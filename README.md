@@ -1,43 +1,9 @@
-<p align="center">
-    <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
-    </a>
-    <h1 align="center">Yii 2 RESTful API with OAuth 2.0 </h1>
-    <br>
-</p>
-
-This is a RESTful API with OAuth2 authentication/security developed using Yii2 framework.
-You can use this if you want to quick start developing your own custom RESTful API by skipping 95% of your scratch works.
-Hopefully this will save lot of your time as this API includes all the basic stuffs you need to get started.
-
-This API also includes a developer dashboard with the API documentation which is developed in Yii2. This will be useful to manage your developers access to the API documentation.
-
-[DEMO](http://developers.yii2.nintriva.net)
--------------------
-```
-http://developers.yii2.nintriva.net
-Login: developer/developer
-```
-
-## Official Documentation
-
-Documentation for this RESTful API can be found on the [Yii2 RESTful API with OAuth2 Documenation](http://developers.yii2.nintriva.net/).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within this template, please send an e-mail to Sirin k at sirin@nintriva.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Lumen framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
-
-
-
+ 
 INSTALLATION
 
 
 ```
-Step1: Create a database named yii2_rest
+Step1: Create a database named weshop-global
 Step2:Clone the source code
 git clone -b master https://github.com/sirinibin/yii2-rest.git
 
@@ -50,7 +16,7 @@ change db information
 
             'class' => 'yii\db\Connection',
 
-            'dsn' => 'mysql:host=127.0.0.1;dbname=yii2_rest',
+            'dsn' => 'mysql:host=127.0.0.1;dbname=weshop-global',
 
             'username' => 'root',
 
@@ -110,12 +76,7 @@ frontend
 vendor/                  contains dependent 3rd-party packages
 environments/            contains environment-based overrides
 ```
-
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii2-app-advanced/v/stable.png)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Total Downloads](https://poser.pugx.org/yiisoft/yii2-app-advanced/downloads.png)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Build Status](https://travis-ci.org/yiisoft/yii2-app-advanced.svg?branch=master)](https://travis-ci.org/yiisoft/yii2-app-advanced)
-
-
+ 
 ###---------yii2 Test-------------
 $ ./vendor/bin/phpunit backend/
 PHPUnit 5.7.21-17-g4eba33748 by Sebastian Bergmann and contributors.
