@@ -5,7 +5,7 @@ use yii\helpers\Html;
 $this->title = 'API 1.0 Documenation';
 $this->params['breadcrumbs'][] = $this->title;
 $protocol="http";
-//$api_host="yii2-rest.com";
+//$api_host="weshop-v4.back-end.local.vn";
 
 ?>
 <!--

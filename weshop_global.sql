@@ -4,10 +4,10 @@
 CREATE TABLE `Customer`
 (
  `customer_id`   int NOT NULL AUTO_INCREMENT ,
- `customername` varchar(40) NOT NULL ,
- `phone`        varchar(20) ,
+ `customer_name` varchar(40) NOT NULL ,
+ `customer_phone`        varchar(20) ,
 PRIMARY KEY (`customer_id`),
-UNIQUE KEY `AK1_Customer_customername` (`customername`)
+UNIQUE KEY `AK1_Customer_customer_name` (`customer_name`)
 ) AUTO_INCREMENT=1 COMMENT='Basic information about Customer';
 
 
@@ -35,7 +35,7 @@ CONSTRAINT `FK_Order_order_status_id_OrderStatus` FOREIGN KEY `FK_Order_order_st
 CREATE TABLE `OrderStatus`
 (
  `order_status_id`     int NOT NULL AUTO_INCREMENT ,
- `name` varchar(10) ,
+ `order_status_name` varchar(10) ,
  PRIMARY KEY (`order_status_id`)
  ) AUTO_INCREMENT=1 COMMENT='Basic information about OrderStatus';
 
@@ -51,22 +51,6 @@ CREATE TABLE `Shipment`
  CONSTRAINT `FK_Shipment_order_id_Order` FOREIGN KEY `FK_Shipment_order_id_Order` (`order_id`) REFERENCES `Order` (`order_id`)
 ) AUTO_INCREMENT=1 COMMENT='Order information like Date, Ammount';
 
-/*
--- ************************************** `OrderItem`
-
-CREATE TABLE `OrderItem`
-(
- `order_id`   int NOT NULL ,
- `product_id` int NOT NULL ,
- `unit_price` decimal(12,2) NOT NULL ,
- `quantity`  int NOT NULL ,
-PRIMARY KEY (`order_id`, `product_id`),
-KEY `FK_OrderItem_order_id_Order` (`order_id`),
-CONSTRAINT `FK_OrderItem_order_id_Order` FOREIGN KEY `FK_OrderItem_order_id_Order` (`order_id`) REFERENCES `Order` (`order_id`),
-KEY `FK_OrderItem_product_id_Product` (`product_id`),
-CONSTRAINT `FK_OrderItem_product_id_Product` FOREIGN KEY `FK_OrderItem_product_id_Product` (`product_id`) REFERENCES `Product` (`product_id`)
-) COMMENT='Information about like Price, quantity';
-*/
 
 -- ************************************** `OrderItem`
 
@@ -76,7 +60,7 @@ CREATE TABLE `OrderItem`
  `order_id`   int NOT NULL ,
  `product_id` int NOT NULL ,
  `unit_price` decimal(12,2) NOT NULL ,
- `quantity`  int NOT NULL ,
+ `order_tem_quantity`  int NOT NULL ,
  PRIMARY KEY (`order_item_id`),
  KEY `FK_OrderItem_order_id_Order` (`order_id`),
  CONSTRAINT `FK_OrderItem_order_id_Order` FOREIGN KEY `FK_OrderItem_order_id_Order` (`order_id`) REFERENCES `Order` (`order_id`),
@@ -148,13 +132,28 @@ CONSTRAINT `FK_Product_supplier_id_Supplier` FOREIGN KEY `FK_Product_supplier_id
 
 CREATE TABLE `ProductCategory`
 (
- `product_categoryId`      int NOT NULL AUTO_INCREMENT ,
- `product_categoryname`    varchar(50) NOT NULL ,
+ `product_category_id`      int NOT NULL AUTO_INCREMENT ,
+ `product_category_name`    varchar(50) NOT NULL ,
  `product_id`     int NOT NULL ,
- PRIMARY KEY (`product_categoryId`),
+ PRIMARY KEY (`product_category_id`),
  KEY `FK_ProductCategory_product_id_Product` (`product_id`),
  CONSTRAINT `FK_ProductCategory_product_id_Product` FOREIGN KEY `FK_ProductCategory_product_id_Product` (`product_id`) REFERENCES `Product` (`product_id`)
 ) AUTO_INCREMENT=1 COMMENT='Basic information abouct ProductCategory';
+
+
+
+-- ************************************** `SurchargeTheCategory`
+
+CREATE TABLE `SurchargeTheCategory`
+(
+ `surcharge_the_category_id`      int NOT NULL AUTO_INCREMENT ,
+ `SurchargeTheCategory_name`    varchar(50) NOT NULL ,
+ `product_id`     int NOT NULL ,
+ PRIMARY KEY (`surcharge_the_category_id`),
+ KEY `FK_SurchargeTheCategory_surcharge_the_category_id_ProductCategory` (`product_category_id`),
+ CONSTRAINT `FK_SurchargeTheCategory_surcharge_the_category_id_ProductCategory` FOREIGN KEY `FK_SurchargeTheCategory_surcharge_the_category_id_ProductCategory` (`product_category_id`) REFERENCES `ProductCategory` (`product_category_id`)
+) AUTO_INCREMENT=1 COMMENT='Basic information abouct SurchargeTheCategory';
+
 
 
 
