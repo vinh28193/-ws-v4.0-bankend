@@ -105,7 +105,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
 
 ###------POST authorize----------
         curl -X POST \
-                http://yii2-rest.back-end.local.vn/1/authorize \
+                http://weshop-v4.back-end.local.vn/1/authorize \
               -H 'content-type: application/json' \
               -d '{
               "username":"gstearmit",
@@ -123,7 +123,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
 ###------POST accesstoken----------
            
       curl -X POST \
-          http://yii2-rest.back-end.local.vn/1/accesstoken \
+          http://weshop-v4.back-end.local.vn/1/accesstoken \
       -H 'content-type: application/json' \
       -d '{
             "authorization_code": "0367d013707b7a1d716500d7487381ce"
@@ -143,7 +143,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
     
       curl -X GET \
      -H "X-Access-Token: 95b45bb33a39a25a12c696f1515ec506" \
-     -G  'http://yii2-rest.back-end.local.vn/1/me'   
+     -G  'http://weshop-v4.back-end.local.vn/1/me'   
      
      ---> Reponse
      
