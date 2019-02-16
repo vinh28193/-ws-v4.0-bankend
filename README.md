@@ -108,14 +108,14 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
                 http://weshop-v4.back-end.local.vn/1/authorize \
               -H 'content-type: application/json' \
               -d '{
-              "username":"gstearmit",
-              "password":"ngoc875052"
+              "username":"ws-global",
+              "password":"ws@2019"
             }'
       ---> Reponse
       {
           "status": 1,
           "data": {
-              "authorization_code": "0367d013707b7a1d716500d7487381ce",
+              "authorization_code": "27b721d2e7a3417466728af96df3597d",
               "expires_at": 1550136755
           }
       }      
@@ -126,7 +126,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
           http://weshop-v4.back-end.local.vn/1/accesstoken \
       -H 'content-type: application/json' \
       -d '{
-            "authorization_code": "0367d013707b7a1d716500d7487381ce"
+            "authorization_code": "27b721d2e7a3417466728af96df3597d"
          }' 
          
        ---> Reponse
@@ -134,7 +134,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
        {
            "status": 1,
            "data": {
-               "access_token": "95b45bb33a39a25a12c696f1515ec506",
+               "access_token": "5c1cab2256d8dd76490b3497afa54795",
                "expires_at": 1555320752
            }
        }
@@ -142,19 +142,19 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
 ###------Get me----------
     
       curl -X GET \
-     -H "X-Access-Token: 95b45bb33a39a25a12c696f1515ec506" \
+     -H "X-Access-Token: 5c1cab2256d8dd76490b3497afa54795" \
      -G  'http://weshop-v4.back-end.local.vn/1/me'   
      
      ---> Reponse
      
-     {
-         "status": 1,
-         "data": {
-             "id": 2,
-             "username": "gstearmit",
-             "email": "gstearmit@gmail.com",
-             "status": 10,
-             "created_at": 1550128415,
-             "updated_at": 1550128415
-         }
-     } 
+    {
+        "status": 1,
+        "data": {
+            "id": 2,
+            "username": "ws-global",
+            "email": "phuchc@peacesoft.net",
+            "status": 10,
+            "created_at": 1550284712,
+            "updated_at": 1550284712
+        }
+    }
