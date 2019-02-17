@@ -6,7 +6,9 @@ CREATE TABLE `Customer`
  `customer_id`   int NOT NULL AUTO_INCREMENT ,
  `customer_name` varchar(40) NOT NULL ,
  `customer_phone`        varchar(20) ,
-PRIMARY KEY (`customer_id`),
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`customer_id`),
 UNIQUE KEY `AK1_Customer_customer_name` (`customer_name`)
 ) AUTO_INCREMENT=1 COMMENT='Basic information about Customer';
 
@@ -21,7 +23,9 @@ CREATE TABLE `Order`
  `order_status_id`  int NOT NULL ,
  `order_date`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  `total_amount` decimal(12,2) NOT NULL ,
-PRIMARY KEY (`order_id`),
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`order_id`),
 UNIQUE KEY `AK1_Order_order_number` (`order_number`),
 KEY `FK_Order_customer_id_Customer` (`customer_id`),
 CONSTRAINT `FK_Order_customer_id_Customer` FOREIGN KEY `FK_Order_customer_id_Customer` (`customer_id`) REFERENCES `Customer` (`customer_id`),
@@ -36,7 +40,9 @@ CREATE TABLE `OrderStatus`
 (
  `order_status_id`     int NOT NULL AUTO_INCREMENT ,
  `order_status_name` varchar(10) ,
- PRIMARY KEY (`order_status_id`)
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`order_status_id`)
  ) AUTO_INCREMENT=1 COMMENT='Basic information about OrderStatus';
 
 -- ************************************** `Shipment`
@@ -46,7 +52,9 @@ CREATE TABLE `Shipment`
  `shipment_id`     int NOT NULL AUTO_INCREMENT ,
  `order_id`   int NOT NULL ,
  `shipment_date`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- PRIMARY KEY (`shipment_id`),
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`shipment_id`),
  KEY `FK_Shipment_order_id_Order` (`order_id`),
  CONSTRAINT `FK_Shipment_order_id_Order` FOREIGN KEY `FK_Shipment_order_id_Order` (`order_id`) REFERENCES `Order` (`order_id`)
 ) AUTO_INCREMENT=1 COMMENT='Order information like Date, Ammount';
@@ -61,7 +69,9 @@ CREATE TABLE `OrderItem`
  `product_id` int NOT NULL ,
  `unit_price` decimal(12,2) NOT NULL ,
  `order_tem_quantity`  int NOT NULL ,
- PRIMARY KEY (`order_item_id`),
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`order_item_id`),
  KEY `FK_OrderItem_order_id_Order` (`order_id`),
  CONSTRAINT `FK_OrderItem_order_id_Order` FOREIGN KEY `FK_OrderItem_order_id_Order` (`order_id`) REFERENCES `Order` (`order_id`),
  KEY `FK_OrderItem_product_id_Product` (`product_id`),
@@ -76,7 +86,9 @@ CREATE TABLE `Delivery`
  `delivery_id`  int NOT NULL AUTO_INCREMENT ,
  `delivery_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  `supplier_id`   int NOT NULL ,
-PRIMARY KEY (`delivery_id`),
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`delivery_id`),
 KEY `FK_Delivery_supplier_id_Supplier` (`supplier_id`),
 CONSTRAINT `FK_Delivery_supplier_id_Supplier` FOREIGN KEY `FK_Delivery_supplier_id_Supplier` (`supplier_id`) REFERENCES `Supplier` (`supplier_id`)
 ) AUTO_INCREMENT=1 COMMENT='Basic information about Delivery - ';
@@ -90,7 +102,9 @@ CREATE TABLE `OrderDetailDelivery`
  `order_id` int NOT NULL ,
  `order_item_id`   int NOT NULL ,
  `delivery_id`   int NOT NULL ,
- PRIMARY KEY (`order_detaildelivery_id`),
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`order_detaildelivery_id`),
  KEY `FK_OrderDetailDelivery_order_id_Order` (`order_id`),
  CONSTRAINT `FK_OrderDetailDelivery_order_id_Order` FOREIGN KEY `FK_OrderDetailDelivery_order_id_Order` (`order_id`) REFERENCES `Order` (`order_id`),
  KEY `FK_OrderDetailDelivery_order_item_id_OrderItem` (`order_item_id`),
@@ -107,7 +121,9 @@ CREATE TABLE `Supplier`
  `supplier_id`  int NOT NULL AUTO_INCREMENT ,
  `company_name` varchar(40) NOT NULL ,
  `supplier_phone`       varchar(20) ,
- PRIMARY KEY (`supplier_id`),
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`supplier_id`),
  UNIQUE KEY `AK1_Supplier_company_name` (`company_name`)
 ) AUTO_INCREMENT=1 COMMENT='Basic information about Supplier - Shop/ người bán trên AMAZON/EBAY ';
 
@@ -118,27 +134,62 @@ CREATE TABLE `Product`
  `product_id`      int NOT NULL AUTO_INCREMENT ,
  `product_name`    varchar(50) NOT NULL ,
  `supplier_id`     int NOT NULL ,
+ `product_status_id`     int NOT NULL ,
  `unit_price`      decimal(12,2) ,
  `is_discontinued` bit NOT NULL DEFAULT 0 ,
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
 PRIMARY KEY (`product_id`),
 UNIQUE KEY `AK1_Product_supplier_id_product_name` (`product_name`, `supplier_id`),
 KEY `FK_Product_supplier_id_Supplier` (`supplier_id`),
-CONSTRAINT `FK_Product_supplier_id_Supplier` FOREIGN KEY `FK_Product_supplier_id_Supplier` (`supplier_id`) REFERENCES `Supplier` (`supplier_id`)
+CONSTRAINT `FK_Product_supplier_id_Supplier` FOREIGN KEY `FK_Product_supplier_id_Supplier` (`supplier_id`) REFERENCES `Supplier` (`supplier_id`),
+KEY `FK_Product_product_status_id_ProductStatus` (`product_status_id`),
+CONSTRAINT `FK_Product_product_status_id_ProductStatus` FOREIGN KEY `FK_Product_product_status_id_ProductStatus` (`product_status_id`) REFERENCES `ProductStatus` (`product_status_id`)
 ) AUTO_INCREMENT=1 COMMENT='Basic information about Product';
 
+-- ************************************** `ProductStatus`
+
+CREATE TABLE `ProductStatus`
+(
+  `product_status_id`      int NOT NULL AUTO_INCREMENT ,
+  `product_status_name`    varchar(50) NOT NULL ,
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`product_status_id`)
+) AUTO_INCREMENT=1 COMMENT='Basic information abouct ProductStatus Ex : unlock , pedding , lock ';
 
 
 -- ************************************** `ProductCategory`
 
 CREATE TABLE `ProductCategory`
 (
- `product_category_id`      int NOT NULL AUTO_INCREMENT ,
- `product_category_name`    varchar(50) NOT NULL ,
- `product_id`     int NOT NULL ,
- PRIMARY KEY (`product_category_id`),
- KEY `FK_ProductCategory_product_id_Product` (`product_id`),
- CONSTRAINT `FK_ProductCategory_product_id_Product` FOREIGN KEY `FK_ProductCategory_product_id_Product` (`product_id`) REFERENCES `Product` (`product_id`)
+  `product_category_id`      int NOT NULL AUTO_INCREMENT ,
+  `category_id`    varchar(50) NOT NULL ,
+  `product_id`     int NOT NULL ,
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`product_category_id`),
+  KEY `FK_ProductCategory_product_id_Product` (`product_id`),
+  CONSTRAINT `FK_ProductCategory_product_id_Product` FOREIGN KEY `FK_ProductCategory_product_id_Product` (`product_id`) REFERENCES `Product` (`product_id`),
+  KEY `FK_ProductCategory_category_id_Category` (`category_id`),
+  CONSTRAINT `FK_ProductCategory_category_id_Category` FOREIGN KEY `FK_ProductCategory_category_id_Category` (`category_id`) REFERENCES `Category` (`category_id`)
 ) AUTO_INCREMENT=1 COMMENT='Basic information abouct ProductCategory';
+
+
+
+-- ************************************** `Category`
+
+CREATE TABLE `Category`
+(
+ `category_id`      int NOT NULL AUTO_INCREMENT ,
+ `category_name`    varchar(50) NOT NULL ,
+ `parent_id`     int NOT NULL ,
+ `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+ `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+ PRIMARY KEY (`category_id`),
+ KEY `FK_Category_category_id_Product` (`category_id`),
+ CONSTRAINT `FK_Category_category_id_Product` FOREIGN KEY `FK_Category_category_id_Product` (`category_id`) REFERENCES `Category` (`category_id`)
+) AUTO_INCREMENT=1 COMMENT='Basic information abouct Category';
 
 
 
@@ -148,11 +199,14 @@ CREATE TABLE `SurchargeTheCategory`
 (
  `surcharge_the_category_id`      int NOT NULL AUTO_INCREMENT ,
  `SurchargeTheCategory_name`    varchar(50) NOT NULL ,
- `product_id`     int NOT NULL ,
+ `category_id`     int NOT NULL ,
+ `user_id`     int NOT NULL COMMENT 'Nhân viên Update phí phụ thu cho danh mục - FK table User' ,
+ `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+ `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
  PRIMARY KEY (`surcharge_the_category_id`),
- KEY `FK_SurchargeTheCategory_surcharge_the_category_id_ProductCategory` (`product_category_id`),
- CONSTRAINT `FK_SurchargeTheCategory_surcharge_the_category_id_ProductCategory` FOREIGN KEY `FK_SurchargeTheCategory_surcharge_the_category_id_ProductCategory` (`product_category_id`) REFERENCES `ProductCategory` (`product_category_id`)
-) AUTO_INCREMENT=1 COMMENT='Basic information abouct SurchargeTheCategory';
+ KEY `FK_SurchargeTheCategory_surcharge_the_category_id_Category` (`category_id`),
+ CONSTRAINT `FK_SurchargeTheCategory_surcharge_the_category_id_Category` FOREIGN KEY `FK_SurchargeTheCategory_surcharge_the_category_id_Category` (`category_id`) REFERENCES `Category` (`category_id`)
+) AUTO_INCREMENT=1 COMMENT='Basic information abouct SurchargeTheCategory - Phụ Thu của danh mục để thu ';
 
 
 
