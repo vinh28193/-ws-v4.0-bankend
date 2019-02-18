@@ -64,7 +64,24 @@ CREATE TABLE `Shipment`
  CONSTRAINT `FK_Shipment_order_id_Order` FOREIGN KEY `FK_Shipment_order_id_Order` (`order_id`) REFERENCES `Order` (`order_id`),
  KEY `FK_Shipment_invoices_id_Invoices` (`invoices_id`),
  CONSTRAINT `FK_Shipment_invoices_id_Invoices` FOREIGN KEY `FK_Shipment_invoices_id_Invoices` (`invoices_id`) REFERENCES `Invoices` (`invoices_id`)
-) AUTO_INCREMENT=1 COMMENT='Order information like Date, Ammount';
+) AUTO_INCREMENT=1 COMMENT='Basic information about Shipment , Order information like Date, Ammount';
+
+
+-- ************************************** `ShipmentItems`
+
+CREATE TABLE `ShipmentItems`
+(
+  `shipment_items_id`     int NOT NULL AUTO_INCREMENT ,
+  `order_item_id` int NOT NULL ,
+  `shipment_id` int NOT NULL ,
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`shipment_items_id`),
+  KEY `FK_ShipmentItems_order_item_id_OrderItem` (`order_item_id`),
+  CONSTRAINT `FK_ShipmentItems_order_item_id_OrderItem` FOREIGN KEY `FK_ShipmentItems_order_item_id_OrderItem` (`order_item_id`) REFERENCES `OrderItem` (`order_item_id`),
+  KEY `FK_ShipmentItems_shipment_id_Shipment` (`shipment_id`),
+  CONSTRAINT `FK_ShipmentItems_shipment_id_ShipmentItems` FOREIGN KEY `FK_ShipmentItems_shipment_id_ShipmentItems` (`shipment_id`) REFERENCES `Shipment` (`shipment_id`)
+) AUTO_INCREMENT=1 COMMENT='Thông tin gửi gói kiện hàng cho Boxme';
 
 
 -- ************************************** `Invoices`
@@ -132,6 +149,18 @@ CREATE TABLE `OrderItem`
  CONSTRAINT `FK_OrderItem_product_id_Product` FOREIGN KEY `FK_OrderItem_product_id_Product` (`product_id`) REFERENCES `Product` (`product_id`)
 ) AUTO_INCREMENT=1  COMMENT='Information about like Price, quantity';
 
+
+-- ************************************** `OrderItemStatus`
+
+CREATE TABLE `OrderItemStatus`
+(
+  `orderitem_status_id`     int NOT NULL AUTO_INCREMENT ,
+  `orderitem_status_name` varchar(10) COMMENT ' eg Delivered , Out of Stock ',
+  `orderitem_status_description` varchar(255) COMMENT 'mô tả trang thái',
+  `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
+  PRIMARY KEY (`orderitem_status_id`)
+) AUTO_INCREMENT=1 COMMENT='Basic information about OrderItemStatus';
 
 -- ************************************** `Delivery`
 
