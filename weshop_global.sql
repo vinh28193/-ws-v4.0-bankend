@@ -38,7 +38,7 @@ CREATE TABLE `CustomerPaymentMethods`
   `payment_method_details` varchar(255) NOT NULL COMMENT '' ,
   `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
   `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
-  PRIMARY KEY (`customer_id`),
+  PRIMARY KEY (`customer_payment_id`),
   KEY `FK_CustomerPaymentMethods_customer_id_Customer` (`customer_id`),
   CONSTRAINT `FK_CustomerPaymentMethods_customer_id_Customer` FOREIGN KEY `FK_CustomerPaymentMethods_customer_id_Customer` (`customer_id`) REFERENCES `Customer` (`customer_id`)
 ) AUTO_INCREMENT=1 COMMENT='Basic information about CustomerPaymentMethods';
@@ -54,8 +54,8 @@ CREATE TABLE `RefPaymentMethods`
   `inserted_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
   `updated_at`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp with time zone = not null',
   PRIMARY KEY (`payment__method_id`),
-  KEY `FK_CustomerPaymentMethods_customer_id_Customer` (`customer_id`),
-  CONSTRAINT `FK_CustomerPaymentMethods_customer_id_Customer` FOREIGN KEY `FK_CustomerPaymentMethods_customer_id_Customer` (`customer_id`) REFERENCES `Customer` (`customer_id`)
+  KEY `FK_RefPaymentMethods_customer_id_Customer` (`customer_id`),
+  CONSTRAINT `FK_RefPaymentMethods_customer_id_Customer` FOREIGN KEY `FK_RefPaymentMethods_customer_id_Customer` (`customer_id`) REFERENCES `Customer` (`customer_id`)
 ) AUTO_INCREMENT=1 COMMENT='Basic information about RefPaymentMethods cần làm rõ hơn nữa';
 
 
