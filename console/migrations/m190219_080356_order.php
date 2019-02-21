@@ -107,36 +107,6 @@ class m190219_080356_order extends Migration
             'updated_time' => $this->bigInteger()->comment("Update qua behaviors tự động"),
             'remove' => $this->tinyInteger(4)->comment("")
         ], $tableOptions);
-
-
-        $this->createIndex('idx-order-store_id', 'order', 'store_id');
-        $this->addForeignKey('fk-order-store_id', 'order', 'store_id', 'store', 'id');
-
-        $this->createIndex('idx-order-customer_id', 'order', 'customer_id');
-        $this->addForeignKey('fk-order-customer_id', 'order', 'customer_id', 'customer', 'id');
-
-        $this->createIndex('idx-order-receiver_country_id', 'order', 'receiver_country_id');
-        $this->addForeignKey('fk-order-receiver_country_id', 'order', 'receiver_country_id', 'system_country', 'id');
-
-        $this->createIndex('idx-order-receiver_province_id', 'order', 'receiver_province_id');
-        $this->addForeignKey('fk-order-receiver_province_id', 'order', 'receiver_province_id', 'system_state_province', 'id');
-
-        $this->createIndex('idx-order-receiver_district_id', 'order', 'receiver_district_id');
-        $this->addForeignKey('fk-order-receiver_district_id', 'order', 'receiver_district_id', 'system_district', 'id');
-
-        $this->createIndex('idx-order-receiver_address_id', 'order', 'receiver_address_id');
-        $this->addForeignKey('fk-order-receiver_address_id', 'order', 'receiver_address_id', 'address', 'id');
-
-        $this->createIndex('idx-order-sale_support_id', 'order', 'sale_support_id');
-        $this->addForeignKey('fk-order-sale_support_id', 'order', 'sale_support_id', 'user', 'id');
-
-        $this->createIndex('idx-order-seller_id', 'order', 'seller_id');
-        $this->addForeignKey('fk-order-seller_id', 'order', 'seller_id', 'seller', 'id');
-
-        $this->createIndex('idx-order-coupon_id', 'order', 'coupon_id');
-
-        $this->createIndex('idx-order-promotion_id', 'order', 'promotion_id');
-        $this->addForeignKey('fk-order-promotion_id', 'order', 'promotion_id', 'promotion', 'id');
     }
 
 
@@ -147,35 +117,35 @@ class m190219_080356_order extends Migration
     {
         echo "m190219_080356_order cannot be reverted.\n";
 
-        $this->dropIndex('idx-order-store_id', 'order');
-        $this->dropForeignKey('fk-order-store_id', 'order');
-
-        $this->dropIndex('idx-order-customer_id', 'order');
-        $this->dropForeignKey('fk-order-customer_id', 'order');
-
-        $this->dropIndex('idx-order-receiver_country_id', 'order');
-        $this->dropForeignKey('fk-order-receiver_country_id', 'order');
-
-        $this->dropIndex('idx-order-receiver_province_id', 'order');
-        $this->dropForeignKey('fk-order-receiver_province_id', 'order');
-
-        $this->dropIndex('idx-order-receiver_district_id', 'order');
-        $this->dropForeignKey('fk-order-receiver_district_id', 'order');
-
-        $this->dropIndex('idx-order-receiver_address_id', 'order');
-        $this->dropForeignKey('fk-order-receiver_address_id', 'order');
-
-        $this->dropIndex('idx-order-sale_support_id', 'order');
-        $this->dropForeignKey('fk-order-sale_support_id', 'order');
-
-        $this->dropIndex('idx-order-seller_id', 'order');
-        $this->dropForeignKey('fk-order-seller_id', 'order');
-
-        $this->dropIndex('idx-order-coupon_id', 'order');
-
-        $this->dropIndex('idx-order-promotion_id', 'order');
-
-        $this->dropTable('order');
+//        $this->dropIndex('idx-order-store_id', 'order');
+//        $this->dropForeignKey('fk-order-store_id', 'order');
+//
+//        $this->dropIndex('idx-order-customer_id', 'order');
+//        $this->dropForeignKey('fk-order-customer_id', 'order');
+//
+//        $this->dropIndex('idx-order-receiver_country_id', 'order');
+//        $this->dropForeignKey('fk-order-receiver_country_id', 'order');
+//
+//        $this->dropIndex('idx-order-receiver_province_id', 'order');
+//        $this->dropForeignKey('fk-order-receiver_province_id', 'order');
+//
+//        $this->dropIndex('idx-order-receiver_district_id', 'order');
+//        $this->dropForeignKey('fk-order-receiver_district_id', 'order');
+//
+//        $this->dropIndex('idx-order-receiver_address_id', 'order');
+//        $this->dropForeignKey('fk-order-receiver_address_id', 'order');
+//
+//        $this->dropIndex('idx-order-sale_support_id', 'order');
+//        $this->dropForeignKey('fk-order-sale_support_id', 'order');
+//
+//        $this->dropIndex('idx-order-seller_id', 'order');
+//        $this->dropForeignKey('fk-order-seller_id', 'order');
+//
+//        $this->dropIndex('idx-order-coupon_id', 'order');
+//
+//        $this->dropIndex('idx-order-promotion_id', 'order');
+//
+//        $this->dropTable('order');
 
     }
 

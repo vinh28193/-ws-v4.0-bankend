@@ -7,16 +7,6 @@ use yii\db\Migration;
  */
 class m190221_025443_scope_user extends Migration
 {
-    public $list = [
-        [
-            'column' => 'user_id',
-            'table' => 'users',
-        ],
-        [
-            'column' => 'scope_id',
-            'table' => 'scopes',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -36,11 +26,6 @@ class m190221_025443_scope_user extends Migration
             'updated_time' => $this->bigInteger()->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
-
-        foreach ($this->list as $data){
-            $this->createIndex('idx-scope_user-'.$data['column'],'scope_user',$data['column']);
-            $this->addForeignKey('fk-scope_user-'.$data['column'], 'scope_user', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -48,12 +33,12 @@ class m190221_025443_scope_user extends Migration
      */
     public function safeDown()
     {
-
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-scope_user-'.$data['column'], 'scope_user');
-            $this->dropForeignKey('fk-scope_user-'.$data['column'], 'scope_user');
-        }
-        $this->dropTable('scope_user');
+//
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-scope_user-'.$data['column'], 'scope_user');
+//            $this->dropForeignKey('fk-scope_user-'.$data['column'], 'scope_user');
+//        }
+//        $this->dropTable('scope_user');
 
         return false;
     }

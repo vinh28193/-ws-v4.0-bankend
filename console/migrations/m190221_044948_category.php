@@ -7,12 +7,6 @@ use yii\db\Migration;
  */
 class m190221_044948_category extends Migration
 {
-    public $list = [
-        [
-            'column' => 'store_id',
-            'table' => 'store',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -26,7 +20,7 @@ class m190221_044948_category extends Migration
         $this->createTable('category',[
             'id' => $this->primaryKey()->comment("ID"),
             'alias' => $this->string(255)->comment(""),
-            'siteId' => $this->integer(11)->comment(""),
+            'site' => $this->string(255)->comment("ebay / amazon / amazon-jp"),
             'origin_name' => $this->string(255)->comment(""),
             'category_group_id' => $this->integer(11)->comment(""),
             'parent_id' => $this->string(255)->comment(""),
@@ -42,11 +36,6 @@ class m190221_044948_category extends Migration
             'active' => $this->tinyInteger(4)->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
-
-        foreach ($this->list as $data){
-            $this->createIndex('idx-category-'.$data['column'],'category',$data['column']);
-            $this->addForeignKey('fk-category-'.$data['column'], 'category', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -54,12 +43,12 @@ class m190221_044948_category extends Migration
      */
     public function safeDown()
     {
-
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-category-'.$data['column'], 'category');
-            $this->dropForeignKey('fk-category-'.$data['column'], 'category');
-        }
-        $this->dropTable('category');
+//
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-category-'.$data['column'], 'category');
+//            $this->dropForeignKey('fk-category-'.$data['column'], 'category');
+//        }
+//        $this->dropTable('category');
 
         return false;
     }

@@ -7,16 +7,6 @@ use yii\db\Migration;
  */
 class m190220_085254_store extends Migration
 {
-    public $list = [
-        [
-            'column' => 'country_id',
-            'table' => 'system_country',
-        ],
-        [
-            'column' => 'currency_id',
-            'table' => 'system_currency',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -41,10 +31,6 @@ class m190220_085254_store extends Migration
             'env' => $this->integer(11)->comment("PROD or UAT or BETA ..."),
             ],$tableOptions);
 
-        foreach ($this->list as $data){
-            $this->createIndex('idx-store-'.$data['column'],'store',$data['column']);
-            $this->addForeignKey('fk-store-'.$data['column'], 'store', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -54,11 +40,11 @@ class m190220_085254_store extends Migration
     {
         echo "m190220_085254_store cannot be reverted.\n";
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-store-'.$data['column'], 'store');
-            $this->dropForeignKey('fk-store-'.$data['column'], 'store');
-        }
-        $this->dropTable('store');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-store-'.$data['column'], 'store');
+//            $this->dropForeignKey('fk-store-'.$data['column'], 'store');
+//        }
+//        $this->dropTable('store');
 
         return false;
     }

@@ -7,16 +7,6 @@ use yii\db\Migration;
  */
 class m190220_060534_wallet_transaction extends Migration
 {
-    public $list = [
-        [
-            'column' => 'order_id',
-            'table' => 'order',
-        ],
-        [
-            'column' => 'customer_id',
-            'table' => 'customer',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -47,11 +37,6 @@ class m190220_060534_wallet_transaction extends Migration
             'before_transaction_amount_local' => $this->decimal(18,2)->comment('Số tiền trước giao dịch'),
             'after_transaction_amount_local' => $this->decimal(18,2)->comment('Số tiền sau giao dịch'),
         ],$tableOptions);
-
-        foreach ($this->list as $data){
-            $this->createIndex('idx-wallet_transaction-'.$data['column'],'wallet_transaction',$data['column']);
-            $this->addForeignKey('fk-wallet_transaction-'.$data['column'], 'wallet_transaction', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -60,14 +45,14 @@ class m190220_060534_wallet_transaction extends Migration
     public function safeDown()
     {
         echo "m190220_060534_wallet_transaction cannot be reverted.\n";
-
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-wallet_transaction-'.$data['column'], 'wallet_transaction');
-            $this->dropForeignKey('fk-wallet_transaction-'.$data['column'], 'wallet_transaction');
-        }
-        $this->dropTable('wallet_transaction');
-
-        return false;
+//
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-wallet_transaction-'.$data['column'], 'wallet_transaction');
+//            $this->dropForeignKey('fk-wallet_transaction-'.$data['column'], 'wallet_transaction');
+//        }
+//        $this->dropTable('wallet_transaction');
+//
+//        return false;
     }
 
     /*

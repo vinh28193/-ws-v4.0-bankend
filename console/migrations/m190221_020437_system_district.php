@@ -7,16 +7,6 @@ use yii\db\Migration;
  */
 class m190221_020437_system_district extends Migration
 {
-    public $list = [
-        [
-            'column' => 'province_id',
-            'table' => 'system_state_province',
-        ],
-        [
-            'column' => 'country_id',
-            'table' => 'system_country',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -41,10 +31,6 @@ class m190221_020437_system_district extends Migration
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
 
-        foreach ($this->list as $data){
-            $this->createIndex('idx-system_district-'.$data['column'],'system_district',$data['column']);
-            $this->addForeignKey('fk-system_district-'.$data['column'], 'system_district', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -53,11 +39,11 @@ class m190221_020437_system_district extends Migration
     public function safeDown()
     {
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-system_district-'.$data['column'], 'system_district');
-            $this->dropForeignKey('fk-system_district-'.$data['column'], 'system_district');
-        }
-        $this->dropTable('system_district');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-system_district-'.$data['column'], 'system_district');
+//            $this->dropForeignKey('fk-system_district-'.$data['column'], 'system_district');
+//        }
+//        $this->dropTable('system_district');
 
         return false;
     }

@@ -7,28 +7,6 @@ use yii\db\Migration;
  */
 class m190221_021137_address extends Migration
 {
-    public $list = [
-        [
-            'column' => 'country_id',
-            'table' => 'system_country',
-        ],
-        [
-            'column' => 'province_id',
-            'table' => 'system_state_province',
-        ],
-        [
-            'column' => 'district_id',
-            'table' => 'system_district',
-        ],
-        [
-            'column' => 'store_id',
-            'table' => 'store',
-        ],
-        [
-            'column' => 'customer_id',
-            'table' => 'customer',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -62,11 +40,6 @@ class m190221_021137_address extends Migration
             'updated_time' => $this->bigInteger()->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
-
-        foreach ($this->list as $data){
-            $this->createIndex('idx-address-'.$data['column'],'address',$data['column']);
-            $this->addForeignKey('fk-address-'.$data['column'], 'address', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -75,11 +48,11 @@ class m190221_021137_address extends Migration
     public function safeDown()
     {
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-address-'.$data['column'], 'address');
-            $this->dropForeignKey('fk-address-'.$data['column'], 'address');
-        }
-        $this->dropTable('address');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-address-'.$data['column'], 'address');
+//            $this->dropForeignKey('fk-address-'.$data['column'], 'address');
+//        }
+//        $this->dropTable('address');
 
         return false;
     }

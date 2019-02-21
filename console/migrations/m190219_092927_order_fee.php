@@ -30,8 +30,6 @@ class m190219_092927_order_fee extends Migration
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
 
-        $this->createIndex('idx-order_fee-order_id', 'order_fee', 'order_id');
-        $this->addForeignKey('fk-order_fee-order_id', 'order_fee', 'order_id', 'order', 'id');
     }
 
     /**
@@ -41,10 +39,10 @@ class m190219_092927_order_fee extends Migration
     {
         echo "m190219_092927_order_fee cannot be reverted.\n";
 
-        $this->dropIndex('idx-order_fee-order_id', 'order_fee');
-        $this->dropForeignKey('fk-order_fee-order_id', 'order_fee');
-        $this->dropTable('order_fee');
-        return false;
+//        $this->dropIndex('idx-order_fee-order_id', 'order_fee');
+//        $this->dropForeignKey('fk-order_fee-order_id', 'order_fee');
+//        $this->dropTable('order_fee');
+//        return false;
     }
 
     /*

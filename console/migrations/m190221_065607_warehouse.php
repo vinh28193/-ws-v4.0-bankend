@@ -7,24 +7,6 @@ use yii\db\Migration;
  */
 class m190221_065607_warehouse extends Migration
 {
-    public $list = [
-        [
-            'column' => 'district_id',
-            'table' => 'system_district',
-        ],
-        [
-            'column' => 'province_id',
-            'table' => 'system_state_province',
-        ],
-        [
-            'column' => 'country_id',
-            'table' => 'system_country',
-        ],
-        [
-            'column' => 'store_id',
-            'table' => 'store',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -55,11 +37,6 @@ class m190221_065607_warehouse extends Migration
             'created_time' => $this->bigInteger()->comment('thời gian tạo'),
             'updated_time' => $this->bigInteger()->comment('thời gian cập nhật'),
         ],$tableOptions);
-
-        foreach ($this->list as $data){
-            $this->createIndex('idx-warehouse-'.$data['column'],'warehouse',$data['column']);
-            $this->addForeignKey('fk-warehouse-'.$data['column'], 'warehouse', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -69,11 +46,11 @@ class m190221_065607_warehouse extends Migration
     {
         echo "m190221_065607_warehouse cannot be reverted.\n";
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-warehouse-'.$data['column'], 'warehouse');
-            $this->dropForeignKey('fk-warehouse-'.$data['column'], 'warehouse');
-        }
-        $this->dropTable('warehouse');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-warehouse-'.$data['column'], 'warehouse');
+//            $this->dropForeignKey('fk-warehouse-'.$data['column'], 'warehouse');
+//        }
+//        $this->dropTable('warehouse');
 
         return false;
     }

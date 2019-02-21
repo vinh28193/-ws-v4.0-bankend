@@ -7,12 +7,6 @@ use yii\db\Migration;
  */
 class m190221_062527_category_custom_policy extends Migration
 {
-    public $list = [
-        [
-            'column' => 'store_id',
-            'table' => 'store',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -48,10 +42,6 @@ class m190221_062527_category_custom_policy extends Migration
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
 
-        foreach ($this->list as $data){
-            $this->createIndex('idx-category_custom_policy-'.$data['column'],'category_custom_policy',$data['column']);
-            $this->addForeignKey('fk-category_custom_policy-'.$data['column'], 'category_custom_policy', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -60,11 +50,11 @@ class m190221_062527_category_custom_policy extends Migration
     public function safeDown()
     {
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-category_custom_policy-'.$data['column'], 'category_custom_policy');
-            $this->dropForeignKey('fk-category_custom_policy-'.$data['column'], 'category_custom_policy');
-        }
-        $this->dropTable('category_custom_policy');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-category_custom_policy-'.$data['column'], 'category_custom_policy');
+//            $this->dropForeignKey('fk-category_custom_policy-'.$data['column'], 'category_custom_policy');
+//        }
+//        $this->dropTable('category_custom_policy');
 
         return false;
     }

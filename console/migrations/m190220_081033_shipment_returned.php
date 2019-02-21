@@ -7,20 +7,6 @@ use yii\db\Migration;
  */
 class m190220_081033_shipment_returned extends Migration
 {
-    public $list = [
-        [
-            'column' => 'warehouse_send_id',
-            'table' => 'warehouse',
-        ],
-        [
-            'column' => 'customer_id',
-            'table' => 'customer',
-        ],
-        [
-            'column' => 'shipment_id',
-            'table' => 'shipment',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -34,7 +20,7 @@ class m190220_081033_shipment_returned extends Migration
         $this->createTable('shipment_returned',[
             'id' => $this->primaryKey()->comment(''),
             'shipment_code' => $this->integer(11)->comment('mã phiếu giao, BM_CODE'),
-            'warehouse_send_id' => $this->double()->comment('id kho gửi đi'),
+            'warehouse_send_id' => $this->integer(11)->comment('id kho gửi đi'),
             'warehouse_tags' => $this->text()->comment('1 list mã thẻ kho Weshop'),
             'customer_id' => $this->integer(11)->comment("id của customer"),
             'shipment_status' => $this->string(255)->comment("trạng thái shipment"),
@@ -53,10 +39,6 @@ class m190220_081033_shipment_returned extends Migration
             'updated_time' => $this->bigInteger()->comment('thời gian cập nhật'),
         ],$tableOptions);
 
-        foreach ($this->list as $data){
-            $this->createIndex('idx-shipment_returned-'.$data['column'],'shipment_returned',$data['column']);
-            $this->addForeignKey('fk-shipment_returned-'.$data['column'], 'shipment_returned', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -66,11 +48,11 @@ class m190220_081033_shipment_returned extends Migration
     {
         echo "m190220_081033_shipment_returned cannot be reverted.\n";
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-shipment_returned-'.$data['column'], 'shipment_returned');
-            $this->dropForeignKey('fk-shipment_returned-'.$data['column'], 'shipment_returned');
-        }
-        $this->dropTable('shipment_returned');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-shipment_returned-'.$data['column'], 'shipment_returned');
+//            $this->dropForeignKey('fk-shipment_returned-'.$data['column'], 'shipment_returned');
+//        }
+//        $this->dropTable('shipment_returned');
 
         return false;
     }

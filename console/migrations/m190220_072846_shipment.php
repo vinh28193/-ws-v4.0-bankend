@@ -7,32 +7,6 @@ use yii\db\Migration;
  */
 class m190220_072846_shipment extends Migration
 {
-    public $list = [
-        [
-            'column' => 'receiver_country_id',
-            'table' => 'system_country',
-        ],
-        [
-            'column' => 'warehouse_send_id',
-            'table' => 'warehouse',
-        ],
-        [
-            'column' => 'receiver_address_id',
-            'table' => 'address',
-        ],
-        [
-            'column' => 'receiver_province_id',
-            'table' => 'system_state_province',
-        ],
-        [
-            'column' => 'receiver_district_id',
-            'table' => 'system_district',
-        ],
-        [
-            'column' => 'customer_id',
-            'table' => 'customer',
-        ],
-    ];
     /**
      * {@inheritdoc}
      */
@@ -48,7 +22,7 @@ class m190220_072846_shipment extends Migration
             'shipment_code' => $this->integer(11)->comment('mã phiếu giao, BM_CODE'),
             'warehouse_tags' => $this->text()->comment('1 list mã thẻ kho Weshop'),
             'total_weight' => $this->double()->comment('Tổng cân nặng của các món hàng'),
-            'warehouse_send_id' => $this->double()->comment('id kho gửi đi'),
+            'warehouse_send_id' => $this->integer(11)->comment('id kho gửi đi'),
             'customer_id' => $this->integer(11)->comment("id của customer"),
             'receiver_email' => $this->string(255)->comment(""),
             'receiver_name' => $this->string(255)->comment(""),
@@ -79,10 +53,6 @@ class m190220_072846_shipment extends Migration
             'updated_time' => $this->bigInteger()->comment('thời gian cập nhật'),
         ],$tableOptions);
 
-        foreach ($this->list as $data){
-            $this->createIndex('idx-shipment-'.$data['column'],'shipment',$data['column']);
-            $this->addForeignKey('fk-shipment-'.$data['column'], 'shipment', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -92,11 +62,11 @@ class m190220_072846_shipment extends Migration
     {
         echo "m190220_072846_shipment cannot be reverted.\n";
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-shipment-'.$data['column'], 'shipment');
-            $this->dropForeignKey('fk-shipment-'.$data['column'], 'shipment');
-        }
-        $this->dropTable('shipment');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-shipment-'.$data['column'], 'shipment');
+//            $this->dropForeignKey('fk-shipment-'.$data['column'], 'shipment');
+//        }
+//        $this->dropTable('shipment');
 
         return false;
     }

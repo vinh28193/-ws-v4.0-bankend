@@ -7,20 +7,6 @@ use yii\db\Migration;
  */
 class m190219_094654_product extends Migration
 {
-    public $list = [
-        [
-            'column' => 'order_id',
-            'table' => 'order',
-        ],
-        [
-            'column' => 'category_id',
-            'table' => 'category',
-        ],
-        [
-            'column' => 'custom_category_id',
-            'table' => 'category_custom_policy',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -34,6 +20,7 @@ class m190219_094654_product extends Migration
         $this->createTable('product',[
             'id' => $this->primaryKey()->comment(''),
             'order_id' => $this->integer(11)->comment('order id'),
+            'seller_id' => $this->integer(11)->comment(''),
             'portal' => $this->string(255)->comment('portal sản phẩm, ebay, amazon us, amazon jp ....'),
             'sku' => $this->string(255)->comment('sku của sản phẩm'),
             'parent_sku' => $this->string(255)->comment('sku cha'),
@@ -55,11 +42,6 @@ class m190219_094654_product extends Migration
             'updated_time' => $this->bigInteger()->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
-
-        foreach ($this->list as $data){
-            $this->createIndex('idx-product-'.$data['column'],'product',$data['column']);
-            $this->addForeignKey('fk-product-'.$data['column'], 'product', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -68,12 +50,12 @@ class m190219_094654_product extends Migration
     public function safeDown()
     {
         echo "m190219_094654_product cannot be reverted.\n";
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-product-'.$data['column'], 'product');
-            $this->dropForeignKey('fk-product-'.$data['column'], 'product');
-        }
-        $this->dropTable('product');
-        return false;
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-product-'.$data['column'], 'product');
+//            $this->dropForeignKey('fk-product-'.$data['column'], 'product');
+//        }
+//        $this->dropTable('product');
+//        return false;
     }
 
     /*

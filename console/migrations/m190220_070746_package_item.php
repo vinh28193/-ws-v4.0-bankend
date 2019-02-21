@@ -7,16 +7,6 @@ use yii\db\Migration;
  */
 class m190220_070746_package_item extends Migration
 {
-    public $list = [
-        [
-            'column' => 'package_id',
-            'table' => 'package',
-        ],
-        [
-            'column' => 'order_id',
-            'table' => 'order',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -50,11 +40,6 @@ class m190220_070746_package_item extends Migration
             'created_time' => $this->bigInteger()->comment('thời gian tạo'),
             'updated_time' => $this->bigInteger()->comment('thời gian cập nhật'),
         ],$tableOptions);
-
-        foreach ($this->list as $data){
-            $this->createIndex('idx-package_item-'.$data['column'],'package_item',$data['column']);
-            $this->addForeignKey('fk-package_item-'.$data['column'], 'package_item', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -64,11 +49,11 @@ class m190220_070746_package_item extends Migration
     {
         echo "m190220_070746_package_item cannot be reverted.\n";
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-package_item-'.$data['column'], 'package_item');
-            $this->dropForeignKey('fk-package_item-'.$data['column'], 'package_item');
-        }
-        $this->dropTable('package_item');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-package_item-'.$data['column'], 'package_item');
+//            $this->dropForeignKey('fk-package_item-'.$data['column'], 'package_item');
+//        }
+//        $this->dropTable('package_item');
 
         return false;
     }

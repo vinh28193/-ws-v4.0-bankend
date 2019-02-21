@@ -7,12 +7,6 @@ use yii\db\Migration;
  */
 class m190220_091710_customer extends Migration
 {
-    public $list = [
-        [
-            'column' => 'store_id',
-            'table' => 'store',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -67,10 +61,6 @@ class m190220_091710_customer extends Migration
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
 
-        foreach ($this->list as $data){
-            $this->createIndex('idx-customer-'.$data['column'],'customer',$data['column']);
-            $this->addForeignKey('fk-customer-'.$data['column'], 'customer', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -79,11 +69,11 @@ class m190220_091710_customer extends Migration
     public function safeDown()
     {
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-customer-'.$data['column'], 'customer');
-            $this->dropForeignKey('fk-customer-'.$data['column'], 'customer');
-        }
-        $this->dropTable('customer');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-customer-'.$data['column'], 'customer');
+//            $this->dropForeignKey('fk-customer-'.$data['column'], 'customer');
+//        }
+//        $this->dropTable('customer');
 
         return false;
     }

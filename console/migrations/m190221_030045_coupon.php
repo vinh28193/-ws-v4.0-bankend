@@ -7,16 +7,6 @@ use yii\db\Migration;
  */
 class m190221_030045_coupon extends Migration
 {
-    public $list = [
-        [
-            'column' => 'store_id',
-            'table' => 'store',
-        ],
-        [
-            'column' => 'created_by',
-            'table' => 'users',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -59,11 +49,6 @@ class m190221_030045_coupon extends Migration
             'updated_time' => $this->bigInteger()->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
-
-        foreach ($this->list as $data){
-            $this->createIndex('idx-coupon-'.$data['column'],'coupon',$data['column']);
-            $this->addForeignKey('fk-coupon-'.$data['column'], 'coupon', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -72,11 +57,11 @@ class m190221_030045_coupon extends Migration
     public function safeDown()
     {
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-coupon-'.$data['column'], 'coupon');
-            $this->dropForeignKey('fk-coupon-'.$data['column'], 'coupon');
-        }
-        $this->dropTable('coupon');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-coupon-'.$data['column'], 'coupon');
+//            $this->dropForeignKey('fk-coupon-'.$data['column'], 'coupon');
+//        }
+//        $this->dropTable('coupon');
 
         return false;
     }

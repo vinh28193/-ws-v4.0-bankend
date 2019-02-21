@@ -7,12 +7,6 @@ use yii\db\Migration;
  */
 class m190221_015306_system_state_province extends Migration
 {
-    public $list = [
-        [
-            'column' => 'country_id',
-            'table' => 'system_country',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -36,10 +30,6 @@ class m190221_015306_system_state_province extends Migration
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
 
-        foreach ($this->list as $data){
-            $this->createIndex('idx-system_state_province-'.$data['column'],'system_state_province',$data['column']);
-            $this->addForeignKey('fk-system_state_province-'.$data['column'], 'system_state_province', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -48,11 +38,11 @@ class m190221_015306_system_state_province extends Migration
     public function safeDown()
     {
         echo "m190221_015306_system_state_province cannot be reverted.\n";
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-system_state_province-'.$data['column'], 'system_state_province');
-            $this->dropForeignKey('fk-system_state_province-'.$data['column'], 'system_state_province');
-        }
-        $this->dropTable('system_state_province');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-system_state_province-'.$data['column'], 'system_state_province');
+//            $this->dropForeignKey('fk-system_state_province-'.$data['column'], 'system_state_province');
+//        }
+//        $this->dropTable('system_state_province');
         return false;
     }
 

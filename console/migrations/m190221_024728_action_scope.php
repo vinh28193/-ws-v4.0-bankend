@@ -7,16 +7,6 @@ use yii\db\Migration;
  */
 class m190221_024728_action_scope extends Migration
 {
-    public $list = [
-        [
-            'column' => 'action_id',
-            'table' => 'actions',
-        ],
-        [
-            'column' => 'scope_id',
-            'table' => 'scopes',
-        ]
-    ];
     /**
      * {@inheritdoc}
      */
@@ -36,11 +26,6 @@ class m190221_024728_action_scope extends Migration
             'updated_time' => $this->bigInteger()->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ],$tableOptions);
-
-        foreach ($this->list as $data){
-            $this->createIndex('idx-action_scope-'.$data['column'],'action_scope',$data['column']);
-            $this->addForeignKey('fk-action_scope-'.$data['column'], 'action_scope', $data['column'], $data['table'], 'id');
-        }
     }
 
     /**
@@ -49,11 +34,11 @@ class m190221_024728_action_scope extends Migration
     public function safeDown()
     {
 
-        foreach ($this->list as $data){
-            $this->dropIndex('idx-action_scope-'.$data['column'], 'action_scope');
-            $this->dropForeignKey('fk-action_scope-'.$data['column'], 'action_scope');
-        }
-        $this->dropTable('action_scope');
+//        foreach ($this->list as $data){
+//            $this->dropIndex('idx-action_scope-'.$data['column'], 'action_scope');
+//            $this->dropForeignKey('fk-action_scope-'.$data['column'], 'action_scope');
+//        }
+//        $this->dropTable('action_scope');
 
         return false;
     }
