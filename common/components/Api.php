@@ -69,7 +69,7 @@ class Api extends Component
 
         header($status_header);
         header('Content-type: ' . $content_type);
-        header('X-Powered-By: ' . "Your Company <www.mywebsite.com>");
+        header('X-Powered-By: ' . "Weshop Global https://weshop.asia");
         header('Access-Control-Allow-Origin:*');
 
 

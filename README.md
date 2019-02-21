@@ -5,7 +5,7 @@ INSTALLATION
 ```
 Step1: Create a database named weshop-global
 Step2:Clone the source code
-git clone -b master https://github.com/sirinibin/yii2-rest.git
+git clone -b master https://gitlab.saobang.vn/weshop/weshop-v4.0-api.git 
 
 Step3: cd yii2-rest
 Step4:composer install
@@ -27,17 +27,25 @@ change db information
         ],
 
 Step7: Run db migration
-           cd /var/www/yii2-rest
+           cd /var/www/weshop-v4.0-api
             ./yii migrate
 
 Step8:
             point API end point URL to backend
-             /var/www/yii2-rest/backend/web
+             /var/www/weshop-v4.0-api/backend/web
 
 
             point frontend URL to frontend
-             /var/www/yii2-rest/frontend/web
+             /var/www/weshop-v4.0-api/frontend/web
 ```
+
+Try to run a frontend application by the following console command:
+
+        php yii serve --docroot=@frontend/web --port=8080
+        
+Then run the backend in an other terminal window:
+
+        php yii serve --docroot=@backend/web --port=8090
 
 DIRECTORY STRUCTURE
 -------------------
@@ -158,3 +166,77 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
             "updated_at": 1550284712
         }
     }
+    
+    
+ #--------------- Installing using Docker -----------------
+ https://github.com/yiisoft/yii2-app-advanced/blob/master/docs/guide/start-installation.md
+ 
+  Install the application dependencies
+  
+  docker-compose run --rm backend composer install
+  Initialize the application by running the init command within a container
+  
+  docker-compose run --rm backend /app/init
+  Add a database service like and adjust the components['db'] configuration in common/config/main-local.php accordingly.
+  
+      'dsn' => 'mysql:host=mysql;dbname=yii2advanced',
+      'username' => 'yii2advanced',
+      'password' => 'secret',
+  Docker networking creates a DNS entry for the host mysql available from your backend and frontend containers.
+  
+  If you want to use another database, such a Postgres, uncomment the corresponding section in docker-compose.yml and update your database connection.
+  
+      'dsn' => 'pgsql:host=pgsql;dbname=yii2advanced',
+  For more information about Docker setup please visit the guide.
+  
+  Run the migrations
+  
+  docker-compose run --rm backend yii migrate
+  Start the application
+  
+  docker-compose up -d
+  Access it in your brower by opening
+  
+  frontend: http://127.0.0.1:20080
+  backend: http://127.0.0.1:21080
+  
+  
+  
+  #-----------------------------
+  http://paginaswebpublicidad.com/questions/1365/tai-sao-chi-co-the-co-mot-cot-timestamp-voi-current-timestamp-trong-menh-de-default
+  
+  INSERT INTO address (village,created_date) VALUES (100,null);
+  UPDATE address SET village=101 WHERE village=100;
+  
+           CREATE TABLE `address` (
+            `id` int(9) NOT NULL AUTO_INCREMENT,
+            `village` int(11) DEFAULT NULL,
+              `created_date` timestamp default '0000-00-00 00:00:00', 
+          
+              -- Since explicit DEFAULT value that is not CURRENT_TIMESTAMP is assigned for a NOT NULL column, 
+              -- implicit DEFAULT CURRENT_TIMESTAMP is avoided.
+              -- So it allows us to set ON UPDATE CURRENT_TIMESTAMP on 'updated_date' column.
+              -- How does setting DEFAULT to '0000-00-00 00:00:00' instead of CURRENT_TIMESTAMP help? 
+              -- It is just a temporary value.
+              -- On INSERT of explicit NULL into the column inserts current timestamp.
+          
+          -- `created_date` timestamp not null default '0000-00-00 00:00:00', // same as above
+          
+          -- `created_date` timestamp null default '0000-00-00 00:00:00', 
+          -- inserting 'null' explicitly in INSERT statement inserts null (Ignoring the column inserts the default value)! 
+          -- Remember we need current timestamp on insert of 'null'. So this won't work. 
+          
+          -- `created_date` timestamp null , // always inserts null. Equally useless as above. 
+          
+          -- `created_date` timestamp default 0, // alternative to '0000-00-00 00:00:00'
+          
+          -- `created_date` timestamp, 
+          -- first 'not null' timestamp column without 'default' value. 
+          -- So implicitly adds DEFAULT CURRENT_TIMESTAMP and ON UPDATE CURRENT_TIMESTAMP. 
+          -- Hence cannot add 'ON UPDATE CURRENT_TIMESTAMP' on 'updated_date' column.
+          
+          
+             `updated_date` timestamp null on update current_timestamp,
+          
+            PRIMARY KEY (`id`)
+          ) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8UPDATE address SET village=101 WHERE village=100

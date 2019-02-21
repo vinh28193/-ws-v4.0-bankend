@@ -12,6 +12,12 @@ class m190219_080356_order extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
+
         $this->createTable('order',[
             'id' => $this->primaryKey()->comment("ID"),
             'store_id' => $this->integer(11)->comment("hàng của nước nào"),
@@ -85,22 +91,23 @@ class m190219_080356_order extends Migration
             'purchase_refund_transaction_id' => $this->text()->comment("mã giao dịch hoàn"),
             'total_weight' => $this->text()->comment("cân nặng tính phí"),
             'total_weight_temporary' => $this->text()->comment("cân nặng tạm tính"),
-            'NEW' => $this->bigInteger()->comment(""),
-            'PURCHASED' => $this->bigInteger()->comment(""),
-            'SELLER_SHIPPED' => $this->bigInteger()->comment(""),
-            'STOCKIN_US' => $this->bigInteger()->comment(""),
-            'STOCKOUT_US' => $this->bigInteger()->comment(""),
-            'STOCKIN_LOCAL' => $this->bigInteger()->comment(""),
-            'STOCKOUT_LOCAL' => $this->bigInteger()->comment(""),
-            'AT_CUSTOMER' => $this->bigInteger()->comment(""),
-            'RETURNED' => $this->bigInteger()->comment(""),
-            'CANCELLED' => $this->bigInteger()->comment(""),
-            'LOST' => $this->bigInteger()->comment(""),
+            'new' => $this->bigInteger()->comment("time NEW"),
+            'purchased' => $this->bigInteger()->comment("time PURCHASED"),
+            'seller_shipped' => $this->bigInteger()->comment("time SELLER_SHIPPED"),
+            'stockin_us' => $this->bigInteger()->comment("time STOCKIN_US"),
+            'stockout_us' => $this->bigInteger()->comment("time STOCKOUT_US"),
+            'stockin_local' => $this->bigInteger()->comment("time STOCKIN_LOCAL"),
+            'stockout_local' => $this->bigInteger()->comment("time STOCKOUT_LOCAL"),
+            'at_customer' => $this->bigInteger()->comment("time AT_CUSTOMER"),
+            'returned' => $this->bigInteger()->comment("time RETURNED"),
+            'cancelled' => $this->bigInteger()->comment(" time CANCELLED"),
+            'lost' => $this->bigInteger()->comment(" time LOST"),
             'current_status' => $this->string(200)->comment("Trạng thái hiện tại của order"),
-            'created_time' => $this->bigInteger()->comment(""),
-            'updated_time' => $this->bigInteger()->comment(""),
-            'remove' => $this->tinyInteger(4)->comment(""),
-        ]);
+            'created_time' => $this->bigInteger()->comment("Update qua behaviors tự động  "),
+            'updated_time' => $this->bigInteger()->comment("Update qua behaviors tự động"),
+            'remove' => $this->tinyInteger(4)->comment("")
+        ], $tableOptions);
+
 
         $this->createIndex('idx-order-store_id', 'order', 'store_id');
         $this->addForeignKey('fk-order-store_id', 'order', 'store_id', 'store', 'id');
@@ -129,7 +136,9 @@ class m190219_080356_order extends Migration
         $this->createIndex('idx-order-coupon_id', 'order', 'coupon_id');
 
         $this->createIndex('idx-order-promotion_id', 'order', 'promotion_id');
+        $this->addForeignKey('fk-order-promotion_id', 'order', 'promotion_id', 'promotion', 'id');
     }
+
 
     /**
      * {@inheritdoc}
@@ -137,6 +146,7 @@ class m190219_080356_order extends Migration
     public function safeDown()
     {
         echo "m190219_080356_order cannot be reverted.\n";
+
         $this->dropIndex('idx-order-store_id', 'order');
         $this->dropForeignKey('fk-order-store_id', 'order');
 
@@ -166,6 +176,7 @@ class m190219_080356_order extends Migration
         $this->dropIndex('idx-order-promotion_id', 'order');
 
         $this->dropTable('order');
+
     }
 
     /*

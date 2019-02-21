@@ -22,6 +22,11 @@ class m190220_085254_store extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
         $this->createTable('store',[
             'id' => $this->primaryKey()->comment("ID"),
             'country_id' => $this->integer(11)->comment(""),
@@ -34,7 +39,7 @@ class m190220_085254_store extends Migration
             'currency_id' => $this->integer(11)->comment(""),
             'status' => $this->integer(11)->comment(""),
             'env' => $this->integer(11)->comment("PROD or UAT or BETA ..."),
-            ]);
+            ],$tableOptions);
 
         foreach ($this->list as $data){
             $this->createIndex('idx-store-'.$data['column'],'store',$data['column']);

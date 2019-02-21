@@ -22,6 +22,11 @@ class m190220_060534_wallet_transaction extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
         $this->createTable('wallet_transaction',[
             'id' => $this->primaryKey()->comment(''),
             'transaction_code' => $this->string(255)->comment('mã giao dịch của weshop'),
@@ -41,7 +46,7 @@ class m190220_060534_wallet_transaction extends Migration
             'third_party_transaction_time' => $this->bigInteger()->comment('thời gian giao dịch bên thứ 3'),
             'before_transaction_amount_local' => $this->decimal(18,2)->comment('Số tiền trước giao dịch'),
             'after_transaction_amount_local' => $this->decimal(18,2)->comment('Số tiền sau giao dịch'),
-        ]);
+        ],$tableOptions);
 
         foreach ($this->list as $data){
             $this->createIndex('idx-wallet_transaction-'.$data['column'],'wallet_transaction',$data['column']);

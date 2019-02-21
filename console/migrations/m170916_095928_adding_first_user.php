@@ -25,7 +25,7 @@ class m170916_095928_adding_first_user extends Migration
     {
        // echo "m170916_095928_adding_first_user cannot be reverted.\n";
 
-        $sql="DELETE from user where username='sirinibin'";
+        $sql="DELETE from user where username='weshopgl'";
         Yii::$app->db->createCommand($sql)->execute();
 
     }

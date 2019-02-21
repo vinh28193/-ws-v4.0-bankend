@@ -18,6 +18,11 @@ class m190221_062527_category_custom_policy extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
         $this->createTable('category_custom_policy',[
             'id' => $this->primaryKey()->comment("ID"),
             'name' => $this->string(255)->comment(""),
@@ -41,7 +46,7 @@ class m190221_062527_category_custom_policy extends Migration
             'updated_time' => $this->bigInteger()->comment(""),
             'active' => $this->tinyInteger(4)->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
-        ]);
+        ],$tableOptions);
 
         foreach ($this->list as $data){
             $this->createIndex('idx-category_custom_policy-'.$data['column'],'category_custom_policy',$data['column']);

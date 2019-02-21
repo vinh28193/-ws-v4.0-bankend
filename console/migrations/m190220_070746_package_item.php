@@ -22,6 +22,11 @@ class m190220_070746_package_item extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
         $this->createTable('package_item',[
             'id' => $this->primaryKey()->comment(''),
             'package_id' => $this->integer(11)->comment('id của package'),
@@ -44,7 +49,7 @@ class m190220_070746_package_item extends Migration
             'shipment_id' => $this->integer(11)->comment(''),
             'created_time' => $this->bigInteger()->comment('thời gian tạo'),
             'updated_time' => $this->bigInteger()->comment('thời gian cập nhật'),
-        ]);
+        ],$tableOptions);
 
         foreach ($this->list as $data){
             $this->createIndex('idx-package_item-'.$data['column'],'package_item',$data['column']);
