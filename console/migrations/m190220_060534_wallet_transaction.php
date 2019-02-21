@@ -25,8 +25,8 @@ class m190220_060534_wallet_transaction extends Migration
         $this->createTable('wallet_transaction',[
             'id' => $this->primaryKey()->comment(''),
             'transaction_code' => $this->string(255)->comment('mã giao dịch của weshop'),
-            'create_time' => $this->bigInteger()->comment('thời gian giao dịch'),
-            'update_time' => $this->bigInteger()->comment('thời gian cập nhật giao dịch'),
+            'created_time' => $this->bigInteger()->comment('thời gian giao dịch'),
+            'updated_time' => $this->bigInteger()->comment('thời gian cập nhật giao dịch'),
             'transaction_status' => $this->string(255)->comment('trạng thái giao dịch'),
             'transaction_type' => $this->string(255)->comment('Loại giao dịch: top up , payment, withdraw'),
             'customer_id' => $this->integer(11)->comment(''),

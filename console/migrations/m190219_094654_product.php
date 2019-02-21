@@ -46,8 +46,8 @@ class m190219_094654_product extends Migration
             'variation_id' => $this->integer(11)->comment('mã thuộc tính sản phẩm'),
             'note_by_customer' => $this->text()->comment('note của khách'),
             'total_weight_temporary' => $this->text()->comment("cân nặng tạm tính"),
-            'create_time' => $this->bigInteger()->comment(""),
-            'update_time' => $this->bigInteger()->comment(""),
+            'created_time' => $this->bigInteger()->comment(""),
+            'updated_time' => $this->bigInteger()->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ]);
 

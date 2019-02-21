@@ -9,12 +9,8 @@ class m190220_091710_customer extends Migration
 {
     public $list = [
         [
-            'column' => 'country_id',
-            'table' => 'system_country',
-        ],
-        [
-            'column' => 'currency_id',
-            'table' => 'system_currency',
+            'column' => 'store_id',
+            'table' => 'store',
         ]
     ];
     /**
@@ -60,8 +56,8 @@ class m190220_091710_customer extends Migration
             'verify_code_count' => $this->integer(11)->comment(""),
             'verify_code_type' => $this->string(255)->comment(""),
 
-            'create_time' => $this->bigInteger()->comment(""),
-            'update_time' => $this->bigInteger()->comment(""),
+            'created_time' => $this->bigInteger()->comment(""),
+            'updated_time' => $this->bigInteger()->comment(""),
             'active' => $this->tinyInteger(4)->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ]);

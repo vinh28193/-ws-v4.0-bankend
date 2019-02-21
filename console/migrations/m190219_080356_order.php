@@ -97,8 +97,8 @@ class m190219_080356_order extends Migration
             'CANCELLED' => $this->bigInteger()->comment(""),
             'LOST' => $this->bigInteger()->comment(""),
             'current_status' => $this->string(200)->comment("Trạng thái hiện tại của order"),
-            'create_time' => $this->bigInteger()->comment(""),
-            'update_time' => $this->bigInteger()->comment(""),
+            'created_time' => $this->bigInteger()->comment(""),
+            'updated_time' => $this->bigInteger()->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ]);
 
@@ -121,16 +121,14 @@ class m190219_080356_order extends Migration
         $this->addForeignKey('fk-order-receiver_address_id', 'order', 'receiver_address_id', 'address', 'id');
 
         $this->createIndex('idx-order-sale_support_id', 'order', 'sale_support_id');
-        $this->addForeignKey('fk-order-sale_support_id', 'order', 'sale_support_id', 'users', 'id');
+        $this->addForeignKey('fk-order-sale_support_id', 'order', 'sale_support_id', 'user', 'id');
 
         $this->createIndex('idx-order-seller_id', 'order', 'seller_id');
         $this->addForeignKey('fk-order-seller_id', 'order', 'seller_id', 'seller', 'id');
 
         $this->createIndex('idx-order-coupon_id', 'order', 'coupon_id');
-        $this->addForeignKey('fk-order-coupon_id', 'order', 'coupon_id', 'coupon', 'id');
 
         $this->createIndex('idx-order-promotion_id', 'order', 'promotion_id');
-        $this->addForeignKey('fk-order-promotion_id', 'order', 'promotion_id', 'promotion', 'id');
     }
 
     /**
@@ -164,10 +162,8 @@ class m190219_080356_order extends Migration
         $this->dropForeignKey('fk-order-seller_id', 'order');
 
         $this->dropIndex('idx-order-coupon_id', 'order');
-        $this->dropForeignKey('fk-order-coupon_id', 'order');
 
         $this->dropIndex('idx-order-promotion_id', 'order');
-        $this->dropForeignKey('fk-order-promotion_id', 'order');
 
         $this->dropTable('order');
     }
