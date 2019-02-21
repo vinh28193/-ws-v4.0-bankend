@@ -44,8 +44,8 @@ class m190220_081033_shipment_returned extends Migration
             'shipment_id' => $this->integer(11)->comment(""),
 
 
-            'create_time' => $this->bigInteger()->comment('thời gian tạo'),
-            'update_time' => $this->bigInteger()->comment('thời gian cập nhật'),
+            'created_time' => $this->bigInteger()->comment('thời gian tạo'),
+            'updated_time' => $this->bigInteger()->comment('thời gian cập nhật'),
         ]);
 
         foreach ($this->list as $data){

@@ -16,9 +16,9 @@ class m170916_100717_adding_employee_table extends Migration
             `id` int(11) NOT NULL,
               `name` varchar(200) NOT NULL,
               `email` varchar(100) NOT NULL,
-              `created_at` datetime DEFAULT NULL,
-              `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-            ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+              `created_at` timestamp default '0000-00-00 00:00:00', 
+              `updated_at` timestamp null on update current_timestamp
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
             
             --
             -- Indexes for dumped tables

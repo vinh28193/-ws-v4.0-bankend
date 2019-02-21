@@ -1,0 +1,12 @@
+        /****Todo
+         * 1 Shop người bán Amazon / Ebay  --> 1 Khách hàng mua hàng ---> N order + flow tiền + product --> lưu vào Giỏ Hàng Session  + API cho  App
+         * 1 Shop người bán Amazon / Ebay  --> 1 Khách hàng mua hàng ---> 1 order + flow tiền + product --> lưu vào Giỏ Hàng Session  + API cho  App
+         *****/
+
+         /****Todo 00 - Gio Hang :
+          * 1 Shop người bán Amazon / Ebay  --> 1 Khách hàng mua hàng ---> N order + flow tiền + product SKU --> lưu vào Giỏ Hàng Session  + API cho  App
+          * 1 Shop người bán Amazon / Ebay  --> 1 Khách hàng mua hàng ---> 1 order + flow tiền + product SKU --> lưu vào Giỏ Hàng Session  + API cho  App
+          * Todo 01 : Làm lại Wallet - Ngân Lượng
+          * Todo 02 : Chuyển bảng customer  --> thành bảng  mới
+          * Todo 03 : Thiết kế lại thanh toán theo luồng Wallet
+          *****/

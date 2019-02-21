@@ -70,8 +70,8 @@ class m190220_072846_shipment extends Migration
             'courier_estimate_time' => $this->text()->comment("thời gian ước tính của hãng vận chuyển"),
             'list_old_shipment_code' => $this->text()->comment("danh sách mã shipment cũ đã bị cancel"),
 
-            'create_time' => $this->bigInteger()->comment('thời gian tạo'),
-            'update_time' => $this->bigInteger()->comment('thời gian cập nhật'),
+            'created_time' => $this->bigInteger()->comment('thời gian tạo'),
+            'updated_time' => $this->bigInteger()->comment('thời gian cập nhật'),
         ]);
 
         foreach ($this->list as $data){

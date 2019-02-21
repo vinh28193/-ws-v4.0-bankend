@@ -15,6 +15,14 @@ class m170916_101824_adding_sample_data_to_employee_table extends Migration
         $sql="INSERT INTO `employee` (`id`, `name`, `email`, `created_at`, `updated_at`) VALUES (NULL, 'John ', 'john@gmail.com', '2017-09-16 03:09:12', CURRENT_TIMESTAMP), (NULL, 'James', 'james@gmail.com', '2017-09-16 04:09:00', CURRENT_TIMESTAMP);";
         Yii::$app->db->createCommand($sql)->execute();
 
+        /*
+         INSERT INTO `employee` (`id`, `name`, `email`, `created_at`) VALUES (NULL, 'John000', 'john123@gmail.com', CURRENT_TIMESTAMP)
+         UPDATE employee SET name='ws2019' WHERE id=3;
+
+         INSERT INTO `employee` (`id`, `name`, `email`, `created_at`) VALUES (NULL, 'John000200', 'john123200@gmail.com', NULL);
+         UPDATE employee SET name='weshop2019' WHERE id=4;
+
+        */
     }
 
     /**

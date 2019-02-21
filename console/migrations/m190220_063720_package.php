@@ -38,8 +38,8 @@ class m190220_063720_package extends Migration
             'LOST' => $this->bigInteger()->comment(''),
             'current_status' => $this->bigInteger()->comment(''),
             'warehouse_id' => $this->integer(11)->comment('id kho nhận'),
-            'create_time' => $this->bigInteger()->comment('thời gian tạo'),
-            'update_time' => $this->bigInteger()->comment('thời gian cập nhật'),
+            'created_time' => $this->bigInteger()->comment('thời gian tạo'),
+            'updated_time' => $this->bigInteger()->comment('thời gian cập nhật'),
         ]);
 
         foreach ($this->list as $data){

@@ -42,8 +42,8 @@ class m190220_070746_package_item extends Migration
             'LOST' => $this->bigInteger()->comment(''),
             'current_status' => $this->bigInteger()->comment(''),
             'shipment_id' => $this->integer(11)->comment(''),
-            'create_time' => $this->bigInteger()->comment('thời gian tạo'),
-            'update_time' => $this->bigInteger()->comment('thời gian cập nhật'),
+            'created_time' => $this->bigInteger()->comment('thời gian tạo'),
+            'updated_time' => $this->bigInteger()->comment('thời gian cập nhật'),
         ]);
 
         foreach ($this->list as $data){

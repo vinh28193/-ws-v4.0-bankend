@@ -20,8 +20,8 @@ class m190219_092927_order_fee extends Migration
             'amount' => $this->decimal(18,2)->comment('tiền ngoại tệ'),
             'currency' => $this->string(255)->comment('loại tiền ngoại tệ'),
             'discount_amount' => $this->decimal(18,2)->comment('tiền giảm giá'),
-            'create_time' => $this->bigInteger()->comment(""),
-            'update_time' => $this->bigInteger()->comment(""),
+            'created_time' => $this->bigInteger()->comment(""),
+            'updated_time' => $this->bigInteger()->comment(""),
             'remove' => $this->tinyInteger(4)->comment(""),
         ]);
 
