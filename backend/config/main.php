@@ -58,14 +58,19 @@ return [
                 '1/me'=>'site/me',
                 '1/logout'=>'site/logout',
 
-
+               ### employees
                 '1/employees'=>'employee/index',
                 '1/employees/view/<id>'=>'employee/view',
                 '1/employees/create'=>'employee/create',
                 '1/employees/update/<id>'=>'employee/update',
                 '1/employees/delete/<id>'=>'employee/delete',
 
-
+                ### Post
+                '1/post'=>'post/index',
+                '1/post/view/<id>'=>'post/view',
+                '1/post/create'=>'post/create',
+                '1/post/update/<id>'=>'post/update',
+                '1/post/delete/<id>'=>'post/delete',
 
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',

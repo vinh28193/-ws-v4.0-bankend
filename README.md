@@ -254,3 +254,18 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
    
    #--------------- Tự sinh 5 User của Viet Nam -----------------
    yii fixture/generate user --count=5 --language=vi_VN
+   
+   
+   ####-----------PHP UNEST TEST-------------
+   API GET : http://weshop-v4.front-end.local.vn/api/posts
+   API GET POST DETAIL : http://weshop-v4.front-end.local.vn/api/posts/1
+           <response>
+           <item>
+           <id>1</id>
+           <title>dsdsdasds</title>
+           <text>dsadsad</text>
+           <status>0</status>
+           <created_at>0</created_at>
+           <updated_at>0</updated_at>
+           </item>
+           </response>
