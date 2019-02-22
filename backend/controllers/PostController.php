@@ -5,7 +5,6 @@ namespace backend\controllers;
 
 use yii\filters\AccessControl;
 use app\models\Post;
-use app\models\PostSearch;
 use backend\behaviours\Verbcheck;
 use backend\behaviours\Apiauth;
 
@@ -68,8 +67,7 @@ class PostController extends RestController
     public function actionIndex()
     {
         $params = $this->request['search'];
-        $searchModel = new PostSearch();
-        $response = $searchModel->search($params);
+        $response = Post::search($params);
         Yii::$app->api->sendSuccessResponse($response['data'], $response['info']);
 
     }
