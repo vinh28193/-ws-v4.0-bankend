@@ -275,6 +275,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   http://weshop-v4.front-end.local.vn/posts/index
   
   
+  
   ### PREPARING FOR THE TESTS
   ###Follow these steps to prepare for the tests:
   
@@ -363,4 +364,9 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   
   
   ###-------Run------
- php frontend/tests/bin/yii serve --port=8980
+    php frontend/tests/bin/yii serve --port=8980
+
+    >php frontend/tests/bin/yii serve --port=8980
+    Server started on http://localhost:8980/
+    Document root is "C:\xampp\htdocs\weshop-v4.0-api\frontend/web"
+    Quit the server with CTRL-C or COMMAND-C.
