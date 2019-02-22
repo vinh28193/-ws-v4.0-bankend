@@ -30,11 +30,15 @@ use Yii;
  * @property string $created_time
  * @property string $updated_time
  * @property int $remove
+ * @property int $currency_id
+ * @property string $currency_symbol
+ * @property string $exchange_rate
  *
  * @property Category $category
  * @property CategoryCustomPolicy $customCategory
  * @property Order $order
  * @property Seller $seller
+ * @property SystemCurrency $currency
  */
 class Product extends \yii\db\ActiveRecord
 {
@@ -52,14 +56,15 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_time', 'updated_time', 'remove'], 'integer'],
+            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_time', 'updated_time', 'remove', 'currency_id'], 'integer'],
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'total_weight_temporary'], 'string'],
-            [['price_amount', 'price_amount_local', 'total_price_amount_local'], 'number'],
-            [['portal', 'sku', 'parent_sku'], 'string', 'max' => 255],
+            [['price_amount', 'price_amount_local', 'total_price_amount_local', 'exchange_rate'], 'number'],
+            [['portal', 'sku', 'parent_sku', 'currency_symbol'], 'string', 'max' => 255],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
             [['custom_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoryCustomPolicy::className(), 'targetAttribute' => ['custom_category_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCurrency::className(), 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
 
@@ -92,6 +97,9 @@ class Product extends \yii\db\ActiveRecord
             'created_time' => 'Created Time',
             'updated_time' => 'Updated Time',
             'remove' => 'Remove',
+            'currency_id' => 'Currency ID',
+            'currency_symbol' => 'Currency Symbol',
+            'exchange_rate' => 'Exchange Rate',
         ];
     }
 
@@ -125,5 +133,13 @@ class Product extends \yii\db\ActiveRecord
     public function getSeller()
     {
         return $this->hasOne(Seller::className(), ['id' => 'seller_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCurrency()
+    {
+        return $this->hasOne(SystemCurrency::className(), ['id' => 'currency_id']);
     }
 }

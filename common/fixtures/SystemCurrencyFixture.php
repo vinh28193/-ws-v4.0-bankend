@@ -11,7 +11,7 @@ namespace common\fixtures;
 
 use yii\test\ActiveFixture;
 
-class CurrencyFixture extends ActiveFixture
+class SystemCurrencyFixture extends ActiveFixture
 {
     public $modelClass = 'common\models\db\SystemCurrency';
 }

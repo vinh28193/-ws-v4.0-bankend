@@ -15,6 +15,7 @@ use Yii;
  * @property string $created_time
  * @property string $updated_time
  * @property int $remove
+ * @property string $portal
  *
  * @property Order[] $orders
  * @property Product[] $products
@@ -35,7 +36,7 @@ class Seller extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['link_store', 'description'], 'string'],
+            [['link_store', 'description', 'portal'], 'string'],
             [['created_time', 'updated_time', 'remove'], 'integer'],
             [['name', 'rate'], 'string', 'max' => 255],
         ];
@@ -55,6 +56,7 @@ class Seller extends \yii\db\ActiveRecord
             'created_time' => 'Created Time',
             'updated_time' => 'Updated Time',
             'remove' => 'Remove',
+            'portal' => 'Portal',
         ];
     }
 
