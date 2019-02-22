@@ -4,18 +4,18 @@ use yii\helpers\Url as Url;
 
 class ContactCest
 {
-    public function _before(\AcceptanceTester $I)
+    public function _before(\old $I)
     {
         $I->amOnPage(Url::toRoute('/site/contact'));
     }
     
-    public function contactPageWorks(AcceptanceTester $I)
+    public function contactPageWorks(old $I)
     {
         $I->wantTo('ensure that contact page works');
         $I->see('Contact', 'h1');
     }
 
-    public function contactFormCanBeSubmitted(AcceptanceTester $I)
+    public function contactFormCanBeSubmitted(old $I)
     {
         $I->amGoingTo('submit contact form with correct data');
         $I->fillField('#contactform-name', 'tester');
