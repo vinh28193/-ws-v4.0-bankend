@@ -17,7 +17,7 @@ $category = $faker->randomElement(\common\fixtures\components\FixtureUtility::ge
 $category_custom = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\category_custom_policy.php',null));
 return [
     'id' => $id,
-    'order_id' => $faker->numberBetween(1, 1000),
+    'order_id' => $order['id'],
     'seller_id' => $order['seller_id'],
     'portal' => $order['portal'],
     'sku' => $faker->randomNumber(),
