@@ -48,6 +48,9 @@ return [
                 '<module:\w+>/<controller:\w+>/<id:\d+>' => '<module>/<controller>/view',
                 '<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '<module>/<controller>/<action>',
                 // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
+
+                /***Post API GET NOT POST , PUT , UPDATE ***/
+                'class' => 'yii\rest\UrlRule', 'controller' => 'api/posts'
             ],
         ],
     ],
