@@ -1,9 +1,9 @@
 <?php
 
-namespace tests\functional\admin;
+namespace tests\functional;
 
 use app\models\Post;
-use FunctionalTester;
+use frontend\tests\FunctionalTester;
 use tests\fixtures\PostFixture;
 use yii\helpers\Url;
 
@@ -21,19 +21,19 @@ class PostsCest
 
     public function testIndex(FunctionalTester $I)
     {
-        $I->amOnPage(['admin/posts/index']);
+        $I->amOnPage(['api/posts/index']);
         $I->see('Posts', 'h1');
     }
 
     public function testView(FunctionalTester $I)
     {
-        $I->amOnPage(['admin/posts/view', 'id' => 1]);
+        $I->amOnPage(['api/posts/view', 'id' => 1]);
         $I->see('First Post', 'h1');
     }
 
     public function testCreateInvalid(FunctionalTester $I)
     {
-        $I->amOnPage(['admin/posts/create']);
+        $I->amOnPage(['api/posts/create']);
         $I->see('Create', 'h1');
 
         $I->submitForm('#post-form', [
@@ -48,7 +48,7 @@ class PostsCest
 
     public function testCreateValid(FunctionalTester $I)
     {
-        $I->amOnPage(['admin/posts/create']);
+        $I->amOnPage(['api/posts/create']);
         $I->see('Create', 'h1');
 
         $I->submitForm('#post-form', [
@@ -68,7 +68,7 @@ class PostsCest
 
     public function testDelete(FunctionalTester $I)
     {
-        $I->amOnPage(['/admin/posts/view', 'id' => 3]);
+        $I->amOnPage(['/api/posts/view', 'id' => 3]);
         $I->see('Title For Deleting', 'h1');
 
         $I->amGoingTo('delete item');
