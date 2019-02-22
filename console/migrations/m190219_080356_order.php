@@ -100,8 +100,8 @@ class m190219_080356_order extends Migration
             'stockout_local' => $this->bigInteger()->comment("time STOCKOUT_LOCAL"),
             'at_customer' => $this->bigInteger()->comment("time AT_CUSTOMER"),
             'returned' => $this->bigInteger()->comment("time RETURNED"),
-            'cancelled' => $this->bigInteger()->comment(" time CANCELLED"),
-            'lost' => $this->bigInteger()->comment(" time LOST"),
+            'cancelled' => $this->bigInteger()->comment(" time CANCELLED :  Đơn hàng đã  hoặc chưa thanh toán --> nhưng bị hủy và hoàn tiền"),
+            'lost' => $this->bigInteger()->comment(" time LOST : Hàng mất ở kho Mỹ hoặc hải quan hoặc kho VN hoặc trên đường giao cho KH "),
             'current_status' => $this->string(200)->comment("Trạng thái hiện tại của order"),
             'created_time' => $this->bigInteger()->comment("Update qua behaviors tự động  "),
             'updated_time' => $this->bigInteger()->comment("Update qua behaviors tự động"),
@@ -109,6 +109,21 @@ class m190219_080356_order extends Migration
         ], $tableOptions);
     }
 
+    /******
+     *  'new' => $this->bigInteger()->comment("time NEW"),
+        'purchased' => $this->bigInteger()->comment("time PURCHASED"),
+        'seller_shipped' => $this->bigInteger()->comment("time SELLER_SHIPPED"),
+        'stockin_us' => $this->bigInteger()->comment("time STOCKIN_US"),
+        'stockout_us' => $this->bigInteger()->comment("time STOCKOUT_US"),
+        'stockin_local' => $this->bigInteger()->comment("time STOCKIN_LOCAL"),
+        'stockout_local' => $this->bigInteger()->comment("time STOCKOUT_LOCAL"),
+        'at_customer' => $this->bigInteger()->comment("time AT_CUSTOMER"),
+        'returned' => $this->bigInteger()->comment("time RETURNED"),
+        'cancelled' => $this->bigInteger()->comment(" time CANCELLED :  Đơn hàng đã  hoặc chưa thanh toán --> nhưng bị hủy và hoàn tiền"),
+        'lost' => $this->bigInteger()->comment(" time LOST : Hàng mất ở kho Mỹ hoặc hải quan hoặc kho VN hoặc trên đường giao cho KH "),
+     * Todo :
+     * 1. Sales Chipo chuyển trang thái đơn chăm như thế nào ? Khach chat và nhìn thấy trạng thái cuối sản phẩm và đơn hàng ntn ?
+     */
 
     /**
      * {@inheritdoc}

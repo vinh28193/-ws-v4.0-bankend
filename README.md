@@ -240,3 +240,17 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
           
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8UPDATE address SET village=101 WHERE village=100
+          
+          
+          
+   ###--------------------generration Data base --------------------------
+   #----------Sinh tat ca lai giu lieu------------
+   php yii fixture/generate-all --count=100    ---> để sinh 100 bản ghi từ 0 - 99
+   php yii fixture/load "*"                    ---> để lưu tất cả các bảng giữ liệu vừa sinh vào database
+   
+   #---------Sinh theo tung bang vi du bang user co check ca khoa ngoai -----------------
+   php yii fixture/generate user --count=100
+   php yii fixture/load User
+   
+   #--------------- Tự sinh 5 User của Viet Nam -----------------
+   yii fixture/generate user --count=5 --language=vi_VN
