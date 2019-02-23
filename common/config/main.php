@@ -12,5 +12,8 @@ return [
         'api' => [
             'class' => 'common\components\Api',
         ],
+        'storeManager' => [
+            'class' => 'common\components\StoreManager'
+        ]
     ],
 ];
