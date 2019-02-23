@@ -17,7 +17,7 @@ interface AdditionalFeeInterface
 {
 
     /**
-     * @return \ws\base\StoreManager
+     * @return \common\components\StoreManager
      */
     public function getStoreManager();
 

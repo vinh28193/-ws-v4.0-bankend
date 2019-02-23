@@ -24,6 +24,7 @@ if($product){
 }else{
     $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\seller.php',null));
 }
+
 return [
     'id' => $id,
     'store_id' => 1,
