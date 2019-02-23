@@ -6,11 +6,9 @@
  * Time: 09:59
  */
 
-namespace backend\modules\v1\controllers;
+namespace api\modules\v1\weshop\customer\controllers;
 
-use backend\behaviours\Apiauth;
-use backend\behaviours\Verbcheck;
-use yii\filters\AccessControl;
+use api\modules\v1\weshop\controllers\BaseController;
 use Yii;
 use common\models\LoginForm;
 use common\models\AuthorizationCodes;
@@ -19,7 +17,7 @@ use common\models\AccessTokens;
 use backend\models\SignupForm;
 
 
-class ConnectController extends RestController
+class ConnectController extends BaseController
 {
 
     /**
@@ -105,6 +103,8 @@ class ConnectController extends RestController
 
         $model->attributes = $this->request;
 
+        print_r(Yii::$app->user);
+        die;
 
         if ($model->validate() && $model->login()) {
 

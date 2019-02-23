@@ -18,24 +18,7 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'backend\controllers',
     'defaultRoute' => 'site/index',
-    'modules' => [
-        'v1' => [
-            'class' => 'backend\modules\v1\Module',
-            'modules' => [
-                'backend' => [
-                    'class' => 'backend\modules\v1\backend\Module',
-                ],
-                'weshop' => [
-                    'class' => 'backend\modules\v1\weshop\Module',
-                    'modules' => [
-                        'customer' => [
-                            'class' => 'backend\modules\v1\weshop\customer\Module',
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+    'modules' => [],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',

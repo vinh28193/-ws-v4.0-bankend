@@ -6,11 +6,10 @@
  * Time: 09:59
  */
 
-namespace backend\modules\v1\backend\controllers;
+namespace api\modules\v1\controllers;
 
-use backend\behaviours\Apiauth;
-use backend\behaviours\Verbcheck;
-use backend\modules\v1\controllers\RestController;
+use api\behaviours\Apiauth;
+use api\behaviours\Verbcheck;
 use yii\filters\AccessControl;
 use Yii;
 use common\models\LoginForm;

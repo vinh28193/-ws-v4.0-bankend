@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\modules\v1\weshop;
+namespace api\modules\v1;
 
 /**
- * weshop module definition class
+ * v1 module definition class
  */
 class Module extends \yii\base\Module
 {
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'backend\modules\v1\weshop\controllers';
+    public $controllerNamespace = 'api\modules\v1\controllers';
 
     /**
      * {@inheritdoc}

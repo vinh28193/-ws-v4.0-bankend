@@ -6,7 +6,7 @@
  * Time: 10:01
  */
 
-namespace backend\modules\v1\controllers;
+namespace api\modules\v1\controllers;
 
 
 class OrderController extends AuthController

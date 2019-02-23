@@ -1,5 +1,5 @@
 <?php
-namespace frontend\models;
+namespace userbackend\models;
 
 use common\models\Customer;
 use Yii;

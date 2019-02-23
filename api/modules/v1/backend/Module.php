@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\modules\v1\weshop\customer;
+namespace api\modules\v1\api;
 
 /**
- * customer module definition class
+ * backend module definition class
  */
 class Module extends \yii\base\Module
 {
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'backend\modules\v1\weshop\customer\controllers';
+    public $controllerNamespace = 'api\modules\v1\api\controllers';
 
     /**
      * {@inheritdoc}

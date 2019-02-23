@@ -6,10 +6,10 @@
  * Time: 10:46
  */
 
-namespace backend\modules\v1\weshop\controllers;
+namespace api\modules\v1\weshop\controllers;
 
 
-use backend\modules\v1\controllers\RestController;
+use api\modules\v1\controllers\RestController;
 
 class BaseController extends RestController
 {

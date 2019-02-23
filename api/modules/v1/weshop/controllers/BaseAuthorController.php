@@ -3,24 +3,17 @@
  * Created by PhpStorm.
  * User: galat
  * Date: 23/02/2019
- * Time: 09:14
+ * Time: 11:06
  */
 
-namespace backend\modules\v1\controllers;
+namespace api\modules\v1\weshop\controllers;
 
 
-use backend\behaviours\Apiauth;
-use backend\behaviours\Verbcheck;
+use api\behaviours\Apiauth;
+use api\behaviours\Verbcheck;
 use yii\filters\AccessControl;
-use Yii;
-use common\models\LoginForm;
-use common\models\AuthorizationCodes;
-use common\models\AccessTokens;
 
-use backend\models\SignupForm;
-
-
-class AuthController extends RestController
+class BaseAuthorController extends BaseController
 {
     public function behaviors()
     {

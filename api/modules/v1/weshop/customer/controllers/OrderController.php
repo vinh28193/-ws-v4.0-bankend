@@ -6,10 +6,10 @@
  * Time: 11:10
  */
 
-namespace backend\modules\v1\weshop\customer\controllers;
+namespace api\modules\v1\weshop\customer\controllers;
 
 
-use backend\modules\v1\weshop\controllers\BaseAuthorController;
+use api\modules\v1\weshop\controllers\BaseAuthorController;
 
 class OrderController extends BaseAuthorController
 {
