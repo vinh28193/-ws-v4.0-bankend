@@ -10,7 +10,7 @@ namespace api\modules\v1\weshop\customer\controllers;
 
 use api\modules\v1\weshop\controllers\BaseController;
 use Yii;
-use common\models\LoginForm;
+use common\models\LoginCustomerForm as LoginForm;
 use common\models\AuthorizationCodes;
 use common\models\AccessTokens;
 
@@ -102,12 +102,9 @@ class ConnectController extends BaseController
         $model = new LoginForm();
 
         $model->attributes = $this->request;
-
-        print_r(Yii::$app->user);
-        die;
+//
 
         if ($model->validate() && $model->login()) {
-
             $auth_code = Yii::$app->api->createAuthorizationCode(Yii::$app->user->identity['id']);
 
             $data = [];
