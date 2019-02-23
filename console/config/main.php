@@ -13,7 +13,7 @@ return [
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'controllerMap' => [
         'fixture' => [
@@ -21,7 +21,11 @@ return [
             'namespace' => 'common\fixtures',
             'templatePath' => '@common/fixtures/templates',
             'fixtureDataPath' => '@common/fixtures/data'
-          ],
+        ],
+        'migrate' => [
+            'class' => 'common\components\consoles\controllers\MigrateController',
+            'migrationPath' => ['@console/migrations']
+        ]
     ],
     'components' => [
         'log' => [
@@ -32,6 +36,9 @@ return [
                 ],
             ],
         ],
+        'storeManager' => [
+            'class' => common\components\consoles\StoreManager::className()
+        ]
     ],
     'params' => $params,
 ];
