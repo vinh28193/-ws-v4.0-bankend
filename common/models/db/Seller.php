@@ -12,8 +12,8 @@ use Yii;
  * @property string $link_store
  * @property string $rate
  * @property string $description
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $remove
  * @property string $portal
  *
@@ -37,7 +37,7 @@ class Seller extends \yii\db\ActiveRecord
     {
         return [
             [['link_store', 'description', 'portal'], 'string'],
-            [['created_time', 'updated_time', 'remove'], 'integer'],
+            [['created_at', 'updated_at', 'remove'], 'integer'],
             [['name', 'rate'], 'string', 'max' => 255],
         ];
     }
@@ -53,8 +53,8 @@ class Seller extends \yii\db\ActiveRecord
             'link_store' => 'Link Store',
             'rate' => 'Rate',
             'description' => 'Description',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'remove' => 'Remove',
             'portal' => 'Portal',
         ];

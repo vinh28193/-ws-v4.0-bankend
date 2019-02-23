@@ -14,8 +14,8 @@ use Yii;
  * @property string $amount tiền ngoại tệ
  * @property string $currency loại tiền ngoại tệ
  * @property string $discount_amount tiền giảm giá
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $remove
  *
  * @property Order $order
@@ -36,7 +36,7 @@ class OrderFee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'created_time', 'updated_time', 'remove'], 'integer'],
+            [['order_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['amount_local', 'amount', 'discount_amount'], 'number'],
             [['type_fee', 'currency'], 'string', 'max' => 255],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
@@ -56,8 +56,8 @@ class OrderFee extends \yii\db\ActiveRecord
             'amount' => 'Amount',
             'currency' => 'Currency',
             'discount_amount' => 'Discount Amount',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'remove' => 'Remove',
         ];
     }

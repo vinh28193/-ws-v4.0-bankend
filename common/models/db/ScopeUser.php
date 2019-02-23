@@ -10,8 +10,8 @@ use Yii;
  * @property int $id ID
  * @property int $user_id
  * @property int $scope_id
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $remove
  *
  * @property Scopes $scope
@@ -33,7 +33,7 @@ class ScopeUser extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'scope_id', 'created_time', 'updated_time', 'remove'], 'integer'],
+            [['user_id', 'scope_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['scope_id'], 'exist', 'skipOnError' => true, 'targetClass' => Scopes::className(), 'targetAttribute' => ['scope_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -48,8 +48,8 @@ class ScopeUser extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'User ID',
             'scope_id' => 'Scope ID',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'remove' => 'Remove',
         ];
     }

@@ -14,8 +14,8 @@ use Yii;
  * @property int $display_order
  * @property int $province_id
  * @property int $country_id
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $remove
  *
  * @property Address[] $addresses
@@ -41,7 +41,7 @@ class SystemDistrict extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['display_order', 'province_id', 'country_id', 'created_time', 'updated_time', 'remove'], 'integer'],
+            [['display_order', 'province_id', 'country_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['name', 'name_local', 'name_alias'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['country_id' => 'id']],
             [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['province_id' => 'id']],
@@ -61,8 +61,8 @@ class SystemDistrict extends \yii\db\ActiveRecord
             'display_order' => 'Display Order',
             'province_id' => 'Province ID',
             'country_id' => 'Country ID',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'remove' => 'Remove',
         ];
     }

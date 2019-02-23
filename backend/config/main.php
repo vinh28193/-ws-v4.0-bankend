@@ -11,7 +11,24 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'v1' => [
+            'class' => 'backend\modules\v1\Module',
+            'modules' => [
+                'backend' => [
+                    'class' => 'backend\modules\v1\backend\Module',
+                ],
+                'weshop' => [
+                    'class' => 'backend\modules\v1\weshop\Module',
+                    'modules' => [
+                        'customer' => [
+                            'class' => 'backend\modules\v1\weshop\customer\Module',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     'components' => [
         /* 'request' => [
              'csrfParam' => '_csrf-backend',
@@ -78,7 +95,6 @@ return [
                 '<module:\w+>/<controller:\w+>/<id:\d+>' => '<module>/<controller>/view',
                 '<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '<module>/<controller>/<action>',
                 // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
-
             ],
 
         ],

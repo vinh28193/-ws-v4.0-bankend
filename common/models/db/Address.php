@@ -24,8 +24,8 @@ use Yii;
  * @property string $type
  * @property int $is_default
  * @property int $customer_id
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $remove
  *
  * @property SystemCountry $country
@@ -52,7 +52,7 @@ class Address extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['country_id', 'province_id', 'district_id', 'store_id', 'is_default', 'customer_id', 'created_time', 'updated_time', 'remove'], 'integer'],
+            [['country_id', 'province_id', 'district_id', 'store_id', 'is_default', 'customer_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['address'], 'string'],
             [['first_name', 'last_name', 'email', 'phone', 'country_name', 'province_name', 'district_name', 'post_code', 'type'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['country_id' => 'id']],
@@ -86,8 +86,8 @@ class Address extends \yii\db\ActiveRecord
             'type' => 'Type',
             'is_default' => 'Is Default',
             'customer_id' => 'Customer ID',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'remove' => 'Remove',
         ];
     }

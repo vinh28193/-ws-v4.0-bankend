@@ -12,8 +12,8 @@ use Yii;
  * @property string $slug
  * @property string $description
  * @property int $level
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $remove
  *
  * @property ActionScope[] $actionScopes
@@ -35,7 +35,7 @@ class Scopes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['level', 'created_time', 'updated_time', 'remove'], 'integer'],
+            [['level', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['name', 'slug', 'description'], 'string', 'max' => 255],
         ];
     }
@@ -51,8 +51,8 @@ class Scopes extends \yii\db\ActiveRecord
             'slug' => 'Slug',
             'description' => 'Description',
             'level' => 'Level',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'remove' => 'Remove',
         ];
     }

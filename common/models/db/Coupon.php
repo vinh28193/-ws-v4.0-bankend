@@ -33,8 +33,8 @@ use Yii;
  * @property string $used_first_time
  * @property string $used_last_time
  * @property int $can_use_instalment
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $remove
  *
  * @property User $createdBy
@@ -56,7 +56,7 @@ class Coupon extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'created_by', 'start_time', 'end_time', 'limit_customer_count_use', 'limit_count_use', 'count_use', 'used_first_time', 'used_last_time', 'can_use_instalment', 'created_time', 'updated_time', 'remove'], 'integer'],
+            [['store_id', 'created_by', 'start_time', 'end_time', 'limit_customer_count_use', 'limit_count_use', 'count_use', 'used_first_time', 'used_last_time', 'can_use_instalment', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['amount', 'limit_amount_use', 'limit_amount_use_order', 'total_amount_used'], 'number'],
             [['name', 'code', 'message', 'type_coupon', 'type_amount', 'percent_for', 'for_email', 'for_portal', 'for_category', 'for_min_order_amount', 'for_max_order_amount'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
@@ -96,8 +96,8 @@ class Coupon extends \yii\db\ActiveRecord
             'used_first_time' => 'Used First Time',
             'used_last_time' => 'Used Last Time',
             'can_use_instalment' => 'Can Use Instalment',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'remove' => 'Remove',
         ];
     }

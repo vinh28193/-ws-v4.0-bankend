@@ -13,8 +13,8 @@ use Yii;
  * @property string $name_local
  * @property string $name_alias
  * @property int $display_order
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $remove
  *
  * @property Address[] $addresses
@@ -40,7 +40,7 @@ class SystemStateProvince extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['country_id', 'display_order', 'created_time', 'updated_time', 'remove'], 'integer'],
+            [['country_id', 'display_order', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['name', 'name_local', 'name_alias'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['country_id' => 'id']],
         ];
@@ -58,8 +58,8 @@ class SystemStateProvince extends \yii\db\ActiveRecord
             'name_local' => 'Name Local',
             'name_alias' => 'Name Alias',
             'display_order' => 'Display Order',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'remove' => 'Remove',
         ];
     }

@@ -22,8 +22,8 @@ use Yii;
  * @property string $courier_logo logo hãng vận chuyển
  * @property string $courier_estimate_time thời gian ước tính của hãng vận chuyển
  * @property int $shipment_id
- * @property string $created_time thời gian tạo
- * @property string $updated_time thời gian cập nhật
+ * @property string $created_at thời gian tạo
+ * @property string $updated_at thời gian cập nhật
  *
  * @property Customer $customer
  * @property Shipment $shipment
@@ -45,7 +45,7 @@ class ShipmentReturned extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['shipment_code', 'warehouse_send_id', 'customer_id', 'total_quantity', 'courier_code', 'shipment_id', 'created_time', 'updated_time'], 'integer'],
+            [['shipment_code', 'warehouse_send_id', 'customer_id', 'total_quantity', 'courier_code', 'shipment_id', 'created_at', 'updated_at'], 'integer'],
             [['warehouse_tags', 'courier_logo', 'courier_estimate_time'], 'string'],
             [['total_weight', 'total_shipping_fee', 'total_price', 'total_cod'], 'number'],
             [['shipment_status'], 'string', 'max' => 255],
@@ -76,8 +76,8 @@ class ShipmentReturned extends \yii\db\ActiveRecord
             'courier_logo' => 'Courier Logo',
             'courier_estimate_time' => 'Courier Estimate Time',
             'shipment_id' => 'Shipment ID',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
         ];
     }
 
