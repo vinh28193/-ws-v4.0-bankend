@@ -73,7 +73,7 @@ class OrderFeeBehavior extends \yii\base\Behavior
                 }
                 $record = [
                     $this->OrderFeeReferenceAttribute => $this->owner->primaryKey,
-                    'store_additional_fee_id' => $storeAdditionFee->id
+                    'type_fee' => $storeAdditionFee->name
                 ];
 
                 /** @var $model OrderFee */
