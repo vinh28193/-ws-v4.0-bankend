@@ -6,7 +6,7 @@ use old;
 use tests\fixtures\PostFixture;
 use yii\helpers\Url;
 
-class PostsCest
+class PostsTestCest
 {
     function _before(old $I)
     {

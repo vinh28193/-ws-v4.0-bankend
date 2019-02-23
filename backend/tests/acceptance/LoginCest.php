@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Url as Url;
 
-class LoginCest
+class LoginTestCest
 {
     public function ensureThatLoginWorks(old $I)
     {

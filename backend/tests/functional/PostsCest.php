@@ -7,7 +7,7 @@ use backend\tests\FunctionalTester;
 use tests\fixtures\PostFixture;
 use yii\helpers\Url;
 
-class PostsCest
+class PostsFuntionCest
 {
     function _before(FunctionalTester $I)
     {

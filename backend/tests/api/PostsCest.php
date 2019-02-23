@@ -6,7 +6,7 @@ use ApiTester;
 use tests\fixtures\PostFixture;
 use yii\helpers\Url;
 
-class PostsCest
+class PostsApiCest
 {
     function _before(ApiTester $I)
     {

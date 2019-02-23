@@ -2,7 +2,7 @@
 
 use yii\helpers\Url as Url;
 
-class ContactCest
+class ContactTestCest
 {
     public function _before(\old $I)
     {
