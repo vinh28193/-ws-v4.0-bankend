@@ -1,1 +1,5 @@
 _generated
+
+# Auto gen
+backend/tests/_support/AcceptanceTester.php
+backend/tests/_support/ApiTester.php

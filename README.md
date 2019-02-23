@@ -65,7 +65,7 @@ console
     migrations/          contains database migrations
     models/              contains console-specific model classes
     runtime/             contains files generated during runtime
-backend
+api
     assets/              contains application assets such as JavaScript and CSS
     config/              contains backend configurations
     controllers/         contains Web controller classes
@@ -74,7 +74,7 @@ backend
     tests/               contains tests for backend application    
     views/               contains view files for the Web application
     web/                 contains the entry script and Web resources
-frontend
+backend
     assets/              contains application assets such as JavaScript and CSS
     config/              contains frontend configurations
     controllers/         contains Web controller classes
@@ -367,16 +367,16 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   
   
   ###-------Run------
-    php frontend/tests/bin/yii serve --port=8980
+    php backend/tests/bin/yii serve --port=8980
 
-    >php frontend/tests/bin/yii serve --port=8980
+    >php backend/tests/bin/yii serve --port=8980
     Server started on http://localhost:8980/
     Document root is "C:\xampp\htdocs\weshop-v4.0-api\frontend/web"
     Quit the server with CTRL-C or COMMAND-C.
     
     
   ####---------------
-  php frontend/codecept.phar run
+  php backend/codecept.phar run
   
   
   
