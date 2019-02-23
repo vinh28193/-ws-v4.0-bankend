@@ -42,3 +42,6 @@ phpunit.phar
 
 # bowerrc
 .bowerrc
+
+#codecept.phar
+backend/codecept.phar
