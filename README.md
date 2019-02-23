@@ -375,3 +375,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   ####---------------
   php frontend/codecept.phar run
   
+  
+  
+  ### ----------Modul Card test-----------
+  http://weshop-v4.front-end.local.vn/cart/index

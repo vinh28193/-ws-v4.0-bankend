@@ -1,4 +1,10 @@
 <?php
+use frontend\cart\storage\SessionStorage;
+Yii::$container->setSingleton('frontend\cart\ShoppingCart');
+Yii::$container->set('frontend\cart\storage\StorageInterface', function() {
+    return new SessionStorage(Yii::$app->session, 'primary-cart');
+});
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
