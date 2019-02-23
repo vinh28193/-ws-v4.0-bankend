@@ -37,7 +37,8 @@ return [
             ],
         ],
         'storeManager' => [
-            'class' => common\components\consoles\StoreManager::className()
+            'class' => common\components\consoles\StoreManager::className(),
+            'defaultDomain' => 'weshop-4.0.backend.vn'
         ]
     ],
     'params' => $params,

@@ -15,11 +15,11 @@ use Yii;
 use yii\db\ActiveRecord;
 
 /**
- * Class OrderFeeBehavior
+ * Class AdditionalFeeBehavior
  * @package common\behaviors
  */
 
-class OrderFeeBehavior extends \yii\base\Behavior
+class AdditionalFeeBehavior extends \yii\base\Behavior
 {
     /**
      * @var ActiveRecord
@@ -60,10 +60,15 @@ class OrderFeeBehavior extends \yii\base\Behavior
         $storeAdditionFees = $this->owner->getStoreAdditionalFee();
         if ($this->owner instanceof AdditionalFeeInterface) {
 
-            $attributes = $event->name === ActiveRecord::EVENT_AFTER_UPDATE ? $event->changedAttributes : $this->owner->getOrderFees();
+            $attributes = $this->owner->getAdditionalFees();
             Yii::info(array_keys($attributes),'changedAttributes');
-            foreach ($attributes as $name => $value) {
-                $value = $value == null ? 0 : $value;
+            foreach ($attributes as $name => $arrayValue) {
+                $totalAmount = 0;
+                $totalLocalAmount = 0;
+                foreach ($arrayValue as $value){
+                    $totalAmount += $value['amount'];
+                    $totalLocalAmount += $value['local_amount'];
+                }
                 if (($storeAdditionFee = $storeAdditionFees[$name]) === null || !$storeAdditionFee instanceof StoreAdditionalFee) {
                     Yii::warning("cannot " . ($event->name === ActiveRecord::EVENT_BEFORE_UPDATE ? "update" : "insert") . " '$name' cause not exist on StoreOrderFee config", __METHOD__);
                     continue;
@@ -79,19 +84,18 @@ class OrderFeeBehavior extends \yii\base\Behavior
                 /** @var $model OrderFee */
                 if ($event->name === ActiveRecord::EVENT_AFTER_UPDATE) {
                     $valueNew = $this->owner->getAttribute($name); // new value
-                    Yii::info("action will be update $name from $value to $valueNew ",__METHOD__);
                     $model = OrderFee::findOne($record);
                     $value = $valueNew;
                 }
                 if (($event->name === ActiveRecord::EVENT_AFTER_UPDATE && isset($model) && $model === null) || $event->name === ActiveRecord::EVENT_AFTER_INSERT) {
                     $model = new OrderFee($record);
                 }
-                $model->amount = $value;
-                $model->amount_local = $this->owner->getExchangeRate() * $value;
+                $model->amount = $totalAmount ;
+                $model->amount_local = $totalLocalAmount;
                 if ($model->isNewRecord && $this->owner->hasAttribute($this->originCurrencyReferenceAttribute)) {
                     $model->currency = $this->owner->{$this->originCurrencyReferenceAttribute};
                 }
-                //$model->detachBehavior('orderFee');
+                $model->detachBehavior('orderFee');
                 $model->save(false);
             }
 
@@ -143,25 +147,34 @@ class OrderFeeBehavior extends \yii\base\Behavior
 
         $totalOriginFee = 0;
         $totalLocalFee = 0;
-        $allOrderFees = OrderFee::findAll([$this->OrderFeeReferenceAttribute => $this->owner instanceof OrderFee ? $this->owner->{$this->OrderFeeReferenceAttribute} : $this->owner->getPrimaryKey()]);
-        foreach ($allOrderFees as $additionFee){
-            /** @var $additionFee OrderFee*/
-            $storeAdditionFee = array_filter($this->owner->getStoreOrderFee(), function ($e) use ($additionFee){
-                /** @var $e StoreOrderFee*/
-                return $e->id === $additionFee->store_additional_fee_id;
-            });
 
-            if (empty($storeAdditionFee) || ($storeAdditionFee = array_values($storeAdditionFee)[0]) === null || !$storeAdditionFee instanceof StoreOrderFee) {
-                Yii::warning("cannot calculator  with {$additionFee->id} cause not exist on StoreOrderFee config", __METHOD__);
-                continue;
-            }
-            if(in_array($storeAdditionFee->name,['origin_price','origin_tax','origin_shipping_fee'])){
-                $totalOriginFee += $additionFee->origin_value;
-            }
-            $totalLocalFee += $additionFee->local_value;
-        }
+//        $allOrderFees = $this->owner->getAdditionalFees();
+//        foreach ($allOrderFees as $orderFee){
+//            /** @var $orderFee OrderFee*/
+//            $storeAdditionFee = array_filter($this->owner->getStoreAdditionalFee(), function ($e) use ($orderFee){
+//                /** @var $e StoreOrderFee*/
+//                return $e->id === $orderFee->type_fee;
+//            });
+//
+//            if (empty($storeAdditionFee) || ($storeAdditionFee = array_values($storeAdditionFee)[0]) === null || !$storeAdditionFee instanceof StoreOrderFee) {
+//                Yii::warning("cannot calculator  with {$orderFee->id} cause not exist on StoreOrderFee config", __METHOD__);
+//                continue;
+//            }
+//            if(in_array($storeAdditionFee->name,['origin_price','origin_tax','origin_shipping_fee'])){
+//                $totalOriginFee += $orderFee->amount_local;
+//            }
+//            $totalLocalFee += $orderFee->amount_local;
+//        }
 
         Yii::info([$totalOriginFee,$totalLocalFee], 'finalCalculator');
+    }
+
+    public function insertOrderFee($event){
+        if (!$this->owner instanceof AdditionalFeeInterface) {
+            return;
+        }
+        $attributes = $this->owner->getAdditionalFees();
+
     }
 
 }

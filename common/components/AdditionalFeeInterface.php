@@ -60,14 +60,14 @@ interface AdditionalFeeInterface
 
     /**
      * @param null $names
-     * @param array $except
      * @return mixed
      */
-    public function getAdditionalFees($names = null, $except = []);
+    public function getAdditionalFees($names = null);
 
     /**
      * @param $values
+     * @param bool $withCondition
      * @return mixed
      */
-    public function setAdditionalFees($values);
+    public function setAdditionalFees($values, $withCondition = false);
 }

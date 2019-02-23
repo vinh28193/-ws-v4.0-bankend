@@ -8,50 +8,72 @@
 
 namespace common\components;
 
+use common\models\StoreAdditionalFee;
 use Yii;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 trait AdditionalFeeTrait
 {
+
+    public $additionalFeeModel = 'common\models\OrderFee';
+    /**
+     * @var array
+     */
+    protected $_additionalFees = [];
+
     /**
      * @param null $names
-     * @param array $except
-     * @return array
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public function getAdditionalFees($names = null, $except = [])
+    public function getAdditionalFees($names = null)
     {
-        $values = [];
-        $storeAdditionalFee = array_keys($this->storeAdditionalFee);
-        if ($names === null) {
-            $names = $storeAdditionalFee;
-        }
-        if (is_string($names)) {
-            $names = [$names];
-        }
-        foreach ($names as $name) {
-            if (!in_array($name, $storeAdditionalFee)) {
-                Yii::warning("failed when get unknown additional fee '$name'");
-                continue;
+        if (empty($this->_additionalFees)) {
+            if ($names === null) {
+                $names = array_keys($this->storeAdditionalFee);;
             }
-            $values[$name] = $this->$name;
+            /** @var  $class \yii\db\ActiveRecord */
+            $class = $this->additionalFeeModel;
+            $query = new Query();
+            $query->select(['c.id', 'c.type_fee', 'c.amount', 'c.local_amount', 'c.currency', 'c.discount_amount']);
+            $query->from(['c' => $class::tableName()]);
+            $query->where(['and', ['c.order_id' => $this->id], ['in', 'c.type_fee', $names]]);
+            $additionalFees = $query->all($class::getDb());
+            $additionalFees = ArrayHelper::index($additionalFees, null, 'type_fee');
+            $this->_additionalFees = $additionalFees;
         }
-
-        foreach ($except as $name) {
-            unset($values[$name]);
-        }
-
-        return $values;
+        return $this->_additionalFees;
     }
 
+    /**
+     * @param $values
+     * @param bool $withCondition
+     */
     public function setAdditionalFees($values, $withCondition = false)
     {
         if (is_array($values)) {
             $fees = $this->storeAdditionalFee;
             foreach ($values as $name => $value) {
-                if ($this->hasProperty($name, true) && isset($fees[$name]) && ($storeAdditionalFee = $fees[$name]) !== null && $storeAdditionalFee instanceof StoreAdditionalFee) {
+                $localValue = $value;
+                if (isset($fees[$name]) && ($storeAdditionalFee = $fees[$name]) !== null && $storeAdditionalFee instanceof StoreAdditionalFee) {
                     if ($withCondition && $this instanceof AdditionalFeeInterface && $storeAdditionalFee->hasMethod('executeCondition')) {
                         $value = $storeAdditionalFee->executeCondition($value, $this);
+                        if( $storeAdditionalFee->is_convert){
+                            $localValue = $value * $this->getExchangeRate();
+                        }
                     }
-                    $this->$name = $value;
+                    $additionalFee = [
+                        'type_fee' => $name,
+                        'amount' => $value,
+                        'local_amount' => $localValue,
+                        'currency' => $storeAdditionalFee->currency,
+                        'discount_amount' => $this->hasAttribute('discount_amount') ? $this->discount_amount : 0,
+                    ];
+                    $owner = "total_{$name}_local";
+                    if($this->canSetProperty($owner)){
+                        $this->$owner = $localValue;
+                    }
+                    $this->_additionalFees[$name] = [$additionalFee];
                 } else {
                     Yii::warning("failed when set unknown additional fee '$name'");
                 }
@@ -59,13 +81,22 @@ trait AdditionalFeeTrait
         }
     }
 
-    public function getTotalAdditionFees($names = null, $except = [])
+    /**
+     * @param null $names
+     * @param bool $isLocal
+     * @return float
+     */
+    public function getTotalAdditionFees($names = null, $isLocal = true)
     {
         $totalFees = 0;
-        foreach ((array)$this->getAdditionalFees($names, $except) as $name => $value) {
-            $totalFees += $value;
+        foreach ((array)$this->getAdditionalFees($names) as $arrays) {
+            foreach ($arrays as $array){
+                $attr = $isLocal ? 'local_amount' : 'amount';
+                $value = isset($array[$attr]) ? $array[$attr] : 0;
+                $totalFees += $value;
+            }
         }
-        return $totalFees;
+        return (float)$totalFees;
 
     }
 }

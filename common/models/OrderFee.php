@@ -18,7 +18,7 @@ class OrderFee extends DbOrderFee
     {
         return array_merge(parent::behaviors(),[
             'orderFee' => [
-                'class' => \common\behaviors\OrderFeeBehavior::className()
+                'class' => \common\behaviors\AdditionalFeeBehavior::className()
             ]
         ]);
     }
