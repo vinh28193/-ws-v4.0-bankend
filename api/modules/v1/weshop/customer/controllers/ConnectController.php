@@ -102,10 +102,9 @@ class ConnectController extends BaseController
         $model = new LoginForm();
 
         $model->attributes = $this->request;
-//
 
         if ($model->validate() && $model->login()) {
-            $auth_code = Yii::$app->api->createAuthorizationCode(Yii::$app->user->identity['id']);
+            $auth_code = Yii::$app->api->createAuthorizationCode(Yii::$app->user->identity['id'],'customer');
 
             $data = [];
             $data['authorization_code'] = $auth_code->code;

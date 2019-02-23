@@ -13,7 +13,7 @@ class m190223_081430_add_column_type_authorzationCode extends Migration
     public function safeUp()
     {
         $sql="ALTER TABLE `authorization_codes` 
-ADD COLUMN `type` varchar(50) NULL DEFAULT user AFTER `user_id`";
+ADD COLUMN `type` varchar(50) NULL DEFAULT 'user' AFTER `user_id`";
         Yii::$app->db->createCommand($sql)->execute();
     }
 

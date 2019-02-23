@@ -8,8 +8,9 @@
 
 namespace common\models;
 
+use common\behaviors\OrderFeeBehavior;
 use common\components\AdditionalFeeInterface;
-use \common\models\db\Order as DbOrder;
+use common\models\db\Order as DbOrder;
 
 class Order extends DbOrder implements AdditionalFeeInterface
 {
@@ -21,7 +22,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
     {
         return array_merge(parent::behaviors(),[
             'orderFee' => [
-                'class' => \common\behaviors\OrderFeeBehavior::className()
+                'class' => OrderFeeBehavior::className()
             ]
         ]);
     }
