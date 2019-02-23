@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Url as Url;
 
-class AboutCest
+class AboutTestCest
 {
     public function ensureThatAboutWorks(old $I)
     {
