@@ -379,3 +379,8 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   
   ### ----------Modul Card test-----------
   http://weshop-v4.front-end.local.vn/cart/index
+  
+  
+  ###---------Selenium--------------------
+  cd ~/Desktop
+  $ java -jar selenium-server-standalone-3.141.59.jar
