@@ -21,7 +21,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
     {
         return array_merge(parent::behaviors(),[
             'orderFee' => [
-                'class' => \common\behaviors\OrderFeeBehavior::className()
+                'class' => \common\behaviors\AdditionalFeeBehavior::className()
             ]
         ]);
     }
@@ -30,53 +30,44 @@ class Order extends DbOrder implements AdditionalFeeInterface
      * @return \common\components\StoreManager|void
      */
     public function getStoreManager(){
-
+        return \Yii::$app->storeManager;
     }
 
-    /**
-     * @return string
-     */
-    public function getItemType(){
-            return '';
+    public function getItemType()
+    {
+        return 'test';
     }
 
-    /**
-     * @return integer
-     */
-    public function getTotalOriginPrice(){
-
+    public function getTotalOriginPrice()
+    {
+        return 12344.99;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCustomCategory(){
-
+    public function getCustomCategory()
+    {
+        $std = new \stdClass();
+        $std->interShippingB = 123;
+        return $std;
     }
 
-    /**
-     * @return integer
-     */
-    public function getShippingWeight(){
-
+    public function getIsForWholeSale()
+    {
+        return false;
     }
-    /**
-     * @return integer
-     */
-    public function getShippingQuantity(){
 
+    public function getShippingWeight()
+    {
+        return 5;
     }
-    /**
-     * @return boolean
-     */
-    public function getIsForWholeSale(){
 
+    public function getShippingQuantity()
+    {
+        return 2;
     }
-    /**
-     * @return integer
-     */
-    public function getExchangeRate(){
 
+    public function getExchangeRate()
+    {
+        return 32000;
     }
 
 }

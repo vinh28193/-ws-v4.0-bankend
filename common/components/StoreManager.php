@@ -112,7 +112,8 @@ class StoreManager extends Component
      */
     public function getId()
     {
-        return $this->getStore()->{$this->storeReferenceKey};
+        //return $this->getStore()->{$this->storeReferenceKey};
+        return $this->getStore()->id;
     }
 
     /**

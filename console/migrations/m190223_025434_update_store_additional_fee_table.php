@@ -12,20 +12,13 @@ class m190223_025434_update_store_additional_fee_table extends Migration
     public function safeUp()
     {
         $conditions = [
-            'total_final_amount_local' => 'common\components\conditions\ExchangeRateCondition',
-            'total_paid_amount_local' => 'common\components\conditions\SimpleCondition',
-            'total_refund_amount_local' => 'common\components\conditions\SimpleCondition',
-            'total_amount_local' => 'common\components\conditions\SimpleCondition',
-            'total_fee_amount_local' => 'common\components\conditions\SimpleCondition',
-            'total_counpon_amount_local' => 'common\components\conditions\SimpleCondition',
-            'total_promotion_amount_local' => 'common\components\conditions\SimpleCondition',
-            'total_price_amount_local' => 'common\components\conditions\ExchangeRateCondition',
-            'total_tax_us_amount_local' => 'common\components\conditions\OriginTaxCondition',
-            'total_shipping_us_amount_local' => 'common\components\conditions\OriginShippingFeeCondition',
-            'total_weshop_fee_amount_local' => 'common\components\conditions\StoreFeeCondition',
-            'total_intl_shipping_fee_amount_local' => 'common\components\conditions\InternationalShippingFeeCondition',
-            'total_custom_fee_amount_local' => 'common\components\conditions\CustomFeeCondition',
-            'total_delivery_fee_amount_local' => 'common\components\conditions\LocalDeliveryFeeCondition',
+            'price_amount' => 'common\components\conditions\SimpleCondition',
+            'tax_us_amount' => 'common\components\conditions\OriginTaxCondition',
+            'shipping_us_amount' => 'common\components\conditions\OriginShippingFeeCondition',
+            'weshop_fee_amount' => 'common\components\conditions\StoreFeeCondition',
+            'intl_shipping_fee_amount' => 'common\components\conditions\InternationalShippingFeeCondition',
+            'custom_fee_amount' => 'common\components\conditions\CustomFeeCondition',
+            'delivery_fee_amount' => 'common\components\conditions\LocalDeliveryFeeCondition',
 
         ];
         foreach ($this->getStoreAdditionalFee() as $name => $storeAdditionalFee) {
