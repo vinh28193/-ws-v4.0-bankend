@@ -2,36 +2,31 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\base\InvalidParamException;
+use yii\web\BadRequestHttpException;
+use yii\web\Controller;
+use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
-use common\models\AuthorizationCodes;
-use common\models\AccessTokens;
-
+use backend\models\PasswordResetRequestForm;
+use backend\models\ResetPasswordForm;
 use backend\models\SignupForm;
-use backend\behaviours\Verbcheck;
-use backend\behaviours\Apiauth;
+use backend\models\ContactForm;
 
 /**
  * Site controller
  */
-class SiteController extends RestController
+class SiteController extends Controller
 {
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
-
-        $behaviors = parent::behaviors();
-
-        return $behaviors + [
-            'apiauth' => [
-                'class' => Apiauth::className(),
-                'exclude' => ['authorize', 'register', 'accesstoken','index'],
-            ],
+        return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'signup','index'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -39,30 +34,20 @@ class SiteController extends RestController
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout', 'me'],
+                        'actions' => ['logout','index'],
                         'allow' => true,
                         'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['authorize', 'register', 'accesstoken'],
-                        'allow' => true,
-                        'roles' => ['*'],
                     ],
                 ],
             ],
             'verbs' => [
-                'class' => Verbcheck::className(),
+                'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['GET'],
-                    'authorize' => ['POST'],
-                    'register' => ['POST'],
-                    'accesstoken' => ['POST'],
-                    'me' => ['GET'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
     }
-
 
     /**
      * @inheritdoc
@@ -73,114 +58,166 @@ class SiteController extends RestController
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
         ];
     }
 
     /**
      * Displays homepage.
      *
-     * @return string
+     * @return mixed
      */
     public function actionIndex()
     {
-        Yii::$app->api->sendSuccessResponse(['Yii2 RESTful API with OAuth2']);
-        //  return $this->render('index');
-    }
-
-    public function actionRegister()
-    {
-
-        $model = new SignupForm();
-        $model->attributes = $this->request;
-
-        if ($user = $model->signup()) {
-
-            $data=$user->attributes;
-            unset($data['auth_key']);
-            unset($data['password_hash']);
-            unset($data['password_reset_token']);
-
-            Yii::$app->api->sendSuccessResponse($data);
-
+        if(YII_ENV=='dev')
+        {
+            $api_host=Yii::$app->params['dev_api_url'];
+        }
+        else if(YII_ENV=='prod')
+        {
+            $api_host=Yii::$app->params['prod_api_url'];
         }
 
+
+        return $this->render('apidoc',['api_host'=>$api_host]);
     }
 
-
-    public function actionMe()
+    /**
+     * Logs in a user.
+     *
+     * @return mixed
+     */
+    public function actionLogin()
     {
-        $data = Yii::$app->user->identity;
-        $data = $data->attributes;
-        unset($data['auth_key']);
-        unset($data['password_hash']);
-        unset($data['password_reset_token']);
-
-        Yii::$app->api->sendSuccessResponse($data);
-    }
-
-    public function actionAccesstoken()
-    {
-
-        if (!isset($this->request["authorization_code"])) {
-            Yii::$app->api->sendFailedResponse("Authorization code missing");
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
         }
 
-        $authorization_code = $this->request["authorization_code"];
-
-        $auth_code = AuthorizationCodes::isValid($authorization_code);
-        if (!$auth_code) {
-            Yii::$app->api->sendFailedResponse("Invalid Authorization Code");
-        }
-
-        $accesstoken = Yii::$app->api->createAccesstoken($authorization_code);
-
-        $data = [];
-        $data['access_token'] = $accesstoken->token;
-        $data['expires_at'] = $accesstoken->expires_at;
-        Yii::$app->api->sendSuccessResponse($data);
-
-    }
-
-    public function actionAuthorize()
-    {
         $model = new LoginForm();
-
-        $model->attributes = $this->request;
-
-
-        if ($model->validate() && $model->login()) {
-
-            $auth_code = Yii::$app->api->createAuthorizationCode(Yii::$app->user->identity['id']);
-
-            $data = [];
-            $data['authorization_code'] = $auth_code->code;
-            $data['expires_at'] = $auth_code->expires_at;
-
-            Yii::$app->api->sendSuccessResponse($data);
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->goBack();
         } else {
-            Yii::$app->api->sendFailedResponse($model->errors);
+            return $this->render('login', [
+                'model' => $model,
+            ]);
         }
     }
 
+    /**
+     * Logs out the current user.
+     *
+     * @return mixed
+     */
     public function actionLogout()
     {
-        $headers = Yii::$app->getRequest()->getHeaders();
-        $access_token = $headers->get('x-access-token');
+        Yii::$app->user->logout();
 
-        if(!$access_token){
-            $access_token = Yii::$app->getRequest()->getQueryParam('access-token');
-        }
+        return $this->goHome();
+    }
 
-        $model = AccessTokens::findOne(['token' => $access_token]);
+    /**
+     * Displays contact page.
+     *
+     * @return mixed
+     */
+    public function actionContact()
+    {
+        $model = new ContactForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
+                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
+            } else {
+                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
+            }
 
-        if ($model->delete()) {
-
-            Yii::$app->api->sendSuccessResponse(["Logged Out Successfully"]);
-
+            return $this->refresh();
         } else {
-            Yii::$app->api->sendFailedResponse("Invalid Request");
+            return $this->render('contact', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Displays about page.
+     *
+     * @return mixed
+     */
+    public function actionAbout()
+    {
+        return $this->render('about');
+    }
+
+    /**
+     * Signs user up.
+     *
+     * @return mixed
+     */
+    public function actionSignup()
+    {
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
         }
 
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
 
+    /**
+     * Requests password reset.
+     *
+     * @return mixed
+     */
+    public function actionRequestPasswordReset()
+    {
+        $model = new PasswordResetRequestForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->sendEmail()) {
+                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+
+                return $this->goHome();
+            } else {
+                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
+            }
+        }
+
+        return $this->render('requestPasswordResetToken', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Resets password.
+     *
+     * @param string $token
+     * @return mixed
+     * @throws BadRequestHttpException
+     */
+    public function actionResetPassword($token)
+    {
+        try {
+            $model = new ResetPasswordForm($token);
+        } catch (InvalidParamException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+            Yii::$app->session->setFlash('success', 'New password saved.');
+
+            return $this->goHome();
+        }
+
+        return $this->render('resetPassword', [
+            'model' => $model,
+        ]);
     }
 }

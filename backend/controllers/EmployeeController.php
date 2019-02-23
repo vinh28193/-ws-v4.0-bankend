@@ -2,124 +2,140 @@
 
 namespace backend\controllers;
 
-
-use yii\filters\AccessControl;
-use app\models\Employee;
-use backend\behaviours\Verbcheck;
-use backend\behaviours\Apiauth;
-
 use Yii;
+use app\models\Employee;
+use app\models\EmployeeSearch;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
-
-
-class EmployeeController extends RestController
+/**
+ * EmployeeController implements the CRUD actions for Employee model.
+ */
+class EmployeeController extends Controller
 {
-
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
-
-        $behaviors = parent::behaviors();
-
-        return $behaviors + [
-
-           'apiauth' => [
-               'class' => Apiauth::className(),
-               'exclude' => [],
-               'callback'=>[]
-           ],
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index'],
+                'only' => [],
                 'rules' => [
                     [
                         'actions' => [],
-                        'allow' => true,
+                        'allow' => false,
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => [
-                            'index'
-                        ],
+                        'actions' => ['create', 'update', 'index', 'view', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                    [
-                        'actions' => [],
-                        'allow' => true,
-                        'roles' => ['*'],
-                    ],
                 ],
             ],
-            'verbs' => [
-                'class' => Verbcheck::className(),
-                'actions' => [
-                    'index' => ['GET', 'POST'],
-                    'create' => ['POST'],
-                    'update' => ['PUT'],
-                    'view' => ['GET'],
-                    'delete' => ['DELETE']
-                ],
-            ],
-
         ];
     }
 
+    /**
+     * Lists all Employee models.
+     * @return mixed
+     */
     public function actionIndex()
     {
-        $params = $this->request['search'];
-        $response = Employee::search($params);
-        Yii::$app->api->sendSuccessResponse($response['data'], $response['info']);
+        $searchModel = new EmployeeSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
-    public function actionCreate()
-    {
-
-        $model = new Employee;
-        $model->attributes = $this->request;
-
-        if ($model->save()) {
-            Yii::$app->api->sendSuccessResponse($model->attributes);
-        } else {
-            Yii::$app->api->sendFailedResponse($model->errors);
-        }
-
-    }
-
-    public function actionUpdate($id)
-    {
-
-        $model = $this->findModel($id);
-        $model->attributes = $this->request;
-
-        if ($model->save()) {
-            Yii::$app->api->sendSuccessResponse($model->attributes);
-        } else {
-            Yii::$app->api->sendFailedResponse($model->errors);
-        }
-
-    }
-
+    /**
+     * Displays a single Employee model.
+     * @param integer $id
+     * @return mixed
+     */
     public function actionView($id)
     {
-
-        $model = $this->findModel($id);
-        Yii::$app->api->sendSuccessResponse($model->attributes);
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
+    /**
+     * Creates a new Employee model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new Employee();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates an existing Employee model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Deletes an existing Employee model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
     public function actionDelete($id)
     {
+        $this->findModel($id)->delete();
 
-        $model = $this->findModel($id);
-        $model->delete();
-        Yii::$app->api->sendSuccessResponse($model->attributes);
+        return $this->redirect(['index']);
     }
 
+    /**
+     * Finds the Employee model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Employee the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
     protected function findModel($id)
     {
         if (($model = Employee::findOne($id)) !== null) {
             return $model;
-        } else {
-            Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
