@@ -32,11 +32,14 @@ Step7: Run db migration
 
 Step8:
             point API end point URL to backend
+             /var/www/weshop-v4.0-api/api/web
+
+
+            point backend monitor all api  URL to backend
              /var/www/weshop-v4.0-api/backend/web
-
-
-            point frontend URL to frontend
-             /var/www/weshop-v4.0-api/frontend/web
+             
+           point User backend    URL to userbackend
+             /var/www/weshop-v4.0-api/userbackend/web  
 ```
 
 Try to run a frontend application by the following console command:
