@@ -1,4 +1,10 @@
 <?php
+use backend\cart\storage\SessionStorage;
+Yii::$container->setSingleton('backend\cart\ShoppingCart');
+Yii::$container->set('backend\cart\storage\StorageInterface', function() {
+    return new SessionStorage(Yii::$app->session, 'primary-cart');
+});
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -7,24 +13,14 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-backend',
+    'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'controllerNamespace' => 'backend\controllers',
+    'defaultRoute' => 'site/index',
     'components' => [
-        /* 'request' => [
-             'csrfParam' => '_csrf-backend',
-         ], */
         'request' => [
-            'parsers' => [
-                'application/json' => 'yii\web\JsonParser',
-            ]
-        ],
-        'response' => [
-            'format' => yii\web\Response::FORMAT_JSON,
-            'charset' => 'UTF-8',
-            // ...
+            'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -33,7 +29,7 @@ return [
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-backend',
+            'name' => 'advanced-frontend',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -52,26 +48,6 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '1/register'=>'site/register',
-                '1/authorize'=>'site/authorize',
-                '1/accesstoken'=>'site/accesstoken',
-                '1/me'=>'site/me',
-                '1/logout'=>'site/logout',
-
-               ### employees
-                '1/employees'=>'employee/index',
-                '1/employees/view/<id>'=>'employee/view',
-                '1/employees/create'=>'employee/create',
-                '1/employees/update/<id>'=>'employee/update',
-                '1/employees/delete/<id>'=>'employee/delete',
-
-                ### Post
-                '1/post'=>'post/index',
-                '1/post/view/<id>'=>'post/view',
-                '1/post/create'=>'post/create',
-                '1/post/update/<id>'=>'post/update',
-                '1/post/delete/<id>'=>'post/delete',
-
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
@@ -79,32 +55,10 @@ return [
                 '<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '<module>/<controller>/<action>',
                 // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
 
-            ],
-
-        ],
-
-
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'enableStrictParsing' => true,
-            'showScriptName' => false,
-            'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'employee'],
+                /***Post API GET NOT POST , PUT , UPDATE ***/
+                'class' => 'yii\rest\UrlRule', 'controller' => 'api/posts'
             ],
         ],
-        */
-
-
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
-
     ],
     'params' => $params,
 ];

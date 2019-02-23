@@ -3,7 +3,6 @@ namespace backend\models;
 
 use yii\base\Model;
 use common\models\User;
-use Yii;
 
 /**
  * Signup form
@@ -21,7 +20,6 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            [['username','password','email'],'required'],
             ['username', 'trim'],
             ['username', 'required'],
             ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
@@ -45,11 +43,8 @@ class SignupForm extends Model
      */
     public function signup()
     {
-
         if (!$this->validate()) {
-
-            Yii::$app->api->sendFailedResponse($this->errors);
-            //return null;
+            return null;
         }
         
         $user = new User();
