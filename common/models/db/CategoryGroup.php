@@ -14,8 +14,8 @@ use Yii;
  * @property int $parent_id
  * @property string $rule
  * @property string $rule_description
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $active
  * @property int $remove
  */
@@ -35,7 +35,7 @@ class CategoryGroup extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'parent_id', 'created_time', 'updated_time', 'active', 'remove'], 'integer'],
+            [['store_id', 'parent_id', 'created_at', 'updated_at', 'active', 'remove'], 'integer'],
             [['rule', 'rule_description'], 'string'],
             [['name', 'description'], 'string', 'max' => 255],
         ];
@@ -54,8 +54,8 @@ class CategoryGroup extends \yii\db\ActiveRecord
             'parent_id' => 'Parent ID',
             'rule' => 'Rule',
             'rule_description' => 'Rule Description',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'active' => 'Active',
             'remove' => 'Remove',
         ];

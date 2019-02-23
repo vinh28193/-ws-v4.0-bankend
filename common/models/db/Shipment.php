@@ -37,8 +37,8 @@ use Yii;
  * @property string $courier_logo logo hãng vận chuyển
  * @property string $courier_estimate_time thời gian ước tính của hãng vận chuyển
  * @property string $list_old_shipment_code danh sách mã shipment cũ đã bị cancel
- * @property string $created_time thời gian tạo
- * @property string $updated_time thời gian cập nhật
+ * @property string $created_at thời gian tạo
+ * @property string $updated_at thời gian cập nhật
  *
  * @property Customer $customer
  * @property Address $receiverAddress
@@ -64,7 +64,7 @@ class Shipment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['shipment_code', 'warehouse_send_id', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'total_quantity', 'is_hold', 'courier_code', 'created_time', 'updated_time'], 'integer'],
+            [['shipment_code', 'warehouse_send_id', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'total_quantity', 'is_hold', 'courier_code', 'created_at', 'updated_at'], 'integer'],
             [['warehouse_tags', 'note_by_customer', 'note', 'courier_logo', 'courier_estimate_time', 'list_old_shipment_code'], 'string'],
             [['total_weight', 'total_shipping_fee', 'total_price', 'total_cod'], 'number'],
             [['receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'shipment_status'], 'string', 'max' => 255],
@@ -113,8 +113,8 @@ class Shipment extends \yii\db\ActiveRecord
             'courier_logo' => 'Courier Logo',
             'courier_estimate_time' => 'Courier Estimate Time',
             'list_old_shipment_code' => 'List Old Shipment Code',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
         ];
     }
 

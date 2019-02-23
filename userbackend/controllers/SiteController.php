@@ -7,7 +7,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use frontend\models\LoginForm;
 use userbackend\models\PasswordResetRequestForm;
 use userbackend\models\ResetPasswordForm;
 use userbackend\models\SignupForm;

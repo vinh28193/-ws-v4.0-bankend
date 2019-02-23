@@ -26,8 +26,8 @@ use Yii;
  * @property string $lost
  * @property string $current_status
  * @property int $shipment_id
- * @property string $created_time thời gian tạo
- * @property string $updated_time thời gian cập nhật
+ * @property string $created_at thời gian tạo
+ * @property string $updated_at thời gian cập nhật
  *
  * @property Order $order
  * @property Package $package
@@ -48,7 +48,7 @@ class PackageItem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['package_id', 'package_code', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'current_status', 'shipment_id', 'created_time', 'updated_time'], 'integer'],
+            [['package_id', 'package_code', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'current_status', 'shipment_id', 'created_at', 'updated_at'], 'integer'],
             [['weight', 'change_weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
             [['box_me_warehouse_tag', 'sku'], 'string', 'max' => 255],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
@@ -81,8 +81,8 @@ class PackageItem extends \yii\db\ActiveRecord
             'lost' => 'Lost',
             'current_status' => 'Current Status',
             'shipment_id' => 'Shipment ID',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
         ];
     }
 

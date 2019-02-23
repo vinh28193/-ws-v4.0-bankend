@@ -119,14 +119,14 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
                 http://weshop-v4.back-end.local.vn/1/authorize \
               -H 'content-type: application/json' \
               -d '{
-              "username":"ws-global",
-              "password":"ws@2019"
+              "username":"weshop2019",
+              "password":"weshop@123"
             }'
       ---> Reponse
       {
           "status": 1,
           "data": {
-              "authorization_code": "27b721d2e7a3417466728af96df3597d",
+              "authorization_code": "6211b94a7800ad46ec5758b6ae882cb8",
               "expires_at": 1550136755
           }
       }      
@@ -137,7 +137,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
           http://weshop-v4.back-end.local.vn/1/accesstoken \
       -H 'content-type: application/json' \
       -d '{
-            "authorization_code": "27b721d2e7a3417466728af96df3597d"
+            "authorization_code": "6211b94a7800ad46ec5758b6ae882cb8"
          }' 
          
        ---> Reponse
@@ -153,7 +153,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
 ###------Get me----------
     
       curl -X GET \
-     -H "X-Access-Token: 5c1cab2256d8dd76490b3497afa54795" \
+     -H "X-Access-Token: 6b26ec4b8c3e52aa3bdbbd1d3d0a1224" \
      -G  'http://weshop-v4.back-end.local.vn/1/me'   
      
      ---> Reponse

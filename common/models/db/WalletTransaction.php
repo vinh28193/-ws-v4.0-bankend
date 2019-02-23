@@ -9,8 +9,8 @@ use Yii;
  *
  * @property int $id
  * @property string $transaction_code mã giao dịch của weshop
- * @property string $created_time thời gian giao dịch
- * @property string $updated_time thời gian cập nhật giao dịch
+ * @property string $created_at thời gian giao dịch
+ * @property string $updated_at thời gian cập nhật giao dịch
  * @property string $transaction_status trạng thái giao dịch
  * @property string $transaction_type Loại giao dịch: top up , payment, withdraw
  * @property int $customer_id
@@ -45,7 +45,7 @@ class WalletTransaction extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_time', 'updated_time', 'customer_id', 'order_id', 'third_party_transaction_time'], 'integer'],
+            [['created_at', 'updated_at', 'customer_id', 'order_id', 'third_party_transaction_time'], 'integer'],
             [['transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
             [['transaction_description', 'note', 'third_party_transaction_link'], 'string'],
             [['transaction_code', 'transaction_status', 'transaction_type', 'transaction_reference_code', 'third_party_transaction_code'], 'string', 'max' => 255],
@@ -63,8 +63,8 @@ class WalletTransaction extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'transaction_code' => 'Transaction Code',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'transaction_status' => 'Transaction Status',
             'transaction_type' => 'Transaction Type',
             'customer_id' => 'Customer ID',

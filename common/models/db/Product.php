@@ -27,8 +27,8 @@ use Yii;
  * @property int $variation_id mã thuộc tính sản phẩm
  * @property string $note_by_customer note của khách
  * @property string $total_weight_temporary cân nặng tạm tính
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $remove
  * @property int $currency_id
  * @property string $currency_symbol
@@ -56,7 +56,7 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_time', 'updated_time', 'remove', 'currency_id'], 'integer'],
+            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'currency_id'], 'integer'],
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'total_weight_temporary'], 'string'],
             [['price_amount', 'price_amount_local', 'total_price_amount_local', 'exchange_rate'], 'number'],
             [['portal', 'sku', 'parent_sku', 'currency_symbol'], 'string', 'max' => 255],
@@ -94,8 +94,8 @@ class Product extends \yii\db\ActiveRecord
             'variation_id' => 'Variation ID',
             'note_by_customer' => 'Note By Customer',
             'total_weight_temporary' => 'Total Weight Temporary',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'remove' => 'Remove',
             'currency_id' => 'Currency ID',
             'currency_symbol' => 'Currency Symbol',

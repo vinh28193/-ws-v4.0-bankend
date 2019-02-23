@@ -24,8 +24,8 @@ use Yii;
  * @property int $item_maximum_per_category
  * @property string $weight_maximum_per_category
  * @property int $sort_order
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $active
  * @property int $remove
  *
@@ -48,7 +48,7 @@ class CategoryCustomPolicy extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['limit', 'is_special', 'store_id', 'item_maximum_per_category', 'sort_order', 'created_time', 'updated_time', 'active', 'remove'], 'integer'],
+            [['limit', 'is_special', 'store_id', 'item_maximum_per_category', 'sort_order', 'created_at', 'updated_at', 'active', 'remove'], 'integer'],
             [['min_price', 'max_price', 'custom_rate_fee', 'use_percentage', 'custom_fix_fee_per_unit', 'custom_fix_fee_per_weight', 'custom_fix_percent_per_weight', 'weight_maximum_per_category'], 'number'],
             [['name', 'description', 'code'], 'string', 'max' => 255],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
@@ -78,8 +78,8 @@ class CategoryCustomPolicy extends \yii\db\ActiveRecord
             'item_maximum_per_category' => 'Item Maximum Per Category',
             'weight_maximum_per_category' => 'Weight Maximum Per Category',
             'sort_order' => 'Sort Order',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'active' => 'Active',
             'remove' => 'Remove',
         ];

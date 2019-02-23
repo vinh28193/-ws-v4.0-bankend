@@ -19,8 +19,8 @@ use Yii;
  * @property string $custom_fee
  * @property int $level
  * @property string $path
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $active
  * @property int $remove
  *
@@ -42,7 +42,7 @@ class Category extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['category_group_id', 'level', 'created_time', 'updated_time', 'active', 'remove'], 'integer'],
+            [['category_group_id', 'level', 'created_at', 'updated_at', 'active', 'remove'], 'integer'],
             [['weight', 'inter_shipping_b', 'custom_fee'], 'number'],
             [['alias', 'site', 'origin_name', 'parent_id', 'description', 'path'], 'string', 'max' => 255],
         ];
@@ -66,8 +66,8 @@ class Category extends \yii\db\ActiveRecord
             'custom_fee' => 'Custom Fee',
             'level' => 'Level',
             'path' => 'Path',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'active' => 'Active',
             'remove' => 'Remove',
         ];

@@ -22,8 +22,8 @@ use Yii;
  * @property string $email
  * @property string $contact_person
  * @property int $ref_warehouse_id
- * @property string $created_time thời gian tạo
- * @property string $updated_time thời gian cập nhật
+ * @property string $created_at thời gian tạo
+ * @property string $updated_at thời gian cập nhật
  *
  * @property Package[] $packages
  * @property Shipment[] $shipments
@@ -49,7 +49,7 @@ class Warehouse extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['district_id', 'province_id', 'country_id', 'store_id', 'type', 'ref_warehouse_id', 'created_time', 'updated_time'], 'integer'],
+            [['district_id', 'province_id', 'country_id', 'store_id', 'type', 'ref_warehouse_id', 'created_at', 'updated_at'], 'integer'],
             [['name', 'description', 'address', 'warehouse_group', 'post_code', 'telephone', 'email', 'contact_person'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['country_id' => 'id']],
             [['district_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemDistrict::className(), 'targetAttribute' => ['district_id' => 'id']],
@@ -79,8 +79,8 @@ class Warehouse extends \yii\db\ActiveRecord
             'email' => 'Email',
             'contact_person' => 'Contact Person',
             'ref_warehouse_id' => 'Ref Warehouse ID',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
         ];
     }
 

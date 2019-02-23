@@ -12,8 +12,8 @@ use Yii;
  * @property string $last_name
  * @property string $email
  * @property string $phone
- * @property string $user_name
- * @property string $password
+ * @property string $username
+ * @property string $password_hard
  * @property int $gender
  * @property string $birthday
  * @property string $avatar
@@ -43,8 +43,8 @@ use Yii;
  * @property string $verify_code_expired_at
  * @property int $verify_code_count
  * @property string $verify_code_type
- * @property string $created_time
- * @property string $updated_time
+ * @property string $created_at
+ * @property string $updated_at
  * @property int $active
  * @property int $remove
  *
@@ -71,11 +71,11 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['gender', 'email_verified', 'phone_verified', 'type_customer', 'store_id', 'active_shipping', 'total_xu_start_date', 'total_xu_expired_date', 'usable_xu_start_date', 'usable_xu_expired_date', 'last_use_time', 'last_revenue_time', 'verify_code_expired_at', 'verify_code_count', 'created_time', 'updated_time', 'active', 'remove'], 'integer'],
+            [['gender', 'email_verified', 'phone_verified', 'type_customer', 'store_id', 'active_shipping', 'total_xu_start_date', 'total_xu_expired_date', 'usable_xu_start_date', 'usable_xu_expired_date', 'last_use_time', 'last_revenue_time', 'verify_code_expired_at', 'verify_code_count', 'created_at', 'updated_at', 'active', 'remove'], 'integer'],
             [['birthday', 'last_order_time'], 'safe'],
             [['note_by_employee'], 'string'],
             [['total_xu', 'usable_xu', 'last_use_xu', 'last_revenue_xu'], 'number'],
-            [['first_name', 'last_name', 'email', 'phone', 'user_name', 'password', 'avatar', 'link_verify', 'access_token', 'auth_client', 'verify_token', 'reset_password_token', 'verify_code_type'], 'string', 'max' => 255],
+            [['first_name', 'last_name', 'email', 'phone', 'username', 'password_hard', 'avatar', 'link_verify', 'access_token', 'auth_client', 'verify_token', 'reset_password_token', 'verify_code_type'], 'string', 'max' => 255],
             [['verify_code'], 'string', 'max' => 10],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
         ];
@@ -92,8 +92,8 @@ class Customer extends \yii\db\ActiveRecord
             'last_name' => 'Last Name',
             'email' => 'Email',
             'phone' => 'Phone',
-            'user_name' => 'User Name',
-            'password' => 'Password',
+            'username' => 'User Name',
+            'password_hard' => 'Password Hard',
             'gender' => 'Gender',
             'birthday' => 'Birthday',
             'avatar' => 'Avatar',
@@ -123,8 +123,8 @@ class Customer extends \yii\db\ActiveRecord
             'verify_code_expired_at' => 'Verify Code Expired At',
             'verify_code_count' => 'Verify Code Count',
             'verify_code_type' => 'Verify Code Type',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'created_at' => 'Created Time',
+            'updated_at' => 'Updated Time',
             'active' => 'Active',
             'remove' => 'Remove',
         ];
