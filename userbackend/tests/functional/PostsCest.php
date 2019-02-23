@@ -3,7 +3,7 @@
 namespace tests\functional;
 
 use app\models\Post;
-use apiops\tests\FunctionalTester;
+use userbackend\tests\FunctionalTester;
 use tests\fixtures\PostFixture;
 use yii\helpers\Url;
 

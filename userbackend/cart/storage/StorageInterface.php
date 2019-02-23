@@ -1,6 +1,6 @@
 <?php
 
-namespace apiops\cart\storage;
+namespace userbackend\cart\storage;
 
 interface StorageInterface
 {

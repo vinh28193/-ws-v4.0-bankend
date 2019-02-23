@@ -1,9 +1,9 @@
 <?php
 
-namespace apiops\controllers;
+namespace userbackend\controllers;
 
-use apiops\cart\ShoppingCart;
-use apiops\models\CartAddForm;
+use userbackend\cart\ShoppingCart;
+use userbackend\models\CartAddForm;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\VerbFilter;

@@ -1,6 +1,6 @@
 <?php
 
-namespace apiops\assets;
+namespace userbackend\assets;
 
 use yii\web\AssetBundle;
 

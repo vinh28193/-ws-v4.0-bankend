@@ -1,8 +1,8 @@
 <?php
 
-namespace apiops\cart;
+namespace userbackend\cart;
 
-use apiops\cart\storage\StorageInterface;
+use userbackend\cart\storage\StorageInterface;
 
 
 class ShoppingCart

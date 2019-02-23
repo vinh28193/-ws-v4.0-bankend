@@ -1,7 +1,7 @@
 <?php
-namespace apiops\tests\functional;
+namespace userbackend\tests\functional;
 
-use apiops\tests\FunctionalTester;
+use userbackend\tests\FunctionalTester;
 
 /* @var $scenario \Codeception\Scenario */
 

@@ -1,7 +1,7 @@
 <?php
-use apiops\cart\storage\SessionStorage;
-Yii::$container->setSingleton('apiops\cart\ShoppingCart');
-Yii::$container->set('apiops\cart\storage\StorageInterface', function() {
+use userbackend\cart\storage\SessionStorage;
+Yii::$container->setSingleton('userbackend\cart\ShoppingCart');
+Yii::$container->set('userbackend\cart\storage\StorageInterface', function() {
     return new SessionStorage(Yii::$app->session, 'primary-cart');
 });
 
@@ -16,7 +16,7 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'apiops\controllers',
+    'controllerNamespace' => 'userbackend\controllers',
     'defaultRoute' => 'site/index',
     'components' => [
         'request' => [
@@ -25,10 +25,10 @@ return [
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-apiops', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity-userbackend', 'httpOnly' => true],
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the apiops
+            // this is the name of the session cookie used for login on the userbackend
             'name' => 'advanced-frontend',
         ],
         'log' => [

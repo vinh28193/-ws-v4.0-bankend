@@ -1,5 +1,5 @@
 <?php
-namespace apiops\models;
+namespace userbackend\models;
 
 use Yii;
 use yii\base\Model;

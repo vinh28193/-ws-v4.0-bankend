@@ -1,6 +1,6 @@
 <?php
 
-namespace apiops\controllers\api;
+namespace userbackend\controllers\api;
 
 use yii\rest\ActiveController;
 

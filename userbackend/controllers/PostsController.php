@@ -1,6 +1,6 @@
 <?php
 
-namespace apiops\controllers;
+namespace userbackend\controllers;
 
 use Yii;
 use app\models\Post;
