@@ -370,3 +370,8 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
     Server started on http://localhost:8980/
     Document root is "C:\xampp\htdocs\weshop-v4.0-api\frontend/web"
     Quit the server with CTRL-C or COMMAND-C.
+    
+    
+  ####---------------
+  php frontend/codecept.phar run
+  
