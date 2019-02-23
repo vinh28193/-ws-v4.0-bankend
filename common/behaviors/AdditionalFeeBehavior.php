@@ -104,10 +104,6 @@ class OrderFeeBehavior extends \yii\base\Behavior
                     return;
                 }
 
-                if (empty($storeAdditionFee) || ($storeAdditionFee = array_values($storeAdditionFee)) == null || !$storeAdditionFee instanceof StoreOrderFee) {
-                    Yii::warning("cannot " . ($event->name === ActiveRecord::EVENT_BEFORE_UPDATE ? "update" : "insert") . " cause not exist on StoreOrderFee config", __METHOD__);
-                    return;
-                }
                 if($storeAdditionFee->name === 'final_origin_fee' || $storeAdditionFee->name === 'final_local_fee'){
                     return;
                 }
