@@ -20,7 +20,7 @@ return [
     'last_name' => $faker->lastName,
     'email' => $faker->email,
     'phone' => $faker->phoneNumber,
-    'user_name' => $faker->userName,
+    'username' => $faker->userName,
     'password' => Yii::$app->security->generatePasswordHash($pass),
     'gender' => $faker->numberBetween(0,2),
     'birthday' => $faker->date('Y-m-d','2000-01-01'),
