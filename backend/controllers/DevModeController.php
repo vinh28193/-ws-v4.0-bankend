@@ -34,7 +34,6 @@ class DevModeController extends \yii\web\Controller
         $order = new Order();
         $order->total_weight = 12;
         $order->setAdditionalFees($fees,true);
-        $order->save(false);
         foreach (array_keys($fees) as $name){
             $owner = "total_{$name}_local";
             if($order->hasAttribute($name)){
@@ -42,7 +41,7 @@ class DevModeController extends \yii\web\Controller
                 var_dump("$owner : $value \n");
             }
         }
-        var_dump($order);
+        var_dump($order->getAdditionalFees());
         die;
     }
 }
