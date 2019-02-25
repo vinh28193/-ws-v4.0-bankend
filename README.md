@@ -367,16 +367,9 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   
   
   ###-------Run------
-    php backend/tests/bin/yii serve --port=8980
+   php -S 127.0.0.1:8980 -t backend/web
+   vendor/bin/codecept run -- -c backend
 
-    >php backend/tests/bin/yii serve --port=8980
-    Server started on http://localhost:8980/
-    Document root is "C:\xampp\htdocs\weshop-v4.0-api\frontend/web"
-    Quit the server with CTRL-C or COMMAND-C.
-    
-    
-  ####---------------
-  php backend/codecept.phar run
   
   
   
