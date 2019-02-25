@@ -28,7 +28,7 @@ return [
     'link_verify' => $faker->url,
     'email_verified' => $faker->numberBetween(0,1),
     'phone_verified' => $faker->numberBetween(0,1),
-    'last_order_time' => $faker->unixTime,
+    'last_order_time' => $faker->date('Y-m-d'). " ". $faker->time(),
     'note_by_employee' => $faker->realText(200),
     'type_customer' => $faker->numberBetween(1,2),
     'access_token' => Yii::$app->security->generateRandomString(),

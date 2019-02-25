@@ -26,6 +26,9 @@ return [
                         ],
                     ],
                 ],
+                'userbackend' => [
+                    'class' => 'api\modules\v1\userbackend\Module',
+                ],
             ],
         ],
     ],
