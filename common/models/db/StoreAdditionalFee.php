@@ -16,11 +16,12 @@ use Yii;
  * @property resource $condition_data Fee Data
  * @property string $condition_description Fee Rules Description
  * @property int $is_convert Is Convert (1:Can Convert;2:Can Not)
+ * @property int $is_read_only Is Read Only
  * @property int $status Status (1:Active;2:Inactive)
  * @property int $created_by Created by
- * @property int $created_at Created at (timestamp)
+ * @property int $created_time Created at (timestamp)
  * @property int $updated_by Updated by
- * @property int $updated_at Updated at (timestamp)
+ * @property int $updated_time Updated at (timestamp)
  */
 class StoreAdditionalFee extends \yii\db\ActiveRecord
 {
@@ -39,7 +40,7 @@ class StoreAdditionalFee extends \yii\db\ActiveRecord
     {
         return [
             [['store_id', 'name'], 'required'],
-            [['store_id', 'is_convert', 'status', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
+            [['store_id', 'is_convert', 'is_read_only', 'status', 'created_by', 'created_time', 'updated_by', 'updated_time'], 'integer'],
             [['description', 'condition_data', 'condition_description'], 'string'],
             [['name'], 'string', 'max' => 50],
             [['currency'], 'string', 'max' => 11],
@@ -62,11 +63,12 @@ class StoreAdditionalFee extends \yii\db\ActiveRecord
             'condition_data' => 'Condition Data',
             'condition_description' => 'Condition Description',
             'is_convert' => 'Is Convert',
+            'is_read_only' => 'Is Read Only',
             'status' => 'Status',
             'created_by' => 'Created By',
-            'created_at' => 'Created At',
+            'created_time' => 'Created Time',
             'updated_by' => 'Updated By',
-            'updated_at' => 'Updated At',
+            'updated_time' => 'Updated Time',
         ];
     }
 }

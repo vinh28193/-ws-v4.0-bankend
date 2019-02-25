@@ -8,7 +8,8 @@
 
 namespace common\components;
 
-use common\helpers\WeshopHelper;
+use common\models\StoreAdditionalFee;
+use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -34,7 +35,7 @@ trait AdditionalFeeTrait
             /** @var  $class \yii\db\ActiveRecord */
             $class = $this->additionalFeeModel;
             $query = new Query();
-            $query->select(['c.id', 'c.type_fee', 'c.amount', 'c.local_amount', 'c.currency', 'c.discount_amount']);
+            $query->select(['c.id', 'c.type_fee', 'c.amount', 'c.amount_local', 'c.currency', 'c.discount_amount']);
             $query->from(['c' => $class::tableName()]);
             $query->where(['and', ['c.order_id' => $this->id], ['in', 'c.type_fee', $names]]);
             $additionalFees = $query->all($class::getDb());
@@ -47,34 +48,69 @@ trait AdditionalFeeTrait
     /**
      * @param $values
      * @param bool $withCondition
+     * @param bool $ensureReadOnly
      */
-    public function setAdditionalFees($values, $withCondition = false)
+    public function setAdditionalFees($values, $withCondition = false, $ensureReadOnly = true)
     {
         if (is_array($values)) {
-            foreach ($this->storeAdditionalFee as $name => $storeAdditionalFee) {
-                $value = isset($values[$name]) ? $values[$name] : 0;
+            $fees = $this->storeAdditionalFee;
+            foreach ($values as $name => $value) {
                 $localValue = $value;
-                if ($withCondition && $this instanceof AdditionalFeeInterface && $storeAdditionalFee->hasMethod('executeCondition')) {
-                    $value = $storeAdditionalFee->executeCondition($value, $this);
+                if (isset($fees[$name]) && ($storeAdditionalFee = $fees[$name]) !== null && $storeAdditionalFee instanceof StoreAdditionalFee) {
+                    if ($withCondition && $this instanceof AdditionalFeeInterface && $storeAdditionalFee->hasMethod('executeCondition')) {
+                        $value = $storeAdditionalFee->executeCondition($value, $this);
+                        if ($storeAdditionalFee->is_convert) {
+                            $localValue = $value * $this->getExchangeRate();
+                        }
+                    }
+                    if($storeAdditionalFee->is_read_only){
+                        Yii::warning("can not read only additional fee '$name'");
+                        continue;
+                    }
+                    $additionalFee = [
+                        'type_fee' => $name,
+                        'amount' => $value,
+                        'amount_local' => $localValue,
+                        'currency' => $storeAdditionalFee->currency,
+                        'discount_amount' => $this->hasAttribute('discount_amount') ? $this->discount_amount : 0,
+                    ];
+                    $owner = "total_{$name}_local";
+                    if ($this->canSetProperty($owner)) {
+                        $this->$owner = $localValue;
+                    }
+                    $this->_additionalFees[$name] = [$additionalFee];
+                } else {
+                    Yii::warning("failed when set unknown additional fee '$name'");
+                }
+            }
+            if($ensureReadOnly){
+                $breaks = array_keys($values);
+                foreach ($fees as $name => $storeAdditionalFee){
+                    /** @var $storeAdditionalFee StoreAdditionalFee */
+                    if (in_array($name,$breaks)){
+                        continue;
+                    }
+                    $value = 0;
+                    if ($withCondition && $this instanceof AdditionalFeeInterface && $storeAdditionalFee->hasMethod('executeCondition')) {
+                        $value = $storeAdditionalFee->executeCondition($value, $this);
+                    }
                     $localValue = $value;
                     if ($storeAdditionalFee->is_convert) {
-                        $localValue = $localValue * $this->getExchangeRate();
-                        $localValue = WeshopHelper::roundNumber($localValue, $this->getStoreManager()->getId() === 1 ? 3 : 0);
+                        $localValue = $value * $this->getExchangeRate();
                     }
+                    $additionalFee = [
+                        'type_fee' => $name,
+                        'amount' => $value,
+                        'local_amount' => $localValue,
+                        'currency' => $storeAdditionalFee->currency,
+                        'discount_amount' => $this->hasAttribute('discount_amount') ? $this->discount_amount : 0,
+                    ];
+                    $owner = "total_{$name}_local";
+                    if ($this->canSetProperty($owner)) {
+                        $this->$owner = $localValue;
+                    }
+                    $this->_additionalFees[$name] = [$additionalFee];
                 }
-                $additionalFee = [
-                    'type_fee' => $name,
-                    'amount' => $value,
-                    'amount_local' => $localValue,
-                    'currency' => $storeAdditionalFee->currency,
-                    'discount_amount' => $this->hasAttribute('discount_amount') ? $this->discount_amount : 0,
-                ];
-                $owner = "total_{$name}_local";
-                if ($this->canSetProperty($owner)) {
-                    $this->$owner = $localValue;
-                }
-                $this->_additionalFees[$name] = [$additionalFee];
-
             }
         }
     }
