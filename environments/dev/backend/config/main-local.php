@@ -14,6 +14,14 @@ if (!YII_ENV_TEST) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
+        'generators' => [
+            'model' => [
+                'class' => 'yii\gii\generators\model\Generator',
+                'ns' => 'common\models\db',
+                'baseClass' => '\common\components\db\ActiveRecord',
+                'queryNs' => 'common\models\queries'
+            ]
+        ]
     ];
 
     $config['bootstrap'][] = 'gii';
