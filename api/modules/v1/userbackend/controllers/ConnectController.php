@@ -6,7 +6,7 @@
  * Time: 09:59
  */
 
-namespace api\modules\v1\weshop\customer\controllers;
+namespace api\modules\v1\userbackend\controllers;
 
 use api\modules\v1\weshop\controllers\BaseController;
 use Yii;

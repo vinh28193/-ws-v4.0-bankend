@@ -93,15 +93,17 @@ class Api extends Component
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    public function createAuthorizationCode($user_id)
+    public function createAuthorizationCode($user_id,$type = 'user')
     {
         $model = new AuthorizationCodes;
 
         $model->code = md5(uniqid());
 
-        $model->expires_at = time() + (60 * 5);
+        $model->expires_at = time() + (60 * 60 * 5);
 
         $model->user_id = $user_id;
+
+        $model->type = $type;
 
         if (isset($_SERVER['HTTP_X_HAIKUJAM_APPLICATION_ID']))
             $app_id = $_SERVER['HTTP_X_HAIKUJAM_APPLICATION_ID'];

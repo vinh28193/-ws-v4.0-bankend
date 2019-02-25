@@ -6,7 +6,7 @@
  * Time: 11:10
  */
 
-namespace api\modules\v1\weshop\customer\controllers;
+namespace api\modules\v1\userbackend\controllers;
 
 
 use api\modules\v1\weshop\controllers\BaseAuthorController;
@@ -14,6 +14,7 @@ use common\models\Customer;
 //use common\models\Order;
 use common\models\db\Order;
 use Yii;
+use yii\db\ActiveQuery;
 
 class OrderController extends BaseAuthorController
 {
@@ -40,7 +41,7 @@ class OrderController extends BaseAuthorController
     public function actionGetListOrder(){
         $data = [];
         try{
-            $data = $this->searchOrder();
+            $data = $this->searchOrder($this->request['type_order'],$this->request['keyword'],$this->request['type_search'],$this->request['time_ranger'],$this->request['status']);
         }catch (\Exception $exception){
             $data = $this->searchOrder();
         }
@@ -62,7 +63,9 @@ class OrderController extends BaseAuthorController
         if(!$this->user){
             return [];
         }
-        $query = Order::find()->where(['customer_id' => $this->user->id,'remove' => 0,]);
+        $query = Order::find()
+            ->with(['products','orderFees','packageItems','walletTransactions','seller','saleSupport'])
+            ->where(['customer_id' => $this->user->id,'remove' => 0,]);
         if($typeSearch){
             $query->andWhere(['like',$typeSearch,$keyword]);
         }else{
@@ -85,6 +88,6 @@ class OrderController extends BaseAuthorController
                 ['<=', 'created_at', $timeRanger['time_end']]
             ]);
         }
-        return $query->orderBy('created_at desc')->limit($this->limit)->offset($this->page* $this->limit - $this->limit)->all();
+        return $query->orderBy('created_at desc')->limit($this->limit)->offset($this->page* $this->limit - $this->limit)->asArray()->all();
     }
 }

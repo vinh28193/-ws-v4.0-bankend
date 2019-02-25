@@ -2,8 +2,9 @@
 
 namespace api\modules\v1\controllers;
 
+use common\components\Response;
 use Yii;
-use yii\web\Controller;
+use yii\rest\Controller;
 
 
 
@@ -48,6 +49,12 @@ class RestController extends Controller
 
     }
 
+    public function response($success = false, $message = null, $data = null)
+    {
+        Yii::$app->response->format = 'json';
+        $message = is_null($message) ? "" : $message;
+        return Response::json($success, $message, $data);
+    }
 }
 
 
