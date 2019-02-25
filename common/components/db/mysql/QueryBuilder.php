@@ -17,7 +17,7 @@ class QueryBuilder extends \yii\db\mysql\QueryBuilder
 {
 
     /**
-     * @var \ws\base\StoreManager | string
+     * @var \common\components\StoreManager | string
      */
     public $storeManager = 'storeManager';
 
