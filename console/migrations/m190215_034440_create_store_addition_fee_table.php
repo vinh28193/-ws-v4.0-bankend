@@ -19,21 +19,26 @@ class m190215_034440_create_store_addition_fee_table extends Migration
             'currency' => $this->string(11)->notNull()->defaultValue('USD')->comment('Currency (USD/VND)'),
             'description' => $this->text()->null()->comment('Description'),
             'is_convert' => $this->smallInteger()->defaultValue(1)->comment('Is Convert (1:Can Convert;2:Can Not)'),
+            'is_read_only' => $this->smallInteger()->defaultValue(1)->comment('Is Read Only'),
             'status' => $this->smallInteger()->defaultValue(1)->comment('Status (1:Active;2:Inactive)'),
             'created_by' => $this->integer(11)->defaultValue(null)->comment('Created by'),
-            'created_at' => $this->integer(11)->defaultValue(null)->comment('Created at (timestamp)'),
+            'created_time' => $this->integer(11)->defaultValue(null)->comment('Created at (timestamp)'),
             'updated_by' => $this->integer(11)->defaultValue(null)->comment('Updated by'),
-            'updated_at' => $this->integer(11)->defaultValue(null)->comment('Updated at (timestamp)'),
+            'updated_time' => $this->integer(11)->defaultValue(null)->comment('Updated at (timestamp)'),
         ]);
 
-        $this->batchInsert('store_additional_fee', ['id', 'store_id', 'name', 'currency', 'description', 'is_convert', 'status', 'created_by', 'created_at', 'updated_by', 'updated_at'], [
-            [1, 1, 'price_amount', 'VND', 'giá tiền các item', 1, 1, 1, time(), 1, time()],
-            [2, 1, 'tax_us_amount', 'VND', 'phí us tax', 1, 1, 1, time(), 1, time()],
-            [3, 1, 'shipping_us_amount', 'VND', 'phí shipping us', 1, 1, 1, time(), 1, time()],
-            [4, 1, 'weshop_fee_amount', 'VND', 'phí weshop', 1, 1, 1, time(), 1, time()],
-            [5, 1, 'intl_shipping_fee_amount', 'VND', 'phí vận chuyển quốc tế', 1, 1, 1, time(), 1, time()],
-            [6, 1, 'custom_fee_amount', 'VND', 'phí phụ thu', 1, 1, 1, time(), 1, time()],
-            [7, 1, 'delivery_fee_amount', 'VND', 'phí vận chuyển nội địa', 1, 1, 1, time(), 1, time()],
+        $this->batchInsert('store_additional_fee', ['id', 'store_id', 'name', 'currency', 'description', 'is_convert', 'is_read_only', 'status', 'created_by', 'created_time', 'updated_by', 'updated_time'], [
+            [1, 1, 'origin_fee', 'VND', 'Phí gốc tại xuất sứ', 1, 1, 1, 1, time(), 1, time()],
+            [2, 1, 'origin_tax_fee', 'VND', 'Phí tax tại xuất sứ', 1, 1, 1, 1, time(), 1, time()],
+            [3, 1, 'origin_shipping_fee', 'VND', 'Phí shipping tại xuất sứ', 1, 1, 1, 1, time(), 1, time()],
+            [4, 1, 'weshop_fee', 'VND', 'Phí weshop', 1, 1, 0, 1, time(), 1, time()],
+            [5, 1, 'intl_shipping_fee', 'VND', 'Phí vận chuyển quốc tế', 1, 1, 0, 1, time(), 1, time()],
+            [6, 1, 'custom_fee', 'VND', 'Phí phụ thu', 1, 1, 0, 1, time(), 1, time()],
+            [7, 1, 'delivery_fee', 'VND', 'Phí vận chuyển nội địa', 1, 1, 1, 1, time(), 1, time()],
+            [8, 1, 'packing_fee', 'VND', 'Phí đóng hàng', 1, 1, 1, 1, time(), 1, time()],
+            [9, 1, 'inspection_fee ', 'VND', 'Phí kiểm hàng', 1, 1, 1, 1, time(), 1, time()],
+            [10, 1, 'insurance_fee ', 'VND', 'Phí bảo hiểm', 1, 1, 1, 1, time(), 1, time()],
+            [11, 1, 'vat_fee ', 'VND', 'Phí VAT', 1, 1, 1, time(), 0, 1, time()],
         ]);
     }
 

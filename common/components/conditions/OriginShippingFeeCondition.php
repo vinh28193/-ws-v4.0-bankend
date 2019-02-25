@@ -15,6 +15,6 @@ class OriginShippingFeeCondition extends BaseCondition
 
     public function execute($value, $additionalFee, $storeAdditionalFee)
     {
-        return $value;
+        return $value * $additionalFee->getShippingQuantity();
     }
 }

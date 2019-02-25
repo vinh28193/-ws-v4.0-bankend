@@ -20,9 +20,25 @@ trait StoreAdditionalFeeRegisterTrait
 {
 
     /**
-     * @var string
+     * @var  \common\components\StoreManager|void
      */
-    public $storeManager = 'storeManager';
+    private $_storeManager;
+
+    /**
+     * @return \common\components\StoreManager|void
+     */
+    public function getStoreManager()
+    {
+        if ($this->_storeManager === null) {
+            $app = Yii::$app;
+            if ($app instanceof \yii\console\Application) {
+                $app->storeManager->setStore(1);
+            }
+            $this->_storeManager = $app;
+
+        }
+        return $this->_storeManager;
+    }
 
     /**
      * @var
@@ -34,11 +50,10 @@ trait StoreAdditionalFeeRegisterTrait
      */
     public function getStoreAdditionalFee()
     {
-        if (empty($this->_storeAdditionalFee) && ($app = Yii::$app) && $app->has($this->storeManager)) {
+        if (empty($this->_storeAdditionalFee)) {
             $this->_storeAdditionalFee = [];
-            $this->storeManager = $app->get($this->storeManager);
             /** @var  $store \yii\db\ActiveRecord */
-            $store = $this->storeManager->store;
+            $store = $this->getStoreManager()->store;
             $key = 'storeAdditionalFee';
             if ($store->isRelationPopulated($key)) {
                 $this->_storeAdditionalFee = $store->$key;

@@ -16,6 +16,13 @@ class OriginTaxCondition extends BaseCondition
 
     public function execute($value, $additionalFee, $storeAdditionalFee)
     {
-        return $value;
+        $originPrice = $additionalFee->getTotalAdditionFees('origin_fee')[0];
+        if ($value < 1) {
+            return $originPrice * $value;
+        } elseif ($value > 1 && $value < 2) {
+            return $originPrice * ($value - 1);
+        } else {
+            return $originPrice * $value / 100;
+        }
     }
 }

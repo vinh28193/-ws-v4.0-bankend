@@ -12,13 +12,13 @@ class m190223_025434_update_store_additional_fee_table extends Migration
     public function safeUp()
     {
         $conditions = [
-            'price_amount' => 'common\components\conditions\SimpleCondition',
-            'tax_us_amount' => 'common\components\conditions\OriginTaxCondition',
-            'shipping_us_amount' => 'common\components\conditions\OriginShippingFeeCondition',
-            'weshop_fee_amount' => 'common\components\conditions\StoreFeeCondition',
-            'intl_shipping_fee_amount' => 'common\components\conditions\InternationalShippingFeeCondition',
-            'custom_fee_amount' => 'common\components\conditions\CustomFeeCondition',
-            'delivery_fee_amount' => 'common\components\conditions\LocalDeliveryFeeCondition',
+            'origin_fee' => 'common\components\conditions\SimpleCondition',
+            'origin_tax_fee' => 'common\components\conditions\OriginTaxCondition',
+            'origin_shipping_fee' => 'common\components\conditions\OriginShippingFeeCondition',
+            'weshop_fee' => 'common\components\conditions\StoreFeeCondition',
+            'intl_shipping_fee' => 'common\components\conditions\InternationalShippingFeeCondition',
+            'custom_fee' => 'common\components\conditions\CustomFeeCondition',
+            'delivery_fee' => 'common\components\conditions\LocalDeliveryFeeCondition',
 
         ];
         foreach ($this->getStoreAdditionalFee() as $name => $storeAdditionalFee) {

@@ -16,6 +16,6 @@ class CustomFeeCondition extends BaseCondition
 
     public function execute($value, $additionalFee, $storeAdditionalFee)
     {
-        // TODO: Implement execute() method.
+        return $value;
     }
 }

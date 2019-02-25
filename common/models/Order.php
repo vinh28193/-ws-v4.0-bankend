@@ -40,7 +40,9 @@ class Order extends DbOrder implements AdditionalFeeInterface
 
     public function getTotalOriginPrice()
     {
-        return 12344.99;
+        return $this->getTotalAdditionFees([
+            'origin_fee','origin_tax_fee','origin_shipping_fee'
+        ])[0];
     }
 
     public function getCustomCategory()
@@ -57,7 +59,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
 
     public function getShippingWeight()
     {
-        return 5;
+        return $this->total_weight;
     }
 
     public function getShippingQuantity()

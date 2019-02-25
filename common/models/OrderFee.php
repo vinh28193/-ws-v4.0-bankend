@@ -14,15 +14,6 @@ use common\components\StoreAdditionalFeeRegisterTrait;
 class OrderFee extends DbOrderFee
 {
 
-    public function behaviors()
-    {
-        return array_merge(parent::behaviors(),[
-            'orderFee' => [
-                'class' => \common\behaviors\AdditionalFeeBehavior::className()
-            ]
-        ]);
-    }
-
     use StoreAdditionalFeeRegisterTrait;
 
     public function getTotalAdditionalFee($names = null)

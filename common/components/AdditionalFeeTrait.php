@@ -8,8 +8,7 @@
 
 namespace common\components;
 
-use common\models\StoreAdditionalFee;
-use Yii;
+use common\helpers\WeshopHelper;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -52,51 +51,49 @@ trait AdditionalFeeTrait
     public function setAdditionalFees($values, $withCondition = false)
     {
         if (is_array($values)) {
-            $fees = $this->storeAdditionalFee;
-            foreach ($values as $name => $value) {
+            foreach ($this->storeAdditionalFee as $name => $storeAdditionalFee) {
+                $value = isset($values[$name]) ? $values[$name] : 0;
                 $localValue = $value;
-                if (isset($fees[$name]) && ($storeAdditionalFee = $fees[$name]) !== null && $storeAdditionalFee instanceof StoreAdditionalFee) {
-                    if ($withCondition && $this instanceof AdditionalFeeInterface && $storeAdditionalFee->hasMethod('executeCondition')) {
-                        $value = $storeAdditionalFee->executeCondition($value, $this);
-                        if( $storeAdditionalFee->is_convert){
-                            $localValue = $value * $this->getExchangeRate();
-                        }
+                if ($withCondition && $this instanceof AdditionalFeeInterface && $storeAdditionalFee->hasMethod('executeCondition')) {
+                    $value = $storeAdditionalFee->executeCondition($value, $this);
+                    $localValue = $value;
+                    if ($storeAdditionalFee->is_convert) {
+                        $localValue = $localValue * $this->getExchangeRate();
+                        $localValue = WeshopHelper::roundNumber($localValue, $this->getStoreManager()->getId() === 1 ? 3 : 0);
                     }
-                    $additionalFee = [
-                        'type_fee' => $name,
-                        'amount' => $value,
-                        'local_amount' => $localValue,
-                        'currency' => $storeAdditionalFee->currency,
-                        'discount_amount' => $this->hasAttribute('discount_amount') ? $this->discount_amount : 0,
-                    ];
-                    $owner = "total_{$name}_local";
-                    if($this->canSetProperty($owner)){
-                        $this->$owner = $localValue;
-                    }
-                    $this->_additionalFees[$name] = [$additionalFee];
-                } else {
-                    Yii::warning("failed when set unknown additional fee '$name'");
                 }
+                $additionalFee = [
+                    'type_fee' => $name,
+                    'amount' => $value,
+                    'amount_local' => $localValue,
+                    'currency' => $storeAdditionalFee->currency,
+                    'discount_amount' => $this->hasAttribute('discount_amount') ? $this->discount_amount : 0,
+                ];
+                $owner = "total_{$name}_local";
+                if ($this->canSetProperty($owner)) {
+                    $this->$owner = $localValue;
+                }
+                $this->_additionalFees[$name] = [$additionalFee];
+
             }
         }
     }
 
     /**
      * @param null $names
-     * @param bool $isLocal
-     * @return float
+     * @return array
      */
-    public function getTotalAdditionFees($names = null, $isLocal = true)
+    public function getTotalAdditionFees($names = null)
     {
         $totalFees = 0;
+        $totalLocalFees = 0;
         foreach ((array)$this->getAdditionalFees($names) as $arrays) {
-            foreach ($arrays as $array){
-                $attr = $isLocal ? 'local_amount' : 'amount';
-                $value = isset($array[$attr]) ? $array[$attr] : 0;
-                $totalFees += $value;
+            foreach ($arrays as $array) {
+                $totalFees += isset($array['amount']) ? $array['amount'] : 0;
+                $totalLocalFees += isset($array['amount_local']) ? $array['amount_local'] : 0;
             }
         }
-        return (float)$totalFees;
+        return [$totalFees, $totalLocalFees];
 
     }
 }
