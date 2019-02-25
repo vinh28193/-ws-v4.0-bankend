@@ -17,9 +17,9 @@ $pass = "$id@123456789";
 return [
     'id' => $id,
     'username' => $faker->userName,
-    'auth_key' => \Yii::$app->security->generateRandomString(40),
+    'auth_key' => \Yii::$app->security->generateRandomString(),
     'password_hash' => \Yii::$app->security->generatePasswordHash($pass),
-    'password_reset_token' => \Yii::$app->security->generateRandomString(60),
+    'password_reset_token' => \Yii::$app->security->generateRandomString(),
     'email' => $faker->email,
     'status' => $faker->numberBetween(0,1),
     'created_at' => $faker->unixTime,

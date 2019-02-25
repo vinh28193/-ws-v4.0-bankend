@@ -70,4 +70,6 @@ interface AdditionalFeeInterface
      * @return mixed
      */
     public function setAdditionalFees($values, $withCondition = false);
+
+    public function getTotalAdditionFees($names = null);
 }

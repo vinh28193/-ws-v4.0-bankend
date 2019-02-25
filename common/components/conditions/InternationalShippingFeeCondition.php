@@ -87,7 +87,7 @@ class InternationalShippingFeeCondition extends BaseCondition
     public $name = 'InternationalShippingFee';
     /**
      * @param integer $value
-     * @param \ws\base\AdditionalFeeInterface $additionalFee
+     * @param \common\components\AdditionalFeeInterface
      * @param $storeAdditionalFee
      * @return int
      */

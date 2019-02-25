@@ -2,16 +2,22 @@
 /**
  * Created by PhpStorm.
  * User: vinhs
- * Date: 2019-02-16
- * Time: 08:45
+ * Date: 2019-02-25
+ * Time: 09:42
  */
 
 namespace common\components;
 
+interface StoreInterface {
 
-interface StoreInterface
-{
-
-    public static function getStoreReferenceKey();
+    /**
+     * @param $condition
+     * @return \yii\db\ActiveRecord
+     */
     public static function getActiveStore($condition);
+
+    /**
+     * @return string
+     */
+    public static function getStoreReferenceKey();
 }

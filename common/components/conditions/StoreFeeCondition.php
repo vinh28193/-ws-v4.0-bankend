@@ -16,6 +16,13 @@ class StoreFeeCondition extends BaseCondition
 
     public function execute($value, $additionalFee, $storeAdditionalFee)
     {
-        return $value;
+        $weshopFeeRate = 0.0;
+
+        switch ($additionalFee->getStoreManager()->getId()) {
+            case 1: //vn
+                $weshopFeeRate = $additionalFee->getIsForWholeSale() ? 0.05 : 0.08;
+                break;
+        }
+        return $additionalFee->getTotalOriginPrice() * $weshopFeeRate;
     }
 }

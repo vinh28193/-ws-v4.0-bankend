@@ -54,16 +54,16 @@ use Yii;
  * @property string $total_fee_amount_local tổng phí đơn hàng
  * @property string $total_counpon_amount_local Tổng số tiền giảm giá bằng mã counpon
  * @property string $total_promotion_amount_local Tổng số tiền giảm giá do promotion
- * @property string $total_price_amount_local tổng giá tiền các item
- * @property string $total_tax_us_amount_local Tổng phí us tax
- * @property string $total_shipping_us_amount_local Tổng phí shipping us
- * @property string $total_weshop_fee_amount_local Tổng phí weshop
- * @property string $total_intl_shipping_fee_amount_local Tổng phí vận chuyển quốc tế
+ * @property string $total_origin_fee_local Tổng phí gốc tại xuất xứ (Tiền Local)
+ * @property string $total_origin_tax_fee_local Tổng phí tax tại xuất xứ
+ * @property string $total_origin_shipping_fee_local Tổng phí vận chuyển tại xuất xứ
+ * @property string $total_weshop_fee_local Tổng phí Weshop
+ * @property string $total_intl_shipping_fee_local Tổng phí vận chuyển quốc tế
  * @property string $total_custom_fee_amount_local Tổng phí phụ thu
- * @property string $total_delivery_fee_amount_local Tổng phí vận chuyển nội địa
- * @property string $total_packing_fee_amount_local tổng phí đóng gỗ
- * @property string $total_inspection_fee_amount_local Tổng phí kiểm hàng
- * @property string $total_insurance_fee_amount_local Tổng phí bảo hiểm
+ * @property string $total_delivery_fee_local Tổng phí vận chuyển nội địa
+ * @property string $total_packing_fee_local Tống phí hàng
+ * @property string $total_inspection_fee_local Tổng phí kiểm hàng
+ * @property string $total_insurance_fee_local Tổng phí bảo hiểm
  * @property string $total_vat_amount_local Tổng phí VAT
  * @property string $exchange_rate_fee Tỷ giá từ USD => tiền local
  * @property string $exchange_rate_purchase Tỷ giá từ tiền website gốc => tiền local. VD: yên => vnd
@@ -88,10 +88,10 @@ use Yii;
  * @property string $stockout_local time STOCKOUT_LOCAL
  * @property string $at_customer time AT_CUSTOMER
  * @property string $returned time RETURNED
- * @property string $cancelled  time CANCELLED
- * @property string $lost  time LOST
+ * @property string $cancelled  time CANCELLED :  Đơn hàng đã  hoặc chưa thanh toán --> nhưng bị hủy và hoàn tiền
+ * @property string $lost  time LOST : Hàng mất ở kho Mỹ hoặc hải quan hoặc kho VN hoặc trên đường giao cho KH 
  * @property string $current_status Trạng thái hiện tại của order
- * @property string $created_at Update qua behaviors tự động
+ * @property string $created_at Update qua behaviors tự động  
  * @property string $updated_at Update qua behaviors tự động
  * @property int $remove
  *
@@ -126,7 +126,7 @@ class Order extends \yii\db\ActiveRecord
         return [
             [['store_id', 'is_quotation', 'quotation_status', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'sale_support_id', 'coupon_time', 'is_email_sent', 'is_sms_sent', 'total_quantity', 'promotion_id', 'difference_money', 'seller_id', 'purchase_account_id', 'new', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'], 'string'],
-            [['revenue_xu', 'xu_count', 'xu_amount', 'total_final_amount_local', 'total_paid_amount_local', 'total_refund_amount_local', 'total_amount_local', 'total_fee_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_price_amount_local', 'total_tax_us_amount_local', 'total_shipping_us_amount_local', 'total_weshop_fee_amount_local', 'total_intl_shipping_fee_amount_local', 'total_custom_fee_amount_local', 'total_delivery_fee_amount_local', 'total_packing_fee_amount_local', 'total_inspection_fee_amount_local', 'total_insurance_fee_amount_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'purchase_amount_buck', 'purchase_amount_refund'], 'number'],
+            [['revenue_xu', 'xu_count', 'xu_amount', 'total_final_amount_local', 'total_paid_amount_local', 'total_refund_amount_local', 'total_amount_local', 'total_fee_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_origin_fee_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_custom_fee_amount_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'purchase_amount_buck', 'purchase_amount_refund'], 'number'],
             [['type_order', 'portal', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'payment_type', 'support_email', 'coupon_id', 'coupon_code', 'utm_source', 'seller_name', 'currency_purchase'], 'string', 'max' => 255],
             [['current_status'], 'string', 'max' => 200],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
@@ -193,16 +193,16 @@ class Order extends \yii\db\ActiveRecord
             'total_fee_amount_local' => 'Total Fee Amount Local',
             'total_counpon_amount_local' => 'Total Counpon Amount Local',
             'total_promotion_amount_local' => 'Total Promotion Amount Local',
-            'total_price_amount_local' => 'Total Price Amount Local',
-            'total_tax_us_amount_local' => 'Total Tax Us Amount Local',
-            'total_shipping_us_amount_local' => 'Total Shipping Us Amount Local',
-            'total_weshop_fee_amount_local' => 'Total Weshop Fee Amount Local',
-            'total_intl_shipping_fee_amount_local' => 'Total Intl Shipping Fee Amount Local',
+            'total_origin_fee_local' => 'Total Origin Fee Local',
+            'total_origin_tax_fee_local' => 'Total Origin Tax Fee Local',
+            'total_origin_shipping_fee_local' => 'Total Origin Shipping Fee Local',
+            'total_weshop_fee_local' => 'Total Weshop Fee Local',
+            'total_intl_shipping_fee_local' => 'Total Intl Shipping Fee Local',
             'total_custom_fee_amount_local' => 'Total Custom Fee Amount Local',
-            'total_delivery_fee_amount_local' => 'Total Delivery Fee Amount Local',
-            'total_packing_fee_amount_local' => 'Total Packing Fee Amount Local',
-            'total_inspection_fee_amount_local' => 'Total Inspection Fee Amount Local',
-            'total_insurance_fee_amount_local' => 'Total Insurance Fee Amount Local',
+            'total_delivery_fee_local' => 'Total Delivery Fee Local',
+            'total_packing_fee_local' => 'Total Packing Fee Local',
+            'total_inspection_fee_local' => 'Total Inspection Fee Local',
+            'total_insurance_fee_local' => 'Total Insurance Fee Local',
             'total_vat_amount_local' => 'Total Vat Amount Local',
             'exchange_rate_fee' => 'Exchange Rate Fee',
             'exchange_rate_purchase' => 'Exchange Rate Purchase',
@@ -230,8 +230,8 @@ class Order extends \yii\db\ActiveRecord
             'cancelled' => 'Cancelled',
             'lost' => 'Lost',
             'current_status' => 'Current Status',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'remove' => 'Remove',
         ];
     }

@@ -26,24 +26,22 @@ class DevModeController extends \yii\web\Controller
     public function actionIndex(){
 
         $fees = [
-            'price_amount' => 600, //US
-            'tax_us_amount' => 5,  //US
-            'shipping_us_amount' => 10,  //US
-            'intl_shipping_fee_amount' => 9999999, //US phí này không được set
-            'custom_fee_amount' => 10, //US phí này không được set
-            'delivery_fee_amount' => 123, //US phí này không được set
+            'origin_fee' => 60,
+            'origin_tax_fee' => 1.23,
+            'origin_shipping_fee' => 5
         ];
 
         $order = new Order();
+        $order->total_weight = 12;
         $order->setAdditionalFees($fees,true);
+        $order->save(false);
         foreach (array_keys($fees) as $name){
             $owner = "total_{$name}_local";
-            if($order->canGetProperty($name)){
+            if($order->hasAttribute($name)){
                 $value = $order->$owner;
                 var_dump("$owner : $value \n");
             }
         }
-        $order->save(false);
         var_dump($order);
         die;
     }
