@@ -26,5 +26,7 @@ class CustomerController extends Controller
          $_customer = new Customer();
          $faker = Factory::create('vi_VN');
          //$_customer->access_token = $faker->
+
+        php -r "print_r(get_loaded_extensions())"
     }
 }
