@@ -22,6 +22,7 @@ use Yii;
  * @property int $created_time Created at (timestamp)
  * @property int $updated_by Updated by
  * @property int $updated_time Updated at (timestamp)
+ * @property string $fee_rate Fee Rate
  */
 class StoreAdditionalFee extends \yii\db\ActiveRecord
 {
@@ -42,6 +43,7 @@ class StoreAdditionalFee extends \yii\db\ActiveRecord
             [['store_id', 'name'], 'required'],
             [['store_id', 'is_convert', 'is_read_only', 'status', 'created_by', 'created_time', 'updated_by', 'updated_time'], 'integer'],
             [['description', 'condition_data', 'condition_description'], 'string'],
+            [['fee_rate'], 'number'],
             [['name'], 'string', 'max' => 50],
             [['currency'], 'string', 'max' => 11],
             [['condition_name'], 'string', 'max' => 255],
@@ -69,6 +71,7 @@ class StoreAdditionalFee extends \yii\db\ActiveRecord
             'created_time' => 'Created Time',
             'updated_by' => 'Updated By',
             'updated_time' => 'Updated Time',
+            'fee_rate' => 'Fee Rate',
         ];
     }
 }

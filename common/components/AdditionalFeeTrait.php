@@ -80,7 +80,7 @@ trait AdditionalFeeTrait
                     }
                     $this->_additionalFees[$name] = [$additionalFee];
                 } else {
-                    Yii::warning("failed when set unknown additional fee '$name'");
+                    Yii::warning("failed when set unknown additional fee '$name'", __METHOD__);
                 }
             }
             if($ensureReadOnly){
