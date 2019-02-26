@@ -1,10 +1,4 @@
 <?php
-use backend\cart\storage\SessionStorage;
-Yii::$container->setSingleton('backend\cart\ShoppingCart');
-Yii::$container->set('backend\cart\storage\StorageInterface', function() {
-    return new SessionStorage(Yii::$app->session, 'primary-cart');
-});
-
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -20,6 +14,10 @@ return [
     'defaultRoute' => 'site/index',
     'modules' => [],
     'components' => [
+        'cart' => [
+            'class' => 'backend\components\ShoppingCart',
+            'sessionKey' => 'primary-cart',
+        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
