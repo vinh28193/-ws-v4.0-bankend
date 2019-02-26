@@ -2,7 +2,6 @@
 
 namespace backend\controllers;
 
-use backend\cart\ShoppingCart;
 use backend\models\CartAddForm;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -11,17 +10,6 @@ use yii\web\Controller;
 
 class CartController extends Controller
 {
-    /**
-     * @var ShoppingCart
-     */
-    private $cart;
-
-    public function __construct($id, $module, ShoppingCart $cart, $config = [])
-    {
-        $this->cart = $cart;
-        parent::__construct($id, $module, $config);
-    }
-
     public function behaviors()
     {
         return [
@@ -37,7 +25,7 @@ class CartController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $this->cart->getItems(),
+            'allModels' => Yii::$app->cart->getItems(),
         ]);
 
         return $this->render('index', [
@@ -50,7 +38,7 @@ class CartController extends Controller
         $form = new CartAddForm();
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            $this->cart->add($form->productId, $form->amount);
+            Yii::$app->cart->add($form->productId, $form->amount);
             return $this->redirect(['index']);
         }
 
@@ -61,7 +49,7 @@ class CartController extends Controller
 
     public function actionDelete($id)
     {
-        $this->cart->remove($id);
+        Yii::$app->cart->remove($id);
 
         return $this->redirect(['index']);
     }
