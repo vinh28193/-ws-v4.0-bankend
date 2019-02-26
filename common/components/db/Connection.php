@@ -13,7 +13,7 @@ class Connection extends \yii\db\Connection
 {
 
     protected $overrideSchemaMap = [
-        'mysql' => 'ws\db\mysql\Schema', // MySQL
+        'mysql' => 'common\components\db\mysql\Schema', // MySQL
     ];
 
 
