@@ -33,9 +33,6 @@ return [
         ],
     ],
     'components' => [
-        /* 'request' => [
-             'csrfParam' => '_csrf-backend',
-         ], */
         'request' => [
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
@@ -102,28 +99,6 @@ return [
             ],
 
         ],
-
-
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'enableStrictParsing' => true,
-            'showScriptName' => false,
-            'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'employee'],
-            ],
-        ],
-        */
-
-
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
 
     ],
     'params' => $params,

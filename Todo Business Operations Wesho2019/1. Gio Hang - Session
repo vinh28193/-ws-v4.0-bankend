@@ -10,3 +10,7 @@
           * Todo 02 : Chuyển bảng customer  --> thành bảng  mới
           * Todo 03 : Thiết kế lại thanh toán theo luồng Wallet
           *****/
+
+          /*****
+          Todo - API giỏ hàng lưu mongodb để app cũng load lại được các đối tượng trong giỏ
+          ******/
