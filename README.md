@@ -380,9 +380,12 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   ###---------Selenium--------------------
   cd ~/Desktop
   $ java -jar selenium-server-standalone-3.141.59.jar
-  
-  
+   
   ###---------user + pass--------------
   id_user+@123456789
   "username": "nghiem.manh",
   "password": "1@123456789"
+
+  
+            
+ 

@@ -9,11 +9,7 @@
 namespace common\tests\_support;
 
 
-class StoreAdditionalFee extends \yii\base\BaseObject
+class StoreAdditionalFee extends \common\models\StoreAdditionalFee
 {
-    use \common\components\conditions\ConditionTrait;
 
-    public $name;
-    public $condition_name;
-    public $condition_data;
 }

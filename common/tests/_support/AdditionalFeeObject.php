@@ -9,28 +9,39 @@
 namespace common\tests\_support;
 
 
-class AdditionalFeeObject extends \yii\base\BaseObject implements \common\components\AdditionalFeeInterface
+class AdditionalFeeObject extends \yii\base\Model implements \common\components\AdditionalFeeInterface
 {
 
+    public $storeAdditionalFee;
 
     use \common\components\AdditionalFeeTrait;
 
     public $total_test_fee_local;
 
 
+    public function attributes()
+    {
+        return ['total_test_fee_local'];
+    }
+
+    public function rules()
+    {
+        return [$this->attributes(), 'safe'];
+    }
+
     public function init()
     {
         parent::init();
     }
 
+    public function hasAttribute($name)
+    {
+        return in_array($name, $this->attributes());
+    }
+
     public function getStoreAdditionalFee()
     {
-        $condition = new TestCondition();
-        $storeAdditionalFee = new StoreAdditionalFee();
-        $storeAdditionalFee->name = 'test_fee';
-        $storeAdditionalFee->condition_name = $condition->name;
-        $storeAdditionalFee->condition_data = serialize($condition);
-        return ['test_fee' => [$storeAdditionalFee]];
+       return $this->storeAdditionalFee;
     }
 
     public function getStoreManager()
