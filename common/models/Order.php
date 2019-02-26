@@ -26,13 +26,6 @@ class Order extends DbOrder implements AdditionalFeeInterface
         ]);
     }
 
-    /**
-     * @return \common\components\StoreManager|void
-     */
-    public function getStoreManager(){
-        return \Yii::$app->storeManager;
-    }
-
     public function getItemType()
     {
         return $this->portal;
