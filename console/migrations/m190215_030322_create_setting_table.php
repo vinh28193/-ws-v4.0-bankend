@@ -1,11 +1,10 @@
 <?php
 
-use common\components\db\Migration;
 
 /**
  * Handles the creation of table `setting`.
  */
-class m190215_030322_create_setting_table extends Migration
+class m190215_030322_create_setting_table extends \common\components\db\Migration
 {
     /**
      * {@inheritdoc}

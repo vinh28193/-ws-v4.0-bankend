@@ -34,7 +34,7 @@ trait StoreAdditionalFeeRegisterTrait
             if ($app instanceof \yii\console\Application) {
                 $app->storeManager->setStore(1);
             }
-            $this->_storeManager = $app;
+            $this->_storeManager = $app->storeManager;
 
         }
         return $this->_storeManager;

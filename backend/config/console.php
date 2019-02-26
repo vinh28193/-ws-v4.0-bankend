@@ -26,6 +26,10 @@ return [
             ],
         ],
         'db' => $db,
+        'storeManager' => [
+            'class' => \common\components\consoles\StoreManager::className(),
+            'defaultDomain' => 'weshop-4.0.backend.vn'
+        ]
     ],
     'params' => $params,
 ];
