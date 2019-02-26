@@ -101,7 +101,7 @@ trait AdditionalFeeTrait
                     $additionalFee = [
                         'type_fee' => $name,
                         'amount' => $value,
-                        'local_amount' => $localValue,
+                        'amount_local' => $localValue,
                         'currency' => $storeAdditionalFee->currency,
                         'discount_amount' => $this->hasAttribute('discount_amount') ? $this->discount_amount : 0,
                     ];

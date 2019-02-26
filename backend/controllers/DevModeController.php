@@ -27,16 +27,15 @@ class DevModeController extends \yii\web\Controller
 
         $fees = [
             'origin_fee' => 60,
-            'origin_tax_fee' => 1.23,
-            'origin_shipping_fee' => 5,
-            'abc_de' => 5
+            'origin_tax_fee' => 634.9,
+            'origin_shipping_fee' => 13,
         ];
 //        $order = Order::find()->one();
 //        var_dump($order);die;
         $order = new Order();
         $order->total_weight = 12;
-        $order->setAdditionalFees($fees,true, false);
-        $order->save(false);
+        $order->exchange_rate_fee = 2333;
+        $order->setAdditionalFees($fees,true, true);
         foreach (array_keys($fees) as $name){
             $owner = "total_{$name}_local";
             if($order->hasAttribute($name)){
@@ -44,7 +43,7 @@ class DevModeController extends \yii\web\Controller
                 var_dump("$owner : $value \n");
             }
         }
-        var_dump($order);
+        var_dump($order->getAdditionalFees());
         die;
     }
 }

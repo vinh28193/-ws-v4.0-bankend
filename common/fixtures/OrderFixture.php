@@ -34,9 +34,10 @@ class OrderFixture extends ActiveFixture
         foreach ($this->getData() as $alias => $row) {
             $fee = $row['fees'];
             unset($row['fees']);
+            /** @var  $order Order*/
             $order = new Order();
-            $order->setAttributes($row);
-            $order->setAdditionalFees($fee,true,false);
+            $order->setAttributes($row, false);
+            $order->setAdditionalFees($fee,true,true);
             $order->save(0);
 //            $primaryKeys = $this->db->schema->insert($table->fullName, $row);
             $this->data[$alias] = array_merge($row, (array)$order->primaryKey);
