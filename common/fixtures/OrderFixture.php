@@ -9,6 +9,7 @@
 namespace common\fixtures;
 
 
+use common\models\Order;
 use yii\test\ActiveFixture;
 
 class OrderFixture extends ActiveFixture
@@ -25,4 +26,19 @@ class OrderFixture extends ActiveFixture
         'common\fixtures\SellerFixture',
         'common\fixtures\CouponFixture',
     ];
+
+    public function load()
+    {
+        $this->data = [];
+        $table = $this->getTableSchema();
+        foreach ($this->getData() as $alias => $row) {
+            $fee = $row['fees'];
+            unset($row['fees']);
+            $order = new Order();
+            $order->setAdditionalFees($fee,true,false);
+            $order->save(0);
+//            $primaryKeys = $this->db->schema->insert($table->fullName, $row);
+            $this->data[$alias] = array_merge($row, $order->primaryKey);
+        }
+    }
 }

@@ -35,7 +35,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
 
     public function getItemType()
     {
-        return 'test';
+        return $this->portal;
     }
 
     public function getTotalOriginPrice()
@@ -64,12 +64,12 @@ class Order extends DbOrder implements AdditionalFeeInterface
 
     public function getShippingQuantity()
     {
-        return 2;
+        return $this->total_quantity;
     }
 
     public function getExchangeRate()
     {
-        return 32000;
+        return $this->exchange_rate_fee;
     }
 
 }
