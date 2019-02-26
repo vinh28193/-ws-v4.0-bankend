@@ -63,8 +63,8 @@ trait AdditionalFeeTrait
                             $localValue = $value * $this->getExchangeRate();
                         }
                     }
-                    if($storeAdditionalFee->is_read_only){
-                        Yii::warning("can not read only additional fee '$name'");
+                    if($storeAdditionalFee->is_read_only === 1){
+                        Yii::warning("can not set read only additional fee '$name'");
                         continue;
                     }
                     $additionalFee = [
