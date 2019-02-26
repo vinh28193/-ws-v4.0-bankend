@@ -30,53 +30,11 @@ class AccountController extends BaseAuthorController
 
     public function actionAddAddress(){
         try{
-            if(!isset($this->request['first_name']) || empty($this->request['first_name'])){
-                return $this->response(false,"First Name is invalid!");
-            }
-            if(!isset($this->request['last_name']) || empty($this->request['last_name'])){
-                return $this->response(false,"Last Name is invalid!");
-            }
-            if(!isset($this->request['email']) || empty($this->request['email'])){
-                return $this->response(false,"Email is invalid!");
-            }
-            if(!isset($this->request['phone']) || empty($this->request['phone'])){
-                return $this->response(false,"Your phone is invalid!");
-            }
-            if(!isset($this->request['address']) || empty($this->request['address'])){
-                return $this->response(false,"Your address is invalid!");
-            }
-            if(!isset($this->request['country_id']) || empty($this->request['country_id']) || !($country = SystemCountry::findOne($this->request['country_id']))){
-                return $this->response(false,"Your country is invalid!");
-            }
-
-            if(!isset($this->request['province_id']) || empty($this->request['province_id']) || !($province = SystemStateProvince::findOne($this->request['province_id']))){
-                return $this->response(false,"Your province is invalid!");
-            }
-            if(!isset($this->request['district_id']) || empty($this->request['district_id']) || !($district = SystemDistrict::findOne($this->request['district_id']))){
-                return $this->response(false,"Your district is invalid!");
-            }
             $mess = "Add new address success!";
             $address = new Address();
-            $address->setAttributes($this->request);
-            $address->country_name = $country->name;
-            $address->country_name = $this->request['district_name'];
-            $address->province_name = $province->name;
-            $address->district_name = $district->name;
-
-            if(isset($this->request['is_default']) && $this->request['is_default']){
-                $count = Address::updateAll(['is_default' => 0],['customer_id'=>$this->user->id,'is_default' => 1]);
-
-                $mess .= " And change address default success!";
-                $address->is_default = 1;
-            }else{
-                $address->is_default = 0;
-            }
-
-            $address->store_id = $this->user->store_id;
-            $address->customer_id = $this->user->id;
-            $address->remove = 0;
-            $address->save(0);
-            return $this->response(true,$mess);
+            $update = $this->setData($address);
+            $mess = $update[0] ? $mess . $update[1] : $update[1] ;
+            return $this->response($update[0],$mess);
         }catch (\Exception $e){
             $data = [];
             if(!YII_DEBUG){
@@ -96,4 +54,96 @@ class AccountController extends BaseAuthorController
             return $this->response(false,"Your request is invalid!",$data);
         }
     }
+
+    /**
+     * @param Address $address
+     * @return array|mixed
+     */
+    public function setData($address){
+        if(!$address){
+            return [false,'Address not found!'];
+        }
+        if(!isset($this->request['first_name']) || empty($this->request['first_name'])){
+            return [false,'First Name is invalid!'];
+        }
+        if(!isset($this->request['last_name']) || empty($this->request['last_name'])){
+            return [false,"Last Name is invalid!"];
+        }
+        if(!isset($this->request['email']) || empty($this->request['email'])){
+            return [false,"Email is invalid!"];
+        }
+        if(!isset($this->request['phone']) || empty($this->request['phone'])){
+            return [false,"Your phone is invalid!"];
+        }
+        if(!isset($this->request['address']) || empty($this->request['address'])){
+            return [false,"Your address is invalid!"];
+        }
+        if(!isset($this->request['country_id']) || empty($this->request['country_id']) || !($country = SystemCountry::findOne($this->request['country_id']))){
+            return [false,"Your country is invalid!"];
+        }
+
+        if(!isset($this->request['province_id']) || empty($this->request['province_id']) || !($province = SystemStateProvince::findOne($this->request['province_id']))){
+            return [false,"Your province is invalid!"];
+        }
+        if(!isset($this->request['district_id']) || empty($this->request['district_id']) || !($district = SystemDistrict::findOne($this->request['district_id']))){
+            return [false,"Your district is invalid!"];
+        }
+        $address->setAttributes($this->request);
+        $address->country_name = $country->name;
+        $address->province_name = $province->name;
+        $address->district_name = $district->name;
+
+        $mess ="";
+        if(isset($this->request['is_default']) && $this->request['is_default']){
+            $count = Address::updateAll(['is_default' => 0],['customer_id'=>$this->user->id,'is_default' => 1]);
+            $mess = " And update default address success!";
+            $address->is_default = 1;
+        }else{
+            $address->is_default = 0;
+        }
+
+        $address->store_id = $this->user->store_id;
+        $address->customer_id = $this->user->id;
+        $address->remove = isset($this->request['remove']) ? $this->request['remove'] : 0;
+        $address->save(0);
+        return [true,$mess];
+    }
+
+    public function actionUpdateAddress(){
+        try{
+            $mess = "Update address success!";
+            $address = Address::findOne($this->request['id']);
+            $update = $this->setData($address);
+            $mess = $update[0] ? $mess . $update[1] : $update[1] ;
+            return $this->response($update[0],$mess);
+        }catch (\Exception $e){
+            $data = [];
+            if(!YII_DEBUG){
+                $data = [
+                    'message' => $e->getMessage(),
+                ];
+            }else{
+                $data = [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'Previous' => $e->getPrevious(),
+                    'TraceAsString' => $e->getTraceAsString(),
+                ];
+            }
+            return $this->response(false,"Your request is invalid!",$data);
+        }
+    }
+
+    public function actionGetAllAddress(){
+        $data = Address::find()
+            ->where(['remove'=>0,'customer_id' => $this->user->id])->asArray()->all();
+        return $this->response(true,"success!",$data);
+    }
+
+    public function actionUpdateProfile(){
+
+    }
+
 }
