@@ -9,7 +9,7 @@ return [
         'country_name' => 'Việt Nam',
         'address' => '656, Thôn Nhượng Bảo, Phường Siêu Trọng, Quận 51
 Hà Nam',
-        'url' => 'weshop-4.0.frontend.vn',
+        'url' => 'KYO',
         'currency' => 'VNĐ',
         'currency_id' => 1,
         'status' => 1,

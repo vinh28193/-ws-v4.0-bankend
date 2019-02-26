@@ -35,10 +35,11 @@ class OrderFixture extends ActiveFixture
             $fee = $row['fees'];
             unset($row['fees']);
             $order = new Order();
+            $order->setAttributes($row);
             $order->setAdditionalFees($fee,true,false);
             $order->save(0);
 //            $primaryKeys = $this->db->schema->insert($table->fullName, $row);
-            $this->data[$alias] = array_merge($row, $order->primaryKey);
+            $this->data[$alias] = array_merge($row, (array)$order->primaryKey);
         }
     }
 }
