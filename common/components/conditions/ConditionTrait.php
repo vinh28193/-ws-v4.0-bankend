@@ -15,6 +15,12 @@ trait ConditionTrait
 {
 
     /**
+     * @return null|float
+     */
+    public function getFeeRate(){
+        return $this->fee_rate > 0 ? $this->fee_rate : null;
+    }
+    /**
      * @return BaseCondition|null|mixed
      */
     public function getCondition()
