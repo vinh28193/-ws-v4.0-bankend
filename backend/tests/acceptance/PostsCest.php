@@ -21,21 +21,21 @@ class PostsTestCest
     public function testIndex(old $I)
     {
         $I->wantTo('ensure that post index page works');
-        $I->amOnPage(Url::to(['/admin/posts/index']));
+        $I->amOnPage(Url::to(['/api/posts/index']));
         $I->see('Posts', 'h1');
     }
 
     public function testView(old $I)
     {
         $I->wantTo('ensure that post view page works');
-        $I->amOnPage(Url::to(['/admin/posts/view', 'id' => 1]));
+        $I->amOnPage(Url::to(['/api/posts/view', 'id' => 1]));
         $I->see('First Post', 'h1');
     }
 
     public function testCreate(old $I)
     {
         $I->wantTo('ensure that post create page works');
-        $I->amOnPage(Url::to(['/admin/posts/create']));
+        $I->amOnPage(Url::to(['/api/posts/create']));
         $I->see('Create', 'h1');
 
         $I->fillField('#post-title', 'Post Create Title');
@@ -51,7 +51,7 @@ class PostsTestCest
 
     public function testDelete(old $I)
     {
-        $I->amOnPage(Url::to(['/admin/posts/view', 'id' => 3]));
+        $I->amOnPage(['/api/posts/view', 'id' => 3]);
         $I->see('Title For Deleting', 'h1');
 
         $I->click('Delete');
