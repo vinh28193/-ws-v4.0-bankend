@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+use common\components\Response;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -79,7 +80,10 @@ class User extends \common\models\db\User implements IdentityInterface
         $access_token = AccessTokens::findOne(['token' => $token]);
         if ($access_token) {
             if ($access_token->expires_at < time()) {
-                Yii::$app->api->sendFailedResponse('Access token expired');
+                \Yii::$app->response->setStatusCode(200);
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                \Yii::$app->response->data  =   ['success' => false,'message' => "Access token expired"];
+                return false;
             }
 
             return static::findOne(['id' => $access_token->user_id]);

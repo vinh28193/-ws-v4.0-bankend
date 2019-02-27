@@ -95,8 +95,10 @@ class Api extends Component
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    public function createAuthorizationCode($user_id,$type = 'user',$expired_time = 86400)
+    public function createAuthorizationCode($user_id,$type = 'user',$expired_time = null)
     {
+        $expired_time = $expired_time ? $expired_time : 60*60*5;
+
         $model = new AuthorizationCodes;
 
         $model->code = md5(uniqid());
@@ -124,8 +126,9 @@ class Api extends Component
 
     }
 
-    public function createAccesstoken($authorization_code)
+    public function createAccesstoken($authorization_code,$app_id = "user",$timeExpired = null)
     {
+        $timeExpired = $timeExpired ? $timeExpired : (60 * 60 * 24 * 60); // 60 days
 
         $auth_code = AuthorizationCodes::findOne(['code' => $authorization_code]);
 
@@ -135,11 +138,13 @@ class Api extends Component
 
         $model->auth_code = $auth_code->code;
 
-        $model->expires_at = time() + (60 * 60 * 24 * 60); // 60 days
+        $model->expires_at = time() + $timeExpired;
 
         // $model->expires_at=time()+(60 * 2);// 2 minutes
 
         $model->user_id = $auth_code->user_id;
+
+        $model->app_id = $app_id;
 
         $model->created_at = time();
 
