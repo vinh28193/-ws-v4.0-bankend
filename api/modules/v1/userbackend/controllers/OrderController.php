@@ -32,10 +32,10 @@ class OrderController extends BaseAuthorController
         /****
          * Todo Log Activity All Action In RestController login or request
          */
-        if(isset($this->request['action'])){
+        if(isset($this->post['action'])){
 
         }
-        print_r($this->request);
+        print_r($this->post);
         print_r(\Yii::$app->user->getIdentity());
         die;
     }
@@ -43,7 +43,7 @@ class OrderController extends BaseAuthorController
     public function actionGetListOrder(){
         $data = [];
         try{
-            $data = $this->searchOrder($this->request['type_order'],$this->request['keyword'],$this->request['type_search'],$this->request['time_ranger'],$this->request['status']);
+            $data = $this->searchOrder($this->post['type_order'],$this->post['keyword'],$this->post['type_search'],$this->post['time_ranger'],$this->post['status']);
         }catch (\Exception $exception){
             $data = $this->searchOrder();
         }

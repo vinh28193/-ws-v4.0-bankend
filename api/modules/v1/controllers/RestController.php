@@ -11,7 +11,8 @@ use yii\rest\Controller;
 class RestController extends Controller
 {
 
-    public $request;
+    public $post;
+    public $get;
 
     public $enableCsrfValidation = false;
 
@@ -40,9 +41,10 @@ class RestController extends Controller
 
     public function init()
     {
-        $this->request = json_decode(file_get_contents('php://input'), true);
 
-        if($this->request&&!is_array($this->request)){
+        $this->post = Yii::$app->request->post();
+        $this->get = Yii::$app->request->get();
+        if($this->post&&!is_array($this->post)){
             Yii::$app->api->sendFailedResponse(['Invalid Json']);
 
         }
@@ -53,6 +55,7 @@ class RestController extends Controller
     {
         Yii::$app->response->format = 'json';
         $message = is_null($message) ? "" : $message;
+        $message = $message ? $message : $success ? 'Success' : "Faild";
         return Response::json($success, $message, $data);
     }
 }

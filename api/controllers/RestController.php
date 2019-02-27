@@ -40,9 +40,9 @@ class RestController extends Controller
 
     public function init()
     {
-        $this->request = json_decode(file_get_contents('php://input'), true);
+        $this->post = json_decode(file_get_contents('php://input'), true);
 
-        if($this->request&&!is_array($this->request)){
+        if($this->post&&!is_array($this->post)){
             Yii::$app->api->sendFailedResponse(['Invalid Json']);
 
         }
