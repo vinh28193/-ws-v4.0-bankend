@@ -11,6 +11,7 @@ namespace api\modules\v1\userbackend\controllers;
 use api\modules\v1\weshop\controllers\BaseAuthorController;
 use common\models\Customer;
 use common\models\db\Order;
+use common\models\db\User;
 use Yii;
 
 class OrderController extends BaseAuthorController
@@ -53,7 +54,17 @@ class OrderController extends BaseAuthorController
             return [];
         }
         $query = Order::find()
-            ->with(['products','orderFees','packageItems','walletTransactions','seller','saleSupport'])
+            ->with([
+                'products',
+                'orderFees',
+                'packageItems',
+                'walletTransactions',
+                'seller',
+                'saleSupport' => function ($q) {
+                /** @var ActiveQuery $q */
+                    $q->select(['username','email','id','status', 'created_at', 'created_at']);
+                }
+                ])
             ->where(['customer_id' => $this->user->id,'remove' => 0,]);
         if($typeSearch){
             $query->andWhere(['like',$typeSearch,$keyword]);

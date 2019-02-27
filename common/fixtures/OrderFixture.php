@@ -38,6 +38,7 @@ class OrderFixture extends ActiveFixture
             $order = new Order();
             $order->setAttributes($row, false);
             $order->setAdditionalFees($fee,true,true);
+            $order->total_final_amount_local = $order->total_amount_local + $order->total_fee_amount_local;
             $order->save(0);
 //            $primaryKeys = $this->db->schema->insert($table->fullName, $row);
             $this->data[$alias] = array_merge($row, (array)$order->primaryKey);

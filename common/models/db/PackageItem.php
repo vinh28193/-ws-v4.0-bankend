@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $package_id id của package
- * @property int $package_code mã kiện của weshop
+ * @property string $package_code
  * @property string $box_me_warehouse_tag mã thẻ kho box me
  * @property int $order_id order id
  * @property string $sku sku sản phẩm
@@ -28,6 +28,7 @@ use Yii;
  * @property int $shipment_id
  * @property string $created_at thời gian tạo
  * @property string $updated_at thời gian cập nhật
+ * @property int $remove
  *
  * @property Order $order
  * @property Package $package
@@ -48,8 +49,9 @@ class PackageItem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['package_id', 'package_code', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'current_status', 'shipment_id', 'created_at', 'updated_at'], 'integer'],
+            [['package_id', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'current_status', 'shipment_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['weight', 'change_weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
+            [['package_code'], 'string', 'max' => 50],
             [['box_me_warehouse_tag', 'sku'], 'string', 'max' => 255],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Package::className(), 'targetAttribute' => ['package_id' => 'id']],
@@ -81,8 +83,9 @@ class PackageItem extends \yii\db\ActiveRecord
             'lost' => 'Lost',
             'current_status' => 'Current Status',
             'shipment_id' => 'Shipment ID',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'remove' => 'Remove',
         ];
     }
 
