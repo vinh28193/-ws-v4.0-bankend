@@ -8,12 +8,12 @@
 
 namespace common\components\cart;
 
-use common\components\cart\item\SimpleItem;
-use common\components\cart\serialize\BaseCartSerialize;
-use common\components\cart\storage\CartStorageInterface;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
+use common\components\cart\item\SimpleItem;
+use common\components\cart\serialize\BaseCartSerialize;
+use common\components\cart\storage\CartStorageInterface;
 
 /**
  * Class CartManager
