@@ -13,7 +13,7 @@ use yii\test\ActiveFixture;
 
 class PackageFixture extends ActiveFixture
 {
-    public $modelClass = 'common\models\db\Product';
+    public $modelClass = 'common\models\db\Package';
     public $depends = [
         'common\fixtures\OrderFixture',
     ];

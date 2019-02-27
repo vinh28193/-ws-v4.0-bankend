@@ -16,7 +16,7 @@ class LoginCustomerForm extends Model
     public $username;
     public $password;
     public $rememberMe = true;
-
+    const EXPIRED_LOGIN = 2592000 ;
     private $_user;
 
 
@@ -60,7 +60,7 @@ class LoginCustomerForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return \Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return \Yii::$app->user->login($this->getUser(), $this->rememberMe ? self::EXPIRED_LOGIN : 0);
         }
 
         return false;

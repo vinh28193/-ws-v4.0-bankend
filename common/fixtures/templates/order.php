@@ -24,7 +24,7 @@ if($product){
 }else{
     $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\seller.php',null));
 }
-
+//$amountDiscount = $coupon['type_amount'] ?
 return [
     'id' => $id,
     'store_id' => 1,
@@ -58,7 +58,7 @@ return [
     'support_email' => $user['email'],
     'coupon_id' => $coupon_id = $faker->randomElement([null,null,null,null,null,null,null,null,null,$coupon['id']]),
     'coupon_code' => $coupon_id ? $coupon['code'] : null,
-    'coupon_time' => $faker->unixTime(),
+    'coupon_time' => $coupon_id ? $faker->unixTime() : null,
     'revenue_xu' => 0,
     'xu_count' => 0,
     'xu_amount' => 0,
