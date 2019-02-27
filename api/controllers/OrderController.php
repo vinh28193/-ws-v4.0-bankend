@@ -119,21 +119,20 @@ class OrderController extends RestController
 
     protected function findModel($id)
     {
-        if ($id !== null) {
-            $model = Order::find()
-                ->with([
-                    'products',
-                    'orderFees',
-                    'packageItems',
-                    'walletTransactions',
-                    'seller',
-                    'saleSupport' => function ($q) {
-                        /** @var ActiveQuery $q */
-                        $q->select(['username','email','id','status', 'created_at', 'created_at']);
-                    }
-                ])
-                ->where(['id' => $id]);
-            return $model->all();
+        $query = Order::find();
+        $query->where('[[id]] = :id',[':id' => $id]);
+        $query->with([
+            'products',
+            'orderFees',
+            'packageItems',
+            'walletTransactions',
+            'seller',
+            'saleSupport' => function(\yii\db\ActiveQuery $q){
+                $q->select(['username','email','id','status', 'created_at', 'created_at']);
+            }
+        ]);
+        if (($model = $query->one()) !== null) {
+            return $model;
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
