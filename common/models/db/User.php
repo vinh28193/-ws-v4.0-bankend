@@ -16,6 +16,8 @@ use Yii;
  * @property int $status
  * @property int $created_at
  * @property int $updated_at
+ * @property string $scopes
+ * @property int $store_id
  *
  * @property Coupon[] $coupons
  * @property Order[] $orders
@@ -38,9 +40,10 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'created_at', 'updated_at', 'store_id'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
+            [['scopes'], 'string', 'max' => 500],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
@@ -62,6 +65,8 @@ class User extends \yii\db\ActiveRecord
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'scopes' => 'Scopes',
+            'store_id' => 'Store ID',
         ];
     }
 

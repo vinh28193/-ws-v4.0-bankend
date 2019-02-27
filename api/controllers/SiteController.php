@@ -91,7 +91,7 @@ class SiteController extends RestController
     {
 
         $model = new SignupForm();
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($user = $model->signup()) {
 
@@ -121,11 +121,11 @@ class SiteController extends RestController
     public function actionAccesstoken()
     {
 
-        if (!isset($this->request["authorization_code"])) {
+        if (!isset($this->post["authorization_code"])) {
             Yii::$app->api->sendFailedResponse("Authorization code missing");
         }
 
-        $authorization_code = $this->request["authorization_code"];
+        $authorization_code = $this->post["authorization_code"];
 
         $auth_code = AuthorizationCodes::isValid($authorization_code);
         if (!$auth_code) {
@@ -145,7 +145,7 @@ class SiteController extends RestController
     {
         $model = new LoginForm();
 
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
 
         if ($model->validate() && $model->login()) {

@@ -66,7 +66,7 @@ class EmployeeController extends RestController
 
     public function actionIndex()
     {
-        $params = $this->request['search'];
+        $params = $this->post['search'];
         $response = Employee::search($params);
         Yii::$app->api->sendSuccessResponse($response['data'], $response['info']);
     }
@@ -75,7 +75,7 @@ class EmployeeController extends RestController
     {
 
         $model = new Employee;
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($model->save()) {
             Yii::$app->api->sendSuccessResponse($model->attributes);
@@ -89,7 +89,7 @@ class EmployeeController extends RestController
     {
 
         $model = $this->findModel($id);
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($model->save()) {
             Yii::$app->api->sendSuccessResponse($model->attributes);

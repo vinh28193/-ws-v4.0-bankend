@@ -126,7 +126,7 @@ class Apiauth extends AuthMethod
 
         $identity = $this->authenticate(
             $this->user ?: Yii::$app->getUser(),
-            $this->request ?: Yii::$app->getRequest(),
+            $this->post ?: Yii::$app->getRequest(),
             $response
         );
 

@@ -30,10 +30,10 @@ class OrderController extends BaseAuthorController
     }
 
     public function actionIndex(){
-        if(isset($this->request['action'])){
+        if(isset($this->post['action'])){
 
         }
-        print_r($this->request);
+        print_r($this->post);
 //        print_r(\Yii::$app->user->getIdentity());
         die;
     }
