@@ -14,7 +14,7 @@ use api\modules\v1\controllers\AuthController;
 class ShipmentController extends AuthController
 {
     public function actionList(){
-        print_r($this->post);
-        die;
+        echo "122121";
+        die("die");
     }
 }
