@@ -351,6 +351,8 @@ class Order extends \yii\db\ActiveRecord
         return $this->hasMany(WalletTransaction::className(), ['order_id' => 'id']);
     }
 
+    // Optional sort/filter params: page,limit,order,search[name],search[email],search[id]... etc
+
     static public function search($params)
     {
 

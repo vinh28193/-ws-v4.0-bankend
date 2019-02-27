@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ducquan
- * Date: 28/8/2015
- * Time: 11:04 AM
- */
-
 namespace common\components;
-
 
 /**
  * Class định nghĩa dữ liệu trả về từ Service
