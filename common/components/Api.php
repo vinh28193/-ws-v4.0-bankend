@@ -36,9 +36,11 @@ class Api extends Component
         if (is_array($data))
             $response['data'] = $data;
 
+
         if ($additional_info) {
             $response = array_merge($response, $additional_info);
         }
+
 
         $response = Json::encode($response, JSON_PRETTY_PRINT);
 

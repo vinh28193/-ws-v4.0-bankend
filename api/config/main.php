@@ -89,6 +89,13 @@ return [
                 '1/post/update/<id>'=>'post/update',
                 '1/post/delete/<id>'=>'post/delete',
 
+                ### Order 27/02/2019
+                '1/order'=>'order/index',
+                '1/order/view/<id>'=>'order/view',
+                '1/order/create'=>'order/create',
+                '1/order/update/<id>'=>'order/update',
+                '1/order/delete/<id>'=>'order/delete',
+
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
