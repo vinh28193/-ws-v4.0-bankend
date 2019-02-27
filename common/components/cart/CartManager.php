@@ -26,7 +26,7 @@ class CartManager extends Component
     /**
      * @var string | \common\components\cart\storage\CartStorageInterface
      */
-    public $storage = 'common\components\cart\storage\SessionCartStorage';
+    public $storage = 'common\components\cart\storage\MongodbCartStorage';
 
     /**
      * @return CartStorageInterface|string
@@ -46,7 +46,7 @@ class CartManager extends Component
     /**
      * @var BaseCartSerialize
      */
-    public $serializer = 'common\components\cart\serialize\NormalSerializer';
+    public $serializer = 'common\components\cart\serialize\NoneSerialize';
 
     /**
      * get Serialize
@@ -91,6 +91,11 @@ class CartManager extends Component
         $this->getSerializer();
         $this->getStorage();
         $this->getUser();
+        if(get_class($this->storage) === 'common\components\cart\storage\MongodbCartStorage'){
+            if(get_class($this->serializer) !== 'common\components\cart\serialize\NoneSerialize'){
+                throw new InvalidConfigException("common\components\cart\storage\MongodbCartStorage only use common\components\cart\serialize\NoneSerialize");
+            }
+        }
     }
 
     /**
@@ -153,6 +158,9 @@ class CartManager extends Component
             if ($this->hasItem($sku, $parentSku)) {
                 if (($item = $this->getItem($sku, $parentSku)) === false) {
                     return false;
+                }
+                if(!is_object($item)){
+                    $item = new SimpleItem($item);
                 }
                 // pass new param for CartItem
                 $item->quantity += 1;
