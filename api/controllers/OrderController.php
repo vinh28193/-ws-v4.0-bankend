@@ -131,7 +131,7 @@ class OrderController extends RestController
                 $q->select(['username','email','id','status', 'created_at', 'created_at']);
             }
         ]);
-        if (($model = $query->one()) !== null) {
+        if (($model = $query->one()) !== null and  $id !== null)  {
             return $model;
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");

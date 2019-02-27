@@ -115,21 +115,18 @@ class Order extends \yii\db\ActiveRecord
      * @return array
      */
 
-    /*
     public function behaviors()
     {
         return [
             [
-                'class' => 'yii\behaviors\BlameableBehavior',
+                'class' => 'yii\behaviors\TimestampBehavior',
                 'attributes' => [
                     BaseActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                    BaseActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at'
+                    BaseActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
                 ]
             ]
         ];
     }
-
-    */
 
     /**
      * {@inheritdoc}
