@@ -11,7 +11,8 @@ use app\models\LoginForm;
 class RestController extends Controller
 {
 
-    public $request;
+    public $get;
+    public $post;
 
     public $enableCsrfValidation = false;
 
@@ -40,8 +41,8 @@ class RestController extends Controller
 
     public function init()
     {
-        $this->post = json_decode(file_get_contents('php://input'), true);
-
+        $this->post = Yii::$app->request->post();
+        $this->get = Yii::$app->request->get();
         if($this->post&&!is_array($this->post)){
             Yii::$app->api->sendFailedResponse(['Invalid Json']);
 
