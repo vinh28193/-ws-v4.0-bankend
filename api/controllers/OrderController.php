@@ -66,7 +66,7 @@ class OrderController extends RestController
 
     public function actionIndex()
     {
-        $params = $this->request['search'];
+        $params = $this->post['search'];
         $response = Order::search($params);
         //Yii::$app->api->sendSuccessResponse($response['data'], $response['info']);
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -78,7 +78,7 @@ class OrderController extends RestController
     {
 
         $model = new Order;
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($model->save()) {
             Yii::$app->api->sendSuccessResponse($model->attributes);
@@ -92,7 +92,7 @@ class OrderController extends RestController
     {
 
         $model = $this->findModel($id);
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($model->save()) {
             Yii::$app->api->sendSuccessResponse($model->attributes);
