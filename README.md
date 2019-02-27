@@ -170,6 +170,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
         }
     }
     
+    Optional sort/filter params: page,limit,order,search[name],search[email],search[id]... etc
     
  #--------------- Installing using Docker -----------------
  https://github.com/yiisoft/yii2-app-advanced/blob/master/docs/guide/start-installation.md

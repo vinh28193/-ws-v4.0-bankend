@@ -373,12 +373,24 @@ class Order extends \yii\db\ActiveRecord
         $offset = ($page - 1) * $limit;
 
         $query = Order::find()
-           // ->select(['id', 'name', 'email', 'created_at', 'updated_at'])
-            ->select(['id','created_at','updated_at','receiver_email','store_id', 'is_quotation', 'quotation_status', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'sale_support_id', 'coupon_time', 'is_email_sent', 'is_sms_sent', 'total_quantity', 'promotion_id', 'difference_money', 'seller_id', 'purchase_account_id', 'new', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'created_at', 'updated_at', 'remove'])
+            ->with([
+                'products',
+                'orderFees',
+                'packageItems',
+                'walletTransactions',
+                'seller',
+                'saleSupport' => function ($q) {
+                    /** @var ActiveQuery $q */
+                    $q->select(['username','email','id','status', 'created_at', 'created_at']);
+                }
+            ])
             ->asArray(true)
+            ->orderBy('created_at desc')
             ->limit($limit)
             ->offset($offset);
 
+
+        /*
         if(isset($params['id'])) {
             $query->andFilterWhere(['id' => $params['id']]);
         }
@@ -397,7 +409,7 @@ class Order extends \yii\db\ActiveRecord
         if(isset($order)){
             $query->orderBy($order);
         }
-
+        */
 
         $additional_info = [
             'page' => $page,
