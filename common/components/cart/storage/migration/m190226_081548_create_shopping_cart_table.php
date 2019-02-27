@@ -16,12 +16,12 @@ class m190226_081548_create_shopping_cart_table extends Migration
         $this->createTable('shopping_cart', [
             'key' => $this->string(32)->notNull()->comment('card key'),
             'identity' => $this->integer(11)->null()->comment('Identity Id'),
-            'quantity' => $this->string(32)->notNull()->comment('card key'),
             'data' => $this->binary(),
             'created_at' => $this->integer(11)->defaultValue(null)->comment('Created at (timestamp)'),
         ]);
 
         $this->addPrimaryKey('pk-key-identity','shopping_cart',['key','identity']);
+        $this->createIndex('idx-identity','shopping_cart','identity');
     }
 
     /**

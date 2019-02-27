@@ -8,20 +8,20 @@
 
 namespace common\components\cart;
 
+use common\components\cart\item\SimpleItem;
+use common\components\cart\serialize\BaseCartSerialize;
+use common\components\cart\storage\CartStorageInterface;
 use Yii;
+use yii\base\Component;
+use yii\base\InvalidConfigException;
 
-class CartManager extends \yii\base\Component
+/**
+ * Class CartManager
+ * @package common\components\cart
+ *
+ */
+class CartManager extends Component
 {
-    public $serializer = 'common\components\cart\CartSerializer';
-
-    /**
-     * @return \common\components\cart\CartSerializer
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function getSerializer()
-    {
-        return Yii::createObject($this->serializer);
-    }
 
     /**
      * @var string | \common\components\cart\storage\CartStorageInterface
@@ -29,88 +29,140 @@ class CartManager extends \yii\base\Component
     public $storage = 'common\components\cart\storage\SessionCartStorage';
 
     /**
-     * @return \stdClass
+     * @return CartStorageInterface|string
+     * @throws InvalidConfigException
      */
-    public function getUser()
-    {
-        $user = new \stdClass();
-        $user->id = 123;
-        return $user;
-    }
-
     public function getStorage()
     {
         if (!is_object($this->storage)) {
             $this->storage = Yii::createObject($this->storage);
+            if (!$this->storage instanceof CartStorageInterface) {
+                throw new InvalidConfigException(get_class($this->storage) . " not instanceof common\components\cart\CartStorageInterface");
+            }
         }
         return $this->storage;
     }
 
+    /**
+     * @var BaseCartSerialize
+     */
+    public $serializer = 'common\components\cart\serialize\NormalSerializer';
+
+    /**
+     * get Serialize
+     * @return BaseCartSerialize
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getSerializer()
+    {
+        if (!is_object($this->serializer)) {
+            $this->serializer = Yii::createObject($this->serializer);
+            if (!$this->serializer instanceof BaseCartSerialize) {
+                throw new InvalidConfigException(get_class($this->serializer) . " not instanceof common\components\cart\serialize\BaseCartSerialize");
+            }
+        }
+        return $this->serializer;
+    }
+
+    /**
+     * @var \yii\web\IdentityInterface
+     */
+    protected $user;
+
+    /**
+     * @return null|\yii\web\IdentityInterface
+     * @throws \Throwable
+     */
+    public function getUser()
+    {
+        if ($this->user === null) {
+            $this->user = Yii::$app->getUser()->getIdentity();
+        }
+        return $this->user;
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws \Throwable
+     */
     public function init()
     {
         parent::init();
+        $this->getSerializer();
+        $this->getStorage();
+        $this->getUser();
     }
 
+    /**
+     * @param $key
+     * @return array
+     * @throws \Throwable
+     */
     public function buildPrimaryKey($key)
     {
         if ($key === null) {
             $key = false;
         }
-        return [$key, $this->getUser()->id];
+        return [$key, $this->getUser()->getId()];
     }
 
-    public function hasItem($sku,$parentSku = null)
+    /**
+     * @param $sku
+     * @param null $parentSku
+     * @return bool
+     * @throws InvalidConfigException
+     * @throws \Throwable
+     */
+    public function hasItem($sku, $parentSku = null)
     {
-        $key = $sku;
-        if ($parentSku !== null) {
-            $key .= "-$parentSku";
-        }
-        $key = $this->buildPrimaryKey($key);
+        $key = $this->normalPrimaryKey($sku, $parentSku);
         return $this->getStorage()->hasItem($key);
     }
 
     /**
      * @param $sku
      * @param null $parentSku
-     * @return boolean | CartItem
-     * @throws \yii\base\InvalidConfigException
+     * @return bool|mixed
+     * @throws InvalidConfigException
+     * @throws \Throwable
      */
     public function getItem($sku, $parentSku = null)
     {
-        $key = $sku;
-        if ($parentSku !== null) {
-            $key .= "-$parentSku";
-        }
-        $key = $this->buildPrimaryKey($key);
-        if (!($value = $this->getStorage()->getItem($key))) {
+        $key = $this->normalPrimaryKey($sku, $parentSku);
+        if (($value = $this->getStorage()->getItem($key)) !== false) {
             return $this->getSerializer()->unserialize($value);
         }
         return false;
     }
 
-    public function addItem($sku, $seller, $quantity, $source, $images, $parentSku = null)
+    /**
+     * @param $sku
+     * @param $seller
+     * @param $quantity
+     * @param $source
+     * @param $image
+     * @param null $parentSku
+     * @return bool
+     * @throws \Throwable
+     */
+    public function addItem($sku, $seller, $quantity, $source, $image, $parentSku = null)
     {
-        $key = $sku;
-        if ($parentSku !== null) {
-            $key .= "-$parentSku";
-        }
-
-        $key = $this->buildPrimaryKey($key);
+        $key = $this->normalPrimaryKey($sku, $parentSku);
 
         try {
-            if ($this->getStorage()->hasItem($key)) {
-                if (!($item = $this->getItem($sku, $parentSku))) {
+            if ($this->hasItem($sku, $parentSku)) {
+                if (($item = $this->getItem($sku, $parentSku)) === false) {
                     return false;
                 }
                 // pass new param for CartItem
                 $item->quantity += 1;
-                //$item = $item->process();
+                $item = $item->process();
                 $item = $this->getSerializer()->serializer($item);
                 $this->getStorage()->setItem($key, $item);
                 return true;
             } else {
-                $item = new CartItem(['sku' => $sku, 'parentSku' => $parentSku, 'quantity' => $quantity, 'seller' => $seller, 'source' => $source, 'images' => $images]);
-                //$item = $item->process();
+                $item = new SimpleItem(['sku' => $sku, 'parentSku' => $parentSku, 'quantity' => $quantity, 'seller' => $seller, 'source' => $source, 'image' => $image]);
+                $item = $item->process();
                 $item = $this->getSerializer()->serializer($item);
                 $this->getStorage()->addItem($key, $item);
                 return true;
@@ -121,35 +173,103 @@ class CartManager extends \yii\base\Component
         }
     }
 
+    public function updateItem($sku, $seller = null, $quantity = 1, $image, $parentSku = null)
+    {
+        $key = $this->normalPrimaryKey($sku, $parentSku);
+
+        try {
+            if ($this->hasItem($sku, $parentSku)) {
+                if (($item = $this->getItem($sku, $parentSku)) === false) {
+                    return false;
+                }
+                if ($seller !== null && !$this->compareValue($item->seller, $seller, 'string')) {
+                    $item->seller = $seller;
+                }
+                if ($quantity !== null && !$this->compareValue($item->quantity, $quantity, 'int')) {
+                    $item->quantity = $quantity;
+                }
+                if ($image !== null && !$this->compareValue($item->image, $image, 'string')) {
+                    $item->image = $image;
+                }
+                $item = $item->process();
+                $item = $this->getSerializer()->serializer($item);
+                $this->getStorage()->setItem($key, $item);
+                return true;
+            }else{
+                return false;
+            }
+
+        } catch (\Exception $exception) {
+            Yii::info($exception);
+            return false;
+        }
+    }
+
     public function removeItem($sku, $parentSku = null)
     {
-        $key = $sku;
-        if ($parentSku !== null) {
-            $key .= "-$parentSku";
-        }
 
-        $key = $this->buildPrimaryKey($key);
-        if ($this->hasItem($key)) {
+        if ($this->hasItem($sku, $parentSku)) {
+            $key = $this->normalPrimaryKey($sku, $parentSku);
             return $this->getStorage()->removeItem($key);
         }
         return false;
 
     }
 
-    public function getItems(){
+    public function getItems()
+    {
         $items = $this->getStorage()->getItems($this->getUser()->id);
         $results = [];
-        foreach ($items as $key => $item){
+        foreach ($items as $key => $item) {
             $results[$key] = $this->getSerializer()->unserialize($item);
         }
         return $results;
     }
 
-    public function countItems(){
-        return $this->getStorage()->countItems($this->getUser()->id);
+    /**
+     * @return int
+     * @throws InvalidConfigException
+     * @throws \Throwable
+     */
+    public function countItems()
+    {
+        return $this->getStorage()->countItems($this->getUser()->getId());
     }
 
-    public function removeItems(){
-        return $this->getStorage()->removeItems($this->getUser()->id);
+    /**
+     * @return bool
+     * @throws InvalidConfigException
+     * @throws \Throwable
+     */
+    public function removeItems()
+    {
+        return $this->getStorage()->removeItems($this->getUser()->getId());
     }
+
+    /**
+     * @param $sku
+     * @param null $parentSku
+     * @return array
+     * @throws \Throwable
+     */
+    private function normalPrimaryKey($sku, $parentSku = null)
+    {
+        $key = $sku;
+        if ($parentSku !== null) {
+            $key .= "-$parentSku";
+        }
+        return $this->buildPrimaryKey($key);
+    }
+
+    /**
+     * @param $target
+     * @param null $source
+     * @param string $convertType
+     * @return bool|mixed
+     */
+    private function compareValue($target, $source = null, $convertType = 'string')
+    {
+        return \common\helpers\WeshopHelper::compareValue($target, $source, $convertType, '===');
+    }
+
 }
