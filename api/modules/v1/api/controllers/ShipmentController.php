@@ -14,8 +14,6 @@ use api\modules\v1\controllers\AuthController;
 class ShipmentController extends AuthController
 {
     public function actionList(){
-        echo "122121";
-        \Yii::$app->api->sendFailedResponse('Invalid Access token');
-        die("die");
+        return $this->response(true,"shipment");
     }
 }

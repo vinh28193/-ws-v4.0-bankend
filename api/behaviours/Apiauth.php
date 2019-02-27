@@ -83,7 +83,9 @@ class Apiauth extends AuthMethod
         }
         if ($accessToken !== null) {
 
-            Yii::$app->api->sendFailedResponse('Invalid Access token');
+//            Yii::$app->api->sendFailedResponse('Invalid Access token');
+            $this->response(false,"Invalid Access token",401);
+
 
             // $this->handleFailure($response);
         }
@@ -136,7 +138,8 @@ class Apiauth extends AuthMethod
             $this->challenge($response);
             $this->handleFailure($response);
 
-            Yii::$app->api->sendFailedResponse('Invalid Request');
+//            Yii::$app->api->sendFailedResponse('Invalid Request');
+            $this->response(false,"Invalid Access token",401);
             //return false;
         }
     }
@@ -147,9 +150,15 @@ class Apiauth extends AuthMethod
     public function handleFailure($response)
     {
 //        Yii::$app->api->sendFailedResponse('Invalid Access token');
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        \Yii::$app->response->data  =   ['success' => false,];
+        $this->response(false,"Invalid Access token",401);
         //throw new UnauthorizedHttpException('You are requesting with an invalid credential.');
     }
 
+    private function response($status,$mess,$statuscode){
+
+        \Yii::$app->response->setStatusCode($statuscode);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        \Yii::$app->response->data  =   ['success' => $status,'message' => $mess];
+        return false;
+    }
 }

@@ -82,17 +82,18 @@ class ConnectController extends RestController
     {
 
         if (!isset($this->post["authorization_code"])) {
-            Yii::$app->api->sendFailedResponse("Authorization code missing");
+            return $this->response(false,"Authorization code missing",[],200);
+//            Yii::$app->api->sendFailedResponse("Authorization code missing");
         }
 
         $authorization_code = $this->post["authorization_code"];
 
         $auth_code = AuthorizationCodes::isValid($authorization_code);
         if (!$auth_code) {
-            Yii::$app->api->sendFailedResponse("Invalid Authorization Code");
+            return $this->response(false,"Invalid Authorization Code",[],200);
         }
 
-        $accesstoken = Yii::$app->api->createAccesstoken($authorization_code);
+        $accesstoken = Yii::$app->api->createAccesstoken($authorization_code,"user");
 
         $data = [];
         $data['access_token'] = $accesstoken->token;
@@ -110,7 +111,7 @@ class ConnectController extends RestController
         $model->login();
         if ($model->validate() && $model->login()) {
 
-            $auth_code = Yii::$app->api->createAuthorizationCode(Yii::$app->user->identity['id']);
+            $auth_code = Yii::$app->api->createAuthorizationCode(Yii::$app->user->identity['id'],'user');
 
             $data = [];
             $data['authorization_code'] = $auth_code->code;
