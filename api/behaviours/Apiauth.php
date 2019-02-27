@@ -146,7 +146,9 @@ class Apiauth extends AuthMethod
      */
     public function handleFailure($response)
     {
-        Yii::$app->api->sendFailedResponse('Invalid Access token');
+//        Yii::$app->api->sendFailedResponse('Invalid Access token');
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        \Yii::$app->response->data  =   ['success' => false,];
         //throw new UnauthorizedHttpException('You are requesting with an invalid credential.');
     }
 
