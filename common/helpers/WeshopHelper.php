@@ -136,4 +136,26 @@ class WeshopHelper
     public static function strReplace($search, $replace, $subject, &$count = null){
         return str_replace($search, $replace, $subject, $count);
     }
+
+    /**
+     * so sánh giá trị
+     * @param $target
+     * @param null $source
+     * @param string $convertType
+     * @param string $operator
+     * @return bool|mixed
+     */
+    public static function compareValue($target, $source = null, $convertType = 'string', $operator = '===')
+    {
+        if ($source === null) {
+            return false;
+        }
+        // Todo add valid convert type
+        if (!in_array($convertType, ['string', 'int', 'float', 'integer'])) {
+            throw new InvalidArgumentException("invalid $convertType");
+        }
+        $condition = "return ($convertType)'$target' $operator ($convertType)'$source';";
+        //var_dump(eval("return ($convertType)'$target';"));die;
+        return eval($condition);
+    }
 }

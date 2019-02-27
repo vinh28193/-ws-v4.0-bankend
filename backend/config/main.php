@@ -14,10 +14,10 @@ return [
     'defaultRoute' => 'site/index',
     'modules' => [],
     'components' => [
-        'cart' => [
-            'class' => 'backend\components\ShoppingCart',
-            'sessionKey' => 'primary-cart',
-        ],
+//        'cart' => [
+//            'class' => 'backend\components\ShoppingCart',
+//            'sessionKey' => 'primary-cart',
+//        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],

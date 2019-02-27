@@ -26,6 +26,9 @@ class DevModeController extends \yii\web\Controller
     public function actionIndex()
     {
 
+        /******
+         * Todo - Test/Run All Fee Weshop
+         */
         $fees = [
             'origin_fee' => 60,
             'origin_tax_fee' => 634.9,
@@ -54,9 +57,10 @@ class DevModeController extends \yii\web\Controller
         /** @var  $cart \common\components\cart\CartManager */
 
         $cart = Yii::$app->cart;
-        //$cart->removeItems();
+        $cart->removeItems();
         $cart->addItem('BBBBB11111AA', 'sadasda', 1, 'ebay', ['sdasd'], '1222');
-        $cart->addItem('9999999999', 'vinh', 1, 'ebay', ['1223'], null);
+        $cart->addItem('9999999999', 'vinh', 1, 'ebay', '1223', null);
+        $cart->addItem('9999999999', 'vinh', 1, 'ebay', '1223', null);
         var_dump($cart->getItems());
         $cart->removeItem('9999999999');
         var_dump('brrrr');
