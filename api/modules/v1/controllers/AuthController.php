@@ -28,7 +28,6 @@ class AuthController extends RestController
         $behaviors = parent::behaviors();
 
         return $behaviors + [
-
                 'apiauth' => [
                     'class' => Apiauth::className(),
                     'exclude' => [],
