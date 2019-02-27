@@ -105,4 +105,17 @@ class FixtureUtility
         }
         return array_sum($array);
     }
+    public static function getRandomCode($length = 12,$typechar = 2){
+        $code = "";
+        for($ind = 1; $ind <= $length; $ind++){
+            $type = $typechar == 1 || $typechar ==0 ? $typechar : rand(0,1);
+            if($type == 1){
+                $code .= rand(0,9);
+            }else{
+                $code .= chr(rand(65,90));
+            }
+        }
+        return $code;
+    }
+
 }

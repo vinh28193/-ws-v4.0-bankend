@@ -36,9 +36,11 @@ class Api extends Component
         if (is_array($data))
             $response['data'] = $data;
 
+
         if ($additional_info) {
             $response = array_merge($response, $additional_info);
         }
+
 
         $response = Json::encode($response, JSON_PRETTY_PRINT);
 
@@ -93,13 +95,13 @@ class Api extends Component
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    public function createAuthorizationCode($user_id,$type = 'user')
+    public function createAuthorizationCode($user_id,$type = 'user',$expired_time = 18000)
     {
         $model = new AuthorizationCodes;
 
         $model->code = md5(uniqid());
 
-        $model->expires_at = time() + (60 * 60 * 5);
+        $model->expires_at = time() + $expired_time;
 
         $model->user_id = $user_id;
 

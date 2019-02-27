@@ -3,6 +3,7 @@
 namespace common\models\db;
 
 use Yii;
+use yii\db\BaseActiveRecord;
 
 /**
  * This is the model class for table "order".
@@ -110,6 +111,24 @@ use Yii;
  */
 class Order extends \yii\db\ActiveRecord
 {
+    /**
+     * @return array
+     */
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => 'yii\behaviors\BlameableBehavior',
+                'attributes' => [
+                    BaseActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                    BaseActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at'
+                ]
+            ]
+        ];
+    }
+
+
     /**
      * {@inheritdoc}
      */
@@ -331,4 +350,80 @@ class Order extends \yii\db\ActiveRecord
     {
         return $this->hasMany(WalletTransaction::className(), ['order_id' => 'id']);
     }
+
+    // Optional sort/filter params: page,limit,order,search[name],search[email],search[id]... etc
+
+    static public function search($params)
+    {
+
+        $page = Yii::$app->getRequest()->getQueryParam('page');
+        $limit = Yii::$app->getRequest()->getQueryParam('limit');
+        $order = Yii::$app->getRequest()->getQueryParam('order');
+
+        $search = Yii::$app->getRequest()->getQueryParam('search');
+
+        if(isset($search)){
+            $params=$search;
+        }
+
+
+
+        $limit = isset($limit) ? $limit : 10;
+        $page = isset($page) ? $page : 1;
+
+
+        $offset = ($page - 1) * $limit;
+
+        $query = Order::find()
+            ->with([
+                'products',
+                'orderFees',
+                'packageItems',
+                'walletTransactions',
+                'seller',
+                'saleSupport' => function ($q) {
+                    /** @var ActiveQuery $q */
+                    $q->select(['username','email','id','status', 'created_at', 'created_at']);
+                }
+            ])
+            ->asArray(true)
+            ->orderBy('created_at desc')
+            ->limit($limit)
+            ->offset($offset);
+
+
+        /*
+        if(isset($params['id'])) {
+            $query->andFilterWhere(['id' => $params['id']]);
+        }
+
+        if(isset($params['created_at'])) {
+            $query->andFilterWhere(['created_at' => $params['created_at']]);
+        }
+        if(isset($params['updated_at'])) {
+            $query->andFilterWhere(['updated_at' => $params['updated_at']]);
+        }
+        if(isset($params['receiver_email'])){
+            $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
+        }
+
+
+        if(isset($order)){
+            $query->orderBy($order);
+        }
+        */
+
+        $additional_info = [
+            'page' => $page,
+            'size' => $limit,
+            'totalCount' => (int)$query->count()
+        ];
+
+        return [
+            'data' => $query->all(),
+            'info' => $additional_info
+        ];
+    }
+
+
 }

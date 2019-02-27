@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "package".
  *
  * @property int $id
- * @property int $package_code mã kiện của weshop
+ * @property string $package_code
  * @property string $tracking_seller mã giao dịch của weshop
  * @property string $order_ids List mã order cách nhau bằng dấu ,
  * @property string $tracking_reference_1 mã tracking tham chiếu 1
@@ -28,6 +28,7 @@ use Yii;
  * @property int $warehouse_id id kho nhận
  * @property string $created_at thời gian tạo
  * @property string $updated_at thời gian cập nhật
+ * @property int $remove
  *
  * @property Warehouse $warehouse
  * @property PackageItem[] $packageItems
@@ -48,9 +49,10 @@ class Package extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['package_code', 'seller_shipped', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'lost', 'current_status', 'warehouse_id', 'created_at', 'updated_at'], 'integer'],
             [['order_ids', 'tracking_reference_1', 'tracking_reference_2', 'manifest_code'], 'string'],
             [['package_weight', 'package_change_weight', 'package_dimension_l', 'package_dimension_w', 'package_dimension_h'], 'number'],
+            [['seller_shipped', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'lost', 'current_status', 'warehouse_id', 'created_at', 'updated_at', 'remove'], 'integer'],
+            [['package_code'], 'string', 'max' => 50],
             [['tracking_seller'], 'string', 'max' => 255],
             [['warehouse_id'], 'exist', 'skipOnError' => true, 'targetClass' => Warehouse::className(), 'targetAttribute' => ['warehouse_id' => 'id']],
         ];
@@ -81,8 +83,9 @@ class Package extends \yii\db\ActiveRecord
             'lost' => 'Lost',
             'current_status' => 'Current Status',
             'warehouse_id' => 'Warehouse ID',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'remove' => 'Remove',
         ];
     }
 
