@@ -364,6 +364,7 @@ class Order extends \yii\db\ActiveRecord
 
         $search = Yii::$app->getRequest()->getQueryParam('search');
 
+
         if(isset($search)){
             $params=$search;
         }
@@ -378,7 +379,6 @@ class Order extends \yii\db\ActiveRecord
 
 
         $query = Order::find()
-           // ->select(['id', 'name', 'email', 'created_at', 'updated_at'])
             ->with([
                 'products',
                 'orderFees',
@@ -387,16 +387,15 @@ class Order extends \yii\db\ActiveRecord
                 'seller',
                 'saleSupport' => function ($q) {
                     /** @var ActiveQuery $q */
-                    $q->select(['username','email','id','status', 'created_at', 'created_at']);
+                    $q->select(['username','email','id','status', 'created_at', 'updated_at']);
                 }
             ])
             ->asArray(true)
-           // ->orderBy('created_at desc')
             ->limit($limit)
             ->offset($offset);
 
 
-        /*
+
         if(isset($params['id'])) {
             $query->andFilterWhere(['id' => $params['id']]);
         }
@@ -412,10 +411,39 @@ class Order extends \yii\db\ActiveRecord
         }
 
 
+        /*
+
+        if(isset($params['typeSearch']) and isset($params['keyword']) ){
+            $query->andFilterWhere(['like',$params['typeSearch'],$params['keyword']]);
+        }else{
+            $query->andWhere(['or',
+                ['like', 'id', $params['keyword']],
+                ['like', 'seller_name', $params['keyword']],
+                ['like', 'seller_store', $params['keyword']],
+                ['like', 'portal', $params['keyword']],
+            ]);
+        }
+        */
+
+        if(isset($params['type_order'])){
+            $query->andFilterWhere(['type_order' => $params['type_order'] ]);
+        }
+        if(isset($params['current_status'])){
+            $query->andFilterWhere(['current_status' => $params['current_status']]);
+        }
+        if (isset($params['time_start']) and isset($params['time_end']) ){
+            $query->andFilterWhere(['or',
+                ['>=', 'created_at', $params['time_start']],
+                ['<=', 'updated_at', $params['time_end']]
+            ]);
+        }
+
+
+
         if(isset($order)){
             $query->orderBy($order);
         }
-        */
+
 
 
 

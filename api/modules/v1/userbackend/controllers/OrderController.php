@@ -74,7 +74,7 @@ class OrderController extends BaseAuthorController
                 'seller',
                 'saleSupport' => function ($q) {
                 /** @var ActiveQuery $q */
-                    $q->select(['username','email','id','status', 'created_at', 'created_at']);
+                    $q->select(['username','email','id','status', 'created_at', 'updated_at']);
                 }
                 ])
             ->where(['customer_id' => $this->user->id,'remove' => 0,]);
