@@ -95,7 +95,7 @@ class Api extends Component
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    public function createAuthorizationCode($user_id,$type = 'user',$expired_time = 18000)
+    public function createAuthorizationCode($user_id,$type = 'user',$expired_time = 86400)
     {
         $model = new AuthorizationCodes;
 

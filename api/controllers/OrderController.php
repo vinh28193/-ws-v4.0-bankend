@@ -4,7 +4,6 @@ namespace api\controllers;
 
 
 use yii\filters\AccessControl;
-use common\models\Customer;
 use common\models\db\Order;
 use api\behaviours\Verbcheck;
 use api\behaviours\Apiauth;
@@ -67,9 +66,11 @@ class OrderController extends RestController
 
     public function actionIndex()
     {
-        $params = $this->request['search'];
+        $params = $this->post['search'];
         $response = Order::search($params);
-        Yii::$app->api->sendSuccessResponse($response['data'], $response['info']);
+        //Yii::$app->api->sendSuccessResponse($response['data'], $response['info']);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        \Yii::$app->response->data  =   array_merge($response['data'], $response['info']);
 
     }
 
@@ -77,7 +78,7 @@ class OrderController extends RestController
     {
 
         $model = new Order;
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($model->save()) {
             Yii::$app->api->sendSuccessResponse($model->attributes);
@@ -91,7 +92,7 @@ class OrderController extends RestController
     {
 
         $model = $this->findModel($id);
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($model->save()) {
             Yii::$app->api->sendSuccessResponse($model->attributes);

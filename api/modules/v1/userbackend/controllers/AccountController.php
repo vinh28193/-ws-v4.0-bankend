@@ -63,38 +63,38 @@ class AccountController extends BaseAuthorController
         if(!$address){
             return [false,'Address not found!'];
         }
-        if(!isset($this->request['first_name']) || empty($this->request['first_name'])){
+        if(!isset($this->post['first_name']) || empty($this->post['first_name'])){
             return [false,'First Name is invalid!'];
         }
-        if(!isset($this->request['last_name']) || empty($this->request['last_name'])){
+        if(!isset($this->post['last_name']) || empty($this->post['last_name'])){
             return [false,"Last Name is invalid!"];
         }
-        if(!isset($this->request['email']) || empty($this->request['email'])){
+        if(!isset($this->post['email']) || empty($this->post['email'])){
             return [false,"Email is invalid!"];
         }
-        if(!isset($this->request['phone']) || empty($this->request['phone'])){
+        if(!isset($this->post['phone']) || empty($this->post['phone'])){
             return [false,"Your phone is invalid!"];
         }
-        if(!isset($this->request['address']) || empty($this->request['address'])){
+        if(!isset($this->post['address']) || empty($this->post['address'])){
             return [false,"Your address is invalid!"];
         }
-        if(!isset($this->request['country_id']) || empty($this->request['country_id']) || !($country = SystemCountry::findOne($this->request['country_id']))){
+        if(!isset($this->post['country_id']) || empty($this->post['country_id']) || !($country = SystemCountry::findOne($this->post['country_id']))){
             return [false,"Your country is invalid!"];
         }
 
-        if(!isset($this->request['province_id']) || empty($this->request['province_id']) || !($province = SystemStateProvince::findOne($this->request['province_id']))){
+        if(!isset($this->post['province_id']) || empty($this->post['province_id']) || !($province = SystemStateProvince::findOne($this->post['province_id']))){
             return [false,"Your province is invalid!"];
         }
-        if(!isset($this->request['district_id']) || empty($this->request['district_id']) || !($district = SystemDistrict::findOne($this->request['district_id']))){
+        if(!isset($this->post['district_id']) || empty($this->post['district_id']) || !($district = SystemDistrict::findOne($this->post['district_id']))){
             return [false,"Your district is invalid!"];
         }
-        $address->setAttributes($this->request);
+        $address->setAttributes($this->post);
         $address->country_name = $country->name;
         $address->province_name = $province->name;
         $address->district_name = $district->name;
 
         $mess ="";
-        if(isset($this->request['is_default']) && $this->request['is_default']){
+        if(isset($this->post['is_default']) && $this->post['is_default']){
             $count = Address::updateAll(['is_default' => 0],['customer_id'=>$this->user->id,'is_default' => 1]);
             $mess = " And update default address success!";
             $address->is_default = 1;
@@ -104,7 +104,7 @@ class AccountController extends BaseAuthorController
 
         $address->store_id = $this->user->store_id;
         $address->customer_id = $this->user->id;
-        $address->remove = isset($this->request['remove']) ? $this->request['remove'] : 0;
+        $address->remove = isset($this->post['remove']) ? $this->post['remove'] : 0;
         $address->save(0);
         return [true,$mess];
     }
@@ -112,7 +112,7 @@ class AccountController extends BaseAuthorController
     public function actionUpdateAddress(){
         try{
             $mess = "Update address success!";
-            $address = Address::findOne($this->request['id']);
+            $address = Address::findOne($this->post['id']);
             $update = $this->setData($address);
             $mess = $update[0] ? $mess . $update[1] : $update[1] ;
             return $this->response($update[0],$mess);

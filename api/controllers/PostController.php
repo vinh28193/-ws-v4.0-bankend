@@ -66,7 +66,7 @@ class PostController extends RestController
 
     public function actionIndex()
     {
-        $params = $this->request['search'];
+        $params = $this->post['search'];
         $response = Post::search($params);
         Yii::$app->api->sendSuccessResponse($response['data'], $response['info']);
 
@@ -76,7 +76,7 @@ class PostController extends RestController
     {
 
         $model = new Post;
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($model->save()) {
             Yii::$app->api->sendSuccessResponse($model->attributes);
@@ -90,7 +90,7 @@ class PostController extends RestController
     {
 
         $model = $this->findModel($id);
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($model->save()) {
             Yii::$app->api->sendSuccessResponse($model->attributes);

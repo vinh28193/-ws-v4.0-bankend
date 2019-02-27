@@ -115,6 +115,7 @@ class Order extends \yii\db\ActiveRecord
      * @return array
      */
 
+    /*
     public function behaviors()
     {
         return [
@@ -128,6 +129,7 @@ class Order extends \yii\db\ActiveRecord
         ];
     }
 
+    */
 
     /**
      * {@inheritdoc}
@@ -374,7 +376,9 @@ class Order extends \yii\db\ActiveRecord
 
         $offset = ($page - 1) * $limit;
 
+
         $query = Order::find()
+           // ->select(['id', 'name', 'email', 'created_at', 'updated_at'])
             ->with([
                 'products',
                 'orderFees',
@@ -387,7 +391,7 @@ class Order extends \yii\db\ActiveRecord
                 }
             ])
             ->asArray(true)
-            ->orderBy('created_at desc')
+           // ->orderBy('created_at desc')
             ->limit($limit)
             ->offset($offset);
 
@@ -412,6 +416,13 @@ class Order extends \yii\db\ActiveRecord
             $query->orderBy($order);
         }
         */
+
+
+
+
+        if(isset($order)){
+            $query->orderBy($order);
+        }
 
         $additional_info = [
             'page' => $page,

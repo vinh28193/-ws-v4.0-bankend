@@ -11,6 +11,7 @@ namespace api\modules\v1\api\controllers;
 use api\behaviours\Apiauth;
 use api\behaviours\Verbcheck;
 use api\modules\v1\controllers\RestController;
+use common\models\User;
 use yii\filters\AccessControl;
 use Yii;
 use common\models\LoginForm;
@@ -50,7 +51,7 @@ class ConnectController extends RestController
     {
 
         $model = new SignupForm();
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
         if ($user = $model->signup()) {
 
@@ -80,11 +81,11 @@ class ConnectController extends RestController
     public function actionAccesstoken()
     {
 
-        if (!isset($this->request["authorization_code"])) {
+        if (!isset($this->post["authorization_code"])) {
             Yii::$app->api->sendFailedResponse("Authorization code missing");
         }
 
-        $authorization_code = $this->request["authorization_code"];
+        $authorization_code = $this->post["authorization_code"];
 
         $auth_code = AuthorizationCodes::isValid($authorization_code);
         if (!$auth_code) {
@@ -96,7 +97,7 @@ class ConnectController extends RestController
         $data = [];
         $data['access_token'] = $accesstoken->token;
         $data['expires_at'] = $accesstoken->expires_at;
-        Yii::$app->api->sendSuccessResponse($data);
+        return $this->response(true,"success",$data);
 
     }
 
@@ -104,20 +105,24 @@ class ConnectController extends RestController
     {
         $model = new LoginForm();
 
-        $model->attributes = $this->request;
+        $model->attributes = $this->post;
 
-
+        $model->login();
         if ($model->validate() && $model->login()) {
 
             $auth_code = Yii::$app->api->createAuthorizationCode(Yii::$app->user->identity['id']);
 
             $data = [];
             $data['authorization_code'] = $auth_code->code;
+            $data['user'] = Yii::$app->user->getIdentity();
             $data['expires_at'] = $auth_code->expires_at;
-
-            Yii::$app->api->sendSuccessResponse($data);
+            return $this->response(true,"Login success!",$data);
         } else {
-            Yii::$app->api->sendFailedResponse($model->errors);
+            $mess = "";
+            foreach ($model->errors as $error){
+                $mess .= $error[0]." .";
+            }
+            return $this->response(false,$mess,$model->errors);
         }
     }
 
