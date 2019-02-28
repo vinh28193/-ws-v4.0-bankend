@@ -99,6 +99,9 @@ return [
                 '1/order/update/<id>'=>'order/update',
                 '1/order/delete/<id>'=>'order/delete',
 
+                ### Login api V1
+                'v1/<name>/login/<action:\w+>'=>'v1/login/<action>',
+
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',

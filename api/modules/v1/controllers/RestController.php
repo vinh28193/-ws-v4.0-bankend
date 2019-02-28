@@ -18,6 +18,7 @@ class RestController extends Controller
 
     public $headers;
 
+    public $type_user = 'user';
 
     public function behaviors()
     {
@@ -41,6 +42,31 @@ class RestController extends Controller
 
     public function init()
     {
+        $arr_tmp = explode("/",Yii::$app->request->url);
+        $type = "";
+        foreach ($arr_tmp as $k => $v){
+            if($v == 'v1'){
+                $type = strtolower($arr_tmp[$k+1]);
+                break;
+            }
+        }
+        switch ($type){
+            case 'user':
+            case 'api':
+                \Yii::$app->user->identityClass = 'common\models\User';
+                $this->type_user = 'user';
+                break;
+            case 'userbackend':
+            case 'weshop':
+            case 'customer':
+                \Yii::$app->user->identityClass = 'common\models\Customer';
+                $this->type_user = 'customer';
+                break;
+            default:
+                $this->type_user = 'user';
+                \Yii::$app->user->identityClass = 'common\models\User';
+                break;
+        }
 
         $this->post = Yii::$app->request->post();
         $this->get = Yii::$app->request->get();
@@ -52,12 +78,33 @@ class RestController extends Controller
 
     }
 
-    public function response($success = false, $message = null, $data = null,$statusCode = 200)
+//    public function response($success = false, $message = null, $data = null,$statusCode = 200)
+//    {
+//        Yii::$app->response->format = 'json';
+//        Yii::$app->response->setStatusCode($statusCode);
+//        $message = is_null($message) ? "" : $message;
+//        return Response::json($success, $message, $data);
+//    }
+
+    public function response($success = false, $message = null, $data = null, $statusCode = 200)
     {
-        Yii::$app->response->format = 'json';
-        Yii::$app->response->setStatusCode($statusCode);
-        $message = is_null($message) ? "" : $message;
-        return Response::json($success, $message, $data);
+        $res['success'] = $success;
+        $res['message'] = $message;
+        $res['status_code'] = $statusCode;
+        if (is_object($data)) {
+            $res['data'] = $data->getAttributes();
+        } else {
+            $res['data'] = $data;
+        }
+        \Yii::$app->response->setStatusCode($statusCode);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        echo json_encode($res);
+         \Yii::$app->response->data  =   $res;
+        \Yii::$app->response->send();
+        exit();
+    }
+    public function isCustomer(){
+        return $this->type_user == 'customer';
     }
 }
 
