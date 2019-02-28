@@ -9,14 +9,14 @@
 namespace api\modules\v1\userbackend\controllers;
 
 
-use api\modules\v1\weshop\controllers\BaseAuthorController;
+use api\modules\v1\controllers\AuthController;
 use common\models\db\Customer;
 use common\models\Address;
 use common\models\db\SystemCountry;
 use common\models\db\SystemDistrict;
 use common\models\db\SystemStateProvince;
 
-class AccountController extends BaseAuthorController
+class AccountController extends AuthController
 {
     /** @var Customer $user */
     public  $user;

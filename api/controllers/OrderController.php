@@ -68,7 +68,6 @@ class OrderController extends RestController
     {
         $params = $this->post['search'];
         $response = Order::search($params);
-        //Yii::$app->api->sendSuccessResponse($response['data'], $response['info']);
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         \Yii::$app->response->data  =   array_merge($response['data'], $response['info']);
 
@@ -76,35 +75,48 @@ class OrderController extends RestController
 
     public function actionCreate()
     {
+        if (isset($this->post) !== null)  {
+            $model = new Order;
+            $model->attributes = $this->post;
 
-        $model = new Order;
-        $model->attributes = $this->post;
+            /***Todo -  Validate data model ***/
 
-        if ($model->save()) {
-            Yii::$app->api->sendSuccessResponse($model->attributes);
+            if ($model->save()) {
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                \Yii::$app->response->data  =   $model->attributes;
+            } else {
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                \Yii::$app->response->data  =   $model->errors;
+            }
         } else {
-            Yii::$app->api->sendFailedResponse($model->errors);
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
 
     }
 
     public function actionUpdate($id)
     {
+        if ($id !== null)  {
+            $model = $this->findModel($id);
+            $model->attributes = $this->post;
 
-        $model = $this->findModel($id);
-        $model->attributes = $this->post;
+            /***Todo -  Validate data model ***/
 
-        if ($model->save()) {
-            Yii::$app->api->sendSuccessResponse($model->attributes);
+            if ($model->save()) {
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                \Yii::$app->response->data  =   $model->attributes;
+            } else {
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                \Yii::$app->response->data  =   $model->errors;
+            }
         } else {
-            Yii::$app->api->sendFailedResponse($model->errors);
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
 
     }
 
     public function actionView($id)
     {
-
         $model = $this->findModel($id);
         Yii::$app->api->sendSuccessResponse($model->attributes);
     }
@@ -119,23 +131,24 @@ class OrderController extends RestController
 
     protected function findModel($id)
     {
-        if ($id !== null) {
-            $model = Order::find()
-                ->with([
-                    'products',
-                    'orderFees',
-                    'packageItems',
-                    'walletTransactions',
-                    'seller',
-                    'saleSupport' => function ($q) {
-                        /** @var ActiveQuery $q */
-                        $q->select(['username','email','id','status', 'created_at', 'created_at']);
-                    }
-                ])
-                ->where(['id' => $id]);
-            return $model->all();
+        $query = Order::find();
+        $query->where('[[id]] = :id',[':id' => $id]);
+        $query->with([
+            'products',
+            'orderFees',
+            'packageItems',
+            'walletTransactions',
+            'seller',
+            'saleSupport' => function(\yii\db\ActiveQuery $q){
+                $q->select(['username','email','id','status', 'created_at', 'created_at']);
+            }
+        ]);
+        if (($model = $query->one()) !== null and  $id !== null)  {
+            return $model;
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
     }
+
+
 }

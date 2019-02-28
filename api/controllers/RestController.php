@@ -11,7 +11,7 @@ use app\models\LoginForm;
 class RestController extends Controller
 {
 
-    public $request;
+    public $post;
 
     public $enableCsrfValidation = false;
 

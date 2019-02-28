@@ -14,7 +14,6 @@ use api\modules\v1\controllers\AuthController;
 class ShipmentController extends AuthController
 {
     public function actionList(){
-        print_r($request_post);
-        die;
+        return $this->response(true,"shipment");
     }
 }

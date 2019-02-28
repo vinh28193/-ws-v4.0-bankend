@@ -38,7 +38,10 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
 
     public function hasItem($key)
     {
-        return $this->getItem($key) !== false;
+
+        list($key, $id) = $key;
+        $keys = array_keys($this->getItems($id));
+        return in_array($key, $keys);
 
     }
 
@@ -52,7 +55,7 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
         list($key, $id) = $key;
         $values = $this->getItems($id);
         $this->removeItems($id);
-        $values = ArrayHelper::merge($values,[
+        $values = ArrayHelper::merge($values, [
             $key => $value
         ]);
         $this->getSession()->set($this->sessionName, [$id => $values]);
@@ -69,7 +72,7 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
         list($key, $id) = $key;
         $values = $this->getItems($id);
         $this->removeItems($id);
-        if(isset($values[$key])){
+        if (isset($values[$key])) {
             unset($values[$key]);
         }
         $this->getSession()->set($this->sessionName, [$id => $values]);
@@ -87,10 +90,10 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
 
     public function removeItems($identity)
     {
-        $value = $this->getSession()->get($this->sessionName, []);
-        if (isset($value[$identity])) {
-            unset($value[$identity]);
+        $items = $this->getSession()->get($this->sessionName, []);
+        if (isset($items[$identity])) {
+            unset($items[$identity]);
         }
-        return $this->getSession()->set($this->sessionName, $value);
+        return $this->getSession()->set($this->sessionName, $items);
     }
 }

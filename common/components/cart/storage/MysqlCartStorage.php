@@ -32,6 +32,12 @@ class MysqlCartStorage extends \yii\base\BaseObject implements CartStorageInterf
         $this->db = Instance::ensure($this->db, Connection::className());
     }
 
+    /**
+     * @inheritdoc
+     * @param $key
+     * @return bool
+     * @throws \yii\db\Exception
+     */
     public function hasItem($key)
     {
         list($key, $id) = $key;
@@ -44,6 +50,7 @@ class MysqlCartStorage extends \yii\base\BaseObject implements CartStorageInterf
     }
 
     /**
+     * @inheritdoc
      * @param $key
      * @param $value
      * @return mixed
@@ -51,35 +58,41 @@ class MysqlCartStorage extends \yii\base\BaseObject implements CartStorageInterf
      */
     public function setItem($key, $value)
     {
-        return $this->db->noCache(function (Connection $db) use ($key, $value) {
+
+        $this->db->noCache(function (Connection $db) use ($key, $value) {
             list($key, $id) = $key;
-            return $db->createCommand()->upsert($this->tableName, [
+            $db->createCommand()->upsert($this->tableName, [
                 'key' => $key,
                 'identity' => $id,
                 'data' => $value
             ])->execute();
         });
+          return true;
+
     }
 
     /**
+     * @inheritdoc
      * @param $key
      * @param $value
-     * @return mixed
+     * @return bool
      * @throws \Throwable
      */
     public function addItem($key, $value)
     {
-        return $this->db->noCache(function (Connection $db) use ($key, $value) {
+        $this->db->noCache(function (Connection $db) use ($key, $value) {
             list($key, $id) = $key;
-            return $db->createCommand()->insert($this->tableName, [
+            $db->createCommand()->insert($this->tableName, [
                 'key' => $key,
                 'identity' => $id,
                 'data' => $value
             ])->execute();
         });
+        return true;
     }
 
     /**
+     * @inheritdoc
      * @param $key
      * @return false|null|string
      * @throws \yii\db\Exception
@@ -109,23 +122,26 @@ class MysqlCartStorage extends \yii\base\BaseObject implements CartStorageInterf
         });
     }
 
-    public function getItems($identity){
+    public function getItems($identity)
+    {
         $query = new Query();
         $query->select(['data'])
             ->from($this->tableName)
-            ->where('[[identity]] = :identity ', [ ':identity' => $identity]);
+            ->where('[[identity]] = :identity ', [':identity' => $identity]);
         return $query->createCommand($this->db)->queryAll();
     }
 
-    public function countItems($identity){
+    public function countItems($identity)
+    {
         $query = new Query();
         $query->select(['COUNT(*)'])
             ->from($this->tableName)
             ->where('[[identity]] = :identity', [':identity' => $identity]);
-       return $query->createCommand($this->db)->queryScalar();
+        return $query->createCommand($this->db)->queryScalar();
     }
 
-    public function removeItems($identity){
+    public function removeItems($identity)
+    {
         return $this->db->noCache(function (Connection $db) use ($identity) {
             return $db->createCommand()
                 ->delete($this->tableName, ['identity' => $identity])
