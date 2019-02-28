@@ -368,19 +368,14 @@ class Order extends \yii\db\ActiveRecord
 
         $search = Yii::$app->getRequest()->getQueryParam('search');
 
-
         if(isset($search)){
             $params=$search;
         }
 
-
-
         $limit = isset($limit) ? $limit : 10;
         $page = isset($page) ? $page : 1;
 
-
         $offset = ($page - 1) * $limit;
-
 
         $query = Order::find()
             ->with([
@@ -398,8 +393,6 @@ class Order extends \yii\db\ActiveRecord
             ->limit($limit)
             ->offset($offset);
 
-
-
         if(isset($params['id'])) {
             $query->andFilterWhere(['id' => $params['id']]);
         }
@@ -413,7 +406,6 @@ class Order extends \yii\db\ActiveRecord
         if(isset($params['receiver_email'])){
             $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
         }
-
 
         /*
 
@@ -442,14 +434,9 @@ class Order extends \yii\db\ActiveRecord
             ]);
         }
 
-
-
         if(isset($order)){
             $query->orderBy($order);
         }
-
-
-
 
 
         if(isset($order)){
