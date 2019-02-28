@@ -33,7 +33,7 @@ class UserFixture extends ActiveFixture
         return [
             'id' => 1,
             'username' => 'weshopdev',
-            'auth_key' => \Yii::$app->security->generateRandomString(40),
+            'auth_key' => \Yii::$app->security->generateRandomString(),
             'password_hash' => \Yii::$app->security->generatePasswordHash('123456'),
             'password_reset_token' => null,
             'email' => 'weshop.dev@weshop.asia',

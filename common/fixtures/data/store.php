@@ -10,6 +10,8 @@ return [
         'address' => '656, Thôn Nhượng Bảo, Phường Siêu Trọng, Quận 51
 Hà Nam',
         'url' => 'KYO',
+        'app_id' => 'KYO',
+        'store_alias' => 'KYO',
         'currency' => 'VNĐ',
         'currency_id' => 1,
         'status' => 1,
