@@ -153,6 +153,7 @@ class Order extends \yii\db\ActiveRecord
             [['quotation_status', 'difference_money'], 'in', 'range' => [0, 1, 2]],
             [['receiver_email', 'support_email', 'purchase_account_email'], 'email'],
             [['seller_store'], 'url'],
+            [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'],'filter','filter' => '\yii\helpers\Html::encode'],
             [['note_by_customer', 'note', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_card', 'purchase_account_email', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'], 'filter','filter' => '\yii\helpers\Html::encode',],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['receiver_address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Address::className(), 'targetAttribute' => ['receiver_address_id' => 'id']],
