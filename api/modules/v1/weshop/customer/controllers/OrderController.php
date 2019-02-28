@@ -9,13 +9,13 @@
 namespace api\modules\v1\weshop\customer\controllers;
 
 
-use api\modules\v1\weshop\controllers\BaseAuthorController;
+use api\modules\v1\controllers\AuthController;
 use common\models\Customer;
 //use common\models\Order;
 use common\models\db\Order;
 use Yii;
 
-class OrderController extends BaseAuthorController
+class OrderController extends AuthController
 {
     public  $page = 1;
     public  $limit = 20;

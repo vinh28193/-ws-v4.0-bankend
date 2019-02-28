@@ -12,6 +12,9 @@ class m190221_030045_coupon extends Migration
      */
     public function safeUp()
     {
+        /***ToDo Coupon Có 2 loại trừ tiền hoặc % Phí dịch vụ
+         * Coupon  Có thể là chương trinh của Mar Ví dụ giám giá 50% phí dịch vụ Weshop , hoặc chạy mã VALENTIN200 trừ 200K vào sản phẩm và cho KH mới hoặc 1 tập cho  sẵn
+        ****/
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
