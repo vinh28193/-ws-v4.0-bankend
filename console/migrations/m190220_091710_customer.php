@@ -33,7 +33,7 @@ class m190220_091710_customer extends Migration
             'phone_verified' => $this->tinyInteger(4)->comment(""),
             'last_order_time' => $this->dateTime()->comment(""),
             'note_by_employee' => $this->text()->comment(""),
-            'type_customer' => $this->integer(11)->comment(""),
+            'type_customer' => $this->integer(11)->comment(" set 1 là Khách Buôn và 2 là Khách buôn - WholeSale Customer "),
             'access_token' => $this->string(255)->comment(""),
             'auth_client' => $this->string(255)->comment(""),
             'verify_token' => $this->string(255)->comment(""),
