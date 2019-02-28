@@ -29,6 +29,9 @@ return [
                 'userbackend' => [
                     'class' => 'api\modules\v1\userbackend\Module',
                 ],
+                'payment' => [
+                    'class' => 'api\modules\v1\payment\PaymentModule',
+                ],
             ],
         ],
     ],
@@ -97,7 +100,9 @@ return [
                 '1/order/delete/<id>'=>'order/delete',
 
                 ### Login api V1
-                'v1/<name>/login/<action:\w+>'=>'v1/login/<action>',
+                'v1/<text:\w+>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',
+                'v1/<text:\w+>/service/order/<action:\w+>'=>'v1/service/order/<action>',
+
 
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
