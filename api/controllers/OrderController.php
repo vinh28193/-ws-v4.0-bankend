@@ -14,6 +14,34 @@ use Yii;
 
 class OrderController extends RestController
 {
+    /*
+     * ```php
+     * public function behaviors()
+     * {
+     *     return [
+     *         'access' => [
+     *             'class' => \yii\filters\AccessControl::className(),
+     *             'only' => ['create', 'update'],
+     *             'rules' => [
+     *                 // deny all POST requests
+     *                 [
+     *                     'allow' => false,
+     *                     'verbs' => ['POST']
+     *                 ],
+     *                 // allow authenticated users
+     *                 [
+     *                     'allow' => true,
+     *                     'roles' => ['@'],
+     *                 ],
+     *                 // everything else is denied
+     *             ],
+     *         ],
+     *     ];
+     * }
+     */
+
+    public  $page = 1;
+    public  $limit = 20;
 
     public function behaviors()
     {
@@ -118,7 +146,9 @@ class OrderController extends RestController
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        Yii::$app->api->sendSuccessResponse($model->attributes);
+       // Yii::$app->api->sendSuccessResponse($model);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        \Yii::$app->response->data  =   $model;
     }
 
     public function actionDelete($id)
@@ -131,20 +161,21 @@ class OrderController extends RestController
 
     protected function findModel($id)
     {
-        $query = Order::find();
-        $query->where('[[id]] = :id',[':id' => $id]);
-        $query->with([
-            'products',
-            'orderFees',
-            'packageItems',
-            'walletTransactions',
-            'seller',
-            'saleSupport' => function(\yii\db\ActiveQuery $q){
-                $q->select(['username','email','id','status', 'created_at', 'created_at']);
-            }
-        ]);
-        if (($model = $query->one()) !== null and  $id !== null)  {
-            return $model;
+        $query = Order::find()
+             ->with([
+                'products',
+                'orderFees',
+                'packageItems',
+                'walletTransactions',
+                'seller',
+                'saleSupport' => function(\yii\db\ActiveQuery $q){
+                    $q->select(['username','email','id','status', 'created_at', 'created_at']);
+                }
+            ])
+            ->where(['id' => $id] );
+
+        if ( $id !== null)  {
+            return $query->orderBy('created_at desc')->limit($this->limit)->offset($this->page* $this->limit - $this->limit)->asArray()->all();
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
