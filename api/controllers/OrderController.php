@@ -79,6 +79,8 @@ class OrderController extends RestController
             $model = new Order;
             $model->attributes = $this->post;
 
+            /***Todo -  Validate data model ***/
+
             if ($model->save()) {
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 \Yii::$app->response->data  =   $model->attributes;
@@ -97,6 +99,8 @@ class OrderController extends RestController
         if ($id !== null)  {
             $model = $this->findModel($id);
             $model->attributes = $this->post;
+
+            /***Todo -  Validate data model ***/
 
             if ($model->save()) {
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
