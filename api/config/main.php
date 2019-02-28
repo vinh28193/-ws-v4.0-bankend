@@ -29,6 +29,9 @@ return [
                 'userbackend' => [
                     'class' => 'api\modules\v1\userbackend\Module',
                 ],
+                'payment' => [
+                    'class' => 'api\modules\v1\payment\PaymentModule',
+                ],
             ],
         ],
     ],
