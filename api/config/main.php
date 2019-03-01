@@ -38,11 +38,33 @@ return [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
+        /*
         'response' => [
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
             // ...
         ],
+        */
+        'response' => [
+            //'class' => 'yii\web\Response',
+            'format' => yii\web\Response::FORMAT_JSON,
+            'charset' => 'UTF-8',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                if ($response->data !== null) {
+                    $response->data = [
+                        'success' => $response->isSuccessful,
+                        'timestamp' => time(),
+                        'path' => Yii::$app->request->getPathInfo(),
+                        'data' => $response->data,
+                    ];
+
+                    /** Todo Save mongodb to Report API route
+                    **/
+                }
+            },
+        ],
+
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -111,7 +133,6 @@ return [
             ],
 
         ],
-
     ],
     'params' => $params,
 ];
