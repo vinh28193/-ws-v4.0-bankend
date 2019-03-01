@@ -16,10 +16,6 @@ class TestController extends \yii\web\Controller
 
     public function actionIndex(){
 
-        $payment = new Payment();
-        $payment->getProviders();
-
-        var_dump($payment);
-        die;
+        return $this->render('index');
     }
 }

@@ -12,4 +12,16 @@ namespace weshop\payment;
 class PaymentAssets extends \yii\web\AssetBundle
 {
 
+    public $sourcePath = '@weshop/payment/assets';
+    public $css = [
+
+    ];
+    public $js = [
+        'ws.payment.js',
+    ];
+
+    public $depends = [
+        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapAsset',
+    ];
 }
