@@ -280,8 +280,7 @@ class ReportController extends AuthController
         return $this->response(true, "ok", $data);
     }
 
-    public
-    function actionUserlastpaid()
+    public function actionUserlastpaid()
     {
         $customerId = Yii::$app->request->post('id');
 

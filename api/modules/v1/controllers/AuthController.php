@@ -79,6 +79,9 @@ class AuthController extends RestController
     public function beforeAction($action)
     {
         $before = parent::beforeAction($action);
+        if(Yii::$app->user->isGuest){
+            return $this->response(false,"pls login!",null,401);
+        }
         $user_id = Yii::$app->user->getIdentity()->getId();
         $key = $action->controller->id."/".$action->actionMethod;
         if(isset($this->get['scope']) && $this->get['scope'] == "clear"){

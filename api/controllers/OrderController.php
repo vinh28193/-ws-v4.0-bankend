@@ -4,7 +4,7 @@ namespace api\controllers;
 
 
 use yii\filters\AccessControl;
-use common\models\db\Order;
+use common\models\Order;
 use api\behaviours\Verbcheck;
 use api\behaviours\Apiauth;
 
@@ -125,7 +125,7 @@ class OrderController extends RestController
     public function actionUpdate($id)
     {
         if ($id !== null)  {
-            $model = $this->findModel($id);
+            $model = $this->findOrder($id);
             $model->attributes = $this->post;
 
             /***Todo -  Validate data model ***/
@@ -161,7 +161,7 @@ class OrderController extends RestController
 
     protected function findModel($id)
     {
-        $query = Order::find()
+        $model = Order::find()
              ->with([
                 'products',
                 'orderFees',
@@ -175,7 +175,16 @@ class OrderController extends RestController
             ->where(['id' => $id] );
 
         if ( $id !== null)  {
-            return $query->orderBy('created_at desc')->limit($this->limit)->offset($this->page* $this->limit - $this->limit)->asArray()->all();
+            return $model->orderBy('created_at desc')->limit($this->limit)->offset($this->page* $this->limit - $this->limit)->asArray()->all();
+        } else {
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        }
+    }
+
+    protected function findOrder($id)
+    {
+        if (($model = Order::findOne($id)) !== null) {
+            return $model;
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
