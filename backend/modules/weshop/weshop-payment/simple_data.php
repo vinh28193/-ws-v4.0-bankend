@@ -8,13 +8,15 @@
 
 return [
     'visaMaster' => [
-        'name' => 'Visa Master',
+        'class' => 'weshop\payment\providers\simple\SimplePaymentProvider',
         'username' => 'username',
         'password' => 'password',
         'submit_url' => 'http://weshop-4.0.api.vn',
+        'return_url' => 'http://weshop-4.0.api.vn',
+        'cancel_url' => 'http://weshop-4.0.api.vn',
         'methods' => [
-            'visa' => [
-                'name' => 'visa',
+            'visaMaster' => [
+                'class' => 'weshop\payment\methods\VisaMaster',
                 'banks' => [
                     'vcb' => [
                         'name' => 'vcb',
@@ -26,8 +28,8 @@ return [
                     ]
                 ]
             ],
-            'master' => [
-                'name' => 'master',
+            'bankTransfer' => [
+                'class' => 'weshop\payment\methods\BankTransfer',
                 'banks' => [
                     'vcb' => [
                         'name' => 'vcb',
@@ -38,12 +40,11 @@ return [
                         'icon' => ''
                     ]
                 ]
-            ],
+            ]
         ]
     ],
     'wallet' => [
-        'name' => 'WS Wallet',
-        'submit_url' => 'http://weshop-4.0.api.vn',
+        'class' => 'weshop\payment\providers\wallet\WeshopWalletProvider',
         'methods' => [],
     ]
 ];

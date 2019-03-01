@@ -6,8 +6,9 @@
  * Time: 10:35
  */
 
-namespace api\modules\v1\payment;
+namespace weshop\payment;
 
+use weshop\payment\traits\OwnerTrait;
 /**
  * Class BasePaymentProvider
  * @package api\modules\v1\payment
@@ -16,6 +17,7 @@ namespace api\modules\v1\payment;
 abstract class BasePaymentProvider extends \yii\base\BaseObject
 {
 
+    use OwnerTrait;
 
     /**
      * @var array|string

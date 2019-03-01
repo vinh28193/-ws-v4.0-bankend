@@ -6,18 +6,22 @@
  * Time: 15:29
  */
 
-namespace api\modules\v1\payment\providers;
+namespace weshop\payment\providers\simple;
 
-class SimplePaymentProvider extends \api\modules\v1\payment\BasePaymentProvider
+class SimplePaymentProvider extends \weshop\payment\BasePaymentProvider
 {
 
-    public $merchantId = '122828873737';
-    public $merchantPass = '122828873737';
+    public $username;
+    public $password;
+    public $submit_url;
+    public $return_url;
+    public $cancel_url;
 
     public function getIsSanBox()
     {
         return false;
     }
+
     public function getName()
     {
         return 'Simple';

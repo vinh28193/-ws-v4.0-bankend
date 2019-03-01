@@ -6,10 +6,10 @@
  * Time: 14:51
  */
 
-namespace api\modules\v1\payment\controllers;
+namespace weshop\payment\controllers;
 
 
-use api\modules\v1\payment\Payment;
+use weshop\payment\Payment;
 
 class TestController extends \yii\web\Controller
 {
