@@ -6,7 +6,7 @@
  * Time: 16:39
  */
 
-namespace api\modules\v1\payment;
+namespace weshop\payment;
 
 
 class PaymentRequest extends \yii\base\BaseObject

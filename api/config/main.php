@@ -10,7 +10,7 @@ return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log','v1/payment'],
     'modules' => [
         'v1' => [
             'class' => 'api\modules\v1\Module',
@@ -28,9 +28,6 @@ return [
                 ],
                 'userbackend' => [
                     'class' => 'api\modules\v1\userbackend\Module',
-                ],
-                'payment' => [
-                    'class' => 'api\modules\v1\payment\PaymentModule',
                 ],
             ],
         ],

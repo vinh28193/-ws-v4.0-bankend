@@ -3,13 +3,13 @@
  * Created by PhpStorm.
  * User: vinhs
  * Date: 2019-02-28
- * Time: 16:41
+ * Time: 11:28
  */
 
-namespace api\modules\v1\payment;
+namespace weshop\payment;
 
 
-class PaymentResponse
+class Payment extends BasePayment
 {
 
 }

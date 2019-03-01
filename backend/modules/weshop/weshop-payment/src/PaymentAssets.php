@@ -6,7 +6,7 @@
  * Time: 10:34
  */
 
-namespace api\modules\v1\payment;
+namespace weshop\payment;
 
 
 class PaymentAssets extends \yii\web\AssetBundle

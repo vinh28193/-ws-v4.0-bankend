@@ -12,7 +12,11 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'backend\controllers',
     'defaultRoute' => 'site/index',
-    'modules' => [],
+    'modules' => [
+        'payment' => [
+            'class' => 'weshop\payment\PaymentModule',
+        ],
+    ],
     'components' => [
 //        'cart' => [
 //            'class' => 'backend\components\ShoppingCart',

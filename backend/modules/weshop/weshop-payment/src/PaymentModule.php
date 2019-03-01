@@ -1,16 +1,18 @@
 <?php
 
-namespace api\modules\v1\payment;
+namespace weshop\payment;
 
+use Yii;
 /**
  * payment module definition class
  */
 class PaymentModule extends \yii\base\Module
 {
+
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'api\modules\v1\payment\controllers';
+    public $controllerNamespace = 'weshop\\payment\\controllers';
 
     /**
      * {@inheritdoc}
@@ -27,7 +29,7 @@ class PaymentModule extends \yii\base\Module
     public function bootstrap($app)
     {
         if ($app instanceof \yii\web\Application) {
-
+            $app->response->format = \yii\web\Response::FORMAT_HTML;
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace api\modules\v1\payment\controllers;
+namespace weshop\payment\controllers;
 
 use yii\web\Controller;
 
