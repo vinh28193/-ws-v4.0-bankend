@@ -1,10 +1,10 @@
 <?php
 
-namespace api\controllers;
+namespace backend\controllers;
 
 use Yii;
-use app\models\Logrouteapi;
-use app\models\LogrouteapiSearch;
+use backend\models\Logrouteapi;
+use backend\models\LogrouteapiSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

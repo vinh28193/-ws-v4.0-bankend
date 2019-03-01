@@ -28,7 +28,7 @@ return [
         ],
         'mongodb-migrate' => [
             'class' => 'yii\mongodb\console\controllers\MigrateController',
-            'migrationPath' => ['@console/mongodb-migrations']
+            'migrationPath' => ['@console/migrations-mongodb']
         ]
     ],
     'components' => [
@@ -43,7 +43,11 @@ return [
         'storeManager' => [
             'class' => common\components\consoles\StoreManager::className(),
             'defaultDomain' => 'weshop.v4.api.frontend'
-        ]
+        ],
+        'mongodb' => [
+            'class' => '\yii\mongodb\Connection',
+            'dsn' => 'mongodb://192.168.11.252:27017/admin',
+        ],
     ],
     'params' => $params,
 ];

@@ -4,11 +4,11 @@ class m160201_102003_create_logrouteapi_collection extends \yii\mongodb\Migratio
 {
     public function up()
     {
-        $this->createCollection('logrouteapi');
+        $this->createCollection('weshop_global_log_api_route');
     }
 
     public function down()
     {
-        $this->dropCollection('logrouteapi');
+        $this->dropCollection('weshop_global_log_api_route');
     }
 }

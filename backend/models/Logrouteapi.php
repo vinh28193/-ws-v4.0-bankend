@@ -1,12 +1,12 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\mongodb\ActiveRecord;
 
 /**
- * This is the model class for collection "customer".
+ * This is the model class for collection "weshop_global_log_api_route".
  *
  * @property \MongoId|string $_id
  * @property mixed $name
@@ -18,7 +18,7 @@ class Logrouteapi extends ActiveRecord
 {
     public static function collectionName()
     {
-        return 'customer';
+        return 'weshop_global_log_api_route';
     }
 
     public function attributes()
