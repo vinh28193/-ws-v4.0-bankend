@@ -22,9 +22,9 @@ class Order extends DbOrder implements AdditionalFeeInterface
     public function behaviors()
     {
         return array_merge(parent::behaviors(),[
-//            'orderFee' => [
-//                'class' => \common\behaviors\AdditionalFeeBehavior::className()
-//            ],
+            'orderFee' => [
+                'class' => \common\behaviors\AdditionalFeeBehavior::className()
+            ],
             [
                 'class' => 'yii\behaviors\TimestampBehavior',
                 'attributes' => [
