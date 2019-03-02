@@ -18,17 +18,6 @@ return [
                 'api' => [
                     'class' => 'api\modules\v1\api\Module',
                 ],
-                'weshop' => [
-                    'class' => 'api\modules\v1\weshop\Module',
-                    'modules' => [
-                        'customer' => [
-                            'class' => 'api\modules\v1\weshop\customer\Module',
-                        ],
-                    ],
-                ],
-                'userbackend' => [
-                    'class' => 'api\modules\v1\userbackend\Module',
-                ],
                 'payment' => [
                     'class' => 'api\modules\v1\payment\PaymentModule',
                 ],
@@ -100,9 +89,8 @@ return [
                 '1/order/delete/<id>'=>'order/delete',
 
                 ### Login api V1
-                'v1/<text:\w+>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',
-                'v1/<text:\w+>/service/order/<action:\w+>'=>'v1/service/order/<action>',
-
+                'v1/<name>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',
+                'v1/<name>/api/<controller:\w+>/<action:\w+>/<actionKey:\w*>'=>'v1/api/<controller>/<action>',
 
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',

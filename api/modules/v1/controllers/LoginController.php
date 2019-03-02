@@ -66,6 +66,7 @@ class LoginController extends RestController
     public function actionIndex()
     {
         Yii::$app->api->sendSuccessResponse(['Yii2 RESTful API with OAuth2']);
+        exit();
         //  return $this->render('index');
     }
 
@@ -104,7 +105,7 @@ class LoginController extends RestController
     {
 
         if (!isset($this->post["authorization_code"])) {
-            return $this->response(false,"Authorization code missing",[],401);
+            return $this->response(false,"Authorization code missing",[],0,401);
 //            Yii::$app->api->sendFailedResponse("Authorization code missing");
         }
 
@@ -112,7 +113,7 @@ class LoginController extends RestController
 
         $auth_code = AuthorizationCodes::isValid($authorization_code);
         if (!$auth_code) {
-            return $this->response(false,"Invalid Authorization Code",[],401);
+            return $this->response(false,"Invalid Authorization Code",[],0,401);
         }
 
         $accesstoken = Yii::$app->api->createAccesstoken($authorization_code,$this->type_user,$this->expiredLogin);
