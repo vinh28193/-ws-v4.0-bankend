@@ -4,3 +4,5 @@ Yii::setAlias('@api', dirname(dirname(__DIR__)) . '/api');
 Yii::setAlias('@backend', dirname(dirname(__DIR__)) . '/backend');
 Yii::setAlias('@userbackend', dirname(dirname(__DIR__)) . '/userbackend');
 Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
+Yii::setAlias('@weshop','@backend/modules/weshop');
+Yii::setAlias('@weshop/payment','@weshop/weshop-payment/src');

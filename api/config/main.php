@@ -10,7 +10,7 @@ return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log','v1/payment'],
     'modules' => [
         'v1' => [
             'class' => 'api\modules\v1\Module',
@@ -18,8 +18,16 @@ return [
                 'api' => [
                     'class' => 'api\modules\v1\api\Module',
                 ],
-                'payment' => [
-                    'class' => 'api\modules\v1\payment\PaymentModule',
+                'weshop' => [
+                    'class' => 'api\modules\v1\weshop\Module',
+                    'modules' => [
+                        'customer' => [
+                            'class' => 'api\modules\v1\weshop\customer\Module',
+                        ],
+                    ],
+                ],
+                'userbackend' => [
+                    'class' => 'api\modules\v1\userbackend\Module',
                 ],
             ],
         ],
@@ -30,11 +38,33 @@ return [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
+        /*
         'response' => [
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
             // ...
         ],
+        */
+        'response' => [
+            //'class' => 'yii\web\Response',
+            'format' => yii\web\Response::FORMAT_JSON,
+            'charset' => 'UTF-8',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                if ($response->data !== null) {
+                    $response->data = [
+                        'success' => $response->isSuccessful,
+                        'timestamp' => time(),
+                        'path' => Yii::$app->request->getPathInfo(),
+                        'data' => $response->data,
+                    ];
+
+                    /** Todo Save mongodb to Report API route
+                    **/
+                }
+            },
+        ],
+
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -92,6 +122,7 @@ return [
                 'v1/<name>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',
                 'v1/<name>/api/<controller:\w+>/<action:\w+>/<actionKey:\w*>'=>'v1/api/<controller>/<action>',
 
+
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
@@ -102,7 +133,6 @@ return [
             ],
 
         ],
-
     ],
     'params' => $params,
 ];
