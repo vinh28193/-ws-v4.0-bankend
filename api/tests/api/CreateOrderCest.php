@@ -102,10 +102,10 @@ class CreateOrderCest
             "current_status" : "Current Status", 
             "remove" : "Remove"
         }');
-        //$I->seeResponseCodeIs(HttpCode::OK); // 200
-        $I->seeResponseCodeIsSuccessful();
+        $I->seeResponseCodeIs(HttpCode::OK); // 200
+        //$I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"success": true}');
+        //$I->seeResponseContains('{"success": true}');
 
     }
 }
