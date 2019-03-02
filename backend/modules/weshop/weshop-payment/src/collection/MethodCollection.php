@@ -6,7 +6,7 @@
  * Time: 08:45
  */
 
-namespace api\modules\v1\payment\collection;
+namespace weshop\payment\collection;
 
 
 class MethodCollection extends \yii\base\BaseObject implements \IteratorAggregate, \ArrayAccess, \Countable
