@@ -119,8 +119,8 @@ return [
                 '1/order/delete/<id>'=>'order/delete',
 
                 ### Login api V1
-                'v1/<text:\w+>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',
-                'v1/<text:\w+>/service/order/<action:\w+>'=>'v1/service/order/<action>',
+                'v1/<name>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',
+                'v1/<name>/api/<controller:\w+>/<action:\w+>/<actionKey:\w*>'=>'v1/api/<controller>/<action>',
 
 
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
