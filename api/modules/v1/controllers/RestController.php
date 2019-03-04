@@ -42,14 +42,13 @@ class RestController extends Controller
 
     public function init()
     {
-        $arr_tmp = explode("/",Yii::$app->request->url);
-        $type = "";
-        foreach ($arr_tmp as $k => $v){
-            if($v == 'v1'){
-                $type = strtolower($arr_tmp[$k+1]);
-                break;
-            }
+        $this->post = Yii::$app->request->post();
+        $this->get = Yii::$app->request->get();
+        if($this->post&&!is_array($this->post)){
+            Yii::$app->api->sendFailedResponse(['Invalid Json']);
         }
+        $arr_tmp = explode("/",Yii::$app->request->url);
+        $type = isset($this->get['name']) && $this->get['name'] ? $this->get['name'] : 'user';
         switch ($type){
             case 'user':
             case 'api':
@@ -67,12 +66,6 @@ class RestController extends Controller
                 \Yii::$app->user->identityClass = 'common\models\User';
                 break;
         }
-
-        $this->post = Yii::$app->request->post();
-        $this->get = Yii::$app->request->get();
-        if($this->post&&!is_array($this->post)){
-            Yii::$app->api->sendFailedResponse(['Invalid Json']);
-        }
         //            Yii::$app->api->sendFailedResponse('Invalid Access token');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
@@ -86,11 +79,12 @@ class RestController extends Controller
 //        return Response::json($success, $message, $data);
 //    }
 
-    public function response($success = false, $message = null, $data = null, $statusCode = 200)
+    public function response($success = false, $message = null, $data = null,$total = 0, $statusCode = 200)
     {
         $res['success'] = $success;
         $res['message'] = $message;
         $res['status_code'] = $statusCode;
+        $res['total'] = $total;
         if (is_object($data)) {
             $res['data'] = $data->getAttributes();
         } else {

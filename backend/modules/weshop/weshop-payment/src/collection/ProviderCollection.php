@@ -6,7 +6,7 @@
  * Time: 09:17
  */
 
-namespace api\modules\v1\payment\collection;
+namespace weshop\payment\collection;
 
 
 class ProviderCollection extends \yii\base\BaseObject implements \IteratorAggregate, \ArrayAccess, \Countable

@@ -25,6 +25,8 @@ use yii\web\NotFoundHttpException;
 class StoreManager extends Component
 {
 
+    public $defaultDomain = 'weshop-4.0.frontend.vn';
+
     /**
      * @var string
      */
@@ -41,7 +43,7 @@ class StoreManager extends Component
     /**
      * @var StoreInterface;
      */
-    public $_store;
+    protected $_store;
 
     /**
      * initialize store
@@ -64,9 +66,9 @@ class StoreManager extends Component
         if($this->_store === null){
             /** @var $class StoreInterface */
             $class = $this->storeClass;
-            $this->_store = $class::getActiveStore(['url' => $this->domain]);
+            $this->_store = $class::getActiveStore(['url' => $this->getDomain()]);
             if($this->_store === null){
-                throw new NotFoundHttpException("not found store {$this->domain}");
+                throw new NotFoundHttpException("not found store {$this->getDomain()}");
             }
         }
         return $this->_store;
@@ -90,8 +92,10 @@ class StoreManager extends Component
             $host = $_SERVER['HTTP_HOST'];
         } else if(isset($_SERVER['HOSTNAME'])) {
             $host = $_SERVER['HOSTNAME'];
-        } else {
+        } else if (isset($_SERVER['SERVER_NAME'])) {
             $host = $_SERVER['SERVER_NAME'];
+        }else {
+            $host = $this->defaultDomain;
         }
         return $host;
     }

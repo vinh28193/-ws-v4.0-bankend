@@ -6,21 +6,14 @@ use common\tests\_support\ActiveStore;
 use common\tests\_support\AdditionalFeeObject;
 use common\tests\_support\TestCondition;
 use common\tests\_support\StoreAdditionalFee;
+use common\tests\unit\WsUnitTestCase;
 
-class AdditionalFeeTest extends Unit
+class AdditionalFeeTest extends WsUnitTestCase
 {
     /**
      * @var \common\tests\UnitTester
      */
     protected $tester;
-
-    protected function _before()
-    {
-    }
-
-    protected function _after()
-    {
-    }
 
     public function testGetStoreManager(){
         $additionalFeeTest = new AdditionalFeeObject();
