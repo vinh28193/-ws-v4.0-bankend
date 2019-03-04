@@ -14,6 +14,9 @@ return [
         ],
         'storeManager' => [
             'class' => 'common\components\StoreManager'
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager'
         ]
     ],
 ];

@@ -9,7 +9,7 @@
 namespace common\components\rest;
 
 
-class WeshopApiAuth extends \yii\filters\auth\HttpHeaderAuth
+class WeshopAuth extends \yii\filters\auth\HttpHeaderAuth
 {
 
     /**

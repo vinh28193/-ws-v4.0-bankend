@@ -28,7 +28,10 @@ return [
         ],
         'mongodb-migrate' => [
             'class' => 'yii\mongodb\console\controllers\MigrateController',
-            'migrationPath' => ['@console/migrations-mongodb']
+            'migrationPath' => ['@console/mongodb-migrations']
+        ],
+        'rbac' => [
+            'class' => 'common\rbac\controllers\RbacController',
         ]
     ],
     'components' => [
@@ -44,10 +47,16 @@ return [
             'class' => common\components\consoles\StoreManager::className(),
             'defaultDomain' => 'weshop.v4.api.frontend'
         ],
+<<<<<<< HEAD
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager'
+        ]
+=======
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://192.168.11.252:27017/admin',
         ],
+>>>>>>> c12c80a33ff1d5aa8e2861720016d45238f52247
     ],
     'params' => $params,
 ];
