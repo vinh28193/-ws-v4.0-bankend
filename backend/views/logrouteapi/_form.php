@@ -4,18 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\CustomerSearch */
+/* @var $model backend\models\Logrouteapi */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="customer-search">
+<div class="customer-form">
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-    ]); ?>
-
-    <?= $form->field($model, '_id') ?>
+    <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'name') ?>
 
@@ -26,8 +21,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'status') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

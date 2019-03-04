@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Logrouteapi;
+use backend\models\Logrouteapi;
 
 /**
- * CustomerSearch represents the model behind the search form about `app\models\Customer`.
+ * CustomerSearch represents the model behind the search form about `backend\models\Logrouteapi`.
  */
 class LogrouteapiSearch extends Logrouteapi
 {
@@ -18,7 +18,7 @@ class LogrouteapiSearch extends Logrouteapi
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['_id'], 'integer'],
             [['name', 'email', 'address'], 'safe'],
         ];
     }
@@ -56,7 +56,7 @@ class LogrouteapiSearch extends Logrouteapi
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
+            '_id' => $this->_id,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

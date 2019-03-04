@@ -1,9 +1,10 @@
 <?php
 
-class m160201_102003_create_logrouteapi_collection extends \yii\mongodb\Migration
+class m190301_101956_logrouteapi extends \yii\mongodb\Migration
 {
     public function up()
     {
+       // $this->createCollection(['weshop_global','log_api_route']);
         $this->createCollection('weshop_global_log_api_route');
     }
 
@@ -11,4 +12,5 @@ class m160201_102003_create_logrouteapi_collection extends \yii\mongodb\Migratio
     {
         $this->dropCollection('weshop_global_log_api_route');
     }
+
 }
