@@ -6,6 +6,7 @@ $params = array_merge(
     require __DIR__ . '/params-local.php'
 );
 use backend\models\Logrouteapi;
+use common\components\RestApiCall;
 
 return [
     'id' => 'app-backend',
@@ -52,6 +53,7 @@ return [
             'charset' => 'UTF-8',
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
+                $_data = $response->data;
                 if ($response->data !== null) {
                     $response->data = [
                         'success' => $response->isSuccessful,
@@ -60,14 +62,38 @@ return [
                         'data' => $response->data,
                     ];
                     /** Todo Save mongodb to Report API route **/
-                    $po = ["Logrouteapi" => [ "name" => "Hoang Anh Baby Move" , "email" => "babyhoanganh19872019@gmail.com" , "address" => "Ha noi" , "status" => "2" ]];
 
+                    $_rest_data = [ "RestApiCall" => [
+                        "success" => $response->isSuccessful,
+                        "timestamp" => time(),
+                        "path" => @json_encode(Yii::$app->request->getPathInfo()),
+                        "data" => @json_encode($_data),
+                        "date"=>date('Y-m-d H:i:s'),
+                    ]];
+
+                    /*
+                    $_rest_data =  [ "RestApiCall" => [
+                        "success" => true,
+                        "timestamp" => 1551682356,
+                        "path" => '1/order',
+                        "data" =>'',
+                        'date'=>date('Y-m-d H:i:s'),
+                        ]];
+                    */
+
+                    $rest_model = new RestApiCall();
+                    if ($rest_model->load($_rest_data) && $rest_model->save()) {
+                        $id = (string)$rest_model->_id;
+                    } else {}
+
+                    /*
+                    $po = ["Logrouteapi" => [ "name" => "Hoang Anh Baby Move" , "email" => "babyhoanganh19872019@gmail.com" , "address" => "Ha noi" , "status" => "2" ]];
                     $model = new Logrouteapi();
                     if ($model->load($po) && $model->save()) {
                         $id = (string)$model->_id;
                         //var_dump($id); die("909099");
                     } else {}
-
+                    */
                 }
             },
         ],
