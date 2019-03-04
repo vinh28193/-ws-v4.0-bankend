@@ -47,16 +47,13 @@ return [
             'class' => common\components\consoles\StoreManager::className(),
             'defaultDomain' => 'weshop.v4.api.frontend'
         ],
-<<<<<<< HEAD
         'authManager' => [
             'class' => 'yii\rbac\DbManager'
-        ]
-=======
+        ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://192.168.11.252:27017/admin',
         ],
->>>>>>> c12c80a33ff1d5aa8e2861720016d45238f52247
     ],
     'params' => $params,
 ];
