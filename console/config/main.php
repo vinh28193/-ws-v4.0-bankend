@@ -29,6 +29,9 @@ return [
         'mongodb-migrate' => [
             'class' => 'yii\mongodb\console\controllers\MigrateController',
             'migrationPath' => ['@console/mongodb-migrations']
+        ],
+        'rbac' => [
+            'class' => 'common\rbac\controllers\RbacController',
         ]
     ],
     'components' => [
@@ -43,6 +46,9 @@ return [
         'storeManager' => [
             'class' => common\components\consoles\StoreManager::className(),
             'defaultDomain' => 'weshop.v4.api.frontend'
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager'
         ]
     ],
     'params' => $params,
