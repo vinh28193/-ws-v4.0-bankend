@@ -29,14 +29,25 @@ class RestApiCall extends ActiveRecord
             'timestamp',
             'path',
             'data',
-            'date'
+            'date',
+            'user_id',
+            'user_email',
+            'user_name',
+            'user_app',
+            'user_request_suorce',
+            'request_ip'
         ];
     }
 
     public function rules()
     {
         return [
-            [['success', 'timestamp', 'path', 'data','date'], 'safe']
+            [['success', 'timestamp', 'path', 'data','date' ,'user_id',
+                'user_email',
+                'user_name',
+                'user_app',
+                'user_request_suorce',
+                'request_ip'], 'safe']
         ];
     }
 
@@ -44,11 +55,17 @@ class RestApiCall extends ActiveRecord
     {
         return [
             '_id' => 'ID',
-            'success' => 'success True or False',
+            'success' => 'success true or false',
             'timestamp' => 'timestamp',
             'path' => 'Api Call by restfull',
             'data' => 'Data Respone',
             'date' => 'Date create data rest',
+            'user_id' => 'User request User id via API ',
+            'user_email' => 'USer Email ',
+            'user_name' => 'User Name request via api',
+            'user_app' => 'User App request via api ',
+            'user_request_suorce' => 'request suorce APP/WEB_API_FRONTEND/WB_API_BACK_END ',
+            'request_ip' => 'IP request ',
         ];
     }
 }

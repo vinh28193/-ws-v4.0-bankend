@@ -19,7 +19,14 @@ class RestApiCallSearch extends RestApiCall
     {
         return [
             [['_id'], 'integer'],
-            [['success', 'path', 'data','date'], 'safe'],
+            [['success', 'path', 'data','date' ,
+              'user_id',
+              'user_email',
+              'user_name',
+              'user_app',
+              'user_request_suorce',
+              'request_ip'
+                ], 'safe'],
         ];
     }
 
