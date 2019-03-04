@@ -18,7 +18,7 @@ class LogrouteapiSearch extends Logrouteapi
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['_id'], 'integer'],
             [['name', 'email', 'address'], 'safe'],
         ];
     }
@@ -56,7 +56,7 @@ class LogrouteapiSearch extends Logrouteapi
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
+            '_id' => $this->_id,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

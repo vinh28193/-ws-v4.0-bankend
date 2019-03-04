@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Customer */
+/* @var $model backend\models\Logrouteapi */
 
 $this->title = 'Update Customer: ' . ' ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Customers', 'url' => ['index']];

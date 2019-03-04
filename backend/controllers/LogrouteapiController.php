@@ -61,9 +61,12 @@ class LogrouteapiController extends Controller
     public function actionCreate()
     {
         $model = new Logrouteapi();
+        echo "<pre>";
+        print_r(Yii::$app->request->post());
+        echo "</pre>";
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => (string)$model->_id]);
+           // return $this->redirect(['view', 'id' => (string)$model->_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,

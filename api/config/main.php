@@ -5,12 +5,13 @@ $params = array_merge(
     require __DIR__ . '/params.php',
     require __DIR__ . '/params-local.php'
 );
+use backend\models\Logrouteapi;
 
 return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
-    'bootstrap' => ['log','v1/payment'],
+    'bootstrap' => ['log'], //,'v1/payment'
     'modules' => [
         'v1' => [
             'class' => 'api\modules\v1\Module',
@@ -58,9 +59,21 @@ return [
                         'path' => Yii::$app->request->getPathInfo(),
                         'data' => $response->data,
                     ];
+                    /** Todo Save mongodb to Report API route **/
+                    $po = ["Logrouteapi" => [ "name" => "Hoang Anh Baby Move" , "email" => "babyhoanganh19872019@gmail.com" , "address" => "Ha noi" , "status" => "2" ]];
 
-                    /** Todo Save mongodb to Report API route
-                    **/
+                    $model = new Logrouteapi();
+                    if ($model->load($po) && $model->save()) {
+                        $id = (string)$model->_id;
+                        var_dump($id);
+                        die("909099");
+                    } else {
+//                        return $this->render('create', [
+//                            'model' => $model,
+//                        ]);
+                    }
+
+
                 }
             },
         ],
