@@ -48,4 +48,45 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         return parent::toArray($fields, $expand, $recursive);
     }
+
+    /**
+     * Determines which fields can be returned by [[toArray()]].
+     * This method will first extract the root fields from the given fields.
+     * Then it will check the requested root fields against those declared in [[fields()]] and [[extraFields()]]
+     * to determine which fields can be returned.
+     * @param array $fields the fields being requested for exporting
+     * @param array $expand the additional fields being requested for exporting
+     * @return array the list of fields to be exported. The array keys are the field names, and the array values
+     * are the corresponding object property names or PHP callables returning the field values.
+     */
+    protected function resolveFields(array $fields, array $expand)
+    {
+
+        $fields = $this->extractRootFields($fields);
+        $expand = $this->extractRootFields($expand);
+
+        $result = [];
+        foreach ($this->fields() as $field => $definition) {
+            if (is_int($field)) {
+                $field = $definition;
+            }
+            if (empty($fields) || in_array($field, $fields, true)) {
+                $result[$field] = $definition;
+            }
+        }
+//        if (empty($expand)) {
+//            return $result;
+//        }
+
+        foreach ($this->extraFields() as $field => $definition) {
+            if (is_int($field)) {
+                $field = $definition;
+            }
+            if (empty($expand) || in_array($field, $expand, true)) {
+                $result[$field] = $definition;
+            }
+        }
+
+        return $result;
+    }
 }

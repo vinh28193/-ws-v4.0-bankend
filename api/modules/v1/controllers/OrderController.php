@@ -8,10 +8,10 @@
 
 namespace api\modules\v1\controllers;
 
-use api\controllers\BaseApiController;
-use common\models\Order;
-use common\models\searchs\OrderSearch;
 use Yii;
+use common\models\Order;
+use common\data\ActiveDataProvider;
+use api\controllers\BaseApiController;
 
 class OrderController extends BaseApiController
 {
@@ -45,6 +45,17 @@ class OrderController extends BaseApiController
     public function actionIndex()
     {
         $requestParams = Yii::$app->getRequest()->getBodyParams();
-        return $this->response(true, 'ok', (new OrderSearch())->search2($requestParams));
+        $query = Order::find();
+        $query->withFullRelations();
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $query->filter($requestParams);
+
+        return $this->response(true, 'ok', $dataProvider);
     }
 }

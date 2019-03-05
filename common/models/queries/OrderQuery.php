@@ -19,16 +19,13 @@ class OrderQuery extends ActiveQuery
      * @return $this
      */
     public function filter($params){
-        $dataFilter = new \yii\data\DataFilter();
-        if($dataFilter->load($params) && ($filter = $dataFilter->build())){
-            $this->andWhere($filter);
-        }
+
         return $this;
     }
 
     public function withFullRelations(){
         $this->with([
-            'products',
+//            'products',
             'orderFees',
             'packageItems',
             'walletTransactions',

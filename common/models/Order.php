@@ -9,7 +9,7 @@
 namespace common\models;
 
 use common\components\AdditionalFeeInterface;
-use \common\models\db\Order as DbOrder;
+use common\models\db\Order as DbOrder;
 use Yii;
 use yii\db\BaseActiveRecord;
 
@@ -21,7 +21,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
 
     public function behaviors()
     {
-        return array_merge(parent::behaviors(),[
+        return array_merge(parent::behaviors(), [
             'orderFee' => [
                 'class' => \common\behaviors\AdditionalFeeBehavior::className()
             ],
@@ -48,8 +48,8 @@ class Order extends DbOrder implements AdditionalFeeInterface
             [['quotation_status', 'difference_money'], 'in', 'range' => [0, 1, 2]],
             [['receiver_email', 'support_email', 'purchase_account_email'], 'email'],
             [['seller_store'], 'url'],
-            [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'],'filter','filter' => '\yii\helpers\Html::encode'],
-            [['note_by_customer', 'note', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_card', 'purchase_account_email', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'], 'filter','filter' => '\yii\helpers\Html::encode',],
+            [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'], 'filter', 'filter' => '\yii\helpers\Html::encode'],
+            [['note_by_customer', 'note', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_card', 'purchase_account_email', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'], 'filter', 'filter' => '\yii\helpers\Html::encode',],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['receiver_address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Address::className(), 'targetAttribute' => ['receiver_address_id' => 'id']],
             [['receiver_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['receiver_country_id' => 'id']],
@@ -70,7 +70,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
     public function getTotalOriginPrice()
     {
         return $this->getTotalAdditionFees([
-            'origin_fee','origin_tax_fee','origin_shipping_fee'
+            'origin_fee', 'origin_tax_fee', 'origin_shipping_fee'
         ])[0];
     }
 
@@ -111,113 +111,112 @@ class Order extends DbOrder implements AdditionalFeeInterface
         return Yii::createObject(\common\models\queries\OrderQuery::className(), [get_called_class()]);
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+        unset($fields['id']);
+        return array_merge($fields,[
+            'store' => function($model) { return $model->store_id  === 1 ? 'Viet Nam' : 'Indo';}
+        ]);
+    }
+
 
     // Optional sort/filter params: page,limit,order,search[name],search[email],search[id]... etc
 
     static public function search($params)
     {
 
-        $query = Order::find();
-        $query->withFullRelations();
-        $query->filter($params);
+        $page = Yii::$app->getRequest()->getQueryParam('page');
+        $limit = Yii::$app->getRequest()->getQueryParam('limit');
+        $order = Yii::$app->getRequest()->getQueryParam('order');
 
-        $dataProvider = new \yii\data\ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $search = Yii::$app->getRequest()->getQueryParam('search');
 
-        return $dataProvider;
+        if(isset($search)){
+            $params=$search;
+        }
 
-//        $page = Yii::$app->getRequest()->getQueryParam('page');
-//        $limit = Yii::$app->getRequest()->getQueryParam('limit');
-//        $order = Yii::$app->getRequest()->getQueryParam('order');
-//
-//        $search = Yii::$app->getRequest()->getQueryParam('search');
-//
-//        if(isset($search)){
-//            $params=$search;
-//        }
-//
-//        $limit = isset($limit) ? $limit : 10;
-//        $page = isset($page) ? $page : 1;
-//
-//        $offset = ($page - 1) * $limit;
-//
-//        $query = Order::find()
-//            ->with([
-//                'products',
-//                'orderFees',
-//                'packageItems',
-//                'walletTransactions',
-//                'seller',
-//                'saleSupport' => function ($q) {
-//                    /** @var ActiveQuery $q */
-//                    $q->select(['username','email','id','status', 'created_at', 'updated_at']);
-//                }
-//            ])
-//            ->asArray(true)
-//            ->limit($limit)
-//            ->offset($offset);
-//
-//        if(isset($params['id'])) {
-//            $query->andFilterWhere(['id' => $params['id']]);
-//        }
-//
-//        if(isset($params['created_at'])) {
-//            $query->andFilterWhere(['created_at' => $params['created_at']]);
-//        }
-//        if(isset($params['updated_at'])) {
-//            $query->andFilterWhere(['updated_at' => $params['updated_at']]);
-//        }
-//        if(isset($params['receiver_email'])){
-//            $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
-//        }
-//
-//        /*
-//
-//        if(isset($params['typeSearch']) and isset($params['keyword']) ){
-//            $query->andFilterWhere(['like',$params['typeSearch'],$params['keyword']]);
-//        }else{
-//            $query->andWhere(['or',
-//                ['like', 'id', $params['keyword']],
-//                ['like', 'seller_name', $params['keyword']],
-//                ['like', 'seller_store', $params['keyword']],
-//                ['like', 'portal', $params['keyword']],
-//            ]);
-//        }
-//        */
-//
-//        if(isset($params['type_order'])){
-//            $query->andFilterWhere(['type_order' => $params['type_order'] ]);
-//        }
-//        if(isset($params['current_status'])){
-//            $query->andFilterWhere(['current_status' => $params['current_status']]);
-//        }
-//        if (isset($params['time_start']) and isset($params['time_end']) ){
-//            $query->andFilterWhere(['or',
-//                ['>=', 'created_at', $params['time_start']],
-//                ['<=', 'updated_at', $params['time_end']]
-//            ]);
-//        }
-//
-//        if(isset($order)){
-//            $query->orderBy($order);
-//        }
-//
-//
-//        if(isset($order)){
-//            $query->orderBy($order);
-//        }
-//
-//        $additional_info = [
-//            'page' => $page,
-//            'size' => $limit,
-//            'totalCount' => (int)$query->count()
-//        ];
-//
-//        return [
-//            'data' => $query->all(),
-//            'info' => $additional_info
-//        ];
+        $limit = isset($limit) ? $limit : 10;
+        $page = isset($page) ? $page : 1;
+
+        $offset = ($page - 1) * $limit;
+
+        $query = Order::find()
+            ->with([
+                'products',
+                'orderFees',
+                'packageItems',
+                'walletTransactions',
+                'seller',
+                'saleSupport' => function ($q) {
+                    /** @var ActiveQuery $q */
+                    $q->select(['username','email','id','status', 'created_at', 'updated_at']);
+                }
+            ])
+            ->asArray(true)
+            ->limit($limit)
+            ->offset($offset);
+
+        if(isset($params['id'])) {
+            $query->andFilterWhere(['id' => $params['id']]);
+        }
+
+        if(isset($params['created_at'])) {
+            $query->andFilterWhere(['created_at' => $params['created_at']]);
+        }
+        if(isset($params['updated_at'])) {
+            $query->andFilterWhere(['updated_at' => $params['updated_at']]);
+        }
+        if(isset($params['receiver_email'])){
+            $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
+        }
+
+        /*
+
+        if(isset($params['typeSearch']) and isset($params['keyword']) ){
+            $query->andFilterWhere(['like',$params['typeSearch'],$params['keyword']]);
+        }else{
+            $query->andWhere(['or',
+                ['like', 'id', $params['keyword']],
+                ['like', 'seller_name', $params['keyword']],
+                ['like', 'seller_store', $params['keyword']],
+                ['like', 'portal', $params['keyword']],
+            ]);
+        }
+        */
+
+        if(isset($params['type_order'])){
+            $query->andFilterWhere(['type_order' => $params['type_order'] ]);
+        }
+        if(isset($params['current_status'])){
+            $query->andFilterWhere(['current_status' => $params['current_status']]);
+        }
+        if (isset($params['time_start']) and isset($params['time_end']) ){
+            $query->andFilterWhere(['or',
+                ['>=', 'created_at', $params['time_start']],
+                ['<=', 'updated_at', $params['time_end']]
+            ]);
+        }
+
+        if(isset($order)){
+            $query->orderBy($order);
+        }
+
+
+        if(isset($order)){
+            $query->orderBy($order);
+        }
+
+        $additional_info = [
+            'page' => $page,
+            'size' => $limit,
+            'totalCount' => (int)$query->count()
+        ];
+
+        return [
+            'data' => $query->all(),
+            'info' => $additional_info
+        ];
     }
 
 }

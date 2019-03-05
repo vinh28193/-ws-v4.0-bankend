@@ -9,13 +9,15 @@
 namespace api\controllers;
 
 use common\helpers\WeshopHelper;
+use Yii;
 use yii\filters\AccessControl;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
-
+use yii\web\Request;
+use yii\web\Response;
 
 class BaseApiController extends \yii\rest\Controller
 {
@@ -97,10 +99,55 @@ class BaseApiController extends \yii\rest\Controller
         ]);
     }
 
+    public function init()
+    {
+        parent::init();
+        Yii::configure(Yii::$app, [
+            'components' => [
+                'request' => [
+                    'class' => Request::className(),
+                    'enableCookieValidation' => false,
+                    'enableCsrfCookie' => false,
+                    'parsers' => [
+                        'application/json' => 'yii\web\JsonParser',
+                    ]
+                ],
+                'response' => [
+                    'class' => Response::className(),
+                    'format' => Response::FORMAT_JSON,
+                    'formatters' => [
+                        Response::FORMAT_JSON => [
+                            'class' => 'yii\web\JsonResponseFormatter',
+                            'prettyPrint' => true, // use "pretty" output in debug mode
+                        ],
+                    ],
+//                    'on beforeSend' => function ($event) {
+//                        $response = $event->sender;
+//                        if ($response->data !== null && Yii::$app->request->get('suppress_response_code')) {
+//                            $data = $response->data;
+//                            if (isset($data['message'])) {
+//                                $message = $data['message'];
+//                                //unset($data['message']);
+//                            } elseif (isset($data['name'])) {
+//                                $message = $data['name'];
+//                                //unset($data['name']);
+//                            } else {
+//                                $statusCode = $response->statusCode;
+//                                $message = "throw error code $statusCode";
+//                            }
+//                            $response->data = WeshopHelper::response($response->isSuccessful, $message, $data);
+//                            $response->statusCode = 200;
+//                        }
+//                    },
+                ]
+            ]
+        ]);
+    }
+
     public function afterAction($action, $result)
     {
         $result = parent::afterAction($action, $result);
-        \Yii::info($result,$action);
+        \Yii::info($result, $action->id);
         return $result;
     }
 
