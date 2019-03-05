@@ -59,6 +59,10 @@ class BaseApiController extends \yii\rest\Controller
         $behaviors['accessControl'] = [
             'class' => AccessControl::className(),
             'rules' => $this->rules(),
+            'denyCallback' => function ($rule, $action) {
+                Yii::info($action);
+                throw new \yii\web\ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
+            }
         ];
         return $behaviors;
     }
@@ -160,5 +164,43 @@ class BaseApiController extends \yii\rest\Controller
     public function response($success = true, $message = 'Ok', $data = [])
     {
         return WeshopHelper::response($success, $message, $data);
+    }
+
+    /**
+     * @param bool $keyOnly
+     * @param array $exception
+     * @return array
+     */
+    public function getAllRoles($keyOnly = false, $exception = [])
+    {
+        if (is_string($exception)) {
+            $exception = [$exception];
+        }
+        $roles = [];
+        foreach ((array)Yii::$app->getAuthManager()->getRoles() as $name => $role) {
+            if (in_array($name, $exception)) {
+                continue;
+            }
+            if ($keyOnly) {
+                $roles[] = $name;
+            } else {
+                $roles[$name] = $role;
+            }
+        }
+        return $roles;
+
+    }
+
+    /**
+     * @param $permissionName
+     * @param array $params
+     * @return bool
+     * @throws \yii\web\ForbiddenHttpException
+     */
+    public function can($permissionName, $params = []){
+        if(Yii::$app->getUser()->can($permissionName, $params,true)){
+            return true;
+        }
+        throw new \yii\web\ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
     }
 }
