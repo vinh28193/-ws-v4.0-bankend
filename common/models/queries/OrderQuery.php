@@ -14,7 +14,6 @@ class OrderQuery extends ActiveQuery
 {
 
     /**
-     *
      * @param $params
      * @return $this
      */

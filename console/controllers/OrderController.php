@@ -9,6 +9,7 @@
 namespace console\controllers;
 
 
+use common\models\db\Category;
 use Faker\Factory;
 use yii\console\Controller;
 
@@ -34,5 +35,14 @@ class OrderController extends Controller
         // Aut molestias et maxime. Fugit autem facilis quos vero. Eius quibusdam possimus est.
         // Ea quaerat et quisquam. Deleniti sunt quam. Adipisci consequatur id in occaecati.
         // Et sint et. Ut ducimus quod nemo ab voluptatum.
+    }
+    public function actionUpdateCategory(){
+        /** @var Category[] $categories */
+        $categories = Category::find()->all();
+        foreach ($categories as $category){
+            $category->name = $category->origin_name;
+            echo $category->name.PHP_EOL;
+            $category->save(0);
+        }
     }
 }
