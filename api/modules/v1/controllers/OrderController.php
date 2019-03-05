@@ -59,6 +59,20 @@ class OrderController extends BaseApiController
     }
 
     /**
+     *  `get given`
+     *      ?q=pen&q_ref=all&tm_ref=create_time&tm=2019-01-01 00:00:00&ps=pain&page=1&per-pace=20
+     * `post given`
+     *  {
+     *      "filter":{
+                "keyword": {"key":"all","value":"pen"},
+     *          "datetime": {"key":"create_at","value":["2019-01-01 00:00:00","2019-01-30 23:59:59"]},
+     *          "paymentStatus":"pain",
+     *          "type":"shop",
+     *          ....
+     *      },
+     *      "page":"1",
+     *      "per-page":"20"
+     * }
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
