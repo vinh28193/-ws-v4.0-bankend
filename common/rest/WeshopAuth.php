@@ -6,7 +6,7 @@
  * Time: 16:45
  */
 
-namespace common\components\rest;
+namespace common\rest;
 
 
 class WeshopAuth extends \yii\filters\auth\HttpHeaderAuth
@@ -34,4 +34,5 @@ class WeshopAuth extends \yii\filters\auth\HttpHeaderAuth
     {
         $response->getHeaders()->set('WWW-Authenticate', "Weshop realm=\"{$this->realm}\"");
     }
+
 }
