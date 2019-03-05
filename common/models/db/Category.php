@@ -23,6 +23,7 @@ use Yii;
  * @property string $updated_at
  * @property int $active
  * @property int $remove
+ * @property string $name
  *
  * @property Product[] $products
  */
@@ -45,6 +46,7 @@ class Category extends \yii\db\ActiveRecord
             [['category_group_id', 'level', 'created_at', 'updated_at', 'active', 'remove'], 'integer'],
             [['weight', 'inter_shipping_b', 'custom_fee'], 'number'],
             [['alias', 'site', 'origin_name', 'parent_id', 'description', 'path'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 500],
         ];
     }
 
@@ -66,10 +68,11 @@ class Category extends \yii\db\ActiveRecord
             'custom_fee' => 'Custom Fee',
             'level' => 'Level',
             'path' => 'Path',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'active' => 'Active',
             'remove' => 'Remove',
+            'name' => 'Name',
         ];
     }
 
