@@ -9,7 +9,7 @@
 namespace common\models;
 
 use common\components\AdditionalFeeInterface;
-use \common\models\db\Order as DbOrder;
+use common\models\db\Order as DbOrder;
 use Yii;
 use yii\db\BaseActiveRecord;
 
@@ -21,7 +21,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
 
     public function behaviors()
     {
-        return array_merge(parent::behaviors(),[
+        return array_merge(parent::behaviors(), [
             'orderFee' => [
                 'class' => \common\behaviors\AdditionalFeeBehavior::className()
             ],
@@ -48,8 +48,8 @@ class Order extends DbOrder implements AdditionalFeeInterface
             [['quotation_status', 'difference_money'], 'in', 'range' => [0, 1, 2]],
             [['receiver_email', 'support_email', 'purchase_account_email'], 'email'],
             [['seller_store'], 'url'],
-            [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'],'filter','filter' => '\yii\helpers\Html::encode'],
-            [['note_by_customer', 'note', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_card', 'purchase_account_email', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'], 'filter','filter' => '\yii\helpers\Html::encode',],
+            [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'], 'filter', 'filter' => '\yii\helpers\Html::encode'],
+            [['note_by_customer', 'note', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_card', 'purchase_account_email', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'], 'filter', 'filter' => '\yii\helpers\Html::encode',],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['receiver_address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Address::className(), 'targetAttribute' => ['receiver_address_id' => 'id']],
             [['receiver_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['receiver_country_id' => 'id']],
@@ -61,6 +61,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
         ];
     }
 
+
     public function getItemType()
     {
         return $this->portal;
@@ -69,7 +70,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
     public function getTotalOriginPrice()
     {
         return $this->getTotalAdditionFees([
-            'origin_fee','origin_tax_fee','origin_shipping_fee'
+            'origin_fee', 'origin_tax_fee', 'origin_shipping_fee'
         ])[0];
     }
 
@@ -99,6 +100,26 @@ class Order extends DbOrder implements AdditionalFeeInterface
     {
         return $this->exchange_rate_fee;
     }
+
+
+    /**
+     * @inheritdoc
+     * @return \common\models\queries\OrderQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return Yii::createObject(\common\models\queries\OrderQuery::className(), [get_called_class()]);
+    }
+
+    public function fields()
+    {
+        $fields = parent::fields();
+        unset($fields['id']);
+        return array_merge($fields,[
+            'store' => function($model) { return $model->store_id  === 1 ? 'Viet Nam' : 'Indo';}
+        ]);
+    }
+
 
     // Optional sort/filter params: page,limit,order,search[name],search[email],search[id]... etc
 

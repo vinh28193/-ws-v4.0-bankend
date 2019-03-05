@@ -389,4 +389,21 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
 
   
             
-
+###-----------------yii2-authclient---------------------
+    https://github.com/yiisoft/yii2-authclient/blob/master/docs/guide/quick-start.md
+    Adding widget to login view
+    There's ready to use [[yii\authclient\widgets\AuthChoice]] widget to use in views:
+    
+    <?= yii\authclient\widgets\AuthChoice::widget([
+         'baseAuthUrl' => ['site/auth'],
+         'popupMode' => false,
+    ]) ?>
+    
+    $_GET = [
+        'authclient' => 'google',
+        'state' => 'a817cac41d5065eac2cbacc7b59ed57000180f5c66e231a6c2b7e5be7f142f4a',
+        'code' => '4/BAGWaSKpLRogBcCTOn76CNU16YW6jzoilUt8vYXhVZ63bgshAo19_d0fkyvF8bihYl3Z10657vopcteYGKhf0m8',
+        'scope' => 'email profile https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+    ];
+    
+     https://packagist.org/packages/hbhe/yii2-authclient

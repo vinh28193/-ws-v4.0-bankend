@@ -135,7 +135,7 @@ class User extends \common\models\db\User implements IdentityInterface
         }
 
         $timestamp = (int) substr($token, strrpos($token, '_') + 1);
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        $expire = isset(Yii::$app->params['user.passwordResetTokenExpire']) ? isset(Yii::$app->params['user.passwordResetTokenExpire']) : 3600 ;
         return $timestamp + $expire >= time();
     }
 

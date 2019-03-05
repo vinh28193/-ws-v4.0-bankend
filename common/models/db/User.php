@@ -16,14 +16,16 @@ use Yii;
  * @property int $status
  * @property int $created_at
  * @property int $updated_at
- * @property string $scopes
+ * @property string $scopes nhiều scope cách nhau bằng dấu ,. scope chính đặt tại đầu
  * @property int $store_id
+ * @property string $github  user co link github
  *
+ * @property Auth[] $auths
  * @property Coupon[] $coupons
  * @property Order[] $orders
  * @property ScopeUser[] $scopeUsers
  */
-class User extends \yii\db\ActiveRecord
+class User extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -43,7 +45,7 @@ class User extends \yii\db\ActiveRecord
             [['status', 'created_at', 'updated_at', 'store_id'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
-            [['scopes'], 'string', 'max' => 500],
+            [['scopes', 'github'], 'string', 'max' => 500],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
@@ -67,7 +69,16 @@ class User extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'scopes' => 'Scopes',
             'store_id' => 'Store ID',
+            'github' => 'Github',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuths()
+    {
+        return $this->hasMany(Auth::className(), ['user_id' => 'id']);
     }
 
     /**

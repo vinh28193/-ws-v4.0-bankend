@@ -18,6 +18,12 @@ use yii\helpers\Json;
 
 class WeshopHelper
 {
+
+    public static function response($success = true, $message = 'Ok', $data = [])
+    {
+        return ['success' => $success, 'message' => $message, 'data' => $data];
+    }
+
     /**
      * define PHP empty value
      * @param $value
