@@ -389,4 +389,12 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
 
   
             
-
+###-----------------yii2-authclient---------------------
+    https://github.com/yiisoft/yii2-authclient/blob/master/docs/guide/quick-start.md
+    Adding widget to login view
+    There's ready to use [[yii\authclient\widgets\AuthChoice]] widget to use in views:
+    
+    <?= yii\authclient\widgets\AuthChoice::widget([
+         'baseAuthUrl' => ['site/auth'],
+         'popupMode' => false,
+    ]) ?>

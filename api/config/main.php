@@ -60,6 +60,7 @@ return [
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
             'on beforeSend' => function ($event) {
+
                 $_user_Identity = Yii::$app->user->getIdentity();
                 $_user_id = $_user_Identity->getId();
                 $_user_email = $_user_Identity['email'];
