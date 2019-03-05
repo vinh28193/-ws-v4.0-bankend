@@ -126,7 +126,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'class' => \common\components\ErrorHandler::className()
         ],
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
