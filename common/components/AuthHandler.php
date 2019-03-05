@@ -28,6 +28,7 @@ class AuthHandler
         $email = ArrayHelper::getValue($attributes, 'email');
         $id = ArrayHelper::getValue($attributes, 'id');
         $nickname = ArrayHelper::getValue($attributes, 'login');
+        $duration = isset(Yii::$app->params['user.rememberMeDuration']) ? isset(Yii::$app->params['user.rememberMeDuration']) : 3600;
 
         /* @var Auth $auth */
         $auth = Auth::find()->where([
@@ -39,8 +40,9 @@ class AuthHandler
             if ($auth) { // login
                 /* @var User $user */
                 $user = $auth->user;
+                if(is_null($user)){ echo "<pre>"; print_r($auth); echo "</pre>"; die("977777777");}
                 $this->updateUserInfo($user);
-                Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
+                Yii::$app->user->login($user, $duration);
             } else { // signup
                 if ($email !== null && User::find()->where(['email' => $email])->exists()) {
                     Yii::$app->getSession()->setFlash('error', [
@@ -49,7 +51,7 @@ class AuthHandler
                 } else {
                     $password = Yii::$app->security->generateRandomString(6);
                     $user = new User([
-                        'username' => $nickname,
+                        'username' => $nickname ? $nickname : $email,
                         'github' => $nickname,
                         'email' => $email,
                         'password' => $password,
@@ -67,7 +69,7 @@ class AuthHandler
                         ]);
                         if ($auth->save()) {
                             $transaction->commit();
-                            Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
+                            Yii::$app->user->login($user, $duration);
                         } else {
                             Yii::$app->getSession()->setFlash('error', [
                                 Yii::t('app', 'Unable to save {client} account: {errors}', [
@@ -131,5 +133,6 @@ class AuthHandler
             $user->github = $github;
             $user->save();
         }
+
     }
 }
