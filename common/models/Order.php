@@ -61,6 +61,7 @@ class Order extends DbOrder implements AdditionalFeeInterface
         ];
     }
 
+
     public function getItemType()
     {
         return $this->portal;
@@ -100,102 +101,123 @@ class Order extends DbOrder implements AdditionalFeeInterface
         return $this->exchange_rate_fee;
     }
 
+
+    /**
+     * @inheritdoc
+     * @return \common\models\queries\OrderQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return Yii::createObject(\common\models\queries\OrderQuery::className(), [get_called_class()]);
+    }
+
+
     // Optional sort/filter params: page,limit,order,search[name],search[email],search[id]... etc
 
     static public function search($params)
     {
 
-        $page = Yii::$app->getRequest()->getQueryParam('page');
-        $limit = Yii::$app->getRequest()->getQueryParam('limit');
-        $order = Yii::$app->getRequest()->getQueryParam('order');
+        $query = Order::find();
+        $query->withFullRelations();
+        $query->filter($params);
 
-        $search = Yii::$app->getRequest()->getQueryParam('search');
+        $dataProvider = new \yii\data\ActiveDataProvider([
+            'query' => $query,
+        ]);
 
-        if(isset($search)){
-            $params=$search;
-        }
+        return $dataProvider;
 
-        $limit = isset($limit) ? $limit : 10;
-        $page = isset($page) ? $page : 1;
-
-        $offset = ($page - 1) * $limit;
-
-        $query = Order::find()
-            ->with([
-                'products',
-                'orderFees',
-                'packageItems',
-                'walletTransactions',
-                'seller',
-                'saleSupport' => function ($q) {
-                    /** @var ActiveQuery $q */
-                    $q->select(['username','email','id','status', 'created_at', 'updated_at']);
-                }
-            ])
-            ->asArray(true)
-            ->limit($limit)
-            ->offset($offset);
-
-        if(isset($params['id'])) {
-            $query->andFilterWhere(['id' => $params['id']]);
-        }
-
-        if(isset($params['created_at'])) {
-            $query->andFilterWhere(['created_at' => $params['created_at']]);
-        }
-        if(isset($params['updated_at'])) {
-            $query->andFilterWhere(['updated_at' => $params['updated_at']]);
-        }
-        if(isset($params['receiver_email'])){
-            $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
-        }
-
-        /*
-
-        if(isset($params['typeSearch']) and isset($params['keyword']) ){
-            $query->andFilterWhere(['like',$params['typeSearch'],$params['keyword']]);
-        }else{
-            $query->andWhere(['or',
-                ['like', 'id', $params['keyword']],
-                ['like', 'seller_name', $params['keyword']],
-                ['like', 'seller_store', $params['keyword']],
-                ['like', 'portal', $params['keyword']],
-            ]);
-        }
-        */
-
-        if(isset($params['type_order'])){
-            $query->andFilterWhere(['type_order' => $params['type_order'] ]);
-        }
-        if(isset($params['current_status'])){
-            $query->andFilterWhere(['current_status' => $params['current_status']]);
-        }
-        if (isset($params['time_start']) and isset($params['time_end']) ){
-            $query->andFilterWhere(['or',
-                ['>=', 'created_at', $params['time_start']],
-                ['<=', 'updated_at', $params['time_end']]
-            ]);
-        }
-
-        if(isset($order)){
-            $query->orderBy($order);
-        }
-
-
-        if(isset($order)){
-            $query->orderBy($order);
-        }
-
-        $additional_info = [
-            'page' => $page,
-            'size' => $limit,
-            'totalCount' => (int)$query->count()
-        ];
-
-        return [
-            'data' => $query->all(),
-            'info' => $additional_info
-        ];
+//        $page = Yii::$app->getRequest()->getQueryParam('page');
+//        $limit = Yii::$app->getRequest()->getQueryParam('limit');
+//        $order = Yii::$app->getRequest()->getQueryParam('order');
+//
+//        $search = Yii::$app->getRequest()->getQueryParam('search');
+//
+//        if(isset($search)){
+//            $params=$search;
+//        }
+//
+//        $limit = isset($limit) ? $limit : 10;
+//        $page = isset($page) ? $page : 1;
+//
+//        $offset = ($page - 1) * $limit;
+//
+//        $query = Order::find()
+//            ->with([
+//                'products',
+//                'orderFees',
+//                'packageItems',
+//                'walletTransactions',
+//                'seller',
+//                'saleSupport' => function ($q) {
+//                    /** @var ActiveQuery $q */
+//                    $q->select(['username','email','id','status', 'created_at', 'updated_at']);
+//                }
+//            ])
+//            ->asArray(true)
+//            ->limit($limit)
+//            ->offset($offset);
+//
+//        if(isset($params['id'])) {
+//            $query->andFilterWhere(['id' => $params['id']]);
+//        }
+//
+//        if(isset($params['created_at'])) {
+//            $query->andFilterWhere(['created_at' => $params['created_at']]);
+//        }
+//        if(isset($params['updated_at'])) {
+//            $query->andFilterWhere(['updated_at' => $params['updated_at']]);
+//        }
+//        if(isset($params['receiver_email'])){
+//            $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
+//        }
+//
+//        /*
+//
+//        if(isset($params['typeSearch']) and isset($params['keyword']) ){
+//            $query->andFilterWhere(['like',$params['typeSearch'],$params['keyword']]);
+//        }else{
+//            $query->andWhere(['or',
+//                ['like', 'id', $params['keyword']],
+//                ['like', 'seller_name', $params['keyword']],
+//                ['like', 'seller_store', $params['keyword']],
+//                ['like', 'portal', $params['keyword']],
+//            ]);
+//        }
+//        */
+//
+//        if(isset($params['type_order'])){
+//            $query->andFilterWhere(['type_order' => $params['type_order'] ]);
+//        }
+//        if(isset($params['current_status'])){
+//            $query->andFilterWhere(['current_status' => $params['current_status']]);
+//        }
+//        if (isset($params['time_start']) and isset($params['time_end']) ){
+//            $query->andFilterWhere(['or',
+//                ['>=', 'created_at', $params['time_start']],
+//                ['<=', 'updated_at', $params['time_end']]
+//            ]);
+//        }
+//
+//        if(isset($order)){
+//            $query->orderBy($order);
+//        }
+//
+//
+//        if(isset($order)){
+//            $query->orderBy($order);
+//        }
+//
+//        $additional_info = [
+//            'page' => $page,
+//            'size' => $limit,
+//            'totalCount' => (int)$query->count()
+//        ];
+//
+//        return [
+//            'data' => $query->all(),
+//            'info' => $additional_info
+//        ];
     }
 
 }

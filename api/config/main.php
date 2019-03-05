@@ -47,29 +47,29 @@ return [
         ],
         */
         'response' => [
-            //'class' => 'yii\web\Response',
+            'class' => 'yii\web\Response',
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
-            'on beforeSend' => function ($event) {
-                $response = $event->sender;
-                if ($response->data !== null) {
-                    $response->data = [
-                        'success' => $response->isSuccessful,
-                        'timestamp' => time(),
-                        'path' => Yii::$app->request->getPathInfo(),
-                        'data' => $response->data,
-                    ];
-                    /** Todo Save mongodb to Report API route **/
-                    $po = ["Logrouteapi" => [ "name" => "Hoang Anh Baby Move" , "email" => "babyhoanganh19872019@gmail.com" , "address" => "Ha noi" , "status" => "2" ]];
-
-                    $model = new Logrouteapi();
-                    if ($model->load($po) && $model->save()) {
-                        $id = (string)$model->_id;
-                        //var_dump($id); die("909099");
-                    } else {}
-
-                }
-            },
+//            'on beforeSend' => function ($event) {
+//                $response = $event->sender;
+//                if ($response->data !== null) {
+//                    $response->data = [
+//                        'success' => $response->isSuccessful,
+//                        'timestamp' => time(),
+//                        'path' => Yii::$app->request->getPathInfo(),
+//                        'data' => $response->data,
+//                    ];
+//                    /** Todo Save mongodb to Report API route **/
+//                    $po = ["Logrouteapi" => [ "name" => "Hoang Anh Baby Move" , "email" => "babyhoanganh19872019@gmail.com" , "address" => "Ha noi" , "status" => "2" ]];
+//
+//                    $model = new Logrouteapi();
+//                    if ($model->load($po) && $model->save()) {
+//                        $id = (string)$model->_id;
+//                        //var_dump($id); die("909099");
+//                    } else {}
+//
+//                }
+//            },
         ],
 
         'user' => [
