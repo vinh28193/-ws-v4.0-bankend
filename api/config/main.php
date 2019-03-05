@@ -40,15 +40,7 @@ return [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
-        /*
         'response' => [
-            'format' => yii\web\Response::FORMAT_JSON,
-            'charset' => 'UTF-8',
-            // ...
-        ],
-        */
-        'response' => [
-            //'class' => 'yii\web\Response',
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
             'on beforeSend' => function ($event) {
@@ -58,7 +50,7 @@ return [
                 $_user_AuthKey = $_user_Identity->getAuthKey();
                 $_user_name = $_user_Identity['username'];
 
-                /****ToDo Need Infor param*****/
+                /****ToDo Need More Infor param*****/
                 $_user_app = 'Weshop2019';
                 $_user_request_suorce = "WEB_API_FRONTEND";//"APP/WEB_API_FRONTEND/WB_API_BACK_END"
                 $_request_ip = "127.0.0.1";
@@ -72,7 +64,6 @@ return [
                         'path' => Yii::$app->request->getPathInfo(),
                         'data' => $response->data,
                     ];
-                    /** Todo Save mongodb to Report API route **/
 
                     $_rest_data = [ "RestApiCall" => [
                         "success" => $response->isSuccessful,
