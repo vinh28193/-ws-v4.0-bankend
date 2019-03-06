@@ -102,13 +102,19 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
             'origin_fee' => $this->sell_price,
             'origin_tax_fee' => $this->us_tax_rate,
             'origin_shipping_fee' => $this->shipping_fee
-        ],true,true);
-        $this->setVariationMapping();
-        $this->setVariationOptions();
-        $this->setRelateProduct();
-        $this->setImages();
-        $this->setTechnicalSpecific();
+        ], true, true);
+
+        if ($this->isInitialized === false) {
+            $this->setVariationMapping();
+            $this->setVariationOptions();
+            $this->setRelateProduct();
+            $this->setImages();
+            $this->setTechnicalSpecific();
+            $this->isInitialized = true;
+        }
     }
+
+    private $isInitialized = false;
 
     /**
      * @return string
