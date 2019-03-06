@@ -92,6 +92,8 @@ class RbacController extends \yii\console\Controller
                 $this->stdout("added child $name for parent role  $roleName... \n", Console::FG_GREEN);
             }
         }
+        $adminRole =  $this->authManager->getRole('master_marketing');
+        $this->authManager->assign($adminRole,1);
     }
 
     protected function createDefaultPermission()

@@ -11,6 +11,9 @@ use api\models\SignupForm;
 use api\behaviours\Verbcheck;
 use api\behaviours\Apiauth;
 
+/****APP Call Back FaceBook Google etc *****/
+use common\components\AuthHandler;
+
 /**
  * Site controller
  */
@@ -72,6 +75,10 @@ class SiteController extends RestController
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
+            ],
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthSuccess'],
             ],
         ];
     }
@@ -182,5 +189,10 @@ class SiteController extends RestController
         }
 
 
+    }
+
+    public function onAuthSuccess($client)
+    {
+        (new AuthHandler($client))->handle();
     }
 }

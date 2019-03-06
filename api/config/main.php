@@ -12,7 +12,7 @@ return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
-    'bootstrap' => ['log'], //,'v1/payment'
+    'bootstrap' => ['log', 'v1'], //,'v1/payment'
     'modules' => [
         'v1' => [
             'class' => 'api\modules\v1\Module',
@@ -35,33 +35,43 @@ return [
         ],
     ],
     'components' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'google' => [
+                    'class' => 'yii\authclient\clients\Google',
+                    'clientId' => 'google_client_id',
+                    'clientSecret' => 'google_client_secret',
+                ],
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => 'facebook_client_id',
+                    'clientSecret' => 'facebook_client_secret',
+                ],
+                // etc.
+            ],
+        ],
         'request' => [
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
-        /*
         'response' => [
-            'format' => yii\web\Response::FORMAT_JSON,
-            'charset' => 'UTF-8',
-            // ...
-        ],
-        */
-        'response' => [
-            //'class' => 'yii\web\Response',
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
             'on beforeSend' => function ($event) {
+               /*
                 $_user_Identity = Yii::$app->user->getIdentity();
                 $_user_id = $_user_Identity->getId();
                 $_user_email = $_user_Identity['email'];
                 $_user_AuthKey = $_user_Identity->getAuthKey();
                 $_user_name = $_user_Identity['username'];
 
-                /****ToDo Need Infor param*****/
+                //----ToDo Need More Infor param
                 $_user_app = 'Weshop2019';
                 $_user_request_suorce = "WEB_API_FRONTEND";//"APP/WEB_API_FRONTEND/WB_API_BACK_END"
                 $_request_ip = "127.0.0.1";
+               */
 
                 $response = $event->sender;
                 $_data = $response->data;
@@ -72,8 +82,8 @@ return [
                         'path' => Yii::$app->request->getPathInfo(),
                         'data' => $response->data,
                     ];
-                    /** Todo Save mongodb to Report API route **/
 
+                    /*
                     $_rest_data = [ "RestApiCall" => [
                         "success" => $response->isSuccessful,
                         "timestamp" => time(),
@@ -92,6 +102,7 @@ return [
                     if ($rest_model->load($_rest_data) && $rest_model->save()) {
                         $id = (string)$rest_model->_id;
                     } else {}
+                    */
                 }
             },
         ],
@@ -148,6 +159,11 @@ return [
                 '1/order/create'=>'order/create',
                 '1/order/update/<id>'=>'order/update',
                 '1/order/delete/<id>'=>'order/delete',
+
+
+                ### API SOCIAL 05/03/2019
+                '1/api/social'=>'api-social/index',
+                '1/api/social/convert-token'=>'api-social/convert-token',
 
                 ### Login api V1
                 'v1/<name>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',

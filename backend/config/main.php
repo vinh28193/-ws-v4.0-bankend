@@ -18,10 +18,28 @@ return [
         ],
     ],
     'components' => [
-//        'cart' => [
-//            'class' => 'backend\components\ShoppingCart',
-//            'sessionKey' => 'primary-cart',
-//        ],
+        /*
+        'cart' => [
+            'class' => 'backend\components\ShoppingCart',
+            'sessionKey' => 'primary-cart',
+        ],
+        */
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'google' => [
+                    'class' => 'yii\authclient\clients\Google',
+                    'clientId' => '745561014114-4emhnbr67v62flr2qbmfarho216cogc0.apps.googleusercontent.com',
+                    'clientSecret' => 'WCSvO39GF8OppvoTqLp3Ilg3',
+                ],
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => 'facebook_client_id',
+                    'clientSecret' => 'facebook_client_secret',
+                ],
+                // etc.
+            ],
+        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
@@ -29,6 +47,7 @@ return [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend

@@ -6,13 +6,14 @@
  * Time: 16:35
  */
 
-namespace common\components\rest;
+namespace common\rest;
 
 use Yii;
 
 class Serializer extends \yii\rest\Serializer
 {
 
+    public $collectionEnvelope = '_items';
     /**
      * @inheritdoc
      * @param mixed $data
@@ -20,11 +21,9 @@ class Serializer extends \yii\rest\Serializer
      */
     public function serialize($data)
     {
-        if (is_array($data) && isset($data['data'])) {
+        if (is_array($data) && count($data) === 3 && isset($data['data'])) {
             $data['data'] = $this->serialize($data['data']);
             return $data;
-        } elseif ($data instanceof \yii\base\BaseObject) {
-            return Yii::getObjectVars($data);
         }
         return parent::serialize($data);
     }

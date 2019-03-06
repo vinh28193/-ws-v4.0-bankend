@@ -34,6 +34,9 @@ phpunit.phar
 
 # vagrant runtime
 /.vagrant
+/api/runtime/
+/backend/runtime/
+/userbackend/runtime/
 
 # common
 /common/config/main-local.php

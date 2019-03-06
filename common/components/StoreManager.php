@@ -25,6 +25,9 @@ use yii\web\NotFoundHttpException;
 class StoreManager extends Component
 {
 
+    const STORE_VN = 1;
+    const STORE_ID = 7;
+
     public $defaultDomain = 'weshop-4.0.frontend.vn';
 
     /**
@@ -126,5 +129,22 @@ class StoreManager extends Component
     public function getExcludeTables()
     {
         return $this->excludeTables;
+    }
+
+    public function getExchangeRate(){
+        switch ($this->getId()){
+            case 1:
+                return 23500;
+            case 7:
+                return 14500;
+            default:
+                return 23500;
+        }
+    }
+    public function isVN(){
+        return $this->getId() == self::STORE_VN;
+    }
+    public function isID(){
+        return $this->getId() == self::STORE_ID;
     }
 }
