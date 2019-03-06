@@ -51,12 +51,10 @@ class RestController extends Controller
         $type = isset($this->get['name']) && $this->get['name'] ? $this->get['name'] : 'user';
         switch ($type){
             case 'user':
-            case 'api':
+            case 'admin':
                 \Yii::$app->user->identityClass = 'common\models\User';
                 $this->type_user = 'user';
                 break;
-            case 'userbackend':
-            case 'weshop':
             case 'customer':
                 \Yii::$app->user->identityClass = 'common\models\Customer';
                 $this->type_user = 'customer';
