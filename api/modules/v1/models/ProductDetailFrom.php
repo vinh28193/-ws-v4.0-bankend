@@ -30,7 +30,7 @@ class ProductDetailFrom extends \yii\base\Model
 
     public $sub_product_url;
 
-    public $with_detail;
+    public $with_detail = false;
 
     /**
      * @param array $data
@@ -108,6 +108,9 @@ class ProductDetailFrom extends \yii\base\Model
         }
 
         $product->init();
+        if($this->with_detail === false){
+            $product->description = null;
+        }
         return $product;
     }
     public function isSku(){

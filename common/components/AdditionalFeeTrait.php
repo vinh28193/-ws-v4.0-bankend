@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
 trait AdditionalFeeTrait
 {
 
-    public $additionalFeeModel = 'common\models\OrderFee';
+    protected $additionalFeeModel = 'common\models\OrderFee';
     /**
      * @var array
      */

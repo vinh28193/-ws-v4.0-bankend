@@ -99,7 +99,7 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     {
         parent::init();
         $this->setAdditionalFees([
-            'origin_fee' => $this->sell_price,
+            'origin_fee' => $this->getSellPrice(),
             'origin_tax_fee' => $this->us_tax_rate,
             'origin_shipping_fee' => $this->shipping_fee
         ], true, true);
@@ -115,6 +115,18 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     }
 
     private $isInitialized = false;
+
+    /**
+     * @return float|int
+     */
+    public function getSellPrice()
+    {
+        if (!empty($this->deal_price) && $this->deal_price > 0.0) {
+            return $this->deal_price * $this->quantity;
+        } else {
+            return $this->sell_price * $this->quantity;
+        }
+    }
 
     /**
      * @return string
@@ -149,7 +161,15 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
      */
     public function getShippingWeight()
     {
-        return $this->shipping_weight;
+        if ($this->shipping_weight == 0 || $this->shipping_weight == null) {
+            return $this->roundShippingWeight($this->shipping_weight) * $this->quantity;
+        }
+        return $this->roundShippingWeight($this->shipping_weight * $this->quantity);
+    }
+
+    public function roundShippingWeight($inputWeight = 0, $minWeight = 0.5)
+    {
+        return floatval($inputWeight) < $minWeight ? $minWeight : round($inputWeight, 2);
     }
 
     /**

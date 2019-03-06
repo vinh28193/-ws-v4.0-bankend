@@ -11,6 +11,7 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use api\modules\v1\models\ProductDetailFrom;
+use common\products\BaseProduct;
 use Yii;
 
 class ProductController extends BaseApiController
@@ -29,10 +30,31 @@ class ProductController extends BaseApiController
     {
         $paramRequests = Yii::$app->getRequest()->getBodyParams();
         $form = new ProductDetailFrom();
-        $form->load($paramRequests,'');
-        if(($res = $form->detail()) === false){
+        $form->load($paramRequests, '');
+        /** @var $product false | BaseProduct */
+        if (($product = $form->detail()) === false) {
             return $this->response(false, $form->getFirstErrors());
         }
-        return $this->response(true,"get detail success",$res->getAdditionalFees());
+        return $this->response(true, "get detail success", $product);
+    }
+
+    public function actionSearch()
+    {
+
+    }
+
+    public function actionCalculator(){
+        $paramRequests = Yii::$app->getRequest()->getQueryParam();
+        $form = new ProductDetailFrom();
+        $form->load($paramRequests, '');
+        /** @var $product false | BaseProduct */
+        if (($product= $form->detail()) === false) {
+            return $this->response(false, $form->getFirstErrors());
+        }
+        $data = [
+            'type' => $product->type,
+            ''
+        ];
+        return $this->response(true, "get detail success", $res->getAdditionalFees());
     }
 }
