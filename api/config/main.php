@@ -160,6 +160,11 @@ return [
                 '1/order/update/<id>'=>'order/update',
                 '1/order/delete/<id>'=>'order/delete',
 
+
+                ### API SOCIAL 05/03/2019
+                '1/api/social'=>'api-social/index',
+                '1/api/social/convert-token'=>'api-social/convert-token',
+
                 ### Login api V1
                 'v1/<name>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',
                 'v1/<name>/api/<controller:\w+>/<action:\w+>/<actionKey:\w*>'=>'v1/api/<controller>/<action>',
