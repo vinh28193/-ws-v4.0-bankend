@@ -24,5 +24,9 @@ return [
             'class' => 'yii\rbac\DbManager'
         ],
         'i18n' => $i18n,
+        'cart' => [
+            'class' => common\components\cart\CartManager::className(),
+            'storage' => common\components\cart\storage\SessionCartStorage::className()
+        ]
     ],
 ];

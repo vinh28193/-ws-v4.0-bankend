@@ -10,7 +10,8 @@ namespace api\modules\v1\controllers;
 
 
 use api\controllers\BaseApiController;
-use api\modules\v1\api\models\ProductDetailFrom;
+use api\modules\v1\models\ProductDetailFrom;
+use common\products\BaseProduct;
 use Yii;
 
 class ProductController extends BaseApiController
@@ -29,19 +30,31 @@ class ProductController extends BaseApiController
     {
         $paramRequests = Yii::$app->getRequest()->getBodyParams();
         $form = new ProductDetailFrom();
-        if (!isset($paramRequests['type'])) {
-            return $this->response(false, "missing parameter `type`");
-        }
-        if (($type = $paramRequests['type']) === null || $type === '' || !in_array($type, ['ebay', 'amazon', 'amazon-jp'])) {
-            return $this->response(false, "parameter `type` ether `ebay`, `amazon` or `amazon-jp`");
-        }
-        unset($paramRequests['type']);
-        $type = strtolower($type);
-        $form->setScenario($type);
-        $form->load($paramRequests,'');
-        if(($res = $form->detail()) === false){
+        $form->load($paramRequests, '');
+        /** @var $product false | BaseProduct */
+        if (($product = $form->detail()) === false) {
             return $this->response(false, $form->getFirstErrors());
         }
-        return $this->response(true,"get detail success",$res);
+        return $this->response(true, "get detail success", $product);
+    }
+
+    public function actionSearch()
+    {
+
+    }
+
+    public function actionCalculator(){
+        $paramRequests = Yii::$app->getRequest()->getQueryParam();
+        $form = new ProductDetailFrom();
+        $form->load($paramRequests, '');
+        /** @var $product false | BaseProduct */
+        if (($product= $form->detail()) === false) {
+            return $this->response(false, $form->getFirstErrors());
+        }
+        $data = [
+            'type' => $product->type,
+            ''
+        ];
+        return $this->response(true, "get detail success", $res->getAdditionalFees());
     }
 }
