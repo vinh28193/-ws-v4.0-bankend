@@ -9,9 +9,7 @@
 return [
     [
         'class' => \yii\rest\UrlRule::className(),
-        'controller' => ['order'],
-        'extraPatterns' => [
-
-        ]
+        'prefix' => 'v1',
+        'controller' => ['o' => 'order'],
     ]
 ];

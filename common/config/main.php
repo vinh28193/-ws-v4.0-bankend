@@ -1,4 +1,7 @@
 <?php
+
+$i18n = require dirname(dirname(__DIR__)) . '/common/i18n/i18n.php';
+
 return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -7,7 +10,9 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'common\components\FileCache',
+            'noCacheParam' => 'noCache',
+            'noCacheValidateKey' => 'yes'
         ],
         'api' => [
             'class' => 'common\components\Api',
@@ -17,6 +22,7 @@ return [
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager'
-        ]
+        ],
+        'i18n' => $i18n,
     ],
 ];

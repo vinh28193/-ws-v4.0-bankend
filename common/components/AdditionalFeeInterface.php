@@ -40,14 +40,17 @@ interface AdditionalFeeInterface
      * @return integer
      */
     public function getShippingWeight();
+
     /**
      * @return integer
      */
     public function getShippingQuantity();
+
     /**
      * @return boolean
      */
     public function getIsForWholeSale();
+
     /**
      * @return integer
      */
@@ -60,9 +63,10 @@ interface AdditionalFeeInterface
 
     /**
      * @param null $names
-     * @return mixed
+     * @param bool $formSource
+     * @return array
      */
-    public function getAdditionalFees($names = null);
+    public function getAdditionalFees($names = null, $formSource = true);
 
     /**
      * @param $values

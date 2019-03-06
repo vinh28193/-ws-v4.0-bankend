@@ -2,6 +2,7 @@
 
 namespace weshop\payment;
 
+use weshop\payment\collection\ProviderCollection;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\base\InvalidConfigException;
@@ -25,7 +26,6 @@ class PaymentModule extends \yii\base\Module
     public function init()
     {
         parent::init();
-        print_r($this->getMethods());
     }
 
     /**
@@ -66,7 +66,6 @@ class PaymentModule extends \yii\base\Module
     protected function loadMethodsFromSources(){
         $providers = require dirname(__DIR__).'/simple_data.php';
         $results = [];
-
         foreach ($providers as $name => $provider){
             if (!isset($provider['class'])) {
                 throw new InvalidConfigException('Provider '.$name.' configuration must be an array containing a "class" element.');
@@ -88,7 +87,7 @@ class PaymentModule extends \yii\base\Module
                 /** @var  $method BasePaymentMethod */
                 $method = Yii::createObject($method);
                 $method->setOwner($provider);
-                $results[$name] = $methods;
+                $results[$mName] = $method;
             }
 
         }

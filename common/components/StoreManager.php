@@ -141,6 +141,11 @@ class StoreManager extends Component
                 return 23500;
         }
     }
+
+    public function getLanguageId(){
+        return 'vi';
+    }
+
     public function isVN(){
         return $this->getId() == self::STORE_VN;
     }
