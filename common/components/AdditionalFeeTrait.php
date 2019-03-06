@@ -20,15 +20,16 @@ trait AdditionalFeeTrait
     /**
      * @var array
      */
-    protected $_additionalFees = [];
+    public $_additionalFees = [];
 
     /**
      * @param null $names
-     * @return array|\yii\db\ActiveRecord[]
+     * @param bool $formSource
+     * @return array
      */
-    public function getAdditionalFees($names = null)
+    public function getAdditionalFees($names = null, $formSource = false)
     {
-        if (empty($this->_additionalFees)) {
+        if (empty($this->_additionalFees) || $formSource) {
             if ($names === null) {
                 $names = array_keys($this->storeAdditionalFee);;
             }
@@ -63,7 +64,7 @@ trait AdditionalFeeTrait
                             $localValue = $value * $this->getExchangeRate();
                         }
                     }
-                    if($storeAdditionalFee->is_read_only === 1){
+                    if ($storeAdditionalFee->is_read_only === 1) {
                         Yii::warning("can not set read only additional fee '$name'");
                         continue;
                     }
@@ -72,7 +73,7 @@ trait AdditionalFeeTrait
                         'amount' => $value,
                         'amount_local' => $localValue,
                         'currency' => $storeAdditionalFee->currency,
-                        'discount_amount' => $this->hasAttribute('discount_amount') ? $this->discount_amount : 0,
+                        'discount_amount' => $this->hasProperty('discount_amount') ? $this->discount_amount : 0,
                     ];
                     $owner = "total_{$name}_local";
                     if ($this->canSetProperty($owner)) {
@@ -83,11 +84,11 @@ trait AdditionalFeeTrait
                     Yii::warning("failed when set unknown additional fee '$name'", __METHOD__);
                 }
             }
-            if($ensureReadOnly){
+            if ($ensureReadOnly) {
                 $breaks = array_keys($values);
-                foreach ($fees as $name => $storeAdditionalFee){
+                foreach ($fees as $name => $storeAdditionalFee) {
                     /** @var $storeAdditionalFee StoreAdditionalFee */
-                    if (in_array($name,$breaks)){
+                    if (in_array($name, $breaks)) {
                         continue;
                     }
                     $value = 0;
@@ -103,7 +104,7 @@ trait AdditionalFeeTrait
                         'amount' => $value,
                         'amount_local' => $localValue,
                         'currency' => $storeAdditionalFee->currency,
-                        'discount_amount' => $this->hasAttribute('discount_amount') ? $this->discount_amount : 0,
+                        'discount_amount' => $this->hasProperty('discount_amount') ? $this->discount_amount : 0,
                     ];
                     $owner = "total_{$name}_local";
                     if ($this->canSetProperty($owner)) {

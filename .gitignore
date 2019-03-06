@@ -37,6 +37,7 @@ phpunit.phar
 /api/runtime/
 /backend/runtime/
 /userbackend/runtime/
+/i18n-cache/
 
 # common
 /common/config/main-local.php

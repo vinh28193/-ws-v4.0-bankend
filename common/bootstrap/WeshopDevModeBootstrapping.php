@@ -1,12 +1,13 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: vinhs
- * Date: 2019-02-18
- * Time: 11:08
+ * Date: 2019-03-06
+ * Time: 13:08
  */
 
-namespace common\components;
+namespace common\bootstrap;
 
 
 class WeshopDevModeBootstrapping implements \yii\base\BootstrapInterface
