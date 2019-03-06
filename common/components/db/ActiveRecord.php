@@ -22,8 +22,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
         if($reflector->hasProperty('created_time') || $reflector->hasProperty('updated_time')){
             $behaviors['timestamp'] = [
                 'class' => \yii\behaviors\TimestampBehavior::class,
-                'createdAtAttribute' => $this->hasAttribute('created_time') ? 'created_time' : false,
-                'updatedAtAttribute' => $this->hasAttribute('updated_time') ? 'updated_time' : false,
+                'createdAtAttribute' => $this->hasAttribute('created_at') ? 'updated_at' : false,
+                'updatedAtAttribute' => $this->hasAttribute('updated_at') ? 'updated_at' : false,
                 'value' => new \yii\db\Expression('NOW()'),
             ];
         }

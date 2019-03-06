@@ -13,7 +13,23 @@ use api\modules\v1\controllers\AuthController;
 
 class ShipmentController extends AuthController
 {
-    public function actionList(){
-        return $this->response(true,"shipment");
+    public function actionIndex(){
+
+    }
+
+    public function actionUpdate(){
+
+    }
+
+    public function actionView(){
+
+    }
+
+    public function actionDelete(){
+
+    }
+
+    public function actionCreate(){
+
     }
 }
