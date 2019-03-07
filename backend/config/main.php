@@ -18,6 +18,14 @@ return [
         ],
         'ipFilter' => [
             'class' => 'johnsnook\ipFilter\Module',
+            'mapquestKey' => 'tCUKiFTyWL5TH9MuiveoJmGdJumWp5Pt',
+            'ipInfoKey' => 'fcbd97665ba41c',
+            'proxyCheckKey' => '295474-6613h7-208634-w34448',
+            'blowOff' => 'site/nope',
+            'ignorables' => [
+                'acontroller' => ['ignore-me', 'ignore-that'],
+                'whitelist' => ['127.0.0.1', '24.99.155.86']
+            ]
         ],
     ],
     'components' => [
