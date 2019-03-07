@@ -48,8 +48,13 @@ class ManifestController extends AuthController
                     $q->with([
                         'packageItems' => function ($qr) {
                             /** @var ActiveQuery $qr */
-                            $qr->where(['remove' => 0]);
-                        }
+                            $qr->with([
+                                'order' => function ($qr) {
+                                    /** @var ActiveQuery $qr */
+                                    $qr->where(['remove' => 0]);
+                                },
+                            ])->where(['remove' => 0]);
+                        },
                     ])->where(['remove' => 0]);
                 }
             ])->asArray()->limit(1)->one();

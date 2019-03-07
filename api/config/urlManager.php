@@ -54,6 +54,14 @@ return [
         'v1/<name>/api/manifest/delete/<id:\d+>'=>'v1/api/manifest/delete',
         'v1/<name>/api/manifest/delete/<id:\d+>/<is_remove_package:\w*>'=>'v1/api/manifest/delete',
 
+        //Shipment
+        'v1/<name>/api/shipment/update/<id:\d+>'=>'v1/api/shipment/update',
+        'v1/<name>/api/shipment/view/<id:\d+>'=>'v1/api/shipment/view',
+        'v1/<name>/api/shipment/index/<limit:\d+>-<page:\d+>.html'=>'v1/api/shipment/index',
+        'v1/<name>/api/shipment/index'=>'v1/api/shipment/index',
+        'v1/<name>/api/shipment/delete/<id:\d+>'=>'v1/api/shipment/delete',
+        'v1/<name>/api/shipment/delete/<id:\d+>/<is_leave:\w*>'=>'v1/api/shipment/delete',
+
         '<controller:\w+>/<id:\d+>' => '<controller>/view',
         '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
         '<controller:\w+>/<action:\w+>' => '<controller>/<action>',

@@ -29,11 +29,13 @@ use Yii;
  * @property string $created_at thời gian tạo
  * @property string $updated_at thời gian cập nhật
  * @property int $remove
+ * @property string $price
+ * @property string $cod
  *
  * @property Order $order
  * @property Package $package
  */
-class PackageItem extends \yii\db\ActiveRecord
+class PackageItem extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -49,10 +51,11 @@ class PackageItem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['package_id', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'current_status', 'shipment_id', 'created_at', 'updated_at', 'remove'], 'integer'],
-            [['weight', 'change_weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
+            [['package_id', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'created_at', 'updated_at', 'remove'], 'integer'],
+            [['weight', 'change_weight', 'dimension_l', 'dimension_w', 'dimension_h', 'price', 'cod'], 'number'],
             [['package_code'], 'string', 'max' => 50],
             [['box_me_warehouse_tag', 'sku'], 'string', 'max' => 255],
+            [['current_status'], 'string', 'max' => 100],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Package::className(), 'targetAttribute' => ['package_id' => 'id']],
         ];
@@ -86,6 +89,8 @@ class PackageItem extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'remove' => 'Remove',
+            'price' => 'Price',
+            'cod' => 'Cod',
         ];
     }
 
