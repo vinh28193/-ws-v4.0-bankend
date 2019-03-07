@@ -407,3 +407,47 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
     ];
     
      https://packagist.org/packages/hbhe/yii2-authclient
+     
+     
+     
+###--------IP Filter----------
+C:\xampp\htdocs\weshop-v4.0-api\vendor\johnsnook\yii2-ip-filter\models\Visitor.php
+https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
+
+ public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                if($this->ip !== '127.0.0.1'){
+                    if (($info = $this->getIpInfo($this->ip)) !== null) {
+                        $this->city = $info->city;
+                        $this->region = $info->region;
+                        $country = Country::findOne(['code' => $info->country]);
+                        $this->country = $country->name;
+                        if ($info->loc) {
+                            $this->latitude = floatval(explode(',', $info->loc)[0]);
+                            $this->longitude = floatval(explode(',', $info->loc)[1]);
+                        }
+                        $this->organization = $info->org;
+                    }
+                    if (($pcheck = $this->getProxyInfo($this->ip)) !== null) {
+                        $this->proxy = ($pcheck->proxy === 'yes' ? $pcheck->type : 'no');
+                        if ($this->proxy !== 'no') {
+                            $this->is_blacklisted = true;
+                        }
+                    }
+                }else {
+                    $this->city = 'Ha Noi';
+                    $this->region = 'Viet Nam';
+                    $this->country = 'Viet Nam';
+                    $this->latitude = '21.028511';
+                    $this->longitude = '105.804817';
+                    $this->organization = 'Weshop';
+                    $this->proxy = 'no';
+                    $this->is_blacklisted = true;
+                }
+
+            }
+            return true;
+        }
+        return false;
+    }

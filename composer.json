@@ -22,7 +22,8 @@
         "fzaninotto/faker": "^1.9@dev",
         "yiisoft/yii2-mongodb": "^2.1@dev",
         "yiisoft/yii2-authclient": "~2.1.0",
-        "yiisoft/yii2-httpclient": "^2.0@dev"
+        "yiisoft/yii2-httpclient": "^2.0@dev",
+        "johnsnook/yii2-ip-filter": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
