@@ -31,7 +31,7 @@ class PackageItemFixture extends ActiveFixture
                 }
                 $product = $products[rand(0,count($products) - 1)];
                 $data = [
-                    'package_id' => $package['order_ids'],
+                    'package_id' => $package['id'],
                     'package_code' => $package['package_code'],
                     'box_me_warehouse_tag' => $package['current_status'] == 'STOCK_IN_LOCAL' ? 'CB_TAG-'.FixtureUtility::getRandomCode(16) : null,
                     'order_id' => $order,
