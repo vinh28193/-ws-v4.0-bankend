@@ -8,12 +8,11 @@
 
 namespace common\rest;
 
-use Yii;
-
 class Serializer extends \yii\rest\Serializer
 {
 
     public $collectionEnvelope = '_items';
+
     /**
      * @inheritdoc
      * @param mixed $data
@@ -22,9 +21,24 @@ class Serializer extends \yii\rest\Serializer
     public function serialize($data)
     {
         if (is_array($data) && count($data) === 3 && isset($data['data'])) {
+
             $data['data'] = $this->serialize($data['data']);
             return $data;
         }
-        return parent::serialize($data);
+        $data = parent::serialize($data);
+        if (is_object($data)) {
+            $data = $this->serializeObject($data);
+        }
+        return $data;
+    }
+
+    public function serializeObject($data)
+    {
+        $reflection = new \ReflectionObject($data);
+        $result = [];
+        foreach ($reflection->getProperties(\ReflectionProperty::IS_PUBLIC) as $name => $reflectionProperty) {
+            $result[$reflectionProperty->getName()] = $reflectionProperty->getValue($data);
+        }
+        return $result;
     }
 }

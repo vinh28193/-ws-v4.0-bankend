@@ -49,6 +49,7 @@ abstract class BaseProductGate extends \yii\base\Component
     {
         if ($config === null || (is_array($config) && !isset($config['class']))) {
             $config['class'] = Client::className();
+
         };
         return Yii::createObject($config);
     }
@@ -109,5 +110,9 @@ abstract class BaseProductGate extends \yii\base\Component
         $event->request = $request;
         $event->response = $response;
         $this->trigger(self::EVENT_AFTER_SEND_REQUEST, $event);
+    }
+
+    public function isEmpty($value){
+        return \common\helpers\WeshopHelper::isEmpty($value);
     }
 }

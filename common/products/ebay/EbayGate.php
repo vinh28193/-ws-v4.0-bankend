@@ -15,14 +15,23 @@ use yii\web\ServerErrorHttpException;
 class EbayGate extends BaseProductGate
 {
 
-    public function getProduct($keyword)
+    /**
+     * @param $keyword
+     * @param bool $renew
+     * @return array|mixed
+     * @throws ServerErrorHttpException
+     * @throws \HttpException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
+     */
+    public function getProduct($keyword, $renew = false)
     {
         $request = new EbayDetailRequest();
         $request->keyword = $keyword;
         if (!$request->validate()) {
             throw new ServerErrorHttpException("Error when validate");
         }
-        return $this->sendRequest($request, true);
+        return $this->sendRequest($request, $renew);
     }
 
     public function parseResponse($response)

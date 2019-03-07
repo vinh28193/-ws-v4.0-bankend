@@ -10,7 +10,7 @@ namespace api\modules\v1\controllers;
 
 
 use api\controllers\BaseApiController;
-use api\modules\v1\models\ProductDetailFrom;
+use common\products\forms\ProductDetailFrom;
 use common\products\BaseProduct;
 use Yii;
 

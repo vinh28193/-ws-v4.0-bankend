@@ -153,7 +153,6 @@ class CartManager extends Component
     public function addItem($sku, $seller, $quantity, $source, $image, $parentSku = null)
     {
         $key = $this->normalPrimaryKey($sku, $parentSku);
-
         try {
             if ($this->hasItem($sku, $parentSku)) {
                 if (($item = $this->getItem($sku, $parentSku)) === false) {
@@ -177,6 +176,7 @@ class CartManager extends Component
             }
         } catch (\Exception $exception) {
             Yii::info($exception);
+
             return false;
         }
     }
