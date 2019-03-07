@@ -77,12 +77,12 @@ class ApiSocialController extends RestController
 
     public function actionIndex()
     {
-        Yii::$app->api->sendSuccessResponse(['Yii2 RESTful ApiSocial API with OAuth2']);
+        Yii::$app->api->sendSuccessResponse(['WESHOP @2019 RESTful ApiSocial API with OAuth2']);
     }
 
     public function actionConvertToken()
     {
-        Yii::$app->api->sendSuccessResponse(['Yii2 RESTful convert-token POST ApiSocial API with OAuth2']);
+        Yii::$app->api->sendSuccessResponse(['WESHOP @2019 RESTful convert-token POST ApiSocial API with OAuth2']);
     }
 
 }

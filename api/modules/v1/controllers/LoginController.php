@@ -65,7 +65,7 @@ class LoginController extends RestController
      */
     public function actionIndex()
     {
-        Yii::$app->api->sendSuccessResponse(['Yii2 RESTful API with OAuth2']);
+        Yii::$app->api->sendSuccessResponse(['WESHOP @2019 RESTful API with OAuth2']);
         exit();
         //  return $this->render('index');
     }
