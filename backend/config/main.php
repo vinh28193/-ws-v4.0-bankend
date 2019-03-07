@@ -9,7 +9,11 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log','ipFilter',],
+    'bootstrap' => [
+        'log',
+        'ipFilter',
+        'admin',
+    ],
     'controllerNamespace' => 'backend\controllers',
     'defaultRoute' => 'site/index',
     'modules' => [
@@ -26,6 +30,16 @@ return [
                 'acontroller' => ['ignore-me', 'ignore-that'],
                 'whitelist' => ['127.0.0.1', '24.99.155.86']
             ]
+        ],
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+            'layout' => 'left-menu',
+            'menus' => [
+                'assignment' => [
+                    'label' => 'Grant Access' // change label
+                ],
+                'route' => null, // disable menu
+            ],
         ],
     ],
     'components' => [

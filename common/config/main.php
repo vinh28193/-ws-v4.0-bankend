@@ -23,6 +23,13 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager'
         ],
+        'as access' => [
+            'class' => 'mdm\admin\classes\AccessControl',
+            'allowActions' => [
+                'site/*',
+                'admin/*',
+            ]
+        ],
         'i18n' => $i18n,
         'cart' => [
             'class' => common\components\cart\CartManager::className(),
