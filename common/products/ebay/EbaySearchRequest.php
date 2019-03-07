@@ -23,7 +23,7 @@ class EbaySearchRequest extends \common\products\BaseRequest
 
 
     public function getFullUrl(){
-
+        return 'http://ebay-api-v3.weshop.beta/v3/search';
     }
 
     public function buildHttpRequest($httpRequest)
