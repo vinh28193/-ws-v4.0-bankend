@@ -74,8 +74,11 @@ class ShipmentController extends AuthController
         if($model->validate()){
             $packageItem_ids = explode(',',$packageItem_ids);
             /** @var PackageItem[] $list_IPackage */
-            $list_IPackage = PackageItem::find()->with('product')->where(['id' => $packageItem_ids])->all();
+            $list_IPackage = PackageItem::find()->where(['id' => $packageItem_ids])
+                ->andWhere(['or',['shipment_id' => null],['shipment_id' => '']])
+                ->all();
             $list_cbTag = [];
+            $list_id_success = [];
             $model->total_weight = 0;
             $model->total_quantity = 0;
             $model->total_cod = 0;
@@ -84,17 +87,23 @@ class ShipmentController extends AuthController
             foreach ($list_IPackage as $value){
                 if(!$value->box_me_warehouse_tag)
                     $checkInspect = false;
-                $list_cbTag[] = $value->box_me_warehouse_tag;
+                if ($value->box_me_warehouse_tag){
+                    $list_cbTag[] = $value->box_me_warehouse_tag;
+                }
                 $model->total_weight += $value->weight ? $value->weight : 0;
                 $model->total_quantity += $value->quantity ?  $value->quantity : 0;
                 $model->total_price += $value->price ? $value->price* $value->quantity : 0;
                 $model->total_cod += $value->cod ? $value->cod : 0;
+                $list_id_success[] = $value->id;
             }
             $model->shipment_status = Shipment::STATUS_NEW;
             if($checkInspect){
                 $model->shipment_status = Shipment::STATUS_LOCAL_INSPECT_DONE;
             }
+            $model->warehouse_tags = implode(',',$list_cbTag);
             $model->save();
+            $rows = PackageItem::updateAll(['shipment_id' => $model->id] , ['id' => $list_id_success]);
+            return ['total_item' => $rows,'data' => $model->toArray()];
         }
 
         return $model->errors;
