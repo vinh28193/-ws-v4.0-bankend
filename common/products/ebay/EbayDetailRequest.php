@@ -11,6 +11,7 @@ namespace common\products\ebay;
 
 class EbayDetailRequest extends \common\products\BaseRequest
 {
+
     /**
      * @return string
      */

@@ -195,4 +195,33 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     {
         return $this->getStoreManager()->getExchangeRate();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLocalizeTotalPrice(){
+        return $this->getTotalAdditionFees()[1];
+    }
+
+    /**
+     * @return null | integer
+     */
+    public function getLocalizeTotalStartPrice(){
+        if ($this->start_price == null || $this->start_price == 0) return null;
+        $tempPrice = $this->getSellPrice();
+        $this->sell_price = $this->start_price;
+        $this->init();
+        $temp = $this->getTotalAdditionFees();
+        if (!empty($this->deal_price) && $this->deal_price > 0.0) {
+            $deal = $this->deal_price;
+            $this->deal_price = null;
+            $this->init();
+            $temp = $this->getTotalAdditionFees();
+            $this->deal_price = $deal;
+        }
+        //restore the sell_price to be $tempPrice before
+        $this->sell_price = $tempPrice;
+        $this->init();
+        return $temp[1];
+    }
 }

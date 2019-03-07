@@ -6,10 +6,9 @@
  * Time: 14:30
  */
 
-namespace api\modules\v1\models;
+namespace common\products\forms;
 
 
-use common\products\BaseProduct;
 use common\products\ebay\EbayGate;
 use common\products\ebay\EbayProduct;
 
@@ -79,10 +78,14 @@ class ProductDetailFrom extends \yii\base\Model
     }
 
     /**
-     * @return array|bool|mixed
+     * @param bool $renew
+     * @return bool|EbayProduct
+     * @throws \HttpException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
      * @throws \yii\web\ServerErrorHttpException
      */
-    public function detail()
+    public function detail($renew = false)
     {
 
         if (!$this->validate()) {
@@ -90,8 +93,12 @@ class ProductDetailFrom extends \yii\base\Model
         }
         $type = strtoupper($this->type);
         $gate = new EbayGate();
-        /** @var  $product EbayProduct*/
-        $product = $gate->getProduct($this->id);
+        /** @var  $product EbayProduct */
+        $product = $gate->getProduct($this->id, $renew);
+        if (is_array($product) && isset($product['success']) && $product['success'] === false) {
+            $this->addError($this->isSku() ? 'sku' : 'id', $product['message']);
+            return false;
+        }
         if ($this->isSku()) {
             foreach ($product->variation_mapping as $variation) {
                 if ($variation->variation_sku === $this->sku) {
@@ -100,20 +107,22 @@ class ProductDetailFrom extends \yii\base\Model
                 }
             }
         }
-        if($this->weight !== null && trim($this->weight) > 0){
+        if ($this->weight !== null && trim($this->weight) > 0) {
             $product->shipping_weight = $this->weight;
         }
-        if($this->quantity !== null && trim($this->quantity) > 0){
+        if ($this->quantity !== null && trim($this->quantity) > 0) {
             $product->quantity = $this->quantity;
         }
 
         $product->init();
-        if($this->with_detail === false){
+        if ($this->with_detail === false) {
             $product->description = null;
         }
         return $product;
     }
-    public function isSku(){
+
+    public function isSku()
+    {
         return $this->sku !== null && trim($this->sku) !== '';
     }
 }
