@@ -87,9 +87,8 @@ class OrderController extends BaseApiController
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
         $query->filter($requestParams);
-
+        $query->orderBy(['id' => SORT_DESC]);
         return $this->response(true, 'ok', $dataProvider);
     }
 
@@ -163,9 +162,10 @@ class OrderController extends BaseApiController
     protected function findModel($condition, $with = true)
     {
         $query = Order::find();
-        if ($with) {
-            $query->withFullRelations();
-        }
+//        if ($with) {
+//            $query->withFullRelations();
+//        }
+        $query->withFullRelations();
         if (is_numeric($condition)) {
             $condition = ['id' => $condition];
         }
