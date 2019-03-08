@@ -10,6 +10,8 @@ namespace console\controllers;
 
 
 use common\models\db\Category;
+use common\models\db\Product;
+use common\models\PackageItem;
 use Faker\Factory;
 use yii\console\Controller;
 
@@ -43,6 +45,20 @@ class OrderController extends Controller
             $category->name = $category->origin_name;
             echo $category->name.PHP_EOL;
             $category->save(0);
+        }
+    }
+
+    public function actionFakePackageItem(){
+        /** @var PackageItem[] $packageItems */
+        $packageItems = PackageItem::find()->all();
+        foreach ($packageItems as $packageItem){
+            echo $packageItem->sku.PHP_EOL;
+            /** @var Product $product */
+            $product = Product::find()->where(['sku' => $packageItem->sku,'order_id' => $packageItem->order_id])->limit(1)->one();
+            $packageItem->price = $product->price_amount_local;
+            $packageItem->cod = rand(0,10) * 23500;
+            echo "Ok ".PHP_EOL;
+            $packageItem->save(0);
         }
     }
 }

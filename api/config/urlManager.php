@@ -44,11 +44,23 @@ return [
 
         ### Login api V1
         'v1/<name>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',
-        'v1/<name>/api/<controller:\w+>/<action:\w+>/<actionKey:\w*>'=>'v1/api/<controller>/<action>',
         'v1/<name>/api/<controller:\w+>/<action:\w+>'=>'v1/api/<controller>/<action>',
 
         //Manifest
-        'v1/<name>/api/manifest/update/<id:\d+>'=>'v1/api/<controller>/<action>',
+        'v1/<name>/api/manifest/update/<id:\d+>'=>'v1/api/manifest/update',
+        'v1/<name>/api/manifest/view/<id:\d+>'=>'v1/api/manifest/view',
+        'v1/<name>/api/manifest/index/<limit:\d+>-<page:\d+>.html'=>'v1/api/manifest/index',
+        'v1/<name>/api/manifest/index'=>'v1/api/manifest/index',
+        'v1/<name>/api/manifest/delete/<id:\d+>'=>'v1/api/manifest/delete',
+        'v1/<name>/api/manifest/delete/<id:\d+>/<is_remove_package:\w*>'=>'v1/api/manifest/delete',
+
+        //Shipment
+        'v1/<name>/api/shipment/update/<id:\d+>'=>'v1/api/shipment/update',
+        'v1/<name>/api/shipment/view/<id:\d+>'=>'v1/api/shipment/view',
+        'v1/<name>/api/shipment/index/<limit:\d+>-<page:\d+>.html'=>'v1/api/shipment/index',
+        'v1/<name>/api/shipment/index'=>'v1/api/shipment/index',
+        'v1/<name>/api/shipment/delete/<id:\d+>'=>'v1/api/shipment/delete',
+        'v1/<name>/api/shipment/delete/<id:\d+>/<is_leave:\w*>'=>'v1/api/shipment/delete',
 
         '<controller:\w+>/<id:\d+>' => '<controller>/view',
         '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',

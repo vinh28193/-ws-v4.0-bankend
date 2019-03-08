@@ -129,7 +129,7 @@ class OrderController extends BaseApiController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id,false);
-        $this->can('canUpdate', ['id' => $model->id]);
+        $this->can('canUpdate', ['id' => $model->id]); // OWner is Update
         $model->load(Yii::$app->getRequest()->getBodyParams(), '');
         if ($model->save() === false && !$model->hasErrors()) {
             throw new ServerErrorHttpException('Failed to update the object for unknown reason.');

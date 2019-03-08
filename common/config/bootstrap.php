@@ -9,3 +9,5 @@ Yii::setAlias('@i18nCache', dirname(dirname(__DIR__)) . '/i18n-cache');
 
 Yii::setAlias('@weshop','@backend/modules/weshop');
 Yii::setAlias('@weshop/payment','@weshop/weshop-payment/src');
+
+//Yii::setAlias('@mdm/admin' , '@app/extensions/mdm/yii2-admin-2.0.0');
