@@ -27,8 +27,8 @@ return [
             'proxyCheckKey' => '295474-6613h7-208634-w34448',
             'blowOff' => 'site/nope',
             'ignorables' => [
-                'acontroller' => ['ignore-me', 'ignore-that'],
-                'whitelist' => ['127.0.0.1', '24.99.155.86']
+                'acontroller' => ['ignore-me', 'ignore-that','avast-Antivirus'],
+                'whitelist' => ['127.0.0.1', '24.99.155.86','10.5.11.83']
             ]
         ],
         'admin' => [

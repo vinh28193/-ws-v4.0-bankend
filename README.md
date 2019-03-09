@@ -370,6 +370,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   ###-------Run------
    php -S 127.0.0.1:8980 -t backend/web
    vendor/bin/codecept run -- -c backend
+   $ vendor/bin/codecept run --steps --debug -- -c backend
 
   
   
@@ -455,3 +456,7 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
     
     # --------------i18n------------------------
     php yii i18n-migrate
+    
+    #------------RBAC authen-----------------------
+    php yii rbac/migrate
+    php yii rbac/create-default 

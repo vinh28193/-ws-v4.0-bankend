@@ -15,7 +15,7 @@ class CreateOrderCest
     public function createOrderViaAPI(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','8ac9d03d9a2f6b467925f209e791254e');
+        $I->haveHttpHeader('X-Access-Token','1f7adc17f86342713ca92a71920d5fe4');
         $I->sendPOST('/1/order/create', '{
             "store_id" : "Store ID",
             "type_order" : "Type Order",
@@ -103,9 +103,9 @@ class CreateOrderCest
             "remove" : "Remove"
         }');
         $I->seeResponseCodeIs(HttpCode::OK); // 200
-        //$I->seeResponseCodeIsSuccessful();
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        //$I->seeResponseContains('{"success": true}');
+        $I->seeResponseContains('{"store_id":["Store ID must be an integer."]');
 
     }
 }
