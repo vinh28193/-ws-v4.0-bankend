@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $order_id order id
+ * @property int $product_id Product Id
  * @property string $type_fee loại phí: đơn giá gốc, ship us, ship nhật , weshop fee, ...
  * @property string $amount_local tiền local
  * @property string $amount tiền ngoại tệ
@@ -20,7 +21,7 @@ use Yii;
  *
  * @property Order $order
  */
-class OrderFee extends \yii\db\ActiveRecord
+class OrderFee extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -36,7 +37,8 @@ class OrderFee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'created_at', 'updated_at', 'remove'], 'integer'],
+            [['order_id', 'product_id', 'created_at', 'updated_at', 'remove'], 'integer'],
+            [['product_id'], 'required'],
             [['amount_local', 'amount', 'discount_amount'], 'number'],
             [['type_fee', 'currency'], 'string', 'max' => 255],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
@@ -51,13 +53,14 @@ class OrderFee extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'order_id' => 'Order ID',
+            'product_id' => 'Product ID',
             'type_fee' => 'Type Fee',
             'amount_local' => 'Amount Local',
             'amount' => 'Amount',
             'currency' => 'Currency',
             'discount_amount' => 'Discount Amount',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'remove' => 'Remove',
         ];
     }

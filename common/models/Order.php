@@ -19,22 +19,6 @@ class Order extends DbOrder implements AdditionalFeeInterface
     use \common\components\StoreAdditionalFeeRegisterTrait;
     use \common\components\AdditionalFeeTrait;
 
-    public function behaviors()
-    {
-        return array_merge(parent::behaviors(), [
-            'orderFee' => [
-                'class' => \common\behaviors\AdditionalFeeBehavior::className()
-            ],
-            [
-                'class' => 'yii\behaviors\TimestampBehavior',
-                'attributes' => [
-                    BaseActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                    BaseActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
-                ]
-            ]
-        ]);
-    }
-
     public function rules()
     {
         return [

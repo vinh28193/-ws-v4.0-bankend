@@ -108,13 +108,13 @@ trait ProductTrait
         $this->item_sku = $sku;
 
         foreach ((array)$this->variation_mapping as $item) {
-            if ($item->variation_sku == $sku) {
+            if ($item->variation_sku === $sku) {
                 $this->start_price = $item->variation_start_price ? $item->variation_start_price : $this->start_price;
                 $this->sell_price = $item->variation_price ? $item->variation_price : $this->sell_price;
                 $this->available_quantity = $item->available_quantity;// ? $item->available_quantity : $this->available_quantity;
                 $this->quantity_sold = $item->quantity_sold;// ? $item->quantity_sold : $this->quantity_sold;
-                $this->currentVariation = $item->options_group ? $item->options_group : $this->currentVariation;
-                return true;
+                $this->current_variation = $item->options_group ? $item->options_group : $this->current_variation;
+                break;
             }
         }
         if (count($this->variation_mapping) == 0) {
@@ -131,7 +131,7 @@ trait ProductTrait
         $checkAmazon = false;
         $checkAmazonNew = false;
         $seller = '';
-        foreach ($this->provider as $provider) {
+        foreach ($this->providers as $provider) {
             if ($provider->condition == 'New') {
 
                 if ($provider->name == 'Amazon.com') {
@@ -164,7 +164,7 @@ trait ProductTrait
 
     public function updateBySeller($selerId)
     {
-        foreach ($this->provider as $provider) {
+        foreach ($this->providers as $provider) {
             if ($provider->provId == $selerId) {
                 $this->sell_price = $provider->price;
                 $this->condition = $provider->condition;

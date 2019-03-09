@@ -24,6 +24,8 @@ class Serializer extends \yii\rest\Serializer
 
             $data['data'] = $this->serialize($data['data']);
             return $data;
+        } elseif ($data instanceof \IteratorAggregate) {
+            return ($iterator = $data->getIterator()) instanceof \ArrayIterator ? $iterator->getArrayCopy() : $iterator;
         }
         $data = parent::serialize($data);
         if (is_object($data)) {
@@ -36,8 +38,10 @@ class Serializer extends \yii\rest\Serializer
     {
         $reflection = new \ReflectionObject($data);
         $result = [];
-        foreach ($reflection->getProperties(\ReflectionProperty::IS_PUBLIC) as $name => $reflectionProperty) {
-            $result[$reflectionProperty->getName()] = $reflectionProperty->getValue($data);
+        foreach ($reflection->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
+            $value = $reflectionProperty->getValue($data);
+            $value = $this->serialize($value);
+            $result[$reflectionProperty->getName()] = $value;
         }
         return $result;
     }
