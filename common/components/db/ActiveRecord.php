@@ -25,7 +25,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         return array_merge(parent::behaviors(), [
             'timestamp' => [
-                'class' => 'yii\behaviors\TimestampBehavior',
+                'class' => 'common\behaviors\TimestampBehavior',
                 'createdAtAttribute' => $this->hasAttribute('created_at') ? 'created_at' : false,
                 'updatedAtAttribute' => $this->hasAttribute('updated_at') ? 'updated_at' : false,
             ],

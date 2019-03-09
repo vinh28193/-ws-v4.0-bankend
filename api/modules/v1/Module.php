@@ -26,6 +26,9 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public function bootstrap($app){
         if($app instanceof \yii\web\Application){
             $rules = require 'routers.php';
+            \Yii::info($app->getUrlManager()->enablePrettyUrl,'enablePrettyUrl');
+            \Yii::info($app->getUrlManager()->enableStrictParsing,'enableStrictParsing');
+            \Yii::info($app->getUrlManager()->showScriptName,'showScriptName');
             $app->getUrlManager()->addRules($rules,false);
         }
     }
