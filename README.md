@@ -451,3 +451,7 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
         }
         return false;
     }
+    
+    
+    # --------------i18n------------------------
+    php yii i18n-migrate
