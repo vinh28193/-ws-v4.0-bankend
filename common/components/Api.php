@@ -98,6 +98,7 @@ class Api extends Component
     public function createAuthorizationCode($user_id,$type = 'user',$expired_time = null)
     {
         $expired_time = $expired_time ? $expired_time : 60*60*5;
+        $type = $type ? $type : 'user';
 
         $model = new AuthorizationCodes;
 
@@ -109,6 +110,7 @@ class Api extends Component
 
         $model->type = $type;
 
+        /** ToDo Set Application ID : WEB + API + APP ENV **/
         if (isset($_SERVER['HTTP_X_HAIKUJAM_APPLICATION_ID']))
             $app_id = $_SERVER['HTTP_X_HAIKUJAM_APPLICATION_ID'];
         else

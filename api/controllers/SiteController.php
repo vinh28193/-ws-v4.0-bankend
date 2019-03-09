@@ -154,11 +154,14 @@ class SiteController extends RestController
 
         $model->attributes = $this->post;
 
-
         if ($model->validate() && $model->login()) {
+            if(YII_DEBUG == true and YII_ENV == 'test'){
+                $expired_time = 60*60*5;
+                $type = 'user';
+            }else {$expired_time = null ; $type = 'user'; }
 
             $_idUser =  Yii::$app->user->identity['id'];
-            $auth_code = Yii::$app->api->createAuthorizationCode($_idUser);
+            $auth_code = Yii::$app->api->createAuthorizationCode($_idUser,$type,$expired_time);
 
             $data = [];
             $data['authorization_code'] = $auth_code->code;

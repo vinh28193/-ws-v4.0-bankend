@@ -148,3 +148,7 @@ Scenario --
  I see response code is 200
  I see response is json
  PASSED
+
+Time: 849 ms, Memory: 12.00 MB
+
+OK (2 tests, 8 assertions)
