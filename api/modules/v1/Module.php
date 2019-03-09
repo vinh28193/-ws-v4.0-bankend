@@ -29,7 +29,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
             \Yii::info($app->getUrlManager()->enablePrettyUrl,'enablePrettyUrl');
             \Yii::info($app->getUrlManager()->enableStrictParsing,'enableStrictParsing');
             \Yii::info($app->getUrlManager()->showScriptName,'showScriptName');
-            $app->getUrlManager()->addRules($rules,false);
+//            $app->getUrlManager()->addRules($rules,false);
         }
     }
 
