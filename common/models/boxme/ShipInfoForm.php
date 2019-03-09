@@ -17,7 +17,7 @@ class ShipInfoForm
     public $address2 = "";
     public $phone = "";
     public $phone2 = "";
-    public $country_id = ""; // boxme_id
+    public $country = ""; // boxme_id
     public $province_id = ""; // boxme_id
     public $district_id = ""; // boxme_id
     public $pickup_id = ""; // boxme_id
