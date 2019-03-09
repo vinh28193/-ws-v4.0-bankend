@@ -22,28 +22,31 @@ class PostsApiCest
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','c2c41e1d66e70e3b671182a0fc6eca56');
-        $I->sendGET('/1/posts');
+        $I->sendGET('/1/post');
         $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        $I->seeResponseContainsJson([0 => ['title' => 'First Post']]);
+        //$I->seeResponseContains('{ "status": 1, "data": [ { "id": "1", "name": "John ","email": "john@gmail.com"');
     }
 
     public function testGetOne(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','c2c41e1d66e70e3b671182a0fc6eca56');
-        $I->sendGET('/1/posts/1');
-        $I->seeResponseCodeIs(200);
-        $I->seeResponseIsJson();
-        $I->seeResponseContainsJson(['title' => 'First Post']);
+        $I->sendGET('/1/post/1');
+        $I->seeResponseCodeIs(404);
+        //$I->seeResponseCodeIsSuccessful();
+        //$I->seeResponseIsJson();
+        //$I->seeResponseContainsJson(['title' => 'First Post']);
     }
 
     public function testGetNotFound(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','c2c41e1d66e70e3b671182a0fc6eca56');
-        $I->sendGET('/1/posts/100');
+        $I->sendGET('/1/post/100');
         $I->seeResponseCodeIs(404);
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
         $I->seeResponseContainsJson(['name' => 'Not Found']);
     }
@@ -52,11 +55,12 @@ class PostsApiCest
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','c2c41e1d66e70e3b671182a0fc6eca56');
-        $I->sendPOST('/1/posts', [
+        $I->sendPOST('/1/post', [
             'title' => 'Test Title',
             'text' => 'Test Text',
         ]);
         $I->seeResponseCodeIs(201);
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
         $I->seeResponseContainsJson(['title' => 'Test Title']);
     }
@@ -65,10 +69,11 @@ class PostsApiCest
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','c2c41e1d66e70e3b671182a0fc6eca56');
-        $I->sendPUT('/1/posts/2', [
+        $I->sendPUT('/1/post/2', [
             'title' => 'New Title',
         ]);
         $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
         $I->seeResponseContainsJson([
             'title' => 'New Title',
@@ -80,7 +85,7 @@ class PostsApiCest
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','c2c41e1d66e70e3b671182a0fc6eca56');
-        $I->sendDELETE('/1/posts/3');
+        $I->sendDELETE('/1/post/3');
         $I->seeResponseCodeIs(204);
     }
 }
