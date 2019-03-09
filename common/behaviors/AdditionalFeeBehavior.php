@@ -82,7 +82,7 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
         $model = new OrderFee();
         $model->amount = $totalFee;
         $model->amount_local = $totalFeeLocal;
-        $model->order_id = $this->owner->primaryKey;
+        $model->order_id = $this->owner->order_id;
         $model->product_id = $this->owner->primaryKey;
         $model->currency = Yii::$app->storeManager->store->currency;
         $model->discount_amount = 0;
