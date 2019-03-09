@@ -94,10 +94,15 @@ class OrderController extends RestController
 
     public function actionIndex()
     {
+//        $PermissionsByUser = \Yii::$app->authManager->getPermissionsByUser(13);
+//        var_dump($PermissionsByUser);
+
         $params = $this->post['search'];
         $response = Order::search($params);
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         \Yii::$app->response->data  =   array_merge($response['data'], $response['info']);
+
+
 
     }
 

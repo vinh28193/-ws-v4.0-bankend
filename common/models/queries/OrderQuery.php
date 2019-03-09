@@ -24,7 +24,7 @@ class OrderQuery extends ActiveQuery
 
     public function withFullRelations(){
         $this->with([
-//            'products',
+            'products',
             'orderFees',
             'packageItems',
             'walletTransactions',

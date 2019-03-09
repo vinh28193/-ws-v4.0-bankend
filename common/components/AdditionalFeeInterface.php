@@ -57,23 +57,9 @@ interface AdditionalFeeInterface
     public function getExchangeRate();
 
     /**
-     * @return mixed
-     */
-    public function getStoreAdditionalFee();
-
-    /**
-     * @param null $names
      * @param bool $formSource
-     * @return array
-     */
-    public function getAdditionalFees($names = null, $formSource = true);
-
-    /**
-     * @param $values
-     * @param bool $withCondition
      * @return mixed
      */
-    public function setAdditionalFees($values, $withCondition = false);
+    public function getAdditionalFees($formSource = true);
 
-    public function getTotalAdditionFees($names = null);
 }

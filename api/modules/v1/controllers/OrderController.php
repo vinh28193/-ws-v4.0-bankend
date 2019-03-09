@@ -87,9 +87,8 @@ class OrderController extends BaseApiController
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
         $query->filter($requestParams);
-
+        $query->orderBy(['id' => SORT_DESC]);
         return $this->response(true, 'ok', $dataProvider);
     }
 
@@ -130,7 +129,7 @@ class OrderController extends BaseApiController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id,false);
-        $this->can('canUpdate', ['id' => $model->id]);
+        $this->can('canUpdate', ['id' => $model->id]); // OWner is Update
         $model->load(Yii::$app->getRequest()->getBodyParams(), '');
         if ($model->save() === false && !$model->hasErrors()) {
             throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
@@ -163,9 +162,10 @@ class OrderController extends BaseApiController
     protected function findModel($condition, $with = true)
     {
         $query = Order::find();
-        if ($with) {
-            $query->withFullRelations();
-        }
+//        if ($with) {
+//            $query->withFullRelations();
+//        }
+        $query->withFullRelations();
         if (is_numeric($condition)) {
             $condition = ['id' => $condition];
         }

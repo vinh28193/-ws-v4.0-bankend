@@ -90,6 +90,12 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     public $suggest_set_session;
     public $suggest_set_purchase;
 
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+    }
+
+
     /**
      * Initializes the object.
      * This method is invoked at the end of the constructor after the object is initialized with the
@@ -98,12 +104,13 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     public function init()
     {
         parent::init();
-        $this->setAdditionalFees([
+        $additionalFee = $this->getAdditionalFees();
+        $additionalFee->setOwner($this);
+        $additionalFee->mset([
             'origin_fee' => $this->getSellPrice(),
             'origin_tax_fee' => $this->us_tax_rate,
             'origin_shipping_fee' => $this->shipping_fee
-        ], true, true);
-
+        ], true,true);
         if ($this->isInitialized === false) {
             $this->setVariationMapping();
             $this->setVariationOptions();
@@ -141,7 +148,7 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
      */
     public function getTotalOriginPrice()
     {
-        return $this->getTotalAdditionFees([
+        return $this->getAdditionalFees()->getTotalAdditionFees([
             'origin_fee', 'origin_tax_fee', 'origin_shipping_fee'
         ])[0];
     }
@@ -199,14 +206,16 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     /**
      * @return mixed
      */
-    public function getLocalizeTotalPrice(){
+    public function getLocalizeTotalPrice()
+    {
         return $this->getTotalAdditionFees()[1];
     }
 
     /**
      * @return null | integer
      */
-    public function getLocalizeTotalStartPrice(){
+    public function getLocalizeTotalStartPrice()
+    {
         if ($this->start_price == null || $this->start_price == 0) return null;
         $tempPrice = $this->getSellPrice();
         $this->sell_price = $this->start_price;
