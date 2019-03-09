@@ -25,7 +25,7 @@ use Yii;
  * @property SystemStateProvince $province
  * @property Warehouse[] $warehouses
  */
-class SystemDistrict extends \yii\db\ActiveRecord
+class SystemDistrict extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

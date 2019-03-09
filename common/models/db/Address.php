@@ -36,7 +36,7 @@ use Yii;
  * @property Order[] $orders
  * @property Shipment[] $shipments
  */
-class Address extends \yii\db\ActiveRecord
+class Address extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

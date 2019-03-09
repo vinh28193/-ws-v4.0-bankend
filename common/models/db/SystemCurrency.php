@@ -15,7 +15,7 @@ use Yii;
  *
  * @property Store[] $stores
  */
-class SystemCurrency extends \yii\db\ActiveRecord
+class SystemCurrency extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

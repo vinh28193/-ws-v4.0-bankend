@@ -20,7 +20,7 @@ use Yii;
  * @property Order[] $orders
  * @property Product[] $products
  */
-class Seller extends \yii\db\ActiveRecord
+class Seller extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

@@ -19,7 +19,7 @@ use Yii;
  * @property ActionScope[] $actionScopes
  * @property ScopeUser[] $scopeUsers
  */
-class Scopes extends \yii\db\ActiveRecord
+class Scopes extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
