@@ -16,7 +16,8 @@ class EbayDetailRequest extends \common\products\BaseRequest
      * @return string
      */
     public function getFullUrl(){
-        return 'http://ebay-api-v3.weshop.beta/v3/product';
+        return 'https://ebay-api-wshopx-v3.weshop.com.vn/v3/product';
+        //https://ebay-api-wshopx-v3.weshop.com.vn/v3/product?id=372500539367
     }
     /**
      * @param \yii\httpclient\Request $httpRequest

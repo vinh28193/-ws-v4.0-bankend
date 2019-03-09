@@ -57,6 +57,8 @@ class CheckOutController extends BaseApiController
         $this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
         // Toto CheckOutForm to validate data form all
         $items = $this->cart->getItems();
+
+        var_dump($items);die("carddddd");
         $orders = [];
         $errors = [];
         foreach ($items as $key => $simpleItem) {
