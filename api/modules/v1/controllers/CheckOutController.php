@@ -58,7 +58,7 @@ class CheckOutController extends BaseApiController
         // Toto CheckOutForm to validate data form all
         $items = $this->cart->getItems();
 
-        var_dump($items);die("carddddd");
+        //var_dump($items);die("carddddd");
         $orders = [];
         $errors = [];
         foreach ($items as $key => $simpleItem) {
@@ -115,12 +115,6 @@ class CheckOutController extends BaseApiController
             $order->seller_id = $seller->id;
             $order->save(false);
             $order->link('products',$product);
-            $productFees = $product->getAdditionalFees(true)->toArray();
-            $fees = [];
-            foreach ($productFees as $name => $fee){
-                $fees[] = $fee['id'];
-            }
-            OrderFee::updateAll(['order_id' => $order->id],['id' => $fees]);
             $orders[] = $order->id;
         }
         var_dump($orders);die;

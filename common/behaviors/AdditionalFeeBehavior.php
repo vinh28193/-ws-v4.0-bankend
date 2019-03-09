@@ -27,8 +27,6 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
      * @var string
      */
 
-    public $orderFeeReferenceAttribute = 'order_id';
-
     public $originCurrencyReferenceAttribute = 'origin_currency';
 
     /**
@@ -62,7 +60,8 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
             $ownerName = "total_{$key}_local";
 
             $model = new OrderFee();
-            $model->{$this->orderFeeReferenceAttribute} = $this->owner->primaryKey;
+            $model->product_id = $this->owner->primaryKey;
+            $model->order_id = $this->owner->order_id;
             $model->currency = $storeAdditionFee->currency;
             $model->type_fee = $storeAdditionFee->name;
             list($model->amount,$model->amount_local) = $getAdditionalFees->getTotalAdditionFees($key);
@@ -84,6 +83,7 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
         $model->amount = $totalFee;
         $model->amount_local = $totalFeeLocal;
         $model->order_id = $this->owner->primaryKey;
+        $model->product_id = $this->owner->primaryKey;
         $model->currency = Yii::$app->storeManager->store->currency;
         $model->discount_amount = 0;
         $model->type_fee = 'total_fee';
