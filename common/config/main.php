@@ -31,6 +31,13 @@ return [
             ]
         ],
         'i18n' => $i18n,
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'timeZone' => 'Asia/Ho_Chi_Minh',
+            'timeFormat' => 'php:H:i:s',
+            'dateFormat' => 'php:Y-m-d',
+            'datetimeFormat' => 'php:Y-m-d H:i:s'
+        ],
         'cart' => [
             'class' => common\components\cart\CartManager::className(),
             'storage' => common\components\cart\storage\SessionCartStorage::className()

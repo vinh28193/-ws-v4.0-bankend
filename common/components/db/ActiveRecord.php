@@ -8,6 +8,12 @@
 
 namespace common\components\db;
 
+use Yii;
+
+/**
+ * Class ActiveRecord
+ * @package common\components\db
+ */
 class ActiveRecord extends \yii\db\ActiveRecord
 {
 
@@ -17,25 +23,18 @@ class ActiveRecord extends \yii\db\ActiveRecord
      */
     public function behaviors()
     {
-        $behaviors = parent::behaviors();
-        $reflector = new \ReflectionClass($this);
-        if($reflector->hasProperty('created_time') || $reflector->hasProperty('updated_time')){
-            $behaviors['timestamp'] = [
-                'class' => \yii\behaviors\TimestampBehavior::class,
-                'createdAtAttribute' => $this->hasAttribute('created_at') ? 'updated_at' : false,
+        return array_merge(parent::behaviors(), [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'createdAtAttribute' => $this->hasAttribute('created_at') ? 'created_at' : false,
                 'updatedAtAttribute' => $this->hasAttribute('updated_at') ? 'updated_at' : false,
-                'value' => new \yii\db\Expression('NOW()'),
-            ];
-        }
-        if($reflector->hasProperty('created_by') || $reflector->hasProperty('updated_by')){
-            $behaviors['timestamp'] = [
-                'class' => \yii\behaviors\BlameableBehavior::class,
-                'createdAtAttribute' => $this->hasAttribute('created_by') ? 'created_by' : false,
-                'updatedAtAttribute' => $this->hasAttribute('updated_by') ? 'updated_by' : false,
-                'value' => new \yii\db\Expression('NOW()'),
-            ];
-        }
-        return $behaviors;
+            ],
+            'blameable' => [
+                'class' => 'yii\behaviors\BlameableBehavior',
+                'createdByAttribute' => $this->hasAttribute('created_by') ? 'created_by' : false,
+                'updatedByAttribute' => $this->hasAttribute('updated_by') ? 'updated_by' : false
+            ]
+        ]);
     }
 
 
@@ -47,6 +46,25 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
         return parent::toArray($fields, $expand, $recursive);
+    }
+
+
+    public function fields()
+    {
+        $fields = parent::fields();
+        foreach (['created_by','updated_by'] as $name){
+            if (isset($fields[$name])) {
+                unset($fields[$name]);
+            }
+        }
+        foreach (['created_at', 'updated_at'] as $name) {
+            if ($this->hasAttribute($name) && isset($fields[$name])) {
+                $fields[$name] = function ($model) use ($name) {
+                    return Yii::$app->formatter->asDatetime($model->$name);
+                };
+            }
+        }
+        return $fields;
     }
 
     /**
