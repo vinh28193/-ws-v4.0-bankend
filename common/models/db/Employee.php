@@ -13,7 +13,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  */
-class Employee extends \yii\db\ActiveRecord
+class Employee extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

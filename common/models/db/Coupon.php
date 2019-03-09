@@ -40,7 +40,7 @@ use Yii;
  * @property User $createdBy
  * @property Store $store
  */
-class Coupon extends \yii\db\ActiveRecord
+class Coupon extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

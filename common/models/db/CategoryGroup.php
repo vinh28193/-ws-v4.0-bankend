@@ -19,7 +19,7 @@ use Yii;
  * @property int $active
  * @property int $remove
  */
-class CategoryGroup extends \yii\db\ActiveRecord
+class CategoryGroup extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

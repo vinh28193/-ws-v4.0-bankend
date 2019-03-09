@@ -16,7 +16,7 @@ use Yii;
  * @property int $created_at
  * @property int $updated_at
  */
-class AccessTokens extends \yii\db\ActiveRecord
+class AccessTokens extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

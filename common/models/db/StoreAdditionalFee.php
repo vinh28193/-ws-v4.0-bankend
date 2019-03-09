@@ -24,7 +24,7 @@ use Yii;
  * @property int $updated_time Updated at (timestamp)
  * @property string $fee_rate Fee Rate
  */
-class StoreAdditionalFee extends \yii\db\ActiveRecord
+class StoreAdditionalFee extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

@@ -29,7 +29,7 @@ use Yii;
  * @property Shipment $shipment
  * @property Warehouse $warehouseSend
  */
-class ShipmentReturned extends \yii\db\ActiveRecord
+class ShipmentReturned extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

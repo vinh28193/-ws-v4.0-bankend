@@ -33,7 +33,7 @@ use Yii;
  * @property Warehouse $warehouse
  * @property PackageItem[] $packageItems
  */
-class Package extends \yii\db\ActiveRecord
+class Package extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
