@@ -157,12 +157,18 @@ class SiteController extends RestController
 
         if ($model->validate() && $model->login()) {
 
-            $auth_code = Yii::$app->api->createAuthorizationCode(Yii::$app->user->identity['id']);
+            $_idUser =  Yii::$app->user->identity['id'];
+            $auth_code = Yii::$app->api->createAuthorizationCode($_idUser);
 
             $data = [];
             $data['authorization_code'] = $auth_code->code;
             $data['expires_at'] = $auth_code->expires_at;
-
+            $permissions = Yii::$app->authManager->getPermissionsByUser($_idUser);
+            $data['permissions'] = isset($permissions) ? $permissions : null;
+            $roles = Yii::$app->authManager->getRolesByUser($_idUser);
+            $data['roles'] = isset($roles) ? $roles : null;
+            $assignments = Yii::$app->authManager->getAssignments($_idUser);
+            $data['assignments'] = isset($assignments) ? $assignments : null;
             Yii::$app->api->sendSuccessResponse($data);
         } else {
             Yii::$app->api->sendFailedResponse($model->errors);
