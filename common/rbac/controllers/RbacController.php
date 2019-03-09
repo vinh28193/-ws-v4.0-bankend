@@ -181,7 +181,7 @@ class RbacController extends \yii\console\Controller
         $master_marketingRole =  $this->authManager->getRole('superAdmin');
         //$this->authManager->assign($adminRole,1);
         //$this->authManager->assign($adminRole,13)
-        $this->authManager->assign($master_marketingRole,12);
+        $this->authManager->assign($master_marketingRole,13);
     }
 
     protected function createDefaultPermission()
