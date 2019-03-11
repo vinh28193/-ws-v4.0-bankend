@@ -1,8 +1,8 @@
 <?php
+namespace api\tests;
 
-namespace tests\api;
-
-use ApiTester;
+use api\tests\ApiTester;
+use Codeception\Util\HttpCode;
 use tests\fixtures\PostFixture;
 use yii\helpers\Url;
 
@@ -16,24 +16,27 @@ class PostsApiCest
                 'dataFile' => codecept_data_dir() . 'post.php'
             ]
         ]);
+
     }
 
     public function testGetAll(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1f7adc17f86342713ca92a71920d5fe4');
-        $I->sendGET('/1/posts');
+        $I->haveHttpHeader('X-Access-Token','3fea2609cbbeb95b557c503c6e4e5e9c');
+        $I->sendGET('/1/post');
         $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        $I->seeResponseContainsJson([0 => ['title' => 'First Post']]);
+        $I->seeResponseContainsJson(['title' => 'First Post']);
     }
 
     public function testGetOne(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1f7adc17f86342713ca92a71920d5fe4');
-        $I->sendGET('/1/posts/1');
+        $I->haveHttpHeader('X-Access-Token','3fea2609cbbeb95b557c503c6e4e5e9c');
+        $I->sendGET('/1/post/view/1');
         $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
         $I->seeResponseContainsJson(['title' => 'First Post']);
     }
@@ -41,22 +44,23 @@ class PostsApiCest
     public function testGetNotFound(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1f7adc17f86342713ca92a71920d5fe4');
-        $I->sendGET('/1/posts/100');
-        $I->seeResponseCodeIs(404);
+        $I->haveHttpHeader('X-Access-Token','3fea2609cbbeb95b557c503c6e4e5e9c');
+        $I->sendGET('/1/post/view/100');
+        $I->seeResponseCodeIs(400);
         $I->seeResponseIsJson();
-        $I->seeResponseContainsJson(['name' => 'Not Found']);
+        $I->seeResponseContainsJson(["errors"=> "Invalid Record requested"]);
     }
 
     public function testCreate(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1f7adc17f86342713ca92a71920d5fe4');
-        $I->sendPOST('/1/posts', [
+        $I->haveHttpHeader('X-Access-Token','3fea2609cbbeb95b557c503c6e4e5e9c');
+        $I->sendPOST('/1/post/create', [
             'title' => 'Test Title',
             'text' => 'Test Text',
         ]);
-        $I->seeResponseCodeIs(201);
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
         $I->seeResponseContainsJson(['title' => 'Test Title']);
     }
@@ -64,14 +68,15 @@ class PostsApiCest
     public function testUpdate(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1f7adc17f86342713ca92a71920d5fe4');
-        $I->sendPUT('/1/posts/2', [
-            'title' => 'New Title',
+        $I->haveHttpHeader('X-Access-Token','3fea2609cbbeb95b557c503c6e4e5e9c');
+        $I->sendPUT('/1/post/update/2', [
+            'title' => 'New Title Weshop 2019',
         ]);
         $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
         $I->seeResponseContainsJson([
-            'title' => 'New Title',
+            'title' => 'New Title Weshop 2019',
             'text' => 'Old Text For Updating',
         ]);
     }
@@ -79,8 +84,8 @@ class PostsApiCest
     public function testDelete(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1f7adc17f86342713ca92a71920d5fe4');
-        $I->sendDELETE('/1/posts/3');
-        $I->seeResponseCodeIs(204);
+        $I->haveHttpHeader('X-Access-Token','3fea2609cbbeb95b557c503c6e4e5e9c');
+        $I->sendDELETE('/1/post/delete/3');
+        $I->seeResponseCodeIs(200);
     }
 }

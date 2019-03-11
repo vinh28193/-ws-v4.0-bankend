@@ -103,6 +103,7 @@ class CheckOutController extends BaseApiController
 
             $order = new Order();
             $order->type_order = 'SHOP';
+            $order->store_id= 1;
             $order->portal = $itemType;
             $order->quotation_status = 0;
             $order->is_quotation = 0;

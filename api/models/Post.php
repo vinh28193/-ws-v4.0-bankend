@@ -55,8 +55,8 @@ class Post extends ActiveRecord
 
         $offset = ($page - 1) * $limit;
 
-        $query = Employee::find()
-            ->select(['id', 'name', 'email', 'created_at', 'updated_at'])
+        $query = Post::find()
+            ->select(['id', 'title', 'text', 'status','created_at', 'updated_at'])
             ->asArray(true)
             ->limit($limit)
             ->offset($offset);

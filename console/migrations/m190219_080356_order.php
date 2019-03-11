@@ -20,13 +20,13 @@ class m190219_080356_order extends Migration
 
         $this->createTable('order',[
             'id' => $this->primaryKey()->comment("ID"),
-            'store_id' => $this->integer(11)->comment("hàng của nước nào"),
-            'type_order' => $this->string(255)->comment("Hình thức mua hàng: SHOP | REQUEST | POS | SHIP"),
-            'portal' => $this->string(255)->comment("portal ebay, amazon us, amazon jp ..."),
+            'store_id' => $this->integer(11)->notNull()->comment("hàng của nước nào"),
+            'type_order' => $this->string(255)->notNull()->comment("Hình thức mua hàng: SHOP | REQUEST | POS | SHIP"),
+            'portal' => $this->string(255)->notNull()->comment("portal ebay, amazon us, amazon jp ..."),
             'is_quotation' => $this->tinyInteger(4)->comment("Đánh dấu đơn báo giá"),
             'quotation_status' => $this->tinyInteger(4)->comment("Trạng thái báo giá. 0 - pending, 1- approve, 2- deny"),
             'quotation_note' => $this->string(255)->comment("note đơn request"),
-            'customer_id' => $this->integer(11)->comment("id của customer"),
+            'customer_id' => $this->integer(11)->notNull()->comment("id của customer"),
             'receiver_email' => $this->string(255)->comment(""),
             'receiver_name' => $this->string(255)->comment(""),
             'receiver_phone' => $this->string(255)->comment(""),

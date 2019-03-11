@@ -9,7 +9,21 @@
 return [
     [
         'class' => \yii\rest\UrlRule::className(),
-        'prefix' => 'v1',
-        'controller' => ['o' => 'order'],
+//        'prefix' => 'v1',
+        'pluralize' => false,
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'controller' => ['v1/order', 'product'],
     ]
 ];

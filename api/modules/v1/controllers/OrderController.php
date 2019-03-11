@@ -81,7 +81,6 @@ class OrderController extends BaseApiController
         $requestParams = Yii::$app->getRequest()->getBodyParams();
         $query = Order::find();
         $query->withFullRelations();
-
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

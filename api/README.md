@@ -19,3 +19,20 @@
   $ codecept generate:cest api CreateOrder
   Test was created in /Applications/XAMPP/xamppfiles/htdocs/weshop-v4.0-api/api/tests/api/CreateOrderCest.php
   
+  
+  #------------Done Test------------
+  
+  $ vendor/bin/codecept run --steps --debug --report -- -c api
+  Codeception PHP Testing Framework v2.6.0
+  Powered by PHPUnit 8.1-g36f92d5 by Sebastian Bergmann and contributors.
+  Running with seed:
+  
+  CreateOrderCest: Try to test...............................................Ok
+  CreateOrderCest: Create order via api error store..........................Ok
+  CreateOrderCest: Create order via api done.................................Ok
+  PostsApiCest: Test get all.................................................Ok
+  PostsApiCest: Test get one.................................................Ok
+  PostsApiCest: Test get not found...........................................Ok
+  PostsApiCest: Test create..................................................Ok
+  PostsApiCest: Test update..................................................Ok
+  PostsApiCest: Test delete..................................................FAIL

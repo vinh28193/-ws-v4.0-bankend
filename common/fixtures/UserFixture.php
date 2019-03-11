@@ -31,6 +31,7 @@ class UserFixture extends ActiveFixture
 
     public function createDefaultData(){
         return [
+            [
             'id' => 1,
             'username' => 'weshopdev',
             'auth_key' => \Yii::$app->security->generateRandomString(),
@@ -39,7 +40,19 @@ class UserFixture extends ActiveFixture
             'email' => 'weshop.dev@weshop.asia',
             'status' => 10,
             'created_at' => time(),
-            'updated_at' => time(),
+            'updated_at' => null,
+            ],
+            [
+                'id' => 13,
+                'username' => 'weshop2019',
+                'auth_key' => \Yii::$app->security->generateRandomString(),
+                'password_hash' => \Yii::$app->security->generatePasswordHash('weshop@123'),
+                'password_reset_token' => null,
+                'email' => 'phuchc@weshop.asia',
+                'status' => 10,
+                'created_at' => time(),
+                'updated_at' => null,
+            ]
         ];
     }
 }
