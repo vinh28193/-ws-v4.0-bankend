@@ -15,17 +15,17 @@ use Yii;
  * @property int $quotation_status Trạng thái báo giá. 0 - pending, 1- approve, 2- deny
  * @property string $quotation_note note đơn request
  * @property int $customer_id id của customer
- * @property string $receiver_email
- * @property string $receiver_name
- * @property string $receiver_phone
- * @property string $receiver_address
- * @property int $receiver_country_id
- * @property string $receiver_country_name
- * @property int $receiver_province_id
- * @property string $receiver_province_name
- * @property int $receiver_district_id
- * @property string $receiver_district_name
- * @property string $receiver_post_code
+ * @property string $receiver_email Email người nhận
+ * @property string $receiver_name Họ tên người nhận
+ * @property string $receiver_phone Số điện thoại người nhận
+ * @property string $receiver_address Địa chỉ người nhận
+ * @property int $receiver_country_id Mã Country người nhận
+ * @property string $receiver_country_name Country người nhận
+ * @property int $receiver_province_id  mã Tỉnh thành người nhận
+ * @property string $receiver_province_name Tên Tỉnh thành người nhận
+ * @property int $receiver_district_id Mã Quận huyện người nhận
+ * @property string $receiver_district_name  Tên Quận huyện người nhận
+ * @property string $receiver_post_code  Mã bưu điện người nhận
  * @property int $receiver_address_id id address của người nhận trong bảng address
  * @property string $note_by_customer Ghi chú của customer
  * @property string $note Ghi chú cho đơn hàng
@@ -38,15 +38,14 @@ use Yii;
  * @property string $revenue_xu số xu được nhận
  * @property string $xu_count số xu sử dụng
  * @property string $xu_amount giá trị quy đổi ra tiền
- * @property int $is_email_sent
- * @property int $is_sms_sent
- * @property int $total_quantity
+ * @property int $is_email_sent  đánh đâu đơn này đã được gửi email tạo thành công đơn hàng
+ * @property int $is_sms_sent đánh đâu đơn này đã được gửi SMS tạo thành công đơn hàng
  * @property int $promotion_id id của promotion
  * @property int $difference_money 0: mac dinh, 1: lech, 2:ẩn thông báo bằng quyền của Admin
- * @property string $utm_source
- * @property int $seller_id
- * @property string $seller_name
- * @property string $seller_store
+ * @property string $utm_source Đơn theo viết được tạo ra bới chiến dịch nào : Facebook ads, Google ads , eomobi , etc ,,,, 
+ * @property int $seller_id Mã người bán 
+ * @property string $seller_name Tên người bán
+ * @property string $seller_store Link shop của người bán
  * @property string $total_final_amount_local số tiền cuối cùng khách hàng phải thanh toán
  * @property string $total_paid_amount_local số tiền khách hàng đã thanh toán
  * @property string $total_refund_amount_local số tiền đã hoàn trả cho khách hàng
@@ -68,7 +67,7 @@ use Yii;
  * @property string $exchange_rate_fee Tỷ giá từ USD => tiền local
  * @property string $exchange_rate_purchase Tỷ giá từ tiền website gốc => tiền local. VD: yên => vnd
  * @property string $currency_purchase USD,JPY,AUD .....
- * @property string $purchase_order_id mã order purchase ( dạng list, cách nhau = dấu phẩy)
+ * @property string $purchase_order_id Mã order đặt mua với NB : mã order purchase ( dạng list, cách nhau = dấu phẩy)
  * @property string $purchase_transaction_id Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy)
  * @property string $purchase_amount số tiền đã thanh toán với người bán, Số đã trừ Buck/Point ( dạng list, cách nhau = dấu phẩy)
  * @property int $purchase_account_id id tài khoản mua hàng
@@ -93,7 +92,7 @@ use Yii;
  * @property string $current_status Trạng thái hiện tại của order
  * @property string $created_at Update qua behaviors tự động  
  * @property string $updated_at Update qua behaviors tự động
- * @property int $remove
+ * @property int $remove đơn đánh đấu 1 là đã xóa , mặc định 0 : chưa xóa
  *
  * @property Customer $customer
  * @property Address $receiverAddress
@@ -124,7 +123,8 @@ class Order extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'is_quotation', 'quotation_status', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'sale_support_id', 'coupon_time', 'is_email_sent', 'is_sms_sent', 'total_quantity', 'promotion_id', 'difference_money', 'seller_id', 'purchase_account_id', 'new', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'created_at', 'updated_at', 'remove'], 'integer'],
+            [['store_id', 'type_order', 'portal', 'customer_id', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_country_name', 'receiver_province_id', 'receiver_province_name', 'receiver_district_id', 'receiver_district_name', 'receiver_post_code', 'receiver_address_id', 'payment_type'], 'required'],
+            [['store_id', 'is_quotation', 'quotation_status', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'sale_support_id', 'coupon_time', 'is_email_sent', 'is_sms_sent', 'promotion_id', 'difference_money', 'seller_id', 'purchase_account_id', 'new', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight', 'total_weight_temporary'], 'string'],
             [['revenue_xu', 'xu_count', 'xu_amount', 'total_final_amount_local', 'total_paid_amount_local', 'total_refund_amount_local', 'total_amount_local', 'total_fee_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_origin_fee_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_custom_fee_amount_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'purchase_amount_buck', 'purchase_amount_refund'], 'number'],
             [['type_order', 'portal', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'payment_type', 'support_email', 'coupon_id', 'coupon_code', 'utm_source', 'seller_name', 'currency_purchase'], 'string', 'max' => 255],
@@ -179,7 +179,6 @@ class Order extends \common\components\db\ActiveRecord
             'xu_amount' => 'Xu Amount',
             'is_email_sent' => 'Is Email Sent',
             'is_sms_sent' => 'Is Sms Sent',
-            'total_quantity' => 'Total Quantity',
             'promotion_id' => 'Promotion ID',
             'difference_money' => 'Difference Money',
             'utm_source' => 'Utm Source',

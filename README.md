@@ -250,7 +250,10 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
    ###--------------------generration Data base --------------------------
    #----------Sinh tat ca lai giu lieu------------
    php yii fixture/generate-all --count=100    ---> để sinh 100 bản ghi từ 0 - 99
-   php yii fixture/load "*"                    ---> để lưu tất cả các bảng giữ liệu vừa sinh vào database
+   php yii fixture/load "*"   ---> để lưu tất cả các bảng giữ liệu vừa sinh vào database
+   
+   php yii fixture/load Warehouse  ---> load data fixed gen for tables Warehouse
+
    
    #---------Sinh theo tung bang vi du bang user co check ca khoa ngoai -----------------
    php yii fixture/generate user --count=100
@@ -453,6 +456,15 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
         return false;
     }
     
+    
+ ####-----------Tat ca cac lenh chay khi tao db moi----------------------
+    
+    #####--------Create all Tabales-----------------
+    php yii migrate/fresh
+    php yii  migrate/up
+
+    ####-----------Load data fixed test------------
+    php yii fixture/load "*"
     
     # --------------i18n------------------------
     php yii i18n-migrate

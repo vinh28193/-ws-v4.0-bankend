@@ -196,6 +196,7 @@ class m190221_074438_update_foreignkey extends Migration
                     'table' => 'customer',
                 ]
             ],
+        /*
             'action_scope' => [
                 [
                     'column' => 'action_id',
@@ -216,6 +217,7 @@ class m190221_074438_update_foreignkey extends Migration
                     'table' => 'scopes',
                 ]
             ],
+          */
             'coupon' => [
                 [
                     'column' => 'store_id',
@@ -259,9 +261,9 @@ class m190221_074438_update_foreignkey extends Migration
         // FK for order table
         foreach ($this->list as $key => $list_data){
             foreach ($list_data as $data){
-                $this->createIndex('idx-'.$key.'-'.$data['column'],$key,$data['column']);
+                //$this->createIndex('idx-'.$key.'-'.$data['column'],$key,$data['column']);
                 if(!isset($data['is_not_fk'])){
-                    $this->addForeignKey('fk-'.$key.'-'.$data['column'], $key, $data['column'], $data['table'], 'id');
+                   // $this->addForeignKey('fk-'.$key.'-'.$data['column'], $key, $data['column'], $data['table'], 'id');
                 }
             }
         }
@@ -272,9 +274,16 @@ class m190221_074438_update_foreignkey extends Migration
      */
     public function safeDown()
     {
-        echo "m190221_074438_update_foreignkey cannot be reverted.\n";
-
-        return false;
+        echo "m190221_074438_update_foreignkey safeDown forech list .\n";
+        foreach ($this->list as $key => $list_data){
+            foreach ($list_data as $data){
+                $this->dropIndex('idx-'.$key.'-'.$data['column'],$key);
+                if(!isset($data['is_not_fk'])){
+                    $this->dropForeignKey('fk-'.$key.'-'.$data['column'], $key);
+                }
+                $this->dropTable($key); //delete tables
+            }
+        }
     }
 
     /*

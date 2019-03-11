@@ -3,27 +3,21 @@
 use yii\db\Migration;
 
 /**
- * Class m190223_063600_updated_created_time_to_updated_created_at
+ * Class m190311_042105_updated_created_time_to_updated_created_at_Table_Rules_Scopes
  */
-class m190223_063600_updated_created_time_to_updated_created_at extends Migration
+class m190311_042105_updated_created_time_to_updated_created_at_Table_Rules_Scopes extends Migration
 {
+    /**
+     * {@inheritdoc}
+     */
     public function safeUp()
     {
         $data = [
-            'order', 'coupon',
-            'category', 'seller',
-            'order_fee', 'package_item',
-            'address',
-            'category_group', 'customer',
-            'category_custom_policy', 'shipment_returned',
-            'package', 'product',
-            'system_district',
-            'system_state_province', 'warehouse',
-            'wallet_transaction', 'shipment'
+             'action_scope','actions', 'scopes','scope_user',
         ];
         $sql = "";
         foreach ($data as $v){
-//            $sql .= "ALTER TABLE `".$v."`
+            //            $sql .= "ALTER TABLE `".$v."`
             //CHANGE COLUMN `created_time` `created_at` bigint(20) NULL DEFAULT NULL COMMENT 'Update qua behaviors tự động' ,
             //CHANGE COLUMN `updated_time` `updated_at` bigint(20) NULL DEFAULT NULL COMMENT 'Update qua behaviors tự động';";
             $this->renameColumn($v,'created_time','created_at');
@@ -36,7 +30,7 @@ class m190223_063600_updated_created_time_to_updated_created_at extends Migratio
      */
     public function safeDown()
     {
-        echo "m190223_060918_updated_created_time_to_updated_created_at cannot be reverted.\n";
+        echo "m190311_042105_updated_created_time_to_updated_created_at_Table_Rules_Scopes cannot be reverted.\n";
 
         return false;
     }
@@ -50,7 +44,7 @@ class m190223_063600_updated_created_time_to_updated_created_at extends Migratio
 
     public function down()
     {
-        echo "m190223_063600_updated_created_time_to_updated_created_at cannot be reverted.\n";
+        echo "m190311_042105_updated_created_time_to_updated_created_at_Table_Rules_Scopes cannot be reverted.\n";
 
         return false;
     }
