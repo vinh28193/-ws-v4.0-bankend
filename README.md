@@ -370,6 +370,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   ###-------Run------
    php -S 127.0.0.1:8980 -t backend/web
    vendor/bin/codecept run -- -c backend
+   $ vendor/bin/codecept run --steps --debug -- -c backend
 
   
   
@@ -455,3 +456,23 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
     
     # --------------i18n------------------------
     php yii i18n-migrate
+    
+    #------------RBAC authen-----------------------
+    php yii rbac/migrate
+    php yii rbac/create-default 
+    
+    ####----------------Automaintion test done --------------------------------
+    
+    $ vendor/bin/codecept run --report -- -c api
+    Codeception PHP Testing Framework v2.6.0
+    Powered by PHPUnit 8.1-g36f92d5 by Sebastian Bergmann and contributors.
+    Running with seed:
+    
+    CreateOrderCest: Try to test...............................................Ok
+    CreateOrderCest: Create order via api......................................Ok
+    PostsApiCest: Test get all.................................................Ok
+    PostsApiCest: Test get one.................................................Ok
+    PostsApiCest: Test get not found...........................................FAIL
+    PostsApiCest: Test create..................................................FAIL
+    PostsApiCest: Test update..................................................FAIL
+    PostsApiCest: Test delete..................................................FAIL
