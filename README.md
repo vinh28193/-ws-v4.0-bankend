@@ -488,3 +488,7 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
     PostsApiCest: Test create..................................................FAIL
     PostsApiCest: Test update..................................................FAIL
     PostsApiCest: Test delete..................................................FAIL
+
+
+####--------------- Document migration --------------------------
+https://www.yiiframework.com/doc/guide/1.1/en/database.migration
