@@ -9,12 +9,37 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+        'log',
+        'ipFilter',
+        'admin',
+    ],
     'controllerNamespace' => 'backend\controllers',
     'defaultRoute' => 'site/index',
     'modules' => [
         'payment' => [
             'class' => 'weshop\payment\PaymentModule',
+        ],
+        'ipFilter' => [
+            'class' => 'johnsnook\ipFilter\Module',
+            'mapquestKey' => 'tCUKiFTyWL5TH9MuiveoJmGdJumWp5Pt',
+            'ipInfoKey' => 'fcbd97665ba41c',
+            'proxyCheckKey' => '295474-6613h7-208634-w34448',
+            'blowOff' => 'site/nope',
+            'ignorables' => [
+                'acontroller' => ['ignore-me', 'ignore-that','avast-Antivirus'],
+                'whitelist' => ['127.0.0.1', '24.99.155.86','10.5.11.83']
+            ]
+        ],
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+            'layout' => 'left-menu',
+            'menus' => [
+                'assignment' => [
+                    'label' => 'Grant Access' // change label
+                ],
+                'route' => null, // disable menu
+            ],
         ],
     ],
     'components' => [
@@ -78,7 +103,14 @@ return [
                 // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
 
                 /***Post API GET NOT POST , PUT , UPDATE ***/
-                'class' => 'yii\rest\UrlRule', 'controller' => 'api/posts'
+                'class' => 'yii\rest\UrlRule', 'controller' => 'api/posts',
+
+                /*****ipFilter******/
+                'visitor' => '/ipFilter/visitor/index',
+                'visitor/index' => '/ipFilter/visitor/index',
+                'visitor/blowoff' => '/ipFilter/visitor/blowoff',
+                'visitor/<id>' => 'ipFilter/visitor/view',
+                'visitor/update/<id>' => 'ipFilter/visitor/update',
             ],
         ],
     ],

@@ -17,7 +17,7 @@ use Yii;
  * @property Actions $action
  * @property Scopes $scope
  */
-class ActionScope extends \yii\db\ActiveRecord
+class ActionScope extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

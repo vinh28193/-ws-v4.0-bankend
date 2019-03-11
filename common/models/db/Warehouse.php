@@ -33,7 +33,7 @@ use Yii;
  * @property SystemStateProvince $province
  * @property Store $store
  */
-class Warehouse extends \yii\db\ActiveRecord
+class Warehouse extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

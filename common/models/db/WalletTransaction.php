@@ -29,7 +29,7 @@ use Yii;
  * @property Customer $customer
  * @property Order $order
  */
-class WalletTransaction extends \yii\db\ActiveRecord
+class WalletTransaction extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

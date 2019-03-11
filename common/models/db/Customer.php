@@ -55,7 +55,7 @@ use Yii;
  * @property ShipmentReturned[] $shipmentReturneds
  * @property WalletTransaction[] $walletTransactions
  */
-class Customer extends \yii\db\ActiveRecord
+class Customer extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

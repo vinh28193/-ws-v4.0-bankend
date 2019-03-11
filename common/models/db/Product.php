@@ -40,7 +40,7 @@ use Yii;
  * @property Seller $seller
  * @property SystemCurrency $currency
  */
-class Product extends \yii\db\ActiveRecord
+class Product extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

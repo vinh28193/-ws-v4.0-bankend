@@ -250,7 +250,10 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
    ###--------------------generration Data base --------------------------
    #----------Sinh tat ca lai giu lieu------------
    php yii fixture/generate-all --count=100    ---> để sinh 100 bản ghi từ 0 - 99
-   php yii fixture/load "*"                    ---> để lưu tất cả các bảng giữ liệu vừa sinh vào database
+   php yii fixture/load "*"   ---> để lưu tất cả các bảng giữ liệu vừa sinh vào database
+   
+   php yii fixture/load Warehouse  ---> load data fixed gen for tables Warehouse
+
    
    #---------Sinh theo tung bang vi du bang user co check ca khoa ngoai -----------------
    php yii fixture/generate user --count=100
@@ -370,6 +373,7 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   ###-------Run------
    php -S 127.0.0.1:8980 -t backend/web
    vendor/bin/codecept run -- -c backend
+   $ vendor/bin/codecept run --steps --debug -- -c backend
 
   
   
@@ -407,3 +411,80 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
     ];
     
      https://packagist.org/packages/hbhe/yii2-authclient
+     
+     
+     
+###--------IP Filter----------
+C:\xampp\htdocs\weshop-v4.0-api\vendor\johnsnook\yii2-ip-filter\models\Visitor.php
+https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
+
+ public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                if($this->ip !== '127.0.0.1'){
+                    if (($info = $this->getIpInfo($this->ip)) !== null) {
+                        $this->city = $info->city;
+                        $this->region = $info->region;
+                        $country = Country::findOne(['code' => $info->country]);
+                        $this->country = $country->name;
+                        if ($info->loc) {
+                            $this->latitude = floatval(explode(',', $info->loc)[0]);
+                            $this->longitude = floatval(explode(',', $info->loc)[1]);
+                        }
+                        $this->organization = $info->org;
+                    }
+                    if (($pcheck = $this->getProxyInfo($this->ip)) !== null) {
+                        $this->proxy = ($pcheck->proxy === 'yes' ? $pcheck->type : 'no');
+                        if ($this->proxy !== 'no') {
+                            $this->is_blacklisted = true;
+                        }
+                    }
+                }else {
+                    $this->city = 'Ha Noi';
+                    $this->region = 'Viet Nam';
+                    $this->country = 'Viet Nam';
+                    $this->latitude = '21.028511';
+                    $this->longitude = '105.804817';
+                    $this->organization = 'Weshop';
+                    $this->proxy = 'no';
+                    $this->is_blacklisted = true;
+                }
+
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    
+ ####-----------Tat ca cac lenh chay khi tao db moi----------------------
+    
+    #####--------Create all Tabales-----------------
+    php yii migrate/fresh
+    php yii  migrate/up
+
+    ####-----------Load data fixed test------------
+    php yii fixture/load "*"
+    
+    # --------------i18n------------------------
+    php yii i18n-migrate
+    
+    #------------RBAC authen-----------------------
+    php yii rbac/migrate
+    php yii rbac/create-default 
+    
+    ####----------------Automaintion test done --------------------------------
+    
+    $ vendor/bin/codecept run --report -- -c api
+    Codeception PHP Testing Framework v2.6.0
+    Powered by PHPUnit 8.1-g36f92d5 by Sebastian Bergmann and contributors.
+    Running with seed:
+    
+    CreateOrderCest: Try to test...............................................Ok
+    CreateOrderCest: Create order via api......................................Ok
+    PostsApiCest: Test get all.................................................Ok
+    PostsApiCest: Test get one.................................................Ok
+    PostsApiCest: Test get not found...........................................FAIL
+    PostsApiCest: Test create..................................................FAIL
+    PostsApiCest: Test update..................................................FAIL
+    PostsApiCest: Test delete..................................................FAIL

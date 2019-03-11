@@ -32,7 +32,7 @@ use Yii;
  * @property Store $store
  * @property Product[] $products
  */
-class CategoryCustomPolicy extends \yii\db\ActiveRecord
+class CategoryCustomPolicy extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

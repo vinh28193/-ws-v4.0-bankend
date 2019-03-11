@@ -4,6 +4,7 @@
  * User: vinhs
  * Date: 2019-03-04
  * Time: 17:29
+ * Chặn Authen theo role được gán chưa viết  test @Phuchc
  */
 
 namespace api\modules\v1\controllers;
@@ -81,15 +82,13 @@ class OrderController extends BaseApiController
         $requestParams = Yii::$app->getRequest()->getBodyParams();
         $query = Order::find();
         $query->withFullRelations();
-
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
         $query->filter($requestParams);
-
+        $query->orderBy(['id' => SORT_DESC]);
         return $this->response(true, 'ok', $dataProvider);
     }
 
@@ -130,7 +129,7 @@ class OrderController extends BaseApiController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id,false);
-        $this->can('canUpdate', ['id' => $model->id]);
+        $this->can('canUpdate', ['id' => $model->id]); // OWner is Update
         $model->load(Yii::$app->getRequest()->getBodyParams(), '');
         if ($model->save() === false && !$model->hasErrors()) {
             throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
@@ -163,7 +162,7 @@ class OrderController extends BaseApiController
     protected function findModel($condition, $with = true)
     {
         $query = Order::find();
-        if ($with) {
+        if ($with === true) {
             $query->withFullRelations();
         }
         if (is_numeric($condition)) {

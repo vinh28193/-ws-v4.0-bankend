@@ -125,24 +125,6 @@ class BaseApiController extends \yii\rest\Controller
                             'prettyPrint' => true, // use "pretty" output in debug mode
                         ],
                     ],
-//                    'on beforeSend' => function ($event) {
-//                        $response = $event->sender;
-//                        if ($response->data !== null && Yii::$app->request->get('suppress_response_code')) {
-//                            $data = $response->data;
-//                            if (isset($data['message'])) {
-//                                $message = $data['message'];
-//                                //unset($data['message']);
-//                            } elseif (isset($data['name'])) {
-//                                $message = $data['name'];
-//                                //unset($data['name']);
-//                            } else {
-//                                $statusCode = $response->statusCode;
-//                                $message = "throw error code $statusCode";
-//                            }
-//                            $response->data = WeshopHelper::response($response->isSuccessful, $message, $data);
-//                            $response->statusCode = 200;
-//                        }
-//                    },
                 ]
             ]
         ]);

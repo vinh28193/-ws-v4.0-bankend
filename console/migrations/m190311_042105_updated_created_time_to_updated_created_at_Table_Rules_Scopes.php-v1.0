@@ -1,0 +1,52 @@
+<?php
+
+use yii\db\Migration;
+
+/**
+ * Class m190311_042105_updated_created_time_to_updated_created_at_Table_Rules_Scopes
+ */
+class m190311_042105_updated_created_time_to_updated_created_at_Table_Rules_Scopes extends Migration
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function safeUp()
+    {
+        $data = [
+             'action_scope','actions', 'scopes','scope_user',
+        ];
+        $sql = "";
+        foreach ($data as $v){
+            //            $sql .= "ALTER TABLE `".$v."`
+            //CHANGE COLUMN `created_time` `created_at` bigint(20) NULL DEFAULT NULL COMMENT 'Update qua behaviors tự động' ,
+            //CHANGE COLUMN `updated_time` `updated_at` bigint(20) NULL DEFAULT NULL COMMENT 'Update qua behaviors tự động';";
+            $this->renameColumn($v,'created_time','created_at');
+            $this->renameColumn($v,'updated_time','updated_at');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function safeDown()
+    {
+        echo "m190311_042105_updated_created_time_to_updated_created_at_Table_Rules_Scopes cannot be reverted.\n";
+
+        return false;
+    }
+
+    /*
+    // Use up()/down() to run migration code without a transaction.
+    public function up()
+    {
+
+    }
+
+    public function down()
+    {
+        echo "m190311_042105_updated_created_time_to_updated_created_at_Table_Rules_Scopes cannot be reverted.\n";
+
+        return false;
+    }
+    */
+}

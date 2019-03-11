@@ -98,6 +98,7 @@ class Api extends Component
     public function createAuthorizationCode($user_id,$type = null,$expired_time = null)
     {
         $expired_time = $expired_time ? $expired_time : 60*60*5;
+        $type = $type ? $type : 'user';
 
         /****ToDo : Refacto APP CALL API : WEB-FRONTEND / WEB-BACKEND / THIRD-PARTY / APP WESHOP ANDDROID + IOS by user token *****/
         $type = $type ? $type : 'user';
@@ -112,6 +113,7 @@ class Api extends Component
 
         $model->type = $type;
 
+        /** ToDo Set Application ID : WEB + API + APP ENV **/
         if (isset($_SERVER['HTTP_X_HAIKUJAM_APPLICATION_ID']))
             $app_id = $_SERVER['HTTP_X_HAIKUJAM_APPLICATION_ID'];
         else

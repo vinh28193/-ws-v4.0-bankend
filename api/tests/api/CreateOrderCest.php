@@ -12,10 +12,10 @@ class CreateOrderCest
     { }
 
     // tests
-    public function createOrderViaAPI(ApiTester $I)
+    public function createOrderViaAPIErrorStore(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','8ac9d03d9a2f6b467925f209e791254e');
+        $I->haveHttpHeader('X-Access-Token','fadcd777f4efbcee34d59a9cb204e271');
         $I->sendPOST('/1/order/create', '{
             "store_id" : "Store ID",
             "type_order" : "Type Order",
@@ -48,8 +48,7 @@ class CreateOrderCest
             "xu_count" : "Xu Count",
             "xu_amount" : "Xu Amount",
             "is_email_sent" : "Is Email Sent",
-            "is_sms_sent" : "Is Sms Sent",
-            "total_quantity" : "Total Quantity",
+            "is_sms_sent" : "Is Sms Sent", 
             "promotion_id" : "Promotion ID",
             "difference_money" : "Difference Money",
             "utm_source" : "Utm Source",
@@ -103,9 +102,92 @@ class CreateOrderCest
             "remove" : "Remove"
         }');
         $I->seeResponseCodeIs(HttpCode::OK); // 200
-        //$I->seeResponseCodeIsSuccessful();
+        $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        //$I->seeResponseContains('{"success": true}');
+        $I->seeResponseContains('{"store_id":["Store ID must be an integer."]');
 
+    }
+
+    public function createOrderViaAPIDone(ApiTester $I)
+    {
+        $I->haveHttpHeader('Content-Type','application/json');
+        $I->haveHttpHeader('X-Access-Token','fadcd777f4efbcee34d59a9cb204e271');
+        $I->sendPOST('/1/order/create', '{
+            "store_id" : 1, 
+            "type_order" : "SHOP",
+            "portal" : "AMAZON",
+            "is_quotation" : 0,
+            "quotation_status" : "1",
+            "quotation_note" : "",
+            "customer_id" : 249,
+            "receiver_email" : "dieu.nghiem@hotmail.com",
+            "receiver_name" : "Bạc Vĩ",
+            "receiver_phone" : "022 511 1846",
+            "receiver_address" : "3, Thôn Diệp Đoàn, Ấp Thạch Đình, Quận Khoát Anh Bắc Giang",
+            "receiver_country_id" : 1,
+            "receiver_country_name" : "Việt Nam",
+            "receiver_province_id" : 3,
+            "receiver_province_name" : "Hà Nội",
+            "receiver_district_id" : 817,
+            "receiver_district_name" : "Phố Bì",
+            "receiver_post_code" : "750214",
+            "receiver_address_id" : 178,
+            "note_by_customer" : "Come on!\" So they sat down with wonder at the.",
+            "note" : "As they walked off together, Alice heard the.",
+            "payment_type" : "WALLET",
+            "sale_support_id" : 1,
+            "support_email" : "dcn@yahoo.com",
+            "coupon_id" : null,
+            "coupon_code" : null,
+            "coupon_time" : null,
+            "revenue_xu" : 0,
+            "xu_count" : 0,
+            "xu_amount" : 0,
+            "is_email_sent" : 0,
+            "is_sms_sent" : 0,
+            "promotion_id" : null,
+            "difference_money" : 0,
+            "utm_source" : null,
+            "seller_id" : 699,
+            "seller_name" : "Em. Giao Luận",
+            "seller_store" : "https://www.le.int.vn/sed-expedita-rerum-beatae-consectetur-commodi",
+            "total_final_amount_local" : 0,
+            "total_paid_amount_local" : 0,
+            "total_refund_amount_local" : 0,
+            "total_amount_local" : 10716000,
+            "total_fee_amount_local" : 0,
+            "total_counpon_amount_local" : 0,
+            "total_promotion_amount_local" : 0,
+            "exchange_rate_fee" : 23500,
+            "exchange_rate_purchase" : 0,
+            "currency_purchase" : "0",
+            "purchase_order_id" : null,
+            "purchase_transaction_id" : null,
+            "purchase_amount" : null,
+            "purchase_account_id" : null,
+            "purchase_account_email" : null,
+            "purchase_card" : null,
+            "purchase_amount_buck" : null,
+            "purchase_amount_refund" : null,
+            "purchase_refund_transaction_id" : null,
+            "total_weight" : null,
+            "total_weight_temporary" : null,
+            "new" : 1213456503,
+            "purchased" : null,
+            "seller_shipped" : null,
+            "stockin_us" : null,
+            "stockout_us" : null,
+            "stockin_local" : null,
+            "stockout_local" : null,
+            "at_customer" : null,
+            "returned" : null,
+            "cancelled" : null,
+            "lost" : null,
+            "current_status" : "NEW", 
+            "remove" : 0
+        }');
+        $I->seeResponseCodeIs(HttpCode::OK); // 200
+        $I->seeResponseCodeIsSuccessful();
+        $I->seeResponseIsJson();
     }
 }

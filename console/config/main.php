@@ -30,6 +30,10 @@ return [
             'class' => 'yii\mongodb\console\controllers\MigrateController',
             'migrationPath' => ['@console/mongodb-migrations']
         ],
+        'i18n-migrate' => [
+            'class' => 'common\components\consoles\controllers\MigrateController',
+            'migrationPath' => ['@yii/i18n/migrations']
+        ],
         'rbac' => [
             'class' => 'common\rbac\controllers\RbacController',
         ]

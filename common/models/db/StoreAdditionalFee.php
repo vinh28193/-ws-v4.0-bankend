@@ -10,6 +10,7 @@ use Yii;
  * @property int $id ID
  * @property int $store_id Store ID reference
  * @property string $name Fee Name
+ * @property string $label Label of fee
  * @property string $currency Currency (USD/VND)
  * @property string $description Description
  * @property string $condition_name Fee Name
@@ -24,7 +25,7 @@ use Yii;
  * @property int $updated_time Updated at (timestamp)
  * @property string $fee_rate Fee Rate
  */
-class StoreAdditionalFee extends \yii\db\ActiveRecord
+class StoreAdditionalFee extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -40,11 +41,12 @@ class StoreAdditionalFee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'name'], 'required'],
+            [['store_id', 'name', 'label'], 'required'],
             [['store_id', 'is_convert', 'is_read_only', 'status', 'created_by', 'created_time', 'updated_by', 'updated_time'], 'integer'],
             [['description', 'condition_data', 'condition_description'], 'string'],
             [['fee_rate'], 'number'],
             [['name'], 'string', 'max' => 50],
+            [['label'], 'string', 'max' => 80],
             [['currency'], 'string', 'max' => 11],
             [['condition_name'], 'string', 'max' => 255],
         ];
@@ -59,6 +61,7 @@ class StoreAdditionalFee extends \yii\db\ActiveRecord
             'id' => 'ID',
             'store_id' => 'Store ID',
             'name' => 'Name',
+            'label' => 'Label',
             'currency' => 'Currency',
             'description' => 'Description',
             'condition_name' => 'Condition Name',

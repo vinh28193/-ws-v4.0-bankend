@@ -1,7 +1,7 @@
 actor: ApiTester
 modules:
     enabled:
-        - \api\tests\Helper\Api
+        #- \api\tests\Helper\Api
         - REST:
            depends: PhpBrowser
            url: 'http://127.0.0.1:8880/index-test.php'

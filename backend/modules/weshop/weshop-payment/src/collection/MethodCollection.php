@@ -89,8 +89,8 @@ class MethodCollection extends \yii\base\BaseObject implements \IteratorAggregat
      */
     public function add($name, $value)
     {
-        $name = strtolower($name);
-        $this->_methods[$name][] = $value;
+//        $name = strtolower($name);
+        $this->_methods[$name] = $value;
 
         return $this;
     }

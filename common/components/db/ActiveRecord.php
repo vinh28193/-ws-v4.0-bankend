@@ -8,6 +8,12 @@
 
 namespace common\components\db;
 
+use Yii;
+
+/**
+ * Class ActiveRecord
+ * @package common\components\db
+ */
 class ActiveRecord extends \yii\db\ActiveRecord
 {
 
@@ -18,26 +24,55 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $reflector = new \ReflectionClass($this);
-        if($reflector->hasProperty('created_time') || $reflector->hasProperty('updated_time')){
-            $behaviors['timestamp'] = [
-                'class' => \yii\behaviors\TimestampBehavior::class,
-                'createdAtAttribute' => $this->hasAttribute('created_time') ? 'created_time' : false,
-                'updatedAtAttribute' => $this->hasAttribute('updated_time') ? 'updated_time' : false,
-                'value' => new \yii\db\Expression('NOW()'),
-            ];
+
+        if(is_a($this,'common\components\db\ActiveRecord')){
+            return $behaviors;
         }
-        if($reflector->hasProperty('created_by') || $reflector->hasProperty('updated_by')){
-            $behaviors['timestamp'] = [
-                'class' => \yii\behaviors\BlameableBehavior::class,
-                'createdAtAttribute' => $this->hasAttribute('created_by') ? 'created_by' : false,
-                'updatedAtAttribute' => $this->hasAttribute('updated_by') ? 'updated_by' : false,
-                'value' => new \yii\db\Expression('NOW()'),
-            ];
+
+        $timestamp = [];
+        if ($this->hasAttribute('created_at')) {
+            $timestamp[self::EVENT_BEFORE_INSERT][] = 'created_at';
         }
+        if ($this->hasAttribute('updated_at')) {
+//            $timestamp[self::EVENT_BEFORE_INSERT][] = 'updated_at';
+            $timestamp[self::EVENT_BEFORE_UPDATE][] = 'updated_at';
+        }
+
+        $behaviors = !empty($timestamp) ? array_merge($behaviors, [
+            [
+                'class' => \yii\behaviors\TimestampBehavior::className(),
+                'attributes' => $timestamp,
+            ],
+        ]) : $behaviors;
+
+        $blameable = [];
+        if ($this->hasAttribute('created_by')) {
+            $blameable[self::EVENT_BEFORE_INSERT][] = 'created_by';
+        }
+        if ($this->hasAttribute('updated_by')) {
+//            $blameable[self::EVENT_BEFORE_INSERT][] = 'updated_by';
+            $blameable[self::EVENT_BEFORE_UPDATE][] = 'updated_by';
+        }
+
+        $behaviors = !empty($blameable) ? array_merge($behaviors, [
+            [
+                'class' => \yii\behaviors\BlameableBehavior::className(),
+                'attributes' => $blameable,
+            ],
+        ]) : $behaviors;
+
+
         return $behaviors;
     }
 
+
+    /**
+     * @return \yii\i18n\Formatter
+     */
+    public static function getFormatter()
+    {
+        return Yii::$app->getFormatter();
+    }
 
     public function formName()
     {
@@ -47,6 +82,27 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
         return parent::toArray($fields, $expand, $recursive);
+    }
+
+
+    public function fields()
+    {
+        $fields = parent::fields();
+        foreach (['created_by', 'updated_by'] as $name) {
+            if (isset($fields[$name])) {
+                unset($fields[$name]);
+            }
+        }
+        foreach (['created_at', 'updated_at'] as $name) {
+            if ($this->hasAttribute($name) && isset($fields[$name])) {
+                $fields[$name] = function ($model) use ($name) {
+                    $formatter = self::getFormatter();
+                    $formatter->nullDisplay = 'not set';
+                    return Yii::$app->formatter->asDatetime($model->$name);
+                };
+            }
+        }
+        return $fields;
     }
 
     /**
