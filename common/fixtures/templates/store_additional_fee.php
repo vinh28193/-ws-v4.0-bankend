@@ -6,6 +6,7 @@
  * Time: 09:28
  */
 
+use yii\helpers\Inflector;
 
 /**
  * @var $faker \Faker\Generator
@@ -34,8 +35,9 @@ $condition = isset($conditions[$feeName]) ? $conditions[$feeName]  : 'common\com
 $condition = new $condition;
 return [
     'id' => $id,
-    'store_id' => $id,
+    'store_id' => 1,
     'name' => $feeName,
+    'label' => Inflector::camel2words($feeName),
     'currency' => $faker->randomElement(['USD','VND','IDR']),
     'description' => $faker->realText(100),
     'condition_name' => $condition->name,

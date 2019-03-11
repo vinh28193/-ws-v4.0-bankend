@@ -25,7 +25,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         $behaviors = parent::behaviors();
 
-        if(is_a($this,'common\components\db\ActiveRecord')){
+        $reflection = new \ReflectionClass($this);
+        if($reflection->getShortName() === 'ActiveRecord'){
             return $behaviors;
         }
 
