@@ -13,6 +13,11 @@ use common\components\AdditionalFeeInterface;
 use common\components\AdditionalFeeTrait;
 use common\components\StoreAdditionalFeeRegisterTrait;
 
+/**
+ * Class BaseProduct
+ * @package common\products
+ * Product EBAY / AMAZON API trả về + tính toán phí để hiên thị lên detail + search + card + checkout  cho khách hàng
+ */
 class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
 {
 

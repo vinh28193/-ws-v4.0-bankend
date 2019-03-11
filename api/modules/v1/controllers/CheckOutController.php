@@ -63,7 +63,7 @@ class CheckOutController extends BaseApiController
         $errors = [];
         foreach ($items as $key => $simpleItem) {
             /** @var  $simpleItem \common\components\cart\item\SimpleItem */
-            $item = $simpleItem->item;
+            $item = $simpleItem->item ;
 
             $itemType = 'ebay';
             // Seller
