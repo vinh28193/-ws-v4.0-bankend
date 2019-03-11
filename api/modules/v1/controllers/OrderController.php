@@ -161,10 +161,9 @@ class OrderController extends BaseApiController
     protected function findModel($condition, $with = true)
     {
         $query = Order::find();
-//        if ($with) {
-//            $query->withFullRelations();
-//        }
-        $query->withFullRelations();
+        if ($with === true) {
+            $query->withFullRelations();
+        }
         if (is_numeric($condition)) {
             $condition = ['id' => $condition];
         }

@@ -17,9 +17,11 @@ trait ConditionTrait
     /**
      * @return null|float
      */
-    public function getFeeRate(){
+    public function getFeeRate()
+    {
         return $this->fee_rate > 0 ? $this->fee_rate : null;
     }
+
     /**
      * @return BaseCondition|null|mixed
      */
@@ -54,14 +56,18 @@ trait ConditionTrait
     public function executeCondition($value, AdditionalFeeInterface $additionalFee)
     {
         if ($this->condition_name === null) {
-            return $value;
+            return false;
         }
 
         $condition = $condition = $this->getCondition();
         if ($condition instanceof BaseCondition) {
-            return $condition->execute($value, $additionalFee, $this);
+            $value = $condition->execute($value, $additionalFee, $this);
         }
-        return $value;
+        $localValue = $value;
+        if ($this->is_convert && $this->name !== 'ExchangeRate') {
+            $localValue = $localValue * $additionalFee->getExchangeRate();
+        }
+        return [$value, $localValue];
 
     }
 }

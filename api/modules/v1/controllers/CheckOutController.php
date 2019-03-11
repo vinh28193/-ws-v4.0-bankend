@@ -83,7 +83,6 @@ class CheckOutController extends BaseApiController
                 $errors[$key][] =  "can not create form null category";
                 continue;
             }
-
             if (($category = Category::findOne(['AND', ['alias' => $categoryId], ['site' => $itemType]])) === null) {
                 $category = new Category();
                 $category->alias = $categoryId;
