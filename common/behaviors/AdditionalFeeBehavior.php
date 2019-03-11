@@ -63,14 +63,16 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
             $model->product_id = $this->owner->primaryKey;
             $model->order_id = $this->owner->order_id;
             $model->currency = $storeAdditionFee->currency;
-            $model->type_fee = $storeAdditionFee->name;
-            list($model->amount,$model->amount_local) = $getAdditionalFees->getTotalAdditionFees($key);
+            $model->type = $storeAdditionFee->name;
+            $model->name = $storeAdditionFee->label;
+            list($model->amount,$model->local_amount) = $getAdditionalFees->getTotalAdditionFees($key);
             $model->save(false);
+
             if ($this->owner->hasAttribute($ownerName)) {
-                $updateAttributes[$ownerName] = $model->amount_local;
+                $updateAttributes[$ownerName] = $model->local_amount;
             }
             $totalFee += $model->amount;
-            $totalFeeLocal +=$model->amount_local;
+            $totalFeeLocal +=$model->local_amount;
         }
         if ($this->owner->hasAttribute('total_amount_local')) {
             $updateAttributes['total_amount_local'] = $totalFee;
@@ -79,15 +81,15 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
             $updateAttributes['total_fee_amount_local'] = $totalFeeLocal;
         }
         $this->owner->updateAttributes($updateAttributes);
-        $model = new OrderFee();
-        $model->amount = $totalFee;
-        $model->amount_local = $totalFeeLocal;
-        $model->order_id = $this->owner->order_id;
-        $model->product_id = $this->owner->primaryKey;
-        $model->currency = Yii::$app->storeManager->store->currency;
-        $model->discount_amount = 0;
-        $model->type_fee = 'total_fee';
-        $model->save(false);
+//        $model = new OrderFee();
+//        $model->amount = $totalFee;
+//        $model->amount_local = $totalFeeLocal;
+//        $model->order_id = $this->owner->order_id;
+//        $model->product_id = $this->owner->primaryKey;
+//        $model->currency = Yii::$app->storeManager->store->currency;
+//        $model->discount_amount = 0;
+//        $model->type_fee = 'total_fee';
+//        $model->save(false);
 
 
     }

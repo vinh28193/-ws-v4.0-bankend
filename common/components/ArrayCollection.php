@@ -77,7 +77,7 @@ class ArrayCollection extends BaseObject implements IteratorAggregate, ArrayAcce
      */
     public function set($key, $value)
     {
-        $this->_items[$key] = $value;
+        $this->_items[$key] = (array)$value;
         return $this;
     }
 
