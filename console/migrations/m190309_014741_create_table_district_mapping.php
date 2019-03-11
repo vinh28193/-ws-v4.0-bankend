@@ -21,9 +21,7 @@ class m190309_014741_create_table_district_mapping extends Migration
             'district_name' => $this->string(),
             'province_name' => $this->string(),
         ]);
-        $this->addForeignKey('fk-sys_district_mapping-district','system_district_mapping','district_id','system_district','id');
-        $this->addForeignKey('fk-sys_district_mapping-province','system_district_mapping','province_id','system_state_province','id');
-    }
+       }
 
     /**
      * {@inheritdoc}

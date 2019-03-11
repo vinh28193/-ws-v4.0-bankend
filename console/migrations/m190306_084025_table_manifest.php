@@ -34,20 +34,6 @@ class m190306_084025_table_manifest extends Migration
             'active' => $this->integer()->comment("")->defaultValue(1),
         ],$tableOptions);
 
-        $this->createIndex('idx-manifest-warehouse_send','manifest','send_warehouse_id');
-        $this->addForeignKey('fk-manifest-warehouse_send','manifest','send_warehouse_id','warehouse','id');
-
-        $this->createIndex('idx-manifest-receive_warehouse','manifest','receive_warehouse_id');
-        $this->addForeignKey('fk-manifest-receive_warehouse','manifest','receive_warehouse_id','warehouse','id');
-
-        $this->createIndex('idx-manifest-store','manifest','store_id');
-        $this->addForeignKey('fk-manifest-store','manifest','store_id','store','id');
-
-        $this->createIndex('idx-manifest-create_by','manifest','created_by');
-        $this->addForeignKey('fk-manifest-create_by','manifest','created_by','user','id');
-
-        $this->createIndex('idx-manifest-updated_by','manifest','updated_by');
-        $this->addForeignKey('fk-manifest-updated_by','manifest','updated_by','user','id');
 
     }
 
