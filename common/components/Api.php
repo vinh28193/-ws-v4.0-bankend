@@ -95,9 +95,12 @@ class Api extends Component
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    public function createAuthorizationCode($user_id,$type = 'user',$expired_time = null)
+    public function createAuthorizationCode($user_id,$type = null,$expired_time = null)
     {
         $expired_time = $expired_time ? $expired_time : 60*60*5;
+        $type = $type ? $type : 'user';
+
+        /****ToDo : Refacto APP CALL API : WEB-FRONTEND / WEB-BACKEND / THIRD-PARTY / APP WESHOP ANDDROID + IOS by user token *****/
         $type = $type ? $type : 'user';
 
         $model = new AuthorizationCodes;
