@@ -12,6 +12,13 @@ class m190219_080356_order extends Migration
      */
     public function safeUp()
     {
+
+        /**ToDo :
+         * 1. 'customer_type' => $this->string(11)->notNull()->comment(" Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers "),
+              Cần chuyển / dánh dấu lại email khách hàng là Buôn hay lẻ khi mua hàng để lấy luôn id + loại khách hàng update vào bảng Order để tiện tính toán ko phải load lại bảng customer gây chậm hệ thống,
+           2. current_status  trạng thái hiện tại của order không phản ánh hết từng trang thái product mà nó được update theo thời gian + sản phẩm cuối cùng
+         **/
+
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
@@ -22,11 +29,29 @@ class m190219_080356_order extends Migration
             'id' => $this->primaryKey()->comment("ID"),
             'store_id' => $this->integer(11)->notNull()->comment("hàng của nước nào"),
             'type_order' => $this->string(255)->notNull()->comment("Hình thức mua hàng: SHOP | REQUEST | POS | SHIP"),
-            'portal' => $this->string(255)->notNull()->comment("portal ebay, amazon us, amazon jp ..."),
+            'customer_id' => $this->integer(11)->notNull()->comment(" Mã id của customer : có thể là khách buôn hoặc khách lẻ "),
+            'customer_type' => $this->string(11)->notNull()->comment(" Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers "),
+            'portal' => $this->string(255)->notNull()->comment("portal ebay, amazon us, amazon jp ...: EBAY/ AMAZON_US / AMAZON_JAPAN / OTHER / WEBSITE NGOÀI "),
+
+
+            'new' => $this->bigInteger()->comment("time NEW"),
+            'purchased' => $this->bigInteger()->comment("time PURCHASED"),
+            'seller_shipped' => $this->bigInteger()->comment("time SELLER_SHIPPED"),
+            'stockin_us' => $this->bigInteger()->comment("time STOCKIN_US"),
+            'stockout_us' => $this->bigInteger()->comment("time STOCKOUT_US"),
+            'stockin_local' => $this->bigInteger()->comment("time STOCKIN_LOCAL"),
+            'stockout_local' => $this->bigInteger()->comment("time STOCKOUT_LOCAL"),
+            'at_customer' => $this->bigInteger()->comment("time AT_CUSTOMER"),
+            'returned' => $this->bigInteger()->comment("time RETURNED : null"),
+            'cancelled' => $this->bigInteger()->comment(" time CANCELLED : null :  Đơn hàng đã  thanh toán --> thì hoàn  tiền ; Đơn hàng chưa thanh toán --> thì Hủy"),
+            'lost' => $this->bigInteger()->comment(" time LOST : null : Hàng mất ở kho Mỹ hoặc hải quan hoặc kho VN hoặc trên đường giao cho KH "),
+            'current_status' => $this->string(200)->comment("Trạng thái hiện tại của order : update theo trạng thái của sản phẩm cuối "),
+
+
             'is_quotation' => $this->tinyInteger(4)->comment("Đánh dấu đơn báo giá"),
-            'quotation_status' => $this->tinyInteger(4)->comment("Trạng thái báo giá. 0 - pending, 1- approve, 2- deny"),
+            'quotation_status' => $this->tinyInteger(4)->comment("Duyệt đơn báo giá nên đơn có Trạng thái báo giá. 0 - pending, 1- approve, 2- deny"),
             'quotation_note' => $this->string(255)->comment("note đơn request"),
-            'customer_id' => $this->integer(11)->notNull()->comment("id của customer"),
+
             'receiver_email' => $this->string(255)->notNull()->comment("Email người nhận"),
             'receiver_name' => $this->string(255)->notNull()->comment("Họ tên người nhận"),
             'receiver_phone' => $this->string(255)->notNull()->comment("Số điện thoại người nhận"),
@@ -39,9 +64,12 @@ class m190219_080356_order extends Migration
             'receiver_district_name' => $this->string(255)->notNull()->comment(" Tên Quận huyện người nhận"),
             'receiver_post_code' => $this->string(255)->notNull()->comment(" Mã bưu điện người nhận"),
             'receiver_address_id' => $this->integer(11)->notNull()->comment("id address của người nhận trong bảng address"),
-            'note_by_customer' => $this->text()->comment("Ghi chú của customer"),
+            'note_by_customer' => $this->text()->comment("Ghi chú của customer hoặc ghi chú cho người nhận "),
             'note' => $this->text()->comment("Ghi chú cho đơn hàng"),
+
+
             'payment_type' => $this->string(255)->notNull()->comment("hinh thuc thanh toan. -online_payment, 'VT'..."),
+
             'sale_support_id' => $this->integer(11)->comment("Người support đơn hàng"),
             'support_email' => $this->string(255)->comment("email người support"),
             'coupon_id' => $this->string(255)->comment("mã giảm giá"),
@@ -91,18 +119,7 @@ class m190219_080356_order extends Migration
             'purchase_refund_transaction_id' => $this->text()->comment("mã giao dịch hoàn"),
             'total_weight' => $this->text()->comment("cân nặng tính phí"),
             'total_weight_temporary' => $this->text()->comment("cân nặng tạm tính"),
-            'new' => $this->bigInteger()->comment("time NEW"),
-            'purchased' => $this->bigInteger()->comment("time PURCHASED"),
-            'seller_shipped' => $this->bigInteger()->comment("time SELLER_SHIPPED"),
-            'stockin_us' => $this->bigInteger()->comment("time STOCKIN_US"),
-            'stockout_us' => $this->bigInteger()->comment("time STOCKOUT_US"),
-            'stockin_local' => $this->bigInteger()->comment("time STOCKIN_LOCAL"),
-            'stockout_local' => $this->bigInteger()->comment("time STOCKOUT_LOCAL"),
-            'at_customer' => $this->bigInteger()->comment("time AT_CUSTOMER"),
-            'returned' => $this->bigInteger()->comment("time RETURNED"),
-            'cancelled' => $this->bigInteger()->comment(" time CANCELLED :  Đơn hàng đã  hoặc chưa thanh toán --> nhưng bị hủy và hoàn tiền"),
-            'lost' => $this->bigInteger()->comment(" time LOST : Hàng mất ở kho Mỹ hoặc hải quan hoặc kho VN hoặc trên đường giao cho KH "),
-            'current_status' => $this->string(200)->comment("Trạng thái hiện tại của order"),
+
             'created_time' => $this->bigInteger()->comment("Update qua behaviors tự động  "),
             'updated_time' => $this->bigInteger()->comment("Update qua behaviors tự động"),
             'remove' => $this->tinyInteger(4)->comment("đơn đánh đấu 1 là đã xóa , mặc định 0 : chưa xóa")
