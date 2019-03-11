@@ -41,7 +41,7 @@ class m190219_080356_order extends Migration
             'receiver_address_id' => $this->integer(11)->notNull()->comment("id address của người nhận trong bảng address"),
             'note_by_customer' => $this->text()->comment("Ghi chú của customer"),
             'note' => $this->text()->comment("Ghi chú cho đơn hàng"),
-            'payment_type' => $this->string(255)->comment("hinh thuc thanh toan. -online_payment, 'VT'..."),
+            'payment_type' => $this->string(255)->notNull()->comment("hinh thuc thanh toan. -online_payment, 'VT'..."),
             'sale_support_id' => $this->integer(11)->comment("Người support đơn hàng"),
             'support_email' => $this->string(255)->comment("email người support"),
             'coupon_id' => $this->string(255)->comment("mã giảm giá"),
@@ -52,10 +52,10 @@ class m190219_080356_order extends Migration
             'xu_amount' => $this->decimal(18,2)->comment("giá trị quy đổi ra tiền"),
             'is_email_sent' => $this->tinyInteger(1)->comment(" đánh đâu đơn này đã được gửi email tạo thành công đơn hàng"),
             'is_sms_sent' => $this->tinyInteger(1)->comment("đánh đâu đơn này đã được gửi SMS tạo thành công đơn hàng"),
-            //'total_quantity' => $this->integer(11)->comment(""),
+            //'total_quantity' => $this->integer(11)->comment(" Tổng số lượng khách hàng đặt = tổng các số lượng trên bảng product"),
             'promotion_id' => $this->integer(11)->comment("id của promotion"),
             'difference_money' => $this->tinyInteger(1)->comment("0: mac dinh, 1: lech, 2:ẩn thông báo bằng quyền của Admin"),
-            'utm_source' => $this->string(255)->comment(""),
+            'utm_source' => $this->string(255)->comment("Đơn theo viết được tạo ra bới chiến dịch nào : Facebook ads, Google ads , eomobi , etc ,,,, "),
             'seller_id' => $this->integer(11)->comment("Mã người bán "),
             'seller_name' => $this->string(255)->comment("Tên người bán"),
             'seller_store' => $this->text()->comment("Link shop của người bán"),
@@ -131,36 +131,6 @@ class m190219_080356_order extends Migration
     public function safeDown()
     {
         echo "m190219_080356_order cannot be reverted.\n";
-
-//        $this->dropIndex('idx-order-store_id', 'order');
-//        $this->dropForeignKey('fk-order-store_id', 'order');
-//
-//        $this->dropIndex('idx-order-customer_id', 'order');
-//        $this->dropForeignKey('fk-order-customer_id', 'order');
-//
-//        $this->dropIndex('idx-order-receiver_country_id', 'order');
-//        $this->dropForeignKey('fk-order-receiver_country_id', 'order');
-//
-//        $this->dropIndex('idx-order-receiver_province_id', 'order');
-//        $this->dropForeignKey('fk-order-receiver_province_id', 'order');
-//
-//        $this->dropIndex('idx-order-receiver_district_id', 'order');
-//        $this->dropForeignKey('fk-order-receiver_district_id', 'order');
-//
-//        $this->dropIndex('idx-order-receiver_address_id', 'order');
-//        $this->dropForeignKey('fk-order-receiver_address_id', 'order');
-//
-//        $this->dropIndex('idx-order-sale_support_id', 'order');
-//        $this->dropForeignKey('fk-order-sale_support_id', 'order');
-//
-//        $this->dropIndex('idx-order-seller_id', 'order');
-//        $this->dropForeignKey('fk-order-seller_id', 'order');
-//
-//        $this->dropIndex('idx-order-coupon_id', 'order');
-//
-//        $this->dropIndex('idx-order-promotion_id', 'order');
-//
-//        $this->dropTable('order');
 
     }
 

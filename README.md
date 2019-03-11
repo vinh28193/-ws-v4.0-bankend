@@ -460,6 +460,7 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
  ####-----------Tat ca cac lenh chay khi tao db moi----------------------
     
     #####--------Create all Tabales-----------------
+    php yii migrate/fresh
     php yii  migrate/up
 
     ####-----------Load data fixed test------------
