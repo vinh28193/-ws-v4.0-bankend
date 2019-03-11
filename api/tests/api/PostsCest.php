@@ -10,14 +10,13 @@ class PostsApiCest
 {
     function _before(ApiTester $I)
     {
-        /*
         $I->haveFixtures([
             'post' => [
                 'class' => PostFixture::className(),
                 'dataFile' => codecept_data_dir() . 'post.php'
             ]
         ]);
-        */
+
     }
 
     public function testGetAll(ApiTester $I)
@@ -28,7 +27,7 @@ class PostsApiCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        $I->seeResponseContainsJson(["title" => "Weshop"]);
+        $I->seeResponseContainsJson(['title' => 'First Post']);
     }
 
     public function testGetOne(ApiTester $I)
@@ -39,7 +38,7 @@ class PostsApiCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        $I->seeResponseContainsJson(['title' => "Weshop"]);
+        $I->seeResponseContainsJson(['title' => 'First Post']);
     }
 
     public function testGetNotFound(ApiTester $I)
@@ -70,7 +69,7 @@ class PostsApiCest
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','3fea2609cbbeb95b557c503c6e4e5e9c');
-        $I->sendPUT('/1/post/update/4', [
+        $I->sendPUT('/1/post/update/2', [
             'title' => 'New Title Weshop 2019',
         ]);
         $I->seeResponseCodeIs(200);
@@ -78,7 +77,7 @@ class PostsApiCest
         $I->seeResponseIsJson();
         $I->seeResponseContainsJson([
             'title' => 'New Title Weshop 2019',
-            //'text' => 'Old Text For Updating',
+            'text' => 'Old Text For Updating',
         ]);
     }
 
@@ -86,7 +85,7 @@ class PostsApiCest
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','3fea2609cbbeb95b557c503c6e4e5e9c');
-        $I->sendDELETE('/1/post/delete/6');
-        $I->seeResponseCodeIs(204);
+        $I->sendDELETE('/1/post/delete/3');
+        $I->seeResponseCodeIs(200);
     }
 }
