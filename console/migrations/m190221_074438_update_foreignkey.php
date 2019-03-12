@@ -263,7 +263,7 @@ class m190221_074438_update_foreignkey extends Migration
             foreach ($list_data as $data){
                 //$this->createIndex('idx-'.$key.'-'.$data['column'],$key,$data['column']);
                 if(!isset($data['is_not_fk'])){
-                    $this->addForeignKey('fk-'.$key.'-'.$data['column'], $key, $data['column'], $data['table'], 'id');
+                  // $this->addForeignKey('fk-'.$key.'-'.$data['column'], $key, $data['column'], $data['table'], 'id','CASCADE','CASCADE');
                 }
             }
         }
@@ -281,7 +281,6 @@ class m190221_074438_update_foreignkey extends Migration
                 if(!isset($data['is_not_fk'])){
                     $this->dropForeignKey('fk-'.$key.'-'.$data['column'], $key);
                 }
-                $this->dropTable($key); //delete tables
             }
         }
     }

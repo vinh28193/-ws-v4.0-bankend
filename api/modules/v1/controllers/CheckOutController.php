@@ -52,13 +52,26 @@ class CheckOutController extends BaseApiController
 
     public function actionCreate()
     {
+        /*** Document Compare*****
+        https://weshop.com.vn/api/cmsproduct/calcfee?id=252888606889&qty=1&store=vn&portal=ebay
+        https://ebay-api-wshopx-v3.weshop.com.vn/v3/product?id=
+         **/
+
+        $this->cart->removeItems();
         $this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
-        $this->cart->addItem('IF_6C960C53', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/nrsAAOSw7Spbzlyw/$_12.JPG?set_id=880000500F', '252888606889');
-        $this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
+
+        //$this->cart->addItem('IF_6C960C53', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/nrsAAOSw7Spbzlyw/$_12.JPG?set_id=880000500F', '252888606889');
+        //$this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
         // Toto CheckOutForm to validate data form all
+
         $items = $this->cart->getItems();
 
-        //var_dump($items);die("carddddd");
+//        echo " Acount items : \n ";
+//        echo "<pre>";
+//        print_r($items);
+//        echo "</pre>";
+
+
         $orders = [];
         $errors = [];
         foreach ($items as $key => $simpleItem) {
@@ -97,8 +110,8 @@ class CheckOutController extends BaseApiController
             $product->link_origin = $item['item_origin_url'];
             $product->getAdditionalFees()->mset($item['additionalFees']);
             $product->category_id = $category->id;
-            list($product->price_amount, $product->total_price_amount_local) = $product->getAdditionalFees()->getTotalAdditionFees();
-            $product->quantity = $item['quantity'];
+            list($product->price_amount_origin, $product->total_price_amount_local) = $product->getAdditionalFees()->getTotalAdditionFees();
+            $product->quantity_customer = $item['quantity'];
 
             $order = new Order();
             $order->type_order = 'SHOP';

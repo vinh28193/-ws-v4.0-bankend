@@ -14,6 +14,7 @@ class m190311_041136_add_foreignkey_index_All__table extends Migration
     {
         //Tables manifest
 
+        /*
         $this->createIndex('idx-manifest-warehouse_send','manifest','send_warehouse_id');
         $this->addForeignKey('fk-manifest-warehouse_send','manifest','send_warehouse_id','warehouse','id');
 
@@ -29,11 +30,10 @@ class m190311_041136_add_foreignkey_index_All__table extends Migration
         $this->createIndex('idx-manifest-updated_by','manifest','updated_by');
         $this->addForeignKey('fk-manifest-updated_by','manifest','updated_by','user','id');
 
-         /*** district_mapping****/
+         // district_mapping
          $this->addForeignKey('fk-sys_district_mapping-district','system_district_mapping','district_id','system_district','id');
          $this->addForeignKey('fk-sys_district_mapping-province','system_district_mapping','province_id','system_state_province','id');
-
-
+         */
     }
 
     /**
@@ -44,6 +44,7 @@ class m190311_041136_add_foreignkey_index_All__table extends Migration
         echo "m190311_041136_add_foreignkey_index_All__table SafeDown be reverted.\n";
 
         //Tables manifest
+        /*
         $this->dropIndex('idx-manifest-warehouse_send','manifest','send_warehouse_id');
         $this->dropForeignKey('fk-manifest-warehouse_send','manifest','send_warehouse_id','warehouse','id');
 
@@ -59,10 +60,10 @@ class m190311_041136_add_foreignkey_index_All__table extends Migration
         $this->dropIndex('idx-manifest-updated_by','manifest','updated_by');
         $this->dropForeignKey('fk-manifest-updated_by','manifest','updated_by','user','id');
 
-        /*** district_mapping****/
+        // district_mapping
         $this->dropIndex('fk-sys_district_mapping-district','system_district_mapping','district_id','system_district','id');
         $this->dropForeignKey('fk-sys_district_mapping-province','system_district_mapping','province_id','system_state_province','id');
-
+        */
 
     }
 
