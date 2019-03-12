@@ -57,6 +57,7 @@ class m190219_080356_order extends Migration
             'current_status' => $this->string(200)->comment("Trạng thái hiện tại của order : update theo trạng thái của sản phẩm cuối "),
 
 
+            // Thông tin đơn báo giá
             'is_quotation' => $this->tinyInteger(4)->comment("Đánh dấu đơn báo giá"),
             'quotation_status' => $this->tinyInteger(4)->comment("Duyệt đơn báo giá nên đơn có Trạng thái báo giá. 0 - pending, 1- approve, 2- deny"),
             'quotation_note' => $this->string(255)->comment("note đơn request"),
@@ -150,6 +151,7 @@ class m190219_080356_order extends Migration
             'promotion_time' => $this->bigInteger()->comment("thời gian sử dụng mã promotion"),
             'promotion_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này "),
 
+            // Boxme + Kho
             'total_weight' => $this->text()->comment("cân nặng tính phí"),
             'total_weight_temporary' => $this->text()->comment("cân nặng tạm tính"),
 
@@ -169,7 +171,7 @@ class m190219_080356_order extends Migration
             'purchase_amount_refund' => $this->decimal(18,2)->comment("số tiền người bán hoàn"),
             'purchase_refund_transaction_id' => $this->text()->comment("mã giao dịch hoàn"),
 
-            // Số lượng
+            // Tổng Số lượng
             'total_quantity' => $this->integer(11)->comment(" Tổng số lượng khách hàng đặt = tổng các số lượng trên bảng product"),
             'total_purchase_quantity' => $this->integer(11)->comment(" Tổng số lượng nhân viên đi mua hàng thực tế của cả đơn = tổng các số lượng mua thực tế trên bảng product"),
 
