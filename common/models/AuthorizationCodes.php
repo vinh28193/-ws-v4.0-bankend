@@ -62,8 +62,12 @@ class AuthorizationCodes extends \yii\db\ActiveRecord
 
         if(!$model||$model->expires_at<time())
         {
-            Yii::$app->api->sendFailedResponse("Authcode Expired");
-            return(false);
+            \Yii::$app->response->setStatusCode(400);
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        echo json_encode($res);
+            \Yii::$app->response->data  =   ['success' => false,'message' => 'Authcode Expired'];
+            \Yii::$app->response->send();
+            exit();
         }
         else
             return($model);
