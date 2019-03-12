@@ -10,16 +10,16 @@ class m190226_092328_insert_test_fee_into_store_additional_fee_table extends Mig
     /**
      * {@inheritdoc}
      */
-    public function safeUp()
-    {
-        $this->insert('store_additional_fee', [
-            'name' => 'test_fee',
-            'currency' => 'VND',
-            'description' => 'dev fee',
-            'is_convert' => 1,
-            'is_read_only' => 0
-        ]);
-    }
+//    public function safeUp()
+//    {
+//        $this->insert('store_additional_fee', [
+//            'name' => 'test_fee',
+//            'currency' => 'VND',
+//            'description' => 'dev fee',
+//            'is_convert' => 1,
+//            'is_read_only' => 0
+//        ]);
+//    }
 
     /**
      * {@inheritdoc}
