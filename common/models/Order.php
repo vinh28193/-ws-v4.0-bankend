@@ -10,6 +10,7 @@ namespace common\models;
 
 use common\components\AdditionalFeeInterface;
 use common\models\db\Order as DbOrder;
+use common\models\db\Promotion;
 use Yii;
 use yii\db\BaseActiveRecord;
 
@@ -81,6 +82,14 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
         return $this->exchange_rate_fee;
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPromotion()
+    {
+        return $this->hasOne(Promotion::className(), ['id' => 'promotion_id']);
+    }
+
 
     /**
      * @inheritdoc
@@ -124,6 +133,7 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
         $query = Order::find()
             ->with([
                 'products',
+                'promotion',
                 'orderFees',
                 'packageItems',
                 'walletTransactions',
