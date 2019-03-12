@@ -29,8 +29,8 @@ return [
     'id' => $id,
     'store_id' => 1,
     'fees' => [
-        'origin_fee' => $faker->numberBetween(0,60),
-        'origin_tax_fee' => $faker->randomFloat(1.9),
+        'product_price_origin' => $faker->numberBetween(0,60),
+        'tax_fee_origin' => $faker->randomFloat(1.9),
         'origin_shipping_fee' => $faker->numberBetween(0,20),
     ],
     'type_order' => $typeOrder = $faker->randomElement(['SHOP','SHOP','SHOP','REQUEST','SHIP']),
