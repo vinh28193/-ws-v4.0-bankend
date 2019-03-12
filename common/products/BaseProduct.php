@@ -13,6 +13,11 @@ use common\components\AdditionalFeeInterface;
 use common\components\AdditionalFeeTrait;
 use common\components\StoreAdditionalFeeRegisterTrait;
 
+/**
+ * Class BaseProduct
+ * @package common\products
+ * Product EBAY / AMAZON API trả về + tính toán phí để hiên thị lên detail + search + card + checkout  cho khách hàng
+ */
 class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
 {
 
@@ -107,8 +112,8 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
         $additionalFee = $this->getAdditionalFees();
         $additionalFee->setOwner($this);
         $additionalFee->mset([
-            'origin_fee' => $this->getSellPrice(),
-            'origin_tax_fee' => $this->us_tax_rate,
+            'product_price_origin' => $this->getSellPrice(),
+            'tax_fee_origin' => $this->us_tax_rate,
             'origin_shipping_fee' => $this->shipping_fee
         ], true,true);
         if ($this->isInitialized === false) {
@@ -149,7 +154,7 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     public function getTotalOriginPrice()
     {
         return $this->getAdditionalFees()->getTotalAdditionFees([
-            'origin_fee', 'origin_tax_fee', 'origin_shipping_fee'
+            'product_price_origin', 'tax_fee_origin', 'origin_shipping_fee'
         ])[0];
     }
 
@@ -208,7 +213,7 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
      */
     public function getLocalizeTotalPrice()
     {
-        return $this->getTotalAdditionFees()[1];
+        return $this->getAdditionalFees()->getTotalAdditionFees()[1];
     }
 
     /**
@@ -220,12 +225,12 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
         $tempPrice = $this->getSellPrice();
         $this->sell_price = $this->start_price;
         $this->init();
-        $temp = $this->getTotalAdditionFees();
+        $temp = $this->$this->getAdditionalFees()->getTotalAdditionFees();
         if (!empty($this->deal_price) && $this->deal_price > 0.0) {
             $deal = $this->deal_price;
             $this->deal_price = null;
             $this->init();
-            $temp = $this->getTotalAdditionFees();
+            $temp = $this->$this->getAdditionalFees()->getTotalAdditionFees();
             $this->deal_price = $deal;
         }
         //restore the sell_price to be $tempPrice before

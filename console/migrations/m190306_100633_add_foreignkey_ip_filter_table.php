@@ -26,7 +26,12 @@ class m190306_100633_add_foreignkey_ip_filter_table extends Migration
     {
         echo "m190306_100633_add_foreignkey_ip_filter_table cannot be reverted.\n";
 
-        return false;
+        $this->dropIndex('visits_ip_idx','visitor_log');
+        $this->dropIndex('visits_timestamp_idx','visitor_log');
+        $this->dropIndex('fki_vl_va_ua_fkey','visitor_log');
+        $this->dropIndex('va_ua_vl_fkey','visitor_agent');
+
+        $this->dropForeignKey('visits_visitor_fkey','visitor_log');
     }
 
     /*

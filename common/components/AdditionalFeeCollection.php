@@ -13,7 +13,6 @@ use common\models\StoreAdditionalFee;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class AdditionalFeeCollection
@@ -51,12 +50,12 @@ class AdditionalFeeCollection extends ArrayCollection
             $ownerClass = get_class($owner);
             $ownerId = $owner->getPrimaryKey(false);
             $query = new Query();
-            $query->select(['c.id', 'c.type_fee', 'c.amount', 'c.amount_local', 'c.currency', 'c.discount_amount']);
+            $query->select(['c.id', 'c.type','c.name', 'c.amount', 'c.local_amount','c.discount_amount', 'c.currency' ]);
             $query->from(['c' => 'order_fee']);
             $query->where(['and', ['c.' . 'product_id' => $ownerId]]);
             $additionalFees = $query->all($ownerClass::getDb());
-            Yii::info($additionalFees,'loadFormOwner');
-            $this->mset($additionalFees,false,false);
+//            Yii::info($additionalFees, 'loadFormOwner');
+            $this->mset($additionalFees, false, false);
         }
     }
 
@@ -92,8 +91,8 @@ class AdditionalFeeCollection extends ArrayCollection
         if (is_array($values)) {
             $this->removeAll();
             foreach ($values as $key => $value) {
-                if (is_array($value) && isset($value['type_fee']) && $this->hasStoreAdditionalFeeByKey($value['type_fee'])) {
-                    parent::set($value['type_fee'], $value);
+                if (is_array($value) && isset($value['type']) && $this->hasStoreAdditionalFeeByKey($value['type'])) {
+                    parent::set($value['type'], $value);
                 } elseif (!is_array($value) && is_string($key) && isset($this->storeAdditionalFee[$key]) && ($storeAdditionalFee = $this->storeAdditionalFee[$key]) !== null && $storeAdditionalFee instanceof StoreAdditionalFee) {
                     if ($ensureReadOnly && $storeAdditionalFee->is_read_only) {
                         continue;
@@ -116,36 +115,35 @@ class AdditionalFeeCollection extends ArrayCollection
         }
     }
 
-    public function has($key)
-    {
-        return parent::has($key);
-    }
-
     public function set($key, $value, $withCondition = false)
     {
 
         if (($storeAdditionalFee = $this->getStoreAdditionalFeeByKey($key)) !== null && $storeAdditionalFee instanceof StoreAdditionalFee) {
-            if (is_array($value) && count($value) === 5 && isset($value['amount']) && isset($value['amount_local'])) {
-               parent::set($key, $value);
+            if (is_array($value) && count($value) === 5 && isset($value['amount']) && isset($value['local_amount'])) {
+                parent::set($key, $value);
             } else {
                 $localValue = $value;
                 /** @var $owner AdditionalFeeInterface|null|\yii\db\ActiveRecord */
                 if (($owner = $this->getOwner()) === null) {
                     $withCondition = false;
                 }
-                if ($withCondition && $owner instanceof AdditionalFeeInterface && $storeAdditionalFee->hasMethod('executeCondition')) {
-                    $value = $storeAdditionalFee->executeCondition($value, $owner);
-                    if ($storeAdditionalFee->is_convert) {
-                        $localValue = $value * $owner->getExchangeRate();
-                    }
+                if (
+                    $withCondition &&
+                    $owner instanceof AdditionalFeeInterface &&
+                    $storeAdditionalFee->hasMethod('executeCondition') &&
+                    ($result = $storeAdditionalFee->executeCondition($value, $owner)) !== false &&
+                    is_array($result)
+                ) {
+                    list($value, $localValue) = $result;
                 }
 
                 $additionalFee = [
-                    'type_fee' => $key,
+                    'type' => $key,
+                    'name' => $storeAdditionalFee->label,
                     'amount' => $value,
-                    'amount_local' => $localValue,
-                    'currency' => $storeAdditionalFee->currency,
+                    'local_amount' => $localValue,
                     'discount_amount' => $owner !== null && $owner->hasProperty('discount_amount') ? $owner->discount_amount : 0,
+                    'currency' => $storeAdditionalFee->currency,
                 ];
                 parent::set($key, $additionalFee);
             }
@@ -187,8 +185,16 @@ class AdditionalFeeCollection extends ArrayCollection
             if (in_array($name, $except)) {
                 continue;
             }
-            $totalFees += isset($array['amount']) ? $array['amount'] : 0;
-            $totalLocalFees += isset($array['amount_local']) ? $array['amount_local'] : 0;
+            if(isset($array[0])){
+                foreach ($array as $item){
+                    $totalFees += isset($item['amount']) ? $item['amount'] : 0;
+                    $totalLocalFees += isset($item['local_amount']) ? $item['local_amount'] : 0;
+                }
+            }else{
+                $totalFees += isset($array['amount']) ? $array['amount'] : 0;
+                $totalLocalFees += isset($array['local_amount']) ? $array['local_amount'] : 0;
+            }
+
         }
         return [$totalFees, $totalLocalFees];
 

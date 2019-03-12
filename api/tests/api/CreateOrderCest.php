@@ -15,7 +15,7 @@ class CreateOrderCest
     public function createOrderViaAPIErrorStore(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','c2c41e1d66e70e3b671182a0fc6eca56');
+        $I->haveHttpHeader('X-Access-Token','fadcd777f4efbcee34d59a9cb204e271');
         $I->sendPOST('/1/order/create', '{
             "store_id" : "Store ID",
             "type_order" : "Type Order",
@@ -48,8 +48,7 @@ class CreateOrderCest
             "xu_count" : "Xu Count",
             "xu_amount" : "Xu Amount",
             "is_email_sent" : "Is Email Sent",
-            "is_sms_sent" : "Is Sms Sent",
-            "total_quantity" : "Total Quantity",
+            "is_sms_sent" : "Is Sms Sent", 
             "promotion_id" : "Promotion ID",
             "difference_money" : "Difference Money",
             "utm_source" : "Utm Source",
@@ -112,7 +111,7 @@ class CreateOrderCest
     public function createOrderViaAPIDone(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','c2c41e1d66e70e3b671182a0fc6eca56');
+        $I->haveHttpHeader('X-Access-Token','fadcd777f4efbcee34d59a9cb204e271');
         $I->sendPOST('/1/order/create', '{
             "store_id" : 1, 
             "type_order" : "SHOP",
@@ -146,7 +145,6 @@ class CreateOrderCest
             "xu_amount" : 0,
             "is_email_sent" : 0,
             "is_sms_sent" : 0,
-            "total_quantity" : 3,
             "promotion_id" : null,
             "difference_money" : 0,
             "utm_source" : null,

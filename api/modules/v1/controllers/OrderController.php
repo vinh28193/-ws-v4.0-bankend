@@ -4,6 +4,7 @@
  * User: vinhs
  * Date: 2019-03-04
  * Time: 17:29
+ * Chặn Authen theo role được gán chưa viết  test @Phuchc
  */
 
 namespace api\modules\v1\controllers;
@@ -161,10 +162,9 @@ class OrderController extends BaseApiController
     protected function findModel($condition, $with = true)
     {
         $query = Order::find();
-//        if ($with) {
-//            $query->withFullRelations();
-//        }
-        $query->withFullRelations();
+        if ($with === true) {
+            $query->withFullRelations();
+        }
         if (is_numeric($condition)) {
             $condition = ['id' => $condition];
         }

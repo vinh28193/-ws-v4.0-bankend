@@ -10,11 +10,12 @@ use Yii;
  * @property int $id
  * @property int $order_id order id
  * @property int $product_id Product Id
- * @property string $type_fee loại phí: đơn giá gốc, ship us, ship nhật , weshop fee, ...
- * @property string $amount_local tiền local
- * @property string $amount tiền ngoại tệ
+ * @property string $type loại phí: đơn giá gốc, ship us, ship nhật , weshop fee, ...
+ * @property string $name
+ * @property string $amount Amount
+ * @property string $local_amount Local amount
+ * @property string $discount_amount Discount of type fee
  * @property string $currency loại tiền ngoại tệ
- * @property string $discount_amount tiền giảm giá
  * @property string $created_at
  * @property string $updated_at
  * @property int $remove
@@ -38,9 +39,10 @@ class OrderFee extends \common\components\db\ActiveRecord
     {
         return [
             [['order_id', 'product_id', 'created_at', 'updated_at', 'remove'], 'integer'],
-            [['product_id'], 'required'],
-            [['amount_local', 'amount', 'discount_amount'], 'number'],
-            [['type_fee', 'currency'], 'string', 'max' => 255],
+            [['product_id', 'name'], 'required'],
+            [['amount', 'local_amount', 'discount_amount'], 'number'],
+            [['type', 'currency'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 60],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
     }
@@ -54,11 +56,12 @@ class OrderFee extends \common\components\db\ActiveRecord
             'id' => 'ID',
             'order_id' => 'Order ID',
             'product_id' => 'Product ID',
-            'type_fee' => 'Type Fee',
-            'amount_local' => 'Amount Local',
+            'type' => 'Type',
+            'name' => 'Name',
             'amount' => 'Amount',
-            'currency' => 'Currency',
+            'local_amount' => 'Local Amount',
             'discount_amount' => 'Discount Amount',
+            'currency' => 'Currency',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'remove' => 'Remove',

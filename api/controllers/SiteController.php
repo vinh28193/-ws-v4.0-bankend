@@ -90,7 +90,7 @@ class SiteController extends RestController
      */
     public function actionIndex()
     {
-        Yii::$app->api->sendSuccessResponse(['WESHOP @2019 RESTful API with OAuth2']);
+        Yii::$app->api->sendSuccessResponse(['@Weshop Global 2019 - RESTful API with OAuth2']);
         //  return $this->render('index');
     }
 

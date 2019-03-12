@@ -39,7 +39,7 @@ class SimpleItem extends BaseCartItem
         }
         $form = new ProductDetailFrom();
         $form->load($params, '');
-        /** @var $product false | BaseProduct */
+        /** @var $product false | common\products\BaseProduct BaseProduct */
         if (($product = $form->detail(true)) === false) {
             \Yii::info($form->getFirstErrors(),"add_to_cart");
             return [false,$form->getFirstErrors()];

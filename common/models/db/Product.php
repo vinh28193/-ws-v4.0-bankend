@@ -10,35 +10,29 @@ use Yii;
  * @property int $id
  * @property int $order_id order id
  * @property int $seller_id
- * @property string $portal portal sản phẩm, ebay, amazon us, amazon jp ....
+ * @property string $portal portal sản phẩm, ebay, amazon us, amazon jp , etc....
  * @property string $sku sku của sản phẩm
  * @property string $parent_sku sku cha
  * @property string $link_img link ảnh sản phẩm
  * @property string $link_origin link gốc sản phẩm
- * @property int $category_id id danh mục
- * @property int $custom_category_id id danh mục phụ thu
- * @property string $price_amount đơn giá ngoại tệ
+ * @property int $category_id id danh mục trên Website Weshop bắt qua API
+ * @property int $custom_category_id id danh mục phụ thu Hải Quản nếu api ko bắt được dang mục mà do sale chọn trong OPS thì sẽ thu thêm COD
+ * @property string $price_amount_origin đơn giá gốc ngoại tệ
  * @property string $price_amount_local đơn giá local
- * @property string $total_price_amount_local tổng tiền hàng của sản phẩm
- * @property int $quantity số lượng khách đặt
- * @property int $quantity_purchase số lượng đã mua
+ * @property string $total_price_amount_local tổng tiền hàng của từng sản phẩm
+ * @property int $quantity_customer số lượng khách đặt
+ * @property int $quantity_purchase số lượng Nhân viên đã mua
  * @property int $quantity_inspect số lượng đã kiểm
  * @property string $variations thuộc tính sản phẩm
- * @property int $variation_id mã thuộc tính sản phẩm
- * @property string $note_by_customer note của khách
- * @property string $total_weight_temporary cân nặng tạm tính
+ * @property int $variation_id mã thuộc tính sản phẩm . Notes : Trường này để làm addon tự động mua hàng đẩy vào Giở hàng của Ebay / Amazon 
+ * @property string $note_by_customer note của khách / Khách hàng ghi chú
+ * @property string $total_weight_temporary cân nặng  trong lượng tạm tính
  * @property string $created_at
  * @property string $updated_at
- * @property int $remove
+ * @property int $remove mặc định 0 là chưa xóa 1 là ẩn 
  * @property int $currency_id
  * @property string $currency_symbol
  * @property string $exchange_rate
- *
- * @property Category $category
- * @property CategoryCustomPolicy $customCategory
- * @property Order $order
- * @property Seller $seller
- * @property SystemCurrency $currency
  */
 class Product extends \common\components\db\ActiveRecord
 {
@@ -56,15 +50,11 @@ class Product extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'currency_id'], 'integer'],
+            [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'total_weight_temporary', 'created_at'], 'required'],
+            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'currency_id'], 'integer'],
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'total_weight_temporary'], 'string'],
-            [['price_amount', 'price_amount_local', 'total_price_amount_local', 'exchange_rate'], 'number'],
+            [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'exchange_rate'], 'number'],
             [['portal', 'sku', 'parent_sku', 'currency_symbol'], 'string', 'max' => 255],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['custom_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoryCustomPolicy::className(), 'targetAttribute' => ['custom_category_id' => 'id']],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
-            [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
-            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCurrency::className(), 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
 
@@ -84,62 +74,22 @@ class Product extends \common\components\db\ActiveRecord
             'link_origin' => 'Link Origin',
             'category_id' => 'Category ID',
             'custom_category_id' => 'Custom Category ID',
-            'price_amount' => 'Price Amount',
+            'price_amount_origin' => 'Price Amount Origin',
             'price_amount_local' => 'Price Amount Local',
             'total_price_amount_local' => 'Total Price Amount Local',
-            'quantity' => 'Quantity',
+            'quantity_customer' => 'Quantity Customer',
             'quantity_purchase' => 'Quantity Purchase',
             'quantity_inspect' => 'Quantity Inspect',
             'variations' => 'Variations',
             'variation_id' => 'Variation ID',
             'note_by_customer' => 'Note By Customer',
             'total_weight_temporary' => 'Total Weight Temporary',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'remove' => 'Remove',
             'currency_id' => 'Currency ID',
             'currency_symbol' => 'Currency Symbol',
             'exchange_rate' => 'Exchange Rate',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCategory()
-    {
-        return $this->hasOne(Category::className(), ['id' => 'category_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCustomCategory()
-    {
-        return $this->hasOne(CategoryCustomPolicy::className(), ['id' => 'custom_category_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrder()
-    {
-        return $this->hasOne(Order::className(), ['id' => 'order_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSeller()
-    {
-        return $this->hasOne(Seller::className(), ['id' => 'seller_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCurrency()
-    {
-        return $this->hasOne(SystemCurrency::className(), ['id' => 'currency_id']);
     }
 }
