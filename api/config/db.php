@@ -2,9 +2,9 @@
 return [
     'db' => [
         'class' => 'yii\db\Connection',
-        'dsn' => 'mysql:host=localhost;dbname=weshop-global_test',
+        'dsn' => 'mysql:host=127.0.0.1;dbname=weshop-global_test',
         'username' => 'root',
-        'password' => '',
+        'password' => '2803',
         'charset' => 'utf8',
     ],
 ];
