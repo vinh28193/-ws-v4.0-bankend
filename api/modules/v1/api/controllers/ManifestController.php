@@ -9,20 +9,18 @@
 namespace api\modules\v1\api\controllers;
 
 
-use api\modules\v1\controllers\AuthController;
+use api\controllers\BaseApiController;
 use common\models\db\Package;
 use common\models\db\PackageItem;
 use common\models\Manifest;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
-class ManifestController extends AuthController
+class ManifestController extends BaseApiController
 {
     public function actionIndex()
     {
-        $limit = ArrayHelper::getValue($this->get, 'limit', 20);
-        $page = ArrayHelper::getValue($this->get, 'page', 1);
-        $model = Manifest::find()->where(['active' => 1])->limit($limit)->offset($page - 1 * $limit)->asArray()->all();
+        $model = Manifest::find()->where(['active' => 1])->limit($this->limit)->offset($this->page - 1 * $this->limit)->asArray()->all();
         return $model;
     }
 
