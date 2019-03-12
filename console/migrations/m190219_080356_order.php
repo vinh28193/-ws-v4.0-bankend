@@ -134,9 +134,9 @@ class m190219_080356_order extends Migration
 
             // Coupon : 1 order - 1 Coupon
             'coupon_id' => $this->string(255)->comment(" id mã giảm giá"),
-            'coupon_code' => $this->string(255)->comment("mã giảm giá"),
-            'coupon_time' => $this->bigInteger()->comment("thời gian sử dụng mã coupon "),
-            'coupon_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này "),
+//            'coupon_code' => $this->string(255)->comment("mã giảm giá"),
+//            'coupon_time' => $this->bigInteger()->comment("thời gian sử dụng mã coupon "),
+//            'coupon_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này "),
 
             // XU : 1 order - 1 Xu được tích lũy hoặc sinh ra
             'revenue_xu' => $this->decimal(18,2)->comment("số xu được nhận"),
@@ -147,9 +147,9 @@ class m190219_080356_order extends Migration
 
             // Promotion : 1 order - 1 promotion
             'promotion_id' => $this->integer(11)->comment("id của promotion : Id Chạy chương trình promotion"),
-            'promotion_code' => $this->string(255)->comment("mã khuyến mại"),
-            'promotion_time' => $this->bigInteger()->comment("thời gian sử dụng mã promotion"),
-            'promotion_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này "),
+//            'promotion_code' => $this->string(255)->comment("mã khuyến mại"),
+//            'promotion_time' => $this->bigInteger()->comment("thời gian sử dụng mã promotion"),
+//            'promotion_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này "),
 
             // Boxme + Kho
             'total_weight' => $this->text()->comment("cân nặng tính phí"),

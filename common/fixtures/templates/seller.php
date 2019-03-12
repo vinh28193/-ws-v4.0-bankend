@@ -15,9 +15,9 @@ $id = $index + 1;
 
 return [
     'id' => $id,
-    'name' => $faker->name,
-    'link_store' => $faker->url,
-    'rate' => $faker->randomFloat(1,0,5),
+    'name' => $faker->unique()->name,
+    'link_store' => $faker->unique()->url,
+    'rate' => $faker->unique()->randomFloat(1,0,10),
     'description' => $faker->realText(50),
     'created_time' => $faker->unixTime,
     'updated_time' => $faker->unixTime,

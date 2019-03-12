@@ -17,7 +17,7 @@ $dataUser = include '.\common\fixtures\data\system_district.php';
 return [
     'id' => $id,
     'name' => $faker->text(50),
-    'code' => strtoupper($faker->text(20)),
+    'code' => strtoupper($faker->unique()->text(20)),
     'message' => $faker->realText(50),
     'type_coupon' => $type_coupon = $faker->randomElement(['REFUND','COUPON','PROMOTION']),
     'type_amount' => $type_amount,

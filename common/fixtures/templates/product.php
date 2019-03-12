@@ -27,7 +27,7 @@ return [
     'category_id' => $category['id'],
     'custom_category_id' => $category_custom['id'],
     'quantity' => $quantity = $faker->numberBetween(1, 3),
-    'price_amount' => $amount = $faker->numberBetween(10, 10000),
+    'quantity_customer' => $amount = $faker->numberBetween(10, 10000),
     'price_amount_local' => $amount_local = strtolower($order['portal']) == 'amazon-jp' ? $amount * 213 : $amount * 23500,
     'total_price_amount_local' => $amount_local* $quantity,
     'quantity_purchase' => 0,

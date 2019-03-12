@@ -11,7 +11,7 @@
  */
 
 $id = $index + 1;
-$country = \common\models\db\SystemCountry::findOne($faker->numberBetween(1,100));
+$country = \common\models\db\SystemCountry::findOne($faker->unique()->numberBetween(1,100));
 $currency = \common\models\db\SystemCurrency::findOne($faker->numberBetween(1,100));
 return [
     'id' => $id,

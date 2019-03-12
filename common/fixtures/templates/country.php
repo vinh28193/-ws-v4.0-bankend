@@ -12,7 +12,7 @@
  */
 
 $id = $index + 1;
-$code = $faker->countryCode;
+$code = $faker->unique()->countryCode;
 return [
     'id' => $id,
     'name' => $faker->country,

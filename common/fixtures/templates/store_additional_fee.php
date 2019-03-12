@@ -14,19 +14,19 @@ use yii\helpers\Inflector;
  */
 
 $feeNames = [
-    'origin_fee', 'origin_tax_fee', 'origin_shipping_fee',
+    'product_price_origin', 'tax_fee_origin', 'origin_shipping_fee',
     'weshop_fee', 'intl_shipping_fee', 'custom_fee',
-    'delivery_fee', 'packing_fee', 'inspection_fee', 'insurance_fee', 'vat_fee',
+    'delivery_fee_local', 'packing_fee', 'inspection_fee', 'insurance_fee', 'vat_fee',
 ];
 
 $conditions = [
-    'origin_fee' => 'common\components\conditions\SimpleCondition',
-    'origin_tax_fee' => 'common\components\conditions\OriginTaxCondition',
+    'product_price_origin' => 'common\components\conditions\SimpleCondition',
+    'tax_fee_origin' => 'common\components\conditions\OriginTaxCondition',
     'origin_shipping_fee' => 'common\components\conditions\OriginShippingFeeCondition',
     'weshop_fee' => 'common\components\conditions\StoreFeeCondition',
     'intl_shipping_fee' => 'common\components\conditions\InternationalShippingFeeCondition',
     'custom_fee' => 'common\components\conditions\CustomFeeCondition',
-    'delivery_fee' => 'common\components\conditions\LocalDeliveryFeeCondition',
+    'delivery_fee_local' => 'common\components\conditions\LocalDeliveryFeeCondition',
 
 ];
 $id = $index + 1;

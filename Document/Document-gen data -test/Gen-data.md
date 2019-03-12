@@ -33,4 +33,5 @@ $ yii fixture/generate user profile team
 yii fixture/generate user --count=5 --language=VI_VN
 yii fixture/generate customer  --count=5 --language=Vi_VN
 yii fixture/generate system_state_province --count=5 --language=Vi_VN
+yii fixture/generate system_district  --count=20 --language=Vi_VN
 yii fixture/generate address  --count=5 --language=Vi_VN
