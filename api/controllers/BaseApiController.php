@@ -24,6 +24,15 @@ class BaseApiController extends \yii\rest\Controller
 
     public $serializer = 'common\rest\Serializer';
 
+    public $post;
+    public $get;
+
+    public $enableCsrfValidation = false;
+
+    public $headers;
+
+    public $type_user = 'user';
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -33,12 +42,22 @@ class BaseApiController extends \yii\rest\Controller
         }
         $behaviors['corsFilter'] = [
             'class' => Cors::className(),
+            'actions' => [
+                'accesstoken' => [
+                    'Origin' => ['http://localhost:4200'],
+                    'Access-Control-Request-Method' => ['POST'],
+                    'Access-Control-Request-Headers' => ['*'],
+                    'Access-Control-Allow-Credentials' => true,
+                    'Access-Control-Max-Age' => 86400,
+                    'Access-Control-Expose-Headers' => [],
+                ]
+            ]
         ];
         // re-add authentication filter
-        $behaviors['authenticator']['except'] = ['options'];
+//        $behaviors['authenticator']['except'] = ['options'];
         $behaviors['authenticator'] = [
             'class' => CompositeAuth::className(),
-            'except' => ['options'], // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
+            'except' => ['options','authorize','accesstoken'], // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
             'authMethods' => [
                 'httpBearer' => [
                     'class' => HttpBearerAuth::className()
@@ -58,6 +77,7 @@ class BaseApiController extends \yii\rest\Controller
         ];
         $behaviors['accessControl'] = [
             'class' => AccessControl::className(),
+            'except' => ['options','authorize','accesstoken'],
             'rules' => $this->rules(),
             'denyCallback' => function ($rule, $action) {
                 Yii::info($action);
@@ -106,6 +126,31 @@ class BaseApiController extends \yii\rest\Controller
     public function init()
     {
         parent::init();
+
+        $this->post = Yii::$app->request->post();
+        $this->get = Yii::$app->request->get();
+        if($this->post&&!is_array($this->post)){
+            Yii::$app->api->sendFailedResponse(['Invalid Json']);
+        }
+        $type = isset($this->get['name']) && $this->get['name'] ? $this->get['name'] : 'user';
+        switch ($type){
+            case 'user':
+            case 'admin':
+                \Yii::$app->user->identityClass = 'common\models\User';
+                $this->type_user = 'user';
+                break;
+            case 'customer':
+                \Yii::$app->user->identityClass = 'common\models\Customer';
+                $this->type_user = 'customer';
+                break;
+            default:
+                $this->type_user = 'user';
+                \Yii::$app->user->identityClass = 'common\models\User';
+                break;
+        }
+        //            Yii::$app->api->sendFailedResponse('Invalid Access token');
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
         Yii::configure(Yii::$app, [
             'components' => [
                 'request' => [

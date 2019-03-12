@@ -8,6 +8,7 @@
 
 namespace api\modules\v1\controllers;
 
+use api\controllers\BaseApiController;
 use common\models\LoginCustomerForm;
 use Yii;
 use common\models\LoginForm;
@@ -17,7 +18,7 @@ use common\models\AccessTokens;
 use backend\models\SignupForm;
 
 
-class LoginController extends RestController
+class LoginController extends BaseApiController
 {
     /** @var LoginForm $loginForm */
     public $loginForm;
@@ -44,18 +45,6 @@ class LoginController extends RestController
                 $this->sigUpForm = new SignupForm();
                 break;
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
     }
 
     /**
@@ -103,13 +92,12 @@ class LoginController extends RestController
 
     public function actionAccesstoken()
     {
-
-        if (!isset($this->post["authorization_code"])) {
+        if (!isset($this->post["authorizationCode"])) {
             return $this->response(false,"Authorization code missing",[],0,401);
 //            Yii::$app->api->sendFailedResponse("Authorization code missing");
         }
 
-        $authorization_code = $this->post["authorization_code"];
+        $authorization_code = $this->post["authorizationCode"];
 
         $auth_code = AuthorizationCodes::isValid($authorization_code);
         if (!$auth_code) {
@@ -129,7 +117,6 @@ class LoginController extends RestController
     {
         $model = $this->loginForm;
         $model->attributes = $this->post;
-
         $model->login();
         if ($model->validate() && $model->login()) {
 
