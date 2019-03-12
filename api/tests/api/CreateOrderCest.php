@@ -15,7 +15,7 @@ class CreateOrderCest
     public function createOrderViaAPIErrorStore(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','fadcd777f4efbcee34d59a9cb204e271');
+        $I->haveHttpHeader('X-Access-Token','492d2510d799536fb00b18ca662cdfcb');
         $I->sendPOST('/1/order/create', '{
             "store_id" : "Store ID",
             "type_order" : "Type Order",
@@ -111,7 +111,7 @@ class CreateOrderCest
     public function createOrderViaAPIDone(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','fadcd777f4efbcee34d59a9cb204e271');
+        $I->haveHttpHeader('X-Access-Token','492d2510d799536fb00b18ca662cdfcb');
         $I->sendPOST('/1/order/create', '{
             "store_id" : 1, 
             "type_order" : "SHOP",
