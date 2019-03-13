@@ -7,6 +7,8 @@ use common\components\AuthHandler;
 use common\models\AccessTokens;
 use common\models\AuthorizationCodes;
 use common\models\LoginForm;
+use api\models\AuthorizeForm;
+use api\models\AccessTokenForm;
 use Yii;
 
 /****APP Call Back FaceBook Google etc *****/
@@ -16,53 +18,6 @@ use Yii;
  */
 class SiteController extends BaseApiController
 {
-    /**
-     * @inheritdoc
-     */
-//    public function behaviors()
-//    {
-//
-//        $behaviors = parent::behaviors();
-//
-//        return $behaviors + [
-//                'apiauth' => [
-//                    'class' => Apiauth::className(),
-//                    'exclude' => ['authorize', 'register', 'accesstoken', 'index'],
-//                ],
-//                'access' => [
-//                    'class' => AccessControl::className(),
-//                    'only' => ['logout', 'signup'],
-//                    'rules' => [
-//                        [
-//                            'actions' => ['signup'],
-//                            'allow' => true,
-//                            'roles' => ['?'],
-//                        ],
-//                        [
-//                            'actions' => ['logout', 'me'],
-//                            'allow' => true,
-//                            'roles' => ['@'],
-//                        ],
-//                        [
-//                            'actions' => ['authorize', 'register', 'accesstoken'],
-//                            'allow' => true,
-//                            'roles' => ['*'],
-//                        ],
-//                    ],
-//                ],
-//                'verbs' => [
-//                    'class' => Verbcheck::className(),
-//                    'actions' => [
-//                        'logout' => ['GET'],
-//                        'authorize' => ['POST'],
-//                        'register' => ['POST'],
-//                        'accesstoken' => ['POST'],
-//                        'me' => ['GET'],
-//                    ],
-//                ],
-//            ];
-//    }
-
 
     public function rules()
     {
@@ -142,59 +97,41 @@ class SiteController extends BaseApiController
 
     public function actionMe()
     {
-        $data = Yii::$app->user->identity;
-        $data = $data->attributes;
-        unset($data['auth_key']);
-        unset($data['password_hash']);
-        unset($data['password_reset_token']);
-
-        Yii::$app->api->sendSuccessResponse($data);
+        /** @var  $user \common\components\UserPublicIdentityInterface */
+        if(($user = Yii::$app->user->identity) === null){
+            return $this->response(false, "user not login", $user->getPublicIdentity());
+        }
+        return $this->response(true, "get public identity is success", $user->getPublicIdentity());
     }
 
     public function actionAccessToken()
     {
-        if (!isset($this->post['authorization_code']) || ($code = $this->post['authorization_code']) === null || $code === '') {
-            return $this->response(false, "missing parameter `authorization_code` when posting request");
+
+        $model = new AccessTokenForm();
+        $model->load($this->post,'');
+        /** @var  $handler boolean|\common\models\AuthorizationCodes*/
+        if (($handler = $model->handle()) === false) {
+            return $this->response(false, $model->getFirstErrors());
         }
-        if (($model = AuthorizationCodes::findOne(['code' => $code])) === null) {
-            // Todo Yii::t
-            return $this->response(false, "not found authorization code `$code`");
-        }
-        if (!$model->isValid()) {
-            return $this->response(false, "$code is expired");
-        }
-        // Todo Yii::t
-        $class = Yii::$app->user->identityClass;
-        Yii::$app->user->setIdentity($class::findIdentity($model->user_id));
-        return $this->response(true, "login with $code is success", [
-            'accessToken' => Yii::$app->api->createAccesstoken($model->code),
-            'userPublicIdentity' => Yii::$app->user->identity->getPublicIdentity(),
-        ]);
+        $response = Yii::$app->getResponse();
+        $response->setStatusCode(201);
+        return $this->response(true, "login is success", $handler);
 
     }
 
     public function actionAuthorize()
     {
-        $model = new LoginForm();
+        $model = new AuthorizeForm();
         $model->attributes = $this->post;
         $model->load($this->post, '');
-
-        if ($model->validate() && $model->login()) {
-            if (YII_DEBUG == true and YII_ENV == 'test') {
-                $expired_time = 60 * 60 * 5;
-                $type = 'user';
-            } else {
-                $expired_time = null;
-                $type = 'user';
-            }
-            $authorizationCode = Yii::$app->api->createAuthorizationCode(Yii::$app->user->getId(), $type, $expired_time);
-            $response = Yii::$app->getResponse();
-            $response->setStatusCode(201);
-            $response->getHeaders()->set('Location', \yii\helpers\Url::toRoute("/1/access-token/{$authorizationCode->code}", true));
-            return $this->response(true, "success", $authorizationCode);
-        } else {
-            return $this->response(false, "failed", $model->errors);
+        /** @var  $authorize boolean|\common\models\AuthorizationCodes*/
+        if (($authorize = $model->authorize()) === false) {
+            return $this->response(false, $model->getFirstErrors());
         }
+        $response = Yii::$app->getResponse();
+        $response->setStatusCode(201);
+        $response->getHeaders()->set('Location', \yii\helpers\Url::toRoute("/1/access-token/{$authorize->code}", true));
+        return $this->response(true, "success", $authorize);
     }
 
     public function actionLogout()
@@ -207,11 +144,9 @@ class SiteController extends BaseApiController
         }
 
         $model = AccessTokens::findOne(['token' => $access_token]);
-
         if ($model->delete()) {
-
-            return $this->response(false, "Logout success");
-
+            Yii::$app->user->logout();
+            return $this->response(true, "Logout success");
         } else {
             return $this->response(false, "Logout error");
         }
