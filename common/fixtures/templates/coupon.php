@@ -13,7 +13,7 @@
 
 $id = $index + 1;
 $type_amount = $faker->randomElement(['percent','money']);
-$dataUser = include '.\common\fixtures\data\data_fiexd\system_district.php';
+$dataUser = include '.\common\fixtures\data\data_fixed\system_district.php';
 return [
     'id' => $id,
     'name' => $faker->text(50),
@@ -32,7 +32,7 @@ return [
     'count_use' => $faker->numberBetween(0,$count_limit),
     'limit_amount_use' => round($faker->numberBetween(1000,$amount > 1000 ? $amount*100 : 10000000),-3),
     'limit_amount_use_order' => $amount > 1000 ? $amount : round($faker->numberBetween(1000, 500000),-3),
-    'for_email' => $type_coupon =='PROMOTION' ? null : $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\customer.php','email')),
+    'for_email' => $type_coupon =='PROMOTION' ? null : $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\customer.php','email')),
     'for_portal' => $faker->randomElement([null,'amazon','amazon-jp',null,null,'ebay']),
     'for_category' => null,
     'for_min_order_amount' => round($faker->numberBetween(500000,10000000),-3),
@@ -41,7 +41,7 @@ return [
     'used_first_time' => $faker->unixTime,
     'used_last_time' => $faker->unixTime,
     'can_use_instalment' => $faker->randomElement([0,0,1,0,0]),
-    'created_time' => $faker->unixTime,
-    'updated_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'remove' => $faker->randomElement([0,0,1,0,0]),
 ];

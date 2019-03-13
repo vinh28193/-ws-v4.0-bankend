@@ -26,6 +26,7 @@ class OrderFixture extends ActiveFixture
         'common\fixtures\SellerFixture',
         'common\fixtures\CouponFixture',
     ];
+    public $dataFile = '@common/fixtures/data/data_fixed/order.php';
 
     public function load()
     {

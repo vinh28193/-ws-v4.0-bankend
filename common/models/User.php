@@ -1,13 +1,12 @@
 <?php
+
 namespace common\models;
 
-use common\components\Response;
-use Yii;
-use yii\base\NotSupportedException;
-use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
 
+use Yii;
+use yii\web\IdentityInterface;
+use common\components\UserApiGlobalIdentityInterface;
+use common\components\UserPublicIdentityInterface;
 /**
  * User model
  *
@@ -22,7 +21,7 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property string $password write-only password
  */
-class User extends \common\models\db\User implements IdentityInterface
+class User extends \common\models\db\User implements IdentityInterface, UserApiGlobalIdentityInterface,UserPublicIdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -34,16 +33,6 @@ class User extends \common\models\db\User implements IdentityInterface
     public static function tableName()
     {
         return '{{%user}}';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
     }
 
     /**
@@ -82,7 +71,7 @@ class User extends \common\models\db\User implements IdentityInterface
             if ($access_token->expires_at < time()) {
                 \Yii::$app->response->setStatusCode(200);
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->data  =   ['success' => false,'message' => "Access token expired"];
+                \Yii::$app->response->data = ['success' => false, 'message' => "Access token expired"];
                 return false;
             }
 
@@ -134,8 +123,8 @@ class User extends \common\models\db\User implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
-        $expire = isset(Yii::$app->params['user.passwordResetTokenExpire']) ? isset(Yii::$app->params['user.passwordResetTokenExpire']) : 3600 ;
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
+        $expire = isset(Yii::$app->params['user.passwordResetTokenExpire']) ? isset(Yii::$app->params['user.passwordResetTokenExpire']) : 3600;
         return $timestamp + $expire >= time();
     }
 
@@ -208,7 +197,8 @@ class User extends \common\models\db\User implements IdentityInterface
         $this->password_reset_token = null;
     }
 
-    public function getPublicIdentity(){
+    public function getPublicIdentity()
+    {
         $authManager = Yii::$app->authManager;
         $permissions = $authManager->getPermissionsByUser($this->getId());
         $role = $authManager->getRolesByUser($this->getId());

@@ -15,18 +15,60 @@ use common\fixtures\components\FixtureUtility;
  */
 
 $id = $index + 1;
-$customer = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\customer.php', null));
-$address = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\address.php', null));
-$user = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\user.php', null));
-$coupon = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\coupon.php', null, ['type_coupon' => ['COUPON', 'REFUND'], 'remove' => 0]));
-//$promotion = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\coupon.php',['type_coupon' => 'PROMOTION']));
-$product = FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\product.php', null, ['order_id' => $id]);
-if ($product) {
-    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\seller.php', null, ['id' => $product[0]['seller_id']]));
+$customer = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\customer.php', $columnName = null));
+$address = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\address.php', $columnName = null));
+$user = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\user.php', $columnName = null));
+$coupon = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\coupon.php', $columnName = null, ['type_coupon' => ['COUPON', 'REFUND'], 'remove' => 0]));
+//$promotion = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\coupon.php',['type_coupon' => 'PROMOTION']));
+$product = FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\product.php', $columnName = null, ['order_id' => $id]);
+if (!empty($product)) {
+    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\seller.php', $columnName = null, ['id' => $product[0]['seller_id']]));
 } else {
-    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\seller.php', null));
+    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\seller.php',$columnName = null));
 }
+
+if( $seller['id'] == null or isset($seller['id']) == true )
+{
+    $seller = [
+        "id" => 2,
+        "name" => "Stuart Friesen",
+        "link_store" => "http://www.conn.com/",
+        "rate" => 7.4,
+        "description" => "I will tell you what year it is?' 'Of course it.",
+        "created_at" => 1335568772,
+        "updated_at" => 879839191,
+        "remove" => 1,
+        "portal" => "AMAZON-JP",
+    ];
+}
+
 //$amountDiscount = $coupon['type_amount'] ?
+
+/*****@TODO : Viết Code Sinh Phụ Thuộc Hàng 'SHOP','REQUEST','SHIP','NEXTTECH' *******/
+
+$typeOrder = $faker->randomElement(['SHOP','REQUEST','SHIP','NEXTTECH']); // 'NEXTTECH' : là loại hàng quan hệ trong nội bộ công ty
+if($typeOrder == 'SHOP' ){
+    $is_quotation  = 0;  // "Đánh dấu đơn báo giá",
+    $quotation_status = null;  //Duyệt đơn báo giá nên đơn có Trạng thái báo giá. null : là hàng SHOP , 0 - pending, 1- approve, 2- deny,
+    $quotation_note = null ;
+}
+if($typeOrder == 'REQUEST' ) {
+        $is_quotation  = 1;  // "Đánh dấu đơn báo giá",
+        $quotation_status = $faker->randomElement([  0, 1 , 2]); //Duyệt đơn báo giá nên đơn có Trạng thái báo giá, 0 - pending, 1- approve, 2- deny,
+        $quotation_note = $faker->realText(50);   //note đơn request",
+}
+if($typeOrder == 'SHIP' ) {
+    $is_quotation  = 0;
+    $quotation_status = null;
+    $quotation_note = null ;
+}
+
+if($typeOrder == 'NEXTTECH' ) {
+    $is_quotation  = 0;
+    $quotation_status = null;
+    $quotation_note = null ;
+}
+
 
 
 return [
@@ -39,34 +81,34 @@ return [
     ],
 
     // Order
-    'type_order' => $faker->randomElement(['SHOP', 'SHOP', 'SHOP', 'REQUEST', 'SHIP']), //Hình thức mua hàng: SHOP | REQUEST | POS | SHIP,
+    'type_order' => $typeOrder , //Hình thức mua hàng: SHOP | REQUEST | POS | SHIP,
     'customer_id' => $customer['id'], // Mã id của customer : có thể là khách buôn hoặc khách lẻ ",
     'customer_type' => $faker->randomElement(['RetailCustomer', 'WholesaleCustomer']), // Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers ",
-    'portal' => $seller['portal'], //portal ebay, amazon us, amazon jp ...: EBAY/ AMAZON_US / AMAZON_JAPAN / OTHER / WEBSITE NGOÀI ,
+    'portal' => $faker->randomElement(['EBAY', 'AMAZON_US', 'AMAZON_JAPAN', 'OTHER']), //$seller['portal'], //portal ebay, amazon us, amazon jp ...: EBAY/ AMAZON_US / AMAZON_JAPAN / OTHER / WEBSITE NGOÀI ,
 
     // Đơn Tạo từ chiến dịch nào hay mua ngay tai website Weshop
     'utm_source' => null, //Đơn theo viết được tạo ra bới chiến dịch nào : Facebook ads, Google ads , eomobi , etc ,,,, ,
 
 
     // Trạng Thái + thời gian
-    'new' => $faker->unixTime() , //time NEW,
+    'new' => $faker->unixTime(), //time NEW,
     'purchased' => null, //time PURCHASED,
-    'seller_shipped' =>  null, //time SELLER_SHIPPED,
-    'stockin_us' =>  null, //time STOCKIN_US,
+    'seller_shipped' => null, //time SELLER_SHIPPED,
+    'stockin_us' => null, //time STOCKIN_US,
     'stockout_us' => null, //time STOCKOUT_US,
-    'stockin_local' =>  null, //time STOCKIN_LOCAL,
-    'stockout_local' =>  null, //time STOCKOUT_LOCAL,
+    'stockin_local' => null, //time STOCKIN_LOCAL,
+    'stockout_local' => null, //time STOCKOUT_LOCAL,
     'at_customer' => null, //time AT_CUSTOMER,
-    'returned' =>  null, //time RETURNED : null,
-    'cancelled' =>  null, // time CANCELLED : null :  Đơn hàng đã  thanh toán --> thì hoàn  tiền ; Đơn hàng chưa thanh toán --> thì Hủy,
-    'lost' =>  null, // time LOST : null : Hàng mất ở kho Mỹ hoặc hải quan hoặc kho VN hoặc trên đường giao cho KH ,
-    'current_status' => 'NEW' , //Trạng thái hiện tại của order : update theo trạng thái của sản phẩm cuối ,
+    'returned' => null, //time RETURNED : null,
+    'cancelled' => null, // time CANCELLED : null :  Đơn hàng đã  thanh toán --> thì hoàn  tiền ; Đơn hàng chưa thanh toán --> thì Hủy,
+    'lost' => null, // time LOST : null : Hàng mất ở kho Mỹ hoặc hải quan hoặc kho VN hoặc trên đường giao cho KH ,
+    'current_status' => 'NEW', //Trạng thái hiện tại của order : update theo trạng thái của sản phẩm cuối ,
 
 
     // Thông tin đơn báo giá
-    'is_quotation' => $is_quotation = $typeOrder = 'REQUEST' ? 1 : $typeOrder == 'SHOP' ? $faker->randomElement([0, 0, 0, 0, 0, 0, 0, 0, 00, 0, 1]) : 0, // "Đánh dấu đơn báo giá",
-    'quotation_status' => $is_quotation == 0 ? "" : $faker->randomElement(['APPROVE', "DECLINE", "NEW"]), //Duyệt đơn báo giá nên đơn có Trạng thái báo giá. 0 - pending, 1- approve, 2- deny,
-    'quotation_note' => $is_quotation == 0 ? "" : $faker->realText(50), //note đơn request",
+    'is_quotation' => $is_quotation, // "Đánh dấu đơn báo giá",
+    'quotation_status' => $quotation_status, //Duyệt đơn báo giá nên đơn có Trạng thái báo giá. null : là hàng SHOP , 0 - pending, 1- approve, 2- deny,
+    'quotation_note' => $quotation_note,  //note đơn request",
 
     // Thông tin người nhận
     'receiver_email' => $address['email'], //Email người nhận,
@@ -85,7 +127,7 @@ return [
     'note' => $faker->realText(50), //Ghi chú cho đơn hàng",
 
     // Thông Tin Người bán
-    'seller_id' => $seller['id'], //Mã người bán ,
+    'seller_id' => $seller['id']  , //Mã người bán ,
     'seller_name' => $seller['name'], //Tên người bán,
     'seller_store' => $seller['link_store'], //Link shop của người bán,
 
@@ -119,7 +161,7 @@ return [
     'total_vat_amount_local' => 0, // "Tổng phí VAT,
 
     // Update từ bảng tỉ giá Vietcombank  Crowler để lưu vào order tại thời điểm khách hàng đặt đơn mua hàng
-    'exchange_rate_fee' => $product ? $product[0]['exchange_rate'] : 0, // Tỉ Giá Tính Phí Local : áp dung theo tỉ giá của VietCombank Crowler upate từ 1 bảng systeam_curentcy : Tỷ giá từ USD => tiền local,
+    'exchange_rate_fee' => 23000, // $product ? $product[0]['exchange_rate'] : 0, // Tỉ Giá Tính Phí Local : áp dung theo tỉ giá của VietCombank Crowler upate từ 1 bảng systeam_curentcy : Tỷ giá từ USD => tiền local,
     'exchange_rate_purchase' => 0, //Tỉ Giá mua hàng : áp dung theo tỉ giá của VietCombank , Ẩn với Khách. Tỉ giá USD / Tỉ giá Yên / Tỉ giá UK .Tỷ giá từ tiền website gốc => tiền local. VD: yên => vnd,
     'currency_purchase' => $faker->randomElement(['USD', "JPY", "AUD"]), // Loại tiền mua hàng là : USD,JPY,AUD .....,
 
@@ -161,8 +203,8 @@ return [
     'total_weight' => $faker->randomElement([0.5, 1, 2]), //cân nặng tính phí,
     'total_weight_temporary' => $faker->randomElement([0.5, 1, 2]), //cân nặng tạm tính,
 
-    'created_time' => $faker->unixTime, //Update qua behaviors tự động  ,
-    'updated_time' => $faker->unixTime, //Update qua behaviors tự động,
+    'created_at' => $faker->unixTime, //Update qua behaviors tự động  ,
+    'updated_at' => $faker->unixTime, //Update qua behaviors tự động,
 
 
     // LƯU THONG TIN đã mua của EBAY / AMAZON :   Đơn này đươc phân cho nhân viên Mua Hàng
@@ -177,8 +219,8 @@ return [
     'purchase_refund_transaction_id' => $faker->realText(30), //mã giao dịch hoàn,
 
     // Tổng Số lượng
-    'total_quantity' => $faker->randomElement([1,34,2,4,5,6,9]), // Tổng số lượng khách hàng đặt = tổng các số lượng trên bảng product,
-    'total_purchase_quantity' => $faker->randomElement([1,34,2,4,5,6,9]), // Tổng số lượng nhân viên đi mua hàng thực tế của cả đơn = tổng các số lượng mua thực tế trên bảng product,
+    'total_quantity' => $faker->randomElement([1, 34, 2, 4, 5, 6, 9]), // Tổng số lượng khách hàng đặt = tổng các số lượng trên bảng product,
+    'total_purchase_quantity' => $faker->randomElement([1, 34, 2, 4, 5, 6, 9]), // Tổng số lượng nhân viên đi mua hàng thực tế của cả đơn = tổng các số lượng mua thực tế trên bảng product,
 
     'remove' => $faker->randomElement([0]), //đơn đánh đấu 1 là đã xóa , mặc định 0 : chưa xóa")
 ];

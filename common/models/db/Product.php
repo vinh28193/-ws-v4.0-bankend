@@ -33,6 +33,8 @@ use Yii;
  * @property int $currency_id
  * @property string $currency_symbol
  * @property string $exchange_rate
+ *
+ * @property SystemCurrency $currency
  */
 class Product extends \common\components\db\ActiveRecord
 {
@@ -55,6 +57,7 @@ class Product extends \common\components\db\ActiveRecord
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'total_weight_temporary'], 'string'],
             [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'exchange_rate'], 'number'],
             [['portal', 'sku', 'parent_sku', 'currency_symbol'], 'string', 'max' => 255],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCurrency::className(), 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
 
@@ -91,5 +94,13 @@ class Product extends \common\components\db\ActiveRecord
             'currency_symbol' => 'Currency Symbol',
             'exchange_rate' => 'Exchange Rate',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCurrency()
+    {
+        return $this->hasOne(SystemCurrency::className(), ['id' => 'currency_id']);
     }
 }

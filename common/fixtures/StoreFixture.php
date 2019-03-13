@@ -18,4 +18,5 @@ class StoreFixture extends ActiveFixture
         'common\fixtures\SystemCountryFixture',
         'common\fixtures\SystemCurrencyFixture'
     ];
+    public $dataFile = '@common/fixtures/data/data_fixed/store.php';
 }

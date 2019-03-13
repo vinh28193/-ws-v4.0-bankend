@@ -18,5 +18,6 @@ class CouponFixture extends ActiveFixture
         'common\fixtures\StoreFixture',
         'common\fixtures\UserFixture',
     ];
+    public $dataFile = '@common/fixtures/data/data_fixed/coupon.php';
 
 }

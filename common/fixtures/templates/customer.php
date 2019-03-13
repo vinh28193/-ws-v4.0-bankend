@@ -21,7 +21,7 @@ return [
     'email' => $faker->unique()->email,
     'phone' => $faker->phoneNumber,
     'username' => $faker->unique()->userName,
-    'password_hard' => Yii::$app->security->generatePasswordHash($pass),
+    'password_hash' => Yii::$app->security->generatePasswordHash($pass),
     'gender' => $faker->numberBetween(0,2),
     'birthday' => $faker->date('Y-m-d','2000-01-01'),
     'avatar' => $faker->imageUrl(),

@@ -18,7 +18,6 @@ use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use yii\web\Request;
 use yii\web\Response;
 
@@ -35,16 +34,10 @@ class BaseApiController extends \yii\rest\Controller
     public $headers;
 
     public $type_user = 'user';
-    public $user;
-    public $page;
-    public $limit;
 
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $this->user = \Yii::$app->user->getIdentity();
-        $this->limit = ArrayHelper::getValue($this->get, 'limit', ArrayHelper::getValue($this->post, 'limit', 20));
-        $this->page = ArrayHelper::getValue($this->get, 'page', ArrayHelper::getValue($this->post, 'page', 1));
         // remove authentication filter
         if (isset($behaviors['authenticator'])) {
             unset($behaviors['authenticator']);
@@ -52,7 +45,7 @@ class BaseApiController extends \yii\rest\Controller
         $behaviors['corsFilter'] = [
             'class' => Cors::className(),
             'cors' => [
-                'Origin' => ['http://localhost:4200'],
+                'Origin' => $this->getHttpOrigin(),
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                 'Access-Control-Request-Headers' => ['*'],
                 'Access-Control-Allow-Credentials' => true,
@@ -135,7 +128,6 @@ class BaseApiController extends \yii\rest\Controller
     public function init()
     {
         parent::init();
-
         $this->post = Yii::$app->request->post();
         $this->get = Yii::$app->request->get();
         $type = isset($this->get['name']) && $this->get['name'] ? $this->get['name'] : 'user';
@@ -177,6 +169,15 @@ class BaseApiController extends \yii\rest\Controller
                 ]
             ]
         ]);
+    }
+
+    protected function getHttpOrigin()
+    {
+        return array_merge(
+            require(dirname(__DIR__) . '/config/http-origin.php'),
+            is_file(dirname(__DIR__) . '/config/http-origin-local.php') ?
+                require(dirname(__DIR__) . '/config/http-origin-local.php') : []
+        );
     }
 
     public function afterAction($action, $result)

@@ -26,8 +26,8 @@ return [
     'custom_fee' => null,
     'level' => 1,
     'path' => null,
-    'created_time' => $faker->unixTime,
-    'updated_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'active' => 1,
     'remove' => 0,
 ];

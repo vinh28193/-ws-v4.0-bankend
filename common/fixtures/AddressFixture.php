@@ -21,4 +21,6 @@ class AddressFixture extends ActiveFixture
         'common\fixtures\CustomerFixture',
         'common\fixtures\StoreFixture',
     ];
+
+    public $dataFile = '@common/fixtures/data/data_fixed/address.php';
 }

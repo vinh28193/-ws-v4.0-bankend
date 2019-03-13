@@ -3,6 +3,15 @@ https://www.yiiframework.com/extension/yiisoft/yii2-faker/doc/api/2.1/yii-faker-
 https://github.com/fzaninotto/Faker
 https://github.com/yiisoft/yii2-faker/blob/master/docs/guide/basic-usage.md
 
+###==========Summary===============
+In the above, we have described how to define and use fixtures. Below we summarize the typical workflow of running unit tests related with DB:
+1.Use yii migrate tool to upgrade your test database to the latest version;
+2.Run a test case:
+    Load fixtures: clean up the relevant DB tables and populate them with fixture data;
+    Perform the actual test;
+    Unload fixtures.
+3. Repeat Step 2 until all tests finish.
+
 
 #---------------------------
 
@@ -37,6 +46,8 @@ $ yii fixture/generate user profile team
 # under folder tests\unit\fixtures
 
 data\
+    data_fixed\
+       
     components\
         fixture_data_file1.php
         fixture_data_file2.php
@@ -78,29 +89,36 @@ yii fixture/generate order --count=5 --language=VI_VN
 
 yii fixture/generate-all --fixtureDataPath='@common/fixtures/data/components'
 
+#-------------load all data needs----------------
+###  load several fixtures
+yii fixture "User, Seller ,Customer , Product , Systemstateprovince , Systemdistrict , address , Category , Categorycustompolicy , Order "
+
+yii fixture "User , Product , Order "
 
 
-# --------------
+###----------gen all ---------------
+yii fixture/generate "*"  --count=5 --language=VI_VN
 
-INSERT INTO `system_country` VALUES (1, 'Việt Nam', 'VN', 'VN', 'vi', '1');
-INSERT INTO `system_country` VALUES (2, 'Indonesia', 'id', 'id', 'id', '1');
-INSERT INTO `system_country` VALUES (3, 'Malaysia', 'my', 'ms', 'en', '0');
-INSERT INTO `system_country` VALUES (4, 'Singapore', 'sg', 'sg', 'sg', '0');
-INSERT INTO `system_country` VALUES (5, 'Philippine', 'ph', 'ph', 'ph', '0');
-INSERT INTO `system_country` VALUES (6, 'United State', 'US', 'US', 'en', '1');
-INSERT INTO `system_country` VALUES (7, 'Thai Lan', 'th', 'TH', 'th', '1');
-INSERT INTO `system_country` VALUES (8, 'Chad', 'QA', 'QA', 'ba', '1');
-INSERT INTO `system_country` VALUES (9, 'Mauritania', 'CA', 'CA', 'oc', '0');
-INSERT INTO `system_country` VALUES (10, 'Portugal', 'DM', 'DM', 'et', '1');
+####--------Save All ---------
+yii fixture/load "*"
 
-#
-INSERT INTO `system_currency` VALUES (1, 'VNĐ', 'vnđ', 'đ', '1');
-INSERT INTO `system_currency` VALUES (2, 'RMB', 'rmb', 'rmb', '1');
-INSERT INTO `system_currency` VALUES (3, 'USD', 'usd', '$', '1');
-INSERT INTO `system_currency` VALUES (4, 'JPY', 'JPY', '￥', '1');
-INSERT INTO `system_currency` VALUES (5, 'DOP', 'BTN', 'RON', '0');
-INSERT INTO `system_currency` VALUES (6, 'RON', 'CZK', 'ZMW', '0');
-INSERT INTO `system_currency` VALUES (7, 'EUR', 'MDL', 'CRC', '0');
-INSERT INTO `system_currency` VALUES (8, 'KYD', 'PAB', 'XCD', '0');
-INSERT INTO `system_currency` VALUES (9, 'BRL', 'ZMW', 'LKR', '1');
-INSERT INTO `system_currency` VALUES (10, 'KGS', 'MXN', 'COP', '1');
+
+### Unloading fixtures
+To unload fixture, run the following command:
+
+// unload Users fixture, by default it will clear fixture storage (for example "users" table, or "users" collection if this is mongodb fixture).
+yii fixture/unload User
+
+// Unload several fixtures
+yii fixture/unload "User, UserProfile"
+
+// unload all fixtures
+yii fixture/unload "*"
+
+// unload all fixtures except ones
+yii fixture/unload "*, -DoNotUnloadThisOne"
+
+
+
+ 
+

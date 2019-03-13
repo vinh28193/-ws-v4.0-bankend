@@ -17,5 +17,6 @@ class CustomerFixture extends ActiveFixture
     public $depends = [
         'common\fixtures\StoreFixture'
     ];
+    public $dataFile = '@common/fixtures/data/data_fixed/customer.php';
 
 }
