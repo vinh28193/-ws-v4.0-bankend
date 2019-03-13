@@ -8,8 +8,7 @@
 
 namespace api\controllers;
 
-use common\filters\WeshopAuth;
-use common\helpers\WeshopHelper;
+
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\auth\CompositeAuth;
@@ -17,7 +16,9 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
-use yii\filters\VerbFilter;
+use common\filters\WeshopAuth;
+use common\filters\VerbFilter;
+use common\helpers\WeshopHelper;
 use yii\web\Request;
 use yii\web\Response;
 
