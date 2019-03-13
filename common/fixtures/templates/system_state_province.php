@@ -11,7 +11,7 @@
  */
 
 $id = $index + 1;
-$name = $faker->city;
+$name = $faker->unique()->city;
 return [
     'id' => $id,
     'country_id' => 1,

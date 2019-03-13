@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 class FixtureUtility
 {
     public static function getProvince(){
-        return include '.\common\fixtures\data\system_state_province.php';
+        return include '.\common\fixtures\data\data_fiexd\system_state_province.php';
     }
     public static function getIdsProvinceByIdCountry($id = 1){
         $list = self::getProvince();
@@ -38,7 +38,7 @@ class FixtureUtility
     }
 
     public static function getDistrict(){
-        return include '.\common\fixtures\data\system_district.php';
+        return include '.\common\fixtures\data\data_fiexd\system_district.php';
     }
     public static function getIdsDistrictByIdProvince($id = 1){
         $list = self::getDistrict();

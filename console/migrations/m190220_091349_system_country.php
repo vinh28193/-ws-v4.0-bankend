@@ -25,6 +25,21 @@ class m190220_091349_system_country extends Migration
             'language' => $this->string(255)->comment("Nếu có nhiều , viết cách nhau bằng dấu phẩy"),
             'status' => $this->string(255)->comment(""),
         ],$tableOptions);
+
+
+        // Insert Data
+        $sql="INSERT INTO `system_country` VALUES (1, 'Việt Nam', 'VN', 'VN', 'vi', '1');
+            INSERT INTO `system_country` VALUES (2, 'Indonesia', 'id', 'id', 'id', '1');
+            INSERT INTO `system_country` VALUES (3, 'Malaysia', 'my', 'ms', 'en', '0');
+            INSERT INTO `system_country` VALUES (4, 'Singapore', 'sg', 'sg', 'sg', '0');
+            INSERT INTO `system_country` VALUES (5, 'Philippine', 'ph', 'ph', 'ph', '0');
+            INSERT INTO `system_country` VALUES (6, 'United State', 'US', 'US', 'en', '1');
+            INSERT INTO `system_country` VALUES (7, 'Thai Lan', 'th', 'TH', 'th', '1');
+            INSERT INTO `system_country` VALUES (8, 'Chad', 'QA', 'QA', 'ba', '1');
+            INSERT INTO `system_country` VALUES (9, 'Mauritania', 'CA', 'CA', 'oc', '0');
+            INSERT INTO `system_country` VALUES (10, 'Portugal', 'DM', 'DM', 'et', '1');";
+        Yii::$app->db->createCommand($sql)->execute();
+
     }
 
     /**

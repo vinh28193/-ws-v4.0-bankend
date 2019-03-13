@@ -15,7 +15,7 @@ $id = $index + 1;
 
 return [
     'id' => $id,
-    'alias' => $faker->randomNumber(),
+    'alias' => $faker->unique()->randomNumber(),
     'site' => $faker->randomElement(['ebay','amazon','amazon-jp']),
     'origin_name' => $faker->text(15),
     'category_group_id' => null,

@@ -166,6 +166,7 @@ class OrderController extends RestController
         $model = Order::find()
              ->with([
                 'products',
+                'promotion',
                 'orderFees',
                 'packageItems',
                 'walletTransactions',

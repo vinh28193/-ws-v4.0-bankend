@@ -9,7 +9,7 @@
  * @var $faker \Faker\Generator
  * @var $index integer
  */
-$name = $faker->streetName;
+$name = $faker->unique()->streetName;
 $id = $index + 1;
 return [
     'id' => $id,

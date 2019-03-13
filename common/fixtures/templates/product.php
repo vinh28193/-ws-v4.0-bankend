@@ -12,9 +12,9 @@
  */
 
 $id = $index + 1;
-$order = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\order.php',null));
-$category = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\category.php',null));
-$category_custom = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\category_custom_policy.php',null));
+$order = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\order.php',null));
+$category = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\category.php',null));
+$category_custom = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\category_custom_policy.php',null));
 return [
     'id' => $id,
     'order_id' => $order['id'],
@@ -27,7 +27,7 @@ return [
     'category_id' => $category['id'],
     'custom_category_id' => $category_custom['id'],
     'quantity' => $quantity = $faker->numberBetween(1, 3),
-    'price_amount' => $amount = $faker->numberBetween(10, 10000),
+    'quantity_customer' => $amount = $faker->numberBetween(10, 10000),
     'price_amount_local' => $amount_local = strtolower($order['portal']) == 'amazon-jp' ? $amount * 213 : $amount * 23500,
     'total_price_amount_local' => $amount_local* $quantity,
     'quantity_purchase' => 0,

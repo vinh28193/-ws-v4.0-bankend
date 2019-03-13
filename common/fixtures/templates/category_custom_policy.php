@@ -15,14 +15,14 @@ $id = $index + 1;
 
 return [
     'id' => $id,
-    'name' => $faker->text(15),
+    'name' => $faker->unique()->text(15),
     'description' => null,
     'code' => null,
     'limit' => $faker->numberBetween(1,100),
     'is_special' => 0,
     'min_price' => null,
     'max_price' => null,
-    'custom_rate_fee' => $faker->numberBetween(1,10),
+    'custom_rate_fee' => $faker->unique()->numberBetween(1,10),
     'use_percentage' => 1,
     'custom_fix_fee_per_unit' => 1,
     'custom_fix_fee_per_weight' => 0,

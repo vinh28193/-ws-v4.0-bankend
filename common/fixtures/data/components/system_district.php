@@ -1,0 +1,56 @@
+<?php
+
+return [
+    'system_district0' => [
+        'system_district0' => [
+            'id' => 1,
+            'name' => 'Shania Summit',
+            'name_local' => 'Shania Summit',
+            'name_alias' => 'Shania Summit',
+            'display_order' => 0,
+            'province_id' => 10,
+            'country_id' => 1,
+            'created_time' => 1337970658,
+            'updated_time' => 1543024117,
+            'remove' => 0,
+        ],
+        'system_district1' => [
+            'id' => 2,
+            'name' => 'Heidenreich Creek',
+            'name_local' => 'Heidenreich Creek',
+            'name_alias' => 'Heidenreich Creek',
+            'display_order' => 0,
+            'province_id' => 4,
+            'country_id' => 1,
+            'created_time' => 918482029,
+            'updated_time' => 286220475,
+            'remove' => 0,
+        ],
+    ],
+    'system_district1' => [
+        'system_district0' => [
+            'id' => 1,
+            'name' => 'Shania Summit',
+            'name_local' => 'Shania Summit',
+            'name_alias' => 'Shania Summit',
+            'display_order' => 0,
+            'province_id' => 10,
+            'country_id' => 1,
+            'created_time' => 1337970658,
+            'updated_time' => 1543024117,
+            'remove' => 0,
+        ],
+        'system_district1' => [
+            'id' => 2,
+            'name' => 'Heidenreich Creek',
+            'name_local' => 'Heidenreich Creek',
+            'name_alias' => 'Heidenreich Creek',
+            'display_order' => 0,
+            'province_id' => 4,
+            'country_id' => 1,
+            'created_time' => 918482029,
+            'updated_time' => 286220475,
+            'remove' => 0,
+        ],
+    ],
+];

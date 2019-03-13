@@ -18,6 +18,7 @@ use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use common\filters\Cors;
 use common\filters\WeshopAuth;
+use yii\helpers\ArrayHelper;
 use yii\web\Request;
 use yii\web\Response;
 
@@ -34,11 +35,16 @@ class BaseApiController extends \yii\rest\Controller
     public $headers;
 
     public $type_user = 'user';
+    public $user ;
+    public $page ;
+    public $limit ;
 
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-
+        $this->user = \Yii::$app->user->getIdentity();
+        $this->limit = ArrayHelper::getValue($this->get, 'limit', ArrayHelper::getValue($this->post, 'limit', 20));
+        $this->page = ArrayHelper::getValue($this->get, 'page', ArrayHelper::getValue($this->post, 'page', 1));
         // remove authentication filter
         if (isset($behaviors['authenticator'])) {
             unset($behaviors['authenticator']);
