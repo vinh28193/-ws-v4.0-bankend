@@ -2,19 +2,14 @@
 
 namespace api\controllers;
 
-use Yii;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
-use common\models\AuthorizationCodes;
-use common\models\AccessTokens;
-
 use api\models\SignupForm;
-use api\behaviours\Verbcheck;
-use api\behaviours\Apiauth;
+use common\components\AuthHandler;
+use common\models\AccessTokens;
+use common\models\AuthorizationCodes;
+use common\models\LoginForm;
+use Yii;
 
 /****APP Call Back FaceBook Google etc *****/
-
-use common\components\AuthHandler;
 
 /**
  * Site controller
@@ -96,7 +91,7 @@ class SiteController extends BaseApiController
             'logout' => ['GET', 'OPTIONS'],
             'authorize' => ['POST', 'OPTIONS'],
             'register' => ['POST', 'OPTIONS'],
-            'accesstoken' => ['GET', 'OPTIONS'],
+            'access-token' => ['POST', 'OPTIONS'],
             'me' => ['GET', 'OPTIONS']
         ]);
     }
@@ -156,8 +151,11 @@ class SiteController extends BaseApiController
         Yii::$app->api->sendSuccessResponse($data);
     }
 
-    public function actionAccessToken($code)
+    public function actionAccessToken()
     {
+        if (!isset($this->post['authorization_code']) || ($code = $this->post['authorization_code']) === null || $code === '') {
+            return $this->response(false, "missing parameter `authorization_code` when posting request");
+        }
         if (($model = AuthorizationCodes::findOne(['code' => $code])) === null) {
             // Todo Yii::t
             return $this->response(false, "not found authorization code `$code`");
@@ -178,7 +176,7 @@ class SiteController extends BaseApiController
     public function actionAuthorize()
     {
         $model = new LoginForm();
-
+        $model->attributes = $this->post;
         $model->load($this->post, '');
 
         if ($model->validate() && $model->login()) {
@@ -189,11 +187,11 @@ class SiteController extends BaseApiController
                 $expired_time = null;
                 $type = 'user';
             }
-            $authorizationCode = Yii::$app->api->createAuthorizationCode(Yii::$app->user->getId(),$type, $expired_time);
+            $authorizationCode = Yii::$app->api->createAuthorizationCode(Yii::$app->user->getId(), $type, $expired_time);
             $response = Yii::$app->getResponse();
             $response->setStatusCode(201);
             $response->getHeaders()->set('Location', \yii\helpers\Url::toRoute("/1/access-token/{$authorizationCode->code}", true));
-            return $this->response(true, "success",$authorizationCode );
+            return $this->response(true, "success", $authorizationCode);
         } else {
             return $this->response(false, "failed", $model->errors);
         }

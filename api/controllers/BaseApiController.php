@@ -8,16 +8,16 @@
 
 namespace api\controllers;
 
+use common\filters\WeshopAuth;
 use common\helpers\WeshopHelper;
 use Yii;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
-use common\filters\Cors;
-use common\filters\WeshopAuth;
+use yii\filters\Cors;
+use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Request;
 use yii\web\Response;
@@ -35,9 +35,9 @@ class BaseApiController extends \yii\rest\Controller
     public $headers;
 
     public $type_user = 'user';
-    public $user ;
-    public $page ;
-    public $limit ;
+    public $user;
+    public $page;
+    public $limit;
 
     public function behaviors()
     {
@@ -51,24 +51,14 @@ class BaseApiController extends \yii\rest\Controller
         }
         $behaviors['corsFilter'] = [
             'class' => Cors::className(),
-            'actions' => [
-                'access-token' => [
-                    'Origin' => ['http://localhost:4200'],
-                    'Access-Control-Request-Method' => ['GET','OPTIONS'],
-                    'Access-Control-Request-Headers' => ['*'],
-                    'Access-Control-Allow-Credentials' => null,
-                    'Access-Control-Max-Age' => 86400,
-                    'Access-Control-Expose-Headers' => [],
-                ]
-            ],
-//            'cors' => [
-//                'Origin' => ['http://localhost:4200'],
-//                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
-//                'Access-Control-Request-Headers' => ['*'],
-//                'Access-Control-Allow-Credentials' => null,
-//                'Access-Control-Max-Age' => 86400,
-//                'Access-Control-Expose-Headers' => [],
-//            ]
+            'cors' => [
+                'Origin' => ['http://localhost:4200'],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+                'Access-Control-Request-Headers' => ['*'],
+                'Access-Control-Allow-Credentials' => null,
+                'Access-Control-Max-Age' => 86400,
+                'Access-Control-Expose-Headers' => [],
+            ]
 
         ];
         // re-add authentication filter
