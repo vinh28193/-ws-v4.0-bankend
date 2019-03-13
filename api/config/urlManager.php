@@ -13,7 +13,7 @@ return [
     'rules' => [
         '1/register'=>'site/register',
         '1/authorize'=>'site/authorize',
-        '1/accesstoken'=>'site/accesstoken',
+        '1/access-token'=>'site/access-token',
         '1/me'=>'site/me',
         '1/logout'=>'site/logout',
 

@@ -56,20 +56,12 @@ class AuthorizationCodes extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
         ];
     }
-    public static function isValid($code)
-    {
-        $model=static::findOne(['code' => $code]);
 
-        if(!$model||$model->expires_at<time())
-        {
-            \Yii::$app->response->setStatusCode(400);
-            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-//        echo json_encode($res);
-            \Yii::$app->response->data  =   ['success' => false,'message' => 'Authcode Expired'];
-            \Yii::$app->response->send();
-            exit();
+    public function isValid()
+    {
+        if (!$this->expires_at >= time()) {
+            return false;
         }
-        else
-            return($model);
+        return true;
     }
 }

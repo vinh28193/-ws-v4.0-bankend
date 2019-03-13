@@ -15,7 +15,7 @@ use common\models\db\Warehouse;
 use common\models\Shipment;
 use yii\helpers\ArrayHelper;
 
-class ShippingController extends AuthController
+class ShippingController extends \yii\rest\Controller
 {
     public function actionView($id,$action){
         $warehouse_id = ArrayHelper::getValue($this->post,'warehouse_id');

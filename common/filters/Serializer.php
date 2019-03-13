@@ -6,7 +6,7 @@
  * Time: 16:35
  */
 
-namespace common\rest;
+namespace common\filters;
 
 class Serializer extends \yii\rest\Serializer
 {

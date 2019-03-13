@@ -1,4 +1,5 @@
 <?php
+
 namespace api\controllers;
 
 use Yii;
@@ -12,75 +13,105 @@ use api\behaviours\Verbcheck;
 use api\behaviours\Apiauth;
 
 /****APP Call Back FaceBook Google etc *****/
+
 use common\components\AuthHandler;
 
 /**
  * Site controller
  */
-class SiteController extends RestController
+class SiteController extends BaseApiController
 {
     /**
      * @inheritdoc
      */
-    public function behaviors()
+//    public function behaviors()
+//    {
+//
+//        $behaviors = parent::behaviors();
+//
+//        return $behaviors + [
+//                'apiauth' => [
+//                    'class' => Apiauth::className(),
+//                    'exclude' => ['authorize', 'register', 'accesstoken', 'index'],
+//                ],
+//                'access' => [
+//                    'class' => AccessControl::className(),
+//                    'only' => ['logout', 'signup'],
+//                    'rules' => [
+//                        [
+//                            'actions' => ['signup'],
+//                            'allow' => true,
+//                            'roles' => ['?'],
+//                        ],
+//                        [
+//                            'actions' => ['logout', 'me'],
+//                            'allow' => true,
+//                            'roles' => ['@'],
+//                        ],
+//                        [
+//                            'actions' => ['authorize', 'register', 'accesstoken'],
+//                            'allow' => true,
+//                            'roles' => ['*'],
+//                        ],
+//                    ],
+//                ],
+//                'verbs' => [
+//                    'class' => Verbcheck::className(),
+//                    'actions' => [
+//                        'logout' => ['GET'],
+//                        'authorize' => ['POST'],
+//                        'register' => ['POST'],
+//                        'accesstoken' => ['POST'],
+//                        'me' => ['GET'],
+//                    ],
+//                ],
+//            ];
+//    }
+
+
+    public function rules()
     {
-
-        $behaviors = parent::behaviors();
-
-        return $behaviors + [
-            'apiauth' => [
-                'class' => Apiauth::className(),
-                'exclude' => ['authorize', 'register', 'accesstoken','index'],
+        return [
+            [
+                'actions' => ['signup'],
+                'allow' => true,
+                'roles' => ['?'],
             ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout', 'me'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['authorize', 'register', 'accesstoken'],
-                        'allow' => true,
-                        'roles' => ['*'],
-                    ],
-                ],
+            [
+                'actions' => ['logout', 'me'],
+                'allow' => true,
+                'roles' => ['@'],
             ],
-            'verbs' => [
-                'class' => Verbcheck::className(),
-                'actions' => [
-                    'logout' => ['GET'],
-                    'authorize' => ['POST'],
-                    'register' => ['POST'],
-                    'accesstoken' => ['POST'],
-                    'me' => ['GET'],
-                ],
-            ],
+            [
+                'actions' => ['authorize', 'register'],
+                'allow' => true,
+                'roles' => ['*'],
+            ]
         ];
     }
 
+    public function verbs()
+    {
+        return array_merge([
+            'logout' => ['GET', 'OPTIONS'],
+            'authorize' => ['POST', 'OPTIONS'],
+            'register' => ['POST', 'OPTIONS'],
+            'accesstoken' => ['GET', 'OPTIONS'],
+            'me' => ['GET', 'OPTIONS']
+        ]);
+    }
 
     /**
      * @inheritdoc
      */
     public function actions()
     {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
+        return array_merge(parent::actions(), [
             'auth' => [
                 'class' => 'yii\authclient\AuthAction',
                 'successCallback' => [$this, 'onAuthSuccess'],
             ],
-        ];
+        ]);
     }
 
     /**
@@ -102,7 +133,7 @@ class SiteController extends RestController
 
         if ($user = $model->signup()) {
 
-            $data=$user->attributes;
+            $data = $user->attributes;
             unset($data['auth_key']);
             unset($data['password_hash']);
             unset($data['password_reset_token']);
@@ -125,26 +156,22 @@ class SiteController extends RestController
         Yii::$app->api->sendSuccessResponse($data);
     }
 
-    public function actionAccesstoken()
+    public function actionAccessToken($code)
     {
-
-        if (!isset($this->post["authorization_code"])) {
-            Yii::$app->api->sendFailedResponse("Authorization code missing");
+        if (($model = AuthorizationCodes::findOne(['code' => $code])) === null) {
+            // Todo Yii::t
+            return $this->response(false, "not found authorization code `$code`");
         }
-
-        $authorization_code = $this->post["authorization_code"];
-
-        $auth_code = AuthorizationCodes::isValid($authorization_code);
-        if (!$auth_code) {
-            Yii::$app->api->sendFailedResponse("Invalid Authorization Code");
+        if (!$model->isValid()) {
+            return $this->response(false, "$code is expired");
         }
-
-        $accesstoken = Yii::$app->api->createAccesstoken($authorization_code);
-
-        $data = [];
-        $data['access_token'] = $accesstoken->token;
-        $data['expires_at'] = $accesstoken->expires_at;
-        Yii::$app->api->sendSuccessResponse($data);
+        // Todo Yii::t
+        $class = Yii::$app->user->identityClass;
+        Yii::$app->user->setIdentity($class::findIdentity($model->user_id));
+        return $this->response(true, "login with $code is success", [
+            'accessToken' => Yii::$app->api->createAccesstoken($model->code),
+            'userPublicIdentity' => Yii::$app->user->identity->getPublicIdentity(),
+        ]);
 
     }
 
@@ -152,29 +179,23 @@ class SiteController extends RestController
     {
         $model = new LoginForm();
 
-        $model->attributes = $this->post;
+        $model->load($this->post, '');
 
         if ($model->validate() && $model->login()) {
-            if(YII_DEBUG == true and YII_ENV == 'test'){
-                $expired_time = 60*60*5;
+            if (YII_DEBUG == true and YII_ENV == 'test') {
+                $expired_time = 60 * 60 * 5;
                 $type = 'user';
-            }else {$expired_time = null ; $type = 'user'; }
-
-            $_idUser =  Yii::$app->user->identity['id'];
-            $auth_code = Yii::$app->api->createAuthorizationCode($_idUser,$type,$expired_time);
-
-            $data = [];
-            $data['authorization_code'] = $auth_code->code;
-            $data['expires_at'] = $auth_code->expires_at;
-            $permissions = Yii::$app->authManager->getPermissionsByUser($_idUser);
-            $data['permissions'] = isset($permissions) ? $permissions : null;
-            $roles = Yii::$app->authManager->getRolesByUser($_idUser);
-            $data['roles'] = isset($roles) ? $roles : null;
-            $assignments = Yii::$app->authManager->getAssignments($_idUser);
-            $data['assignments'] = isset($assignments) ? $assignments : null;
-            Yii::$app->api->sendSuccessResponse($data);
+            } else {
+                $expired_time = null;
+                $type = 'user';
+            }
+            $authorizationCode = Yii::$app->api->createAuthorizationCode(Yii::$app->user->getId(),$type, $expired_time);
+            $response = Yii::$app->getResponse();
+            $response->setStatusCode(201);
+            $response->getHeaders()->set('Location', \yii\helpers\Url::toRoute("/1/access-token/{$authorizationCode->code}", true));
+            return $this->response(true, "success",$authorizationCode );
         } else {
-            Yii::$app->api->sendFailedResponse($model->errors);
+            return $this->response(false, "failed", $model->errors);
         }
     }
 
@@ -183,7 +204,7 @@ class SiteController extends RestController
         $headers = Yii::$app->getRequest()->getHeaders();
         $access_token = $headers->get('x-access-token');
 
-        if(!$access_token){
+        if (!$access_token) {
             $access_token = Yii::$app->getRequest()->getQueryParam('access-token');
         }
 
@@ -191,10 +212,10 @@ class SiteController extends RestController
 
         if ($model->delete()) {
 
-            Yii::$app->api->sendSuccessResponse(["Logged Out Successfully"]);
+            return $this->response(false, "Logout success");
 
         } else {
-            Yii::$app->api->sendFailedResponse("Invalid Request");
+            return $this->response(false, "Logout error");
         }
 
 
