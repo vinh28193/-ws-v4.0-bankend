@@ -15,16 +15,16 @@ use common\fixtures\components\FixtureUtility;
  */
 
 $id = $index + 1;
-$customer = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\customer.php', null));
-$address = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\address.php', null));
-$user = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\user.php', null));
-$coupon = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\coupon.php', null, ['type_coupon' => ['COUPON', 'REFUND'], 'remove' => 0]));
-//$promotion = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\coupon.php',['type_coupon' => 'PROMOTION']));
-$product = FixtureUtility::getDataWithColumn('.\common\fixtures\data\product.php', null, ['order_id' => $id]);
+$customer = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\customer.php', null));
+$address = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\address.php', null));
+$user = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\user.php', null));
+$coupon = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\coupon.php', null, ['type_coupon' => ['COUPON', 'REFUND'], 'remove' => 0]));
+//$promotion = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\coupon.php',['type_coupon' => 'PROMOTION']));
+$product = FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\product.php', null, ['order_id' => $id]);
 if ($product) {
-    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\seller.php', null, ['id' => $product[0]['seller_id']]));
+    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\seller.php', null, ['id' => $product[0]['seller_id']]));
 } else {
-    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\seller.php', null));
+    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\seller.php', null));
 }
 //$amountDiscount = $coupon['type_amount'] ?
 

@@ -11,10 +11,8 @@
  * @var $index integer
  */
 
-$id = $index + 1;
-
 return [
-    'id' => $id,
+    'id' => $index + 1,
     'name' => $faker->unique()->name,
     'link_store' => $faker->unique()->url,
     'rate' => $faker->unique()->randomFloat(1,0,10),

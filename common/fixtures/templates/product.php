@@ -12,9 +12,9 @@
  */
 
 $id = $index + 1;
-$order = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\order.php',null));
-$category = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\category.php',null));
-$category_custom = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\category_custom_policy.php',null));
+$order = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\order.php',null));
+$category = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\category.php',null));
+$category_custom = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\category_custom_policy.php',null));
 return [
     'id' => $id,
     'order_id' => $order['id'],
