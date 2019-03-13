@@ -43,11 +43,11 @@ class SiteController extends BaseApiController
     public function verbs()
     {
         return array_merge([
-            'logout' => ['GET', 'OPTIONS'],
-            'authorize' => ['POST', 'OPTIONS'],
-            'register' => ['POST', 'OPTIONS'],
-            'access-token' => ['POST', 'OPTIONS'],
-            'me' => ['GET', 'OPTIONS']
+            'logout' => ['GET'],
+            'authorize' => ['POST'],
+            'register' => ['POST'],
+            'access-token' => ['POST'],
+            'me' => ['GET']
         ]);
     }
 

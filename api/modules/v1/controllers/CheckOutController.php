@@ -48,7 +48,8 @@ class CheckOutController extends BaseApiController
     public function verbs()
     {
         return [
-            'create' => ['POST','OPTIONS']
+            'index' => ['GET'],
+            'create' => ['POST']
         ];
     }
 
