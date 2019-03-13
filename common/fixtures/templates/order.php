@@ -44,9 +44,32 @@ if( $seller['id'] == null or isset($seller['id']) == true )
 
 //$amountDiscount = $coupon['type_amount'] ?
 
-//var_dump($product);
-//var_dump($seller);
-//die;
+/*****@TODO : Viết Code Sinh Phụ Thuộc Hàng 'SHOP','REQUEST','SHIP','NEXTTECH' *******/
+
+$typeOrder = $faker->randomElement(['SHOP','REQUEST','SHIP','NEXTTECH']); // 'NEXTTECH' : là loại hàng quan hệ trong nội bộ công ty
+if($typeOrder == 'SHOP' ){
+    $is_quotation  = 0;  // "Đánh dấu đơn báo giá",
+    $quotation_status = null;  //Duyệt đơn báo giá nên đơn có Trạng thái báo giá. null : là hàng SHOP , 0 - pending, 1- approve, 2- deny,
+    $quotation_note = null ;
+}
+if($typeOrder == 'REQUEST' ) {
+        $is_quotation  = 1;  // "Đánh dấu đơn báo giá",
+        $quotation_status = $faker->randomElement([  0, 1 , 2]); //Duyệt đơn báo giá nên đơn có Trạng thái báo giá, 0 - pending, 1- approve, 2- deny,
+        $quotation_note = $faker->realText(50);   //note đơn request",
+}
+if($typeOrder == 'SHIP' ) {
+    $is_quotation  = 0;
+    $quotation_status = null;
+    $quotation_note = null ;
+}
+
+if($typeOrder == 'NEXTTECH' ) {
+    $is_quotation  = 0;
+    $quotation_status = null;
+    $quotation_note = null ;
+}
+
+
 
 return [
     'id' => $id,
@@ -58,7 +81,7 @@ return [
     ],
 
     // Order
-    'type_order' => $faker->randomElement(['SHOP', 'SHOP', 'SHOP', 'REQUEST', 'SHIP']), //Hình thức mua hàng: SHOP | REQUEST | POS | SHIP,
+    'type_order' => $typeOrder , //Hình thức mua hàng: SHOP | REQUEST | POS | SHIP,
     'customer_id' => $customer['id'], // Mã id của customer : có thể là khách buôn hoặc khách lẻ ",
     'customer_type' => $faker->randomElement(['RetailCustomer', 'WholesaleCustomer']), // Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers ",
     'portal' => $faker->randomElement(['EBAY', 'AMAZON_US', 'AMAZON_JAPAN', 'OTHER']), //$seller['portal'], //portal ebay, amazon us, amazon jp ...: EBAY/ AMAZON_US / AMAZON_JAPAN / OTHER / WEBSITE NGOÀI ,
@@ -83,9 +106,9 @@ return [
 
 
     // Thông tin đơn báo giá
-    'is_quotation' => $is_quotation = $typeOrder = 'REQUEST' ? 1 : $typeOrder == 'SHOP' ? $faker->randomElement([0, 0, 0, 0, 0, 0, 0, 0, 00, 0, 1]) : 0, // "Đánh dấu đơn báo giá",
-    'quotation_status' => $is_quotation == 0 ? "" : $faker->randomElement(['APPROVE', "DECLINE", "NEW"]), //Duyệt đơn báo giá nên đơn có Trạng thái báo giá. 0 - pending, 1- approve, 2- deny,
-    'quotation_note' => $is_quotation == 0 ? "" : $faker->realText(50), //note đơn request",
+    'is_quotation' => $is_quotation, // "Đánh dấu đơn báo giá",
+    'quotation_status' => $quotation_status, //Duyệt đơn báo giá nên đơn có Trạng thái báo giá. null : là hàng SHOP , 0 - pending, 1- approve, 2- deny,
+    'quotation_note' => $quotation_note,  //note đơn request",
 
     // Thông tin người nhận
     'receiver_email' => $address['email'], //Email người nhận,

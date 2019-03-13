@@ -27,7 +27,7 @@ use Yii;
  * @property string $lost  time LOST : null : Hàng mất ở kho Mỹ hoặc hải quan hoặc kho VN hoặc trên đường giao cho KH 
  * @property string $current_status Trạng thái hiện tại của order : update theo trạng thái của sản phẩm cuối 
  * @property int $is_quotation Đánh dấu đơn báo giá
- * @property int $quotation_status Duyệt đơn báo giá nên đơn có Trạng thái báo giá. 0 - pending, 1- approve, 2- deny
+ * @property int $quotation_status Duyệt đơn báo giá nên đơn có Trạng thái báo giá. null : là hàng SHOP ,  0 - pending, 1- approve, 2- deny
  * @property string $quotation_note note đơn request
  * @property string $receiver_email Email người nhận
  * @property string $receiver_name Họ tên người nhận
@@ -75,26 +75,20 @@ use Yii;
  * @property int $is_sms_sent đánh đâu đơn này đã được gửi SMS tạo thành công đơn hàng
  * @property int $difference_money 0: mac dinh, 1: lech, 2:ẩn thông báo bằng quyền của Admin
  * @property string $coupon_id  id mã giảm giá
- * @property string $coupon_code mã giảm giá
- * @property string $coupon_time thời gian sử dụng mã coupon 
- * @property string $coupon_amount số tiền áp dụng cho mã coupon này 
  * @property string $revenue_xu số xu được nhận
  * @property string $xu_count số xu sử dụng
  * @property string $xu_amount giá trị quy đổi ra tiền
  * @property string $xu_time thời gian mốc sử dụng mã xu  
  * @property string $xu_log trừ từ xu đang có vào đơn , Quy chế sinh ra xu là khách hàng nhận được hàng thành công mới tự động sinh ra xu 
- * @property int $promotion_id id của promotion : Id Chạy chương trình promotion
- * @property string $promotion_code mã khuyến mại
- * @property string $promotion_time thời gian sử dụng mã promotion
- * @property string $promotion_amount số tiền áp dụng cho mã coupon này 
- * @property string $total_weight cân nặng tính phí
- * @property string $total_weight_temporary cân nặng tạm tính
+ * @property string $promotion_id id của promotion : Id Chạy chương trình promotion
+ * @property int $total_weight cân nặng tính phí
+ * @property int $total_weight_temporary cân nặng tạm tính
  * @property string $created_at Update qua behaviors tự động  
  * @property string $updated_at Update qua behaviors tự động
  * @property string $purchase_order_id Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy)
  * @property string $purchase_transaction_id Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy)
  * @property string $purchase_amount số tiền thanh toán thực tế với người bán EBAY/AMAZON, lưu ý : Số đã trừ Buck/Point ( và là dạng list, cách nhau = dấu phẩy)
- * @property int $purchase_account_id id tài khoản mua hàng
+ * @property string $purchase_account_id id tài khoản mua hàng
  * @property string $purchase_account_email email tài khoản mua hàng
  * @property string $purchase_card thẻ thanh toán
  * @property string $purchase_amount_buck số tiền buck thanh toán
@@ -103,19 +97,6 @@ use Yii;
  * @property int $total_quantity  Tổng số lượng khách hàng đặt = tổng các số lượng trên bảng product
  * @property int $total_purchase_quantity  Tổng số lượng nhân viên đi mua hàng thực tế của cả đơn = tổng các số lượng mua thực tế trên bảng product
  * @property int $remove đơn đánh đấu 1 là đã xóa , mặc định 0 : chưa xóa
- *
- * @property Customer $customer
- * @property Address $receiverAddress
- * @property SystemCountry $receiverCountry
- * @property SystemDistrict $receiverDistrict
- * @property SystemStateProvince $receiverProvince
- * @property User $saleSupport
- * @property Seller $seller
- * @property Store $store
- * @property OrderFee[] $orderFees
- * @property PackageItem[] $packageItems
- * @property Product[] $products
- * @property WalletTransaction[] $walletTransactions
  */
 class Order extends \common\components\db\ActiveRecord
 {
@@ -134,20 +115,12 @@ class Order extends \common\components\db\ActiveRecord
     {
         return [
             [['store_id', 'type_order', 'customer_id', 'customer_type', 'portal', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_country_name', 'receiver_province_id', 'receiver_province_name', 'receiver_district_id', 'receiver_district_name', 'receiver_post_code', 'receiver_address_id', 'payment_type'], 'required'],
-            [['store_id', 'customer_id', 'new', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_time', 'xu_time', 'promotion_id', 'promotion_time', 'created_at', 'updated_at', 'purchase_account_id', 'total_quantity', 'total_purchase_quantity', 'remove'], 'integer'],
-            [['note_by_customer', 'note', 'seller_store', 'total_weight', 'total_weight_temporary', 'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id'], 'string'],
-            [['total_final_amount_local', 'total_amount_local', 'total_origin_fee_local', 'total_price_amount_origin', 'total_paid_amount_local', 'total_refund_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_fee_amount_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_custom_fee_amount_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'coupon_amount', 'revenue_xu', 'xu_count', 'xu_amount', 'promotion_amount', 'purchase_amount_buck', 'purchase_amount_refund'], 'number'],
-            [['type_order', 'portal', 'utm_source', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'coupon_id', 'coupon_code', 'xu_log', 'promotion_code'], 'string', 'max' => 255],
+            [['store_id', 'customer_id', 'new', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'total_weight', 'total_weight_temporary', 'created_at', 'updated_at', 'total_quantity', 'total_purchase_quantity', 'remove'], 'integer'],
+            [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_account_id', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id'], 'string'],
+            [['total_final_amount_local', 'total_amount_local', 'total_origin_fee_local', 'total_price_amount_origin', 'total_paid_amount_local', 'total_refund_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_fee_amount_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_custom_fee_amount_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'revenue_xu', 'xu_count', 'xu_amount', 'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund'], 'number'],
+            [['type_order', 'portal', 'utm_source', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log'], 'string', 'max' => 255],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['receiver_address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Address::className(), 'targetAttribute' => ['receiver_address_id' => 'id']],
-            [['receiver_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['receiver_country_id' => 'id']],
-            [['receiver_district_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemDistrict::className(), 'targetAttribute' => ['receiver_district_id' => 'id']],
-            [['receiver_province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['receiver_province_id' => 'id']],
-            [['sale_support_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sale_support_id' => 'id']],
-            [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
 
@@ -225,18 +198,12 @@ class Order extends \common\components\db\ActiveRecord
             'is_sms_sent' => 'Is Sms Sent',
             'difference_money' => 'Difference Money',
             'coupon_id' => 'Coupon ID',
-            'coupon_code' => 'Coupon Code',
-            'coupon_time' => 'Coupon Time',
-            'coupon_amount' => 'Coupon Amount',
             'revenue_xu' => 'Revenue Xu',
             'xu_count' => 'Xu Count',
             'xu_amount' => 'Xu Amount',
             'xu_time' => 'Xu Time',
             'xu_log' => 'Xu Log',
             'promotion_id' => 'Promotion ID',
-            'promotion_code' => 'Promotion Code',
-            'promotion_time' => 'Promotion Time',
-            'promotion_amount' => 'Promotion Amount',
             'total_weight' => 'Total Weight',
             'total_weight_temporary' => 'Total Weight Temporary',
             'created_at' => 'Created At',
@@ -254,101 +221,5 @@ class Order extends \common\components\db\ActiveRecord
             'total_purchase_quantity' => 'Total Purchase Quantity',
             'remove' => 'Remove',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCustomer()
-    {
-        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReceiverAddress()
-    {
-        return $this->hasOne(Address::className(), ['id' => 'receiver_address_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReceiverCountry()
-    {
-        return $this->hasOne(SystemCountry::className(), ['id' => 'receiver_country_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReceiverDistrict()
-    {
-        return $this->hasOne(SystemDistrict::className(), ['id' => 'receiver_district_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReceiverProvince()
-    {
-        return $this->hasOne(SystemStateProvince::className(), ['id' => 'receiver_province_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSaleSupport()
-    {
-        return $this->hasOne(User::className(), ['id' => 'sale_support_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSeller()
-    {
-        return $this->hasOne(Seller::className(), ['id' => 'seller_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'store_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrderFees()
-    {
-        return $this->hasMany(OrderFee::className(), ['order_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPackageItems()
-    {
-        return $this->hasMany(PackageItem::className(), ['order_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProducts()
-    {
-        return $this->hasMany(Product::className(), ['order_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getWalletTransactions()
-    {
-        return $this->hasMany(WalletTransaction::className(), ['order_id' => 'id']);
     }
 }
