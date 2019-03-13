@@ -14,14 +14,40 @@ use common\models\db\Product;
 use common\models\PackageItem;
 use Faker\Factory;
 use yii\console\Controller;
+use Yii;
 
 class OrderController extends Controller
 {
+    public function actionCachesClear()
+    {
+        // Load all tables of the application in the schema
+        //Yii::$app->db->schema->getTables();
+        // clear the cache of all loaded tables
+        Yii::$app->db->schema->refresh();
+    }
+
+    public function actionTestFackeData()
+    {
+        $faker = \Faker\Factory::create('vi_VN');
+
+        var_dump($faker->citySuffix);   // 'Ville'
+        var_dump($faker->streetSuffix);   // string(5) "Street"
+        var_dump($faker->buildingNumber); // string(1) "4"
+        var_dump($faker->city);           // string(12) "Hải Phòng"
+        var_dump($faker->streetName);     // string(17) "167 Phố Đổng"
+        var_dump($faker->streetAddress);  // string(25) "Phố Hàng Châu Khuyên"
+        var_dump($faker->postcode);   // string(10) "36730-2184"
+        var_dump($faker->address);   // string(78) "3068 Phố Lân, Xã Tiêu Chính Đức, Quận Vi Trầm Lễ Hồ Chí Minh"
+        var_dump($faker->country);    // 'Falkland Islands (Malvinas)'
+        var_dump($faker->latitude($min = -90, $max = 90));
+        var_dump($faker->longitude($min = -180, $max = 180));  // 86.211205
+    }
+
     public function actionIndex(){
         // use the factory to create a Faker\Generator instance
         $faker = Factory::create();
 
-// generate data by accessing properties
+       // generate data by accessing properties
         echo $faker->name;
         // 'Lucy Cechtelar';
         echo $faker->address;

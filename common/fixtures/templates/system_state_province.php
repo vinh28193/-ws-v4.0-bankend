@@ -10,14 +10,13 @@
  * @var $index integer
  */
 
-$id = $index + 1;
-$name = $faker->unique()->city;
+$faker = \Faker\Factory::create('vi_VN');
 return [
-    'id' => $id,
+    'id' => $index + 1,
     'country_id' => 1,
-    'name' => $name,
-    'name_local' => $name,
-    'name_alias' => $name,
+    'name' => $faker->city,
+    'name_local' => $faker->city,
+    'name_alias' => $faker->city,
     'display_order' => 0,
     'created_time' => $faker->unixTime,
     'updated_time' => $faker->unixTime,

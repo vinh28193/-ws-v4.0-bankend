@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 class FixtureUtility
 {
     public static function getProvince(){
-        return include '.\common\fixtures\data\data_fiexd\system_state_province.php';
+        return include '.\common\fixtures\data\data_fixed\system_state_province.php';
     }
     public static function getIdsProvinceByIdCountry($id = 1){
         $list = self::getProvince();
@@ -29,16 +29,33 @@ class FixtureUtility
     public static function getProvincesByIdCountry($id = 1){
         $list = self::getProvince();
         $ids = [];
-        foreach ($list as $data){
-            if(isset($data['country_id']) && $data['country_id'] == $id && isset($data['id'])){
-                $ids[] = $data;
+        if(!empty($list)){
+            foreach ($list as $data){
+                if(  isset($data['country_id']) && $data['country_id'] == $id && isset($data['id'])){
+                    $ids[] = $data;
+                }
+            }
+        }
+        return $ids;
+    }
+
+    public static function getDistrictByIdCountry($id = 1, $country_id = null){
+        $list = self::getProvince();
+        $ids = [];
+        if(!empty($list)){
+            foreach ($list as $data){
+                // fixed bug 'district_id' => null +  'district_name' => null,
+                if(  $country_id != null && isset($data['country_id']) && $data['country_id'] == $country_id && isset($data['id'])){
+                    $ids[] = $data;
+                }
+
             }
         }
         return $ids;
     }
 
     public static function getDistrict(){
-        return include '.\common\fixtures\data\data_fiexd\system_district.php';
+        return include '.\common\fixtures\data\data_fixed\system_district.php';
     }
     public static function getIdsDistrictByIdProvince($id = 1){
         $list = self::getDistrict();

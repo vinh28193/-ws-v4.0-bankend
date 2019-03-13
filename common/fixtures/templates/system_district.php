@@ -9,15 +9,14 @@
  * @var $faker \Faker\Generator
  * @var $index integer
  */
-$name = $faker->unique()->streetName;
-$id = $index + 1;
+$faker = \Faker\Factory::create('vi_VN');
 return [
-    'id' => $id,
-    'name' =>  $name,
-    'name_local' => $name,
-    'name_alias' => $name,
+    'id' => $id = $index + 1,
+    'name' =>  $faker->streetName,
+    'name_local' => $faker->streetName,
+    'name_alias' => $faker->streetName,
     'display_order' => 0,
-    'province_id' => $faker->numberBetween(1,10),
+    'province_id' => $faker->unique()->numberBetween(1,100),
     'country_id' => 1,
     'created_time' => $faker->unixTime,
     'updated_time' => $faker->unixTime,

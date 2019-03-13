@@ -17,7 +17,7 @@ $countOrders = rand(1,4);
 $orders = "";
 for($ind = 1; $ind<=$countOrders;$ind++){
     $id_order = rand(1,1000);
-    $products = (FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\product.php',null,['order_id' => $id_order]));
+    $products = (FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\product.php',null,['order_id' => $id_order]));
     if(count($products)){
         $orders .=  $ind < $countOrders ? rand(1,1000)."," : rand(1,1000);
     }else{

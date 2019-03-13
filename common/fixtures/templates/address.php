@@ -11,18 +11,23 @@
  * @var $index integer
  */
 
-$id = $index + 1;
-$province = $faker->randomElement(\common\fixtures\components\FixtureUtility::getProvincesByIdCountry(1));
-$district = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDistrictsByIdProvince($province['id']));
+$faker = \Faker\Factory::create('vi_VN');
+$province = $faker->randomElement(\common\fixtures\components\FixtureUtility::getProvincesByIdCountry($IdCountry = 1));
+$district = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDistrictByIdCountry($IdCountry = 1,$province['country_id']));
+
+//var_dump($province);
+//var_dump($district);
+//die;
+
 return [
-    'id' => $id,
+    'id' => $index + 1,
     'first_name' => $faker->firstName,
     'last_name' => $faker->lastName,
     'email' => $faker->email,
     'phone' => $faker->phoneNumber,
     'country_id' => 1,
     'country_name' => 'Việt Nam',
-    'province_id' => $province['id'],
+    'province_id' => $faker->unique()->numberBetween(1,100), //$province['id'],
     'province_name' => $province['name'],
     'district_id' => $district['id'],
     'district_name' => $district['name'],

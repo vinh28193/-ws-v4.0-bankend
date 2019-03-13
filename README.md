@@ -471,6 +471,7 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
     
     #------------RBAC authen-----------------------
     php yii rbac/migrate
+    php yii fixture/load User
     php yii rbac/create-default 
     
     ####----------------Automaintion test done --------------------------------

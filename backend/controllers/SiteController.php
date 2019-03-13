@@ -88,7 +88,6 @@ class SiteController extends Controller
             $api_host=Yii::$app->params['prod_api_url'];
         }
 
-
         return $this->render('apidoc',['api_host'=>$api_host]);
     }
 

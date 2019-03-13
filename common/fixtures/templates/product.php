@@ -12,9 +12,11 @@
  */
 
 $id = $index + 1;
-$order = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\order.php',null));
-$category = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\category.php',null));
-$category_custom = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fiexd\category_custom_policy.php',null));
+$order = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\order.php',null));
+$category = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\category.php',null));
+$category_custom = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\category_custom_policy.php',null));
+$quantity = $faker->numberBetween(1, 3);
+
 return [
     'id' => $id,
     'order_id' => $order['id'],
@@ -26,8 +28,7 @@ return [
     'link_origin' => $faker->url,
     'category_id' => $category['id'],
     'custom_category_id' => $category_custom['id'],
-    'quantity' => $quantity = $faker->numberBetween(1, 3),
-    'quantity_customer' => $amount = $faker->numberBetween(10, 10000),
+    'quantity_customer' => $amount = $faker->numberBetween(1, 3),
     'price_amount_local' => $amount_local = strtolower($order['portal']) == 'amazon-jp' ? $amount * 213 : $amount * 23500,
     'total_price_amount_local' => $amount_local* $quantity,
     'quantity_purchase' => 0,
@@ -36,10 +37,7 @@ return [
     'variation_id' => '',
     'note_by_customer' => $faker->realText(20),
     'total_weight_temporary' => 0.5*$quantity,
-    'created_time' => $faker->unixTime,
-    'updated_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'remove' => 0,
-    'currency_id' => $amount_local = strtolower($order['portal']) == 'amazon-jp' ? '￥' : '$',
-    'currency_symbol' => $amount_local = strtolower($order['portal']) == 'amazon-jp' ? '￥' : '$',
-    'exchange_rate' => $amount_local = strtolower($order['portal']) == 'amazon-jp' ? 213 : 23500,
-];
+    ];

@@ -20,8 +20,8 @@ return [
             'class' => 'console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
             'templatePath' => '@common/fixtures/templates',
-            //'fixtureDataPath' => '@common/fixtures/data/units'
-            'fixtureDataPath' => '@common/fixtures/data'
+            //'fixtureDataPath' => '@common/fixtures/data/units' // units , models , data_fixed , components
+            'fixtureDataPath' => '@common/fixtures/data/data_fixed/'
         ],
         'migrate' => [
             'class' => 'common\components\consoles\controllers\MigrateController',

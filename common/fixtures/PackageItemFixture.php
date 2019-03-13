@@ -20,12 +20,12 @@ class PackageItemFixture extends ActiveFixture
 
     public function load()
     {
-        $dataPackages = FixtureUtility::getDataWithColumn('.\common\fixtures\data\package.php',null);
+        $dataPackages = FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\package.php',null);
         foreach ($dataPackages as $package){
             $orders = explode(',',$package['order_ids']);
             foreach ($orders as $order){
                 $item = new PackageItem();
-                $products = (FixtureUtility::getDataWithColumn('.\common\fixtures\data\product.php',null,['order_id' => $order]));
+                $products = (FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\product.php',null,['order_id' => $order]));
                 if(count($products) == 0){
                     continue;
                 }
@@ -36,8 +36,8 @@ class PackageItemFixture extends ActiveFixture
                     'box_me_warehouse_tag' => $package['current_status'] == 'STOCK_IN_LOCAL' ? 'CB_TAG-'.FixtureUtility::getRandomCode(16) : null,
                     'order_id' => $order,
                     'sku' => $product['sku'],
-                    'quantity' => $quantity = rand(1,$product['quantity']),
-                    'weight' => $product['total_weight_temporary'] / $product['quantity'] * $quantity,
+                    'quantity' => $quantity = rand(1,$product['quantity_customer']),
+                    'weight' => $product['total_weight_temporary'] / $product['quantity_customer'] * $quantity,
                     'dimension_l' => $dl = rand(1,$package['package_dimension_l']),
                     'dimension_w' => $dw = rand(1,$package['package_dimension_w']),
                     'dimension_h' => $dh = rand(1,$package['package_dimension_h']),
