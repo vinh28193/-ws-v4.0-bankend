@@ -13,15 +13,23 @@ use api\controllers\BaseApiController;
 use common\models\db\Package;
 use common\models\db\PackageItem;
 use common\models\Manifest;
+use yii\base\Response;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 
 class ManifestController extends BaseApiController
 {
     public function actionIndex()
     {
-        $model = Manifest::find()->where(['active' => 1])->limit($this->limit)->offset($this->page - 1 * $this->limit)->asArray()->all();
-        return $model;
+       $limit = json_decode(\Yii::$app->request->get('limit'));
+       $page   = json_decode(\Yii::$app->request->get('page'));
+        $model = Manifest::find()
+            ->where(['active' => 1])
+            ->limit($limit)
+            ->offset($page - 1 * $limit)
+            ->asArray()->all();
+            return $model;
     }
 
     public function actionUpdate($id)
@@ -84,8 +92,9 @@ class ManifestController extends BaseApiController
 
     public function actionCreate()
     {
+        $post = json_decode(\Yii::$app->request->post());
         $model = new Manifest();
-        $model->setAttributes($this->post);
+        $model->setAttributes($this->$post);
         $model->save(0);
         return $model->toArray();
     }
