@@ -91,6 +91,7 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
     }
 
 
+
     /**
      * @inheritdoc
      * @return \common\models\queries\OrderQuery the active query used by this AR class.

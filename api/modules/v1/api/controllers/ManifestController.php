@@ -20,6 +20,13 @@ use yii\helpers\Json;
 
 class ManifestController extends BaseApiController
 {
+    public function verbs()
+    {
+        return [
+            'index' => ['GET','OPTIONS']
+        ];
+    }
+
     public function actionIndex()
     {
        $limit = json_decode(\Yii::$app->request->get('limit'));
@@ -34,8 +41,9 @@ class ManifestController extends BaseApiController
 
     public function actionUpdate($id)
     {
+        $post = json_decode(\Yii::$app->request->post());
         $model = Manifest::findIdentity($id);
-        $model->setAttributes($this->post);
+        $model->setAttributes($this->$post);
         $model->save();
         return $model->toArray();
     }
