@@ -46,8 +46,8 @@ return [
     'is_read_only' => $faker->numberBetween(0,1),
     'status' => $faker->numberBetween(0,1),
     'created_by' => $faker->numberBetween(1,99),
-    'created_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
     'updated_by' => $faker->numberBetween(1,99),
-    'updated_time' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'fee_rate' => $faker->randomFloat(2,1,99),
 ];

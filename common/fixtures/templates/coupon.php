@@ -41,7 +41,7 @@ return [
     'used_first_time' => $faker->unixTime,
     'used_last_time' => $faker->unixTime,
     'can_use_instalment' => $faker->randomElement([0,0,1,0,0]),
-    'created_time' => $faker->unixTime,
-    'updated_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'remove' => $faker->randomElement([0,0,1,0,0]),
 ];
