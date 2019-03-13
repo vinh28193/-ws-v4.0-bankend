@@ -207,4 +207,15 @@ class User extends \common\models\db\User implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    public function getPublicIdentity(){
+        $authManager = Yii::$app->authManager;
+        $permissions = $authManager->getPermissionsByUser($this->getId());
+        $role = $authManager->getRolesByUser($this->getId());
+        return [
+            'username' => $this->username,
+            'role' => !empty($role) ? array_keys($role) : [],
+            'permission' => !empty($permissions) ? array_keys($permissions) : []
+        ];
+    }
 }

@@ -6,7 +6,7 @@
  * Time: 16:45
  */
 
-namespace common\rest;
+namespace common\filters;
 
 
 class WeshopAuth extends \yii\filters\auth\HttpHeaderAuth
