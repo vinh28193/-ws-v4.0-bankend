@@ -39,14 +39,14 @@ class SimpleItem extends BaseCartItem
         }
         $form = new ProductDetailFrom();
         $form->load($params, '');
-        /** @var $product false | common\products\BaseProduct BaseProduct */
+        /** @var $product false | \common\products\BaseProduct BaseProduct */
         if (($product = $form->detail(true)) === false) {
             \Yii::info($form->getFirstErrors(),"add_to_cart");
             return [false,$form->getFirstErrors()];
 
         }
         $product->current_image = $this->image;
-        $serializer = new \common\rest\Serializer();
+        $serializer = new \common\filters\Serializer();
         $this->item = $serializer->serialize($product);
         return $this;
     }

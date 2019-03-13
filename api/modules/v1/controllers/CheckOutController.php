@@ -45,6 +45,13 @@ class CheckOutController extends BaseApiController
         $this->cart = Instance::ensure($this->cart, CartManager::className());
     }
 
+    public function verbs()
+    {
+        return [
+            'create' => ['POST','OPTIONS']
+        ];
+    }
+
     public function actionIndex()
     {
 
