@@ -18,4 +18,5 @@ class SystemDistrictFixture extends ActiveFixture
         'common\fixtures\SystemCountryFixture',
         'common\fixtures\SystemStateProvinceFixture'
     ];
+    public $dataFile = '@common/fixtures/data/data_fixed/system_district.php';
 }

@@ -31,8 +31,8 @@ return [
     'item_maximum_per_category' => null,
     'weight_maximum_per_category' => 0,
     'sort_order' => 0,
-    'created_time' => $faker->unixTime,
-    'updated_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'active' => $faker->numberBetween(0,1),
     'remove' => $faker->numberBetween(0,1),
 ];

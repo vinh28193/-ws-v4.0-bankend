@@ -35,8 +35,8 @@ if( $seller['id'] == null or isset($seller['id']) == true )
         "link_store" => "http://www.conn.com/",
         "rate" => 7.4,
         "description" => "I will tell you what year it is?' 'Of course it.",
-        "created_time" => 1335568772,
-        "updated_time" => 879839191,
+        "created_at" => 1335568772,
+        "updated_at" => 879839191,
         "remove" => 1,
         "portal" => "AMAZON-JP",
     ];

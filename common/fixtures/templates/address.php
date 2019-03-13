@@ -37,7 +37,7 @@ return [
     'type' => 1,
     'is_default' => 0,
     'customer_id' => $faker->numberBetween(1,1500),
-    'created_time' => $faker->unixTime,
-    'updated_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'remove' => $faker->numberBetween(0,1),
 ];

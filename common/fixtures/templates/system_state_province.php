@@ -18,7 +18,7 @@ return [
     'name_local' => $faker->city,
     'name_alias' => $faker->city,
     'display_order' => 0,
-    'created_time' => $faker->unixTime,
-    'updated_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'remove' => 0,
 ];

@@ -17,8 +17,8 @@ return [
     'link_store' => $faker->unique()->url,
     'rate' => $faker->unique()->randomFloat(1,0,10),
     'description' => $faker->realText(50),
-    'created_time' => $faker->unixTime,
-    'updated_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'remove' => $faker->numberBetween(0,1),
     'portal' => $faker->randomElement(['EBAY',"AMAZON","AMAZON-JP"]),
 ];

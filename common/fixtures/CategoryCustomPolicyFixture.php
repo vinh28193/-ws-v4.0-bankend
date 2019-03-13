@@ -14,4 +14,5 @@ use yii\test\ActiveFixture;
 class CategoryCustomPolicyFixture extends ActiveFixture
 {
     public $modelClass = 'common\models\db\CategoryCustomPolicy';
+    public $dataFile = '@common/fixtures/data/data_fixed/category_custom_policy.php';
 }

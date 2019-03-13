@@ -18,7 +18,7 @@ return [
     'display_order' => 0,
     'province_id' => $faker->unique()->numberBetween(1,100),
     'country_id' => 1,
-    'created_time' => $faker->unixTime,
-    'updated_time' => $faker->unixTime,
+    'created_at' => $faker->unixTime,
+    'updated_at' => $faker->unixTime,
     'remove' => 0,
 ];

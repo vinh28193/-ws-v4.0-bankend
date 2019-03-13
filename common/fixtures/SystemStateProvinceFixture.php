@@ -14,6 +14,6 @@ use yii\test\ActiveFixture;
 class SystemStateProvinceFixture extends ActiveFixture
 {
     public $modelClass = 'common\models\db\SystemStateProvince';
-    public $depends = [
-        'common\fixtures\SystemCountryFixture'];
+    public $depends = ['common\fixtures\SystemCountryFixture'];
+    public $dataFile = '@common/fixtures/data/data_fixed/system_state_province.php';
 }
