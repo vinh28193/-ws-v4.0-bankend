@@ -82,6 +82,9 @@ yii fixture/generate system_state_province --count=5 --language=Vi_VN
 yii fixture/generate system_district  --count=20 --language=Vi_VN
 yii fixture/generate address  --count=5 --language=Vi_VN
 
+# System country
+yii fixture/generate country  --count=5 --language=Vi_VN
+
 yii fixture/generate category  --count=5 --language=Vi_VN
 yii fixture/generate category_custom_policy  --count=5 --language=Vi_VN
 yii fixture/generate order --count=5 --language=VI_VN
@@ -91,10 +94,11 @@ yii fixture/generate-all --fixtureDataPath='@common/fixtures/data/components'
 
 #-------------load all data needs----------------
 ###  load several fixtures
-yii fixture "User, Seller ,Customer , Product , Systemstateprovince , Systemdistrict , address , Category , Categorycustompolicy , Order "
+yii fixture "User, Seller ,Customer , Product , Systemstateprovince , Systemdistrict , Address , Category , Categorycustompolicy , Order "
 
 yii fixture "User , Product , Order "
 
+yii fixture "Address , Seller , Customer , Systemstateprovince , Systemdistrict , Category , Categorycustompolicy"
 
 ###----------gen all ---------------
 yii fixture/generate "*"  --count=5 --language=VI_VN
