@@ -83,7 +83,7 @@ return [
     // Order
     'type_order' => $typeOrder , //Hình thức mua hàng: SHOP | REQUEST | POS | SHIP,
     'customer_id' => $customer['id'], // Mã id của customer : có thể là khách buôn hoặc khách lẻ ",
-    'customer_type' => $faker->randomElement(['RetailCustomer', 'WholesaleCustomer']), // Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers ",
+    'customer_type' => $faker->randomElement(['Retail', 'Wholesale']), // Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers ",
     'portal' => $faker->randomElement(['EBAY', 'AMAZON_US', 'AMAZON_JAPAN', 'OTHER']), //$seller['portal'], //portal ebay, amazon us, amazon jp ...: EBAY/ AMAZON_US / AMAZON_JAPAN / OTHER / WEBSITE NGOÀI ,
 
     // Đơn Tạo từ chiến dịch nào hay mua ngay tai website Weshop
