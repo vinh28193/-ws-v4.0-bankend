@@ -15,8 +15,6 @@ class m190222_090850_add_3_column_product_table extends Migration
         $this->addColumn('product','currency_id','int');
         $this->addColumn('product','currency_symbol','varchar(255)');
         $this->addColumn('product','exchange_rate','decimal');
-        $this->addForeignKey('idx-product-currency','product','currency_id','system_currency','id');
-        $this->createIndex('idx-product-currency','product','currency_id');
     }
 
     /**

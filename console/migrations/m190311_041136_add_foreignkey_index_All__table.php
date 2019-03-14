@@ -13,8 +13,10 @@ class m190311_041136_add_foreignkey_index_All__table extends Migration
     public function safeUp()
     {
         //Tables manifest
-
         /*
+        $this->addForeignKey('idx-product-currency','product','currency_id','system_currency','id');
+        $this->createIndex('idx-product-currency','product','currency_id');
+
         $this->createIndex('idx-manifest-warehouse_send','manifest','send_warehouse_id');
         $this->addForeignKey('fk-manifest-warehouse_send','manifest','send_warehouse_id','warehouse','id');
 

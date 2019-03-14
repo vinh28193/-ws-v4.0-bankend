@@ -23,6 +23,7 @@ return [
     'seller_id' => $order['seller_id'],
     'portal' => $order['portal'],
     'sku' => $faker->randomNumber(),
+    'product_name'=> $faker->realText(200),
     'parent_sku' => $faker->randomNumber(),
     'link_img' => $faker->imageUrl(),
     'link_origin' => $faker->url,

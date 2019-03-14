@@ -30,11 +30,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  * @property int $remove mặc định 0 là chưa xóa 1 là ẩn 
- * @property int $currency_id
- * @property string $currency_symbol
- * @property string $exchange_rate
- *
- * @property SystemCurrency $currency
+ * @property string $product_name
  */
 class Product extends \common\components\db\ActiveRecord
 {
@@ -52,12 +48,11 @@ class Product extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'total_weight_temporary', 'created_at'], 'required'],
-            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'currency_id'], 'integer'],
-            [['link_img', 'link_origin', 'variations', 'note_by_customer', 'total_weight_temporary'], 'string'],
-            [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'exchange_rate'], 'number'],
-            [['portal', 'sku', 'parent_sku', 'currency_symbol'], 'string', 'max' => 255],
-            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCurrency::className(), 'targetAttribute' => ['currency_id' => 'id']],
+            [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'total_weight_temporary', 'created_at', 'product_name'], 'required'],
+            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove'], 'integer'],
+            [['link_img', 'link_origin', 'variations', 'note_by_customer', 'total_weight_temporary', 'product_name'], 'string'],
+            [['price_amount_origin', 'price_amount_local', 'total_price_amount_local'], 'number'],
+            [['portal', 'sku', 'parent_sku'], 'string', 'max' => 255],
         ];
     }
 
@@ -90,17 +85,7 @@ class Product extends \common\components\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'remove' => 'Remove',
-            'currency_id' => 'Currency ID',
-            'currency_symbol' => 'Currency Symbol',
-            'exchange_rate' => 'Exchange Rate',
+            'product_name' => 'Product Name',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCurrency()
-    {
-        return $this->hasOne(SystemCurrency::className(), ['id' => 'currency_id']);
     }
 }
