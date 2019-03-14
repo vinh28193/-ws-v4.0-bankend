@@ -29,7 +29,7 @@ return [
     'link_origin' => $faker->url,
     'category_id' => $category['id'],
     'custom_category_id' => $category_custom['id'],
-    'quantity' => $amount = $faker->numberBetween(1, 3),
+    'quantity_customer' => $amount = $faker->numberBetween(1, 3),
     'price_amount_local' => $amount_local = strtolower($order['portal']) == 'amazon-jp' ? $amount * 213 : $amount * 23500,
     'total_price_amount_local' => $amount_local* $quantity,
     'quantity_purchase' => 0,
