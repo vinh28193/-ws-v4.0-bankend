@@ -3,6 +3,7 @@
 namespace api\controllers;
 
 
+
 use yii\filters\AccessControl;
 use common\models\Order;
 use api\behaviours\Verbcheck;
@@ -12,7 +13,7 @@ use Yii;
 
 
 
-class OrderController extends RestController
+class OrderController extends BaseApiController
 {
     /*
      * ```php
@@ -43,58 +44,23 @@ class OrderController extends RestController
     public  $page = 1;
     public  $limit = 20;
 
-    public function behaviors()
+
+
+    public function verbs()
     {
-
-        $behaviors = parent::behaviors();
-
-        return $behaviors + [
-
-           'apiauth' => [
-               'class' => Apiauth::className(),
-               'exclude' => [],
-               'callback'=>[]
-           ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['index'],
-                'rules' => [
-                    [
-                        'actions' => [],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => [
-                            'index'
-                        ],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => [],
-                        'allow' => true,
-                        'roles' => ['*'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => Verbcheck::className(),
-                'actions' => [
-                    'index' => ['GET', 'POST'],
-                    'create' => ['POST'],
-                    'update' => ['PUT'],
-                    'view' => ['GET'],
-                    'delete' => ['DELETE']
-                ],
-            ],
-
+        return [
+            'index' => ['GET', 'POST'],
+            'create' => ['POST'],
+            'update' => ['PUT'],
+            'view' => ['GET'],
+            'delete' => ['DELETE']
         ];
     }
 
     public function actionIndex()
     {
-        $params = $this->post['search'];
+
+        $params = '';
         $response = Order::search($params);
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         \Yii::$app->response->data  =   array_merge($response['data'], $response['info']);

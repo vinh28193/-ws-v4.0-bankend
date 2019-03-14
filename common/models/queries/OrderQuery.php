@@ -26,6 +26,7 @@ class OrderQuery extends ActiveQuery
         $this->with([
             'products',
             'orderFees',
+            'customer',
             'packageItems',
             'walletTransactions',
             'seller',

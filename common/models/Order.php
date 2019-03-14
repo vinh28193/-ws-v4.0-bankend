@@ -13,6 +13,7 @@ use common\models\db\Order as DbOrder;
 use common\models\db\Promotion;
 use Yii;
 use yii\db\BaseActiveRecord;
+use common\models\WalletTransaction;
 
 class Order extends DbOrder  // implements AdditionalFeeInterface
 {
@@ -92,6 +93,102 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
     }
 
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCustomer()
+    {
+        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverAddress()
+    {
+        return $this->hasOne(Address::className(), ['id' => 'receiver_address_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverCountry()
+    {
+        return $this->hasOne(SystemCountry::className(), ['id' => 'receiver_country_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverDistrict()
+    {
+        return $this->hasOne(SystemDistrict::className(), ['id' => 'receiver_district_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverProvince()
+    {
+        return $this->hasOne(SystemStateProvince::className(), ['id' => 'receiver_province_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSaleSupport()
+    {
+        return $this->hasOne(User::className(), ['id' => 'sale_support_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSeller()
+    {
+        return $this->hasOne(Seller::className(), ['id' => 'seller_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStore()
+    {
+        return $this->hasOne(Store::className(), ['id' => 'store_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrderFees()
+    {
+        return $this->hasMany(OrderFee::className(), ['order_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPackageItems()
+    {
+        return $this->hasMany(PackageItem::className(), ['order_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['order_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWalletTransactions()
+    {
+        return $this->hasMany(WalletTransaction::className(), ['order_id' => 'id']);
+    }
+
 
     /**
      * @inheritdoc
@@ -105,7 +202,6 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
     public function fields()
     {
         $fields = parent::fields();
-        unset($fields['id']);
         return array_merge($fields,[
             'store' => function($model) { return $model->store_id  === 1 ? 'Viet Nam' : 'Indo';}
         ]);

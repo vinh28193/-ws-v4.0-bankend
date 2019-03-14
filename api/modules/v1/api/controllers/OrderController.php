@@ -48,7 +48,7 @@ class OrderController extends BaseApiController
     }
     public function actionIndex($limit = 20, $page = 1) {
         $model = Order::find()
-            ->with('customer', 'saleSupport', 'seller', 'product')
+            ->with('customer', 'saleSupport', 'seller', 'products')
             ->limit($limit)
             ->offset($page - 1 * $limit)
             ->asArray()->all();
