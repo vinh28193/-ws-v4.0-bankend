@@ -11,6 +11,7 @@ return [
         'class' => \yii\rest\UrlRule::className(),
 //        'prefix' => 'v1',
         'pluralize' => false,
+        'controller' => ['order', 'product', 'check-out', 'package'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -24,6 +25,8 @@ return [
             'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
         ],
-        'controller' => ['v1/order', 'product'],
+        'extraPatterns' => [
+
+        ]
     ]
 ];

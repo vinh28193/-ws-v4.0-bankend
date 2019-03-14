@@ -8,21 +8,35 @@
 
 namespace common\models;
 
-
-use common\models\db\Product;
-
+use common\models\db\PackageItem as DbPackageItem;
 /**
  * Class PackageItem
  * @package common\models
  */
 
-class PackageItem extends \common\models\db\PackageItem
+class PackageItem extends DbPackageItem
 {
-//    /**
-//     * @return \yii\db\ActiveQuery
-//     */
-//    public function getProduct()
-//    {
-//        return $this->hasOne(Product::className(), ['order_id' => 'order_id'])->where(['sku' => $this->sku]);
-//    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrder()
+    {
+        return $this->hasOne(Order::className(), ['id' => 'order_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPackage()
+    {
+        return $this->hasOne(Package::className(), ['id' => 'package_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['order_id' => 'id'])->via('order');
+    }
 }

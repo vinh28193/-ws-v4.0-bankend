@@ -17,4 +17,5 @@ class PackageFixture extends ActiveFixture
     public $depends = [
         'common\fixtures\OrderFixture',
     ];
+    public $dataFile = '@common/fixtures/data/data_fixed/package.php';
 }

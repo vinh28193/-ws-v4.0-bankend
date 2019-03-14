@@ -132,19 +132,8 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
         $offset = ($page - 1) * $limit;
 
         $query = Order::find()
-            ->with([
-                'products',
-                'promotion',
-                'orderFees',
-                'packageItems',
-                'walletTransactions',
-                'seller',
-                'saleSupport' => function ($q) {
-                    /** @var ActiveQuery $q */
-                    $q->select(['username','email','id','status', 'created_at', 'updated_at']);
-                }
-            ])
-            ->asArray(true)
+            ->withFullRelations()
+            ->filter($params)
             ->limit($limit)
             ->offset($offset);
 
@@ -210,4 +199,7 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
         ];
     }
 
+    public function getProducts(){
+        return $this->hasMany(Product::className(),['order_id' => 'id']);
+    }
 }

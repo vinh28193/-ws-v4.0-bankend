@@ -24,9 +24,9 @@ class PackageItemFixture extends ActiveFixture
         foreach ($dataPackages as $package){
             $orders = explode(',',$package['order_ids']);
             foreach ($orders as $order){
-                $item = new PackageItem();
                 $products = (FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\product.php',null,['order_id' => $order]));
                 if(count($products) == 0){
+                    echo 12;
                     continue;
                 }
                 $product = $products[rand(0,count($products) - 1)];
@@ -53,8 +53,9 @@ class PackageItemFixture extends ActiveFixture
                     'updated_at' => rand($created_at,time()),
                     'remove' => 0,
                 ];
-                $item->setAttributes($data);
-                $item->save(0);
+                $this->data = [];
+                $table = $this->getTableSchema();
+                $this->db->schema->insert($table->fullName, $data);
             }
         }
     }
