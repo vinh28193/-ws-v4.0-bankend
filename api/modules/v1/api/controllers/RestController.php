@@ -1,6 +1,6 @@
 <?php
 
-namespace api\modules\v1\controllers;
+namespace api\modules\v1\api\controllers;
 
 use common\components\Response;
 use Yii;

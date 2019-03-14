@@ -8,7 +8,7 @@
 
 namespace api\modules\v1\api\controllers;
 
-use api\modules\v1\controllers\AuthController;
+
 use common\components\ExcelSpreadsheet;
 use common\components\TextUtility;
 use common\components\UrlComponent;

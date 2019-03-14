@@ -6,7 +6,7 @@
  * Time: 16:32
  */
 
-namespace api\models;
+namespace api\v1\models;
 
 use Yii;
 use yii\base\Model;

@@ -1,43 +1,32 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: vinhs
+ * Date: 2019-03-14
+ * Time: 17:14
+ */
 
-namespace api\controllers;
+namespace api\modules\v1\controllers;
 
-use api\models\SignupForm;
+use Yii;
+use api\controllers\BaseApiController;
+use api\v1\models\AccessTokenForm;
+use api\v1\models\AuthorizeForm;
 use common\components\AuthHandler;
 use common\models\AccessTokens;
 use common\models\AuthorizationCodes;
-use common\models\LoginForm;
-use api\v1\models\AuthorizeForm;
-use api\v1\models\AccessTokenForm;
-use Yii;
 
-/****APP Call Back FaceBook Google etc *****/
-
-/**
- * Site controller
- */
-class SiteController extends BaseApiController
+class SecureController extends BaseApiController
 {
-
     public function rules()
     {
-        return [
+        return array_merge(parent::rules(), [
             [
-                'actions' => ['signup'],
                 'allow' => true,
-                'roles' => ['?'],
-            ],
-            [
-                'actions' => ['logout', 'me'],
-                'allow' => true,
-                'roles' => ['@'],
-            ],
-            [
-                'actions' => ['authorize', 'register'],
-                'allow' => true,
+                'actions' => ['auth', 'authorize', 'register', 'access-token'],
                 'roles' => ['*'],
             ]
-        ];
+        ]);
     }
 
     public function verbs()
@@ -64,41 +53,11 @@ class SiteController extends BaseApiController
         ]);
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        Yii::$app->api->sendSuccessResponse(['@Weshop Global 2019 - RESTful API with OAuth2']);
-        //  return $this->render('index');
-    }
-
-    public function actionRegister()
-    {
-
-        $model = new SignupForm();
-        $model->attributes = $this->post;
-
-        if ($user = $model->signup()) {
-
-            $data = $user->attributes;
-            unset($data['auth_key']);
-            unset($data['password_hash']);
-            unset($data['password_reset_token']);
-
-            Yii::$app->api->sendSuccessResponse($data);
-
-        }
-
-    }
-
 
     public function actionMe()
     {
         /** @var  $user \common\components\UserPublicIdentityInterface */
-        if(($user = Yii::$app->user->identity) === null){
+        if (($user = Yii::$app->user->identity) === null) {
             return $this->response(false, "user not login", $user->getPublicIdentity());
         }
         return $this->response(true, "get public identity is success", $user->getPublicIdentity());
@@ -108,8 +67,8 @@ class SiteController extends BaseApiController
     {
 
         $model = new AccessTokenForm();
-        $model->load($this->post,'');
-        /** @var  $handler boolean|\common\models\AuthorizationCodes*/
+        $model->load($this->post, '');
+        /** @var  $handler boolean|AuthorizationCodes */
         if (($handler = $model->handle()) === false) {
             return $this->response(false, $model->getFirstErrors());
         }
@@ -124,7 +83,7 @@ class SiteController extends BaseApiController
         $model = new AuthorizeForm();
         $model->attributes = $this->post;
         $model->load($this->post, '');
-        /** @var  $authorize boolean|\common\models\AuthorizationCodes*/
+        /** @var  $authorize boolean|\common\models\AuthorizationCodes */
         if (($authorize = $model->authorize()) === false) {
             return $this->response(false, $model->getFirstErrors());
         }

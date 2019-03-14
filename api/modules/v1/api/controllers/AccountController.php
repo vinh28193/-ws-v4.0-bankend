@@ -9,7 +9,6 @@
 namespace api\modules\v1\api\controllers;
 
 
-use api\modules\v1\controllers\AuthController;
 use common\models\db\Customer;
 use common\models\Address;
 use common\models\db\SystemCountry;
