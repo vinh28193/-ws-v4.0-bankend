@@ -63,7 +63,8 @@ class OrderController extends BaseApiController
         $params = '';
         $response = Order::search($params);
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        \Yii::$app->response->data  =   array_merge($response['data'], $response['info']);
+        \Yii::$app->response->data  =   $response;
+       // Yii::$app->api->sendSuccessResponse($response);
 
     }
 
@@ -110,9 +111,7 @@ class OrderController extends BaseApiController
     public function actionView($id)
     {
         $model = $this->findModel($id);
-       // Yii::$app->api->sendSuccessResponse($model);
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        \Yii::$app->response->data  =   $model;
+        Yii::$app->api->sendSuccessResponse($model);
     }
 
     public function actionDelete($id)

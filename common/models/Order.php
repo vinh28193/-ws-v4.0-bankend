@@ -304,10 +304,9 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
             'totalCount' => (int)$query->count()
         ];
 
-        return [
-            'data' => $query->all(),
-            'info' => $additional_info
-        ];
+        $data = (array)$query->all();
+        return array_merge($data , $additional_info);
+
     }
 
 }
