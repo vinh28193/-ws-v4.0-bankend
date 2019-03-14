@@ -494,17 +494,9 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
 ####--------------- Document migration --------------------------
 https://www.yiiframework.com/doc/guide/1.1/en/database.migration
 
-
-        $this->batchInsert('store_additional_fee', ['id', 'store_id', 'name', 'currency', 'description', 'is_convert', 'is_read_only', 'status', 'created_by', 'created_time', 'updated_by', 'updated_time'], [
-            [1, 1, 'product_price_origin', 'VND', 'Gias gốc tại xuất sứ . Ví Dụ : Giá gốc sản phẩm EBAY + GIÁ GÓC AMAZON ', 1, 0, 1, 1, time(), 1, time()],
-            [2, 1, 'tax_fee_origin', 'VND', 'Phí tax tại ( xuất sứ) Tại EBAY / AMAZON', 1, 0, 1, 1, time(), 1, time()],
-            [3, 1, 'origin_shipping_fee', 'VND', 'Phí shipping tại xuất sứ', 1, 0, 1, 1, time(), 1, time()],
-            [4, 1, 'weshop_fee', 'VND', 'Phí weshop', 1, 1, 0, 1, time(), 1, time()],
-            [5, 1, 'intl_shipping_fee', 'VND', 'Phí vận chuyển quốc tế', 1, 1, 0, 1, time(), 1, time()],
-            [6, 1, 'custom_fee', 'VND', 'Phí phụ thu', 1, 1, 0, 1, time(), 1, time()],
-            [7, 1, 'delivery_fee_local', 'VND', 'Phí vận chuyển nội địa', 1, 1, 1, 1, time(), 1, time()],
-            [8, 1, 'packing_fee', 'VND', 'Phí đóng hàng', 1, 1, 1, 1, time(), 1, time()],
-            [9, 1, 'inspection_fee ', 'VND', 'Phí kiểm hàng', 1, 1, 1, 1, time(), 1, time()],
-            [10, 1, 'insurance_fee ', 'VND', 'Phí bảo hiểm', 1, 1, 1, 1, time(), 1, time()],
-            [11, 1, 'vat_fee ', 'VND', 'Phí VAT', 1, 0, 1, 1,time(), 1, time()],
-        ]);
+ 
+                
+                  [Response] {"customer_id":["Customer ID is invalid."],"receiver_address_id":["Receiver Address ID is invalid."],"receiver_country_id":["Receiver Country ID is invalid."],"receiver_district_id":["Receiver District ID is invalid."],"seller_id":["Seller ID is invalid."]}
+                 I see response code is 200
+                 I see response code is successful
+                 I see response is json

@@ -1,23 +1,14 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: galat
- * Date: 22/02/2019
- * Time: 08:46
- */
-
-/**
  * @var $faker \Faker\Generator
  * @var $index integer
  */
 
-$id = $index + 1;
-$code = $faker->unique()->countryCode;
 return [
-    'id' => $id,
+    'id' => $index + 1,
     'name' => $faker->country,
-    'country_code' => $code,
-    'country_code_2' => $code,
-    'language' => $faker->languageCode,
+    'country_code' => $faker->unique()->countryCode,
+    'country_code_2' => $faker->unique()->countryCode,
+    'language' => $faker->unique()->languageCode,
     'status' => $faker->numberBetween(0,1),
 ];

@@ -14,4 +14,5 @@ use yii\test\ActiveFixture;
 class SellerFixture extends ActiveFixture
 {
     public $modelClass = 'common\models\db\Seller';
+    public $dataFile = '@common/fixtures/data/data_fixed/seller.php';
 }

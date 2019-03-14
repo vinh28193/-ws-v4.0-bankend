@@ -6,8 +6,6 @@ use Yii;
 use yii\web\Controller;
 use app\models\LoginForm;
 
-
-
 class RestController extends Controller
 {
 
@@ -25,8 +23,8 @@ class RestController extends Controller
         $behaviors['corsFilter'] = [
             'class' => \yii\filters\Cors::className(),
             'cors' => [
-                'Origin' => ['*'],
-                // 'Access-Control-Allow-Origin' => ['*', 'http://haikuwebapp.local.com:81','http://localhost:81'],
+                //'Origin' => ['*'],
+                'Access-Control-Allow-Origin' => ['http://weshop-ops-angular.local.vn','http://localhost:8000','http://weshop-v4.back-end.local.vn','http://localhost:4200'],
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                 'Access-Control-Request-Headers' => ['*'],
                 'Access-Control-Allow-Credentials' => null,
@@ -48,6 +46,7 @@ class RestController extends Controller
         }
 
     }
+
 
 }
 
