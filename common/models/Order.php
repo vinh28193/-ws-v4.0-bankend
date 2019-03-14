@@ -298,7 +298,4 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
 
     }
 
-    public function getProducts(){
-        return $this->hasMany(Product::className(),['order_id' => 'id']);
-    }
 }

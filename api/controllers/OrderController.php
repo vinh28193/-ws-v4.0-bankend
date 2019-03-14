@@ -13,7 +13,7 @@ use Yii;
 
 
 
-class OrderController extends BaseApiController
+class OrderController extends RestController
 {
     /*
      * ```php
