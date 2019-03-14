@@ -7,8 +7,8 @@ use common\components\AuthHandler;
 use common\models\AccessTokens;
 use common\models\AuthorizationCodes;
 use common\models\LoginForm;
-use api\v1\models\AuthorizeForm;
-use api\v1\models\AccessTokenForm;
+use api\modules\v1\models\AuthorizeForm;
+use api\modules\v1\models\AccessTokenForm;
 use Yii;
 
 /****APP Call Back FaceBook Google etc *****/
