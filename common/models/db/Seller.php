@@ -8,17 +8,14 @@ use Yii;
  * This is the model class for table "seller".
  *
  * @property int $id ID
- * @property string $name
- * @property string $link_store
- * @property string $rate
- * @property string $description
+ * @property string $seller_name
+ * @property string $seller_link_store
+ * @property string $seller_store_rate
+ * @property string $seller_store_description
  * @property string $created_at
  * @property string $updated_at
- * @property int $remove
+ * @property int $seller_remove
  * @property string $portal
- *
- * @property Order[] $orders
- * @property Product[] $products
  */
 class Seller extends \common\components\db\ActiveRecord
 {
@@ -36,9 +33,9 @@ class Seller extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['link_store', 'description', 'portal'], 'string'],
-            [['created_at', 'updated_at', 'remove'], 'integer'],
-            [['name', 'rate'], 'string', 'max' => 255],
+            [['seller_link_store', 'seller_store_description', 'portal'], 'string'],
+            [['created_at', 'updated_at', 'seller_remove'], 'integer'],
+            [['seller_name', 'seller_store_rate'], 'string', 'max' => 255],
         ];
     }
 
@@ -49,30 +46,14 @@ class Seller extends \common\components\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'link_store' => 'Link Store',
-            'rate' => 'Rate',
-            'description' => 'Description',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
-            'remove' => 'Remove',
+            'seller_name' => 'Seller Name',
+            'seller_link_store' => 'Seller Link Store',
+            'seller_store_rate' => 'Seller Store Rate',
+            'seller_store_description' => 'Seller Store Description',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'seller_remove' => 'Seller Remove',
             'portal' => 'Portal',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrders()
-    {
-        return $this->hasMany(Order::className(), ['seller_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProducts()
-    {
-        return $this->hasMany(Product::className(), ['seller_id' => 'id']);
     }
 }

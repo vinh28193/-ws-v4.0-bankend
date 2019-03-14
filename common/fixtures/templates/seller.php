@@ -13,12 +13,12 @@
 
 return [
     'id' => $index + 1,
-    'name' => $faker->unique()->name,
-    'link_store' => $faker->unique()->url,
-    'rate' => $faker->unique()->randomFloat(1,0,10),
-    'description' => $faker->realText(50),
+    'seller_name' => $faker->unique()->name,
+    'seller_store_rate' => $faker->unique()->url,
+    'seller_store_rate' => $faker->unique()->randomFloat(1,0,10),
+    'seller_store_description' => $faker->realText(50),
     'created_at' => $faker->unixTime,
     'updated_at' => $faker->unixTime,
-    'remove' => $faker->numberBetween(0,1),
+    'seller_remove' => $faker->numberBetween(0,1),
     'portal' => $faker->randomElement(['EBAY',"AMAZON","AMAZON-JP"]),
 ];

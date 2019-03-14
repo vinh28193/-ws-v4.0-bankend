@@ -3,6 +3,7 @@
 namespace api\controllers;
 
 
+
 use yii\filters\AccessControl;
 use common\models\Order;
 use api\behaviours\Verbcheck;
@@ -12,7 +13,7 @@ use Yii;
 
 
 
-class OrderController extends RestController
+class OrderController extends BaseApiController
 {
     /*
      * ```php
@@ -43,64 +44,24 @@ class OrderController extends RestController
     public  $page = 1;
     public  $limit = 20;
 
-    public function behaviors()
+
+
+    public function verbs()
     {
-
-        $behaviors = parent::behaviors();
-
-        return $behaviors + [
-
-           'apiauth' => [
-               'class' => Apiauth::className(),
-               'exclude' => [],
-               'callback'=>[]
-           ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['index'],
-                'rules' => [
-                    [
-                        'actions' => [],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => [
-                            'index'
-                        ],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => [],
-                        'allow' => true,
-                        'roles' => ['*'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => Verbcheck::className(),
-                'actions' => [
-                    'index' => ['GET', 'POST'],
-                    'create' => ['POST'],
-                    'update' => ['PUT'],
-                    'view' => ['GET'],
-                    'delete' => ['DELETE']
-                ],
-            ],
-
+        return [
+            'index' => ['GET', 'POST'],
+            'create' => ['POST'],
+            'update' => ['PUT'],
+            'view' => ['GET'],
+            'delete' => ['DELETE']
         ];
     }
 
     public function actionIndex()
     {
-        $params = $this->post['search'];
+        $params = '';
         $response = Order::search($params);
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        \Yii::$app->response->data  =   array_merge($response['data'], $response['info']);
-
-
-
+        Yii::$app->api->sendSuccessResponse($response);
     }
 
     public function actionCreate()
@@ -109,14 +70,12 @@ class OrderController extends RestController
             $model = new Order;
             $model->attributes = $this->post;
 
-            /***Todo -  Validate data model ***/
-
             if ($model->save()) {
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->data  =   $model->attributes;
-            } else {
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->data  =   $model->errors;
+                /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->attributes; */
+                  Yii::$app->api->sendSuccessResponse($model->attributes);
+            } elseif ($model->save() === false) {
+                /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->errors;  */
+                Yii::$app->api->sendFailedResponse("Invalid Record requested" , (array)$model->errors);
             }
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
@@ -129,15 +88,11 @@ class OrderController extends RestController
         if ($id !== null)  {
             $model = $this->findOrder($id);
             $model->attributes = $this->post;
-
             /***Todo -  Validate data model ***/
-
             if ($model->save()) {
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->data  =   $model->attributes;
+                Yii::$app->api->sendSuccessResponse($model->attributes);
             } else {
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->data  =   $model->errors;
+                Yii::$app->api->sendFailedResponse("Invalid Record requested" , (array)$model->errors);
             }
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
@@ -148,9 +103,7 @@ class OrderController extends RestController
     public function actionView($id)
     {
         $model = $this->findModel($id);
-       // Yii::$app->api->sendSuccessResponse($model);
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        \Yii::$app->response->data  =   $model;
+        Yii::$app->api->sendSuccessResponse($model);
     }
 
     public function actionDelete($id)

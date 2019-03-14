@@ -14,4 +14,5 @@ use yii\test\ActiveFixture;
 class SystemCountryFixture extends ActiveFixture
 {
     public $modelClass = 'common\models\db\SystemCountry';
+    public $dataFile = '@common/fixtures/data/data_fixed/country.php';
 }

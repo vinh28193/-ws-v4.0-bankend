@@ -98,7 +98,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
             if ($this->hasAttribute($name) && isset($fields[$name])) {
                 $fields[$name] = function ($model) use ($name) {
                     $formatter = self::getFormatter();
-                    $formatter->nullDisplay = 'not set';
+                    $formatter->nullDisplay = '';
                     return Yii::$app->formatter->asDatetime($model->$name);
                 };
             }
