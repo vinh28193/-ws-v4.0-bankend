@@ -6,7 +6,7 @@
  * Time: 09:14
  */
 
-namespace api\modules\v1\controllers;
+namespace api\modules\v1\api\controllers;
 
 
 use api\behaviours\Apiauth;

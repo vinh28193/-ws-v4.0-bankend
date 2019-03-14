@@ -8,7 +8,7 @@
 return [
     'class' => 'yii\web\UrlManager',
     'enablePrettyUrl' => true,
-    'enableStrictParsing' => false,
+    'enableStrictParsing' => true,
     'showScriptName' => false,
     'rules' => [
         '1/register'=>'site/register',

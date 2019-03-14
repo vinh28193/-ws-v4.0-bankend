@@ -6,7 +6,7 @@
  * Time: 17:03
  */
 
-namespace api\models;
+namespace api\v1\models;
 
 use common\models\AuthorizationCodes;
 use Yii;
