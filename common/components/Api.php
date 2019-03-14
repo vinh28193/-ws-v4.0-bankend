@@ -16,12 +16,17 @@ use common\models\AccessTokens;
 class Api extends Component
 {
 
-    public function sendFailedResponse($message)
+    public function sendFailedResponse($message = false , $additional_info = false )
     {
         $this->setHeader(400);
-
-        echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $message), JSON_PRETTY_PRINT);
-
+        $response = [];
+        $response['status'] = 0;
+        $response['message'] = "Failed";
+        $response['status'] = 0;
+        $response['errors'] = $message;
+        $response['data'] = $additional_info;
+        $response = Json::encode($response, JSON_PRETTY_PRINT);
+        echo $response;
         Yii::$app->end();
     }
 
@@ -32,23 +37,19 @@ class Api extends Component
 
         $response = [];
         $response['status'] = 1;
+        $response['message'] = "Success";
 
         if (is_array($data))
             $response['data'] = $data;
-
-
         if ($additional_info) {
             $response = array_merge($response, $additional_info);
         }
 
-
         $response = Json::encode($response, JSON_PRETTY_PRINT);
-
 
         if (isset($_GET['callback'])) {
             /* this is required for angularjs1.0 client factory API calls to work */
             $response = $_GET['callback'] . "(" . $response . ")";
-
             echo $response;
         } else {
             echo $response;

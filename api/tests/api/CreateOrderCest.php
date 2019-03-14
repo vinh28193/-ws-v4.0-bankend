@@ -99,10 +99,14 @@ class CreateOrderCest
             "current_status" : null, 
             "remove" : 0
         }');
-        $I->seeResponseCodeIs(HttpCode::OK); // 200
-        $I->seeResponseCodeIsSuccessful();
-        $I->seeResponseIsJson();
-        $I->seeResponseContains('{"store_id":["Store ID must be an integer."]');
+        $I->seeResponseCodeIs(400);
+//        $I->seeResponseCodeIsSuccessful();
+//        $I->seeResponseIsJson();
+//        $I->seeResponseContainsJson([
+//            'status'=> 0,
+//            'message' => "Failed",
+//            'errors' => "Invalid Record requested"
+//        ]);
 
     }
 
@@ -185,5 +189,6 @@ class CreateOrderCest
         $I->seeResponseCodeIs(HttpCode::OK); // 200
         $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
+        $I->seeResponseContainsJson(['status' => 1,"message"=>"Success"]);
     }
 }

@@ -99,8 +99,6 @@ class OrderController extends RestController
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         \Yii::$app->response->data  =   array_merge($response['data'], $response['info']);
 
-
-
     }
 
     public function actionCreate()
@@ -109,14 +107,12 @@ class OrderController extends RestController
             $model = new Order;
             $model->attributes = $this->post;
 
-            /***Todo -  Validate data model ***/
-
             if ($model->save()) {
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->data  =   $model->attributes;
-            } else {
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->data  =   $model->errors;
+                /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->attributes; */
+                  Yii::$app->api->sendSuccessResponse($model->attributes);
+            } elseif ($model->save() === false) {
+                /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->errors;  */
+                Yii::$app->api->sendFailedResponse("Invalid Record requested" , (array)$model->errors);
             }
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
