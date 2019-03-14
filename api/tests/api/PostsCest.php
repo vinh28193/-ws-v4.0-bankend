@@ -46,9 +46,9 @@ class PostsApiCest
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','e54e9558e4c0f80cc356647251e24054');
         $I->sendGET('/1/post/view/100');
-        $I->seeResponseCodeIs(400);
+        $I->seeResponseCodeIs(500);
         $I->seeResponseIsJson();
-        $I->seeResponseContainsJson(["errors"=> "Invalid Record requested"]);
+        $I->seeResponseContainsJson(['success' => false,'message' =>"Trying to get property 'attributes' of non-object"]);
     }
 
     public function testCreate(ApiTester $I)

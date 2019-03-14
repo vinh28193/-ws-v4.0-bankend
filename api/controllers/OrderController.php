@@ -59,13 +59,9 @@ class OrderController extends BaseApiController
 
     public function actionIndex()
     {
-
         $params = '';
         $response = Order::search($params);
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        \Yii::$app->response->data  =   $response;
-       // Yii::$app->api->sendSuccessResponse($response);
-
+        Yii::$app->api->sendSuccessResponse($response);
     }
 
     public function actionCreate()
@@ -92,15 +88,11 @@ class OrderController extends BaseApiController
         if ($id !== null)  {
             $model = $this->findOrder($id);
             $model->attributes = $this->post;
-
             /***Todo -  Validate data model ***/
-
             if ($model->save()) {
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->data  =   $model->attributes;
+                Yii::$app->api->sendSuccessResponse($model->attributes);
             } else {
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->data  =   $model->errors;
+                Yii::$app->api->sendFailedResponse("Invalid Record requested" , (array)$model->errors);
             }
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
