@@ -182,9 +182,9 @@ return [
 
     // Coupon : 1 order - 1 Coupon
     'coupon_id' => $coupon_id = $faker->randomElement([null, null, null, null, null, null, null, null, null, $coupon['id']]), // id mã giảm giá,
-//            'coupon_code' => $this->string(255)->comment("mã giảm giá,
-//            'coupon_time' => $this->bigInteger()->comment("thời gian sử dụng mã coupon ,
-//            'coupon_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này ,
+//  'coupon_code' => $this->string(255)->comment("mã giảm giá,
+//  'coupon_time' => $this->bigInteger()->comment("thời gian sử dụng mã coupon ,
+//  'coupon_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này ,
 
     // XU : 1 order - 1 Xu được tích lũy hoặc sinh ra
     'revenue_xu' => 0, //số xu được nhận,
@@ -195,9 +195,9 @@ return [
 
     // Promotion : 1 order - 1 promotion
     'promotion_id' => $coupon_id, //"id của promotion : Id Chạy chương trình promotion,
-//            'promotion_code' => $this->string(255)->comment("mã khuyến mại,
-//            'promotion_time' => $this->bigInteger()->comment("thời gian sử dụng mã promotion,
-//            'promotion_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này ,
+//  'promotion_code' => $this->string(255)->comment("mã khuyến mại,
+//  'promotion_time' => $this->bigInteger()->comment("thời gian sử dụng mã promotion,
+//  'promotion_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này ,
 
     // Boxme + Kho
     'total_weight' => $faker->randomElement([0.5, 1, 2]), //cân nặng tính phí,
@@ -208,15 +208,15 @@ return [
 
 
     // LƯU THONG TIN đã mua của EBAY / AMAZON :   Đơn này đươc phân cho nhân viên Mua Hàng
-    'purchase_order_id' => $faker->unique()->realText(50), //Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy),
-    'purchase_transaction_id' => $faker->unique()->realText(100), //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
+    'purchase_order_id' => $faker->bankAccountNumber.$faker->realText(10).','.$faker->bankAccountNumber.','.$faker->bankAccountNumber.$faker->realText(10).','.$faker->bankAccountNumber, //Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy),
+    'purchase_transaction_id' => $faker->bankAccountNumber.'ws2019'.$faker->bankAccountNumber, //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
     'purchase_amount' => $faker->unique()->randomDigit(), //số tiền thanh toán thực tế với người bán EBAY/AMAZON, lưu ý : Số đã trừ Buck/Point ( và là dạng list, cách nhau = dấu phẩy),
     'purchase_account_id' => $faker->bankAccountNumber, //id tài khoản mua hàng,
     'purchase_account_email' => $faker->unique()->email, //email tài khoản mua hàng,
     'purchase_card' => $faker->unique()->bankAccountNumber, //thẻ thanh toán,
     'purchase_amount_buck' => $faker->randomNumber(), //số tiền buck thanh toán,
     'purchase_amount_refund' => $faker->randomNumber(), //số tiền người bán hoàn,
-    'purchase_refund_transaction_id' => $faker->realText(30), //mã giao dịch hoàn,
+    'purchase_refund_transaction_id' => null, //mã giao dịch hoàn,
 
     // Tổng Số lượng
     'total_quantity' => $faker->randomElement([1, 34, 2, 4, 5, 6, 9]), // Tổng số lượng khách hàng đặt = tổng các số lượng trên bảng product,
