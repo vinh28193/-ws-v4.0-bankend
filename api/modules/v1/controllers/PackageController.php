@@ -8,20 +8,36 @@
 
 namespace api\modules\v1\controllers;
 
-use Yii;
 use api\controllers\BaseApiController;
 use common\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
 use common\models\Package;
+use Yii;
 
 class PackageController extends BaseApiController
 {
 
-    public function verbs()
+    /**
+     * @inheritdoc
+     */
+    protected function verbs()
     {
-        return ArrayHelper::merge(parent::verbs(), [
+        return [
             'index' => ['GET']
-        ]);
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function rules()
+    {
+        return [
+            [
+                'allow' => true,
+                'actions' => ['index'],
+                'roles' => $this->getAllRoles(true, ['user', 'sale', 'marketing'])
+            ],
+        ];
     }
 
     /**

@@ -93,7 +93,7 @@ class BaseApiController extends \yii\rest\Controller
      * Please refer to [[VerbFilter::actions]] on how to declare the allowed verbs.
      * @return array the allowed HTTP verbs.
      */
-    public function verbs()
+    protected function verbs()
     {
         return [
             '*' => ['OPTIONS']
@@ -104,7 +104,7 @@ class BaseApiController extends \yii\rest\Controller
      * Declares the allowed access rule.
      * @return array
      */
-    public function rules()
+    protected function rules()
     {
         return [
             [

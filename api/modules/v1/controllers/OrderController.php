@@ -19,9 +19,9 @@ use yii\web\ServerErrorHttpException;
 class OrderController extends BaseApiController
 {
 
-    public function rules()
+    protected function rules()
     {
-        return array_merge(parent::rules(), [
+        return [
             [
                 'allow' => true,
                 'actions' => ['index', 'view', 'create', 'update'],
@@ -45,10 +45,10 @@ class OrderController extends BaseApiController
                 'actions' => ['update', 'delete'],
                 'roles' => $this->getAllRoles(true, 'user'),
             ],
-        ]);
+        ];
     }
 
-    public function verbs()
+    protected function verbs()
     {
         return [
             'index' => ['GET', 'POST'],
