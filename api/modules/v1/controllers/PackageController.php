@@ -8,10 +8,11 @@
 
 namespace api\modules\v1\controllers;
 
+use Yii;
 use api\controllers\BaseApiController;
 use common\data\ActiveDataProvider;
-use common\models\Package;
 use yii\helpers\ArrayHelper;
+use common\models\Package;
 
 class PackageController extends BaseApiController
 {
@@ -25,21 +26,27 @@ class PackageController extends BaseApiController
 
     /**
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
-//        $requestParams = Yii::$app->getRequest()->getQueryParam();
+        $requestParams = Yii::$app->getRequest()->getQueryParams();
         $query = Package::find();
 
-        $query->joinWith(['packageItems' => function (\yii\db\ActiveQuery $q) {
-            $q->with(['order' => function(\common\models\queries\OrderQuery $orderQuery){
-                    $orderQuery->with('products');
-            } ]);
-        }]);
-
+        $query->filterRelation();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSizeParam' => 'perPage',
+                'params' => $requestParams,
+            ],
+            'sort' => [
+                'params' => $requestParams,
+            ],
         ]);
+
+        $query->filter($requestParams);
+
         return $this->response(true, 'get data success', $dataProvider);
     }
 }
