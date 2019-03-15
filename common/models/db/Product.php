@@ -26,7 +26,7 @@ use Yii;
  * @property string $variations thuộc tính sản phẩm
  * @property int $variation_id mã thuộc tính sản phẩm . Notes : Trường này để làm addon tự động mua hàng đẩy vào Giở hàng của Ebay / Amazon 
  * @property string $note_by_customer note của khách / Khách hàng ghi chú
- * @property string $total_weight_temporary cân nặng  trong lượng tạm tính
+ * @property string $total_weight_temporary
  * @property string $created_at
  * @property string $updated_at
  * @property int $remove mặc định 0 là chưa xóa 1 là ẩn 
@@ -48,10 +48,10 @@ class Product extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'total_weight_temporary', 'created_at', 'product_name'], 'required'],
+            [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'created_at', 'product_name'], 'required'],
             [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove'], 'integer'],
-            [['link_img', 'link_origin', 'variations', 'note_by_customer', 'total_weight_temporary', 'product_name'], 'string'],
-            [['price_amount_origin', 'price_amount_local', 'total_price_amount_local'], 'number'],
+            [['link_img', 'link_origin', 'variations', 'note_by_customer', 'product_name'], 'string'],
+            [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_weight_temporary'], 'number'],
             [['portal', 'sku', 'parent_sku'], 'string', 'max' => 255],
         ];
     }
