@@ -8,10 +8,22 @@
 
 namespace common\models;
 
+use Yii;
 use common\models\db\Package as DbPackage;
+use common\models\queries\PackageQuery;
 
 class Package extends DbPackage
 {
+
+    /**
+     * @inheritdoc
+     * @return PackageQuery the active query used by this AR class.
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function find()
+    {
+        return Yii::createObject(PackageQuery::className(), [get_called_class()]);
+    }
 
     /**
      * @return \yii\db\ActiveQuery
