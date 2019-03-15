@@ -21,7 +21,7 @@ class PostsFuntionCest
 
     public function testIndex(FunctionalTester $I)
     {
-        $I->amOnPage(['api/posts/index']);
+        $I->amOnPage(['1/posts/index']);
         $I->see('Posts', 'h1');
     }
 

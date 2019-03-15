@@ -1,11 +1,22 @@
 <?php namespace api\tests;
 use api\tests\ApiTester;
 use Codeception\Util\HttpCode;
+use tests\fixtures\OrderFixture;
+use yii\helpers\Url;
 
 class CreateOrderCest
 {
     public function _before(ApiTester $I)
-    { }
+    {
+        /*
+        $I->haveFixtures([
+            'order' => [
+                'class' => OrderFixture::className(),
+                //'dataFile' => codecept_data_dir() . 'post.php'
+            ]
+        ]);
+        */
+    }
 
     // tests
     public function tryToTest(ApiTester $I)

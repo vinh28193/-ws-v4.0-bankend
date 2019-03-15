@@ -49,3 +49,4 @@ phpunit.phar
 
 #codecept.phar
 backend/codecept.phar
+api/tests/_support/ApiTester.php

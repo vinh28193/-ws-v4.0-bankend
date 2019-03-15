@@ -21,7 +21,7 @@ return [
             'namespace' => 'common\fixtures',
             'templatePath' => '@common/fixtures/templates',
             //'fixtureDataPath' => '@common/fixtures/data/units' // units , models , data_fixed , components
-            'fixtureDataPath' => '@common/fixtures/data/data_fixed'
+            'fixtureDataPath' => '@common/fixtures/data/units'
         ],
         'migrate' => [
             'class' => 'common\components\consoles\controllers\MigrateController',
