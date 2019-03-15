@@ -32,15 +32,15 @@ class PostsController extends Controller
                 'only' => [],
                 'rules' => [
                     [
-                        'actions' => [],
-                        'allow' => false,
-                        'roles' => ['?'],
-                    ],
-                    [
                         'actions' => ['create', 'update', 'index', 'view', 'delete'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['?'],
                     ],
+//                    [
+//                        'actions' => ['create', 'update', 'index', 'view', 'delete'],
+//                        'allow' => true,
+//                        'roles' => ['@'],
+//                    ],
                 ],
             ],
         ];

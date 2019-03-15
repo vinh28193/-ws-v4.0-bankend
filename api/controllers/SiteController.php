@@ -72,7 +72,6 @@ class SiteController extends BaseApiController
     public function actionIndex()
     {
         Yii::$app->api->sendSuccessResponse(['@Weshop Global 2019 - RESTful API with OAuth2']);
-        //  return $this->render('index');
     }
 
     public function actionRegister()

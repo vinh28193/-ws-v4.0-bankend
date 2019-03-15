@@ -11,7 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => [
         'log',
-        'ipFilter',
+        //'ipFilter',
         'admin',
     ],
     'controllerNamespace' => 'backend\controllers',

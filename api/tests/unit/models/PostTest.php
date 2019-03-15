@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\unit\models;
+namespace api\unit\models;
 
 use app\models\Post;
 use Codeception\Test\Unit;

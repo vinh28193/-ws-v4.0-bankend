@@ -494,9 +494,29 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
 ####--------------- Document migration --------------------------
 https://www.yiiframework.com/doc/guide/1.1/en/database.migration
 
+ #collect coverage for all tests
+ vendor/bin/codecept run -- --coverage-html --coverage-xml
  
-                
-                  [Response] {"customer_id":["Customer ID is invalid."],"receiver_address_id":["Receiver Address ID is invalid."],"receiver_country_id":["Receiver Country ID is invalid."],"receiver_district_id":["Receiver District ID is invalid."],"seller_id":["Seller ID is invalid."]}
-                 I see response code is 200
-                 I see response code is successful
-                 I see response is json
+ #------------Test Units------------
+ 
+ Generators
+ There are plenty of useful Codeception commands:
+ 
+ generate:cest suite filename - Generates a sample Cest test
+ generate:test suite filename - Generates a sample PHPUnit Test with Codeception hooks
+ generate:feature suite filename - Generates Gherkin feature file
+ generate:suite suite actor - Generates a new suite with the given Actor class name
+ generate:scenarios suite - Generates text files containing scenarios from tests
+ generate:helper filename - Generates a sample Helper File
+ generate:pageobject suite filename - Generates a sample Page object
+ generate:stepobject suite filename - Generates a sample Step object
+ generate:environment env - Generates a sample Environment configuration
+ generate:groupobject group - Generates a sample Group Extension
+ 
+ 
+  
+  
+  php vendor/bin/codecept generate:scenarios
+  php vendor/bin/codecept generate:cest acceptance Signin
+  
+  
