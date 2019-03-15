@@ -12,7 +12,7 @@ class CreateOrderCest
         $I->haveFixtures([
             'order' => [
                 'class' => OrderFixture::className(),
-                //'dataFile' => codecept_data_dir() . 'post.php'
+                //'dataFile' => codecept_data_dir() . 'order.php'
             ]
         ]);
         */
