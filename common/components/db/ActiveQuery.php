@@ -8,8 +8,12 @@
 
 namespace common\components\db;
 
+/**
+ * Class ActiveQuery
+ * @package common\components\db
+ */
 
-class ActiveQuery extends \yii\db\ActiveRecord
+class ActiveQuery extends \yii\db\ActiveQuery
 {
     /**
      * @return string
