@@ -2,43 +2,45 @@
 
 namespace api\controllers;
 
-
-
 use yii\filters\AccessControl;
-use common\models\Order;
+use common\models\Product;
 use api\behaviours\Verbcheck;
 use api\behaviours\Apiauth;
 
 use Yii;
 
-/***Cache Http **/
-use yii\caching\DbDependency;
-use yii\caching\TagDependency;
 
-
-class OrderController extends BaseApiController
+class ProductController extends BaseApiController
 {
+    /*
+     * ```php
+     * public function behaviors()
+     * {
+     *     return [
+     *         'access' => [
+     *             'class' => \yii\filters\AccessControl::className(),
+     *             'only' => ['create', 'update'],
+     *             'rules' => [
+     *                 // deny all POST requests
+     *                 [
+     *                     'allow' => false,
+     *                     'verbs' => ['POST']
+     *                 ],
+     *                 // allow authenticated users
+     *                 [
+     *                     'allow' => true,
+     *                     'roles' => ['@'],
+     *                 ],
+     *                 // everything else is denied
+     *             ],
+     *         ],
+     *     ];
+     * }
+     */
 
     public  $page = 1;
     public  $limit = 20;
 
-    public function behaviors()
-    {
-
-        return [
-            'pageCache' => [
-                'class' => 'yii\filters\PageCache',
-                'only' => ['index'],
-                'duration' => 24 * 3600 * 365, // 1 year
-                'dependency' => [
-                    'class' => 'yii\caching\ChainedDependency',
-                    'dependencies' => [
-                        new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
-                    ]
-                ],
-            ],
-        ];
-    }
 
 
     public function verbs()
@@ -55,15 +57,45 @@ class OrderController extends BaseApiController
     public function actionIndex()
     {
         $params = '';
-        $response = Order::search($params);
+        $response = Product::search($params);
         Yii::$app->api->sendSuccessResponse($response);
     }
 
     public function actionCreate()
     {
         if (isset($this->post) !== null)  {
-            $model = new Order;
+            $model = new Product;
             $model->attributes = $this->post;
+
+            $model->attributes = [
+                'order_id' => 2,
+                'seller_id' => 2,
+                'portal' => 'AMAZON_JAPAN',
+                'sku' => 'db5e5333ff544da2a6a6',
+                'product_name' => 'The players all played at once to eat the comfits: this caused some noise and confusion, as the hall was very hot, she kept on puzzling about it in a few minutes it seemed quite natural to Alice as.',
+                'parent_sku' => '34efc0d2c247db5e5333ff544da2a6',
+                'link_img' => 'https://lorempixel.com/640/480/?70454',
+                'link_origin' => 'http://www.moc.com/quaerat-repellendus-id-autem-nulla-harum-fuga.html',
+                'category_id' => 2,
+                'custom_category_id' => 2,
+                'price_amount_origin' => 3,
+                'quantity_customer' => 3,
+                'price_amount_local' => 70500,
+                'total_price_amount_local' => 70500,
+                'quantity_purchase' => 0,
+                'quantity_inspect' => 0,
+                'variations' => '',
+                'variation_id' => '',
+                'note_by_customer' => 'Let me see: four.',
+                'total_weight_temporary' => 0.5,
+                'created_at' => 1540486574,
+                'updated_at' => 498739696,
+                'remove' => 0,
+            ];
+
+            var_dump($model->validate());
+            var_dump($model->errors);
+            die();
 
             if ($model->save()) {
                 /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->attributes; */
@@ -81,7 +113,7 @@ class OrderController extends BaseApiController
     public function actionUpdate($id)
     {
         if ($id !== null)  {
-            $model = $this->findOrder($id);
+            $model = $this->findProduct($id);
             $model->attributes = $this->post;
             /***Todo -  Validate data model ***/
             if ($model->save()) {
@@ -111,11 +143,11 @@ class OrderController extends BaseApiController
 
     protected function findModel($id)
     {
-        $model = Order::find()
+        $model = Product::find()
              ->with([
                 'products',
                 'promotion',
-                'orderFees',
+                'ProductFees',
                 'packageItems',
                 'walletTransactions',
                 'seller',
@@ -126,15 +158,15 @@ class OrderController extends BaseApiController
             ->where(['id' => $id] );
 
         if ( $id !== null)  {
-            return $model->orderBy('created_at desc')->limit($this->limit)->offset($this->page* $this->limit - $this->limit)->asArray()->all();
+            return $model->ProductBy('created_at desc')->limit($this->limit)->offset($this->page* $this->limit - $this->limit)->asArray()->all();
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
     }
 
-    protected function findOrder($id)
+    protected function findProduct($id)
     {
-        if (($model = Order::findOne($id)) !== null) {
+        if (($model = Product::findOne($id)) !== null) {
             return $model;
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");

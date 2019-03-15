@@ -39,6 +39,14 @@ return [
         '1/order/delete/<id>'=>'order/delete',
 
 
+        ### Product 27/02/2019
+        '1/product'=>'product/index',
+        '1/product/view/<id>'=>'product/view',
+        '1/product/create'=>'product/create',
+        '1/product/update/<id>'=>'product/update',
+        '1/product/delete/<id>'=>'product/delete',
+
+
         ### API SOCIAL 05/03/2019
         '1/api/social'=>'api-social/index',
         '1/api/social/convert-token'=>'api-social/convert-token',

@@ -135,7 +135,7 @@ return [
     'total_final_amount_local' => 0, // Tổng giá trị đơn hàng ( Số tiền đã trừ đi giảm giá ) : số tiền cuối cùng khách hàng phải thanh toán và tính theo tiền local,
     'total_amount_local' => 0, // Tổng giá trị đơn hàng : Số tiền chưa tính giảm giá ,
 
-    'total_price_amount_local' => 0, // Tổng Tiền Hàng ( Theo tiền tê của nước Weshop Indo hoặc Weshop Viet Nam ) : Tổng giá tiền gốc các item theo tiền local ,
+    'total_origin_fee_local' => 0, // Tổng Tiền Hàng ( Theo tiền tê của nước Weshop Indo hoặc Weshop Viet Nam ) : Tổng giá tiền gốc các item theo tiền local ,
     'total_price_amount_origin' => 0, // Tổng Tiền Hàng ( Theo tiền ngoại tê của EBAY / AMAZON  / WEBSITE NGOÀI) : Tổng giá tiền gốc các item theo ngoại tệ ,
 
 
@@ -149,15 +149,15 @@ return [
 
     // Tổng các Phí Weshop
     'total_fee_amount_local' => 0,  //tổng phí đơn hàng,
-    'total_tax_us_amount_local' => 0, //Tổng phí us tax,
-    'total_shipping_us_amount_local' => 0, //Tổng phí shipping us,
-    'total_weshop_fee_amount_local' => 0, //Tổng phí weshop,
-    'total_intl_shipping_fee_amount_local' => 0,//Tổng phí vận chuyển quốc tế,
+    'total_origin_tax_fee_local' => 0, //Tổng phí us tax,
+    'total_origin_shipping_fee_local' => 0, //Tổng phí shipping us,
+    'total_weshop_fee_local' => 0, //Tổng phí weshop,
+    'total_intl_shipping_fee_local' => 0,//Tổng phí vận chuyển quốc tế,
     'total_custom_fee_amount_local' => 0,//Tổng phí phụ thu,
-    'total_delivery_fee_amount_local' => 0, //Tổng phí vận chuyển nội địa,
-    'total_packing_fee_amount_local' => 0, //tổng phí đóng gỗ,
-    'total_inspection_fee_amount_local' => 0, //Tổng phí kiểm hàng,
-    'total_insurance_fee_amount_local' => 0, //Tổng phí bảo hiểm,
+    'total_delivery_fee_local' => 0, //Tổng phí vận chuyển nội địa,
+    'total_packing_fee_local' => 0, //tổng phí đóng gỗ,
+    'total_inspection_fee_local' => 0, //Tổng phí kiểm hàng,
+    'total_insurance_fee_local' => 0, //Tổng phí bảo hiểm,
     'total_vat_amount_local' => 0, // "Tổng phí VAT,
 
     // Update từ bảng tỉ giá Vietcombank  Crowler để lưu vào order tại thời điểm khách hàng đặt đơn mua hàng
@@ -182,9 +182,9 @@ return [
 
     // Coupon : 1 order - 1 Coupon
     'coupon_id' => $coupon_id = $faker->randomElement([null, null, null, null, null, null, null, null, null, $coupon['id']]), // id mã giảm giá,
-//            'coupon_code' => $this->string(255)->comment("mã giảm giá,
-//            'coupon_time' => $this->bigInteger()->comment("thời gian sử dụng mã coupon ,
-//            'coupon_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này ,
+//  'coupon_code' => $this->string(255)->comment("mã giảm giá,
+//  'coupon_time' => $this->bigInteger()->comment("thời gian sử dụng mã coupon ,
+//  'coupon_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này ,
 
     // XU : 1 order - 1 Xu được tích lũy hoặc sinh ra
     'revenue_xu' => 0, //số xu được nhận,
@@ -195,9 +195,9 @@ return [
 
     // Promotion : 1 order - 1 promotion
     'promotion_id' => $coupon_id, //"id của promotion : Id Chạy chương trình promotion,
-//            'promotion_code' => $this->string(255)->comment("mã khuyến mại,
-//            'promotion_time' => $this->bigInteger()->comment("thời gian sử dụng mã promotion,
-//            'promotion_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này ,
+//  'promotion_code' => $this->string(255)->comment("mã khuyến mại,
+//  'promotion_time' => $this->bigInteger()->comment("thời gian sử dụng mã promotion,
+//  'promotion_amount' => $this->decimal(18,2)->comment("số tiền áp dụng cho mã coupon này ,
 
     // Boxme + Kho
     'total_weight' => $faker->randomElement([0.5, 1, 2]), //cân nặng tính phí,
@@ -208,15 +208,15 @@ return [
 
 
     // LƯU THONG TIN đã mua của EBAY / AMAZON :   Đơn này đươc phân cho nhân viên Mua Hàng
-    'purchase_order_id' => $faker->unique()->realText(50), //Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy),
-    'purchase_transaction_id' => $faker->unique()->realText(100), //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
+    'purchase_order_id' => $faker->bankAccountNumber.','.$faker->bankAccountNumber.','.$faker->bankAccountNumber.$faker->randomNumber().','.$faker->bankAccountNumber, //Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy),
+    'purchase_transaction_id' => $faker->md5(), //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
     'purchase_amount' => $faker->unique()->randomDigit(), //số tiền thanh toán thực tế với người bán EBAY/AMAZON, lưu ý : Số đã trừ Buck/Point ( và là dạng list, cách nhau = dấu phẩy),
     'purchase_account_id' => $faker->bankAccountNumber, //id tài khoản mua hàng,
     'purchase_account_email' => $faker->unique()->email, //email tài khoản mua hàng,
-    'purchase_card' => $faker->unique()->bankAccountNumber, //thẻ thanh toán,
+    'purchase_card' => $faker->creditCardNumber(), //thẻ thanh toán,
     'purchase_amount_buck' => $faker->randomNumber(), //số tiền buck thanh toán,
     'purchase_amount_refund' => $faker->randomNumber(), //số tiền người bán hoàn,
-    'purchase_refund_transaction_id' => $faker->realText(30), //mã giao dịch hoàn,
+    'purchase_refund_transaction_id' => null, //mã giao dịch hoàn,
 
     // Tổng Số lượng
     'total_quantity' => $faker->randomElement([1, 34, 2, 4, 5, 6, 9]), // Tổng số lượng khách hàng đặt = tổng các số lượng trên bảng product,

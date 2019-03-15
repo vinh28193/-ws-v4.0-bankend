@@ -1,8 +1,8 @@
 class_name: FunctionalTester
 modules:
-  config:
-    Yii2:
-      configFile: 'config/test.php'
+    config:
+        Yii2:
+        - configFile: 'config/test.php'
     enabled:
         - Filesystem
         - Yii2

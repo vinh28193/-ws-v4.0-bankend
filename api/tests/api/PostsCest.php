@@ -22,7 +22,7 @@ class PostsApiCest
     public function testGetAll(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1db0a94b9e2bc63d03421e02f69ed12c');
+        $I->haveHttpHeader('X-Access-Token','9224bebbf45d302b2fabbf09438fbe7d');
         $I->sendGET('/1/post');
         $I->seeResponseCodeIs(200);
         $I->seeResponseCodeIsSuccessful();
@@ -33,7 +33,7 @@ class PostsApiCest
     public function testGetOne(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1db0a94b9e2bc63d03421e02f69ed12c');
+        $I->haveHttpHeader('X-Access-Token','9224bebbf45d302b2fabbf09438fbe7d');
         $I->sendGET('/1/post/view/1');
         $I->seeResponseCodeIs(200);
         $I->seeResponseCodeIsSuccessful();
@@ -44,7 +44,7 @@ class PostsApiCest
     public function testGetNotFound(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1db0a94b9e2bc63d03421e02f69ed12c');
+        $I->haveHttpHeader('X-Access-Token','9224bebbf45d302b2fabbf09438fbe7d');
         $I->sendGET('/1/post/view/100');
         $I->seeResponseCodeIs(500);
         $I->seeResponseIsJson();
@@ -54,7 +54,7 @@ class PostsApiCest
     public function testCreate(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1db0a94b9e2bc63d03421e02f69ed12c');
+        $I->haveHttpHeader('X-Access-Token','9224bebbf45d302b2fabbf09438fbe7d');
         $I->sendPOST('/1/post/create', [
             'title' => 'Test Title',
             'text' => 'Test Text',
@@ -68,7 +68,7 @@ class PostsApiCest
     public function testUpdate(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1db0a94b9e2bc63d03421e02f69ed12c');
+        $I->haveHttpHeader('X-Access-Token','9224bebbf45d302b2fabbf09438fbe7d');
         $I->sendPUT('/1/post/update/2', [
             'title' => 'New Title Weshop 2019',
         ]);
@@ -84,7 +84,7 @@ class PostsApiCest
     public function testDelete(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type','application/json');
-        $I->haveHttpHeader('X-Access-Token','1db0a94b9e2bc63d03421e02f69ed12c');
+        $I->haveHttpHeader('X-Access-Token','9224bebbf45d302b2fabbf09438fbe7d');
         $I->sendDELETE('/1/post/delete/3');
         $I->seeResponseCodeIs(200);
     }

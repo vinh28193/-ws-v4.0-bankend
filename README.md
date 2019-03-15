@@ -368,7 +368,8 @@ https://stackoverflow.com/questions/38431005/how-to-yii2-faker-database-relation
   # run unit tests
   composer exec codecept run unit
   
-  
+  # ----------------
+  php -S 127.0.0.1:8880 -t api/web
   
   ###-------Run------
    php -S 127.0.0.1:8980 -t backend/web
@@ -518,5 +519,4 @@ https://www.yiiframework.com/doc/guide/1.1/en/database.migration
   
   php vendor/bin/codecept generate:scenarios
   php vendor/bin/codecept generate:cest acceptance Signin
-  
   
