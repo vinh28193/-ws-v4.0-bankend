@@ -208,12 +208,12 @@ return [
 
 
     // LƯU THONG TIN đã mua của EBAY / AMAZON :   Đơn này đươc phân cho nhân viên Mua Hàng
-    'purchase_order_id' => $faker->bankAccountNumber.$faker->realText(10).','.$faker->bankAccountNumber.','.$faker->bankAccountNumber.$faker->realText(10).','.$faker->bankAccountNumber, //Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy),
-    'purchase_transaction_id' => $faker->bankAccountNumber.'ws2019'.$faker->bankAccountNumber, //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
+    'purchase_order_id' => $faker->bankAccountNumber.','.$faker->bankAccountNumber.','.$faker->bankAccountNumber.$faker->randomNumber().','.$faker->bankAccountNumber, //Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy),
+    'purchase_transaction_id' => $faker->md5(), //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
     'purchase_amount' => $faker->unique()->randomDigit(), //số tiền thanh toán thực tế với người bán EBAY/AMAZON, lưu ý : Số đã trừ Buck/Point ( và là dạng list, cách nhau = dấu phẩy),
     'purchase_account_id' => $faker->bankAccountNumber, //id tài khoản mua hàng,
     'purchase_account_email' => $faker->unique()->email, //email tài khoản mua hàng,
-    'purchase_card' => $faker->unique()->bankAccountNumber, //thẻ thanh toán,
+    'purchase_card' => $faker->creditCardNumber(), //thẻ thanh toán,
     'purchase_amount_buck' => $faker->randomNumber(), //số tiền buck thanh toán,
     'purchase_amount_refund' => $faker->randomNumber(), //số tiền người bán hoàn,
     'purchase_refund_transaction_id' => null, //mã giao dịch hoàn,
