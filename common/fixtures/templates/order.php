@@ -135,7 +135,7 @@ return [
     'total_final_amount_local' => 0, // Tổng giá trị đơn hàng ( Số tiền đã trừ đi giảm giá ) : số tiền cuối cùng khách hàng phải thanh toán và tính theo tiền local,
     'total_amount_local' => 0, // Tổng giá trị đơn hàng : Số tiền chưa tính giảm giá ,
 
-    'total_price_amount_local' => 0, // Tổng Tiền Hàng ( Theo tiền tê của nước Weshop Indo hoặc Weshop Viet Nam ) : Tổng giá tiền gốc các item theo tiền local ,
+    'total_origin_fee_local' => 0, // Tổng Tiền Hàng ( Theo tiền tê của nước Weshop Indo hoặc Weshop Viet Nam ) : Tổng giá tiền gốc các item theo tiền local ,
     'total_price_amount_origin' => 0, // Tổng Tiền Hàng ( Theo tiền ngoại tê của EBAY / AMAZON  / WEBSITE NGOÀI) : Tổng giá tiền gốc các item theo ngoại tệ ,
 
 
@@ -149,15 +149,15 @@ return [
 
     // Tổng các Phí Weshop
     'total_fee_amount_local' => 0,  //tổng phí đơn hàng,
-    'total_tax_us_amount_local' => 0, //Tổng phí us tax,
-    'total_shipping_us_amount_local' => 0, //Tổng phí shipping us,
-    'total_weshop_fee_amount_local' => 0, //Tổng phí weshop,
-    'total_intl_shipping_fee_amount_local' => 0,//Tổng phí vận chuyển quốc tế,
+    'total_origin_tax_fee_local' => 0, //Tổng phí us tax,
+    'total_origin_shipping_fee_local' => 0, //Tổng phí shipping us,
+    'total_weshop_fee_local' => 0, //Tổng phí weshop,
+    'total_intl_shipping_fee_local' => 0,//Tổng phí vận chuyển quốc tế,
     'total_custom_fee_amount_local' => 0,//Tổng phí phụ thu,
-    'total_delivery_fee_amount_local' => 0, //Tổng phí vận chuyển nội địa,
-    'total_packing_fee_amount_local' => 0, //tổng phí đóng gỗ,
-    'total_inspection_fee_amount_local' => 0, //Tổng phí kiểm hàng,
-    'total_insurance_fee_amount_local' => 0, //Tổng phí bảo hiểm,
+    'total_delivery_fee_local' => 0, //Tổng phí vận chuyển nội địa,
+    'total_packing_fee_local' => 0, //tổng phí đóng gỗ,
+    'total_inspection_fee_local' => 0, //Tổng phí kiểm hàng,
+    'total_insurance_fee_local' => 0, //Tổng phí bảo hiểm,
     'total_vat_amount_local' => 0, // "Tổng phí VAT,
 
     // Update từ bảng tỉ giá Vietcombank  Crowler để lưu vào order tại thời điểm khách hàng đặt đơn mua hàng
