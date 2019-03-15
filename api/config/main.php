@@ -56,6 +56,26 @@ return [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
+
+        /*
+        'session' => array(
+            'class' => 'yii\web\CacheSession',
+            'cache' => 'sessionCache',
+        ),
+        'sessionCache' => array(
+            'class' => 'yii\caching\MemCache',
+        ),
+        'cache' => [
+            'class' => 'yii\caching\MemCache',
+        ],
+        */
+
+        'session' => [
+            // this is the name of the session cookie used for login on the backend
+            'name' => 'advanced-backend',
+        ],
+
+
 //        'response' => [
 //            'format' => yii\web\Response::FORMAT_JSON,
 //            'charset' => 'UTF-8',
@@ -112,10 +132,7 @@ return [
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],
-        'session' => [
-            // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-backend',
-        ],
+
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

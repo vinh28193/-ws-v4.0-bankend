@@ -11,39 +11,34 @@ use api\behaviours\Apiauth;
 
 use Yii;
 
+/***Cache Http **/
+use yii\caching\DbDependency;
+use yii\caching\TagDependency;
 
 
 class OrderController extends BaseApiController
 {
-    /*
-     * ```php
-     * public function behaviors()
-     * {
-     *     return [
-     *         'access' => [
-     *             'class' => \yii\filters\AccessControl::className(),
-     *             'only' => ['create', 'update'],
-     *             'rules' => [
-     *                 // deny all POST requests
-     *                 [
-     *                     'allow' => false,
-     *                     'verbs' => ['POST']
-     *                 ],
-     *                 // allow authenticated users
-     *                 [
-     *                     'allow' => true,
-     *                     'roles' => ['@'],
-     *                 ],
-     *                 // everything else is denied
-     *             ],
-     *         ],
-     *     ];
-     * }
-     */
 
     public  $page = 1;
     public  $limit = 20;
 
+    public function behaviors()
+    {
+
+        return [
+            'pageCache' => [
+                'class' => 'yii\filters\PageCache',
+                'only' => ['index'],
+                'duration' => 24 * 3600 * 365, // 1 year
+                'dependency' => [
+                    'class' => 'yii\caching\ChainedDependency',
+                    'dependencies' => [
+                        new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
+                    ]
+                ],
+            ],
+        ];
+    }
 
 
     public function verbs()
