@@ -476,7 +476,7 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
     php yii rbac/create-default 
     
     ####----------------Automaintion test done --------------------------------
-    
+    $ php -S 127.0.0.1:8880 -t api/web
     $ vendor/bin/codecept run --report -- -c api
     Codeception PHP Testing Framework v2.6.0
     Powered by PHPUnit 8.1-g36f92d5 by Sebastian Bergmann and contributors.
