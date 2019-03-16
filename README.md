@@ -520,3 +520,59 @@ https://www.yiiframework.com/doc/guide/1.1/en/database.migration
   php vendor/bin/codecept generate:scenarios
   php vendor/bin/codecept generate:cest acceptance Signin
   
+  
+  #-----------Cache Yii-------------
+  # Page Cache
+  https://www.yiiframework.com/doc/api/2.0/yii-filters-pagecache
+  
+  PageCache implements server-side caching of whole pages.
+  
+  It is an action filter that can be added to a controller and handles the beforeAction event.
+  
+  To use PageCache, declare it in the behaviors() method of your controller class. In the following example the filter will be applied to the index action and cache the whole page for maximum 60 seconds or until the count of entries in the post table changes. It also stores different versions of the page depending on the application language.
+  
+  public function behaviors()
+  {
+      return [
+          'pageCache' => [
+              'class' => 'yii\filters\PageCache',
+              'only' => ['index'],
+              'duration' => 60,
+              'dependency' => [
+                  'class' => 'yii\caching\DbDependency',
+                  'sql' => 'SELECT COUNT(*) FROM post',
+              ],
+              'variations' => [
+                  \Yii::$app->language,
+              ]
+          ],
+      ];
+  }
+
+ # http Cache 
+ https://www.yiiframework.com/doc/api/2.0/yii-filters-httpcache
+ HttpCache implements client-side caching by utilizing the Last-Modified and ETag HTTP headers.
+ 
+ It is an action filter that can be added to a controller and handles the beforeAction event.
+ 
+ To use HttpCache, declare it in the behaviors() method of your controller class. In the following example the filter will be applied to the index action and the Last-Modified header will contain the date of the last update to the user table in the database.
+ 
+ public function behaviors()
+ {
+     return [
+         [
+             'class' => 'yii\filters\HttpCache',
+             'only' => ['index'],
+             'lastModified' => function ($action, $params) {
+                 $q = new \yii\db\Query();
+                 return $q->from('user')->max('updated_at');
+             },
+ //            'etagSeed' => function ($action, $params) {
+ //                return // generate ETag seed here
+ //            }
+         ],
+     ];
+ }
+ 
+ 
+ https://www.yiiframework.com/doc/api/2.0/yii-db-querybuilder#getColumnType()-detail

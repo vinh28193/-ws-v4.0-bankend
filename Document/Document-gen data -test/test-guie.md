@@ -15,3 +15,6 @@ $ vendor/bin/codecept run backend/tests/unit
 $ vendor/bin/codecept run api/tests/functional
  
 $ vendor/bin/codecept run backend/tests/functional
+
+###-----------Test Common-------------------------
+$ vendor/bin/codecept run --report -- -c common
