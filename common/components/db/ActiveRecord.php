@@ -68,6 +68,15 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
 
     /**
+     * @inheritdoc
+     * @return ActiveQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return Yii::createObject(ActiveQuery::className(), [get_called_class()]);
+    }
+
+    /**
      * @return \yii\i18n\Formatter
      */
     public static function getFormatter()
