@@ -19,9 +19,32 @@ use Yii;
 class SiteController extends BaseApiController
 {
 
-    public function rules()
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        $auth = $behaviors['authenticator'];
+        $except = array_merge($auth['except'],[
+            'index',
+            'auth',
+            'authorize',
+            'access-token'
+        ]);
+        $auth['except'] = $except;
+        $behaviors['authenticator'] = $auth;
+        return $behaviors;
+    }
+
+    protected function rules()
     {
         return [
+            [
+                'actions' => ['index'],
+                'allow' => true,
+            ],
             [
                 'actions' => ['signup'],
                 'allow' => true,
@@ -40,15 +63,16 @@ class SiteController extends BaseApiController
         ];
     }
 
-    public function verbs()
+    protected function verbs()
     {
-        return array_merge([
+        return [
+            'index' => ['POST','GET'],
             'logout' => ['GET'],
             'authorize' => ['POST'],
             'register' => ['POST'],
             'access-token' => ['POST'],
             'me' => ['GET']
-        ]);
+        ];
     }
 
     /**

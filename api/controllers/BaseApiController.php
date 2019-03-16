@@ -58,7 +58,11 @@ class BaseApiController extends \yii\rest\Controller
         // re-add authentication filter
         $behaviors['authenticator'] = [
             'class' => CompositeAuth::className(),
-            'except' => ['options', 'authorize', 'access-token'], // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
+            'except' => [
+                'options',
+                'authorize',
+                'access-token'
+            ], // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
             'authMethods' => [
                 'httpBearer' => [
                     'class' => HttpBearerAuth::className()
@@ -78,7 +82,7 @@ class BaseApiController extends \yii\rest\Controller
         ];
         $behaviors['accessControl'] = [
             'class' => AccessControl::className(),
-            'except' => ['options', 'authorize', 'access-token'],
+            'except' => ['options'],
             'rules' => $this->rules(),
         ];
         $behaviors['verbFilter'] = [

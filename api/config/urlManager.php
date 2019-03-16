@@ -11,6 +11,7 @@ return [
     'enableStrictParsing' => true,
     'showScriptName' => false,
     'rules' => [
+        '' => 'site/index',
         '1/register'=>'site/register',
         '1/authorize'=>'site/authorize',
         '1/access-token'=>'site/access-token',
