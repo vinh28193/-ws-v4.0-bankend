@@ -47,8 +47,7 @@ return [
         'cart' => [
             'class' => 'backend\components\ShoppingCart',
             'sessionKey' => 'primary-cart',
-        ],
-        */
+        ],*/
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [
@@ -68,11 +67,13 @@ return [
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
+//        'cache' => [
+//            'class' => 'yii\caching\FileCache',
+//        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
-
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend
@@ -101,9 +102,6 @@ return [
                 '<module:\w+>/<controller:\w+>/<id:\d+>' => '<module>/<controller>/view',
                 '<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '<module>/<controller>/<action>',
                 // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
-
-                /***Post API GET NOT POST , PUT , UPDATE ***/
-                'class' => 'yii\rest\UrlRule', 'controller' => 'api/posts',
 
                 /*****ipFilter******/
                 'visitor' => '/ipFilter/visitor/index',

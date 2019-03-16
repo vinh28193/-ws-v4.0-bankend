@@ -48,6 +48,13 @@ return [
         '1/product/delete/<id>'=>'product/delete',
 
 
+        ### TestService 27/02/2019
+        '1/service/get-amazon'=>'service/get-amazon',
+        '1/service/get-amazon-detail'=>'service/get-amazon-detail',
+        '1/service/ebay-detail'=>'service/ebay-detail',
+        '1/service/create-order-product'=>'service/create-order-product',
+
+
         ### API SOCIAL 05/03/2019
         '1/api/social'=>'api-social/index',
         '1/api/social/convert-token'=>'api-social/convert-token',
