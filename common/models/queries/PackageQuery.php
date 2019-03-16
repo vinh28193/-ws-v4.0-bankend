@@ -8,9 +8,10 @@
 
 namespace common\models\queries;
 
-use common\helpers\WeshopHelper;
-use yii\db\ActiveQuery;
+
 use yii\helpers\ArrayHelper;
+use common\components\db\ActiveQuery;
+use common\helpers\WeshopHelper;
 
 /**
  * Class PackageQuery
@@ -19,31 +20,6 @@ use yii\helpers\ArrayHelper;
 class PackageQuery extends ActiveQuery
 {
 
-
-    /**
-     * @return string
-     */
-    public function getTableName()
-    {
-        /** @var  $class \yii\db\ActiveRecord */
-        $class = $this->modelClass;
-        return $class::tableName();
-    }
-
-    /**
-     * @param $name
-     * @param bool|string $tableName
-     * @return string
-     */
-    public function getColumnName($name, $tableName = true)
-    {
-        if ($tableName === true) {
-            return $this->getTableName() . '.' . $name;
-        } elseif (is_string($tableName)) {
-            return "$tableName.$name";
-        }
-        return $name;
-    }
 
     public function remove()
     {

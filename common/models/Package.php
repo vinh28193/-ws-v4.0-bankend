@@ -18,7 +18,6 @@ class Package extends DbPackage
     /**
      * @inheritdoc
      * @return PackageQuery the active query used by this AR class.
-     * @throws \yii\base\InvalidConfigException
      */
     public static function find()
     {

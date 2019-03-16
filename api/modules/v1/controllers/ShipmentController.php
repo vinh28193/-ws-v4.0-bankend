@@ -2,18 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: vinhs
- * Date: 2019-03-14
- * Time: 13:02
+ * Date: 2019-03-15
+ * Time: 20:41
  */
 
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\data\ActiveDataProvider;
-use common\models\Package;
-use Yii;
+use common\models\Shipment;
 
-class PackageController extends BaseApiController
+class ShipmentController extends BaseApiController
 {
 
     /**
@@ -41,28 +40,30 @@ class PackageController extends BaseApiController
     }
 
     /**
+     * list all shipment
      * @return array
-     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
-        $requestParams = Yii::$app->getRequest()->getQueryParams();
-        $query = Package::find();
+        $params = $this->get;
+        $query = Shipment::find();
 
-        $query->filterRelation();
+        $query->joinWith(['packageItems']);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                 'pageSizeParam' => 'perPage',
-                'params' => $requestParams,
+                'params' => $params,
             ],
             'sort' => [
-                'params' => $requestParams,
+                'params' => $params,
             ],
         ]);
 
-        $query->filter($requestParams);
+        $query->filter($params);
 
-        return $this->response(true, 'get data success', $dataProvider);
+        return $this->response(true, "get shipment success", $dataProvider);
+
     }
 }
