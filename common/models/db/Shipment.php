@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "shipment".
  *
  * @property int $id
- * @property int $shipment_code mã phiếu giao, BM_CODE
+ * @property string $shipment_code mã phiếu giao, BM_CODE
  * @property string $warehouse_tags 1 list mã thẻ kho Weshop
  * @property double $total_weight Tổng cân nặng của các món hàng
  * @property int $warehouse_send_id id kho gửi đi
@@ -64,9 +64,10 @@ class Shipment extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['shipment_code', 'warehouse_send_id', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'total_quantity', 'is_hold', 'courier_code', 'created_at', 'updated_at'], 'integer'],
             [['warehouse_tags', 'note_by_customer', 'note', 'courier_logo', 'courier_estimate_time', 'list_old_shipment_code'], 'string'],
             [['total_weight', 'total_shipping_fee', 'total_price', 'total_cod'], 'number'],
+            [['warehouse_send_id', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'total_quantity', 'is_hold', 'courier_code', 'created_at', 'updated_at'], 'integer'],
+            [['shipment_code'], 'string', 'max' => 32],
             [['receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'shipment_status'], 'string', 'max' => 255],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['receiver_address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Address::className(), 'targetAttribute' => ['receiver_address_id' => 'id']],
@@ -113,8 +114,8 @@ class Shipment extends \common\components\db\ActiveRecord
             'courier_logo' => 'Courier Logo',
             'courier_estimate_time' => 'Courier Estimate Time',
             'list_old_shipment_code' => 'List Old Shipment Code',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 

@@ -48,7 +48,7 @@ class ShipmentController extends BaseApiController
         $params = $this->get;
         $query = Shipment::find();
 
-        $query->joinWith(['packageItems']);
+        $query->filterRelation();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
