@@ -60,4 +60,15 @@ return [
         ],
         'extraPatterns' => []
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['s' => 'shipment'],
+        'patterns' => [
+            'GET' => 'index',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
 ];

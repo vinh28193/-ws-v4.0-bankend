@@ -15,4 +15,20 @@ use common\components\db\ActiveQuery;
 class ShipmentQuery extends ActiveQuery
 {
 
+    /**
+     * @return $this
+     */
+    public function filterRelation()
+    {
+        $this->joinWith(['packageItems']);
+        return $this;
+    }
+
+    /**
+     * @param $params
+     * @return $this
+     */
+    public function filter($params){
+        return $this;
+    }
 }

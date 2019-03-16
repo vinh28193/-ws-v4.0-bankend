@@ -8,6 +8,8 @@
 
 namespace common\models;
 
+use Yii;
+use common\models\queries\ShipmentQuery;
 use common\models\db\Shipment as DbShipment;
 /**
  * Class Shipment
@@ -32,6 +34,15 @@ class Shipment extends DbShipment
             [['warehouse_send_id', 'customer_id', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id'], 'required'],
         ];
         return array_merge($paren,$child);
+    }
+
+    /**
+     * @inheritdoc
+     * @return ShipmentQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return Yii::createObject(ShipmentQuery::className(), [get_called_class()]);
     }
 
     /**

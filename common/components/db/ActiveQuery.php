@@ -15,6 +15,16 @@ namespace common\components\db;
 
 class ActiveQuery extends \yii\db\ActiveQuery
 {
+
+    /**
+     * @return $this
+     */
+    public function remove()
+    {
+        $this->andWhere([$this->getColumnName('remove') => 0]);
+        return $this;
+    }
+
     /**
      * @return string
      */
