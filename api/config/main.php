@@ -13,7 +13,7 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
     'defaultRoute' => 'site/index',
-    'bootstrap' => ['log'], //,'v1/payment'
+    'bootstrap' => ['log', 'v1'], //,'v1/payment'
     'modules' => [
         'v1' => [
             'class' => 'api\modules\v1\Module',
