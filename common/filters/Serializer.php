@@ -13,6 +13,7 @@ class Serializer extends \yii\rest\Serializer
 
     public $collectionEnvelope = '_items';
 
+    public $forceArray = true;
     /**
      * @inheritdoc
      * @param mixed $data
@@ -21,15 +22,14 @@ class Serializer extends \yii\rest\Serializer
     public function serialize($data)
     {
         if (is_array($data) && count($data) === 3 && isset($data['data'])) {
-
             $data['data'] = $this->serialize($data['data']);
             return $data;
         } elseif ($data instanceof \IteratorAggregate) {
             return ($iterator = $data->getIterator()) instanceof \ArrayIterator ? $iterator->getArrayCopy() : $iterator;
         }
         $data = parent::serialize($data);
-        if (is_object($data)) {
-            $data = $this->serializeObject($data);
+        if (is_object($data) && $this->forceArray) {
+            return $this->serializeObject($data);
         }
         return $data;
     }
@@ -44,5 +44,14 @@ class Serializer extends \yii\rest\Serializer
             $result[$reflectionProperty->getName()] = $value;
         }
         return $result;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function serializeModelErrors($model)
+    {
+        $this->response->setStatusCode(422, 'Data Validation Failed.');
+        return $model->getFirstErrors();
     }
 }
