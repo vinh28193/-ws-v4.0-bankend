@@ -8,7 +8,11 @@
 
 namespace common\components\db;
 
+use ReflectionClass;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class ActiveRecord
@@ -16,6 +20,17 @@ use Yii;
  */
 class ActiveRecord extends \yii\db\ActiveRecord
 {
+
+    const EVENT_BEFORE_RESOLVE_FIELD = 'beforeResolveField';
+    const EVENT_AFTER_RESOLVE_FIELD = 'afterResolveField';
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return parent::scenarios();
+    }
 
     /**
      * @inheritdoc
@@ -25,7 +40,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         $behaviors = parent::behaviors();
 
-        $reflection = new \ReflectionClass($this);
+        $reflection = new ReflectionClass($this);
         if ($reflection->getShortName() === 'ActiveRecord') {
             return $behaviors;
         }
@@ -39,9 +54,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
             $timestamp[self::EVENT_BEFORE_UPDATE][] = 'updated_at';
         }
 
-        $behaviors = !empty($timestamp) ? array_merge($behaviors, [
+        $behaviors = !empty($timestamp) ? ArrayHelper::merge($behaviors, [
             [
-                'class' => \yii\behaviors\TimestampBehavior::className(),
+                'class' => TimestampBehavior::className(),
                 'attributes' => $timestamp,
             ],
         ]) : $behaviors;
@@ -55,13 +70,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
             $blameable[self::EVENT_BEFORE_UPDATE][] = 'updated_by';
         }
 
-        $behaviors = !empty($blameable) ? array_merge($behaviors, [
+        $behaviors = !empty($blameable) ? ArrayHelper::merge($behaviors, [
             [
-                'class' => \yii\behaviors\BlameableBehavior::className(),
+                'class' => BlameableBehavior::className(),
                 'attributes' => $blameable,
             ],
         ]) : $behaviors;
-
 
         return $behaviors;
     }
@@ -79,7 +93,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * @return \yii\i18n\Formatter
      */
-    public static function getFormatter()
+    public function getFormatter()
     {
         return Yii::$app->getFormatter();
     }
@@ -150,7 +164,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      */
     protected function resolveTimestampField($field)
     {
-        $formatter = self::getFormatter();
+        $formatter = $this->getFormatter();
         $formatter->nullDisplay = '';
         return function ($self) use ($field, $formatter) {
             return $formatter->asDatetime($self->$field);
@@ -170,7 +184,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
      */
     protected function resolveFields(array $fields, array $expand)
     {
-
         $fields = $this->extractRootFields($fields);
         $expand = $this->extractRootFields($expand);
 
@@ -179,11 +192,11 @@ class ActiveRecord extends \yii\db\ActiveRecord
             if (is_int($field)) {
                 $field = $definition;
             }
-            if (empty($fields) || in_array($field, $fields, true)) {
-                if (in_array($field, $this->confidentialFields())) {
+            if (empty($fields) || ArrayHelper::isIn($field, $fields, true)) {
+                if (ArrayHelper::isIn($field, $this->confidentialFields())) {
                     continue;
-                } elseif (in_array($field, $this->timestampFields())) {
-                    $result[$field] = $this->resolveTimestampField($definition);
+                } elseif (ArrayHelper::isIn($field, $this->timestampFields())) {
+                    $result[$field] = $this->resolveTimestampField($field);
                 } else {
                     $result[$field] = $definition;
                 }
@@ -197,13 +210,13 @@ class ActiveRecord extends \yii\db\ActiveRecord
             if (is_int($field)) {
                 $field = $definition;
             }
-            if (empty($expand) || in_array($field, $expand, true)) {
-//                if (is_array($definition)) {
+            if (empty($expand) || ArrayHelper::isIn($field, $expand, true)) {
+//                if (ArrayHelper::isIn($definition)) {
 //                    $results = [];
 //                    foreach ($definition as $fieldDefinition => $extraDefinition) {
-//                        if (in_array($field, $this->confidentialFields())) {
+//                        if (ArrayHelper::isIn($fieldDefinition, $this->confidentialFields())) {
 //                            continue;
-//                        } elseif (in_array($field, $this->timestampFields())) {
+//                        } elseif (ArrayHelper::isIn($fieldDefinition, $this->timestampFields())) {
 //                            $results[$fieldDefinition] = $this->resolveTimestampField($extraDefinition);
 //                        } else {
 //                            $results[$fieldDefinition] = $extraDefinition;
@@ -216,5 +229,19 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
 
         return $result;
+    }
+
+    /**
+     * @param $fields
+     * @param $expand
+     * @return ResolveFieldEvent
+     */
+    public function beforeResolveField($fields, $expand)
+    {
+        $event = new ResolveFieldEvent();
+        $event->fields = $fields;
+        $event->expand = $expand;
+        $this->trigger(self::EVENT_BEFORE_RESOLVE_FIELD,$event);
+        return $event;
     }
 }
