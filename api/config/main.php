@@ -82,6 +82,7 @@ return [
 //            'charset' => 'UTF-8',
 //            'on beforeSend' => function ($event) {
 //               /*
+//                @date_default_timezone_set('Asia/Ho_Chi_Minh');
 //                $_user_Identity = Yii::$app->user->getIdentity();
 //                $_user_id = $_user_Identity->getId();
 //                $_user_email = $_user_Identity['email'];
@@ -91,7 +92,7 @@ return [
 //                //----ToDo Need More Infor param
 //                $_user_app = 'Weshop2019';
 //                $_user_request_suorce = "WEB_API_FRONTEND";//"APP/WEB_API_FRONTEND/WB_API_BACK_END"
-//                $_request_ip = "127.0.0.1";
+//                $_request_ip = Yii::$app->getRequest()->getUserIP()
 //               */
 //
 //                $response = $event->sender;

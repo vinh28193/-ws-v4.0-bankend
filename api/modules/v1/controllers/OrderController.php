@@ -16,32 +16,29 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
-/***Cache Http **/
-
+/***Cache PageCache **/
 use yii\caching\DbDependency;
 use yii\caching\TagDependency;
 
 class OrderController extends BaseApiController
 {
-    /*
     public function behaviors()
     {
-
-        return [
-            'pageCache' => [
+        $behaviors = parent::behaviors();
+        $behaviors['pageCache'] = [
                 'class' => 'yii\filters\PageCache',
                 'only' => ['index'],
                 'duration' => 24 * 3600 * 365, // 1 year
                 'dependency' => [
                     'class' => 'yii\caching\ChainedDependency',
                     'dependencies' => [
-                        //new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
+                        new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
                     ]
                 ],
-            ],
-        ];
+            ];
+        return $behaviors;
     }
-    */
+
 
     protected function rules()
     {
