@@ -3,7 +3,6 @@
 namespace api\controllers;
 
 
-
 use yii\filters\AccessControl;
 use common\models\Order;
 use api\behaviours\Verbcheck;
@@ -12,15 +11,17 @@ use api\behaviours\Apiauth;
 use Yii;
 
 /***Cache Http **/
+
 use yii\caching\DbDependency;
 use yii\caching\TagDependency;
+use api\controllers\BaseApiController as BaseApi;
 
 
-class OrderController extends BaseApiController
+class OrderController extends BaseApi
 {
 
-    public  $page = 1;
-    public  $limit = 20;
+    public $page = 1;
+    public $limit = 20;
 
     public function behaviors()
     {
@@ -36,6 +37,36 @@ class OrderController extends BaseApiController
                         new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
                     ]
                 ],
+            ],
+        ];
+    }
+
+
+    protected function rules()
+    {
+        return [
+            [
+                'allow' => true,
+                'actions' => ['index', 'view', 'create', 'update'],
+                'roles' => $this->getAllRoles(true),
+
+            ],
+            [
+                'allow' => true,
+                'actions' => ['view'],
+                'roles' => $this->getAllRoles(true),
+                'permissions' => ['canView']
+            ],
+            [
+                'allow' => true,
+                'actions' => ['create'],
+                'roles' => $this->getAllRoles(true, 'user'),
+                'permissions' => ['canCreate']
+            ],
+            [
+                'allow' => true,
+                'actions' => ['update', 'delete'],
+                'roles' => $this->getAllRoles(true, 'user'),
             ],
         ];
     }
@@ -61,16 +92,16 @@ class OrderController extends BaseApiController
 
     public function actionCreate()
     {
-        if (isset($this->post) !== null)  {
+        if (isset($this->post) !== null) {
             $model = new Order;
             $model->attributes = $this->post;
 
             if ($model->save()) {
                 /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->attributes; */
-                  Yii::$app->api->sendSuccessResponse($model->attributes);
+                Yii::$app->api->sendSuccessResponse($model->attributes);
             } elseif ($model->save() === false) {
                 /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->errors;  */
-                Yii::$app->api->sendFailedResponse("Invalid Record requested" , (array)$model->errors);
+                Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
             }
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
@@ -80,14 +111,14 @@ class OrderController extends BaseApiController
 
     public function actionUpdate($id)
     {
-        if ($id !== null)  {
+        if ($id !== null) {
             $model = $this->findOrder($id);
             $model->attributes = $this->post;
             /***Todo -  Validate data model ***/
             if ($model->save()) {
                 Yii::$app->api->sendSuccessResponse($model->attributes);
             } else {
-                Yii::$app->api->sendFailedResponse("Invalid Record requested" , (array)$model->errors);
+                Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
             }
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
@@ -112,21 +143,21 @@ class OrderController extends BaseApiController
     protected function findModel($id)
     {
         $model = Order::find()
-             ->with([
+            ->with([
                 'products',
                 'promotion',
                 'orderFees',
                 'packageItems',
                 'walletTransactions',
                 'seller',
-                'saleSupport' => function(\yii\db\ActiveQuery $q){
-                    $q->select(['username','email','id','status', 'created_at', 'created_at']);
+                'saleSupport' => function (\yii\db\ActiveQuery $q) {
+                    $q->select(['username', 'email', 'id', 'status', 'created_at', 'created_at']);
                 }
             ])
-            ->where(['id' => $id] );
+            ->where(['id' => $id]);
 
-        if ( $id !== null)  {
-            return $model->orderBy('created_at desc')->limit($this->limit)->offset($this->page* $this->limit - $this->limit)->asArray()->all();
+        if ($id !== null) {
+            return $model->orderBy('created_at desc')->limit($this->limit)->offset($this->page * $this->limit - $this->limit)->asArray()->all();
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }

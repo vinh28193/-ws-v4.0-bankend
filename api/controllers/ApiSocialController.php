@@ -11,7 +11,7 @@ use Yii;
 
 
 
-class ApiSocialController extends RestController
+class ApiSocialController extends BaseApiController
 {
 
     public function behaviors()
