@@ -23,25 +23,23 @@ use yii\caching\TagDependency;
 
 class OrderController extends BaseApiController
 {
-    /*
     public function behaviors()
     {
-
-        return [
-            'pageCache' => [
+        $behaviors = parent::behaviors();
+        $behaviors['pageCache'] = [
                 'class' => 'yii\filters\PageCache',
                 'only' => ['index'],
                 'duration' => 24 * 3600 * 365, // 1 year
                 'dependency' => [
                     'class' => 'yii\caching\ChainedDependency',
                     'dependencies' => [
-                        //new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
+                        new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
                     ]
                 ],
-            ],
-        ];
+            ];
+        return $behaviors;
     }
-    */
+
 
     protected function rules()
     {
