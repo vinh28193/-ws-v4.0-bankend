@@ -35,8 +35,10 @@ if (!YII_ENV_TEST) {
             'model' => [
                 'class' => 'yii\gii\generators\model\Generator',
                 'ns' => 'common\models\db',
-                'baseClass' => '\common\components\db\ActiveRecord',
-                'queryNs' => 'common\models\queries'
+                'baseClass' => 'common\components\db\ActiveRecord',
+                'generateQuery' => true,
+                'queryNs' => 'common\models\queries',
+                'queryBaseClass' => 'common\components\db\ActiveQuery'
             ],
             'mongoDbModel' => [
                 'class' => 'yii\mongodb\gii\model\Generator'
