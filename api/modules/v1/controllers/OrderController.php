@@ -103,17 +103,9 @@ class OrderController extends BaseApiController
      */
     public function actionIndex()
     {
-        $requestParams = Yii::$app->getRequest()->getBodyParams();
-        $query = Order::find();
-        $query->withFullRelations();
-        // add conditions that should always apply here
+        $response = Order::search($params = '');
+        return $this->response(true, 'Success', $response);
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-        $query->filter($requestParams);
-        $query->orderBy(['id' => SORT_DESC]);
-        return $this->response(true, 'Success', $dataProvider);
     }
 
     /**
@@ -122,14 +114,12 @@ class OrderController extends BaseApiController
     public function actionCreate()
     {
         if (isset($this->post) !== null) {
+            // $this->can('canCreate',[]); // Supper is canCreate
             $model = new Order;
             $model->attributes = $this->post;
-
             if ($model->save()) {
-                /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->attributes; */
                 Yii::$app->api->sendSuccessResponse($model->attributes);
             } elseif ($model->save() === false) {
-                /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->errors;  */
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
             }
         } else {

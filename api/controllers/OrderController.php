@@ -85,8 +85,7 @@ class OrderController extends BaseApi
 
     public function actionIndex()
     {
-        $params = '';
-        $response = Order::search($params);
+        $response = Order::search($params = '');
         Yii::$app->api->sendSuccessResponse($response);
     }
 
