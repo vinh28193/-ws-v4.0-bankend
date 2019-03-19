@@ -200,6 +200,6 @@ class CreateOrderCest
         $I->seeResponseCodeIs(HttpCode::OK); // 200
         $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        $I->seeResponseContainsJson(['status' => 1,"message"=>"Success"]);
+        $I->seeResponseContainsJson(['status' => true,"message"=>"Success"]);
     }
 }

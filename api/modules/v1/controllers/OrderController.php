@@ -16,8 +16,32 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
+/***Cache Http **/
+
+use yii\caching\DbDependency;
+use yii\caching\TagDependency;
+
 class OrderController extends BaseApiController
 {
+    /*
+    public function behaviors()
+    {
+
+        return [
+            'pageCache' => [
+                'class' => 'yii\filters\PageCache',
+                'only' => ['index'],
+                'duration' => 24 * 3600 * 365, // 1 year
+                'dependency' => [
+                    'class' => 'yii\caching\ChainedDependency',
+                    'dependencies' => [
+                        //new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
+                    ]
+                ],
+            ],
+        ];
+    }
+    */
 
     protected function rules()
     {
@@ -53,7 +77,7 @@ class OrderController extends BaseApiController
         return [
             'index' => ['GET', 'POST'],
             'create' => ['POST'],
-            'update' => ['POST'],
+            'update' => ['PATCH','PUT'],
             'view' => ['GET'],
             'delete' => ['DELETE']
         ];
@@ -65,7 +89,7 @@ class OrderController extends BaseApiController
      * `post given`
      *  {
      *      "filter":{
-                "keyword": {"key":"all","value":"pen"},
+     * "keyword": {"key":"all","value":"pen"},
      *          "datetime": {"key":"create_at","value":["2019-01-01 00:00:00","2019-01-30 23:59:59"]},
      *          "paymentStatus":"pain",
      *          "type":"shop",
@@ -97,14 +121,19 @@ class OrderController extends BaseApiController
      */
     public function actionCreate()
     {
-        $model = new Order();
-        if ($model->save()) {
-            $response = Yii::$app->getResponse();
-            $response->setStatusCode(201);
-            $id = implode(',', array_values($model->getPrimaryKey(true)));
-            $response->getHeaders()->set('Location', \yii\helpers\Url::toRoute(['/order/view', 'id' => $id], true));
-        } elseif (!$model->hasErrors()) {
-            throw new ServerErrorHttpException('Failed to create the object for unknown reason.');
+        if (isset($this->post) !== null) {
+            $model = new Order;
+            $model->attributes = $this->post;
+
+            if ($model->save()) {
+                /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->attributes; */
+                Yii::$app->api->sendSuccessResponse($model->attributes);
+            } elseif ($model->save() === false) {
+                /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->errors;  */
+                Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
+            }
+        } else {
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
     }
 
@@ -115,7 +144,11 @@ class OrderController extends BaseApiController
      */
     public function actionView($id)
     {
-        return $this->response(true, "Get order $id success", $this->findModel($id));
+        if ($id !== null) {
+           return $this->response(true, "Get order $id success", $this->findModel($id));
+        } else {
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        }
     }
 
     /**
@@ -128,13 +161,18 @@ class OrderController extends BaseApiController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id,false);
-        $this->can('canUpdate', ['id' => $model->id]); // OWner is Update
-        $model->load(Yii::$app->getRequest()->getBodyParams(), '');
-        if ($model->save() === false && !$model->hasErrors()) {
-            throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
+        if ($id !== null) {
+            $model = $this->findModel($id, false);
+            $this->can('canUpdate', ['id' => $model->id]); // OWner is Update
+            $model->attributes = $this->post;
+            if ($model->save()) {
+                Yii::$app->api->sendSuccessResponse($model->attributes);
+            } else {
+                Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
+            }
+        } else {
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
-        return $this->response(true, "Get order $id success", $model);
     }
 
     /**
@@ -147,7 +185,7 @@ class OrderController extends BaseApiController
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id,false);
+        $model = $this->findModel($id, false);
         $this->can('canDelete', ['id' => $model->id]);
         $model->delete();
         return $this->response(true, "Delete order $id success", $model);

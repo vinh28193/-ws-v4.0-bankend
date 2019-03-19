@@ -1,4 +1,10 @@
 
+# --------Run ENV--------
+  php -S 127.0.0.1:8880 -t api/web
+  
+  ###-------Run ENV------
+   php -S 127.0.0.1:8980 -t backend/web
+
 ###---------Test Report------------
 $ vendor/bin/codecept run --report -- -c backend
 $ vendor/bin/codecept run --report -- -c api
