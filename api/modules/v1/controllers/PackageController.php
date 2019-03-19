@@ -35,7 +35,7 @@ class PackageController extends BaseApiController
             [
                 'allow' => true,
                 'actions' => ['index'],
-                'roles' => $this->getAllRoles(true, ['user', 'sale', 'marketing'])
+                'roles' => ['operation','master_operation']
             ],
         ];
     }
@@ -50,6 +50,7 @@ class PackageController extends BaseApiController
         $query = Package::find();
 
         $query->filterRelation();
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [

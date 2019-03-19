@@ -8,7 +8,10 @@
 
 namespace common\models;
 
+
+use Yii;
 use common\models\db\PackageItem as DbPackageItem;
+use common\models\queries\PackageItemQuery;
 /**
  * Class PackageItem
  * @package common\models
@@ -16,6 +19,16 @@ use common\models\db\PackageItem as DbPackageItem;
 
 class PackageItem extends DbPackageItem
 {
+    /**
+     * @inheritdoc
+     * @return PackageItemQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return Yii::createObject(PackageItemQuery::className(), [get_called_class()]);
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */

@@ -8,12 +8,16 @@
 
 namespace common\models;
 
-use common\components\AdditionalFeeTrait;
-use common\components\StoreAdditionalFeeRegisterTrait;
-use common\models\db\Product as DbProduct;
-use yii\helpers\ArrayHelper;
 use Yii;
+use yii\helpers\ArrayHelper;
+use common\models\db\Product as DbProduct;
+use common\models\queries\ProductQuery;
+use common\components\AdditionalFeeTrait;
 
+/**
+ * Class Product
+ * @package common\models
+ */
 class Product extends DbProduct
 {
     use AdditionalFeeTrait;
@@ -25,6 +29,16 @@ class Product extends DbProduct
                 'class' => \common\behaviors\AdditionalFeeBehavior::className(),
             ],
         ]);
+    }
+
+
+    /**
+     * @inheritdoc
+     * @return ProductQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return Yii::createObject(ProductQuery::className(), [get_called_class()]);
     }
 
 
