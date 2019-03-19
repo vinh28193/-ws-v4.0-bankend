@@ -230,7 +230,7 @@ class BaseApiController extends \yii\rest\Controller
 
     /**
      * @param $permissionName
-     * @param array $params
+     * @param array|string| \common\rbac\rules\RuleOwnerAccessInterface $params
      * @return bool
      * @throws \yii\web\ForbiddenHttpException
      */
