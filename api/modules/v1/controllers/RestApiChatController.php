@@ -61,6 +61,7 @@ class RestApiChatController extends BaseApiController
     {
         $_post = (array)$this->post;
         if (isset($_post) !== null) {
+            @date_default_timezone_set('Asia/Ho_Chi_Minh');
             $model = new ChatMongoWs();
             $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();
@@ -70,12 +71,11 @@ class RestApiChatController extends BaseApiController
             $_user_name = $_user_Identity['username'];
             //----ToDo Need More Infor param
             $_user_app = 'Weshop2019';
-            $_user_request_suorce = "BACK_END"; // "APP/FRONTEND/BACK_END"
-            $_request_ip = "127.0.0.1";
+            $_user_request_suorce = "BACK_END"; // "APP/FRONTEND/BACK_END" // Todo : set
+            $_request_ip = Yii::$app->getRequest()->getUserIP();
 
             $_rest_data = ["ChatMongoWs" => [
                 "success" => true,
-                "timestamp" => time(),
                 "message" => @json_encode($_post['message']),
                 "date" => date('Y-m-d H:i:s'),
                 "user_id" => $_user_id,
@@ -90,7 +90,6 @@ class RestApiChatController extends BaseApiController
                 "type_chat" => $_post['type_chat'], //'WS_CUSTOMER',   // Todo : set
                 "is_customer_vew" => null,
                 "is_employee_vew" => null
-
             ]];
 
             if ($model->load($_rest_data) and $model->save()) {

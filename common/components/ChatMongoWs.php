@@ -21,12 +21,40 @@ class ChatMongoWs extends ActiveRecord
         return 'chat_mongo_ws';
     }
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        $reflection = new \ReflectionClass($this);
+        if($reflection->getShortName() === 'ActiveRecord'){
+            return $behaviors;
+        }
+
+        $timestamp = [];
+        if ($this->hasAttribute('created_at')) {
+            $timestamp[self::EVENT_BEFORE_INSERT][] = 'created_at';
+        }
+        if ($this->hasAttribute('updated_at')) {
+            $timestamp[self::EVENT_BEFORE_UPDATE][] = 'updated_at';
+        }
+
+        $behaviors = !empty($timestamp) ? array_merge($behaviors, [
+            [
+                'class' => \yii\behaviors\TimestampBehavior::className(),
+                'attributes' => $timestamp,
+            ],
+        ]) : $behaviors;
+
+        return $behaviors;
+    }
+
     public function attributes()
     {
         return [
             '_id',
             'success',
-            'timestamp',
+            'created_at',
+            'updated_at',
             'date',
             'user_id',
             'user_email',
@@ -47,7 +75,8 @@ class ChatMongoWs extends ActiveRecord
     public function rules()
     {
         return [
-            [['success', 'timestamp', 'date', 'user_id',
+            [['success', 'created_at',
+                'updated_at', 'date', 'user_id',
                 'user_email',
                 'user_name',
                 'user_app',
@@ -69,7 +98,8 @@ class ChatMongoWs extends ActiveRecord
         return [
             '_id' => 'ID',
             'success' => 'success true or false',
-            'timestamp' => 'timestamp',
+            'created_at' => 'created_at',
+            'updated_at' => 'updated_at',
             'date' => 'Date create data message',
             'user_id' => 'id nhân viên ',
             'user_email' => 'Email nhân viên chat ',
