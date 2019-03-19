@@ -53,7 +53,8 @@ class RestApiChatController extends BaseApiController
 
     public function actionIndex()
     {
-        return $this->response(true, 'Success', $response = []);
+        $response = ChatMongoWs::search($params = '');
+        return $this->response(true, 'Success', $response);
     }
 
     public function actionCreate()
