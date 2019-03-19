@@ -26,17 +26,17 @@ class OrderController extends BaseApiController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['pageCache'] = [
-                'class' => 'yii\filters\PageCache',
-                'only' => ['index'],
-                'duration' => 24 * 3600 * 365, // 1 year
-                'dependency' => [
-                    'class' => 'yii\caching\ChainedDependency',
-                    'dependencies' => [
-                        new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
-                    ]
-                ],
-            ];
+//        $behaviors['pageCache'] = [
+//            'class' => 'yii\filters\PageCache',
+//            'only' => ['index'],
+//            'duration' => 24 * 3600 * 365, // 1 year
+//            'dependency' => [
+//                'class' => 'yii\caching\ChainedDependency',
+//                'dependencies' => [
+//                    new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
+//                ]
+//            ],
+//        ];
         return $behaviors;
     }
 
@@ -46,7 +46,7 @@ class OrderController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index', 'view', 'create', 'update'],
+                'actions' => ['index', 'view', 'create', 'update', 'edit-image', 'edit-variant'],
                 'roles' => $this->getAllRoles(true),
 
             ],
@@ -75,7 +75,7 @@ class OrderController extends BaseApiController
         return [
             'index' => ['GET', 'POST'],
             'create' => ['POST'],
-            'update' => ['PATCH','PUT'],
+            'update' => ['PATCH', 'PUT'],
             'view' => ['GET'],
             'delete' => ['DELETE']
         ];
@@ -101,7 +101,8 @@ class OrderController extends BaseApiController
      */
     public function actionIndex()
     {
-        $response = Order::search($params = '');
+        $params = Yii::$app->request->get();
+        $response = Order::search($params);
         return $this->response(true, 'Success', $response);
 
     }
@@ -133,7 +134,7 @@ class OrderController extends BaseApiController
     public function actionView($id)
     {
         if ($id !== null) {
-           return $this->response(true, "Get order $id success", $this->findModel($id));
+            return $this->response(true, "Get order $id success", $this->findModel($id));
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
@@ -201,4 +202,19 @@ class OrderController extends BaseApiController
         return $model;
     }
 
+
+    public function actionEditImage($id)
+    {
+        $post = Yii::$app->request->post('image');
+        var_dump($post);
+        die();
+        return $this->response(true, "Delete $id success", Yii::$app->request->get());
+    }
+
+    public  function actionEditVariant()
+    {
+        $post = Yii::$app->request->post();
+        var_dump($post);
+        die();
+    }
 }
