@@ -9,6 +9,10 @@
 namespace api\controllers;
 
 
+use common\filters\VerbFilter;
+use common\filters\WeshopAuth;
+use common\helpers\WeshopHelper;
+use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\auth\CompositeAuth;
@@ -16,9 +20,6 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
-use common\filters\WeshopAuth;
-use common\filters\VerbFilter;
-use common\helpers\WeshopHelper;
 use yii\web\Request;
 use yii\web\Response;
 
@@ -229,16 +230,33 @@ class BaseApiController extends \yii\rest\Controller
     }
 
     /**
+     * @param bool $throw
+     * @return array
+     * @throws \yii\web\ForbiddenHttpException
+     */
+    public function forbidden($throw = true)
+    {
+        $message = Yii::t('yii', 'You are not allowed to perform this action.');
+        if ($throw) {
+            throw new \yii\web\ForbiddenHttpException($message);
+        }
+        return $this->response(false, $message);
+    }
+
+    /**
      * @param $permissionName
-     * @param array $params
+     * @param array|string|\common\rbac\rules\RuleOwnerAccessInterface $params
      * @return bool
      * @throws \yii\web\ForbiddenHttpException
      */
-    public function can($permissionName, $params = [])
+    public function can($permissionName, $params)
     {
+        if ($params instanceof RuleOwnerAccessInterface) {
+            $params = $params->getRuleParams();
+        }
         if (Yii::$app->getUser()->can($permissionName, $params, true)) {
             return true;
         }
-        throw new \yii\web\ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
+        $this->forbidden(true);
     }
 }
