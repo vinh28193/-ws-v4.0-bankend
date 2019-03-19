@@ -188,6 +188,7 @@ class BaseApiController extends \yii\rest\Controller
 
     public function afterAction($action, $result)
     {
+        /** @TODO : Luu API CALL RESPHONE **/
         $result = parent::afterAction($action, $result);
 //        \Yii::info($result, $action->id);
         return $result;

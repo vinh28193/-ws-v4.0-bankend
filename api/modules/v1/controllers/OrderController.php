@@ -16,8 +16,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
-/***Cache Http **/
-
+/***Cache PageCache **/
 use yii\caching\DbDependency;
 use yii\caching\TagDependency;
 
