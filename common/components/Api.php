@@ -21,7 +21,7 @@ class Api extends Component
     {
         $this->setHeader(400);
         $response = [];
-        $response['status'] = 0;
+        $response['status'] = false;
         $response['message'] = "Failed";
         $response['status'] = 0;
         $response['errors'] = $message;
@@ -34,7 +34,7 @@ class Api extends Component
     {
         $this->setHeader(200);
         $response = [];
-        $response['status'] = 1;
+        $response['status'] = true;
         $response['message'] = "Success";
 
         if (is_array($data))

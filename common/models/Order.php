@@ -287,13 +287,17 @@ class Order extends DbOrder  // implements AdditionalFeeInterface
         }
 
         $additional_info = [
-            'page' => $page,
-            'size' => $limit,
+            'currentPage' => $page,
+            'pageCount' =>  $page,
+            'perPage' => $limit,
             'totalCount' => (int)$query->count()
         ];
 
-        $data = (array)$query->all();
-        return array_merge($data , $additional_info);
+        $data = new \stdClass();
+        $data->_items = $query->all();
+        $data->_links = '';
+        $data->_meta = $additional_info;
+        return $data;
 
     }
 

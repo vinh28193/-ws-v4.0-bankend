@@ -42,8 +42,8 @@ class SiteController extends BaseApiController
     {
         return [
             [
-                'actions' => ['index'],
-                'allow' => true,
+                'actions' => ['authorize', 'register','access-token','index'],
+                'allow' => true
             ],
             [
                 'actions' => ['signup'],
@@ -54,11 +54,6 @@ class SiteController extends BaseApiController
                 'actions' => ['logout', 'me'],
                 'allow' => true,
                 'roles' => ['@'],
-            ],
-            [
-                'actions' => ['authorize', 'register'],
-                'allow' => true,
-                'roles' => ['*'],
             ]
         ];
     }

@@ -27,7 +27,7 @@ class CreateOrderCest
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','9224bebbf45d302b2fabbf09438fbe7d');
-        $I->sendPOST('/1/order/create', '{
+        $I->sendPOST('/v1/order/create', '{
             "store_id" : "Store ID",
             "type_order" : "Type Order",
             "portal" : "Portal",
@@ -125,7 +125,7 @@ class CreateOrderCest
     {
         $I->haveHttpHeader('Content-Type','application/json');
         $I->haveHttpHeader('X-Access-Token','9224bebbf45d302b2fabbf09438fbe7d');
-        $I->sendPOST('/1/order/create', '{
+        $I->sendPOST('/v1/order/create', '{
             "store_id" : 1, 
             "type_order" : "SHOP",
             "portal" : "AMAZON",
@@ -200,6 +200,6 @@ class CreateOrderCest
         $I->seeResponseCodeIs(HttpCode::OK); // 200
         $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        $I->seeResponseContainsJson(['status' => 1,"message"=>"Success"]);
+        $I->seeResponseContainsJson(['status' => true,"message"=>"Success"]);
     }
 }
