@@ -77,7 +77,7 @@ class RestApiChatController extends BaseApiController
 
             $_rest_data = ["ChatMongoWs" => [
                 "success" => true,
-                "message" => @json_encode($_post['message']),
+                "message" => is_array($_post['message']) ? @json_encode($_post['message']) : $_post['message'] ,
                 "date" => date('Y-m-d H:i:s'),
                 "user_id" => $_user_id,
                 "user_email" => $_user_email,
