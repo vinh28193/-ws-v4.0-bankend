@@ -63,8 +63,8 @@ class CheckOutController extends BaseApiController
         $this->cart->removeItems();
         $this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
 
-        //$this->cart->addItem('IF_6C960C53', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/nrsAAOSw7Spbzlyw/$_12.JPG?set_id=880000500F', '252888606889');
-        //$this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
+        $this->cart->addItem('IF_6C960C53', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/nrsAAOSw7Spbzlyw/$_12.JPG?set_id=880000500F', '252888606889');
+        $this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
         // Toto CheckOutForm to validate data form all
 
         $items = $this->cart->getItems();
@@ -81,11 +81,11 @@ class CheckOutController extends BaseApiController
                 $errors[$key][] = "can not create form null seller";
                 continue;
             }
-            if (($seller = Seller::findOne(['name' => $providers['name']])) === null) {
+            if (($seller = Seller::findOne(['seller_name' => $providers['name']])) === null) {
                 $seller = new Seller();
-                $seller->name = $providers['name'];
-                $seller->link_store = $providers['website'];
-                $seller->rate = $providers['rating_score'];
+                $seller->seller_name = $providers['name'];
+                $seller->seller_link_store = $providers['website'];
+                $seller->seller_store_rate = $providers['rating_score'];
                 $seller->save(false);
             }
             // Category
