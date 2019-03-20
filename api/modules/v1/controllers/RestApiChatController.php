@@ -12,7 +12,16 @@ use yii\web\ServerErrorHttpException;
 
 class RestApiChatController extends BaseApiController
 {
-    protected function rules()
+    /** Role :
+        case 'cms':
+        case 'warehouse':
+        case 'operation':
+        case 'sale':
+        case 'master_sale':
+        case 'master_operation':
+        case 'superAdmin' :
+    **/
+    public function rules()
     {
         return [
             [
@@ -30,25 +39,27 @@ class RestApiChatController extends BaseApiController
             [
                 'allow' => true,
                 'actions' => ['create'],
-                'roles' => $this->getAllRoles(true, 'user'),
+                'roles' => $this->getAllRoles(true),
                 'permissions' => ['canCreate']
             ],
             [
                 'allow' => true,
                 'actions' => ['update', 'delete'],
-                'roles' => $this->getAllRoles(true, 'user'),
+                'roles' => $this->getAllRoles(true, ['user','cms', 'warehouse' ,'operation','master_sale','master_operation']),
             ],
         ];
     }
 
-    protected function verbs()
+    public function verbs()
     {
         return [
             'index' => ['GET', 'POST'],
             'create' => ['POST'],
             'update' => ['PATCH', 'PUT'],
             'view' => ['GET'],
-            'delete' => ['DELETE']
+            'delete' => ['DELETE'],
+            'group-viewed' => ['POST'],
+            'customer-viewed' => ['POST']
         ];
     }
 
@@ -140,7 +151,7 @@ class RestApiChatController extends BaseApiController
         Yii::$app->api->sendSuccessResponse($model->attributes);
     }
 
-    protected function findModel($id)
+    public function findModel($id)
     {
         if (($model = ChatMongoWs::findOne($id)) !== null) {
             return $model;

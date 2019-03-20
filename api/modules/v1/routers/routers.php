@@ -115,4 +115,21 @@ return [
         ],
         'extraPatterns' => []
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['chat-service' =>'rest-service-chat'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'PUT {id}' => 'customer-viewed',
+            'PATCH {id}' => 'group-viewed',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
 ];
