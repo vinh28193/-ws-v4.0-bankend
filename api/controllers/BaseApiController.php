@@ -8,13 +8,12 @@
 
 namespace api\controllers;
 
-
+use common\filters\AccessControl;
 use common\filters\VerbFilter;
 use common\filters\WeshopAuth;
 use common\helpers\WeshopHelper;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpHeaderAuth;
@@ -59,11 +58,7 @@ class BaseApiController extends \yii\rest\Controller
         // re-add authentication filter
         $behaviors['authenticator'] = [
             'class' => CompositeAuth::className(),
-            'except' => [
-                'options',
-                'authorize',
-                'access-token'
-            ], // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
+            'except' => ['options'], // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
             'authMethods' => [
                 'httpBearer' => [
                     'class' => HttpBearerAuth::className()
@@ -84,6 +79,12 @@ class BaseApiController extends \yii\rest\Controller
         $behaviors['accessControl'] = [
             'class' => AccessControl::className(),
             'except' => ['options'],
+            'defaultRules' => [
+                [
+                    'allow' => true,
+                    'roles' => ['admin', 'superAdmin']
+                ]
+            ],
             'rules' => $this->rules(),
         ];
         $behaviors['verbFilter'] = [
@@ -111,12 +112,7 @@ class BaseApiController extends \yii\rest\Controller
      */
     protected function rules()
     {
-        return [
-            [
-                'allow' => true,
-                'roles' => ['@'],
-            ],
-        ];
+        return [];
     }
 
     /**

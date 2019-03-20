@@ -23,9 +23,9 @@ class ApiUrlRule extends \yii\rest\UrlRule
         $except = array_flip($this->except);
         $patterns = $this->extraPatterns + $this->patterns;
         $rules = [];
-        \Yii::info($this->prefix);
         foreach ($this->controller as $urlName => $controller) {
             $prefix = trim($this->prefix . '/' . $urlName, '/');
+            \Yii::info($prefix);
             foreach ($patterns as $pattern => $action) {
                 if (!isset($except[$action]) && (empty($only) || isset($only[$action]))) {
                     $action = $controller . '/' . $action;

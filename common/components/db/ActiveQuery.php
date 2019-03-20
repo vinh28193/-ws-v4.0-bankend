@@ -49,4 +49,37 @@ class ActiveQuery extends \yii\db\ActiveQuery
         }
         return $name;
     }
+
+    /**
+     * @param array $columns
+     * @return $this
+     */
+    public function defaultSelect($columns = [])
+    {
+        $this->select(array_merge([
+            $this->getColumnName('id')
+        ], $columns));
+        return $this;
+    }
+
+    /**
+     * $this->expression('NOW()');
+     * $this->expression(['time' => 'NOW()']);
+     * @param $columns
+     * @return \yii\db\Expression
+     */
+    public function expression($columns)
+    {
+//        if (is_string($columns)) {
+            return new \yii\db\Expression($columns);
+//        } else if (is_array($columns) && isset($columns[0])) {
+//            $results = [];
+//            foreach ($columns as $name => $definition) {
+//                $results[$name] = $this->expression($definition);
+//            }
+//            return $results;
+//        } else {
+//            return [$columns[0] => $this->expression($columns[1])];
+//        }
+    }
 }

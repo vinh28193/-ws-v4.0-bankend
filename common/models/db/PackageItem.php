@@ -29,7 +29,7 @@ use Yii;
  * @property string $created_at thời gian tạo
  * @property string $updated_at thời gian cập nhật
  * @property int $remove
- * @property string $price
+ * @property string $price Giá trị 1 sản phẩm
  * @property string $cod
  *
  * @property Order $order
