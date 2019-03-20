@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers;
 use api\controllers\BaseApiController;
 use common\components\RestApiCall;
 use common\components\ChatMongoWs;
+use common\models\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
@@ -123,7 +124,10 @@ class RestApiChatController extends BaseApiController
     public function actionView($id)
     {
         if ($id !== null) {
-            return $this->response(true, "Get  $id success", $this->findModel($id));
+            $response = ChatMongoWs::find()
+                ->where(['Order_path' => $id])
+                ->asArray()->all();
+            return $this->response(true, "Get  $id success", $response);
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
