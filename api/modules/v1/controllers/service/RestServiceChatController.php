@@ -1,16 +1,11 @@
 <?php
 
-namespace api\modules\v1\controllers;
+namespace api\modules\v1\controllers\service;
 
-use api\controllers\BaseApiController;
-use common\components\RestApiCall;
-use common\components\ChatMongoWs;
-use common\models\Order;
 use Yii;
-use yii\web\NotFoundHttpException;
-use yii\web\ServerErrorHttpException;
+use api\modules\v1\controllers\RestApiChatController as RestApiChat;
 
-class RestServiceChatController extends RestApiChatController
+class RestServiceChatController extends RestApiChat
 {
     /** Role :
         case 'cms':

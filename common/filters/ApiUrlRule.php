@@ -13,6 +13,7 @@ class ApiUrlRule extends \yii\rest\UrlRule
 {
 
     public $sharePrefix = true;
+    public $if_service = false;
 
     /**
      * {@inheritdoc}
@@ -32,6 +33,7 @@ class ApiUrlRule extends \yii\rest\UrlRule
                     $action = $this->sharePrefix ? trim($this->prefix . '/' . $action, '/') : $action;
                     $rules[$urlName][] = $this->createRule($pattern, $prefix, $action);
                 }
+
             }
         }
 
