@@ -3,7 +3,7 @@
 return [
     'order0' => [
         'id' => 1,
-        'Ordercode' => 'WSVN2935',
+        'ordercode' => 'WSVN2935',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 15,
@@ -102,7 +102,7 @@ Thái Nguyên',
     ],
     'order1' => [
         'id' => 2,
-        'Ordercode' => 'WSVN7',
+        'ordercode' => 'WSVN7',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 48,
@@ -201,7 +201,7 @@ Hồ Chí Minh',
     ],
     'order2' => [
         'id' => 3,
-        'Ordercode' => 'WSVN9271883',
+        'ordercode' => 'WSVN9271883',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 33,
@@ -300,7 +300,7 @@ Thái Nguyên',
     ],
     'order3' => [
         'id' => 4,
-        'Ordercode' => 'WSVN8079091',
+        'ordercode' => 'WSVN8079091',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 9,
@@ -399,7 +399,7 @@ Hải Phòng',
     ],
     'order4' => [
         'id' => 5,
-        'Ordercode' => 'WSVN96',
+        'ordercode' => 'WSVN96',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 27,
@@ -498,7 +498,7 @@ Ninh Bình',
     ],
     'order5' => [
         'id' => 6,
-        'Ordercode' => 'WSVN476929223',
+        'ordercode' => 'WSVN476929223',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 56,
@@ -597,7 +597,7 @@ Ninh Bình',
     ],
     'order6' => [
         'id' => 7,
-        'Ordercode' => 'WSVN5',
+        'ordercode' => 'WSVN5',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 5,
@@ -696,7 +696,7 @@ Hồ Chí Minh',
     ],
     'order7' => [
         'id' => 8,
-        'Ordercode' => 'WSVN4830',
+        'ordercode' => 'WSVN4830',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 2,
@@ -795,7 +795,7 @@ Ninh Bình',
     ],
     'order8' => [
         'id' => 9,
-        'Ordercode' => 'WSVN54',
+        'ordercode' => 'WSVN54',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 46,
@@ -894,7 +894,7 @@ Thái Nguyên',
     ],
     'order9' => [
         'id' => 10,
-        'Ordercode' => 'WSVN88',
+        'ordercode' => 'WSVN88',
         'store_id' => 1,
         'fees' => [
             'product_price_origin' => 7,

@@ -3,16 +3,16 @@
 use yii\db\Migration;
 
 /**
- * Class m190320_093736_add_field_Order_code_in_Order_tables
+ * Class m190315_090823_update_columns_product
  */
-class m190320_093736_add_field_Order_code_in_Order_tables extends Migration
+class m190315_090823_update_columns_product extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->addColumn('order','ordercode','varchar(255)');
+        $this->addColumn('product','product_link','varchar(500)');
     }
 
     /**
@@ -20,7 +20,9 @@ class m190320_093736_add_field_Order_code_in_Order_tables extends Migration
      */
     public function safeDown()
     {
-         $this->dropColumn('order','ordercode');
+        echo "m190315_090823_update_columns_product cannot be reverted.\n";
+
+        return false;
     }
 
     /*
@@ -32,7 +34,7 @@ class m190320_093736_add_field_Order_code_in_Order_tables extends Migration
 
     public function down()
     {
-        echo "m190320_093736_add_field_Order_code_in_Order_tables cannot be reverted.\n";
+        echo "m190315_090823_update_columns_product cannot be reverted.\n";
 
         return false;
     }
