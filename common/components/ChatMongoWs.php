@@ -6,7 +6,7 @@ use Yii;
 use yii\mongodb\ActiveRecord;
 
 /**
- * This is the model class for collection "rest_api_call".
+ * This is the model class for collection "chat_mongo_ws".
  *
  * @property \MongoId|string $_id
  * @property mixed $name
@@ -18,7 +18,7 @@ class ChatMongoWs extends ActiveRecord
 {
     public static function collectionName()
     {
-        return 'chat_mongo_ws';
+        return ['weshop_logs','chat_mongo_ws'];
     }
 
     public function behaviors()
