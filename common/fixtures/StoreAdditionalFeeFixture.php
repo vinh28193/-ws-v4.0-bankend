@@ -12,4 +12,5 @@ namespace common\fixtures;
 class StoreAdditionalFeeFixture extends \yii\test\ActiveFixture
 {
     public $modelClass = 'common\models\StoreAdditionalFee';
+    public $dataFile = '@common/fixtures/data/data_fixed/store_additional_fee.php';
 }

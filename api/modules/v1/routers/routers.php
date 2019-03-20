@@ -33,10 +33,9 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['order', 'product', 'check-out'],
+        'controller' => [ 'product'],
         'tokens' => [
-            '{id}' => '<id:\\d[\\d,]*>',
-            '{token}' => '<token:\\d[\\d,]*>',
+            '{id}' => '<id:\\d[\\d,]*>'
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
@@ -53,7 +52,32 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['p' => 'package', 'pi' => 'package-item'],
+        'controller' => ['order'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{image}' => '<image:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [
+            'PUT edit-image/<id:\d+>'=> 'edit-image',
+            'OPTIONS edit-image/<id:\d+>'=> 'options',
+            'PUT edit-variant/<id:\d+>'=> 'edit-variant',
+            'OPTIONS edit-variant/<id:\d+>'=> 'options'
+        ]
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['p' => 'package'],
         'patterns' => [
             'GET' => 'index',
             'OPTIONS' => 'options',
@@ -75,7 +99,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['chat' => 'rest-api-chat'],
+        'controller' => ['chat' =>'rest-api-chat'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -86,6 +110,24 @@ return [
             'DELETE {id}' => 'delete',
             'GET,HEAD {id}' => 'view',
             'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'if_service' => true,
+        'controller' => ['chat-service' =>'service/rest-service-chat'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'PUT {id}' => 'customer-viewed',
+            'PATCH {id}' => 'group-viewed',
             'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
         ],

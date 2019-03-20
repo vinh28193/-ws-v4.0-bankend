@@ -56,9 +56,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
 
     public function withFullRelations(){
         $this->with([
-            'products',
             'orderFees',
-            'customer',
             'packageItems',
             'walletTransactions',
             'seller',
@@ -66,6 +64,11 @@ class OrderQuery extends \common\components\db\ActiveQuery
                 /** @var ActiveQuery $q */
                 $q->select(['username','email','id','status', 'created_at', 'updated_at']);
             }
+        ]);
+        $this->joinWith([
+            'products',
+            'coupon',
+            'customer'
         ]);
         return $this;
     }

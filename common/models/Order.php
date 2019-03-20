@@ -9,6 +9,7 @@
 namespace common\models;
 
 use Yii;
+use common\models\db\Coupon;
 use common\models\db\Order as DbOrder;
 use common\models\queries\OrderQuery;
 use common\models\db\Promotion;
@@ -151,6 +152,11 @@ class Order extends DbOrder
         return $this->hasMany(Product::className(), ['order_id' => 'id']);
     }
 
+    public function getCoupon()
+    {
+        return $this->hasOne(Coupon::className(), ['id' => 'coupon_id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -198,13 +204,28 @@ class Order extends DbOrder
         if(isset($params['id'])) {
             $query->andFilterWhere(['id' => $params['id']]);
         }
+        if(isset($params['store'])) {
+            $query->andFilterWhere(['order.store_id' => $params['store']]);
+        }
+        if(isset($params['type'])) {
+            $query->andFilterWhere(['order.type_order' => $params['type']]);
+        }
+        if(isset($params['searchKeyword']) && isset($params['value'])) {
+            $query->andFilterWhere([$params['searchKeyword'] => $params['value']]);
+        }
 
-        if(isset($params['created_at'])) {
-            $query->andFilterWhere(['created_at' => $params['created_at']]);
+        if(isset($params['orderStatus'])) {
+            $query->andFilterWhere(['order.current_status' => $params['orderStatus']]);
         }
-        if(isset($params['updated_at'])) {
-            $query->andFilterWhere(['updated_at' => $params['updated_at']]);
+
+        if(isset($params['portal'])) {
+            $query->andFilterWhere(['order.portal' => $params['portal']]);
         }
+
+//        if(isset($params['timeKey']) && isset($params['valueTime'])) {
+//            $query->andFilterWhere([$params['timeKey'] => $params['valueTime']]);
+//        }
+
         if(isset($params['receiver_email'])){
             $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
         }
