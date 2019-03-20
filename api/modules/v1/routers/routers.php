@@ -53,7 +53,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['p' => 'package'],
+        'controller' => ['p' => 'package', 'pi' => 'package-item'],
         'patterns' => [
             'GET' => 'index',
             'OPTIONS' => 'options',
@@ -75,7 +75,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['chat' =>'rest-api-chat'],
+        'controller' => ['chat' => 'rest-api-chat'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
