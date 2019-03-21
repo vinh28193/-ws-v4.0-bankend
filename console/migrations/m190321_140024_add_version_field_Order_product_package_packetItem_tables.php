@@ -30,8 +30,6 @@ class m190321_140024_add_version_field_Order_product_package_packetItem_tables e
         $this->addColumn('system_currency', 'version',$this->string(255)->null()->comment('version 4.0'));
         $this->addColumn('system_district', 'version',$this->string(255)->null()->comment('version 4.0'));
         $this->addColumn('system_district_mapping', 'version',$this->string(255)->null()->comment('version 4.0'));
-        $this->addColumn('system_district_mapping', 'version',$this->string(255)->null()->comment('version 4.0'));
-        $this->addColumn('system_district_mapping', 'version',$this->string(255)->null()->comment('version 4.0'));
         $this->addColumn('system_state_province', 'version',$this->string(255)->null()->comment('version 4.0'));
         $this->addColumn('warehouse', 'version',$this->string(255)->null()->comment('version 4.0'));
 
