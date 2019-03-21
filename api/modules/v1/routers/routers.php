@@ -99,6 +99,17 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
+        'controller' => ['tracking-code'],
+        'patterns' => [
+            'GET' => 'index',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
         'controller' => ['chat' =>'rest-api-chat'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',

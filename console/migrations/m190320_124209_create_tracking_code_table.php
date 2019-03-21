@@ -24,6 +24,8 @@ class m190320_124209_create_tracking_code_table extends Migration
             'order_id' => $this->integer(11)->null()->defaultValue(null)->comment('Order id'),
             'seller_id' => $this->integer(11)->null()->comment('Seller'),
             'seller_tracking' => $this->string(60)->null()->comment('Seller tracking'),
+            'seller_tracking_reference_1' => $this->string(60)->null()->comment('Seller tracking reference'),
+            'seller_tracking_reference_2' => $this->string(60)->null()->comment('Seller tracking reference'),
             'seller_weight' => $this->decimal(2)->defaultValue(0.00)->comment('seller Weight (kg)'),
             'seller_quantity' => $this->decimal(2)->defaultValue(0.00)->comment('seller quantity'),
             'seller_dimension_width' => $this->decimal(2)->defaultValue(0.00)->comment('Seller Width (cm)'),

@@ -15,6 +15,8 @@ use Yii;
  * @property int $order_id Order id
  * @property int $seller_id Seller
  * @property string $seller_tracking Seller tracking
+ * @property string $seller_tracking_reference_1 Seller tracking reference
+ * @property string $seller_tracking_reference_2 Seller tracking reference
  * @property string $seller_weight seller Weight (kg)
  * @property string $seller_quantity seller quantity
  * @property string $seller_dimension_width Seller Width (cm)
@@ -62,7 +64,7 @@ class TrackingCode extends \common\components\db\ActiveRecord
             [['store_id', 'package_id', 'package_item_id', 'order_id', 'seller_id', 'seller_shipped_at', 'receiver_warehouse_id', 'receiver_warehouse_send_at', 'local_warehouse_send_at', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['seller_weight', 'seller_quantity', 'seller_dimension_width', 'seller_dimension_length', 'seller_dimension_height', 'local_warehouse_dimension_width', 'local_warehouse_dimension_length', 'local_warehouse_dimension_height', 'local_warehouse_note'], 'number'],
             [['receiver_warehouse_note', 'operation_note'], 'string'],
-            [['weshop_tag', 'seller_tracking', 'local_warehouse_id', 'local_warehouse_tag', 'local_warehouse_weight', 'local_warehouse_quantity'], 'string', 'max' => 60],
+            [['weshop_tag', 'seller_tracking', 'seller_tracking_reference_1', 'seller_tracking_reference_2', 'local_warehouse_id', 'local_warehouse_tag', 'local_warehouse_weight', 'local_warehouse_quantity'], 'string', 'max' => 60],
             [['local_warehouse_status'], 'string', 'max' => 10],
             [['status'], 'string', 'max' => 32],
         ];
@@ -82,6 +84,8 @@ class TrackingCode extends \common\components\db\ActiveRecord
             'order_id' => 'Order ID',
             'seller_id' => 'Seller ID',
             'seller_tracking' => 'Seller Tracking',
+            'seller_tracking_reference_1' => 'Seller Tracking Reference 1',
+            'seller_tracking_reference_2' => 'Seller Tracking Reference 2',
             'seller_weight' => 'Seller Weight',
             'seller_quantity' => 'Seller Quantity',
             'seller_dimension_width' => 'Seller Dimension Width',

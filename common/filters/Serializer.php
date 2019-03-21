@@ -24,7 +24,11 @@ class Serializer extends \yii\rest\Serializer
         if (is_array($data) && count($data) === 3 && isset($data['data'])) {
             $data['data'] = $this->serialize($data['data']);
             return $data;
-        } elseif ($data instanceof \IteratorAggregate) {
+        }elseif (is_array($data) && isset($data[$this->collectionEnvelope]) && !empty($data[$this->collectionEnvelope])){
+            $data[$this->collectionEnvelope] = $this->serializeModels($data[$this->collectionEnvelope]);
+            return $data;
+        }
+        elseif ($data instanceof \IteratorAggregate) {
             return ($iterator = $data->getIterator()) instanceof \ArrayIterator ? $iterator->getArrayCopy() : $iterator;
         }
         $data = parent::serialize($data);
@@ -53,5 +57,10 @@ class Serializer extends \yii\rest\Serializer
     {
         $this->response->setStatusCode(422, 'Data Validation Failed.');
         return $model->getFirstErrors();
+    }
+
+    protected function serializeModels(array $models)
+    {
+        return parent::serializeModels($models);
     }
 }

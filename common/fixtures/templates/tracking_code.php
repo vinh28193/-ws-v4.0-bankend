@@ -21,6 +21,8 @@ return [
     'order_id' => null,
     'seller_id' => null,
     'seller_tracking' => \common\helpers\WeshopHelper::generateTag($index,'',16),
+    'seller_tracking_reference_1' => \common\helpers\WeshopHelper::generateTag($index,'REF1_',16),
+    'seller_tracking_reference_2' => \common\helpers\WeshopHelper::generateTag($index,'REF2_',16),
     'seller_weight' => \common\helpers\WeshopHelper::roundNumber($faker->numberBetween(100,9999),2),
     'seller_quantity' => $faker->numberBetween(1,99),
     'seller_dimension_width' => \common\helpers\WeshopHelper::roundNumber($faker->numberBetween(100,9999),2),
