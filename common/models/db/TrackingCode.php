@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "package_item_raw".
+ * This is the model class for table "tracking_code".
  *
  * @property int $id ID
  * @property int $store_id Store ID reference
@@ -42,14 +42,14 @@ use Yii;
  * @property int $updated_by Updated by
  * @property int $updated_at Updated at (timestamp)
  */
-class PackageItemRaw extends \common\components\db\ActiveRecord
+class TrackingCode extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'package_item_raw';
+        return 'tracking_code';
     }
 
     /**
@@ -113,10 +113,10 @@ class PackageItemRaw extends \common\components\db\ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return \common\models\queries\PackageItemRawQuery the active query used by this AR class.
+     * @return \common\models\queries\TrackingCodeQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\queries\PackageItemRawQuery(get_called_class());
+        return new \common\models\queries\TrackingCodeQuery(get_called_class());
     }
 }

@@ -3,19 +3,19 @@
 use common\components\db\Migration;
 
 /**
- * Handles the creation of table `package_item_raw`.
+ * Handles the creation of table `tracking_code`.
  * Has foreign keys to the tables:
  *
  * - `store`
  */
-class m190320_124209_create_package_item_raw_table extends Migration
+class m190320_124209_create_tracking_code_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('package_item_raw', [
+        $this->createTable('tracking_code', [
             'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID reference'),
             'package_id' => $this->integer(11)->defaultValue(null)->comment("Package id after sent"),
@@ -59,6 +59,6 @@ class m190320_124209_create_package_item_raw_table extends Migration
     public function safeDown()
     {
 
-        $this->dropTable('package_item_raw');
+        $this->dropTable('tracking_code');
     }
 }
