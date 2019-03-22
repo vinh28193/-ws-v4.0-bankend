@@ -20,4 +20,6 @@ class WarehouseFixture extends ActiveFixture
         'common\fixtures\SystemDistrictFixture',
         'common\fixtures\StoreFixture',
     ];
+
+    public $dataFile = '@common/fixtures/data/data_fixed/warehouse.php';
 }
