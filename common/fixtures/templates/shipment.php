@@ -28,6 +28,7 @@ $tags = $faker->randomElements($array, $faker->numberBetween(1, count($array) - 
 $tags = implode(',', $tags);
 return [
     'id' => $id,
+    'version'=>'4.0',
     'shipment_code' => FixtureUtility::getRandomCode(6),
     'warehouse_tags' => $tags,
     'total_weight' => $faker->numberBetween(1000, 100000),

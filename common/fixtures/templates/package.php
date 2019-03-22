@@ -28,6 +28,7 @@ for($ind = 1; $ind<=$countOrders;$ind++){
 return [
     'id' => $id,
     'package_code' => FixtureUtility::getRandomCode(11,1),
+    'version'=>'4.0',
     'tracking_seller' => FixtureUtility::getRandomCode(),
     'order_ids' => $orders,
     'tracking_reference_1' => FixtureUtility::getRandomCode(),

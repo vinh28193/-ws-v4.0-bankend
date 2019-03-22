@@ -31,6 +31,7 @@ use Yii;
  * @property int $created_at Created at (timestamp)
  * @property int $updated_by Updated by
  * @property int $updated_at Updated at (timestamp)
+ * @property string $version version 4.0
  */
 class TrackingCode extends \common\components\db\ActiveRecord
 {
@@ -55,6 +56,7 @@ class TrackingCode extends \common\components\db\ActiveRecord
             [['tracking_code', 'weshop_tag', 'warehouse_alias', 'warehouse_tag'], 'string', 'max' => 60],
             [['warehouse_status'], 'string', 'max' => 10],
             [['status'], 'string', 'max' => 32],
+            [['version'], 'string', 'max' => 255],
         ];
     }
 
@@ -88,15 +90,7 @@ class TrackingCode extends \common\components\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_by' => 'Updated By',
             'updated_at' => 'Updated At',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\TrackingCodeQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\TrackingCodeQuery(get_called_class());
     }
 }

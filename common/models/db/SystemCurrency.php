@@ -12,8 +12,7 @@ use Yii;
  * @property string $currency_code
  * @property string $currency_symbol
  * @property string $status
- *
- * @property Store[] $stores
+ * @property string $version version 4.0
  */
 class SystemCurrency extends \common\components\db\ActiveRecord
 {
@@ -31,7 +30,7 @@ class SystemCurrency extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'currency_code', 'currency_symbol', 'status'], 'string', 'max' => 255],
+            [['name', 'currency_code', 'currency_symbol', 'status', 'version'], 'string', 'max' => 255],
         ];
     }
 
@@ -46,14 +45,7 @@ class SystemCurrency extends \common\components\db\ActiveRecord
             'currency_code' => 'Currency Code',
             'currency_symbol' => 'Currency Symbol',
             'status' => 'Status',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStores()
-    {
-        return $this->hasMany(Store::className(), ['currency_id' => 'id']);
     }
 }

@@ -36,9 +36,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  * @property int $remove
- *
- * @property User $createdBy
- * @property Store $store
+ * @property string $version version 4.0
  */
 class Coupon extends \common\components\db\ActiveRecord
 {
@@ -58,9 +56,7 @@ class Coupon extends \common\components\db\ActiveRecord
         return [
             [['store_id', 'created_by', 'start_time', 'end_time', 'limit_customer_count_use', 'limit_count_use', 'count_use', 'used_first_time', 'used_last_time', 'can_use_instalment', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['amount', 'limit_amount_use', 'limit_amount_use_order', 'total_amount_used'], 'number'],
-            [['name', 'code', 'message', 'type_coupon', 'type_amount', 'percent_for', 'for_email', 'for_portal', 'for_category', 'for_min_order_amount', 'for_max_order_amount'], 'string', 'max' => 255],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
+            [['name', 'code', 'message', 'type_coupon', 'type_amount', 'percent_for', 'for_email', 'for_portal', 'for_category', 'for_min_order_amount', 'for_max_order_amount', 'version'], 'string', 'max' => 255],
         ];
     }
 
@@ -96,25 +92,10 @@ class Coupon extends \common\components\db\ActiveRecord
             'used_first_time' => 'Used First Time',
             'used_last_time' => 'Used Last Time',
             'can_use_instalment' => 'Can Use Instalment',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'remove' => 'Remove',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCreatedBy()
-    {
-        return $this->hasOne(User::className(), ['id' => 'created_by']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'store_id']);
     }
 }

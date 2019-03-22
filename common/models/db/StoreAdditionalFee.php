@@ -24,6 +24,7 @@ use Yii;
  * @property int $updated_by Updated by
  * @property int $updated_time Updated at (timestamp)
  * @property string $fee_rate Fee Rate
+ * @property string $version version 4.0
  */
 class StoreAdditionalFee extends \common\components\db\ActiveRecord
 {
@@ -48,7 +49,7 @@ class StoreAdditionalFee extends \common\components\db\ActiveRecord
             [['name'], 'string', 'max' => 50],
             [['label'], 'string', 'max' => 80],
             [['currency'], 'string', 'max' => 11],
-            [['condition_name'], 'string', 'max' => 255],
+            [['condition_name', 'version'], 'string', 'max' => 255],
         ];
     }
 
@@ -75,6 +76,7 @@ class StoreAdditionalFee extends \common\components\db\ActiveRecord
             'updated_by' => 'Updated By',
             'updated_time' => 'Updated Time',
             'fee_rate' => 'Fee Rate',
+            'version' => 'Version',
         ];
     }
 }

@@ -35,6 +35,7 @@ $condition = isset($conditions[$feeName]) ? $conditions[$feeName]  : 'common\com
 $condition = new $condition;
 return [
     'id' => $id,
+    'version'=>'4.0',
     'store_id' => 1,
     'name' => $feeName,
     'label' => Inflector::camel2words($feeName),

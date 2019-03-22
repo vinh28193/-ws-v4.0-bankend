@@ -21,6 +21,7 @@ $package = $faker->randomElement($arrays);
 $id = $index + 1;
 return [
     'id' => $id,
+    'version'=>'4.0',
     'store_id' => 1,
     'package_id' => $package['id'],
     'package_code' => $package['package_code'],

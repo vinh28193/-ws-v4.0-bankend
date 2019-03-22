@@ -75,6 +75,7 @@ if($typeOrder == 'NEXTTECH' ) {
 return [
     'id' => $id,
     'Ordercode'=>'WSVN'.$faker->unique(true,10000)->randomNumber(),
+    'version'=>'4.0',
     'store_id' => 1,
     'fees' => [
         'product_price_origin' => $faker->numberBetween(0, 60),

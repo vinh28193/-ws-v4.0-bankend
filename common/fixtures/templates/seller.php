@@ -13,6 +13,7 @@
 
 return [
     'id' => $index + 1,
+    'version'=>'4.0',
     'seller_name' => $faker->unique()->name,
     'seller_store_rate' => $faker->unique()->url,
     'seller_store_rate' => $faker->unique()->randomFloat(1,0,10),

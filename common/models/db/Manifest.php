@@ -20,12 +20,7 @@ use Yii;
  * @property int $created_at ngày tạo
  * @property int $updated_at
  * @property int $active
- *
- * @property User $createdBy
- * @property Warehouse $receiveWarehouse
- * @property Store $store
- * @property User $updatedBy
- * @property Warehouse $sendWarehouse
+ * @property string $version version 4.0
  */
 class Manifest extends \common\components\db\ActiveRecord
 {
@@ -46,12 +41,7 @@ class Manifest extends \common\components\db\ActiveRecord
             [['manifest_code'], 'required'],
             [['send_warehouse_id', 'receive_warehouse_id', 'store_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'active'], 'integer'],
             [['us_stock_out_time', 'local_stock_in_time', 'local_stock_out_time'], 'safe'],
-            [['manifest_code'], 'string', 'max' => 255],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
-            [['receive_warehouse_id'], 'exist', 'skipOnError' => true, 'targetClass' => Warehouse::className(), 'targetAttribute' => ['receive_warehouse_id' => 'id']],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
-            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
-            [['send_warehouse_id'], 'exist', 'skipOnError' => true, 'targetClass' => Warehouse::className(), 'targetAttribute' => ['send_warehouse_id' => 'id']],
+            [['manifest_code', 'version'], 'string', 'max' => 255],
         ];
     }
 
@@ -74,46 +64,7 @@ class Manifest extends \common\components\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'active' => 'Active',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCreatedBy()
-    {
-        return $this->hasOne(User::className(), ['id' => 'created_by']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReceiveWarehouse()
-    {
-        return $this->hasOne(Warehouse::className(), ['id' => 'receive_warehouse_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'store_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUpdatedBy()
-    {
-        return $this->hasOne(User::className(), ['id' => 'updated_by']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSendWarehouse()
-    {
-        return $this->hasOne(Warehouse::className(), ['id' => 'send_warehouse_id']);
     }
 }

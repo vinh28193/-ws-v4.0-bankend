@@ -492,6 +492,9 @@ https://www.yiiframework.com/extension/johnsnook/yii2-ip-filter
     PostsApiCest: Test delete..................................................FAIL
 
 
+#####---------Load Db Test--------------
+php yii fixture/load "Package,PackageItem,Order,Product"
+
 ####--------------- Document migration --------------------------
 https://www.yiiframework.com/doc/guide/1.1/en/database.migration
 

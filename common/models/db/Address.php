@@ -27,14 +27,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  * @property int $remove
- *
- * @property SystemCountry $country
- * @property Customer $customer
- * @property SystemDistrict $district
- * @property SystemStateProvince $province
- * @property Store $store
- * @property Order[] $orders
- * @property Shipment[] $shipments
+ * @property string $version version 4.0
  */
 class Address extends \common\components\db\ActiveRecord
 {
@@ -54,12 +47,7 @@ class Address extends \common\components\db\ActiveRecord
         return [
             [['country_id', 'province_id', 'district_id', 'store_id', 'is_default', 'customer_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['address'], 'string'],
-            [['first_name', 'last_name', 'email', 'phone', 'country_name', 'province_name', 'district_name', 'post_code', 'type'], 'string', 'max' => 255],
-            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['country_id' => 'id']],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['district_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemDistrict::className(), 'targetAttribute' => ['district_id' => 'id']],
-            [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['province_id' => 'id']],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
+            [['first_name', 'last_name', 'email', 'phone', 'country_name', 'province_name', 'district_name', 'post_code', 'type', 'version'], 'string', 'max' => 255],
         ];
     }
 
@@ -86,65 +74,10 @@ class Address extends \common\components\db\ActiveRecord
             'type' => 'Type',
             'is_default' => 'Is Default',
             'customer_id' => 'Customer ID',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'remove' => 'Remove',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCountry()
-    {
-        return $this->hasOne(SystemCountry::className(), ['id' => 'country_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCustomer()
-    {
-        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDistrict()
-    {
-        return $this->hasOne(SystemDistrict::className(), ['id' => 'district_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProvince()
-    {
-        return $this->hasOne(SystemStateProvince::className(), ['id' => 'province_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'store_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrders()
-    {
-        return $this->hasMany(Order::className(), ['receiver_address_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getShipments()
-    {
-        return $this->hasMany(Shipment::className(), ['receiver_address_id' => 'id']);
     }
 }

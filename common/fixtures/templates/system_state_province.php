@@ -13,6 +13,7 @@
 $faker = \Faker\Factory::create('vi_VN');
 return [
     'id' => $index + 1,
+    'version'=>'4.0',
     'country_id' => 1,
     'name' => $faker->city,
     'name_local' => $faker->city,

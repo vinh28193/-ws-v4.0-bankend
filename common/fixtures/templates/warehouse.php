@@ -16,6 +16,7 @@ $province = $faker->randomElement(\common\fixtures\components\FixtureUtility::ge
 $district = $faker->randomElement(\common\fixtures\components\FixtureUtility::getDistrictsByIdProvince($province['id']));
 return [
     'id' => $id,
+    'version'=>'4.0',
     'name' => $faker->unique()->name,
     'description' => $faker->name,
     'district_id' => $district['id'],
