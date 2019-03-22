@@ -3,11 +3,11 @@
 namespace common\models\queries;
 
 /**
- * This is the ActiveQuery class for [[\common\models\db\TrackingCode]].
+ * This is the ActiveQuery class for [[\common\models\db\PackingItemRaw]].
  *
- * @see \common\models\db\TrackingCode
+ * @see \common\models\db\PackingItemRaw
  */
-class TrackingCodeQuery extends \common\components\db\ActiveQuery
+class PackingItemRawQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +16,7 @@ class TrackingCodeQuery extends \common\components\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \common\models\db\TrackingCode[]|array
+     * @return \common\models\db\PackingItemRaw[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class TrackingCodeQuery extends \common\components\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \common\models\db\TrackingCode|array|null
+     * @return \common\models\db\PackingItemRaw|array|null
      */
     public function one($db = null)
     {
