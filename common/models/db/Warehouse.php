@@ -24,14 +24,7 @@ use Yii;
  * @property int $ref_warehouse_id
  * @property string $created_at thời gian tạo
  * @property string $updated_at thời gian cập nhật
- *
- * @property Package[] $packages
- * @property Shipment[] $shipments
- * @property ShipmentReturned[] $shipmentReturneds
- * @property SystemCountry $country
- * @property SystemDistrict $district
- * @property SystemStateProvince $province
- * @property Store $store
+ * @property string $version version 4.0
  */
 class Warehouse extends \common\components\db\ActiveRecord
 {
@@ -50,11 +43,7 @@ class Warehouse extends \common\components\db\ActiveRecord
     {
         return [
             [['district_id', 'province_id', 'country_id', 'store_id', 'type', 'ref_warehouse_id', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'description', 'address', 'warehouse_group', 'post_code', 'telephone', 'email', 'contact_person'], 'string', 'max' => 255],
-            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['country_id' => 'id']],
-            [['district_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemDistrict::className(), 'targetAttribute' => ['district_id' => 'id']],
-            [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['province_id' => 'id']],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
+            [['name', 'description', 'address', 'warehouse_group', 'post_code', 'telephone', 'email', 'contact_person', 'version'], 'string', 'max' => 255],
         ];
     }
 
@@ -79,64 +68,9 @@ class Warehouse extends \common\components\db\ActiveRecord
             'email' => 'Email',
             'contact_person' => 'Contact Person',
             'ref_warehouse_id' => 'Ref Warehouse ID',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPackages()
-    {
-        return $this->hasMany(Package::className(), ['warehouse_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getShipments()
-    {
-        return $this->hasMany(Shipment::className(), ['warehouse_send_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getShipmentReturneds()
-    {
-        return $this->hasMany(ShipmentReturned::className(), ['warehouse_send_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCountry()
-    {
-        return $this->hasOne(SystemCountry::className(), ['id' => 'country_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDistrict()
-    {
-        return $this->hasOne(SystemDistrict::className(), ['id' => 'district_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProvince()
-    {
-        return $this->hasOne(SystemStateProvince::className(), ['id' => 'province_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'store_id']);
     }
 }

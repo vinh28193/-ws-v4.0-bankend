@@ -24,8 +24,7 @@ use Yii;
  * @property int $active
  * @property int $remove
  * @property string $name
- *
- * @property Product[] $products
+ * @property string $version version 4.0
  */
 class Category extends \common\components\db\ActiveRecord
 {
@@ -45,7 +44,7 @@ class Category extends \common\components\db\ActiveRecord
         return [
             [['category_group_id', 'level', 'created_at', 'updated_at', 'active', 'remove'], 'integer'],
             [['weight', 'inter_shipping_b', 'custom_fee'], 'number'],
-            [['alias', 'site', 'origin_name', 'parent_id', 'description', 'path'], 'string', 'max' => 255],
+            [['alias', 'site', 'origin_name', 'parent_id', 'description', 'path', 'version'], 'string', 'max' => 255],
             [['name'], 'string', 'max' => 500],
         ];
     }
@@ -73,14 +72,7 @@ class Category extends \common\components\db\ActiveRecord
             'active' => 'Active',
             'remove' => 'Remove',
             'name' => 'Name',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProducts()
-    {
-        return $this->hasMany(Product::className(), ['category_id' => 'id']);
     }
 }

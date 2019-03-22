@@ -24,10 +24,7 @@ use Yii;
  * @property int $shipment_id
  * @property string $created_at thời gian tạo
  * @property string $updated_at thời gian cập nhật
- *
- * @property Customer $customer
- * @property Shipment $shipment
- * @property Warehouse $warehouseSend
+ * @property string $version version 4.0
  */
 class ShipmentReturned extends \common\components\db\ActiveRecord
 {
@@ -48,10 +45,7 @@ class ShipmentReturned extends \common\components\db\ActiveRecord
             [['shipment_code', 'warehouse_send_id', 'customer_id', 'total_quantity', 'courier_code', 'shipment_id', 'created_at', 'updated_at'], 'integer'],
             [['warehouse_tags', 'courier_logo', 'courier_estimate_time'], 'string'],
             [['total_weight', 'total_shipping_fee', 'total_price', 'total_cod'], 'number'],
-            [['shipment_status'], 'string', 'max' => 255],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['shipment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipment::className(), 'targetAttribute' => ['shipment_id' => 'id']],
-            [['warehouse_send_id'], 'exist', 'skipOnError' => true, 'targetClass' => Warehouse::className(), 'targetAttribute' => ['warehouse_send_id' => 'id']],
+            [['shipment_status', 'version'], 'string', 'max' => 255],
         ];
     }
 
@@ -76,32 +70,9 @@ class ShipmentReturned extends \common\components\db\ActiveRecord
             'courier_logo' => 'Courier Logo',
             'courier_estimate_time' => 'Courier Estimate Time',
             'shipment_id' => 'Shipment ID',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCustomer()
-    {
-        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getShipment()
-    {
-        return $this->hasOne(Shipment::className(), ['id' => 'shipment_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getWarehouseSend()
-    {
-        return $this->hasOne(Warehouse::className(), ['id' => 'warehouse_send_id']);
     }
 }

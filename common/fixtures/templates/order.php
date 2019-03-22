@@ -15,6 +15,7 @@ use common\fixtures\components\FixtureUtility;
  */
 
 $id = $index + 1;
+$user = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\user.php', $columnName = null));
 $customer = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\customer.php', $columnName = null));
 $address = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\address.php', $columnName = null));
 $user = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\user.php', $columnName = null));
@@ -74,6 +75,7 @@ if($typeOrder == 'NEXTTECH' ) {
 return [
     'id' => $id,
     'Ordercode'=>'WSVN'.$faker->unique(true,10000)->randomNumber(),
+    'version'=>'4.0',
     'store_id' => 1,
     'fees' => [
         'product_price_origin' => $faker->numberBetween(0, 60),
@@ -210,13 +212,13 @@ return [
 
     // LƯU THONG TIN đã mua của EBAY / AMAZON :   Đơn này đươc phân cho nhân viên Mua Hàng
     'purchase_order_id' => $faker->bankAccountNumber.','.$faker->bankAccountNumber.','.$faker->bankAccountNumber.$faker->randomNumber().','.$faker->bankAccountNumber, //Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy),
-    'purchase_transaction_id' => $faker->md5(), //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
+    'purchase_transaction_id' => $faker->md5().','.$faker->md5().','.$faker->md5(), //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
     'purchase_amount' => $faker->unique(true,10000)->randomDigit(), //số tiền thanh toán thực tế với người bán EBAY/AMAZON, lưu ý : Số đã trừ Buck/Point ( và là dạng list, cách nhau = dấu phẩy),
-    'purchase_account_id' => $faker->bankAccountNumber, //id tài khoản mua hàng,
-    'purchase_account_email' => $faker->unique(true,10000)->email, //email tài khoản mua hàng,
+    'purchase_account_id' => $user['id'], //id tài khoản mua hàng,
+    'purchase_account_email' => $user['email'], //email tài khoản mua hàng,
     'purchase_card' => $faker->creditCardNumber(), //thẻ thanh toán,
     'purchase_amount_buck' => $faker->randomNumber(), //số tiền buck thanh toán,
-    'purchase_amount_refund' => $faker->randomNumber(), //số tiền người bán hoàn,
+    'purchase_amount_refund' => 0, //số tiền người bán hoàn,
     'purchase_refund_transaction_id' => null, //mã giao dịch hoàn,
 
     // Tổng Số lượng

@@ -15,6 +15,7 @@ use common\fixtures\components\FixtureUtility;
 
 return [
     'package_id' => $faker->numberBetween(1,999),
+    'version'=>'4.0',
     'package_code' => FixtureUtility::getRandomCode(11,1),
     'box_me_warehouse_tag' => $faker->randomElement(['CB_TAG-'.FixtureUtility::getRandomCode(16),null]),
     'order_id' => $faker->numberBetween(1,999),

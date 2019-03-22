@@ -19,8 +19,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  * @property int $remove
- *
- * @property Order $order
+ * @property string $version version 4.0
  */
 class OrderFee extends \common\components\db\ActiveRecord
 {
@@ -41,9 +40,8 @@ class OrderFee extends \common\components\db\ActiveRecord
             [['order_id', 'product_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['product_id', 'name'], 'required'],
             [['amount', 'local_amount', 'discount_amount'], 'number'],
-            [['type', 'currency'], 'string', 'max' => 255],
+            [['type', 'currency', 'version'], 'string', 'max' => 255],
             [['name'], 'string', 'max' => 60],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
     }
 
@@ -65,14 +63,7 @@ class OrderFee extends \common\components\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'remove' => 'Remove',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrder()
-    {
-        return $this->hasOne(Order::className(), ['id' => 'order_id']);
     }
 }

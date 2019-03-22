@@ -15,6 +15,7 @@ $id = $index + 1;
 
 return [
     'id' => $id,
+    'version'=>'4.0',
     'name' => $faker->unique()->text(15),
     'description' => null,
     'code' => null,

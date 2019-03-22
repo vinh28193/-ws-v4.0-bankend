@@ -31,9 +31,7 @@ use Yii;
  * @property int $remove
  * @property string $price Giá trị 1 sản phẩm
  * @property string $cod
- *
- * @property Order $order
- * @property Package $package
+ * @property string $version version 4.0
  */
 class PackageItem extends \common\components\db\ActiveRecord
 {
@@ -54,10 +52,8 @@ class PackageItem extends \common\components\db\ActiveRecord
             [['package_id', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['weight', 'change_weight', 'dimension_l', 'dimension_w', 'dimension_h', 'price', 'cod'], 'number'],
             [['package_code'], 'string', 'max' => 50],
-            [['box_me_warehouse_tag', 'sku'], 'string', 'max' => 255],
+            [['box_me_warehouse_tag', 'sku', 'version'], 'string', 'max' => 255],
             [['current_status'], 'string', 'max' => 100],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
-            [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Package::className(), 'targetAttribute' => ['package_id' => 'id']],
         ];
     }
 
@@ -91,22 +87,7 @@ class PackageItem extends \common\components\db\ActiveRecord
             'remove' => 'Remove',
             'price' => 'Price',
             'cod' => 'Cod',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrder()
-    {
-        return $this->hasOne(Order::className(), ['id' => 'order_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPackage()
-    {
-        return $this->hasOne(Package::className(), ['id' => 'package_id']);
     }
 }

@@ -15,6 +15,7 @@ $id = $index + 1;
 
 return [
     'id' => $id,
+    'version'=>'4.0',
     'name' => $faker->currencyCode,
     'currency_code' => $faker->currencyCode,
     'currency_symbol' => $faker->currencyCode,

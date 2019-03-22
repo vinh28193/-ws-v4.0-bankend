@@ -28,6 +28,7 @@ $manifest['manifest_code'] .= rand(1000,9999);
 $id = $index + 1;
 return [
     'id' => $id,
+    'version'=>'4.0',
     'store_id' => 1,
     'manifest_id' => $manifest['id'],
     'manifest_code' => $manifest['manifest_code'],

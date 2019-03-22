@@ -29,9 +29,7 @@ use Yii;
  * @property string $created_at thời gian tạo
  * @property string $updated_at thời gian cập nhật
  * @property int $remove
- *
- * @property Warehouse $warehouse
- * @property PackageItem[] $packageItems
+ * @property string $version version 4.0
  */
 class Package extends \common\components\db\ActiveRecord
 {
@@ -51,10 +49,10 @@ class Package extends \common\components\db\ActiveRecord
         return [
             [['order_ids', 'tracking_reference_1', 'tracking_reference_2', 'manifest_code'], 'string'],
             [['package_weight', 'package_change_weight', 'package_dimension_l', 'package_dimension_w', 'package_dimension_h'], 'number'],
-            [['seller_shipped', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'lost', 'current_status', 'warehouse_id', 'created_at', 'updated_at', 'remove'], 'integer'],
+            [['seller_shipped', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'lost', 'warehouse_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['package_code'], 'string', 'max' => 50],
-            [['tracking_seller'], 'string', 'max' => 255],
-            [['warehouse_id'], 'exist', 'skipOnError' => true, 'targetClass' => Warehouse::className(), 'targetAttribute' => ['warehouse_id' => 'id']],
+            [['tracking_seller', 'version'], 'string', 'max' => 255],
+            [['current_status'], 'string', 'max' => 100],
         ];
     }
 
@@ -86,22 +84,7 @@ class Package extends \common\components\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'remove' => 'Remove',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getWarehouse()
-    {
-        return $this->hasOne(Warehouse::className(), ['id' => 'warehouse_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPackageItems()
-    {
-        return $this->hasMany(PackageItem::className(), ['package_id' => 'id']);
     }
 }
