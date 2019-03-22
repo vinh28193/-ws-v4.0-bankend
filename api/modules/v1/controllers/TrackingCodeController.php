@@ -113,10 +113,10 @@ class TrackingCodeController extends BaseApiController
             return $this->response(false, $e->getMessage());
         }
         $time = microtime(true) - $start;
-        $message = ["Sending $manifest->manifest_code success"];
+        $message = ["Sending `$manifest->manifest_code` success"];
         foreach ($tokens as $name => $token){
             $error = isset($token['error']) ? count($token['error']) : 0;
-            $message[] = " from $name {$token['total']} executed $error error/{$token['success']} success";
+            $message[] = "from `$name` {$token['total']} executed $error error/{$token['success']} success";
         }
         $message = implode(", ",$message);
         return $this->response(true, $message);
