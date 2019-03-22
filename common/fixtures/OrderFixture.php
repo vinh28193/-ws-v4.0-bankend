@@ -28,21 +28,29 @@ class OrderFixture extends ActiveFixture
     ];
     public $dataFile = '@common/fixtures/data/data_fixed/order.php';
 
+    /*
     public function load()
     {
+        echo "<pre>";
+        print_r($this->getData());
+        echo "</pre>";
+        die;
+
         $this->data = [];
         $table = $this->getTableSchema();
         foreach ($this->getData() as $alias => $row) {
             $fee = $row['fees'];
             unset($row['fees']);
-            /** @var  $order Order*/
+            // @var  $order Order
             $order = new Order();
+            //$order->attributes = $row;
             $order->setAttributes($row, false);
             //$order->setAdditionalFees($fee,true,true);
             $order->total_final_amount_local = $order->total_amount_local + $order->total_fee_amount_local;
-            $order->save(0);
+            $order->save(false);
 //            $primaryKeys = $this->db->schema->insert($table->fullName, $row);
             $this->data[$alias] = array_merge($row, (array)$order->primaryKey);
         }
     }
+    */
 }

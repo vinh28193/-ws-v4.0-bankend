@@ -133,7 +133,11 @@ class OrderController extends BaseApiController
     public function actionView($id)
     {
         if ($id !== null) {
-            return $this->response(true, "Get order $id success", $this->findModel($id));
+            $request = Order::find()
+                ->where(['id' => $id])
+                ->withFullRelations()
+                ->asArray()->all();
+            return $this->response(true, "Get order $id success", $request);
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }

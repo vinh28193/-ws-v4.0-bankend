@@ -25,9 +25,7 @@ use Yii;
  * @property string $third_party_transaction_time thời gian giao dịch bên thứ 3
  * @property string $before_transaction_amount_local Số tiền trước giao dịch
  * @property string $after_transaction_amount_local Số tiền sau giao dịch
- *
- * @property Customer $customer
- * @property Order $order
+ * @property string $version version 4.0
  */
 class WalletTransaction extends \common\components\db\ActiveRecord
 {
@@ -48,10 +46,8 @@ class WalletTransaction extends \common\components\db\ActiveRecord
             [['created_at', 'updated_at', 'customer_id', 'order_id', 'third_party_transaction_time'], 'integer'],
             [['transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
             [['transaction_description', 'note', 'third_party_transaction_link'], 'string'],
-            [['transaction_code', 'transaction_status', 'transaction_type', 'transaction_reference_code', 'third_party_transaction_code'], 'string', 'max' => 255],
+            [['transaction_code', 'transaction_status', 'transaction_type', 'transaction_reference_code', 'third_party_transaction_code', 'version'], 'string', 'max' => 255],
             [['third_party_transaction_status'], 'string', 'max' => 200],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
     }
 
@@ -63,8 +59,8 @@ class WalletTransaction extends \common\components\db\ActiveRecord
         return [
             'id' => 'ID',
             'transaction_code' => 'Transaction Code',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'transaction_status' => 'Transaction Status',
             'transaction_type' => 'Transaction Type',
             'customer_id' => 'Customer ID',
@@ -79,22 +75,7 @@ class WalletTransaction extends \common\components\db\ActiveRecord
             'third_party_transaction_time' => 'Third Party Transaction Time',
             'before_transaction_amount_local' => 'Before Transaction Amount Local',
             'after_transaction_amount_local' => 'After Transaction Amount Local',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCustomer()
-    {
-        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrder()
-    {
-        return $this->hasOne(Order::className(), ['id' => 'order_id']);
     }
 }
