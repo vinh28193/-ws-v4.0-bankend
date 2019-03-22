@@ -11,24 +11,32 @@
  * @var $index integer
  */
 
-$arrays = [
+$packages = [
     ['id' => 1, 'package_code' => 'PK_1223454321'],
     ['id' => 2, 'package_code' => 'PK_0987654323'],
     ['id' => 3, 'package_code' => 'PB_0000000000'],
 ];
 
-$package = $faker->randomElement($arrays);
+$manifests = [
+    ['id' => 1, 'manifest_code' => 'RVS789'],
+    ['id' => 2, 'manifest_code' => 'VA1234'],
+    ['id' => 3, 'manifest_code' => 'HNC555'],
+];
+$package = $faker->randomElement($packages);
+$manifest = $faker->randomElement($manifests);
 $id = $index + 1;
 return [
     'id' => $id,
     'version'=>'4.0',
     'store_id' => 1,
+    'manifest_id' => $manifest['id'],
+    'manifest_code' => $manifest['manifest_code'],
     'package_id' => $package['id'],
     'package_code' => $package['package_code'],
     'package_item_id' => null,
     'weshop_tag' => \common\helpers\WeshopHelper::generateTag($index,'WS',16),
     'order_ids' => null,
-    'tracking_code' => \common\helpers\WeshopHelper::generateTag($index,'',16),
+    'tracking_code' => \common\helpers\WeshopHelper::generateTag($index,'TK',16),
     'weight' => \common\helpers\WeshopHelper::roundNumber($faker->numberBetween(100,9999),2),
     'quantity' => $faker->numberBetween(1,99),
     'dimension_width' => \common\helpers\WeshopHelper::roundNumber($faker->numberBetween(100,9999),2),
