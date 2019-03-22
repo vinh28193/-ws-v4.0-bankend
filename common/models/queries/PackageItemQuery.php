@@ -33,6 +33,27 @@ class PackageItemQuery extends \common\components\db\ActiveQuery
             $this->getColumnName('price'),
             $this->getColumnName('cod'),
         ], $columns));
-       return $this;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function filterRelation(){
+        $this->joinWith(['package' => function(PackageQuery $packageQuery){
+            $packageQuery->defaultSelect();
+        }]);
+        $this->joinWith(['order' => function(OrderQuery $orderQuery){
+            $orderQuery->defaultSelect();
+        }]);
+        $this->with(['products' => function(ProductQuery $productQuery){
+            $productQuery->defaultSelect();
+        }]);
+        $this->with(['shipment']);
+        return $this;
+    }
+
+    public function filter($params){
+        return $this;
     }
 }

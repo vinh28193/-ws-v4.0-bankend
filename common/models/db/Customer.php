@@ -13,7 +13,7 @@ use Yii;
  * @property string $email
  * @property string $phone
  * @property string $username
- * @property string $password_hard
+ * @property string $password_hash
  * @property int $gender
  * @property string $birthday
  * @property string $avatar
@@ -22,7 +22,7 @@ use Yii;
  * @property int $phone_verified
  * @property string $last_order_time
  * @property string $note_by_employee
- * @property int $type_customer
+ * @property int $type_customer  set 1 là Khách Buôn và 2 là Khách buôn - WholeSale Customer 
  * @property string $access_token
  * @property string $auth_client
  * @property string $verify_token
@@ -47,13 +47,6 @@ use Yii;
  * @property string $updated_at
  * @property int $active
  * @property int $remove
- *
- * @property Address[] $addresses
- * @property Store $store
- * @property Order[] $orders
- * @property Shipment[] $shipments
- * @property ShipmentReturned[] $shipmentReturneds
- * @property WalletTransaction[] $walletTransactions
  */
 class Customer extends \common\components\db\ActiveRecord
 {
@@ -75,9 +68,8 @@ class Customer extends \common\components\db\ActiveRecord
             [['birthday', 'last_order_time'], 'safe'],
             [['note_by_employee'], 'string'],
             [['total_xu', 'usable_xu', 'last_use_xu', 'last_revenue_xu'], 'number'],
-            [['first_name', 'last_name', 'email', 'phone', 'username', 'password_hard', 'avatar', 'link_verify', 'access_token', 'auth_client', 'verify_token', 'reset_password_token', 'verify_code_type'], 'string', 'max' => 255],
+            [['first_name', 'last_name', 'email', 'phone', 'username', 'password_hash', 'avatar', 'link_verify', 'access_token', 'auth_client', 'verify_token', 'reset_password_token', 'verify_code_type'], 'string', 'max' => 255],
             [['verify_code'], 'string', 'max' => 10],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
 
@@ -92,8 +84,8 @@ class Customer extends \common\components\db\ActiveRecord
             'last_name' => 'Last Name',
             'email' => 'Email',
             'phone' => 'Phone',
-            'username' => 'User Name',
-            'password_hard' => 'Password Hard',
+            'username' => 'Username',
+            'password_hash' => 'Password Hash',
             'gender' => 'Gender',
             'birthday' => 'Birthday',
             'avatar' => 'Avatar',
@@ -123,58 +115,10 @@ class Customer extends \common\components\db\ActiveRecord
             'verify_code_expired_at' => 'Verify Code Expired At',
             'verify_code_count' => 'Verify Code Count',
             'verify_code_type' => 'Verify Code Type',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'active' => 'Active',
             'remove' => 'Remove',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAddresses()
-    {
-        return $this->hasMany(Address::className(), ['customer_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'store_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrders()
-    {
-        return $this->hasMany(Order::className(), ['customer_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getShipments()
-    {
-        return $this->hasMany(Shipment::className(), ['customer_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getShipmentReturneds()
-    {
-        return $this->hasMany(ShipmentReturned::className(), ['customer_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getWalletTransactions()
-    {
-        return $this->hasMany(WalletTransaction::className(), ['customer_id' => 'id']);
     }
 }

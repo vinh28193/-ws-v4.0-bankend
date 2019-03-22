@@ -31,6 +31,8 @@ use Yii;
  * @property string $updated_at
  * @property int $remove mặc định 0 là chưa xóa 1 là ẩn 
  * @property string $product_name
+ * @property string $product_link
+ * @property string $version version 4.0
  */
 class Product extends \common\components\db\ActiveRecord
 {
@@ -57,7 +59,8 @@ class Product extends \common\components\db\ActiveRecord
             [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'product_name'], 'string'],
             [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_weight_temporary'], 'number'],
-            [['portal', 'sku', 'parent_sku'], 'string', 'max' => 255],
+            [['portal', 'sku', 'parent_sku', 'version'], 'string', 'max' => 255],
+            [['product_link'], 'string', 'max' => 500],
         ];
     }
 
@@ -91,6 +94,8 @@ class Product extends \common\components\db\ActiveRecord
             'updated_at' => 'Updated At',
             'remove' => 'Remove',
             'product_name' => 'Product Name',
+            'product_link' => 'Product Link',
+            'version' => 'Version',
         ];
     }
 }

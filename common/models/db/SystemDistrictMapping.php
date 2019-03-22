@@ -14,9 +14,7 @@ use Yii;
  * @property int $box_me_province_id id province box me
  * @property string $district_name
  * @property string $province_name
- *
- * @property SystemDistrict $district
- * @property SystemStateProvince $province
+ * @property string $version version 4.0
  */
 class SystemDistrictMapping extends \common\components\db\ActiveRecord
 {
@@ -35,9 +33,7 @@ class SystemDistrictMapping extends \common\components\db\ActiveRecord
     {
         return [
             [['district_id', 'province_id', 'box_me_district_id', 'box_me_province_id'], 'integer'],
-            [['district_name', 'province_name'], 'string', 'max' => 255],
-            [['district_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemDistrict::className(), 'targetAttribute' => ['district_id' => 'id']],
-            [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['province_id' => 'id']],
+            [['district_name', 'province_name', 'version'], 'string', 'max' => 255],
         ];
     }
 
@@ -54,22 +50,7 @@ class SystemDistrictMapping extends \common\components\db\ActiveRecord
             'box_me_province_id' => 'Box Me Province ID',
             'district_name' => 'District Name',
             'province_name' => 'Province Name',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDistrict()
-    {
-        return $this->hasOne(SystemDistrict::className(), ['id' => 'district_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProvince()
-    {
-        return $this->hasOne(SystemStateProvince::className(), ['id' => 'province_id']);
     }
 }

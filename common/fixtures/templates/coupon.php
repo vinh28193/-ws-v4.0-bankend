@@ -16,6 +16,7 @@ $type_amount = $faker->randomElement(['percent','money']);
 $dataUser = include '.\common\fixtures\data\data_fixed\system_district.php';
 return [
     'id' => $id,
+    'version'=>'4.0',
     'name' => $faker->text(50),
     'code' => strtoupper($faker->unique()->text(20)),
     'message' => $faker->realText(50),

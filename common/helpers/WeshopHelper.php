@@ -8,13 +8,8 @@
 
 namespace common\helpers;
 
-use DateTime;
-use DateTimeZone;
-use Yii;
 use yii\base\InvalidArgumentException;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Inflector;
-use yii\helpers\Json;
 
 class WeshopHelper
 {
@@ -45,7 +40,7 @@ class WeshopHelper
      */
     public static function isSubText($haystack, $needle)
     {
-        if($haystack === null){
+        if ($haystack === null) {
             return false;
         }
         return strpos($haystack, $needle) !== false;
@@ -131,15 +126,8 @@ class WeshopHelper
         return false;
     }
 
-    public static function isValidExcelValue($value)
+    public static function strReplace($search, $replace, $subject, &$count = null)
     {
-        if(self::isEmpty($value) || $value === '-' || $value === '_' || $value === '*'){
-            return false;
-        }
-        return ($value = self::strToUpperCase($value)) !== 'NULL' &&  $value !== 'NONE' && $value !== 'NOT FOUND';
-    }
-
-    public static function strReplace($search, $replace, $subject, &$count = null){
         return str_replace($search, $replace, $subject, $count);
     }
 
@@ -163,5 +151,12 @@ class WeshopHelper
         $condition = "return ($convertType)'$target' $operator ($convertType)'$source';";
         //var_dump(eval("return ($convertType)'$target';"));die;
         return eval($condition);
+    }
+
+    public static function generateTag($reference, $prefix = 'WS', $length = 12)
+    {
+        $length -= strlen($prefix);
+        $reference = substr(md5($reference), 0, $length - 1);
+        return self::strToUpperCase($prefix . $reference);
     }
 }

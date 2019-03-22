@@ -28,9 +28,7 @@ use Yii;
  * @property string $updated_at
  * @property int $active
  * @property int $remove
- *
- * @property Store $store
- * @property Product[] $products
+ * @property string $version version 4.0
  */
 class CategoryCustomPolicy extends \common\components\db\ActiveRecord
 {
@@ -50,8 +48,7 @@ class CategoryCustomPolicy extends \common\components\db\ActiveRecord
         return [
             [['limit', 'is_special', 'store_id', 'item_maximum_per_category', 'sort_order', 'created_at', 'updated_at', 'active', 'remove'], 'integer'],
             [['min_price', 'max_price', 'custom_rate_fee', 'use_percentage', 'custom_fix_fee_per_unit', 'custom_fix_fee_per_weight', 'custom_fix_percent_per_weight', 'weight_maximum_per_category'], 'number'],
-            [['name', 'description', 'code'], 'string', 'max' => 255],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
+            [['name', 'description', 'code', 'version'], 'string', 'max' => 255],
         ];
     }
 
@@ -78,26 +75,11 @@ class CategoryCustomPolicy extends \common\components\db\ActiveRecord
             'item_maximum_per_category' => 'Item Maximum Per Category',
             'weight_maximum_per_category' => 'Weight Maximum Per Category',
             'sort_order' => 'Sort Order',
-            'created_at' => 'Created Time',
-            'updated_at' => 'Updated Time',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'active' => 'Active',
             'remove' => 'Remove',
+            'version' => 'Version',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'store_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProducts()
-    {
-        return $this->hasMany(Product::className(), ['custom_category_id' => 'id']);
     }
 }

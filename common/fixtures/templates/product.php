@@ -20,6 +20,7 @@ $quantity = $faker->numberBetween(1, 3);
 return [
     'id' => $id,
     'order_id' => $order['id'],
+    'version'=>'4.0',
     'seller_id' => $order['seller_id'],
     'portal' => $order['portal'],
     'sku' => $faker->md5(),

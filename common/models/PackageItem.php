@@ -52,4 +52,12 @@ class PackageItem extends DbPackageItem
     {
         return $this->hasMany(Product::className(), ['order_id' => 'id'])->via('order');
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getShipment()
+    {
+        return $this->hasOne(Shipment::className(), ['id' => 'shipment_id']);
+    }
 }
