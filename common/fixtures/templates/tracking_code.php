@@ -24,7 +24,6 @@ $manifests = [
 ];
 $package = $faker->randomElement($packages);
 $manifest = $faker->randomElement($manifests);
-$manifest['manifest_code'] .= rand(1000,9999);
 $id = $index + 1;
 return [
     'id' => $id,
