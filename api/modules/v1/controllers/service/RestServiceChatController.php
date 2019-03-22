@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers\service;
 
 use Yii;
 use api\modules\v1\controllers\RestApiChatController as RestApiChat;
+use app\models\User;
 
 class RestServiceChatController extends RestApiChat
 {
@@ -50,7 +51,9 @@ class RestServiceChatController extends RestApiChat
     {
         if ($id !== null) {
             $model = $this->findModel($id);
-            $model->attributes = $this->post;
+            $model->message = $this->post['message'];
+            $model->user_id = Yii::$app->user->identity->username;
+            $model->type_chat = 'WS_CUSTOMER';
             if ($model->save(false,['is_customer_vew'])) {
                 Yii::$app->api->sendSuccessResponse($model->attributes);
             } else {
