@@ -7,6 +7,7 @@ use yii\test\ActiveFixture;
 class UserFixture extends ActiveFixture
 {
     public $modelClass = 'common\models\db\User';
+    public $dataFile = '@common/fixtures/data/data_fixed/user.php';
 
     /**
      * @inheritdoc
