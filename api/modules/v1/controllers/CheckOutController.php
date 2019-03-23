@@ -125,6 +125,10 @@ class CheckOutController extends BaseApiController
             $order->receiver_district_id = 1;
             $order->seller_id = $seller->id;
 
+            // Todo with OrderFee
+
+            var_dump($product->getAdditionalFees()->toArray());
+
             /*
             $order->new = 1195200481;
             $order->purchased = null;
