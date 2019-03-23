@@ -67,24 +67,15 @@ class PackageQuery extends ActiveQuery
     public function filter($params)
     {
         $this->remove();
-        if (($filters = json_decode(ArrayHelper::getValue($params, 'filters', '{}'), true)) !== [] && !WeshopHelper::isEmpty($filters)) {
-            $filterWhere = ['AND'];
-            if (isset($filters['keyword']) && ($keyWord = ArrayHelper::getValue($filters, 'keyword')) !== null && !WeshopHelper::isEmpty($keyWord)) {
-                $filterWhere[] = [
-                    'OR',
-                    ['LIKE', $this->getColumnName('package_code'), $keyWord],
-                    ['LIKE', $this->getColumnName('tracking_seller'), $keyWord],
-                    ['LIKE', $this->getColumnName('tracking_reference_1'), $keyWord],
-                    ['LIKE', $this->getColumnName('tracking_reference_2'), $keyWord],
-                    ['LIKE', $this->getColumnName('manifest_code'), $keyWord],
-                ];
-            }
-
-            // Thêm filter ở đây
-
-            if (count($filterWhere) > 1) {
-                $this->andWhere($filterWhere);
-            }
+        if(($q = ArrayHelper::getValue($params,'q')) !== null && !WeshopHelper::isEmpty($q)){
+            $this->andWhere([
+                'OR',
+                ['LIKE', $this->getColumnName('package_code'), $q],
+                ['LIKE', $this->getColumnName('tracking_seller'), $q],
+                ['LIKE', $this->getColumnName('tracking_reference_1'), $q],
+                ['LIKE', $this->getColumnName('tracking_reference_2'), $q],
+                ['LIKE', $this->getColumnName('manifest_code'), $q],
+            ]);
         }
         return $this;
 
