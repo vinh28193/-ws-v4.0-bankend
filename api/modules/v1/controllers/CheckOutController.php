@@ -73,7 +73,7 @@ class CheckOutController extends BaseApiController
         $errors = [];
         foreach ($items as $key => $simpleItem) {
             /** @var  $simpleItem \common\components\cart\item\SimpleItem */
-            $item = $simpleItem->item ;
+            $item = $simpleItem->item;
 
             $itemType = 'ebay';
             // Seller
@@ -90,7 +90,7 @@ class CheckOutController extends BaseApiController
             }
             // Category
             if (($categoryId = ArrayHelper::getValue($item, 'category_id')) === null) {
-                $errors[$key][] =  "can not create form null category";
+                $errors[$key][] = "can not create form null category";
                 continue;
             }
             if (($category = Category::findOne(['AND', ['alias' => $categoryId], ['site' => $itemType]])) === null) {
@@ -127,8 +127,7 @@ class CheckOutController extends BaseApiController
 
             // Todo with OrderFee
 
-            var_dump($product->getAdditionalFees()->toArray());
-
+//
             /*
             $order->new = 1195200481;
             $order->purchased = null;
@@ -208,11 +207,37 @@ class CheckOutController extends BaseApiController
             $order->remove = 0;
             */
             $order->save(false);
-            $order->link('products',$product);
+            $order->link('products', $product);
+            $orderUpdateFeeAttribute = [];
+            foreach ($product->getAdditionalFees()->keys() as $key) {
+                list($amount, $local) = $product->getAdditionalFees()->getTotalAdditionFees($key);
+                $orderAttribute = "total_{$key}_local";
+                if ($key === 'product_price_origin') {
+                    $orderAttribute = 'total_origin_fee_local';
+                } elseif ($key === 'tax_fee_origin') {
+                    $orderAttribute = 'total_origin_tax_fee_local';
+                } elseif ($key === 'delivery_fee_local') {
+                    $orderAttribute = 'total_delivery_fee_local';
+                }
 
+                $orderFee = new OrderFee();
+                $orderFee->type = $key;
+                $orderFee->name = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
+                $orderFee->order_id = $order->id;
+                $orderFee->product_id = $product->id;
+                $orderFee->amount = $amount;
+                $orderFee->local_amount = $local;
+                $orderFee->currency = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
+                if ($orderFee->save() && $order->hasAttribute($orderAttribute)) {
+                    $orderUpdateFeeAttribute[$orderAttribute] = $local;
+                }
+            }
+            $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
+            $order->updateAttributes($orderUpdateFeeAttribute);
             $orders[] = $order->id;
         }
-        var_dump($orders);die;
+        var_dump($orders);
+        die;
         return true;
 
     }
