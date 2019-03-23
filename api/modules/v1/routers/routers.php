@@ -144,4 +144,21 @@ return [
         ],
         'extraPatterns' => []
     ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'if_service' => true,
+        'controller' => ['province' =>'system-state-province'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
 ];

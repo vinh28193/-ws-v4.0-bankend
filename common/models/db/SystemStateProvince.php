@@ -57,4 +57,9 @@ class SystemStateProvince extends \common\components\db\ActiveRecord
             'version' => 'Version',
         ];
     }
+
+    public function getSystemDistricts()
+    {
+        return $this->hasOne(SystemDistrict::className(), ['province_id' => 'id']);
+    }
 }

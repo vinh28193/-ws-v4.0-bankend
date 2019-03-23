@@ -222,9 +222,9 @@ class Order extends DbOrder
             $query->andFilterWhere(['order.portal' => $params['portal']]);
         }
 
-//        if(isset($params['timeKey']) && isset($params['valueTime'])) {
-//            $query->andFilterWhere([$params['timeKey'] => $params['valueTime']]);
-//        }
+        if(isset($params['timeKey']) && isset($params['startTime']) && isset($params['endTime'])) {
+            $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
+        }
 
         if(isset($params['receiver_email'])){
             $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
