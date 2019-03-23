@@ -102,6 +102,19 @@ return [
         'controller' => ['tracking-code'],
         'patterns' => [
             'GET' => 'index',
+            'POST' => 'create',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['manifest'],
+        'patterns' => [
+            'GET' => 'index',
+            'POST' => 'create',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => []

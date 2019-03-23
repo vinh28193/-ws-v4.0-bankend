@@ -25,11 +25,10 @@ $product = FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\
 if (!empty($product)) {
     $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\seller.php', $columnName = null, ['id' => $product[0]['seller_id']]));
 } else {
-    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\seller.php',$columnName = null));
+    $seller = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\seller.php', $columnName = null));
 }
 
-if( $seller['id'] == null or isset($seller['id']) == true )
-{
+if ($seller['id'] == null or isset($seller['id']) == true) {
     $seller = [
         "id" => 2,
         "name" => "Stuart Friesen",
@@ -45,46 +44,40 @@ if( $seller['id'] == null or isset($seller['id']) == true )
 
 //$amountDiscount = $coupon['type_amount'] ?
 
-/*****@TODO : Viết Code Sinh Phụ Thuộc Hàng 'SHOP','REQUEST','SHIP','NEXTTECH' *******/
+/*****@TODO : Viết Code Sinh Phụ Thuộc Hàng 'SHOP','REQUEST','SHIP','NEXTTECH' ****** */
 
-$typeOrder = $faker->randomElement(['SHOP','REQUEST','SHIP','NEXTTECH']); // 'NEXTTECH' : là loại hàng quan hệ trong nội bộ công ty
-if($typeOrder == 'SHOP' ){
-    $is_quotation  = 0;  // "Đánh dấu đơn báo giá",
+$typeOrder = $faker->randomElement(['SHOP', 'REQUEST', 'SHIP', 'NEXTTECH']); // 'NEXTTECH' : là loại hàng quan hệ trong nội bộ công ty
+if ($typeOrder == 'SHOP') {
+    $is_quotation = 0;  // "Đánh dấu đơn báo giá",
     $quotation_status = null;  //Duyệt đơn báo giá nên đơn có Trạng thái báo giá. null : là hàng SHOP , 0 - pending, 1- approve, 2- deny,
-    $quotation_note = null ;
+    $quotation_note = null;
 }
-if($typeOrder == 'REQUEST' ) {
-        $is_quotation  = 1;  // "Đánh dấu đơn báo giá",
-        $quotation_status = $faker->randomElement([  0, 1 , 2]); //Duyệt đơn báo giá nên đơn có Trạng thái báo giá, 0 - pending, 1- approve, 2- deny,
-        $quotation_note = $faker->realText(50);   //note đơn request",
+if ($typeOrder == 'REQUEST') {
+    $is_quotation = 1;  // "Đánh dấu đơn báo giá",
+    $quotation_status = $faker->randomElement([0, 1, 2]); //Duyệt đơn báo giá nên đơn có Trạng thái báo giá, 0 - pending, 1- approve, 2- deny,
+    $quotation_note = $faker->realText(50);   //note đơn request",
 }
-if($typeOrder == 'SHIP' ) {
-    $is_quotation  = 0;
+if ($typeOrder == 'SHIP') {
+    $is_quotation = 0;
     $quotation_status = null;
-    $quotation_note = null ;
+    $quotation_note = null;
 }
 
-if($typeOrder == 'NEXTTECH' ) {
-    $is_quotation  = 0;
+if ($typeOrder == 'NEXTTECH') {
+    $is_quotation = 0;
     $quotation_status = null;
-    $quotation_note = null ;
+    $quotation_note = null;
 }
 
-
+$exRate = 23000;
 
 return [
     'id' => $id,
-    'Ordercode'=>'WSVN'.$faker->unique(true,10000)->randomNumber(),
-    'version'=>'4.0',
+    'Ordercode' => 'WSVN' . $faker->unique(true, 10000)->randomNumber(),
+    'version' => '4.0',
     'store_id' => 1,
-//    'fees' => [
-//        'product_price_origin' => $faker->numberBetween(0, 60),
-//        'tax_fee_origin' => $faker->randomFloat(1.9),
-//        'origin_shipping_fee' => $faker->numberBetween(0, 20),
-//    ],
-
     // Order
-    'type_order' => $typeOrder , //Hình thức mua hàng: SHOP | REQUEST | POS | SHIP,
+    'type_order' => $typeOrder, //Hình thức mua hàng: SHOP | REQUEST | POS | SHIP,
     'customer_id' => $customer['id'], // Mã id của customer : có thể là khách buôn hoặc khách lẻ ",
     'customer_type' => $faker->randomElement(['Retail', 'Wholesale']), // Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers ",
     'portal' => $faker->randomElement(['EBAY', 'AMAZON_US', 'AMAZON_JAPAN', 'OTHER']), //$seller['portal'], //portal ebay, amazon us, amazon jp ...: EBAY/ AMAZON_US / AMAZON_JAPAN / OTHER / WEBSITE NGOÀI ,
@@ -130,42 +123,42 @@ return [
     'note' => $faker->realText(50), //Ghi chú cho đơn hàng",
 
     // Thông Tin Người bán
-    'seller_id' => $seller['id']  , //Mã người bán ,
+    'seller_id' => $seller['id'], //Mã người bán ,
     'seller_name' => $seller['name'], //Tên người bán,
     'seller_store' => $seller['link_store'], //Link shop của người bán,
 
     // Tiền
-    'total_final_amount_local' => 0, // Tổng giá trị đơn hàng ( Số tiền đã trừ đi giảm giá ) : số tiền cuối cùng khách hàng phải thanh toán và tính theo tiền local,
-    'total_amount_local' => 0, // Tổng giá trị đơn hàng : Số tiền chưa tính giảm giá ,
+    'total_final_amount_local' => FixtureUtility::randFee(), // Tổng giá trị đơn hàng ( Số tiền đã trừ đi giảm giá ) : số tiền cuối cùng khách hàng phải thanh toán và tính theo tiền local,
+    'total_amount_local' => FixtureUtility::randFee(), // Tổng giá trị đơn hàng : Số tiền chưa tính giảm giá ,
 
-    'total_origin_fee_local' => 0, // Tổng Tiền Hàng ( Theo tiền tê của nước Weshop Indo hoặc Weshop Viet Nam ) : Tổng giá tiền gốc các item theo tiền local ,
-    'total_price_amount_origin' => 0, // Tổng Tiền Hàng ( Theo tiền ngoại tê của EBAY / AMAZON  / WEBSITE NGOÀI) : Tổng giá tiền gốc các item theo ngoại tệ ,
-
-
-    'total_paid_amount_local' => 0, //Tổng số tiền khách hàng đã thanh toán : Theo tiền local ,
-    'total_refund_amount_local' => 0, //số tiền đã hoàn trả cho khách hàng : Theo tiền local,
+    'total_origin_fee_local' => FixtureUtility::randFee(), // Tổng Tiền Hàng ( Theo tiền tê của nước Weshop Indo hoặc Weshop Viet Nam ) : Tổng giá tiền gốc các item theo tiền local ,
+    'total_price_amount_origin' => FixtureUtility::randFee(), // Tổng Tiền Hàng ( Theo tiền ngoại tê của EBAY / AMAZON  / WEBSITE NGOÀI) : Tổng giá tiền gốc các item theo ngoại tệ ,
 
 
-    'total_counpon_amount_local' => 0, //Tổng số tiền giảm giá bằng mã counpon . Ví dụ MÃ VALENTIN200 áp dụng cho khách hàng mới ,
-    'total_promotion_amount_local' => 0, //Tổng số tiền giảm giá do promotion . Vi Dụ : Chương trình giảm giá trừ 200.000 VNĐ cho cả đơn ,
+    'total_paid_amount_local' => FixtureUtility::randFee(), //Tổng số tiền khách hàng đã thanh toán : Theo tiền local ,
+    'total_refund_amount_local' => FixtureUtility::randFee(), //số tiền đã hoàn trả cho khách hàng : Theo tiền local,
+
+
+    'total_counpon_amount_local' => FixtureUtility::randFee(), //Tổng số tiền giảm giá bằng mã counpon . Ví dụ MÃ VALENTIN200 áp dụng cho khách hàng mới ,
+    'total_promotion_amount_local' => FixtureUtility::randFee(), //Tổng số tiền giảm giá do promotion . Vi Dụ : Chương trình giảm giá trừ 200.000 VNĐ cho cả đơn ,
 
 
     // Tổng các Phí Weshop
-    'total_fee_amount_local' => 0,  //tổng phí đơn hàng,
-    'total_origin_tax_fee_local' => 0, //Tổng phí us tax,
-    'total_origin_shipping_fee_local' => 0, //Tổng phí shipping us,
-    'total_weshop_fee_local' => 0, //Tổng phí weshop,
-    'total_intl_shipping_fee_local' => 0,//Tổng phí vận chuyển quốc tế,
-    'total_custom_fee_amount_local' => 0,//Tổng phí phụ thu,
-    'total_delivery_fee_local' => 0, //Tổng phí vận chuyển nội địa,
-    'total_packing_fee_local' => 0, //tổng phí đóng gỗ,
-    'total_inspection_fee_local' => 0, //Tổng phí kiểm hàng,
-    'total_insurance_fee_local' => 0, //Tổng phí bảo hiểm,
-    'total_vat_amount_local' => 0, // "Tổng phí VAT,
+    'total_fee_amount_local' => FixtureUtility::randFee(),  //tổng phí đơn hàng,
+    'total_origin_tax_fee_local' => FixtureUtility::randFee(), //Tổng phí us tax,
+    'total_origin_shipping_fee_local' => FixtureUtility::randFee(), //Tổng phí shipping us,
+    'total_weshop_fee_local' => FixtureUtility::randFee(), //Tổng phí weshop,
+    'total_intl_shipping_fee_local' => FixtureUtility::randFee(),//Tổng phí vận chuyển quốc tế,
+    'total_custom_fee_amount_local' => FixtureUtility::randFee(),//Tổng phí phụ thu,
+    'total_delivery_fee_local' => FixtureUtility::randFee(), //Tổng phí vận chuyển nội địa,
+    'total_packing_fee_local' => FixtureUtility::randFee(), //tổng phí đóng gỗ,
+    'total_inspection_fee_local' => FixtureUtility::randFee(), //Tổng phí kiểm hàng,
+    'total_insurance_fee_local' => FixtureUtility::randFee(), //Tổng phí bảo hiểm,
+    'total_vat_amount_local' => FixtureUtility::randFee(), // "Tổng phí VAT,
 
     // Update từ bảng tỉ giá Vietcombank  Crowler để lưu vào order tại thời điểm khách hàng đặt đơn mua hàng
-    'exchange_rate_fee' => 23000, // $product ? $product[0]['exchange_rate'] : 0, // Tỉ Giá Tính Phí Local : áp dung theo tỉ giá của VietCombank Crowler upate từ 1 bảng systeam_curentcy : Tỷ giá từ USD => tiền local,
-    'exchange_rate_purchase' => 0, //Tỉ Giá mua hàng : áp dung theo tỉ giá của VietCombank , Ẩn với Khách. Tỉ giá USD / Tỉ giá Yên / Tỉ giá UK .Tỷ giá từ tiền website gốc => tiền local. VD: yên => vnd,
+    'exchange_rate_fee' => $exRate, // $product ? $product[0]['exchange_rate'] : 0, // Tỉ Giá Tính Phí Local : áp dung theo tỉ giá của VietCombank Crowler upate từ 1 bảng systeam_curentcy : Tỷ giá từ USD => tiền local,
+    'exchange_rate_purchase' => $exRate, //Tỉ Giá mua hàng : áp dung theo tỉ giá của VietCombank , Ẩn với Khách. Tỉ giá USD / Tỉ giá Yên / Tỉ giá UK .Tỷ giá từ tiền website gốc => tiền local. VD: yên => vnd,
     'currency_purchase' => $faker->randomElement(['USD', "JPY", "AUD"]), // Loại tiền mua hàng là : USD,JPY,AUD .....,
 
 
@@ -211,9 +204,9 @@ return [
 
 
     // LƯU THONG TIN đã mua của EBAY / AMAZON :   Đơn này đươc phân cho nhân viên Mua Hàng
-    'purchase_order_id' => $faker->bankAccountNumber.','.$faker->bankAccountNumber.','.$faker->bankAccountNumber.$faker->randomNumber().','.$faker->bankAccountNumber, //Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy),
-    'purchase_transaction_id' => $faker->md5().','.$faker->md5().','.$faker->md5(), //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
-    'purchase_amount' => $faker->unique(true,10000)->randomDigit(), //số tiền thanh toán thực tế với người bán EBAY/AMAZON, lưu ý : Số đã trừ Buck/Point ( và là dạng list, cách nhau = dấu phẩy),
+    'purchase_order_id' => $faker->bankAccountNumber . ',' . $faker->bankAccountNumber . ',' . $faker->bankAccountNumber . $faker->randomNumber() . ',' . $faker->bankAccountNumber, //Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy),
+    'purchase_transaction_id' => $faker->md5() . ',' . $faker->md5() . ',' . $faker->md5(), //Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy),
+    'purchase_amount' => $faker->unique(true, 10000)->randomDigit(), //số tiền thanh toán thực tế với người bán EBAY/AMAZON, lưu ý : Số đã trừ Buck/Point ( và là dạng list, cách nhau = dấu phẩy),
     'purchase_account_id' => $user['id'], //id tài khoản mua hàng,
     'purchase_account_email' => $user['email'], //email tài khoản mua hàng,
     'purchase_card' => $faker->creditCardNumber(), //thẻ thanh toán,

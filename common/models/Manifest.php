@@ -15,7 +15,6 @@ use common\models\db\Manifest as DbManifest;
  * @package common\models
  * @property Package[] $packages
  */
-
 class Manifest extends DbManifest
 {
     const STATUS_ACTIVE = 1;
@@ -31,7 +30,22 @@ class Manifest extends DbManifest
             ['active', 'default', 'value' => self::STATUS_ACTIVE],
             ['active', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
-        return array_merge($paren,$child);
+        return array_merge($paren, $child);
     }
 
+    public static function createSafe($code, $receiveWarehouse, $store)
+    {
+        $build = [
+            'manifest_code' => $code,
+            'receive_warehouse_id' => $receiveWarehouse,
+            'store_id' => $store
+        ];
+        $query = self::find()->andWhere($build)->andWhere(['active' => 1]);
+        if (($manifest = $query->one()) === null) {
+            $manifest = new Manifest($build);
+            $manifest->save(false);
+        }
+        return $manifest;
+
+    }
 }
