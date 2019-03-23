@@ -142,7 +142,7 @@ return [
     'total_price_amount_origin' => 0, // Tổng Tiền Hàng ( Theo tiền ngoại tê của EBAY / AMAZON  / WEBSITE NGOÀI) : Tổng giá tiền gốc các item theo ngoại tệ ,
 
 
-    'total_paid_amount_local' => 0, //Tổng số tiền khách hàng đã thanh toán : Theo tiền local ,
+    'total_paid_amount_local' => $faker->numberBetween($min = 1000000, $max = 10000000) , //Tổng số tiền khách hàng đã thanh toán : Theo tiền local ,
     'total_refund_amount_local' => 0, //số tiền đã hoàn trả cho khách hàng : Theo tiền local,
 
 
@@ -165,7 +165,7 @@ return [
 
     // Update từ bảng tỉ giá Vietcombank  Crowler để lưu vào order tại thời điểm khách hàng đặt đơn mua hàng
     'exchange_rate_fee' => 23000, // $product ? $product[0]['exchange_rate'] : 0, // Tỉ Giá Tính Phí Local : áp dung theo tỉ giá của VietCombank Crowler upate từ 1 bảng systeam_curentcy : Tỷ giá từ USD => tiền local,
-    'exchange_rate_purchase' => 0, //Tỉ Giá mua hàng : áp dung theo tỉ giá của VietCombank , Ẩn với Khách. Tỉ giá USD / Tỉ giá Yên / Tỉ giá UK .Tỷ giá từ tiền website gốc => tiền local. VD: yên => vnd,
+    'exchange_rate_purchase' => 1, //Tỉ Giá mua hàng : áp dung theo tỉ giá của VietCombank , Ẩn với Khách. Tỉ giá USD / Tỉ giá Yên / Tỉ giá UK .Tỷ giá từ tiền website gốc => tiền local. VD: yên => vnd,
     'currency_purchase' => $faker->randomElement(['USD', "JPY", "AUD"]), // Loại tiền mua hàng là : USD,JPY,AUD .....,
 
 
