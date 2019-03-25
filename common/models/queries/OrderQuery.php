@@ -9,6 +9,8 @@
 namespace common\models\queries;
 
 
+use yii\db\ActiveQuery;
+
 class OrderQuery extends \common\components\db\ActiveQuery
 {
 
@@ -65,6 +67,9 @@ class OrderQuery extends \common\components\db\ActiveQuery
                 $q->select(['username','email','id','status', 'created_at', 'updated_at']);
             }
         ]);
+//        $this->innerJoinWith([
+//            'products',
+//        ]);
         $this->joinWith([
             'products',
             'coupon',

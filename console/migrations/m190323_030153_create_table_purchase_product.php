@@ -50,10 +50,6 @@ class m190323_030153_create_table_purchase_product extends Migration
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
         ]);
-
-        $this->addForeignKey('fk-purchase_product-product','purchase_product','product_id','product','id');
-        $this->addForeignKey('fk-purchase_product-purchase_order','purchase_product','purchase_order_id','purchase_order','id');
-        $this->addForeignKey('fk-purchase_product-order','purchase_product','order_id','order','id');
     }
 
     /**
