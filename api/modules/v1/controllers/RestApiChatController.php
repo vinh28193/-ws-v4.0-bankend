@@ -3,8 +3,8 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\components\RestApiCall;
-use common\components\ChatMongoWs;
+use common\modelsMongo\RestApiCall;
+use common\modelsMongo\ChatMongoWs;
 use common\models\Order;
 use Yii;
 use yii\web\NotFoundHttpException;

@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\components\RestApiCall */
+/* @var $model common\modelsMongo\RestApiCall */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="customer-search">
+<div class="RestApiCall-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],

@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\components\RestApiCall */
+/* @var $model common\modelsMongo\RestApiCall */
 
 $this->title = $model->success;
 $this->params['breadcrumbs'][] = ['label' => 'RestApiCall', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = $this->_id;
 ?>
-<div class="customer-view">
+<div class="RestApiCall-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,11 +29,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             '_id',
-            'success',
-            'timestamp',
             'path',
             'data',
-            'date'
+            'success',
+            'user_id',
+            'user_email',
+            'user_name',
+            'user_app',
+            'user_request_suorce',
+            'request_ip',
+            'date',
+            'timestamp',
         ],
     ]) ?>
 

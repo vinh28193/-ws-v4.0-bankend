@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\Logrouteapi */
+/* @var $model common\modelsMongo\RestApiCall */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="customer-form">
+<div class="RestApiCall-form">
 
     <?php $form = ActiveForm::begin(); ?>
 

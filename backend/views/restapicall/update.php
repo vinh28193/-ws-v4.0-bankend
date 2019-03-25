@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = ['label' => 'RestApiCall', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->success, 'url' => ['view', 'id' => (string)$model->_id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="customer-update">
+<div class="RestApiCall-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
