@@ -13,6 +13,7 @@ use common\models\StoreAdditionalFee;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class AdditionalFeeCollection
@@ -50,11 +51,14 @@ class AdditionalFeeCollection extends ArrayCollection
             $ownerClass = get_class($owner);
             $ownerId = $owner->getPrimaryKey(false);
             $query = new Query();
-            $query->select(['c.id', 'c.type','c.name', 'c.amount', 'c.local_amount','c.discount_amount', 'c.currency' ]);
+            $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.local_amount', 'c.discount_amount', 'c.currency']);
             $query->from(['c' => 'order_fee']);
             $query->where(['and', ['c.' . 'product_id' => $ownerId]]);
             $additionalFees = $query->all($ownerClass::getDb());
-//            Yii::info($additionalFees, 'loadFormOwner');
+            $additionalFees = ArrayHelper::index($additionalFees, null, function ($element) {
+                return $element['type'];
+            });
+            Yii::info($additionalFees, 'loadFormOwner');
             $this->mset($additionalFees, false, false);
         }
     }
@@ -86,15 +90,55 @@ class AdditionalFeeCollection extends ArrayCollection
         return $results;
     }
 
+    /**
+     * params 1 :
+     *      [
+     *          'origin_fee' => 123,
+     *          'tax' => 122
+     *      ]
+     * params 2 [
+     *     'origin_fee' => [
+     *          [
+     *              'type' => 'origin_fee',
+     *              'name' => 'Phi X',
+     *              'value' => 123
+     *              ...
+     *          ],
+     *          [
+     *              'type' => 'origin_fee',
+     *              'name' => 'Phi X',
+     *              'value' => '6666'
+     *              ...
+     *          ]
+     *      ],
+     * '    tax' => [
+     *          [
+     *              'type' => 'tax',
+     *              'name' => 'Phi tax',
+     *              'value' => 123
+     *              ...
+     *          ],
+     *          [
+     *              'type' => 'tax',
+     *              'name' => 'Phi tax',
+     *              'value' => '6666'
+     *              ...
+     *          ]
+     *      ]
+     * ]
+     * @param $values
+     * @param bool $withCondition
+     * @param bool $ensureReadOnly
+     */
     public function mset($values, $withCondition = false, $ensureReadOnly = true)
     {
         if (is_array($values)) {
             $this->removeAll();
             foreach ($values as $key => $value) {
-                if (is_array($value) && isset($value['type']) && $this->hasStoreAdditionalFeeByKey($value['type'])) {
-                    parent::set($value['type'], $value);
-                } elseif (!is_array($value) && is_string($key) && isset($this->storeAdditionalFee[$key]) && ($storeAdditionalFee = $this->storeAdditionalFee[$key]) !== null && $storeAdditionalFee instanceof StoreAdditionalFee) {
-                    if ($ensureReadOnly && $storeAdditionalFee->is_read_only) {
+                if (is_array($value)) {
+                    parent::set($key, $value);
+                } elseif (!is_array($value) && is_string($key) && $this->hasStoreAdditionalFeeByKey($key)) {
+                    if ($ensureReadOnly && $this->getStoreAdditionalFeeByKey($key)->is_read_only) {
                         continue;
                     }
                     $this->set($key, $value, $withCondition);
@@ -120,7 +164,7 @@ class AdditionalFeeCollection extends ArrayCollection
 
         if (($storeAdditionalFee = $this->getStoreAdditionalFeeByKey($key)) !== null && $storeAdditionalFee instanceof StoreAdditionalFee) {
             if (is_array($value) && count($value) === 5 && isset($value['amount']) && isset($value['local_amount'])) {
-                parent::set($key, $value);
+                parent::add($key, $value);
             } else {
                 $localValue = $value;
                 /** @var $owner AdditionalFeeInterface|null|\yii\db\ActiveRecord */
@@ -145,7 +189,7 @@ class AdditionalFeeCollection extends ArrayCollection
                     'discount_amount' => $owner !== null && $owner->hasProperty('discount_amount') ? $owner->discount_amount : 0,
                     'currency' => $storeAdditionalFee->currency,
                 ];
-                parent::set($key, $additionalFee);
+                parent::add($key, $additionalFee);
             }
         } else {
             Yii::warning("failed when set unknown additional fee '$key'", __METHOD__);
@@ -185,12 +229,12 @@ class AdditionalFeeCollection extends ArrayCollection
             if (in_array($name, $except)) {
                 continue;
             }
-            if(isset($array[0])){
-                foreach ($array as $item){
+            if (isset($array[0])) {
+                foreach ($array as $item) {
                     $totalFees += isset($item['amount']) ? $item['amount'] : 0;
                     $totalLocalFees += isset($item['local_amount']) ? $item['local_amount'] : 0;
                 }
-            }else{
+            } else {
                 $totalFees += isset($array['amount']) ? $array['amount'] : 0;
                 $totalLocalFees += isset($array['local_amount']) ? $array['local_amount'] : 0;
             }

@@ -48,13 +48,12 @@ class PackageController extends BaseApiController
     {
         $requestParams = Yii::$app->getRequest()->getQueryParams();
         $query = Package::find();
-
-        $query->filterRelation();
-
+        $query->defaultSelect();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pageSizeParam' => 'perPage',
+                'pageSizeParam' => 'ps',
+                'pageParam' => 'p',
                 'params' => $requestParams,
             ],
             'sort' => [
