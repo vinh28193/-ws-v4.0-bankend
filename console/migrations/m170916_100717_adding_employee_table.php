@@ -13,7 +13,7 @@ class m170916_100717_adding_employee_table extends Migration
     public function safeUp()
     {
         $sql="CREATE TABLE `employee` (
-            `id` int(11) NOT NULL,
+            `id` int(11) NOT NULL AUTO_INCREMENT,
               `name` varchar(200) NOT NULL,
               `email` varchar(100) NOT NULL,
               `created_at` timestamp default '0000-00-00 00:00:00', 
@@ -28,17 +28,7 @@ class m170916_100717_adding_employee_table extends Migration
             -- Indexes for table `employee`
             --
             ALTER TABLE `employee`
-             ADD PRIMARY KEY (`id`);      
-            
-            --
-            -- AUTO_INCREMENT for dumped tables
-            --
-            
-            --
-            -- AUTO_INCREMENT for table `employee`
-            --
-            ALTER TABLE `employee`
-            MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;";
+             ADD PRIMARY KEY (`id`);";
         Yii::$app->db->createCommand($sql)->execute();
 
 
