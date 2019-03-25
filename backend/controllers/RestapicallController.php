@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use common\components\RestApiCall;
-use common\components\RestApiCallSearch;
+use common\modelsMongo\RestApiCall;
+use common\modelsMongo\RestApiCallSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -61,12 +61,8 @@ class RestapicallController extends Controller
     public function actionCreate()
     {
         $model = new RestApiCall();
-        echo "<pre>";
-        print_r(Yii::$app->request->post());
-        echo "</pre>";
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-           // return $this->redirect(['view', 'id' => (string)$model->_id]);
+           return $this->redirect(['view', 'id' => (string)$model->_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,

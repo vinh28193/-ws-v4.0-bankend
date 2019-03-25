@@ -11,6 +11,8 @@ class m160309_070856_create_post extends Migration
             'title' => $this->string()->notNull(),
             'text' => $this->text()->notNull(),
             'status' => $this->smallInteger()->notNull()->defaultValue(0),
+            'content_markdown' => $this->text(),
+            'content_html' => $this->text(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace common\components;
+namespace common\modelsMongo;
 
 use Yii;
 use yii\mongodb\ActiveRecord;
@@ -63,14 +63,15 @@ class RestApiCall extends ActiveRecord
             'user_name',
             'user_app',
             'user_request_suorce',
-            'request_ip'
+            'request_ip',
+            'timestamp'
         ];
     }
 
     public function rules()
     {
         return [
-            [['success', 'created_at',
+            [['_id','success', 'created_at',
                 'updated_at', 'path', 'data','date' ,'user_id',
                 'user_email',
                 'user_name',

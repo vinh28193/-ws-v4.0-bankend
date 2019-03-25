@@ -1,6 +1,6 @@
 <?php
 
-namespace common\components;
+namespace common\modelsMongo;
 
 use Yii;
 use yii\mongodb\ActiveRecord;
@@ -18,7 +18,7 @@ class ChatMongoWs extends ActiveRecord
 {
     public static function collectionName()
     {
-        return ['weshop_logs','chat_mongo_ws'];
+        return ['Weshop_log_40','chat_mongo_ws'];
     }
 
     public function behaviors()

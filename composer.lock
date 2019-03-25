@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a73dadcb10ac3e6f0db6143543eef87b",
+    "content-hash": "0c755c77f66ff0759ea1ea5fc5167f36",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -1031,16 +1031,16 @@
         },
         {
             "name": "symfony/polyfill-intl-idn",
-            "version": "v1.10.0",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-idn.git",
-                "reference": "89de1d44f2c059b266f22c9cc9124ddc4cd0987a"
+                "reference": "c766e95bec706cdd89903b1eda8afab7d7a6b7af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/89de1d44f2c059b266f22c9cc9124ddc4cd0987a",
-                "reference": "89de1d44f2c059b266f22c9cc9124ddc4cd0987a",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/c766e95bec706cdd89903b1eda8afab7d7a6b7af",
+                "reference": "c766e95bec706cdd89903b1eda8afab7d7a6b7af",
                 "shasum": ""
             },
             "require": {
@@ -1089,7 +1089,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2018-09-30T16:36:12+00:00"
+            "time": "2019-03-04T13:44:35+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1211,12 +1211,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "2d451d972588f6a8d016549ba08a6557de97a9a2"
+                "reference": "5d5bac9eec63083f9472740515e79f9dd5ec9230"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/2d451d972588f6a8d016549ba08a6557de97a9a2",
-                "reference": "2d451d972588f6a8d016549ba08a6557de97a9a2",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/5d5bac9eec63083f9472740515e79f9dd5ec9230",
+                "reference": "5d5bac9eec63083f9472740515e79f9dd5ec9230",
                 "shasum": ""
             },
             "require": {
@@ -1303,7 +1303,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2019-03-20T18:48:19+00:00"
+            "time": "2019-03-24T12:57:46+00:00"
         },
         {
             "name": "yiisoft/yii2-authclient",
@@ -1747,12 +1747,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "4b6ed666a30c4d41a35894999359067f97d16b1a"
+                "reference": "3693c88b669002ff79bf1d5b6eb7a1d5c7ce6879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/4b6ed666a30c4d41a35894999359067f97d16b1a",
-                "reference": "4b6ed666a30c4d41a35894999359067f97d16b1a",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/3693c88b669002ff79bf1d5b6eb7a1d5c7ce6879",
+                "reference": "3693c88b669002ff79bf1d5b6eb7a1d5c7ce6879",
                 "shasum": ""
             },
             "require": {
@@ -1776,7 +1776,6 @@
             },
             "require-dev": {
                 "codeception/specify": "~0.3",
-                "facebook/graph-sdk": "~5.3",
                 "flow/jsonpath": "~0.2",
                 "monolog/monolog": "~1.8",
                 "pda/pheanstalk": "~3.0",
@@ -1831,7 +1830,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2019-03-20T12:52:44+00:00"
+            "time": "2019-03-25T11:13:00+00:00"
         },
         {
             "name": "codeception/phpunit-wrapper",
@@ -2997,12 +2996,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "856f2136bcd3a7c49013e152f5c04b8f6d9c58fe"
+                "reference": "a30b6b61c0b9ef5ba8aa9c4683f36316280b29d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/856f2136bcd3a7c49013e152f5c04b8f6d9c58fe",
-                "reference": "856f2136bcd3a7c49013e152f5c04b8f6d9c58fe",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a30b6b61c0b9ef5ba8aa9c4683f36316280b29d7",
+                "reference": "a30b6b61c0b9ef5ba8aa9c4683f36316280b29d7",
                 "shasum": ""
             },
             "require": {
@@ -3071,7 +3070,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-03-18T12:49:55+00:00"
+            "time": "2019-03-22T07:23:35+00:00"
         },
         {
             "name": "psr/http-message",
@@ -3787,12 +3786,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "92ea0b46cb4dfaa80aba9f02d9d9532c629314ed"
+                "reference": "5ddf1710a5871742659716b3cddb1a8b464caaee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/92ea0b46cb4dfaa80aba9f02d9d9532c629314ed",
-                "reference": "92ea0b46cb4dfaa80aba9f02d9d9532c629314ed",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/5ddf1710a5871742659716b3cddb1a8b464caaee",
+                "reference": "5ddf1710a5871742659716b3cddb1a8b464caaee",
                 "shasum": ""
             },
             "require": {
@@ -3801,6 +3800,8 @@
             },
             "require-dev": {
                 "symfony/css-selector": "~3.4|~4.0",
+                "symfony/http-client": "^4.3",
+                "symfony/mime": "^4.3",
                 "symfony/process": "~3.4|~4.0"
             },
             "suggest": {
@@ -3836,7 +3837,7 @@
             ],
             "description": "Symfony BrowserKit Component",
             "homepage": "https://symfony.com",
-            "time": "2019-03-12T20:40:15+00:00"
+            "time": "2019-03-22T11:38:01+00:00"
         },
         {
             "name": "symfony/console",
@@ -3844,12 +3845,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "91def169ece5712be974336fdbd6f1954e798f98"
+                "reference": "33ba4d57d5e75181f1cd10049e9777b0bc239937"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/91def169ece5712be974336fdbd6f1954e798f98",
-                "reference": "91def169ece5712be974336fdbd6f1954e798f98",
+                "url": "https://api.github.com/repos/symfony/console/zipball/33ba4d57d5e75181f1cd10049e9777b0bc239937",
+                "reference": "33ba4d57d5e75181f1cd10049e9777b0bc239937",
                 "shasum": ""
             },
             "require": {
@@ -3872,7 +3873,8 @@
                 "symfony/dependency-injection": "~3.4|~4.0",
                 "symfony/event-dispatcher": "^4.3",
                 "symfony/lock": "~3.4|~4.0",
-                "symfony/process": "~3.4|~4.0"
+                "symfony/process": "~3.4|~4.0",
+                "symfony/var-dumper": "^4.3"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
@@ -3910,7 +3912,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-03-14T07:32:46+00:00"
+            "time": "2019-03-24T10:32:26+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -4162,12 +4164,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "c2a5a99744e881c987e22faf443b74b661cada3c"
+                "reference": "208454e7834b0a427d976ab110485419b9a52971"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/c2a5a99744e881c987e22faf443b74b661cada3c",
-                "reference": "c2a5a99744e881c987e22faf443b74b661cada3c",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/208454e7834b0a427d976ab110485419b9a52971",
+                "reference": "208454e7834b0a427d976ab110485419b9a52971",
                 "shasum": ""
             },
             "require": {
@@ -4203,7 +4205,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-02-23T15:42:19+00:00"
+            "time": "2019-03-22T07:19:24+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4250,7 +4252,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -4521,17 +4523,63 @@
             "time": "2018-12-25T11:19:39+00:00"
         },
         {
+            "name": "yiisoft/yii2-codeception",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-codeception.git",
+                "reference": "c7d1509498c349179940a8d2b9c6d078e8054b90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-codeception/zipball/c7d1509498c349179940a8d2b9c6d078e8054b90",
+                "reference": "c7d1509498c349179940a8d2b9c6d078e8054b90",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": ">=2.0.4"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\codeception\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Jebri",
+                    "email": "mark.github@yandex.ru"
+                }
+            ],
+            "description": "The Codeception integration for the Yii framework",
+            "keywords": [
+                "codeception",
+                "yii2"
+            ],
+            "abandoned": "codeception/codeception",
+            "time": "2018-04-26T18:21:40+00:00"
+        },
+        {
             "name": "yiisoft/yii2-debug",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-debug.git",
-                "reference": "0380db2170d5667bf5355b5fbf963802866a1a28"
+                "reference": "6264f51882811121c8a2497dd8b4a0c5bd9ca02f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/0380db2170d5667bf5355b5fbf963802866a1a28",
-                "reference": "0380db2170d5667bf5355b5fbf963802866a1a28",
+                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/6264f51882811121c8a2497dd8b4a0c5bd9ca02f",
+                "reference": "6264f51882811121c8a2497dd8b4a0c5bd9ca02f",
                 "shasum": ""
             },
             "require": {
@@ -4575,7 +4623,7 @@
                 "debugger",
                 "yii2"
             ],
-            "time": "2019-03-17T17:47:24+00:00"
+            "time": "2019-03-24T13:53:15+00:00"
         },
         {
             "name": "yiisoft/yii2-gii",
@@ -4583,12 +4631,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-gii.git",
-                "reference": "e1671784144e378a7391d6d8063bd3e53e19b78a"
+                "reference": "eff1dc599f577420d569bdc67d8cc689148e9818"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-gii/zipball/e1671784144e378a7391d6d8063bd3e53e19b78a",
-                "reference": "e1671784144e378a7391d6d8063bd3e53e19b78a",
+                "url": "https://api.github.com/repos/yiisoft/yii2-gii/zipball/eff1dc599f577420d569bdc67d8cc689148e9818",
+                "reference": "eff1dc599f577420d569bdc67d8cc689148e9818",
                 "shasum": ""
             },
             "require": {
@@ -4626,7 +4674,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2019-03-17T19:23:56+00:00"
+            "time": "2019-03-22T15:08:43+00:00"
         }
     ],
     "aliases": [],

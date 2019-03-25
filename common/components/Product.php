@@ -30,6 +30,7 @@ class Product implements AdditionalFeeInterface
     const TYPE_AMZON_JP = 'AMAZON-JP';
     const TYPE_AMZON_UK = 'AMAZON-UK';
     const TYPE_OTHER = 'OTHER';
+    const TYPE_NEXTTECH = 'NEXTTECH';
 
     public $provider;
     public $categories;

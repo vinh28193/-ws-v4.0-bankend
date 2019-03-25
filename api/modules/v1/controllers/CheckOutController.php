@@ -113,6 +113,7 @@ class CheckOutController extends BaseApiController
             // Order
             $order = new Order();
             $order->type_order = 'SHOP';
+            $order->ordercode = 'WSVN'. @rand(10,100000);
             $order->store_id = 1;
             $order->portal = $itemType;
             $order->quotation_status = 0;
