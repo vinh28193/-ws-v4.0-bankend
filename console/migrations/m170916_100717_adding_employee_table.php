@@ -19,17 +19,7 @@ class m170916_100717_adding_employee_table extends Migration
               `created_at` timestamp default '0000-00-00 00:00:00', 
               `updated_at` timestamp null on update current_timestamp,
               PRIMARY KEY (`id`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-            
-            --
-            -- Indexes for dumped tables
-            --
-            
-            --
-            -- Indexes for table `employee`
-            --
-            ALTER TABLE `employee`
-             ADD PRIMARY KEY (`id`);";
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         Yii::$app->db->createCommand($sql)->execute();
 
 
