@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use api\behaviors\MarkdownBehavior;
 
 /**
  * @property integer $id
@@ -28,7 +29,7 @@ class Post extends ActiveRecord
     {
         return [
             [['title', 'text'], 'required'],
-            [['text'], 'string'],
+            [['text','content_markdown'], 'string'],
             ['status', 'in', 'range' => [self::STATUS_DRAFT, self::STATUS_ACTIVE]],
             ['status', 'default', 'value' => self::STATUS_DRAFT],
             [['title'], 'string', 'max' => 255],
@@ -121,6 +122,11 @@ class Post extends ActiveRecord
     {
         return [
             TimestampBehavior::className(),
+            'markdown' => [
+                'class' => MarkdownBehavior::className(),
+                'sourceAttribute' => 'content_markdown',
+                'targetAttribute' => 'content_html',
+            ],
         ];
     }
 
@@ -147,4 +153,6 @@ class Post extends ActiveRecord
         }
         $this->status = self::STATUS_DRAFT;
     }
+
+
 }
