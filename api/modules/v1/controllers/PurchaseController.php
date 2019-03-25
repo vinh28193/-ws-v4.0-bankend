@@ -10,10 +10,14 @@ namespace api\modules\v1\controllers;
 
 
 use api\controllers\BaseApiController;
+use common\models\db\Customer;
+use common\models\db\PurchaseProduct;
 use common\models\Order;
 use common\models\Product;
 use common\models\User;
+use common\models\weshop\FormPurchaseItem;
 use Yii;
+use yii\db\ActiveQuery;
 
 class PurchaseController extends BaseApiController
 {
@@ -29,31 +33,31 @@ class PurchaseController extends BaseApiController
 
     protected function rules()
     {
-//        return [
-//            [
-//                'allow' => true,
-//                'actions' => ['index', 'view', 'create', 'update', 'edit-image', 'edit-variant'],
-//                'roles' => $this->getAllRoles(true),
-//
-//            ],
-//            [
-//                'allow' => true,
-//                'actions' => ['view'],
-//                'roles' => $this->getAllRoles(true),
-//                'permissions' => ['canView']
-//            ],
-//            [
-//                'allow' => true,
-//                'actions' => ['create'],
-//                'roles' => $this->getAllRoles(true, 'user'),
-//                'permissions' => ['canCreate']
-//            ],
-//            [
-//                'allow' => true,
-//                'actions' => ['update', 'delete'],
-//                'roles' => $this->getAllRoles(true, 'user'),
-//            ],
-//        ];
+        return [
+            [
+                'allow' => true,
+                'actions' => ['index', 'view', 'create', 'update','delete'],
+                'roles' => $this->getAllRoles(true),
+
+            ],
+            [
+                'allow' => true,
+                'actions' => ['view'],
+                'roles' => $this->getAllRoles(true),
+                'permissions' => ['canView']
+            ],
+            [
+                'allow' => true,
+                'actions' => ['create'],
+                'roles' => $this->getAllRoles(true, 'user'),
+                'permissions' => ['canCreate']
+            ],
+            [
+                'allow' => true,
+                'actions' => ['update', 'delete'],
+                'roles' => $this->getAllRoles(true, 'user'),
+            ],
+        ];
     }
 
     protected function verbs()
@@ -70,13 +74,16 @@ class PurchaseController extends BaseApiController
     public function actionIndex(){
         die("Action Test");
     }
+    public function actionCreate(){
+        die("Action Create");
+    }
 
     /**
      *Add cart purchase .
      */
-    public function actionCreate(){
-        if(isset($this->post['idItem'])){
-            $listId = (json_decode($this->post['idItem'],true));
+    public function actionUpdate(){
+        if(isset($this->get['id'])){
+            $listId = [$this->get['id']];
             return $this->getCart($listId);
         }
         return $this->response(false,"not have Id");
@@ -108,27 +115,32 @@ class PurchaseController extends BaseApiController
         $mess = '';
         $success = false;
         $addfee_amount = 0;
-        /** @var Order $order */
+        /** @var Order[] $orders */
         if($listId && $type == 'addtocart'){
-            $order = Order::find()->with('products')
+            $orders = Order::find()->with(['products'])
                 ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY_PURCHASE,Order::STATUS_PURCHASE_PART]])
-                ->orWhere(['purchase_assignee_id'=>Yii::$app->user->getId(),'status' => Order::STATUS_PURCHASING])
+                ->orWhere(['purchase_assignee_id'=>Yii::$app->user->getId(),'current_status' => Order::STATUS_PURCHASING])
                 ->all();
         }elseif($listId){
-            $order = Order::find()->with('products')
+            $orders = Order::find()->with('products')
                 ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY_PURCHASE,Order::STATUS_PURCHASE_PART]])
                 ->all();
         }else{
             $success = true;
-            $order = Order::find()->with('products')
+            $orders = Order::find()->with('products')
                 ->where(['purchase_assignee_id'=>Yii::$app->user->getId(),'current_status' => Order::STATUS_PURCHASING])
                 ->all();
         }
         /** @var User $user */
         $user = Yii::$app->user->getIdentity();
-        foreach ($order->products as $item){
-            if($item->quantity_customer < $item->quantity_purchase){
-                $addfee_amount = 0;
+        foreach ($orders as $key => $order){
+            $data[$key]['order_id'] = $order->id;
+            $data[$key]['seller'] = $order->seller_name;
+            $data[$key]['total_amount'] = $order->total_final_amount_local;
+            $data[$key]['portal'] = $order->portal;
+            foreach ($order->products as $item){
+                if($item->quantity_customer > $item->quantity_purchase || $order->current_status == Order::STATUS_PURCHASING) {
+                    $addfee_amount = 0;
 //                /** @var OrderPaymentRequest[] $order_request_change */
 //                $order_request_change = OrderPaymentRequest::find()
 //                    ->where([
@@ -144,86 +156,50 @@ class PurchaseController extends BaseApiController
 //                foreach ($order_request_change as $addfee){
 //                    $addfee_amount += $addfee->weshop_fee ? floatval($addfee->amount) - floatval($addfee->weshop_fee) : floatval($addfee->amount);
 //                }
-                /** @var PurchaseOrderItem[] $list_purchased */
-                $list_purchased = PurchaseOrderItem::find()->where(['orderItemId'=>$item->id])->all();
-                $amount_purchased = 0;
-                $quantity_purchased = 0;
-                foreach ($list_purchased as $purchaseOrderItem){
-                    $quantity_purchased += $purchaseOrderItem->Quantity;
-                    $amount_purchased += $purchaseOrderItem->getTotalAmount();
+                    /** @var PurchaseProduct[] $list_purchased */
+                    $list_purchased = PurchaseProduct::find()->where(['product_id' => $item->id])->all();
+                    $amount_purchased = 0;
+                    $quantity_purchased = 0;
+                    foreach ($list_purchased as $purchaseOrderItem) {
+                        $quantity_purchased += $purchaseOrderItem->purchase_quantity;
+                        $amount_purchased += $purchaseOrderItem->paid_to_seller;
+                    }
+                    /** @var Customer $cus */
+                    $cus = $order->customer_id ? Customer::findOne($order->customer_id) : false;
+                    $tmp = new FormPurchaseItem();
+                    $tmp->id = $item->id;
+                    $tmp->order_id = $order->id;
+                    $tmp->condition = $item->condition;
+                    $tmp->sellerId = $order->seller_name;
+                    $tmp->ItemType = $order->portal;
+                    $tmp->image = $item->link_img;
+                    $tmp->Name = $item->product_name;
+                    $tmp->typeCustomer = $cus && $cus->type_customer ? $cus->type_customer : 1;
+                    $tmp->price = $tmp->price_purchase = $item->price_amount_origin;// $item->ItemFeeServiceAmount;
+                    $tmp->us_ship = $tmp->us_ship_purchase = $item->usShippingFee ? $item->usShippingFee->amount : 0;
+                    $tmp->us_tax = $tmp->us_tax_purchase = $item->usTax ? $item->usTax->amount : 0;
+                    $tmp->ParentSku = $item->parent_sku;
+                    $tmp->sku = $item->sku;
+                    $tmp->quantity = $item->quantity_customer - $quantity_purchased;
+                    $tmp->quantityPurchase = $item->quantity_customer - $quantity_purchased;
+                    $tmp->variation = $item->variations;
+                    $tmp->paidToSeller = ($tmp->price + $tmp->us_ship + $tmp->us_tax) * $tmp->quantity ;
+                    $data[$key]['products'][] = $tmp->toArray();
+                    if ($type == 'addtocart') {
+//                    $mess = "Add soi ".$item->id." to cart. Total ".count($order)." items!";
+//                    OrderLogs::log($item->orderId,"action",$mess,$user->username,$mess,$item->id);
+                    }
+                    $success = true;
+                }else{
+                    $listId_cancel[] = $item->id;
                 }
-                /** @var Customer $cus */
-                $cus = $item->CustomerId ? Customer::findOne($item->CustomerId) : false;
-                $order = $item->order;
-                $tmp = new FormPurchaseItem();
-                $tmp->id = $item->id;
-                $tmp->binCode = $order ? strtoupper($order->binCode) : "---";
-                $tmp->condition = $item->description;
-                $tmp->sellerId = $item->sellerId;
-                $tmp->ItemType = $item->ItemType;
-                $tmp->image = $item->image;
-                $tmp->Name = $item->Name;
-                $tmp->typeCustomer = $cus && $cus->customerGroupId ? $cus->customerGroupId : 1;
-                $tmp->amountPaid = $addfee_amount + ($item->quantity * $item->UnitPriceInclTax) + $item->ItemLocalShippingAmount - $amount_purchased ;// $item->ItemFeeServiceAmount;
-                $tmp->paidToSeller = $tmp->amountPaid ;
-                $tmp->ParentSku = $item->ParentSku;
-                $tmp->sku = $item->sku;
-                $tmp->pricePurchase = $item->UnitPriceExclTax ? $item->UnitPriceExclTax : $item->PriceInclTax - ($item->ItemTax / $item->quantity);
-                $tmp->quantity = $item->quantity - $quantity_purchased;
-                $tmp->quantityPurchase = $item->quantity - $quantity_purchased;
-                $tmp->shipPurchase = $item->ItemLocalShippingAmount;
-                $tmp->taxPurchase = $item->ItemTax;
-                $tmp->taxRatePurchase = $item->ItemTaxRate;
-                $tmp->variation = $item->specifics;
-                $data[] = $tmp->toArray();
-                if($quantity_purchased == 0)
-                    $item->purchaseStartTime = date('Y-m-d H:i:s');
-                if($type == 'addtocart'){
-                    $mess = "Add soi ".$item->id." to cart. Total ".count($order)." items!";
-                    OrderLogs::log($item->orderId,"action",$mess,$user->username,$mess,$item->id);
-                    $item->purchaseStatus = OrderItem::STATUS_PURCHASING;
-                    $item->status = OrderItem::STATUS_PURCHASING;
-                    $item->purchase_assignee_id = Yii::$app->user->getId();
-                    $item->save(0);
-                }
-                $success = true;
-            }elseif ($item->status == OrderItem::STATUS_PURCHASING){
-                /** @var PurchaseOrderItem[] $list_purchased */
-                $list_purchased = PurchaseOrderItem::find()->where(['orderItemId'=>$item->id])->all();
-                $amount_purchased = 0;
-                $quantity_purchased = 0;
-                foreach ($list_purchased as $purchaseOrderItem){
-                    $quantity_purchased += $purchaseOrderItem->Quantity;
-                    $amount_purchased += $purchaseOrderItem->getTotalAmount();
-                }
-                /** @var Customer $cus */
-                $cus = $item->CustomerId ? Customer::findOne($item->CustomerId) : false;
-                $order = $item->order;
-                $tmp = new FormPurchaseItem();
-                $tmp->id = $item->id;
-                $tmp->binCode = $order ? strtoupper($order->binCode) : "---";
-                $tmp->condition = $item->description;
-                $tmp->sellerId = $item->sellerId;
-                $tmp->ItemType = $item->ItemType;
-                $tmp->image = $item->image;
-                $tmp->Name = $item->Name;
-                $tmp->typeCustomer = $cus && $cus->customerGroupId ? $cus->customerGroupId : 1;
-                $tmp->amountPaid = $addfee_amount + ($item->quantity * $item->UnitPriceInclTax) + $item->ItemLocalShippingAmount - $amount_purchased ;// $item->ItemFeeServiceAmount;
-                $tmp->paidToSeller = $tmp->amountPaid ;
-                $tmp->ParentSku = $item->ParentSku;
-                $tmp->sku = $item->sku;
-                $tmp->pricePurchase = $item->UnitPriceExclTax ? $item->UnitPriceExclTax : $item->PriceInclTax - ($item->ItemTax / $item->quantity);
-                $tmp->quantity = $item->quantity - $quantity_purchased;
-                $tmp->quantityPurchase = $item->quantity - $quantity_purchased;
-                $tmp->shipPurchase = $item->ItemLocalShippingAmount;
-                $tmp->taxPurchase = $item->ItemTax;
-                $tmp->taxRatePurchase = $item->ItemTaxRate;
-                $tmp->variation = $item->specifics;
-                $data[] = $tmp->toArray();
-            }else{
-                $listId_cancel[] = $item->id;
             }
+            $order->purchase_assignee_id = $user->id;
+            $order->current_status = Order::STATUS_PURCHASING;
+            $order->save(0);
         }
+
+        $mess .= "Add to cart success. ";
         if(count($listId_cancel) > 0){
             $mess .="And this is list soi cancel add to card: ".implode(' ,',$listId_cancel);
             $success = true;

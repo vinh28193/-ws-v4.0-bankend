@@ -171,6 +171,11 @@ return [
             'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
         ],
-        'extraPatterns' => []
+        'extraPatterns' => [
+            'PUT update/<id:\d+>'=> 'update',
+            'OPTIONS update/<id:\d+>'=> 'options',
+            'POST create/<id:\d+>'=> 'create',
+            'OPTIONS create/<id:\d+>'=> 'options'
+        ]
     ],
 ];
