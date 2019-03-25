@@ -58,7 +58,7 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
                 continue;
             }
             $ownerName = "total_{$key}_local";
-
+            if($key === '')
             $model = new OrderFee();
             $model->product_id = $this->owner->primaryKey;
             $model->order_id = $this->owner->order_id;
