@@ -17,6 +17,15 @@ use common\models\db\Promotion;
 
 class Order extends DbOrder
 {
+    /**
+     * @var Product[] $products
+     */
+    public $products;
+
+    const STATUS_READY_PURCHASE = "READY_PURCHASE";
+    const STATUS_PURCHASING = "PURCHASING";
+    const STATUS_PURCHASED = "PURCHASED";
+    const STATUS_PURCHASE_PART = "PURCHASE_PART";
     public function rules()
     {
         return [
