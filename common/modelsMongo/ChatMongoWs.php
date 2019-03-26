@@ -89,7 +89,7 @@ class ChatMongoWs extends ActiveRecord
                 'type_chat',
                 'is_customer_vew',
                 'is_employee_vew'], 'safe'],
-            [['message', 'Order_path', 'type_chat'], 'required'],
+            [['user_id','message', 'Order_path', 'type_chat'], 'required'],
         ];
     }
 
@@ -105,7 +105,7 @@ class ChatMongoWs extends ActiveRecord
             'user_email' => 'Email nhân viên chat ',
             'user_name' => 'tên nhân viên chat',
             'user_app' => 'Tên Application Id ',
-            'user_request_suorce' => ' suorce gửi app chát Phân biệt : APP/FRONTEND/BACK_END ',
+            'user_request_suorce' => 'suorce gửi app chát Phân biệt : APP/FRONTEND/BACK_END ',
             'request_ip' => 'IP request send message',
             'user_avatar' => 'Hình đại diện của User',
             'Order_path' => 'link order details',
