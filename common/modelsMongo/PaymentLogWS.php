@@ -43,6 +43,7 @@ class PaymentLogWS extends ActiveRecord
     public function attributes()
     {
         return [
+            '_id',
             'created_at',
             'updated_at',
             'date',

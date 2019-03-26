@@ -94,8 +94,10 @@ class RestPaymentLogWSController extends BaseApiController
 
                 //Action thao tác là gì ?
                 "action_path" => $_post['action_path'],
-                "LogType" =>  $_post['LogType'], // "Order hoăc Product", // LogType : Order | Product : and Id để join
-                "id" => $_post['LogType'], //"Id để join với Logtype nêu là Order hoặc nếu là Product",
+                "LogTypPaymentWs" =>  $_post['LogTypPaymentWs'], // "Order hoăc Product", // LogType : Order | Product : and Id để join
+                "OrderId" => $_post['OrderId'], //"Id để join với Logtype nêu là Order hoặc nếu là Product",
+
+                'status' => $_post['status'],   //  'Trạng thái Thanh Toans',
 
                 // data
                 "data_input" => is_array($_post['data_input']) ? @json_encode($_post['data_input']) : $_post['data_input'] ,   // dữ liệu ban đầu trước khi ghi log
