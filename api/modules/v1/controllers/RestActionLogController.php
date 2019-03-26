@@ -157,6 +157,7 @@ class RestActionLogController extends BaseApiController
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+        $this->can('canDelete', ['id' => $model->id]);
         $model->delete();
         Yii::$app->api->sendSuccessResponse($model->attributes);
     }
