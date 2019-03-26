@@ -159,13 +159,16 @@ class OrderController extends BaseApiController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id, false);
-        $this->can('canUpdate', $model);
-        $model->loadScenario($this->post);
-        $model->load($this->post,'');
-        if(!$model->save()){
-            Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
-        }
-        Yii::$app->api->sendSuccessResponse($model->attributes);
+        Yii::info($this->post,__METHOD__);
+        return $this->response(true,'ok',$this->post);
+//
+//        $this->can('canUpdate', $model);
+//        $model->loadScenario($this->post);
+//        $model->load($this->post,'');
+//        if(!$model->save()){
+//            Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
+//        }
+//        Yii::$app->api->sendSuccessResponse($model->attributes);
     }
 
     /**
@@ -193,11 +196,11 @@ class OrderController extends BaseApiController
     protected function findModel($condition, $with = true)
     {
         $query = Order::find();
-        if ($with === true) {
-            $query->withFullRelations();
-        }
+//        if ($with === true) {
+//            $query->withFullRelations();
+//        }
         if (is_numeric($condition)) {
-            $condition = ['id' => $condition];
+            $condition = [$query->getColumnName('id') => $condition];
         }
         $query->where($condition);
         if (($model = $query->one()) === null) {
