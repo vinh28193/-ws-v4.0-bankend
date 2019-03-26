@@ -144,6 +144,11 @@ class OrderController extends BaseApiController
     }
 
     /**
+     * Todo
+     *  common action update
+     *      post given
+     *          $_POST
+     *
      * @param $id
      * @return array
      * @throws NotFoundHttpException
@@ -153,18 +158,14 @@ class OrderController extends BaseApiController
      */
     public function actionUpdate($id)
     {
-        if ($id !== null) {
-            $model = $this->findModel($id, false);
-            $this->can('canUpdate', ['id' => $model->id]); // OWner is Update
-            $model->attributes = $this->post;
-            if ($model->save()) {
-                Yii::$app->api->sendSuccessResponse($model->attributes);
-            } else {
-                Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
-            }
-        } else {
-            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        $model = $this->findModel($id, false);
+        $this->can('canUpdate', $model);
+        $model->loadScenario($this->post);
+        $model->load($this->post,'');
+        if(!$model->save()){
+            Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
         }
+        Yii::$app->api->sendSuccessResponse($model->attributes);
     }
 
     /**
