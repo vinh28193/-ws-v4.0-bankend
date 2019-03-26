@@ -46,7 +46,7 @@ class Product extends \common\components\db\ActiveRecord
 
     public function getOrderFee()
     {
-        return $this->hasOne(OrderFee::className(), ['product_id' => 'id']);
+        return $this->hasMany(OrderFee::className(), ['product_id' => 'id']);
     }
 
     /**
