@@ -5,7 +5,15 @@ namespace common\modelsMongo;
 use Yii;
 use yii\mongodb\ActiveRecord;
 
-
+/**
+ * This is the model class for collection "Action_log_40".
+ *
+ * @property \MongoId|string $_id
+ * @property mixed $name
+ * @property mixed $email
+ * @property mixed $address
+ * @property mixed $status
+ */
 class ActionLogWS extends ActiveRecord
 {
     public static function collectionName()

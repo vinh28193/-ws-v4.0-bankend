@@ -57,6 +57,9 @@ class BoxmeLogSendReturnShipmentWs extends ActiveRecord
             'request_ip',
 
 
+            'Role','user_id','data_input','data_output', 'action_path','status' ,'LogTypeSendShipmentReturn','id'
+
+
         ];
     }
 
@@ -76,9 +79,6 @@ class BoxmeLogSendReturnShipmentWs extends ActiveRecord
                 'user_app',
                 'user_request_suorce',
                 'request_ip',
-
-
-                'Role','user_id','data_input','data_output', 'action_path','status' ,'LogTypeSendShipmentReturn','id'
 
             ], 'safe'],
             [[ 'Role','user_id','data_input','data_output', 'action_path','status' ,'LogTypeSendShipmentReturn','id' ], 'required'],
