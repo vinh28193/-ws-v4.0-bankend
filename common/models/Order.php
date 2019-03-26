@@ -14,11 +14,11 @@ use common\models\db\Promotion;
 use common\models\queries\OrderQuery;
 use Yii;
 use yii\helpers\ArrayHelper;
-
+use common\rbac\rules\RuleOwnerAccessInterface;
 /**
  * @property  Product[] $products
  */
-class Order extends DbOrder
+class Order extends DbOrder implements RuleOwnerAccessInterface
 {
 
     const SCENARIO_UPDATE_RECEIVER = 'updateReceiver';
@@ -158,6 +158,11 @@ class Order extends DbOrder
     protected function evaluateCustomer($event, $attribute)
     {
 
+    }
+
+    public function getRuleParams($permissionName)
+    {
+       return $this->sale_support_id;
     }
 
     /**
