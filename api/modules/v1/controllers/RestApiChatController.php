@@ -82,24 +82,23 @@ class RestApiChatController extends BaseApiController
             $_user_AuthKey = $_user_Identity->getAuthKey();
             $_user_name = $_user_Identity['username'];
             //----ToDo Need More Infor param
-            $_user_app = 'Weshop2019';
-//            $_user_request_suorce = "BACK_END"; // "APP/FRONTEND/BACK_END" // Todo : set
+            $_user_app = 'Weshop2019'; /***Todo Set**/
             $_request_ip = Yii::$app->getRequest()->getUserIP();
 
             $_rest_data = ["ChatMongoWs" => [
                 "success" => true,
                 "message" => is_array($_post['message']) ? @json_encode($_post['message']) : $_post['message'] ,
-                "date" => date('Y-m-d H:i:s'),
+                "date" => Yii::$app->getFormatter()->asDatetime('now'),
                 "user_id" => $_user_id,
                 "user_email" => $_user_email,
                 "user_name" => $_user_name,
                 "user_app" => $_user_app,
-                "user_request_suorce" => $_post['user_request_suorce'],
+                "user_request_suorce" => $_post['suorce'],  // "APP/FRONTEND/BACK_END"
                 "request_ip" => $_request_ip, // Todo : set
                 "user_avatars" => null,
                 "Order_path" => $_post['Order_path'],
                 "is_send_email_to_customer" => null,
-                "type_chat" => $_post['type_chat'], //'WS_CUSTOMER',   // Todo : set
+                "type_chat" => $_post['type_chat'], // 'TYPE_CHAT : GROUP_WS/WS_CUSTOMER // Todo : set
                 "is_customer_vew" => null,
                 "is_employee_vew" => null
             ]];
@@ -147,6 +146,7 @@ class RestApiChatController extends BaseApiController
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+        $this->can('canDelete', ['id' => $model->id]);
         $model->delete();
         Yii::$app->api->sendSuccessResponse($model->attributes);
     }

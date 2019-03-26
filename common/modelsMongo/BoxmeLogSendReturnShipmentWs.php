@@ -10,7 +10,7 @@ class BoxmeLogSendReturnShipmentWs extends ActiveRecord
 {
     public static function collectionName()
     {
-        return ['Weshop_log_40','Action_log_40'];
+        return ['Weshop_log_40','Boxme_log_40_send_Return_shipment'];
     }
 
     public function behaviors()
@@ -43,6 +43,7 @@ class BoxmeLogSendReturnShipmentWs extends ActiveRecord
     public function attributes()
     {
         return [
+            '_id',
             'created_at',
             'updated_at',
             'date',
