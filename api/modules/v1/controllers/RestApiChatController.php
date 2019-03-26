@@ -83,7 +83,7 @@ class RestApiChatController extends BaseApiController
             $_user_name = $_user_Identity['username'];
             //----ToDo Need More Infor param
             $_user_app = 'Weshop2019';
-            $_user_request_suorce = "BACK_END"; // "APP/FRONTEND/BACK_END" // Todo : set
+//            $_user_request_suorce = "BACK_END"; // "APP/FRONTEND/BACK_END" // Todo : set
             $_request_ip = Yii::$app->getRequest()->getUserIP();
 
             $_rest_data = ["ChatMongoWs" => [
@@ -94,7 +94,7 @@ class RestApiChatController extends BaseApiController
                 "user_email" => $_user_email,
                 "user_name" => $_user_name,
                 "user_app" => $_user_app,
-                "user_request_suorce" => $_user_request_suorce,
+                "user_request_suorce" => $_post['user_request_suorce'],
                 "request_ip" => $_request_ip, // Todo : set
                 "user_avatars" => null,
                 "Order_path" => $_post['Order_path'],

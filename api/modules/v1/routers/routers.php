@@ -163,6 +163,17 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
+        'controller' => ['seller' => 'seller'],
+        'patterns' => [
+            'GET,POST' => 'index',
+            'OPTIONS' => 'options',
+        ],
+    ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
         'controller' => ['actionlog' => 'rest-action-log'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',

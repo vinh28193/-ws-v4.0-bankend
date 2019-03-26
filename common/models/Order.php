@@ -232,6 +232,10 @@ class Order extends DbOrder
             $query->andFilterWhere(['order.portal' => $params['portal']]);
         }
 
+        if(isset($params['seller'])) {
+            $query->andFilterWhere(['order.seller_id' => $params['seller']]);
+        }
+
         if(isset($params['timeKey']) && isset($params['startTime']) && isset($params['endTime'])) {
             $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
         }
