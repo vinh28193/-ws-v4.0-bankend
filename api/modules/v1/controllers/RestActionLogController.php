@@ -109,7 +109,7 @@ class RestActionLogController extends BaseApiController
 
                 // ENV nào bắn lên
                 "user_app" => $_user_app,
-                "user_request_suorce" => $_user_request_suorce,
+                "user_request_suorce" => $_post['suorce'], //$_user_request_suorce,
                 "request_ip" => $_request_ip,
 
             ]];

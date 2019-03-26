@@ -94,7 +94,7 @@ class RestApiChatController extends BaseApiController
                 "user_email" => $_user_email,
                 "user_name" => $_user_name,
                 "user_app" => $_user_app,
-                "user_request_suorce" => $_user_request_suorce,
+                "user_request_suorce" => $_post['suorce'], //$_user_request_suorce, // "APP/FRONTEND/BACK_END"
                 "request_ip" => $_request_ip, // Todo : set
                 "user_avatars" => null,
                 "Order_path" => $_post['Order_path'],
