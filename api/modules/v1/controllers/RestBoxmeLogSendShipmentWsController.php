@@ -1,15 +1,14 @@
 <?php
-
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\modelsMongo\ActionLogWS as ActionLog ;
+use common\modelsMongo\BoxmeLogSendShipmentWs ;
 use common\models\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
-class RestActionLogController extends BaseApiController
+class RestBoxmeLogSendShipmentWsController extends BaseApiController
 {
     /** Role :
         case 'cms':
@@ -64,7 +63,7 @@ class RestActionLogController extends BaseApiController
 
     public function actionIndex()
     {
-        $response = ActionLog::search($params = '');
+        $response = BoxmeLogSendShipmentWs::search($params = '');
         return $this->response(true, 'Success', $response);
     }
 
@@ -72,7 +71,7 @@ class RestActionLogController extends BaseApiController
     {
         $_post = (array)$this->post;
         if (isset($_post) !== null) {
-            $model = new ActionLog();
+            $model = new BoxmeLogSendShipmentWs();
             $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();
             $_user_id = $_user_Identity->getId();
@@ -83,7 +82,7 @@ class RestActionLogController extends BaseApiController
             $_user_app = 'Weshop2019'; // Todo : set
             $_request_ip = Yii::$app->getRequest()->getUserIP();
 
-            $_rest_data = ["ActionLogWS" => [
+            $_rest_data = ["BoxmeLogSendShipmentWs" => [
 
                 //User : Who ai tác
                 "user_id" => $_user_id,
@@ -94,8 +93,10 @@ class RestActionLogController extends BaseApiController
 
                 //Action thao tác là gì ?
                 "action_path" => $_post['action_path'],
-                "LogType" =>  $_post['LogType'], // "Order hoăc Product", // LogType : Order | Product : and Id để join
-                "id" => $_post['LogType'], //"Id để join với Logtype nêu là Order hoặc nếu là Product",
+                "LogTypeSendShipmentWs" =>  $_post['LogTypeSendShipmentWs'], // "Order hoăc Product", // LogType : Order | Product : and Id để join
+                "id" => $_post['id'], //"Id để join với Logtype nêu là Order hoặc nếu là Product",
+
+                'status' => $_post['status'], 'Trạng thái nhãn kiểm : DONE , .....',
 
                 // data
                 "data_input" => is_array($_post['data_input']) ? @json_encode($_post['data_input']) : $_post['data_input'] ,   // dữ liệu ban đầu trước khi ghi log
@@ -143,7 +144,7 @@ class RestActionLogController extends BaseApiController
     public function actionView($id)
     {
         if ($id !== null) {
-            $response = ActionLog::find()
+            $response = BoxmeLogSendShipmentWs::find()
                 ->where(['id' => $id])
                 ->asArray()->all();
             return $this->response(true, "Get  $id success", $response);
@@ -162,7 +163,7 @@ class RestActionLogController extends BaseApiController
 
     public function findModel($id)
     {
-        if (($model = ActionLogWS::findOne($id)) !== null) {
+        if (($model = BoxmeLogSendShipmentWs::findOne($id)) !== null) {
             return $model;
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
