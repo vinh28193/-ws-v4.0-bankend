@@ -81,8 +81,7 @@ class RestActionLogController extends BaseApiController
             $_user_AuthKey = $_user_Identity->getAuthKey();
             $_user_name = $_user_Identity['username'];
             //----ToDo Need More Infor param
-            $_user_app = 'Weshop2019';
-            $_user_request_suorce = "BACK_END"; // "APP/FRONTEND/BACK_END" // Todo : set
+            $_user_app = 'Weshop2019'; // Todo : set
             $_request_ip = Yii::$app->getRequest()->getUserIP();
 
             $_rest_data = ["ActionLogWS" => [
@@ -109,7 +108,7 @@ class RestActionLogController extends BaseApiController
 
                 // ENV nào bắn lên
                 "user_app" => $_user_app,
-                "user_request_suorce" => $_post['suorce'], //$_user_request_suorce,
+                "user_request_suorce" => $_post['suorce'],  // "APP/FRONTEND/BACK_END"
                 "request_ip" => $_request_ip,
 
             ]];
