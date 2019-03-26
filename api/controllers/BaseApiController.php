@@ -249,7 +249,7 @@ class BaseApiController extends \yii\rest\Controller
     public function can($permissionName, $params)
     {
         if ($params instanceof RuleOwnerAccessInterface) {
-            $params = $params->getRuleParams();
+            $params = $params->getRuleParams($permissionName);
         }
         if (Yii::$app->getUser()->can($permissionName, $params, true)) {
             return true;
