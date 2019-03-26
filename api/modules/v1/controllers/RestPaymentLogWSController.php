@@ -3,13 +3,13 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\modelsMongo\ActionLogWS as ActionLog ;
+use common\modelsMongo\PaymentLogWS ;
 use common\models\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
-class RestActionLogController extends BaseApiController
+class RestPaymentLogWSController extends BaseApiController
 {
     /** Role :
         case 'cms':
@@ -64,7 +64,7 @@ class RestActionLogController extends BaseApiController
 
     public function actionIndex()
     {
-        $response = ActionLog::search($params = '');
+        $response = PaymentLogWS::search($params = '');
         return $this->response(true, 'Success', $response);
     }
 
@@ -72,7 +72,7 @@ class RestActionLogController extends BaseApiController
     {
         $_post = (array)$this->post;
         if (isset($_post) !== null) {
-            $model = new ActionLog();
+            $model = new PaymentLogWS();
             $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();
             $_user_id = $_user_Identity->getId();
@@ -83,7 +83,7 @@ class RestActionLogController extends BaseApiController
             $_user_app = 'Weshop2019'; // Todo : set
             $_request_ip = Yii::$app->getRequest()->getUserIP();
 
-            $_rest_data = ["ActionLogWS" => [
+            $_rest_data = ["PaymentLogWS" => [
 
                 //User : Who ai tác
                 "user_id" => $_user_id,
@@ -143,7 +143,7 @@ class RestActionLogController extends BaseApiController
     public function actionView($id)
     {
         if ($id !== null) {
-            $response = ActionLog::find()
+            $response = PaymentLogWS::find()
                 ->where(['id' => $id])
                 ->asArray()->all();
             return $this->response(true, "Get  $id success", $response);
@@ -162,7 +162,7 @@ class RestActionLogController extends BaseApiController
 
     public function findModel($id)
     {
-        if (($model = ActionLogWS::findOne($id)) !== null) {
+        if (($model = PaymentLogWS::findOne($id)) !== null) {
             return $model;
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
