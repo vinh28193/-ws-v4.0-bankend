@@ -236,6 +236,10 @@ class Order extends DbOrder
             $query->andFilterWhere(['order.seller_id' => $params['seller']]);
         }
 
+        if(isset($params['sale'])) {
+            $query->andFilterWhere(['order.sale_support_id' => $params['sale']]);
+        }
+
         if(isset($params['timeKey']) && isset($params['startTime']) && isset($params['endTime'])) {
             $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
         }
