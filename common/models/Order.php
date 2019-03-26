@@ -13,10 +13,19 @@ use common\models\db\Coupon;
 use common\models\db\Order as DbOrder;
 use common\models\queries\OrderQuery;
 use common\models\db\Promotion;
-
+/**
+ * @property  Product[] $products
+ */
 
 class Order extends DbOrder
 {
+
+//    public $products;
+
+    const STATUS_READY_PURCHASE = "READY_PURCHASE";
+    const STATUS_PURCHASING = "PURCHASING";
+    const STATUS_PURCHASED = "PURCHASED";
+    const STATUS_PURCHASE_PART = "PURCHASE_PART";
     public function rules()
     {
         return [
@@ -197,6 +206,7 @@ class Order extends DbOrder
 
         $query = Order::find()
             ->withFullRelations()
+            ->andWhere(['is not','product.id',null])
             ->filter($params)
             ->limit($limit)
             ->offset($offset);

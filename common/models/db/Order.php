@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "order".
  *
  * @property int $id ID
+ * @property string $ordercode ordercode : BIN Code Weshop : WSVN , WSINDO
  * @property int $store_id hàng của nước nào Weshop Indo hay Weshop VIET NAM
  * @property string $type_order Hình thức mua hàng: SHOP | REQUEST | POS | SHIP
  * @property int $customer_id  Mã id của customer : có thể là khách buôn hoặc khách lẻ 
@@ -85,6 +86,7 @@ use Yii;
  * @property string $total_weight_temporary
  * @property string $created_at Update qua behaviors tự động  
  * @property string $updated_at Update qua behaviors tự động
+ * @property int $purchase_assignee_id Id nhân viên mua hàng
  * @property string $purchase_order_id Mã order đặt mua với NB là EBAY / AMAZON / hoặc Website ngoài : mã order purchase ( dạng list, cách nhau = dấu phẩy)
  * @property string $purchase_transaction_id Mã thanh toán Paypal với eBay, amazon thanh toán bằng thẻ, k lấy được mã giao dịch ( dạng list, cách nhau = dấu phẩy)
  * @property string $purchase_amount số tiền thanh toán thực tế với người bán EBAY/AMAZON, lưu ý : Số đã trừ Buck/Point ( và là dạng list, cách nhau = dấu phẩy)
@@ -97,8 +99,9 @@ use Yii;
  * @property int $total_quantity  Tổng số lượng khách hàng đặt = tổng các số lượng trên bảng product
  * @property int $total_purchase_quantity  Tổng số lượng nhân viên đi mua hàng thực tế của cả đơn = tổng các số lượng mua thực tế trên bảng product
  * @property int $remove đơn đánh đấu 1 là đã xóa , mặc định 0 : chưa xóa
- * @property string $ordercode
  * @property string $version version 4.0
+ *
+ * @property User $purchaseAssignee
  */
 class Order extends \common\components\db\ActiveRecord
 {
@@ -117,12 +120,13 @@ class Order extends \common\components\db\ActiveRecord
     {
         return [
             [['store_id', 'type_order', 'customer_id', 'customer_type', 'portal', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_country_name', 'receiver_province_id', 'receiver_province_name', 'receiver_district_id', 'receiver_district_name', 'receiver_post_code', 'receiver_address_id', 'payment_type'], 'required'],
-            [['store_id', 'customer_id', 'new', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'total_quantity', 'total_purchase_quantity', 'remove'], 'integer'],
+            [['store_id', 'customer_id', 'new', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove'], 'integer'],
             [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_account_id', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id'], 'string'],
             [['total_final_amount_local', 'total_amount_local', 'total_origin_fee_local', 'total_price_amount_origin', 'total_paid_amount_local', 'total_refund_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_fee_amount_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_custom_fee_amount_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'revenue_xu', 'xu_count', 'xu_amount', 'total_weight', 'total_weight_temporary', 'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund'], 'number'],
-            [['type_order', 'portal', 'utm_source', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'ordercode', 'version'], 'string', 'max' => 255],
+            [['ordercode', 'type_order', 'portal', 'utm_source', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'version'], 'string', 'max' => 255],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
+            [['purchase_assignee_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['purchase_assignee_id' => 'id']],
         ];
     }
 
@@ -133,6 +137,7 @@ class Order extends \common\components\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'ordercode' => 'Ordercode',
             'store_id' => 'Store ID',
             'type_order' => 'Type Order',
             'customer_id' => 'Customer ID',
@@ -210,6 +215,7 @@ class Order extends \common\components\db\ActiveRecord
             'total_weight_temporary' => 'Total Weight Temporary',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'purchase_assignee_id' => 'Purchase Assignee ID',
             'purchase_order_id' => 'Purchase Order ID',
             'purchase_transaction_id' => 'Purchase Transaction ID',
             'purchase_amount' => 'Purchase Amount',
@@ -222,8 +228,15 @@ class Order extends \common\components\db\ActiveRecord
             'total_quantity' => 'Total Quantity',
             'total_purchase_quantity' => 'Total Purchase Quantity',
             'remove' => 'Remove',
-            'ordercode' => 'Ordercode',
             'version' => 'Version',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPurchaseAssignee()
+    {
+        return $this->hasOne(User::className(), ['id' => 'purchase_assignee_id']);
     }
 }

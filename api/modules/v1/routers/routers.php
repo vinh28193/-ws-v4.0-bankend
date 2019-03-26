@@ -157,21 +157,25 @@ return [
         ],
         'extraPatterns' => []
     ],
-
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'if_service' => true,
-        'controller' => ['province' =>'system-state-province'],
-        'tokens' => [
-            '{id}' => '<id:\\w[\\w,]*>',
-            '{token}' => '<token:\\d[\\d,]*>',
-        ],
+        'controller' => ['purchase' => 'purchase'],
         'patterns' => [
             'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
         ],
-        'extraPatterns' => []
+        'extraPatterns' => [
+            'PUT update/<id:\d+>'=> 'update',
+            'OPTIONS update/<id:\d+>'=> 'options',
+            'POST create/<id:\d+>'=> 'create',
+            'OPTIONS create/<id:\d+>'=> 'options'
+        ]
     ],
 ];

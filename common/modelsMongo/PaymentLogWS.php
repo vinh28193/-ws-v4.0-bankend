@@ -1,24 +1,16 @@
 <?php
 
-namespace common\components;
+namespace common\modelsMongo;
 
 use Yii;
 use yii\mongodb\ActiveRecord;
 
-/**
- * This is the model class for collection "chat_mongo_ws".
- *
- * @property \MongoId|string $_id
- * @property mixed $name
- * @property mixed $email
- * @property mixed $address
- * @property mixed $status
- */
-class ChatMongoWs extends ActiveRecord
+
+class PaymentLogWS extends ActiveRecord
 {
     public static function collectionName()
     {
-        return ['weshop_logs','chat_mongo_ws'];
+        return ['Weshop_log_40','Payment_log_40'];
     }
 
     public function behaviors()
@@ -134,7 +126,7 @@ class ChatMongoWs extends ActiveRecord
 
         $offset = ($page - 1) * $limit;
 
-        $query = ChatMongoWs::find()
+        $query = PaymentLogWS::find()
             //->withFullRelations()
             //->filter($params)
             ->limit($limit)

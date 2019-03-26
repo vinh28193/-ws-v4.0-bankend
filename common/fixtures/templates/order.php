@@ -157,8 +157,10 @@ return [
     'total_vat_amount_local' => FixtureUtility::randFee(), // "Tổng phí VAT,
 
     // Update từ bảng tỉ giá Vietcombank  Crowler để lưu vào order tại thời điểm khách hàng đặt đơn mua hàng
+
     'exchange_rate_fee' => $exRate, // $product ? $product[0]['exchange_rate'] : 0, // Tỉ Giá Tính Phí Local : áp dung theo tỉ giá của VietCombank Crowler upate từ 1 bảng systeam_curentcy : Tỷ giá từ USD => tiền local,
     'exchange_rate_purchase' => $exRate, //Tỉ Giá mua hàng : áp dung theo tỉ giá của VietCombank , Ẩn với Khách. Tỉ giá USD / Tỉ giá Yên / Tỉ giá UK .Tỷ giá từ tiền website gốc => tiền local. VD: yên => vnd,
+
     'currency_purchase' => $faker->randomElement(['USD', "JPY", "AUD"]), // Loại tiền mua hàng là : USD,JPY,AUD .....,
 
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\models;
+namespace common\modelsMongo;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\models\Logrouteapi;
+use common\modelsMongo\RestApiCall;
 
 /**
- * CustomerSearch represents the model behind the search form about `backend\models\Logrouteapi`.
+ * RestApiCallSearch represents the model behind the search form about `common\components\RestApiCall`.
  */
-class LogrouteapiSearch extends Logrouteapi
+class RestApiCallSearch extends RestApiCall
 {
     /**
      * @inheritdoc
@@ -19,7 +19,14 @@ class LogrouteapiSearch extends Logrouteapi
     {
         return [
             [['_id'], 'integer'],
-            [['name', 'email', 'address'], 'safe'],
+            [['success', 'path', 'data','date' ,
+              'user_id',
+              'user_email',
+              'user_name',
+              'user_app',
+              'user_request_suorce',
+              'request_ip'
+                ], 'safe'],
         ];
     }
 
@@ -41,7 +48,7 @@ class LogrouteapiSearch extends Logrouteapi
      */
     public function search($params)
     {
-        $query = Logrouteapi::find();
+        $query = RestApiCall::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -59,9 +66,9 @@ class LogrouteapiSearch extends Logrouteapi
             '_id' => $this->_id,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'address', $this->address]);
+        $query->andFilterWhere(['like', 'user_name', $this->user_name])
+            ->andFilterWhere(['like', 'user_email', $this->user_email])
+            ->andFilterWhere(['like', 'user_id', $this->user_id]);
 
         return $dataProvider;
     }
