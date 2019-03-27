@@ -159,8 +159,14 @@ class OrderController extends BaseApiController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id, false);
-        Yii::info($this->post,__METHOD__);
-        return $this->response(true,'ok',$this->post);
+        $this->can('canUpdate', $model);
+        $model->loadWithScenario($this->post);
+        $dirtyAttributes = $model->getDirtyAttributes();
+        Yii::info($dirtyAttributes,$model->getScenario());
+        if(!$model->save()){
+            return $this->response(false,$model->getFirstErrors());
+        }
+        return $this->response(true,"order $id is up to date",$dirtyAttributes);
 //
 //        $this->can('canUpdate', $model);
 //        $model->loadScenario($this->post);
@@ -196,9 +202,9 @@ class OrderController extends BaseApiController
     protected function findModel($condition, $with = true)
     {
         $query = Order::find();
-//        if ($with === true) {
-//            $query->withFullRelations();
-//        }
+        if ($with === true) {
+            $query->withFullRelations();
+        }
         if (is_numeric($condition)) {
             $condition = [$query->getColumnName('id') => $condition];
         }

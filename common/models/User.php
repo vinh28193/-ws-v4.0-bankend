@@ -203,7 +203,9 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
         $permissions = $authManager->getPermissionsByUser($this->getId());
         $role = $authManager->getRolesByUser($this->getId());
         return [
+            'id' => $this->getId(),
             'username' => $this->username,
+            'email' => $this->email,
             'role' => !empty($role) ? array_keys($role) : [],
             'permission' => !empty($permissions) ? array_keys($permissions) : []
         ];
