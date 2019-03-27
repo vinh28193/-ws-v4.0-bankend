@@ -11,6 +11,8 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\models\db\Customer;
+use common\models\db\ListAccountPurchase;
+use common\models\db\PurchasePaymentCard;
 use common\models\db\PurchaseProduct;
 use common\models\Order;
 use common\models\Product;
@@ -67,12 +69,25 @@ class PurchaseController extends BaseApiController
             'create' => ['POST'],
             'update' => ['PATCH', 'PUT'],
             'view' => ['GET'],
-            'delete' => ['DELETE']
+            'delete' => ['DELETE'],
+            'get-list-account' => ['GET'],
+            'get-list-card-payment' => ['GET']
         ];
     }
 
     public function actionIndex(){
-        die("Action Test");
+//        $action = Yii::$app->request->get('action');
+//        switch (strtolower($action)){
+//            case 'getlistaccount':
+//                return $this->getListAccount();
+//                break;
+//            case 'getlistcard':
+//                return $this->GetListCardPayment();
+//                break;
+//            default:
+//                return $this->response(false,"Please send action");
+//                break;
+//        }
     }
 
     /**
@@ -384,9 +399,11 @@ class PurchaseController extends BaseApiController
             return $this->response(false,'something error');
         }
     }
+
+
     public function actionGetListAccount(){
         $type = Yii::$app->request->get('type','all');
-        $account = ListAccountBuyer::find()->where(['active' => 1]);
+        $account = ListAccountPurchase::find()->where(['active' => 1]);
         if($type !== 'all'){
             $account->andWhere(['type' => strtolower($type)]);
         }
