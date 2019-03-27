@@ -117,10 +117,10 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     {
         return ArrayHelper::merge(parent::scenarios(), [
             self::SCENARIO_UPDATE_STATUS => [
-                '!current_status'
+                'current_status'
             ],
             self::SCENARIO_SALE_ASSIGN => [
-                '!sale_support_id'
+                'sale_support_id','support_email'
             ]
         ]);
     }
