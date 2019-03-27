@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * RestApiCallController implements the CRUD actions for RestApiCall model.
  */
-class RestapicallController extends Controller
+class ApicallController extends Controller
 {
     public function behaviors()
     {

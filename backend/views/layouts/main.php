@@ -64,7 +64,7 @@ AppAsset::register($this);
     NavBar::end();
     ?>
 
-    <div class="container">
+    <div class="container"> <!-- class="container" -->
         <?= Breadcrumbs::widget([
             //'homeLink'=>['label'=>'','url'=>''],
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
