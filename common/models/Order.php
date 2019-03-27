@@ -27,6 +27,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_STATUS = 'updateStatus';
     const SCENARIO_SALE_ASSIGN = 'saleAssign';
     const SCENARIO_REQUEST = 'request';
+    const SCENARIO_CONFIRM_PURCHASE = 'confirmPurchase';
 
     /**
      * order type
@@ -117,6 +118,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     {
         return ArrayHelper::merge(parent::scenarios(), [
             self::SCENARIO_UPDATE_STATUS => [
+                'current_status'
+            ],
+            self::SCENARIO_CONFIRM_PURCHASE => [
                 'current_status'
             ],
             self::SCENARIO_SALE_ASSIGN => [
