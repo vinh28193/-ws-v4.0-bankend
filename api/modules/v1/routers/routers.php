@@ -33,6 +33,16 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
+        'controller' => ['data-fixed'],
+        'patterns' => [
+            'POST' => 'create',
+            'OPTIONS' => 'options',
+        ],
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
         'controller' => ['product'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>'
@@ -154,8 +164,6 @@ return [
             'OPTIONS create'=> 'options',
         ]
     ],
-
-    /*
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
@@ -173,7 +181,7 @@ return [
             'OPTIONS get-list-account'=> 'options'
         ]
     ],
-    */
+
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
