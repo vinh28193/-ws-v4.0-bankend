@@ -74,9 +74,6 @@ class PurchaseController extends BaseApiController
     public function actionIndex(){
         die("Action Test");
     }
-    public function actionCreate(){
-        die("Action Create");
-    }
 
     /**
      *Add cart purchase .
@@ -183,7 +180,7 @@ class PurchaseController extends BaseApiController
                     $tmp->quantity = $item->quantity_customer - $quantity_purchased;
                     $tmp->quantityPurchase = $item->quantity_customer - $quantity_purchased;
                     $tmp->variation = $item->variations;
-                    $tmp->paidToSeller = ($tmp->price + $tmp->us_ship + $tmp->us_tax) * $tmp->quantity ;
+                    $tmp->paidTotal = $tmp->paidToSeller = ($tmp->price + $tmp->us_ship + $tmp->us_tax) * $tmp->quantity ;
                     $data[$key]['products'][] = $tmp->toArray();
                     if ($type == 'addtocart') {
 //                    $mess = "Add soi ".$item->id." to cart. Total ".count($order)." items!";
@@ -209,7 +206,9 @@ class PurchaseController extends BaseApiController
         }
         return $this->response($success,$mess,$data);
     }
-    public function actionPurchaseUpdate(){
+    public function actionCreate(){
+//        print_r($this->post);
+//        die;
         $list_item = Yii::$app->request->post('Items',null);
         $po = Yii::$app->request->post('TotalPurchase',null);
         if(!$list_item || !$po){
@@ -384,6 +383,22 @@ class PurchaseController extends BaseApiController
             $tran->rollBack();
             return $this->response(false,'something error');
         }
+    }
+    public function actionGetListAccount(){
+        $type = Yii::$app->request->get('type','all');
+        $account = ListAccountBuyer::find()->where(['active' => 1]);
+        if($type !== 'all'){
+            $account->andWhere(['type' => strtolower($type)]);
+        }
+        $account = $account->asArray()->all();
+        return $this->response(true,"SUccess" , $account);
+    }
+    public function actionGetListCardPayment(){
+        $storeId = Yii::$app->request->get('store',1);
+        $storeId = $storeId ? $storeId : 1;
+//        $list_data = PurchasePaymentCard::find()->where(['store_id' => $storeId , 'status' => 1])->asArray()->all();
+        $list_data = PurchasePaymentCard::find()->where(['status' => 1])->asArray()->all();
+        return $this->response(true,"Success" , $list_data);
     }
     public function actionMakeStatus(){
         $id = Yii::$app->request->post('id');
