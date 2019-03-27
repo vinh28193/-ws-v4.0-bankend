@@ -10,16 +10,12 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\data\ActiveDataProvider;
 use common\models\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
 /***Cache PageCache **/
-use yii\caching\DbDependency;
-use yii\caching\TagDependency;
-
 class OrderController extends BaseApiController
 {
     public function behaviors()
@@ -65,6 +61,11 @@ class OrderController extends BaseApiController
                 'allow' => true,
                 'actions' => ['update', 'delete'],
                 'roles' => $this->getAllRoles(true, 'user'),
+            ],
+            [
+                'allow' => true,
+                'actions' => ['sale-assign'],
+                'roles' => ['sale', 'master_sale'],
             ],
         ];
     }
@@ -160,14 +161,13 @@ class OrderController extends BaseApiController
     {
         $model = $this->findModel($id, false);
         $this->can('canUpdate', $model);
-        $model->loadWithScenario($this->post);
-        Yii::info($model->scenarios());
+        $check = $model->loadWithScenario($this->post);
         $dirtyAttributes = $model->getDirtyAttributes();
-        Yii::info($dirtyAttributes,$model->getScenario());
-        if(!$model->save()){
-            return $this->response(false,$model->getFirstErrors());
+        Yii::info($check, $model->getScenario());
+        if (!$model->save()) {
+            return $this->response(false, $model->getFirstErrors());
         }
-        return $this->response(true,"order $id is up to date",$dirtyAttributes);
+        return $this->response(true, "order $id is up to date", $dirtyAttributes);
     }
 
     /**
@@ -209,6 +209,20 @@ class OrderController extends BaseApiController
     }
 
 
+    public function actionSaleAssign($id)
+    {
+        $model = $this->findModel($id, false);
+        $model->setScenario(Order::SCENARIO_SALE_ASSIGN);
+        /** @var  $identity  \common\models\User */
+        $identity = Yii::$app->getUser()->getIdentity();
+        $model->sale_support_id = $identity->getId();
+        $model->support_email = $identity->email;
+        if(!$model->save()){
+            return $this->response(false, $model->getFirstErrors());
+        }
+        return $this->response(true, "sale {$identity->email} assign to order $id",$identity->getPublicIdentity());
+    }
+
     public function actionEditImage($id)
     {
         $post = Yii::$app->request->post('image');
@@ -217,7 +231,7 @@ class OrderController extends BaseApiController
         return $this->response(true, "Delete $id success", Yii::$app->request->get());
     }
 
-    public  function actionEditVariant()
+    public function actionEditVariant()
     {
         $post = Yii::$app->request->post();
         var_dump($post);

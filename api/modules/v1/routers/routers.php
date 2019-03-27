@@ -70,7 +70,9 @@ return [
             'PUT edit-image/<id:\d+>' => 'edit-image',
             'OPTIONS edit-image/<id:\d+>' => 'options',
             'PUT edit-variant/<id:\d+>' => 'edit-variant',
-            'OPTIONS edit-variant/<id:\d+>' => 'options'
+            'OPTIONS edit-variant/<id:\d+>' => 'options',
+            'GET assign/<id:\d+>' => 'sale-assign',
+            'OPTIONS assign/<id:\d+>' => 'options',
         ]
     ],
     [
