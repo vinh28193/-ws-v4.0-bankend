@@ -132,6 +132,10 @@ return [
         'prefix' => 'v1',
         'pluralize' => false,
         'controller' => ['purchase' => 'purchase'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
@@ -152,18 +156,36 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['purchase-service' => 'service/purchase-service'],
+        'controller' => ['purchase-account' => 'service/purchase-service'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
         'patterns' => [
-            'POST' => 'get-list-card-payment',
-            'GET' => 'get-list-account',
+            'GET' => 'list-account',
         ],
         'extraPatterns' => [
-            'GET get-list-account' => 'get-list-account',
-            'OPTIONS get-list-account' => 'options',
-            'POST get-list-card-payment' => 'get-list-card-payment',
-            'OPTIONS get-list-card-payment' => 'options'
+            'GET list-account' => 'list-account',
+            'OPTIONS list-account' => 'options',
         ]
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['card-payment' => 'service/list-card-payment'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+           // 'GET' => 'list-card-payment',
+            'POST list-card-payment' => 'list-card-payment',
+            'OPTIONS list-card-payment' => 'options',
+        ],
+        'extraPatterns' => [ ]
+    ],
+
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',

@@ -583,3 +583,7 @@ https://www.yiiframework.com/doc/guide/1.1/en/database.migration
 #-----------Purchase-------------
 php yii fixture/load PurchasePaymentCard
 php yii fixture/load ListAccountPurchase
+
+
+####---------Warning: session_regenerate_id(): Session object destruction failed in------
+https://stackoverflow.com/questions/27438806/warning-session-regenerate-id-session-object-destruction-failed-in/27453468

@@ -1,39 +1,43 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: galat
- * Date: 27/03/2019
- * Time: 3:37 CH
- */
-
 namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
 use api\modules\v1\controllers\PurchaseController;
-use common\models\db\ListAccountBuyer;
+use common\models\db\ListAccountPurchase;
 use Yii;
 
 class PurchaseServiceController extends BaseApiController
 {
-    public function verbs()
+    public function rules()
     {
         return [
-            'get-list-account' => ['GET'],
-            'get-list-card-payment' => ['POST']
+            [
+                'allow' => true,
+                'actions' => ['list-account'],
+                'roles' => $this->getAllRoles(true),
+                'permissions' => ['canView']
+            ],
         ];
     }
 
-    public function actionGetListAccount()
+    public function verbs()
     {
-        die("ewewqeqwewqeqw");
-        $type = Yii::$app->request->get('type', 'all');
-        $account = ListAccountBuyer::find()->where(['active' => 1]);
-        if ($type !== 'all') {
-            $account->andWhere(['type' => strtolower($type)]);
-        }
-        $account = $account->asArray()->all();
-        return $this->response(true, "Success", $account);
+        return [
+            'list-account' => ['GET'],
+        ];
+    }
+
+    public function actionListAccount()
+    {
+        die("list-account");
+//        $type = Yii::$app->request->get('type', 'all');
+//        $account = ListAccountPurchase::find()->where(['active' => 1]);
+//        if ($type !== 'all') {
+//            $account->andWhere(['type' => strtolower($type)]);
+//        }
+//        $account = $account->asArray()->all();
+//        return $this->response(true, "Success", $account);
     }
 
 }
