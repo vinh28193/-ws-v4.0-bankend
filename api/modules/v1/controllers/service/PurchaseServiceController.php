@@ -1,43 +1,43 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: galat
- * Date: 27/03/2019
- * Time: 2:57 CH
- */
-
 namespace api\modules\v1\controllers\service;
 
 
+use api\controllers\BaseApiController;
 use api\modules\v1\controllers\PurchaseController;
 use common\models\db\ListAccountPurchase;
-use common\models\db\PurchasePaymentCard;
 use Yii;
 
-class PurchaseServiceController extends PurchaseController
+class PurchaseServiceController extends BaseApiController
 {
-    protected function verbs()
+    public function rules()
     {
         return [
-            'get-list-account' => ['GET'],
-            'get-list-card-payment' => ['GET']
+            [
+                'allow' => true,
+                'actions' => ['list-account'],
+                'roles' => $this->getAllRoles(true),
+                'permissions' => ['canView']
+            ],
         ];
     }
 
-    public function actionGetListAccount(){
-        $type = Yii::$app->request->get('type','all');
-        $account = ListAccountPurchase::find()->where(['active' => 1]);
-        if($type !== 'all'){
-            $account->andWhere(['type' => strtolower($type)]);
-        }
-        $account = $account->asArray()->all();
-        return $this->response(true,"SUccess" , $account);
+    public function verbs()
+    {
+        return [
+            'list-account' => ['GET'],
+        ];
     }
-    public function actionGetListCardPayment(){
-        $storeId = Yii::$app->request->get('store',1);
-        $storeId = $storeId ? $storeId : 1;
-//        $list_data = PurchasePaymentCard::find()->where(['store_id' => $storeId , 'status' => 1])->asArray()->all();
-        $list_data = PurchasePaymentCard::find()->where(['status' => 1])->asArray()->all();
-        return $this->response(true,"Success" , $list_data);
+
+    public function actionListAccount()
+    {
+        die("list-account");
+//        $type = Yii::$app->request->get('type', 'all');
+//        $account = ListAccountPurchase::find()->where(['active' => 1]);
+//        if ($type !== 'all') {
+//            $account->andWhere(['type' => strtolower($type)]);
+//        }
+//        $account = $account->asArray()->all();
+//        return $this->response(true, "Success", $account);
     }
+
 }

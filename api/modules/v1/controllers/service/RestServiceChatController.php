@@ -4,7 +4,6 @@ namespace api\modules\v1\controllers\service;
 
 use Yii;
 use api\modules\v1\controllers\RestApiChatController as RestApiChat;
-use app\models\User;
 
 class RestServiceChatController extends RestApiChat
 {

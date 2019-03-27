@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: galat
- * Date: 23/03/2019
- * Time: 8:42 SA
- */
-
 namespace api\modules\v1\controllers;
 
 
@@ -76,18 +69,7 @@ class PurchaseController extends BaseApiController
     }
 
     public function actionIndex(){
-//        $action = Yii::$app->request->get('action');
-//        switch (strtolower($action)){
-//            case 'getlistaccount':
-//                return $this->getListAccount();
-//                break;
-//            case 'getlistcard':
-//                return $this->GetListCardPayment();
-//                break;
-//            default:
-//                return $this->response(false,"Please send action");
-//                break;
-//        }
+        die("Action Test");
     }
 
     /**
@@ -400,10 +382,10 @@ class PurchaseController extends BaseApiController
         }
     }
 
-
     public function actionGetListAccount(){
         $type = Yii::$app->request->get('type','all');
-        $account = ListAccountPurchase::find()->where(['active' => 1]);
+        $account = ListAccountBuyer::find()->where(['active' => 1]);
+
         if($type !== 'all'){
             $account->andWhere(['type' => strtolower($type)]);
         }
