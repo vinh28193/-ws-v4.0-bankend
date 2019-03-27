@@ -32,5 +32,6 @@ class FormPurchaseItem extends Model
     public $quantity;
     public $quantityPurchase;
     public $paidToSeller;
+    public $paidTotal;
     public $typeCustomer;
 }
