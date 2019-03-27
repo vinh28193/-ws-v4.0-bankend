@@ -49,6 +49,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const STATUS_PURCHASED = 'PURCHASED'; // Lv7; đơn đã mua, next status REFUNDING
     const STATUS_REFUNDING = 'REFUNDING'; //Lv8; đơn đang chuyển hoàn, next status REFUNDED
     const STATUS_REFUNDED = 'REFUNDED'; //Lv8; đơn đã chuyển hoàn, end of status
+    const STATUS_CANCEL = 'CANCEL';
 
     /**
      * request status
@@ -161,7 +162,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             [['receiver_province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['receiver_province_id' => 'id'], 'on' => [self::SCENARIO_UPDATE_RECEIVER, self::SCENARIO_DEFAULT]],
 
             [['current_status'], 'required', 'on' => self::SCENARIO_UPDATE_STATUS],
-            [['current_status'], 'validateCurrentStatus', 'on' => self::SCENARIO_UPDATE_STATUS],
+//            [['current_status'], 'validateCurrentStatus', 'on' => self::SCENARIO_UPDATE_STATUS],
 
             [['sale_support_id', 'support_email'], 'required', 'on' => self::SCENARIO_SALE_ASSIGN],
             [['sale_support_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sale_support_id' => 'id'], 'on' => self::SCENARIO_SALE_ASSIGN],
