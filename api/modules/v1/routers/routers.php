@@ -33,7 +33,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => [ 'product'],
+        'controller' => ['product'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>'
         ],
@@ -67,42 +67,24 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'PUT edit-image/<id:\d+>'=> 'edit-image',
-            'OPTIONS edit-image/<id:\d+>'=> 'options',
-            'PUT edit-variant/<id:\d+>'=> 'edit-variant',
-            'OPTIONS edit-variant/<id:\d+>'=> 'options'
+            'PUT edit-image/<id:\d+>' => 'edit-image',
+            'OPTIONS edit-image/<id:\d+>' => 'options',
+            'PUT edit-variant/<id:\d+>' => 'edit-variant',
+            'OPTIONS edit-variant/<id:\d+>' => 'options'
         ]
     ],
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['p' => 'package'],
+        'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','manifest'],
         'patterns' => [
-            'GET' => 'index',
-            'OPTIONS' => 'options',
-        ],
-        'extraPatterns' => []
-    ],
-    [
-        'class' => \common\filters\ApiUrlRule::className(),
-        'prefix' => 'v1',
-        'pluralize' => false,
-        'controller' => ['s' => 'shipment'],
-        'patterns' => [
-            'GET' => 'index',
-            'OPTIONS' => 'options',
-        ],
-        'extraPatterns' => []
-    ],
-    [
-        'class' => \common\filters\ApiUrlRule::className(),
-        'prefix' => 'v1',
-        'pluralize' => false,
-        'controller' => ['tracking-code'],
-        'patterns' => [
-            'GET' => 'index',
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
             'POST' => 'create',
+            'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => []
@@ -111,19 +93,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['manifest'],
-        'patterns' => [
-            'GET' => 'index',
-            'POST' => 'create',
-            'OPTIONS' => 'options',
-        ],
-        'extraPatterns' => []
-    ],
-    [
-        'class' => \common\filters\ApiUrlRule::className(),
-        'prefix' => 'v1',
-        'pluralize' => false,
-        'controller' => ['chat' =>'rest-api-chat'],
+        'controller' => ['chat' => 'rest-api-chat'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -144,7 +114,7 @@ return [
         'prefix' => 'v1',
         'pluralize' => false,
         'if_service' => true,
-        'controller' => ['chat-service' =>'service/rest-service-chat'],
+        'controller' => ['chat-service' => 'service/rest-service-chat'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -177,5 +147,149 @@ return [
             'POST create'=> 'create',
             'OPTIONS create'=> 'options'
         ]
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['system-location' => 'system-state-province','sale-support' => 'sale'],
+        'patterns' => [
+            'GET,POST' => 'index',
+            'OPTIONS' => 'options',
+        ],
+    ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['seller' => 'seller'],
+        'patterns' => [
+            'GET,POST' => 'index',
+            'OPTIONS' => 'options',
+        ],
+    ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['actionlog' => 'rest-action-log'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['paymentlog' => 'rest-payment-log-w-s'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['walletlog' => 'rest-wallet-log-ws'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['boxme-inspect-log' => 'rest-bm-log-inspect-ws'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['send-shipment-return-log' => 'rest-bm-log-send-return-shipment-ws'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['send-shipment-log' => 'rest-boxme-log-send-shipment-ws'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
     ],
 ];

@@ -17,6 +17,13 @@ use Yii;
  * @property string $updated_at
  * @property int $remove
  * @property string $version version 4.0
+ *
+ * @property Address[] $addresses
+ * @property Order[] $orders
+ * @property Shipment[] $shipments
+ * @property SystemDistrict[] $systemDistricts
+ * @property SystemCountry $country
+ * @property Warehouse[] $warehouses
  */
 class SystemStateProvince extends \common\components\db\ActiveRecord
 {
@@ -36,6 +43,7 @@ class SystemStateProvince extends \common\components\db\ActiveRecord
         return [
             [['country_id', 'display_order', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['name', 'name_local', 'name_alias', 'version'], 'string', 'max' => 255],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['country_id' => 'id']],
         ];
     }
 
@@ -56,5 +64,62 @@ class SystemStateProvince extends \common\components\db\ActiveRecord
             'remove' => 'Remove',
             'version' => 'Version',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAddresses()
+    {
+        return $this->hasMany(Address::className(), ['province_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrders()
+    {
+        return $this->hasMany(Order::className(), ['receiver_province_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getShipments()
+    {
+        return $this->hasMany(Shipment::className(), ['receiver_province_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSystemDistricts()
+    {
+        return $this->hasMany(SystemDistrict::className(), ['province_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(SystemCountry::className(), ['id' => 'country_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWarehouses()
+    {
+        return $this->hasMany(Warehouse::className(), ['province_id' => 'id']);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return \common\models\queries\SystemStateProvinceQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new \common\models\queries\SystemStateProvinceQuery(get_called_class());
     }
 }

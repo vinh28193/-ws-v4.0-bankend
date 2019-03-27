@@ -5,20 +5,12 @@ namespace common\modelsMongo;
 use Yii;
 use yii\mongodb\ActiveRecord;
 
-/**
- * This is the model class for collection "chat_mongo_ws".
- *
- * @property \MongoId|string $_id
- * @property mixed $name
- * @property mixed $email
- * @property mixed $address
- * @property mixed $status
- */
-class ChatMongoWs extends ActiveRecord
+
+class BoxmeLogSendShipmentWs extends ActiveRecord
 {
     public static function collectionName()
     {
-        return ['Weshop_log_40','chat_mongo_ws'];
+        return ['Weshop_log_40','Boxme_log_40_send_shipment'];
     }
 
     public function behaviors()
@@ -52,44 +44,45 @@ class ChatMongoWs extends ActiveRecord
     {
         return [
             '_id',
-            'success',
             'created_at',
             'updated_at',
             'date',
+
             'user_id',
             'user_email',
             'user_name',
+            'user_avatar',
+
             'user_app',
             'user_request_suorce',
             'request_ip',
-            'message',
-            'user_avatars',
-            'Order_path',
-            'is_send_email_to_customer',
-            'type_chat',
-            'is_customer_vew',
-            'is_employee_vew'
+
+
+            'Role','user_id','data_input','data_output', 'action_path','status' ,'LogTypeSendShipmentWs','id'
+
+
         ];
     }
 
     public function rules()
     {
         return [
-            [['success', 'created_at',
-                'updated_at', 'date', 'user_id',
+            [[
+                'created_at',
+                'updated_at',
+                'date',
+
+                'user_id',
                 'user_email',
                 'user_name',
+                'user_avatar',
+
                 'user_app',
                 'user_request_suorce',
                 'request_ip',
-                'message',
-                'user_avatar',
-                'Order_path',
-                'is_send_email_to_customer',
-                'type_chat',
-                'is_customer_vew',
-                'is_employee_vew'], 'safe'],
-            [['user_id','message', 'Order_path', 'type_chat'], 'required'],
+
+            ], 'safe'],
+            [[ 'Role','user_id','data_input','data_output', 'action_path','status' ,'LogTypeSendShipmentWs','id' ], 'required'],
         ];
     }
 
@@ -97,23 +90,34 @@ class ChatMongoWs extends ActiveRecord
     {
         return [
             '_id' => 'ID',
-            'success' => 'success true or false',
-            'created_at' => 'created_at',
-            'updated_at' => 'updated_at',
-            'date' => 'Date create data message',
+
+            //User : Who ai tác
             'user_id' => 'id nhân viên ',
             'user_email' => 'Email nhân viên chat ',
             'user_name' => 'tên nhân viên chat',
+            'user_avatar' => 'Hình đại diện của User',
+            'Role' => 'Role của nhân viên đang thao tác vào action',
+
+            //Action thao tác là gì ?
+            'action_path' => 'Tên của action / nút bấm thao tác là gì ?',
+            'LogTypeSendShipmentWs'=> 'Order | Product | PACKEAGE | PACKEGEITEM', // LogType : Order | Product | PACKEAGE | PACKEGEITEM : and Id để join
+            'id' => 'Id để join với LogTypeSendShipmentWs ',
+
+            'status' => 'Trạng thái LogTypeSendShipmentWs , .....',
+
+            // data
+            'data_input' => 'dữ liệu ban đầu trước khi ghi log',
+            'data_output' => 'dữ liệu sau khi xử lý',
+
+            // time
+            'created_at' => 'created_at',
+            'updated_at' => 'updated_at',
+            'date' => 'Date create data',
+
+            // ENV nào bắn lên
             'user_app' => 'Tên Application Id ',
             'user_request_suorce' => 'suorce gửi app chát Phân biệt : APP/FRONTEND/BACK_END ',
             'request_ip' => 'IP request send message',
-            'user_avatar' => 'Hình đại diện của User',
-            'Order_path' => 'link order details',
-            'is_send_email_to_customer' => ' đánh đấu nội dung này có gửi tới email khách hàng không',
-            'message' => 'nội dung Thông điện tin nhắn Text nội bộ chat hoặc chat',
-            'type_chat' => 'TYPE_CHAT : GROUP_WS/WS_CUSTOMER : CHAT nội bộ trong WS : "GROUP_WS" hoặc nhân viên chat KH :"WS_CUSTOMER" ',
-            'is_customer_vew' => ' Đanh dấu khách hàng đã xem Null / Id Customer',
-            'is_employee_vew' => 'đánh đấu nhân viên nào đã xem , list Id user : null / id user'
         ];
     }
 
@@ -134,7 +138,7 @@ class ChatMongoWs extends ActiveRecord
 
         $offset = ($page - 1) * $limit;
 
-        $query = ChatMongoWs::find()
+        $query = BoxmeLogSendShipmentWs::find()
             //->withFullRelations()
             //->filter($params)
             ->limit($limit)

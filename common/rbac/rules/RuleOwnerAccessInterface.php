@@ -13,7 +13,7 @@ interface RuleOwnerAccessInterface
     /**
      *   class Order implements RuleOwnerAccessInterface{
      *      public function getRuleParams(){
-                return $this->saleAssignId;
+     * return $this->saleAssignId;
      *      }
      *  }
      *  in controller
@@ -23,8 +23,9 @@ interface RuleOwnerAccessInterface
      *  }
      *  --
      * rule parameters for [[CheckAccessInterface::checkAccess()]]
+     * @param  $permissionName
      * @see \yii\web\User::can()
      * @return array|string|integer
      */
-    public function getRuleParams();
+    public function getRuleParams($permissionName);
 }

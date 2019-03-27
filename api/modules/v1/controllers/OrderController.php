@@ -144,6 +144,11 @@ class OrderController extends BaseApiController
     }
 
     /**
+     * Todo
+     *  common action update
+     *      post given
+     *          $_POST
+     *
      * @param $id
      * @return array
      * @throws NotFoundHttpException
@@ -153,18 +158,23 @@ class OrderController extends BaseApiController
      */
     public function actionUpdate($id)
     {
-        if ($id !== null) {
-            $model = $this->findModel($id, false);
-            $this->can('canUpdate', ['id' => $model->id]); // OWner is Update
-            $model->attributes = $this->post;
-            if ($model->save()) {
-                Yii::$app->api->sendSuccessResponse($model->attributes);
-            } else {
-                Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
-            }
-        } else {
-            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        $model = $this->findModel($id, false);
+        $this->can('canUpdate', $model);
+        $model->loadWithScenario($this->post);
+        $dirtyAttributes = $model->getDirtyAttributes();
+        Yii::info($dirtyAttributes,$model->getScenario());
+        if(!$model->save()){
+            return $this->response(false,$model->getFirstErrors());
         }
+        return $this->response(true,"order $id is up to date",$dirtyAttributes);
+//
+//        $this->can('canUpdate', $model);
+//        $model->loadScenario($this->post);
+//        $model->load($this->post,'');
+//        if(!$model->save()){
+//            Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
+//        }
+//        Yii::$app->api->sendSuccessResponse($model->attributes);
     }
 
     /**
@@ -196,7 +206,7 @@ class OrderController extends BaseApiController
             $query->withFullRelations();
         }
         if (is_numeric($condition)) {
-            $condition = ['id' => $condition];
+            $condition = [$query->getColumnName('id') => $condition];
         }
         $query->where($condition);
         if (($model = $query->one()) === null) {

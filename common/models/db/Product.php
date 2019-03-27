@@ -33,9 +33,6 @@ use Yii;
  * @property string $product_name
  * @property string $product_link
  * @property string $version version 4.0
- * @property string $condition Tình trạng đơn hàng
- *
- * @property PurchaseProduct[] $purchaseProducts
  */
 class Product extends \common\components\db\ActiveRecord
 {
@@ -45,6 +42,11 @@ class Product extends \common\components\db\ActiveRecord
     public static function tableName()
     {
         return 'product';
+    }
+
+    public function getOrderFee()
+    {
+        return $this->hasMany(OrderFee::className(), ['product_id' => 'id']);
     }
 
     /**

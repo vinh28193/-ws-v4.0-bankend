@@ -1,16 +1,14 @@
 <?php
-
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\modelsMongo\RestApiCall;
-use common\modelsMongo\ChatMongoWs;
+use common\modelsMongo\BoxmeLogSendShipmentWs ;
 use common\models\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
-class RestApiChatController extends BaseApiController
+class RestBoxmeLogSendShipmentWsController extends BaseApiController
 {
     /** Role :
         case 'cms':
@@ -65,7 +63,7 @@ class RestApiChatController extends BaseApiController
 
     public function actionIndex()
     {
-        $response = ChatMongoWs::search($params = '');
+        $response = BoxmeLogSendShipmentWs::search($params = '');
         return $this->response(true, 'Success', $response);
     }
 
@@ -73,8 +71,7 @@ class RestApiChatController extends BaseApiController
     {
         $_post = (array)$this->post;
         if (isset($_post) !== null) {
-            @date_default_timezone_set('Asia/Ho_Chi_Minh');
-            $model = new ChatMongoWs();
+            $model = new BoxmeLogSendShipmentWs();
             $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();
             $_user_id = $_user_Identity->getId();
@@ -82,25 +79,38 @@ class RestApiChatController extends BaseApiController
             $_user_AuthKey = $_user_Identity->getAuthKey();
             $_user_name = $_user_Identity['username'];
             //----ToDo Need More Infor param
-            $_user_app = 'Weshop2019'; /***Todo Set**/
+            $_user_app = 'Weshop2019'; // Todo : set
             $_request_ip = Yii::$app->getRequest()->getUserIP();
 
-            $_rest_data = ["ChatMongoWs" => [
-                "success" => true,
-                "message" => is_array($_post['message']) ? @json_encode($_post['message']) : $_post['message'] ,
-                "date" => Yii::$app->getFormatter()->asDatetime('now'),
+            $_rest_data = ["BoxmeLogSendShipmentWs" => [
+
+                //User : Who ai tác
                 "user_id" => $_user_id,
                 "user_email" => $_user_email,
                 "user_name" => $_user_name,
+                "user_avatar" => null,
+                "Role" =>  $_post['role'],
+
+                //Action thao tác là gì ?
+                "action_path" => $_post['action_path'],
+                "LogTypeSendShipmentWs" =>  $_post['LogTypeSendShipmentWs'], // "Order hoăc Product", // LogType : Order | Product : and Id để join
+                "id" => $_post['id'], //"Id để join với Logtype nêu là Order hoặc nếu là Product",
+
+                'status' => $_post['status'], 'Trạng thái nhãn kiểm : DONE , .....',
+
+                // data
+                "data_input" => is_array($_post['data_input']) ? @json_encode($_post['data_input']) : $_post['data_input'] ,   // dữ liệu ban đầu trước khi ghi log
+                "data_output" => is_array($_post['data_output']) ? @json_encode($_post['data_output']) : $_post['data_output'] , // dữ liệu sau khi xử lý
+
+                // time
+                //"created_at" => "created_at", "updated_at" => "updated_at",
+                "date" => Yii::$app->getFormatter()->asDatetime('now'),
+
+                // ENV nào bắn lên
                 "user_app" => $_user_app,
                 "user_request_suorce" => $_post['suorce'],  // "APP/FRONTEND/BACK_END"
-                "request_ip" => $_request_ip, // Todo : set
-                "user_avatars" => null,
-                "Order_path" => $_post['Order_path'],
-                "is_send_email_to_customer" => null,
-                "type_chat" => $_post['type_chat'], // 'TYPE_CHAT : GROUP_WS/WS_CUSTOMER // Todo : set
-                "is_customer_vew" => null,
-                "is_employee_vew" => null
+                "request_ip" => $_request_ip,
+
             ]];
 
             if ($model->load($_rest_data) and $model->save()) {
@@ -134,8 +144,8 @@ class RestApiChatController extends BaseApiController
     public function actionView($id)
     {
         if ($id !== null) {
-            $response = ChatMongoWs::find()
-                ->where(['Order_path' => $id])
+            $response = BoxmeLogSendShipmentWs::find()
+                ->where(['id' => $id])
                 ->asArray()->all();
             return $this->response(true, "Get  $id success", $response);
         } else {
@@ -153,7 +163,7 @@ class RestApiChatController extends BaseApiController
 
     public function findModel($id)
     {
-        if (($model = ChatMongoWs::findOne($id)) !== null) {
+        if (($model = BoxmeLogSendShipmentWs::findOne($id)) !== null) {
             return $model;
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
