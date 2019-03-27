@@ -62,11 +62,6 @@ class OrderController extends BaseApiController
                 'actions' => ['update', 'delete'],
                 'roles' => $this->getAllRoles(true, 'user'),
             ],
-            [
-                'allow' => true,
-                'actions' => ['sale-assign'],
-                'roles' => ['sale', 'master_sale'],
-            ],
         ];
     }
 
@@ -206,21 +201,6 @@ class OrderController extends BaseApiController
             throw new NotFoundHttpException("Not found order");
         }
         return $model;
-    }
-
-
-    public function actionSaleAssign($id)
-    {
-        $model = $this->findModel($id, false);
-        $model->setScenario(Order::SCENARIO_SALE_ASSIGN);
-        /** @var  $identity  \common\models\User */
-        $identity = Yii::$app->getUser()->getIdentity();
-        $model->sale_support_id = $identity->getId();
-        $model->support_email = $identity->email;
-        if(!$model->save()){
-            return $this->response(false, $model->getFirstErrors());
-        }
-        return $this->response(true, "sale {$identity->email} assign to order $id",$identity->getPublicIdentity());
     }
 
     public function actionEditImage($id)

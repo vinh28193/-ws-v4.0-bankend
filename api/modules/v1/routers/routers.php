@@ -172,13 +172,24 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['system-location' => 'system-state-province','sale-support' => 'sale'],
+        'controller' => ['system-location' => 'system-state-province'],
         'patterns' => [
             'GET,POST' => 'index',
             'OPTIONS' => 'options',
         ],
     ],
-
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['sale-support' => 'sale'],
+        'patterns' => [
+            'GET,POST' => 'index',
+            'PUT,POST {id}' => 'assign',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+    ],
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
