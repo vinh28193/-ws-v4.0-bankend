@@ -30,14 +30,13 @@ class PurchaseServiceController extends BaseApiController
 
     public function actionListAccount()
     {
-        die("list-account");
-//        $type = Yii::$app->request->get('type', 'all');
-//        $account = ListAccountPurchase::find()->where(['active' => 1]);
-//        if ($type !== 'all') {
-//            $account->andWhere(['type' => strtolower($type)]);
-//        }
-//        $account = $account->asArray()->all();
-//        return $this->response(true, "Success", $account);
+        $type = Yii::$app->request->get('type', 'all');
+        $account = ListAccountPurchase::find()->where(['active' => 1]);
+        if ($type !== 'all') {
+            $account->andWhere(['type' => strtolower($type)]);
+        }
+        $account = $account->asArray()->all();
+        return $this->response(true, "Success", $account);
     }
 
 }

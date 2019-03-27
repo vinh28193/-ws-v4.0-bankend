@@ -23,8 +23,10 @@ use Yii;
  * @property string $transaction_payment Mã giao dịch thanh toán paypal.
  * @property int $created_at
  * @property int $updated_at
+ * @property int $updated_by
  *
  * @property PurchaseProduct[] $purchaseProducts
+ * @property PurchaseProduct[] $purchaseProducts0
  */
 class PurchaseOrder extends \common\components\db\ActiveRecord
 {
@@ -43,7 +45,8 @@ class PurchaseOrder extends \common\components\db\ActiveRecord
     {
         return [
             [['total_item', 'total_quantity', 'total_paid_seller', 'total_changing_price', 'total_type_changing', 'purchase_amount_buck', 'transaction_payment'], 'number'],
-            [['receive_warehouse_id', 'purchase_account_id', 'purchase_card_id', 'created_at', 'updated_at'], 'integer'],
+            [['receive_warehouse_id', 'purchase_account_id', 'purchase_card_id', 'created_at', 'updated_at', 'updated_by'], 'integer'],
+            [['updated_by'], 'required'],
             [['note', 'purchase_order_number', 'purchase_card_number'], 'string', 'max' => 255],
         ];
     }
@@ -70,6 +73,7 @@ class PurchaseOrder extends \common\components\db\ActiveRecord
             'transaction_payment' => 'Transaction Payment',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'updated_by' => 'Updated By',
         ];
     }
 
@@ -77,6 +81,14 @@ class PurchaseOrder extends \common\components\db\ActiveRecord
      * @return \yii\db\ActiveQuery
      */
     public function getPurchaseProducts()
+    {
+        return $this->hasMany(PurchaseProduct::className(), ['purchase_order_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPurchaseProducts0()
     {
         return $this->hasMany(PurchaseProduct::className(), ['purchase_order_id' => 'id']);
     }
