@@ -10,7 +10,7 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\modules\v1\controllers\PurchaseController;
-use common\models\db\ListAccountBuyer;
+use common\models\db\ListAccountPurchase;
 use common\models\db\PurchasePaymentCard;
 use Yii;
 
@@ -26,7 +26,7 @@ class PurchaseServiceController extends PurchaseController
 
     public function actionGetListAccount(){
         $type = Yii::$app->request->get('type','all');
-        $account = ListAccountBuyer::find()->where(['active' => 1]);
+        $account = ListAccountPurchase::find()->where(['active' => 1]);
         if($type !== 'all'){
             $account->andWhere(['type' => strtolower($type)]);
         }
