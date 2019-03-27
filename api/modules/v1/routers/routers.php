@@ -152,7 +152,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['system-location' => 'system-state-province'],
+        'controller' => ['system-location' => 'system-state-province','sale-support' => 'sale'],
         'patterns' => [
             'GET,POST' => 'index',
             'OPTIONS' => 'options',

@@ -445,8 +445,8 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($params['type'])) {
             $query->andFilterWhere(['order.type_order' => $params['type']]);
         }
-        if (isset($params['searchKeyword']) && isset($params['value'])) {
-            $query->andFilterWhere([$params['searchKeyword'] => $params['value']]);
+        if (isset($params['searchKeyword']) && isset($params['keyWord'])) {
+            $query->andFilterWhere([$params['searchKeyword'] => $params['keyWord']]);
         }
 
         if (isset($params['orderStatus'])) {
@@ -455,6 +455,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
         if (isset($params['portal'])) {
             $query->andFilterWhere(['order.portal' => $params['portal']]);
+        }
+        if (isset($params['sale'])) {
+            $query->andFilterWhere(['order.sale_support_id' => $params['sale']]);
         }
 
         if (isset($params['timeKey']) && isset($params['startTime']) && isset($params['endTime'])) {

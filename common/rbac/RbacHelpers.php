@@ -92,6 +92,6 @@ class RbacHelpers
                     self::ROLE_ACCOUNTANT, self::ROLE_MASTER_ACCOUNTANT,
                 ]
             ]
-        ]
+        ];
     }
 }
