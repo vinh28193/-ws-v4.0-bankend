@@ -73,6 +73,7 @@ class RestApiChatController extends BaseApiController
     {
         $_post = (array)$this->post;
         if (isset($_post) !== null) {
+            @date_default_timezone_set('Asia/Ho_Chi_Minh');
             $model = new ChatMongoWs();
             $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();

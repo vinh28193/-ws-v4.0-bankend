@@ -1,16 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: galat
- * Date: 23/03/2019
- * Time: 8:42 SA
- */
-
 namespace api\modules\v1\controllers;
 
 
 use api\controllers\BaseApiController;
 use common\models\db\Customer;
+use common\models\db\ListAccountPurchase;
+use common\models\db\PurchasePaymentCard;
 use common\models\db\PurchaseProduct;
 use common\models\Order;
 use common\models\Product;
@@ -67,7 +62,9 @@ class PurchaseController extends BaseApiController
             'create' => ['POST'],
             'update' => ['PATCH', 'PUT'],
             'view' => ['GET'],
-            'delete' => ['DELETE']
+            'delete' => ['DELETE'],
+            'get-list-account' => ['GET'],
+            'get-list-card-payment' => ['GET']
         ];
     }
 
@@ -384,9 +381,11 @@ class PurchaseController extends BaseApiController
             return $this->response(false,'something error');
         }
     }
+
     public function actionGetListAccount(){
         $type = Yii::$app->request->get('type','all');
         $account = ListAccountBuyer::find()->where(['active' => 1]);
+
         if($type !== 'all'){
             $account->andWhere(['type' => strtolower($type)]);
         }

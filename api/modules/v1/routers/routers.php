@@ -70,7 +70,9 @@ return [
             'PUT edit-image/<id:\d+>' => 'edit-image',
             'OPTIONS edit-image/<id:\d+>' => 'options',
             'PUT edit-variant/<id:\d+>' => 'edit-variant',
-            'OPTIONS edit-variant/<id:\d+>' => 'options'
+            'OPTIONS edit-variant/<id:\d+>' => 'options',
+            'GET assign/<id:\d+>' => 'sale-assign',
+            'OPTIONS assign/<id:\d+>' => 'options',
         ]
     ],
     [
@@ -146,10 +148,28 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'PUT update/<id:\d+>' => 'update',
-            'OPTIONS update/<id:\d+>' => 'options',
-            'POST create/<id:\d+>' => 'create',
-            'OPTIONS create/<id:\d+>' => 'options'
+            'PUT update/<id:\d+>'=> 'update',
+            'OPTIONS update/<id:\d+>'=> 'options',
+            'POST create'=> 'create',
+            'OPTIONS create'=> 'options',
+        ]
+    ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['service-purchase' => 'service/purchase-service'],
+        'patterns' => [
+            'GET' => 'get-list-card-payment,get-list-account',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [
+            'GET get-list-card-payment'=> 'get-list-card-payment',
+            'OPTIONS get-list-card-payment'=> 'options',
+            'GET get-list-account'=> 'get-list-account',
+            'OPTIONS get-list-account'=> 'options'
         ]
     ],
     [
@@ -191,6 +211,28 @@ return [
         'prefix' => 'v1',
         'pluralize' => false,
         'controller' => ['system-location' => 'system-state-province'],
+        'patterns' => [
+            'GET,POST' => 'index',
+            'OPTIONS' => 'options',
+        ],
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['sale-support' => 'sale'],
+        'patterns' => [
+            'GET,POST' => 'index',
+            'PUT,POST {id}' => 'assign',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['seller' => 'seller'],
         'patterns' => [
             'GET,POST' => 'index',
             'OPTIONS' => 'options',

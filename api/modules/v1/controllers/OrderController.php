@@ -10,16 +10,12 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\data\ActiveDataProvider;
 use common\models\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
 /***Cache PageCache **/
-use yii\caching\DbDependency;
-use yii\caching\TagDependency;
-
 class OrderController extends BaseApiController
 {
     public function behaviors()
@@ -144,6 +140,11 @@ class OrderController extends BaseApiController
     }
 
     /**
+     * Todo
+     *  common action update
+     *      post given
+     *          $_POST
+     *
      * @param $id
      * @return array
      * @throws NotFoundHttpException
@@ -153,18 +154,15 @@ class OrderController extends BaseApiController
      */
     public function actionUpdate($id)
     {
-        if ($id !== null) {
-            $model = $this->findModel($id, false);
-            $this->can('canUpdate', ['id' => $model->id]); // OWner is Update
-            $model->attributes = $this->post;
-            if ($model->save()) {
-                Yii::$app->api->sendSuccessResponse($model->attributes);
-            } else {
-                Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
-            }
-        } else {
-            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        $model = $this->findModel($id, false);
+        $this->can('canUpdate', $model);
+        $check = $model->loadWithScenario($this->post);
+        $dirtyAttributes = $model->getDirtyAttributes();
+        Yii::info($check, $model->getScenario());
+        if (!$model->save()) {
+            return $this->response(false, $model->getFirstErrors());
         }
+        return $this->response(true, "order $id is up to date", $dirtyAttributes);
     }
 
     /**
@@ -196,7 +194,7 @@ class OrderController extends BaseApiController
             $query->withFullRelations();
         }
         if (is_numeric($condition)) {
-            $condition = ['id' => $condition];
+            $condition = [$query->getColumnName('id') => $condition];
         }
         $query->where($condition);
         if (($model = $query->one()) === null) {
@@ -204,7 +202,6 @@ class OrderController extends BaseApiController
         }
         return $model;
     }
-
 
     public function actionEditImage($id)
     {
@@ -214,7 +211,7 @@ class OrderController extends BaseApiController
         return $this->response(true, "Delete $id success", Yii::$app->request->get());
     }
 
-    public  function actionEditVariant()
+    public function actionEditVariant()
     {
         $post = Yii::$app->request->post();
         var_dump($post);

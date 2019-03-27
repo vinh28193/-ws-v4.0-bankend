@@ -10,6 +10,7 @@ namespace common\components\db;
 
 use ReflectionClass;
 use Yii;
+use yii\di\Instance;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
@@ -55,7 +56,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
 
         $behaviors = !empty($timestamp) ? ArrayHelper::merge($behaviors, [
-            [
+            'timestamp' => [
                 'class' => TimestampBehavior::className(),
                 'attributes' => $timestamp,
             ],
@@ -71,7 +72,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
 
         $behaviors = !empty($blameable) ? ArrayHelper::merge($behaviors, [
-            [
+            'blameable' => [
                 'class' => BlameableBehavior::className(),
                 'attributes' => $blameable,
             ],
@@ -114,6 +115,46 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function formName()
     {
         return parent::formName();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function load($data, $formName = null)
+    {
+        return parent::load($data, $formName);
+    }
+
+
+    /**
+     * load Scenario from get or post
+     *  $post = [
+     *      ...,
+     *      'OrderScenario' => 'update'
+     *  ]
+     * $this->loadScenario($post,'scenario')
+     * @param $data
+     * @param null $formName
+     * @return bool
+     */
+    public function loadWithScenario($data, $formName = null)
+    {
+        $scope = $formName === null ? $this->formName() : $formName;
+        if ($scope !== '' && isset($data[($scopeScenario = "{$scope}Scenario")])) {
+            $this->setScenario($data[$scopeScenario]);
+        }
+        return $this->load($data, $formName);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setScenario($value)
+    {
+        if (is_array($value)) {
+            $value = reset($value);
+        }
+        parent::setScenario($value);
     }
 
     /**
@@ -241,7 +282,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         $event = new ResolveFieldEvent();
         $event->fields = $fields;
         $event->expand = $expand;
-        $this->trigger(self::EVENT_BEFORE_RESOLVE_FIELD,$event);
+        $this->trigger(self::EVENT_BEFORE_RESOLVE_FIELD, $event);
         return $event;
     }
 }
