@@ -155,6 +155,7 @@ return [
         ]
     ],
 
+    /*
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
@@ -172,6 +173,7 @@ return [
             'OPTIONS get-list-account'=> 'options'
         ]
     ],
+    */
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
@@ -193,15 +195,15 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['card-payment' => 'service/list-card-payment'],
+        'controller' => ['card-payment' => 'service/rest-service-list-card-payment'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
         ],
         'patterns' => [
            // 'GET' => 'list-card-payment',
-            'POST list-card-payment' => 'list-card-payment',
-            'OPTIONS list-card-payment' => 'options',
+            'POST' => 'list-card-payment',
+            'OPTIONS' => 'options',
         ],
         'extraPatterns' => [ ]
     ],
