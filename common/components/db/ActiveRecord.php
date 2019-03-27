@@ -140,9 +140,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function loadWithScenario($data, $formName = null)
     {
         $scope = $formName === null ? $this->formName() : $formName;
-        $scenario = $this->scenarios();
         if ($scope !== '' && isset($data[($scopeScenario = "{$scope}Scenario")])) {
-
             $this->setScenario($data[$scopeScenario]);
         }
         return $this->load($data, $formName);

@@ -70,7 +70,9 @@ return [
             'PUT edit-image/<id:\d+>' => 'edit-image',
             'OPTIONS edit-image/<id:\d+>' => 'options',
             'PUT edit-variant/<id:\d+>' => 'edit-variant',
-            'OPTIONS edit-variant/<id:\d+>' => 'options'
+            'OPTIONS edit-variant/<id:\d+>' => 'options',
+            'GET assign/<id:\d+>' => 'sale-assign',
+            'OPTIONS assign/<id:\d+>' => 'options',
         ]
     ],
     [
@@ -170,13 +172,24 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['system-location' => 'system-state-province','sale-support' => 'sale'],
+        'controller' => ['system-location' => 'system-state-province'],
         'patterns' => [
             'GET,POST' => 'index',
             'OPTIONS' => 'options',
         ],
     ],
-
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['sale-support' => 'sale'],
+        'patterns' => [
+            'GET,POST' => 'index',
+            'PUT,POST {id}' => 'assign',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+    ],
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',

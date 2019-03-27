@@ -164,9 +164,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             [['current_status'], 'required', 'on' => self::SCENARIO_UPDATE_STATUS],
 //            [['current_status'], 'validateCurrentStatus', 'on' => self::SCENARIO_UPDATE_STATUS],
 
-            [['sale_support_id', 'support_email'], 'required', 'on' => self::SCENARIO_SALE_ASSIGN],
+            [['sale_support_id'], 'required', 'on' => self::SCENARIO_SALE_ASSIGN],
             [['sale_support_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sale_support_id' => 'id'], 'on' => self::SCENARIO_SALE_ASSIGN],
-
+            [['support_email'], 'safe', 'on' => self::SCENARIO_SALE_ASSIGN],
             [
                 [
                     'store_id', 'customer_id', 'new',
@@ -204,14 +204,14 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
-            [
-                [
-                    'note_by_customer', 'note',
-                    'seller_store',
-                    'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id',
-                    'total_weight',
-                ], 'trim'
-            ],
+//            [
+//                [
+//                    'note_by_customer', 'note',
+//                    'seller_store',
+//                    'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id',
+//                    'total_weight',
+//                ], 'filter' , 'filter' => 'trim'
+//            ],
             [['current_status'], 'string', 'max' => 200],
             [['quotation_status'], 'in', 'range' => [null, self::QUOTATION_STATUS_PENDING, self::QUOTATION_STATUS_APPROVE, self::QUOTATION_STATUS_DECLINE]],
             [['difference_money'], 'in', 'range' => [self::DIFF_MONEY_DEFAULT, self::DIFF_MONEY_LECH, self::DIFF_MONEY_HIDE]],
@@ -220,13 +220,13 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     'receiver_email', 'support_email', 'purchase_account_email'
                 ], 'email'
             ],
-            [
-                [
-                    'note_by_customer', 'note',
-                    'seller_store',
-                    'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight',
-                ], 'filter', 'filter' => '\yii\helpers\Html::encode'
-            ],
+//            [
+//                [
+//                    'note_by_customer', 'note',
+//                    'seller_store',
+//                    'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight',
+//                ], 'filter', 'filter' => '\yii\helpers\Html::encode'
+//            ],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
@@ -402,15 +402,15 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
     public static function updateOrderStatus($condition, $next, $note = null)
     {
-        if(($model = self::findOne($condition)) === null){
+        if (($model = self::findOne($condition)) === null) {
             $condition = is_array($condition) ? reset($condition) : $condition;
             throw new NotFoundHttpException("not found order $condition");
         }
         $model->setScenario(self::SCENARIO_UPDATE_STATUS);
         $model->current_status = $next;
-        if($model->current_status === self::STATUS_PURCHASED){
+        if ($model->current_status === self::STATUS_PURCHASED) {
         }
-        if(!$model->save()){
+        if (!$model->save()) {
             throw new \InvalidArgumentException($model->getFirstErrors());
         }
         return true;

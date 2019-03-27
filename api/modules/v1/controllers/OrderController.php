@@ -10,16 +10,12 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\data\ActiveDataProvider;
 use common\models\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
 /***Cache PageCache **/
-use yii\caching\DbDependency;
-use yii\caching\TagDependency;
-
 class OrderController extends BaseApiController
 {
     public function behaviors()
@@ -160,14 +156,13 @@ class OrderController extends BaseApiController
     {
         $model = $this->findModel($id, false);
         $this->can('canUpdate', $model);
-        $model->loadWithScenario($this->post);
-        Yii::info($model->scenarios());
+        $check = $model->loadWithScenario($this->post);
         $dirtyAttributes = $model->getDirtyAttributes();
-        Yii::info($dirtyAttributes,$model->getScenario());
-        if(!$model->save()){
-            return $this->response(false,$model->getFirstErrors());
+        Yii::info($check, $model->getScenario());
+        if (!$model->save()) {
+            return $this->response(false, $model->getFirstErrors());
         }
-        return $this->response(true,"order $id is up to date",$dirtyAttributes);
+        return $this->response(true, "order $id is up to date", $dirtyAttributes);
     }
 
     /**
@@ -208,7 +203,6 @@ class OrderController extends BaseApiController
         return $model;
     }
 
-
     public function actionEditImage($id)
     {
         $post = Yii::$app->request->post('image');
@@ -217,7 +211,7 @@ class OrderController extends BaseApiController
         return $this->response(true, "Delete $id success", Yii::$app->request->get());
     }
 
-    public  function actionEditVariant()
+    public function actionEditVariant()
     {
         $post = Yii::$app->request->post();
         var_dump($post);
