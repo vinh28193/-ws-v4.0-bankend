@@ -75,7 +75,7 @@ class RestApiChatController extends BaseApiController
         if (isset($_post) !== null) {
             @date_default_timezone_set('Asia/Ho_Chi_Minh');
             $model = new ChatMongoWs();
-            $model->attributes = $_post;
+//            $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();
             $_user_id = $_user_Identity->getId();
             $_user_email = $_user_Identity['email'];
@@ -84,7 +84,7 @@ class RestApiChatController extends BaseApiController
             //----ToDo Need More Infor param
             $_user_app = 'Weshop2019'; /***Todo Set**/
             $_request_ip = Yii::$app->getRequest()->getUserIP();
-
+            $isNew = isset($_post['isNew']) && $_post['isNew'] === 'yes';
             $_rest_data = ["ChatMongoWs" => [
                 "success" => true,
                 "message" => is_array($_post['message']) ? @json_encode($_post['message']) : $_post['message'] ,
@@ -105,6 +105,11 @@ class RestApiChatController extends BaseApiController
 
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
+                if($isNew === true){
+                    Order::updateAll([
+                        'current_status' => Order::STATUS_SUPPORTING
+                    ],['ordercode' => $_post['Order_path']]);
+                }
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
