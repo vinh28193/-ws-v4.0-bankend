@@ -579,3 +579,6 @@ https://www.yiiframework.com/doc/guide/1.1/en/database.migration
  
  
  https://www.yiiframework.com/doc/api/2.0/yii-db-querybuilder#getColumnType()-detail
+
+
+
