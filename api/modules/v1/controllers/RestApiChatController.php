@@ -135,7 +135,7 @@ class RestApiChatController extends BaseApiController
     {
         if ($id !== null) {
             $response = ChatMongoWs::find()
-                ->where(['id' => $id])
+                ->where(['Order_path' => $id])
                 ->asArray()->all();
             return $this->response(true, "Get  $id success", $response);
         } else {
