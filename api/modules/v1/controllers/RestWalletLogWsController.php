@@ -146,7 +146,7 @@ class RestWalletLogWsController extends BaseApiController
     {
         if ($id !== null) {
             $response = WalletLogWs::find()
-                ->where(['id' => $id])
+                ->where(['action_path' => $id])
                 ->asArray()->all();
             return $this->response(true, "Get  $id success", $response);
         } else {
