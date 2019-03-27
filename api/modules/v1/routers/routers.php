@@ -134,6 +134,10 @@ return [
         'prefix' => 'v1',
         'pluralize' => false,
         'controller' => ['purchase' => 'purchase'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
@@ -151,6 +155,7 @@ return [
         ]
     ],
 
+    /*
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
@@ -168,6 +173,41 @@ return [
             'OPTIONS get-list-account'=> 'options'
         ]
     ],
+    */
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['purchase-account' => 'service/purchase-service'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET' => 'list-account',
+        ],
+        'extraPatterns' => [
+            'GET list-account' => 'list-account',
+            'OPTIONS list-account' => 'options',
+        ]
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['card-payment' => 'service/rest-service-list-card-payment'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+           // 'GET' => 'list-card-payment',
+            'POST' => 'list-card-payment',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [ ]
+    ],
+
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
