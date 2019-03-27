@@ -15,6 +15,7 @@ use common\models\queries\OrderQuery;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * @property  Product[] $products
@@ -24,6 +25,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
     const SCENARIO_UPDATE_RECEIVER = 'updateReceiver';
     const SCENARIO_UPDATE_STATUS = 'updateStatus';
+    const SCENARIO_SALE_ASSIGN = 'SALE_ASSIGN';
     const SCENARIO_REQUEST = 'request';
 
     /**
@@ -113,20 +115,11 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     public function scenarios()
     {
         return ArrayHelper::merge(parent::scenarios(), [
-            self::SCENARIO_DEFAULT => [
-                'type_order', 'customer_id', 'portal',
-                'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address',
-                'receiver_country_id', 'receiver_country_name', 'receiver_province_id',
-                'receiver_province_name', 'receiver_district_id', 'receiver_district_name',
-                'receiver_post_code', 'receiver_address_id', 'payment_type'],
-            self::SCENARIO_UPDATE_RECEIVER => [
-                'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address',
-                'receiver_country_id', 'receiver_country_name',
-                'receiver_province_id', 'receiver_province_name',
-                'receiver_district_id', 'receiver_district_name'
-            ],
             self::SCENARIO_UPDATE_STATUS => [
-                'current_status'
+                '!current_status'
+            ],
+            self::SCENARIO_SALE_ASSIGN => [
+                '!sale_support_id', '!support_email'
             ]
         ]);
     }
@@ -154,14 +147,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     'receiver_district_id', 'receiver_district_name'
                 ], 'required', 'on' => self::SCENARIO_UPDATE_RECEIVER
             ],
-            [
-                [
-                    'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address',
-                    'receiver_country_id', 'receiver_country_name',
-                    'receiver_province_id', 'receiver_province_name',
-                    'receiver_district_id', 'receiver_district_name'
-                ], 'required', 'on' => self::SCENARIO_UPDATE_RECEIVER
-            ],
             [[
                 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address'
             ], 'filter', 'filter' => 'trim', 'on' => self::SCENARIO_UPDATE_RECEIVER],
@@ -170,8 +155,16 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 'receiver_country_name', 'receiver_province_name', 'receiver_district_name'
             ], 'filter', 'filter' => '\yii\helpers\Html::encode', 'on' => self::SCENARIO_UPDATE_RECEIVER],
 
+            [['receiver_address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Address::className(), 'targetAttribute' => ['receiver_address_id' => 'id'], 'on' => [self::SCENARIO_UPDATE_RECEIVER, self::SCENARIO_DEFAULT]],
+            [['receiver_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['receiver_country_id' => 'id'], 'on' => [self::SCENARIO_UPDATE_RECEIVER, self::SCENARIO_DEFAULT]],
+            [['receiver_district_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemDistrict::className(), 'targetAttribute' => ['receiver_district_id' => 'id'], 'on' => [self::SCENARIO_UPDATE_RECEIVER, self::SCENARIO_DEFAULT]],
+            [['receiver_province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['receiver_province_id' => 'id'], 'on' => [self::SCENARIO_UPDATE_RECEIVER, self::SCENARIO_DEFAULT]],
+
             [['current_status'], 'required', 'on' => self::SCENARIO_UPDATE_STATUS],
             [['current_status'], 'validateCurrentStatus', 'on' => self::SCENARIO_UPDATE_STATUS],
+
+            [['sale_support_id', 'support_email'], 'required', 'on' => self::SCENARIO_SALE_ASSIGN],
+            [['sale_support_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sale_support_id' => 'id'], 'on' => self::SCENARIO_SALE_ASSIGN],
 
             [
                 [
@@ -234,11 +227,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 ], 'filter', 'filter' => '\yii\helpers\Html::encode'
             ],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['receiver_address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Address::className(), 'targetAttribute' => ['receiver_address_id' => 'id']],
-            [['receiver_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['receiver_country_id' => 'id']],
-            [['receiver_district_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemDistrict::className(), 'targetAttribute' => ['receiver_district_id' => 'id']],
-            [['receiver_province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['receiver_province_id' => 'id']],
-            [['sale_support_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sale_support_id' => 'id']],
             [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
         ];
@@ -250,7 +238,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
      */
     protected function validateCurrentStatus($attribute, $params)
     {
-
+        if (!$this->hasErrors()) {
+            $value = $this->$attribute;
+        }
     }
 
     /**
@@ -408,6 +398,22 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         ]);
     }
 
+
+    public static function updateOrderStatus($condition, $next, $note = null)
+    {
+        if(($model = self::findOne($condition)) === null){
+            $condition = is_array($condition) ? reset($condition) : $condition;
+            throw new NotFoundHttpException("not found order $condition");
+        }
+        $model->setScenario(self::SCENARIO_UPDATE_STATUS);
+        $model->current_status = $next;
+        if($model->current_status === self::STATUS_PURCHASED){
+        }
+        if(!$model->save()){
+            throw new \InvalidArgumentException($model->getFirstErrors());
+        }
+        return true;
+    }
 
     // Optional sort/filter params: page,limit,order,search[name],search[email],search[id]... etc
 

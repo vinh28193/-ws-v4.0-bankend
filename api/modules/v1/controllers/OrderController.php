@@ -161,20 +161,13 @@ class OrderController extends BaseApiController
         $model = $this->findModel($id, false);
         $this->can('canUpdate', $model);
         $model->loadWithScenario($this->post);
+        Yii::info($model->scenarios());
         $dirtyAttributes = $model->getDirtyAttributes();
         Yii::info($dirtyAttributes,$model->getScenario());
         if(!$model->save()){
             return $this->response(false,$model->getFirstErrors());
         }
         return $this->response(true,"order $id is up to date",$dirtyAttributes);
-//
-//        $this->can('canUpdate', $model);
-//        $model->loadScenario($this->post);
-//        $model->load($this->post,'');
-//        if(!$model->save()){
-//            Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
-//        }
-//        Yii::$app->api->sendSuccessResponse($model->attributes);
     }
 
     /**
