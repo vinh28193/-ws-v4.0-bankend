@@ -25,7 +25,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
     const SCENARIO_UPDATE_RECEIVER = 'updateReceiver';
     const SCENARIO_UPDATE_STATUS = 'updateStatus';
-    const SCENARIO_SALE_ASSIGN = 'SALE_ASSIGN';
+    const SCENARIO_SALE_ASSIGN = 'saleAssign';
     const SCENARIO_REQUEST = 'request';
 
     /**
@@ -119,7 +119,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 '!current_status'
             ],
             self::SCENARIO_SALE_ASSIGN => [
-                '!sale_support_id', '!support_email'
+                '!sale_support_id'
             ]
         ]);
     }
