@@ -152,6 +152,22 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
+        'controller' => ['purchase-service' => 'service/purchase-service'],
+        'patterns' => [
+            'POST' => 'get-list-card-payment',
+            'GET' => 'get-list-account',
+        ],
+        'extraPatterns' => [
+            'GET get-list-account' => 'get-list-account',
+            'OPTIONS get-list-account' => 'options',
+            'POST get-list-card-payment' => 'get-list-card-payment',
+            'OPTIONS get-list-card-payment' => 'options'
+        ]
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
         'controller' => ['system-location' => 'system-state-province'],
         'patterns' => [
             'GET,POST' => 'index',

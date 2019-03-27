@@ -209,22 +209,6 @@ class PurchaseController extends BaseApiController
         }
         return $this->response($success,$mess,$data);
     }
-    public function actionGetListAccount(){
-        $type = Yii::$app->request->get('type','all');
-        $account = ListAccountBuyer::find()->where(['active' => 1]);
-        if($type !== 'all'){
-            $account->andWhere(['type' => strtolower($type)]);
-        }
-        $account = $account->asArray()->all();
-        return $this->response(true,"SUccess" , $account);
-    }
-    public function actionGetListCardPayment(){
-        $storeId = Yii::$app->request->get('store',1);
-        $storeId = $storeId ? $storeId : 1;
-//        $list_data = PurchasePaymentCard::find()->where(['store_id' => $storeId , 'status' => 1])->asArray()->all();
-        $list_data = PurchasePaymentCard::find()->where(['status' => 1])->asArray()->all();
-        return $this->response(true,"Success" , $list_data);
-    }
     public function actionPurchaseUpdate(){
         $list_item = Yii::$app->request->post('Items',null);
         $po = Yii::$app->request->post('TotalPurchase',null);
