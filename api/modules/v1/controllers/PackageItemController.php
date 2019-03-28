@@ -76,9 +76,20 @@ class PackageItemController extends BaseApiController
         $model->order_id = $post['order_id'];
         $model->change_weight = $post['change_weight'];
         $model->box_me_warehouse_tag = $post['box_me_warehouse_tag'];
+        $dirtyAttributes = $model->getDirtyAttributes();
         if (!$model->save()) {
+            Yii::$app->wsLog->order->push('createPackageItem', null, [
+                'id' => $post['order_id'],
+                'request' => $this->post,
+                'response' => $model->getErrors()
+            ]);
             return $this->response(false, 'create package item error');
         }
+        Yii::$app->wsLog->order->push('createPackageItem', null, [
+            'id' => $post['order_id'],
+            'request' => $this->post,
+            'response' => $dirtyAttributes
+        ]);
         return $this->response(true, 'create package item success', $model);
     }
 
@@ -92,9 +103,20 @@ class PackageItemController extends BaseApiController
             $model->dimension_l = $post['dimension_l'];
             $model->dimension_h = $post['dimension_h'];
             $model->dimension_w = $post['dimension_w'];
+            $dirtyAttributes = $model->getDirtyAttributes();
             if (!$model->save()) {
+                Yii::$app->wsLog->order->push('updatePackageItem', null, [
+                    'id' => $post['order_id'],
+                    'request' => $this->post,
+                    'response' => $model->getErrors()
+                ]);
                 return $this->response(false, 'update package item'. $id . 'error');
             }
+            Yii::$app->wsLog->order->push('createPackageItem', null, [
+                'id' => $post['order_id'],
+                'request' => $this->post,
+                'response' => $dirtyAttributes
+            ]);
             return $this->response(true, 'update package item' . $id .' success', $model);
         }
     }
