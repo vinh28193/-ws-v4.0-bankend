@@ -62,4 +62,19 @@ class PackageItemController extends BaseApiController
 
         return $this->response(true, 'get data success', $dataProvider);
     }
+
+    public function actionUpdate($id) {
+        $post = Yii::$app->request->post();
+
+        $model = PackageItem::findOne($id);
+        if ($model) {
+            $model->package_code = $post['package_code'];
+            $model->weight = $post['weight'];
+            $model->dimension_l = $post['dimension_l'];
+            $model->dimension_h = $post['dimension_h'];
+            $model->dimension_w = $post['dimension_w'];
+            $model->save();
+            return $this->response(true, 'update package' . $id .'item success', $model);
+        }
+    }
 }
