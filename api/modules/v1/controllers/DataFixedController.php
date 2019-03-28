@@ -136,7 +136,7 @@ class DataFixedController extends BaseApiController
         return $category;
     }
 
-    protected function ProductData($propertyShopCart,$itemGetWayAPI,$category,$order,$seller)
+    protected function ProductData($propertyShopCart,$itemGetWayAPI=[],$category,$order,$seller)
    {
 
         $product = new Product;
@@ -164,14 +164,26 @@ class DataFixedController extends BaseApiController
         $product->variations =  null;   /** Todo */
         $product->variation_id =  null;  /** Todo */
         $product->note_by_customer =  'Note By Customer';
-        $product->total_weight_temporary =  'Total Weight Temporary';
+        $product->total_weight_temporary =  0;
         $product->remove =  0;
-        $product->product_name =  null;  /** Todo */
-        $product->product_link =  null;  /** Todo */
+        $product->product_name =  "CHUA LAY DUOC";  /** Todo */
+        $product->product_link =  'https://weshop.com.vn/link/sanpham.html';  /** Todo */
         $product->version =  '4.0';
         $product->condition =  null; /** Todo */
 
-        $product->save();
+        $IsSave = $product->save();
+
+//        $dataSavePro = [
+//            'status' => $IsSave,
+//            'dataProduct' => $product,
+//            'Error' =>$product->errors
+//        ];
+//
+//
+//        echo "<pre>";
+//        print_r($dataSavePro);
+//        echo "</pre>";
+//        die(42434243432);
 
         return $product;
     }
@@ -249,10 +261,19 @@ class DataFixedController extends BaseApiController
         $order->lost =  null;
         $order->current_status =  "NEW";
         $order->remove =  0;
-        $order->save();
+        $IsSave = $order->save();
 
 
-        return $order;
+//        $dataSaveOrder = [
+//            'status' => $IsSave,
+//            'dataOrder' => $order,
+//            'Error' =>$order->errors
+//        ];
+//        echo "<pre>";
+//        print_r($dataSaveOrder);
+//        echo "</pre>";
+
+       return $order;
     }
 
     public function actionCreate()
