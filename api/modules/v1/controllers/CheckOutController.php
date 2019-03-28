@@ -13,7 +13,7 @@ use api\controllers\BaseApiController;
 use common\components\cart\CartManager;
 use common\models\db\Category;
 use common\models\Order;
-use common\models\OrderFee;
+use common\models\ProductFee;
 use common\models\Product;
 use common\models\Seller;
 use Yii;
@@ -126,7 +126,7 @@ class CheckOutController extends BaseApiController
             $order->receiver_district_id = 1;
             $order->seller_id = $seller->id;
 
-            // Todo with OrderFee
+            // Todo with ProductFee
 
 //
             /*
@@ -221,7 +221,7 @@ class CheckOutController extends BaseApiController
                     $orderAttribute = 'total_delivery_fee_local';
                 }
 
-                $orderFee = new OrderFee();
+                $orderFee = new ProductFee();
                 $orderFee->type = $key;
                 $orderFee->name = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
                 $orderFee->order_id = $order->id;

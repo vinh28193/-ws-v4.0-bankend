@@ -8,7 +8,7 @@
 
 namespace common\behaviors;
 
-use common\models\OrderFee;
+use common\models\ProductFee;
 use common\models\StoreAdditionalFee;
 use Yii;
 use yii\db\ActiveRecord;
@@ -35,14 +35,14 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
     public function events()
     {
         return [
-            ActiveRecord::EVENT_AFTER_INSERT => 'evaluateOrderFee'
+            ActiveRecord::EVENT_AFTER_INSERT => 'evaluateProductFee'
         ];
     }
 
     /**
      *
      */
-    public function evaluateOrderFee()
+    public function evaluateProductFee()
     {
         /** @var  $getAdditionalFees  \common\components\AdditionalFeeCollection*/
         $getAdditionalFees = $this->owner->getAdditionalFees();
@@ -59,7 +59,7 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
             }
             $ownerName = "total_{$key}_local";
             if($key === '')
-            $model = new OrderFee();
+            $model = new ProductFee();
             $model->product_id = $this->owner->primaryKey;
             $model->order_id = $this->owner->order_id;
             $model->currency = $storeAdditionFee->currency;
@@ -81,7 +81,7 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
             $updateAttributes['total_fee_amount_local'] = $totalFeeLocal;
         }
         $this->owner->updateAttributes($updateAttributes);
-//        $model = new OrderFee();
+//        $model = new ProductFee();
 //        $model->amount = $totalFee;
 //        $model->amount_local = $totalFeeLocal;
 //        $model->order_id = $this->owner->order_id;

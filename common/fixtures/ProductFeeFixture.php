@@ -12,14 +12,14 @@ namespace common\fixtures;
 use common\models\Order;
 use yii\test\ActiveFixture;
 
-class OrderFeeFixture extends ActiveFixture
+class ProductFeeFixture extends ActiveFixture
 {
-    public $modelClass = 'common\models\OrderFee';
+    public $modelClass = 'common\models\ProductFee';
     public $depends = [
         'common\fixtures\OrderFixture',
         'common\fixtures\ProductFixture',
     ];
-    public $dataFile = '@common/fixtures/data/data_fixed/order_fee.php';
+    public $dataFile = '@common/fixtures/data/data_fixed/product_fee.php';
 
     /*
     public function load()

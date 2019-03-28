@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "order_fee".
+ * This is the model class for table "product_fee".
  *
  * @property int $id
  * @property int $order_id order id
@@ -21,14 +21,14 @@ use Yii;
  * @property int $remove
  * @property string $version version 4.0
  */
-class OrderFee extends \common\components\db\ActiveRecord
+class ProductFee extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'order_fee';
+        return 'product_fee';
     }
 
     /**
@@ -65,5 +65,14 @@ class OrderFee extends \common\components\db\ActiveRecord
             'remove' => 'Remove',
             'version' => 'Version',
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return \common\models\queries\ProductFeeQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new \common\models\queries\ProductFeeQuery(get_called_class());
     }
 }
