@@ -14,10 +14,11 @@ use yii\base\Controller;
 
 class TestController extends Controller
 {
+    /***Tính Phụ Thu danh Mục**/
     public function actionGetCustomFee()
     {
         $data = [
-          'price' => 400, // $
+          'price' => 400, // $ gía gốc mỹ
           'quantity' => 7,
           'weight' => 0.5, // kg
           'isNew' => false,
