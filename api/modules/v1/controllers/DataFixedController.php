@@ -11,7 +11,7 @@ use common\models\Order;
 
 /** Sản Phẩm 1-1 , 1-n **/
 use common\models\Product;
-use common\models\OrderFee as ProductFee;
+use common\models\ProductFee as ProductFee;
 
 /** Tính Phụ Thu danh mục**/
 use common\models\db\Category;
@@ -286,7 +286,7 @@ class DataFixedController extends BaseApiController
                     $orderAttribute = 'total_delivery_fee_local';
                 }
 
-                // Todo with OrderFee
+                // Todo with ProductFee
                 $_productFee = $this->ProductsFeeData($key,$amount,$local,$product,$order_id, $orderAttribute);
 
             }

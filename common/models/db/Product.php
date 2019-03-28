@@ -44,9 +44,9 @@ class Product extends \common\components\db\ActiveRecord
         return 'product';
     }
 
-    public function getOrderFee()
+    public function getProductFee()
     {
-        return $this->hasMany(OrderFee::className(), ['product_id' => 'id']);
+        return $this->hasMany(ProductFee::className(), ['product_id' => 'id']);
     }
 
     /**

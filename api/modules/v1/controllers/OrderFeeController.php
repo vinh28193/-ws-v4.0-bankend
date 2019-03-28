@@ -9,11 +9,11 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\models\OrderFee;
+use common\models\ProductFee;
 use yii\web\NotFoundHttpException;
 
 
-class OrderFeeController extends BaseApiController
+class ProductFeeController extends BaseApiController
 {
 
     protected function verbs()
@@ -51,7 +51,7 @@ class OrderFeeController extends BaseApiController
         if (is_numeric($condition)) {
             $condition = ['id' => $condition];
         }
-        if (($model = OrderFee::findOne($condition)) === null) {
+        if (($model = ProductFee::findOne($condition)) === null) {
             throw new NotFoundHttpException("not found");
         }
         return $model;
