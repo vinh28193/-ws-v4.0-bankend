@@ -80,8 +80,6 @@ class DataFixedController extends BaseApiController
     {
         $this->cart->removeItems();
         //$this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
-        //$this->cart->addItem('IF_6C960C53', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/nrsAAOSw7Spbzlyw/$_12.JPG?set_id=880000500F', '252888606889');
-        //$this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
 
         // $sku, $seller, $quantity, $source, $image, $parentSku
         /** Todo : Thiếu link Gốc sản phẩm
@@ -175,12 +173,6 @@ class DataFixedController extends BaseApiController
 //            'dataProduct' => $product,
 //            'Error' =>$product->errors
 //        ];
-//
-//
-//        echo "<pre>";
-//        print_r($dataSavePro);
-//        echo "</pre>";
-//        die(42434243432);
 
         return $product;
     }
@@ -266,9 +258,6 @@ class DataFixedController extends BaseApiController
 //            'dataOrder' => $order,
 //            'Error' =>$order->errors
 //        ];
-//        echo "<pre>";
-//        print_r($dataSaveOrder);
-//        echo "</pre>";
 
        return $order;
     }
@@ -301,7 +290,7 @@ class DataFixedController extends BaseApiController
             // Product
             $product = $this->ProductData($simpleItem, $item, $category, $order, $seller);
 
-            $orderUpdateFeeAttribute = [];
+            $orderUpdateFeeAttribute = $productFee = []; $i=0;
             foreach ($product->getAdditionalFees()->keys() as $key) {
                 list($amount, $local) = $product->getAdditionalFees()->getTotalAdditionFees($key);
                 $orderAttribute = "total_{$key}_local";
@@ -314,41 +303,36 @@ class DataFixedController extends BaseApiController
                 }
 
                 // Todo with OrderFee
-                $_productFee = $this->ProductsFeeData($key, $amount, $local, $product->getPrimaryKey(), $order->getPrimaryKey(), $orderAttribute);
+                $_productFee = new ProductFee();
+                $_productFee->type = $key;
+                $_productFee->name = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
+                $_productFee->order_id = $order->id;
+                $_productFee->product_id = $product->id;
+                $_productFee->amount = $amount;
+                $_productFee->local_amount = $local;
+                $_productFee->currency = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
+                if ($_productFee->save()) {
+                    $orderUpdateFeeAttribute[$orderAttribute] = $local;
+                }
+
+                $productFee[$i++] = $_productFee;
 
                 $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
-                //$order->updateAttributes($orderUpdateFeeAttribute);
+                //$order->updateAttributes($orderUpdateFeeAttribute);  /** VI SAO UPDATE moi cai nay lai loi **/
+                $productFee[$i++] = $_productFee;
                 $orders[] = $order;
             }
 
 
-            $_itemRes = new \stdClass();
-            $_itemRes->order = $orders;
-            $_itemRes->product = $product;
-            $_itemRes->productFee = $_productFee;
 
-            $data = new \stdClass();
-            $data->_items = $_itemRes;
-            $data->_links = null;
-            $data->_meta = null;
-            Yii::$app->api->sendSuccessResponse($data);
+            $_itemRes['order'] = $orders;
+            $_itemRes['product'] = $product;
+            $_itemRes['productFee'] = $productFee;
+
+            Yii::$app->api->sendSuccessResponse($_itemRes);
 
         }
     }
 
-    protected function ProductsFeeData($key,$amount,$local,$product,$order_id , $orderAttribute)
-    {
-        $_productFee = new ProductFee();
-        $_productFee->type = $key;
-        $_productFee->name = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
-        $_productFee->order_id = $order_id;
-        $_productFee->product_id = $product->getPrimaryKey();
-        $_productFee->amount = $amount;
-        $_productFee->local_amount = $local;
-        $_productFee->currency = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
-        if ($_productFee->save()) {
-            $orderUpdateFeeAttribute[$orderAttribute] = $local;
-        }
-        return $_productFee;
-    }
+
 }

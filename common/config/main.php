@@ -44,6 +44,12 @@ return [
         ],
         'wsLog' => [
             'class' => 'common\components\log\Logging'
-        ]
+        ],
+        'cartws' => [
+            'class' => 'common\components\book\cart\Cart',
+            'storage' => [
+                'class' => 'common\components\book\cart\storage\SessionStorage',
+            ],
+        ],
     ],
 ];
