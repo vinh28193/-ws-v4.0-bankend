@@ -360,9 +360,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrderFees()
+    public function getProductFees()
     {
-        return $this->hasMany(OrderFee::className(), ['order_id' => 'id']);
+        return $this->hasMany(ProductFee::className(), ['order_id' => 'id']);
     }
 
     /**

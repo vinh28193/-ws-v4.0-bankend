@@ -11,7 +11,7 @@ use common\models\Order;
 
 /** Sản Phẩm 1-1 , 1-n **/
 use common\models\Product;
-use common\models\OrderFee as ProductFee;
+use common\models\ProductFee;
 
 /** Tính Phụ Thu danh mục**/
 use common\models\db\Category;
@@ -278,7 +278,9 @@ class DataFixedController extends BaseApiController
 
     public function actionCreate()
     {
-        if (isset($this->post) == null) {  Yii::$app->api->sendFailedResponse("Invalid Record requested"); }
+        if (isset($this->post) == null) {
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        }
 
         $this->CartData($this->post);
         $items = $this->cart->getItems();
@@ -291,16 +293,16 @@ class DataFixedController extends BaseApiController
 
             $itemType = $this->post['source'];
             // Seller
-            $seller = $this->SellerData($item,$key);
+            $seller = $this->SellerData($item, $key);
 
             // Category
-            $category = $this->CategoryData($item,$key,$itemType);
+            $category = $this->CategoryData($item, $key, $itemType);
 
             // Order
-            $order = $this->OrderData($itemType ,$seller);
+            $order = $this->OrderData($itemType, $seller);
 
             // Product
-            $product =  $this->ProductData( $simpleItem,$item,$category,$order,$seller);
+            $product = $this->ProductData($simpleItem, $item, $category, $order, $seller);
 
             $orderUpdateFeeAttribute = [];
             foreach ($product->getAdditionalFees()->keys() as $key) {
@@ -315,26 +317,26 @@ class DataFixedController extends BaseApiController
                 }
 
                 // Todo with OrderFee
-                $_productFee = $this->ProductsFeeData($key,$amount,$local,$product->getPrimaryKey(),$order->getPrimaryKey(), $orderAttribute);
+                $_productFee = $this->ProductsFeeData($key, $amount, $local, $product->getPrimaryKey(), $order->getPrimaryKey(), $orderAttribute);
 
+                $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
+                //$order->updateAttributes($orderUpdateFeeAttribute);
+                $orders[] = $order;
             }
-            $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
-            //$order->updateAttributes($orderUpdateFeeAttribute);
-            $orders[] = $order->id;
+
+
+            $_itemRes = new \stdClass();
+            $_itemRes->order = $orders;
+            $_itemRes->product = $product;
+            $_itemRes->productFee = $_productFee;
+
+            $data = new \stdClass();
+            $data->_items = $_itemRes;
+            $data->_links = null;
+            $data->_meta = null;
+            Yii::$app->api->sendSuccessResponse($data);
+
         }
-
-
-        $_itemRes = new \stdClass();
-        $_itemRes->order = $orders;
-        $_itemRes->product = $product;
-        $_itemRes->productFee = $_productFee;
-
-        $data = new \stdClass();
-        $data->_items = $_itemRes;
-        $data->_links = null;
-        $data->_meta = null;
-        Yii::$app->api->sendSuccessResponse($data);
-
     }
 
     protected function ProductsFeeData($key,$amount,$local,$product,$order_id , $orderAttribute)
