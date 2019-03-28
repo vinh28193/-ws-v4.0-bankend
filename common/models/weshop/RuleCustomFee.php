@@ -69,7 +69,7 @@ class RuleCustomFee
             $u = $this->unit;
             switch ($this->type_fee){
                 case self::TYPE_FEE_USD:
-                    $amount = $target->price * $this->fee;
+                    $amount = $target->$u * $this->fee;
                     break;
                 case self::TYPE_FEE_PERCENT:
                     $amount = $target->price * $target->$u * ($this->fee/100);
