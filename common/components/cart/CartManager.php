@@ -168,6 +168,7 @@ class CartManager extends Component
                 $this->getStorage()->setItem($key, $item);
                 return true;
             } else {
+                /** Todo : Thiếu link Gốc sản phẩm **/
                 $item = new SimpleItem(['sku' => $sku, 'parentSku' => $parentSku, 'quantity' => $quantity, 'seller' => $seller, 'source' => $source, 'image' => $image]);
                 $item = $item->process();
                 $item = $this->getSerializer()->serializer($item);
