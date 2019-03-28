@@ -63,18 +63,61 @@ class PackageItemController extends BaseApiController
         return $this->response(true, 'get data success', $dataProvider);
     }
 
+    public function actionCreate() {
+        $post = Yii::$app->request->post();
+        $model = new PackageItem;
+        $model->package_code = $post['package_code'];
+        $model->weight = $post['weight'];
+        $model->quantity = $post['quantity'];
+        $model->dimension_l = $post['dimension_l'];
+        $model->dimension_h = $post['dimension_h'];
+        $model->dimension_w = $post['dimension_w'];
+        $model->price = $post['price'];
+        $model->order_id = $post['order_id'];
+        $model->change_weight = $post['change_weight'];
+        $model->box_me_warehouse_tag = $post['box_me_warehouse_tag'];
+        $dirtyAttributes = $model->getDirtyAttributes();
+        if (!$model->save()) {
+            Yii::$app->wsLog->order->push('createPackageItem', null, [
+                'id' => $post['order_id'],
+                'request' => $this->post,
+                'response' => $model->getErrors()
+            ]);
+            return $this->response(false, 'create package item error');
+        }
+        Yii::$app->wsLog->order->push('createPackageItem', null, [
+            'id' => $post['order_id'],
+            'request' => $this->post,
+            'response' => $dirtyAttributes
+        ]);
+        return $this->response(true, 'create package item success', $model);
+    }
+
     public function actionUpdate($id) {
         $post = Yii::$app->request->post();
-
         $model = PackageItem::findOne($id);
         if ($model) {
             $model->package_code = $post['package_code'];
             $model->weight = $post['weight'];
+            $model->quantity = $post['quantity'];
             $model->dimension_l = $post['dimension_l'];
             $model->dimension_h = $post['dimension_h'];
             $model->dimension_w = $post['dimension_w'];
-            $model->save();
-            return $this->response(true, 'update package' . $id .'item success', $model);
+            $dirtyAttributes = $model->getDirtyAttributes();
+            if (!$model->save()) {
+                Yii::$app->wsLog->order->push('updatePackageItem', null, [
+                    'id' => $post['order_id'],
+                    'request' => $this->post,
+                    'response' => $model->getErrors()
+                ]);
+                return $this->response(false, 'update package item'. $id . 'error');
+            }
+            Yii::$app->wsLog->order->push('createPackageItem', null, [
+                'id' => $post['order_id'],
+                'request' => $this->post,
+                'response' => $dirtyAttributes
+            ]);
+            return $this->response(true, 'update package item' . $id .' success', $model);
         }
     }
 }
