@@ -18,6 +18,8 @@ return [
         '1/me'=>'site/me',
         '1/logout'=>'site/logout',
 
+        'test/get-custom-fee'=>'test/get-custom-fee',
+
         ### employees
         '1/employees'=>'employee/index',
         '1/employees/view/<id>'=>'employee/view',
