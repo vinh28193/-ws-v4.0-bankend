@@ -98,11 +98,12 @@ class DataFixedController extends BaseApiController
             );
     }
 
-    protected function SellerData()
+    protected function SellerData($item,$key)
     {
         if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($providers !== null && !isset($providers['name']))) {
             $errors[$key][] = "can not create form null seller";
-            continue;
+            //continue;
+            Yii::$app->api->sendFailedResponse("can not create form null seller");
         }
         if (($seller = Seller::findOne(['seller_name' => $providers['name']])) === null) {
             $seller = new Seller();
@@ -264,7 +265,7 @@ class DataFixedController extends BaseApiController
 
             $itemType = 'ebay';
             // Seller
-            $seller = $this->SellerData($item);
+            $seller = SellerData($item,$key);
 
             // Category
             $category = $this->CategoryData($item,$key,$itemType);
@@ -289,7 +290,7 @@ class DataFixedController extends BaseApiController
                 }
 
                 // Todo with OrderFee
-                $_productFee = $this->ProductsFeeData($product,$order,$orderAttribute);
+                $_productFee = $this->ProductsFeeData($key,$amount,$local,$product,$order , $orderAttribute);
 
             }
             $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
@@ -302,7 +303,7 @@ class DataFixedController extends BaseApiController
 
     }
 
-    protected function ProductsFeeData($product,$order , $orderAttribute)
+    protected function ProductsFeeData($key,$amount,$local,$product,$order , $orderAttribute)
     {
         $_productFee = new ProductFee();
         $_productFee->type = $key;
