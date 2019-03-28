@@ -14,4 +14,5 @@ use yii\test\ActiveFixture;
 class CategoryFixture extends ActiveFixture
 {
     public $modelClass = 'common\models\db\Category';
+    public $dataFile = '@common/fixtures/data/data_fixed/category.php';
 }
