@@ -38,12 +38,11 @@ class RestServiceListCardPaymentController extends BaseApiController
 
     public function actionListCardPayment()
     {
-        die("list-card-payment");
-//        $storeId = Yii::$app->request->get('store', 1);
-//        $storeId = $storeId ? $storeId : 1;
-//        // $list_data = PurchasePaymentCard::find()->where(['store_id' => $storeId , 'status' => 1])->asArray()->all();
-//        $list_data = PurchasePaymentCard::find()->where(['status' => 1])->asArray()->all();
-//        return $this->response(true, "Success", $list_data);
+        $storeId = Yii::$app->request->get('store', 1);
+        $storeId = $storeId ? $storeId : 1;
+        // $list_data = PurchasePaymentCard::find()->where(['store_id' => $storeId , 'status' => 1])->asArray()->all();
+        $list_data = PurchasePaymentCard::find()->where(['status' => 1])->asArray()->all();
+        return $this->response(true, "Success", $list_data);
 
     }
 

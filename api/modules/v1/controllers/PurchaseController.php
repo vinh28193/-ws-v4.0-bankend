@@ -5,12 +5,15 @@ namespace api\modules\v1\controllers;
 use api\controllers\BaseApiController;
 use common\models\db\Customer;
 use common\models\db\ListAccountPurchase;
+use common\models\db\PurchaseOrder;
 use common\models\db\PurchasePaymentCard;
 use common\models\db\PurchaseProduct;
 use common\models\Order;
 use common\models\Product;
 use common\models\User;
+use common\models\weshop\FormCartPurchase;
 use common\models\weshop\FormPurchaseItem;
+use common\models\weshop\FormRequestPurchase;
 use Yii;
 use yii\db\ActiveQuery;
 
@@ -204,289 +207,127 @@ class PurchaseController extends BaseApiController
         return $this->response($success,$mess,$data);
     }
     public function actionCreate(){
-//        print_r($this->post);
-//        die;
-        $list_item = Yii::$app->request->post('Items',null);
-        $po = Yii::$app->request->post('TotalPurchase',null);
-        if(!$list_item || !$po){
+        $form = new FormRequestPurchase();
+        $form->setAttributes($this->post,false);
+        if(!isset($this->post['cart']) || !$this->post['cart']){
+            return $this->response(false,"Nothing in your cart");
+        }
+        $products = [];
+        foreach ($this->post['cart'] as $itemCart){
+            if(isset($itemCart['products']) && $itemCart['products']){
+                foreach ($itemCart['products'] as $product){
+                    $newItem = new FormPurchaseItem();
+                    $newItem->setAttributes($product,false);
+                    $products[] = $newItem;
+                }
+            }
+        }
+        $form->products = $products;
+        if(!$form || !$form->products){
             return $this->response(false,'Item or TotalPurchase was null');
         }
-        $list_item = (json_decode($list_item,true));
-        $po = (json_decode($po,true));
-//        print_r($po);
-//        print_r($list_item);
-//        die;
-        $po['purchaseAccount'] = str_replace(' ','',$po['purchaseAccount']);
-        $po['orderId'] = str_replace(' ','',$po['orderId']);
-        $po['purchaseTransaction'] = str_replace(' ','',$po['purchaseTransaction']);
-        if(!$po['warehouse'] || !$po['orderId'] || !$po['purchaseAccount'] || !$po['purchaseCard'] || !$po['purchaseTransaction'] || !$po['totalAmount'] || !$po['totalAmountPaid'] ){
-            return $this->response(false,'Enter all field required');
+        $form->accountPurchase = str_replace(' ','',$form->accountPurchase);
+        $form->orderIdPurchase = str_replace(' ','',$form->orderIdPurchase);
+        $form->PPTranId = str_replace(' ','',$form->PPTranId);
+        if(!$form->validate()){
+            $mss = "";
+            foreach ($form->errors as $error){
+                $mss .= $error[0]." ";
+            }
+            return $this->response(false,$mss,$form);
         }
-        if(count($list_item) == 0){
-            return $this->response(false,'Not have item purchase!');
-        }
-        $item_type = strtolower($list_item[0]['ItemType']);
-        $account = ListAccountBuyer::find()->where(['like','email',$po['purchaseAccount']])
+        $item_type = strtolower($form->products[0]->ItemType);
+        $account = ListAccountPurchase::find()->where(['like','email',$form->accountPurchase])
             ->andWhere(['like','type',$item_type])->one();
         if(!$account){
-            $account = new ListAccountBuyer();
-            $account->account = $po['purchaseAccount'];
-            $account->email = $po['purchaseAccount'];
+            $account = new ListAccountPurchase();
+            $account->account = $form->accountPurchase;
+            $account->email = $form->accountPurchase;
             $account->active = 1;
             $account->type = $item_type;
             $account->save(0);
         }
-        $listid = [];
-        foreach ($list_item as $item) {
-            $listid[] = $item['id'] ;
-        }
-        $countItem = OrderItem::find()->where(['id' => $listid,'status' => [OrderItem::STATUS_PURCHASING,OrderItem::STATUS_READY2PURCHASE]])->count();
-        if($countItem == 0){
-            return $this->response(false,'Not have item invalid!');
-        }
         $tran = Yii::$app->db->beginTransaction();
         try{
             $PurchaseOrder = new PurchaseOrder();
-            $PurchaseOrder->Description = $po['note'];
-            $PurchaseOrder->OrderTime = date('Y-m-d H:i:s');
-            $PurchaseOrder->TotalItemOrder = $countItem;
-            $PurchaseOrder->TransactionCode = $po['purchaseTransaction'];
-            $PurchaseOrder->PaymentMethodId = 1;
-            $PurchaseOrder->Status = 0;
-            $PurchaseOrder->PaymentTime = date('Y-m-d H:i:s');
-            $PurchaseOrder->PaymentCardId = $po['purchaseCard'];
-            $PurchaseOrder->TotalOrder = $po['totalAmount'];
-            $PurchaseOrder->PurchaseOrderCode = $po['orderId'];
-            $PurchaseOrder->PaypalAmount = $po['totalAmountPaid'];
-            $PurchaseOrder->viaChannelId = 2;
-            $PurchaseOrder->MerchantEmail = $account->email;
-            $PurchaseOrder->isNoTrackingCode = 0;
-            $PurchaseOrder->paypalCurrencyId = 3;
-            $PurchaseOrder->NotePurchaseWarehouseId = $po['warehouse'];
-            $PurchaseOrder->accountPurchaseId = $account->id;
-            $PurchaseOrder->save(0);
+            $PurchaseOrder->note = $form->note;
+            $PurchaseOrder->purchase_order_number = $form->orderIdPurchase;
+            $PurchaseOrder->total_quantity = 0;
+            $PurchaseOrder->total_changing_price = 0;
+            $PurchaseOrder->total_item = 0;
+            $PurchaseOrder->total_paid_seller = 0;
+            $PurchaseOrder->total_type_changing = 0;
+            $PurchaseOrder->receive_warehouse_id = $form->warehouse;
+            $PurchaseOrder->purchase_account_id = $account->id;
+
+            $card = PurchasePaymentCard::findOne($form->card_payment);
+
+            $PurchaseOrder->purchase_card_id = $form->card_payment;
+            $PurchaseOrder->purchase_card_number = $card ? $card->card_code : null;
+            $PurchaseOrder->purchase_amount_buck = $form->buckAmount;
+            $PurchaseOrder->transaction_payment = $form->PPTranId;
+            $PurchaseOrder->note = $form->note;
             /** @var User $user */
             $user = Yii::$app->user->getIdentity();
+            $PurchaseOrder->updated_by = $user->id;
+            $PurchaseOrder->created_at = time();
+            $PurchaseOrder->updated_at = time();
+            $PurchaseOrder->save(0);
             $shippingFee = 0;
             $storeId = 1;
-            foreach ($list_item as $item){
-                $order = OrderItem::findOne($item['id']);
-                if($order && in_array($order->status,[OrderItem::STATUS_READY2PURCHASE,OrderItem::STATUS_PURCHASING])){
-                    $storeId = $order->storeId ? $order->storeId : 1;
-                    $order->purchaseOrderCode = $PurchaseOrder->PurchaseOrderCode;
-                    $order->purchase_assignee_id = $user->getId();
-                    $order->purchaseUnitPrice = $item['pricePurchase'];
-                    $order->purchaseQuantity = $order->purchaseQuantity ? $order->purchaseQuantity +  $item['quantity'] : $item['quantity'];
-                    if($order->purchaseQuantity >= $order->quantity) {
-                        $order->purchaseStatus = OrderItem::STATUS_PURCHASED;
-                        $order->status = OrderItem::STATUS_PURCHASED;
-                        $order->purchaseCompleteTime = date('Y-m-d H:i:s');
-                    }else{
-                        $order->purchaseStatus = OrderItem::STATUS_PURCHASED_PART;
-                        $order->status = OrderItem::STATUS_PURCHASED_PART;
-                    }
-                    $order->purchaseTax = $order->purchaseTax ? floatval($order->purchaseTax) + $item['taxPurchase'] : $item['taxPurchase'];
-                    $order->purchaseShippingFee = $order->purchaseShippingFee ? floatval($order->purchaseShippingFee) + $item['shipPurchase'] : $item['shipPurchase'];
-                    $order->purchasePaidAmount = $order->purchasePaidAmount? floatval($order->purchasePaidAmount) + $item['paidToSeller'] : $item['paidToSeller'];
-                    $order->purchasePaypalAmount = $order->purchasePaypalAmount? floatval($order->purchasePaypalAmount) + $item['paidToSeller'] : $item['paidToSeller'];
-                    $order->purchaseTransactionCode = $PurchaseOrder->TransactionCode;
-                    $order->purchaseOrderId = $PurchaseOrder->id;
-                    $order->purchaseMerchantEmail = $PurchaseOrder->MerchantEmail;
-                    $order->NotePurchaseWarehouseId = $PurchaseOrder->NotePurchaseWarehouseId;
-                    $order->accountPurchaseId = $PurchaseOrder->accountPurchaseId;
-                    $order->purchaseStartTime = date('Y-m-d H:i:s');
-                    $order->skuChange = $item['sku'];
-                    $order->save();
-                    if(strtolower($order->ItemType) == 'amazon' || strtolower($order->ItemType) == 'amazon-jp' || strtolower($order->ItemType) == 'amazon-uk'){
-                        $typeWesShopFee = 2;
-                    }else{
-                        $typeWesShopFee = 1;
-                    }
-                    if($order->currencyId){
-                        /** @var Customer $cus */
-                        $cus = Customer::findOne($order);
-                        if($cus && $cus->customerGroupId == 2){
-                            $typeWesShopFee = 3;
-                        }
-                    }
-                    $newPurchaseItem = new PurchaseOrderItem();
-                    $newPurchaseItem->PurchaseOrderId = $PurchaseOrder->id;
-                    $newPurchaseItem->orderItemId = $order->id;
-                    $newPurchaseItem->sku = $order->skuChange;
-                    $newPurchaseItem->ProductName = $order->Name;
-                    $newPurchaseItem->Description = $po['note'];
-                    $newPurchaseItem->Price = $item['pricePurchase'];
-                    $newPurchaseItem->TaxRate = $item['taxRatePurchase'];
-                    $newPurchaseItem->TaxAmount = $item['taxPurchase'];
-                    $newPurchaseItem->ShipFeeAmount = $item['shipPurchase'];
-                    $newPurchaseItem->CustomFeeAmount = $order->ItemCustomFee;
-                    $newPurchaseItem->InspectionFee = $order->ItemCustomAdditionFee;
-                    $newPurchaseItem->Weight = $order->weight;
-                    $newPurchaseItem->Quantity = $item['quantity'];
-                    $newPurchaseItem->ExRate = Yii::$app->store->tryStore($order->storeId ? $order->storeId : 1)->exchangeRate();
-                    $newPurchaseItem->weshopFee = $newPurchaseItem->getWeShopFee($typeWesShopFee);
-                    $newPurchaseItem->SubTotalAmount = $newPurchaseItem->getSubTotalAmount();
-                    $newPurchaseItem->TotalAmountInLocalCurreny = $newPurchaseItem->ExRate * $newPurchaseItem->SubTotalAmount;
-                    $newPurchaseItem->ShippingStatus = 1;
-                    $newPurchaseItem->MerchantId = $account->id;
-                    $newPurchaseItem->IsRequestInspection = 0;
-                    $newPurchaseItem->ItemLine = $PurchaseOrder->id;
-                    $newPurchaseItem->NoteForInspection = 0;
-                    $newPurchaseItem->PaypalAmount = $item['paidToSeller'];
-                    $newPurchaseItem->MerchantEmail = $account->email;
-                    $newPurchaseItem->viaChannelId = 2;
-                    $newPurchaseItem->localProductName = $order->localProductName;
-                    $changingPrice = $newPurchaseItem->getSubTotalAmount() - (($order->quantity * $order->UnitPriceExclTax) + floatval($order->ItemTax) + floatval($order->ItemLocalShippingAmount) + floatval($order->ItemFeeServiceAmount));
-                    $order->changingPrice += $changingPrice;
-                    $order->save(0);
-                    $newPurchaseItem->changingPrice = $order->changingPrice;
-                    $newPurchaseItem->save(0);
-                    $shippingFee += $newPurchaseItem->ShipFeeAmount;
-                    $p = PurchasePaymentCard::findOne($po['purchaseCard']);
-                    $po['CardCode'] = $p->CardCode;
-                    $po['Items'] = $item;
-//                try{
-                    LogTrackingOrderItem::createLogTracking(
-                        null,
-                        $order->id,
-                        null,
-                        null,
-                        LogTrackingOrderItem::STATUS_CODE_PURCHASED,
-                        "Purchased",
-                        $po
-                    );
-                    OrderLogs::log($order->orderId,"action",$order->status,$user->username,$po,$order->id);
-                    OrderLogs::log($order->orderId,"operation",$order->status,$user->username,$po,$order->id);
-//                }catch (\Exception $e){
-
-//                }
-                    if($po['sendmailPrice']){
-                        //#ToDo: send mail to customer for changing price
-                    }
-                    if($po['sendmailFragile']){
-                        //#ToDo: send mail to customer for fragile
-                    }
-
+            $changeAmount = 0;
+            foreach ($form->products as $product){
+                /** @var Product $item */
+                $item = Product::find()->with('order')->where(['id' => $product->id])->one();
+                if(!$item){
+                    continue;
                 }
+                $amount = $product->paidToSeller - $product->paidTotal;
+                $changeAmount += $amount;
+                $purchaseProd = new PurchaseProduct();
+                $purchaseProd->product_id = $product->id;
+                $purchaseProd->purchase_order_id = $PurchaseOrder->id;
+                $purchaseProd->order_id = $item->order_id;
+                $purchaseProd->sku = $product->sku;
+                $purchaseProd->product_name = $product->Name;
+                $purchaseProd->image = $product->image;
+                $purchaseProd->purchase_quantity = $product->quantityPurchase;
+                $purchaseProd->receive_quantity = 0;
+                $purchaseProd->paid_to_seller = $product->paidToSeller;
+                $purchaseProd->changing_price = abs($amount);
+                $purchaseProd->type_changing = $amount > 0 ? 'up' : 'down' ;
+                $purchaseProd->purchase_price = $product->price_purchase;
+                $purchaseProd->purchase_us_tax = $product->us_tax_purchase;
+                $purchaseProd->purchase_shipping_fee = $product->us_ship_purchase;
+                $purchaseProd->created_at = time();
+                $purchaseProd->updated_at = time();
+                $purchaseProd->save(0);
+                $item->updated_at = time();
+                $item->quantity_purchase += $item->quantity_purchase ? $item->quantity_purchase + $product->quantityPurchase : $product->quantityPurchase;
+                $item->save(0);
+                $item->order->updated_at = time();
+                $item->order->purchase_order_id = $item->order->purchase_order_id ? $item->order->purchase_order_id .",".$PurchaseOrder->id : $PurchaseOrder->id ;
+                $item->order->purchase_transaction_id = $item->order->purchase_transaction_id ? $item->order->purchase_transaction_id .",".$PurchaseOrder->transaction_payment : $PurchaseOrder->transaction_payment;
+                $item->order->purchase_amount = $item->order->purchase_amount ? $item->order->purchase_amount + $product->paidToSeller : $product->paidToSeller;
+                $item->order->purchase_account_id = $item->order->purchase_account_id ? $item->order->purchase_account_id .",". $PurchaseOrder->purchase_account_id : $PurchaseOrder->purchase_account_id;
+                $item->order->purchase_card = $item->order->purchase_card ? $item->order->purchase_card .",". $PurchaseOrder->purchase_card_number : $PurchaseOrder->purchase_card_number;
+                $item->order->purchase_amount_buck = $item->order->purchase_amount_buck ? $item->order->purchase_amount_buck + $PurchaseOrder->purchase_amount_buck : $PurchaseOrder->purchase_amount_buck;
+                $item->order->total_purchase_quantity = $item->order->total_purchase_quantity ? $item->order->total_purchase_quantity + $product->quantityPurchase : $product->quantityPurchase;
+                $item->order->purchased = $item->order->total_purchase_quantity < $item->order->total_quantity ? $item->order->purchased : time();
+                $item->order->current_status = $item->order->purchased ? Order::STATUS_PURCHASED : Order::STATUS_PURCHASE_PART;
+                $item->order->save(0);
+                $PurchaseOrder->total_quantity += $product->quantityPurchase;
+                $PurchaseOrder->total_item += 1;
+                $PurchaseOrder->total_paid_seller += $product->paidToSeller;
             }
-            $PurchaseOrder->PurchaseOrderNumber = 'PO'.$PurchaseOrder->id;
-            $PurchaseOrder->localCurencyId   = $storeId == 6 ? 5 : $storeId;
-            $PurchaseOrder->StoreId = $storeId;
-            $PurchaseOrder->ShippingFee = $shippingFee;
+            $PurchaseOrder->total_changing_price = abs($changeAmount);
+            $PurchaseOrder->total_type_changing = $changeAmount > 0 ? 'up' : 'down';
             $PurchaseOrder->save(0);
             $tran->commit();
-            return $this->response(true,'Purchase success! '.$PurchaseOrder->PurchaseOrderNumber);
+            return $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id);
         }catch (\Exception $exception){
             $tran->rollBack();
             return $this->response(false,'something error');
-        }
-    }
-
-    public function actionGetListAccount(){
-        $type = Yii::$app->request->get('type','all');
-        $account = ListAccountBuyer::find()->where(['active' => 1]);
-
-        if($type !== 'all'){
-            $account->andWhere(['type' => strtolower($type)]);
-        }
-        $account = $account->asArray()->all();
-        return $this->response(true,"SUccess" , $account);
-    }
-    public function actionGetListCardPayment(){
-        $storeId = Yii::$app->request->get('store',1);
-        $storeId = $storeId ? $storeId : 1;
-//        $list_data = PurchasePaymentCard::find()->where(['store_id' => $storeId , 'status' => 1])->asArray()->all();
-        $list_data = PurchasePaymentCard::find()->where(['status' => 1])->asArray()->all();
-        return $this->response(true,"Success" , $list_data);
-    }
-    public function actionMakeStatus(){
-        $id = Yii::$app->request->post('id');
-        $note = Yii::$app->request->post('note');
-        $type = Yii::$app->request->post('type');
-
-        $data = [
-            'status' => OrderItem::STATUS_PURCHASE_PENDING,
-            'purchaseFailReason' => 'OUT_OF_STOCK',
-            //'note' => 'Out of Stock',
-            //'purchaseNote' => 'Out of Stock by user ' . $this->request->get('userId'),
-            'purchaseStatus' => 'Out_of_Stock',
-            'purchaseStartTime' => date('Y-m-d H:i:s')
-        ];
-        $order = OrderItem::findOne($id);
-        $order->setAttributes($data);
-        $order->save(0);
-
-        $order_Support = new OrderSupportLog();
-        $order_Support->created_at = date("Y-m-d H:i:s");
-        $order_Support->SupportedDate = date("Y-m-d H:i:s");
-        $order_Support->OrderId = $order->orderId;
-        $order_Support->OrderItemId = $order->id;
-        $order_Support->EmployeeId = Yii::$app->user->getId();
-        $order_Support->user_id = Yii::$app->user->getId();
-        $order_Support->Note = 'Action OutOfStock, update ' . OrderItem::STATUS_PURCHASE_PENDING . ' with note: ' . $note;
-        $order_Support->LevelSupport = OrderItem::STATUS_PURCHASE_PENDING;
-        $order_Support->save(0);
-
-        OrderLogs::log($order->orderId, 'action', "SOI-$order->id: Update status", Yii::$app->user->getIdentity()->username, 'Action OutOfStock, update ' . OrderItem::STATUS_PURCHASE_PENDING . ' with note: ' . $note, $order->id);
-        OrderLogs::log($order->orderId, 'operation', "SOI-$order->id: Update status", Yii::$app->user->getIdentity()->username, 'Action OutOfStock, update ' . OrderItem::STATUS_PURCHASE_PENDING . ' with note: ' . $note, $order->id);
-        return $this->response(true,"Make Out Of Stock Success!",['id' => $id, 'status' => OrderItem::STATUS_PURCHASE_PENDING]);
-    }
-    public function actionCreateAddfee(){
-        $item = Yii::$app->request->post('item',null);
-        $note = Yii::$app->request->post('note',null);
-        $addFee = Yii::$app->request->post('addfee',null);
-        $wsFee = Yii::$app->request->post('wsFee',0);
-
-        if(!$item){
-            return $this->response(false,"Not have item");
-        }
-        if(!$addFee || $addFee < 0){
-            return $this->response(false,"Not have addfee");
-        }
-        $item = json_decode($item);
-        $tran = Yii::$app->db->beginTransaction();
-        try{
-            $order = OrderItem::findOne($item->id);
-            if($order){
-                $order->setAttributes([
-                    'purchaseUnitPrice' => $item->pricePurchase,
-                    'purchaseShippingFee' => $item->shipPurchase,
-//                    'purchaseQuantity' => $item->quantityPurchase,
-                    'purchaseTax' => $item->taxPurchase,
-                    'purchaseNote' => $note ? $note : "",
-                    'status' => OrderItem::STATUS_PURCHASE_PENDING,
-                    'purchaseFailReason' => "ADD_FEE",
-                ]);
-                $order->save(0);
-                /** @var SystemCurrencyRate $currency */
-                $currency = SystemCurrencyRate::GetCurrencyRate($order->currencyId);
-                $rateEx = $order->ExRate ? $order->ExRate : $currency->Rate;
-                $data = [
-                    'amount' => $addFee + $wsFee,
-                    'amount_local' => round($rateEx * ($addFee + $wsFee),($order->currencyId == 1 ? -3 : 2)),
-                    'exchange_rate' => $rateEx,
-                    'currency_id' => $order->currencyId,
-                    'create_at' => date('Y-m-d H:i:s'),
-                    'create_by' => Yii::$app->user->getIdentity()->username,
-                    'type' => OrderPaymentRequest::TYPE_ADDFEE,
-                    'reason' => 'INCREASE PRICE',
-                    'process_note' => 'ADDFEE FROM HIGHER PRICE $' . $addFee." & WSFEE $".$wsFee,
-                    'order_id' => $order->orderId,
-                    'order_item_id' => $order->id,
-                    'status' => OrderPaymentRequest::STATUS_NEW,
-                    'weshop_fee' => $wsFee,
-                ];
-                $orderRequest = new OrderPaymentRequest();
-                $orderRequest->setAttributes($data);
-                $orderRequest->save(0);
-                OrderLogs::log($order->orderId, 'action', "SOI-$order->id: $orderRequest->process_note", Yii::$app->user->getIdentity()->username, 'Action addfee changingPrice, update ' . OrderItem::STATUS_PURCHASE_PENDING . ' with note: ' . $note, $order->id);
-                OrderLogs::log($order->orderId, 'operation', "SOI-$order->id: $orderRequest->process_note", Yii::$app->user->getIdentity()->username, 'Action addfee changingPrice, update ' . OrderItem::STATUS_PURCHASE_PENDING . ' with note: ' . $note, $order->id);
-            }
-            $tran->commit();
-            return $this->response(true,"Create addFee success!");
-        }catch (\Exception $exception){
-            $tran->rollBack();
-            return $this->response(false,"Create addFee fail!");
         }
     }
 }
