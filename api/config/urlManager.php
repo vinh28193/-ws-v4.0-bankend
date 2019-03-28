@@ -50,11 +50,11 @@ return [
         '1/product/delete/<id>'=>'product/delete',
 
 
-        ### TestService 27/02/2019
-        '1/service/get-amazon'=>'service/get-amazon',
-        '1/service/get-amazon-detail'=>'service/get-amazon-detail',
-        '1/service/ebay-detail'=>'service/ebay-detail',
-        '1/service/create-order-product'=>'service/create-order-product',
+        ### TestService Call Details EBAY + AMAZON  27/02/2019 + Data Fixed
+        '1/service-e-a/get-amazon'=>'service/get-amazon',
+        '1/service-e-a/get-amazon-detail'=>'service/get-amazon-detail',
+        '1/service-e-a/ebay-detail'=>'service/ebay-detail',
+        '1/service-e-a/create-order-product'=>'service/create-order-product',
 
 
         ### API SOCIAL 05/03/2019
