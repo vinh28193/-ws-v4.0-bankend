@@ -11,7 +11,7 @@ use common\models\Order;
 
 /** Sản Phẩm 1-1 , 1-n **/
 use common\models\Product;
-use common\models\ProductFee as ProductFee;
+use common\models\ProductFee;
 
 /** Tính Phụ Thu danh mục**/
 use common\models\db\Category;
@@ -73,10 +73,7 @@ class DataFixedController extends BaseApiController
         ];
     }
 
-    public function actionIndex()
-    {
-
-    }
+    public function actionIndex(){}
 
     /** Dữ liệu giả lập add Card **/
     protected function CartData($dataPost = [])
@@ -87,7 +84,9 @@ class DataFixedController extends BaseApiController
         //$this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
 
         // $sku, $seller, $quantity, $source, $image, $parentSku
-        // Thieu Mã giảm giá , Phương thức thanh toán
+        /** Todo : Thiếu link Gốc sản phẩm
+          * Thieu Mã giảm giá , Phương thức thanh toán
+         **/
         $this->cart->addItem(
             $dataPost['sku'],
             $dataPost['seller'],
@@ -134,17 +133,54 @@ class DataFixedController extends BaseApiController
         return $category;
     }
 
-    protected function ProductData($item,$category,$order_id)
-    {
+    protected function ProductData($propertyShopCart,$itemGetWayAPI=[],$category,$order,$seller)
+   {
+
         $product = new Product;
-        $product->order_id = $order_id;
-        $product->sku = $item['item_sku'];
-        $product->parent_sku = $item['item_id'];
-        $product->link_origin = $item['item_origin_url'];
-        $product->getAdditionalFees()->mset($item['additionalFees']);
+
+        $product->order_id = $order->id;
+        $product->seller_id =  $seller->id;
+        $product->portal =  $propertyShopCart->source;
+        $product->sku =  $itemGetWayAPI['item_sku'];
+        $product->parent_sku =  $itemGetWayAPI['item_id'];
+        $product->link_img =  $propertyShopCart->image;
+        $product->link_origin = $itemGetWayAPI['item_origin_url'];
         $product->category_id = $category->id;
+        $product->custom_category_id =  $category->id;
+
+        $product->getAdditionalFees()->mset($itemGetWayAPI['additionalFees']);
         list($product->price_amount_origin, $product->total_price_amount_local) = $product->getAdditionalFees()->getTotalAdditionFees();
-        $product->quantity_customer = $item['quantity'];
+
+        //$product->price_amount_origin =  0;
+        //$product->total_price_amount_local =  0;
+
+        $product->price_amount_local =  0;  /** Todo */
+        $product->quantity_customer =  $itemGetWayAPI['quantity'];
+        $product->quantity_purchase =  null;  /** Todo */
+        $product->quantity_inspect =  null;  /** Todo */
+        $product->variations =  null;   /** Todo */
+        $product->variation_id =  null;  /** Todo */
+        $product->note_by_customer =  'Note By Customer';
+        $product->total_weight_temporary =  0;
+        $product->remove =  0;
+        $product->product_name =  "CHUA LAY DUOC";  /** Todo */
+        $product->product_link =  'https://weshop.com.vn/link/sanpham.html';  /** Todo */
+        $product->version =  '4.0';
+        $product->condition =  null; /** Todo */
+
+        $IsSave = $product->save();
+
+//        $dataSavePro = [
+//            'status' => $IsSave,
+//            'dataProduct' => $product,
+//            'Error' =>$product->errors
+//        ];
+//
+//
+//        echo "<pre>";
+//        print_r($dataSavePro);
+//        echo "</pre>";
+//        die(42434243432);
 
         return $product;
     }
@@ -152,27 +188,10 @@ class DataFixedController extends BaseApiController
     protected function OrderData($itemType , $seller )
     {
         $order = new Order();
-        /*
-        $order->type_order = 'SHOP';
-        $order->ordercode = 'WSVN'. @rand(10,100000);
-        $order->store_id = 1;
-        $order->portal = $itemType;
-        $order->quotation_status = 0;
-        $order->is_quotation = 0;
-        $order->customer_id = 13; //Yii::$app->getUser()->getId();
-        $order->receiver_email = 'vinhvv@peacesolt.net';
-        $order->receiver_name = 'Vinh';
-        $order->receiver_phone = '0987654321';
-        $order->receiver_address = '123 Tam Trinh';
-        $order->receiver_district_id = 1;
-        $order->seller_id = $seller->id;
-        */
-
-
         $order->new = time();
         $order->store_id =  1;
         $order->type_order =  "SHOP";
-        $order->portal =  "AMAZON";
+        $order->portal =  $itemType;
         $order->is_quotation =  0;
         $order->quotation_status =  null;
         $order->quotation_note =  null;
@@ -239,16 +258,26 @@ class DataFixedController extends BaseApiController
         $order->lost =  null;
         $order->current_status =  "NEW";
         $order->remove =  0;
-        $order->save();
+        $IsSave = $order->save();
 
-       // $order->link('products', $product);
 
-        return $order->getPrimaryKey();
+//        $dataSaveOrder = [
+//            'status' => $IsSave,
+//            'dataOrder' => $order,
+//            'Error' =>$order->errors
+//        ];
+//        echo "<pre>";
+//        print_r($dataSaveOrder);
+//        echo "</pre>";
+
+       return $order;
     }
 
     public function actionCreate()
     {
-        if (isset($this->post) == null) {  Yii::$app->api->sendFailedResponse("Invalid Record requested"); }
+        if (isset($this->post) == null) {
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        }
 
         $this->CartData($this->post);
         $items = $this->cart->getItems();
@@ -261,18 +290,16 @@ class DataFixedController extends BaseApiController
 
             $itemType = $this->post['source'];
             // Seller
-            $seller = $this->SellerData($item,$key);
+            $seller = $this->SellerData($item, $key);
 
             // Category
-            $category = $this->CategoryData($item,$key,$itemType);
+            $category = $this->CategoryData($item, $key, $itemType);
 
             // Order
-            $order_id = $this->OrderData($itemType ,$seller);
+            $order = $this->OrderData($itemType, $seller);
 
             // Product
-            $product =  $this->ProductData($item,$category,$order_id);
-
-
+            $product = $this->ProductData($simpleItem, $item, $category, $order, $seller);
 
             $orderUpdateFeeAttribute = [];
             foreach ($product->getAdditionalFees()->keys() as $key) {
@@ -286,18 +313,27 @@ class DataFixedController extends BaseApiController
                     $orderAttribute = 'total_delivery_fee_local';
                 }
 
-                // Todo with ProductFee
-                $_productFee = $this->ProductsFeeData($key,$amount,$local,$product,$order_id, $orderAttribute);
+                // Todo with OrderFee
+                $_productFee = $this->ProductsFeeData($key, $amount, $local, $product->getPrimaryKey(), $order->getPrimaryKey(), $orderAttribute);
 
+                $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
+                //$order->updateAttributes($orderUpdateFeeAttribute);
+                $orders[] = $order;
             }
-            $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
-            //$order->updateAttributes($orderUpdateFeeAttribute);
-            $orders[] = $order_id;
-        }
-        var_dump($orders);
-        die;
-        return true;
 
+
+            $_itemRes = new \stdClass();
+            $_itemRes->order = $orders;
+            $_itemRes->product = $product;
+            $_itemRes->productFee = $_productFee;
+
+            $data = new \stdClass();
+            $data->_items = $_itemRes;
+            $data->_links = null;
+            $data->_meta = null;
+            Yii::$app->api->sendSuccessResponse($data);
+
+        }
     }
 
     protected function ProductsFeeData($key,$amount,$local,$product,$order_id , $orderAttribute)
