@@ -77,6 +77,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             'insertAttributes' => [
                 'class' => \yii\behaviors\AttributesBehavior::className(),
                 'attributes' => [
+                    /*
                     'receiver_country_name' => [
                         self::EVENT_BEFORE_INSERT => [$this, 'evaluateSystemLocation']
                     ],
@@ -97,6 +98,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                             return YII_ENV_DEV ? 1 : Yii::$app->storeManager->getId();
                         },
                     ]
+                    */
                 ]
             ],
         ]);
@@ -253,7 +255,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
      * @param string $attribute target attribute name
      * @param \yii\base\Event $event the event that triggers the current attribute updating.
      */
-    protected function evaluateSystemLocation($event, $attribute)
+    public function evaluateSystemLocation($event, $attribute)
     {
         Yii::info($event, $attribute);
     }
@@ -263,10 +265,10 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
      * @param string $attribute target attribute name
      * @param \yii\base\Event $event the event that triggers the current attribute updating.
      */
-    protected function evaluateCustomer($event, $attribute)
-    {
-
-    }
+//    public function evaluateCustomer($event, $attribute)
+//    {
+//        Yii::info($event, $attribute);
+//    }
 
     public function getRuleParams($permissionName)
     {
