@@ -589,3 +589,32 @@ php yii fixture/load ListAccountPurchase
 ####---------Warning: session_regenerate_id(): Session object destruction failed in------
 https://stackoverflow.com/questions/27438806/warning-session-regenerate-id-session-object-destruction-failed-in/27453468
  Line 300 vendor/yiisoft/yii2/web/Session.php
+
+
+##------API TEST PHU THU DANH MUC--------------
+php yii fixture/load "Category,CategoryGroup"
+API : http://weshop-v4.back-end.local.vn/test/get-custom-fee
+{
+    "price": 400,
+    "quantity": 7,
+    "weight": 0.5,
+    "isNew": false,
+    "cate_id": 11,
+    "rules": [
+        {
+            "conditions": [
+                {
+                    "value": 0,
+                    "key": "price",
+                    "type": "int",
+                    "operator": ">"
+                }
+            ],
+            "fee": 10,
+            "unit": "quantity",
+            "type_fee": "%"
+        }
+    ],
+    "custom_fee": 280,
+    "message": "Lấy custom fee thành công"
+}
