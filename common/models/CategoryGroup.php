@@ -15,14 +15,13 @@ use common\models\weshop\TargetCustomFee;
 
 class CategoryGroup extends \common\models\db\CategoryGroup
 {
-    public function customFeeCalculator($price, $quantity, $weight, $isNew = false){
+    /**
+     * @param TargetCustomFee $target
+     * @return float|int
+     */
+    public function customFeeCalculator($target){
         $rules = json_decode($this->rule,true);
         $total_custom_fee = 0;
-        $target = new TargetCustomFee();
-        $target->price = $price;
-        $target->quantity = $quantity;
-        $target->weight = $weight;
-        $target->condition = $isNew ? ConditionCustomFee::condition_NEW : ConditionCustomFee::condition_used;
         foreach ($rules as $rule){
             $crRule = new RuleCustomFee();
             $crRule->set($rule);
