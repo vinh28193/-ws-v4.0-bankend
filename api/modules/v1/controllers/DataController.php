@@ -41,7 +41,7 @@ use yii\db\Connection;
 use yii\di\Instance;
 use yii\helpers\ArrayHelper;
 
-class DataFixedController extends BaseApiController
+class DataController extends BaseApiController
 {
 
     /**
@@ -147,7 +147,7 @@ class DataFixedController extends BaseApiController
         $product->custom_category_id =  $category->id;
 
         $product->getAdditionalFees()->mset($itemGetWayAPI['additionalFees']);
-        list($product->price_amount_origin, $product->total_price_amount_local) = $product->getAdditionalFees()->getTotalAdditionFees();
+        list($product->price_amount_origin, $product->total_price_amount_local) = 0; // $product->getAdditionalFees()->getTotalAdditionFees();
 
         //$product->price_amount_origin =  0;
         //$product->total_price_amount_local =  0;
@@ -175,6 +175,10 @@ class DataFixedController extends BaseApiController
             'Error' =>$product->errors
         ];
 
+
+        var_dump($dataSavePro);
+        die("Prod");
+
         return $product;
     }
 
@@ -190,6 +194,7 @@ class DataFixedController extends BaseApiController
         $order->quotation_status =  null;
         $order->quotation_note =  null;
         $order->customer_id =  13;
+        $order->customer_type = 'Retail';
         $order->receiver_email =  "dieu.nghiem@hotmail.com";
         $order->receiver_name =  "Bạc Vĩ";
         $order->receiver_phone =  "022 511 1846";
@@ -217,7 +222,7 @@ class DataFixedController extends BaseApiController
         $order->difference_money =  0;
         $order->utm_source =  null;
         $order->seller_id =  $seller->id;
-        $order->seller_name = $seller->name;
+        $order->seller_name = $seller->seller_name;
         $order->seller_store = $seller->seller_link_store;
         $order->total_final_amount_local =  0;
         $order->total_paid_amount_local =  0;
@@ -268,6 +273,7 @@ class DataFixedController extends BaseApiController
 
     public function actionCreate()
     {
+
         /** IPHONE
         https://weshop.com.vn/ebay/item/apple-iphone-4s-mobile-phone-8gb-16gb-32gb-sim-free-factory-unlocked-smartphone-312226695751.html?sid=IPhone-4S-White-16GB
         https://weshop.com.vn/api/cmsproduct/calcfee?id=312226695751&qty=1&store=vn&portal=ebay
