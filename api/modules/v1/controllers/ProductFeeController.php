@@ -51,6 +51,9 @@ class ProductFeeController extends BaseApiController
         $this->post['updated_at'] = time();
         $old_amount = $model->amount;
         $old_local_amount = $model->local_amount;
+        if(in_array($model->type,['product_price_origin','tax_fee_origin','origin_shipping_fee'])){
+            return $this->response(false, 'Can not edit '.$model->type.' .');
+        }
         $type_total = $this->getTotalFeeOrder($model->type);
         if(!$type_total){
             return $this->response(false, 'Can not find type fee : '.$model->type.' in order table');
