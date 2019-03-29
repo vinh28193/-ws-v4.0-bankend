@@ -15,6 +15,8 @@ use common\models\queries\PackageItemQuery;
 /**
  * Class PackageItem
  * @package common\models
+ * @property $order Order
+ *
  */
 
 class PackageItem extends DbPackageItem
