@@ -9,11 +9,15 @@
 namespace api\controllers;
 
 
+use common\components\TestObject;
+
 class TesterController extends \yii\rest\Controller
 {
 
     public function actionIndex(){
-        \common\components\log\Logging::create()->product->push('test','tesing');
+        $object = new TestObject();
+        $object->type = 'isA';
+        $object->isA();
         die;
         return 0;
     }
