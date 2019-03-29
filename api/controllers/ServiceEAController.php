@@ -25,7 +25,7 @@ use yii\db\Connection;
 use yii\di\Instance;
 use yii\helpers\ArrayHelper;
 
-class ServiceController extends REST
+class ServiceEAController extends BaseApiController
 {
     /**
      * @var string|Connection
@@ -47,7 +47,7 @@ class ServiceController extends REST
         $this->db = Instance::ensure($this->db, Connection::className());
         $this->cart = Instance::ensure($this->cart, CartManager::className());
     }
-    
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -110,8 +110,7 @@ class ServiceController extends REST
         $amazonSearch->rh = \Yii::$app->request->post('rh');
         $amazonSearch->sort = \Yii::$app->request->post('sort');
         $rs = AmazonSearchProductGate::parse($amazonSearch);
-        print_r($rs);
-        die;
+        Yii::$app->api->sendSuccessResponse($rs);
     }
 
     public function actionGetamazonDetail()
@@ -120,8 +119,7 @@ class ServiceController extends REST
         $amazonSearch->store = \Yii::$app->request->post('domain', Product::STORE_US);
         $amazonSearch->asin_id = \Yii::$app->request->post('sku');
         $rs = AmazonProductGate::parse($amazonSearch);
-        print_r($rs);
-        die;
+        Yii::$app->api->sendSuccessResponse($rs);
     }
 
     public function actionGetEbay()
@@ -138,8 +136,7 @@ class ServiceController extends REST
         $form->sellers = \Yii::$app->request->post("sellers");
         $form->type = \Yii::$app->request->post("type");
         $rs = EbaySearchProductGate::parse($form);
-        print_r($rs);
-        die;
+        Yii::$app->api->sendSuccessResponse($rs);
     }
 
     public function actionEbayDetail()
@@ -149,7 +146,7 @@ class ServiceController extends REST
             $store = new StoreManager();
             $store->setStore(1);
             $product = EbayProductGate::parseObject($sku, $store);
-            print_r($product);
+            Yii::$app->api->sendSuccessResponse($product);
         }
     }
 
@@ -162,15 +159,7 @@ class ServiceController extends REST
 
         $this->cart->removeItems();
         $this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
-        //$this->cart->addItem('IF_6C960C53', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/nrsAAOSw7Spbzlyw/$_12.JPG?set_id=880000500F', '252888606889');
-        //$this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
         $items = $this->cart->getItems();
-
-        echo " Acount items : \n ";
-        echo "<pre>";
-        print_r($items);
-        echo "</pre>";
-        die("90909090");
 
         $orders = [];
         $errors = [];

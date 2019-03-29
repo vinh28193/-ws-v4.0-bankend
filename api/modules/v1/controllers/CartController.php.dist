@@ -12,7 +12,7 @@ use Yii;
 use yii\data\ArrayDataProvider;
 use api\controllers\BaseApiController;
 
-class CartController extends BaseApiController
+class CartControllerDist extends BaseApiController
 {
 
 
