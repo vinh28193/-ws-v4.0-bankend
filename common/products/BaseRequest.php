@@ -128,20 +128,10 @@ abstract class BaseRequest extends \yii\base\Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    abstract function getFullUrl();
-    /**
-     * @param \yii\httpclient\Request $httpRequest
-     * @return \yii\httpclient\Request
-     */
-    abstract function buildHttpRequest($httpRequest);
-
 
     /**
      * Build Parameter as Array
      * @return array|mixed
      */
-    abstract function buildParams();
+    abstract function params();
 }

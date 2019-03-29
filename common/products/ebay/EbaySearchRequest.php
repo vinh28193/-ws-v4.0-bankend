@@ -21,19 +21,6 @@ class EbaySearchRequest extends \common\products\BaseRequest
     public $usShippingFee;
     public $itemsPerPage;
 
-
-    public function getFullUrl(){
-        return 'http://ebay-api-v3.weshop.beta/v3/search';
-    }
-
-    public function buildHttpRequest($httpRequest)
-    {
-        return $httpRequest->setFormat('json')
-        ->setFullUrl($this->getFullUrl())
-        ->setMethod('POST')
-        ->setData($this->buildParams());
-    }
-
     public function rules()
     {
         $rules = ArrayHelper::merge(parent::rules(), [
@@ -138,7 +125,7 @@ class EbaySearchRequest extends \common\products\BaseRequest
     }
 
 
-    public function buildParams(){
+    public function params(){
         $post = [];
         $post['keywords'] = $this->keyword ? $this->keyword : '';
         $post['page'] = $this->page ? $this->page : 1;

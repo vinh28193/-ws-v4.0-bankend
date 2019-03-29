@@ -15,10 +15,8 @@ class TesterController extends \yii\rest\Controller
 {
 
     public function actionIndex(){
-        $object = new TestObject();
-        $object->type = 'isA';
-        $object->isA();
-        die;
-        return 0;
+        $productComponent = new \common\products\ProductManager();
+        $ebay = $productComponent->ebay->lookup(332800694983);
+        var_dump($ebay);die;
     }
 }

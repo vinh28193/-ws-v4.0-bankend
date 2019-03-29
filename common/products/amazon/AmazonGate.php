@@ -9,7 +9,539 @@
 
 namespace common\products\amazon;
 
-class AmazonGate
+
+use common\models\Category;
+use common\products\BaseGate;
+use Yii;
+use yii\httpclient\Client;
+
+class AmazonGate extends BaseGate
 {
 
+    public $store = AmazonProduct::STORE_US;
+    public $searchUrl = 'search';
+    public $lookupUrl = 'get';
+    public $offerUrl = 'get_offers';
+    public $asinsUrl = 'get_asins';
+
+    public function search($params, $refresh = false)
+    {
+        $request = new AmazonSearchRequest();
+        $request->load($params, '');
+        if (!$request->validate()) {
+            return [false, $request->getFirstErrors()];
+        }
+        list($ok, $response) = $this->searchIternal($request);
+        if ($ok && is_array($response)) {
+            return [$ok, (new AmazonSearchResponse($this))->parser($response)];
+        }
+        return [false, $response];
+
+    }
+
+    public function lookup($condition, $refresh = false)
+    {
+        $condition['store'] = $this->store;
+        $request = new AmazonDetailRequest();
+        $request->load($condition, '');
+        if (!$request->validate()) {
+            return [false, $request->getFirstErrors()];
+        }
+        if ($request->parent_asin_id !== null && $request->parent_asin_id !== $request->asin_id) {
+            //Search ra san pham cha truoc de lay load sub url params, parent sku
+            $cloneRequest = clone $request;
+            $cloneRequest->asin_id = $request->parent_asin_id;
+            $cloneRequest->parent_asin_id = null;
+            list($ok, $response) = $this->lookupInternal($cloneRequest);
+            if ($ok && is_array($response)) {
+                /** @var  $product \common\products\amazon\AmazonProduct */
+                $product = (new AmazonDetailResponse($this))->parser($response);
+                //new sku cua san pham cha khac voi sku can tim kiem
+                if ($product->item_id != $request->asin_id) {
+                    if ($request->parent_asin_id != $product->parent_item_id) {
+                        //gan lai gia tri parent_asin_id  neu khac form truyen len
+                        $request->parent_asin_id = $product->parent_item_id;
+                    }
+                    //Gan gia tri load_sub_url
+                    $request->load_sub_url = $product->load_sub_url;
+                    list($okSub, $productSub) = $this->lookupInternal($request);
+                    if ($okSub && is_array($productSub)) {
+                        $productSub = (array)$productSub;
+                        $this->updateProduct($product, $productSub, $request);
+                    }
+
+                }
+                return [true, $product];
+            }
+            return [false, $response];
+        } else {
+            //Truong hop hop load sp lan dau
+            $cloneRequest = clone $request;
+            $cloneRequest->parent_asin_id = null;
+            $cloneRequest->load_sub_url = null;
+            list($ok, $response) = $this->lookupInternal($cloneRequest);
+            if ($ok && is_array($response)) {
+                /** @var  $product \common\products\amazon\AmazonProduct */
+                $product = (new AmazonDetailResponse($this))->parser($response);
+                if (($product->item_id != $request->asin_id) || (isset($product->parent_item_id) && $product->parent_item_id != $product->item_id)) {
+                    $request->parent_asin_id = $product->parent_item_id;
+                    $request->load_sub_url = $product->load_sub_url;
+                    list($okSub, $productSub) = $this->lookupInternal($request);
+                    if ($okSub && is_array($productSub)) {
+                        $productSub = (array)$productSub;
+                        $this->updateProduct($product, $productSub, $request);
+                    }
+                }
+                return [true, $product];
+            }
+            return [false, $response];
+        }
+    }
+
+    /**
+     * @param $ids
+     * @param bool $refresh
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getAsins($ids, $refresh = false)
+    {
+        $ids = implode(",", $ids);
+        $httpClient = $this->getHttpClient();
+        $httpRequest = $httpClient->createRequest();
+        $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
+        $httpRequest->setMethod('POST');
+        $httpRequest->setUrl($this->asinsUrl);
+        $httpRequest->setData([
+            'store' => $this->store,
+            'asin_ids' => $ids
+        ]);
+        try {
+            $httpResponse = $httpClient->send($httpRequest);
+            if (!$httpResponse->isOk) {
+                return [];
+            }
+            $httpResponse = $httpResponse->getData();
+            return $httpResponse['response'] ? $httpResponse['response'] : [];
+        } catch (\Exception $e) {
+            Yii::error($e, __METHOD__);
+            return [];
+        }
+
+    }
+
+    /**
+     * @param $itemId
+     * @param bool $refresh
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getOffers($itemId, $refresh = false)
+    {
+        $httpClient = $this->getHttpClient();
+        $httpRequest = $httpClient->createRequest();
+        $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
+        $httpRequest->setMethod('POST');
+        $httpRequest->setUrl($this->asinsUrl);
+        $httpRequest->setData([
+            'store' => $this->store,
+            'asin_id' => $itemId
+        ]);
+        try {
+            $httpResponse = $httpClient->send($httpRequest);
+            if (!$httpResponse->isOk) {
+                return [];
+            }
+            $httpResponse = $httpResponse->getData();
+            return $httpResponse['response'] ? $httpResponse['response'] : [];
+        } catch (\Exception $e) {
+            Yii::error($e, __METHOD__);
+            return [];
+        }
+    }
+
+    /**
+     * @param $request
+     */
+    private function searchIternal($request)
+    {
+        $attempts = 0;
+        do {
+            $attempts++;
+            $httpClient = $this->getHttpClient();
+            $httpRequest = $httpClient->createRequest();
+            $httpRequest->setUrl($this->searchUrl);
+            $httpRequest->setData($request->params());
+            $httpRequest->setFormat('json');
+            $httpRequest->setMethod('POST');
+            $httpResponse = $httpClient->send($httpRequest);
+            $response = $httpResponse->getData();
+            if ($this->isValidResponse($response)) {
+                break;
+            }
+
+        } while ($attempts < 3);
+        if (!isset($response)) {
+            return [false, 'can not send request'];
+        }
+        if (!isset($response['response'])) return [];
+        $result = $response['response'];
+
+        if (!isset($result['total_product'])) return [];
+        $data['products'] = $this->getSearchProduct($result['products']);
+        $data['total_product'] = $result['total_product'] > 0 ? $result['total_product'] : ($result['total_page'] > 0 ? $result['total_page'] * count($data['products']) : count($data['products']));
+
+        $result['categories'] = array_unique($result['categories']);
+
+
+        $categories = Category::find()->where([
+            'OR',
+            ['alias' => $result['categories']],
+            ['path' => $result['categories']]
+        ])->select(['alias as category_id', 'name as category_name', 'originName as origin_name'])->asArray()->all();
+        $data['categories'] = $categories;
+        $data['sorts'] = $result['sorts'];
+        $data['filters'] = $this->getFilter($result['filters']);
+        $data['total_page'] = $result['total_page'];
+    }
+
+    /**
+     * @param AmazonDetailRequest $request
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
+     */
+    private function lookupInternal(AmazonDetailRequest $request)
+    {
+        $attempts = 0;
+        do {
+            $attempts++;
+            $httpClient = $this->getHttpClient();
+            $httpRequest = $httpClient->createRequest();
+            $httpRequest->setUrl($this->searchUrl);
+            $httpRequest->setData($request->params());
+            $httpRequest->setFormat('json');
+            $httpRequest->setMethod('POST');
+            $httpResponse = $httpClient->send($httpRequest);
+            $response = $httpResponse->getData();
+            if ($this->isValidResponse($response)) {
+                break;
+            }
+
+        } while ($attempts < 3);
+        if (!isset($response)) {
+            return [false, 'can not send request'];
+        }
+        $amazon = $response['response'];
+        $rs = [];
+        $rs['categories'] = $amazon['node_ids'];
+        $rs['item_id'] = $request->asin_id;
+        $rs['item_sku'] = $request->asin_id;
+        $rs['rate_star'] = isset($amazon['rate_star']) ? $amazon['rate_star'] : 0;
+        $rs['category_id'] = isset($amazon['node_ids'][count($amazon['node_ids']) - 1]) ? $amazon['node_ids'][count($amazon['node_ids']) - 1] : null;
+        $rs['item_name'] = $amazon['title'];
+        $rs['parent_item_id'] = $amazon['parent_asin_id'];
+        $rs['retail_price'] = count($amazon['retail_price']) > 0 ? $amazon['retail_price'][0] : null;
+        $rs['sell_price'] = count($amazon['sell_price']) > 0 ? $amazon['sell_price'][0] : null;
+        $rs['sell_price_special'] = $amazon['sell_price'];
+        $rs['product_type'] = count($amazon['sell_price']) == 0 ? 1 : 0;
+        $rs['deal_price'] = count($amazon['deal_price']) > 0 ? $amazon['deal_price'][0] : null;
+        $rs['deal_time'] = isset($amazon['deal_time']) ? $amazon['deal_time'] : null;
+        $rs['shipping_weight'] = $amazon['shipping_weight'] / 1000;
+        $rs['shipping_fee'] = $amazon['shipping_fee'];
+        $rs['is_prime'] = $amazon['is_prime'];
+        $rs['is_free_ship'] = $amazon['is_free_ship'];
+        $rs['sort_desc'] = $amazon['description'];
+        $rs['description'] = $amazon['feature_bullets'];
+        $rs['best_seller'] = $amazon['best_seller'];
+        $rs['load_sub_url'] = base64_encode($amazon['load_sub_url']);
+        $rs['manufacturer_description'] = $amazon['manufacturer_description'];
+        $rs['primary_images'] = $this->getItemImage($amazon['primary_images']);
+        $rs['technical_specific'] = $amazon['specific_description'];
+        $rs['variation_options'] = $this->getOptionGroup($amazon['sale_specifics'], $amazon['detail_images']);
+        $rs['variation_mapping'] = $this->getVariationMapping($amazon['sale_specifics'], $amazon['detail_images']);
+        $rs['relate_products'] = $this->getRelateProduct($amazon['suggest_products']);
+        $rs['start_price'] = !empty($amazon["retail_price"]) ? ($amazon["retail_price"][0]) : 0.0;
+        $rs['condition'] = isset($amazon['condition']) ? $amazon['condition'] : 'new';
+        foreach ($amazon['suggest_sets'] as $suggest_sets) {
+            if (($suggest_sets['id'] == 'purchase' || $suggest_sets['id'] == 'session') && count($suggest_sets['asins']) > 0) {
+                $rs['suggest_set_purchase'] = $this->getAsins($suggest_sets['asins']);
+            }
+        }
+
+        $offers = $this->getOffers($rs['item_sku']);
+        $rs['provider'] = [];
+        if (isset($offers['response'])) {
+            foreach ($offers['response'] as $item) {
+                $dat = [];
+                $dat['name'] = $item['seller']['seller_name'];
+                $dat['image'] = '';
+                $dat['website'] = '';
+                $dat['location'] = '';
+                $dat['rating_score'] = $item['seller']['rating_count'];
+                $dat['rating_star'] = $item['seller']['rate_star'];
+                $dat['positive_feedback_percent'] = $item['seller']['positive'];
+                $dat['condition'] = $item['condition'];
+                $dat['fulfillment'] = $item['fulfillment'];
+                $dat['is_free_ship'] = $item['is_free_ship'];
+                $dat['is_prime'] = $item['is_prime'];
+                $dat['price'] = $item['price'];
+                $dat['shipping_fee'] = $item['ship_fee'];
+                $dat['tax_fee'] = $item['tax_fee'];
+                $rs['provider'][] = $dat;
+            }
+            $rs['sell_price'] = $offers['response'][0]['price'];
+            $rs['condition'] = $offers['response'][0]['condition'];
+            $rs['is_free_ship'] = $offers['response'][0]['is_free_ship'];
+            $rs['is_prime'] = $offers['response'][0]['is_prime'];
+            $rs['sell_price'] = $offers['response'][0]['price'];
+            $rs['shipping_fee'] = $offers['response'][0]['ship_fee'];
+            $rs['tax_fee'] = $offers['response'][0]['tax_fee'];
+        }
+        return [true, $rs];
+
+    }
+
+
+    /**
+     * @param $product AmazonProduct
+     * @param $params array
+     * @param $request AmazonDetailRequest
+     */
+    private function updateProduct(&$product, $params, $request)
+    {
+        foreach ($product->variation_mapping as $item) {
+            if ($item->variation_sku == $request->asin_id) {
+                $item->variation_start_price = $params['retail_price'] ? $params['retail_price'] : 0;
+                $item->variation_price = $params['sell_price'];
+                break;
+            }
+        }
+        $product->providers = self::getProviders($params['provider']);
+        $product->deal_price = $params['deal_price'];
+        $product->retail_price = $params['retail_price'];
+        $product->start_price = $params['start_price'];
+        $product->sell_price = $params['sell_price'];
+        $product->condition = $params['condition'];
+        $product->sell_price_special = $params['sell_price_special'];
+        $product->shipping_fee = $params['shipping_fee'];
+        $product->shipping_weight = $params['shipping_weight'] ? $params['shipping_weight'] : ($product->shipping_weight ? $product->shipping_weight : 0.50);
+    }
+
+    private function isValidResponse($response)
+    {
+        return (isset($response['response']) || (count($response['response']['sell_price']) > 0 && count($response['response']['retail_price']) > 0 && count($response['response']['deal_price']) > 0 && $response['response']['title'] != null));
+    }
+
+    private function getOptionGroup($data, $images)
+    {
+        if (count($data) == 0 || count($data['options']) == 0) {
+            return [];
+        }
+        $rs = [];
+        foreach ($data['options'] as $item) {
+            $temp['name'] = $item['name'];
+            $temp['values'] = $item['values'];
+            $temp['images_mapping'] = [];
+            if (count($images) > 0) {
+                if (isset($images['diff_by'])) {
+                    foreach ($images['diff_by'] as $diffBy) {
+                        if ($diffBy == $item['id']) {
+                            foreach ($item['values'] as $val) {
+                                foreach ($images['images'] as $k => $v) {
+                                    if (strpos($k, $val) !== false) {
+                                        $imgTemp = [];
+                                        foreach ($v as $img) {
+                                            $imgTemp[] = [
+                                                'thumb' => $img['thumb'],
+                                                'main' => $img['large'],
+                                            ];
+                                        }
+                                        $temp['images_mapping'][] = [
+                                            'value' => $k,
+                                            'images' => $imgTemp
+                                        ];
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+                if (isset($images['diff_by'][0]) && $images['diff_by'][0] == $item['id']) {
+                    foreach ($images['images'] as $k => $v) {
+                        $imgTemp = [];
+                        foreach ($v as $img) {
+                            $imgTemp[] = [
+                                'thumb' => $img['thumb'],
+                                'main' => $img['large'],
+                            ];
+                        }
+                        $temp['images_mapping'][] = [
+                            'value' => $k,
+                            'images' => $imgTemp
+                        ];
+                    }
+                }
+            }
+            $rs[] = $temp;
+        }
+        return $rs;
+
+    }
+
+    private function getVariationMapping($data, $detailImage)
+    {
+        $varian = [];
+
+        foreach ($data['map'] as $datum) {
+            $imageDiff = $detailImage['diff_by'];
+            $dat = [];
+            $dat['variation_sku'] = $datum['ASIN'];
+            $dat['options_group'] = [];
+            foreach ($datum as $k => $value) {
+                foreach ($data['options'] as $option) {
+                    if ($k == $option['id']) {
+                        $dat['options_group'][] = [
+                            'name' => $option['name'],
+                            'value' => $option['values'][$value]
+                        ];
+                        foreach ($imageDiff as $key => $diff) {
+                            if ($diff == $option['id']) {
+                                $imageDiff[$key] = $option['values'][$value];
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            $imageDiff = implode(' ', $imageDiff);
+            $dat['image_diff'] = $imageDiff;
+            foreach ($detailImage['images'] as $key => $image) {
+                if ($key == $imageDiff) {
+                    $dat['images'] = self::getItemImage($image);
+                    break;
+                }
+            }
+
+            $varian[] = $dat;
+        }
+        return $varian;
+    }
+
+    private function getItemImage($data)
+    {
+        $imgs = [];
+        if (count($data) > 0)
+            foreach ($data as $datum) {
+                $temp = [];
+                $temp['thumb'] = $datum['thumb'];
+                $temp['main'] = $datum['large'];
+                $imgs[] = $temp;
+            }
+        return $imgs;
+    }
+
+    public function getProviders($data)
+    {
+        $rs = [];
+        foreach ($data as $datum) {
+            $rs[] = new \common\products\Provider($datum);
+        }
+        return $rs;
+    }
+
+    private function getRelateProduct($data)
+    {
+
+        $r = [];
+        foreach ($data as $datum) {
+            $rs['item_id'] = $datum['asin_id'];
+            $rs['image'] = $datum['images'][0];
+            $rs['is_prime'] = $datum['is_prime'];
+            $rs['rate_count'] = $datum['rate_count'];
+            $rs['rate_star'] = $datum['rate_star'];
+            $rs['sell_price'] = isset($datum['sell_price'][0]) ? $datum['sell_price'][0] : 0;
+            $rs['title'] = $datum['title'];
+            $r[] = $rs;
+        }
+        return $r;
+    }
+
+    private function getSearchProduct($params)
+    {
+        $rs = [];
+        foreach ($params as $param) {
+            $item = [];
+            $item['item_id'] = $param['asin_id'];
+            $item['image'] = $param['images'][0];
+            $item['is_prime'] = $param['is_prime'];
+
+            $sell_price = $param['sell_price'];
+            $sell_price = array_filter($sell_price, function ($price) {
+                return (int)$price > 0;
+            });
+            $param['sell_price'] = $sell_price;
+            $item['prices_range'] = null;
+            if (count($param['sell_price']) > 1) {
+                if (min($param['sell_price']) < max($param['sell_price'])) {
+                    $item['prices_range'] = [min($param['sell_price']), max($param['sell_price'])];
+                }
+            }
+            $item['sell_price'] = isset($param['sell_price'][0]) ? $param['sell_price'][0] : '';
+            $item['retail_price'] = count($param['retail_price']) > 0 ? $param['retail_price'][0] : null;
+            $item['rate_star'] = $param['rate_star'];
+            $item['rate_count'] = $param['rate_count'];
+            $item['item_name'] = $param['title'];
+            $rs[] = $item;
+        }
+
+        return $rs;
+    }
+
+    private function getFilter($filter)
+    {
+        $rs = [];
+        foreach ($filter as $item) {
+            if (count($item['values']) == 0)
+                continue;
+            $temp = [];
+            $temp['name'] = $item['name'];
+            $temp['values'] = $item['values'];
+            $rs[] = $temp;
+        }
+        return $rs;
+    }
+
+    private function getCategories($data)
+    {
+        $rs = [];
+        $data = array_unique($data);
+        foreach ($data as $datum) {
+            $t = explode(":", $datum);
+//            $arr = array();
+//            $ref = &$arr;
+//            foreach ($t as $key) {
+//                $ref['category_id']=$key;
+//                $ref['category_name']= self::getCategoryName($key);
+//                $ref = &$ref['child_category'][];
+//            }
+//            $rs[] =$arr;
+            $arr = [];
+            $count_level = count($t);
+            $arr['category_id'] = $t[$count_level - 1];
+            $arr['category_name'] = self::getCategoryName($arr['category_id']);
+//            $arr['category_path']=$datum;
+            $rs[] = $arr;
+        }
+        return $rs;
+
+    }
+
+    private function getCategoryName($alias)
+    {
+        $cate = Category::find()->select('name')->where(['alias' => $alias])->one();
+        return $cate['name'];
+    }
 }

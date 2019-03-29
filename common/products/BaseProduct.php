@@ -225,7 +225,7 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
         $tempPrice = $this->getSellPrice();
         $this->sell_price = $this->start_price;
         $this->init();
-        $temp = $this->$this->getAdditionalFees()->getTotalAdditionFees();
+        $temp = $this->getAdditionalFees()->getTotalAdditionFees();
         if (!empty($this->deal_price) && $this->deal_price > 0.0) {
             $deal = $this->deal_price;
             $this->deal_price = null;
