@@ -8,9 +8,11 @@
 
 namespace api\modules\v1\controllers;
 
-use Yii;
 use api\controllers\BaseApiController;
+use common\helpers\ChatHelper;
 use common\models\Order;
+use common\models\User;
+use Yii;
 
 class SaleController extends BaseApiController
 {
@@ -34,7 +36,7 @@ class SaleController extends BaseApiController
     {
         return [
             'index' => ['GET', 'POST'],
-            'assign' => ['PUT','POST']
+            'assign' => ['PUT', 'POST']
         ];
     }
 
@@ -47,17 +49,34 @@ class SaleController extends BaseApiController
 
     public function actionAssign($id)
     {
-        if(($model = Order::findOne($id)) === null){
-            return $this->response(false,"not found order $id");
+        if (($model = Order::findOne($id)) === null) {
+            return $this->response(false, "not found order $id");
         }
         $model->setScenario(Order::SCENARIO_SALE_ASSIGN);
-        /** @var  $identity  \common\models\User */
-        $identity = Yii::$app->getUser()->getIdentity();
-        $model->sale_support_id = $identity->getId();
-        $model->support_email = $identity->email;
-        if(!$model->save()){
+        if (!isset($this->post['sale_support_id']) || ($saleId = $this->post['sale_support_id']) === null || $saleId === '') {
+            return $this->response(false, 'Invalid sale');
+        }
+        if (($sale = User::findOne($saleId)) === null) {
+            return $this->response(false, 'Not found sale ' . $saleId);
+        }
+        /** @var $user \common\models\User */
+        $user = Yii::$app->getUser()->getIdentity();
+        /** @var  $sale \common\models\User */
+        $model->sale_support_id = $sale->id;
+        $model->support_email = $sale->email;
+        if (!$model->save()) {
             return $this->response(false, $model->getFirstErrors());
         }
-        return $this->response(true, "sale {$identity->email} assign to order $id",$identity->getPublicIdentity());
+        $message = "sale {$sale->email} assign to order $id";
+        Yii::$app->wsLog->order->push('assign', null, [
+            'id' => $model->id,
+            'request' => $saleId,
+            'response' => $message
+        ]);
+        ChatHelper::push($message, $model->id, 'WS_CUSTOMER', 'SYSTEM');
+        return $this->response(true, "sale {$user->username} assign order $id to {$sale->username} ", [
+            'id' => $model->sale_support_id,
+            'username' => $sale->username,
+        ]);
     }
 }
