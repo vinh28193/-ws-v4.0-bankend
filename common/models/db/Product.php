@@ -20,19 +20,23 @@ use Yii;
  * @property string $price_amount_origin đơn giá gốc ngoại tệ
  * @property string $price_amount_local đơn giá local
  * @property string $total_price_amount_local tổng tiền hàng của từng sản phẩm
+ * @property string $total_fee_product_local tổng phí trên sản phẩm
  * @property int $quantity_customer số lượng khách đặt
  * @property int $quantity_purchase số lượng Nhân viên đã mua
  * @property int $quantity_inspect số lượng đã kiểm
  * @property string $variations thuộc tính sản phẩm
- * @property int $variation_id mã thuộc tính sản phẩm . Notes : Trường này để làm addon tự động mua hàng đẩy vào Giở hàng của Ebay / Amazon
+ * @property int $variation_id mã thuộc tính sản phẩm . Notes : Trường này để làm addon tự động mua hàng đẩy vào Giở hàng của Ebay / Amazon 
  * @property string $note_by_customer note của khách / Khách hàng ghi chú
  * @property string $total_weight_temporary
  * @property string $created_at
  * @property string $updated_at
- * @property int $remove mặc định 0 là chưa xóa 1 là ẩn
+ * @property int $remove mặc định 0 là chưa xóa 1 là ẩn 
  * @property string $product_name
  * @property string $product_link
  * @property string $version version 4.0
+ * @property string $condition Tình trạng đơn hàng
+ *
+ * @property PurchaseProduct[] $purchaseProducts
  */
 class Product extends \common\components\db\ActiveRecord
 {
@@ -44,21 +48,16 @@ class Product extends \common\components\db\ActiveRecord
         return 'product';
     }
 
-    public function getProductFee()
-    {
-        return $this->hasMany(ProductFee::className(), ['product_id' => 'id']);
-    }
-
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'product_name'], 'required'],
-            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'remove'], 'integer'],
+            [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'created_at', 'product_name'], 'required'],
+            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove'], 'integer'],
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'product_name'], 'string'],
-            [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_weight_temporary'], 'number'],
+            [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_fee_product_local', 'total_weight_temporary'], 'number'],
             [['portal', 'sku', 'parent_sku', 'version', 'condition'], 'string', 'max' => 255],
             [['product_link'], 'string', 'max' => 500],
         ];
@@ -83,6 +82,7 @@ class Product extends \common\components\db\ActiveRecord
             'price_amount_origin' => 'Price Amount Origin',
             'price_amount_local' => 'Price Amount Local',
             'total_price_amount_local' => 'Total Price Amount Local',
+            'total_fee_product_local' => 'Total Fee Product Local',
             'quantity_customer' => 'Quantity Customer',
             'quantity_purchase' => 'Quantity Purchase',
             'quantity_inspect' => 'Quantity Inspect',

@@ -152,6 +152,7 @@ class DataFixedController extends BaseApiController
         //$product->price_amount_origin =  0;
         //$product->total_price_amount_local =  0;
 
+        $product->total_fee_product_local = 0;  // Tổng Phí theo sản phẩm
         $product->price_amount_local =  0;  /** Todo */
         $product->quantity_customer =  $itemGetWayAPI['quantity'];
         $product->quantity_purchase =  null;  /** Todo */
@@ -221,7 +222,7 @@ class DataFixedController extends BaseApiController
         $order->total_paid_amount_local =  0;
         $order->total_refund_amount_local =  0;
         $order->total_amount_local =  10716000;
-        $order->total_fee_amount_local =  0;
+        $order->total_fee_amount_local =  0;  // Tổng Phí / order
         $order->total_counpon_amount_local =  0;
         $order->total_promotion_amount_local =  0;
         $order->exchange_rate_fee =  23500;
@@ -291,16 +292,50 @@ class DataFixedController extends BaseApiController
             $product = $this->ProductData($simpleItem, $item, $category, $order, $seller);
 
             $orderUpdateFeeAttribute = $productFee = []; $i=0;
+            $data_key = [];
             foreach ($product->getAdditionalFees()->keys() as $key) {
                 list($amount, $local) = $product->getAdditionalFees()->getTotalAdditionFees($key);
-                $orderAttribute = "total_{$key}_local";
+
+                // Chọn Key Product Fee Tương ứng với trường nào của Order để tính tổng
+                /* ----> ProductFee :
+                    "product_price_origin": "product_price_origin",
+                    "tax_fee_origin": "tax_fee_origin",
+                    "origin_shipping_fee": "origin_shipping_fee",
+                    "weshop_fee": "weshop_fee",
+                    "intl_shipping_fee": "intl_shipping_fee",
+                    "custom_fee": "custom_fee",
+                    "delivery_fee_local": "delivery_fee_local",
+                    "packing_fee": "packing_fee",
+                    "inspection_fee": "inspection_fee",
+                    "insurance_fee": "insurance_fee",
+                    "vat_fee": "vat_fee"
+
+                   * Order
+                    // Tổng các Phí Weshop
+                    'total_fee_amount_local' => $this->decimal(18, 2)->comment("tổng phí đơn hàng"),
+                    'total_tax_us_amount_local' => $this->decimal(18, 2)->comment("Tổng phí us tax"),
+                    'total_shipping_us_amount_local' => $this->decimal(18, 2)->comment("Tổng phí shipping us"),
+                    'total_weshop_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí weshop"),
+                    'total_intl_shipping_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí vận chuyển quốc tế"),
+                    'total_custom_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí phụ thu"),
+                    'total_delivery_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí vận chuyển nội địa"),
+                    'total_packing_fee_amount_local' => $this->decimal(18, 2)->comment("tổng phí đóng gỗ"),
+                    'total_inspection_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí kiểm hàng"),
+                    'total_insurance_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí bảo hiểm"),
+                    'total_vat_amount_local' => $this->decimal(18, 2)->comment("Tổng phí VAT"),
+                */
+
                 if ($key === 'product_price_origin') {
                     $orderAttribute = 'total_origin_fee_local';
                 } elseif ($key === 'tax_fee_origin') {
                     $orderAttribute = 'total_origin_tax_fee_local';
                 } elseif ($key === 'delivery_fee_local') {
                     $orderAttribute = 'total_delivery_fee_local';
+                } elseif ($key === 'custom_fee'){
+                    $orderAttribute = 'total_custom_fee_amount_local';
                 }
+
+                $data_key[$key] = $key;
 
                 // Todo with OrderFee
                 $_productFee = new ProductFee();
@@ -318,9 +353,10 @@ class DataFixedController extends BaseApiController
                 $productFee[$i++] = $_productFee;
 
                 $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
+                //var_dump($orderAttribute);die("89989898989");
                 //$order->updateAttributes($orderUpdateFeeAttribute);  /** VI SAO UPDATE moi cai nay lai loi **/
                 $productFee[$i++] = $_productFee;
-                $orders[] = $order;
+                //$orders[] = $order;
             }
 
 
@@ -328,6 +364,8 @@ class DataFixedController extends BaseApiController
             $_itemRes['order'] = $orders;
             $_itemRes['product'] = $product;
             $_itemRes['productFee'] = $productFee;
+            $_itemRes['orderUpdateFee'] = $orderUpdateFeeAttribute;
+            $_itemRes['key'] = $data_key;
 
             Yii::$app->api->sendSuccessResponse($_itemRes);
 
