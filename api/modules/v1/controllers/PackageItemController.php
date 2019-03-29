@@ -106,14 +106,14 @@ class PackageItemController extends BaseApiController
             $dirtyAttributes = $model->getDirtyAttributes();
             if (!$model->save()) {
                 Yii::$app->wsLog->order->push('updatePackageItem', null, [
-                    'id' => $model->order->ordercore,
+                    'id' => $post['ordercode'],
                     'request' => $this->post,
                     'response' => $model->getErrors()
                 ]);
                 return $this->response(false, 'update package item'. $id . 'error');
             }
             Yii::$app->wsLog->order->push('createPackageItem', null, [
-                'id' => $model->order->ordercore,
+                'id' => $post['ordercode'],
                 'request' => $this->post,
                 'response' => $dirtyAttributes
             ]);
