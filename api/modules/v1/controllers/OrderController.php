@@ -163,14 +163,14 @@ class OrderController extends BaseApiController
         $response = null;
         if (!$model->save()) {
             Yii::$app->wsLog->order->push($model->getScenario(), null, [
-                'id' => $id,
+                'id' => $model->id,
                 'request' => $this->post,
                 'response' => $model->getErrors()
             ]);
             return $this->response(false, $model->getFirstErrors());
         }
         Yii::$app->wsLog->order->push($model->getScenario(), null, [
-            'id' => $id,
+            'id' => $model->id,
             'request' => $this->post,
             'response' => $dirtyAttributes
         ]);
