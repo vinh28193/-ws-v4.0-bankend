@@ -54,7 +54,7 @@ class Product extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'product_name'], 'required'],
+            [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'product_name','total_fee_product_local'], 'required'],
             [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'remove'], 'integer'],
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'product_name'], 'string'],
             [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_fee_product_local', 'total_weight_temporary'], 'number'],
