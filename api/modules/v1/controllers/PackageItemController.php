@@ -63,6 +63,11 @@ class PackageItemController extends BaseApiController
         return $this->response(true, 'get data success', $dataProvider);
     }
 
+    public function actionView($id) {
+        $query = PackageItem::find()->where(['order_id' => $id])->asArray()->all();
+        return $this->response(true, 'get data success', $query);
+    }
+
     public function actionCreate() {
         $post = Yii::$app->request->post();
         $model = new PackageItem;
@@ -79,14 +84,14 @@ class PackageItemController extends BaseApiController
         $dirtyAttributes = $model->getDirtyAttributes();
         if (!$model->save()) {
             Yii::$app->wsLog->order->push('createPackageItem', null, [
-                'id' => $post['order_id'],
+                'id' => $post['ordercode'],
                 'request' => $this->post,
                 'response' => $model->getErrors()
             ]);
             return $this->response(false, 'create package item error');
         }
         Yii::$app->wsLog->order->push('createPackageItem', null, [
-            'id' => $post['order_id'],
+            'id' => $post['ordercode'],
             'request' => $this->post,
             'response' => $dirtyAttributes
         ]);

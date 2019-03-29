@@ -16,9 +16,9 @@ trait AdditionalFeeTrait
     {
         if ($this->additionalFees === null || $isLoad) {
             $this->additionalFees = new AdditionalFeeCollection();
-            if ($isLoad) {
+//            if ($isLoad) {
                 $this->additionalFees->loadFormOwner($this);
-            }
+//            }
         }
         return $this->additionalFees;
     }
