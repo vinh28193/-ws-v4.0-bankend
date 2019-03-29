@@ -67,14 +67,21 @@ class SaleController extends BaseApiController
         if (!$model->save()) {
             return $this->response(false, $model->getFirstErrors());
         }
-        $message = "sale {$sale->email} assign to order $id";
+        $role = Yii::$app->authManager->getRolesByUser($user->id);
+        $message = '';
+        if (!empty($role)) {
+            $role = array_keys($role);
+            $role = reset($role);
+            $message .= "$role ";
+        }
+        $message .= "{$user->username} assign order {$model->ordercode} to {$sale->username}";
         Yii::$app->wsLog->order->push('assign', null, [
             'id' => $model->ordercode,
             'request' => $saleId,
             'response' => $message
         ]);
         ChatHelper::push($message, $model->ordercode, 'WS_CUSTOMER', 'SYSTEM');
-        return $this->response(true, "sale {$user->username} assign order $id to {$sale->username} ", [
+        return $this->response(true, $message, [
             'id' => $model->sale_support_id,
             'username' => $sale->username,
         ]);

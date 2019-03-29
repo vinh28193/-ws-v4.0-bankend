@@ -10,8 +10,10 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
+use common\helpers\ChatHelper;
 use common\models\Order;
 use Yii;
+use yii\helpers\Inflector;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
@@ -159,8 +161,10 @@ class OrderController extends BaseApiController
         $check = $model->loadWithScenario($this->post);
         $dirtyAttributes = $model->getDirtyAttributes();
 
-        Yii::info($check, $model->getScenario());
-        $response = null;
+        $action = Inflector::camel2words($model->getScenario());
+        Yii::info([$dirtyAttributes,$model->getOldAttributes()], $model->getScenario());
+
+        $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if (!$model->save()) {
             Yii::$app->wsLog->order->push($model->getScenario(), null, [
                 'id' => $model->ordercode,
@@ -169,12 +173,13 @@ class OrderController extends BaseApiController
             ]);
             return $this->response(false, $model->getFirstErrors());
         }
+        ChatHelper::push($messages,$model->ordercode,'WS_CUSTOMER', 'SYSTEM');
         Yii::$app->wsLog->order->push($model->getScenario(), null, [
             'id' => $model->ordercode,
             'request' => $this->post,
             'response' => $dirtyAttributes
         ]);
-        return $this->response(true, "order $id is up to date", $dirtyAttributes);
+        return $this->response(true, $messages);
     }
 
     /**
@@ -213,6 +218,25 @@ class OrderController extends BaseApiController
             throw new NotFoundHttpException("Not found order");
         }
         return $model;
+    }
+
+    /**
+     * @param $dirtyAttributes
+     * @param $reference \common\components\db\ActiveRecord
+     * @return string
+     */
+    protected function resolveChatMessage($dirtyAttributes,$reference)
+    {
+
+        $results = [];
+        foreach ($dirtyAttributes as $name => $value) {
+            if (strpos($name, '_id') !== false && is_numeric($value)) {
+                continue;
+            }
+            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+        }
+
+        return implode(", ", $results);
     }
 
     public function actionEditImage($id)
