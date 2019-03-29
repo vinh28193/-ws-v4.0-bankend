@@ -153,8 +153,10 @@ class ServiceEAController extends BaseApiController
     public function actionCreateOrderProduct()
     {
         /*** Document Compare*****
-        https://weshop.com.vn/api/cmsproduct/calcfee?id=252888606889&qty=1&store=vn&portal=ebay
-        https://ebay-api-wshopx-v3.weshop.com.vn/v3/product?id=
+         * IPHONE
+         * https://weshop.com.vn/ebay/item/apple-iphone-4s-mobile-phone-8gb-16gb-32gb-sim-free-factory-unlocked-smartphone-312226695751.html?sid=IPhone-4S-White-16GB
+        https://weshop.com.vn/api/cmsproduct/calcfee?id=312226695751&qty=1&store=vn&portal=ebay
+        https://ebay-api-wshopx-v3.weshop.com.vn/v3/product?id=312226695751
          **/
 
         $this->cart->removeItems();

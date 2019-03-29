@@ -152,17 +152,17 @@ class DataFixedController extends BaseApiController
         //$product->price_amount_origin =  0;
         //$product->total_price_amount_local =  0;
 
-        $product->total_fee_product_local = 0;  // Tổng Phí theo sản phẩm
-        $product->price_amount_local =  0;  /** Todo */
+        $product->total_fee_product_local = 0;         // Tổng Phí theo sản phẩm
+        $product->price_amount_local =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin');  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
         $product->quantity_customer =  $itemGetWayAPI['quantity'];
         $product->quantity_purchase =  null;  /** Todo */
         $product->quantity_inspect =  null;  /** Todo */
         $product->variations =  null;   /** Todo */
         $product->variation_id =  null;  /** Todo */
         $product->note_by_customer =  'Note By Customer';
-        $product->total_weight_temporary =  0;
+        $product->total_weight_temporary =  0;     //"cân nặng  trong lượng tạm tính"
         $product->remove =  0;
-        $product->product_name =  "CHUA LAY DUOC";  /** Todo */
+        $product->product_name =  $itemGetWayAPI['item_name'];  /** Todo */
         $product->product_link =  'https://weshop.com.vn/link/sanpham.html';  /** Todo */
         $product->version =  '4.0';
         $product->condition =  null; /** Todo */
@@ -217,8 +217,8 @@ class DataFixedController extends BaseApiController
         $order->difference_money =  0;
         $order->utm_source =  null;
         $order->seller_id =  $seller->id;
-        $order->seller_name =  "Em. Giao Luận";
-        $order->seller_store =  "https://www.le.int.vn/sed-expedita-rerum-beatae-consectetur-commodi";
+        $order->seller_name = $seller->name;
+        $order->seller_store = $seller->seller_link_store;
         $order->total_final_amount_local =  0;
         $order->total_paid_amount_local =  0;
         $order->total_refund_amount_local =  0;
@@ -268,6 +268,13 @@ class DataFixedController extends BaseApiController
 
     public function actionCreate()
     {
+        /** IPHONE
+        https://weshop.com.vn/ebay/item/apple-iphone-4s-mobile-phone-8gb-16gb-32gb-sim-free-factory-unlocked-smartphone-312226695751.html?sid=IPhone-4S-White-16GB
+        https://weshop.com.vn/api/cmsproduct/calcfee?id=312226695751&qty=1&store=vn&portal=ebay
+        https://ebay-api-wshopx-v3.weshop.com.vn/v3/product?id=312226695751
+         **/
+
+
         if (isset($this->post) == null) {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
@@ -277,9 +284,14 @@ class DataFixedController extends BaseApiController
 
         $orders = [];
         $errors = [];
+        $Object_detech = [];
         foreach ($items as $key => $simpleItem) {
             /** @var  $simpleItem \common\components\cart\item\SimpleItem */
+            if(empty($simpleItem->item)) {
+                Yii::$app->api->sendFailedResponse(" Kiem Tra lai SKU ");
+            }
             $item = $simpleItem->item;
+            $Object_detech = $item;
 
             $itemType = $this->post['source'];
             // Seller
@@ -371,7 +383,11 @@ class DataFixedController extends BaseApiController
             }
 
 
-
+            $_itemRes = [];
+            $source = $this->post['source'];
+            $_itemRes['Object_detech_api_'.$source] = $Object_detech;
+            $_itemRes['seller'] = $seller;
+            $_itemRes['category'] = $category;
             $_itemRes['order'] = $orders;
             $_itemRes['product'] = $product;
             $_itemRes['productFee'] = $productFee;
