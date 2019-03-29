@@ -69,11 +69,11 @@ class SaleController extends BaseApiController
         }
         $message = "sale {$sale->email} assign to order $id";
         Yii::$app->wsLog->order->push('assign', null, [
-            'id' => $model->id,
+            'id' => $model->ordercode,
             'request' => $saleId,
             'response' => $message
         ]);
-        ChatHelper::push($message, $model->id, 'WS_CUSTOMER', 'SYSTEM');
+        ChatHelper::push($message, $model->ordercode, 'WS_CUSTOMER', 'SYSTEM');
         return $this->response(true, "sale {$user->username} assign order $id to {$sale->username} ", [
             'id' => $model->sale_support_id,
             'username' => $sale->username,
