@@ -618,3 +618,7 @@ API : http://weshop-v4.back-end.local.vn/test/get-custom-fee
     "custom_fee": 280,
     "message": "Lấy custom fee thành công"
 }
+
+
+# --------Test Tracking Code--------
+>php yii fixture/load "TrackingCode"
