@@ -169,17 +169,18 @@ class DataFixedController extends BaseApiController
 
         $IsSave = $product->save();
 
-//        $dataSavePro = [
-//            'status' => $IsSave,
-//            'dataProduct' => $product,
-//            'Error' =>$product->errors
-//        ];
+        $dataSavePro = [
+            'status' => $IsSave,
+            'dataProduct' => $product,
+            'Error' =>$product->errors
+        ];
 
         return $product;
     }
 
     protected function OrderData($itemType , $seller )
     {
+
         $order = new Order();
         $order->new = time();
         $order->store_id =  1;
@@ -251,15 +252,17 @@ class DataFixedController extends BaseApiController
         $order->lost =  null;
         $order->current_status =  "NEW";
         $order->remove =  0;
+        $order->ordercode = 'WSVN' . @rand(10,100000);
         $IsSave = $order->save();
 
 
-//        $dataSaveOrder = [
-//            'status' => $IsSave,
-//            'dataOrder' => $order,
-//            'Error' =>$order->errors
-//        ];
+        $dataSaveOrder = [
+            'status' => $IsSave,
+            'dataOrder' => $order,
+            'Error' =>$order->errors
+        ];
 
+//        var_dump($dataSaveOrder); die("Order");
        return $order;
     }
 
@@ -291,48 +294,45 @@ class DataFixedController extends BaseApiController
             // Product
             $product = $this->ProductData($simpleItem, $item, $category, $order, $seller);
 
+
+
             $orderUpdateFeeAttribute = $productFee = []; $i=0;
             $data_key = [];
             foreach ($product->getAdditionalFees()->keys() as $key) {
                 list($amount, $local) = $product->getAdditionalFees()->getTotalAdditionFees($key);
 
                 // Chọn Key Product Fee Tương ứng với trường nào của Order để tính tổng
-                /* ----> ProductFee :
-                    "product_price_origin": "product_price_origin",
-                    "tax_fee_origin": "tax_fee_origin",
-                    "origin_shipping_fee": "origin_shipping_fee",
-                    "weshop_fee": "weshop_fee",
-                    "intl_shipping_fee": "intl_shipping_fee",
-                    "custom_fee": "custom_fee",
-                    "delivery_fee_local": "delivery_fee_local",
-                    "packing_fee": "packing_fee",
-                    "inspection_fee": "inspection_fee",
-                    "insurance_fee": "insurance_fee",
-                    "vat_fee": "vat_fee"
-
-                   * Order
-                    // Tổng các Phí Weshop
-                    'total_fee_amount_local' => $this->decimal(18, 2)->comment("tổng phí đơn hàng"),
-                    'total_tax_us_amount_local' => $this->decimal(18, 2)->comment("Tổng phí us tax"),
-                    'total_shipping_us_amount_local' => $this->decimal(18, 2)->comment("Tổng phí shipping us"),
-                    'total_weshop_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí weshop"),
-                    'total_intl_shipping_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí vận chuyển quốc tế"),
-                    'total_custom_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí phụ thu"),
-                    'total_delivery_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí vận chuyển nội địa"),
-                    'total_packing_fee_amount_local' => $this->decimal(18, 2)->comment("tổng phí đóng gỗ"),
-                    'total_inspection_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí kiểm hàng"),
-                    'total_insurance_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí bảo hiểm"),
-                    'total_vat_amount_local' => $this->decimal(18, 2)->comment("Tổng phí VAT"),
-                */
-
-                if ($key === 'product_price_origin') {
-                    $orderAttribute = 'total_origin_fee_local';
-                } elseif ($key === 'tax_fee_origin') {
-                    $orderAttribute = 'total_origin_tax_fee_local';
-                } elseif ($key === 'delivery_fee_local') {
-                    $orderAttribute = 'total_delivery_fee_local';
-                } elseif ($key === 'custom_fee'){
+                /** ----> ProductFee Map Orderfee Property  **/
+                $orderAttribute = '';
+                if ($key === 'tax_fee_origin') {
+                    $orderAttribute = 'total_tax_us_amount_local';
+                }
+                if ($key === 'origin_shipping_fee') {
+                    $orderAttribute = 'total_shipping_us_amount_local';
+                }
+                if ($key === 'weshop_fee') {
+                    $orderAttribute = 'total_weshop_fee_amount_local';
+                }
+                if ($key === 'intl_shipping_fee') {
+                    $orderAttribute = 'total_intl_shipping_fee_amount_local';
+                }
+                if ($key === 'custom_fee'){
                     $orderAttribute = 'total_custom_fee_amount_local';
+                }
+                if ($key === 'packing_fee') {
+                    $orderAttribute = 'total_packing_fee_amount_local';
+                }
+                if ($key === 'inspection_fee') {
+                    $orderAttribute = 'total_inspection_fee_amount_local';
+                }
+                if ($key === 'insurance_fee') {
+                    $orderAttribute = 'total_insurance_fee_amount_local';
+                }
+                if ($key === 'vat_fee') {
+                    $orderAttribute = 'total_vat_amount_local';
+                }
+                if ($key === 'delivery_fee_local') {
+                    $orderAttribute = 'total_delivery_fee_amount_local';
                 }
 
                 $data_key[$key] = $key;
@@ -352,11 +352,22 @@ class DataFixedController extends BaseApiController
 
                 $productFee[$i++] = $_productFee;
 
-                $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
-                //var_dump($orderAttribute);die("89989898989");
+                //Total Fee Order
+                $orderUpdateFeeAttribute['total_shipping_us_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('origin_shipping_fee')[1]; //"Tổng phí shipping us"),
+                $orderUpdateFeeAttribute['total_weshop_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('weshop_fee')[1]; //Tổng phí weshop"),
+                $orderUpdateFeeAttribute['total_intl_shipping_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('intl_shipping_fee')[1]; //"Tổng phí vận chuyển quốc tế"),
+                $orderUpdateFeeAttribute['total_custom_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('custom_fee')[1]; //"Tổng phí phụ thu"),
+                $orderUpdateFeeAttribute['total_delivery_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('delivery_fee_local')[1]; //"Tổng phí vận chuyển nội địa"
+                $orderUpdateFeeAttribute['total_packing_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('packing_fee')[1]; //"tổng phí đóng gỗ"),
+                $orderUpdateFeeAttribute['total_inspection_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('inspection_fee')[1];//"Tổng phí kiểm hàng"),
+                $orderUpdateFeeAttribute['total_insurance_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('insurance_fee')[1]; //"Tổng phí bảo hiểm"),
+                $orderUpdateFeeAttribute['total_vat_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('tax_fee_origin')[1]; //"Tổng phí VAT"           //"Tổng phí us tax"
+                $orderUpdateFeeAttribute['total_custom_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('custom_fee')[1]; // "Tổng phí phụ thu"
+                $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];  // Tổng phí đơn hàng
                 //$order->updateAttributes($orderUpdateFeeAttribute);  /** VI SAO UPDATE moi cai nay lai loi **/
+
                 $productFee[$i++] = $_productFee;
-                //$orders[] = $order;
+                $orders = $order;
             }
 
 
