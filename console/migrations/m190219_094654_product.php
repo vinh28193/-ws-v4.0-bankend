@@ -34,7 +34,7 @@ class m190219_094654_product extends Migration
             'category_id' => $this->integer(11)->comment('id danh mục trên Website Weshop bắt qua API'),
             'custom_category_id' => $this->integer(11)->comment('id danh mục phụ thu Hải Quản nếu api ko bắt được dang mục mà do sale chọn trong OPS thì sẽ thu thêm COD'),
             'price_amount_origin' => $this->decimal(18,2)->notNull()->comment('đơn giá gốc ngoại tệ'),
-            'price_amount_local' => $this->decimal(18,2)->notNull()->comment('đơn giá local'),
+            'price_amount_local' => $this->decimal(18,2)->notNull()->comment('đơn giá local = giá gốc ngoại tệ * tỉ giá Local'),
             'total_price_amount_local' => $this->decimal(18,2)->notNull()->comment('tổng tiền hàng của từng sản phẩm'),
             'quantity_customer' => $this->integer(11)->notNull()->comment('số lượng khách đặt'),
             'quantity_purchase' => $this->integer(11)->comment('số lượng Nhân viên đã mua'),

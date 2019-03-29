@@ -99,13 +99,15 @@ class m190219_080356_order extends Migration
             'total_promotion_amount_local' => $this->decimal(18, 2)->comment("Tổng số tiền giảm giá do promotion . Vi Dụ : Chương trình giảm giá trừ 200.000 VNĐ cho cả đơn "),
 
 
-            // Tổng các Phí Weshop
+            // Tổng các Phí Weshop  /**TODO Needs : 29/03/2019 2 Phis nay la mot : total_fee_amount_local = total_custom_fee_amount_local **/
             'total_fee_amount_local' => $this->decimal(18, 2)->comment("tổng phí đơn hàng"),
+            'total_custom_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí phụ thu : Chỉ khác 0 khi API không bắt được danh mục để tính phí và update bằng tay vào trường product->custom_category_id thì tổng này mới có giá trị"),
+
             'total_tax_us_amount_local' => $this->decimal(18, 2)->comment("Tổng phí us tax"),
             'total_shipping_us_amount_local' => $this->decimal(18, 2)->comment("Tổng phí shipping us"),
             'total_weshop_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí weshop"),
             'total_intl_shipping_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí vận chuyển quốc tế"),
-            'total_custom_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí phụ thu"),
+
             'total_delivery_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí vận chuyển nội địa"),
             'total_packing_fee_amount_local' => $this->decimal(18, 2)->comment("tổng phí đóng gỗ"),
             'total_inspection_fee_amount_local' => $this->decimal(18, 2)->comment("Tổng phí kiểm hàng"),

@@ -55,6 +55,7 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
         }
 //        $model->success = true;
         $userRole = $this->userIdentity ? Yii::$app->getAuthManager()->getRolesByUser($this->userIdentity->getId()) : null;
+        Yii::info($userRole);
         if(is_array($userRole)){
             $userRole = array_keys($userRole);
             $userRole = reset($userRole);

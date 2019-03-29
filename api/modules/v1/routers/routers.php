@@ -33,7 +33,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['data-fixed'],
+        'controller' => ['data'],
         'patterns' => [
             'POST' => 'create',
             'OPTIONS' => 'options',
