@@ -186,7 +186,7 @@ class DataController extends BaseApiController
     {
 
         $order = new Order();
-        $order->new = time();
+        $order->new = @strtotime("now");
         $order->store_id =  1;
         $order->type_order =  "SHOP";
         $order->portal =  $itemType;
