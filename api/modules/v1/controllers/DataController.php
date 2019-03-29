@@ -153,7 +153,7 @@ class DataController extends BaseApiController
         //$product->total_price_amount_local =  0;
 
         $product->total_fee_product_local = 0;         // Tổng Phí theo sản phẩm
-        $product->price_amount_local =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin');  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
+        $product->price_amount_local =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
         $product->quantity_customer =  $itemGetWayAPI['quantity'];
         $product->quantity_purchase =  null;  /** Todo */
         $product->quantity_inspect =  null;  /** Todo */
@@ -176,8 +176,8 @@ class DataController extends BaseApiController
         ];
 
 
-        var_dump($dataSavePro);
-        die("Prod");
+//        var_dump($dataSavePro);
+//        die("Prod");
 
         return $product;
     }
