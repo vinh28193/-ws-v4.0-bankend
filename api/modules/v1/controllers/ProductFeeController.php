@@ -11,6 +11,7 @@ namespace api\modules\v1\controllers;
 use api\controllers\BaseApiController;
 use common\models\Product;
 use common\models\ProductFee;
+use Yii;
 use yii\web\NotFoundHttpException;
 
 
@@ -62,6 +63,7 @@ class ProductFeeController extends BaseApiController
         if (!$model->load($this->post, '')) {
             return $this->response(false, 'Can not resolve current request parameter');
         }
+        $dirtyAttributes = $model->getDirtyAttributes();
         if (!$model->save()) {
             return $this->response(false, $model->getFirstErrors());
         }
@@ -79,6 +81,11 @@ class ProductFeeController extends BaseApiController
         $order->total_amount_local += $model->local_amount - $old_local_amount;
 
         $order->save(0);
+        Yii::$app->wsLog->order->push('updateFee', null, [
+            'id' => $model->id,
+            'request' => $this->post,
+            'response' => $dirtyAttributes
+        ]);
 //        die;
         // Todo update back to Order
         return $this->response(true, "update fee $id success");
