@@ -477,9 +477,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
         }
 
-        if (isset($params['timeKeyCreate']) && isset($params['startDate']) && isset($params['endDate'])) {
-            $query->andFilterWhere(['between', $params['timeKeyCreate'], $params['startDate'], $params['endDate']]);
-        }
+//        if (isset($params['timeKeyCreate']) && isset($params['startDate']) && isset($params['endDate'])) {
+//            $query->andFilterWhere(['between', $params['timeKeyCreate'], $params['startDate'], $params['endDate']]);
+//        }
 
         if (isset($params['receiver_email'])) {
             $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
