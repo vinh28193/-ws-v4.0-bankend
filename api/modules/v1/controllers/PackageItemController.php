@@ -115,14 +115,30 @@ class PackageItemController extends BaseApiController
                     'request' => $this->post,
                     'response' => $model->getErrors()
                 ]);
-                return $this->response(false, 'update package item'. $id . 'error');
+                return $this->response(false, 'delete package item'. $id . 'error');
             }
             Yii::$app->wsLog->order->push('createPackageItem', null, [
                 'id' => $post['ordercode'],
                 'request' => $this->post,
                 'response' => $dirtyAttributes
             ]);
-            return $this->response(true, 'update package item' . $id .' success', $model);
+            return $this->response(true, 'delete package item' . $id .' success', $model);
         }
+    }
+
+    public function actionDelete($id) {
+        $model = PackageItem::findOne($id);
+        if (!$model->delete()) {
+            Yii::$app->wsLog->order->push('deletePackageItem', null, [
+                'id' => $model->order->ordercode,
+                'request' => $this->post,
+            ]);
+            return $this->response(false, 'delete package item'. $id . 'error');
+        }
+        Yii::$app->wsLog->order->push('deletePackageItem', null, [
+            'id' => $model->order->ordercode,
+            'request' => $this->post,
+        ]);
+        return $this->response(true, 'update package item'. $id . 'success');
     }
 }
