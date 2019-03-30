@@ -43,6 +43,7 @@ class EbayGate extends BaseGate
 
     public function lookup($condition, $refresh = false)
     {
+
         $request = new EbayDetailRequest();
         $request->keyword = $condition;
         if (($product = $this->cache->get($request->getCacheKey()))) {

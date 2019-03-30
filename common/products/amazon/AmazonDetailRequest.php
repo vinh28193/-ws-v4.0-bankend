@@ -34,8 +34,11 @@ class AmazonDetailRequest extends AmazonRequest
     public function params()
     {
         $params = parent::params();
-        $params['parent_asin_id'] = $this->parent_asin_id;
-        if ($this->load_sub_url !== null) {
+        $params['asin_id'] = $this->asin_id;
+        if (!$this->isEmpty($this->parent_asin_id)) {
+            $params['parent_asin_id'] = $this->parent_asin_id;
+        }
+        if (!$this->isEmpty($this->load_sub_url)) {
             $params['load_sub_url'] = base64_decode($this->load_sub_url);
         }
         return $params;

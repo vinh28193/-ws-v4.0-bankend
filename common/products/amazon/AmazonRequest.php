@@ -18,6 +18,11 @@ class AmazonRequest extends BaseRequest
 
     public $store = AmazonProduct::STORE_US;
 
+    public function attributes()
+    {
+        return ArrayHelper::merge(parent::attributes(),['store']);
+    }
+
     public function rules()
     {
         return ArrayHelper::merge(parent::rules(), [

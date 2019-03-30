@@ -19,6 +19,10 @@ class AmazonProduct extends BaseProduct
 
     public $store = self::STORE_US;
 
+    public $manufacturer_description;
+    public $best_seller;
+    public $sort_desc;
+    public $is_free_ship = false;
     public $sell_price_special;
     public $load_sub_url;
 }

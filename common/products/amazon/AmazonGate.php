@@ -26,12 +26,13 @@ class AmazonGate extends BaseGate
 
     public function search($params, $refresh = false)
     {
+        $params['store'] = $this->store;
         $request = new AmazonSearchRequest();
         $request->load($params, '');
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
-        list($ok, $response) = $this->searchIternal($request);
+        list($ok, $response) = $this->searchInternal($request);
         if ($ok && is_array($response)) {
             return [$ok, (new AmazonSearchResponse($this))->parser($response)];
         }
@@ -41,13 +42,15 @@ class AmazonGate extends BaseGate
 
     public function lookup($condition, $refresh = false)
     {
+
         $condition['store'] = $this->store;
         $request = new AmazonDetailRequest();
         $request->load($condition, '');
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
-        if ($request->parent_asin_id !== null && $request->parent_asin_id !== $request->asin_id) {
+
+        if (!$this->isEmpty($request->parent_asin_id) && $request->parent_asin_id !== $request->asin_id) {
             //Search ra san pham cha truoc de lay load sub url params, parent sku
             $cloneRequest = clone $request;
             $cloneRequest->asin_id = $request->parent_asin_id;
@@ -162,8 +165,11 @@ class AmazonGate extends BaseGate
 
     /**
      * @param $request
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
      */
-    private function searchIternal($request)
+    private function searchInternal($request)
     {
         $attempts = 0;
         do {
@@ -172,11 +178,11 @@ class AmazonGate extends BaseGate
             $httpRequest = $httpClient->createRequest();
             $httpRequest->setUrl($this->searchUrl);
             $httpRequest->setData($request->params());
-            $httpRequest->setFormat('json');
+            $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
             $httpRequest->setMethod('POST');
             $httpResponse = $httpClient->send($httpRequest);
             $response = $httpResponse->getData();
-            if ($this->isValidResponse($response)) {
+            if (isset($response['response']) || isset($response['total_product'])){
                 break;
             }
 
@@ -184,7 +190,9 @@ class AmazonGate extends BaseGate
         if (!isset($response)) {
             return [false, 'can not send request'];
         }
-        if (!isset($response['response'])) return [];
+        if (!isset($response['response'])) {
+            return [false, 'invalid response'];
+        };
         $result = $response['response'];
 
         if (!isset($result['total_product'])) return [];
@@ -198,11 +206,12 @@ class AmazonGate extends BaseGate
             'OR',
             ['alias' => $result['categories']],
             ['path' => $result['categories']]
-        ])->select(['alias as category_id', 'name as category_name', 'originName as origin_name'])->asArray()->all();
+        ])->select(['alias as category_id', 'name as category_name', 'origin_name as origin_name'])->asArray()->all();
         $data['categories'] = $categories;
         $data['sorts'] = $result['sorts'];
         $data['filters'] = $this->getFilter($result['filters']);
         $data['total_page'] = $result['total_page'];
+        return [true, $data];
     }
 
     /**
@@ -218,9 +227,9 @@ class AmazonGate extends BaseGate
             $attempts++;
             $httpClient = $this->getHttpClient();
             $httpRequest = $httpClient->createRequest();
-            $httpRequest->setUrl($this->searchUrl);
+            $httpRequest->setUrl($this->lookupUrl);
             $httpRequest->setData($request->params());
-            $httpRequest->setFormat('json');
+            $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
             $httpRequest->setMethod('POST');
             $httpResponse = $httpClient->send($httpRequest);
             $response = $httpResponse->getData();
@@ -270,25 +279,25 @@ class AmazonGate extends BaseGate
         }
 
         $offers = $this->getOffers($rs['item_sku']);
-        $rs['provider'] = [];
+        $rs['providers'] = [];
         if (isset($offers['response'])) {
-            foreach ($offers['response'] as $item) {
-                $dat = [];
-                $dat['name'] = $item['seller']['seller_name'];
-                $dat['image'] = '';
-                $dat['website'] = '';
-                $dat['location'] = '';
-                $dat['rating_score'] = $item['seller']['rating_count'];
-                $dat['rating_star'] = $item['seller']['rate_star'];
-                $dat['positive_feedback_percent'] = $item['seller']['positive'];
-                $dat['condition'] = $item['condition'];
-                $dat['fulfillment'] = $item['fulfillment'];
-                $dat['is_free_ship'] = $item['is_free_ship'];
-                $dat['is_prime'] = $item['is_prime'];
-                $dat['price'] = $item['price'];
-                $dat['shipping_fee'] = $item['ship_fee'];
-                $dat['tax_fee'] = $item['tax_fee'];
-                $rs['provider'][] = $dat;
+            foreach ($offers['response'] as $offer) {
+                $prov = [];
+                $prov['name'] = $offer['seller']['seller_name'];
+                $prov['image'] = '';
+                $prov['website'] = '';
+                $prov['location'] = '';
+                $prov['rating_score'] = $offer['seller']['rating_count'];
+                $prov['rating_star'] = $offer['seller']['rate_star'];
+                $prov['positive_feedback_percent'] = $offer['seller']['positive'];
+                $prov['condition'] = $offer['condition'];
+                $prov['fulfillment'] = $offer['fulfillment'];
+                $prov['is_free_ship'] = $offer['is_free_ship'];
+                $prov['is_prime'] = $offer['is_prime'];
+                $prov['price'] = $offer['price'];
+                $prov['shipping_fee'] = $offer['ship_fee'];
+                $prov['tax_fee'] = $offer['tax_fee'];
+                $rs['providers'][] = $prov;
             }
             $rs['sell_price'] = $offers['response'][0]['price'];
             $rs['condition'] = $offers['response'][0]['condition'];
@@ -317,7 +326,7 @@ class AmazonGate extends BaseGate
                 break;
             }
         }
-        $product->providers = self::getProviders($params['provider']);
+        $product->providers = self::getProviders($params['providers']);
         $product->deal_price = $params['deal_price'];
         $product->retail_price = $params['retail_price'];
         $product->start_price = $params['start_price'];
@@ -330,7 +339,12 @@ class AmazonGate extends BaseGate
 
     private function isValidResponse($response)
     {
-        return (isset($response['response']) || (count($response['response']['sell_price']) > 0 && count($response['response']['retail_price']) > 0 && count($response['response']['deal_price']) > 0 && $response['response']['title'] != null));
+        return (isset($response['response']) &&
+                count($response['response']['sell_price']) > 0 &&
+                count($response['response']['retail_price']) > 0 &&
+                count($response['response']['deal_price']) > 0 &&
+                $response['response']['title'] != null
+        );
     }
 
     private function getOptionGroup($data, $images)

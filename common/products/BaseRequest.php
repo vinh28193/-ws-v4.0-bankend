@@ -124,7 +124,7 @@ abstract class BaseRequest extends \yii\base\Model
         return [
             get_called_class(),
             $this->getStoreManager()->getId(),
-            $this->buildParams()
+            $this->params()
         ];
     }
 

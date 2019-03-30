@@ -27,6 +27,16 @@ class ProductManager extends Component
             'baseUrl' => 'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
             'searchUrl' => 'search',
             'lookupUrl' => 'product'
+        ],
+        'amazon' => [
+            'class' => 'common\products\amazon\AmazonGate',
+            'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon',
+            'store' => \common\products\amazon\AmazonProduct::STORE_US
+        ],
+        'amazon-jp' => [
+            'class' => 'common\products\amazon\AmazonGate',
+            'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon',
+            'store' => \common\products\amazon\AmazonProduct::STORE_JP
         ]
     ];
 
@@ -59,7 +69,7 @@ class ProductManager extends Component
      * @param $name string
      * @return BaseGate|null
      */
-    public function getDriver($name)
+    public function getGate($name)
     {
         return isset($this->_gates[$name]) ? $this->_gates[$name] : null;
     }

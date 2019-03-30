@@ -10,7 +10,6 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'pluralize' => false,
         'controller' => ['s' => 'secure'],
         'patterns' => [
             'GET me' => 'secure/me',
@@ -22,7 +21,6 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'pluralize' => false,
         'controller' => ['check-out'],
         'patterns' => [
             'POST' => 'create',
@@ -32,7 +30,6 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'pluralize' => false,
         'controller' => ['data'],
         'patterns' => [
             'POST' => 'create',
@@ -42,7 +39,6 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'pluralize' => false,
         'controller' => ['product'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>'
@@ -88,7 +84,6 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'pluralize' => false,
         'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','manifest'],
         'patterns' => [
             'GET,HEAD' => 'index',
@@ -104,7 +99,6 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'pluralize' => false,
         'controller' => ['chat' => 'rest-api-chat'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
@@ -124,8 +118,6 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'pluralize' => false,
-        'if_service' => true,
         'controller' => ['chat-service' => 'service/rest-service-chat'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
@@ -142,7 +134,6 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'pluralize' => false,
         'controller' => ['purchase' => 'purchase'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
@@ -415,5 +406,18 @@ return [
             'PUT update/<id:\d+>'=> 'update',
             'OPTIONS update/<id:\d+>'=> 'options',
         ]
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['gate' => 'product-gate'],
+        'patterns' => [
+            'GET,POST search' => 'search',
+            'GET,POST get' => 'detail',
+            'GET,POST calc' => 'calculator',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
     ],
 ];
