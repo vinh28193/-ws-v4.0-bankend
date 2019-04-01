@@ -21,6 +21,13 @@ use common\models\queries\PackageItemQuery;
 
 class PackageItem extends DbPackageItem
 {
+    public function rules()
+    {
+        return [
+            [['package_code'], 'required'],
+        ];
+    }
+
     /**
      * @inheritdoc
      * @return PackageItemQuery the active query used by this AR class.

@@ -414,6 +414,8 @@ return [
         'extraPatterns' => [
             'PUT update/<id:\d+>'=> 'update',
             'OPTIONS update/<id:\d+>'=> 'options',
+            'GET view/<id:\d+>'=> 'view',
+            'OPTIONS view/<id:\d+>'=> 'options',
         ]
     ],
 ];

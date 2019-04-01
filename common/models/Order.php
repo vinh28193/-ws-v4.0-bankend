@@ -28,6 +28,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_SALE_ASSIGN = 'saleAssign';
     const SCENARIO_REQUEST = 'request';
     const SCENARIO_CONFIRM_PURCHASE = 'confirmPurchase';
+    const SCENARIO_UPDATE_ADJUST_PAYMENT = 'editAdjustPayment';
 
     /**
      * order type
@@ -127,7 +128,10 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_SALE_ASSIGN => [
                 'sale_support_id','support_email'
-            ]
+            ],
+            self::SCENARIO_UPDATE_ADJUST_PAYMENT => [
+                'total_paid_amount_local'
+            ],
         ]);
     }
 
@@ -477,9 +481,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
         }
 
-        if (isset($params['timeKeyCreate']) && isset($params['startDate']) && isset($params['endDate'])) {
-            $query->andFilterWhere(['between', $params['timeKeyCreate'], $params['startDate'], $params['endDate']]);
-        }
+//        if (isset($params['timeKeyCreate']) && isset($params['startDate']) && isset($params['endDate'])) {
+//            $query->andFilterWhere(['between', $params['timeKeyCreate'], $params['startDate'], $params['endDate']]);
+//        }
 
         if (isset($params['receiver_email'])) {
             $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
