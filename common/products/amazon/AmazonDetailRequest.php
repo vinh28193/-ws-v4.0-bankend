@@ -17,6 +17,7 @@ class AmazonDetailRequest extends AmazonRequest
     public $parent_asin_id;
     public $load_sub_url;
 
+    public $is_first_load = false;
     public function rules()
     {
         $rules = parent::rules();
@@ -25,7 +26,7 @@ class AmazonDetailRequest extends AmazonRequest
             [['asin_id', 'parent_asin_id'], 'string', 'min' => 1],
             [['asin_id', 'parent_asin_id'], 'filter', 'filter' => 'trim'],
             [['asin_id', 'parent_asin_id'], 'filter', 'filter' => '\yii\helpers\Html::encode'],
-
+            [['is_first_load'],'safe']
         ]);
 
         return $rules;

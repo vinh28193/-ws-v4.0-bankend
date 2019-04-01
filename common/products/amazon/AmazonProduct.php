@@ -25,4 +25,7 @@ class AmazonProduct extends BaseProduct
     public $is_free_ship = false;
     public $sell_price_special;
     public $load_sub_url;
+
+    public $PriceApi;
+    public $CurrencyApi;
 }

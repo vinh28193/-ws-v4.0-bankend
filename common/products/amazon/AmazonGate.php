@@ -24,6 +24,8 @@ class AmazonGate extends BaseGate
     public $offerUrl = 'get_offers';
     public $asinsUrl = 'get_asins';
 
+    public $sellerBlackLists = [];
+
     public function search($params, $refresh = false)
     {
         $params['store'] = $this->store;
@@ -49,7 +51,6 @@ class AmazonGate extends BaseGate
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
-
         if (!$this->isEmpty($request->parent_asin_id) && $request->parent_asin_id !== $request->asin_id) {
             //Search ra san pham cha truoc de lay load sub url params, parent sku
             $cloneRequest = clone $request;
@@ -60,7 +61,7 @@ class AmazonGate extends BaseGate
                 /** @var  $product \common\products\amazon\AmazonProduct */
                 $product = (new AmazonDetailResponse($this))->parser($response);
                 //new sku cua san pham cha khac voi sku can tim kiem
-                if ($product->item_id != $request->asin_id) {
+                if ($product->item_id != $request->asin_id && !$request->is_first_load) {
                     if ($request->parent_asin_id != $product->parent_item_id) {
                         //gan lai gia tri parent_asin_id  neu khac form truyen len
                         $request->parent_asin_id = $product->parent_item_id;
@@ -182,7 +183,7 @@ class AmazonGate extends BaseGate
             $httpRequest->setMethod('POST');
             $httpResponse = $httpClient->send($httpRequest);
             $response = $httpResponse->getData();
-            if (isset($response['response']) || isset($response['total_product'])){
+            if (isset($response['response']) || isset($response['total_product'])) {
                 break;
             }
 
@@ -211,6 +212,17 @@ class AmazonGate extends BaseGate
         $data['sorts'] = $result['sorts'];
         $data['filters'] = $this->getFilter($result['filters']);
         $data['total_page'] = $result['total_page'];
+        if($this->store === AmazonProduct::STORE_JP){
+            /** @var  $exRate \common\components\ExchangeRate*/
+            $exRate = Yii::$app->exRate;
+            foreach ($data['products'] as $k => $v) {
+                $data['products'][$k]['sell_price'] = $exRate->jpyToUsd($data['products'][$k]['sell_price']);
+                $data['products'][$k]['retail_price'] = $exRate->jpyToUsd($data['products'][$k]['retail_price']);
+                foreach ($data['products'][$k]['prices_range'] as $key => $value) {
+                    $data['products'][$k]['prices_range'][$key] = $exRate->jpyToUsd($value);
+                }
+            }
+        }
         return [true, $data];
     }
 
@@ -243,7 +255,7 @@ class AmazonGate extends BaseGate
         }
         $amazon = $response['response'];
         $rs = [];
-        $rs['categories'] = $amazon['node_ids'];
+        $rs['categories'] = array_unique($amazon['node_ids']);
         $rs['item_id'] = $request->asin_id;
         $rs['item_sku'] = $request->asin_id;
         $rs['rate_star'] = isset($amazon['rate_star']) ? $amazon['rate_star'] : 0;
@@ -272,40 +284,73 @@ class AmazonGate extends BaseGate
         $rs['relate_products'] = $this->getRelateProduct($amazon['suggest_products']);
         $rs['start_price'] = !empty($amazon["retail_price"]) ? ($amazon["retail_price"][0]) : 0.0;
         $rs['condition'] = isset($amazon['condition']) ? $amazon['condition'] : 'new';
-        foreach ($amazon['suggest_sets'] as $suggest_sets) {
-            if (($suggest_sets['id'] == 'purchase' || $suggest_sets['id'] == 'session') && count($suggest_sets['asins']) > 0) {
-                $rs['suggest_set_purchase'] = $this->getAsins($suggest_sets['asins']);
+        $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::STORE_JP : AmazonProduct::STORE_US;
+        $rs['tax_fee'] = 0;
+        $rs['store'] = $this->store;
+        $suggestSetCacheKey = "suggest_set_{$rs['item_sku']}";
+        if (!($suggestSets = $this->cache->get($suggestSetCacheKey))) {
+            foreach ($amazon['suggest_sets'] as $suggestSet) {
+                $key = $suggestSet['id'];
+                if (($key == 'purchase' || $key == 'session') && count($suggestSet['asins']) > 0) {
+                    $suggestSets[$key] = $this->getAsins($suggestSet['asins']);
+                }
             }
+            $this->cache->set($suggestSetCacheKey, $suggestSets, 3600);
         }
 
-        $offers = $this->getOffers($rs['item_sku']);
-        $rs['providers'] = [];
-        if (isset($offers['response'])) {
-            foreach ($offers['response'] as $offer) {
-                $prov = [];
-                $prov['name'] = $offer['seller']['seller_name'];
-                $prov['image'] = '';
-                $prov['website'] = '';
-                $prov['location'] = '';
-                $prov['rating_score'] = $offer['seller']['rating_count'];
-                $prov['rating_star'] = $offer['seller']['rate_star'];
-                $prov['positive_feedback_percent'] = $offer['seller']['positive'];
-                $prov['condition'] = $offer['condition'];
-                $prov['fulfillment'] = $offer['fulfillment'];
-                $prov['is_free_ship'] = $offer['is_free_ship'];
-                $prov['is_prime'] = $offer['is_prime'];
-                $prov['price'] = $offer['price'];
-                $prov['shipping_fee'] = $offer['ship_fee'];
-                $prov['tax_fee'] = $offer['tax_fee'];
-                $rs['providers'][] = $prov;
+        foreach (['purchase', 'session'] as $key) {
+            $rs["suggest_set_$key"] = isset($suggestSets[$key]) ? $suggestSets[$key] : null;
+        }
+
+        if (!$request->is_first_load) {
+            $offersCacheKey = "offers_{$rs['item_sku']}";
+            if (!($offers = $this->cache->get($offersCacheKey))) {
+                $offers = $this->getOffers($rs['item_sku']);
+                $this->cache->set($offersCacheKey, $offers, 3600);
             }
-            $rs['sell_price'] = $offers['response'][0]['price'];
-            $rs['condition'] = $offers['response'][0]['condition'];
-            $rs['is_free_ship'] = $offers['response'][0]['is_free_ship'];
-            $rs['is_prime'] = $offers['response'][0]['is_prime'];
-            $rs['sell_price'] = $offers['response'][0]['price'];
-            $rs['shipping_fee'] = $offers['response'][0]['ship_fee'];
-            $rs['tax_fee'] = $offers['response'][0]['tax_fee'];
+            $check = false;
+            $rs['providers'] = [];
+            if (isset($offers['response'])) {
+                foreach ($offers['response'] as $offer) {
+                    if (in_array($offer['seller']['seller_name'], $this->sellerBlackLists)) {
+                        $check = true;
+                        continue;
+                    }
+                    $prov = [];
+                    $prov['name'] = $offer['seller']['seller_name'];
+                    $prov['image'] = '';
+                    $prov['website'] = '';
+                    $prov['location'] = '';
+                    $prov['rating_score'] = $offer['seller']['rating_count'];
+                    $prov['rating_star'] = $offer['seller']['rate_star'];
+                    $prov['positive_feedback_percent'] = $offer['seller']['positive'];
+                    $prov['condition'] = $offer['condition'];
+                    $prov['fulfillment'] = $offer['fulfillment'];
+                    $prov['is_free_ship'] = $offer['is_free_ship'];
+                    $prov['is_prime'] = $offer['is_prime'];
+                    $prov['price'] = $offer['price'];
+                    $prov['shipping_fee'] = $offer['ship_fee'];
+                    $prov['tax_fee'] = $offer['tax_fee'];
+                    $rs['providers'][] = $prov;
+                }
+                $rs['sell_price'] = $offers['response'][0]['price'];
+                $rs['condition'] = $offers['response'][0]['condition'];
+                $rs['is_free_ship'] = $offers['response'][0]['is_free_ship'];
+                $rs['is_prime'] = $offers['response'][0]['is_prime'];
+                $rs['sell_price'] = $offers['response'][0]['price'];
+                $rs['shipping_fee'] = $offers['response'][0]['ship_fee'];
+                $rs['tax_fee'] = $offers['response'][0]['tax_fee'];
+            }
+            if (!count($rs['providers']) && $check) {
+                $rs['sell_price'] = 0;
+                [false, 'no provider valid'];
+            }
+        }
+        $rs['price_api'] = $rs['sell_price'];
+        $rs['currency_api'] = 'USD';
+        $rs['ex_rate_api'] = 1;
+        if ($this->store === AmazonProduct::STORE_JP) {
+            $this->ensureJpPrice($rs);
         }
         return [true, $rs];
 
@@ -340,10 +385,10 @@ class AmazonGate extends BaseGate
     private function isValidResponse($response)
     {
         return (isset($response['response']) &&
-                count($response['response']['sell_price']) > 0 &&
-                count($response['response']['retail_price']) > 0 &&
-                count($response['response']['deal_price']) > 0 &&
-                $response['response']['title'] != null
+            count($response['response']['sell_price']) > 0 &&
+            count($response['response']['retail_price']) > 0 &&
+            count($response['response']['deal_price']) > 0 &&
+            $response['response']['title'] != null
         );
     }
 
@@ -434,7 +479,7 @@ class AmazonGate extends BaseGate
             $dat['image_diff'] = $imageDiff;
             foreach ($detailImage['images'] as $key => $image) {
                 if ($key == $imageDiff) {
-                    $dat['images'] = self::getItemImage($image);
+                    $dat['images'] = $this->getItemImage($image);
                     break;
                 }
             }
@@ -557,5 +602,39 @@ class AmazonGate extends BaseGate
     {
         $cate = Category::find()->select('name')->where(['alias' => $alias])->one();
         return $cate['name'];
+    }
+
+    protected function ensureJpPrice(&$response){
+        /** @var  $exRate \common\components\ExchangeRate*/
+        $exRate = Yii::$app->exRate;
+        $response['currency_api'] = 'JPY';
+        $response['ex_rate_api'] = $exRate->jpyToUsd(1);
+        $response['sell_price'] = $exRate->jpyToUsd($response['sell_price']);
+        $response['shipping_fee'] = $exRate->jpyToUsd($response['shipping_fee']);
+        $response['retail_price'] = $exRate->jpyToUsd($response['retail_price']);
+        $response['tax_fee'] = $exRate->jpyToUsd($response['tax_fee']);
+        $response['deal_price'] = $exRate->jpyToUsd($response['deal_price']);
+        $response['start_price'] = $exRate->jpyToUsd($response['start_price']);
+        foreach ($response['sell_price_special'] as $k => $v) {
+            $response['sell_price_special'][$k] = $exRate->jpyToUsd($v);
+        }
+        foreach ($response['relate_products'] as $k => $v) {
+            $response['relate_products'][$k]['sell_price'] = $exRate->jpyToUsd($v['sell_price']);
+        }
+        foreach ($response['suggest_set_purchase'] as $k => $v) {
+            foreach ($v['sell_price'] as $key => $val) {
+                $response['suggest_set_purchase'][$k]['sell_price'][$key] = $exRate->jpyToUsd($val);
+            }
+        }
+        foreach ($response['suggest_set_session'] as $k => $v) {
+            foreach ($v['sell_price'] as $key => $val) {
+                $response['suggest_set_session'][$k]['sell_price'][$key] = $exRate->jpyToUsd($val);
+            }
+        }
+        foreach ($response['providers'] as $k => $v) {
+            $response['providers'][$k]['price'] = $exRate->jpyToUsd($v['price']);
+            $response['providers'][$k]['shipping_fee'] = $exRate->jpyToUsd($v['shipping_fee']);
+            $response['providers'][$k]['tax_fee'] = $exRate->jpyToUsd($v['tax_fee']);
+        }
     }
 }
