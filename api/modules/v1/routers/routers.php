@@ -125,6 +125,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
+        //'if_service' => true,
         'controller' => ['chat-service' => 'service/rest-service-chat'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',

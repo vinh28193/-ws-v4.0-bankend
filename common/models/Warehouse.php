@@ -12,5 +12,7 @@ use common\models\db\Warehouse as DbWarehouse;
 
 class Warehouse extends DbWarehouse
 {
-
+    const GROUP_WAREHOUSE_TRANSIT = 1;
+    const GROUP_WAREHOUSE_SAVE = 2;
+    const GROUP_WAREHOUSE_NOTE_PURCHASE = 3;
 }

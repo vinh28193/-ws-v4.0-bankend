@@ -46,13 +46,15 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const STATUS_JUNK = 'JUNK'; // end of status
     const STATUS_SUPPORTING = 'SUPPORTING'; // Lv 2; đơn đang được chăm sóc, next status SUPPORTED
     const STATUS_SUPPORTED = 'SUPPORTED'; // Lv 3; đơn đã được chăm sóc, next status READY_PURCHASE
-    const STATUS_READY_PURCHASE = 'READY_PURCHASE'; // Lv 4; đơn đã sẵn sàng mua hàng, next status PURCHASING, PURCHASE_PART or REFUNDING
+    const STATUS_READY2PURCHASE = 'READY2PURCHASE'; // Lv 4; đơn đã sẵn sàng mua hàng, next status PURCHASING, PURCHASE_PART or REFUNDING
     const STATUS_PURCHASING = 'PURCHASING'; // Lv 5; đơn đang trong quá trình mua hàng, next status PURCHASED
     const STATUS_PURCHASE_PART = 'PURCHASE_PART'; // Lv 6; đơn đang trong quá trình mua hàng nhưng mới mua được 1 phần, next status PURCHASED
     const STATUS_PURCHASED = 'PURCHASED'; // Lv7; đơn đã mua, next status REFUNDING
     const STATUS_REFUNDING = 'REFUNDING'; //Lv8; đơn đang chuyển hoàn, next status REFUNDED
     const STATUS_REFUNDED = 'REFUNDED'; //Lv8; đơn đã chuyển hoàn, end of status
     const STATUS_CANCEL = 'CANCEL';
+
+    const STATUS_RE_APPRAISE = 'RE_APPRAISE';  //  re-appraise : Đơn đang càn thậm định lái về giá + log + những vấn đề khác  --> Màu vàng và dừng lại ko cho gửi shipment
 
     /**
      * request status
@@ -452,7 +454,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
         $query = Order::find()
             ->withFullRelations()
-            ->andWhere(['is not', 'product.id', null])
+            ->andWhere(['is not', 'product.id', null])  // ToDo Test/Check Code Fee
             ->filter($params)
             ->limit($limit)
             ->offset($offset);
