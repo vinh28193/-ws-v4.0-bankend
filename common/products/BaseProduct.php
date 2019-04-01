@@ -8,7 +8,9 @@
 
 namespace common\products;
 
-
+use Yii;
+use yii\helpers\ArrayHelper;
+use common\models\Category;
 use common\components\AdditionalFeeInterface;
 use common\components\AdditionalFeeTrait;
 use common\components\StoreAdditionalFeeRegisterTrait;
@@ -115,7 +117,7 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
             'product_price_origin' => $this->getSellPrice(),
             'tax_fee_origin' => $this->us_tax_rate,
             'origin_shipping_fee' => $this->shipping_fee
-        ], true,true);
+        ], true, true);
         if ($this->isInitialized === false) {
             $this->setVariationMapping();
             $this->setVariationOptions();
@@ -158,14 +160,56 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
         ])[0];
     }
 
+    private $_customCategory;
+
     /**
-     * @return mixed
+     * @param bool $refresh
+     * @return mixed|void
      */
-    public function getCustomCategory()
+    public function getCustomCategory($refresh = false)
     {
-        $std = new \stdClass();
-        $std->interShippingB = 10.5;
-        return $std;
+        if ($this->_customCategory === null) {
+            if (!$this->isEmpty($this->categories)) {
+                $key = implode('_', $this->categories);
+                if (!($categories = Yii::$app->cache->get($key)) || $refresh) {
+                    $categories = Category::find()->forSite($this->getSiteMapping())->alias($this->categories)->all();
+                    Yii::$app->cache->set($key,$categories,60 * 10);
+                }
+                $this->_customCategory = null;
+                for ($i = count($this->categories) - 1; $i >= 0; $i--) {
+                    foreach ($categories as $category) {
+                        /** @var $category Category */
+                        if ($category->alias == $this->categories[$i]) {
+                            $this->_customCategory = $category;
+                            break;
+                        }
+                    }
+                    if ($this->_customCategory !== null){
+                        break;
+                    };
+                }
+            }elseif ($this->category_id !== null){
+                if (!($category = Yii::$app->cache->get($this->category_id))) {
+                    $category = Category::find()->where(['alias' => $this->category_id])->one();
+                    Yii::$app->cache->set($this->category_id, $category, 60 * 10);
+                }
+                $this->_customCategory = $category;
+            }
+        }
+        return $this->_customCategory;
+    }
+
+    /**
+     * @return integer|null
+     */
+    public function getSiteMapping()
+    {
+        return ArrayHelper::getValue([
+            self::TYPE_EBAY => Category::SITE_EBAY,
+            self::TYPE_AMAZON_US => Category::SITE_AMAZON_US,
+            self::TYPE_AMAZON_UK => Category::SITE_AMAZON_UK,
+            self::TYPE_AMAZON_JP => Category::SITE_AMAZON_JP
+        ], $this->type, null);
     }
 
     /**
@@ -200,6 +244,12 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
         return $this->for_whole_sale;
     }
 
+    public function getIsNew()
+    {
+        $condition = strtoupper($this->condition);
+        return ($condition === 'NEW' || strpos($condition, 'NEW') !== false || $condition === strtoupper('Manufacturer refurbished'));
+    }
+
     /**
      * @return integer
      */
@@ -225,7 +275,7 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
         $tempPrice = $this->getSellPrice();
         $this->sell_price = $this->start_price;
         $this->init();
-        $temp = $this->$this->getAdditionalFees()->getTotalAdditionFees();
+        $temp = $this->getAdditionalFees()->getTotalAdditionFees();
         if (!empty($this->deal_price) && $this->deal_price > 0.0) {
             $deal = $this->deal_price;
             $this->deal_price = null;
@@ -237,5 +287,14 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
         $this->sell_price = $tempPrice;
         $this->init();
         return $temp[1];
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    public function isEmpty($value)
+    {
+        return \common\helpers\WeshopHelper::isEmpty($value);
     }
 }

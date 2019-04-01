@@ -8,7 +8,8 @@
 
 namespace common\models;
 
-
+use common\components\AdditionalFeeInterface;
+use common\models\db\Category as DbCategory;
 use common\models\weshop\ConditionCustomFee;
 use common\models\weshop\TargetCustomFee;
 
@@ -18,14 +19,23 @@ use common\models\weshop\TargetCustomFee;
  * @property CategoryGroup $categoryGroup
  */
 
-class Category extends \common\models\db\Category
+class Category extends DbCategory
 {
-    public function getCustomFee($price, $quantity, $weight, $isNew = false){
+
+    const SITE_EBAY = 2;
+    const SITE_AMAZON_US = 26;
+    const SITE_AMAZON_UK = 27;
+    const SITE_AMAZON_JP= 1014;
+
+    public function getCustomFee(AdditionalFeeInterface $additionalFee){
+        $quantity = $additionalFee->getShippingQuantity();
+        $price = $additionalFee->getTotalOriginPrice() / $quantity;
+        $isNew = $additionalFee->getIsNew();
         $target = new TargetCustomFee();
         $target->price = $price;
-        $target->quantity = $quantity;
-        $target->weight = $weight;
-        $target->condition = $isNew ? ConditionCustomFee::condition_NEW : ConditionCustomFee::condition_used;
+        $target->quantity = $additionalFee->getShippingQuantity();
+        $target->weight = $additionalFee->getShippingWeight();
+        $target->condition = $additionalFee->getIsNew() ? ConditionCustomFee::condition_NEW : ConditionCustomFee::condition_used;
         if($this->categoryGroup){
             return $this->categoryGroup->customFeeCalculator($target);
         }elseif($price > 500){

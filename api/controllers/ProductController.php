@@ -66,37 +66,6 @@ class ProductController extends BaseApiController
         if (isset($this->post) !== null)  {
             $model = new Product;
             $model->attributes = $this->post;
-
-            $model->attributes = [
-                'order_id' => 2,
-                'seller_id' => 2,
-                'portal' => 'AMAZON_JAPAN',
-                'sku' => 'db5e5333ff544da2a6a6',
-                'product_name' => 'The players all played at once to eat the comfits: this caused some noise and confusion, as the hall was very hot, she kept on puzzling about it in a few minutes it seemed quite natural to Alice as.',
-                'parent_sku' => '34efc0d2c247db5e5333ff544da2a6',
-                'link_img' => 'https://lorempixel.com/640/480/?70454',
-                'link_origin' => 'http://www.moc.com/quaerat-repellendus-id-autem-nulla-harum-fuga.html',
-                'category_id' => 2,
-                'custom_category_id' => 2,
-                'price_amount_origin' => 3,
-                'quantity_customer' => 3,
-                'price_amount_local' => 70500,
-                'total_price_amount_local' => 70500,
-                'quantity_purchase' => 0,
-                'quantity_inspect' => 0,
-                'variations' => '',
-                'variation_id' => '',
-                'note_by_customer' => 'Let me see: four.',
-                'total_weight_temporary' => 0.5,
-                'created_at' => 1540486574,
-                'updated_at' => 498739696,
-                'remove' => 0,
-            ];
-
-            var_dump($model->validate());
-            var_dump($model->errors);
-            die();
-
             if ($model->save()) {
                 /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; \Yii::$app->response->data  =   $model->attributes; */
                   Yii::$app->api->sendSuccessResponse($model->attributes);

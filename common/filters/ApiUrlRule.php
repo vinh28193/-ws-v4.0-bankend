@@ -12,9 +12,12 @@ namespace common\filters;
 class ApiUrlRule extends \yii\rest\UrlRule
 {
 
+    /**
+     * @var bool
+     */
     public $sharePrefix = true;
-    public $if_service = false;
 
+    public $pluralize = false;
     /**
      * {@inheritdoc}
      */

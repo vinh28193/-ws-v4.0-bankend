@@ -422,6 +422,19 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
+        'controller' => ['gate' => 'product-gate'],
+        'patterns' => [
+            'GET,POST search' => 'search',
+            'GET,POST get' => 'detail',
+            'GET,POST calc' => 'calculator',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
         'controller' => ['coupon' => 'coupon'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',

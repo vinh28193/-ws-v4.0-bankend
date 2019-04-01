@@ -8,68 +8,64 @@
 
 namespace common\products\ebay;
 
+use common\products\BaseGate;
+use Yii;
 
-use common\products\BaseProductGate;
-use yii\web\ServerErrorHttpException;
-
-class EbayGate extends BaseProductGate
+class EbayGate extends BaseGate
 {
 
-    /**
-     * @param $keyword
-     * @param bool $renew
-     * @return array|mixed
-     * @throws ServerErrorHttpException
-     * @throws \HttpException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\httpclient\Exception
-     */
-    public function getProduct($keyword, $renew = false)
+    public function search($params, $refresh = false)
     {
-        $request = new EbayDetailRequest();
-        $request->keyword = $keyword;
+        $request = new EbaySearchRequest();
+        $request->load($params, '');
         if (!$request->validate()) {
-            throw new ServerErrorHttpException("Error when validate");
+            return [false, $request->getFirstErrors()];
         }
-        return $this->sendRequest($request, $renew);
+        $httpClient = $this->getHttpClient();
+        $httpRequest = $httpClient->createRequest();
+        $httpRequest->setUrl($this->searchUrl);
+        $httpRequest->setData($request->params());
+        $httpRequest->setFormat('json');
+        $httpRequest->setMethod('POST');
+        try {
+            $httpResponse = $httpClient->send($httpRequest);
+            $response = $httpResponse->getData();
+            if (!$httpResponse->getIsOk()) {
+                return [false, $response];
+            }
+            return [true, (new EbaySearchResponse($this))->parser($response)];
+        } catch (\Exception $exception) {
+            Yii::error($exception);
+            return [false, $exception->getMessage()];
+        }
+
     }
 
-    public function parseResponse($response)
+    public function lookup($condition, $refresh = false)
     {
-        if ($response['success']) {
-            $temp_i = 0;
-            foreach ($response['data']['variation_options'] as $option) {
-                $response['data']['variation_options'][$temp_i]['name'] = str_replace("\"", "''", $option["name"]);
-                $temp_j = 0;
-                foreach ($option['values'] as $item) {
-                    $response['data']['variation_options'][$temp_i]['values'][$temp_j] = str_replace("\"", "''", $item);
-                    $temp_j++;
-                }
-                $temp_i++;
-            }
-            $temp_i = 0;
-            foreach ($response['data']['variation_mapping'] as $option) {
-                $temp_j = 0;
-                foreach ($option['options_group'] as $item) {
-                    $response['data']['variation_mapping'][$temp_i]['options_group'][$temp_j]['name'] = str_replace("\"", "''", $item["name"]);
-                    $response['data']['variation_mapping'][$temp_i]['options_group'][$temp_j]['value'] = str_replace("\"", "''", $item["value"]);
-                    $temp_j++;
-                }
-                $temp_i++;
-            }
-            $response = $response['data'];
-            if(isset($response['provider'])){
-                $response['providers'] = $response['provider'];
-                unset($response['provider']);
-            }
-            if(isset($response['usTaxRate'])){
-                $response['us_tax_rate'] = $response['usTaxRate'];
-                unset($response['usTaxRate']);
-            }
 
-            return new EbayProduct($response);
+        $request = new EbayDetailRequest();
+        $request->keyword = $condition;
+        if (($product = $this->cache->get($request->getCacheKey()))) {
+
         }
-
-        return $response;
+        $httpClient = $this->getHttpClient();
+        $httpRequest = $httpClient->createRequest();
+        $this->lookupUrl .= "?id={$request->params()}";
+        $httpRequest->setUrl($this->lookupUrl);
+        $httpRequest->setData(null);
+        $httpRequest->setFormat('json');
+        $httpRequest->setMethod('POST');
+        try {
+            $httpResponse = $httpClient->send($httpRequest);
+            $data = $httpResponse->getData();
+            if (!$httpResponse->getIsOk()) {
+                return [false, $data];
+            }
+            return [true, (new EbayDetailResponse($this))->parser($data)];
+        } catch (\Exception $exception) {
+            Yii::error($exception);
+            return [false, $exception->getMessage()];
+        }
     }
 }

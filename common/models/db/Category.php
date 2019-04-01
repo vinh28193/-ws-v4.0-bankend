@@ -25,6 +25,8 @@ use Yii;
  * @property int $remove
  * @property string $name
  * @property string $version version 4.0
+ *
+ * @property Product[] $products
  */
 class Category extends \common\components\db\ActiveRecord
 {
@@ -74,5 +76,22 @@ class Category extends \common\components\db\ActiveRecord
             'name' => 'Name',
             'version' => 'Version',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['category_id' => 'id']);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return \common\models\queries\CategoryQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new \common\models\queries\CategoryQuery(get_called_class());
     }
 }
