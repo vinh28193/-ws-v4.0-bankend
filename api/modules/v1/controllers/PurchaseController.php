@@ -94,7 +94,7 @@ class PurchaseController extends BaseApiController
                 'current_status' => Order::STATUS_PURCHASING,
                 'id' => $this->post['idItem']
             ])->limit(1)->one();
-            $order->current_status = $order->total_purchase_quantity == 0 ?  Order::STATUS_READY_PURCHASE : Order::STATUS_PURCHASE_PART;
+            $order->current_status = $order->total_purchase_quantity == 0 ?  Order::STATUS_READY2PURCHASE : Order::STATUS_PURCHASE_PART;
             $order->purchase_assignee_id = null;
             $order->save(0);
 //            $item = Order::find()->where(['id' => $this->post['idItem']])->limit(1)->one();
@@ -115,12 +115,12 @@ class PurchaseController extends BaseApiController
         /** @var Order[] $orders */
         if($listId && $type == 'addtocart'){
             $orders = Order::find()->with(['products'])
-                ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY_PURCHASE,Order::STATUS_PURCHASE_PART]])
+                ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY2PURCHASE,Order::STATUS_PURCHASE_PART]])
                 ->orWhere(['purchase_assignee_id'=>Yii::$app->user->getId(),'current_status' => Order::STATUS_PURCHASING])
                 ->all();
         }elseif($listId){
             $orders = Order::find()->with('products')
-                ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY_PURCHASE,Order::STATUS_PURCHASE_PART]])
+                ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY2PURCHASE,Order::STATUS_PURCHASE_PART]])
                 ->all();
         }else{
             $success = true;
