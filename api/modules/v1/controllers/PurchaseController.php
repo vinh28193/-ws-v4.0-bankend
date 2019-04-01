@@ -81,31 +81,41 @@ class PurchaseController extends BaseApiController
     public function actionUpdate(){
         if(isset($this->get['id'])){
             $listId = [$this->get['id']];
-            return $this->getCart($listId);
+            $repon = $this->getCart($listId);
+
+            Yii::$app->wsLog->order->push('addToCart', null, [
+                'id' => $this->get['id'],
+                'request' => $this->get,
+                'response' => $repon
+            ]);
+            return $repon;
         }
         return $this->response(false,"not have Id");
     }
 
-    public function actionDelete(){
-        if(isset($this->post['idItem'])){
+    public function actionDelete($id){
             /** @var Order $order */
             $order = Order::find()->where( [
                 'purchase_assignee_id'=>Yii::$app->user->getId(),
                 'current_status' => Order::STATUS_PURCHASING,
-                'id' => $this->post['idItem']
+                'id' => $id
             ])->limit(1)->one();
-            $order->current_status = $order->total_purchase_quantity == 0 ?  Order::STATUS_READY_PURCHASE : Order::STATUS_PURCHASE_PART;
-            $order->purchase_assignee_id = null;
+            $order->current_status = $order->total_purchase_quantity == 0 ?  Order::STATUS_READY2PURCHASE : Order::STATUS_PURCHASE_PART;
+            $order->purchase_assignee_id = $order->total_purchase_quantity == 0 ?  null : $order->purchase_assignee_id;
             $order->save(0);
 //            $item = Order::find()->where(['id' => $this->post['idItem']])->limit(1)->one();
 //            $mess = "Remove soi ".$this->post['idItem']." to cart. ";
 //            OrderLogs::log($item->id,"action",$mess,Yii::$app->user->getIdentity()->username,$mess,$item->id);
-            return $this->getCart();
-        }
-        return $this->response(false,"not have Id");
+        $repon = $this->getCart([],'Remove Success!');
+        Yii::$app->wsLog->order->push('removeItemToCart', null, [
+            'id' => $id,
+            'request' => "delete/".$this->id,
+            'response' => $repon
+        ]);
+            return $repon;
     }
 
-    function getCart($listId = []){
+    function getCart($listId = [],$message = ''){
         $type = Yii::$app->request->post('type','addtocart');
         $data = [];
         $listId_cancel = [];
@@ -115,12 +125,12 @@ class PurchaseController extends BaseApiController
         /** @var Order[] $orders */
         if($listId && $type == 'addtocart'){
             $orders = Order::find()->with(['products'])
-                ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY_PURCHASE,Order::STATUS_PURCHASE_PART]])
+                ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY2PURCHASE,Order::STATUS_PURCHASE_PART]])
                 ->orWhere(['purchase_assignee_id'=>Yii::$app->user->getId(),'current_status' => Order::STATUS_PURCHASING])
                 ->all();
         }elseif($listId){
             $orders = Order::find()->with('products')
-                ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY_PURCHASE,Order::STATUS_PURCHASE_PART]])
+                ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY2PURCHASE,Order::STATUS_PURCHASE_PART]])
                 ->all();
         }else{
             $success = true;
@@ -132,6 +142,7 @@ class PurchaseController extends BaseApiController
         $user = Yii::$app->user->getIdentity();
         foreach ($orders as $key => $order){
             $data[$key]['order_id'] = $order->id;
+            $data[$key]['ordercode'] = $order->ordercode;
             $data[$key]['seller'] = $order->seller_name;
             $data[$key]['total_amount'] = $order->total_final_amount_local;
             $data[$key]['portal'] = $order->portal;
@@ -196,15 +207,16 @@ class PurchaseController extends BaseApiController
             $order->save(0);
         }
 
-        $mess .= "Add to cart success. ";
+        if(!$success){
+            $mess .="can not find anything soi in list id";
+        }else{
+            $mess .= "Add to cart success. ";
+        }
         if(count($listId_cancel) > 0){
             $mess .="And this is list soi cancel add to card: ".implode(' ,',$listId_cancel);
             $success = true;
         }
-        if(!$success){
-            $mess .="can not find anything soi in list id";
-        }
-        return $this->response($success,$mess,$data);
+        return $this->response($success,$message ? $message : $mess,$data);
     }
     public function actionCreate(){
         $form = new FormRequestPurchase();
@@ -323,6 +335,12 @@ class PurchaseController extends BaseApiController
             $PurchaseOrder->total_changing_price = abs($changeAmount);
             $PurchaseOrder->total_type_changing = $changeAmount > 0 ? 'up' : 'down';
             $PurchaseOrder->save(0);
+
+            Yii::$app->wsLog->order->push('purchased', null, [
+                'id' => $PurchaseOrder->id,
+                'request' => $this->post['cart'],
+                'response' => $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id)
+            ]);
             $tran->commit();
             return $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id);
         }catch (\Exception $exception){

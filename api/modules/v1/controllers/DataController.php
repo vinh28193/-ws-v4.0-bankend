@@ -85,7 +85,7 @@ class DataController extends BaseApiController
         /** Todo : Thiếu link Gốc sản phẩm
           * Thieu Mã giảm giá , Phương thức thanh toán
          **/
-        $this->cart->addItem(
+       $isCard =  $this->cart->addItem(
             $dataPost['sku'],
             $dataPost['seller'],
             $dataPost['quantity'],
@@ -93,6 +93,7 @@ class DataController extends BaseApiController
             $dataPost['image'],
             $dataPost['parentSku']
             );
+       return $isCard;
     }
 
     protected function SellerData($item,$key)
@@ -176,8 +177,7 @@ class DataController extends BaseApiController
         ];
 
 
-//        var_dump($dataSavePro);
-//        die("Prod");
+       var_dump($dataSavePro);  die("Prod");
 
         return $product;
     }
@@ -267,7 +267,7 @@ class DataController extends BaseApiController
             'Error' =>$order->errors
         ];
 
-//        var_dump($dataSaveOrder); die("Order");
+        var_dump($dataSaveOrder); die("Order");
        return $order;
     }
 
@@ -285,8 +285,13 @@ class DataController extends BaseApiController
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
 
-        $this->CartData($this->post);
+        $card =  $this->CartData($this->post);
+        var_dump($card);die("Card");
         $items = $this->cart->getItems();
+
+        if(empty($items)) {
+            Yii::$app->api->sendFailedResponse("Not get products");
+        }
 
         $orders = [];
         $errors = [];

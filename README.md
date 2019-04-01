@@ -622,3 +622,7 @@ API : http://weshop-v4.back-end.local.vn/test/get-custom-fee
 
 # --------Test Tracking Code--------
 >php yii fixture/load "TrackingCode"
+
+
+# --------- status active btn purchase
+READY_PURCHASE or PURCHASE_PART or ( PURCHASING and ( PURCHASE_ASSIGNEE_ID = user_id or user_role = 'superAdmin,master_operation' ))
