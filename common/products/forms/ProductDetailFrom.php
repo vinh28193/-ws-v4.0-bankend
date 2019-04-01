@@ -8,15 +8,16 @@
 
 namespace common\products\forms;
 
+use common\products\BaseProduct;
+use yii\helpers\ArrayHelper;
 
-use common\products\ebay\EbayGate;
-use common\products\ebay\EbayProduct;
-
-class ProductDetailFrom extends \yii\base\Model
+class ProductDetailFrom extends BaseForm
 {
 
-    public $type;
 
+    /**
+     * @var string
+     */
     public $id;
 
     public $sku;
@@ -31,55 +32,45 @@ class ProductDetailFrom extends \yii\base\Model
 
     public $with_detail = false;
 
-    /**
-     * @param array $data
-     * @param string $formName
-     * @return bool
-     */
-    public function load($data, $formName = '')
+
+    public function init()
     {
-        return parent::load($data, $formName);
+        parent::init();
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function getFirstErrors()
-    {
-        $error = parent::getFirstErrors();
-        return reset($error);
-    }
 
     /**
      * @return array
      */
     public function attributes()
     {
-        return [
-            'type', 'id', 'sku', 'quantity', 'seller', 'weight', 'sub_product_url', 'with_detail'
-        ];
+        return ArrayHelper::merge(parent::attributes(), [
+            'id', 'sku', 'quantity', 'seller', 'weight', 'sub_product_url', 'with_detail'
+        ]);
     }
 
     public function rules()
     {
-        return [
-            ['type', 'required'],
+        return ArrayHelper::merge(parent::rules(), [
             ['id', 'required'],
             ['id', 'string', 'min' => 3, 'max' => 40],
-            ['id', 'filter', 'filter' => '\yii\helpers\Html::encode'],
             ['sku', 'string', 'min' => 3, 'max' => 12],
-            ['sku', 'filter', 'filter' => '\yii\helpers\Html::encode'],
             ['quantity', 'default', 'value' => 1],
             ['seller', 'string'],
             ['seller', 'filter', 'filter' => '\yii\helpers\Html::encode'],
             ['weight', 'integer'],
             ['sub_product_url', 'string']
-        ];
+        ]);
+    }
+
+    public function attributeLabels()
+    {
+        return parent::attributeLabels();
     }
 
     /**
      * @param bool $renew
-     * @return bool|EbayProduct
+     * @return bool|BaseProduct
      * @throws \HttpException
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\httpclient\Exception
@@ -91,12 +82,11 @@ class ProductDetailFrom extends \yii\base\Model
         if (!$this->validate()) {
             return false;
         }
-        $type = strtoupper($this->type);
-        $gate = new EbayGate();
-        /** @var  $product EbayProduct */
-        $product = $gate->getProduct($this->id, $renew);
-        if (is_array($product) && isset($product['success']) && $product['success'] === false) {
-            $this->addError($this->isSku() ? 'sku' : 'id', $product['message']);
+        /** @var $success boolean */
+        /** @var $product BaseProduct */
+        list($success, $product) = $this->getActiveGate()->lookup($this->getParams(), $renew);
+        if (!$success && is_string($product)) {
+            $this->addError($this->isSku() ? 'sku' : 'id', $product);
             return false;
         }
         if ($this->isSku()) {
@@ -104,7 +94,7 @@ class ProductDetailFrom extends \yii\base\Model
                 if ($variation->variation_sku === $this->sku) {
                     $product->sell_price = $variation->variation_price;
                     $product->available_quantity = $variation->available_quantity;
-                    $product->quantity_sold =  $variation->quantity_sold;
+                    $product->quantity_sold = $variation->quantity_sold;
                     $product->item_sku = $this->sku;
                     break;
                 }
@@ -128,5 +118,23 @@ class ProductDetailFrom extends \yii\base\Model
     public function isSku()
     {
         return $this->sku !== null && trim($this->sku) !== '';
+    }
+
+    protected function getParams()
+    {
+        if ($this->type === 'ebay') {
+            return $this->id;
+        } else {
+            $param = [
+                'asin_id' => $this->id
+            ];
+            if ($this->isSku()) {
+                $param['asin_id'] = $this->sku;
+                $param['parent_asin_id'] = $this->id;
+                $param['load_sub_url'] = null;
+            }
+            return $param;
+
+        }
     }
 }

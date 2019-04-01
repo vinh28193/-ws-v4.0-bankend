@@ -1,0 +1,299 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: vinhs
+ * Date: 2019-04-01
+ * Time: 09:26
+ */
+
+namespace common\components;
+
+use Yii;
+use yii\base\Component;
+use yii\base\InvalidArgumentException;
+use yii\caching\CacheInterface;
+use yii\db\Connection;
+use yii\db\Query;
+use yii\di\Instance;
+use yii\helpers\Inflector;
+
+class ExchangeRate extends Component
+{
+
+    public $ratePercent = 1.03;
+
+    /**
+     * @var string | Connection
+     */
+    public $db = 'db';
+    /**
+     * @var string|CacheInterface
+     */
+    public $cache = 'cache';
+    public $cacheDuration = 10800;
+    public $currencies = [
+        'USD', 'VND', 'MYR', 'THB', 'SGD', 'IDR', 'PHP', 'GBP', 'JPY',
+    ];
+
+    public $symbols = [
+        'USD' => '$',
+        'VND' => 'VND',
+        'MYR' => 'MYR',
+        'THB' => 'THB',
+        'SGD' => 'SGD',
+        'IDR' => 'IDR',
+        'PHP' => 'PHP',
+        'GBP' => 'GBP',
+        'JPY' => 'JPY',
+    ];
+    /**
+     * @var string
+     */
+    public $exchangeRateTable = 'system_exchange_rate';
+    /**
+     * @var array
+     */
+    public $defaultTo = [
+        'usd,vnd' => 23000,
+        'jpy,vnd' => 20000
+    ];
+
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function init()
+    {
+        parent::init();
+        $this->db = Instance::ensure($this->db, Connection::className());
+        $this->cache = Instance::ensure($this->cache, 'yii\caching\CacheInterface');
+    }
+
+    private $_rates;
+
+    /**
+     * @param $form
+     * @param $to
+     * @return mixed|null
+     */
+    public function load($form, $to)
+    {
+        if (!in_array($form, $this->currencies)) {
+            throw  new InvalidArgumentException("invalid currency from $form not in config");
+        }
+        if (!in_array($to, $this->currencies)) {
+            throw  new InvalidArgumentException("invalid currency to $to not in config");
+        }
+        $key = $this->buildKey($form, $to);
+        $this->loadFormCache($form, $to);
+        return isset($this->_rates[$key]) ? $this->_rates[$key] : $this->setDefault($form, $to);
+    }
+
+    /**
+     * @param $form
+     * @param $to
+     * @param bool $refresh
+     */
+    protected function loadFormCache($form, $to, $refresh = false)
+    {
+        $key = $this->buildKey($form, $to);
+        if (!($this->_rates = $this->cache->get($key)) || $refresh) {
+            $this->_rates[$key] = $this->loadFormDb($form, $to);
+        }
+        $this->cache->set($key, $this->_rates, $this->cacheDuration);
+    }
+
+    /**
+     * @param $form
+     * @param $to
+     * @return array
+     */
+    protected function loadFormDb($form, $to)
+    {
+        $this->invalidCache($form, $to);
+        $query = new Query();
+        $query->select(['rate' => 'r.rate']);
+        $query->from(['r' => $this->exchangeRateTable]);
+        $query->where([
+            'AND',
+            ['r.form' => strtoupper($form)],
+            ['r.to' => strtoupper($to)]
+        ]);
+        return $query->one($this->db)['rate'];
+    }
+
+    public function loadFormApi()
+    {
+        $from = 'USD';
+        $transaction = $this->db->beginTransaction();
+        try {
+            $curl = curl_init('http://www.apilayer.net/api/live?access_key=3c96a96b7700b09c5803dbf858ab9af0&format=1');
+            curl_setopt($curl, CURLOPT_FAILONERROR, true);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            $result = curl_exec($curl);
+            $result = json_decode($result, true);
+            foreach ($result['quotes'] as $key => $quote) {
+                $to = str_replace('USD', '', $key);
+                foreach ($this->currencies as $currency) {
+                    if ($currency === $to) {
+                        $rate = $quote * $this->ratePercent;
+                        $key = $this->buildKey($from, $to);
+                        $this->_rates[$key] = $rate;
+                        $this->db->createCommand()
+                            ->insert($this->exchangeRateTable, [
+                                'from' => strtoupper($from),
+                                'to' => strtoupper($to),
+                                'rate' => $rate,
+                                'sync_at' => Yii::$app->getFormatter()->asDatetime('now')
+                            ])->execute();
+                    }
+                }
+
+            }
+
+        } catch (\Exception $e) {
+            Yii::error($e, __METHOD__);
+            $transaction->rollBack();
+        }
+
+    }
+
+    /**
+     * @param $form
+     * @param $to
+     * @return mixed|null
+     */
+    protected function setDefault($form, $to)
+    {
+        $key = implode(',', [$form, $to]);
+        return isset($this->defaultTo[$key]) ? $this->defaultTo[$key] : null;
+    }
+
+    /**
+     * @param $form
+     * @param $to
+     * @return string
+     */
+    protected function buildKey($form, $to)
+    {
+        $form = strtoupper($form);
+        $to = strtoupper($to);
+        return 'c-rate-' . $form . '-' . $to;
+    }
+
+    /**
+     * @param $form
+     * @param $to
+     */
+    public function invalidCache($form, $to)
+    {
+        $key = $this->buildKey($form, $to);
+        $this->cache->set($key, 0);
+    }
+
+    public function __call($name, $params)
+    {
+        $func = Inflector::camelize($name);
+
+        return parent::__call($name, $params);
+    }
+
+    /**
+     * @param $currency
+     * @return mixed
+     */
+    public function symbol($currency)
+    {
+        return isset($this->symbols[$currency]) ? $this->symbols[$currency] : $currency;
+    }
+
+    /**
+     * @param $value
+     * @param $from
+     * @param $to
+     * @param int $default
+     * @param int $precision
+     * @return float|int
+     */
+    public function convert($value, $from, $to, $default = 0, $precision = 0)
+    {
+        if (($rate = $this->load($from, $to)) === null) {
+            Yii::warning("can not resolve current exchange rate form $from to $to, register with default $default");
+            $rate = $default;
+        }
+        return \common\helpers\WeshopHelper::roundNumber($rate * $value, $precision);
+    }
+
+    /**
+     * @param $value
+     * @param $default
+     * @return float|int
+     */
+    public function usdToVnd($value, $default = 1)
+    {
+        return $this->convert($value, 'USD', 'VND', $default, -3);
+    }
+
+    public function jpyToVnd($value, $default = 213)
+    {
+        return $this->convert($value, 'JPY', 'VND', $value * $default, -3);
+    }
+
+    /**
+     * @param $value
+     * @param $default
+     * @return float|int
+     */
+    public function jpyToUsd($value, $default = 1)
+    {
+        $vnd = $this->jpyToVnd($value);
+        $rateUs = $this->convert(1, 'USD', 'VND', $default, -3);
+        $usd = $vnd / $rateUs;
+        return \common\helpers\WeshopHelper::roundNumber($usd, 2);
+    }
+
+    /**
+     * @param $value
+     * @param $default
+     * @return float|int
+     */
+    public function gpdToUsd($value, $default = 1)
+    {
+        return $this->convert($value, 'gpd', 'usd', $default, 2);
+    }
+
+    /**
+     * @param $value
+     * @param $default
+     * @return float|int
+     */
+    public function gpdToVnd($value, $default = 1)
+    {
+        return $this->convert($value, 'gpd', 'vnd', $default, -3);
+    }
+
+    public function showMoney($value, $from = 'USD', $to, $isSymbol = false, $defaultValue = 1)
+    {
+        $to = Inflector::camelize($to);
+        $func = strtolower($from);
+        $func = "{$func}To{$to}";
+        if (method_exists($this, $func)) {
+            $value = $this->$func($value, $defaultValue);
+        }
+        $value .= $isSymbol ? $this->symbol($to) : strtoupper($to);
+        return $value;
+    }
+
+    /**
+     * @param $value
+     * @param bool $isSymbol
+     * @param int $defaultValue
+     * @return string
+     */
+    public function showUsdToVnd($value, $isSymbol = false, $defaultValue = 1)
+    {
+        return $this->showMoney($value, 'USD', 'VND', $isSymbol, $defaultValue);
+    }
+}

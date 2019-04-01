@@ -32,7 +32,7 @@ interface AdditionalFeeInterface
     public function getTotalOriginPrice();
 
     /**
-     * @return mixed
+     * @return \common\models\Category
      */
     public function getCustomCategory();
 
@@ -50,6 +50,11 @@ interface AdditionalFeeInterface
      * @return boolean
      */
     public function getIsForWholeSale();
+
+    /**
+     * @return boolean
+     */
+    public function getIsNew();
 
     /**
      * @return integer

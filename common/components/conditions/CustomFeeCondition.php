@@ -16,6 +16,9 @@ class CustomFeeCondition extends BaseCondition
 
     public function execute($value, $additionalFee, $storeAdditionalFee)
     {
-        return $value;
+        if (($category = $additionalFee->getCustomCategory()) !== null) {
+            return $category->getCustomFee($additionalFee);
+        }
+        return 0.0;
     }
 }
