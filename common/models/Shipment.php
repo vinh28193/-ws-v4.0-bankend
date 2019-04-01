@@ -15,6 +15,7 @@ use common\models\db\Shipment as DbShipment;
  * Class Shipment
  * @package common\models
  * @property PackageItem[] $packageItems
+ * @property Customer $customer
  */
 
 class Shipment extends DbShipment
@@ -51,5 +52,13 @@ class Shipment extends DbShipment
     public function getPackageItems()
     {
         return $this->hasMany(PackageItem::className(), ['shipment_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCustomer()
+    {
+        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
     }
 }
