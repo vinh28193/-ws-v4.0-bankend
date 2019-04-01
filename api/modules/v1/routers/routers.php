@@ -143,7 +143,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['purchase' => 'purchase'],
+        'controller' => ['purchase'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -162,6 +162,8 @@ return [
             'OPTIONS update/<id:\d+>'=> 'options',
             'POST create'=> 'create',
             'OPTIONS create'=> 'options',
+            'DELETE delete/<id:\d+>'=> 'delete',
+            'OPTIONS delete/<id:\d+>'=> 'options',
         ]
     ],
     [
