@@ -31,7 +31,7 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     const TYPE_AMAZON_US = 'AMAZON';
     const TYPE_AMAZON_JP = 'AMAZON-JP';
     const TYPE_AMAZON_UK = 'AMAZON-UK';
-    const TYPE_AMAZON = 'OTHER';
+    const TYPE_OTHER = 'OTHER';
 
     const PRODUCT_TYPE_BUY_NOW = 0;
     const PRODUCT_TYPE_REQUEST = 1;
