@@ -12,9 +12,20 @@ namespace api\controllers;
 class TesterController extends \yii\rest\Controller
 {
 
-    public function actionIndex(){
-        \common\components\log\Logging::create()->product->push('test','tesing');
+    public function actionIndex()
+    {
+        $productComponent = new \common\products\ProductManager();
+        $ebay = $productComponent->ebay->lookup(332800694983);
+        var_dump($ebay);
         die;
-        return 0;
+    }
+
+    public function actionRate()
+    {
+        /** @var  $exRate  \common\components\ExchangeRate */
+        $exRate = \Yii::$app->exRate;
+
+        echo "rate from USD to VND: " . $exRate->usdToVnd(12, 0) ."\n";
+        die;
     }
 }

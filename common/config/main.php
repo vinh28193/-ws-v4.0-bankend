@@ -45,6 +45,12 @@ return [
         'wsLog' => [
             'class' => 'common\components\log\Logging'
         ],
+        'productManager' => [
+            'class' => 'common\products\ProductManager'
+        ],
+        'exRate' => [
+            'class' => 'common\components\ExchangeRate'
+        ],
 //        'cartws' => [
 //            'class' => 'common\components\book\cart\Cart',
 //            'storage' => [
