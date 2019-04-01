@@ -11,3 +11,15 @@ checkBuynow(order) {
                     || this.checkAdminAccess()))
         );
     }
+
+
+2. const STATUS_RE_APPRAISE = 'RE_APPRAISE';
+  //  re-appraise : Đơn đang càn thậm định lái về giá + log + những vấn đề khác  --> Màu vàng và dừng lại ko cho gửi shipment
+  Order có thêm trang thái này
+  và dưng ko gửi shipment và hoàn tiền nhé
+  tạm thời do admin mới vào dánh dấu được
+  hoặc crontab quét thấy có vấn đề
+  chạy cho con mới
+
+
+
