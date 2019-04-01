@@ -28,6 +28,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_SALE_ASSIGN = 'saleAssign';
     const SCENARIO_REQUEST = 'request';
     const SCENARIO_CONFIRM_PURCHASE = 'confirmPurchase';
+    const SCENARIO_UPDATE_ADJUST_PAYMENT = 'editAdjustPayment';
 
     /**
      * order type
@@ -127,7 +128,10 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_SALE_ASSIGN => [
                 'sale_support_id','support_email'
-            ]
+            ],
+            self::SCENARIO_UPDATE_ADJUST_PAYMENT => [
+                'total_paid_amount_local'
+            ],
         ]);
     }
 
