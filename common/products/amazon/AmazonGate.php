@@ -146,7 +146,7 @@ class AmazonGate extends BaseGate
         $httpRequest = $httpClient->createRequest();
         $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
         $httpRequest->setMethod('POST');
-        $httpRequest->setUrl($this->asinsUrl);
+        $httpRequest->setUrl($this->offerUrl);
         $httpRequest->setData([
             'store' => $this->store,
             'asin_id' => $itemId
@@ -284,7 +284,7 @@ class AmazonGate extends BaseGate
         $rs['relate_products'] = $this->getRelateProduct($amazon['suggest_products']);
         $rs['start_price'] = !empty($amazon["retail_price"]) ? ($amazon["retail_price"][0]) : 0.0;
         $rs['condition'] = isset($amazon['condition']) ? $amazon['condition'] : 'new';
-        $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::STORE_JP : AmazonProduct::STORE_US;
+        $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::TYPE_AMAZON_JP : AmazonProduct::TYPE_AMAZON_US;
         $rs['tax_fee'] = 0;
         $rs['store'] = $this->store;
         $suggestSetCacheKey = "suggest_set_{$rs['item_sku']}";
@@ -302,16 +302,16 @@ class AmazonGate extends BaseGate
             $rs["suggest_set_$key"] = isset($suggestSets[$key]) ? $suggestSets[$key] : null;
         }
 
-        if (!$request->is_first_load) {
+//        if (!$request->is_first_load) {
             $offersCacheKey = "offers_{$rs['item_sku']}";
-            if (!($offers = $this->cache->get($offersCacheKey))) {
+//            if (!($offers = $this->cache->get($offersCacheKey))) {
                 $offers = $this->getOffers($rs['item_sku']);
-                $this->cache->set($offersCacheKey, $offers, 3600);
-            }
+//                $this->cache->set($offersCacheKey, $offers, 3600);
+//            }
             $check = false;
             $rs['providers'] = [];
-            if (isset($offers['response'])) {
-                foreach ($offers['response'] as $offer) {
+            if (!$this->isEmpty($offers)) {
+                foreach ($offers as $offer) {
                     if (in_array($offer['seller']['seller_name'], $this->sellerBlackLists)) {
                         $check = true;
                         continue;
@@ -333,19 +333,19 @@ class AmazonGate extends BaseGate
                     $prov['tax_fee'] = $offer['tax_fee'];
                     $rs['providers'][] = $prov;
                 }
-                $rs['sell_price'] = $offers['response'][0]['price'];
-                $rs['condition'] = $offers['response'][0]['condition'];
-                $rs['is_free_ship'] = $offers['response'][0]['is_free_ship'];
-                $rs['is_prime'] = $offers['response'][0]['is_prime'];
-                $rs['sell_price'] = $offers['response'][0]['price'];
-                $rs['shipping_fee'] = $offers['response'][0]['ship_fee'];
-                $rs['tax_fee'] = $offers['response'][0]['tax_fee'];
+                $rs['sell_price'] = $offers[0]['price'];
+                $rs['condition'] = $offers[0]['condition'];
+                $rs['is_free_ship'] = $offers[0]['is_free_ship'];
+                $rs['is_prime'] = $offers[0]['is_prime'];
+                $rs['sell_price'] = $offers[0]['price'];
+                $rs['shipping_fee'] = $offers[0]['ship_fee'];
+                $rs['tax_fee'] = $offers[0]['tax_fee'];
             }
             if (!count($rs['providers']) && $check) {
                 $rs['sell_price'] = 0;
                 [false, 'no provider valid'];
             }
-        }
+//        }
         $rs['price_api'] = $rs['sell_price'];
         $rs['currency_api'] = 'USD';
         $rs['ex_rate_api'] = 1;

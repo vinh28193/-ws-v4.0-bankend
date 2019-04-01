@@ -107,7 +107,9 @@ class ProductDetailFrom extends BaseForm
         if ($this->quantity !== null && trim($this->quantity) > 0) {
             $product->quantity = $this->quantity;
         }
-
+        if ($this->seller !== null && trim($this->seller) !== '' && $this->type !== 'ebay') {
+//            $product->updateBySeller($this->seller);
+        }
         $product->init();
         if ($this->with_detail === false) {
             $product->description = null;

@@ -84,7 +84,7 @@ trait ProductTrait
 
     public function getSpecific($sku)
     {
-        if (empty($this->variation_mapping)){
+        if (empty($this->variation_mapping)) {
             return "";
         }
         foreach ((array)$this->variation_mapping as $item) {
@@ -164,6 +164,9 @@ trait ProductTrait
 
     public function updateBySeller($selerId)
     {
+        if (empty($this->providers)) {
+            return false;
+        }
         foreach ($this->providers as $provider) {
             if ($provider->provId == $selerId) {
                 $this->sell_price = $provider->price;
