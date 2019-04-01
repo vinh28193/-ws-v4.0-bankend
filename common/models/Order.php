@@ -30,6 +30,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_CONFIRM_PURCHASE = 'confirmPurchase';
     const SCENARIO_UPDATE_ADJUST_PAYMENT = 'editAdjustPayment';
     const SCENARIO_UPDATE_COUPON = 'updateCouponId';
+    const SCENARIO_UPDATE_PAY_BACK = 'updatePayBack';
 
     /**
      * order type
