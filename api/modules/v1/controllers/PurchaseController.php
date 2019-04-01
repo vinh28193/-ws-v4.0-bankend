@@ -132,6 +132,7 @@ class PurchaseController extends BaseApiController
         $user = Yii::$app->user->getIdentity();
         foreach ($orders as $key => $order){
             $data[$key]['order_id'] = $order->id;
+            $data[$key]['ordercode'] = $order->ordercode;
             $data[$key]['seller'] = $order->seller_name;
             $data[$key]['total_amount'] = $order->total_final_amount_local;
             $data[$key]['portal'] = $order->portal;

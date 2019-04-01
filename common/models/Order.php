@@ -29,6 +29,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_REQUEST = 'request';
     const SCENARIO_CONFIRM_PURCHASE = 'confirmPurchase';
     const SCENARIO_UPDATE_ADJUST_PAYMENT = 'editAdjustPayment';
+    const SCENARIO_UPDATE_COUPON = 'updateCouponId';
 
     /**
      * order type
@@ -131,6 +132,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_UPDATE_ADJUST_PAYMENT => [
                 'total_paid_amount_local'
+            ],
+            self::SCENARIO_UPDATE_COUPON => [
+                'coupon_id'
             ],
         ]);
     }
