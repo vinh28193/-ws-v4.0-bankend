@@ -122,7 +122,6 @@ class CheckOutController extends BaseApiController
             $product->sku = $item->item_sku;
             $product->parent_sku = $item->item_id;
             $product->link_origin = $item->item_origin_url ? $item->item_origin_url : '';
-            $product->getAdditionalFees()->mset($item->additionalFees);
             $product->category_id = $category->id;
             list($product->price_amount_origin, $product->total_price_amount_local) = $product->getAdditionalFees()->getTotalAdditionFees();
             $product->quantity_customer = $item->quantity;
@@ -153,8 +152,9 @@ class CheckOutController extends BaseApiController
             $order->link('products', $product);
             $orderUpdateFeeAttribute = [];
             $data_key = [];
-            foreach ($product->getAdditionalFees()->keys() as $key) {
-                list($amount, $local) = $product->getAdditionalFees()->getTotalAdditionFees($key);
+            foreach ($item->additionalFees->keys() as $key) {
+
+                list($amount, $local) = $item->getAdditionalFees()->getTotalAdditionFees($key);
                 $orderAttribute = "total_{$key}_local";
                 if ($key === 'product_price_origin') {
                     $orderAttribute = 'total_origin_fee_local';
@@ -166,15 +166,14 @@ class CheckOutController extends BaseApiController
 
                 $data_key[$key] = $key;
 
-                // Todo with Product Fee
                 $orderFee = new ProductFee();
                 $orderFee->type = $key;
-                $orderFee->name = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
+                $orderFee->name = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
                 $orderFee->order_id = $order->id;
                 $orderFee->product_id = $product->id;
                 $orderFee->amount = $amount;
                 $orderFee->local_amount = $local;
-                $orderFee->currency = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
+                $orderFee->currency = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
                 if ($orderFee->save() && $order->hasAttribute($orderAttribute)) {
                     $orderUpdateFeeAttribute[$orderAttribute] = $local;
                 }
