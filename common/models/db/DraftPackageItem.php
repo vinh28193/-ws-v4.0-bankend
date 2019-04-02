@@ -11,6 +11,11 @@ use Yii;
  * @property string $tracking_code
  * @property int $product_id
  * @property int $order_id
+ * @property int $quatity
+ * @property double $weight
+ * @property double $dimension_l
+ * @property double $dimension_w
+ * @property double $dimension_h
  * @property int $manifest_id
  * @property string $manifest_code
  * @property string $purchase_invoice_number
@@ -37,7 +42,8 @@ class DraftPackageItem extends \common\components\db\ActiveRecord
     {
         return [
             [['tracking_code'], 'required'],
-            [['product_id', 'order_id', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['product_id', 'order_id', 'quatity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
             [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status'], 'string', 'max' => 255],
         ];
     }
@@ -52,6 +58,11 @@ class DraftPackageItem extends \common\components\db\ActiveRecord
             'tracking_code' => 'Tracking Code',
             'product_id' => 'Product ID',
             'order_id' => 'Order ID',
+            'quatity' => 'Quatity',
+            'weight' => 'Weight',
+            'dimension_l' => 'Dimension L',
+            'dimension_w' => 'Dimension W',
+            'dimension_h' => 'Dimension H',
             'manifest_id' => 'Manifest ID',
             'manifest_code' => 'Manifest Code',
             'purchase_invoice_number' => 'Purchase Invoice Number',
