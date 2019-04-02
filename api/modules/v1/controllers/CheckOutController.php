@@ -13,8 +13,8 @@ use api\controllers\BaseApiController;
 use common\components\cart\CartManager;
 use common\models\db\Category;
 use common\models\Order;
-use common\models\ProductFee;
 use common\models\Product;
+use common\models\ProductFee;
 use common\models\Seller;
 use Yii;
 use yii\db\Connection;
@@ -62,6 +62,7 @@ class CheckOutController extends BaseApiController
     {
         $this->cart->removeItems();
         $this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
+        $this->cart->addItem('B01MQDLB83', 'ZVN1cHBsZW1lbnRzLU5ldy0xNi45NQ==', 1, 'amazon', 'https://images-na.ssl-images-amazon.com/images/I/41lv8DmLJvL.jpg');
 
         //$this->cart->addItem('IF_6C960C53', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/nrsAAOSw7Spbzlyw/$_12.JPG?set_id=880000500F', '252888606889');
         //$this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
@@ -72,14 +73,26 @@ class CheckOutController extends BaseApiController
         $orders = [];
         $errors = [];
         foreach ($items as $key => $simpleItem) {
+
             /** @var  $simpleItem \common\components\cart\item\SimpleItem */
             $item = $simpleItem->item;
 
-            $itemType = 'ebay';
             // Seller
-            if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($providers !== null && !isset($providers['name']))) {
+            if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($item->type === 'EBAY' &&  $providers !== null && !isset($providers['name']))) {
                 $errors[$key][] = "can not create form null seller";
                 continue;
+            }
+            /**
+             * seller ebay va amazon khac nhau, hien tai chia parse ve 1 dang, vi amzon lau theo api offfer
+             */
+            if (isset($providers[0]) && $item->type !== 'EBAY') {
+                $s = [];
+                foreach ($providers as $provider) {
+                    $s['name'] = $provider->prov_id;
+                    $s['website'] = null;
+                    $s['rating_score'] = $provider->rating_score;
+                }
+                $providers = $s;
             }
             if (($seller = Seller::findOne(['seller_name' => $providers['name']])) === null) {
                 $seller = new Seller();
@@ -93,39 +106,43 @@ class CheckOutController extends BaseApiController
                 $errors[$key][] = "can not create form null category";
                 continue;
             }
-            if (($category = Category::findOne(['AND', ['alias' => $categoryId], ['site' => $itemType]])) === null) {
+            if (($category = Category::findOne(['AND', ['alias' => $categoryId], ['site' => $item->type]])) === null) {
                 $category = new Category();
                 $category->alias = $categoryId;
-                $category->site = $itemType;
+                $category->site = $item->type;
                 $category->origin_name = ArrayHelper::getValue($item, 'category_name', 'Unknown');
                 $category->save();
             }
 
             $product = new Product;
-            $product->sku = $item['item_sku'];
-            $product->parent_sku = $item['item_id'];
-            $product->link_origin = $item['item_origin_url'];
-            $product->getAdditionalFees()->mset($item['additionalFees']);
+            $product->sku = $item->item_sku;
+            $product->parent_sku = $item->item_id;
+            $product->link_origin = $item->item_origin_url ? $item->item_origin_url : '';
+            $product->getAdditionalFees()->mset($item->additionalFees);
             $product->category_id = $category->id;
             list($product->price_amount_origin, $product->total_price_amount_local) = $product->getAdditionalFees()->getTotalAdditionFees();
-            $product->quantity_customer = $item['quantity'];
-
+            $product->quantity_customer = $item->quantity;
+            $product->seller_id = $seller->id;
             // Order
             $order = new Order();
             $order->type_order = 'SHOP';
-            $order->ordercode = 'WSVN'. @rand(10,100000);
+            $order->ordercode = 'WSVN' . @rand(10, 100000);
             $order->store_id = 1;
-            $order->portal = $itemType;
+            $order->seller_id = $seller->id;
+//            $order->portal = $item->type;
             $order->quotation_status = 0;
             $order->is_quotation = 0;
             $order->customer_id = Yii::$app->getUser()->getId();
-            $order->receiver_email = 'vinhvv@peacesolt.net';
-            $order->receiver_name = 'Vinh';
-            $order->receiver_phone = '0987654321';
-            $order->receiver_address = '123 Tam Trinh';
-            $order->receiver_district_id = 1;
-            $order->seller_id = $seller->id;
-
+            $order->current_status = 'NEW';
+            $order->quotation_note = null;
+            $order->receiver_country_id = 1;
+            $order->receiver_country_name = 'Việt Nam';
+            $order->receiver_province_id = 1;
+            $order->receiver_province_name = 'Hồ Chí Minh';
+            $order->receiver_district_id = 2;
+            $order->receiver_district_name = 'Đà Nẵng';
+            $order->receiver_post_code = '24800-8633';
+            $order->receiver_address_id = 2;
             // Todo with ProductFee
 
 //

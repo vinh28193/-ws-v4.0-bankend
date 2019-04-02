@@ -8,8 +8,8 @@
 
 namespace common\components\cart\item;
 
-use common\products\forms\ProductDetailFrom;
 use common\products\BaseProduct;
+use common\products\forms\ProductDetailFrom;
 
 class SimpleItem extends BaseCartItem
 {
@@ -33,7 +33,7 @@ class SimpleItem extends BaseCartItem
             'quantity' => $this->quantity,
             'with_detail' => false,
         ];
-        if($this->parentSku !== null){
+        if ($this->parentSku !== null) {
             $params['id'] = $this->parentSku;
             $params['sku'] = $this->sku;
         }
@@ -41,13 +41,14 @@ class SimpleItem extends BaseCartItem
         $form->load($params, '');
         /** @var $product false | \common\products\BaseProduct BaseProduct */
         if (($product = $form->detail(true)) === false) {
-            \Yii::info($form->getFirstErrors(),"add_to_cart");
-            return [false,$form->getFirstErrors()];
+            \Yii::info($form->getFirstErrors(), "add_to_cart");
+            return [false, $form->getFirstErrors()];
 
         }
         $product->current_image = $this->image;
-        $serializer = new \common\filters\Serializer();
-        $this->item = $serializer->serialize($product);
+//        $serializer = new \common\filters\Serializer();
+//        $this->item = $serializer->serialize($product);
+        $this->item = $product;
         return $this;
     }
 
