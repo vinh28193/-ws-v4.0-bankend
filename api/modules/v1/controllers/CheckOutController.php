@@ -179,7 +179,7 @@ class CheckOutController extends BaseApiController
                 }
                 $productFee[$i++] = $orderFee;
             }
-            $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
+            $orderUpdateFeeAttribute['total_fee_amount_local'] = $item->getAdditionalFees()->getTotalAdditionFees()[1];
             $order->updateAttributes($orderUpdateFeeAttribute);
             $orders[] = $order->id;
         }
