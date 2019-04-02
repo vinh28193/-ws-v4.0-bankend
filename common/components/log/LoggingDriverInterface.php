@@ -10,10 +10,13 @@ namespace common\components\log;
 
 interface LoggingDriverInterface
 {
+
     /**
-     * @return string
+     * LoggingDriverInterface constructor.
+     * @param Logging $logging
+     * @param array $config
      */
-    public function getProvider();
+//    public function __construct(Logging $logging, $config);
 
     /**
      * @param $action string

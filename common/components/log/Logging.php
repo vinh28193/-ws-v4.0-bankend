@@ -34,6 +34,11 @@ class Logging extends \yii\base\Component
      * @var array|LoggingDriverInterface[]
      */
     public $_drivers = [
+        'file' => [
+            'class' =>  'common\components\log\driver\SaveFileLog',
+            'filePath' => '@common/components/log/data'
+
+        ],
         'product' => [
             'class' => 'common\components\log\driver\MongoLog',
             'type' => 'Product'
