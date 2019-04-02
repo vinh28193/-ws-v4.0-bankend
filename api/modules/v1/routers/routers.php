@@ -89,7 +89,7 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'pluralize' => false,
-        'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','manifest'],
+        'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','manifest','tracking'],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
