@@ -166,7 +166,6 @@ class DataController extends BaseApiController
         $product->total_price_amount_local = $product->getAdditionalFees()->getTotalAdditionFees()[1] + $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[0] ; // 'tổng tiền hàng của từng sản phẩm'
 
 
-
         $product->total_fee_product_local = 0;         // Tổng Phí theo sản phẩm
         $product->price_amount_local =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
         $product->quantity_customer =  $itemGetWayAPI->quantity;
