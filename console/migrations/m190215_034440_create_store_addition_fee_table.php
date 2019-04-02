@@ -36,9 +36,9 @@ class m190215_034440_create_store_addition_fee_table extends Migration
             [6, 1, 'custom_fee', 'VND', 'Phí phụ thu', 1, 1, 0, 1, time(), 1, time()],
             [7, 1, 'delivery_fee', 'VND', 'Phí vận chuyển nội địa', 1, 1, 1, 1, time(), 1, time()],
             [8, 1, 'packing_fee', 'VND', 'Phí đóng hàng', 1, 1, 1, 1, time(), 1, time()],
-            [9, 1, 'inspection_fee ', 'VND', 'Phí kiểm hàng', 1, 1, 1, 1, time(), 1, time()],
-            [10, 1, 'insurance_fee ', 'VND', 'Phí bảo hiểm', 1, 1, 1, 1, time(), 1, time()],
-            [11, 1, 'vat_fee ', 'VND', 'Phí VAT', 1, 0, 1, 1,time(), 1, time()],
+            [9, 1, 'inspection_fee', 'VND', 'Phí kiểm hàng', 1, 1, 1, 1, time(), 1, time()],
+            [10, 1, 'insurance_fee', 'VND', 'Phí bảo hiểm', 1, 1, 1, 1, time(), 1, time()],
+            [11, 1, 'vat_fee', 'VND', 'Phí VAT', 1, 0, 1, 1,time(), 1, time()],
         ]);
     }
 
