@@ -36,7 +36,7 @@ if (!YII_ENV_TEST) {
                 'class' => 'yii\gii\generators\model\Generator',
                 'ns' => 'common\models\db',
                 'baseClass' => 'common\components\db\ActiveRecord',
-                'generateQuery' => true,
+                'generateQuery' => false,
                 'queryNs' => 'common\models\queries',
                 'queryBaseClass' => 'common\components\db\ActiveQuery'
             ],

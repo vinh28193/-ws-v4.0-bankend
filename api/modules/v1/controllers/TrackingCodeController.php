@@ -119,6 +119,11 @@ class TrackingCodeController extends BaseApiController
             $message[] = "from `$name` {$token['total']} executed $error error/{$token['success']} success";
         }
         $message = implode(", ",$message);
+//        ChatHelper::push($message,$model->ordercode,'WS_CUSTOMER', 'SYSTEM');
+//        Yii::$app->wsLog->order->push('Us Sending', null, [
+//            'id' => $model->order->ordercode,
+//            'request' => $this->post,
+//        ]);
         return $this->response(true, $message);
     }
 }
