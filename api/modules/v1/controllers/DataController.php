@@ -80,28 +80,43 @@ class DataController extends BaseApiController
     {
         $this->cart->removeItems();
         //$this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
+        $this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
+        $this->cart->addItem('B01MQDLB83', 'ZVN1cHBsZW1lbnRzLU5ldy0xNi45NQ==', 1, 'amazon', 'https://images-na.ssl-images-amazon.com/images/I/41lv8DmLJvL.jpg');
 
         // $sku, $seller, $quantity, $source, $image, $parentSku
         /** Todo : Thiếu link Gốc sản phẩm
           * Thieu Mã giảm giá , Phương thức thanh toán
          **/
-       $isCard =  $this->cart->addItem(
-            $dataPost['sku'],
-            $dataPost['seller'],
-            $dataPost['quantity'],
-            $dataPost['source'],
-            $dataPost['image'],
-            $dataPost['parentSku']
-            );
-       return $isCard;
+//       $isCard =  $this->cart->addItem(
+//            $dataPost['sku'],
+//            $dataPost['seller'],
+//            $dataPost['quantity'],
+//            $dataPost['source'],
+//            $dataPost['image'],
+//            $dataPost['parentSku']
+//            );
+//       return $isCard;
     }
 
     protected function SellerData($item,$key)
     {
-        if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($providers !== null && !isset($providers['name']))) {
+        $errors = [];
+        // Seller
+        if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($item->type === 'EBAY' &&  $providers !== null && !isset($providers['name']))) {
             $errors[$key][] = "can not create form null seller";
             //continue;
-            Yii::$app->api->sendFailedResponse("can not create form null seller");
+        }
+        /**
+         * seller ebay va amazon khac nhau, hien tai chia parse ve 1 dang, vi amzon lau theo api offfer
+         */
+        if (isset($providers[0]) && $item->type !== 'EBAY') {
+            $s = [];
+            foreach ($providers as $provider) {
+                $s['name'] = $provider->prov_id;
+                $s['website'] = null;
+                $s['rating_score'] = $provider->rating_score;
+            }
+            $providers = $s;
         }
         if (($seller = Seller::findOne(['seller_name' => $providers['name']])) === null) {
             $seller = new Seller();
@@ -132,22 +147,21 @@ class DataController extends BaseApiController
         return $category;
     }
 
-    protected function ProductData($propertyShopCart,$itemGetWayAPI=[],$category,$order,$seller)
+    protected function ProductData($propertyShopCart,$itemGetWayAPI,$category,$order,$seller)
    {
-
         $product = new Product;
 
         $product->order_id = $order->id;
         $product->seller_id =  $seller->id;
         $product->portal =  $propertyShopCart->source;
-        $product->sku =  $itemGetWayAPI['item_sku'];
-        $product->parent_sku =  $itemGetWayAPI['item_id'];
+        $product->sku =  $itemGetWayAPI->item_sku;
+        $product->parent_sku =  $itemGetWayAPI->item_id;
         $product->link_img =  $propertyShopCart->image;
-        $product->link_origin = $itemGetWayAPI['item_origin_url'];
+        $product->link_origin = $itemGetWayAPI->item_origin_url;
         $product->category_id = $category->id;
         $product->custom_category_id =  $category->id;
 
-        $product->getAdditionalFees()->mset($itemGetWayAPI['additionalFees']);
+        $product->getAdditionalFees()->mset($itemGetWayAPI->additionalFees);
         $product->price_amount_origin =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[0]; // 'đơn giá gốc ngoại tệ'
         $product->total_price_amount_local = $product->getAdditionalFees()->getTotalAdditionFees()[1] + $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[0] ; // 'tổng tiền hàng của từng sản phẩm'
 
@@ -155,7 +169,7 @@ class DataController extends BaseApiController
 
         $product->total_fee_product_local = 0;         // Tổng Phí theo sản phẩm
         $product->price_amount_local =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
-        $product->quantity_customer =  $itemGetWayAPI['quantity'];
+        $product->quantity_customer =  $itemGetWayAPI->quantity;
         $product->quantity_purchase =  null;  /** Todo */
         $product->quantity_inspect =  null;  /** Todo */
         $product->variations =  null;   /** Todo */
@@ -163,7 +177,7 @@ class DataController extends BaseApiController
         $product->note_by_customer =  'Note By Customer';
         $product->total_weight_temporary =  0;     //"cân nặng  trong lượng tạm tính"
         $product->remove =  0;
-        $product->product_name =  $itemGetWayAPI['item_name'];  /** Todo */
+        $product->product_name =  $itemGetWayAPI->item_name;  /** Todo */
         $product->product_link =  'https://weshop.com.vn/link/sanpham.html';  /** Todo Add on Purchase */
         $product->version =  '4.0';
         $product->condition =  null; /** Todo */
@@ -177,7 +191,7 @@ class DataController extends BaseApiController
         ];
 
 
-       var_dump($dataSavePro);  die("Prod");
+       //var_dump($dataSavePro);  die("Prod");
 
         return $product;
     }
@@ -267,7 +281,7 @@ class DataController extends BaseApiController
             'Error' =>$order->errors
         ];
 
-        var_dump($dataSaveOrder); die("Order");
+       //var_dump($dataSaveOrder); die("Order");
        return $order;
     }
 
@@ -286,8 +300,9 @@ class DataController extends BaseApiController
         }
 
         $card =  $this->CartData($this->post);
-        var_dump($card);die("Card");
         $items = $this->cart->getItems();
+
+        //var_dump($items);die("Items");
 
         if(empty($items)) {
             Yii::$app->api->sendFailedResponse("Not get products");
