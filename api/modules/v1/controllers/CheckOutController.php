@@ -62,7 +62,7 @@ class CheckOutController extends BaseApiController
     {
         $this->cart->removeItems();
         $this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
-        $this->cart->addItem('B01MQDLB83', 'ZVN1cHBsZW1lbnRzLU5ldy0xNi45NQ==', 1, 'amazon', 'https://images-na.ssl-images-amazon.com/images/I/41lv8DmLJvL.jpg');
+       // $this->cart->addItem('B01MQDLB83', 'ZVN1cHBsZW1lbnRzLU5ldy0xNi45NQ==', 1, 'amazon', 'https://images-na.ssl-images-amazon.com/images/I/41lv8DmLJvL.jpg');
 
         //$this->cart->addItem('IF_6C960C53', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/nrsAAOSw7Spbzlyw/$_12.JPG?set_id=880000500F', '252888606889');
         //$this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
@@ -72,10 +72,14 @@ class CheckOutController extends BaseApiController
 
         $orders = [];
         $errors = [];
+        $Object_detech = [];
+        $orderUpdateFeeAttribute = $productFee = []; $i=0;
+
         foreach ($items as $key => $simpleItem) {
 
             /** @var  $simpleItem \common\components\cart\item\SimpleItem */
             $item = $simpleItem->item;
+            $Object_detech = $item;
 
             // Seller
             if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($item->type === 'EBAY' &&  $providers !== null && !isset($providers['name']))) {
@@ -148,6 +152,7 @@ class CheckOutController extends BaseApiController
             $order->save(false);
             $order->link('products', $product);
             $orderUpdateFeeAttribute = [];
+            $data_key = [];
             foreach ($product->getAdditionalFees()->keys() as $key) {
                 list($amount, $local) = $product->getAdditionalFees()->getTotalAdditionFees($key);
                 $orderAttribute = "total_{$key}_local";
@@ -159,6 +164,9 @@ class CheckOutController extends BaseApiController
                     $orderAttribute = 'total_delivery_fee_local';
                 }
 
+                $data_key[$key] = $key;
+
+                // Todo with Product Fee
                 $orderFee = new ProductFee();
                 $orderFee->type = $key;
                 $orderFee->name = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
@@ -170,14 +178,24 @@ class CheckOutController extends BaseApiController
                 if ($orderFee->save() && $order->hasAttribute($orderAttribute)) {
                     $orderUpdateFeeAttribute[$orderAttribute] = $local;
                 }
+                $productFee[$i++] = $orderFee;
             }
             $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];
             $order->updateAttributes($orderUpdateFeeAttribute);
             $orders[] = $order->id;
         }
-        var_dump($orders);
-        die;
-        return true;
+
+        $_itemRes = [];
+        $_itemRes['Object_detech_api_'] = $Object_detech;
+        $_itemRes['seller'] = $seller;
+        $_itemRes['category'] = $category;
+        $_itemRes['order'] = $orders;
+        $_itemRes['product'] = $product;
+        $_itemRes['productFee'] = $productFee;
+        $_itemRes['orderUpdateFee'] = $orderUpdateFeeAttribute;
+        $_itemRes['key'] = $data_key;
+
+        Yii::$app->api->sendSuccessResponse($_itemRes);
 
     }
 }

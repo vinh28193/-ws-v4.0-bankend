@@ -388,7 +388,7 @@ class DataController extends BaseApiController
 
                 $data_key[$key] = $key;
 
-                // Todo with OrderFee
+                // Todo with Product Fee
                 $_productFee = new ProductFee();
                 $_productFee->type = $key;
                 $_productFee->name = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
@@ -417,6 +417,9 @@ class DataController extends BaseApiController
                 $orderUpdateFeeAttribute['total_vat_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('tax_fee_origin')[1]; //"Tổng phí VAT"           //"Tổng phí us tax"
                 $orderUpdateFeeAttribute['total_custom_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('custom_fee')[1]; // "Tổng phí phụ thu"
                 $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];  // Tổng phí đơn hàng
+
+
+
                 if($orderAttribute !=''){
                     $order->updateAttributes($orderUpdateFeeAttribute);
                 }
