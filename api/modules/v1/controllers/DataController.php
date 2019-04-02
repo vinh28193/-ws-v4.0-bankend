@@ -79,23 +79,37 @@ class DataController extends BaseApiController
     protected function CartData($dataPost = [])
     {
         $this->cart->removeItems();
-        //$this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
-        $this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
-        $this->cart->addItem('B01MQDLB83', 'ZVN1cHBsZW1lbnRzLU5ldy0xNi45NQ==', 1, 'amazon', 'https://images-na.ssl-images-amazon.com/images/I/41lv8DmLJvL.jpg');
+        /*
+        $this->cart->addItem(
+            'IF_739F9D0E',
+            'cleats_blowout_sports',
+            1,
+            'ebay',
+            'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F',
+            '252888606889'
+        );
+        $this->cart->addItem(
+            'B01MQDLB83',
+            'ZVN1cHBsZW1lbnRzLU5ldy0xNi45NQ==',
+            1,
+            'amazon',
+            'https://images-na.ssl-images-amazon.com/images/I/41lv8DmLJvL.jpg'
+        );
+        */
 
         // $sku, $seller, $quantity, $source, $image, $parentSku
         /** Todo : Thiếu link Gốc sản phẩm
           * Thieu Mã giảm giá , Phương thức thanh toán
          **/
-//       $isCard =  $this->cart->addItem(
-//            $dataPost['sku'],
-//            $dataPost['seller'],
-//            $dataPost['quantity'],
-//            $dataPost['source'],
-//            $dataPost['image'],
-//            $dataPost['parentSku']
-//            );
-//       return $isCard;
+       $isCard =  $this->cart->addItem(
+            $dataPost['sku'],
+            $dataPost['seller'],
+            $dataPost['quantity'],
+            $dataPost['source'],
+            $dataPost['image'],
+            $dataPost['parentSku']
+            );
+       return $isCard;
     }
 
     protected function SellerData($item,$key)
