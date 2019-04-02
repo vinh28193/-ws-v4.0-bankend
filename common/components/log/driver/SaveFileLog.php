@@ -226,14 +226,23 @@ class SaveFileLog extends \yii\base\BaseObject implements LoggingDriverInterface
         }
     }
 
+    /**
+     * @return string
+     * @throws InvalidConfigException
+     */
     public function beginContent()
     {
         return <<<DOCBLOCK
+USER:{$this->getIdentity()} 
 TIME: {$this->getFormatter()->asDatetime('now')}
 =============================BEGIN================================
 DOCBLOCK;
     }
 
+    /**
+     * @param string $text
+     * @return string
+     */
     public function endContent($text = "\n\n")
     {
         return <<<DOCBLOCK
@@ -243,11 +252,28 @@ DOCBLOCK;
 
     }
 
+    /**
+     * current user identity
+     * @return int|string
+     */
+    public function getIdentity(){
+        return Yii::$app->getUser()->getId();
+    }
+
+    /**
+     * @return \yii\i18n\Formatter
+     */
     public function getFormatter()
     {
         return Yii::$app->getFormatter();
     }
-
+    /**
+     * @param $action
+     * @param $message
+     * @param array $params
+     * @return string
+     * @throws InvalidConfigException
+     */
     protected function resolveContent($action, $message, $params = [])
     {
         if(!empty($params)){
@@ -259,7 +285,6 @@ DOCBLOCK;
 $text
 {$this->endContent("\n")}
 EOD;
-
     }
 
     public function pullData($condition)

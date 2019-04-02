@@ -39,7 +39,6 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
 
     public function pushData($action, $message, $params = [])
     {
-        throw new \Exception('asdadasd');
         $model = new self();
         foreach ($params as $name => $value) {
             if ($name === 'request' || $name === 'data_input') {
