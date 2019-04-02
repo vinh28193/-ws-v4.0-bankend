@@ -12,6 +12,7 @@ namespace api\modules\v1\controllers;
 use api\controllers\BaseApiController;
 use common\models\db\Coupon;
 use Yii;
+use common\helpers\ChatHelper;
 
 class CouponController extends BaseApiController
 {
@@ -83,6 +84,7 @@ class CouponController extends BaseApiController
             $model->message = $post['message'];
         }
         $dirtyAttributes = $model->getDirtyAttributes();
+        $messages = "order {$post['ordercode']} Update Coupon {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if (!$model->save()) {
             Yii::$app->wsLog->order->push('updateCoupon', null, [
                 'id' => $post['ordercode'],
@@ -91,12 +93,27 @@ class CouponController extends BaseApiController
             ]);
             return $this->response(false, 'update coupon error');
         }
+        ChatHelper::push($messages, $post['ordercode'],'WS_CUSTOMER', 'SYSTEM');
         Yii::$app->wsLog->order->push('updateCoupon', null, [
             'id' => $post['ordercode'],
             'request' => $this->post,
             'response' => $dirtyAttributes
         ]);
         return $this->response(true, 'update coupon success', $model);
+    }
+
+    protected function resolveChatMessage($dirtyAttributes,$reference)
+    {
+
+        $results = [];
+        foreach ($dirtyAttributes as $name => $value) {
+            if (strpos($name, '_id') !== false && is_numeric($value)) {
+                continue;
+            }
+            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+        }
+
+        return implode(", ", $results);
     }
 
 }

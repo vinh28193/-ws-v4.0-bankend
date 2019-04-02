@@ -79,7 +79,23 @@ class DataController extends BaseApiController
     protected function CartData($dataPost = [])
     {
         $this->cart->removeItems();
-        //$this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
+        /*
+        $this->cart->addItem(
+            'IF_739F9D0E',
+            'cleats_blowout_sports',
+            1,
+            'ebay',
+            'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F',
+            '252888606889'
+        );
+        $this->cart->addItem(
+            'B01MQDLB83',
+            'ZVN1cHBsZW1lbnRzLU5ldy0xNi45NQ==',
+            1,
+            'amazon',
+            'https://images-na.ssl-images-amazon.com/images/I/41lv8DmLJvL.jpg'
+        );
+        */
 
         // $sku, $seller, $quantity, $source, $image, $parentSku
         /** Todo : Thiếu link Gốc sản phẩm
@@ -98,10 +114,23 @@ class DataController extends BaseApiController
 
     protected function SellerData($item,$key)
     {
-        if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($providers !== null && !isset($providers['name']))) {
+        $errors = [];
+        // Seller
+        if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($item->type === 'EBAY' &&  $providers !== null && !isset($providers['name']))) {
             $errors[$key][] = "can not create form null seller";
             //continue;
-            Yii::$app->api->sendFailedResponse("can not create form null seller");
+        }
+        /**
+         * seller ebay va amazon khac nhau, hien tai chia parse ve 1 dang, vi amzon lau theo api offfer
+         */
+        if (isset($providers[0]) && $item->type !== 'EBAY') {
+            $s = [];
+            foreach ($providers as $provider) {
+                $s['name'] = $provider->prov_id;
+                $s['website'] = null;
+                $s['rating_score'] = $provider->rating_score;
+            }
+            $providers = $s;
         }
         if (($seller = Seller::findOne(['seller_name' => $providers['name']])) === null) {
             $seller = new Seller();
@@ -132,30 +161,28 @@ class DataController extends BaseApiController
         return $category;
     }
 
-    protected function ProductData($propertyShopCart,$itemGetWayAPI=[],$category,$order,$seller)
+    protected function ProductData($propertyShopCart,$itemGetWayAPI,$category,$order,$seller)
    {
-
         $product = new Product;
 
         $product->order_id = $order->id;
         $product->seller_id =  $seller->id;
         $product->portal =  $propertyShopCart->source;
-        $product->sku =  $itemGetWayAPI['item_sku'];
-        $product->parent_sku =  $itemGetWayAPI['item_id'];
+        $product->sku =  $itemGetWayAPI->item_sku;
+        $product->parent_sku =  $itemGetWayAPI->item_id;
         $product->link_img =  $propertyShopCart->image;
-        $product->link_origin = $itemGetWayAPI['item_origin_url'];
+        $product->link_origin = $itemGetWayAPI->item_origin_url;
         $product->category_id = $category->id;
         $product->custom_category_id =  $category->id;
 
-        $product->getAdditionalFees()->mset($itemGetWayAPI['additionalFees']);
+        $product->getAdditionalFees()->mset($itemGetWayAPI->additionalFees);
         $product->price_amount_origin =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[0]; // 'đơn giá gốc ngoại tệ'
         $product->total_price_amount_local = $product->getAdditionalFees()->getTotalAdditionFees()[1] + $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[0] ; // 'tổng tiền hàng của từng sản phẩm'
 
 
-
         $product->total_fee_product_local = 0;         // Tổng Phí theo sản phẩm
         $product->price_amount_local =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
-        $product->quantity_customer =  $itemGetWayAPI['quantity'];
+        $product->quantity_customer =  $itemGetWayAPI->quantity;
         $product->quantity_purchase =  null;  /** Todo */
         $product->quantity_inspect =  null;  /** Todo */
         $product->variations =  null;   /** Todo */
@@ -163,7 +190,7 @@ class DataController extends BaseApiController
         $product->note_by_customer =  'Note By Customer';
         $product->total_weight_temporary =  0;     //"cân nặng  trong lượng tạm tính"
         $product->remove =  0;
-        $product->product_name =  $itemGetWayAPI['item_name'];  /** Todo */
+        $product->product_name =  $itemGetWayAPI->item_name;  /** Todo */
         $product->product_link =  'https://weshop.com.vn/link/sanpham.html';  /** Todo Add on Purchase */
         $product->version =  '4.0';
         $product->condition =  null; /** Todo */
@@ -177,7 +204,7 @@ class DataController extends BaseApiController
         ];
 
 
-       var_dump($dataSavePro);  die("Prod");
+       //var_dump($dataSavePro);  die("Prod");
 
         return $product;
     }
@@ -267,7 +294,7 @@ class DataController extends BaseApiController
             'Error' =>$order->errors
         ];
 
-        var_dump($dataSaveOrder); die("Order");
+       //var_dump($dataSaveOrder); die("Order");
        return $order;
     }
 
@@ -286,8 +313,9 @@ class DataController extends BaseApiController
         }
 
         $card =  $this->CartData($this->post);
-        var_dump($card);die("Card");
         $items = $this->cart->getItems();
+
+        //var_dump($items);die("Items");
 
         if(empty($items)) {
             Yii::$app->api->sendFailedResponse("Not get products");
@@ -321,8 +349,8 @@ class DataController extends BaseApiController
 
             $orderUpdateFeeAttribute = $productFee = []; $i=0;
             $data_key = [];
-            foreach ($product->getAdditionalFees()->keys() as $key) {
-                list($amount, $local) = $product->getAdditionalFees()->getTotalAdditionFees($key);
+            foreach ($item->additionalFees->keys() as $key) {
+                list($amount, $local) = $item->getAdditionalFees()->getTotalAdditionFees($key);
 
                 // Chọn Key Product Fee Tương ứng với trường nào của Order để tính tổng
                 /** ----> ProductFee Map Orderfee Property  **/
@@ -360,15 +388,15 @@ class DataController extends BaseApiController
 
                 $data_key[$key] = $key;
 
-                // Todo with OrderFee
+                // Todo with Product Fee
                 $_productFee = new ProductFee();
                 $_productFee->type = $key;
-                $_productFee->name = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
+                $_productFee->name = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
                 $_productFee->order_id = $order->id;
                 $_productFee->product_id = $product->id;
                 $_productFee->amount = $amount;
                 $_productFee->local_amount = $local;
-                $_productFee->currency = $product->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
+                $_productFee->currency = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
                 if ($_productFee->save()) {
                     if($orderAttribute !='') {
                         $orderUpdateFeeAttribute[$orderAttribute] = $local;
@@ -376,24 +404,23 @@ class DataController extends BaseApiController
                 }
 
                 $productFee[$i++] = $_productFee;
-
                 //Total Fee Order
-                $orderUpdateFeeAttribute['total_origin_shipping_fee_local'] = $product->getAdditionalFees()->getTotalAdditionFees('origin_shipping_fee')[1]; //"Tổng phí shipping us"),
-                $orderUpdateFeeAttribute['total_weshop_fee_local'] = $product->getAdditionalFees()->getTotalAdditionFees('weshop_fee')[1]; //Tổng phí weshop"),
-                $orderUpdateFeeAttribute['total_intl_shipping_fee_local'] = $product->getAdditionalFees()->getTotalAdditionFees('intl_shipping_fee')[1]; //"Tổng phí vận chuyển quốc tế"),
-                $orderUpdateFeeAttribute['total_custom_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('custom_fee')[1]; //"Tổng phí phụ thu"),
-                $orderUpdateFeeAttribute['total_delivery_fee_local'] = $product->getAdditionalFees()->getTotalAdditionFees('delivery_fee_local')[1]; //"Tổng phí vận chuyển nội địa"
-                $orderUpdateFeeAttribute['total_packing_fee_local'] = $product->getAdditionalFees()->getTotalAdditionFees('packing_fee')[1]; //"tổng phí đóng gỗ"),
-                $orderUpdateFeeAttribute['total_inspection_fee_local'] = $product->getAdditionalFees()->getTotalAdditionFees('inspection_fee')[1];//"Tổng phí kiểm hàng"),
-                $orderUpdateFeeAttribute['total_insurance_fee_local'] = $product->getAdditionalFees()->getTotalAdditionFees('insurance_fee')[1]; //"Tổng phí bảo hiểm"),
-                $orderUpdateFeeAttribute['total_vat_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('tax_fee_origin')[1]; //"Tổng phí VAT"           //"Tổng phí us tax"
-                $orderUpdateFeeAttribute['total_custom_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees('custom_fee')[1]; // "Tổng phí phụ thu"
-                $orderUpdateFeeAttribute['total_fee_amount_local'] = $product->getAdditionalFees()->getTotalAdditionFees()[1];  // Tổng phí đơn hàng
+                $orderUpdateFeeAttribute['total_origin_shipping_fee_local'] = $item->getAdditionalFees()->getTotalAdditionFees('origin_shipping_fee')[1]; //"Tổng phí shipping us"),
+                $orderUpdateFeeAttribute['total_weshop_fee_local'] = $item->getAdditionalFees()->getTotalAdditionFees('weshop_fee')[1]; //Tổng phí weshop"),
+                $orderUpdateFeeAttribute['total_intl_shipping_fee_local'] = $item->getAdditionalFees()->getTotalAdditionFees('intl_shipping_fee')[1]; //"Tổng phí vận chuyển quốc tế"),
+                $orderUpdateFeeAttribute['total_custom_fee_amount_local'] = $item->getAdditionalFees()->getTotalAdditionFees('custom_fee')[1]; //"Tổng phí phụ thu"),
+                $orderUpdateFeeAttribute['total_delivery_fee_local'] = $item->getAdditionalFees()->getTotalAdditionFees('delivery_fee_local')[1]; //"Tổng phí vận chuyển nội địa"
+                $orderUpdateFeeAttribute['total_packing_fee_local'] = $item->getAdditionalFees()->getTotalAdditionFees('packing_fee')[1]; //"tổng phí đóng gỗ"),
+                $orderUpdateFeeAttribute['total_inspection_fee_local'] = $item->getAdditionalFees()->getTotalAdditionFees('inspection_fee')[1];//"Tổng phí kiểm hàng"),
+                $orderUpdateFeeAttribute['total_insurance_fee_local'] = $item->getAdditionalFees()->getTotalAdditionFees('insurance_fee')[1]; //"Tổng phí bảo hiểm"),
+                $orderUpdateFeeAttribute['total_vat_amount_local'] = $item->getAdditionalFees()->getTotalAdditionFees('tax_fee_origin')[1]; //"Tổng phí VAT"           //"Tổng phí us tax"
+                $orderUpdateFeeAttribute['total_custom_fee_amount_local'] = $item->getAdditionalFees()->getTotalAdditionFees('custom_fee')[1]; // "Tổng phí phụ thu"
+                $orderUpdateFeeAttribute['total_fee_amount_local'] = $item->getAdditionalFees()->getTotalAdditionFees()[1];  // Tổng phí đơn hàng
+
                 if($orderAttribute !=''){
                     $order->updateAttributes($orderUpdateFeeAttribute);
                 }
 
-                $productFee[$i++] = $_productFee;
                 $orders = $order;
             }
 
