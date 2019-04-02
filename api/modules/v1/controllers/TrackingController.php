@@ -55,15 +55,23 @@ class TrackingController extends BaseApiController
             return $this->response(false,'can not find tranid '.$tranId.' in data!');
         }
         /** @var PurchaseProduct[] $purchaseProducts */
-        $purchaseProducts = PurchaseProduct::find()->where(['sku' => $sku,'purchase_order_id' => $purchaseOrder->id])
-                    ->with(['product','order'])->all();
+        $purchaseProducts = PurchaseProduct::find()->where(['sku' => $sku,'purchase_order_id' => $purchaseOrder->id])->all();
         $tracking = new TrackingCode();
         $tracking->store_id = 1;
-        $tracking->package_id = 1;
-        $tracking->store_id = 1;
+        $tracking->tracking_code = $trackingCode;
+        $tracking->warehouse_alias = $purchaseOrder->receive_warehouse_id;
+        $tracking->status = $status;
+        $tracking->remove = 0;
+        $tracking->created_by = \Yii::$app->user->id;
+        $tracking->updated_by = \Yii::$app->user->id;
+        $tracking->created_at = time();
+        $tracking->updated_at = time();
         //#Todo set tracking_code get by extensions
         foreach ($purchaseProducts as $purchaseProduct){
-
+            $tracking->quantity = $purchaseProduct->purchase_quantity;
+            $tracking->order_ids = $purchaseProduct->order_id;
+            $tracking->CreateOrUpdate(false);
+//            $purchaseProduct->receive_quantity = $staus == 'shipped' ?
         }
     }
 }

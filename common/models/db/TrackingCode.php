@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "tracking_code".
  *
  * @property int $id ID
+ * @property string $version version 4.0
  * @property int $store_id Store ID reference
  * @property int $manifest_id Manifest Id
  * @property string $manifest_code Manifest code
@@ -15,7 +16,7 @@ use Yii;
  * @property string $package_code Mã kiện của weshop
  * @property int $package_item_id Package item id after create item
  * @property string $tracking_code Tracking code
- * @property int $order_ids Order id(s)
+ * @property string $order_ids Order id(s)
  * @property string $weshop_tag Weshop Tag
  * @property string $warehouse_alias warehouse alias BMVN_HN (Boxme Ha Noi/Boxme HCM)
  * @property string $warehouse_tag warehouse tag
@@ -51,9 +52,10 @@ class TrackingCode extends \common\components\db\ActiveRecord
     {
         return [
             [['store_id'], 'required'],
-            [['store_id', 'manifest_id', 'package_id', 'package_item_id', 'order_ids', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
+            [['store_id', 'manifest_id', 'package_id', 'package_item_id', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['warehouse_note', 'operation_note'], 'string'],
             [['weight', 'quantity', 'dimension_width', 'dimension_length', 'dimension_height'], 'number'],
+            [['version', 'order_ids'], 'string', 'max' => 255],
             [['manifest_code', 'package_code', 'tracking_code', 'weshop_tag', 'warehouse_alias', 'warehouse_tag', 'status'], 'string', 'max' => 32],
             [['warehouse_status'], 'string', 'max' => 10],
         ];
@@ -66,6 +68,7 @@ class TrackingCode extends \common\components\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'version' => 'Version',
             'store_id' => 'Store ID',
             'manifest_id' => 'Manifest ID',
             'manifest_code' => 'Manifest Code',
@@ -92,14 +95,5 @@ class TrackingCode extends \common\components\db\ActiveRecord
             'updated_by' => 'Updated By',
             'updated_at' => 'Updated At',
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\TrackingCodeQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\TrackingCodeQuery(get_called_class());
     }
 }
