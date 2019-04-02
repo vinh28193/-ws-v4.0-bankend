@@ -43,7 +43,7 @@ class OrderController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index', 'view', 'create', 'update', 'edit-image', 'edit-variant'],
+                'actions' => ['index', 'view', 'create', 'update'],
                 'roles' => $this->getAllRoles(true),
 
             ],
@@ -239,18 +239,5 @@ class OrderController extends BaseApiController
         return implode(", ", $results);
     }
 
-    public function actionEditImage($id)
-    {
-        $post = Yii::$app->request->post('image');
-        var_dump($post);
-        die();
-        return $this->response(true, "Delete $id success", Yii::$app->request->get());
-    }
 
-    public function actionEditVariant()
-    {
-        $post = Yii::$app->request->post();
-        var_dump($post);
-        die();
-    }
 }
