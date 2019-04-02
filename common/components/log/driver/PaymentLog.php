@@ -28,7 +28,7 @@ class PaymentLog extends PaymentLogWS implements LoggingDriverInterface
     /**
      * @return string
      */
-    public function getProvider()
+    public function getProvided()
     {
         return 'Payment';
     }
@@ -39,7 +39,7 @@ class PaymentLog extends PaymentLogWS implements LoggingDriverInterface
      * @param array $params
      * @return bool|mixed|void
      */
-    public function push($action, $message, $params = [])
+    public function pushData($action, $message, $params = [])
     {
         // TODO: Implement push() method.
     }
@@ -48,7 +48,7 @@ class PaymentLog extends PaymentLogWS implements LoggingDriverInterface
      * @param array|string $condition
      * @return mixed|void
      */
-    public function pull($condition)
+    public function pullData($condition)
     {
         // TODO: Implement pull() method.
     }

@@ -8,15 +8,18 @@
 
 namespace common\components\log;
 
+/**
+ * Interface LoggingDriverInterface
+ * @package common\components\log
+ * @property $provided string
+ */
 interface LoggingDriverInterface
 {
 
     /**
-     * LoggingDriverInterface constructor.
-     * @param Logging $logging
-     * @param array $config
+     * @return string
      */
-//    public function __construct(Logging $logging, $config);
+    public function getProvided();
 
     /**
      * @param $action string
@@ -24,11 +27,11 @@ interface LoggingDriverInterface
      * @param array $params array
      * @return mixed|boolean
      */
-    public function push($action, $message, $params = []);
+    public function pushData($action, $message, $params = []);
 
     /**
      * @param $condition string|array
      * @return mixed
      */
-    public function pull($condition);
+    public function pullData($condition);
 }
