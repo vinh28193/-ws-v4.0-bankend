@@ -8,7 +8,6 @@
 
 namespace common\components\log\driver;
 
-use common\components\log\Logging;
 use common\components\log\LoggingDriverInterface;
 use common\modelsMongo\ActionLogWS;
 use Yii;
@@ -21,15 +20,6 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
      */
     public $userIdentity;
 
-    /**
-     * MongoLog constructor.
-     * @param Logging $logging
-     * @param $config
-     */
-//    public function __construct(Logging $logging, $config)
-//    {
-//        parent::__construct($config);
-//    }
 
     public function init()
     {
@@ -42,12 +32,12 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
      */
     public $type;
 
-    public function getProvider()
+    public function getProvided()
     {
-        return $this->type;
+       return $this->type;
     }
 
-    public function push($action, $message, $params = [])
+    public function pushData($action, $message, $params = [])
     {
         $model = new self();
         foreach ($params as $name => $value) {
@@ -73,7 +63,7 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
             $model->Role = $userRole;
         }
         $model->action_path = $action;
-        $model->LogType = $this->getProvider();
+        $model->LogType = $this->type;
         $model->user_id = $this->userIdentity ? $this->userIdentity->getId() : null;
         $model->user_email = $this->userIdentity ? $this->userIdentity->email : null;
         $model->user_name = $this->userIdentity ? $this->userIdentity->username : null;
@@ -84,10 +74,10 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
         return $model->save(false);
     }
 
-    public function pull($condition)
+    public function pullData($condition)
     {
         return self::find()->andWhere($condition)->andWhere([
-            'LogType' => $this->getProvider()
+            'LogType' => $this->type
         ])->all();
     }
 
