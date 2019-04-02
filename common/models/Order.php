@@ -473,6 +473,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($params['store'])) {
             $query->andFilterWhere(['order.store_id' => $params['store']]);
         }
+        if (isset($params['location'])) {
+            $query->andFilterWhere(['order.receiver_province_id' => $params['location']]);
+        }
         if (isset($params['type'])) {
             $query->andFilterWhere(['order.type_order' => $params['type']]);
         }
