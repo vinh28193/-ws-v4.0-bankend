@@ -45,7 +45,7 @@ class BoxMeController extends Controller
                             $wasting->tracking_code = $tracking;
                             $wasting->manifest_code = $detail->manifest_code;
                             $wasting->manifest_id = $detail->manifest_id;
-                            $wasting->quatity = $quantity;
+                            $wasting->quantity = $quantity;
                             $wasting->weight = $weight;
                             $wasting->status = $status;
                             $vol = $volume ? explode('x',strtolower($volume)) : null;
