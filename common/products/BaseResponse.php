@@ -27,6 +27,7 @@ abstract class BaseResponse extends \yii\base\BaseObject
     /**
      * @param $response
      * @return BaseProduct
+     * Parser data theo flow
      */
     abstract public function parser($response);
 
@@ -42,6 +43,7 @@ abstract class BaseResponse extends \yii\base\BaseObject
     /**
      * @param $id
      * @return bool
+     * Những sku thuộc danh mục black list
      */
     public function isBanned($id)
     {
