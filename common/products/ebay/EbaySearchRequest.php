@@ -27,7 +27,7 @@ class EbaySearchRequest extends \common\products\BaseRequest
             [['sellers'], 'string'],
             [['sellers'], 'filter', 'filter' => 'trim'],
             [['sellers'], 'filter', 'filter' => '\yii\helpers\Html::encode'],
-            //[['filter'],'match',['pattern' => '']], \\ Todo make RegularExpression match string "Condition:1000,1500;Color:Blue,Greed,Red;Display:7%20Inch"
+            //[['filter'],'match',['pattern' => '']],         \\ Todo make RegularExpression match string "Condition:1000,1500;Color:Blue,Greed,Red;Display:7%20Inch"
             [['limit', 'type', 'usTax', 'usShippingFee', 'itemsPerPage'], 'integer'],
             [['min_price', 'max_price'], 'filter', 'skipOnEmpty' => true,'filter' => function ($value) {
                 $ex = $this->getStoreManager()->getExchangeRate();

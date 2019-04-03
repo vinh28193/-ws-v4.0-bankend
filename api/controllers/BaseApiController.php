@@ -193,12 +193,12 @@ class BaseApiController extends \yii\rest\Controller
         /** @TODO : Luu API CALL RESPHONE **/
         $result = parent::afterAction($action, $result);
         $log = Yii::$app->wsLog;
-        if($driver = $log->getDriver($controllerId) !== null){
-            $request = Yii::$app->request;
-//            $driver->push($action->id,isset($result['message']) ? $result['message'] : null,[
-//                'response' => $result
-//            ]);
-        }
+//        if($driver = $log->getDriver($controllerId) !== null){
+//            $request = Yii::$app->request;
+////            $driver->push($action->id,isset($result['message']) ? $result['message'] : null,[
+////                'response' => $result
+////            ]);
+//        }
         return $result;
     }
 

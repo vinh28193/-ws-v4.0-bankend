@@ -20,6 +20,7 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
      */
     public $userIdentity;
 
+
     public function init()
     {
         parent::init();
@@ -31,12 +32,12 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
      */
     public $type;
 
-    public function getProvider()
+    public function getProvided()
     {
-        return $this->type;
+       return $this->type;
     }
 
-    public function push($action, $message, $params = [])
+    public function pushData($action, $message, $params = [])
     {
         $model = new self();
         foreach ($params as $name => $value) {
@@ -56,14 +57,14 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
 //        $model->success = true;
         $userRole = $this->userIdentity ? Yii::$app->getAuthManager()->getRolesByUser($this->userIdentity->getId()) : null;
 
-        if(!empty($userRole) && $userRole !== null){
+        if (!empty($userRole) && $userRole !== null) {
             $userRole = array_keys($userRole);
             $userRole = reset($userRole);
             $model->Role = $userRole;
         }
         $model->action_path = $action;
-        $model->LogType = $this->getProvider();
-        $model->user_id = $this->userIdentity ? $this->userIdentity->getId() :null;
+        $model->LogType = $this->type;
+        $model->user_id = $this->userIdentity ? $this->userIdentity->getId() : null;
         $model->user_email = $this->userIdentity ? $this->userIdentity->email : null;
         $model->user_name = $this->userIdentity ? $this->userIdentity->username : null;
         $model->user_avatar = null;
@@ -73,17 +74,17 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
         return $model->save(false);
     }
 
-    public function pull($condition)
+    public function pullData($condition)
     {
         return self::find()->andWhere($condition)->andWhere([
-            'LogType' => $this->getProvider()
+            'LogType' => $this->type
         ])->all();
     }
 
     public function resolveRawValue($value)
     {
         if (is_array($value)) {
-            $value = json_encode($value);
+            $value = @serialize($value);
         }
         return $value;
     }

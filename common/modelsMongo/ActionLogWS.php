@@ -18,7 +18,7 @@ class ActionLogWS extends ActiveRecord
 {
     public static function collectionName()
     {
-        return ['Weshop_log_40','Action_log_40'];
+        return ['Weshop_log_40', 'Action_log_40'];
     }
 
     public function behaviors()
@@ -26,7 +26,7 @@ class ActionLogWS extends ActiveRecord
         $behaviors = parent::behaviors();
 
         $reflection = new \ReflectionClass($this);
-        if($reflection->getShortName() === 'ActiveRecord'){
+        if ($reflection->getShortName() === 'ActiveRecord') {
             return $behaviors;
         }
 
@@ -65,14 +65,14 @@ class ActionLogWS extends ActiveRecord
             'user_request_suorce',
             'request_ip',
 
-            'Role','user_id','data_input','data_output', 'action_path', 'LogType','id'
+            'Role', 'user_id', 'data_input', 'data_output', 'action_path', 'LogType', 'id'
         ];
     }
 
     public function rules()
     {
         return [
-            [[  'created_at',
+            [['created_at',
                 'updated_at',
                 'date',
 
@@ -86,8 +86,8 @@ class ActionLogWS extends ActiveRecord
                 'request_ip',
 
 
-                ], 'safe'],
-            [[ 'Role','user_id','data_input','data_output', 'action_path', 'LogType','id'], 'required'],
+            ], 'safe'],
+            [['Role', 'user_id', 'data_input', 'data_output', 'action_path', 'LogType', 'id'], 'required'],
         ];
     }
 
@@ -105,7 +105,7 @@ class ActionLogWS extends ActiveRecord
 
             //Action thao tác là gì ?
             'action_path' => 'Tên của action / nút bấm thao tác là gì ?',
-            'LogType'=> 'Order hoăc Product', // LogType : Order | Product : and Id để join
+            'LogType' => 'Order hoăc Product', // LogType : Order | Product : and Id để join
             'id' => 'Id để join với Logtype nêu là Order hoặc nếu là Product',
 
             // data
@@ -167,5 +167,17 @@ class ActionLogWS extends ActiveRecord
         $data->_meta = $additional_info;
         return $data;
 
+    }
+
+    public function fields()
+    {
+        $fields = parent::fields();
+//        foreach (['data_output', 'data_input'] as $name) {
+//            $fields["raw_{$name}"] = $name;
+//            $fields[$name] = function ($model) use ($name) {
+//                return @json_decode($model->$name,true);
+//            };
+//        }
+        return $fields;
     }
 }

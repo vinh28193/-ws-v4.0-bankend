@@ -97,7 +97,7 @@ class AuthorizeForm extends Model
             $expired_time = null;
             $type = 'user';
         }
-        /** @var  $user \common\components\UserApiGlobalIdentityInterface|\yii\web\IdentityInterface */
+        /** @var  $user \common\components\User ApiGlobalIdentityInterface|\yii\web\IdentityInterface */
         $user = $this->getUser();
         return Yii::$app->api->createAuthorizationCode($user->getId(), $type, $expired_time);
     }
@@ -105,12 +105,12 @@ class AuthorizeForm extends Model
     /**
      * Finds user by [[username]]
      *
-     * @return \common\components\UserApiGlobalIdentityInterface|\yii\web\IdentityInterface|null
+     * @return \common\components\User ApiGlobalIdentityInterface|\yii\web\IdentityInterface|null
      */
     protected function getUser()
     {
         if ($this->_user === null) {
-            /** @var  $class \common\components\UserApiGlobalIdentityInterface */
+            /** @var  $class \common\components\User ApiGlobalIdentityInterface */
             $class = $this->identityClass;
             $this->_user = $class::findByUsername($this->username);
         }

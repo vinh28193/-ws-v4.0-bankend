@@ -13,6 +13,12 @@ use Yii;
  * @property int $order_id
  * @property string $purchase_invoice_number
  * @property string $status trạng thái của tracking bên us
+ * @property int $quantity
+ * @property double $weight
+ * @property double $dimension_l
+ * @property double $dimension_w
+ * @property double $dimension_h
+ * @property int $number_run
  * @property int $created_at
  * @property int $updated_at
  * @property int $created_by
@@ -35,7 +41,8 @@ class DraftExtensionTrackingMap extends \common\components\db\ActiveRecord
     {
         return [
             [['tracking_code', 'product_id', 'order_id', 'purchase_invoice_number'], 'required'],
-            [['product_id', 'order_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['product_id', 'order_id', 'quantity', 'number_run', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
             [['tracking_code', 'purchase_invoice_number', 'status'], 'string', 'max' => 255],
         ];
     }
@@ -52,6 +59,12 @@ class DraftExtensionTrackingMap extends \common\components\db\ActiveRecord
             'order_id' => 'Order ID',
             'purchase_invoice_number' => 'Purchase Invoice Number',
             'status' => 'Status',
+            'quantity' => 'Quantity',
+            'weight' => 'Weight',
+            'dimension_l' => 'Dimension L',
+            'dimension_w' => 'Dimension W',
+            'dimension_h' => 'Dimension H',
+            'number_run' => 'Number Run',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

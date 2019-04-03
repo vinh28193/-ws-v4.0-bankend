@@ -10,7 +10,7 @@ namespace common\tests\unit;
 
 use yii\helpers\ArrayHelper;
 
-class WsUnitTestCase extends \Codeception\Test\Unit
+class WsUnitTestCase extends Codeception\Test\Unit
 {
     use \Codeception\Specify;
 

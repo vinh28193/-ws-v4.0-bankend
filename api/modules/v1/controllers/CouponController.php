@@ -94,7 +94,7 @@ class CouponController extends BaseApiController
             return $this->response(false, 'update coupon error');
         }
         ChatHelper::push($messages, $post['ordercode'],'WS_CUSTOMER', 'SYSTEM');
-        Yii::$app->wsLog->order->push('updateCoupon', null, [
+        Yii::$app->wsLog->push('order','updateCoupon', null, [
             'id' => $post['ordercode'],
             'request' => $this->post,
             'response' => $dirtyAttributes

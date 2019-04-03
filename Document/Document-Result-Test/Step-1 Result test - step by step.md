@@ -38,6 +38,10 @@ userbackend\tests\FunctionalTester includes modules: Filesystem, Yii2
 userbackend\tests\UnitTester includes modules: Yii2, Asserts
 
 admin@DESKTOP-PL28AOR MINGW64 /c/xampp/htdocs/weshop-v4.0-api (master)
+
+
+
+
 $ vendor/bin/codecept run
 Codeception PHP Testing Framework v2.6.0
 Powered by PHPUnit 8.1-g36f92d5 by Sebastian Bergmann and contributors.

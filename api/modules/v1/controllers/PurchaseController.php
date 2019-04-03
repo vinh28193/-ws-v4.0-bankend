@@ -83,7 +83,7 @@ class PurchaseController extends BaseApiController
             $listId = [$this->get['id']];
             $repon = $this->getCart($listId);
 
-            Yii::$app->wsLog->order->push('addToCart', null, [
+            Yii::$app->wsLog->push('order','addToCart', null, [
                 'id' => $this->get['id'],
                 'request' => $this->get,
                 'response' => $repon
@@ -107,7 +107,7 @@ class PurchaseController extends BaseApiController
 //            $mess = "Remove soi ".$this->post['idItem']." to cart. ";
 //            OrderLogs::log($item->id,"action",$mess,Yii::$app->user->getIdentity()->username,$mess,$item->id);
         $repon = $this->getCart([],'Remove Success!');
-        Yii::$app->wsLog->order->push('removeItemToCart', null, [
+        Yii::$app->wsLog->push('order','removeItemToCart', null, [
             'id' => $id,
             'request' => "delete/".$this->id,
             'response' => $repon
@@ -336,7 +336,7 @@ class PurchaseController extends BaseApiController
             $PurchaseOrder->total_type_changing = $changeAmount > 0 ? 'up' : 'down';
             $PurchaseOrder->save(0);
 
-            Yii::$app->wsLog->order->push('purchased', null, [
+            Yii::$app->wsLog->push('order','purchased', null, [
                 'id' => $PurchaseOrder->id,
                 'request' => $this->post['cart'],
                 'response' => $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id)
