@@ -218,6 +218,7 @@ class Logging extends \yii\base\Component
      * @param $action string
      * @param $message string
      * @param $params array
+     * Phòng trường hợp Mongo dịch vu bị lỗi thì lưu xuống file @Phuchc 03/04/2019
      */
     public function push($driver, $action, $message, $params)
     {
