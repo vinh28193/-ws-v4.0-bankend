@@ -21,7 +21,7 @@ class Serializer extends \yii\rest\Serializer
      */
     public function serialize($data)
     {
-        \Yii::info(gettype($data),__METHOD__);
+//        \Yii::info(gettype($data),__METHOD__);
         if (is_array($data) && count($data) === 3 && isset($data['data'])) {
             $data['data'] = $this->serialize($data['data']);
             return $data;
