@@ -31,7 +31,8 @@
     "johnsnook/yii2-ip-filter": "*",
     "mdmsoft/yii2-admin": "~2.0",
     "phpoffice/phpspreadsheet": "dev-master",
-    "phpoffice/phpexcel": "dev-master"
+    "phpoffice/phpexcel": "dev-master",
+    "ext-mongo": "*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
