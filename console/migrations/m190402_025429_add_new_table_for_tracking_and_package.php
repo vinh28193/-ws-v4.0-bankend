@@ -12,19 +12,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
      */
     public function safeUp()
     {
-        /**
-         *  execute DROP TABLE IF EXISTS được thì tốt hơn
-         *  ví dụ : $this->execute("DROP TABLE IF EXISTS `draft_extension_tracking_map`");
-         *  vì các bảng này gần giống nhau về tên và cấu trúc, thêm comment cho từng table để phân biệt
-         */
-        try {
-
-            $this->dropTable('draft_extension_tracking_map');
-
-            echo "drop table success\n";
-        } catch (Exception $exception) {
-            echo 'Not have table';
-        }
+        $this->execute("DROP TABLE IF EXISTS `draft_extension_tracking_map`");
         $this->createTable('draft_extension_tracking_map', [
             'id' => $this->primaryKey(),
             'tracking_code' => $this->string()->notNull(),
@@ -44,12 +32,8 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'updated_by' => $this->integer(),
         ]);
         $this->addCommentOnTable('draft_extension_tracking_map','Bảng dùng để lưu những tracking từ 1 extension lưu về');
-        try {
-            $this->dropTable('draft_data_tracking');
-            echo 'Drop table success\n';
-        } catch (Exception $exception) {
-            echo 'Not have table';
-        }
+
+        $this->execute("DROP TABLE IF EXISTS `draft_data_tracking`");
         $this->createTable('draft_data_tracking', [
             'id' => $this->primaryKey(),
             'tracking_code' => $this->string()->notNull(),
@@ -70,15 +54,9 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
         ]);
-        $this->addCommentOnTable('draft_data_tracking','Bảng dùng để so với table tracking (khi US sending) đối chiếu với table draft_extension_tracking_map');
+        $this->addCommentOnTable('draft_data_tracking','Bảng dùng để tổ hợp dữ liệu của 2 bàng draft_extension_tracking_map và tracking_code (US sending)');
 
-        try {
-            $this->dropTable('draft_boxme_tracking');
-
-            echo 'Drop table success\n';
-        } catch (Exception $exception) {
-            echo 'Not have table';
-        }
+        $this->execute("DROP TABLE IF EXISTS `draft_boxme_tracking`");
         $this->createTable('draft_boxme_tracking', [
             'id' => $this->primaryKey(),
             'tracking_code' => $this->string()->notNull(),
@@ -99,14 +77,8 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
         ]);
-        $this->addCommentOnTable('draft_data_tracking','Bảng dùng để đối chiếu với callback kiểm hàng');
-        try {
-            $this->dropTable('draft_missing_tracking');
-
-            echo 'Drop table success\n';
-        } catch (Exception $exception) {
-            echo 'Not have table';
-        }
+        $this->addCommentOnTable('draft_data_tracking','Bảng dùng để đối chiếu với callback kiểm hàng, được tạo ra khi bảng draft_data_tracking đối chiếu với api get detail của box me');
+        $this->execute("DROP TABLE IF EXISTS `draft_missing_tracking`");
         $this->createTable('draft_missing_tracking', [
             'id' => $this->primaryKey(),
             'tracking_code' => $this->string()->notNull(),
@@ -127,13 +99,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'updated_by' => $this->integer(),
         ]);
 
-        try {
-            $this->dropTable('draft_wasting_tracking');
-
-            echo 'Drop table success\n';
-        } catch (Exception $exception) {
-            echo 'Not have table';
-        }
+        $this->execute("DROP TABLE IF EXISTS `draft_wasting_tracking`");
         $this->createTable('draft_wasting_tracking', [
             'id' => $this->primaryKey(),
             'tracking_code' => $this->string()->notNull(),
@@ -154,13 +120,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'updated_by' => $this->integer(),
         ]);
 
-        try {
-            $this->dropTable('draft_package_item');
-
-            echo "Drop table success\n";
-        } catch (Exception $exception) {
-            echo 'Not have table';
-        }
+        $this->execute("DROP TABLE IF EXISTS `draft_package_item`");
         $this->createTable('draft_package_item', [
             'id' => $this->primaryKey(),
             'tracking_code' => $this->string()->notNull(),
