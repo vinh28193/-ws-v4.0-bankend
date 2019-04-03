@@ -16,20 +16,25 @@ class DraftWastingTracking extends \common\models\db\DraftWastingTracking
     }
 
     public function createOrUpdate($validate = true){
-        $draft_data = DraftDataTracking::find()->where([
+        $draft_data = self::find()->where([
             'tracking_code' => $this->tracking_code,
             'product_id' => $this->product_id,
         ])->one();
         if(!$draft_data){
-            $draft_data = DraftDataTracking::find()->where([
+            $draft_data = self::find()->where([
                 'tracking_code' => $this->tracking_code,
                 'product_id' => null,
             ])->one();
             if(!$draft_data){
-                $draft_data = new DraftDataTracking();
+                $draft_data = new self();
             }
         }
         $draft_data->setAttributes($this->getAttributes());
-        return $draft_data->save($validate);
+        if($draft_data->save($validate)){
+            return true;
+        }else{
+            print_r($draft_data->errors);
+            die;
+        }
     }
 }
