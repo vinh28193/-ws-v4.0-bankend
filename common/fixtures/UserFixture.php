@@ -12,6 +12,7 @@ class UserFixture extends ActiveFixture
     /**
      * @inheritdoc
      */
+    /*
     public function load()
     {
         $this->data = [];
@@ -50,7 +51,7 @@ class UserFixture extends ActiveFixture
             'password_hash' => \Yii::$app->security->generatePasswordHash('123456'),
             'password_reset_token' => null,
             'email' => 'weshop.dev@weshop.asia',
-            'status' => 10,
+            'status' => 1,
             'created_at' => time(),
             'updated_at' => time(),
             ];
@@ -65,9 +66,10 @@ class UserFixture extends ActiveFixture
             'password_hash' => \Yii::$app->security->generatePasswordHash('weshop@123'),
             'password_reset_token' => null,
             'email' => 'phuchc@weshop.asia',
-            'status' => 10,
+            'status' => 1,  // 10
             'created_at' => time(),
             'updated_at' => time(),
         ];
     }
+    */
 }
