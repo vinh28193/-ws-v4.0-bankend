@@ -43,6 +43,13 @@ class DraftPackageItemSearch extends DraftPackageItem
         return Model::scenarios();
     }
 
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
     public function search($params)
     {
         $query = DraftPackageItem::find();
@@ -58,16 +65,21 @@ class DraftPackageItemSearch extends DraftPackageItem
                 ]
             ]
         ]);
-        if (!$this->load($params) || !$this->validate()) {
+
+        $this->load($params, '');
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
             $query->where('0=1');
             return $dataProvider;
         }
 
-        $query->where(['tracking_code' => $this->keyword]);
+        //$query->where(['tracking_code' => $this->keyword]);
         return $dataProvider;
     }
 
-    public function createResponseMessage(){
+    public function createResponseMessage()
+    {
         return "success";
     }
 }
