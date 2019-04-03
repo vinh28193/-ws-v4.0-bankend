@@ -24,14 +24,7 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
             }
         }
         $status = $draft_data->status != null && $draft_data->status != $this->status ? self::STATUS_CHECK_DONE : $this->status;
-        /**
-         * [[ActiveRecord::toArray]] được chuyển đổi nhờ [[fields]] và [[extraFields]]
-         * trường hợp có thay đổi cấu trúc trong [[fields]] hoặc [[extraFields]] thì dữ liệu [[toArray]] trả về không được bảo toàn
-         * dùng [[getAttributes()]] thì tốt hơn
-         * @see \common\components\db\ActiveRecord::fields()
-         * @see \common\components\db\ActiveRecord::extraFields()
-         */
-        $draft_data->setAttributes($this->toArray());
+        $draft_data->setAttributes($this->getAttributes());
         $draft_data->status = $status;
         return $draft_data->save($validate);
     }
