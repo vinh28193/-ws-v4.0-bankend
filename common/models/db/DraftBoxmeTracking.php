@@ -13,7 +13,7 @@ use Yii;
  * @property int $order_id
  * @property int $manifest_id
  * @property string $manifest_code
- * @property int $quatity
+ * @property int $quantity
  * @property double $weight
  * @property double $dimension_l
  * @property double $dimension_w
@@ -43,7 +43,7 @@ class DraftBoxmeTracking extends \common\components\db\ActiveRecord
     {
         return [
             [['tracking_code'], 'required'],
-            [['product_id', 'order_id', 'manifest_id', 'quatity', 'number_callback', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['product_id', 'order_id', 'manifest_id', 'quantity', 'number_callback', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
             [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status'], 'string', 'max' => 255],
         ];
@@ -61,7 +61,7 @@ class DraftBoxmeTracking extends \common\components\db\ActiveRecord
             'order_id' => 'Order ID',
             'manifest_id' => 'Manifest ID',
             'manifest_code' => 'Manifest Code',
-            'quatity' => 'Quatity',
+            'quantity' => 'Quantity',
             'weight' => 'Weight',
             'dimension_l' => 'Dimension L',
             'dimension_w' => 'Dimension W',
@@ -74,5 +74,14 @@ class DraftBoxmeTracking extends \common\components\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return \common\models\queries\DraftBoxmeTrackingQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new \common\models\queries\DraftBoxmeTrackingQuery(get_called_class());
     }
 }

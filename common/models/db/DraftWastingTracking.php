@@ -11,7 +11,7 @@ use Yii;
  * @property string $tracking_code
  * @property int $product_id
  * @property int $order_id
- * @property int $quatity
+ * @property int $quantity
  * @property double $weight
  * @property double $dimension_l
  * @property double $dimension_w
@@ -42,7 +42,7 @@ class DraftWastingTracking extends \common\components\db\ActiveRecord
     {
         return [
             [['tracking_code'], 'required'],
-            [['product_id', 'order_id', 'quatity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
             [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status'], 'string', 'max' => 255],
         ];
@@ -58,7 +58,7 @@ class DraftWastingTracking extends \common\components\db\ActiveRecord
             'tracking_code' => 'Tracking Code',
             'product_id' => 'Product ID',
             'order_id' => 'Order ID',
-            'quatity' => 'Quatity',
+            'quantity' => 'Quantity',
             'weight' => 'Weight',
             'dimension_l' => 'Dimension L',
             'dimension_w' => 'Dimension W',
@@ -72,5 +72,14 @@ class DraftWastingTracking extends \common\components\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return \common\models\queries\DraftWastingTrackingQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new \common\models\queries\DraftWastingTrackingQuery(get_called_class());
     }
 }
