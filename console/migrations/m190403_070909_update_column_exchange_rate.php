@@ -13,6 +13,7 @@ class m190403_070909_update_column_exchange_rate extends Migration
     public function safeUp()
     {
         $this->renameColumn('system_exchange_rate','form','from');
+        $this->alterColumn('system_exchange_rate','store_id','int(11) null');
     }
 
     /**
