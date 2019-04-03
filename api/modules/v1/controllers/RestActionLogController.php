@@ -106,7 +106,7 @@ class RestActionLogController extends BaseApiController
         if ($id !== null) {
             $response = ActionLog::find()
                 ->where(['id' => $id])
-                ->asArray()->all();
+                ->all();
             return $this->response(true, "Get  $id success", $response);
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");

@@ -489,4 +489,20 @@ return [
             'POST update' => 'update',
         ]
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['detail-boxme' => 'service/manifest-box-me'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET' => 'get-detail',
+        ],
+        'extraPatterns' => [
+            'GET get {manifest_id}' => 'get-detail',
+        ]
+    ],
 ];
