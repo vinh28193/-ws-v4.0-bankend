@@ -24,7 +24,7 @@ use common\components\UserPublicIdentityInterface;
 class User extends \common\models\db\User implements IdentityInterface, UserApiGlobalIdentityInterface,UserPublicIdentityInterface
 {
     const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_ACTIVE = 1;
 
 
     /**
