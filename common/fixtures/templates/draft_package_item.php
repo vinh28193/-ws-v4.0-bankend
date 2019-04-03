@@ -23,29 +23,21 @@ $manifests = [
 $manifest = $faker->randomElement($manifests);
 $invoice = WeshopHelper::generateTag($index, '', 26);
 $tk = WeshopHelper::generateTag($index, 'TK', 16);
-$order = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\order.php', null));
-$order = $faker->randomElement([null, $order['id']]);
-$product = null;
-if ($order !== null) {
-    $products = (FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\product.php', null, ['order_id' => $order]));
-    if (!empty($products)) {
-        $product = $faker->randomElement($products)['id'];
-    }
-
-}
+$order = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\order.php', null))['id'];
+$product = $faker->randomElement(FixtureUtility::getDataWithColumn('.\common\fixtures\data\data_fixed\product.php', null, ['order_id' => $order]))['id'];
 return [
     'id' => $id,
     'tracking_code' => $tk,
     'product_id' => $product,
     'order_id' => $order,
-    'quantity' => ($order && $product) ? $faker->numberBetween(1, 100) : null,
-    'weight' => ($order && $product) ? $faker->numberBetween(1, 100) : null,
-    'dimension_l' => ($order && $product) ? $faker->numberBetween(1, 100) : null,
-    'dimension_w' => ($order && $product) ? $faker->numberBetween(1, 100) : null,
-    'dimension_h' => ($order && $product) ? $faker->numberBetween(1, 100) : null ? $faker->numberBetween(1, 100) : null,
+    'quantity' => $faker->numberBetween(1, 100),
+    'weight' => $faker->numberBetween(1, 100),
+    'dimension_l' => $faker->numberBetween(1, 100),
+    'dimension_w' => $faker->numberBetween(1, 100),
+    'dimension_h' => $faker->numberBetween(1, 100),
     'manifest_id' => $manifest['id'],
     'manifest_code' => $manifest['manifest_code'],
-    'purchase_invoice_number' => ($order && $product) ? $invoice : null,
+    'purchase_invoice_number' => $invoice,
     'status' => 1,
     'created_at' => $faker->unixTime,
     'updated_at' => $faker->unixTime,
