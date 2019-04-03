@@ -139,9 +139,11 @@ class SiteController extends BaseApiController
 
     public function actionAuthorize()
     {
+        //var_dump($this->post);die("44324342432443");
         $model = new AuthorizeForm();
         $model->attributes = $this->post;
-        $model->load($this->post, '');
+        $model->load($this->post,null);
+        //var_dump($model);die("9090090");
         /** @var  $authorize boolean|\common\models\AuthorizationCodes*/
         if (($authorize = $model->authorize()) === false) {
             return $this->response(false, $model->getFirstErrors());
