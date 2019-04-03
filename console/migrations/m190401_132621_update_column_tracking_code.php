@@ -22,7 +22,7 @@ class m190401_132621_update_column_tracking_code extends Migration
     {
         echo "m190401_132621_update_column_tracking_code cannot be reverted.\n";
 
-        return false;
+        return true;
     }
 
     /*

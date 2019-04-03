@@ -41,6 +41,7 @@ class ManifestBoxMeController extends BaseApiController
             $request_get->manifest_id = $manifest_id;
             $request_get->manifest_code = $manifest->manifest_code;
             $request_get->count_request = 0;
+            $request_get->store_id = $manifest->store_id;
             $request_get->created_by = \Yii::$app->user->getIdentity()->username.'-'.\Yii::$app->user->id;
             $request_get->created_at = date('Y-m-d H:i:s');
         }

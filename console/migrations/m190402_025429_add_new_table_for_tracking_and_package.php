@@ -12,7 +12,13 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
      */
     public function safeUp()
     {
+        /**
+         *  execute DROP TABLE IF EXISTS được thì tốt hơn
+         *  ví dụ : $this->execute("DROP TABLE IF EXISTS `draft_extension_tracking_map`");
+         *  vì các bảng này gần giống nhau về tên và cấu trúc, thêm comment cho từng table để phân biệt
+         */
         try {
+
             $this->dropTable('draft_extension_tracking_map');
 
             echo "drop table success\n";
@@ -26,7 +32,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'order_id' => $this->integer()->notNull(),
             'purchase_invoice_number' => $this->string()->notNull(),
             'status' => $this->string()->comment("trạng thái của tracking bên us"),
-            'quatity' => $this->integer(),
+            'quantity' => $this->integer(),
             'weight' => $this->float(),
             'dimension_l' => $this->float(),
             'dimension_w' => $this->float(),
@@ -37,9 +43,9 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
         ]);
+        $this->addCommentOnTable('draft_extension_tracking_map','Bảng dùng để lưu những tracking từ 1 extension lưu về');
         try {
             $this->dropTable('draft_data_tracking');
-
             echo 'Drop table success\n';
         } catch (Exception $exception) {
             echo 'Not have table';
@@ -51,7 +57,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'order_id' => $this->integer(),
             'manifest_id' => $this->integer(),
             'manifest_code' => $this->string(),
-            'quatity' => $this->integer(),
+            'quantity' => $this->integer(),
             'weight' => $this->float(),
             'dimension_l' => $this->float(),
             'dimension_w' => $this->float(),
@@ -64,6 +70,8 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
         ]);
+        $this->addCommentOnTable('draft_data_tracking','Bảng dùng để so với table tracking (khi US sending) đối chiếu với table draft_extension_tracking_map');
+
         try {
             $this->dropTable('draft_boxme_tracking');
 
@@ -78,7 +86,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'order_id' => $this->integer(),
             'manifest_id' => $this->integer(),
             'manifest_code' => $this->string(),
-            'quatity' => $this->integer(),
+            'quantity' => $this->integer(),
             'weight' => $this->float(),
             'dimension_l' => $this->float(),
             'dimension_w' => $this->float(),
@@ -91,7 +99,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
         ]);
-
+        $this->addCommentOnTable('draft_data_tracking','Bảng dùng để đối chiếu với callback kiểm hàng');
         try {
             $this->dropTable('draft_missing_tracking');
 
@@ -104,7 +112,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'tracking_code' => $this->string()->notNull(),
             'product_id' => $this->integer(),
             'order_id' => $this->integer(),
-            'quatity' => $this->integer(),
+            'quantity' => $this->integer(),
             'weight' => $this->float(),
             'dimension_l' => $this->float(),
             'dimension_w' => $this->float(),
@@ -131,7 +139,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'tracking_code' => $this->string()->notNull(),
             'product_id' => $this->integer(),
             'order_id' => $this->integer(),
-            'quatity' => $this->integer(),
+            'quantity' => $this->integer(),
             'weight' => $this->float(),
             'dimension_l' => $this->float(),
             'dimension_w' => $this->float(),
@@ -158,7 +166,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'tracking_code' => $this->string()->notNull(),
             'product_id' => $this->integer(),
             'order_id' => $this->integer(),
-            'quatity' => $this->integer(),
+            'quantity' => $this->integer(),
             'weight' => $this->float(),
             'dimension_l' => $this->float(),
             'dimension_w' => $this->float(),
@@ -172,6 +180,7 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
         ]);
+        $this->addCommentOnTable('draft_package_item','Bảng packing tạm');
     }
 
     /**
@@ -179,9 +188,13 @@ class m190402_025429_add_new_table_for_tracking_and_package extends Migration
      */
     public function safeDown()
     {
-        echo "m190402_025429_add_new_table_for_tracking_and_package cannot be reverted.\n";
+        $this->dropTable('draft_extension_tracking_map');
+        $this->dropTable('draft_data_tracking');
+        $this->dropTable('draft_boxme_tracking');
+        $this->dropTable('draft_missing_tracking');
+        $this->dropTable('draft_wasting_tracking');
+        $this->dropTable('draft_package_item');
 
-        return false;
     }
 
     /*

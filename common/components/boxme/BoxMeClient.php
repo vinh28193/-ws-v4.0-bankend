@@ -102,4 +102,31 @@ class BoxMeClient
         $res = $response->getData();
         return $res;
     }
+
+    public static function GetDetail($code,$page = 1,$contry = 'vn'){
+
+        $url = Yii::$app->params['boxme'][$contry]['URL'].'v1/packing/detail/'.$code.'/?page='.$page.'&q='.$tracking;
+
+        $client = new \yii\httpclient\Client();
+        $request = $client->createRequest();
+        $request->setFullUrl($url);
+        $request->addHeaders([
+            'Authorization' => Yii::$app->params['boxme'][$contry]['TOKEN']
+        ]);
+        $request->setFormat('json');
+        $request->setMethod('GET');
+        $response = $client->send($request);
+        $params['url'] = $url;
+        $params['token'] = Yii::$app->params['boxme'][$contry]['TOKEN'];
+//        ThirdPartyLogs::setLog("BOX_ME","pricing/create_order","weshopdev",($params),$response->getData());
+        if(!$response->isOk){
+//            $courierFailObject->message ='Request Failed';
+            $res = $response->getData();
+            return $res['messages'];
+        }
+        $res = $response->getData();
+        return $res;
+    }
+
+
 }
