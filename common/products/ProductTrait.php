@@ -111,8 +111,8 @@ trait ProductTrait
             if ($item->variation_sku === $sku) {
                 $this->start_price = $item->variation_start_price ? $item->variation_start_price : $this->start_price;
                 $this->sell_price = $item->variation_price ? $item->variation_price : $this->sell_price;
-                $this->available_quantity = $item->available_quantity;// ? $item->available_quantity : $this->available_quantity;
-                $this->quantity_sold = $item->quantity_sold;// ? $item->quantity_sold : $this->quantity_sold;
+                $this->available_quantity = $item->available_quantity;  // ? $item->available_quantity : $this->available_quantity;
+                $this->quantity_sold = $item->quantity_sold;            // ? $item->quantity_sold : $this->quantity_sold;
                 $this->current_variation = $item->options_group ? $item->options_group : $this->current_variation;
                 break;
             }
