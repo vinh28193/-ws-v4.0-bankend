@@ -64,7 +64,7 @@ class ExtensionController extends BaseApiController
                 $ext->purchase_invoice_number = $purchaseOrder->purchase_order_number;
             }
             $ext->status = $status;
-            $ext->quatity = $qty;
+            $ext->quantity = $qty;
             $ext->number_run = $ext->number_run ? $ext->number_run + 1 : 1;
             $ext->save();
             $draft_data = DraftDataTracking::find()->where([

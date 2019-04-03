@@ -24,6 +24,10 @@ use Yii;
  * @property int $updated_at
  * @property int $created_by
  * @property int $updated_by
+ * @property string $item_name tên sản phẩm trả về từ boxme
+ * @property string $warehouse_tag_boxme wtag của boxme
+ * @property string $note_boxme note của boxme
+ * @property string $image các hình ảnh cách nhau bởi dấu phẩy
  */
 class DraftMissingTracking extends \common\components\db\ActiveRecord
 {
@@ -44,7 +48,7 @@ class DraftMissingTracking extends \common\components\db\ActiveRecord
             [['tracking_code'], 'required'],
             [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
-            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status'], 'string', 'max' => 255],
+            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme', 'image'], 'string', 'max' => 255],
         ];
     }
 
@@ -71,15 +75,10 @@ class DraftMissingTracking extends \common\components\db\ActiveRecord
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
+            'item_name' => 'Item Name',
+            'warehouse_tag_boxme' => 'Warehouse Tag Boxme',
+            'note_boxme' => 'Note Boxme',
+            'image' => 'Image',
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\DraftMissingTrackingQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\DraftMissingTrackingQuery(get_called_class());
     }
 }

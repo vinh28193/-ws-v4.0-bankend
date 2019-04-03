@@ -170,7 +170,7 @@ class ExchangeRate extends Component
     public function loadFormVcb($console = false)
     {
         if ($console) echo "Lấy tỷ giá từ VietCombank: ,,," . PHP_EOL;
-        $from = 'VND';
+        $to = 'VND';
         $url = 'https://www.vietcombank.com.vn/ExchangeRates/ExrateXML.aspx';
 
         $transaction = $this->db->beginTransaction();
@@ -184,8 +184,8 @@ class ExchangeRate extends Component
             $rs = XmlUtility::xmlToArray($rs);
             if (!empty($rs['Exrate'])) {
                 foreach ($rs['Exrate'] as $key => $val) {
-                    $to = $val['@attributes']['CurrencyCode'];
-                    if (in_array($to, $this->currencies)) {
+                    $from = $val['@attributes']['CurrencyCode'];
+                    if (in_array($from, $this->currencies)) {
                         $rate = $val['@attributes']['Sell'] * $this->ratePercent;
                         $key = $this->buildKey($from, $to);
                         $this->_rates[$key] = $rate;

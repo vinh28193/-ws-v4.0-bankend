@@ -6,7 +6,7 @@ use common\models\Product;
 use Codeception\Test\Unit;
 use tests\fixtures\ProductFixture;
 
-class ProductTest extends Unit
+class ProductTest extends Codeception\Test\Unit
 {
     /**
      * @var \UnitTester

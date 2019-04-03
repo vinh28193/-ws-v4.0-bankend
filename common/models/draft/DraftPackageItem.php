@@ -71,4 +71,13 @@ class DraftPackageItem extends \common\models\db\DraftPackageItem
         };
         return $fields;
     }
+
+    /**
+     * {@inheritdoc}
+     * @return \common\models\queries\DraftPackageItemQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new \common\models\queries\DraftPackageItemQuery(get_called_class());
+    }
 }

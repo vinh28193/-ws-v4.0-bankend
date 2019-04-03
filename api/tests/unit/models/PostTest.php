@@ -15,12 +15,12 @@ class PostTest extends Unit
 
     public function _before()
     {
-        $this->tester->haveFixtures([
-            'post' => [
-                'class' => PostFixture::className(),
-                'dataFile' => codecept_data_dir() . 'post.php'
-            ]
-        ]);
+//        $this->tester->haveFixtures([
+//            'post' => [
+//                'class' => PostFixture::className(),
+//                'dataFile' => codecept_data_dir() . 'post.php'
+//            ]
+//        ]);
     }
 
     public function testValidateEmpty()

@@ -75,13 +75,4 @@ class DraftDataTracking extends \common\components\db\ActiveRecord
             'updated_by' => 'Updated By',
         ];
     }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\DraftDataTrackingQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\DraftDataTrackingQuery(get_called_class());
-    }
 }
