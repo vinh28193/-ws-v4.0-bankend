@@ -27,6 +27,8 @@ class Serializer extends \yii\rest\Serializer
         }elseif (is_array($data) && isset($data[$this->collectionEnvelope]) && !empty($data[$this->collectionEnvelope])){
             $data[$this->collectionEnvelope] = $this->serializeModels($data[$this->collectionEnvelope]);
             return $data;
+        }elseif ($data instanceof \stdClass && isset($data->{$this->collectionEnvelope}) && !empty($data->{$this->collectionEnvelope})){
+            $data->{$this->collectionEnvelope} = $this->serializeModels($data->{$this->collectionEnvelope});
         }
         elseif ($data instanceof \IteratorAggregate) {
             return ($iterator = $data->getIterator()) instanceof \ArrayIterator ? $iterator->getArrayCopy() : $iterator;
