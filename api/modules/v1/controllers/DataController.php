@@ -116,7 +116,8 @@ class DataController extends BaseApiController
     {
         $errors = [];
         // Seller
-        if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($item->type === 'EBAY' &&  $providers !== null && !isset($providers['name']))) {
+        if (($providers = ArrayHelper::getValue($item, 'providers')) === null
+            || ($item->type === 'EBAY' &&  $providers !== null && !isset($providers['name']))) {
             $errors[$key][] = "can not create form null seller";
             //continue;
         }
