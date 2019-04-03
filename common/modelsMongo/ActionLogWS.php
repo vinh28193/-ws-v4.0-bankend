@@ -172,12 +172,12 @@ class ActionLogWS extends ActiveRecord
     public function fields()
     {
         $fields = parent::fields();
-        foreach (['data_output', 'data_input'] as $name) {
-            $fields["raw_{$name}"] = $name;
-            $fields[$name] = function ($model) use ($name) {
-                return @unserialize($model->$name);
-            };
-        }
+//        foreach (['data_output', 'data_input'] as $name) {
+//            $fields["raw_{$name}"] = $name;
+//            $fields[$name] = function ($model) use ($name) {
+//                return @json_decode($model->$name,true);
+//            };
+//        }
         return $fields;
     }
 }

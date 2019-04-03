@@ -21,6 +21,7 @@ class Serializer extends \yii\rest\Serializer
      */
     public function serialize($data)
     {
+        \Yii::info(gettype($data),__METHOD__);
         if (is_array($data) && count($data) === 3 && isset($data['data'])) {
             $data['data'] = $this->serialize($data['data']);
             return $data;
@@ -29,6 +30,7 @@ class Serializer extends \yii\rest\Serializer
             return $data;
         }elseif ($data instanceof \stdClass && isset($data->{$this->collectionEnvelope}) && !empty($data->{$this->collectionEnvelope})){
             $data->{$this->collectionEnvelope} = $this->serializeModels($data->{$this->collectionEnvelope});
+            return $data;
         }
         elseif ($data instanceof \IteratorAggregate) {
             return ($iterator = $data->getIterator()) instanceof \ArrayIterator ? $iterator->getArrayCopy() : $iterator;
