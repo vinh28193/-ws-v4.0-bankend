@@ -18,6 +18,10 @@ use Yii;
  * @property double $dimension_h
  * @property int $manifest_id
  * @property string $manifest_code
+ * @property string $item_name tên sản phẩm trả về từ boxme
+ * @property string $warehouse_tag_boxme wtag của boxme
+ * @property string $note_boxme note của boxme
+ * @property string $image các hình ảnh cách nhau bởi dấu phẩy
  * @property string $purchase_invoice_number
  * @property string $status
  * @property int $created_at
@@ -44,7 +48,8 @@ class DraftWastingTracking extends \common\components\db\ActiveRecord
             [['tracking_code'], 'required'],
             [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
-            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status'], 'string', 'max' => 255],
+            [['warehouse_tag_boxme', 'note_boxme', 'image'], 'string'],
+            [['tracking_code', 'manifest_code', 'item_name', 'purchase_invoice_number', 'status'], 'string', 'max' => 255],
         ];
     }
 
@@ -65,6 +70,10 @@ class DraftWastingTracking extends \common\components\db\ActiveRecord
             'dimension_h' => 'Dimension H',
             'manifest_id' => 'Manifest ID',
             'manifest_code' => 'Manifest Code',
+            'item_name' => 'Item Name',
+            'warehouse_tag_boxme' => 'Warehouse Tag Boxme',
+            'note_boxme' => 'Note Boxme',
+            'image' => 'Image',
             'purchase_invoice_number' => 'Purchase Invoice Number',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -72,14 +81,5 @@ class DraftWastingTracking extends \common\components\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\DraftWastingTrackingQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\DraftWastingTrackingQuery(get_called_class());
     }
 }

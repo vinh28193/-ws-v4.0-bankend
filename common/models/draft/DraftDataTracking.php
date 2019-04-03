@@ -36,4 +36,12 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
         return $draft_data->save($validate);
     }
 
+    /**
+     * {@inheritdoc}
+     * @return \common\models\queries\DraftDataTrackingQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new \common\models\queries\DraftDataTrackingQuery(get_called_class());
+    }
 }
