@@ -53,6 +53,13 @@ class DraftPackageItemSearch extends DraftPackageItem
     public function search($params)
     {
         $query = DraftPackageItem::find();
+        $query->with([
+            'order' => function (\common\models\queries\OrderQuery $orderQuery) {
+                $orderQuery->defaultSelect();
+            },
+            'product' => function (\common\models\queries\ProductQuery $productQuery) {
+                $productQuery->defaultSelect();
+            }]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
