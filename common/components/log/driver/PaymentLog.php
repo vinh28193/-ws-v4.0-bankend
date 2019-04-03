@@ -8,23 +8,47 @@
 
 namespace common\components\log\driver;
 
-use Yii;
-use common\modelsMongo\PaymentLogWS;
+use common\components\log\Logging;
 use common\components\log\LoggingDriverInterface;
+use common\modelsMongo\PaymentLogWS;
 
-class PaymentLog extends PaymentLogWS implements  LoggingDriverInterface
+class PaymentLog extends PaymentLogWS implements LoggingDriverInterface
 {
-    public function getProvider()
+
+    /**
+     * PaymentLog constructor.
+     * @param Logging $logging
+     * @param array $config
+     */
+    public function __construct(Logging $logging, $config = [])
+    {
+        parent::__construct($config);
+    }
+
+    /**
+     * @return string
+     */
+    public function getProvided()
     {
         return 'Payment';
     }
 
-    public function push($action, $message, $params = [])
+    /**
+     * @param string $action
+     * @param string $message
+     * @param array $params
+     * @return bool|mixed|void
+     */
+    public function pushData($action, $message, $params = [])
     {
         // TODO: Implement push() method.
     }
 
-    public function pull($condition)
+    /**
+     * @param array|string $condition
+     * @return mixed|void
+     */
+    public function pullData($condition)
     {
         // TODO: Implement pull() method.
     }

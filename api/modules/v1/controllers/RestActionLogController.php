@@ -77,9 +77,8 @@ class RestActionLogController extends BaseApiController
             $_post['user_request_suorce'] = $_post['suorce'];
             unset($_post['suorce']);
         }
-        $logg = Yii::$app->wsLog;
-        $driver = $logg->getDriver($type === 'Product' ? 'product' : 'order');
-        if($driver->push($action, null, $_post)){
+
+        if(Yii::$app->wsLog->push($type === 'Product' ? 'product' : 'order',$action, null, $_post)){
             Yii::$app->api->sendSuccessResponse();
         }
         Yii::$app->api->sendFailedResponse("Invalid Record requested");
@@ -107,7 +106,7 @@ class RestActionLogController extends BaseApiController
         if ($id !== null) {
             $response = ActionLog::find()
                 ->where(['id' => $id])
-                ->asArray()->all();
+                ->all();
             return $this->response(true, "Get  $id success", $response);
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");

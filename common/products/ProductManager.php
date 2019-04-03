@@ -41,37 +41,37 @@ class ProductManager extends Component
     ];
 
     /**
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function init()
-    {
-        parent::init();
-        foreach ($this->gates as $name => $config) {
-            $this->setGate($name, $config);
-        }
-
-    }
-
-    /**
      * create object
      * @param $config
      * @return object
      * @throws \yii\base\InvalidConfigException
      */
-    protected function createObject($config)
+    protected function createGate($config)
     {
         return Yii::createObject($config);
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function hasGate($name)
+    {
+        return array_key_exists($name, $this->_gates);
+    }
 
     /**
      * get a driver
      * @param $name string
-     * @return BaseGate|null
+     * @return BaseGate
      */
     public function getGate($name)
     {
-        return isset($this->_gates[$name]) ? $this->_gates[$name] : null;
+        if (!$this->hasGate($name)) {
+            throw new \yii\base\InvalidParamException("Unknown gate '{$name}'.");
+        }
+        $this->setGate($name, $this->gates[$name]);
+        return $this->gates[$name];
     }
 
     /**
@@ -83,7 +83,7 @@ class ProductManager extends Component
     public function setGate($name, $config)
     {
         if (is_array($config) || is_string($config)) {
-            $config = $this->createObject($config);
+            $config = $this->createGate($config);
         }
         if ($config instanceof BaseGate) {
             $this->_gates[$name] = $config;
@@ -99,15 +99,7 @@ class ProductManager extends Component
      */
     public function setGates($gates)
     {
-        foreach ($gates as $name => $config) {
-            if (is_array($config) || is_string($config)) {
-                $config = $this->createObject($config);
-            }
-            if (!$config instanceof BaseGate) {
-                continue;
-            }
-            $this->_gates[$name] = $config;
-        }
+        $this->_gates = $gates;
     }
 
     /**
@@ -127,8 +119,8 @@ class ProductManager extends Component
      */
     public function __get($name)
     {
-        if (isset($this->gates[$name])) {
-            return $this->gates[$name];
+        if ($this->hasGate($name)) {
+            return $this->getGate($name);
         }
         return parent::__get($name);
     }

@@ -81,7 +81,7 @@ class ProductFeeController extends BaseApiController
         $order->total_amount_local += $model->local_amount - $old_local_amount;
 
         $order->save(0);
-        Yii::$app->wsLog->order->push('updateFee', null, [
+        Yii::$app->wsLog->push('order','updateFee', null, [
             'id' => $model->id,
             'request' => $this->post,
             'response' => $dirtyAttributes

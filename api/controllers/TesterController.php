@@ -9,6 +9,8 @@
 namespace api\controllers;
 
 
+use common\components\log\Logging;
+
 class TesterController extends \yii\rest\Controller
 {
 
@@ -26,6 +28,12 @@ class TesterController extends \yii\rest\Controller
         $exRate = \Yii::$app->exRate;
 
         echo "rate from USD to VND: " . $exRate->usdToVnd(12, 0) ."\n";
+        die;
+    }
+
+    public function actionLog(){
+        echo "23";
+        $log = Logging::create()->push('product','test','messager',['abc' => 'def']);
         die;
     }
 }

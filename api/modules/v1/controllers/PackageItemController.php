@@ -10,9 +10,9 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\data\ActiveDataProvider;
+use common\helpers\ChatHelper;
 use common\models\PackageItem;
 use Yii;
-use common\helpers\ChatHelper;
 
 class PackageItemController extends BaseApiController
 {
@@ -64,12 +64,14 @@ class PackageItemController extends BaseApiController
         return $this->response(true, 'get data success', $dataProvider);
     }
 
-    public function actionView($id) {
+    public function actionView($id)
+    {
         $query = PackageItem::find()->where(['order_id' => $id])->asArray()->all();
         return $this->response(true, 'get data success', $query);
     }
 
-    public function actionCreate() {
+    public function actionCreate()
+    {
         $post = Yii::$app->request->post();
         $model = new PackageItem;
         $model->package_code = $post['package_code'];
@@ -92,8 +94,8 @@ class PackageItemController extends BaseApiController
             ]);
             return $this->response(false, 'create package item error');
         }
-        ChatHelper::push($messages, $post['ordercode'],'WS_CUSTOMER', 'SYSTEM');
-        Yii::$app->wsLog->order->push('createPackageItem', null, [
+        ChatHelper::push($messages, $post['ordercode'], 'WS_CUSTOMER', 'SYSTEM');
+        Yii::$app->wsLog->push('order', 'createPackageItem', null, [
             'id' => $post['ordercode'],
             'request' => $this->post,
             'response' => $dirtyAttributes
@@ -101,7 +103,8 @@ class PackageItemController extends BaseApiController
         return $this->response(true, 'create package item success', $model);
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate($id)
+    {
         $post = Yii::$app->request->post();
         $model = PackageItem::findOne($id);
         if ($model) {
@@ -119,38 +122,39 @@ class PackageItemController extends BaseApiController
                     'request' => $this->post,
                     'response' => $model->getErrors()
                 ]);
-                return $this->response(false, 'delete package item'. $id . 'error');
+                return $this->response(false, 'delete package item' . $id . 'error');
             }
-            ChatHelper::push($messages, $post['ordercode'],'WS_CUSTOMER', 'SYSTEM');
-            Yii::$app->wsLog->order->push('createPackageItem', null, [
+            ChatHelper::push($messages, $post['ordercode'], 'WS_CUSTOMER', 'SYSTEM');
+            Yii::$app->wsLog->push('order','createPackageItem', null, [
                 'id' => $post['ordercode'],
                 'request' => $this->post,
                 'response' => $dirtyAttributes
             ]);
-            return $this->response(true, 'delete package item' . $id .' success', $model);
+            return $this->response(true, 'delete package item' . $id . ' success', $model);
         }
     }
 
-    public function actionDelete($id) {
+    public function actionDelete($id)
+    {
         $model = PackageItem::findOne($id);
         if (!$model->delete()) {
             Yii::$app->wsLog->order->push('deletePackageItem', null, [
                 'id' => $model->order->ordercode,
                 'request' => $this->post,
             ]);
-            return $this->response(false, 'delete package item'. $id . 'error');
+            return $this->response(false, 'delete package item' . $id . 'error');
         }
         $dirtyAttributes = $model->getDirtyAttributes();
         $messages = "order {$model->order->ordercode} Delete Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
-        ChatHelper::push($messages, $model->order->ordercode,'WS_CUSTOMER', 'SYSTEM');
+        ChatHelper::push($messages, $model->order->ordercode, 'WS_CUSTOMER', 'SYSTEM');
         Yii::$app->wsLog->order->push('deletePackageItem', null, [
             'id' => $model->order->ordercode,
             'request' => $this->post,
         ]);
-        return $this->response(true, 'update package item'. $id . 'success');
+        return $this->response(true, 'update package item' . $id . 'success');
     }
 
-    protected function resolveChatMessage($dirtyAttributes,$reference)
+    protected function resolveChatMessage($dirtyAttributes, $reference)
     {
 
         $results = [];

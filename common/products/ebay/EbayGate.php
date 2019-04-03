@@ -14,6 +14,13 @@ use Yii;
 class EbayGate extends BaseGate
 {
 
+    /**
+     * @param $params
+     * @param bool $refresh
+     * @return array|mixed
+     * @throws \yii\base\InvalidConfigException
+     * Search Ebay
+     */
     public function search($params, $refresh = false)
     {
         $request = new EbaySearchRequest();
@@ -41,12 +48,21 @@ class EbayGate extends BaseGate
 
     }
 
+
+    /**
+     * @param $condition
+     * @param bool $refresh
+     * @return array|mixed
+     * @throws \yii\base\InvalidConfigException
+     * Lấy details Ebay
+     */
     public function lookup($condition, $refresh = false)
     {
 
         $request = new EbayDetailRequest();
         $request->keyword = $condition;
         if (($product = $this->cache->get($request->getCacheKey()))) {
+            /** Todo Cache key**/
 
         }
         $httpClient = $this->getHttpClient();

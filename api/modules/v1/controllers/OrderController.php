@@ -162,19 +162,19 @@ class OrderController extends BaseApiController
         $dirtyAttributes = $model->getDirtyAttributes();
 
         $action = Inflector::camel2words($model->getScenario());
-        Yii::info([$dirtyAttributes,$model->getOldAttributes()], $model->getScenario());
+        Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());
 
         $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if (!$model->save()) {
-            Yii::$app->wsLog->order->push($model->getScenario(), null, [
+            Yii::$app->wsLog->push('order', $model->getScenario(), null, [
                 'id' => $model->ordercode,
                 'request' => $this->post,
                 'response' => $model->getErrors()
             ]);
             return $this->response(false, $model->getFirstErrors());
         }
-        ChatHelper::push($messages,$model->ordercode,'WS_CUSTOMER', 'SYSTEM');
-        Yii::$app->wsLog->order->push($model->getScenario(), null, [
+        ChatHelper::push($messages, $model->ordercode, 'WS_CUSTOMER', 'SYSTEM');
+        Yii::$app->wsLog->push('order', $model->getScenario(), null, [
             'id' => $model->ordercode,
             'request' => $this->post,
             'response' => $dirtyAttributes
@@ -225,7 +225,7 @@ class OrderController extends BaseApiController
      * @param $reference \common\components\db\ActiveRecord
      * @return string
      */
-    protected function resolveChatMessage($dirtyAttributes,$reference)
+    protected function resolveChatMessage($dirtyAttributes, $reference)
     {
 
         $results = [];
