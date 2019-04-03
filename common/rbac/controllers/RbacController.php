@@ -178,10 +178,64 @@ class RbacController extends \yii\console\Controller
                     $this->stdout("added child Role $name for parent role  $roleName ... \n", Console::FG_GREEN);
                 }
         }
-        $master_marketingRole =  $this->authManager->getRole('superAdmin');
-        //$this->authManager->assign($adminRole,1);
-        //$this->authManager->assign($adminRole,13)
-        $this->authManager->assign($master_marketingRole,13);
+
+        // Super Admin
+        $super_admin =  $this->authManager->getRole('superAdmin');
+        $this->authManager->assign($super_admin,13);
+
+        // Master Sales
+        $master_sale =  $this->authManager->getRole('master_sale');
+        $this->authManager->assign($master_sale,1);
+
+        // Master Operation
+        $master_operation =  $this->authManager->getRole('master_operation');
+        $this->authManager->assign($master_operation,2);
+
+        // Master Marketing
+        $master_marketing =  $this->authManager->getRole('master_marketing');
+        $this->authManager->assign($master_marketing,3);
+
+        // Master Accountant
+        $master_accountant =  $this->authManager->getRole('master_accountant');
+        $this->authManager->assign($master_accountant,4);
+
+
+        // warehouse
+        $warehouse =  $this->authManager->getRole('warehouse');
+        $this->authManager->assign($warehouse,5);
+
+        // purchase
+        $purchase =  $this->authManager->getRole('purchase');
+        $this->authManager->assign($purchase,6);
+
+        // sale
+        $sale =  $this->authManager->getRole('sale');
+        $this->authManager->assign($purchase,7);
+
+        //operation 8
+        $operation =  $this->authManager->getRole('operation');
+        $this->authManager->assign($operation,8);
+
+        //marketing_intent 9
+        $marketing_intent =  $this->authManager->getRole('marketing_intent');
+        $this->authManager->assign($marketing_intent,9);
+
+        // marketing_ads 10
+        $marketing_ads =  $this->authManager->getRole('marketing_ads');
+        $this->authManager->assign($marketing_ads,10);
+
+        // accountant 11
+        $accountant =  $this->authManager->getRole('accountant');
+        $this->authManager->assign($accountant,11);
+
+        // tester 12
+        $tester =  $this->authManager->getRole('tester');
+        $this->authManager->assign($tester,12);
+
+        // marketing 14
+        $marketing =  $this->authManager->getRole('marketing');
+        $this->authManager->assign($marketing,14);
+
     }
 
     protected function createDefaultPermission()
