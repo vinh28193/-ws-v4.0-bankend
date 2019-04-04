@@ -6,7 +6,7 @@
  * Time: 16:21
  */
 
-namespace common\tests\_support;
+namespace common\tests\stubs;
 
 
 class TestCondition extends \common\components\conditions\BaseCondition

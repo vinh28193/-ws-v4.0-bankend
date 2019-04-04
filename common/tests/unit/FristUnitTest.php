@@ -20,7 +20,6 @@ class FristUnitTest extends UnitTestCase
     // tests
     public function testSomeFeature()
     {
-        var_dump(\Yii::$app);
-        die;
+        var_dump($this->grabFixtures());die;
     }
 }

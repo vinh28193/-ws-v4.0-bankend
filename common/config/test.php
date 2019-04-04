@@ -9,6 +9,7 @@ return [
         ],
         'storeManager' => [
             'class' => common\components\consoles\StoreManager::className(),
+            'defaultDomain' => 'localhost:80'
         ]
     ],
 ];
