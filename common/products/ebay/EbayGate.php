@@ -28,10 +28,24 @@ class EbayGate extends BaseGate
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
+        if (!($rs = $this->cache->get($request->getCacheKey())) || $refresh) {
+            $rs = $this->searchRequest($request->params());
+            $this->cache->set($request->getCacheKey(), $rs, $rs[0] === true ? self::MAX_CACHE_DURATION : 0);
+        }
+        return $rs;
+    }
+
+    /**
+     * @param $params
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function searchRequest($params)
+    {
         $httpClient = $this->getHttpClient();
         $httpRequest = $httpClient->createRequest();
         $httpRequest->setUrl($this->searchUrl);
-        $httpRequest->setData($request->params());
+        $httpRequest->setData($params);
         $httpRequest->setFormat('json');
         $httpRequest->setMethod('POST');
         try {
@@ -45,9 +59,7 @@ class EbayGate extends BaseGate
             Yii::error($exception);
             return [false, $exception->getMessage()];
         }
-
     }
-
 
     /**
      * @param $condition
@@ -58,16 +70,26 @@ class EbayGate extends BaseGate
      */
     public function lookup($condition, $refresh = false)
     {
-
         $request = new EbayDetailRequest();
         $request->keyword = $condition;
-        if (($product = $this->cache->get($request->getCacheKey()))) {
-            /** Todo Cache key**/
-
+        if (!($rs = $this->cache->get($request->getCacheKey())) || $refresh) {
+            $rs = $this->lookupRequest($request->params());
+            $this->cache->set($request->getCacheKey(), $rs, $rs[0] === true ? self::MAX_CACHE_DURATION : 0);
         }
+        return $rs;
+
+    }
+
+    /**
+     * @param $params
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function lookupRequest($params)
+    {
         $httpClient = $this->getHttpClient();
         $httpRequest = $httpClient->createRequest();
-        $this->lookupUrl .= "?id={$request->params()}";
+        $this->lookupUrl .= "?id={$params}";
         $httpRequest->setUrl($this->lookupUrl);
         $httpRequest->setData(null);
         $httpRequest->setFormat('json');

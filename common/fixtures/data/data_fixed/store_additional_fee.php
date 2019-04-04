@@ -164,7 +164,7 @@ return [
     'store_additional_fee8' => [
         'id' => '9',
         'store_id' => '1',
-        'name' => 'inspection_fee',
+        'name' => 'inspection_fee ',
         'label' => 'Phí kiểm hàng',
         'currency' => 'VND',
         'description' => 'Phí kiểm hàng',
@@ -184,7 +184,7 @@ return [
     'store_additional_fee9' => [
         'id' => '10',
         'store_id' => '1',
-        'name' => 'insurance_fee',
+        'name' => 'insurance_fee ',
         'label' => 'Phí bảo hiểm',
         'currency' => 'VND',
         'description' => 'Phí bảo hiểm',
@@ -204,7 +204,7 @@ return [
     'store_additional_fee10' => [
         'id' => '11',
         'store_id' => '1',
-        'name' => 'vat_fee',
+        'name' => 'vat_fee ',
         'label' => 'Phí VAT tại nước sở tại WS VIET NAM hoặc Indo ',
         'currency' => 'VND',
         'description' => 'Phí VAT',

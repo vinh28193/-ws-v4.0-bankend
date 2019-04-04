@@ -67,53 +67,88 @@ class AmazonGate extends BaseGate
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
+        $tokens = ["Check with `$request->store`, validated success"];
+        $tokens[] = "refresh cache " . ($refresh === true ? 'true' : 'false');
         if (!$this->isEmpty($request->parent_asin_id) && $request->parent_asin_id !== $request->asin_id) {
             //Search ra san pham cha truoc de lay load sub url params, parent sku
+            $tokens[] = "parent sku {$request->parent_asin_id} detected, try in case 1";
             $cloneRequest = clone $request;
             $cloneRequest->asin_id = $request->parent_asin_id;
             $cloneRequest->parent_asin_id = null;
-            list($ok, $response) = $this->lookupInternal($cloneRequest);
+            if(!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh){
+                $results = $this->lookupInternal($cloneRequest);
+                $this->cache->set($cloneRequest->getCacheKey(),$results,$results[0] === true ? self::MAX_CACHE_DURATION : 0);
+            }
+            list($ok, $response) = $results;
+            $tokens[] = "response return :" . ($ok ? 'true' : 'false');
             if ($ok && is_array($response)) {
                 /** @var  $product \common\products\amazon\AmazonProduct */
                 $product = (new AmazonDetailResponse($this))->parser($response);
                 //new sku cua san pham cha khac voi sku can tim kiem
                 if ($product->item_id != $request->asin_id && !$request->is_first_load) {
+                    $tokens[] = "product `{$product->item_id}` diff with `$request->asin_id`, load sub product is active";
                     if ($request->parent_asin_id != $product->parent_item_id) {
+                        $tokens[] = "product parent sku `{$product->parent_item_id}` diff with request parent sku `$request->parent_asin_id`, `$product->parent_item_id` replaced  `$request->parent_asin_id`";
                         //gan lai gia tri parent_asin_id  neu khac form truyen len
                         $request->parent_asin_id = $product->parent_item_id;
                     }
                     //Gan gia tri load_sub_url
                     $request->load_sub_url = $product->load_sub_url;
-                    list($okSub, $productSub) = $this->lookupInternal($request);
+                    $tokens[] = "register load sub url";
+                    if(!($subs = $this->cache->get($request->getCacheKey())) || $refresh){
+                        $subs = $this->lookupInternal($request);
+                        $this->cache->set($request->getCacheKey(),$subs,$subs[0] === true ? self::MAX_CACHE_DURATION : 0);
+                    }
+                    list($okSub, $productSub) = $subs;
+                    $tokens[] = "load sub product, response return :" . ($okSub ? 'true' : 'false');
                     if ($okSub && is_array($productSub)) {
                         $productSub = (array)$productSub;
+                        $tokens[] = "update product with sub product";
                         $this->updateProduct($product, $productSub, $request);
                     }
 
                 }
+                Yii::info(implode(", ", $tokens), __METHOD__);
                 return [true, $product];
             }
+            Yii::info(implode(", ", $tokens), __METHOD__);
             return [false, $response];
         } else {
             //Truong hop hop load sp lan dau
+            $tokens[] = "single product request";
             $cloneRequest = clone $request;
             $cloneRequest->parent_asin_id = null;
             $cloneRequest->load_sub_url = null;
-            list($ok, $response) = $this->lookupInternal($cloneRequest);
+            if(!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh){
+                $results = $this->lookupInternal($cloneRequest);
+                $this->cache->set($cloneRequest->getCacheKey(),$results,$results[0] === true ? self::MAX_CACHE_DURATION : 0);
+            }
+            list($ok, $response) = $results;
+
+            $tokens[] = "response return :" . ($ok ? 'true' : 'false');
             if ($ok && is_array($response)) {
                 /** @var  $product \common\products\amazon\AmazonProduct */
                 $product = (new AmazonDetailResponse($this))->parser($response);
-                if (($product->item_id != $request->asin_id) || (isset($product->parent_item_id) && $product->parent_item_id != $product->item_id)) {
+                if ((($product->item_id != $request->asin_id) || (isset($product->parent_item_id) && $product->parent_item_id != $product->item_id)) && !$request->is_first_load) {
+                    $tokens[] = "sub product detected";
                     $request->parent_asin_id = $product->parent_item_id;
                     $request->load_sub_url = $product->load_sub_url;
-                    list($okSub, $productSub) = $this->lookupInternal($request);
+                    if(!($subs = $this->cache->get($request->getCacheKey())) || $refresh){
+                        $subs = $this->lookupInternal($request);
+                        $this->cache->set($request->getCacheKey(),$subs,$subs[0] === true ? self::MAX_CACHE_DURATION : 0);
+                    }
+                    list($okSub, $productSub) = $subs;
+                    $tokens[] = "load sub product, response return :" . ($okSub ? 'true' : 'false');
                     if ($okSub && is_array($productSub)) {
                         $productSub = (array)$productSub;
+                        $tokens[] = "update product with sub product";
                         $this->updateProduct($product, $productSub, $request);
                     }
                 }
+                Yii::info(implode(", ", $tokens), __METHOD__);
                 return [true, $product];
             }
+            Yii::info(implode(", ", $tokens), __METHOD__);
             return [false, $response];
         }
     }
@@ -124,7 +159,7 @@ class AmazonGate extends BaseGate
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function getAsins($ids, $refresh = false)
+    public function getAsins($ids)
     {
         $ids = implode(",", $ids);
         $httpClient = $this->getHttpClient();
@@ -156,7 +191,7 @@ class AmazonGate extends BaseGate
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function getOffers($itemId, $refresh = false)
+    public function getOffers($itemId)
     {
         $httpClient = $this->getHttpClient();
         $httpRequest = $httpClient->createRequest();
@@ -228,9 +263,8 @@ class AmazonGate extends BaseGate
         $data['sorts'] = $result['sorts'];
         $data['filters'] = $this->getFilter($result['filters']);
         $data['total_page'] = $result['total_page'];
-
-        if($this->store === AmazonProduct::STORE_JP){
-            /** @var  $exRate \common\components\ExchangeRate*/
+        if ($this->store === AmazonProduct::STORE_JP) {
+            /** @var  $exRate \common\components\ExchangeRate */
             $exRate = Yii::$app->exRate;
             foreach ($data['products'] as $k => $v) {
                 $data['products'][$k]['sell_price'] = $exRate->jpyToUsd($data['products'][$k]['sell_price']);
@@ -304,23 +338,24 @@ class AmazonGate extends BaseGate
         $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::TYPE_AMAZON_JP : AmazonProduct::TYPE_AMAZON_US;
         $rs['tax_fee'] = 0;
         $rs['store'] = $this->store;
-        $suggestSetCacheKey = "suggest_set_{$rs['item_sku']}";
-        if (!($suggestSets = $this->cache->get($suggestSetCacheKey))) {
+
+//        $suggestSetCacheKey = "suggest_set_{$rs['item_sku']}";
+//        if (!($suggestSets = $this->cache->get($suggestSetCacheKey))) {
             foreach ($amazon['suggest_sets'] as $suggestSet) {
                 $key = $suggestSet['id'];
                 if (($key == 'purchase' || $key == 'session') && count($suggestSet['asins']) > 0) {
                     $suggestSets[$key] = $this->getAsins($suggestSet['asins']);
                 }
             }
-            $this->cache->set($suggestSetCacheKey, $suggestSets, 3600);
-        }
+//            $this->cache->set($suggestSetCacheKey, $suggestSets, 3600);
+//        }
 
         foreach (['purchase', 'session'] as $key) {
             $rs["suggest_set_$key"] = isset($suggestSets[$key]) ? $suggestSets[$key] : null;
         }
 
-//        if (!$request->is_first_load) {
-            $offersCacheKey = "offers_{$rs['item_sku']}";
+        if (!$request->is_first_load) {
+//            $offersCacheKey = "offers_{$rs['item_sku']}";
 //            if (!($offers = $this->cache->get($offersCacheKey))) {
                 $offers = $this->getOffers($rs['item_sku']);
 //                $this->cache->set($offersCacheKey, $offers, 3600);
@@ -362,7 +397,7 @@ class AmazonGate extends BaseGate
                 $rs['sell_price'] = 0;
                 [false, 'no provider valid'];
             }
-//        }
+        }
         $rs['price_api'] = $rs['sell_price'];
         $rs['currency_api'] = 'USD';
         $rs['ex_rate_api'] = 1;
@@ -401,12 +436,7 @@ class AmazonGate extends BaseGate
 
     private function isValidResponse($response)
     {
-        return (isset($response['response']) &&
-            count($response['response']['sell_price']) > 0 &&
-            count($response['response']['retail_price']) > 0 &&
-            count($response['response']['deal_price']) > 0 &&
-            $response['response']['title'] != null
-        );
+        return isset($response['response']) || (count($response['response']['sell_price']) > 0 && count($response['response']['retail_price']) > 0 && count($response['response']['deal_price']) > 0 && $response['response']['title'] !== null);
     }
 
     private function getOptionGroup($data, $images)
@@ -621,8 +651,9 @@ class AmazonGate extends BaseGate
         return $cate['name'];
     }
 
-    protected function ensureJpPrice(&$response){
-        /** @var  $exRate \common\components\ExchangeRate*/
+    protected function ensureJpPrice(&$response)
+    {
+        /** @var  $exRate \common\components\ExchangeRate */
         $exRate = Yii::$app->exRate;
         $response['currency_api'] = 'JPY';
         $response['ex_rate_api'] = $exRate->jpyToUsd(1);
