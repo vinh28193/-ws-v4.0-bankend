@@ -6,6 +6,7 @@ namespace console\controllers;
 
 use common\components\boxme\BoxMeClient;
 use common\models\draft\DraftBoxmeTracking;
+use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftWastingTracking;
 use common\models\draft\DraftDataTracking;
 use common\modelsMongo\RequestGetDetailBoxMe;
@@ -29,7 +30,8 @@ class BoxMeController extends Controller
             $pageTotal = 2;
             for ($page = 1; $page <= $pageTotal; $page++) {
                 $data = BoxMeClient::GetDetail($code, $page, $country);
-                $detail->send_request_latest = 'https://wms.boxme.asia/v1/packing/detail/'.$code.'/?page='.$page;
+                $detail->send_request_latest = 'https://wms.boxme.asia/v1/packing/detail/' . $code . '/?page=' . $page;
+                $detail->count_request = $detail->count_request ? $detail->count_request + 1 : 1;
                 $detail->get_response_latest = $data;
                 $detail->time_run_latest = date('Y-m-d H:i:s');
                 $detail->updated_at = date('Y-m-d H:i:s');
@@ -64,10 +66,13 @@ class BoxMeController extends Controller
                         $finds = DraftDataTracking::find()->where([
                             'tracking_code' => $tracking,
                             'product_id' => $soi,
+                            'manifest_id' => $detail->manifest_id,
+                            'manifest_code' => $detail->manifest_code,
                         ])->all();
                         if ($finds) {
                             echo "Có trong DraftDataTracking" . PHP_EOL;
                             foreach ($finds as $find) {
+                                $find->status = DraftDataTracking::STATUS_CHECK_DETAIL;
                                 $find->number_get_detail = $find->number_get_detail ? $find->number_get_detail + 1 : 1;
                                 $find->save(0);
                                 $draft = new DraftBoxmeTracking();
@@ -89,9 +94,20 @@ class BoxMeController extends Controller
                                 $draft->createOrUpdate(false);
                                 DraftWastingTracking::updateAll([
                                     'status' => 'MERGED'
-                                ],[
-                                  'tracking_code' => $tracking,
-                                  'product_id' => $soi,
+                                ], [
+                                    'tracking_code' => $tracking,
+                                    'product_id' => $soi,
+                                    'manifest_id' => $detail->manifest_id,
+                                    'manifest_code' => $detail->manifest_code,
+                                ]);
+
+                                DraftMissingTracking::updateAll([
+                                    'status' => 'MERGED'
+                                ], [
+                                    'tracking_code' => $tracking,
+                                    'product_id' => $soi,
+                                    'manifest_id' => $detail->manifest_id,
+                                    'manifest_code' => $detail->manifest_code,
                                 ]);
                             }
                         } else {
@@ -122,12 +138,40 @@ class BoxMeController extends Controller
                     break;
                 }
             }
+            /** @var DraftDataTracking[] $draftData */
+            $draftData = DraftDataTracking::find()->where([
+                'manifest_id' => $detail->manifest_id,
+                'manifest_code' => $detail->manifest_code,
+            ])->andWhere(['<>', 'status', DraftDataTracking::STATUS_CHECK_DETAIL])->all();
+            foreach ($draftData as $datum){
+                $missing = new DraftMissingTracking();
+                $missing->tracking_code = $datum->tracking_code;
+                $missing->manifest_code = $datum->manifest_code;
+                $missing->manifest_id = $datum->manifest_id;
+                $missing->product_id = $datum->product_id;
+                $missing->order_id = $datum->order_id;
+                $missing->purchase_invoice_number = $datum->purchase_invoice_number;
+                $missing->quantity = $datum->quantity;
+                $missing->dimension_h = $datum->dimension_h;
+                $missing->dimension_l = $datum->dimension_l;
+                $missing->dimension_w = $datum->dimension_w;
+                $missing->weight = $datum->weight;
+                $missing->status = $datum->status;
+                $missing->created_at = time();
+                $missing->updated_at = time();
+                $missing->createOrUpdate(false);
+            }
             $detail->status = RequestGetDetailBoxMe::STATUS_GET_DONE;
             $detail->updated_at = date('Y-m-d H:i:s');
             $detail->save();
         } else {
             echo "Đã hết yêu cầu lấy chi tiết tracking trong lô." . PHP_EOL;
-            die;
+            die('STOP');
         }
+    }
+
+    public function actionMergeExtensionUsSending()
+    {
+
     }
 }

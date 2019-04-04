@@ -6,6 +6,7 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
     const STATUS_EXTENSION = "EXTENSION";
     const STATUS_MAKE_US_SENDING = "MAKE_US_SENDING";
     const STATUS_CHECK_DONE = "CHECK_DONE";
+    const STATUS_CHECK_DETAIL = "CHECK_DETAIL";
 
     public function createOrUpdate($validate = true){
         $draft_data = self::find()->where([
