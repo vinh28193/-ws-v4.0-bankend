@@ -87,13 +87,18 @@ class BoxMeController extends Controller
 
     public function actionMergeExtensionUsSending()
     {
+        $this->stdout("Bắt đầu merge ....".PHP_EOL);
         /** @var \common\models\TrackingCode[] $trackingCode */
-        $trackingCode = \common\models\TrackingCode::find()->where(['status_merge' => [null, \common\models\TrackingCode::STATUS_MERGE_NEW]])
+        $trackingCode = \common\models\TrackingCode::find()->where(['status_merge' => null])
+            ->orWhere(['status_merge' => \common\models\TrackingCode::STATUS_MERGE_NEW])
             ->limit(500)->all();
+        $this->stdout("Có tổng cộng: ".count($trackingCode)." tracking sẽ được chạy.".PHP_EOL);
         foreach ($trackingCode as $tracking) {
             if(!$tracking->tracking_code){
+                $this->stdout("Không có tracking code....".PHP_EOL);
                 continue;
             }
+            $this->stdout($tracking->tracking_code.PHP_EOL);
             /** @var DraftDataTracking[] $draft_data */
             $draft_data = DraftDataTracking::find()->where([
                 'tracking_code' => $tracking->tracking_code,
@@ -119,5 +124,6 @@ class BoxMeController extends Controller
             $tracking->status_merge = \common\models\TrackingCode::STATUS_MERGE_DONE;
             $tracking->save(0);
         }
+        $this->stdout("Merge kết thúc ....".PHP_EOL);
     }
 }
