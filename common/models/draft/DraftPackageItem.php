@@ -33,12 +33,12 @@ class DraftPackageItem extends \common\models\db\DraftPackageItem
      */
     public function getOrder()
     {
-        return $this->hasMany(\common\models\Order::className(), ['id' => 'order_id']);
+        return $this->hasOne(\common\models\Order::className(), ['id' => 'order_id']);
     }
 
     public function getProduct()
     {
-        return $this->hasMany(\common\models\Product::className(), ['id' => 'product_id']);
+        return $this->hasOne(\common\models\Product::className(), ['id' => 'product_id']);
     }
 
     public function fields()

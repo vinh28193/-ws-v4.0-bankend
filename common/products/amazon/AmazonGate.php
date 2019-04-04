@@ -21,7 +21,7 @@ class AmazonGate extends BaseGate
     public $store = AmazonProduct::STORE_US;
     public $searchUrl = 'search';
     public $lookupUrl = 'get';
-    public $offerUrl = 'get_offers';
+    public $offerUrl = 'get_offers';        //Get Seller
     public $asinsUrl = 'get_asins';
 
     public $sellerBlackLists = [];

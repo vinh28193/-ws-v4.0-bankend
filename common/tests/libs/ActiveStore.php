@@ -6,7 +6,7 @@
  * Time: 16:00
  */
 
-namespace common\tests\_support;
+namespace testCommon;
 
 
 class ActiveStore extends \yii\base\BaseObject implements \common\components\StoreInterface
