@@ -28,9 +28,9 @@ class ProductDetailFrom extends BaseForm
 
     public $weight;
 
-    public $sub_product_url;
+    public $sub_product_url;      //ToDo :  Url product con vì chạy qua 2 api mới lấy đủ 1 thông tin details sản phẩm
 
-    public $with_detail = false;
+    public $with_detail = false;  //ToDo :  Thông tin mô tả quá dài . nếu Tru sẽ cắt đi và ngược lại
 
 
     public function init()

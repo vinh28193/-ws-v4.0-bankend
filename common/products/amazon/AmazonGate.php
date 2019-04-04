@@ -26,6 +26,14 @@ class AmazonGate extends BaseGate
 
     public $sellerBlackLists = [];
 
+    /**
+     * @param $params
+     * @param bool $refresh
+     * @return array|mixed
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
+     * Search Pages Amazon of Weshop
+     */
     public function search($params, $refresh = false)
     {
         $params['store'] = $this->store;
@@ -42,6 +50,14 @@ class AmazonGate extends BaseGate
 
     }
 
+    /**
+     * @param $condition
+     * @param bool $refresh
+     * @return array|mixed
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
+     * Pages Details Amazon Weshop
+     */
     public function lookup($condition, $refresh = false)
     {
 
@@ -212,6 +228,7 @@ class AmazonGate extends BaseGate
         $data['sorts'] = $result['sorts'];
         $data['filters'] = $this->getFilter($result['filters']);
         $data['total_page'] = $result['total_page'];
+
         if($this->store === AmazonProduct::STORE_JP){
             /** @var  $exRate \common\components\ExchangeRate*/
             $exRate = Yii::$app->exRate;
