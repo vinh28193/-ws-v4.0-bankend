@@ -6,6 +6,7 @@ namespace common\models\draft;
 
 class DraftBoxmeTracking extends \common\models\db\DraftBoxmeTracking
 {
+    const STATUS_CALLBACK_SUCCESS = "CALLBACK";
     /**
      * {@inheritdoc}
      * @return \common\models\queries\DraftBoxmeTrackingQuery the active query used by this AR class.
