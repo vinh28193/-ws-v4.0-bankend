@@ -19,6 +19,7 @@ return [
         '1/logout'=>'site/logout',
 
         'test/get-custom-fee'=>'test/get-custom-fee',
+        'test/callback-boxme'=>'test/callback-boxme',
 
         ### employees
         '1/employees'=>'employee/index',

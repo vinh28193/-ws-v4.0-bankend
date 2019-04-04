@@ -19,7 +19,7 @@ class EbayGate extends BaseGate
      * @param bool $refresh
      * @return array|mixed
      * @throws \yii\base\InvalidConfigException
-     * Search Ebay
+     * Search Pages Ebay of Weshop
      */
     public function search($params, $refresh = false)
     {
