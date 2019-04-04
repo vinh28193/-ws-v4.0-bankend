@@ -12,6 +12,8 @@ use common\models\db\TrackingCode as DbTrackingCode;
 
 class TrackingCode extends DbTrackingCode
 {
+    const STATUS_MERGE_NEW = 'NEW';
+    const STATUS_MERGE_DONE = 'DONE';
     public function CreateOrUpdate($validate = true){
         if($this->tracking_code){
             $model = TrackingCode::find()->where(['tracking_code' => $this->tracking_code,'remove' => 0])->one();
@@ -26,7 +28,7 @@ class TrackingCode extends DbTrackingCode
         }else{
             $model = new TrackingCode();
         }
-        $model->setAttributes($this->toArray());
+        $model->setAttributes($this->getAttributes());
 //        print_r($model);die;
         return $model->save($validate);
     }

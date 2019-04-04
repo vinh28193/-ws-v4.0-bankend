@@ -15,7 +15,7 @@ class ManifestBoxMeController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['get-detail'],
+                'actions' => ['get-detail','index'],
                 'roles' => $this->getAllRoles(true),
             ],
         ];
@@ -24,10 +24,13 @@ class ManifestBoxMeController extends BaseApiController
     public function verbs()
     {
         return [
-            'get-detail' => ['POST'],
+            'get-detail' => ['GET'],
+            'index' => ['GET'],
         ];
     }
-
+    public function actionIndex(){
+        die("index");
+    }
     public function actionGetDetail($manifest_id){
         $manifest = Manifest::findOne($manifest_id);
         if(!$manifest){
@@ -38,7 +41,7 @@ class ManifestBoxMeController extends BaseApiController
             ->one();
         if(!$request_get){
             $request_get = new RequestGetDetailBoxMe();
-            $request_get->manifest_id = $manifest_id;
+            $request_get->manifest_id = $manifest->id;
             $request_get->manifest_code = $manifest->manifest_code;
             $request_get->count_request = 0;
             $request_get->store_id = $manifest->store_id;
@@ -47,17 +50,18 @@ class ManifestBoxMeController extends BaseApiController
         }
         $mess = "Set job get detail manifest box me success with manifest_id : ".$manifest_id;
         if($request_get->status == RequestGetDetailBoxMe::STATUS_NEW){
-            return $this->response(TRUE,"Manifest were ready get detail. Please wait some minute!");
+            return $this->response(TRUE,"Manifest were ready get detail. Please wait some minute!",$request_get->getAttributes());
         }else if($request_get->status == RequestGetDetailBoxMe::STATUS_PROCESSING){
-            return $this->response(TRUE,"Manifest were processing get detail. Please wait some minute!");
+            return $this->response(TRUE,"Manifest were processing get detail. Please wait some minute!",$request_get->getAttributes());
         }else if($request_get->status == RequestGetDetailBoxMe::STATUS_PROCESSING){
-            return $this->response(TRUE,"Manifest were processing get detail. Please wait some minute!");
+            return $this->response(TRUE,"Manifest were processing get detail. Please wait some minute!",$request_get->getAttributes());
         }else{
             $mess .= $request_get->status ? ". Change status from ".$request_get->status." to ".RequestGetDetailBoxMe::STATUS_NEW : ".";
         }
         $request_get->status = RequestGetDetailBoxMe::STATUS_NEW;
         $request_get->updated_by = \Yii::$app->user->getIdentity()->username.'-'.\Yii::$app->user->id;
         $request_get->updated_at = date('Y-m-d H:i:s');
-        return $this->response(TRUE,$mess);
+        $request_get->save();
+        return $this->response(TRUE,$request_get->getAttributes());
     }
 }
