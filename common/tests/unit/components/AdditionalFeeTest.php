@@ -15,6 +15,18 @@ class AdditionalFeeTest extends UnitTestCase
     protected $tester;
 
 
+    /**
+     * @return array
+     */
+    public function _fixtures()
+    {
+        return array_merge(parent::_fixtures(),[
+            'store_additional_fee' => [
+                'class' => 'common\fixtures\StoreAdditionalFeeFixture'
+            ]
+        ]);
+    }
+
     public function testGetStoreManager(){
         $object = new AdditionalFeeObject();
         verify($object->getStoreManager())->isInstanceOf('common\components\StoreManager');
@@ -22,7 +34,7 @@ class AdditionalFeeTest extends UnitTestCase
 
     public function testGetStoreAdditionalFee(){
         $object = new AdditionalFeeObject();
-        verify($object->getStoreAdditionalFee())->notEmpty();
+        verify($object->getStoreAdditionalFee())->notNull();
     }
 
     public function testGetAdditionalFees(){
@@ -33,5 +45,6 @@ class AdditionalFeeTest extends UnitTestCase
                 ])
             ]
         ]);
+        var_dump($additionalFee->getStoreAdditionalFee());die;
     }
 }
