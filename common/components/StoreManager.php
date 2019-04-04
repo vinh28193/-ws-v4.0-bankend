@@ -45,7 +45,7 @@ class StoreManager extends Component
     /**
      * @var StoreInterface;
      */
-    protected $_store;
+    private $_store;
 
     /**
      * initialize store

@@ -21,11 +21,8 @@ class StoreManager extends \common\components\StoreManager
 
     }
 
-    public function getDomain()
-    {
-        if($this->getStore() !== null){
-          return $this->getStore()->{$this->domainAttribute};
-        }
-        return parent::getDomain();
-    }
+   public function getDomain()
+   {
+       return $this->defaultDomain;
+   }
 }
