@@ -5,6 +5,7 @@ namespace console\controllers;
 
 
 use common\components\boxme\BoxMeClient;
+use common\components\TrackingCode;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftWastingTracking;
@@ -43,93 +44,7 @@ class BoxMeController extends Controller
                     echo "Tổng trang " . $data['total_page'] . "." . PHP_EOL;
                     echo "trang " . $page . "." . PHP_EOL;
                     foreach ($data['results'] as $result) {
-                        $soi = ArrayHelper::getValue($result, 'soi_tracking');
-                        $tracking = ArrayHelper::getValue($result, 'tracking_code');
-                        $tag_code = ArrayHelper::getValue($result, 'tag_code');
-                        $volume = ArrayHelper::getValue($result, 'volume');
-                        $quantity = ArrayHelper::getValue($result, 'quantity');
-                        $weight = ArrayHelper::getValue($result, 'weight');
-                        $status = ArrayHelper::getValue($result, 'status');
-                        $item_name = ArrayHelper::getValue($result, 'item');
-                        $note = ArrayHelper::getValue($result, 'note');
-                        $images = ArrayHelper::getValue($result, 'images');
-                        $image = "";
-                        $vol = $volume ? explode('x', strtolower($volume)) : null;
-                        echo "Tracking: " . $tracking . PHP_EOL;
-                        echo "SOI: " . $soi . PHP_EOL;
-                        foreach ($images as $k => $img) {
-                            $image .= $k == 0 ? ArrayHelper::getValue($img, 'urls') : ',' . ArrayHelper::getValue($img, 'urls');
-                        }
-                        $soi = intval(str_replace('SOI-', '', $soi));
-                        $soi = $soi ? $soi : null;
-                        /** @var DraftDataTracking[] $finds */
-                        $finds = DraftDataTracking::find()->where([
-                            'tracking_code' => $tracking,
-                            'product_id' => $soi,
-                            'manifest_id' => $detail->manifest_id,
-                            'manifest_code' => $detail->manifest_code,
-                        ])->all();
-                        if ($finds) {
-                            echo "Có trong DraftDataTracking" . PHP_EOL;
-                            foreach ($finds as $find) {
-                                $find->status = DraftDataTracking::STATUS_CHECK_DETAIL;
-                                $find->number_get_detail = $find->number_get_detail ? $find->number_get_detail + 1 : 1;
-                                $find->save(0);
-                                $draft = new DraftBoxmeTracking();
-                                $draft->tracking_code = $tracking;
-                                $draft->manifest_code = $detail->manifest_code;
-                                $draft->manifest_id = $detail->manifest_id;
-                                $draft->quantity = $quantity;
-                                $draft->weight = $weight;
-                                $draft->product_id = $soi;
-                                $draft->status = $status;
-
-                                $draft->dimension_l = isset($vol[0]) ? $vol[0] : null;
-                                $draft->dimension_w = isset($vol[1]) ? $vol[1] : null;
-                                $draft->dimension_h = isset($vol[2]) ? $vol[2] : null;
-                                $draft->item_name = $item_name;
-                                $draft->image = $image;
-                                $draft->warehouse_tag_boxme = $tag_code;
-                                $draft->note_boxme = $note;
-                                $draft->createOrUpdate(false);
-                                DraftWastingTracking::updateAll([
-                                    'status' => 'MERGED'
-                                ], [
-                                    'tracking_code' => $tracking,
-                                    'product_id' => $soi,
-                                    'manifest_id' => $detail->manifest_id,
-                                    'manifest_code' => $detail->manifest_code,
-                                ]);
-
-                                DraftMissingTracking::updateAll([
-                                    'status' => 'MERGED'
-                                ], [
-                                    'tracking_code' => $tracking,
-                                    'product_id' => $soi,
-                                    'manifest_id' => $detail->manifest_id,
-                                    'manifest_code' => $detail->manifest_code,
-                                ]);
-                            }
-                        } else {
-                            echo "Không có trong DraftDataTracking" . PHP_EOL;
-                            $wasting = new DraftWastingTracking();
-                            $wasting->tracking_code = $tracking;
-                            $wasting->manifest_code = $detail->manifest_code;
-                            $wasting->manifest_id = $detail->manifest_id;
-                            $wasting->product_id = $soi;
-                            $wasting->quantity = $quantity;
-                            $wasting->weight = $weight;
-                            $wasting->status = $status;
-
-                            $wasting->dimension_l = isset($vol[0]) ? $vol[0] : null;
-                            $wasting->dimension_w = isset($vol[1]) ? $vol[1] : null;
-                            $wasting->dimension_h = isset($vol[2]) ? $vol[2] : null;
-                            $wasting->item_name = $item_name;
-                            $wasting->image = $image;
-                            $wasting->warehouse_tag_boxme = $tag_code;
-                            $wasting->note_boxme = $note;
-                            $wasting->createOrUpdate(false);
-                        }
+                        TrackingCode::UpdateTracking($result);
                     }
                 } else {
                     echo "Lỗi gọi api" . PHP_EOL;
@@ -143,7 +58,7 @@ class BoxMeController extends Controller
                 'manifest_id' => $detail->manifest_id,
                 'manifest_code' => $detail->manifest_code,
             ])->andWhere(['<>', 'status', DraftDataTracking::STATUS_CHECK_DETAIL])->all();
-            foreach ($draftData as $datum){
+            foreach ($draftData as $datum) {
                 $missing = new DraftMissingTracking();
                 $missing->tracking_code = $datum->tracking_code;
                 $missing->manifest_code = $datum->manifest_code;
@@ -172,6 +87,37 @@ class BoxMeController extends Controller
 
     public function actionMergeExtensionUsSending()
     {
-
+        /** @var \common\models\TrackingCode[] $trackingCode */
+        $trackingCode = \common\models\TrackingCode::find()->where(['status_merge' => [null, \common\models\TrackingCode::STATUS_MERGE_NEW]])
+            ->limit(500)->all();
+        foreach ($trackingCode as $tracking) {
+            if(!$tracking->tracking_code){
+                continue;
+            }
+            /** @var DraftDataTracking[] $draft_data */
+            $draft_data = DraftDataTracking::find()->where([
+                'tracking_code' => $tracking->tracking_code,
+            ])->all();
+            if($draft_data){
+                foreach ($draft_data as $datum){
+                    $datum->manifest_id = $tracking->manifest_id;
+                    $datum->manifest_code = $tracking->manifest_code;
+                    $datum->updated_at = time();
+                    $datum->status = in_array($datum->status,[DraftDataTracking::STATUS_CHECK_DETAIL,DraftDataTracking::STATUS_CHECK_DONE]) ? $datum->status : ($datum->status == DraftDataTracking::STATUS_EXTENSION ? DraftDataTracking::STATUS_CHECK_DONE : DraftDataTracking::STATUS_MAKE_US_SENDING);
+                    $datum->save(false);
+                }
+            }else{
+                $draft_data_one = new DraftDataTracking();
+                $draft_data_one->tracking_code = $tracking->tracking_code;
+                $draft_data_one->manifest_id = $tracking->manifest_id;
+                $draft_data_one->manifest_code = $tracking->manifest_code;
+                $draft_data_one->created_at = time();
+                $draft_data_one->updated_at = time();
+                $draft_data_one->status = DraftDataTracking::STATUS_MAKE_US_SENDING;
+                $draft_data_one->save(0);
+            }
+            $tracking->status_merge = \common\models\TrackingCode::STATUS_MERGE_DONE;
+            $tracking->save(0);
+        }
     }
 }
