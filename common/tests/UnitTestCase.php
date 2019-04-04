@@ -2,10 +2,10 @@
 
 namespace common\tests;
 
-use Codeception\Test\Unit;
+use Codeception\TestCase\Test;
 use Codeception\Specify;
 
-class UnitTestCase extends Unit
+class UnitTestCase extends Test
 {
     use Specify;
 
