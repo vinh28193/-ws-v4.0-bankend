@@ -54,10 +54,10 @@ class ConditionCustomFee
                 return $val <= $this->value;
                 break;
             case self::OPERATOR_equal:
-            return $val == $this->value;
+                return $val == $this->value;
             break;
             case self::OPERATOR_different:
-            return $val != $this->value;
+                return $val != $this->value;
             break;
             default:
                 return false;
