@@ -111,14 +111,6 @@ class AdditionalFeeCollectionTest extends UnitTestCase
 
     }
 
-    public function testGetSetOwner()
-    {
-        $collection = new AdditionalFeeCollection();
-        $owner = new AdditionalFeeObject();
-        $collection->setOwner($owner);
-        verify($collection->getOwner())->isInstanceOf(get_class($owner));
-    }
-
     public function testLoadFormOwner()
     {
         $store = 123;
@@ -179,21 +171,44 @@ class AdditionalFeeCollectionTest extends UnitTestCase
         $collection->loadFormOwner($product);
         verify($collection->keys())->equals($keys);
         $collection->removeAll();
+        verify($collection->keys())->equals([]);
         foreach ($keys as $key) {
             $collection->add($key, ['test' => $key]);
         }
         verify($collection->keys())->equals($keys);
     }
 
-    public function testMget()
+    public function testMsetMget()
     {
         $keys = [];
         for ($i = 1; $i < 20; $i++) {
-            $keys[] = "keyTest$i";
+            $key = "keyTest$i";
+            foreach ([1, 2, 3, 4] as $num) {
+                $keys[$key][] = [
+                    'type' => $key,
+                    'name' => $key,
+                    'amount' => $num,
+                ];
+            }
         }
-        $collection = $this->mockCollection(100, $keys, [], false);
+        $collection = $this->mockCollection(100, [], [], false);
+        $collection->mset($keys);
         verify(array_keys($collection->mget()))->equals($keys);
-        $keyGet = ['keyTest1','keyTest1'];
+        $keyGet = ['keyTest1', 'keyTest9', 'keyTest11'];
         verify(array_keys($collection->mget($keyGet)))->equals($keyGet);
+        $newKey = [];
+        foreach (array_keys($keys) as $key) {
+            if (in_array($key, $keyGet)) {
+                continue;
+            }
+            $newKey[] = $key;
+        }
+        $mgets = $collection->mget(null, $keyGet);
+        foreach ($mgets as $mkey => $mvalue) {
+            verify($keys[$mkey])->equals($mvalue);
+            foreach ($keyGet as $except) {
+                verify($except)->notEquals($mkey);
+            }
+        }
     }
 }
