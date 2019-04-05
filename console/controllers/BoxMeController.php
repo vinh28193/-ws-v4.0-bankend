@@ -254,7 +254,7 @@ class BoxMeController extends Controller
                 $tmp['urls'] = $img;
                 $data['images'][] = $tmp;
             }
-            $url = 'http://weshop-v4.back-end.local.vn/test/callback-boxme';
+            $url = ArrayHelper::getValue(\Yii::$app->params,'url_api','http://weshop-v4.back-end.local.vn').'/test/callback-boxme';
             $client = new \yii\httpclient\Client();
             $request = $client->createRequest();
             $request->setFullUrl($url);
@@ -299,7 +299,7 @@ class BoxMeController extends Controller
         if($product){
             return Order::findOne($product->order_id);
         }
-        $url = "http://weshop-v4.back-end.local.vn/v1/data";
+        $url = ArrayHelper::getValue(\Yii::$app->params,'url_api','http://weshop-v4.back-end.local.vn')."/v1/data";
         $data['sku'] = "312226695751";
         $data['seller'] = "yibe_98";
         $data['quantity'] = "1";
