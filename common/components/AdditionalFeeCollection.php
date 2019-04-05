@@ -35,7 +35,7 @@ class AdditionalFeeCollection extends ArrayCollection
     public function setOwner($owner)
     {
         $this->owner = $owner;
-        $this->loadFormOwner($owner);
+//        $this->loadFormOwner($owner);
     }
 
     public function getOwner()
@@ -195,6 +195,7 @@ class AdditionalFeeCollection extends ArrayCollection
             Yii::warning("failed when set unknown additional fee '$key'", __METHOD__);
         }
     }
+
 
     /**
      * @param $key

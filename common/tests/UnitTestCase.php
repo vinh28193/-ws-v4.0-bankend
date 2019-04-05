@@ -58,7 +58,12 @@ class UnitTestCase extends Test
      */
     public function grabFixture($name, $id = 1)
     {
-        return $this->tester()->grabFixture($name, $id - 1);
+        if ($id < 1) {
+            $id = 1;
+        }
+        $id -= 1;
+        $idx = "$name$id";
+        return $this->tester()->grabFixture($name, $idx);
     }
 
     /**
@@ -72,7 +77,9 @@ class UnitTestCase extends Test
     /**
      * @return UnitTester
      */
-    public function tester(){
+    public function tester()
+    {
         return $this->tester;
     }
+
 }
