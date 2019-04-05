@@ -9,6 +9,7 @@
 namespace api\controllers;
 
 
+use common\calculators\ConditionBuilder;
 use common\components\log\Logging;
 
 class TesterController extends \yii\rest\Controller
@@ -34,6 +35,16 @@ class TesterController extends \yii\rest\Controller
     public function actionLog(){
         echo "23";
         $log = Logging::create()->push('product','test','messager',['abc' => 'def']);
+        die;
+    }
+
+    public function actionCondition(){
+        $builder = new ConditionBuilder();
+        $condition = ['===','a','b'];
+//        $condition = ['||',['===','A','B'],['===','C','D']];
+        $condition =  (string) $builder->build($condition);
+//        $sql = implode(' ', array_filter($condition));
+        var_dump($condition);
         die;
     }
 }
