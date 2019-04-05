@@ -33,7 +33,9 @@ class TrackingCode
         $manifest_id = isset($manifest[1]) ? $manifest[1] : null;
         $manifest_code = isset($manifest[0]) ? $manifest[0] : null;
         foreach ($images as $k => $img) {
-            $image .= $k == 0 ? ArrayHelper::getValue($img, 'urls') : ',' . ArrayHelper::getValue($img, 'urls');
+            if(ArrayHelper::getValue($img, 'urls') && strtolower(ArrayHelper::getValue($img, 'urls')) != 'none'){
+                $image .= $k == 0 ? ArrayHelper::getValue($img, 'urls') : ',' . ArrayHelper::getValue($img, 'urls');
+            }
         }
         $soi = intval(str_replace('SOI-', '', $soi));
         $soi = $soi ? $soi : null;

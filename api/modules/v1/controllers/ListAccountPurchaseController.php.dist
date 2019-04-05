@@ -1,0 +1,59 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: HUYKAKA
+ * Date: 4/3/2019
+ * Time: 5:12 PM
+ */
+
+namespace api\modules\v1\controllers;
+use common\models\db\ListAccountPurchase;
+use Yii;
+use api\controllers\BaseApiController;
+
+
+class ListAccountPurchaseController extends BaseApiController
+{
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        $auth = $behaviors['authenticator'];
+        $except = array_merge($auth['except'],[
+            'index',
+        ]);
+        $auth['except'] = $except;
+        $behaviors['authenticator'] = $auth;
+        return $behaviors;
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function verbs()
+    {
+        return [
+            'index' => ['GET']
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function rules()
+    {
+        return [
+            [
+                'allow' => true,
+                'actions' => ['index'],
+                'roles' => $this->getAllRoles(true)
+            ],
+        ];
+    }
+    public function actionIndex() {
+        $model = ListAccountPurchase::find()->asArray()->all();
+        return $this->response(true, 'success', $model);
+    }
+}

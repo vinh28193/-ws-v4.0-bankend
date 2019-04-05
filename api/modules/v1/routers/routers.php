@@ -478,4 +478,25 @@ return [
             'OPTIONS get-detail/<manifest_id:\d+>'=> 'options',
         ]
     ],
+    /*
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['account-purchase' => 'list-account-purchase'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    */
 ];

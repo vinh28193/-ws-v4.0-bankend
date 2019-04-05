@@ -316,7 +316,7 @@ class DataController extends BaseApiController
         $card =  $this->CartData($this->post);
         $items = $this->cart->getItems();
 
-        //var_dump($items);die("Items");
+//        var_dump($items);die("Items");
 
         if(empty($items)) {
             Yii::$app->api->sendFailedResponse("Not get products");
