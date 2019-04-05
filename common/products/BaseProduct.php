@@ -259,6 +259,10 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
         return $this->getStoreManager()->getExchangeRate();
     }
 
+    public function getStoreManager(){
+        return Yii::$app->storeManager;
+    }
+
     /**
      * @return mixed
      */

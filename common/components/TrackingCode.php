@@ -39,6 +39,7 @@ class TrackingCode
         }
         $soi = intval(str_replace('SOI-', '', $soi));
         $soi = $soi ? $soi : null;
+        $product = \common\models\Product::findOne($soi);
         /** @var DraftDataTracking[] $finds */
         $finds = DraftDataTracking::find()->where([
             'tracking_code' => $tracking,
@@ -59,6 +60,7 @@ class TrackingCode
                 $draft->quantity = $quantity;
                 $draft->weight = $weight;
                 $draft->product_id = $soi;
+                $draft->order_id = $product? $product->order_id : null;
                 $draft->status = $status;
 
                 $draft->dimension_l = isset($vol[0]) ? $vol[0] : null;
@@ -94,6 +96,7 @@ class TrackingCode
             $wasting->manifest_code = $manifest_code;
             $wasting->manifest_id = $manifest_id;
             $wasting->product_id = $soi;
+            $wasting->product_id = $product ? $product->order_id : null;
             $wasting->quantity = $quantity;
             $wasting->weight = $weight;
             $wasting->status = $status;

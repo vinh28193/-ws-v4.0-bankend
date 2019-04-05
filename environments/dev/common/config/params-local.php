@@ -11,4 +11,5 @@ return [
             'TOKEN' => '424dcf510b055bc4345cafbe0e1e73da0a665ef236e965897ab48f165a599a19'
         ],
     ],
+    'url_api' => 'http://weshop-v4.back-end.local.vn'
 ];
