@@ -12,6 +12,5 @@ use yii\base\BaseObject;
 
 class AdditionalFeeObject extends BaseObject
 {
-    use StoreAdditionalFeeRegisterTrait;
     use AdditionalFeeTrait;
 }
