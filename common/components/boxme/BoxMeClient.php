@@ -126,6 +126,8 @@ class BoxMeClient
         if(!$response->isOk){
 //            $courierFailObject->message ='Request Failed';
             $res = $response->getData();
+            print_r($res);
+            die;
             return $res['messages'];
         }
         $res = $response->getData();
