@@ -68,6 +68,7 @@ class AddonController extends BaseApiController
 
     public function actionIndex() {
         $model = ListAccountPurchase::find()->asArray()->all();
+        //ToDo check data để return giữ liệu
         return $this->response(true, 'success', $model);
     }
 
@@ -77,11 +78,13 @@ class AddonController extends BaseApiController
             ->where(['seller_id'=> $post['sellerId']])
             ->with('products')
             ->asArray()->all();
+        //ToDo check data để return giữ liệu
         return $this->response(true, 'success', $model);
     }
 
     public function actionView($id) {
         $model = Order::find()->where(['id'=>$id])->asArray()->all();
+        //ToDo check data để return giữ liệu
         return $this->response(true, 'success', $model);
     }
 }
