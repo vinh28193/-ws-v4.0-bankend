@@ -15,7 +15,7 @@ use Yii;
  * @property int $package_id Package id after sent
  * @property string $package_code Mã kiện của weshop
  * @property int $package_item_id Package item id after create item
- * @property string $tracking_code Tracking code
+ * @property string $tracking_code
  * @property string $order_ids Order id(s)
  * @property string $weshop_tag Weshop Tag
  * @property string $warehouse_alias warehouse alias BMVN_HN (Boxme Ha Noi/Boxme HCM)
@@ -56,8 +56,8 @@ class TrackingCode extends \common\components\db\ActiveRecord
             [['store_id', 'manifest_id', 'package_id', 'package_item_id', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['warehouse_note', 'operation_note'], 'string'],
             [['weight', 'quantity', 'dimension_width', 'dimension_length', 'dimension_height'], 'number'],
-            [['version', 'order_ids', 'status_merge'], 'string', 'max' => 255],
-            [['manifest_code', 'package_code', 'tracking_code', 'weshop_tag', 'warehouse_alias', 'warehouse_tag', 'status'], 'string', 'max' => 32],
+            [['version', 'tracking_code', 'order_ids', 'status_merge'], 'string', 'max' => 255],
+            [['manifest_code', 'package_code', 'weshop_tag', 'warehouse_alias', 'warehouse_tag', 'status'], 'string', 'max' => 32],
             [['warehouse_status'], 'string', 'max' => 10],
         ];
     }
