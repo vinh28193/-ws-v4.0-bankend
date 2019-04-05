@@ -9,6 +9,7 @@
 namespace common\products;
 
 use Yii;
+use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
 use common\models\Category;
 use common\components\AdditionalFeeInterface;
@@ -20,10 +21,9 @@ use common\components\StoreAdditionalFeeRegisterTrait;
  * @package common\products
  * Product EBAY / AMAZON API trả về + tính toán phí để hiên thị lên detail + search + card + checkout  cho khách hàng
  */
-class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
+class BaseProduct extends  BaseObject implements AdditionalFeeInterface
 {
 
-    use StoreAdditionalFeeRegisterTrait;
     use AdditionalFeeTrait;
     use ProductTrait;
 
@@ -112,12 +112,12 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     {
         parent::init();
         $additionalFee = $this->getAdditionalFees();
-        $additionalFee->setOwner($this);
-        $additionalFee->mset([
+        $additionalFee->removeAll(); // đảm bảo dữ liệu không bị đúp lên nhiều lần
+        $additionalFee->withConditions($this,[
             'product_price_origin' => $this->getSellPrice(),
             'tax_fee_origin' => $this->us_tax_rate,
             'origin_shipping_fee' => $this->shipping_fee
-        ], true, true);
+        ], true);
         if ($this->isInitialized === false) {
             $this->setVariationMapping();
             $this->setVariationOptions();
@@ -129,6 +129,7 @@ class BaseProduct extends \yii\base\BaseObject implements AdditionalFeeInterface
     }
 
     private $isInitialized = false;
+
 
     /**
      * @return float|int
