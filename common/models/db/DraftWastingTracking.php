@@ -27,7 +27,7 @@ use Yii;
  * @property string $item_name tên sản phẩm trả về từ boxme
  * @property string $warehouse_tag_boxme wtag của boxme
  * @property string $note_boxme note của boxme
- * @property string $image các hình ảnh cách nhau bởi dấu phẩy
+ * @property string $image
  */
 class DraftWastingTracking extends \common\components\db\ActiveRecord
 {
@@ -48,7 +48,8 @@ class DraftWastingTracking extends \common\components\db\ActiveRecord
             [['tracking_code'], 'required'],
             [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
-            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme', 'image'], 'string', 'max' => 255],
+            [['image'], 'string'],
+            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme'], 'string', 'max' => 255],
         ];
     }
 

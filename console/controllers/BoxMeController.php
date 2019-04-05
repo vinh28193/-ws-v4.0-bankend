@@ -9,8 +9,10 @@ use common\components\TrackingCode;
 use common\models\db\DraftExtensionTrackingMap;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftMissingTracking;
+use common\models\draft\DraftPackageItem;
 use common\models\draft\DraftWastingTracking;
 use common\models\draft\DraftDataTracking;
+use common\models\Order;
 use common\modelsMongo\RequestGetDetailBoxMe;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
@@ -263,5 +265,32 @@ class BoxMeController extends Controller
         echo "]".PHP_EOL;
         print_r("Kết thúc giả lập");
         die;
+    }
+
+    public function actionEmulatorOrder($token){
+        /** @var DraftPackageItem[] $draft_package */
+        $draft_package = DraftPackageItem::find()->where(['is not','product_id',null])->all();
+        foreach ($draft_package as $packageItem){
+            $order = Order::findOne($packageItem->order_id);
+            if(!$order){
+                 $url = "http://weshop-v4.back-end.local.vn/v1/data";
+                $data['sku'] ="312226695751";
+                $data['seller'] ="yibe_98";
+                $data['quantity'] ="1";
+                $data['source'] ="EBAY";
+                $data['image'] ='https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/iEcAAOSwLMFciIYI/$_12.JPG?set_id=880000500F';
+                $data['parentSku'] ="312226695751";
+                $client = new \yii\httpclient\Client();
+                $request = $client->createRequest();
+                $request->setFullUrl($url);
+                $request->addHeaders([
+                    'X-Access-Token' => $token
+                ]);
+                $request->setFormat('json');
+                $request->setMethod('POST');
+                $request->setData($data);
+                $response = $client->send($request);
+            }
+        }
     }
 }
