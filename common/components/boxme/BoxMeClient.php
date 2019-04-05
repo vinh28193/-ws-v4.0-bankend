@@ -104,9 +104,12 @@ class BoxMeClient
         return $res;
     }
 
-    public static function GetDetail($code,$page = 1,$contry = 'vn'){
+    public static function GetDetail($code,$page = 1,$contry = 'vn',$q = ""){
 
         $url = 'https://wms.boxme.asia/v1/packing/detail/'.$code.'/?page='.$page;
+        if($q){
+            $url .= '&q='.$q;
+        }
         $token = "Q9v5AX0JsM5nLWUs3zDt8YQN3z9a55qP";
         $client = new \yii\httpclient\Client();
         $request = $client->createRequest();

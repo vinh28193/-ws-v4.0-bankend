@@ -6,6 +6,7 @@ namespace console\controllers;
 
 use common\components\boxme\BoxMeClient;
 use common\components\TrackingCode;
+use common\models\db\DraftExtensionTrackingMap;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftWastingTracking;
@@ -125,5 +126,140 @@ class BoxMeController extends Controller
             $tracking->save(0);
         }
         $this->stdout("Merge kết thúc ....".PHP_EOL);
+    }
+
+
+    public function actionEmulatorExtension($manifest_code){
+        echo "Bắt đầu giả lập dữ liệu extension: ".PHP_EOL;
+        /** @var \common\models\TrackingCode[] $track */
+        $track = \common\models\TrackingCode::find()
+            ->where(['manifest_code' => $manifest_code])->limit(500)->all();
+        $cn = round(count($track));
+        echo "Sẽ có :".$cn." tracking được giả lập extension".PHP_EOL;
+        echo "[";
+        foreach ($track as $k => $item){
+            if($k > $cn){
+                break;
+            }
+            $data = BoxMeClient::GetDetail($item->manifest_code."-".$item->manifest_id,1,'vn',$item->tracking_code);
+            if ($data['success']) {
+                foreach ($data['results'] as $result) {
+                    $soi = ArrayHelper::getValue($result, 'soi_tracking');
+                    $tracking = ArrayHelper::getValue($result, 'tracking_code');
+                    $quantity = ArrayHelper::getValue($result, 'quantity');
+                    $soi = intval(str_replace('SOI-', '', $soi));
+                    $soi = $soi ? $soi : null;
+                    $order_id = rand(1,100);
+                    $purchase_id = rand(1,100);
+                    if($soi){
+                        $ext = DraftExtensionTrackingMap::find()->where([
+                            'tracking_code' => $item->tracking_code,
+                            'product_id' => $soi,
+                            'order_id' => $order_id, //Todo Giả lập dữ liệu order tại đây
+                            'purchase_invoice_number' => $purchase_id //Todo Giả lập dữ liệu order tại đây
+                        ])->one();
+                        if(!$ext){
+                            $ext = new DraftExtensionTrackingMap();
+                            $ext->tracking_code = $item->tracking_code;
+                            $ext->product_id = $soi;
+                            $ext->order_id = $order_id;
+                            $ext->purchase_invoice_number = "".$purchase_id;
+                            $ext->created_at = time();
+                            $ext->updated_at = time();
+                            $ext->created_by = 1;
+                            $ext->updated_by = 1;
+                        }
+                        $ext->status = "US_RECEIVED";
+                        $ext->quantity = $quantity;
+                        $ext->number_run = $ext->number_run ? $ext->number_run + 1 : 1;
+                        if(!$ext->save()){
+                            print_r($ext->errors);
+                            die;
+                        }
+                        $draft_data = DraftDataTracking::find()->where([
+                            'tracking_code' => $tracking,
+                            'product_id' => $soi
+                        ])->one();
+                        if(!$draft_data){
+                            $draft_data = DraftDataTracking::find()->where([
+                                'tracking_code' => $tracking,
+                                'product_id' => null,
+                            ])->one();
+                            if(!$draft_data){
+                                $tmp = DraftDataTracking::find()->where([
+                                    'tracking_code' => $tracking,
+                                ])->one();
+                                $draft_data = new DraftDataTracking();
+                                $draft_data->created_at = time();
+                                $draft_data->updated_at = time();
+                                $draft_data->created_by = 1;
+                                $draft_data->updated_by = 1;
+                                if($tmp){
+                                    $draft_data->manifest_code = $tmp->manifest_code;
+                                    $draft_data->manifest_id = $tmp->manifest_id;
+                                }
+                            }
+                        }
+                        $draft_data->tracking_code = $tracking;
+                        $draft_data->product_id = $soi;
+                        $draft_data->purchase_invoice_number = $order_id;
+                        $draft_data->order_id = $purchase_id;
+                        $draft_data->quantity = $quantity;
+                        $draft_data->createOrUpdate(false);
+                        echo "♪";
+                    }
+                }
+            }
+        }
+        echo "]".PHP_EOL;
+        print_r("Kết thúc giả lập");
+        die;
+    }
+    public function actionEmulatorCallback($manifest_code){
+        echo "Bắt đầu quá trình giả lập :".PHP_EOL;
+        /** @var DraftBoxmeTracking[] $track */
+        $track = DraftBoxmeTracking::find()
+            ->where(['manifest_code' => $manifest_code])->limit(500)->all();
+        echo "Sẽ có :".count($track)." tracking được giả lập callback".PHP_EOL;
+        echo "[";
+        foreach ($track as $item){
+            echo "♪";
+            $data['packing_code'] = $item->manifest_code.'-'.$item->manifest_id;
+            $data['soi_tracking'] = $item->product_id ? 'SOI-'.$item->product_id : 'NONE';
+            $data['tracking_code'] = $item->tracking_code;
+            $data['tag_code'] = $item->warehouse_tag_boxme;
+            $data['tracking_type'] = "Normal";
+            $data['volume'] = $item->dimension_l ? $item->dimension_l."x".$item->dimension_h."x".$item->dimension_w : "";
+            $data['quantity'] = $item->quantity;
+            $data['item'] = $item->item_name;
+            $data['weight'] = $item->weight;
+            $data['status'] = 'Close';
+            $data['note'] = $item->note_boxme;
+            $data['images'] = [];
+            $images = explode(',',$item->image);
+            foreach ($images as $img){
+                $tmp = [];
+                $tmp['order_id'] = $item->warehouse_tag_boxme;
+                $tmp['urls'] = $img;
+                $data['images'][] = $img;
+            }
+            $url = 'http://weshop-v4.back-end.local.vn/test/callback-boxme';
+            $client = new \yii\httpclient\Client();
+            $request = $client->createRequest();
+            $request->setFullUrl($url);
+            $request->setFormat('json');
+            $request->setMethod('POST');
+            $request->setData($data);
+            $response = $client->send($request);
+            if(!$response->isOk){
+                $res = $response->getData();
+//                return $res['messages'];
+            }
+            $res = $response->getData();
+//            print_r($res);
+        }
+        echo "]".PHP_EOL;
+        print_r("Kết thúc giả lập");
+        die;
     }
 }

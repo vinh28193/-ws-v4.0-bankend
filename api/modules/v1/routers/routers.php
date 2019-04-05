@@ -459,7 +459,6 @@ return [
             'POST' => 'update',
         ],
         'extraPatterns' => [
-            'POST update' => 'update',
         ]
     ],
     [
