@@ -20,6 +20,10 @@ return [
 
         'test/get-custom-fee'=>'test/get-custom-fee',
 
+        '1/addon/get'=>'addon/index',
+        '1/addon/order'=>'addon/order-list',
+        '1/addon/view'=>'addon/view',
+
         ### employees
         '1/employees'=>'employee/index',
         '1/employees/view/<id>'=>'employee/view',

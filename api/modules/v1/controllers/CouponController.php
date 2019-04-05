@@ -57,12 +57,6 @@ class CouponController extends BaseApiController
         $post = \Yii::$app->request->post();
         $model = Coupon::findOne($id);
         if (isset($post['start_time'])) {
-
-        }
-        if (isset($post['start_time'])) {
-
-        }
-        if (isset($post['start_time'])) {
             $model->start_time = $post['start_time'];
         }
         if (isset($post['end_time'])) {
@@ -82,6 +76,9 @@ class CouponController extends BaseApiController
         }
         if (isset($post['message'])) {
             $model->message = $post['message'];
+        }
+        if (isset($post['amount'])) {
+            $model->amount = $post['amount'];
         }
         $dirtyAttributes = $model->getDirtyAttributes();
         $messages = "order {$post['ordercode']} Update Coupon {$this->resolveChatMessage($dirtyAttributes,$model)}";

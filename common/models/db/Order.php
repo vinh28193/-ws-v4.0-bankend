@@ -239,4 +239,8 @@ class Order extends \common\components\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'purchase_assignee_id']);
     }
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['order_id' => 'id']);
+    }
 }
