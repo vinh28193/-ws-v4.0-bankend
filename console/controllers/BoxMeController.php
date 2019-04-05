@@ -84,6 +84,8 @@ class BoxMeController extends Controller
             echo "Đã hết yêu cầu lấy chi tiết tracking trong lô." . PHP_EOL;
             die('STOP');
         }
+        echo "Kết thúc quá trình." . PHP_EOL;
+        die('STOP');
     }
 
     public function actionMergeExtensionUsSending()
@@ -241,7 +243,7 @@ class BoxMeController extends Controller
                 $tmp = [];
                 $tmp['order_id'] = $item->warehouse_tag_boxme;
                 $tmp['urls'] = $img;
-                $data['images'][] = $img;
+                $data['images'][] = $tmp;
             }
             $url = 'http://weshop-v4.back-end.local.vn/test/callback-boxme';
             $client = new \yii\httpclient\Client();
