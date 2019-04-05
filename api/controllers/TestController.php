@@ -95,6 +95,8 @@ class TestController extends Controller
                 $draft->quantity = $quantity;
                 $draft->weight = $weight;
                 $draft->product_id = $soi;
+                $draft->order_id = $find->order_id;
+                $draft->purchase_invoice_number = $find->purchase_invoice_number;
                 $draft->status = $status;
 
                 $draft->dimension_l = isset($vol[0]) ? $vol[0] : null;
@@ -124,23 +126,68 @@ class TestController extends Controller
                 ]);
             }
         } else {
-            $wasting = new DraftWastingTracking();
-            $wasting->tracking_code = $tracking;
-            $wasting->manifest_code = $manifest_code;
-            $wasting->manifest_id = $manifest_id;
-            $wasting->product_id = $soi;
-            $wasting->quantity = $quantity;
-            $wasting->weight = $weight;
-            $wasting->status = "WAST_CALLBACK";
+            /** @var DraftMissingTracking[] $data_draft */
+            $data_draft = DraftMissingTracking::find()
+                ->where([
+                    'tracking_code' => $tracking,
+                    'manifest_code' => $manifest_code,
+                    'manifest_id' => $manifest_id
+                ])
+                ->andWhere(['or',['product_id' => null],['product_id' => $soi]])->orderBy('product_id desc')->all();
+            if($data_draft){
+                $data_draft[0]->product_id = $soi;
+                $data_draft[0]->quantity = $quantity;
+                $data_draft[0]->weight = $weight;
+                $data_draft[0]->weight = $weight;
+                $data_draft[0]->dimension_l = isset($vol[0]) ? $vol[0] : null;
+                $data_draft[0]->dimension_w = isset($vol[1]) ? $vol[1] : null;
+                $data_draft[0]->dimension_h = isset($vol[2]) ? $vol[2] : null;
+                $data_draft[0]->item_name = $item_name;
+                $data_draft[0]->image = $image;
+                $data_draft[0]->warehouse_tag_boxme = $tag_code;
+                $data_draft[0]->note_boxme = $note;
+                $data_draft[0]->status = "MERGE_CALLBACK";
+                $data_draft[0]->save(false);
 
-            $wasting->dimension_l = isset($vol[0]) ? $vol[0] : null;
-            $wasting->dimension_w = isset($vol[1]) ? $vol[1] : null;
-            $wasting->dimension_h = isset($vol[2]) ? $vol[2] : null;
-            $wasting->item_name = $item_name;
-            $wasting->image = $image;
-            $wasting->warehouse_tag_boxme = $tag_code;
-            $wasting->note_boxme = $note;
-            $wasting->createOrUpdate(false);
+                $draft = new DraftPackageItem();
+                $draft->tracking_code = $tracking;
+                $draft->manifest_code = $manifest_code;
+                $draft->manifest_id = $manifest_id;
+                $draft->quantity = $quantity;
+                $draft->weight = $weight;
+                $draft->product_id = $soi;
+                $draft->order_id = $data_draft[0]->order_id;
+                $draft->purchase_invoice_number = $data_draft[0]->purchase_invoice_number;
+                $draft->status = $status;
+
+                $draft->dimension_l = isset($vol[0]) ? $vol[0] : null;
+                $draft->dimension_w = isset($vol[1]) ? $vol[1] : null;
+                $draft->dimension_h = isset($vol[2]) ? $vol[2] : null;
+                $draft->item_name = $item_name;
+                $draft->image = $image;
+                $draft->warehouse_tag_boxme = $tag_code;
+                $draft->note_boxme = $note;
+                $draft->createOrUpdate(false);
+
+            }else{
+                $wasting = new DraftWastingTracking();
+                $wasting->tracking_code = $tracking;
+                $wasting->manifest_code = $manifest_code;
+                $wasting->manifest_id = $manifest_id;
+                $wasting->product_id = $soi;
+                $wasting->quantity = $quantity;
+                $wasting->weight = $weight;
+                $wasting->status = "WAST_CALLBACK";
+
+                $wasting->dimension_l = isset($vol[0]) ? $vol[0] : null;
+                $wasting->dimension_w = isset($vol[1]) ? $vol[1] : null;
+                $wasting->dimension_h = isset($vol[2]) ? $vol[2] : null;
+                $wasting->item_name = $item_name;
+                $wasting->image = $image;
+                $wasting->warehouse_tag_boxme = $tag_code;
+                $wasting->note_boxme = $note;
+                $wasting->createOrUpdate(false);
+            }
         }
         \Yii::$app->response->format = 'json';
         \Yii::$app->response->data = ['success' => true, 'message' => 'Done'];
