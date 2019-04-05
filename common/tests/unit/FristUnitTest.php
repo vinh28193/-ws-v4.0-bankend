@@ -20,6 +20,6 @@ class FristUnitTest extends UnitTestCase
     // tests
     public function testSomeFeature()
     {
-        var_dump($this->grabFixtures());die;
+
     }
 }

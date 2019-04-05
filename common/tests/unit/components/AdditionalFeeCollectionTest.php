@@ -5,6 +5,7 @@ use common\models\ProductFee;
 use common\models\Store;
 use common\models\StoreAdditionalFee;
 use common\tests\stubs\AdditionalFeeObject;
+use common\tests\stubs\TestCondition;
 use common\tests\UnitTestCase;
 use common\components\AdditionalFeeCollection;
 use yii\helpers\ArrayHelper;
@@ -191,9 +192,9 @@ class AdditionalFeeCollectionTest extends UnitTestCase
                 ];
             }
         }
-        $collection = $this->mockCollection(100, [], [], false);
+        $collection = $this->mockCollection(100, array_keys($keys), [], false);
         $collection->mset($keys);
-        verify(array_keys($collection->mget()))->equals($keys);
+        verify($collection->mget())->equals($keys);
         $keyGet = ['keyTest1', 'keyTest9', 'keyTest11'];
         verify(array_keys($collection->mget($keyGet)))->equals($keyGet);
         $newKey = [];
@@ -210,5 +211,146 @@ class AdditionalFeeCollectionTest extends UnitTestCase
                 verify($except)->notEquals($mkey);
             }
         }
+    }
+
+
+    public function testWithCondition()
+    {
+        $store = new Store(['id' => 99]);
+        $feeName = 'test';
+        $condition = new TestCondition();
+        $storeAdditionalFee = new StoreAdditionalFee([
+            'store_id' => $store->id,
+            'name' => 'test',
+            'label' => 'fee test',
+            'is_convert' => 1,
+            'condition_name' => $condition->name,
+            'condition_data' => serialize($condition),
+            'currency' => 'test'
+        ]);
+        $store->populateRelation('storeAdditionalFee', [$feeName => $storeAdditionalFee]);
+        $collection = $this->mockCollection($store->id, [$feeName], [
+            'getStoreManager' => function () use ($store) {
+                $manager = $this->make('common\components\StoreManager', [
+                    'getStore' => $store
+                ]);
+                return $manager;
+            }
+        ], false);
+        $owner = $this->make(AdditionalFeeObject::className(), [
+            'getExchangeRate' => function () {
+                return 1000;
+            }
+        ]);
+        $collection->withCondition($owner, $feeName, 123);
+
+        verify($collection->get($feeName))->equals([
+            'type' => $storeAdditionalFee->name,
+            'name' => $storeAdditionalFee->label,
+            'amount' => 123,
+            'local_amount' => 123000,
+            'discount_amount' => 0,
+            'currency' => $storeAdditionalFee->currency
+        ]);
+    }
+
+    public function testWithConditions()
+    {
+        $store = new Store(['id' => 99]);
+        $exRate = 1000;
+        $results = [];
+        $params = [];
+        $fees = ['test1' => 123, 'test2' => 234];
+        foreach ($fees as $name => $amount) {
+            $condition = new TestCondition();
+            $config = new StoreAdditionalFee([
+                'store_id' => $store->id,
+                'name' => $name,
+                'label' => $name,
+                'is_convert' => 1,
+                'condition_name' => $condition->name,
+                'condition_data' => serialize($condition),
+                'currency' => $name
+            ]);
+            $results[$name] = $config;
+            $params[$name] = [
+                'type' => $config->name,
+                'name' => $config->label,
+                'amount' => $amount,
+                'local_amount' => $amount * $exRate,
+                'discount_amount' => 0,
+                'currency' => $config->currency
+            ];
+        }
+        $store->populateRelation('storeAdditionalFee', $results);
+        $collection = $this->mockCollection($store->id, array_keys($fees), [
+            'getStoreManager' => function () use ($store) {
+                $manager = $this->make('common\components\StoreManager', [
+                    'getStore' => $store
+                ]);
+                return $manager;
+            }
+        ], false);
+        $owner = $this->make(AdditionalFeeObject::className(), [
+            'getExchangeRate' => function () use ($exRate) {
+                return $exRate;
+            }
+        ]);
+        $collection->withConditions($owner, $fees, false);
+        verify($collection->count())->equals(count($fees));
+        foreach (array_keys($fees) as $fee) {
+            if (isset($params[$fee])) {
+                verify($collection->get($fee))->equals($params[$fee]);
+            }
+        }
+    }
+
+    public function testCreateItem()
+    {
+        $exRate = 1000;
+        $condition = new TestCondition();
+        $storeAdditionalFee = new StoreAdditionalFee([
+            'store_id' => 999,
+            'name' => 'test',
+            'label' => 'fee test',
+            'condition_name' => $condition->name,
+            'condition_data' => serialize($condition),
+        ]);
+        $owner = $this->make(AdditionalFeeObject::className(), [
+            'getExchangeRate' => function () use ($exRate) {
+                return $exRate;
+            }
+        ]);
+        $collection = $this->mockCollection(999, [], [], false);
+        $item = $collection->createItem($storeAdditionalFee, $owner, 15, 8, 'vnd');
+        verify($item)->equals([
+            'type' => $storeAdditionalFee->name,
+            'name' => $storeAdditionalFee->label,
+            'amount' => 15,
+            'local_amount' => 15,
+            'discount_amount' => 8,
+            'currency' => 'vnd'
+        ]);
+    }
+
+    public function testHasStoreAdditionalFeeByKey(){
+        $feeKey = 'test';
+        $collection = $this->mockCollection(9999,[$feeKey]);
+        verify($collection->hasStoreAdditionalFeeByKey($feeKey))->true();
+    }
+
+    public function testGetStoreAdditionalFeeByKey(){
+        $feeKey = 'test';
+        $collection = $this->mockCollection(9999,[$feeKey]);
+        verify($collection->getStoreAdditionalFeeByKey($feeKey))->notNull();
+        verify($collection->getStoreAdditionalFeeByKey($feeKey))->isInstanceOf(StoreAdditionalFee::className());
+        verify($collection->getStoreAdditionalFeeByKey('no_key'))->null();
+    }
+
+    /**
+     * ham xem commnet tren ham
+     */
+    public function testGetTotalAdditionFees(){
+
     }
 }
