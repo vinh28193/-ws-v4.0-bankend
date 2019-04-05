@@ -8,11 +8,11 @@
 
 namespace common\tests\stubs;
 
+use common\components\conditions\BaseCondition;
 
-class TestCondition extends \common\components\conditions\BaseCondition
+class TestCondition extends BaseCondition
 {
-
-    public $name = 'TestCondition';
+    public $name = 'Test';
 
     public function execute($value, $additionalFee, $storeAdditionalFee)
     {

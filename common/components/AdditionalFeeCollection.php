@@ -142,7 +142,7 @@ class AdditionalFeeCollection extends ArrayCollection
      * @param null $currency
      * @return array
      */
-    protected function createItem(StoreAdditionalFee $config, AdditionalFeeInterface $additional, $amount, $discountAmount = 0, $currency = null)
+    public function createItem(StoreAdditionalFee $config, AdditionalFeeInterface $additional, $amount, $discountAmount = 0, $currency = null)
     {
         $amountLocal = $amount;
         if ($config->hasMethod('executeCondition') &&
