@@ -1,47 +1,5 @@
 $ vendor/bin/codecept build
-
-Included Configuration: common
-Building Actor classes for suites: unit
- -> UnitTesterActions.php generated successfully. 0 methods added
-common\tests\UnitTester includes modules: Yii2
-
-Included Configuration: api
-Building Actor classes for suites: api, functional, unit
- -> ApiTesterActions.php generated successfully. 0 methods added
-api\tests\ApiTester includes modules: REST, PhpBrowser, Yii2
-ApiTester.php created.
- -> FunctionalTesterActions.php generated successfully. 0 methods added
-api\tests\FunctionalTester includes modules: Yii2
- -> UnitTesterActions.php generated successfully. 0 methods added
-api\tests\UnitTester includes modules:
-
-Included Configuration: backend
-Building Actor classes for suites: acceptance, api, functional, unit
- -> AcceptanceTesterActions.php generated successfully. 0 methods added
-backend\tests\AcceptanceTester includes modules: WebDriver, Yii2
- -> ApiTesterActions.php generated successfully. 0 methods added
-backend\tests\ApiTester includes modules: REST, PhpBrowser, Yii2
- -> FunctionalTesterActions.php generated successfully. 0 methods added
-backend\tests\FunctionalTester includes modules: Filesystem, Yii2
- -> UnitTesterActions.php generated successfully. 0 methods added
-backend\tests\UnitTester includes modules: Yii2, Asserts
-
-Included Configuration: userbackend
-Building Actor classes for suites: acceptance, api, functional, unit
- -> AcceptanceTesterActions.php generated successfully. 0 methods added
-userbackend\tests\AcceptanceTester includes modules: WebDriver, Yii2
- -> ApiTesterActions.php generated successfully. 0 methods added
-userbackend\tests\ApiTester includes modules: REST, PhpBrowser, Yii2
- -> FunctionalTesterActions.php generated successfully. 0 methods added
-userbackend\tests\FunctionalTester includes modules: Filesystem, Yii2
- -> UnitTesterActions.php generated successfully. 0 methods added
-userbackend\tests\UnitTester includes modules: Yii2, Asserts
-
-admin@DESKTOP-PL28AOR MINGW64 /c/xampp/htdocs/weshop-v4.0-api (master)
-
-
-
-
+  
 $ vendor/bin/codecept run
 Codeception PHP Testing Framework v2.6.0
 Powered by PHPUnit 8.1-g36f92d5 by Sebastian Bergmann and contributors.

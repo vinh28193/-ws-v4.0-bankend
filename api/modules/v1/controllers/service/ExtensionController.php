@@ -62,6 +62,10 @@ class ExtensionController extends BaseApiController
                 $ext->product_id = $purchaseProduct->product_id;
                 $ext->order_id = $purchaseProduct->order_id;
                 $ext->purchase_invoice_number = $purchaseOrder->purchase_order_number;
+                $ext->created_at = time();
+                $ext->updated_at = time();
+                $ext->created_by = \Yii::$app->user->id;
+                $ext->updated_by = \Yii::$app->user->id;
             }
             $ext->status = $status;
             $ext->quantity = $qty;
@@ -79,13 +83,26 @@ class ExtensionController extends BaseApiController
                     'order_id' => null,
                 ])->one();
                 if(!$draft_data){
+                    $tmp = DraftDataTracking::find()->where([
+                        'tracking_code' => $trackingCode,
+                    ])->one();
                     $draft_data = new DraftDataTracking();
+                    $draft_data->created_at = time();
+                    $draft_data->updated_at = time();
+                    $draft_data->created_by = \Yii::$app->user->id;
+                    $draft_data->updated_by = \Yii::$app->user->id;
+                    if($tmp){
+                        $draft_data->manifest_code = $tmp->manifest_code;
+                        $draft_data->manifest_id = $tmp->manifest_id;
+                    }
                 }
-                $draft_data->tracking_code = $trackingCode;
-                $draft_data->product_id = $purchaseProduct->product_id;
-                $draft_data->order_id = $purchaseProduct->order_id;
-                $draft_data->tracking_code = $trackingCode;
             }
+            $draft_data->tracking_code = $trackingCode;
+            $draft_data->product_id = $purchaseProduct->product_id;
+            $draft_data->order_id = $purchaseProduct->order_id;
+            $draft_data->purchase_invoice_number = $purchaseOrder->purchase_order_number;
+            $draft_data->quantity = $qty;
+            $draft_data->createOrUpdate(false);
         }
         return $this->response(true,'Update success!');
     }

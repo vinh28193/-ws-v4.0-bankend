@@ -14,8 +14,15 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
-
 /**
+ * new update co collection
+ * đối tượng collection cho phép cóp nhặt 1 list data từ 1 nguồn sẵn có hoặc tự được thêm vào
+ * các [[IteratorAggregate]] được lưu dưới dạng key => array value
+ * $collection = new AdditionalFeeCollection()
+ * $collection['test'] => 123
+ * $collection->set('test',123);
+ * unset($collection['test']);
+ * $collection->remove('test')
  * Class AdditionalFeeCollection
  * @package common\components
  */
@@ -24,46 +31,28 @@ class AdditionalFeeCollection extends ArrayCollection
     use StoreAdditionalFeeRegisterTrait;
 
     /**
-     * cái gì
-     * @var
+     * cho phép get dữ liệu từ một nguồn được định nghĩa từ [[ActiceRecore]]
+     * @param ActiveRecord $owner
      */
-    protected $owner = null;
-
-    /**
-     * @param $owner
-     */
-    public function setOwner($owner)
+    public function loadFormOwner(ActiveRecord $owner)
     {
-        $this->owner = $owner;
-        $this->loadFormOwner($owner);
-    }
-
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    public function loadFormOwner($owner)
-    {
-        $this->owner = $owner;
-        if ($owner instanceof ActiveRecord) {
-            $tableName = $owner::tableName();
-            $ownerClass = get_class($owner);
-            $ownerId = $owner->getPrimaryKey(false);
-            $query = new Query();
-            $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.local_amount', 'c.discount_amount', 'c.currency']);
-            $query->from(['c' => 'product_fee']);
-            $query->where(['and', ['c.' . 'product_id' => $ownerId]]);
-            $additionalFees = $query->all($ownerClass::getDb());
-            $additionalFees = ArrayHelper::index($additionalFees, null, function ($element) {
-                return $element['type'];
-            });
-            Yii::info($additionalFees, 'loadFormOwner');
-            $this->mset($additionalFees, false, false);
-        }
+        $tableName = $owner::tableName();
+        $ownerClass = get_class($owner);
+        $ownerId = $owner->getPrimaryKey(false);
+        $query = new Query();
+        $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.local_amount', 'c.discount_amount', 'c.currency']);
+        $query->from(['c' => 'product_fee']);
+        $query->where(['and', ['c.' . 'product_id' => $ownerId]]);
+        $additionalFees = $query->all($ownerClass::getDb());
+        $additionalFees = ArrayHelper::index($additionalFees, null, function ($element) {
+            return $element['type'];
+        });
+        Yii::info($additionalFees, 'loadFormOwner');
+        $this->mset($additionalFees);
     }
 
     /**
+     * return all keys exist on collection
      * @return array
      */
     public function keys()
@@ -71,6 +60,13 @@ class AdditionalFeeCollection extends ArrayCollection
         return array_keys($this->toArray());
     }
 
+    /**
+     * lấy tất cả các loại theo tên
+     * multi get
+     * @param null $keys if null meaning get all in config [[StoreAdditionalFee]]
+     * @param array $except
+     * @return array
+     */
     public function mget($keys = null, $except = [])
     {
         if ($keys === null) {
@@ -91,12 +87,7 @@ class AdditionalFeeCollection extends ArrayCollection
     }
 
     /**
-     * params 1 :
-     *      [
-     *          'origin_fee' => 123,
-     *          'tax' => 122
-     *      ]
-     * params 2 [
+     *    [
      *     'origin_fee' => [
      *          [
      *              'type' => 'origin_fee',
@@ -127,72 +118,95 @@ class AdditionalFeeCollection extends ArrayCollection
      *      ]
      * ]
      * @param $values
+     * mset giờ chỉ có thể sử dụng dữ liệu từ mget
      * @param bool $withCondition
      * @param bool $ensureReadOnly
      */
-    public function mset($values, $withCondition = false, $ensureReadOnly = true)
+    public function mset($values)
     {
         if (is_array($values)) {
             $this->removeAll();
             foreach ($values as $key => $value) {
-                if (is_array($value)) {
-                    parent::set($key, $value);
-                } elseif (!is_array($value) && is_string($key) && $this->hasStoreAdditionalFeeByKey($key)) {
-                    if ($ensureReadOnly && $this->getStoreAdditionalFeeByKey($key)->is_read_only) {
-                        continue;
-                    }
-                    $this->set($key, $value, $withCondition);
-                } else {
-                    Yii::warning("failed when set unknown additional fee '$key'", __METHOD__);
-                }
-            }
-            if ($ensureReadOnly) {
-                $breaks = $this->keys();
-                foreach ($this->storeAdditionalFee as $name => $storeAdditionalFee) {
-                    /** @var $storeAdditionalFee StoreAdditionalFee */
-                    if (in_array($name, $breaks)) {
-                        continue;
-                    }
-                    $this->set($name, $storeAdditionalFee->fee_rate, $withCondition);
-                }
+                $this->set($key, $value);
             }
         }
     }
 
-    public function set($key, $value, $withCondition = false)
+    /**
+     * tạo 1 kiểu dữ liệu lưu trữ
+     * call từ [[withCondition]] các condition tương ứng sẽ được thực thi
+     * @param StoreAdditionalFee $config
+     * @param AdditionalFeeInterface $additional
+     * @param $amount
+     * @param int $discountAmount
+     * @param null $currency
+     * @return array
+     */
+    protected function createItem(StoreAdditionalFee $config, AdditionalFeeInterface $additional, $amount, $discountAmount = 0, $currency = null)
     {
+        $amountLocal = $amount;
+        if ($config->hasMethod('executeCondition') &&
+            ($result = $config->executeCondition($amount, $additional)) !== false &&
+            is_array($result)
+        ) {
+            list($amount, $amountLocal) = $result;
+        }
+        return [
+            'type' => $config->name,
+            'name' => $config->label,
+            'amount' => $amount,
+            'local_amount' => $amountLocal,
+            'discount_amount' => $discountAmount,
+            'currency' => $currency === null ? $config->currency : $currency,
+        ];
+    }
 
+    /**
+     * hàm này được tách ra để được dễ dàng thay đổi cũng như nâng cấp
+     * giờ hoạt động khác với [[parent::set]] (trước khi update)
+     * đảm bảo bởi [[parent:add]] cho phém thêm dữ liệu được tính toán mới
+     * vào list đã tồn tại trước đó hoặc thêm mới nếu chưa tồn tại
+     * ví dụ :
+     *      $collection->set('fee',arrayValue);
+     *      $collection->withCondition($owner,'test',1243)
+     *      var_dump($collection->get('fee')) // return array 2 giá trị
+     *  lưu ý, set với add khác nhau,
+     *      - set : thay thế hẳn dữ liệu bởi key mặc dù trước đó đã tồn tại,
+     *      - add : thêm dữ vào cuối cùng của key.
+     *  lưu ý khi dùng, hàm này mỗi lần dùng sẽ add thêm, tránh việc duplicate dữ liệu, remove trước khi tính toán lại
+     * @param AdditionalFeeInterface $owner
+     * @param $key string
+     * @param $value
+     */
+    public function withCondition(AdditionalFeeInterface $owner, $key, $value)
+    {
         if (($storeAdditionalFee = $this->getStoreAdditionalFeeByKey($key)) !== null && $storeAdditionalFee instanceof StoreAdditionalFee) {
-            if (is_array($value) && count($value) === 5 && isset($value['amount']) && isset($value['local_amount'])) {
-                parent::add($key, $value);
-            } else {
-                $localValue = $value;
-                /** @var $owner AdditionalFeeInterface|null|\yii\db\ActiveRecord */
-                if (($owner = $this->getOwner()) === null) {
-                    $withCondition = false;
-                }
-                if (
-                    $withCondition &&
-                    $owner instanceof AdditionalFeeInterface &&
-                    $storeAdditionalFee->hasMethod('executeCondition') &&
-                    ($result = $storeAdditionalFee->executeCondition($value, $owner)) !== false &&
-                    is_array($result)
-                ) {
-                    list($value, $localValue) = $result;
-                }
-
-                $additionalFee = [
-                    'type' => $key,
-                    'name' => $storeAdditionalFee->label,
-                    'amount' => $value,
-                    'local_amount' => $localValue,
-                    'discount_amount' => $owner !== null && $owner->hasProperty('discount_amount') ? $owner->discount_amount : 0,
-                    'currency' => $storeAdditionalFee->currency,
-                ];
-                parent::add($key, $additionalFee);
-            }
+            $item = $this->createItem($storeAdditionalFee, $owner, $value);
+            $this->add($key, $item);
         } else {
             Yii::warning("failed when set unknown additional fee '$key'", __METHOD__);
+        }
+    }
+
+    /**
+     * @param AdditionalFeeInterface $owner
+     * @param $values array
+     * @param bool $ensureReadOnly
+     */
+    public function withConditions(AdditionalFeeInterface $owner, $values, $ensureReadOnly = true)
+    {
+        foreach ($values as $key => $value) {
+            $this->withCondition($owner, $key, $value);
+        }
+        if ($ensureReadOnly) {
+            $breaks = $this->keys();
+            foreach ($this->storeAdditionalFee as $name => $storeAdditionalFee) {
+                /** @var $storeAdditionalFee StoreAdditionalFee */
+                if (in_array($name, $breaks)) {
+                    continue;
+                }
+                $this->withCondition($owner, $name, $storeAdditionalFee->fee_rate);
+            }
         }
     }
 
@@ -217,7 +231,21 @@ class AdditionalFeeCollection extends ArrayCollection
 
 
     /**
-     * @param null $names
+     * trả về tổng phí của từng loại phí
+     *  return [tiền gốc, tiền local]
+     *  ví dụ
+     *      'testfee' => [
+     *          [
+     *              'amount' => 5,
+     *              'local_amount => 12'
+     *          ],
+     *          [
+     *              'amount' => 2,
+     *              'local_amount => 10'
+     *          ]
+     *      ]
+     * return [7,22] // 7 = 5 +2 ; 22 = 12 + 10
+     * @param null $names, null nghĩa là trả về tất cả cả loại phí có trong config
      * @param array $except
      * @return array
      */

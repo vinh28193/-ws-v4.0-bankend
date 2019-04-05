@@ -1,8 +1,9 @@
 <?php
-
+namespace common\components\boxme;
 use common\models\boxme\ConfigForm;
 use common\models\boxme\ShipInfoForm;
 use common\models\boxme\ShipmentInfoForm;
+use Yii;
 
 /**
  * Created by PhpStorm.
@@ -103,21 +104,24 @@ class BoxMeClient
         return $res;
     }
 
-    public static function GetDetail($code,$page = 1,$contry = 'vn'){
+    public static function GetDetail($code,$page = 1,$contry = 'vn',$q = ""){
 
-        $url = Yii::$app->params['boxme'][$contry]['URL'].'v1/packing/detail/'.$code.'/?page='.$page.'&q='.$tracking;
-
+        $url = 'https://wms.boxme.asia/v1/packing/detail/'.$code.'/?page='.$page;
+        if($q){
+            $url .= '&q='.$q;
+        }
+        $token = "Q9v5AX0JsM5nLWUs3zDt8YQN3z9a55qP";
         $client = new \yii\httpclient\Client();
         $request = $client->createRequest();
         $request->setFullUrl($url);
         $request->addHeaders([
-            'Authorization' => Yii::$app->params['boxme'][$contry]['TOKEN']
+            'Authorization' => $token
         ]);
         $request->setFormat('json');
         $request->setMethod('GET');
         $response = $client->send($request);
         $params['url'] = $url;
-        $params['token'] = Yii::$app->params['boxme'][$contry]['TOKEN'];
+        $params['token'] = $token;
 //        ThirdPartyLogs::setLog("BOX_ME","pricing/create_order","weshopdev",($params),$response->getData());
         if(!$response->isOk){
 //            $courierFailObject->message ='Request Failed';

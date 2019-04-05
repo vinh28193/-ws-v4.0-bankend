@@ -1,42 +1,31 @@
-<?php namespace common\tests\components;
+<?php
 
-use Codeception\Test\Unit;
-use common\components\StoreManager;
-use common\tests\_support\ActiveStore;
-use common\tests\_support\AdditionalFeeObject;
-use common\tests\_support\TestCondition;
-use common\tests\_support\StoreAdditionalFee;
-use common\tests\unit\WsUnitTestCase;
+namespace common\tests\components;
 
-class AdditionalFeeTest extends WsUnitTestCase
+
+use common\components\AdditionalFeeCollection;
+use common\models\Product;
+use common\models\ProductFee;
+use Yii;
+use yii\di\Instance;
+use common\models\Store;
+use common\models\StoreAdditionalFee;
+use common\tests\UnitTestCase;
+use common\tests\stubs\AdditionalFeeObject;
+
+
+class AdditionalFeeTest extends UnitTestCase
 {
     /**
      * @var \common\tests\UnitTester
      */
     protected $tester;
 
-    public function testGetStoreManager(){
-        $additionalFeeTest = new AdditionalFeeObject();
-        $class = $additionalFeeTest->getStoreManager();
-        $class = get_class($class);
-        $this->assertEquals($class, StoreManager::className());
+
+
+    public function testGetAdditionalFees(){
+
+
     }
 
-    public function testSetAdditionalFees()
-    {
-        $additionalFeeTest = new AdditionalFeeObject();
-        $condition = new TestCondition();
-        $storeAdditionalFee = new StoreAdditionalFee();
-        $storeAdditionalFee->name = 'test_fee';
-        $storeAdditionalFee->condition_name = $condition->name;
-        $storeAdditionalFee->condition_data = serialize($condition);
-        $storeAdditionalFee->is_convert = 1;
-        $additionalFeeTest->storeAdditionalFee['test_fee'] = $storeAdditionalFee;
-        $fee = ['test_fee' => 999];
-        $withCondition = true;
-        $ensureReadOnly = false;
-
-        $additionalFeeTest->setAdditionalFees($fee, $withCondition, $ensureReadOnly);
-        $this->assertEquals($additionalFeeTest->total_test_fee_local, 999 * $additionalFeeTest->getExchangeRate());
-    }
 }

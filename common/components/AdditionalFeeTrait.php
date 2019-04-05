@@ -12,13 +12,10 @@ trait AdditionalFeeTrait
 {
     public $additionalFees;
 
-    public function getAdditionalFees($isLoad = false)
+    public function getAdditionalFees()
     {
-        if ($this->additionalFees === null || $isLoad) {
+        if ($this->additionalFees === null) {
             $this->additionalFees = new AdditionalFeeCollection();
-//            if ($isLoad) {
-                $this->additionalFees->loadFormOwner($this);
-//            }
         }
         return $this->additionalFees;
     }

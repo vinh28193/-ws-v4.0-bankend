@@ -34,6 +34,7 @@ use Yii;
  * @property int $created_at Created at (timestamp)
  * @property int $updated_by Updated by
  * @property int $updated_at Updated at (timestamp)
+ * @property string $status_merge Trạng thái của tracking với việc đối chiếu tracking với bảng ext
  */
 class TrackingCode extends \common\components\db\ActiveRecord
 {
@@ -55,7 +56,7 @@ class TrackingCode extends \common\components\db\ActiveRecord
             [['store_id', 'manifest_id', 'package_id', 'package_item_id', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['warehouse_note', 'operation_note'], 'string'],
             [['weight', 'quantity', 'dimension_width', 'dimension_length', 'dimension_height'], 'number'],
-            [['version', 'order_ids'], 'string', 'max' => 255],
+            [['version', 'order_ids', 'status_merge'], 'string', 'max' => 255],
             [['manifest_code', 'package_code', 'tracking_code', 'weshop_tag', 'warehouse_alias', 'warehouse_tag', 'status'], 'string', 'max' => 32],
             [['warehouse_status'], 'string', 'max' => 10],
         ];
@@ -94,6 +95,7 @@ class TrackingCode extends \common\components\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_by' => 'Updated By',
             'updated_at' => 'Updated At',
+            'status_merge' => 'Status Merge',
         ];
     }
 }

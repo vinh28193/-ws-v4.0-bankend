@@ -14,6 +14,8 @@ use yii\httpclient\Client;
 abstract class BaseGate extends \yii\base\BaseObject
 {
 
+    const MAX_CACHE_DURATION = 300;
+
     public $baseUrl = '';
 
     public $searchUrl = 'search';

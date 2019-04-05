@@ -51,11 +51,13 @@ return [
         'exRate' => [
             'class' => 'common\components\ExchangeRate'
         ],
-//        'cartws' => [
-//            'class' => 'common\components\book\cart\Cart',
-//            'storage' => [
-//                'class' => 'common\components\book\cart\storage\SessionStorage',
-//            ],
-//        ],
+        /*
+        'cartws' => [
+            'class' => 'common\components\book\cart\Cart',
+            'storage' => [
+                'class' => 'common\components\book\cart\storage\SessionStorage',
+            ],
+        ],
+        */
     ],
 ];

@@ -9,17 +9,12 @@
 namespace common\components;
 
 /**
+ * interface để đảm bảo có thể tính toán giá cho bất khì 1 đồi tượng nào khi được implements
  * Interface AdditionalFeeInterface
- *
+ * @package common\components
  */
-
 interface AdditionalFeeInterface
 {
-
-    /**
-     * @return \common\components\StoreManager
-     */
-    public function getStoreManager();
 
     /**
      * @return string
@@ -61,10 +56,5 @@ interface AdditionalFeeInterface
      */
     public function getExchangeRate();
 
-    /**
-     * @param bool $formSource
-     * @return mixed
-     */
-    public function getAdditionalFees($formSource = true);
 
 }

@@ -54,10 +54,11 @@ class ExchangeRate extends Component
     public $exchangeRateTable = 'system_exchange_rate';
     /**
      * @var array
+     * Mặc định cho cao hơn hẳn
      */
     public $defaultTo = [
-        'usd,vnd' => 23000,
-        'jpy,vnd' => 20000
+        'usd,vnd' => 23500,
+        'jpy,vnd' => 21000
     ];
 
     /**

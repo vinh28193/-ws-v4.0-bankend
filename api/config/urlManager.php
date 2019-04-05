@@ -19,6 +19,7 @@ return [
         '1/logout'=>'site/logout',
 
         'test/get-custom-fee'=>'test/get-custom-fee',
+        'test/callback-boxme'=>'test/callback-boxme',
 
         '1/addon/get'=>'addon/index',
         '1/addon/order'=>'addon/order-list',
