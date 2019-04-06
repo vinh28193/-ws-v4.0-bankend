@@ -7,8 +7,8 @@
  */
 
 namespace api\controllers;
-use common\models\db\ListAccountPurchase;
-use common\models\db\Order;
+use common\models\ListAccountPurchase;
+use common\models\Order;
 use Yii;
 use api\controllers\BaseApiController;
 
@@ -83,8 +83,19 @@ class AddonController extends BaseApiController
     }
 
     public function actionView($id) {
-        $model = Order::find()->where(['id'=>$id])->asArray()->all();
-        //ToDo check data để return giữ liệu
-        return $this->response(true, 'success', $model);
+        //ToDo Set Header
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json');
+
+        if ($id !== null) {
+            $query = Order::find();
+            $request = $query->where([$query->getColumnName('id') => $id])
+                ->withFullRelations()
+                ->asArray()->all();
+            return $this->response(true, 'success', $request);
+            //return $this->response(true, "Get order $id success", $request);
+        } else {
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        }
     }
 }
