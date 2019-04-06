@@ -66,11 +66,15 @@ class AddonController extends BaseApiController
     }
 
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $model = ListAccountPurchase::find()->asArray()->all();
-        //ToDo check data để return giữ liệu
-        return $this->response(true, 'success', $model);
+        if ($model) {
+            return $this->response(true, 'success', $model);
+        }
+        return $this->response(false, 'not found account purchase');
     }
+
 
     public function actionOrderList() {
         $post = Yii::$app->request->get();
@@ -78,8 +82,10 @@ class AddonController extends BaseApiController
             ->where(['seller_id'=> $post['sellerId']])
             ->with('products')
             ->asArray()->all();
-        //ToDo check data để return giữ liệu
-        return $this->response(true, 'success', $model);
+        if ($model) {
+            return $this->response(true, 'success', $model);
+        }
+        return $this->response(false, 'not found order');
     }
 
     public function actionView($id) {
@@ -97,5 +103,6 @@ class AddonController extends BaseApiController
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
+
     }
 }

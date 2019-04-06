@@ -480,6 +480,18 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             $query->andFilterWhere(['order.type_order' => $params['type']]);
         }
         if (isset($params['searchKeyword']) && isset($params['keyWord'])) {
+            if ($params['searchKeyword'] == 'email') {
+                $query->andFilterWhere(['or',
+                ['like', 'order.receiver_email', $params['keyWord']],
+                ['like', 'customer.email', $params['keyWord']],
+            ]);
+            }
+            if ($params['searchKeyword'] == 'phone') {
+                $query->andFilterWhere(['or',
+                    ['like', 'order.receiver_phone', $params['keyWord']],
+                    ['like', 'customer.email', $params['keyWord']],
+                ]);
+            }
             $query->andFilterWhere([$params['searchKeyword'] => $params['keyWord']]);
         }
 
@@ -502,9 +514,13 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 //            $query->andFilterWhere(['between', $params['timeKeyCreate'], $params['startDate'], $params['endDate']]);
 //        }
 
-        if (isset($params['receiver_email'])) {
-            $query->andFilterWhere(['like', 'receiver_email', $params['receiver_email']]);
-        }
+//        if (isset($params['receiver_email'])) {
+//            $query->andFilterWhere(['or',
+//                ['like', 'order.receiver_email', $params['receiver_email']],
+//                ['like', 'customer.email', $params['receiver_email']],
+//            ]
+//            );
+//        }
 
         /*
 
