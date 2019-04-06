@@ -7,8 +7,8 @@
  */
 
 namespace api\controllers;
-use common\models\db\ListAccountPurchase;
-use common\models\db\Order;
+use common\models\ListAccountPurchase;
+use common\models\Order;
 use Yii;
 use api\controllers\BaseApiController;
 
@@ -66,10 +66,15 @@ class AddonController extends BaseApiController
     }
 
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $model = ListAccountPurchase::find()->asArray()->all();
-        return $this->response(true, 'success', $model);
+        if ($model) {
+            return $this->response(true, 'success', $model);
+        }
+        return $this->response(false, 'not found account purchase');
     }
+
 
     public function actionOrderList() {
         $post = Yii::$app->request->get();
@@ -77,11 +82,27 @@ class AddonController extends BaseApiController
             ->where(['seller_id'=> $post['sellerId']])
             ->with('products')
             ->asArray()->all();
-        return $this->response(true, 'success', $model);
+        if ($model) {
+            return $this->response(true, 'success', $model);
+        }
+        return $this->response(false, 'not found order');
     }
 
     public function actionView($id) {
-        $model = Order::find()->where(['id'=>$id])->asArray()->all();
-        return $this->response(true, 'success', $model);
+        //ToDo Set Header
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json');
+
+        if ($id !== null) {
+            $query = Order::find();
+            $request = $query->where([$query->getColumnName('id') => $id])
+                ->withFullRelations()
+                ->asArray()->all();
+            return $this->response(true, 'success', $request);
+            //return $this->response(true, "Get order $id success", $request);
+        } else {
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        }
+
     }
 }

@@ -131,8 +131,8 @@ class OrderController extends BaseApiController
     public function actionView($id)
     {
         if ($id !== null) {
-            $request = Order::find()
-                ->where(['id' => $id])
+            $query = Order::find();
+            $request = $query->where([$query->getColumnName('id') => $id])
                 ->withFullRelations()
                 ->asArray()->all();
             return $this->response(true, "Get order $id success", $request);
