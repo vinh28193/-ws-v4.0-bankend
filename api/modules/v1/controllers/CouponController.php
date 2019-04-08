@@ -41,7 +41,7 @@ class CouponController extends BaseApiController
     }
     public function actionIndex() {
         $model = Coupon::find()
-            ->select(['name', 'id'])
+            ->select(['name', 'id', 'code', 'amount'])
             ->asArray()->all();
         return $this->response(true, 'get data success', $model);
     }
