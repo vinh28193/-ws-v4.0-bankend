@@ -88,7 +88,6 @@ class BaseProductTest extends UnitTestCase
             'getItemType' => 'ebay'
         ];
 
-
         $this->specify('check have data', function () use ($params) {
             $baseProduct = $this->mockProduct($params);
             $baseProduct->init();
