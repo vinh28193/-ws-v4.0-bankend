@@ -124,7 +124,7 @@ class PackageItemController extends BaseApiController
                 ]);
                 return $this->response(false, 'delete package item' . $id . 'error');
             }
-            ChatHelper::push($messages, $post['ordercode'], 'WS_CUSTOMER', 'SYSTEM');
+            ChatHelper::push($messages, $post['ordercode'], 'GROUP_WS', 'SYSTEM');
             Yii::$app->wsLog->push('order','createPackageItem', null, [
                 'id' => $post['ordercode'],
                 'request' => $this->post,
@@ -146,7 +146,7 @@ class PackageItemController extends BaseApiController
         }
         $dirtyAttributes = $model->getDirtyAttributes();
         $messages = "order {$model->order->ordercode} Delete Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
-        ChatHelper::push($messages, $model->order->ordercode, 'WS_CUSTOMER', 'SYSTEM');
+        ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
         Yii::$app->wsLog->order->push('deletePackageItem', null, [
             'id' => $model->order->ordercode,
             'request' => $this->post,
