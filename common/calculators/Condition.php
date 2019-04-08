@@ -4,13 +4,9 @@
 namespace common\calculators;
 
 use Yii;
-use ReflectionClass;
-use yii\base\InvalidConfigException;
-use yii\helpers\Inflector;
+use Exception;
 
-use yii\base\BaseObject;
-
-class Condition extends BaseObject
+class Condition extends Resolver
 {
     const TYPE_INTEGER = 'int';
     const TYPE_STRING = 'string';
@@ -22,10 +18,22 @@ class Condition extends BaseObject
     const OPERATOR_LESS = '<';
     const OPERATOR_DIFFERENT = '!=';
 
+    /**
+     * @var string type of value calculator (string|integer)
+     */
     public $type = self::TYPE_INTEGER;
 
+    /**
+     * @var string key
+     */
     public $key;
+    /**
+     * @var string (==|<|<=|>|>=|!=)
+     */
     public $operator;
+    /**
+     * @var string|integer
+     */
     public $value;
 
     /**
@@ -35,29 +43,15 @@ class Condition extends BaseObject
     public function pass($target)
     {
         try {
-            $data = (new ResolveTarget())->resolve($target, $this->key);
-            return $this->check($data);
-        } catch (\Exception $exception) {
+            $key = $this->resolveKey($this->key);
+            $value = $this->resolve($target, $key);
+            if ($key === 'getIsNew') {
+                $value = $value ? 'new' : 'used';
+            }
+            return $this->check($value);
+        } catch (Exception $exception) {
             Yii::info($exception, __METHOD__);
             return false;
-        }
-    }
-
-    /**
-     * @param  $target
-     * @return mixed
-     * @throws InvalidConfigException
-     */
-    public function resolve($target)
-    {
-        $reflection = ReflectionClass($target);
-        $getter = "get" . Inflector::camelize($this->key);
-        if ($reflection->hasProperty($this->key) || $reflection->hasMethod($this->key)) {
-            return $target->{$this->key};
-        } elseif ($reflection->hasMethod($getter)) {
-            return $target->$getter;
-        } else {
-            throw new InvalidConfigException("can not resolve property or method {$this->key} in " . get_class($target));
         }
     }
 
@@ -67,21 +61,23 @@ class Condition extends BaseObject
      */
     protected function check($data)
     {
+
         switch ($this->operator) {
             case self::OPERATOR_GREATER_EQUAL:
-                return $data > $this->value;
+                return $data >= $this->value;
                 break;
             case self::OPERATOR_GREATER:
-                return $data < $this->value;
+                return $data > $this->value;
                 break;
             case self::OPERATOR_EQUAL:
-                return $data >= $this->value;
+                return $data == $this->value;
                 break;
             case self::OPERATOR_LESS_EQUAL:
                 return $data <= $this->value;
                 break;
             case self::OPERATOR_LESS:
-                return $data == $this->value;
+                return $data < $this->value;
+
                 break;
             case self::OPERATOR_DIFFERENT:
                 return $data != $this->value;
@@ -91,7 +87,18 @@ class Condition extends BaseObject
         }
     }
 
-    public function deception(){
+    public function toArray()
+    {
+        return [
+            'key' => $this->key,
+            'operator' => $this->operator,
+            'value' => $this->value,
+            'type' => $this->type,
+        ];
+    }
+
+    public function deception()
+    {
         $decs = [
             self::OPERATOR_GREATER => 'greater',
             self::OPERATOR_GREATER_EQUAL => 'greater and equal',
@@ -100,14 +107,6 @@ class Condition extends BaseObject
             self::OPERATOR_LESS_EQUAL => 'less and equal',
             self::OPERATOR_DIFFERENT => 'different'
         ];
-        return [
-            'array' => [
-                'key' => $this->key,
-                'operator' => $this->operator,
-                'value' => $this->value,
-                'type' => $this->type,
-            ],
-            'string' => "{$this->key} {$decs[$this->operator]}  ({$this->type}){$this->value}"
-        ];
+        return "{$this->key} {$decs[$this->operator]} ({$this->type}){$this->value}";
     }
 }

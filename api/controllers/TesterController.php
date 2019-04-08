@@ -40,12 +40,6 @@ class TesterController extends \yii\rest\Controller
     }
 
     public function actionCondition(){
-        $builder = new ConditionBuilder();
-        $condition = ['===','a','b'];
-//        $condition = ['||',['===','A','B'],['===','C','D']];
-        $condition =  (string) $builder->build($condition);
-//        $sql = implode(' ', array_filter($condition));
-
         $string = '[{"conditions":[{"value":50,"key":"price","type":"int","operator":">="}],"value":5,"unit":"quantity","type":"P"},{"conditions":[{"value":50,"key":"price","type":"int","operator":"<"},{"value":5,"key":"quantity","type":"int","operator":">"}],"value":5,"unit":"quantity","type":"P"}]';
         $rules = json_decode($string,true);
         $target = new \stdClass();

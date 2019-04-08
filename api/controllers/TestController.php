@@ -36,7 +36,7 @@ class TestController extends Controller
         $data['rules'] = "";
         if($category){
             $data['rules'] = json_decode($category->categoryGroup->rule,true);
-            $data['custom_fee'] = $category->getCustomFee($data['price'], $data['quantity'], $data['weight'], $data['isNew']);
+//            $data['custom_fee'] = $category->getCustomFee();
             $data['message'] = "Lấy custom fee thành công";
             \Yii::$app->response->statusCode = 200;
         }else{
