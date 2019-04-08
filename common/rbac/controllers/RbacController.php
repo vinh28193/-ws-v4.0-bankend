@@ -210,7 +210,7 @@ class RbacController extends \yii\console\Controller
 
         // sale
         $sale =  $this->authManager->getRole('sale');
-        $this->authManager->assign($purchase,7);
+        $this->authManager->assign($sale,7);
 
         //operation 8
         $operation =  $this->authManager->getRole('operation');
