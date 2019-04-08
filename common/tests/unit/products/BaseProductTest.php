@@ -170,10 +170,25 @@ class BaseProductTest extends UnitTestCase
                 verify($value['local_amount'])->equals(10 * 20 * $baseProduct->getExchangeRate());
             });
         });
-//        $baseProduct = $this->mockProduct($params);
-//        $baseProduct->init();
-//        var_dump($baseProduct->getAdditionalFees()->toArray());
-//        die;
+
+        $this->specify('custom_fee', function () use ($params) {
+            $baseProduct = $this->mockProduct($params);
+            $baseProduct->init();
+            $value = $baseProduct->getAdditionalFees()->get('custom_fee');
+            verify($value)->notNull();
+
+            $oldValue = $value;
+
+            $this->specify("change params", function () use ($params,$oldValue) {
+                $params['getSellPrice'] = 20; // dont for got ustax and us ship
+                $baseProduct = $this->mockProduct($params);
+                $baseProduct->init();
+                $value = $baseProduct->getAdditionalFees()->get('custom_fee');
+                verify($value)->notNull();
+                verify($value['amount'])->notEquals($oldValue['amount']);
+                verify($value['local_amount'])->notEquals($oldValue['local_amount']);
+            });
+        });
     }
 
 //    public function testGetSellPrice()
@@ -204,7 +219,7 @@ class BaseProductTest extends UnitTestCase
 //    {
 //    }
 //
-//    public function testSetShippingQuantity()
+//    public function testGetShippingQuantity()
 //    {
 //    }
 //
@@ -212,19 +227,19 @@ class BaseProductTest extends UnitTestCase
 //    {
 //    }
 //
-//    public function testSetIsNew()
+//    public function testGetIsNew()
 //    {
 //    }
 //
-//    public function testSetExchangeRate()
+//    public function testGetExchangeRate()
 //    {
 //    }
 //
-//    public function testSetLocalizeTotalPrice()
+//    public function testGetLocalizeTotalPrice()
 //    {
 //    }
 //
-//    public function testSetLocalizeTotalStartPrice()
+//    public function testGetLocalizeTotalStartPrice()
 //    {
 //    }
 //
