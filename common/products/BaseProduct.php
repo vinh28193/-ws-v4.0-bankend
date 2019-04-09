@@ -89,6 +89,8 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
     public $type = self::TYPE_EBAY;
     public $product_type = self::PRODUCT_TYPE_BUY_NOW;
 
+    public $is_free_ship = false;
+
     public $current_url;
     public $current_image;
     public $price_api;
@@ -124,6 +126,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
             $this->setRelateProduct();
             $this->setImages();
             $this->setTechnicalSpecific();
+            $this->setProviders();
             $this->isInitialized = true;
         }
     }
@@ -148,7 +151,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
      */
     public function getItemType()
     {
-        return $this->type;
+        return strtolower($this->type);
     }
 
     /**

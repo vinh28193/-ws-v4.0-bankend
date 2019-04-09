@@ -69,6 +69,13 @@ trait ProductTrait
         $this->primary_images = $rs;
     }
 
+    public function setProviders(){
+        $providers = [];
+        foreach ($this->providers as  $provider){
+            $providers[] = new Provider($provider);
+        }
+        $this->providers = $providers;
+    }
     public function checkOutOfStock()
     {
         return $this->available_quantity - $this->quantity_sold < 0 ? $this->available_quantity : $this->available_quantity - $this->quantity_sold;
@@ -168,7 +175,8 @@ trait ProductTrait
             return false;
         }
         foreach ($this->providers as $provider) {
-            if ($provider->provId == $selerId) {
+            /** @var $provider Provider */
+            if ($provider->prov_id == $selerId) {
                 $this->sell_price = $provider->price;
                 $this->condition = $provider->condition;
                 $this->is_prime = $provider->is_prime;

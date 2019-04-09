@@ -22,6 +22,11 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
         return \Yii::$app->session;
     }
 
+    private function resolveKey($key)
+    {
+        return explode('.', $key);
+    }
+
     public function setByKey($key, $value, $default = false)
     {
         list($key, $id) = $key;
@@ -36,12 +41,28 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
         return true;
     }
 
+    protected function getKeys($id){
+
+    }
     public function hasItem($key)
     {
-
         list($key, $id) = $key;
-        $keys = array_keys($this->getItems($id));
-        return in_array($key, $keys);
+        list($second, $third) = $this->resolveKey($key);
+        $exist = false;
+        foreach ($this->getItems($id) as $key => $arrays){
+            if($key === $second){
+                foreach (array_keys($arrays) as $key){
+                    if($key === $third){
+                        $exist = true;
+                        break;
+                    }
+                }
+                if($exist === true){
+                    break;
+                }
+            }
+        }
+        return $exist;
 
     }
 
@@ -55,9 +76,13 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
         list($key, $id) = $key;
         $values = $this->getItems($id);
         $this->removeItems($id);
-        $values = ArrayHelper::merge($values, [
-            $key => $value
+
+        list($second, $third) = $this->resolveKey($key);
+        $secondValue = ArrayHelper::getValue($values, $second, []);
+        $secondValue = ArrayHelper::merge($secondValue, [
+            $third => $value
         ]);
+        $values[$second] = $secondValue;
         $this->getSession()->set($this->sessionName, [$id => $values]);
     }
 

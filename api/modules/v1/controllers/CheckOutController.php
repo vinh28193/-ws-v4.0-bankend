@@ -72,39 +72,33 @@ class CheckOutController extends BaseApiController
 
         $orders = [];
         $errors = [];
-        $Object_detech = [];
-        $orderUpdateFeeAttribute = $productFee = []; $i=0;
-
         foreach ($items as $key => $simpleItem) {
-
+            $rs = [];
             /** @var  $simpleItem \common\components\cart\item\SimpleItem */
             $item = $simpleItem->item;
-            $Object_detech = $item;
+            $rs['item'] = $item;
 
             // Seller
-            if (($providers = ArrayHelper::getValue($item, 'providers')) === null || ($item->type === 'EBAY' &&  $providers !== null && !isset($providers['name']))) {
+            if (($providers = ArrayHelper::getValue($item, 'providers')) === null) {
                 $errors[$key][] = "can not create form null seller";
                 continue;
             }
+
             /**
-             * seller ebay va amazon khac nhau, hien tai chia parse ve 1 dang, vi amzon lau theo api offfer
+             * todo get current seller
              */
-            if (isset($providers[0]) && $item->type !== 'EBAY') {
-                $s = [];
-                foreach ($providers as $provider) {
-                    $s['name'] = $provider->prov_id;
-                    $s['website'] = null;
-                    $s['rating_score'] = $provider->rating_score;
+            $sellers = [];
+            foreach ($providers as $provider){
+                if (($seller = Seller::findOne(['seller_name' => $provider->name])) === null) {
+                    $seller = new Seller();
+                    $seller->seller_name = $provider['name'];
+                    $seller->seller_link_store = $provider['website'];
                 }
-                $providers = $s;
-            }
-            if (($seller = Seller::findOne(['seller_name' => $providers['name']])) === null) {
-                $seller = new Seller();
-                $seller->seller_name = $providers['name'];
-                $seller->seller_link_store = $providers['website'];
-                $seller->seller_store_rate = $providers['rating_score'];
+                $seller->seller_store_rate = $provider['rating_score'];
                 $seller->save(false);
+                $sellers[] = $seller;
             }
+            $rs['sellers'] = $sellers;
             // Category
             if (($categoryId = ArrayHelper::getValue($item, 'category_id')) === null) {
                 $errors[$key][] = "can not create form null category";
@@ -117,7 +111,7 @@ class CheckOutController extends BaseApiController
                 $category->origin_name = ArrayHelper::getValue($item, 'category_name', 'Unknown');
                 $category->save();
             }
-
+            $rs['category'] = $category;
             $product = new Product;
             $product->sku = $item->item_sku;
             $product->parent_sku = $item->item_id;
@@ -125,13 +119,13 @@ class CheckOutController extends BaseApiController
             $product->category_id = $category->id;
             list($product->price_amount_origin, $product->total_price_amount_local) = $product->getAdditionalFees()->getTotalAdditionFees();
             $product->quantity_customer = $item->quantity;
-            $product->seller_id = $seller->id;
+            $product->seller_id = $sellers[0]->id;
             // Order
             $order = new Order();
             $order->type_order = 'SHOP';
             $order->ordercode = 'WSVN' . @rand(10, 100000);
             $order->store_id = 1;
-            $order->seller_id = $seller->id;
+            $order->seller_id = $sellers[0]->id;
 //            $order->portal = $item->type;
             $order->quotation_status = 0;
             $order->is_quotation = 0;
@@ -150,8 +144,10 @@ class CheckOutController extends BaseApiController
 
             $order->save(false);
             $order->link('products', $product);
+            $rs['products'] = $product;
             $orderUpdateFeeAttribute = [];
             $data_key = [];
+            $productFee = [];
             foreach ($item->additionalFees->keys() as $key) {
 
                 list($amount, $local) = $item->getAdditionalFees()->getTotalAdditionFees($key);
@@ -177,24 +173,19 @@ class CheckOutController extends BaseApiController
                 if ($orderFee->save() && $order->hasAttribute($orderAttribute)) {
                     $orderUpdateFeeAttribute[$orderAttribute] = $local;
                 }
-                $productFee[$i++] = $orderFee;
+                $productFee[$key] = $orderFee;
             }
+
             $orderUpdateFeeAttribute['total_fee_amount_local'] = $item->getAdditionalFees()->getTotalAdditionFees()[1];
             $order->updateAttributes($orderUpdateFeeAttribute);
-            $orders[] = $order->id;
+            $rs['key'] = $data_key;
+            $rs['productFee'] = $productFee;
+            $rs['orderUpdateFee'] = $orderUpdateFeeAttribute;
+            $rs['order'] = $order;
+            $orders[$order->id] = $rs;
         }
 
-        $_itemRes = [];
-        $_itemRes['Object_detech_api_'] = $Object_detech;
-        $_itemRes['seller'] = $seller;
-        $_itemRes['category'] = $category;
-        $_itemRes['order'] = $orders;
-        $_itemRes['product'] = $product;
-        $_itemRes['productFee'] = $productFee;
-        $_itemRes['orderUpdateFee'] = $orderUpdateFeeAttribute;
-        $_itemRes['key'] = $data_key;
-
-        Yii::$app->api->sendSuccessResponse($_itemRes);
+        Yii::$app->api->sendSuccessResponse($orders);
 
     }
 }

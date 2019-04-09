@@ -19,6 +19,21 @@ use common\components\cart\storage\CartStorageInterface;
  * Class CartManager
  * @package common\components\cart
  *
+ * [
+ *      1 => [
+ *         ebay:fun_shop => [
+ *              sku => [
+ *                   // item data
+ *              ],
+ *              sku:parentSku => [
+ *                  // item data
+ *             ]
+ *          ],
+ *          ebay:shop2 => [
+ *
+ *          ]
+ *
+ * ]
  */
 class CartManager extends Component
 {
@@ -91,8 +106,8 @@ class CartManager extends Component
         $this->getSerializer();
         $this->getStorage();
         $this->getUser();
-        if(get_class($this->storage) === 'common\components\cart\storage\MongodbCartStorage'){
-            if(get_class($this->serializer) !== 'common\components\cart\serialize\NoneSerialize'){
+        if (get_class($this->storage) === 'common\components\cart\storage\MongodbCartStorage') {
+            if (get_class($this->serializer) !== 'common\components\cart\serialize\NoneSerialize') {
                 throw new InvalidConfigException("common\components\cart\storage\MongodbCartStorage only use common\components\cart\serialize\NoneSerialize");
             }
         }
@@ -103,37 +118,38 @@ class CartManager extends Component
      * @return array
      * @throws \Throwable
      */
-    public function buildPrimaryKey($key)
+    private function buildPrimaryKey($key)
     {
-        if ($key === null) {
-            $key = false;
-        }
         return [$key, $this->getUser()->getId()];
     }
 
     /**
+     * @param $source
+     * @param $seller
      * @param $sku
      * @param null $parentSku
      * @return bool
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function hasItem($sku, $parentSku = null)
+    public function hasItem($source, $seller, $sku, $parentSku = null)
     {
-        $key = $this->normalPrimaryKey($sku, $parentSku);
+        $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
         return $this->getStorage()->hasItem($key);
     }
 
     /**
+     * @param $source
+     * @param $seller
      * @param $sku
      * @param null $parentSku
      * @return bool|mixed
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function getItem($sku, $parentSku = null)
+    public function getItem($source, $seller, $sku, $parentSku = null)
     {
-        $key = $this->normalPrimaryKey($sku, $parentSku);
+        $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
         if (($value = $this->getStorage()->getItem($key)) !== false) {
             return $this->getSerializer()->unserialize($value);
         }
@@ -150,15 +166,15 @@ class CartManager extends Component
      * @return bool
      * @throws \Throwable
      */
-    public function addItem($sku, $seller, $quantity, $source, $image, $parentSku = null)
+    public function addItem($source, $seller, $quantity,$image, $sku, $parentSku = null)
     {
-        $key = $this->normalPrimaryKey($sku, $parentSku);
+        $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
         try {
-            if ($this->hasItem($sku, $parentSku)) {
-                if (($item = $this->getItem($sku, $parentSku)) === false) {
+            if ($this->hasItem($source, $seller, $sku, $parentSku)) {
+                if (($item = $this->getItem($source, $seller, $sku, $parentSku)) === false) {
                     return false;
                 }
-                if(!is_object($item)){
+                if (!is_object($item)) {
                     $item = new SimpleItem($item);
                 }
                 // pass new param for CartItem
@@ -182,13 +198,13 @@ class CartManager extends Component
         }
     }
 
-    public function updateItem($sku, $seller = null, $quantity = 1, $image, $parentSku = null)
+    public function update($source, $seller, $sku, $parentSku = null, $quantity = 1, $image)
     {
-        $key = $this->normalPrimaryKey($sku, $parentSku);
+        $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
 
         try {
-            if ($this->hasItem($sku, $parentSku)) {
-                if (($item = $this->getItem($sku, $parentSku)) === false) {
+            if ($this->hasItem($source, $seller, $sku, $parentSku)) {
+                if (($item = $this->getItem($source, $seller, $sku, $parentSku)) === false) {
                     return false;
                 }
                 if ($seller !== null && !$this->compareValue($item->seller, $seller, 'string')) {
@@ -204,7 +220,7 @@ class CartManager extends Component
                 $item = $this->getSerializer()->serializer($item);
                 $this->getStorage()->setItem($key, $item);
                 return true;
-            }else{
+            } else {
                 return false;
             }
 
@@ -214,11 +230,11 @@ class CartManager extends Component
         }
     }
 
-    public function removeItem($sku, $parentSku = null)
+    public function removeItem($source, $seller, $sku, $parentSku = null)
     {
 
-        if ($this->hasItem($sku, $parentSku)) {
-            $key = $this->normalPrimaryKey($sku, $parentSku);
+        if ($this->hasItem($source, $seller, $sku, $parentSku)) {
+            $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
             return $this->getStorage()->removeItem($key);
         }
         return false;
@@ -229,8 +245,10 @@ class CartManager extends Component
     {
         $items = $this->getStorage()->getItems($this->getUser()->id);
         $results = [];
-        foreach ($items as $key => $item) {
-            $results[$key] = $this->getSerializer()->unserialize($item);
+        foreach ($items as $second => $arrays) {
+            foreach ($arrays as $third => $item){
+                $results[$second][$third] = $this->getSerializer()->unserialize($item);
+            }
         }
         return $results;
     }
@@ -256,17 +274,21 @@ class CartManager extends Component
     }
 
     /**
+     * @param $source
+     * @param $seller
      * @param $sku
      * @param null $parentSku
      * @return array
      * @throws \Throwable
      */
-    private function normalPrimaryKey($sku, $parentSku = null)
+    public function normalPrimaryKey($source, $seller, $sku, $parentSku = null)
     {
-        $key = $sku;
+        $firstKey = "$source:$seller";
+        $secondKey = "$sku";
         if ($parentSku !== null) {
-            $key .= "-$parentSku";
+            $secondKey .= ":$parentSku";
         }
+        $key = $firstKey . "." . $secondKey;
         return $this->buildPrimaryKey($key);
     }
 

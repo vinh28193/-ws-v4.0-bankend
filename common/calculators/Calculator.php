@@ -167,7 +167,7 @@ class Calculator extends Resolver
             $deception[] = $condition->deception();
         }
         $string = implode(', ', $deception);
-        $type = $this->type === self::TYPE_PERCENT ? '%' : $this->type;
+        $type = $this->type === self::TYPE_FIXED ? '$' : '%';
         $unit = $this->unit === 'quantity' ? 'each item' : ($this->unit === 'weight' ? 'each kg' : 'each price');
         return "$this->value{$type} $unit if $string";
 
