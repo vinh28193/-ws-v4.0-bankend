@@ -16,6 +16,7 @@ use Yii;
  * @property string $portal portal ebay, amazon us, amazon jp ...: EBAY/ AMAZON_US / AMAZON_JAPAN / OTHER / WEBSITE NGOÀI 
  * @property string $utm_source Đơn theo viết được tạo ra bới chiến dịch nào : Facebook ads, Google ads , eomobi , etc ,,,, 
  * @property string $new time NEW
+ * @property string $purchase_start
  * @property string $purchased time PURCHASED
  * @property string $seller_shipped time SELLER_SHIPPED
  * @property string $stockin_us time STOCKIN_US
@@ -102,6 +103,7 @@ use Yii;
  * @property string $version version 4.0
  *
  * @property User $purchaseAssignee
+ * @property PurchaseProduct[] $purchaseProducts
  */
 class Order extends \common\components\db\ActiveRecord
 {
@@ -120,7 +122,7 @@ class Order extends \common\components\db\ActiveRecord
     {
         return [
             [['store_id', 'type_order', 'customer_id', 'customer_type', 'portal', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_country_name', 'receiver_province_id', 'receiver_province_name', 'receiver_district_id', 'receiver_district_name', 'receiver_post_code', 'receiver_address_id', 'payment_type'], 'required'],
-            [['store_id', 'customer_id', 'new', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove'], 'integer'],
+            [['store_id', 'customer_id', 'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove'], 'integer'],
             [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_account_id', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id'], 'string'],
             [['total_final_amount_local', 'total_amount_local', 'total_origin_fee_local', 'total_price_amount_origin', 'total_paid_amount_local', 'total_refund_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_fee_amount_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_custom_fee_amount_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'revenue_xu', 'xu_count', 'xu_amount', 'total_weight', 'total_weight_temporary', 'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund'], 'number'],
             [['ordercode', 'type_order', 'portal', 'utm_source', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'version'], 'string', 'max' => 255],
@@ -145,6 +147,7 @@ class Order extends \common\components\db\ActiveRecord
             'portal' => 'Portal',
             'utm_source' => 'Utm Source',
             'new' => 'New',
+            'purchase_start' => 'Purchase Start',
             'purchased' => 'Purchased',
             'seller_shipped' => 'Seller Shipped',
             'stockin_us' => 'Stockin Us',
@@ -239,8 +242,12 @@ class Order extends \common\components\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'purchase_assignee_id']);
     }
-    public function getProducts()
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPurchaseProducts()
     {
-        return $this->hasMany(Product::className(), ['order_id' => 'id']);
+        return $this->hasMany(PurchaseProduct::className(), ['order_id' => 'id']);
     }
 }

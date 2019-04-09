@@ -616,7 +616,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         ];
 
         $data = new \stdClass();
-        $data->_items = $query->all();
+        $data->_items = $query->orderBy('id desc')->all();
         $data->_links = '';
         $data->_meta = $additional_info;
         return $data;

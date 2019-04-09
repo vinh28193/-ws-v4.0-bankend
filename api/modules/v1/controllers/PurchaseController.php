@@ -127,16 +127,16 @@ class PurchaseController extends BaseApiController
             $orders = Order::find()->with(['products'])
                 ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY2PURCHASE,Order::STATUS_PURCHASE_PART]])
                 ->orWhere(['purchase_assignee_id'=>Yii::$app->user->getId(),'current_status' => Order::STATUS_PURCHASING])
-                ->all();
+                ->limit(1)->all();
         }elseif($listId){
             $orders = Order::find()->with('products')
                 ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY2PURCHASE,Order::STATUS_PURCHASE_PART]])
-                ->all();
+                ->limit(1)->all();
         }else{
             $success = true;
             $orders = Order::find()->with('products')
                 ->where(['purchase_assignee_id'=>Yii::$app->user->getId(),'current_status' => Order::STATUS_PURCHASING])
-                ->all();
+                ->limit(1)->all();
         }
         /** @var User $user */
         $user = Yii::$app->user->getIdentity();
@@ -203,6 +203,7 @@ class PurchaseController extends BaseApiController
                 }
             }
             $order->purchase_assignee_id = $user->id;
+            $order->purchase_start = $order->current_status == Order::STATUS_READY2PURCHASE ? time() : $order->purchase_start;
             $order->current_status = Order::STATUS_PURCHASING;
             $order->save(0);
         }
