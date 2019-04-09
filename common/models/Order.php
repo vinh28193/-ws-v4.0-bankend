@@ -221,15 +221,20 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             [
                 [
-                    'type_order', 'portal', 'utm_source', 'quotation_note',
-                    'receiver_email', 'receiver_name', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code',
+                    'receiver_email', 'type_order', 'portal', 'utm_source', 'quotation_note',
+                    'receiver_name', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code',
                     'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log'
                 ], 'string', 'max' => 255
             ],
+//             [
+//                 [
+//                     'receiver_email',
+//                 ],'string', 'min' => 5, 'math' , 'pattern' => "/^[A-Za-z0-9_\.]{6,32}@([a-zA-Z0-9]{2,12})(\.[a-zA-Z]{2,12})+$/"
+//             ],
             [
                 [
                     'receiver_phone',
-                ],'string', 'min' => 9,
+                ],'string', 'min' => 9
             ],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
