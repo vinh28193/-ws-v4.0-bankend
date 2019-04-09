@@ -124,6 +124,26 @@ class ExchangeRate extends Component
         return $query->one($this->db)['rate'];
     }
 
+    public function addData($from, $to, $rate)
+    {
+        $transaction = $this->db->beginTransaction();
+        try {
+            $this->db->createCommand()
+                ->insert($this->exchangeRateTable, [
+                    'from' => strtoupper($from),
+                    'to' => strtoupper($to),
+                    'rate' => $rate,
+                    'sync_at' => Yii::$app->getFormatter()->asDatetime('now')
+                ])->execute();
+            $transaction->commit();
+            return true;
+        } catch (\Exception $exception) {
+            Yii::error($exception, __METHOD__);
+            $transaction->rollBack();
+            return false;
+        }
+    }
+
     public function loadFormApi($console = false)
     {
         if ($console) echo "Lấy tỷ giá từ apilayer: ,,," . PHP_EOL;
@@ -151,16 +171,16 @@ class ExchangeRate extends Component
                             'rate' => $rate,
                             'sync_at' => Yii::$app->getFormatter()->asDatetime('now')
                         ])->execute();
-                    if ($console) echo $from." ==> ".$to.": ".$rate. PHP_EOL;
+                    if ($console) echo $from . " ==> " . $to . ": " . $rate . PHP_EOL;
                 }
             }
             $transaction->commit();
         } catch (\Exception $exception) {
-            if ($console) echo "Có lỗi sảy ra. Huỷ tất cả các tỷ giá vừa lấy  ...". PHP_EOL;
-            if ($console) echo $exception->getFile(). PHP_EOL;
-            if ($console) echo $exception->getMessage(). PHP_EOL;
-            if ($console) echo $exception->getLine(). PHP_EOL;
-            if ($console) echo $exception->getTraceAsString(). PHP_EOL;
+            if ($console) echo "Có lỗi sảy ra. Huỷ tất cả các tỷ giá vừa lấy  ..." . PHP_EOL;
+            if ($console) echo $exception->getFile() . PHP_EOL;
+            if ($console) echo $exception->getMessage() . PHP_EOL;
+            if ($console) echo $exception->getLine() . PHP_EOL;
+            if ($console) echo $exception->getTraceAsString() . PHP_EOL;
             Yii::error($exception, __METHOD__);
             $transaction->rollBack();
         }
@@ -197,17 +217,17 @@ class ExchangeRate extends Component
                                 'rate' => $rate,
                                 'sync_at' => Yii::$app->getFormatter()->asDatetime('now')
                             ])->execute();
-                        if ($console) echo $from." ==> ".$to.": ".$rate. PHP_EOL;
+                        if ($console) echo $from . " ==> " . $to . ": " . $rate . PHP_EOL;
                     }
                 }
             }
             $transaction->commit();
         } catch (\Exception $exception) {
-            if ($console) echo "Có lỗi sảy ra. Huỷ tất cả các tỷ giá vừa lấy  ...". PHP_EOL;
-            if ($console) echo $exception->getFile(). PHP_EOL;
-            if ($console) echo $exception->getMessage(). PHP_EOL;
-            if ($console) echo $exception->getLine(). PHP_EOL;
-            if ($console) echo $exception->getTraceAsString(). PHP_EOL;
+            if ($console) echo "Có lỗi sảy ra. Huỷ tất cả các tỷ giá vừa lấy  ..." . PHP_EOL;
+            if ($console) echo $exception->getFile() . PHP_EOL;
+            if ($console) echo $exception->getMessage() . PHP_EOL;
+            if ($console) echo $exception->getLine() . PHP_EOL;
+            if ($console) echo $exception->getTraceAsString() . PHP_EOL;
             Yii::error($exception, __METHOD__);
             $transaction->rollBack();
         }
