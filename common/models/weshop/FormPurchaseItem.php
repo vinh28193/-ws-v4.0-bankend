@@ -34,4 +34,5 @@ class FormPurchaseItem extends Model
     public $paidToSeller;
     public $paidTotal;
     public $typeCustomer;
+    public $isChange;
 }
