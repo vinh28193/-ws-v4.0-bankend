@@ -173,7 +173,7 @@ class OrderController extends BaseApiController
             ]);
             return $this->response(false, $model->getFirstErrors());
         }
-        ChatHelper::push($messages, $model->ordercode, 'WS_CUSTOMER', 'SYSTEM');
+        ChatHelper::push($messages, $model->ordercode, 'GROUP_WS', 'SYSTEM');
         Yii::$app->wsLog->push('order', $model->getScenario(), null, [
             'id' => $model->ordercode,
             'request' => $this->post,

@@ -41,7 +41,7 @@ class CouponController extends BaseApiController
     }
     public function actionIndex() {
         $model = Coupon::find()
-            ->select(['name', 'id'])
+            ->select(['name', 'id', 'code', 'amount'])
             ->asArray()->all();
         return $this->response(true, 'get data success', $model);
     }
@@ -90,7 +90,7 @@ class CouponController extends BaseApiController
             ]);
             return $this->response(false, 'update coupon error');
         }
-        ChatHelper::push($messages, $post['ordercode'],'WS_CUSTOMER', 'SYSTEM');
+        ChatHelper::push($messages, $post['ordercode'],'GROUP_WS', 'SYSTEM');
         Yii::$app->wsLog->push('order','updateCoupon', null, [
             'id' => $post['ordercode'],
             'request' => $this->post,

@@ -221,10 +221,20 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             [
                 [
-                    'type_order', 'portal', 'utm_source', 'quotation_note',
-                    'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code',
+                    'receiver_email', 'type_order', 'portal', 'utm_source', 'quotation_note',
+                    'receiver_name', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code',
                     'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log'
                 ], 'string', 'max' => 255
+            ],
+//             [
+//                 [
+//                     'receiver_email',
+//                 ],'string', 'min' => 5, 'math' , 'pattern' => "/^[A-Za-z0-9_\.]{6,32}@([a-zA-Z0-9]{2,12})(\.[a-zA-Z]{2,12})+$/"
+//             ],
+            [
+                [
+                    'receiver_phone',
+                ],'string', 'min' => 9
             ],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
@@ -480,19 +490,37 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             $query->andFilterWhere(['order.type_order' => $params['type']]);
         }
         if (isset($params['searchKeyword']) && isset($params['keyWord'])) {
-            if ($params['searchKeyword'] == 'email') {
+            if ($params['searchKeyword'] == 'ALL') {
                 $query->andFilterWhere(['or',
-                ['like', 'order.receiver_email', $params['keyWord']],
-                ['like', 'customer.email', $params['keyWord']],
-            ]);
+                    ['order.ordercode' => $params['keyWord']],
+                    ['product.id' => $params['keyWord']],
+                    ['order.ordercode' => $params['keyWord']],
+                    ['product.sku' => $params['keyWord']],
+                    ['coupon.code' => $params['keyWord']],
+                    ['product.category_id' => $params['keyWord']],
+                    ['product.product_name' => $params['keyWord']],
+                    ['order.payment_type' => $params['keyWord']],
+                    ['customer.email' => $params['keyWord']],
+                    ['order.receiver_email' => $params['keyWord']],
+                    ['order.receiver_phone' => $params['keyWord']],
+                    ['customer.phone' => $params['keyWord']],
+                    ]);
+            } elseif ($params['searchKeyword'] != 'ALL') {
+                if ($params['searchKeyword'] == 'email') {
+                    $query->andFilterWhere(['or',
+                        ['like', 'order.receiver_email', $params['keyWord']],
+                        ['like', 'customer.email', $params['keyWord']],
+                    ]);
+                }
+                elseif ($params['searchKeyword'] == 'phone') {
+                    $query->andFilterWhere(['or',
+                        ['like', 'order.receiver_phone', $params['keyWord']],
+                        ['like', 'customer.phone', $params['keyWord']],
+                    ]);
+                }
+                $query->andFilterWhere([$params['searchKeyword'] => $params['keyWord']]);
             }
-            if ($params['searchKeyword'] == 'phone') {
-                $query->andFilterWhere(['or',
-                    ['like', 'order.receiver_phone', $params['keyWord']],
-                    ['like', 'customer.email', $params['keyWord']],
-                ]);
-            }
-            $query->andFilterWhere([$params['searchKeyword'] => $params['keyWord']]);
+
         }
 
         if (isset($params['orderStatus'])) {
@@ -507,7 +535,25 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         }
 
         if (isset($params['timeKey']) && isset($params['startTime']) && isset($params['endTime'])) {
-            $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
+            if ($params['timeKey'] == 'ALL') {
+                $query->andFilterWhere(['or',
+                    ['between', 'order.created_at', $params['startTime'], $params['endTime']],
+                    ['between', 'order.updated_at', $params['startTime'], $params['endTime']],
+                    ['between', 'order.new', $params['startTime'], $params['endTime']],
+                    ['between', 'order.purchased', $params['startTime'], $params['endTime']],
+                    ['between', 'order.seller_shipped', $params['startTime'], $params['endTime']],
+                    ['between', 'order.stockin_us', $params['startTime'], $params['endTime']],
+                    ['between', 'order.stockout_us', $params['startTime'], $params['endTime']],
+                    ['between', 'order.stockin_local', $params['startTime'], $params['endTime']],
+                    ['between', 'order.stockout_local', $params['startTime'], $params['endTime']],
+                    ['between', 'order.at_customer', $params['startTime'], $params['endTime']],
+                    ['between', 'order.returned', $params['startTime'], $params['endTime']],
+                    ['between', 'order.cancelled', $params['startTime'], $params['endTime']],
+                    ['between', 'order.lost', $params['startTime'], $params['endTime']],
+                    ]);
+            } elseif ($params['timeKey'] != 'ALL') {
+                $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
+            }
         }
 
 //        if (isset($params['timeKeyCreate']) && isset($params['startDate']) && isset($params['endDate'])) {
