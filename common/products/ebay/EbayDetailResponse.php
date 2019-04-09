@@ -54,7 +54,7 @@ class EbayDetailResponse extends BaseResponse
             }
             $response = $response['data'];
             if (isset($response['provider'])) {
-                $response['providers'] = $response['provider'];
+                $response['providers'][] = $response['provider'];
                 unset($response['provider']);
             }
             if (isset($response['usTaxRate'])) {

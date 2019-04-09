@@ -31,7 +31,7 @@ class EbayGate extends BaseGate
             return [false, $request->getFirstErrors()];
         }
         if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
-            list($success,$response) = $this->searchRequest($request->params());
+            list($success, $response) = $this->searchRequest($request->params());
             $this->cache->set($request->getCacheKey(), $response, $success === true ? self::MAX_CACHE_DURATION : 0);
         }
         return [true, (new EbaySearchResponse($this))->parser($response)];
@@ -74,11 +74,11 @@ class EbayGate extends BaseGate
     {
         $request = new EbayDetailRequest();
         $request->keyword = $condition;
-        if (!($rs = $this->cache->get($request->getCacheKey())) || $refresh) {
-            $rs = $this->lookupRequest($request->params());
-            $this->cache->set($request->getCacheKey(), $rs, $rs[0] === true ? self::MAX_CACHE_DURATION : 0);
+        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
+            list($ok, $response) = $this->lookupRequest($request->params());
+            $this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
         }
-        return [true, (new EbayDetailResponse($this))->parser($rs)];
+        return [true, (new EbayDetailResponse($this))->parser($response)];
 
     }
 
