@@ -27,14 +27,31 @@ class BaseRequestTest extends UnitTestCase
                     'getStore' => $store
                 ]);
                 return $manager;
-            }
+            },
+            'params' => []
         ], $params);
         return $this->make(BaseRequest::className(), $params);
     }
 
     // tests
-    public function testSomeFeature()
+    public function testGetStoreManager()
     {
+        $request = $this->make(BaseRequest::className(),[
+            'params' => []
+        ]);
+        $this->specify("check class Name",function ()use ($request){
+            verify($request)->isInstanceOf(\common\components\StoreManager::className());
+        });
+    }
 
+    public function testRules(){
+
+    }
+
+    public function testAttributes(){
+        $request = $this->make(BaseRequest::className(),[
+            'params' => []
+        ]);
+        verify($request->attributes())->notNull();
     }
 }
