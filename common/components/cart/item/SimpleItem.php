@@ -13,12 +13,13 @@ use common\products\forms\ProductDetailFrom;
 
 class SimpleItem extends BaseCartItem
 {
-    public $sku;
-    public $parentSku;
+
     public $source;
     public $seller;
     public $quantity = 1;
     public $image;
+    public $sku;
+    public $parentSku = null;
 
     /** @var BaseProduct */
     public $item;
@@ -40,14 +41,12 @@ class SimpleItem extends BaseCartItem
         $form = new ProductDetailFrom();
         $form->load($params, '');
         /** @var $product false | \common\products\BaseProduct BaseProduct */
-        if (($product = $form->detail(true)) === false) {
+        if (($product = $form->detail(false)) === false) {
             \Yii::info($form->getFirstErrors(), "add_to_cart");
             return [false, $form->getFirstErrors()];
 
         }
         $product->current_image = $this->image;
-//        $serializer = new \common\filters\Serializer();
-//        $this->item = $serializer->serialize($product);
         $this->item = $product;
         return $this;
     }

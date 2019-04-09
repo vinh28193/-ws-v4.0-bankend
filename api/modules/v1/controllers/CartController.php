@@ -28,10 +28,13 @@ class CartController extends \yii\rest\Controller
         $this->getCart()->removeItems();
 
         $this->getCart()->addItem('ebay','cleats_blowout_sports',1,'test','252888606889');
-        var_dump($this->getCart()->getItem('ebay','cleats_blowout_sports','254113708379'));die;
         $this->getCart()->addItem('ebay','cleats_blowout_sports',1,'test','254113708379');
+        $this->getCart()->addItem('ebay','mygiftstop',1,'test','332800694983');
+        $this->getCart()->addItem('ebay','mygiftstop',10,'test','332800694983');
+        $this->getCart()->addItem('amazon','QVVESU9MQUIgLSBTaW5jZSAxOTU4LU5ldy0yNzk=',10,'test','B07C49F2LD');
+        $this->getCart()->addItem('amazon','QW1hem9uLmNvbS1OZXctMjc5',10,'test','B07C49F2LD');
         $items = $this->getCart()->getItems();
-        var_dump(1);die;
+        var_dump($items);die;
 //        $this->getCart()->addItem('IF_6C960C53','cleats_blowout_sports',1,'ebay','test','252888606889');
 //        $dataProvider = new ArrayDataProvider([
 //            'allModels' => $this->getCart()->getItems(),

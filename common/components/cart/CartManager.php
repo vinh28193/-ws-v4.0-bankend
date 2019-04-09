@@ -178,7 +178,12 @@ class CartManager extends Component
                     $item = new SimpleItem($item);
                 }
                 // pass new param for CartItem
-                $item->quantity += 1;
+                $item->quantity = $quantity;
+                $item->seller = $seller;
+                $item->source = $source;
+                $item->parentSku = $parentSku;
+                $item->sku = $sku;
+                $item->image = $item;
                 $item = $item->process();
                 $item = $this->getSerializer()->serializer($item);
                 $this->getStorage()->setItem($key, $item);

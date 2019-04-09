@@ -61,18 +61,79 @@ class CheckOutController extends BaseApiController
     public function actionCreate()
     {
         $this->cart->removeItems();
-        $this->cart->addItem('IF_739F9D0E', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/cAQAAOSwMn5bzly6/$_12.JPG?set_id=880000500F', '252888606889');
-       // $this->cart->addItem('B01MQDLB83', 'ZVN1cHBsZW1lbnRzLU5ldy0xNi45NQ==', 1, 'amazon', 'https://images-na.ssl-images-amazon.com/images/I/41lv8DmLJvL.jpg');
+        $this->getCart()->removeItems();
 
-        //$this->cart->addItem('IF_6C960C53', 'cleats_blowout_sports', 1, 'ebay', 'https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/nrsAAOSw7Spbzlyw/$_12.JPG?set_id=880000500F', '252888606889');
-        //$this->cart->addItem('261671375738', 'luv4everbeauty', 1, 'ebay', 'https://i.ebayimg.com/00/s/NTk3WDU5Nw==/z/FjMAAOSwscNbK5~0/$_57.JPG');
-        // Toto CheckOutForm to validate data form all
+        $this->getCart()->addItem('ebay', 'cleats_blowout_sports', 1, 'test', '252888606889');
+        $this->getCart()->addItem('ebay', 'cleats_blowout_sports', 1, 'test', '254113708379');
+        $this->getCart()->addItem('ebay', 'mygiftstop', 1, 'test', '332800694983');
+        $this->getCart()->addItem('ebay', 'mygiftstop', 10, 'test', '332800694983');
+        $this->getCart()->addItem('amazon', 'QVVESU9MQUIgLSBTaW5jZSAxOTU4LU5ldy0yNzk=', 10, 'test', 'B07C49F2LD');
+        $this->getCart()->addItem('amazon', 'QW1hem9uLmNvbS1OZXctMjc5', 10, 'test', 'B07C49F2LD');
+        $items = $this->getCart()->getItems();
 
         $items = $this->cart->getItems();
 
         $orders = [];
         $errors = [];
-        foreach ($items as $key => $simpleItem) {
+
+        foreach ($items as $seller => $arrays) {
+            list($portal, $seller) = explode(':', $seller);
+            $sellerId = str_replace(['ebay:', 'amazon:'], '', $seller);
+            $seller = null;
+            $products = [];
+
+            foreach ($arrays as $key => $simpleItem) {
+                /** @var  $item \common\products\BaseProduct */
+                $item = $simpleItem->item;
+                $rs['item'] = $item;
+                if (empty($item->providers)) {
+                    $errors[$seller][$key][] = "can not create form null seller";
+                }
+                foreach ($item->providers as $provider) {
+                    /** @var $provider \common\products\Provider */
+                    if ($seller === null && $provider->prov_id === $sellerId) {
+                        $seller = $provider;
+                        break;
+                    }
+                }
+                if (($categoryId = ArrayHelper::getValue($item, 'category_id')) === null) {
+                    $errors[$seller][$key][] = "can not create form null category";
+                    continue;
+                }
+                if (($category = Category::findOne(['AND', ['alias' => $categoryId], ['site' => $item->type]])) === null) {
+                    $category = new Category();
+                    $category->alias = $categoryId;
+                    $category->site = $item->type;
+                    $category->origin_name = ArrayHelper::getValue($item, 'category_name', 'Unknown');
+                    $category->save();
+                }
+                $rs['category'] = $category;
+            }
+
+            if($seller === null){
+                continue;
+            }
+            $order = new Order();
+            $order->type_order = 'SHOP';
+            $order->ordercode = 'WSVN' . @rand(10, 100000);
+            $order->store_id = 1;
+
+            $order->portal = $portal;
+            $order->quotation_status = 0;
+            $order->is_quotation = 0;
+            $order->customer_id = Yii::$app->getUser()->getId();
+            $order->current_status = 'NEW';
+            $order->quotation_note = null;
+            $order->receiver_country_id = 1;
+            $order->receiver_country_name = 'Việt Nam';
+            $order->receiver_province_id = 1;
+            $order->receiver_province_name = 'Hồ Chí Minh';
+            $order->receiver_district_id = 2;
+            $order->receiver_district_name = 'Đà Nẵng';
+            $order->receiver_post_code = '24800-8633';
+            $order->receiver_address_id = 2;
+
+
             $rs = [];
             /** @var  $simpleItem \common\components\cart\item\SimpleItem */
             $item = $simpleItem->item;
@@ -88,8 +149,9 @@ class CheckOutController extends BaseApiController
              * todo get current seller
              */
             $sellers = [];
-            foreach ($providers as $provider){
-                if (($seller = Seller::findOne(['seller_name' => $provider->name])) === null) {
+            foreach ($providers as $provider) {
+                /** @var $provider \common\products\Provider */
+                if ($seller === null && $provider->prov_id) {
                     $seller = new Seller();
                     $seller->seller_name = $provider['name'];
                     $seller->seller_link_store = $provider['website'];
@@ -121,25 +183,7 @@ class CheckOutController extends BaseApiController
             $product->quantity_customer = $item->quantity;
             $product->seller_id = $sellers[0]->id;
             // Order
-            $order = new Order();
-            $order->type_order = 'SHOP';
-            $order->ordercode = 'WSVN' . @rand(10, 100000);
-            $order->store_id = 1;
-            $order->seller_id = $sellers[0]->id;
-//            $order->portal = $item->type;
-            $order->quotation_status = 0;
-            $order->is_quotation = 0;
-            $order->customer_id = Yii::$app->getUser()->getId();
-            $order->current_status = 'NEW';
-            $order->quotation_note = null;
-            $order->receiver_country_id = 1;
-            $order->receiver_country_name = 'Việt Nam';
-            $order->receiver_province_id = 1;
-            $order->receiver_province_name = 'Hồ Chí Minh';
-            $order->receiver_district_id = 2;
-            $order->receiver_district_name = 'Đà Nẵng';
-            $order->receiver_post_code = '24800-8633';
-            $order->receiver_address_id = 2;
+
             // Todo with ProductFee
 
             $order->save(false);

@@ -59,7 +59,8 @@ class ProductDetailFrom extends BaseForm
             ['seller', 'string'],
             ['seller', 'filter', 'filter' => '\yii\helpers\Html::encode'],
             ['weight', 'integer'],
-            ['sub_product_url', 'string']
+            ['sub_product_url', 'string'],
+            ['with_detail','safe'],
         ]);
     }
 
@@ -85,7 +86,7 @@ class ProductDetailFrom extends BaseForm
         /** @var $success boolean */
         /** @var $product BaseProduct */
         list($success, $product) = $this->getActiveGate()->lookup($this->getParams(), $renew);
-        if (!$success && is_string($product)) {
+        if (!$success || is_string($product)) {
             $this->addError($this->isSku() ? 'sku' : 'id', $product);
             return false;
         }

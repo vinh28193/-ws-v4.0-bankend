@@ -89,10 +89,11 @@ class EbayGate extends BaseGate
      */
     public function lookupRequest($params)
     {
+        Yii::info($params);
         $httpClient = $this->getHttpClient();
         $httpRequest = $httpClient->createRequest();
-        $this->lookupUrl .= "?id={$params}";
-        $httpRequest->setUrl($this->lookupUrl);
+        $url = "{$this->lookupUrl}?id={$params}";
+        $httpRequest->setUrl($url);
         $httpRequest->setData(null);
         $httpRequest->setFormat('json');
         $httpRequest->setMethod('POST');
