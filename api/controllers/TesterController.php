@@ -18,9 +18,8 @@ class TesterController extends \yii\rest\Controller
 
     public function actionIndex()
     {
-        $productComponent = new \common\products\ProductManager();
-        $ebay = $productComponent->ebay->lookup(332800694983);
-        var_dump($ebay);
+
+        var_dump(\Yii::$app->storeManager->getExchangeRate());
         die;
     }
 

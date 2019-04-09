@@ -5,6 +5,7 @@ namespace console\controllers;
 
 
 use common\components\boxme\BoxMeClient;
+use common\components\lib\TextUtility;
 use common\components\TrackingCode;
 use common\models\db\DraftExtensionTrackingMap;
 use common\models\draft\DraftBoxmeTracking;
@@ -13,6 +14,8 @@ use common\models\draft\DraftPackageItem;
 use common\models\draft\DraftWastingTracking;
 use common\models\draft\DraftDataTracking;
 use common\models\Order;
+use common\models\Package;
+use common\models\PackageItem;
 use common\models\Product;
 use common\models\ProductFee;
 use common\modelsMongo\RequestGetDetailBoxMe;
@@ -329,5 +332,65 @@ class BoxMeController extends Controller
             }
         }
         return false;
+    }
+
+    public function actionParserPackage(){
+        /** @var DraftPackageItem[] $draft_package */
+        $draft_package = DraftPackageItem::find()
+            ->with(['manifest'])
+            ->where(['<>' ,'status' , DraftPackageItem::STATUS_PARSER])
+            ->limit(500)->all();
+        foreach ($draft_package as $packageItem){
+            $package = Package::find()
+                ->where(['manifest_code' => $packageItem->manifest_code])
+                ->andWhere([
+                    'or',
+                    ['like','tracking_seller',$packageItem->tracking_code],
+                    ['like','tracking_reference_1',$packageItem->tracking_code],
+                    ['like','tracking_reference_2',$packageItem->tracking_code]
+                ])->orderBy('id desc')->one();
+            if(!$package){
+                $package = new Package();
+                $package->tracking_seller = $packageItem->tracking_code;
+                $package->manifest_code = $packageItem->manifest_code;
+                $package->package_weight = 0;
+                $package->stock_in_local = $packageItem->created_at;
+                $package->current_status = "STOCK_IN_LOCAL";
+                $package->manifest_code = $packageItem->manifest_code;
+                $package->warehouse_id = $packageItem->manifest->receive_warehouse_id;
+                $package->created_at = time();
+                $package->remove = 0;
+                $package->version = 'v4.0';
+                $package->save(false);
+                $package->package_code = TextUtility::GeneratePackingCode($package->id);
+            }
+            $package->order_ids .= $package->order_ids ? ','.$packageItem->order_id : ''.$packageItem->order_id;
+            $package->package_weight += $packageItem->weight;
+            $package->updated_at = time();
+            $package->save(0);
+            /** @var PackageItem $item */
+            $item = PackageItem::find()->where(['box_me_warehouse_tag' => $packageItem->warehouse_tag_boxme,'remove' => 0])->one();
+            if(!$item){
+                $item = new PackageItem();
+                $item->created_at = time();
+            }
+            $item->package_id = $package->id;
+            $item->package_code = $package->package_code;
+            $item->box_me_warehouse_tag = $packageItem->warehouse_tag_boxme;
+            $item->order_id = $packageItem->order_id;
+            $item->sku = $packageItem->order_id;
+            $item->quantity = $packageItem->quantity;
+            $item->weight = $packageItem->weight;
+            $item->change_weight = ($packageItem->dimension_l*$packageItem->dimension_h*$packageItem->dimension_w)/5;
+            $item->dimension_l = $packageItem->dimension_l;
+            $item->dimension_h = $packageItem->dimension_h;
+            $item->dimension_w = $packageItem->dimension_w;
+            $item->stock_in_local = $packageItem->created_at;
+            $item->current_status = "STOCK_IN_LOCAL";
+            $item->updated_at = time();
+            $item->remove = 0;
+            $item->version = "v4.0";
+            $item->save(0);
+        }
     }
 }

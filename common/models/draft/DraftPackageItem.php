@@ -9,11 +9,17 @@
 namespace common\models\draft;
 
 
+use common\models\Manifest;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class DraftPackageItem
+ * @package common\models\draft
+ * @property Manifest $manifest
+ */
 class DraftPackageItem extends \common\models\db\DraftPackageItem
 {
-
+    const STATUS_PARSER = "PARSER";
     /**
      * @return array
      */
@@ -39,6 +45,10 @@ class DraftPackageItem extends \common\models\db\DraftPackageItem
     public function getProduct()
     {
         return $this->hasOne(\common\models\Product::className(), ['id' => 'product_id']);
+    }
+
+    public function getManifest(){
+        return $this->hasOne(\common\models\Manifest::className(), ['id' => 'manifest_id']);
     }
 
     public function fields()

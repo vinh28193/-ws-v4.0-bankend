@@ -172,7 +172,7 @@ class DataController extends BaseApiController
         $product->sku =  $itemGetWayAPI->item_sku;
         $product->parent_sku =  $itemGetWayAPI->item_id;
         $product->link_img =  $propertyShopCart->image;
-        $product->link_origin = $itemGetWayAPI->item_origin_url;
+        $product->link_origin = @str_replace("?var=","",$itemGetWayAPI->item_origin_url); ;
         $product->category_id = $category->id;
         $product->custom_category_id =  $category->id;
 

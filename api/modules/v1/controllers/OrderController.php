@@ -131,8 +131,8 @@ class OrderController extends BaseApiController
     public function actionView($id)
     {
         if ($id !== null) {
-            $request = Order::find()
-                ->where(['id' => $id])
+            $query = Order::find();
+            $request = $query->where([$query->getColumnName('id') => $id])
                 ->withFullRelations()
                 ->asArray()->all();
             return $this->response(true, "Get order $id success", $request);
@@ -173,7 +173,7 @@ class OrderController extends BaseApiController
             ]);
             return $this->response(false, $model->getFirstErrors());
         }
-        ChatHelper::push($messages, $model->ordercode, 'WS_CUSTOMER', 'SYSTEM');
+        ChatHelper::push($messages, $model->ordercode, 'GROUP_WS', 'SYSTEM');
         Yii::$app->wsLog->push('order', $model->getScenario(), null, [
             'id' => $model->ordercode,
             'request' => $this->post,
