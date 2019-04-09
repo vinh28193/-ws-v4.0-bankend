@@ -74,63 +74,65 @@ class ExchangeRate extends Component
     private $_rates;
 
     /**
-     * @param $form
+     * @param $from
      * @param $to
      * @return mixed|null
      */
-    public function load($form, $to)
+    public function load($from, $to)
     {
-        if (!in_array($form, $this->currencies)) {
-            throw  new InvalidArgumentException("invalid currency from $form not in config");
+        if (!in_array($from, $this->currencies)) {
+            throw  new InvalidArgumentException("invalid currency from $from not in config");
         }
         if (!in_array($to, $this->currencies)) {
             throw  new InvalidArgumentException("invalid currency to $to not in config");
         }
-        $key = $this->buildKey($form, $to);
-        $this->loadFormCache($form, $to);
-        return isset($this->_rates[$key]) ? $this->_rates[$key] : $this->setDefault($form, $to);
+        $key = $this->buildKey($from, $to);
+        $this->loadFromCache($from, $to);
+        return isset($this->_rates[$key]) ? $this->_rates[$key] : $this->setDefault($from, $to);
     }
 
     /**
-     * @param $form
+     * @param $from
      * @param $to
      * @param bool $refresh
      */
-    protected function loadFormCache($form, $to, $refresh = false)
+    protected function loadFromCache($from, $to, $refresh = false)
     {
-        $key = $this->buildKey($form, $to);
+        $key = $this->buildKey($from, $to);
         if (!($this->_rates = $this->cache->get($key)) || $refresh) {
-            $this->_rates[$key] = $this->loadFormDb($form, $to);
+            $this->_rates[$key] = $this->loadFromDb($from, $to);
         }
         $this->cache->set($key, $this->_rates, $this->cacheDuration);
     }
 
     /**
-     * @param $form
+     * @param $from
      * @param $to
      * @return array
      */
-    protected function loadFormDb($form, $to)
+    protected function loadFromDb($from, $to)
     {
-        $this->invalidCache($form, $to);
+        $this->invalidCache($from, $to);
         $query = new Query();
         $query->select(['rate' => 'r.rate']);
         $query->from(['r' => $this->exchangeRateTable]);
         $query->where([
             'AND',
-            ['r.form' => strtoupper($form)],
+            ['r.from' => strtoupper($from)],
             ['r.to' => strtoupper($to)]
         ]);
+        $query->orderBy(['r.id' => SORT_DESC]);
+        $query->limit(1);
         return $query->one($this->db)['rate'];
     }
 
-    public function loadFormApi($console = false)
+    public function loadFromApi($console = false)
     {
         if ($console) echo "Lấy tỷ giá từ apilayer: ,,," . PHP_EOL;
         $from = 'USD';
         $transaction = $this->db->beginTransaction();
         try {
-            $curl = curl_init('http://www.apilayer.net/api/live?access_key=3c96a96b7700b09c5803dbf858ab9af0&format=1');
+            $curl = curl_init('http://www.apilayer.net/api/live?access_key=3c96a96b7700b09c5803dbf858ab9af0&fromat=1');
             curl_setopt($curl, CURLOPT_FAILONERROR, true);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -168,7 +170,7 @@ class ExchangeRate extends Component
     }
 
 
-    public function loadFormVcb($console = false)
+    public function loadFromVcb($console = false)
     {
         if ($console) echo "Lấy tỷ giá từ VietCombank: ,,," . PHP_EOL;
         $to = 'VND';
@@ -214,35 +216,35 @@ class ExchangeRate extends Component
     }
 
     /**
-     * @param $form
+     * @param $from
      * @param $to
      * @return mixed|null
      */
-    protected function setDefault($form, $to)
+    public function setDefault($from, $to)
     {
-        $key = implode(',', [$form, $to]);
+        $key = implode(',', [$from, $to]);
         return isset($this->defaultTo[$key]) ? $this->defaultTo[$key] : null;
     }
 
     /**
-     * @param $form
+     * @param $from
      * @param $to
      * @return string
      */
-    protected function buildKey($form, $to)
+    protected function buildKey($from, $to)
     {
-        $form = strtoupper($form);
+        $from = strtoupper($from);
         $to = strtoupper($to);
-        return 'c-rate-' . $form . '-' . $to;
+        return 'c-rate-' . $from . '-' . $to;
     }
 
     /**
-     * @param $form
+     * @param $from
      * @param $to
      */
-    public function invalidCache($form, $to)
+    public function invalidCache($from, $to)
     {
-        $key = $this->buildKey($form, $to);
+        $key = $this->buildKey($from, $to);
         $this->cache->set($key, 0);
     }
 
@@ -273,7 +275,7 @@ class ExchangeRate extends Component
     public function convert($value, $from, $to, $default = 0, $precision = 0)
     {
         if (($rate = $this->load($from, $to)) === null) {
-            Yii::warning("can not resolve current exchange rate form $from to $to, register with default $default");
+            Yii::warning("can not resolve current exchange rate from $from to $to, register with default $default");
             $rate = $default;
         }
         return \common\helpers\WeshopHelper::roundNumber($rate * $value, $precision);
