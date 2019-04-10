@@ -160,23 +160,6 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['service-purchase' => 'service/purchase-service'],
-        'patterns' => [
-            'GET' => 'get-list-card-payment,get-list-account',
-            'OPTIONS {id}' => 'options',
-            'OPTIONS' => 'options',
-        ],
-        'extraPatterns' => [
-            'GET get-list-card-payment'=> 'get-list-card-payment',
-            'OPTIONS get-list-card-payment'=> 'options',
-            'GET get-list-account'=> 'get-list-account',
-            'OPTIONS get-list-account'=> 'options'
-        ]
-    ],
-
-    [
-        'class' => \common\filters\ApiUrlRule::className(),
-        'prefix' => 'v1',
         'controller' => ['purchase-account' => 'service/purchase-service'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
@@ -184,10 +167,15 @@ return [
         ],
         'patterns' => [
             'GET' => 'list-account',
+            'POST' => 'send-notify-changing,confirm-changing-price',
         ],
         'extraPatterns' => [
             'GET list-account' => 'list-account',
             'OPTIONS list-account' => 'options',
+            'POST send-notify-changing' => 'send-notify-changing',
+            'OPTIONS send-notify-changing' => 'options',
+            'POST confirm-changing-price' => 'confirm-changing-price',
+            'OPTIONS confirm-changing-price' => 'options',
         ]
     ],
     [
@@ -413,6 +401,25 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'controller' => ['coupon' => 'coupon'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['promotion' => 'promotion'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',

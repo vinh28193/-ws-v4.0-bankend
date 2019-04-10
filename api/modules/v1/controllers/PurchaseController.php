@@ -82,12 +82,6 @@ class PurchaseController extends BaseApiController
         if(isset($this->get['id'])){
             $listId = [$this->get['id']];
             $repon = $this->getCart($listId);
-
-            Yii::$app->wsLog->push('order','addToCart', null, [
-                'id' => $this->get['id'],
-                'request' => $this->get,
-                'response' => $repon
-            ]);
             return $repon;
         }
         return $this->response(false,"not have Id");
@@ -116,7 +110,7 @@ class PurchaseController extends BaseApiController
     }
 
     function getCart($listId = [],$message = ''){
-        $type = Yii::$app->request->post('type','addtocart');
+        $type = Yii::$app->request->post('type','buynow');
         $data = [];
         $listId_cancel = [];
         $mess = '';
@@ -130,13 +124,17 @@ class PurchaseController extends BaseApiController
                 ->limit(1)->all();
         }elseif($listId){
             $orders = Order::find()->with('products')
-                ->where(['id'=>$listId,'current_status' => [Order::STATUS_READY2PURCHASE,Order::STATUS_PURCHASE_PART]])
+                ->where([
+                    'id'=>$listId,
+                    'current_status' => [Order::STATUS_READY2PURCHASE,Order::STATUS_PURCHASE_PART,Order::STATUS_PURCHASING]
+                ])
                 ->limit(1)->all();
         }else{
-            $success = true;
-            $orders = Order::find()->with('products')
-                ->where(['purchase_assignee_id'=>Yii::$app->user->getId(),'current_status' => Order::STATUS_PURCHASING])
-                ->limit(1)->all();
+            return $this->response(false,"Cart emty",[]);
+//            $success = true;
+//            $orders = Order::find()->with('products')
+//                ->where(['purchase_assignee_id'=>Yii::$app->user->getId(),'current_status' => Order::STATUS_PURCHASING])
+//                ->limit(1)->all();
         }
         /** @var User $user */
         $user = Yii::$app->user->getIdentity();
@@ -183,15 +181,19 @@ class PurchaseController extends BaseApiController
                     $tmp->image = $item->link_img;
                     $tmp->Name = $item->product_name;
                     $tmp->typeCustomer = $cus && $cus->type_customer ? $cus->type_customer : 1;
-                    $tmp->price = $tmp->price_purchase = $item->price_amount_origin;// $item->ItemFeeServiceAmount;
-                    $tmp->us_ship = $tmp->us_ship_purchase = $item->usShippingFee ? $item->usShippingFee->amount : 0;
-                    $tmp->us_tax = $tmp->us_tax_purchase = $item->usTax ? $item->usTax->amount : 0;
+                    $tmp->price = $item->unitPrice ? $item->unitPrice->amount : 0;
+                    $tmp->price_purchase = $item->price_purchase ? $item->price_purchase : $tmp->price;
+                    $tmp->us_ship = $item->usShippingFee ? $item->usShippingFee->amount : 0;
+                    $tmp->us_ship_purchase = $item->shipping_fee_purchase ? $item->shipping_fee_purchase : $tmp->us_ship;
+                    $tmp->us_tax = $item->usTax ? $item->usTax->amount : 0;
+                    $tmp->us_tax_purchase = $item->tax_fee_purchase ? $item->tax_fee_purchase : $tmp->us_tax;
                     $tmp->ParentSku = $item->parent_sku;
                     $tmp->sku = $item->sku;
                     $tmp->quantity = $item->quantity_customer - $quantity_purchased;
                     $tmp->quantityPurchase = $item->quantity_customer - $quantity_purchased;
                     $tmp->variation = $item->variations;
                     $tmp->paidTotal = $tmp->paidToSeller = ($tmp->price + $tmp->us_ship + $tmp->us_tax) * $tmp->quantity ;
+                    $tmp->isChange = $item->tax_fee_purchase || $item->shipping_fee_purchase || $item->price_purchase;
                     $data[$key]['products'][] = $tmp->toArray();
                     if ($type == 'addtocart') {
 //                    $mess = "Add soi ".$item->id." to cart. Total ".count($order)." items!";
@@ -202,8 +204,15 @@ class PurchaseController extends BaseApiController
                     $listId_cancel[] = $item->id;
                 }
             }
+            if($order->current_status == Order::STATUS_READY2PURCHASE){
+                $order->purchase_start = time();
+                Yii::$app->wsLog->push('order','addToCart', null, [
+                    'id' => $order->id,
+                    'request' => "Change status to Purchasing",
+                    'response' => "Success"
+                ]);
+            }
             $order->purchase_assignee_id = $user->id;
-            $order->purchase_start = $order->current_status == Order::STATUS_READY2PURCHASE ? time() : $order->purchase_start;
             $order->current_status = Order::STATUS_PURCHASING;
             $order->save(0);
         }
