@@ -8,11 +8,10 @@
 
 namespace common\models;
 
+use Yii;
 use common\components\AdditionalFeeInterface;
 use common\models\db\Category as DbCategory;
-use common\models\weshop\ConditionCustomFee;
-use common\models\weshop\TargetCustomFee;
-
+use common\models\queries\CategoryQuery;
 /**
  * Class Category
  * @package common\models
@@ -29,18 +28,34 @@ class Category extends DbCategory
     public function getCustomFee(AdditionalFeeInterface $additionalFee)
     {
 
-        if ($this->categoryGroup !== null && ($group = $this->categoryGroup) instanceof CategoryGroup) {
-            return $group->customFeeCalculator($additionalFee);
+        if (
+            $this->categoryGroup !== null &&
+            ($group = $this->categoryGroup) instanceof CategoryGroup &&
+            ($customFee = $group->customFeeCalculator($additionalFee)) > 0
+        ) {
+            return $customFee;
+        } else if ($this->custom_fee !== null && $this->custom_fee > 0) {
+            Yii::info("Custom fee on Database of ID{$this->id} FEE {$this->custom_fee}", 'CUSTOM FEE INFORMATION');
+            return $this->custom_fee * $additionalFee->getShippingQuantity();
         } else {
-            if ($this->custom_fee !== null && $this->custom_fee > 0) {
-//                \Yii::info("Custom fee on Database of ID{$this->id} FEE {$this->custom_fee}",'CUSTOM FEE INFORMATION');
-                return $this->custom_fee * $additionalFee->getShippingQuantity();
-            } else {
-                return 0;
-            }
+            return 0;
         }
+
     }
 
+    /**
+     * {@inheritdoc}
+     * @return CategoryQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new CategoryQuery(get_called_class());
+    }
+
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getCategoryGroup()
     {
         return $this->hasOne(CategoryGroup::className(), ['id' => 'category_group_id'])->where(['active' => 1]);

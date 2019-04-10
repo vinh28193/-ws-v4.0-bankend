@@ -31,7 +31,11 @@ class StoreAdditionalFee extends DbStoreAdditionalFee
     {
 
         if ($this->name === 'custom_fee') {
-            $value = $additional->getCustomCategory()->getCustomFee($additional);
+            if (($category = $additional->getCustomCategory()) !== null) {
+                $value = $category->getCustomFee($additional);
+            } else {
+                $value = 0.0;
+            }
         } else {
             $condition = $condition = $this->getCondition();
             if (empty($condition)) {

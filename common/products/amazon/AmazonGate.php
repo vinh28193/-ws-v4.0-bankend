@@ -42,7 +42,11 @@ class AmazonGate extends BaseGate
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
-        list($ok, $response) = $this->searchInternal($request);
+        if (!($results = $this->cache->get($request->getCacheKey())) || $refresh) {
+            $results = $this->searchInternal($request);
+            $this->cache->set($request->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
+        }
+        list($ok, $response) = $results;
         if ($ok && is_array($response)) {
             return [$ok, (new AmazonSearchResponse($this))->parser($response)];
         }
@@ -75,9 +79,9 @@ class AmazonGate extends BaseGate
             $cloneRequest = clone $request;
             $cloneRequest->asin_id = $request->parent_asin_id;
             $cloneRequest->parent_asin_id = null;
-            if(!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh){
+            if (!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh) {
                 $results = $this->lookupInternal($cloneRequest);
-                $this->cache->set($cloneRequest->getCacheKey(),$results,$results[0] === true ? self::MAX_CACHE_DURATION : 0);
+                $this->cache->set($cloneRequest->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
             }
             list($ok, $response) = $results;
             $tokens[] = "response return :" . ($ok ? 'true' : 'false');
@@ -95,9 +99,9 @@ class AmazonGate extends BaseGate
                     //Gan gia tri load_sub_url
                     $request->load_sub_url = $product->load_sub_url;
                     $tokens[] = "register load sub url";
-                    if(!($subs = $this->cache->get($request->getCacheKey())) || $refresh){
+                    if (!($subs = $this->cache->get($request->getCacheKey())) || $refresh) {
                         $subs = $this->lookupInternal($request);
-                        $this->cache->set($request->getCacheKey(),$subs,$subs[0] === true ? self::MAX_CACHE_DURATION : 0);
+                        $this->cache->set($request->getCacheKey(), $subs, $subs[0] === true ? self::MAX_CACHE_DURATION : 0);
                     }
                     list($okSub, $productSub) = $subs;
                     $tokens[] = "load sub product, response return :" . ($okSub ? 'true' : 'false');
@@ -119,9 +123,9 @@ class AmazonGate extends BaseGate
             $cloneRequest = clone $request;
             $cloneRequest->parent_asin_id = null;
             $cloneRequest->load_sub_url = null;
-            if(!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh){
+            if (!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh) {
                 $results = $this->lookupInternal($cloneRequest);
-                $this->cache->set($cloneRequest->getCacheKey(),$results,$results[0] === true ? self::MAX_CACHE_DURATION : 0);
+                $this->cache->set($cloneRequest->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
             }
             list($ok, $response) = $results;
 
@@ -133,9 +137,9 @@ class AmazonGate extends BaseGate
                     $tokens[] = "sub product detected";
                     $request->parent_asin_id = $product->parent_item_id;
                     $request->load_sub_url = $product->load_sub_url;
-                    if(!($subs = $this->cache->get($request->getCacheKey())) || $refresh){
+                    if (!($subs = $this->cache->get($request->getCacheKey())) || $refresh) {
                         $subs = $this->lookupInternal($request);
-                        $this->cache->set($request->getCacheKey(),$subs,$subs[0] === true ? self::MAX_CACHE_DURATION : 0);
+                        $this->cache->set($request->getCacheKey(), $subs, $subs[0] === true ? self::MAX_CACHE_DURATION : 0);
                     }
                     list($okSub, $productSub) = $subs;
                     $tokens[] = "load sub product, response return :" . ($okSub ? 'true' : 'false');
@@ -341,12 +345,12 @@ class AmazonGate extends BaseGate
 
 //        $suggestSetCacheKey = "suggest_set_{$rs['item_sku']}";
 //        if (!($suggestSets = $this->cache->get($suggestSetCacheKey))) {
-            foreach ($amazon['suggest_sets'] as $suggestSet) {
-                $key = $suggestSet['id'];
-                if (($key == 'purchase' || $key == 'session') && count($suggestSet['asins']) > 0) {
-                    $suggestSets[$key] = $this->getAsins($suggestSet['asins']);
-                }
+        foreach ($amazon['suggest_sets'] as $suggestSet) {
+            $key = $suggestSet['id'];
+            if (($key == 'purchase' || $key == 'session') && count($suggestSet['asins']) > 0) {
+                $suggestSets[$key] = $this->getAsins($suggestSet['asins']);
             }
+        }
 //            $this->cache->set($suggestSetCacheKey, $suggestSets, 3600);
 //        }
 
@@ -357,7 +361,7 @@ class AmazonGate extends BaseGate
         if (!$request->is_first_load) {
 //            $offersCacheKey = "offers_{$rs['item_sku']}";
 //            if (!($offers = $this->cache->get($offersCacheKey))) {
-                $offers = $this->getOffers($rs['item_sku']);
+            $offers = $this->getOffers($rs['item_sku']);
 //                $this->cache->set($offersCacheKey, $offers, 3600);
 //            }
             $check = false;
