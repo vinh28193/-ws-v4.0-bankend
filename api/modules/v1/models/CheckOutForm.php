@@ -175,7 +175,7 @@ class CheckOutForm extends Model
             $order->receiver_district_id = 1;
             $order->receiver_country_name = "Việt Nam";
             $order->receiver_province_name = "Hà Nội";
-            $order->receiver_district_name = 'Hoàng Mai';
+            $order->receiver_district_name = "Phố Bì";
             $order->receiver_post_code = '10000';
             $order->receiver_address_id = 1;
             $order->payment_type = 'online_payment';
