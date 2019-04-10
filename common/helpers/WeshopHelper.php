@@ -153,10 +153,14 @@ class WeshopHelper
         return eval($condition);
     }
 
-    public static function generateTag($reference, $prefix = 'WS', $length = 12)
+    public static function generateTag($reference, $prefix = 'WS', $length = 16)
     {
         $length -= strlen($prefix);
-        $reference = substr(md5($reference), 0, $length - 1);
+        $length -= strlen($reference);
+        if ($length > 1) {
+            $reference .= substr(md5($reference), 0, $length - 1);
+        }
+
         return self::strToUpperCase($prefix . $reference);
     }
 }
