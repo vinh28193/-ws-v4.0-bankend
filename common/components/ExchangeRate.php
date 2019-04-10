@@ -126,6 +126,25 @@ class ExchangeRate extends Component
         return $query->one($this->db)['rate'];
     }
 
+    public function addData($from, $to, $rate)
+    {
+        $transaction = $this->db->beginTransaction();
+        try {
+            $this->db->createCommand()
+                ->insert($this->exchangeRateTable, [
+                    'from' => strtoupper($from),
+                    'to' => strtoupper($to),
+                    'rate' => $rate,
+                    'sync_at' => Yii::$app->getFormatter()->asDatetime('now')
+                ])->execute();
+            $transaction->commit();
+            return true;
+        } catch (\Exception $exception) {
+            Yii::error($exception, __METHOD__);
+            $transaction->rollBack();
+            return false;
+        }
+    }
     public function loadFromApi($console = false)
     {
         if ($console) echo "Lấy tỷ giá từ apilayer: ,,," . PHP_EOL;

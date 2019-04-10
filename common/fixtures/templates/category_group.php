@@ -15,11 +15,11 @@ $id = $index + 1;
 $name = $faker->word;
 
 $list_rule = [
-  '[{"conditions":[{"value":100,"key":"price","type":"int","operator":">="}],"fee":10,"unit":"quantity","type_fee":"%"},{"conditions":[{"value":100,"key":"price","type":"int","operator":"<"}],"fee":8,"unit":"quantity","type_fee":"$"}]',
-  '[{"conditions":[{"value":0,"key":"price","type":"int","operator":">"}],"fee":10,"unit":"quantity","type_fee":"%"}]',
-  '[{"fee":"5","unit":"quantity","type_fee":"%","conditions":[{"value":"5","key":"quantity","type":"int","operator":">"}]}]',
-  '[{"conditions":[{"value":0,"key":"price","type":"int","operator":">"}],"fee":10,"unit":"quantity","type_fee":"%"}]',
-  '[{"conditions":[{"value":0,"key":"price","type":"int","operator":">"}],"fee":5,"unit":"quantity","type_fee":"%"}]',
+  '[{"conditions":[{"value":100,"key":"price","type":"int","operator":">="}],"value":10,"unit":"quantity","type":"P"},{"conditions":[{"value":100,"key":"price","type":"int","operator":"<"}],"value":8,"unit":"quantity","type":"$"}]',
+  '[{"conditions":[{"value":0,"key":"price","type":"int","operator":">"}],"value":10,"unit":"quantity","type":"P"}]',
+  '[{"value":"5","unit":"quantity","type":"P","conditions":[{"value":"5","key":"quantity","type":"int","operator":">"}]}]',
+  '[{"conditions":[{"value":0,"key":"price","type":"int","operator":">"}],"value":10,"unit":"quantity","type":"P"}]',
+  '[{"conditions":[{"value":0,"key":"price","type":"int","operator":">"}],"value":5,"unit":"quantity","type":"P"}]',
 ];
 return [
     'id' => $id,

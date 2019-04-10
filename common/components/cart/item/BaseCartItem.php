@@ -8,7 +8,7 @@
 
 namespace common\components\cart\item;
 
-abstract class BaseCartItem extends \yii\base\BaseObject
+abstract class BaseCartItem extends \yii\base\Model
 {
     /**
      * @return $this;

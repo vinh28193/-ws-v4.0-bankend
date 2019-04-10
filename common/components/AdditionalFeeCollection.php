@@ -14,6 +14,7 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+
 /**
  * new update co collection
  * đối tượng collection cho phép cóp nhặt 1 list data từ 1 nguồn sẵn có hoặc tự được thêm vào
@@ -119,8 +120,6 @@ class AdditionalFeeCollection extends ArrayCollection
      * ]
      * @param $values
      * mset giờ chỉ có thể sử dụng dữ liệu từ mget
-     * @param bool $withCondition
-     * @param bool $ensureReadOnly
      */
     public function mset($values)
     {
@@ -142,14 +141,17 @@ class AdditionalFeeCollection extends ArrayCollection
      * @param null $currency
      * @return array
      */
-    public function createItem(StoreAdditionalFee $config, AdditionalFeeInterface $additional, $amount, $discountAmount = 0, $currency = null)
+    public function createItem(StoreAdditionalFee $config, AdditionalFeeInterface $additional, $amount = null, $discountAmount = 0, $currency = null)
     {
-        $amountLocal = $amount;
-        if ($config->hasMethod('executeCondition') &&
-            ($result = $config->executeCondition($amount, $additional)) !== false &&
+        if ($amount === null && $config->hasMethod('executeCondition') &&
+            ($result = $config->executeCondition( $additional)) !== false &&
             is_array($result)
         ) {
             list($amount, $amountLocal) = $result;
+        }else{
+
+            $amount *= $additional->getShippingQuantity();
+            $amountLocal = $amount * $additional->getExchangeRate();
         }
         return [
             'type' => $config->name,
@@ -205,7 +207,7 @@ class AdditionalFeeCollection extends ArrayCollection
                 if (in_array($name, $breaks)) {
                     continue;
                 }
-                $this->withCondition($owner, $name, $storeAdditionalFee->fee_rate);
+                $this->withCondition($owner, $name, null);
             }
         }
     }
@@ -245,7 +247,7 @@ class AdditionalFeeCollection extends ArrayCollection
      *          ]
      *      ]
      * return [7,22] // 7 = 5 +2 ; 22 = 12 + 10
-     * @param null $names, null nghĩa là trả về tất cả cả loại phí có trong config
+     * @param null $names , null nghĩa là trả về tất cả cả loại phí có trong config
      * @param array $except
      * @return array
      */

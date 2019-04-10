@@ -9,65 +9,35 @@
 namespace common\components\conditions;
 
 
+use common\calculators\Calculator;
+use common\calculators\CalculatorService;
 use common\components\AdditionalFeeInterface;
 
 trait ConditionTrait
 {
 
     /**
-     * @return null|float
-     */
-    public function getFeeRate()
-    {
-        return $this->fee_rate > 0 ? $this->fee_rate : null;
-    }
-
-    /**
-     * @return BaseCondition|null|mixed
+     * @return array
      */
     public function getCondition()
     {
         $data = $this->condition_data;
-        if (is_resource($data)) {
-            $data = stream_get_contents($data);
+        if ($data === null) {
+            return [];
         }
-
-        return unserialize($data);
+        return json_decode($data, true);
     }
 
-    /**
-     * @param BaseCondition $condition
-     */
-    public function setCondition(BaseCondition $condition)
+    public function executeCondition(AdditionalFeeInterface $additional)
     {
-        $time = time();
-        if ($condition->createdAt === null) {
-            $condition->createdAt = $time;
-        }
-        if ($condition->updatedAt === null) {
-            $condition->updatedAt = $time;
-        }
-        $this->updateAttributes([
-            'condition_name' => $condition->name,
-            'condition_data' => serialize($condition),
-        ]);
-    }
-
-    public function executeCondition($value, AdditionalFeeInterface $additionalFee)
-    {
-        if ($this->condition_name === null) {
-            return false;
-        }
 
         $condition = $condition = $this->getCondition();
-        if ($condition instanceof BaseCondition) {
-            $value = $condition->execute($value, $additionalFee, $this);
+        if (!empty($condition)) {
+            return false;
         }
-        $localValue = $value;
-        if ($this->is_convert && $this->name !== 'ExchangeRate') {
-            $localValue = $localValue * $additionalFee->getExchangeRate();
-        }
-        return [$value, $localValue];
+        $value = CalculatorService::calculator($condition, $additional);
+        $value *= $additional->getShippingQuantity();
+        return [$value, $value * $additional->getExchangeRate()];
 
     }
 }
