@@ -1,0 +1,45 @@
+<?php
+
+use yii\db\Migration;
+
+/**
+ * Class m190410_090628_add_customer_type_in_order_tables
+ */
+class m190410_090628_add_customer_type_in_order_tables extends Migration
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function safeUp()
+    {
+        // $this->string(11)->notNull()->comment(" Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers "),
+        //$this->addColumn('product','total_fee_product_local',$this->decimal(18, 2)->after('total_price_amount_local')->comment("tổng phí trên sản phẩm"));
+        $this->addColumn('order','customer_type',$this->string(11)->after('customer_id')->comment("tổng phí trên sản phẩm")->notNull());
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function safeDown()
+    {
+        echo "m190410_090628_add_customer_type_in_order_tables cannot be reverted.\n";
+
+        return false;
+    }
+
+    /*
+    // Use up()/down() to run migration code without a transaction.
+    public function up()
+    {
+
+    }
+
+    public function down()
+    {
+        echo "m190410_090628_add_customer_type_in_order_tables cannot be reverted.\n";
+
+        return false;
+    }
+    */
+}
