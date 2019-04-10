@@ -102,8 +102,19 @@ use Yii;
  * @property int $remove đơn đánh đấu 1 là đã xóa , mặc định 0 : chưa xóa
  * @property string $version version 4.0
  *
+ * @property Customer $customer
+ * @property Address $receiverAddress
+ * @property SystemCountry $receiverCountry
+ * @property SystemDistrict $receiverDistrict
+ * @property SystemStateProvince $receiverProvince
+ * @property User $saleSupport
+ * @property Seller $seller
+ * @property Store $store
  * @property User $purchaseAssignee
+ * @property PackageItem[] $packageItems
+ * @property Product[] $products
  * @property PurchaseProduct[] $purchaseProducts
+ * @property WalletTransaction[] $walletTransactions
  */
 class Order extends \common\components\db\ActiveRecord
 {
@@ -128,6 +139,14 @@ class Order extends \common\components\db\ActiveRecord
             [['ordercode', 'type_order', 'portal', 'utm_source', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'version'], 'string', 'max' => 255],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
+            [['receiver_address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Address::className(), 'targetAttribute' => ['receiver_address_id' => 'id']],
+            [['receiver_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['receiver_country_id' => 'id']],
+            [['receiver_district_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemDistrict::className(), 'targetAttribute' => ['receiver_district_id' => 'id']],
+            [['receiver_province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['receiver_province_id' => 'id']],
+            [['sale_support_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sale_support_id' => 'id']],
+            [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
+            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
             [['purchase_assignee_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['purchase_assignee_id' => 'id']],
         ];
     }
@@ -238,6 +257,70 @@ class Order extends \common\components\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getCustomer()
+    {
+        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverAddress()
+    {
+        return $this->hasOne(Address::className(), ['id' => 'receiver_address_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverCountry()
+    {
+        return $this->hasOne(SystemCountry::className(), ['id' => 'receiver_country_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverDistrict()
+    {
+        return $this->hasOne(SystemDistrict::className(), ['id' => 'receiver_district_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverProvince()
+    {
+        return $this->hasOne(SystemStateProvince::className(), ['id' => 'receiver_province_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSaleSupport()
+    {
+        return $this->hasOne(User::className(), ['id' => 'sale_support_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSeller()
+    {
+        return $this->hasOne(Seller::className(), ['id' => 'seller_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStore()
+    {
+        return $this->hasOne(Store::className(), ['id' => 'store_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getPurchaseAssignee()
     {
         return $this->hasOne(User::className(), ['id' => 'purchase_assignee_id']);
@@ -246,8 +329,32 @@ class Order extends \common\components\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getPackageItems()
+    {
+        return $this->hasMany(PackageItem::className(), ['order_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['order_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getPurchaseProducts()
     {
         return $this->hasMany(PurchaseProduct::className(), ['order_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWalletTransactions()
+    {
+        return $this->hasMany(WalletTransaction::className(), ['order_id' => 'id']);
     }
 }

@@ -161,8 +161,6 @@ class CheckOutForm extends Model
             $order->new = Yii::$app->getFormatter()->asTimestamp('now');
             $order->type_order = Order::TYPE_SHOP;
             $order->customer_type = 'Retail';
-            $order->receiver_country_name =  "Việt Nam";
-            $order->receiver_province_name =  "Hà Nội";
             $order->current_status = Order::STATUS_NEW;
             $order->store_id = $this->storeManager->getId();
             $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
@@ -175,6 +173,9 @@ class CheckOutForm extends Model
             $order->receiver_country_id = 1;
             $order->receiver_province_id = 1;
             $order->receiver_district_id = 1;
+            $order->receiver_country_name = "Việt Nam";
+            $order->receiver_province_name = "Hà Nội";
+            $order->receiver_district_name = 'Hoàng Mai';
             $order->receiver_post_code = '10000';
             $order->receiver_address_id = 1;
             $order->payment_type = 'online_payment';
@@ -184,7 +185,7 @@ class CheckOutForm extends Model
             $order->total_paid_amount_local = 0;
             $order->save(false);
             $order->updateAttributes([
-                'ordercode' => WeshopHelper::generateTag($order->id,'WSVN',16),
+                'ordercode' => WeshopHelper::generateTag($order->id, 'WSVN', 16),
             ]);
             $products = [];
             $productFees = [];
@@ -249,12 +250,38 @@ class CheckOutForm extends Model
                 // step 5: create product fee for each item
                 foreach ($additionalFees->keys() as $key) {
                     list($amount, $local) = $item->getAdditionalFees()->getTotalAdditionFees($key);
-                    $orderAttribute = "total_{$key}_local";
+                    $orderAttribute = '';
                     if ($key === 'product_price_origin') {
                         $orderAttribute = 'total_origin_fee_local';
-                    } elseif ($key === 'tax_fee_origin') {
+                    }
+                    if ($key === 'tax_fee_origin') {
                         $orderAttribute = 'total_origin_tax_fee_local';
-                    } elseif ($key === 'delivery_fee_local') {
+                    }
+                    if ($key === 'origin_shipping_fee') {
+                        $orderAttribute = 'total_origin_shipping_fee_local';
+                    }
+                    if ($key === 'weshop_fee') {
+                        $orderAttribute = 'total_weshop_fee_local';
+                    }
+                    if ($key === 'intl_shipping_fee') {
+                        $orderAttribute = 'total_intl_shipping_fee_local';
+                    }
+                    if ($key === 'custom_fee') {
+                        $orderAttribute = 'total_custom_fee_amount_local';
+                    }
+                    if ($key === 'packing_fee') {
+                        $orderAttribute = 'total_packing_fee_local';
+                    }
+                    if ($key === 'inspection_fee') {
+                        $orderAttribute = 'total_inspection_fee_local';
+                    }
+                    if ($key === 'insurance_fee') {
+                        $orderAttribute = 'total_insurance_fee_local';
+                    }
+                    if ($key === 'vat_fee') {
+                        $orderAttribute = 'total_vat_amount_local';
+                    }
+                    if ($key === 'delivery_fee_local') {
                         $orderAttribute = 'total_delivery_fee_local';
                     }
 
@@ -266,8 +293,8 @@ class CheckOutForm extends Model
                     $productFee->amount = $amount;
                     $productFee->local_amount = $local;
                     $productFee->currency = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
-                    if ($productFee->save() && $order->hasAttribute($orderAttribute)) {
-                        if($key === 'product_price_origin'){
+                    if ($productFee->save() && $orderAttribute !== '') {
+                        if ($orderAttribute === 'total_origin_fee_local') {
                             $oldAmount = isset($updateOrderAttributes['total_price_amount_origin']) ? $updateOrderAttributes['total_price_amount_origin'] : 0;
                             $oldAmount += $amount;
                             $updateOrderAttributes['total_price_amount_origin'] = $oldAmount;
@@ -278,7 +305,16 @@ class CheckOutForm extends Model
                     }
                     $productFees[$product->id][$key] = $productFee;
                 }
-                $updateOrderAttributes['total_fee_amount_local'] = $additionalFees->getTotalAdditionFees()[1];
+
+
+                $oldAmount = isset($updateOrderAttributes['total_fee_amount_local']) ? $updateOrderAttributes['total_fee_amount_local'] : 0;
+                $oldAmount += $additionalFees->getTotalAdditionFees(null, ['product_price_origin'])[1];
+                $updateOrderAttributes['total_fee_amount_local'] = $oldAmount;
+
+                $oldAmount = isset($updateOrderAttributes['total_amount_local']) ? $updateOrderAttributes['total_amount_local'] : 0;
+                $oldAmount += $additionalFees->getTotalAdditionFees()[1];
+                $updateOrderAttributes['total_amount_local'] = $oldAmount;
+
                 $products[] = $product;
             }
 
