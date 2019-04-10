@@ -132,9 +132,9 @@ class CartManager extends Component
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function hasItem($source, $seller, $sku, $parentSku = null)
+    public function hasItem($key)
     {
-        $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
+        $key = $this->normalPrimaryKey($key);
         return $this->getStorage()->hasItem($key);
     }
 
@@ -157,68 +157,74 @@ class CartManager extends Component
     }
 
     /**
-     * @param $sku
-     * @param $seller
-     * @param $quantity
-     * @param $source
-     * @param $image
-     * @param null $parentSku
+     * @param $params
      * @return bool
      * @throws \Throwable
      */
-    public function addItem($source, $seller, $quantity,$image, $sku, $parentSku = null)
+    public function addItem($params)
     {
-        $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
+        $key = $this->createKeyFormParams($params);
+        $key = $this->normalPrimaryKey($key);
         try {
-            if ($this->hasItem($source, $seller, $sku, $parentSku)) {
-                if (($item = $this->getItem($source, $seller, $sku, $parentSku)) === false) {
+            if ($this->hasItem($key)) {
+                if (($value = $this->getItem($key)) === false) {
                     return false;
                 }
-                if (!is_object($item)) {
-                    $item = new SimpleItem($item);
+                $item = new SimpleItem();
+                foreach ($params as $name => $val){
+                    $item->$name = $val;
                 }
+                // Todo Validate data before call
                 // pass new param for CartItem
-                $item->quantity = $quantity;
-                $item->seller = $seller;
-                $item->source = $source;
-                $item->parentSku = $parentSku;
-                $item->sku = $sku;
-                $item->image = $item;
-                $item = $item->process();
-                $item = $this->getSerializer()->serializer($item);
-                $this->getStorage()->setItem($key, $item);
+                list($ok, $value) = $item->process();
+                if (!$ok) {
+                    return false;
+                }
+                $value = $this->getSerializer()->serializer($value);
+                $this->getStorage()->setItem($key, $value);
                 return true;
             } else {
                 /** Todo : Thiếu link Gốc sản phẩm **/
-                $item = new SimpleItem(['sku' => $sku, 'parentSku' => $parentSku, 'quantity' => $quantity, 'seller' => $seller, 'source' => $source, 'image' => $image]);
-                $item = $item->process();
-                $item = $this->getSerializer()->serializer($item);
-                $this->getStorage()->addItem($key, $item);
+                $item = new SimpleItem();
+                foreach ($params as $name => $val){
+                    $item->$name = $val;
+                }
+                // Todo Validate data before call
+                list($ok, $value) = $item->process();
+                if (!$ok) {
+                    return false;
+                }
+                $value = $this->getSerializer()->serializer($value);
+                $this->getStorage()->addItem($key, $value);
                 return true;
             }
         } catch (\Exception $exception) {
             Yii::info($exception);
-
             return false;
         }
     }
 
-    public function update($source, $seller, $sku, $parentSku = null, $quantity = 1, $image)
+    private function createKeyFormParams($params)
     {
-        $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
+        return md5(json_encode($params));
+    }
+
+    public function update($key, $params = [])
+    {
+        $key = $this->normalPrimaryKey($key);
 
         try {
-            if ($this->hasItem($source, $seller, $sku, $parentSku)) {
-                if (($item = $this->getItem($source, $seller, $sku, $parentSku)) === false) {
+            if ($this->hasItem($key)) {
+                if (($item = $this->getItem($key)) === false) {
                     return false;
                 }
-                if ($seller !== null && !$this->compareValue($item->seller, $seller, 'string')) {
+                if (isset($params['seller']) !== null && ($seller = $params['seller']) !== null && !$this->compareValue($item->seller, $seller, 'string')) {
                     $item->seller = $seller;
                 }
-                if ($quantity !== null && !$this->compareValue($item->quantity, $quantity, 'int')) {
+                if (isset($params['quantity']) !== null && ($quantity = $params['quantity']) !== null && !$this->compareValue($item->quantity, $quantity, 'int')) {
                     $item->quantity = $quantity;
                 }
-                if ($image !== null && !$this->compareValue($item->image, $image, 'string')) {
+                if (isset($params['image']) !== null && ($image = $params['image']) !== null && !$this->compareValue($item->image, $image, 'string')) {
                     $item->image = $image;
                 }
                 $item = $item->process();
@@ -235,11 +241,11 @@ class CartManager extends Component
         }
     }
 
-    public function removeItem($source, $seller, $sku, $parentSku = null)
+    public function removeItem($key)
     {
 
-        if ($this->hasItem($source, $seller, $sku, $parentSku)) {
-            $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
+        if ($this->hasItem($key)) {
+            $key = $this->normalPrimaryKey($key);
             return $this->getStorage()->removeItem($key);
         }
         return false;
@@ -250,10 +256,8 @@ class CartManager extends Component
     {
         $items = $this->getStorage()->getItems($this->getUser()->id);
         $results = [];
-        foreach ($items as $second => $arrays) {
-            foreach ($arrays as $third => $item){
-                $results[$second][$third] = $this->getSerializer()->unserialize($item);
-            }
+        foreach ($items as $key => $item) {
+            $results[$key] = $this->getSerializer()->unserialize($item);
         }
         return $results;
     }
@@ -279,21 +283,12 @@ class CartManager extends Component
     }
 
     /**
-     * @param $source
-     * @param $seller
-     * @param $sku
-     * @param null $parentSku
+     * @param $key
      * @return array
      * @throws \Throwable
      */
-    public function normalPrimaryKey($source, $seller, $sku, $parentSku = null)
+    public function normalPrimaryKey($key)
     {
-        $firstKey = "$source:$seller";
-        $secondKey = "$sku";
-        if ($parentSku !== null) {
-            $secondKey .= ":$parentSku";
-        }
-        $key = $firstKey . "." . $secondKey;
         return $this->buildPrimaryKey($key);
     }
 

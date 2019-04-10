@@ -21,8 +21,6 @@ class SimpleItem extends BaseCartItem
     public $sku;
     public $parentSku = null;
 
-    /** @var BaseProduct */
-    public $item;
 
     public function process()
     {
@@ -47,8 +45,7 @@ class SimpleItem extends BaseCartItem
 
         }
         $product->current_image = $this->image;
-        $this->item = $product;
-        return $this;
+        return [true, ['request' => $params, 'response' => $product]];
     }
 
 }

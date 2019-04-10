@@ -22,11 +22,6 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
         return \Yii::$app->session;
     }
 
-    private function resolveKey($key)
-    {
-        return explode('.', $key);
-    }
-
     public function setByKey($key, $value, $default = false)
     {
         list($key, $id) = $key;
@@ -48,44 +43,27 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
 
     public function hasItem($key)
     {
+
         list($key, $id) = $key;
-        list($second, $third) = $this->resolveKey($key);
-        $exist = false;
-        foreach ($this->getItems($id) as $key => $arrays) {
-            if ($key === $second) {
-                foreach (array_keys($arrays) as $key) {
-                    if ($key === $third) {
-                        $exist = true;
-                        break;
-                    }
-                }
-                if ($exist === true) {
-                    break;
-                }
-            }
-        }
-        return $exist;
+        $keys = array_keys($this->getItems($id));
+        return in_array($key, $keys);
 
     }
 
     public function addItem($key, $value)
     {
-        return $this->setItem($key,$value);
+        return $this->setItem($key, $value);
     }
 
     public function setItem($key, $value)
     {
         list($key, $id) = $key;
+        $value['key'] = $key;
         $values = $this->getItems($id);
         $this->removeItems($id);
-
-        list($second, $third) = $this->resolveKey($key);
-        $secondValue = ArrayHelper::getValue($values, $second, []);
-        \Yii::info($value,$third);
-        $secondValue = ArrayHelper::merge($secondValue, [
-            $third => $value
+        $values = ArrayHelper::merge($values, [
+            $key => $value
         ]);
-        $values[$second] = $secondValue;
         $this->getSession()->set($this->sessionName, [$id => $values]);
         return true;
     }
@@ -93,12 +71,7 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
     public function getItem($key)
     {
         list($key, $id) = $key;
-        list($second, $third) = $this->resolveKey($key);
-        $items = $this->getItems($id);
-        if (count($items) === 0 || ($secondValue = ArrayHelper::getValue($items, $second)) === null) {
-            return false;
-        }
-        return ArrayHelper::getValue($secondValue, $third, false);
+        return ArrayHelper::getValue($this->getItems($id), $key, false);
     }
 
     public function removeItem($key)
