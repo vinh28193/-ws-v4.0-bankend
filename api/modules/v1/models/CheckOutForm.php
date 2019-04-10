@@ -163,6 +163,7 @@ class CheckOutForm extends Model
             $order->customer_type = 'Retail';
             $order->receiver_country_name =  "Việt Nam";
             $order->receiver_province_name =  "Hà Nội";
+            $order->receiver_district_name =  "Phố Bì";
             $order->current_status = Order::STATUS_NEW;
             $order->store_id = $this->storeManager->getId();
             $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
