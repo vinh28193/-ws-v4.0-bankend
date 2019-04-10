@@ -8,8 +8,10 @@
 
 namespace common\products\ebay;
 
-use common\products\BaseGate;
+
 use Yii;
+use Exception;
+use common\products\BaseGate;
 
 class EbayGate extends BaseGate
 {
@@ -28,11 +30,11 @@ class EbayGate extends BaseGate
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
-        if (!($rs = $this->cache->get($request->getCacheKey())) || $refresh) {
-            $rs = $this->searchRequest($request->params());
-            $this->cache->set($request->getCacheKey(), $rs, $rs[0] === true ? self::MAX_CACHE_DURATION : 0);
+        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
+            list($success, $response) = $this->searchRequest($request->params());
+            $this->cache->set($request->getCacheKey(), $response, $success === true ? self::MAX_CACHE_DURATION : 0);
         }
-        return $rs;
+        return [true, (new EbaySearchResponse($this))->parser($response)];
     }
 
     /**
@@ -54,8 +56,8 @@ class EbayGate extends BaseGate
             if (!$httpResponse->getIsOk()) {
                 return [false, $response];
             }
-            return [true, (new EbaySearchResponse($this))->parser($response)];
-        } catch (\Exception $exception) {
+            return [true, $response];
+        } catch (Exception $exception) {
             Yii::error($exception);
             return [false, $exception->getMessage()];
         }
@@ -72,11 +74,11 @@ class EbayGate extends BaseGate
     {
         $request = new EbayDetailRequest();
         $request->keyword = $condition;
-        if (!($rs = $this->cache->get($request->getCacheKey())) || $refresh) {
-            $rs = $this->lookupRequest($request->params());
-            $this->cache->set($request->getCacheKey(), $rs, $rs[0] === true ? self::MAX_CACHE_DURATION : 0);
+        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
+            list($ok, $response) = $this->lookupRequest($request->params());
+            $this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
         }
-        return $rs;
+        return [true, (new EbayDetailResponse($this))->parser($response)];
 
     }
 
@@ -87,10 +89,11 @@ class EbayGate extends BaseGate
      */
     public function lookupRequest($params)
     {
+        Yii::info($params);
         $httpClient = $this->getHttpClient();
         $httpRequest = $httpClient->createRequest();
-        $this->lookupUrl .= "?id={$params}";
-        $httpRequest->setUrl($this->lookupUrl);
+        $url = "{$this->lookupUrl}?id={$params}";
+        $httpRequest->setUrl($url);
         $httpRequest->setData(null);
         $httpRequest->setFormat('json');
         $httpRequest->setMethod('POST');
@@ -100,8 +103,8 @@ class EbayGate extends BaseGate
             if (!$httpResponse->getIsOk()) {
                 return [false, $data];
             }
-            return [true, (new EbayDetailResponse($this))->parser($data)];
-        } catch (\Exception $exception) {
+            return [true, $data];
+        } catch (Exception $exception) {
             Yii::error($exception);
             return [false, $exception->getMessage()];
         }
