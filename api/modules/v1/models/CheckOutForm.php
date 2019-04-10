@@ -3,18 +3,22 @@
 
 namespace api\modules\v1\models;
 
-use common\products\BaseProduct;
-use common\products\Provider;
+
 use Yii;
 use yii\base\Model;
-use common\components\cart\CartManager;
+use yii\db\Connection;
+use yii\di\Instance;
+use yii\helpers\ArrayHelper;
+use common\helpers\WeshopHelper;
 use common\models\db\Category;
 use common\models\Order;
 use common\models\Product;
 use common\models\ProductFee;
 use common\models\Seller;
-use yii\di\Instance;
-use yii\helpers\ArrayHelper;
+use common\products\BaseProduct;
+use common\products\Provider;
+use common\components\StoreManager;
+use common\components\cart\CartManager;
 
 class CheckOutForm extends Model
 {
@@ -43,9 +47,22 @@ class CheckOutForm extends Model
     public $couponCode;
 
     /**
+     * @var string|Connection
+     */
+    protected $db = 'db';
+    /**
      * @var string|CartManager
      */
     protected $cartManager = 'cart';
+    /**
+     * @var string | StoreManager
+     */
+    protected $storeManager = 'storeManager';
+
+    /**
+     * @var \yii\web\User
+     */
+    protected $user;
 
     /**
      * @inheritDoc
@@ -54,8 +71,10 @@ class CheckOutForm extends Model
     public function init()
     {
         parent::init();
+        $this->db = Instance::ensure($this->db, Connection::className());
         $this->cartManager = Instance::ensure($this->cartManager, CartManager::className());
-
+        $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
+        $this->user = Yii::$app->getUser();
     }
 
     /**
@@ -140,8 +159,10 @@ class CheckOutForm extends Model
             $order = new Order();
             $order->setScenario(Order::SCENARIO_DEFAULT);
             $order->type_order = Order::TYPE_SHOP;
-            $order->store_id = Yii::$app->storeManager->getId();
-            $order->customer_id = Yii::$app->getUser()->getId();
+            $order->current_status = Order::STATUS_NEW;
+            $order->store_id = $this->storeManager->getId();
+            $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
+            $order->customer_id = $this->user->getId();
             $order->portal = $type;
             $order->receiver_email = 'vinhvv@peacesoft.net';
             $order->receiver_name = 'vinh dev';
@@ -157,6 +178,9 @@ class CheckOutForm extends Model
             $order->seller_name = $seller->seller_name;
             $order->seller_store = $seller->seller_link_store;
             $order->save(false);
+            $order->updateAttributes([
+                'ordercode' => WeshopHelper::generateTag($order->id,'WSVN',16),
+            ]);
             $products = [];
             $productFees = [];
             $updateOrderAttributes = [];
@@ -251,7 +275,7 @@ class CheckOutForm extends Model
                 $updateOrderAttributes['seller_store'] = $seller->seller_link_store;
             }
             $order->updateAttributes($updateOrderAttributes);
-            $results[$order->id] = [
+            $results[$order->ordercode] = [
                 'seller' => $seller,
                 'order' => $order,
                 'products' => $products,
