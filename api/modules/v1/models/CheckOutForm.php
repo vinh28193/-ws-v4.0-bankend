@@ -219,10 +219,14 @@ class CheckOutForm extends Model
 
                 $additionalFees = $item->getAdditionalFees();
 
-                // 'đơn giá gốc ngoại tệ'
+                // 'đơn giá gốc ngoại tệ bao gồm các phí tại nơi xuất xứ (tiền us, us tax, us ship)
                 $product->price_amount_origin = $item->getTotalOriginPrice();
+                // Tổng tiền các phí, trừ tiền gốc sản phẩm (chỉ có các phí)
                 $product->total_fee_product_local = $additionalFees->getTotalAdditionFees(null, ['product_price_origin'])[1];         // Tổng Phí theo sản phẩm
+                // Tổng tiền local gốc sản phẩm (chỉ có tiền gốc của sản phẩm)
                 $product->price_amount_local = $additionalFees->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
+                // Tổng tiền local tất tần tận
+                $product->total_price_amount_local = $additionalFees->getTotalAdditionFees()[1];
                 $product->quantity_customer = $item->quantity;
                 $product->quantity_purchase = null;
                 /** Todo */
@@ -252,36 +256,47 @@ class CheckOutForm extends Model
                     list($amount, $local) = $item->getAdditionalFees()->getTotalAdditionFees($key);
                     $orderAttribute = '';
                     if ($key === 'product_price_origin') {
+                        // Tổng giá gốc của các sản phẩm tại nơi xuất xứ
                         $orderAttribute = 'total_origin_fee_local';
                     }
                     if ($key === 'tax_fee_origin') {
+                        // Tổng phí tax của các sản phẩm tại nơi xuất xứ
                         $orderAttribute = 'total_origin_tax_fee_local';
                     }
                     if ($key === 'origin_shipping_fee') {
+                        // Tổng phí ship của các sản phẩm tại nơi xuất xứ
                         $orderAttribute = 'total_origin_shipping_fee_local';
                     }
                     if ($key === 'weshop_fee') {
+                        // Tổng phí phí dịch vụ wéhop fee của các sản phẩm
                         $orderAttribute = 'total_weshop_fee_local';
                     }
                     if ($key === 'intl_shipping_fee') {
+                        // Tổng phí phí vận chuyển quốc tế của các sản phẩm
                         $orderAttribute = 'total_intl_shipping_fee_local';
                     }
                     if ($key === 'custom_fee') {
+                        // Tổng phí phụ thu của các sản phẩm
                         $orderAttribute = 'total_custom_fee_amount_local';
                     }
                     if ($key === 'packing_fee') {
+                        // Tổng phí đóng gói của các sản phẩm
                         $orderAttribute = 'total_packing_fee_local';
                     }
                     if ($key === 'inspection_fee') {
+                        // Tổng đóng hàng của các sản phẩm
                         $orderAttribute = 'total_inspection_fee_local';
                     }
                     if ($key === 'insurance_fee') {
+                        // Tổng bảo hiểm của các sản phẩm
                         $orderAttribute = 'total_insurance_fee_local';
                     }
                     if ($key === 'vat_fee') {
+                        // Tổng vat của các sản phẩm
                         $orderAttribute = 'total_vat_amount_local';
                     }
                     if ($key === 'delivery_fee_local') {
+                        // Tổng vận chuyển tại local của các sản phẩm
                         $orderAttribute = 'total_delivery_fee_local';
                     }
 
@@ -295,6 +310,7 @@ class CheckOutForm extends Model
                     $productFee->currency = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
                     if ($productFee->save() && $orderAttribute !== '') {
                         if ($orderAttribute === 'total_origin_fee_local') {
+                            // Tổng giá gốc của các sản phẩm tại nơi xuất xứ (giá tại nơi xuất xứ)
                             $oldAmount = isset($updateOrderAttributes['total_price_amount_origin']) ? $updateOrderAttributes['total_price_amount_origin'] : 0;
                             $oldAmount += $amount;
                             $updateOrderAttributes['total_price_amount_origin'] = $oldAmount;
@@ -306,11 +322,12 @@ class CheckOutForm extends Model
                     $productFees[$product->id][$key] = $productFee;
                 }
 
-
+                // Tổng các phí các sản phẩm (trừ giá gốc tại nơi xuất xứ)
                 $oldAmount = isset($updateOrderAttributes['total_fee_amount_local']) ? $updateOrderAttributes['total_fee_amount_local'] : 0;
                 $oldAmount += $additionalFees->getTotalAdditionFees(null, ['product_price_origin'])[1];
                 $updateOrderAttributes['total_fee_amount_local'] = $oldAmount;
 
+                // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
                 $oldAmount = isset($updateOrderAttributes['total_amount_local']) ? $updateOrderAttributes['total_amount_local'] : 0;
                 $oldAmount += $additionalFees->getTotalAdditionFees()[1];
                 $updateOrderAttributes['total_amount_local'] = $oldAmount;
