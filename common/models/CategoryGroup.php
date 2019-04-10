@@ -9,27 +9,23 @@
 namespace common\models;
 
 
-use common\models\weshop\ConditionCustomFee;
-use common\models\weshop\RuleCustomFee;
-use common\models\weshop\TargetCustomFee;
+use yii\helpers\Json;
+use common\models\db\CategoryGroup as DbCategoryGroup;
+use common\calculators\CalculatorService;
+use common\components\AdditionalFeeInterface;
 
-class CategoryGroup extends \common\models\db\CategoryGroup
+class CategoryGroup extends DbCategoryGroup
 {
     /**
-     * @param TargetCustomFee $target
+     * @param  $target
      * @return float|int
      */
-    public function customFeeCalculator($target){
-        $rules = json_decode($this->rule,true);
-        $total_custom_fee = 0;
-        foreach ($rules as $rule){
-            $crRule = new RuleCustomFee();
-            $crRule->set($rule);
-            $total_custom_fee = $crRule->getTotalCustomFee($target);
-            if($total_custom_fee > 0){
-                break;
-            }
+    public function customFeeCalculator(AdditionalFeeInterface $target)
+    {
+        if($this->rule === null){
+            return 0.0;
         }
-        return $total_custom_fee;
+        $rules = Json::decode($this->rule, true);
+        return CalculatorService::calculator($rules, $target);
     }
 }

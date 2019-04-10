@@ -13,6 +13,6 @@ use yii\test\ActiveFixture;
 
 class CategoryGroupFixture extends ActiveFixture
 {
-    public $modelClass = 'common\models\db\CategoryGroup';
+    public $modelClass = 'common\models\CategoryGroup';
     public $dataFile = '@common/fixtures/data/data_fixed/category_group.php';
 }

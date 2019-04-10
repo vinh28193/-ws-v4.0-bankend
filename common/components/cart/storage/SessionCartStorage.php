@@ -36,6 +36,11 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
         return true;
     }
 
+    protected function getKeys($id)
+    {
+
+    }
+
     public function hasItem($key)
     {
 
@@ -53,12 +58,14 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
     public function setItem($key, $value)
     {
         list($key, $id) = $key;
+        $value['key'] = $key;
         $values = $this->getItems($id);
         $this->removeItems($id);
         $values = ArrayHelper::merge($values, [
             $key => $value
         ]);
         $this->getSession()->set($this->sessionName, [$id => $values]);
+        return true;
     }
 
     public function getItem($key)

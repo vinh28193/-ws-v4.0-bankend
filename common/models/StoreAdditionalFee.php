@@ -8,9 +8,43 @@
 
 namespace common\models;
 
+use yii\helpers\Json;
+use common\calculators\CalculatorService;
+use common\components\AdditionalFeeInterface;
 use common\models\db\StoreAdditionalFee as DbStoreAdditionalFee;
 
 class StoreAdditionalFee extends DbStoreAdditionalFee
 {
-    use \common\components\conditions\ConditionTrait;
+    /**
+     * @return array
+     */
+    public function getCondition()
+    {
+        $data = $this->condition_data;
+        if ($data === null) {
+            return [];
+        }
+        return Json::decode($data, true);
+    }
+
+    public function executeCondition(AdditionalFeeInterface $additional)
+    {
+
+        if ($this->name === 'custom_fee') {
+            if (($category = $additional->getCustomCategory()) !== null) {
+                $value = $category->getCustomFee($additional);
+            } else {
+                $value = 0.0;
+            }
+        } else {
+            $condition = $condition = $this->getCondition();
+            if (empty($condition)) {
+                return false;
+            }
+            $value = CalculatorService::calculator($condition, $additional);
+        }
+
+        return [$value, $value * $additional->getExchangeRate()];
+
+    }
 }

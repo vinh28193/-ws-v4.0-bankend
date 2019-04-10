@@ -59,7 +59,8 @@ class ProductDetailFrom extends BaseForm
             ['seller', 'string'],
             ['seller', 'filter', 'filter' => '\yii\helpers\Html::encode'],
             ['weight', 'integer'],
-            ['sub_product_url', 'string']
+            ['sub_product_url', 'string'],
+            ['with_detail','safe'],
         ]);
     }
 
@@ -85,7 +86,7 @@ class ProductDetailFrom extends BaseForm
         /** @var $success boolean */
         /** @var $product BaseProduct */
         list($success, $product) = $this->getActiveGate()->lookup($this->getParams(), $renew);
-        if (!$success && is_string($product)) {
+        if (!$success || is_string($product)) {
             $this->addError($this->isSku() ? 'sku' : 'id', $product);
             return false;
         }
@@ -108,7 +109,7 @@ class ProductDetailFrom extends BaseForm
             $product->quantity = $this->quantity;
         }
         if ($this->seller !== null && trim($this->seller) !== '' && $this->type !== 'ebay') {
-//            $product->updateBySeller($this->seller);
+            $product->updateBySeller($this->seller);
         }
         $product->init();
         if ($this->with_detail === false) {

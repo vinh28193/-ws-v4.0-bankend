@@ -3,19 +3,29 @@
 namespace common\calculators;
 
 use Yii;
-use yii\base\BaseObject;
+use Exception;
 
 /**
  * Class Calculator
  * @package common\components\calculator
+ * @property Condition[] $conditions
  */
-class Calculator extends BaseObject
+class Calculator extends Resolver
 {
+    /**
+     * constant for type of check
+     */
     const TYPE_FIXED = 'F';
     const TYPE_PERCENT = 'P';
 
     public $type = self::TYPE_FIXED;
-    public $value = 0;
+    /**
+     * @var integer|string
+     */
+    public $value;
+    /**
+     * @var string
+     */
     public $unit;
 
     /**
@@ -39,10 +49,28 @@ class Calculator extends BaseObject
         $this->_conditions = $conditions;
     }
 
-    protected function checkCondition($target)
+    /**
+     * @param $config
+     * @return object
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function createCondition($config)
+    {
+        if (!isset($config['class'])) {
+            $config['class'] = Condition::className();
+        }
+        return Yii::createObject($config);
+    }
+
+    /**
+     * check conditions, true if pass all condition
+     * @param $target
+     * @return bool
+     */
+    public function checkCondition($target)
     {
         $pass = false;
-        foreach ($this->getConditions() as $condition) {
+        foreach ($this->conditions as $condition) {
             $pass = $condition->pass($target);
             if (!$pass) {
                 break;
@@ -51,28 +79,49 @@ class Calculator extends BaseObject
         return $pass;
     }
 
+    /**
+     * @param $rule
+     */
     public function register($rule)
     {
         $this->value = $rule['value'];
         $this->unit = $rule['unit'];
         $this->type = $rule['type'];
-        $LCondition = [];
+        $conditions = [];
         foreach ($rule['conditions'] as $condition) {
-            $condition['class'] = Condition::className();
-            $LCondition[] = Yii::createObject($condition);
+            $conditions[] = $this->createCondition($condition);
         }
-        $this->setConditions($LCondition);
+        $this->conditions = $conditions;
     }
 
+    /**
+     * @param $target
+     * @return float|int
+     */
     public function calculator($target)
     {
         if (!$this->checkCondition($target)) {
             return 0;
         }
+        Yii::info($this->deception(),__METHOD__);
         try {
-            $data = (new ResolveTarget())->resolve($target, $this->unit);
-            return $this->calculatorInternal($data);
-        } catch (\Exception $exception) {
+            $unit = $this->resolveKey($this->unit);
+            /**
+             *  fix bug, tính toán theo cái, theo kg
+             */
+
+            if ($unit === 'getShippingWeight' || $unit === 'getShippingQuantity') {
+
+                $value = $this->resolve($target, 'getTotalOriginPrice');
+
+                $unitValue = $this->resolve($target, $unit);
+                $value = $this->calculatorInternal($value);
+                $value *= $unitValue;
+                return $value;
+            }
+            $value = $this->resolve($target, $unit);
+            return $this->calculatorInternal($value);
+        } catch (Exception $exception) {
             Yii::info($exception, __METHOD__);
             return 0;
         }
@@ -86,7 +135,7 @@ class Calculator extends BaseObject
     {
         switch ($this->type) {
             case self::TYPE_FIXED:
-                return $data * $this->value;
+                return $this->value;
             case self::TYPE_PERCENT:
                 return $data * ($this->value / 100);
             default:
@@ -94,26 +143,33 @@ class Calculator extends BaseObject
         }
     }
 
+    public function toArray()
+    {
+        $array = [];
+        foreach ($this->conditions as $condition) {
+            $array[] = $condition->toArray();
+        }
+        return [
+            'value' => $this->value,
+            'type' => $this->type,
+            'unit' => $this->unit,
+            'conditions' => $array
+        ];
+    }
 
+    /**
+     * @return string get deception
+     */
     public function deception()
     {
-        $string = [];
-        $array = [];
-        foreach ($this->getConditions() as $condition) {
-            $string[] = $condition->deception()['string'];
-            $array[] = $condition->deception()['array'];
+        $deception = [];
+        foreach ($this->conditions as $condition) {
+            $deception[] = $condition->deception();
         }
-        $string = implode(', ', $string);
-        $type = $this->type === self::TYPE_PERCENT ? '%' : '';
-        return [
-            'array' => [
-                'value' => $this->value,
-                'type' => $this->type,
-                'unit' => $this->unit,
-                'conditions' => $array
-            ],
-            'string' => "$this->value{$type} {$this->unit} if $string",
-        ];
+        $string = implode(', ', $deception);
+        $type = $this->type === self::TYPE_FIXED ? '$' : '%';
+        $unit = $this->unit === 'quantity' ? 'each item' : ($this->unit === 'weight' ? 'each kg' : 'each price');
+        return "$this->value{$type} $unit if $string";
 
     }
 }

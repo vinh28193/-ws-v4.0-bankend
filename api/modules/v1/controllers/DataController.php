@@ -114,34 +114,24 @@ class DataController extends BaseApiController
 
     protected function SellerData($item,$key)
     {
-        $errors = [];
-        // Seller
-        if (($providers = ArrayHelper::getValue($item, 'providers')) === null
-            || ($item->type === 'EBAY' &&  $providers !== null && !isset($providers['name']))) {
-            $errors[$key][] = "can not create form null seller";
-            //continue;
+        $sellers = [];
+        if (($providers = ArrayHelper::getValue($item, 'providers')) === null) {
+           return $sellers;
         }
-        /**
-         * seller ebay va amazon khac nhau, hien tai chia parse ve 1 dang, vi amzon lau theo api offfer
-         */
-        if (isset($providers[0]) && $item->type !== 'EBAY') {
-            $s = [];
-            foreach ($providers as $provider) {
-                $s['name'] = $provider->prov_id;
-                $s['website'] = null;
-                $s['rating_score'] = $provider->rating_score;
+        foreach ($providers as $provider) {
+            if (($seller = Seller::findOne(['seller_name' => $provider['name']])) === null) {
+                $seller = new Seller();
+                $seller->seller_name = $provider['name'];
+                $seller->seller_link_store = $provider['website'];
+                $seller->seller_store_rate = $provider['rating_score'];
+                $seller->save(false);
             }
-            $providers = $s;
-        }
-        if (($seller = Seller::findOne(['seller_name' => $providers['name']])) === null) {
-            $seller = new Seller();
-            $seller->seller_name = $providers['name'];
-            $seller->seller_link_store = $providers['website'];
-            $seller->seller_store_rate = $providers['rating_score'];
-            $seller->save(false);
+            $sellers[] = $seller;
         }
 
-        return $seller;
+
+
+        return $sellers;
     }
 
     protected function CategoryData($item,$key,$itemType)
@@ -176,13 +166,12 @@ class DataController extends BaseApiController
         $product->category_id = $category->id;
         $product->custom_category_id =  $category->id;
 
-        $product->getAdditionalFees()->mset($itemGetWayAPI->additionalFees);
-        $product->price_amount_origin =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[0]; // 'đơn giá gốc ngoại tệ'
-        $product->total_price_amount_local = $product->getAdditionalFees()->getTotalAdditionFees()[1] + $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[0] ; // 'tổng tiền hàng của từng sản phẩm'
+        $product->price_amount_origin =  $itemGetWayAPI->additionalFees->getTotalAdditionFees('product_price_origin')[0]; // 'đơn giá gốc ngoại tệ'
+        $product->total_price_amount_local = $itemGetWayAPI->additionalFees->getTotalAdditionFees()[1] + $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[0] ; // 'tổng tiền hàng của từng sản phẩm'
 
 
         $product->total_fee_product_local = 0;         // Tổng Phí theo sản phẩm
-        $product->price_amount_local =  $product->getAdditionalFees()->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
+        $product->price_amount_local =  $itemGetWayAPI->additionalFees->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
         $product->quantity_customer =  $itemGetWayAPI->quantity;
         $product->quantity_purchase =  null;  /** Todo */
         $product->quantity_inspect =  null;  /** Todo */
@@ -335,6 +324,7 @@ class DataController extends BaseApiController
 
             $itemType = $this->post['source'];
             // Seller
+
             $seller = $this->SellerData($item, $key);
 
             // Category

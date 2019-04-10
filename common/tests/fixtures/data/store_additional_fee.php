@@ -3,7 +3,7 @@
 return [
     'store_additional_fee0' => [
         'id' => '1',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'product_price_origin',
         'label' => 'Giá gốc Sell Price ',
         'currency' => 'VND',
@@ -20,7 +20,7 @@ return [
     ],
     'store_additional_fee1' => [
         'id' => '2',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'tax_fee_origin',
         'label' => 'Phí / Thuế Bang Tax  Ví dụ tại Mỹ tại nhật',
         'currency' => 'VND',
@@ -37,7 +37,7 @@ return [
     ],
     'store_additional_fee2' => [
         'id' => '3',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'origin_shipping_fee',
         'label' => 'phí vận chuyển tại nước sở tại',
         'currency' => 'VND',
@@ -54,7 +54,7 @@ return [
     ],
     'store_additional_fee3' => [
         'id' => '4',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'weshop_fee',
         'label' => 'Phí weshop',
         'currency' => 'VND',
@@ -71,7 +71,7 @@ return [
     ],
     'store_additional_fee4' => [
         'id' => '5',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'intl_shipping_fee',
         'label' => 'Phí vận chuyển quốc tế',
         'currency' => 'VND',
@@ -88,7 +88,7 @@ return [
     ],
     'store_additional_fee5' => [
         'id' => '6',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'custom_fee',
         'label' => 'Phí Phụ Thu danh mục',
         'currency' => 'VND',
@@ -105,7 +105,7 @@ return [
     ],
     'store_additional_fee6' => [
         'id' => '7',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'delivery_fee_local',
         'label' => 'Phí vận chuyển Tại Nội địa như Weshop Viêt Nam hoặc Weshop Indo',
         'currency' => 'VND',
@@ -122,7 +122,7 @@ return [
     ],
     'store_additional_fee7' => [
         'id' => '8',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'packing_fee',
         'label' => 'Phí đóng kiện',
         'currency' => 'VND',
@@ -139,7 +139,7 @@ return [
     ],
     'store_additional_fee8' => [
         'id' => '9',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'inspection_fee ',
         'label' => 'Phí kiểm hàng',
         'currency' => 'VND',
@@ -156,7 +156,7 @@ return [
     ],
     'store_additional_fee9' => [
         'id' => '10',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'insurance_fee ',
         'label' => 'Phí bảo hiểm',
         'currency' => 'VND',
@@ -173,7 +173,7 @@ return [
     ],
     'store_additional_fee10' => [
         'id' => '11',
-        'store_id' => '1',
+        'store_id' => '2',
         'name' => 'vat_fee ',
         'label' => 'Phí VAT tại nước sở tại WS VIET NAM hoặc Indo ',
         'currency' => 'VND',
