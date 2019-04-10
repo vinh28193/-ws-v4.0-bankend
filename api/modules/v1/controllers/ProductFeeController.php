@@ -109,7 +109,7 @@ class ProductFeeController extends BaseApiController
 
     protected function getTotalFeeOrder($type){
         $typeTotal = "";
-        switch (strtolower($type)){
+        switch (strtolower(str_replace(' ','',$type))){
             // Không cho phép thay đổi phí gốc : price , us tax, us ship
 //            case 'product_price_origin':
 //                $typeTotal = 'total_price_amount_origin';
@@ -135,13 +135,13 @@ class ProductFeeController extends BaseApiController
             case 'packing_fee':
                 $typeTotal = 'total_packing_fee_local';
                 break;
-            case 'inspection_fee ':
+            case 'inspection_fee':
                 $typeTotal = 'total_inspection_fee_local';
                 break;
-            case 'insurance_fee ':
+            case 'insurance_fee':
                 $typeTotal = 'total_insurance_fee_local';
                 break;
-            case 'vat_fee ':
+            case 'vat_fee':
                 $typeTotal = 'total_vat_amount_local';
                 break;
         }

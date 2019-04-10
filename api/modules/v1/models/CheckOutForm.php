@@ -158,6 +158,7 @@ class CheckOutForm extends Model
             // step 3: create order
             $order = new Order();
             $order->setScenario(Order::SCENARIO_DEFAULT);
+            $order->new = Yii::$app->getFormatter()->asTimestamp('now');
             $order->type_order = Order::TYPE_SHOP;
             $order->customer_type = 'Retail';
             $order->current_status = Order::STATUS_NEW;
@@ -178,6 +179,7 @@ class CheckOutForm extends Model
             $order->seller_id = $seller->id;
             $order->seller_name = $seller->seller_name;
             $order->seller_store = $seller->seller_link_store;
+            $order->total_paid_amount_local = 0;
             $order->save(false);
             $order->updateAttributes([
                 'ordercode' => WeshopHelper::generateTag($order->id,'WSVN',16),
@@ -263,6 +265,11 @@ class CheckOutForm extends Model
                     $productFee->local_amount = $local;
                     $productFee->currency = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
                     if ($productFee->save() && $order->hasAttribute($orderAttribute)) {
+                        if($key === 'product_price_origin'){
+                            $oldAmount = isset($updateOrderAttributes['total_price_amount_origin']) ? $updateOrderAttributes['total_price_amount_origin'] : 0;
+                            $oldAmount += $amount;
+                            $updateOrderAttributes['total_price_amount_origin'] = $oldAmount;
+                        }
                         $value = isset($updateOrderAttributes[$orderAttribute]) ? $updateOrderAttributes[$orderAttribute] : 0;
                         $value += $local;
                         $updateOrderAttributes[$orderAttribute] = $value;
@@ -272,9 +279,7 @@ class CheckOutForm extends Model
                 $updateOrderAttributes['total_fee_amount_local'] = $additionalFees->getTotalAdditionFees()[1];
                 $products[] = $product;
             }
-            if ($provider !== null) {
-                $updateOrderAttributes['seller_store'] = $seller->seller_link_store;
-            }
+
             $order->updateAttributes($updateOrderAttributes);
             $results[$order->ordercode] = [
                 'seller' => $seller,
