@@ -506,4 +506,19 @@ return [
         'extraPatterns' => []
     ],
     */
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['warehouse' => 'service/warehouse-service'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET' => 'list',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [ ]
+    ],
 ];
