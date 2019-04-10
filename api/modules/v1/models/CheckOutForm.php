@@ -155,9 +155,10 @@ class CheckOutForm extends Model
             $order->payment_type = 'online_payment';
             $order->seller_id = $seller->id;
             $order->seller_name = $seller->seller_name;
-            $order->seller_store =$seller->seller_link_store;
+            $order->seller_store = $seller->seller_link_store;
             $order->save(false);
             $products = [];
+            $productFees = [];
             $updateOrderAttributes = [];
             // step 4: create product
             foreach ($arrays as $id => $array) {
@@ -228,21 +229,20 @@ class CheckOutForm extends Model
                         $orderAttribute = 'total_delivery_fee_local';
                     }
 
-                    $data_key[$key] = $key;
-
-                    $orderFee = new ProductFee();
-                    $orderFee->type = $key;
-                    $orderFee->name = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
-                    $orderFee->order_id = $order->id;
-                    $orderFee->product_id = $product->id;
-                    $orderFee->amount = $amount;
-                    $orderFee->local_amount = $local;
-                    $orderFee->currency = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
-                    if ($orderFee->save() && $order->hasAttribute($orderAttribute)) {
+                    $productFee = new ProductFee();
+                    $productFee->type = $key;
+                    $productFee->name = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->label;
+                    $productFee->order_id = $order->id;
+                    $productFee->product_id = $product->id;
+                    $productFee->amount = $amount;
+                    $productFee->local_amount = $local;
+                    $productFee->currency = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($key)->currency;
+                    if ($productFee->save() && $order->hasAttribute($orderAttribute)) {
                         $value = isset($updateOrderAttributes[$orderAttribute]) ? $updateOrderAttributes[$orderAttribute] : 0;
                         $value += $local;
                         $updateOrderAttributes[$orderAttribute] = $value;
                     }
+                    $productFees[$product->id][$key] = $productFee;
                 }
                 $updateOrderAttributes['total_fee_amount_local'] = $additionalFees->getTotalAdditionFees()[1];
                 $products[] = $product;
@@ -252,8 +252,10 @@ class CheckOutForm extends Model
             }
             $order->updateAttributes($updateOrderAttributes);
             $results[$order->id] = [
+                'seller' => $seller,
                 'order' => $order,
-                'products' => $products
+                'products' => $products,
+                'productFees' => $productFees
             ];
         }
         return $results;
@@ -262,7 +264,8 @@ class CheckOutForm extends Model
     /**
      * @return \yii\db\Connection
      */
-    protected function getDb(){
+    protected function getDb()
+    {
         return Order::getDb();
     }
 }
