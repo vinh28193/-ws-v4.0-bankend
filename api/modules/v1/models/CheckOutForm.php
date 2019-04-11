@@ -355,6 +355,7 @@ class CheckOutForm extends Model
                     $oldAmount = isset($updateOrderAttributes['total_amount_local']) ? $updateOrderAttributes['total_amount_local'] : 0;
                     $oldAmount += $additionalFees->getTotalAdditionFees()[1];
                     $updateOrderAttributes['total_amount_local'] = $oldAmount;
+                    $updateOrderAttributes['total_final_amount_local'] = $oldAmount;
 
                     $products[] = $product;
                 }
