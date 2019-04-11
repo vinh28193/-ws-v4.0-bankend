@@ -112,6 +112,17 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     }
 
     /**
+     * @return array
+     */
+    public function timestampFields()
+    {
+        return ArrayHelper::merge(parent::timestampFields(), [
+            'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us',
+            'stockout_us', 'stockin_local', 'stockout_local', 'at_customer',
+        ]);
+    }
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -133,7 +144,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 'current_status'
             ],
             self::SCENARIO_SALE_ASSIGN => [
-                'sale_support_id','support_email'
+                'sale_support_id', 'support_email'
             ],
             self::SCENARIO_UPDATE_ADJUST_PAYMENT => [
                 'total_paid_amount_local'
@@ -148,7 +159,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 'total_refund_amount_local'
             ],
             self::SCENARIO_UPDATE_SELLER_REFUND => [
-            'purchase_amount_buck', 'purchase_amount_refund'
+                'purchase_amount_buck', 'purchase_amount_refund'
             ],
         ]);
     }
@@ -238,7 +249,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             [
                 [
                     'receiver_phone',
-                ],'string', 'min' => 9
+                ], 'string', 'min' => 9
             ],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
@@ -476,7 +487,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
         $query = Order::find()
             ->withFullRelations()
-            ->andWhere(['is not', 'product.id', null])  // ToDo Test/Check Code Fee
+            ->andWhere(['is not', 'product.id', null])// ToDo Test/Check Code Fee
             ->filter($params)
             ->limit($limit)
             ->offset($offset);
@@ -508,15 +519,14 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     ['order.receiver_email' => $params['keyWord']],
                     ['order.receiver_phone' => $params['keyWord']],
                     ['customer.phone' => $params['keyWord']],
-                    ]);
+                ]);
             } elseif ($params['searchKeyword'] != 'ALL') {
                 if ($params['searchKeyword'] == 'email') {
                     $query->andFilterWhere(['or',
                         ['like', 'order.receiver_email', $params['keyWord']],
                         ['like', 'customer.email', $params['keyWord']],
                     ]);
-                }
-                elseif ($params['searchKeyword'] == 'phone') {
+                } elseif ($params['searchKeyword'] == 'phone') {
                     $query->andFilterWhere(['or',
                         ['like', 'order.receiver_phone', $params['keyWord']],
                         ['like', 'customer.phone', $params['keyWord']],
@@ -554,7 +564,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     ['between', 'order.returned', $params['startTime'], $params['endTime']],
                     ['between', 'order.cancelled', $params['startTime'], $params['endTime']],
                     ['between', 'order.lost', $params['startTime'], $params['endTime']],
-                    ]);
+                ]);
             } elseif ($params['timeKey'] != 'ALL') {
                 $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
             }
