@@ -32,7 +32,7 @@ class SimpleItem extends BaseCartItem
             'quantity' => $this->quantity,
             'with_detail' => false,
         ];
-        if ($this->parentSku !== null) {
+        if ($this->parentSku !== null && $this->parentSku !== '') {
             $params['id'] = $this->parentSku;
             $params['sku'] = $this->sku;
         }

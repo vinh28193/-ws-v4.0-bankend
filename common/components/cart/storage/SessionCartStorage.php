@@ -65,7 +65,7 @@ class SessionCartStorage extends \yii\base\BaseObject implements CartStorageInte
             $key => $value
         ]);
         $this->getSession()->set($this->sessionName, [$id => $values]);
-        return true;
+        return $key;
     }
 
     public function getItem($key)

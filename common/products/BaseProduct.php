@@ -131,7 +131,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
         }
     }
 
-    private $isInitialized = false;
+    public $isInitialized = false;
 
 
     /**
