@@ -367,9 +367,11 @@ class CheckOutForm extends Model
                     'productFees' => $productFees
                 ];
             }
+            $transaction->commit();
         } catch (Exception $exception) {
             Yii::info($exception);
-            $this->addError('cartIds', 'Can not get cart item from ids :' . implode(', ', $this->cartIds));
+            $this->addError('cartIds', $exception->getMessage());
+            $transaction->rollBack();
             return false;
         }
 
