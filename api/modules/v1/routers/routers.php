@@ -21,8 +21,9 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['check-out'],
+        'controller' => ['check-out','cart'],
         'patterns' => [
+            'GET' => 'index',
             'POST' => 'create',
             'OPTIONS' => 'options',
         ],

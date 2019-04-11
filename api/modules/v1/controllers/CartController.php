@@ -14,41 +14,44 @@ use yii\data\ArrayDataProvider;
 use api\controllers\BaseApiController;
 use yii\helpers\ArrayHelper;
 
-class CartController extends \yii\rest\Controller
+class CartController extends BaseApiController
 {
 
 
-    public function init()
+    protected function rules()
     {
-        Yii::$app->getUser()->setIdentity(User::findOne(1));
-        parent::init();
+        return [
+            [
+                'allow' => true,
+                'roles' => $this->getAllRoles(true)
+            ]
+        ];
+    }
+
+    protected function verbs()
+    {
+        return [
+            'index' => ['GET'],
+            'create' => ['POST'],
+        ];
     }
 
     public function actionIndex()
     {
-        $this->getCart()->removeItems();
-
-        $this->getCart()->addItem(['source' => 'ebay', 'seller' => 'cleats_blowout_sports', 'quantity' => 1, 'image' => 'test', 'sku' => '252888606889']);
-        $this->getCart()->addItem(['source' => 'ebay', 'seller' => 'cleats_blowout_sports', 'quantity' => 1, 'image' => 'test', 'sku' => '254113708379']);
-        $this->getCart()->addItem(['source' => 'ebay', 'seller' => 'mygiftstop', 'quantity' => 1, 'image' => 'test', 'sku' => '332800694983']);
-        $this->getCart()->addItem(['source' => 'ebay', 'mygiftstop', 'seller' => 10, 'quantity' => 'test', 'image' => '332800694983']);
-        $this->getCart()->addItem(['source' => 'amazon', 'seller' => 'QVVESU9MQUIgLSBTaW5jZSAxOTU4LU5ldy0yNzk=', 'quantity' => 10, 'image' => 'test', 'sku' => 'B07C49F2LD']);
-        $this->getCart()->addItem(['source' => 'amazon', 'seller' => 'QW1hem9uLmNvbS1OZXctMjc5', 'quantity' => 10, 'image' => 'test', 'sku' => 'B07C49F2LD']);
-        $items = $this->getCart()->getItems();
-        var_dump($items);
-        die;
-//        $this->getCart()->addItem('IF_6C960C53','cleats_blowout_sports',1,'ebay','test','252888606889');
-//        $dataProvider = new ArrayDataProvider([
-//            'allModels' => $this->getCart()->getItems(),
-//        ]);
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $this->getCart()->getItems(),
+        ]);
+        return $this->response(true, 'get cart success', $dataProvider);
 
     }
 
-//    public function actionAddToCart(){
-//
-//        $this->getCart()->addItem('252888606889','cleats_blowout_sports',1,'ebay','test');
-//        return $this->response(true,"ok",$this->getCart()->getItems());
-//    }
+    public function actionCreate()
+    {
+        if (($key = $this->getCart()->addItem($this->post)) === false) {
+            $this->response(false, 'can not add item');
+        };
+        return $this->response(true, "ok", $this->getCart()->getItem($key));
+    }
 
     /**
      * @return \common\components\cart\CartManager

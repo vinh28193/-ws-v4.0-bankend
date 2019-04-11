@@ -71,8 +71,8 @@ trait ProductTrait
 
     public function setProviders(){
         $providers = [];
-        foreach ($this->providers as  $provider){
-            $providers[] = new Provider($provider);
+        foreach ($this->providers as $provider){
+            $providers[] = !is_object($provider) ? new Provider($provider) : $provider ;
         }
         $this->providers = $providers;
     }
