@@ -54,7 +54,9 @@ class PromotionCondition extends DbPromotionCondition
             if ($config->type_cast !== self::TYPE_BOOLEAN && $valueType === self::TYPE_BOOLEAN) {
                 return false;
             }
+
             $this->value = $this->normalizeTypeCast($config->type_cast, $this->value);
+
             if (($config->type_cast === self::TYPE_INTEGER || $config->type_cast === self::TYPE_STRING) && $valueType !== $config->type_cast) {
                 $value = $this->normalizeTypeCast($config->type_cast, $value);
             }
@@ -85,7 +87,6 @@ class PromotionCondition extends DbPromotionCondition
             'LIKE' => 'executeLikeCondition',
         ];
         $operator = isset($this->operatorMapping[$config->operator]) ? $this->operatorMapping[$config->operator] : $config->operator;
-
         if (isset($operatorsExecutor[$operator]) && ($method = $operatorsExecutor[$operator]) !== null) {
             return call_user_func_array([$this, $method], $method === 'executeNormalCondition' ? [$operator, $value] : [$value]);
         }

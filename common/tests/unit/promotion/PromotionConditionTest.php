@@ -7,6 +7,7 @@ use common\tests\UnitTestCase;
 use common\promotion\PromotionRequest;
 use common\promotion\PromotionCondition;
 use yii\helpers\ArrayHelper;
+use common\tests\stubs\PromotionRequestParam;
 
 class PromotionConditionTest extends UnitTestCase
 {
@@ -18,45 +19,80 @@ class PromotionConditionTest extends UnitTestCase
     public function testCheckConditionRecursive()
     {
 
-        $conditions = [
-            'amount' => [
-                'name' => 'amount',
-                'value' => 999,
-                'operator' => '<',
-                'type_cast' => 'integer'
+        $testCases = [
+            'integer test case lesser' => [
+                'conditionValue' => 999,
+                'passValue' => 998,
+                'unPassValue' => 1000,
+                'operator' => 'lt',
+                'typeCast' => 'integer'
+            ],
+            'integer test case greater' => [
+                'conditionValue' => 999,
+                'passValue' => 1000,
+                'unPassValue' => 999,
+                'operator' => 'gt',
+                'typeCast' => 'integer'
+            ],
+            'integer test case lte' => [
+                'conditionValue' => 999,
+                'passValue' => 999,
+                'unPassValue' => 1000,
+                'operator' => 'lte',
+                'typeCast' => 'integer'
+            ],
+            'integer test case gte' => [
+                'conditionValue' => 999,
+                'passValue' => 999,
+                'unPassValue' => 998,
+                'operator' => 'gte',
+                'typeCast' => 'integer'
+            ],
+            'array test case' => [
+                'conditionValue' => 'a;b;c',
+                'passValue' => 'a',
+                'unPassValue' => 'd',
+                'operator' => 'in',
+                'typeCast' => 'array'
             ]
         ];
 
-        foreach ($conditions as $name => $params) {
-            $this->specify("check condition $name", function () use ($params) {
-                $condition = new PromotionCondition([
-                    'name' => $params['name'],
-                    'value' => $params['value']
-                ]);
-                $config = new PromotionConditionConfig([
-                    'name' => $params['name'],
-                    'operator' => $params['operator'],
-                    'type_cast' => $params['type_cast']
-                ]);
-                $condition->populateRelation('promotionConditionConfig', $config);
-                $this->specify('i want check case pass condition', function () use ($condition) {
-                    $request = $this->make(PromotionRequest::className(), [
-                        $condition->name => 998
+        foreach ($testCases as $case => $params) {
+            $this->specify("check condition $case", function () use ($params) {
+                $this->specify('i want check case pass condition', function () use ($params) {
+                    $condition = new PromotionCondition([
+                        'name' => 'testerProperty',
+                        'value' => $params['conditionValue']
+                    ]);
+                    $config = new PromotionConditionConfig([
+                        'name' => 'testerProperty',
+                        'operator' => $params['operator'],
+                        'type_cast' => $params['typeCast']
+                    ]);
+                    $condition->populateRelation('promotionConditionConfig', $config);
+                    $request = $this->make(PromotionRequestParam::className(), [
+                        $condition->name => $params['passValue']
                     ]);
                     verify($condition->checkConditionRecursive($request))->true();
                 });
 
-                $this->specify('i want check case not  pass condition', function () use ($condition) {
-                    $request = $this->make(PromotionRequest::className(), [
-                        $condition->name => 1000
+                $this->specify('i want check case not pass condition', function () use ($params) {
+                    $condition = new PromotionCondition([
+                        'name' => 'testerProperty',
+                        'value' => $params['conditionValue']
+                    ]);
+                    $config = new PromotionConditionConfig([
+                        'name' => 'testerProperty',
+                        'operator' => $params['operator'],
+                        'type_cast' => $params['typeCast']
+                    ]);
+                    $condition->populateRelation('promotionConditionConfig', $config);
+                    $request = $this->make(PromotionRequestParam::className(), [
+                        $condition->name => $params['unPassValue']
                     ]);
                     verify($condition->checkConditionRecursive($request))->false();
                 });
             });
         }
-        $conditionConfig = new PromotionConditionConfig([
-            'name' => 'amount'
-        ]);
-
     }
 }
