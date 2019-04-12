@@ -117,20 +117,20 @@ class PackageItemController extends BaseApiController
             $dirtyAttributes = $model->getDirtyAttributes();
             $messages = "order {$model->order->ordercode} Create Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
             if (!$model->save()) {
-                Yii::$app->wsLog->order->push('updatePackageItem', null, [
+                Yii::$app->wsLog->push('order', 'updatePackageItem', null, [
                     'id' => $model->order->ordercode,
                     'request' => $this->post,
                     'response' => $model->getErrors()
                 ]);
-                return $this->response(false, 'delete package item' . $id . 'error');
+                return $this->response(false, $messages);
             }
             ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
-            Yii::$app->wsLog->push('order','createPackageItem', null, [
+            Yii::$app->wsLog->push('order', 'update package item', null, [
                 'id' => $model->order->ordercode,
                 'request' => $this->post,
                 'response' => $dirtyAttributes
             ]);
-            return $this->response(true, 'delete package item' . $id . ' success', $model);
+            return $this->response(true, $messages);
         }
     }
 
@@ -138,7 +138,7 @@ class PackageItemController extends BaseApiController
     {
         $model = PackageItem::findOne($id);
         if (!$model->delete()) {
-            Yii::$app->wsLog->order->push('deletePackageItem', null, [
+            Yii::$app->wsLog->push('order', 'deletePackageItem', null, [
                 'id' => $model->order->ordercode,
                 'request' => $this->post,
             ]);
@@ -147,7 +147,7 @@ class PackageItemController extends BaseApiController
         $dirtyAttributes = $model->getDirtyAttributes();
         $messages = "order {$model->order->ordercode} Delete Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
         ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
-        Yii::$app->wsLog->order->push('package-item', 'deletePackageItem', null, [
+        Yii::$app->wsLog->push('order', 'deletePackageItem', null, [
             'id' => $model->order->ordercode,
             'request' => $this->post,
         ]);
