@@ -1,6 +1,17 @@
 <?php
 namespace common\models\draft;
+use common\models\TrackingCode;
 
+/**
+ * Class DraftDataTracking
+ * @package common\models\draft
+ * @property DraftExtensionTrackingMap $draftExtensionTrackingMap
+ * @property TrackingCode $trackingCode
+ * @property DraftBoxmeTracking $draftBoxmeTracking
+ * @property DraftMissingTracking $draftMissingTracking
+ * @property DraftWastingTracking $draftWastingTracking
+ * @property DraftPackageItem $draftPackageItem
+ */
 class DraftDataTracking extends \common\models\db\DraftDataTracking
 {
     const STATUS_EXTENSION = "EXTENSION";
@@ -37,5 +48,33 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
     public static function find()
     {
         return new \common\models\queries\DraftDataTrackingQuery(get_called_class());
+    }
+
+    public function getDraftExtensionTrackingMap(){
+        return $this->hasOne(DraftExtensionTrackingMap::className(),['tracking_code' => 'tracking_code','product_id' => 'product_id']);
+//        return DraftExtensionTrackingMap::find()->where(['tracking_code' => $this->tracking_code,'product_id' => $this->product_id])->one();
+    }
+    public function getTrackingCode(){
+        return $this->hasOne(TrackingCode::className(),['tracking_code' => 'tracking_code']);
+    }
+
+    public function getDraftBoxmeTracking(){
+        return $this->hasOne(DraftBoxmeTracking::className(),['tracking_code' => 'tracking_code','product_id' => 'product_id']);
+//        return DraftBoxmeTracking::find()->where(['tracking_code' => $this->tracking_code,'product_id' => $this->product_id])->one();
+    }
+
+    public function getDraftMissingTracking(){
+        return $this->hasOne(DraftMissingTracking::className(),['tracking_code' => 'tracking_code','product_id' => 'product_id']);
+//        return DraftMissingTracking::find()->where(['tracking_code' => $this->tracking_code,'product_id' => $this->product_id])->one();
+    }
+
+    public function getDraftWastingTracking(){
+        return $this->hasOne(DraftWastingTracking::className(),['tracking_code' => 'tracking_code','product_id' => 'product_id']);
+//        return DraftWastingTracking::find()->where(['tracking_code' => $this->tracking_code,'product_id' => $this->product_id])->one();
+    }
+
+    public function getDraftPackageItem(){
+        return $this->hasOne(DraftPackageItem::className(),['tracking_code' => 'tracking_code','product_id' => 'product_id']);
+//        return DraftPackageItem::find()->where(['tracking_code' => $this->tracking_code,'product_id' => $this->product_id])->one();
     }
 }
