@@ -34,6 +34,23 @@ class Promotion extends DbPromotion
 
     /**
      * 1:normal(price),2 weight,3 quantity
+     * NOTE:
+     * normal:
+     *      điều kiện : mixed
+     *      tính toán:
+     *          phần trăm hoặc số tiền được giảm tại phí đó
+     *      ví dụ:
+     *          - giảm 10% phí weshop (max 500k) => $feeWeshop * 10% (nếu lơn hơn max thì rả về max)
+     *          - giảm 100k phí weshop => $feeWeshop - 100;
+     *          - giảm 200k cho toàn đơn hàng :D => chưa rõ
+     * over weight : tính cho phí vận chuyển quốc tế, vượt từ x kg thì giảm với độ tương ứng
+     *      ví dụ : vượt quá 3 kg thì tặng phí vận chuyển của 2kg tiếp theo (không vượt quá 2kg),
+     *      điều kiện: cân nặng trên 3kg, max 2kg
+     *      tính toán: số tiền được giảm cho số kg vượt quá, nhưng không vượt quá max
+     *          - trên 3kg dưới 5kg (3kg đầu và 2kg tiếp theo) => giảm cho 2 cân tiếp theo
+     *          - trên 5kg cũng vẫn chỉ giảm 2kg (max 2kg), vẫn tính số cân nậng còn lại
+     * over quantity : chưa áp dụng bao giờ
+     *
      */
     const DISCOUNT_TYPE_NORMAL = 1;
     const DISCOUNT_TYPE_OVER_WEIGHT = 2;

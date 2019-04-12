@@ -51,7 +51,7 @@ class PromotionCondition extends DbPromotionCondition
         $value = $this->resolveRequest($request);
         $valueType = gettype($value);
         if ($config->type_cast !== null) {
-            if($config->type_cast !== self::TYPE_BOOLEAN && $valueType === self::TYPE_BOOLEAN){
+            if ($config->type_cast !== self::TYPE_BOOLEAN && $valueType === self::TYPE_BOOLEAN) {
                 return false;
             }
             $this->value = $this->normalizeTypeCast($config->type_cast, $this->value);
@@ -60,7 +60,12 @@ class PromotionCondition extends DbPromotionCondition
             }
         }
         /**
-         * Todo child condition here
+         * Todo depend condition here
+         * ví dụ điều kiện là hàng ebay nhưng mà phải trong danh mục đồng hồ
+         * khi check điều kiện hàng ebay thì phải check xem có nằm trong danh mục đồng hồ không
+         * hoặc ngược lại
+         *
+         * NOTE: vì hàm đệ quy nên phải tìm điểm dừng, tránh đệ quy liên tục
          * 1, created from config
          * 2, call function recursive
          */
