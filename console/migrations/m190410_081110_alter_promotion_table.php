@@ -42,13 +42,20 @@ class m190410_081110_alter_promotion_table extends Migration
             'store_id' => $this->integer(11)->notNull()->comment('Store ID'),
             'promotion_id' => $this->string(11)->comment("Promotion ID"),
             'name' => $this->string(80)->notNull()->comment('name of condition'),
-            'value' => $this->text()->notNull()
+            'value' => $this->binary()->notNull()->comment('mixed value'),
+            'created_by' => $this->integer(11)->defaultValue(null)->comment('Created by'),
+            'created_at' => $this->integer(11)->defaultValue(null)->comment('Created at (timestamp)'),
+            'updated_by' => $this->integer(11)->defaultValue(null)->comment('Updated by'),
+            'updated_at' => $this->integer(11)->defaultValue(null)->comment('Updated at (timestamp)'),
+
         ]);
         $this->createTable('promotion_condition_config', [
             'id' => $this->primaryKey()->comment("ID"),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID'),
             'name' => $this->string(80)->notNull()->comment('name of condition'),
+            'operator' => $this->string(10)->notNull()->comment('Operator of condition'),
             'type_cast' => $this->string(10)->notNull()->defaultValue('integer')->comment('php type cast (integer,string,float ..etc)'),
+            'description' => $this->text()->comment('description'),
             'status' => $this->smallInteger()->defaultValue(1)->comment('Status (1:Active;2:Inactive)'),
             'created_by' => $this->integer(11)->defaultValue(null)->comment('Created by'),
             'created_at' => $this->integer(11)->defaultValue(null)->comment('Created at (timestamp)'),
@@ -142,7 +149,7 @@ class m190410_081110_alter_promotion_table extends Migration
         $this->dropTable('promotion_condition');
         $this->dropTable('promotion_condition_config');
         $this->dropTable('promotion_user');
-        $this->execute('DROP TABLE IF EXISTS ``');
+        $this->execute('DROP TABLE IF EXISTS `promotion_log`');
         $this->createTable('promotion_log', [
             'id' => $this->primaryKey()->comment("ID"),
             'promotion_id' => $this->string(11)->comment(""),

@@ -12,6 +12,9 @@ namespace api\controllers;
 use common\calculators\ConditionBuilder;
 use common\calculators\Calculator;
 use common\components\log\Logging;
+use yii\db\Query;
+use yii\db\QueryBuilder;
+use yii\db\Expression;
 
 class TesterController extends \yii\rest\Controller
 {
@@ -28,19 +31,21 @@ class TesterController extends \yii\rest\Controller
         /** @var  $exRate  \common\components\ExchangeRate */
         $exRate = \Yii::$app->exRate;
 
-        echo "rate from USD to VND: " . $exRate->usdToVnd(12, 0) ."\n";
+        echo "rate from USD to VND: " . $exRate->usdToVnd(12, 0) . "\n";
         die;
     }
 
-    public function actionLog(){
+    public function actionLog()
+    {
         echo "23";
-        $log = Logging::create()->push('product','test','messager',['abc' => 'def']);
+        $log = Logging::create()->push('product', 'test', 'messager', ['abc' => 'def']);
         die;
     }
 
-    public function actionCondition(){
+    public function actionCondition()
+    {
         $string = '[{"conditions":[{"value":50,"key":"price","type":"int","operator":">="}],"value":5,"unit":"quantity","type":"P"},{"conditions":[{"value":50,"key":"price","type":"int","operator":"<"},{"value":5,"key":"quantity","type":"int","operator":">"}],"value":5,"unit":"quantity","type":"P"}]';
-        $rules = json_decode($string,true);
+        $rules = json_decode($string, true);
         $target = new \stdClass();
         $target->getTotalOriginPrice = 99;
         $target->getShippingQuantity = 1;
@@ -49,6 +54,26 @@ class TesterController extends \yii\rest\Controller
         $cal->calculator($target);
         var_dump($cal->deception());
 
+        die;
+    }
+
+    public function actionQuery()
+    {
+
+        $query = new Query();
+        $condition = [
+            'AND',
+            ['IS NOT', 'trackingCode', new  Expression('NULL')],
+            ['<', new Expression('LENGTH(trackingCode)'), 6]
+//            [
+//                'AND',
+//                ['=', new Expression('trim(trackingCode)'), new  Expression('NULL')]
+//            ]
+        ];
+        $builder = new QueryBuilder(\Yii::$app->db);
+        $params = [];
+        $sql = $builder->buildCondition($condition, $params);
+        var_dump($sql, $params);
         die;
     }
 }
