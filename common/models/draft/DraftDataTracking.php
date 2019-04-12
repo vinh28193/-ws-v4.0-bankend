@@ -77,4 +77,5 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
         return $this->hasOne(DraftPackageItem::className(),['tracking_code' => 'tracking_code','product_id' => 'product_id']);
 //        return DraftPackageItem::find()->where(['tracking_code' => $this->tracking_code,'product_id' => $this->product_id])->one();
     }
+
 }

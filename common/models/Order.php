@@ -491,7 +491,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ->filter($params)
             ->limit($limit)
             ->offset($offset);
-
         if (isset($params['id'])) {
             $query->andFilterWhere(['id' => $params['id']]);
         }

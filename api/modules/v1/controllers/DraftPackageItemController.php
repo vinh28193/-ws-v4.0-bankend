@@ -61,14 +61,6 @@ class DraftPackageItemController extends BaseApiController
         $countD = clone $model;
         $data['_items'] = $model->limit($limit)->offset($page*$limit - $limit)->asArray()->orderBy('id desc')->all();
         $data['_total'] = $countD->count();
-//        $data['current'] = $countD->count();
-//        $data['_links']['last'] = $model->count();
-//        $data['_links']['next'] = "";
-//        $data['_links']['self'] = "";
-//        $data['_meta']['currentPage'] = "";
-//        $data['_meta']['pageCount'] = "";
-//        $data['_meta']['perPage'] = "";
-//        $data['_meta']['totalCount'] = "";
         return $this->response(true, "Success", $data);
     }
 }
