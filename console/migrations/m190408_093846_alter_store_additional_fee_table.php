@@ -211,6 +211,31 @@ class m190408_093846_alter_store_additional_fee_table extends Migration
                             'type' => 'int',
                             'operator' => '>'
                         ],
+                        [
+                            'value' => 'ebay',
+                            'key' => 'portal',
+                            'type' => 'string',
+                            'operator' => '=='
+                        ]
+                    ],
+                    'type' => 'F',
+                    'value' => 12,
+                    'unit' => 'weight'
+                ],
+                [
+                    'conditions' => [
+                        [
+                            'value' => 0,
+                            'key' => 'weight',
+                            'type' => 'int',
+                            'operator' => '>'
+                        ],
+                        [
+                            'value' => 'ebay',
+                            'key' => 'portal',
+                            'type' => 'string',
+                            'operator' => '!='
+                        ]
                     ],
                     'type' => 'F',
                     'value' => 10,
