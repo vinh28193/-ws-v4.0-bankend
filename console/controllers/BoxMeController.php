@@ -27,6 +27,9 @@ use yii\helpers\ArrayHelper;
 
 class BoxMeController extends Controller
 {
+    /**
+     *
+     */
     public function actionCheckDetailBoxme()
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
