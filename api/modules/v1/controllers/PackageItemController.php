@@ -87,16 +87,16 @@ class PackageItemController extends BaseApiController
         $dirtyAttributes = $model->getDirtyAttributes();
         $messages = "order {$post['ordercode']} Create Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if (!$model->save()) {
-            Yii::$app->wsLog->order->push('createPackageItem', null, [
-                'id' => $post['ordercode'],
+            Yii::$app->wsLog->push('order', 'createPackageItem', null, [
+                'id' => $model->order->ordercode,
                 'request' => $this->post,
                 'response' => $model->getErrors()
             ]);
             return $this->response(false, 'create package item error');
         }
-        ChatHelper::push($messages, $post['ordercode'], 'WS_CUSTOMER', 'SYSTEM');
-        Yii::$app->wsLog->push('order', 'createPackageItem', null, [
-            'id' => $post['ordercode'],
+        ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
+        Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+            'id' => $model->order->ordercode,
             'request' => $this->post,
             'response' => $dirtyAttributes
         ]);
