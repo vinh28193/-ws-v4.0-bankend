@@ -4,9 +4,7 @@ namespace common\tests\unit\promotion;
 
 use common\promotion\PromotionConditionConfig;
 use common\tests\UnitTestCase;
-use common\promotion\PromotionRequest;
 use common\promotion\PromotionCondition;
-use yii\helpers\ArrayHelper;
 use common\tests\stubs\PromotionRequestParam;
 
 class PromotionConditionTest extends UnitTestCase

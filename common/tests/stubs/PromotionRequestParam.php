@@ -4,7 +4,9 @@
 namespace common\tests\stubs;
 
 
-class PromotionRequestParam extends \common\promotion\PromotionRequest
+use common\promotion\PromotionForm;
+
+class PromotionRequestParam extends PromotionForm
 {
 
     /**

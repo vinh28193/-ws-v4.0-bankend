@@ -40,10 +40,10 @@ class PromotionCondition extends DbPromotionCondition
     ];
 
     /**
-     * @param PromotionRequest $request
+     * @param PromotionForm $request
      * @return boolean
      */
-    public function checkConditionRecursive(PromotionRequest $request)
+    public function checkConditionRecursive(PromotionForm $request)
     {
         if (($config = $this->promotionConditionConfig) === null) {
             return false;
@@ -127,10 +127,10 @@ class PromotionCondition extends DbPromotionCondition
     }
 
     /**
-     * @param PromotionRequest $request
+     * @param PromotionForm $request
      * @return bool|mixed
      */
-    protected function resolveRequest(PromotionRequest $request)
+    protected function resolveRequest(PromotionForm $request)
     {
         try {
             return ObjectHelper::resolve($request, $this->name);
