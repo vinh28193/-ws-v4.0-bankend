@@ -21,7 +21,7 @@ return [
     'transaction_status' => 'DONE',
     'transaction_type' => 'PAYMENT',
     'customer_id' => 1,
-    'order_id' =>$faker->numberBetween(300,999), // $order['id'],
+    'order_id' =>$faker->numberBetween(1,999), // $order['id'],
     'transaction_amount_local' => $faker->numberBetween(1000000,100000000),//$order['total_final_amount_local'],
     'transaction_description' => 'Thanh toán đơn hàng',
     'note' => 'Giao dich thanh công',
