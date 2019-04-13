@@ -21,7 +21,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
      */
     public static function collectionName()
     {
-        return ['weshop_global', 'shopping_cart'];
+        return ['weshop_global_40', 'shopping_cart'];
     }
 
     /**
