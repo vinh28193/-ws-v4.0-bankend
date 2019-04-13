@@ -636,3 +636,12 @@ READY_PURCHASE or PURCHASE_PART or ( PURCHASING and ( PURCHASE_ASSIGNEE_ID = use
 5.	Chạy job get_getDetail							php yii box-me/check-detail-boxme
 6.	Chạy job giả lập dữ liệu callback				php yii box-me/emulator-callback manifest_code
 7.	Tạo các order,product,product_fee tương ứng.	
+
+
+#----------Tables packet tam----------
+draft_boxme_tracking : 
+draft_data_tracking : 
+draft_extension_tracking_map : 
+draft_missing_tracking : 
+draft_package_item : 
+draft_wasting_tracking : 
