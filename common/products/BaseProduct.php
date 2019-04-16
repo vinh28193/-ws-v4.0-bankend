@@ -114,6 +114,13 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
             'tax_fee_origin' => $this->us_tax_rate,
             'origin_shipping_fee' => $this->shipping_fee
         ], true);
+        /**
+         * Todo function initDefaultProperty
+         * - vì mấy hàm này chỉ có tác dụng sử dụng 1 lần khi create object nên chỉ cần viết 1 hàm
+         * - để là protected để ghi đè
+         * - isInitialized được chuyển xuống
+         * - remove trait ProductTrait (chuyển tất cả về base product)
+         */
         if ($this->isInitialized === false) {
             $this->setVariationMapping();
             $this->setVariationOptions();
