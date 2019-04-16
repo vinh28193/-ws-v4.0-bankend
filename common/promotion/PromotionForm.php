@@ -24,4 +24,74 @@ use yii\base\Model;
 class PromotionForm extends Model
 {
 
+    /**
+     * @var string mã coupon
+     */
+    public $couponCode;
+
+    /**
+     * @var integer
+     */
+    public $customerId;
+    /**
+     * @var string payment service
+     * template "PaymentMethodId_PaymentBankCode"
+     */
+    public $paymentService;
+
+    /**
+     * @var integer|float
+     */
+    public $totalAmount;
+    /**
+     * check promotion
+     */
+
+
+    /**
+     * @inheritDoc
+     */
+    public function load($data, $formName = null)
+    {
+        if (parent::load($data, $formName)) {
+//            foreach ($this->items as $key => $item) {
+//                $this->items[$key] = new PromotionItem($item);
+//            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFirstErrors()
+    {
+        return parent::getFirstErrors();
+    }
+
+    public function attributes()
+    {
+        return [
+            'couponCode', 'customerId', 'paymentService', 'totalAmount'
+        ];
+    }
+
+    public function checkPromotion()
+    {
+
+    }
+
+    /**
+     * calculate discount amount
+     */
+    public function calculatePromotion()
+    {
+
+    }
+
+    protected function findPromotion()
+    {
+
+    }
 }
