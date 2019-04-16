@@ -12,6 +12,7 @@ namespace api\controllers;
 use common\calculators\ConditionBuilder;
 use common\calculators\Calculator;
 use common\components\log\Logging;
+use common\promotion\CheckoutPromotionForm;
 use yii\db\Query;
 use yii\db\QueryBuilder;
 use yii\db\Expression;
@@ -74,6 +75,15 @@ class TesterController extends \yii\rest\Controller
         $params = [];
         $sql = $builder->buildCondition($condition, $params);
         var_dump($sql, $params);
+        die;
+    }
+
+    public function actionPromotion(){
+
+        $form = new CheckoutPromotionForm();
+        $form->couponCode = 'TEST';
+        $form->cartIds = ['173263ac8f9b2d30a70b9f3c61551822'];
+        var_dump($form->checkPromotion());
         die;
     }
 }

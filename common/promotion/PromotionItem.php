@@ -7,5 +7,13 @@ use yii\base\BaseObject;
 
 class PromotionItem extends BaseObject
 {
-    public $id;
+    public $itemType;
+
+    public $customCategory;
+
+    public $shippingQuantity;
+
+    public $shippingWeight;
+
+    public $additionalFees;
 }

@@ -6,16 +6,21 @@ namespace common\promotion;
 
 use common\models\Customer;
 
+/**
+ * Class PromotionRequest
+ * @package common\promotion
+ *
+ * @property string $paymentService
+ * @property string|Customer $customer
+ * @property PromotionItem[] $items
+ */
 class PromotionRequest extends \yii\base\BaseObject
 {
 
-    public $paymentService;
-
     /**
-     * @var integer|float
+     * @var string
      */
-    public $totalAmount;
-
+    public $paymentService;
 
     /**
      * @var string|Customer

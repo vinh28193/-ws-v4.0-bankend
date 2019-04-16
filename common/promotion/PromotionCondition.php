@@ -39,11 +39,14 @@ class PromotionCondition extends DbPromotionCondition
         'like' => 'LIKE',
     ];
 
+    public $keyName = [
+        'category' => 'order.products'
+    ];
     /**
-     * @param PromotionForm $request
+     * @param PromotionRequest $request
      * @return boolean
      */
-    public function checkConditionRecursive(PromotionForm $request)
+    public function checkConditionRecursive(PromotionRequest $request)
     {
         if (($config = $this->promotionConditionConfig) === null) {
             return false;
@@ -127,10 +130,10 @@ class PromotionCondition extends DbPromotionCondition
     }
 
     /**
-     * @param PromotionForm $request
+     * @param PromotionRequest $request
      * @return bool|mixed
      */
-    protected function resolveRequest(PromotionForm $request)
+    protected function resolveRequest(PromotionRequest $request)
     {
         try {
             return ObjectHelper::resolve($request, $this->name);

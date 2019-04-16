@@ -3,7 +3,10 @@
 
 namespace common\promotion;
 
+use Yii;
 use yii\base\Model;
+use yii\di\Instance;
+use common\components\cart\CartManager;
 
 /**
  * $post given
@@ -21,7 +24,7 @@ use yii\base\Model;
  * Class PromotionForm
  * @package common\promotion
  */
-class PromotionForm extends Model
+abstract class PromotionForm extends Model
 {
 
     /**
@@ -33,34 +36,6 @@ class PromotionForm extends Model
      * @var integer
      */
     public $customerId;
-    /**
-     * @var string payment service
-     * template "PaymentMethodId_PaymentBankCode"
-     */
-    public $paymentService;
-
-    /**
-     * @var integer|float
-     */
-    public $totalAmount;
-    /**
-     * check promotion
-     */
-
-
-    /**
-     * @inheritDoc
-     */
-    public function load($data, $formName = null)
-    {
-        if (parent::load($data, $formName)) {
-//            foreach ($this->items as $key => $item) {
-//                $this->items[$key] = new PromotionItem($item);
-//            }
-            return true;
-        }
-        return false;
-    }
 
     /**
      * @inheritDoc
@@ -73,25 +48,49 @@ class PromotionForm extends Model
     public function attributes()
     {
         return [
-            'couponCode', 'customerId', 'paymentService', 'totalAmount'
+
+        ];
+    }
+
+    public function rules()
+    {
+        return [
+            [['couponCode', 'customerId', 'paymentService', 'totalAmount'], 'safe']
         ];
     }
 
     public function checkPromotion()
     {
+        if (!$this->validate()) {
+            return PromotionResponse::create(false, $this->getFirstErrors(), $this->couponCode);
+        }
+        if (($promotion = $this->findPromotion()) === null) {
+            return PromotionResponse::create(false, "Not found promotion '$this->couponCode'", $this->couponCode);
+        }
+        if (($request = $this->createRequest()) === false) {
+            if ($this->hasErrors()) {
+                return PromotionResponse::create(false, $this->getFirstErrors());
+            }
+            return PromotionResponse::create(false, "can not use {$promotion->code} because have unknown error");
+        }
+        if (($result = $promotion->checkCondition($request)) !== true && is_array($result) && count($result) === 2) {
+            return PromotionResponse::create($result[0],  $result[1]);
+        }
+        $discount = $promotion->calculatorDiscount($request);
+        return $discount;
+    }
 
+
+    /**
+     * @return Promotion|null
+     */
+    protected function findPromotion()
+    {
+        return new Promotion();
     }
 
     /**
-     * calculate discount amount
+     * @return false|PromotionRequest
      */
-    public function calculatePromotion()
-    {
-
-    }
-
-    protected function findPromotion()
-    {
-
-    }
+    abstract protected function createRequest();
 }

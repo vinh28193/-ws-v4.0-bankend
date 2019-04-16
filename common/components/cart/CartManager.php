@@ -124,32 +124,23 @@ class CartManager extends Component
     }
 
     /**
-     * @param $source
-     * @param $seller
-     * @param $sku
-     * @param null $parentSku
+     * @param $key
      * @return bool
      * @throws InvalidConfigException
      * @throws \Throwable
      */
     public function hasItem($key)
     {
-        $key = $this->normalPrimaryKey($key);
         return $this->getStorage()->hasItem($key);
     }
 
     /**
-     * @param $source
-     * @param $seller
-     * @param $sku
-     * @param null $parentSku
+     * @param $key
      * @return bool|mixed
      * @throws InvalidConfigException
-     * @throws \Throwable
      */
-    public function getItem($source, $seller, $sku, $parentSku = null)
+    public function getItem($key)
     {
-        $key = $this->normalPrimaryKey($source, $seller, $sku, $parentSku);
         if (($value = $this->getStorage()->getItem($key)) !== false) {
             return $this->getSerializer()->unserialize($value);
         }
@@ -211,8 +202,6 @@ class CartManager extends Component
 
     public function update($key, $params = [])
     {
-        $key = $this->normalPrimaryKey($key);
-
         try {
             if ($this->hasItem($key)) {
                 if (($item = $this->getItem($key)) === false) {
@@ -245,7 +234,6 @@ class CartManager extends Component
     {
 
         if ($this->hasItem($key)) {
-            $key = $this->normalPrimaryKey($key);
             return $this->getStorage()->removeItem($key);
         }
         return false;

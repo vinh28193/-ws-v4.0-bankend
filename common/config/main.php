@@ -40,7 +40,7 @@ return [
         ],
         'cart' => [
             'class' => common\components\cart\CartManager::className(),
-            'storage' => common\components\cart\storage\SessionCartStorage::className()
+            'storage' => common\components\cart\storage\MongodbCartStorage::className()
         ],
         'wsLog' => [
             'class' => 'common\components\log\Logging'

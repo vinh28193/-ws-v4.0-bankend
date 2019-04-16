@@ -8,6 +8,7 @@ use ReflectionObject;
 use ReflectionProperty;
 use yii\base\InvalidConfigException;
 use yii\helpers\Inflector;
+use yii\helpers\StringHelper;
 
 class ObjectHelper
 {
@@ -31,6 +32,30 @@ class ObjectHelper
         } else {
             throw new InvalidConfigException("can not resolve property or method $key in " . get_class($object));
         }
+    }
+
+    /**
+     * @param $object object|\stdClass|\yii\base\BaseObject
+     * @param $key string|array
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public static function resolveRecursive($object, $key)
+    {
+        if (is_array($key)) {
+            $lastKey = array_pop($key);
+            foreach ($key as $keyPart) {
+                $object = static::resolveRecursive($object, $keyPart);
+            }
+            $key = $lastKey;
+        }
+
+        if (($pos = strrpos($key, '.')) !== false) {
+            $object = static::resolveRecursive($object, substr($key, 0, $pos));
+            $key = substr($key, $pos + 1);
+        }
+
+        return self::resolve($object, $key);
     }
 
     public static function toArray($object)

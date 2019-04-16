@@ -57,10 +57,10 @@ class Promotion extends DbPromotion
     const DISCOUNT_TYPE_OVER_QUANTITY = 3;
 
     /**
-     * @param PromotionForm $request
+     * @param PromotionRequest $request
      * @return array|bool
      */
-    public function checkCondition(PromotionForm $request)
+    public function checkCondition(PromotionRequest $request)
     {
         $conditions = $this->conditions;
         if (empty($condition)) {
@@ -75,13 +75,16 @@ class Promotion extends DbPromotion
     }
 
     /**
-     * @param PromotionForm $request
+     * @param PromotionRequest $request
      */
-    public function calculatorDiscount(PromotionForm $request)
+    public function calculatorDiscount(PromotionRequest $request)
     {
         $discountAmount = 0;
     }
 
+    private function getAdditionalFee(){
+
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
