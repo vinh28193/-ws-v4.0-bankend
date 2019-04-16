@@ -639,9 +639,9 @@ READY_PURCHASE or PURCHASE_PART or ( PURCHASING and ( PURCHASE_ASSIGNEE_ID = use
 
 
 #----------Tables packet tam----------
-draft_boxme_tracking : 
-draft_data_tracking : 
-draft_extension_tracking_map : 
-draft_missing_tracking : 
-draft_package_item : 
-draft_wasting_tracking : 
+draft_extension_tracking_map : Nhận dữ kiệu các tracking lấy được từ extension
+draft_data_tracking : Nhận dữ liệu được map nối từ 2 bảng tracking_code (us sending) và draft_extension_tracking_map. 
+draft_boxme_tracking (hàng boxme đã nhận) : Nhận dữ liệu được đối chiếu từ api detail với bảng draft_data_tracking để kiểm tra bên boxme đã nhận được những tracking nào.
+draft_missing_tracking (hàng thiếu) : Nhận dữ liệu khi mà bên boxme không nhận được tracking trong bảng draft_data_tracking
+draft_wasting_tracking (hàng thừa) : Nhận dữ liệu khi mà bên boxme nhận được tracking nhưng đối chiếu draft_data_tracking hoặc draft_boxme_tracking lại không có
+draft_package_item (hàng đầy đủ): Nhận dữ liệu khi mà bên boxme nhận được tracking và đối chiếu draft_data_tracking hoặc draft_boxme_tracking có tracking.
