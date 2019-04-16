@@ -28,7 +28,7 @@ class AmazonProduct extends BaseProduct
     protected function generateOriginLink()
     {
         $source = self::STORE_US;
-        if($this->type === self::TYPE_AMZON_JP){
+        if($this->type === self::TYPE_AMAZON_JP){
             $source = self::STORE_JP;
         }
         $id = strtoupper($this->item_id);
