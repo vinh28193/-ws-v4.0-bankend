@@ -99,12 +99,6 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
     public $suggest_set_session;
     public $suggest_set_purchase;
 
-    public function __construct(array $config = [])
-    {
-        parent::__construct($config);
-    }
-
-
     /**
      * Initializes the object.
      * This method is invoked at the end of the constructor after the object is initialized with the
@@ -133,6 +127,12 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
 
     public $isInitialized = false;
 
+    /**
+     * @return string
+     */
+    protected function generateOriginLink(){
+        return $this->item_origin_url;
+    }
 
     /**
      * @return float|int
@@ -262,6 +262,9 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
         return $this->getStoreManager()->getExchangeRate();
     }
 
+    /**
+     * @return \common\components\StoreManager
+     */
     public function getStoreManager(){
         return Yii::$app->storeManager;
     }
