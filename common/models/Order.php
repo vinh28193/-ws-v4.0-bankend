@@ -507,6 +507,13 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($params['location'])) {
             $query->andFilterWhere(['order.receiver_province_id' => $params['location']]);
         }
+        if (isset($params['paymentStatus'])) {
+            if ($params['paymentStatus'] === 'PAID') {
+                $query->andFilterWhere(['>','order.total_paid_amount_local' , 0]);
+            } elseif ($params['paymentStatus'] === 'UNPAID') {
+                $query->andFilterWhere(['=', 'order.total_paid_amount_local', 0]);
+            }
+        }
         if (isset($params['type'])) {
             $query->andFilterWhere(['order.type_order' => $params['type']]);
         }
@@ -623,7 +630,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($order)) {
             $query->orderBy($order);
         }
-        if (isset($params['tracking'])) {
+        if (isset($params['noTracking'])) {
             $subDraftExtensionTrackingMapQuery = new Query();
             $subDraftExtensionTrackingMapQuery->select([new Expression('1')]);
             $subDraftExtensionTrackingMapQuery->from(['draftTracking' => DraftExtensionTrackingMap::tableName()]);
