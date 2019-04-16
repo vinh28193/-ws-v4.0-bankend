@@ -68,4 +68,23 @@ return [
             'userbackend/config/main-local.php',
         ],
     ],
+    '252' => [
+        'path' => '252',
+        'setWritable' => [
+            'api/runtime',
+            'api/web/assets',
+            'backend/runtime',
+            'backend/web/assets',
+            'userbackend/runtime',
+            'userbackend/web/assets',
+        ],
+        'setExecutable' => [
+            'yii',
+        ],
+        'setCookieValidationKey' => [
+            'api/config/main-local.php',
+            'backend/config/main-local.php',
+            'userbackend/config/main-local.php',
+        ],
+    ],
 ];
