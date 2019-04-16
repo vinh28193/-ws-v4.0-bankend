@@ -86,7 +86,7 @@ abstract class PromotionForm extends Model
      */
     protected function findPromotion()
     {
-        return new Promotion();
+        return Promotion::findOne(['code' => $this->couponCode]);
     }
 
     /**

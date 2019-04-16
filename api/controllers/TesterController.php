@@ -89,6 +89,7 @@ class TesterController extends \yii\rest\Controller
         $form = new CheckoutPromotionForm();
         $form->couponCode = 'TEST';
         $form->cartIds = ['173263ac8f9b2d30a70b9f3c61551822'];
+        $form->customerId = 1;
         var_dump($form->checkPromotion());
         die;
     }

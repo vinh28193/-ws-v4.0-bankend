@@ -61,7 +61,7 @@ class CartManager extends Component
     /**
      * @var BaseCartSerialize
      */
-    public $serializer = 'common\components\cart\serialize\NoneSerialize';
+    private $_serializer = 'common\components\cart\serialize\NoneSerialize';
 
     /**
      * get Serialize
@@ -70,19 +70,19 @@ class CartManager extends Component
      */
     public function getSerializer()
     {
-        if (!is_object($this->serializer)) {
-            $this->serializer = Yii::createObject($this->serializer);
-            if (!$this->serializer instanceof BaseCartSerialize) {
-                throw new InvalidConfigException(get_class($this->serializer) . " not instanceof common\components\cart\serialize\BaseCartSerialize");
+        if (!is_object($this->_serializer)) {
+            $this->_serializer = Yii::createObject($this->_serializer);
+            if (!$this->_serializer instanceof BaseCartSerialize) {
+                throw new InvalidConfigException(get_class($this->_serializer) . " not instanceof common\components\cart\serialize\BaseCartSerialize");
             }
         }
-        return $this->serializer;
+        return $this->_serializer;
     }
 
     /**
      * @var \yii\web\IdentityInterface
      */
-    protected $user;
+    private $_user;
 
     /**
      * @return null|\yii\web\IdentityInterface
@@ -90,10 +90,21 @@ class CartManager extends Component
      */
     public function getUser()
     {
-        if ($this->user === null) {
-            $this->user = Yii::$app->getUser()->getIdentity();
+        if (!is_object($this->_user)) {
+            $this->_user = Yii::$app->getUser()->getIdentity();
         }
-        return $this->user;
+        return $this->_user;
+    }
+
+    public function setUser($user)
+    {
+        if ($user instanceof \yii\web\IdentityInterface) {
+            $this->_user = $user;
+        } elseif (is_string($user) || is_numeric($user)) {
+            /** @var  $class \yii\web\IdentityInterface */
+            $class = Yii::$app->getUser()->identityClass;
+            $this->_user = $class::findIdentity($user);
+        }
     }
 
     /**
@@ -103,11 +114,11 @@ class CartManager extends Component
     public function init()
     {
         parent::init();
-        $this->getSerializer();
-        $this->getStorage();
-        $this->getUser();
-        if (get_class($this->storage) === 'common\components\cart\storage\MongodbCartStorage') {
-            if (get_class($this->serializer) !== 'common\components\cart\serialize\NoneSerialize') {
+        if ($this->getUser() === null || !$this->getUser() instanceof \yii\web\IdentityInterface) {
+            throw new InvalidConfigException("missing \yii\web\IdentityInterface");
+        }
+        if (get_class($this->getStorage()) === 'common\components\cart\storage\MongodbCartStorage') {
+            if (get_class($this->getSerializer()) !== 'common\components\cart\serialize\NoneSerialize') {
                 throw new InvalidConfigException("common\components\cart\storage\MongodbCartStorage only use common\components\cart\serialize\NoneSerialize");
             }
         }
@@ -165,7 +176,7 @@ class CartManager extends Component
                     return false;
                 }
                 $item = new SimpleItem();
-                foreach ($params as $name => $val){
+                foreach ($params as $name => $val) {
                     $item->$name = $val;
                 }
                 // Todo Validate data before call
@@ -179,7 +190,7 @@ class CartManager extends Component
             } else {
                 /** Todo : Thiếu link Gốc sản phẩm **/
                 $item = new SimpleItem();
-                foreach ($params as $name => $val){
+                foreach ($params as $name => $val) {
                     $item->$name = $val;
                 }
                 // Todo Validate data before call
@@ -198,13 +209,13 @@ class CartManager extends Component
 
     private function createKeyFormParams($params)
     {
-       $keys = [];
-       foreach (['seller', 'source','sku','parentSku'] as $k){
-           if(!isset($params[$k]) || (isset($params[$k]) && ($params[$k] === null || $params[$k] === ''))){
-               continue;
-           }
-           $keys[$k] = $params[$k];
-       }
+        $keys = [];
+        foreach (['seller', 'source', 'sku', 'parentSku'] as $k) {
+            if (!isset($params[$k]) || (isset($params[$k]) && ($params[$k] === null || $params[$k] === ''))) {
+                continue;
+            }
+            $keys[$k] = $params[$k];
+        }
         return md5(json_encode($keys));
     }
 

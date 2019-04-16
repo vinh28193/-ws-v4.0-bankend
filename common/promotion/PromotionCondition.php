@@ -25,7 +25,7 @@ class PromotionCondition extends DbPromotionCondition
     const TYPE_BOOLEAN = 'boolean';
     const TYPE_STRING = 'string';
     const TYPE_ARRAY = 'array';
-    const TYPE_DATETIME = 'datetime';
+    const TYPE_TIMESTAMP = 'timestamp';
 
     public $operatorMapping = [
         'lt' => '<',
@@ -39,9 +39,6 @@ class PromotionCondition extends DbPromotionCondition
         'like' => 'LIKE',
     ];
 
-    public $keyName = [
-        'category' => 'order.products'
-    ];
     /**
      * @param PromotionRequest $request
      * @return boolean
@@ -51,7 +48,18 @@ class PromotionCondition extends DbPromotionCondition
         if (($config = $this->promotionConditionConfig) === null) {
             return false;
         }
-        $value = $this->resolveRequest($request);
+        // non param
+        $resolvers = [
+            'timeStart' => 'resolveTimestamp',
+            'timeEnd' => 'resolveTimestamp',
+            'dayOfWeek' => 'resolveDayOfWeek'
+        ];
+        if (isset($resolvers[$this->name]) && ($resolver = $resolvers[$this->name]) !== null) {
+            $value = call_user_func([$this, $resolver]);
+        }else{
+            $value = $this->resolveObject($request, $this->name);
+
+        }
         $valueType = gettype($value);
         if ($config->type_cast !== null) {
             if ($config->type_cast !== self::TYPE_BOOLEAN && $valueType === self::TYPE_BOOLEAN) {
@@ -64,6 +72,7 @@ class PromotionCondition extends DbPromotionCondition
                 $value = $this->normalizeTypeCast($config->type_cast, $value);
             }
         }
+
         /**
          * Todo depend condition here
          * ví dụ điều kiện là hàng ebay nhưng mà phải trong danh mục đồng hồ
@@ -96,17 +105,22 @@ class PromotionCondition extends DbPromotionCondition
         return $this->executeNormalCondition($operator, $value);
     }
 
+
     /**
      * @param $operator
      * @param $value
      * @return boolean
      */
-    public function executeNormalCondition($operator, $value)
+    protected function executeNormalCondition($operator, $value)
     {
         return $this->evalCondition("$value $operator {$this->value}");
     }
 
-    public function executeInCondition($value)
+    /**
+     * @param $value
+     * @return bool
+     */
+    protected function executeInCondition($value)
     {
         $conditionValue = $this->value;
         if (!is_array($conditionValue)) {
@@ -115,7 +129,7 @@ class PromotionCondition extends DbPromotionCondition
         return in_array($value, $conditionValue);
     }
 
-    public function executeNotInCondition($value)
+    protected function executeNotInCondition($value)
     {
         return !$this->executeInCondition($value);
     }
@@ -124,19 +138,34 @@ class PromotionCondition extends DbPromotionCondition
      * @param $value
      * @return bool
      */
-    public function executeLikeCondition($value)
+    protected function executeLikeCondition($value)
     {
         return strpos($this->value, $value) !== false;
     }
 
     /**
+     * @return string
+     */
+    protected function resolveTimestamp()
+    {
+        return $this->getFormatter()->asTimestamp('now');
+    }
+
+
+    protected function resolveDayOfWeek(){
+        return $this->getFormatter()->format('now','l');
+    }
+
+    /**
      * @param PromotionRequest $request
+     * @param $name
      * @return bool|mixed
      */
-    protected function resolveRequest(PromotionRequest $request)
+    protected function resolveObject(PromotionRequest $request, $name)
     {
+
         try {
-            return ObjectHelper::resolve($request, $this->name);
+            return ObjectHelper::resolveRecursive($request, $name);
         } catch (Exception $exception) {
             Yii::error($exception, __METHOD__);
             return false;
