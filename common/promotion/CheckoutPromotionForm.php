@@ -48,17 +48,18 @@ class CheckoutPromotionForm extends PromotionForm
         $items = [];
         foreach ($this->cartIds as $key) {
             /** @var $product BaseProduct */
-            if (($data = $this->cartManager->getItem($key)) !== false || !($product = $data['response']) instanceof BaseProduct) {
+            if (($data = $this->cartManager->getItem($key)) === false || !($product = $data['response']) instanceof BaseProduct) {
                 $this->addError('cartIds', "can not create request from cart `$key`");
                 return false;
             }
             $additionalFees = [];
-            foreach ($product->getAdditionalFees()->toArray() as $key => $array){
-                $additionalFees[$key] = $array['local_amount'];
+
+            foreach ($product->getAdditionalFees()->keys() as $key){
+                $additionalFees[$key] = $product->getAdditionalFees()->getTotalAdditionFees($key)[1];
             }
             $items[] = [
                 'itemType' => $product->getItemType(),
-                'customCategory' => $product->getCustomCategory()->id,
+                'customCategory' => $product->getCustomCategory(),
                 'shippingQuantity' => $product->getShippingQuantity(),
                 'shippingWeight' => $product->getShippingWeight(),
                 'additionalFees' => $additionalFees,

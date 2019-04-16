@@ -8,7 +8,7 @@
 
 namespace api\controllers;
 
-
+use Yii;
 use common\calculators\ConditionBuilder;
 use common\calculators\Calculator;
 use common\components\log\Logging;
@@ -19,6 +19,12 @@ use yii\db\Expression;
 
 class TesterController extends \yii\rest\Controller
 {
+
+    public function init()
+    {
+        parent::init();
+        Yii::$app->getUser()->setIdentity(\common\models\User::findOne(1));
+    }
 
     public function actionIndex()
     {

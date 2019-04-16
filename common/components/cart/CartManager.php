@@ -143,6 +143,7 @@ class CartManager extends Component
      */
     public function getItem($key)
     {
+        $key = $this->normalPrimaryKey($key);
         if (($value = $this->getStorage()->getItem($key)) !== false) {
             return $this->getSerializer()->unserialize($value);
         }
@@ -241,7 +242,7 @@ class CartManager extends Component
 
     public function removeItem($key)
     {
-
+        $key = $this->normalPrimaryKey($key);
         if ($this->hasItem($key)) {
             return $this->getStorage()->removeItem($key);
         }
