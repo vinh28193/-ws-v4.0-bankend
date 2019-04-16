@@ -7,6 +7,8 @@ use common\modelsMongo\RestApiCall;
 use common\modelsMongo\ChatMongoWs;
 use common\models\Order;
 use Yii;
+use common\data\ActiveDataProvider;
+use common\helpers\ChatHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
@@ -102,7 +104,6 @@ class RestApiChatController extends BaseApiController
                 "is_customer_vew" => null,
                 "is_employee_vew" => null
             ]];
-
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
                 if($isNew === true){
@@ -110,6 +111,13 @@ class RestApiChatController extends BaseApiController
                         'current_status' => Order::STATUS_SUPPORTING
                     ],['ordercode' => $_post['Order_path']]);
                 }
+                $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}";
+                ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM');
+                Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+                    'id' => $_post['Order_path'],
+                    'request' => $this->post,
+                    'response' => $_post['message']
+                ]);
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
@@ -163,5 +171,18 @@ class RestApiChatController extends BaseApiController
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
+    }
+    protected function resolveChatMessage($dirtyAttributes, $reference)
+    {
+
+        $results = [];
+        foreach ($dirtyAttributes as $name => $value) {
+            if (strpos($name, '_id') !== false && is_numeric($value)) {
+                continue;
+            }
+            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+        }
+
+        return implode(", ", $results);
     }
 }

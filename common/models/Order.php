@@ -623,7 +623,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($order)) {
             $query->orderBy($order);
         }
-        if (isset($params['tracking'])) {
+        if (isset($params['noTracking'])) {
             $subDraftExtensionTrackingMapQuery = new Query();
             $subDraftExtensionTrackingMapQuery->select([new Expression('1')]);
             $subDraftExtensionTrackingMapQuery->from(['draftTracking' => DraftExtensionTrackingMap::tableName()]);
