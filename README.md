@@ -640,8 +640,25 @@ READY_PURCHASE or PURCHASE_PART or ( PURCHASING and ( PURCHASE_ASSIGNEE_ID = use
 
 #----------Tables packet tam----------
 draft_extension_tracking_map : Nhận dữ kiệu các tracking lấy được từ extension
-draft_data_tracking : Nhận dữ liệu được map nối từ 2 bảng tracking_code (us sending) và draft_extension_tracking_map. 
-draft_boxme_tracking (hàng boxme đã nhận) : Nhận dữ liệu được đối chiếu từ api detail với bảng draft_data_tracking để kiểm tra bên boxme đã nhận được những tracking nào.
-draft_missing_tracking (hàng thiếu) : Nhận dữ liệu khi mà bên boxme không nhận được tracking trong bảng draft_data_tracking
-draft_wasting_tracking (hàng thừa) : Nhận dữ liệu khi mà bên boxme nhận được tracking nhưng đối chiếu draft_data_tracking hoặc draft_boxme_tracking lại không có
-draft_package_item (hàng đầy đủ): Nhận dữ liệu khi mà bên boxme nhận được tracking và đối chiếu draft_data_tracking hoặc draft_boxme_tracking có tracking.
+
+draft_data_tracking : Nhận dữ liệu được map nối từ 2 bảng tracking_code (us sending) 
+                      và draft_extension_tracking_map. 
+                      
+         ---> Gửi API BOXME Kiểm hàng - đã đánh dấu hàng tách , gom  ( gửi email + api packing)
+         https://www.getpostman.com/collections/d0cf6d7f64d4d96029cd
+         
+         GET DETAIL PACKING : https://wms.boxme.asia/v1/packing/detail/RVSID-003/?page=1
+         CREATE PACKING LIST API (LIVE) : https://s.boxme.asia/v1/packing/packing/create
+         
+         
+                      
+draft_boxme_tracking (hàng boxme đã nhận) : Nhận dữ liệu được đối chiếu từ api detail 
+                     với bảng draft_data_tracking để kiểm tra bên boxme đã nhận được những tracking nào.
+draft_missing_tracking (hàng thiếu) : Nhận dữ liệu khi mà bên boxme không nhận được tracking
+                   trong bảng draft_data_tracking
+                   
+draft_wasting_tracking (hàng thừa) : Nhận dữ liệu khi mà bên boxme nhận được tracking 
+             nhưng đối chiếu draft_data_tracking hoặc draft_boxme_tracking lại không có
+
+draft_package_item (hàng đầy đủ): Nhận dữ liệu khi mà bên boxme nhận được tracking 
+                 và đối chiếu draft_data_tracking hoặc draft_boxme_tracking có tracking.
