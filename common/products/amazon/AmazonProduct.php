@@ -38,15 +38,12 @@ class AmazonProduct extends BaseProduct
 
     public function getSellPriceSpecial()
     {
-        $price_specials = $this->sell_price_special;
-        if (count($price_specials) > 0) {
-            $sell_special = [];
+        if(is_array(($price_specials = $this->sell_price_special)) && count($price_specials) > 0) {
+            $money = [];
             foreach ($price_specials as $price_special) {
-                $calcfee = $this->getStoreManager()->showMoney($price_special * $this->getExchangeRate());
-                array_push($sell_special, $calcfee);
+                $money[] = $this->getStoreManager()->showMoney($price_special * $this->getExchangeRate());
             }
-
-            echo implode(" - ", $sell_special);
+            return implode(' - ', $money);
         }
         return false;
     }
