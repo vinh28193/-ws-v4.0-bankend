@@ -9,6 +9,7 @@
 namespace common\models;
 
 use common\models\db\Coupon;
+use common\models\db\DraftExtensionTrackingMap;
 use common\models\db\Order as DbOrder;
 use common\models\db\Promotion;
 use common\models\queries\OrderQuery;
@@ -16,6 +17,8 @@ use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
+use yii\db\Query;
+use yii\db\Expression;
 
 /**
  * @property  Product[] $products
@@ -118,7 +121,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     {
         return ArrayHelper::merge(parent::timestampFields(), [
             'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us',
-            'stockout_us', 'stockin_local', 'stockout_local', 'at_customer',
+            'stockout_us', 'stockin_local', 'stockout_local', 'at_customer','returned','lost' , 'cancelled'
         ]);
     }
 
@@ -424,6 +427,11 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         return $this->hasMany(Product::className(), ['order_id' => 'id']);
     }
 
+    public function getDraftExtensionTrackingMap()
+    {
+        return $this->hasMany(DraftExtensionTrackingMap::className(), ['order_id' => 'id']);
+    }
+
     public function getCoupon()
     {
         return $this->hasOne(Coupon::className(), ['id' => 'coupon_id']);
@@ -484,14 +492,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         $page = isset($page) ? $page : 1;
 
         $offset = ($page - 1) * $limit;
-
         $query = Order::find()
             ->withFullRelations()
             ->andWhere(['is not', 'product.id', null])// ToDo Test/Check Code Fee
             ->filter($params)
             ->limit($limit)
             ->offset($offset);
-
         if (isset($params['id'])) {
             $query->andFilterWhere(['id' => $params['id']]);
         }
@@ -500,6 +506,13 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         }
         if (isset($params['location'])) {
             $query->andFilterWhere(['order.receiver_province_id' => $params['location']]);
+        }
+        if (isset($params['paymentStatus'])) {
+            if ($params['paymentStatus'] === 'PAID') {
+                $query->andFilterWhere(['>','order.total_paid_amount_local' , 0]);
+            } elseif ($params['paymentStatus'] === 'UNPAID') {
+                $query->andFilterWhere(['=', 'order.total_paid_amount_local', 0]);
+            }
         }
         if (isset($params['type'])) {
             $query->andFilterWhere(['order.type_order' => $params['type']]);
@@ -617,6 +630,13 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($order)) {
             $query->orderBy($order);
         }
+        if (isset($params['noTracking'])) {
+            $subDraftExtensionTrackingMapQuery = new Query();
+            $subDraftExtensionTrackingMapQuery->select([new Expression('1')]);
+            $subDraftExtensionTrackingMapQuery->from(['draftTracking' => DraftExtensionTrackingMap::tableName()]);
+            $subDraftExtensionTrackingMapQuery->where(['draftTracking.order_id' => new Expression('[[id]]')]);
+            $query->andWhere(['NOT EXISTS', $subDraftExtensionTrackingMapQuery]);
+        }
 
         $additional_info = [
             'currentPage' => $page,
@@ -629,6 +649,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         $data->_items = $query->orderBy('id desc')->all();
         $data->_links = '';
         $data->_meta = $additional_info;
+        $data->total = count($data->_items);
         return $data;
 
     }

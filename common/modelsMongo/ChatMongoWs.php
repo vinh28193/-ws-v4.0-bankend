@@ -18,7 +18,7 @@ class ChatMongoWs extends ActiveRecord
 {
     public static function collectionName()
     {
-        return ['Weshop_log_40','chat_mongo_ws'];
+        return ['weshop_global_40','chat_mongo_ws'];
     }
 
     public function behaviors()

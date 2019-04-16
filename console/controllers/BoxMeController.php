@@ -8,6 +8,8 @@ use common\components\boxme\BoxMeClient;
 use common\components\lib\TextUtility;
 use common\components\TrackingCode;
 use common\models\db\DraftExtensionTrackingMap;
+use common\models\db\PurchaseOrder;
+use common\models\db\PurchaseProduct;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftPackageItem;
@@ -18,12 +20,16 @@ use common\models\Package;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\ProductFee;
+use common\models\Warehouse;
 use common\modelsMongo\RequestGetDetailBoxMe;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 
 class BoxMeController extends Controller
 {
+    /**
+     *
+     */
     public function actionCheckDetailBoxme()
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
@@ -391,6 +397,19 @@ class BoxMeController extends Controller
             $item->remove = 0;
             $item->version = "v4.0";
             $item->save(0);
+        }
+    }
+    public function actionPurchase(){
+        /** @var PurchaseOrder[] $purchase_o */
+        $purchase_o = PurchaseOrder::find()->all();
+        foreach ($purchase_o as $item){
+            $wh = Warehouse::findOne($item->receive_warehouse_id);
+            if($wh){
+                PurchaseProduct::updateAll(
+                    ['receive_warehouse_id' => $wh->id,'receive_warehouse_name' => $wh->name],
+                    ['purchase_order_id' => $item->id]
+                );
+            }
         }
     }
 }

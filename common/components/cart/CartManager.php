@@ -131,6 +131,7 @@ class CartManager extends Component
      */
     public function hasItem($key)
     {
+        $key = $this->normalPrimaryKey($key);
         return $this->getStorage()->hasItem($key);
     }
 
@@ -138,6 +139,7 @@ class CartManager extends Component
      * @param $key
      * @return bool|mixed
      * @throws InvalidConfigException
+     * @throws \Throwable
      */
     public function getItem($key)
     {
@@ -172,8 +174,7 @@ class CartManager extends Component
                     return false;
                 }
                 $value = $this->getSerializer()->serializer($value);
-                $this->getStorage()->setItem($key, $value);
-                return true;
+                return $this->getStorage()->setItem($key, $value);
             } else {
                 /** Todo : Thiếu link Gốc sản phẩm **/
                 $item = new SimpleItem();
@@ -186,8 +187,7 @@ class CartManager extends Component
                     return false;
                 }
                 $value = $this->getSerializer()->serializer($value);
-                $this->getStorage()->addItem($key, $value);
-                return true;
+                return $this->getStorage()->addItem($key, $value);
             }
         } catch (\Exception $exception) {
             Yii::info($exception);
@@ -197,11 +197,20 @@ class CartManager extends Component
 
     private function createKeyFormParams($params)
     {
-        return md5(json_encode($params));
+       $keys = [];
+       foreach (['seller', 'source','sku','parentSku'] as $k){
+           if(!isset($params[$k]) || (isset($params[$k]) && ($params[$k] === null || $params[$k] === ''))){
+               continue;
+           }
+           $keys[$k] = $params[$k];
+       }
+        return md5(json_encode($keys));
     }
 
     public function update($key, $params = [])
     {
+        $key = $this->normalPrimaryKey($key);
+
         try {
             if ($this->hasItem($key)) {
                 if (($item = $this->getItem($key)) === false) {

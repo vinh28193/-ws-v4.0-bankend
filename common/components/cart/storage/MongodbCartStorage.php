@@ -3,6 +3,7 @@
 namespace common\components\cart\storage;
 
 use yii\helpers\ArrayHelper;
+use yii\mongodb\ActiveRecord;
 
 /**
  * This is the model class for collection "shopping_cart".
@@ -13,14 +14,14 @@ use yii\helpers\ArrayHelper;
  * @property mixed $data
  * @property mixed $created_at
  */
-class MongodbCartStorage extends \yii\mongodb\ActiveRecord implements CartStorageInterface
+class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
 {
     /**
      * {@inheritdoc}
      */
     public static function collectionName()
     {
-        return ['weshop_global', 'shopping_cart'];
+        return ['weshop_global_40', 'shopping_cart'];
     }
 
     /**
@@ -81,12 +82,14 @@ class MongodbCartStorage extends \yii\mongodb\ActiveRecord implements CartStorag
     public function addItem($key, $value)
     {
         list($key, $id) = $key;
+        $value['key'] = $key;
         $model = new self();
         $model->key = $key;
         $model->identity = $id;
         $model->data = $value;
         $model->created_at = time();
-        return $model->save(false);
+        $model->save(false);
+        return $key;
     }
 
     /**
@@ -96,12 +99,17 @@ class MongodbCartStorage extends \yii\mongodb\ActiveRecord implements CartStorag
      */
     public function setItem($key, $value)
     {
+        list($key2, $id) = $key;
         /** @var $item $this */
-        if (($item = $this->getItem($key)) === false) {
-            return $this->setItem($key, $value);
+        $query = self::find()->where(['AND', ['key' => $key2], ['identity' => $id]]);
+        /** @var $model $this */
+        if (($model = $query->one()) === null) {
+            return $this->addItem($key, $value);
         }
-        $item->data = $value;
-        return $item->save(false);
+        $value['key'] = $key2;
+        $model->data = $value;
+        $model->save(false);
+        return $key2;
 
     }
 
@@ -136,8 +144,8 @@ class MongodbCartStorage extends \yii\mongodb\ActiveRecord implements CartStorag
      */
     public function getItems($identity)
     {
-        $items = self::find()->where( ['identity' => $identity])->all();
-        return ArrayHelper::map($items,'key','data');
+        $items = self::find()->where(['identity' => $identity])->all();
+        return ArrayHelper::map($items, 'key', 'data');
 
     }
 
@@ -148,7 +156,7 @@ class MongodbCartStorage extends \yii\mongodb\ActiveRecord implements CartStorag
      */
     public function countItems($identity)
     {
-        $query = self::find()->select(['key'])->where( ['identity' => $identity]);
+        $query = self::find()->select(['key'])->where(['identity' => $identity]);
         return $query->count('key');
     }
 

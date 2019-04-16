@@ -13,8 +13,8 @@ class m190314_103412_product_name_tables_product extends Migration
     public function safeUp()
     {
         $this->addColumn('product','product_name','text not null');
-        //$this->dropForeignKey('idx-product-currency' , 'product');
-        //$this->dropIndex('idx-product-currency','product');
+        $this->dropForeignKey('idx-product-currency' , 'product');
+        $this->dropIndex('idx-product-currency','product');
         $this->dropColumn('product','currency_id');
         $this->dropColumn('product','currency_symbol');
         $this->dropColumn('product','exchange_rate');
