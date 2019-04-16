@@ -9,7 +9,8 @@ use common\models\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
-
+use common\data\ActiveDataProvider;
+use common\helpers\ChatHelper;
 class RestApiChatController extends BaseApiController
 {
     /** Role :
@@ -85,6 +86,9 @@ class RestApiChatController extends BaseApiController
             $_user_app = 'Weshop2019'; /***Todo Set**/
             $_request_ip = Yii::$app->getRequest()->getUserIP();
             $isNew = isset($_post['isNew']) && $_post['isNew'] === 'yes';
+            //code vandinh : status order
+            $isSupporting = (isset($_post['is_supporting']) && $_post['is_supporting'] == 1) ? true : false;
+            //end code vandinh
             $_rest_data = ["ChatMongoWs" => [
                 "success" => true,
                 "message" => is_array($_post['message']) ? @json_encode($_post['message']) : $_post['message'] ,
@@ -105,10 +109,31 @@ class RestApiChatController extends BaseApiController
 
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
-                if($isNew === true){
+                if($isNew === true || $isSupporting == true)
+                {
+                 // code vandinh staus order is new or chat supporting
+                    $ordercode = $_post['Order_path'];
+                    $dirtyAttributes = $model->getDirtyAttributes();
+                    $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
                     Order::updateAll([
                         'current_status' => Order::STATUS_SUPPORTING
                     ],['ordercode' => $_post['Order_path']]);
+                //code update action log
+                    if (!$model->save())
+                     {
+                        Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+                            'id' => $ordercode,
+                            'request' => $this->post,
+                            'response' => $model->getErrors()
+                        ]);
+                        return $this->response(false, $model->getFirstErrors());
+                     }
+                    ChatHelper::push($messages, $ordercode, 'GROUP_WS', 'SYSTEM');
+                    Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+                        'id' => $ordercode,
+                        'request' => $this->post,
+                        'response' => $dirtyAttributes
+                    ]);
                 }
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
@@ -163,5 +188,23 @@ class RestApiChatController extends BaseApiController
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
+    }
+        /**
+     * @param $dirtyAttributes
+     * @param $reference \common\components\db\ActiveRecord
+     * @return string
+     */
+    protected function resolveChatMessage($dirtyAttributes, $reference)
+    {
+
+        $results = [];
+        foreach ($dirtyAttributes as $name => $value) {
+            if (strpos($name, '_id') !== false && is_numeric($value)) {
+                continue;
+            }
+            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+        }
+
+        return implode(", ", $results);
     }
 }
