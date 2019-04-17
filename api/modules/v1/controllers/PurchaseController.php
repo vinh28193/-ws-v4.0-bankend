@@ -11,6 +11,7 @@ use common\models\db\PurchaseProduct;
 use common\models\Order;
 use common\models\Product;
 use common\models\User;
+use common\models\Warehouse;
 use common\models\weshop\FormCartPurchase;
 use common\models\weshop\FormPurchaseItem;
 use common\models\weshop\FormRequestPurchase;
@@ -269,6 +270,10 @@ class PurchaseController extends BaseApiController
             $account->type = $item_type;
             $account->save(0);
         }
+        $warehouse = Warehouse::findOne($form->warehouse);
+        if(!$warehouse){
+            return $this->response(false,"Không tìm thấy kho tương ứng",$form);
+        }
         $tran = Yii::$app->db->beginTransaction();
         try{
             $PurchaseOrder = new PurchaseOrder();
@@ -279,7 +284,7 @@ class PurchaseController extends BaseApiController
             $PurchaseOrder->total_item = 0;
             $PurchaseOrder->total_paid_seller = 0;
             $PurchaseOrder->total_type_changing = 0;
-            $PurchaseOrder->receive_warehouse_id = $form->warehouse;
+            $PurchaseOrder->receive_warehouse_id = $warehouse->id;
             $PurchaseOrder->purchase_account_id = $account->id;
 
             $card = PurchasePaymentCard::findOne($form->card_payment);
@@ -289,6 +294,7 @@ class PurchaseController extends BaseApiController
             $PurchaseOrder->purchase_amount_buck = $form->buckAmount;
             $PurchaseOrder->transaction_payment = $form->PPTranId;
             $PurchaseOrder->note = $form->note;
+
             /** @var User $user */
             $user = Yii::$app->user->getIdentity();
             $PurchaseOrder->updated_by = $user->id;
@@ -315,6 +321,8 @@ class PurchaseController extends BaseApiController
                 $purchaseProd->image = $product->image;
                 $purchaseProd->purchase_quantity = $product->quantityPurchase;
                 $purchaseProd->receive_quantity = 0;
+                $purchaseProd->receive_warehouse_id = $warehouse->id;
+                $purchaseProd->receive_warehouse_name = $warehouse->name;
                 $purchaseProd->paid_to_seller = $product->paidToSeller;
                 $purchaseProd->changing_price = abs($amount);
                 $purchaseProd->type_changing = $amount > 0 ? 'up' : 'down' ;

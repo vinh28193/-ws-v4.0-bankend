@@ -99,7 +99,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['chat' => 'rest-api-chat'],
+        'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',

@@ -12,12 +12,21 @@ class m190314_103412_product_name_tables_product extends Migration
      */
     public function safeUp()
     {
+<<<<<<< HEAD
         // $this->addColumn('product','product_name','text not null');
         //$this->dropForeignKey('idx-product-currency' , 'product');
         //$this->dropIndex('idx-product-currency','product');
         // $this->dropColumn('product','currency_id');
         // $this->dropColumn('product','currency_symbol');
         // $this->dropColumn('product','exchange_rate');
+=======
+        $this->addColumn('product','product_name','text not null');
+        $this->dropForeignKey('idx-product-currency' , 'product');
+        $this->dropIndex('idx-product-currency','product');
+        $this->dropColumn('product','currency_id');
+        $this->dropColumn('product','currency_symbol');
+        $this->dropColumn('product','exchange_rate');
+>>>>>>> 80a5afbea6edfe79ee4bbadba481eca859266add
     }
 
     /**

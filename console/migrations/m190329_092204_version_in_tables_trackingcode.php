@@ -12,7 +12,9 @@ class m190329_092204_version_in_tables_trackingcode extends Migration
      */
     public function safeUp()
     {
-        // $this->addColumn('tracking_code','version',$this->string(255)->defaultValue('4.0')->after('id')->comment('version 4.0'));
+
+        $this->addColumn('tracking_code','version',$this->string(255)->defaultValue('4.0')->after('id')->comment('version 4.0'));
+
     }
 
     /**

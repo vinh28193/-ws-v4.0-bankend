@@ -24,6 +24,8 @@ use Yii;
  * @property string $purchase_shipping_fee phí ship khi đi mua
  * @property int $created_at
  * @property int $updated_at
+ * @property int $receive_warehouse_id Id Kho nhận
+ * @property string $receive_warehouse_name Tên Kho nhận
  *
  * @property Order $order
  * @property Product $product
@@ -45,9 +47,9 @@ class PurchaseProduct extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['product_id', 'purchase_order_id', 'order_id', 'purchase_quantity', 'receive_quantity', 'created_at', 'updated_at'], 'integer'],
-            [['paid_to_seller', 'changing_price', 'type_changing', 'purchase_price', 'purchase_us_tax', 'purchase_shipping_fee'], 'number'],
-            [['sku', 'product_name', 'image'], 'string', 'max' => 255],
+            [['product_id', 'purchase_order_id', 'order_id', 'purchase_quantity', 'receive_quantity', 'created_at', 'updated_at', 'receive_warehouse_id'], 'integer'],
+            [['paid_to_seller', 'changing_price', 'purchase_price', 'purchase_us_tax', 'purchase_shipping_fee'], 'number'],
+            [['sku', 'product_name', 'image', 'type_changing', 'receive_warehouse_name'], 'string', 'max' => 255],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['purchase_order_id'], 'exist', 'skipOnError' => true, 'targetClass' => PurchaseOrder::className(), 'targetAttribute' => ['purchase_order_id' => 'id']],
@@ -77,6 +79,8 @@ class PurchaseProduct extends \common\components\db\ActiveRecord
             'purchase_shipping_fee' => 'Purchase Shipping Fee',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'receive_warehouse_id' => 'Receive Warehouse ID',
+            'receive_warehouse_name' => 'Receive Warehouse Name',
         ];
     }
 

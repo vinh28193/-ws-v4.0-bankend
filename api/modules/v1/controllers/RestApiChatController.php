@@ -7,10 +7,10 @@ use common\modelsMongo\RestApiCall;
 use common\modelsMongo\ChatMongoWs;
 use common\models\Order;
 use Yii;
-use yii\web\NotFoundHttpException;
-use yii\web\ServerErrorHttpException;
 use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
+use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
 class RestApiChatController extends BaseApiController
 {
     /** Role :
@@ -76,7 +76,7 @@ class RestApiChatController extends BaseApiController
         if (isset($_post) !== null) {
             @date_default_timezone_set('Asia/Ho_Chi_Minh');
             $model = new ChatMongoWs();
-//            $model->attributes = $_post;
+                //  $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();
             $_user_id = $_user_Identity->getId();
             $_user_email = $_user_Identity['email'];
@@ -87,7 +87,15 @@ class RestApiChatController extends BaseApiController
             $_request_ip = Yii::$app->getRequest()->getUserIP();
             $isNew = isset($_post['isNew']) && $_post['isNew'] === 'yes';
             //code vandinh : status order
-            $isSupporting = (isset($_post['is_supporting']) && $_post['is_supporting'] == 1) ? true : false;
+            $isSupporting = true;
+            if($_post['type_chat'] == 'GROUP_WS')
+            {
+                $jsonfile_vi= Yii::getAlias('@webroot/listchats/chat-vi.json');
+    
+                $listchats = $this->readFileChat($jsonfile_vi);
+                $check_string_chat = $this->checkStringInFile($_post['message'],$listchats);
+                $isSupporting = $check_string_chat;
+            }
             //end code vandinh
             $_rest_data = ["ChatMongoWs" => [
                 "success" => true,
@@ -107,14 +115,15 @@ class RestApiChatController extends BaseApiController
                 "is_employee_vew" => null
             ]];
 
+
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
-                if($isNew === true || $isSupporting == true)
+                if($isNew === true && $isSupporting == true)
                 {
+
                  // code vandinh staus order is new or chat supporting
-                    $ordercode = $_post['Order_path'];
-                    $dirtyAttributes = $model->getDirtyAttributes();
-                    $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
+                   
+                    $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}, order new to supporting";
                     Order::updateAll([
                         'current_status' => Order::STATUS_SUPPORTING
                     ],['ordercode' => $_post['Order_path']]);
@@ -122,19 +131,21 @@ class RestApiChatController extends BaseApiController
                     if (!$model->save())
                      {
                         Yii::$app->wsLog->push('order', $model->getScenario(), null, [
-                            'id' => $ordercode,
+                            'id' => $_post['Order_path'],
                             'request' => $this->post,
                             'response' => $model->getErrors()
                         ]);
                         return $this->response(false, $model->getFirstErrors());
                      }
-                    ChatHelper::push($messages, $ordercode, 'GROUP_WS', 'SYSTEM');
+                    ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM');
                     Yii::$app->wsLog->push('order', $model->getScenario(), null, [
-                        'id' => $ordercode,
-                        'request' => $this->post,
-                        'response' => $dirtyAttributes
-                    ]);
+                    'id' => $_post['Order_path'],
+                    'request' => $this->post,
+                    'response' => $_post['message']
+                ]);
+                  
                 }
+                
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
@@ -181,6 +192,10 @@ class RestApiChatController extends BaseApiController
         Yii::$app->api->sendSuccessResponse($model->attributes);
     }
 
+    public function actionAddlistchat()
+    {
+        return 1;
+    }
     public function findModel($id)
     {
         if (($model = ChatMongoWs::findOne($id)) !== null) {
@@ -189,11 +204,15 @@ class RestApiChatController extends BaseApiController
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
     }
+
+
         /**
      * @param $dirtyAttributes
      * @param $reference \common\components\db\ActiveRecord
      * @return string
      */
+
+
     protected function resolveChatMessage($dirtyAttributes, $reference)
     {
 
@@ -206,5 +225,35 @@ class RestApiChatController extends BaseApiController
         }
 
         return implode(", ", $results);
+    }
+
+    protected function writeFileChat($value,$jsonfile)
+    {
+
+        $tempArray = $this->readFileChat($jsonfile);
+        $value     = strtolower($value);
+        if(empty($tempArray))
+        {
+         $tempArray = array();  
+        }
+        array_push($tempArray, $value);
+        $jsonData = json_encode($tempArray);
+        file_put_contents($jsonfile, $jsonData);     
+
+    }
+
+    protected function readFileChat($jsonfile)
+    {
+
+                $string = file_get_contents($jsonfile);
+                $listchats = json_decode($string, true);
+                return $listchats;
+    }
+
+    protected function checkStringInFile($string,$file)
+    {
+               $return = false;
+               if(in_array($string, $file)) $return = true;
+               return $return;
     }
 }
