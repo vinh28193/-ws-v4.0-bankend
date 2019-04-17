@@ -8,6 +8,7 @@
 
 namespace api\controllers;
 
+use common\promotion\PromotionForm;
 use Yii;
 use common\calculators\ConditionBuilder;
 use common\calculators\Calculator;
@@ -86,11 +87,11 @@ class TesterController extends \yii\rest\Controller
 
     public function actionPromotion(){
 
-        $form = new CheckoutPromotionForm();
+        $form = new PromotionForm();
         $form->couponCode = 'TEST';
         $form->cartIds = ['173263ac8f9b2d30a70b9f3c61551822'];
         $form->customerId = 1;
-        var_dump($form->checkPromotion());
+        echo json_encode($form->checkPromotion());
         die;
     }
 }

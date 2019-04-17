@@ -3,6 +3,8 @@
 
 namespace common\promotion;
 
+use common\models\Customer;
+use common\products\BaseProduct;
 use Yii;
 use yii\base\Model;
 use yii\di\Instance;
@@ -24,7 +26,7 @@ use common\components\cart\CartManager;
  * Class PromotionForm
  * @package common\promotion
  */
-abstract class PromotionForm extends Model
+class PromotionForm extends Model
 {
 
     /**
@@ -36,6 +38,57 @@ abstract class PromotionForm extends Model
      * @var integer
      */
     public $customerId;
+    /**
+     * @var array
+     */
+    public $cartIds;
+
+    /**
+     * @var string payment service
+     * template "PaymentMethodId_PaymentBankCode"
+     */
+    public $paymentService;
+
+    /**
+     * @var integer|float
+     */
+    public $refundOrderId;
+
+    /**
+     * @var string|CartManager
+     */
+    protected $cartManager = 'cart';
+
+    public function init()
+    {
+        parent::init();
+        $this->cartManager = Instance::ensure($this->cartManager, CartManager::className());
+    }
+
+    /**
+     * @var string|Customer
+     */
+    private $_customer;
+
+    /**
+     * @return Customer|string|null
+     */
+    public function getCustomer()
+    {
+        if (!is_object($this->_customer)) {
+            $this->_customer = Customer::findOne($this->customerId);
+        }
+        return $this->_customer;
+    }
+
+    /**
+     * @param $customer
+     */
+    public function setCustomer($customer)
+    {
+        $this->_customer = $customer;
+    }
+
 
     /**
      * @inheritDoc
@@ -59,38 +112,76 @@ abstract class PromotionForm extends Model
         ];
     }
 
+
     public function checkPromotion()
     {
+        $results = ['success' => false, 'message' => 'khong co truong trinh giam gia phu hop', 'data' => [], 'totalDiscount' => 0];
         if (!$this->validate()) {
-            return PromotionResponse::create(false, $this->getFirstErrors(), $this->couponCode);
+            $results['message'] = $this->getFirstErrors();
+            return $results;
         }
-        if (($promotion = $this->findPromotion()) === null) {
-            return PromotionResponse::create(false, "Not found promotion '$this->couponCode'", $this->couponCode);
-        }
-        if (($request = $this->createRequest()) === false) {
-            if ($this->hasErrors()) {
-                return PromotionResponse::create(false, $this->getFirstErrors());
+        $promotions = $this->findPromotion();
+        $totalDiscount = 0;
+        foreach ($this->cartIds as $cartId) {
+            $detail = ['success' => false, 'message' => "can not get item form cart `$cartId`", 'data' => [], 'value' => 0];
+            /** @var $product BaseProduct */
+            if (($data = $this->cartManager->getItem($cartId)) === false || !($product = $data['response']) instanceof BaseProduct) {
+                continue;
             }
-            return PromotionResponse::create(false, "can not use {$promotion->code} because have unknown error");
+            $additionalFees = [];
+            foreach ($product->getAdditionalFees()->keys() as $key) {
+                $additionalFees[$key] = $product->getAdditionalFees()->getTotalAdditionFees($key)[1];
+            }
+
+            $item = new PromotionItem([
+                'customer' => $this->getCustomer(),
+                'itemType' => $product->getItemType(),
+                'customCategory' => $product->getCustomCategory(),
+                'shippingQuantity' => $product->getShippingQuantity(),
+                'shippingWeight' => $product->getShippingWeight(),
+                'additionalFees' => $additionalFees,
+                'paymentService' => $this->paymentService
+            ]);
+            $discountAmount = 0;
+            foreach ($promotions as $promotion) {
+                /** @var $promotion Promotion */
+                if (($result = $promotion->checkCondition($item)) !== true && is_array($result) && count($result) === 2) {
+                    $detail['data'][] = $result;
+                } else {
+                    $item = $promotion->calculatorDiscount($item);
+                    $item->customer = null;
+                    $discountAmount += $item->totalDiscountAmount;
+                    $detail['data'][] = [
+                        'fees' => $item->discountFees,
+                        'detail' => $item->discountDetail,
+                        'value' => $item->totalDiscountAmount
+                    ];
+                }
+
+            }
+            if ($discountAmount > 0) {
+                $detail['success'] = true;
+                $detail['message'] = "App dung thanh cong cho cart '$cartId'";
+                $detail['value'] = $discountAmount;
+            }
+            $totalDiscount += $discountAmount;
+            $results['data'][$cartId] = $detail;
         }
-        if (($result = $promotion->checkCondition($request)) !== true && is_array($result) && count($result) === 2) {
-            return PromotionResponse::create($result[0],  $result[1]);
+        if ($totalDiscount > 0) {
+            $results['success'] = true;
+            $results['message'] = "ap dung chuong trinh thanh cong";
+            $results['totalDiscount'] = $totalDiscount;
         }
-        $discount = $promotion->calculatorDiscount($request);
-        return $discount;
+        return $results;
     }
 
 
     /**
-     * @return Promotion|null
+     * @return Promotion[]|null
      */
     protected function findPromotion()
     {
-        return Promotion::findOne(['code' => $this->couponCode]);
+        return Promotion::find()->all();
     }
 
-    /**
-     * @return false|PromotionRequest
-     */
-    abstract protected function createRequest();
 }

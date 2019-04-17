@@ -40,10 +40,10 @@ class PromotionCondition extends DbPromotionCondition
     ];
 
     /**
-     * @param PromotionRequest $request
+     * @param PromotionItem $item
      * @return boolean
      */
-    public function checkConditionRecursive(PromotionRequest $request)
+    public function checkConditionRecursive(PromotionItem $item)
     {
         if (($config = $this->promotionConditionConfig) === null) {
             return false;
@@ -57,7 +57,7 @@ class PromotionCondition extends DbPromotionCondition
         if (isset($resolvers[$this->name]) && ($resolver = $resolvers[$this->name]) !== null) {
             $value = call_user_func([$this, $resolver]);
         }else{
-            $value = $this->resolveObject($request, $this->name);
+            $value = $this->resolveObject($item, $this->name);
 
         }
         $valueType = gettype($value);
