@@ -635,15 +635,29 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($order)) {
             $query->orderBy($order);
         }
-        if (isset($params['noTracking'])) {
+        if (isset($params['noTracking']) == 'NO_TRACKING') {
             $subDraftExtensionTrackingMapQuery = new Query();
             $subDraftExtensionTrackingMapQuery->select([new Expression('1')]);
             $subDraftExtensionTrackingMapQuery->from(['draftTracking' => DraftExtensionTrackingMap::tableName()]);
             $subDraftExtensionTrackingMapQuery->where(['draftTracking.order_id' => new Expression('[[id]]')]);
             $query->andWhere(['NOT EXISTS', $subDraftExtensionTrackingMapQuery]);
         }
+        if (isset($params['noTracking']) == 'TIME_LC2') {
+            $query->andFilterWhere([
+                'and',
+                ['>' ,'stockin_local', Yii::$app->getFormatter()->asTimestamp('now - 2 days')],
+                ['>', 'total_paid_amount_local', 0]
+            ]);
+        }
+        if (isset($params['noTracking']) == 'TIME_US5') {
+            $query->andFilterWhere(['>' ,'seller_shipped', Yii::$app->getFormatter()->asTimestamp('now - 5 days')]);
+        }
+        if (isset($params['noTracking']) == 'TIME_US10') {
+            $query->andFilterWhere(['>' ,'stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')]);
+        }
 
-        $cloneQuery = clone $query;
+
+            $cloneQuery = clone $query;
         $cloneQuery->with = null;
         $cloneQuery->limit(-1);
         $cloneQuery->offset(-1);
@@ -656,6 +670,13 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 ['>' ,'seller_shipped', Yii::$app->getFormatter()->asTimestamp('now - 5 days')]
             ])->count('cp.id'),
             'countUS' => (new Query())->from(['cp' => $cloneQuery])->where(['>' ,'stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')])->count('cp.id'),
+            'countLC' => (new Query())->from(['cp' => $cloneQuery])->where(
+                [
+                    'and',
+                    ['>' ,'stockin_local', Yii::$app->getFormatter()->asTimestamp('now - 2 days')],
+                    ['>', 'total_paid_amount_local', 0]
+                ]
+            )->count('cp.id'),
         ];
         $additional_info = [
             'currentPage' => $page,
