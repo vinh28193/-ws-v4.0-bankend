@@ -522,4 +522,25 @@ return [
         ],
         'extraPatterns' => [ ]
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'pluralize' => false,
+        'controller' => ['ext-tracking' => 'extension-tracking'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'POST,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [
+            'POST create'=> 'create',
+            'OPTIONS create'=> 'options',
+        ]
+    ],
 ];

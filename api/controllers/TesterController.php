@@ -51,4 +51,12 @@ class TesterController extends \yii\rest\Controller
 
         die;
     }
+
+    public function actionNow(){
+        $f =\Yii::$app->getFormatter();
+        echo "now {$f->asDatetime('now')}\n";
+        echo "<br>";
+        echo "+3 days {$f->asDatetime('now + 300 seconds')}\n";
+        die;
+    }
 }

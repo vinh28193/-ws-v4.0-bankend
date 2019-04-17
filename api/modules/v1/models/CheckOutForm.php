@@ -170,6 +170,7 @@ class CheckOutForm extends Model
                         break;
                     }
                 }
+
                 if (($seller = Seller::findOne(['AND', ['seller_name' => $provider->name], ['portal' => $type]])) === null) {
                     $seller = new Seller();
                     $seller->seller_name = $sellerId;

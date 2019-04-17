@@ -127,6 +127,7 @@ class RestApiChatController extends BaseApiController
                     Order::updateAll([
                         'current_status' => Order::STATUS_SUPPORTING
                     ],['ordercode' => $_post['Order_path']]);
+<<<<<<< HEAD
                 //code update action log
                     if (!$model->save())
                      {
@@ -139,6 +140,12 @@ class RestApiChatController extends BaseApiController
                      }
                     ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM');
                     Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+=======
+                }
+                $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}";
+                ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM');
+                Yii::$app->wsLog->push('order', "create chat {$_post['type_chat']}", null, [
+>>>>>>> 8b53dd451ca7229ca96754b2ebd08df5a8660846
                     'id' => $_post['Order_path'],
                     'request' => $this->post,
                     'response' => $_post['message']
