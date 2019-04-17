@@ -36,6 +36,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_PAY_BACK = 'updatePayBack';
     const SCENARIO_UPDATE_SELLER_REFUND = 'updateSellerRefund';
     const SCENARIO_UPDATE_PROMOTION = 'updatePromotionId';
+    const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupporting';
 
     /**
      * order type
@@ -163,6 +164,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_UPDATE_SELLER_REFUND => [
                 'purchase_amount_buck', 'purchase_amount_refund'
+            ],
+            self::SCENARIO_UPDATE_MARK_SUPPORTING => [
+                'current_status', 'mark_supporting'
             ],
         ]);
     }
