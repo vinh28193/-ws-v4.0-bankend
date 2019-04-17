@@ -16,6 +16,7 @@ use common\models\queries\OrderQuery;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\i18n\Formatter;
 use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\db\Expression;
@@ -642,17 +643,31 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             $query->andWhere(['NOT EXISTS', $subDraftExtensionTrackingMapQuery]);
         }
 
+        $cloneQuery = clone $query;
+        $cloneQuery->with = null;
+        $cloneQuery->limit(-1);
+        $cloneQuery->offset(-1);
+        $cloneQuery->orderBy([]);
+
+        $summary = [
+            'totalUnPaid' => (new Query())->from(['cc' => $cloneQuery])->where(['=', 'total_paid_amount_local', 0])->count('cc.id'),
+            'countPurchase' => (new Query())->from(['cp' => $cloneQuery])->where([
+                'AND',
+                ['>' ,'seller_shipped', Yii::$app->getFormatter()->asTimestamp('now - 5 days')]
+            ])->count('cp.id'),
+            'countUS' => (new Query())->from(['cp' => $cloneQuery])->where(['>' ,'stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')])->count('cp.id'),
+        ];
         $additional_info = [
             'currentPage' => $page,
             'pageCount' => $page,
             'perPage' => $limit,
-            'totalCount' => (int)$query->count()
+            'totalCount' => (int)(clone $query)->limit(-1)->offset(-1)->orderBy([])->count('order.id')
         ];
-
         $data = new \stdClass();
         $data->_items = $query->orderBy('id desc')->all();
         $data->_links = '';
         $data->_meta = $additional_info;
+        $data->_summary = $summary;
         $data->total = count($data->_items);
         return $data;
 
