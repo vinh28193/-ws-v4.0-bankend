@@ -85,12 +85,14 @@ class TesterController extends \yii\rest\Controller
         die;
     }
 
-    public function actionPromotion(){
+    public function actionPromotion()
+    {
 
+        // remake params $_POST
+        $posts = require dirname(dirname(__DIR__)).'/common/promotion/mock-post.php';
+//        var_dump(strlen(json_encode($posts)));die;
         $form = new PromotionForm();
-        $form->couponCode = 'TEST';
-        $form->cartIds = ['173263ac8f9b2d30a70b9f3c61551822'];
-        $form->customerId = 1;
+        $form->loadParam([]);
         echo json_encode($form->checkPromotion());
         die;
     }

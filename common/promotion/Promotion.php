@@ -4,6 +4,7 @@ namespace common\promotion;
 
 use common\helpers\ObjectHelper;
 use common\models\db\Promotion as DbPromotion;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class Promotion
@@ -81,67 +82,60 @@ class Promotion extends DbPromotion
      */
     public function calculatorDiscount(PromotionItem $item)
     {
-        // step 1: lấy tất cả các phí ra, nếu không có phí nào, thì discount bằng 0
-        if (($additionalFees = $item->additionalFees) === null || empty($additionalFees)) {
-            return $item;
-        }
-        // step 2: lấy số tiền được discount trước đó
-        $discountFees = $item->discountFees;
-        $originAmount = 0;
-        $discountAmount = 0;
-        // step 3; nếu mà tồn tại discount cho phí gì thì lấy giá trị của phí đó, và giá trị discount cho phí đó
-        if ($this->discount_fee !== null) {
-            if (!isset($additionalFees[$this->discount_fee])) {
-                return $item;
-            }
-            $originAmount = $additionalFees[$this->discount_fee];
-            $discountFee = isset($discountFees[$this->discount_fee]) ? $discountFees[$this->discount_fee] : 0;
 
-            // step 4; lấy giá trị discount được giảm
-            $discount = $this->discount_amount;
-            // nếu là % thì tính phần trăm
-            if ($this->discount_calculator === self::DISCOUNT_CALCULATOR_PERCENT) {
-                $discount = ($discount / 100) * $originAmount;
-                // nếu là % mà giá trị discount lơn hơn max thì để giá trị max
-                if ($this->discount_max_amount !== null && $discount > $this->discount_max_amount) {
-                    $discount = $this->discount_max_amount;
+        if ($item instanceof Product) {
+            if ($this->discount_fee !== null) {
+                if (($originAmount = ArrayHelper::getValue($item->additionalFees, $this->discount_fee)) === null) {
+                    return $item;
                 }
-            }
-
-            if ($this->allow_multiple) {
-                $discountFee += $discount;
-                $item->totalDiscountAmount += $discount;
+                $discountFee = ArrayHelper::getValue($item->discountFees, $this->discount_fee, 0);
+                $discount = $this->discount_amount;
+                // nếu là % thì tính phần trăm
+                if ($this->discount_calculator === self::DISCOUNT_CALCULATOR_PERCENT) {
+                    $discount = ($discount / 100) * $originAmount;
+                    // nếu là % mà giá trị discount lơn hơn max thì để giá trị max
+                    if ($this->discount_max_amount !== null && $discount > $this->discount_max_amount) {
+                        $discount = $this->discount_max_amount;
+                    }
+                }
+                if ($this->allow_multiple) {
+                    $discountFee += $discount;
+                    $item->totalDiscountAmount += $discount;
+                } else {
+                    $discountFee = $discount;
+                    $item->totalDiscountAmount = $discount;
+                }
+                $item->discountFees[$this->discount_fee] = $discountFee;
             } else {
-                $discountFee = $discount;
-                $item->totalDiscountAmount = $discount;
-            }
-            $item->discountFees[$this->discount_fee] = $discountFee;
-
-        } else {
-            // nếu không có discount cho phí gì thì lấy tổng toàn bộ phí
-            foreach ($additionalFees as $key => $value) {
-                if ($value <= 0) {
-                    continue;
+                $discount = $this->discount_amount;
+                // nếu là % thì tính phần trăm
+                if ($this->discount_calculator === self::DISCOUNT_CALCULATOR_PERCENT) {
+                    $discount = ($discount / 100) * $item->totalAmount;
+                    // nếu là % mà giá trị discount lơn hơn max thì để giá trị max
+                    if ($this->discount_max_amount !== null && $discount > $this->discount_max_amount) {
+                        $discount = $this->discount_max_amount;
+                    }
                 }
-                $originAmount += $value;
-            }
-            // step 4; lấy giá trị discount được giảm
-            $discount = $this->discount_amount;
-            // nếu là % thì tính phần trăm
-            if ($this->discount_calculator === self::DISCOUNT_CALCULATOR_PERCENT) {
-                $discount = ($discount / 100) * $originAmount;
-                // nếu là % mà giá trị discount lơn hơn max thì để giá trị max
-                if ($discount > $this->discount_max_amount) {
-                    $discount = $this->discount_max_amount;
+                if ($this->allow_multiple) {
+                    $item->totalDiscountAmount += $discount;
+                } else {
+                    $item->totalDiscountAmount = $discount;
                 }
             }
-            if ($this->allow_multiple) {
-                $item->totalDiscountAmount += $discountAmount;
-            } else {
-                $item->totalDiscountAmount = $discountAmount;
+            $item->discountDetail[] = $this->code;
+        } else if ($item instanceof Order) {
+            if ($this->discount_fee !== null) {
+                foreach ($item->getProducts() as $key => $product) {
+                    $passed = $this->checkCondition($product);
+                    if ($passed !== true && is_array($passed) && count($passed) === 2) {
+                        continue;
+                    }
+                    $product = $this->calculatorDiscount($product);
+                    $item->totalDiscountAmount += $product->totalDiscountAmount;
+                    $item->updateProduct($key, $product);
+                }
             }
         }
-        $item->discountDetail[] = ['id' => $this->id, 'code' => $this->code, 'message' => $this->id, 'value' => $discount];
         return $item;
     }
 

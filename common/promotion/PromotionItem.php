@@ -7,26 +7,37 @@ use yii\base\BaseObject;
 
 class PromotionItem extends BaseObject
 {
-
-    public $customer;
-
+    /**
+     * @var string
+     */
     public $paymentService;
-
+    /**
+     * @var string ebay/amazon
+     */
     public $itemType;
 
-    public $customCategory;
+    /**
+     * @var string|integer
+     */
+    public $categoryId;
 
+    /**
+     * @var integer
+     */
     public $shippingQuantity;
 
+    /**
+     * @var integer
+     */
     public $shippingWeight;
 
-    public $additionalFees;
-
+    /**
+     * @var int
+     */
     public $totalAmount;
 
-    public $discountFees = [];
-
-    public $discountDetail = [];
-
+    /**
+     * @var int
+     */
     public $totalDiscountAmount = 0;
 }
