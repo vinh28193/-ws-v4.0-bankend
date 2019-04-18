@@ -635,29 +635,18 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 //        if (isset($order)) {
 //            $query->orderBy($order);
 //        }
+        $subDraftExtensionTrackingMapQuery = new Query();
+        $subDraftExtensionTrackingMapQuery->select([new Expression('1')]);
+        $subDraftExtensionTrackingMapQuery->from(['draftTracking' => DraftExtensionTrackingMap::tableName()]);
+        $subDraftExtensionTrackingMapQuery->where(['draftTracking.order_id' => new Expression('[[id]]')]);
         if (isset($params['noTracking']) == 'NO_TRACKING') {
-            $subDraftExtensionTrackingMapQuery = new Query();
-            $subDraftExtensionTrackingMapQuery->select([new Expression('1')]);
-            $subDraftExtensionTrackingMapQuery->from(['draftTracking' => DraftExtensionTrackingMap::tableName()]);
-            $subDraftExtensionTrackingMapQuery->where(['draftTracking.order_id' => new Expression('[[id]]')]);
             $query->andWhere(['NOT EXISTS', $subDraftExtensionTrackingMapQuery]);
         }
-//        if (isset($params['noTracking']) == 'TIME_LC2') {
-//            $query->andFilterWhere([
-//                'and',
-//                ['>' ,'stockin_local', Yii::$app->getFormatter()->asTimestamp('now - 2 days')],
-//                ['>', 'total_paid_amount_local', 0]
-//            ]);
-//        }
-//        if (isset($params['noTracking']) == 'TIME_US5') {
-//            $query->andFilterWhere(['>' ,'seller_shipped', Yii::$app->getFormatter()->asTimestamp('now - 5 days')]);
-//        }
-//        if (isset($params['noTracking']) == 'TIME_US10') {
-//            $query->andFilterWhere(['>' ,'stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')]);
+//        if (isset($params['noTracking']) == 'PURCHASED') {
+//
 //        }
 
-
-            $cloneQuery = clone $query;
+        $cloneQuery = clone $query;
         $cloneQuery->with = null;
         $cloneQuery->limit(-1);
         $cloneQuery->offset(-1);
@@ -729,13 +718,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 ['>' ,'cp.stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')],
                 ['=', 'cp.stockout_us', null],
             ])->count('cp.id'),
-//            'countLC' => (new Query())->from(['cp' => $cloneQuery])->where(
-//                [
-//                    'and',
-//                    ['>' ,'stockin_local', Yii::$app->getFormatter()->asTimestamp('now - 2 days')],
-//                    ['>', 'total_paid_amount_local', 0]
-//                ]
-//            )->count('cp.id'),
+            'noTracking' => (new Query())->from(['cc' => $cloneQuery])->where(['NOT EXISTS', $subDraftExtensionTrackingMapQuery])->count('cc.id'),
         ];
         $additional_info = [
             'currentPage' => $page,
