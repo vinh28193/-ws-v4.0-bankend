@@ -642,8 +642,19 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($params['noTracking']) == 'NO_TRACKING') {
             $query->andWhere(['NOT EXISTS', $subDraftExtensionTrackingMapQuery]);
         }
-        if (isset($params['noTracking']) == 'PURCHASED') {
-
+        if (isset($params['noTracking']) == '10STOCKOUT_US') {
+            $query->andFilterWhere([
+                'and',
+                ['<' ,'stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')],
+                ['=', 'stockout_us', null],
+            ]);
+        }
+        if (isset($params['noTracking']) == 'SHIPPED5') {
+            $query->andFilterWhere([
+                'and',
+                ['<' ,'seller_shipped', Yii::$app->getFormatter()->asTimestamp('now - 5 days')],
+                ['=', 'stockin_us', null],
+            ]);
         }
 
         $cloneQuery = clone $query;
@@ -665,28 +676,28 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 $pc = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
                     ['<' ,'p.purchased',(int)Yii::$app->getFormatter()->asTimestamp('now - 5 days')],
-                    ['=', 'p.stockin_us', null],
+                    ['is', 'p.stockin_us', new Expression('null')],
                 ])->count('p.id');
             }
             if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'],'l') == 'Saturday') {
                 $pc1 = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
                     ['<' ,'p.purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 4 days')],
-                    ['=', 'p.stockin_us', null],
+                    ['is', 'p.stockin_us', new Expression('null')],
                 ])->count('p.id');
             }
             if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'],'l') == 'Friday') {
                 $sk = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
-                    ['>' ,'p.stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 4 days')],
-                    ['=', 'p.stockout_us', null],
+                    ['<' ,'p.stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 4 days')],
+                    ['is', 'p.stockout_us', new Expression('null')],
                 ])->count('p.id');
             }
             if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'],'l') == 'Saturday') {
                 $sk1 = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
                     ['<' ,'p.stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 3 days')],
-                    ['=', 'p.stockout_us', null],
+                    ['is', 'p.stockout_us', new Expression('null')],
                 ])->count('p.id');
             }
             else {
@@ -709,14 +720,14 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             'countPurchase' => (new Query())->from(['cp' => $cloneQuery])->where([
                 'AND',
                 ['<' ,'cp.seller_shipped', (int)(Yii::$app->getFormatter()->asTimestamp('now - 5 days'))],
-                ['=', 'cp.stockin_us', null]
+                ['is', 'cp.stockin_us', new Expression('null')]
             ])->count('cp.id'),
             'countPC' => $countPC,
             'countStockin' => $countStockin,
             'countUS' => (new Query())->from(['cp' => $cloneQuery])->where([
                 'and',
-                ['>' ,'cp.stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')],
-                ['=', 'cp.stockout_us', null],
+                ['<' ,'cp.stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')],
+                ['is', 'cp.stockout_us', new Expression('null')],
             ])->count('cp.id'),
             'noTracking' => (new Query())->from(['cc' => $cloneQuery])->where(['NOT EXISTS', $subDraftExtensionTrackingMapQuery])->count('cc.id'),
         ];
