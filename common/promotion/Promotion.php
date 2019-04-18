@@ -64,7 +64,7 @@ class Promotion extends DbPromotion
     public function checkCondition(PromotionItem $item)
     {
         $conditions = $this->conditions;
-        if (empty($condition)) {
+        if (empty($conditions)) {
             return true;
         }
         foreach ($conditions as $condition) {
@@ -95,7 +95,7 @@ class Promotion extends DbPromotion
                 return $item;
             }
             $originAmount = $additionalFees[$this->discount_fee];
-            $discountAmount = isset($discountFees[$this->discount_fee]) ? $discountFees[$this->discount_fee] : 0;
+            $discountFee = isset($discountFees[$this->discount_fee]) ? $discountFees[$this->discount_fee] : 0;
 
             // step 4; lấy giá trị discount được giảm
             $discount = $this->discount_amount;
@@ -109,13 +109,14 @@ class Promotion extends DbPromotion
             }
 
             if ($this->allow_multiple) {
-                $discountAmount += $discount;
-                $item->totalDiscountAmount += $discountAmount;
+                $discountFee += $discount;
+                $item->totalDiscountAmount += $discount;
             } else {
-                $discountAmount = $discount;
-                $item->totalDiscountAmount = $discountAmount;
+                $discountFee = $discount;
+                $item->totalDiscountAmount = $discount;
             }
-            $item->discountFees[$this->discount_fee] = $discountAmount;
+            $item->discountFees[$this->discount_fee] = $discountFee;
+
         } else {
             // nếu không có discount cho phí gì thì lấy tổng toàn bộ phí
             foreach ($additionalFees as $key => $value) {
@@ -135,10 +136,8 @@ class Promotion extends DbPromotion
                 }
             }
             if ($this->allow_multiple) {
-                $discountAmount += $discount;
                 $item->totalDiscountAmount += $discountAmount;
             } else {
-                $discountAmount = $discount;
                 $item->totalDiscountAmount = $discountAmount;
             }
         }

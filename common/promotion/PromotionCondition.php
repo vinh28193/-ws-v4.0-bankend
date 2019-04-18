@@ -3,6 +3,8 @@
 
 namespace common\promotion;
 
+use DateTime;
+use DateTimeZone;
 use Yii;
 use Exception;
 use common\helpers\ObjectHelper;
@@ -48,6 +50,7 @@ class PromotionCondition extends DbPromotionCondition
         if (($config = $this->promotionConditionConfig) === null) {
             return false;
         }
+
         // non param
         $resolvers = [
             'timeStart' => 'resolveTimestamp',
@@ -58,8 +61,8 @@ class PromotionCondition extends DbPromotionCondition
             $value = call_user_func([$this, $resolver]);
         }else{
             $value = $this->resolveObject($item, $this->name);
-
         }
+        Yii::info($value,$this->name);
         $valueType = gettype($value);
         if ($config->type_cast !== null) {
             if ($config->type_cast !== self::TYPE_BOOLEAN && $valueType === self::TYPE_BOOLEAN) {
@@ -153,19 +156,25 @@ class PromotionCondition extends DbPromotionCondition
 
 
     protected function resolveDayOfWeek(){
-        return $this->getFormatter()->format('now','l');
+        $dateTime = new DateTime('now',new DateTimeZone($this->getFormatter()->timeZone));
+        return $dateTime->format('l');
     }
 
     /**
-     * @param PromotionRequest $request
+     * @param PromotionItem $item
      * @param $name
      * @return bool|mixed
      */
-    protected function resolveObject(PromotionRequest $request, $name)
+    protected function resolveObject($item, $name)
     {
-
+        $maps = [
+            'minAmount' => 'totalAmount',
+            'maxAmount' => 'totalAmount',
+            'portal' => 'itemType'
+        ];
+        $name = isset($maps[$name]) ? $maps[$name] : $name;
         try {
-            return ObjectHelper::resolveRecursive($request, $name);
+            return ObjectHelper::resolveRecursive($item, $name);
         } catch (Exception $exception) {
             Yii::error($exception, __METHOD__);
             return false;

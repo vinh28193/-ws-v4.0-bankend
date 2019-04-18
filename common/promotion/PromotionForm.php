@@ -140,31 +140,31 @@ class PromotionForm extends Model
                 'shippingQuantity' => $product->getShippingQuantity(),
                 'shippingWeight' => $product->getShippingWeight(),
                 'additionalFees' => $additionalFees,
+                'totalAmount' => $product->getAdditionalFees()->getTotalAdditionFees()[1],
                 'paymentService' => $this->paymentService
             ]);
             $discountAmount = 0;
+
             foreach ($promotions as $promotion) {
                 /** @var $promotion Promotion */
-                if (($result = $promotion->checkCondition($item)) !== true && is_array($result) && count($result) === 2) {
-                    $detail['data'][] = $result;
+                $result = $promotion->checkCondition($item);
+                if ($result !== true && is_array($result) && count($result) === 2) {
+                    $detail['success'] = false;
+                    $detail['message'] = $result[1];
                 } else {
                     $item = $promotion->calculatorDiscount($item);
-                    $item->customer = null;
-                    $discountAmount += $item->totalDiscountAmount;
-                    $detail['data'][] = [
-                        'fees' => $item->discountFees,
-                        'detail' => $item->discountDetail,
-                        'value' => $item->totalDiscountAmount
-                    ];
+                    $detail['value'] = $item->totalDiscountAmount;
+                    $detail['fees'] = $item->discountFees;
+                    $detail['detail'] =  $item->discountDetail;
                 }
 
             }
-            if ($discountAmount > 0) {
+            if ($item->totalDiscountAmount > 0) {
                 $detail['success'] = true;
                 $detail['message'] = "App dung thanh cong cho cart '$cartId'";
-                $detail['value'] = $discountAmount;
+
             }
-            $totalDiscount += $discountAmount;
+            $totalDiscount += $item->totalDiscountAmount;
             $results['data'][$cartId] = $detail;
         }
         if ($totalDiscount > 0) {

@@ -22,6 +22,8 @@ class PromotionItem extends BaseObject
 
     public $additionalFees;
 
+    public $totalAmount;
+
     public $discountFees = [];
 
     public $discountDetail = [];
