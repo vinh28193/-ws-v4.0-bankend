@@ -80,4 +80,8 @@ class OrderQuery extends \common\components\db\ActiveQuery
         ]);
         return $this;
     }
+
+    public function countPurchase() {
+
+    }
 }

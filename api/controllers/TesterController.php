@@ -57,6 +57,12 @@ class TesterController extends \yii\rest\Controller
         echo "now {$f->asDatetime('now')}\n";
         echo "<br>";
         echo "+3 days {$f->asDatetime('now + 300 seconds')}\n";
+        $dateTime = new \DateTime('now');
+
+        echo "day week {$dateTime->format('U')}\n";
+//        echo "day week {$f->asDatetime(1340692034,'l')}";
+//        $datee = getFormatter()->asDatetime(1340692034,'l');
+//        echo "test {$datee}";
         die;
     }
 }
