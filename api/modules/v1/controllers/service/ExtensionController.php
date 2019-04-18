@@ -35,7 +35,7 @@ class ExtensionController extends BaseApiController
         $trackingCode = \Yii::$app->request->post("tracking_code");
         $sku = \Yii::$app->request->post("sku");
         $estimate = \Yii::$app->request->post("estimate");
-        $quantity = \Yii::$app->request->post("quantity");
+        $qty = \Yii::$app->request->post("quantity");
         $status = \Yii::$app->request->post("status");
 
         /** @var PurchaseOrder $purchaseOrder */
@@ -44,12 +44,9 @@ class ExtensionController extends BaseApiController
             return $this->response(false,'can not find tranid '.$tranId.' in data!');
         }
         /** @var PurchaseProduct[] $purchaseProducts */
-        $purchaseProducts = PurchaseProduct::find()->where(['sku' => $sku,'purchase_order_id' => $purchaseOrder->id])->with(['product'])->all();
-        $total = 0;
+        $purchaseProducts = PurchaseProduct::find()->where(['sku' => $sku,'purchase_order_id' => $purchaseOrder->id])->all();
         foreach ($purchaseProducts as $purchaseProduct){
-            $qty = $quantity - $total;
             $qty = $qty > 0 ? ($purchaseProduct->purchase_quantity > $qty ? $qty : $purchaseProduct->purchase_quantity) : 0;
-            $total += $qty;
             $ext = DraftExtensionTrackingMap::find()->where([
                 'tracking_code' => $trackingCode,
                 'product_id' => $purchaseProduct->product_id,
@@ -71,6 +68,8 @@ class ExtensionController extends BaseApiController
             $ext->quantity = $qty;
             $ext->number_run = $ext->number_run ? $ext->number_run + 1 : 1;
             $ext->save();
+            $purchaseProduct->receive_quantity = $purchaseProduct->receive_quantity ? $qty : $purchaseProduct->receive_quantity;
+            $purchaseProduct->save(0);
             $draft_data = DraftDataTracking::find()->where([
                 'tracking_code' => $trackingCode,
                 'product_id' => $purchaseProduct->product_id,
