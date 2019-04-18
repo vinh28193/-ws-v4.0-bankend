@@ -61,8 +61,8 @@ class TesterController extends \yii\rest\Controller
 
         echo "day week {$dateTime->format('U')}\n";
 //        echo "day week {$f->asDatetime(1340692034,'l')}";
-        $datee = getFormatter()->asDatetime(1340692034,'l');
-        echo "test {$datee}";
+//        $datee = getFormatter()->asDatetime(1340692034,'l');
+//        echo "test {$datee}";
         die;
     }
 }
