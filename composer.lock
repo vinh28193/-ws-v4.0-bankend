@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "adb15bb6b494b27de1f0363aa45dc2a2",
+    "content-hash": "4ea023800b4a84647d1557e8fa15f77f",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -26,6 +26,22 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "bower-asset/bootstrap4",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twbs/bootstrap.git",
+                "reference": "a86598e4fff82fc6f24bee18a4ce3d1b090cd73e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/a86598e4fff82fc6f24bee18a4ce3d1b090cd73e",
+                "reference": "a86598e4fff82fc6f24bee18a4ce3d1b090cd73e"
+            },
+            "type": "bower-asset",
+            "time": "2019-04-10T12:18:57+00:00"
         },
         {
             "name": "bower-asset/inputmask",
@@ -4778,7 +4794,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -5165,7 +5181,8 @@
         "yiisoft/yii2-mongodb": 20,
         "yiisoft/yii2-httpclient": 20,
         "phpoffice/phpspreadsheet": 20,
-        "phpoffice/phpexcel": 20
+        "phpoffice/phpexcel": 20,
+        "bower-asset/bootstrap4": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
