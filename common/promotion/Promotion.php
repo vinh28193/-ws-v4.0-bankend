@@ -3,6 +3,7 @@
 namespace common\promotion;
 
 use common\helpers\ObjectHelper;
+use common\helpers\WeshopHelper;
 use common\models\db\Promotion as DbPromotion;
 use yii\helpers\ArrayHelper;
 
@@ -76,67 +77,83 @@ class Promotion extends DbPromotion
         return true;
     }
 
-    /**
-     * @param PromotionItem $item
-     * @return PromotionItem
-     */
-    public function calculatorDiscount(PromotionItem $item)
+    protected function preRequest(PromotionRequest &$request)
     {
-
-        if ($item instanceof Product) {
+        $request->totalValidAmount = 0;
+        foreach ($request->discountOrders as $index => $order) {
+            /** @var $order Order */
             if ($this->discount_fee !== null) {
-                if (($originAmount = ArrayHelper::getValue($item->additionalFees, $this->discount_fee)) === null) {
-                    return $item;
-                }
-                $discountFee = ArrayHelper::getValue($item->discountFees, $this->discount_fee, 0);
-                $discount = $this->discount_amount;
-                // nếu là % thì tính phần trăm
-                if ($this->discount_calculator === self::DISCOUNT_CALCULATOR_PERCENT) {
-                    $discount = ($discount / 100) * $originAmount;
-                    // nếu là % mà giá trị discount lơn hơn max thì để giá trị max
-                    if ($this->discount_max_amount !== null && $discount > $this->discount_max_amount) {
-                        $discount = $this->discount_max_amount;
+                $totalFeeAmount = 0;
+                foreach ($order->getProducts() as $key => $product) {
+                    /** @var $product Product */
+//                    if(!$this->allow_order){
+//                        $passedFee = $this->checkCondition($product);
+//                    }
+                    if (isset($product->additionalFees[$this->discount_fee]) && ($fee = $product->additionalFees[$this->discount_fee]) > 0) {
+                        $totalFeeAmount += $fee;
                     }
                 }
-                if ($this->allow_multiple) {
-                    $discountFee += $discount;
-                    $item->totalDiscountAmount += $discount;
-                } else {
-                    $discountFee = $discount;
-                    $item->totalDiscountAmount = $discount;
-                }
-                $item->discountFees[$this->discount_fee] = $discountFee;
+                $request->totalValidAmount += $totalFeeAmount;
             } else {
-                $discount = $this->discount_amount;
-                // nếu là % thì tính phần trăm
-                if ($this->discount_calculator === self::DISCOUNT_CALCULATOR_PERCENT) {
-                    $discount = ($discount / 100) * $item->totalAmount;
-                    // nếu là % mà giá trị discount lơn hơn max thì để giá trị max
-                    if ($this->discount_max_amount !== null && $discount > $this->discount_max_amount) {
-                        $discount = $this->discount_max_amount;
-                    }
-                }
-                if ($this->allow_multiple) {
-                    $item->totalDiscountAmount += $discount;
-                } else {
-                    $item->totalDiscountAmount = $discount;
-                }
+                $request->totalValidAmount += $order->totalAmount;
             }
-            $item->discountDetail[] = $this->code;
-        } else if ($item instanceof Order) {
+
+        }
+    }
+
+    /**
+     * @param PromotionRequest $request
+     * @param PromotionResponse $response
+     */
+    public function calculatorDiscount(PromotionRequest $request, PromotionResponse &$response)
+    {
+        if (empty($request->discountOrders)) {
+            return;
+        }
+        $this->preRequest($request);
+        $discount = $this->discount_amount;
+        // nếu là % thì tính phần trăm
+        if ($this->discount_calculator === self::DISCOUNT_CALCULATOR_PERCENT) {
+            $discount = ($discount / 100) * $request->totalValidAmount;
+            // nếu là % mà giá trị discount lơn hơn max thì để giá trị max
+            if ($this->discount_max_amount !== null && $discount > $this->discount_max_amount) {
+                $discount = $this->discount_max_amount;
+            }
+        }
+
+        foreach ($request->discountOrders as $index => $order) {
+            /** @var $order Order */
             if ($this->discount_fee !== null) {
-                foreach ($item->getProducts() as $key => $product) {
-                    $passed = $this->checkCondition($product);
-                    if ($passed !== true && is_array($passed) && count($passed) === 2) {
-                        continue;
+                foreach ($order->getProducts() as $key => $product) {
+                    if (isset($product->additionalFees[$this->discount_fee]) && ($fee = $product->additionalFees[$this->discount_fee]) > 0) {
+                        $feeDiscount = WeshopHelper::discountAmountPercent($fee, $request->totalValidAmount, $discount);
+                        $product->discountFees[$this->discount_fee] = $feeDiscount;
+                        if ($this->allow_multiple) {
+                            $product->totalDiscountAmount += $feeDiscount;
+                            $order->totalDiscountAmount += $feeDiscount;
+                        } else {
+                            $product->totalDiscountAmount = $feeDiscount;
+                            $order->totalDiscountAmount = $feeDiscount;
+                        }
                     }
-                    $product = $this->calculatorDiscount($product);
-                    $item->totalDiscountAmount += $product->totalDiscountAmount;
-                    $item->updateProduct($key, $product);
+
+                    $order->updateProduct($key, $product);
+                }
+            } else {
+                $discountAmount = WeshopHelper::discountAmountPercent($order->totalAmount, $request->totalValidAmount, $discount);
+                if ($this->allow_multiple) {
+                    $order->totalDiscountAmount += $discountAmount;
+                } else {
+                    $order->totalDiscountAmount = $discountAmount;
                 }
             }
         }
-        return $item;
+        if ($this->allow_multiple) {
+            $request->totalDiscountAmount += $discount;
+        } else {
+            $request->totalDiscountAmount = $discount;
+        }
+        var_dump($request->orders);
     }
 
 

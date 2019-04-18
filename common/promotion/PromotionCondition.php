@@ -98,11 +98,12 @@ class PromotionCondition extends DbPromotionCondition
             'IN' => 'executeInCondition',
             'NOT IN' => 'executeInCondition',
             'LIKE' => 'executeLikeCondition',
+            'NOT LIKE' => 'executeNotLikeCondition'
         ];
         $operator = isset($this->operatorMapping[$config->operator]) ? $this->operatorMapping[$config->operator] : $config->operator;
         if (isset($operatorsExecutor[$operator]) && ($method = $operatorsExecutor[$operator]) !== null) {
             $params = $method === 'executeNormalCondition' ? [$operator, $value] : [$value];
-//            Yii::info($params, $method);
+//
             return call_user_func_array([$this, $method], $params);
         }
         return $this->executeNormalCondition($operator, $value);
@@ -144,6 +145,11 @@ class PromotionCondition extends DbPromotionCondition
     protected function executeLikeCondition($value)
     {
         return strpos($this->value, $value) !== false;
+    }
+
+    protected function executeNotLikeCondition($value)
+    {
+        return !$this->executeLikeCondition($value);
     }
 
     /**
