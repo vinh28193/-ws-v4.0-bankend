@@ -16,6 +16,7 @@ use common\models\queries\OrderQuery;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\i18n\Formatter;
 use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\db\Expression;
@@ -36,6 +37,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_PAY_BACK = 'updatePayBack';
     const SCENARIO_UPDATE_SELLER_REFUND = 'updateSellerRefund';
     const SCENARIO_UPDATE_PROMOTION = 'updatePromotionId';
+    const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupporting';
 
     /**
      * order type
@@ -163,6 +165,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_UPDATE_SELLER_REFUND => [
                 'purchase_amount_buck', 'purchase_amount_refund'
+            ],
+            self::SCENARIO_UPDATE_MARK_SUPPORTING => [
+                'current_status', 'mark_supporting'
             ],
         ]);
     }
@@ -507,6 +512,13 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($params['location'])) {
             $query->andFilterWhere(['order.receiver_province_id' => $params['location']]);
         }
+        if (isset($params['paymentStatus'])) {
+            if ($params['paymentStatus'] === 'PAID') {
+                $query->andFilterWhere(['>','order.total_paid_amount_local' , 0]);
+            } elseif ($params['paymentStatus'] === 'UNPAID') {
+                $query->andFilterWhere(['=', 'order.total_paid_amount_local', 0]);
+            }
+        }
         if (isset($params['type'])) {
             $query->andFilterWhere(['order.type_order' => $params['type']]);
         }
@@ -623,25 +635,60 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($order)) {
             $query->orderBy($order);
         }
-        if (isset($params['tracking'])) {
+        if (isset($params['noTracking']) == 'NO_TRACKING') {
             $subDraftExtensionTrackingMapQuery = new Query();
             $subDraftExtensionTrackingMapQuery->select([new Expression('1')]);
             $subDraftExtensionTrackingMapQuery->from(['draftTracking' => DraftExtensionTrackingMap::tableName()]);
             $subDraftExtensionTrackingMapQuery->where(['draftTracking.order_id' => new Expression('[[id]]')]);
             $query->andWhere(['NOT EXISTS', $subDraftExtensionTrackingMapQuery]);
         }
+        if (isset($params['noTracking']) == 'TIME_LC2') {
+            $query->andFilterWhere([
+                'and',
+                ['>' ,'stockin_local', Yii::$app->getFormatter()->asTimestamp('now - 2 days')],
+                ['>', 'total_paid_amount_local', 0]
+            ]);
+        }
+        if (isset($params['noTracking']) == 'TIME_US5') {
+            $query->andFilterWhere(['>' ,'seller_shipped', Yii::$app->getFormatter()->asTimestamp('now - 5 days')]);
+        }
+        if (isset($params['noTracking']) == 'TIME_US10') {
+            $query->andFilterWhere(['>' ,'stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')]);
+        }
 
+
+            $cloneQuery = clone $query;
+        $cloneQuery->with = null;
+        $cloneQuery->limit(-1);
+        $cloneQuery->offset(-1);
+        $cloneQuery->orderBy([]);
+
+        $summary = [
+            'totalUnPaid' => (new Query())->from(['cc' => $cloneQuery])->where(['=', 'total_paid_amount_local', 0])->count('cc.id'),
+            'countPurchase' => (new Query())->from(['cp' => $cloneQuery])->where([
+                'AND',
+                ['>' ,'seller_shipped', Yii::$app->getFormatter()->asTimestamp('now - 5 days')]
+            ])->count('cp.id'),
+            'countUS' => (new Query())->from(['cp' => $cloneQuery])->where(['>' ,'stockin_us', Yii::$app->getFormatter()->asTimestamp('now - 10 days')])->count('cp.id'),
+            'countLC' => (new Query())->from(['cp' => $cloneQuery])->where(
+                [
+                    'and',
+                    ['>' ,'stockin_local', Yii::$app->getFormatter()->asTimestamp('now - 2 days')],
+                    ['>', 'total_paid_amount_local', 0]
+                ]
+            )->count('cp.id'),
+        ];
         $additional_info = [
             'currentPage' => $page,
             'pageCount' => $page,
             'perPage' => $limit,
-            'totalCount' => (int)$query->count()
+            'totalCount' => (int)(clone $query)->limit(-1)->offset(-1)->orderBy([])->count('order.id')
         ];
-
         $data = new \stdClass();
         $data->_items = $query->orderBy('id desc')->all();
         $data->_links = '';
         $data->_meta = $additional_info;
+        $data->_summary = $summary;
         $data->total = count($data->_items);
         return $data;
 

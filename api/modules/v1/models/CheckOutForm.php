@@ -170,6 +170,7 @@ class CheckOutForm extends Model
                         break;
                     }
                 }
+
                 if (($seller = Seller::findOne(['AND', ['seller_name' => $provider->name], ['portal' => $type]])) === null) {
                     $seller = new Seller();
                     $seller->seller_name = $sellerId;
@@ -239,7 +240,7 @@ class CheckOutForm extends Model
                         $category->save(false);
                     }
                     $product->category_id = $category->id;
-//                $product->custom_category_id = $category->id;
+//                  $product->custom_category_id = $category->id;
 
                     $additionalFees = $item->getAdditionalFees();
 
@@ -261,7 +262,7 @@ class CheckOutForm extends Model
                     $product->variation_id = null;
                     /** Todo */
                     $product->note_by_customer = 'Note By Customer';
-                    $product->total_weight_temporary = 0;     //"cân nặng  trong lượng tạm tính"
+                    $product->total_weight_temporary = $item->shipping_weight;     //"cân nặng  trong lượng tạm tính"
                     $product->remove = 0;
                     $product->product_name = $item->item_name;
                     /** Todo */

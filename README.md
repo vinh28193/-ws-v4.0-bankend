@@ -639,9 +639,34 @@ READY_PURCHASE or PURCHASE_PART or ( PURCHASING and ( PURCHASE_ASSIGNEE_ID = use
 
 
 #----------Tables packet tam----------
-draft_extension_tracking_map : Nhận dữ kiệu các tracking lấy được từ extension
-draft_data_tracking : Nhận dữ liệu được map nối từ 2 bảng tracking_code (us sending) và draft_extension_tracking_map. 
-draft_boxme_tracking (hàng boxme đã nhận) : Nhận dữ liệu được đối chiếu từ api detail với bảng draft_data_tracking để kiểm tra bên boxme đã nhận được những tracking nào.
-draft_missing_tracking (hàng thiếu) : Nhận dữ liệu khi mà bên boxme không nhận được tracking trong bảng draft_data_tracking
-draft_wasting_tracking (hàng thừa) : Nhận dữ liệu khi mà bên boxme nhận được tracking nhưng đối chiếu draft_data_tracking hoặc draft_boxme_tracking lại không có
-draft_package_item (hàng đầy đủ): Nhận dữ liệu khi mà bên boxme nhận được tracking và đối chiếu draft_data_tracking hoặc draft_boxme_tracking có tracking.
+1. draft_extension_tracking_map : Nhận dữ liệu các tracking lấy được từ extension : ( data làm dữ liệu để đánh dấu hàng tách hàng gom)
+
+2. draft_data_tracking : Nhận dữ liệu được map nối từ 2 bảng tracking_code (us sending : Tạo lô) 
+                      và draft_extension_tracking_map. 
+   2.0 Tạo Lô ( Ko xử lý trường hợp tạo lô nhầm và tạo lại) --> bắt log chắc chắn + ko cho xóa lô --> quét tracking Trùng để ko cho tạo nhầm lô                    
+   2.1 Chạy Crontab tự động map 2 bảng với nhau và cho vào hàng đợi nếu quá nhiều tracking
+   2.3 Nếu Extension có dữ liệu mới do update bằng tay hoặc yêu cầu chạy lại thì map lại                
+       Hoặc Phải chạy lại đến khi không có "hàng gom trong hàng tách " , 
+            Chạy lại đến khi Chí có nhãn : NORMAL / UNKNOW / TÁCH hoặc nhân viên thao tác stop tiến trình thì dừng lại chuyển bước 3
+   
+3. draft_boxme_tracking (hàng boxme đã nhận) : Nhận dữ liệu được đối chiếu từ api detail 
+                     với bảng draft_data_tracking để kiểm tra bên boxme đã nhận được những tracking nào và trạng thái từng tracking Closed / Open của boxme 
+                     
+   ---> Gửi API BOXME Kiểm hàng - đã đánh dấu hàng tách , gom  ( gửi email + api packing)
+            https://www.getpostman.com/collections/d0cf6d7f64d4d96029cd 
+            GET DETAIL PACKING : https://wms.boxme.asia/v1/packing/detail/RVSID-003/?page=1
+            CREATE PACKING LIST API (LIVE) : https://s.boxme.asia/v1/packing/packing/create
+   3.0 Yêu cầu Boxme có mã nào trên gói hàng phải quét tất 
+   3.2 . Cho vào lô vào hàng đợi chạy Merger Tracking ( Đối chiếu tracking done) với BoxMe
+   3.3 . Với Lô Done :  Xuất API cho boxme kiểm hàng --> Có thể gưi email hoặc tạo lại qua API BOXME Chuyển qua bước 4                 
+                     
+4. draft_missing_tracking (hàng thiếu) : Nhận dữ liệu khi mà bên boxme không nhận được tracking trong bảng draft_data_tracking
+   4.1 . Đánh dấu tracking, Order nào nếu biết là hàng thiếu 
+   4.2 . Nếu biết được Tracking , máp với đơn nào thuộc KH nào Move sang bảng Package + Packe Item để xuất Kho , va tạo mã vận đơn tại màn hình Shipment
+                   
+5. draft_wasting_tracking (hàng thừa) : Nhận dữ liệu khi mà bên boxme nhận được tracking 
+             nhưng đối chiếu draft_data_tracking hoặc draft_boxme_tracking lại không có
+   5.1           
+
+6. draft_package_item (hàng đầy đủ): Nhận dữ liệu khi mà bên boxme nhận được tracking 
+                 và đối chiếu draft_data_tracking hoặc draft_boxme_tracking có tracking.

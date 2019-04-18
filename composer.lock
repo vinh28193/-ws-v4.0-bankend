@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "964c5617f7abcf3f979c12875c52165b",
+    "content-hash": "4ea023800b4a84647d1557e8fa15f77f",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -26,6 +26,22 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "bower-asset/bootstrap4",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twbs/bootstrap.git",
+                "reference": "a86598e4fff82fc6f24bee18a4ce3d1b090cd73e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/a86598e4fff82fc6f24bee18a4ce3d1b090cd73e",
+                "reference": "a86598e4fff82fc6f24bee18a4ce3d1b090cd73e"
+            },
+            "type": "bower-asset",
+            "time": "2019-04-10T12:18:57+00:00"
         },
         {
             "name": "bower-asset/inputmask",
@@ -375,110 +391,6 @@
                 "fixtures"
             ],
             "time": "2019-04-01T21:23:46+00:00"
-        },
-        {
-            "name": "johnsnook/yii2-ip-filter",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/johnsnook/yii2-visitors.git",
-                "reference": "dffed7a30a3d931ae0cd293bdcc35b440438c518"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/johnsnook/yii2-visitors/zipball/dffed7a30a3d931ae0cd293bdcc35b440438c518",
-                "reference": "dffed7a30a3d931ae0cd293bdcc35b440438c518",
-                "shasum": ""
-            },
-            "require": {
-                "kassner/log-parser": "~1.0",
-                "yiisoft/yii2": "*"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "johnsnook\\ipFilter\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "John Michael Snook",
-                    "email": "jsnook@gmail.com"
-                }
-            ],
-            "description": "This extension gets the visitors ip address, logs the access and checks if it's blacklisted or whitelisted.  If it's a blacklist ip address, it redirects them to a blowoff page.",
-            "homepage": "https://snooky.biz/",
-            "keywords": [
-                "blacklist",
-                "cidr",
-                "extension",
-                "hackers",
-                "ip address",
-                "postgresql",
-                "proxy",
-                "security",
-                "tor",
-                "whitelist",
-                "yii2"
-            ],
-            "time": "2018-07-01T22:25:40+00:00"
-        },
-        {
-            "name": "kassner/log-parser",
-            "version": "1.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kassner/log-parser.git",
-                "reference": "ea846b7edf24a421c5484902b2501c9c8e065796"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kassner/log-parser/zipball/ea846b7edf24a421c5484902b2501c9c8e065796",
-                "reference": "ea846b7edf24a421c5484902b2501c9c8e065796",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.4"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.11",
-                "phpmd/phpmd": "~2.1",
-                "phpunit/phpunit": "~4.4",
-                "sebastian/phpcpd": "~2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Kassner": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Rafael Kassner",
-                    "email": "kassner@gmail.com",
-                    "homepage": "http://www.kassner.com.br/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP Log Parser Library",
-            "homepage": "http://github.com/kassner/log-parser",
-            "keywords": [
-                "apache",
-                "format",
-                "log",
-                "log-format",
-                "nginx",
-                "parser"
-            ],
-            "time": "2019-02-04T07:43:30+00:00"
         },
         {
             "name": "markbaker/complex",
@@ -1747,12 +1659,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "a3f96ba1a351315a44a64ca62c2bacd72b82f9df"
+                "reference": "40f7393ee1daa2588279b21accb5e2fe7340744f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/a3f96ba1a351315a44a64ca62c2bacd72b82f9df",
-                "reference": "a3f96ba1a351315a44a64ca62c2bacd72b82f9df",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/40f7393ee1daa2588279b21accb5e2fe7340744f",
+                "reference": "40f7393ee1daa2588279b21accb5e2fe7340744f",
                 "shasum": ""
             },
             "require": {
@@ -1831,7 +1743,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2019-03-28T08:30:47+00:00"
+            "time": "2019-04-08T10:58:16+00:00"
         },
         {
             "name": "codeception/phpunit-wrapper",
@@ -2912,12 +2824,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8"
+                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
-                "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
+                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
                 "shasum": ""
             },
             "require": {
@@ -2952,7 +2864,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2018-06-11T23:09:50+00:00"
+            "time": "2019-04-07T13:18:21+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -4406,12 +4318,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "62c667bb62cc341e300697b3c3c1e0a9351b1826"
+                "reference": "5502f01de44b6275912c1c20c5a7dd3feb59c522"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/62c667bb62cc341e300697b3c3c1e0a9351b1826",
-                "reference": "62c667bb62cc341e300697b3c3c1e0a9351b1826",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/5502f01de44b6275912c1c20c5a7dd3feb59c522",
+                "reference": "5502f01de44b6275912c1c20c5a7dd3feb59c522",
                 "shasum": ""
             },
             "require": {
@@ -4457,7 +4369,7 @@
             ],
             "description": "Symfony BrowserKit Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-02T11:11:42+00:00"
+            "time": "2019-04-07T09:58:10+00:00"
         },
         {
             "name": "symfony/console",
@@ -4465,12 +4377,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "f6f44ce1c9513a37b8826ce7f3edd26d6ab7bf09"
+                "reference": "47b78954bea981abeccfed88eef3a9a57c15ca4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/f6f44ce1c9513a37b8826ce7f3edd26d6ab7bf09",
-                "reference": "f6f44ce1c9513a37b8826ce7f3edd26d6ab7bf09",
+                "url": "https://api.github.com/repos/symfony/console/zipball/47b78954bea981abeccfed88eef3a9a57c15ca4d",
+                "reference": "47b78954bea981abeccfed88eef3a9a57c15ca4d",
                 "shasum": ""
             },
             "require": {
@@ -4532,7 +4444,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-03-30T07:40:00+00:00"
+            "time": "2019-04-09T18:49:00+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -4540,12 +4452,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "a4b5e697e24544ddeaf9f9255cdda6e4c2c32659"
+                "reference": "2ae87c20fb85e5f71af65adfe39cde9e09a72ed2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/a4b5e697e24544ddeaf9f9255cdda6e4c2c32659",
-                "reference": "a4b5e697e24544ddeaf9f9255cdda6e4c2c32659",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/2ae87c20fb85e5f71af65adfe39cde9e09a72ed2",
+                "reference": "2ae87c20fb85e5f71af65adfe39cde9e09a72ed2",
                 "shasum": ""
             },
             "require": {
@@ -4603,7 +4515,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2019-04-03T09:22:57+00:00"
+            "time": "2019-04-07T08:26:05+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -4664,12 +4576,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "230f5ae18dbaed45ff6354c2a05b7d87dad491ad"
+                "reference": "a3709b7b83616653dfb7b50af64d5e3f6342c2df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/230f5ae18dbaed45ff6354c2a05b7d87dad491ad",
-                "reference": "230f5ae18dbaed45ff6354c2a05b7d87dad491ad",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/a3709b7b83616653dfb7b50af64d5e3f6342c2df",
+                "reference": "a3709b7b83616653dfb7b50af64d5e3f6342c2df",
                 "shasum": ""
             },
             "require": {
@@ -4717,7 +4629,7 @@
             ],
             "description": "Symfony DomCrawler Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-03T13:17:57+00:00"
+            "time": "2019-04-06T14:52:24+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -4725,12 +4637,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "96212e1684326fa95be877f4560e2ff47f6dc748"
+                "reference": "24e03676c2fa5f54c6c5b296133d39aec34d38cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/96212e1684326fa95be877f4560e2ff47f6dc748",
-                "reference": "96212e1684326fa95be877f4560e2ff47f6dc748",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/24e03676c2fa5f54c6c5b296133d39aec34d38cc",
+                "reference": "24e03676c2fa5f54c6c5b296133d39aec34d38cc",
                 "shasum": ""
             },
             "require": {
@@ -4786,7 +4698,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-02T10:04:04+00:00"
+            "time": "2019-04-06T14:04:46+00:00"
         },
         {
             "name": "symfony/finder",
@@ -4794,12 +4706,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "93e27e6111470949885d5486ad2fa0bd3bb3b0b5"
+                "reference": "5e2136f5d2caf276f7b4ba77a6be786988c1783c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/93e27e6111470949885d5486ad2fa0bd3bb3b0b5",
-                "reference": "93e27e6111470949885d5486ad2fa0bd3bb3b0b5",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/5e2136f5d2caf276f7b4ba77a6be786988c1783c",
+                "reference": "5e2136f5d2caf276f7b4ba77a6be786988c1783c",
                 "shasum": ""
             },
             "require": {
@@ -4835,7 +4747,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-03-28T11:28:31+00:00"
+            "time": "2019-04-06T14:04:46+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4959,12 +4871,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "483b38ff95689915ddc1feeed1cbce6422467b02"
+                "reference": "7ae5878b84fc3a41ad92848a23c30ed159a8ccb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/483b38ff95689915ddc1feeed1cbce6422467b02",
-                "reference": "483b38ff95689915ddc1feeed1cbce6422467b02",
+                "url": "https://api.github.com/repos/symfony/process/zipball/7ae5878b84fc3a41ad92848a23c30ed159a8ccb8",
+                "reference": "7ae5878b84fc3a41ad92848a23c30ed159a8ccb8",
                 "shasum": ""
             },
             "require": {
@@ -5000,7 +4912,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-01T13:29:45+00:00"
+            "time": "2019-04-10T19:42:49+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -5008,12 +4920,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "2fb37042c7060535dbe08a5d61a550e5d181f3c7"
+                "reference": "c60ecf5ba842324433b46f58dc7afc4487dbab99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/2fb37042c7060535dbe08a5d61a550e5d181f3c7",
-                "reference": "2fb37042c7060535dbe08a5d61a550e5d181f3c7",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/c60ecf5ba842324433b46f58dc7afc4487dbab99",
+                "reference": "c60ecf5ba842324433b46f58dc7afc4487dbab99",
                 "shasum": ""
             },
             "require": {
@@ -5059,20 +4971,20 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2019-02-23T15:22:31+00:00"
+            "time": "2019-04-06T14:04:46+00:00"
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "06b6ce404ee574e9c1787fb67bb9980ca4387c34"
+                "reference": "1c42705be2b6c1de5904f8afacef5895cab44bf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/06b6ce404ee574e9c1787fb67bb9980ca4387c34",
-                "reference": "06b6ce404ee574e9c1787fb67bb9980ca4387c34",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/1c42705be2b6c1de5904f8afacef5895cab44bf8",
+                "reference": "1c42705be2b6c1de5904f8afacef5895cab44bf8",
                 "shasum": ""
             },
             "require": {
@@ -5099,7 +5011,7 @@
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
-            "time": "2019-04-03T18:37:40+00:00"
+            "time": "2019-04-04T09:56:43+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -5269,7 +5181,8 @@
         "yiisoft/yii2-mongodb": 20,
         "yiisoft/yii2-httpclient": 20,
         "phpoffice/phpspreadsheet": 20,
-        "phpoffice/phpexcel": 20
+        "phpoffice/phpexcel": 20,
+        "bower-asset/bootstrap4": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
