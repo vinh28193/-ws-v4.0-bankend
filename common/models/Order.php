@@ -642,9 +642,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($params['noTracking']) == 'NO_TRACKING') {
             $query->andWhere(['NOT EXISTS', $subDraftExtensionTrackingMapQuery]);
         }
-//        if (isset($params['noTracking']) == 'PURCHASED') {
-//
-//        }
+        if (isset($params['noTracking']) == 'PURCHASED') {
+
+        }
 
         $cloneQuery = clone $query;
         $cloneQuery->with = null;
