@@ -123,7 +123,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     {
         return ArrayHelper::merge(parent::timestampFields(), [
             'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us',
-            'stockout_us', 'stockin_local', 'stockout_local', 'at_customer','returned','lost' , 'cancelled'
+            'stockout_us', 'stockin_local', 'stockout_local', 'at_customer','returned','lost' , 'cancelled', 'supporting', 'supported', 'ready_purchase'
         ]);
     }
 
