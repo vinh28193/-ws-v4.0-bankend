@@ -168,6 +168,7 @@ class OrderController extends BaseApiController
         $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if ($model->getScenario() == 'confirmPurchase') {
             $model->supported = $now;
+
         }
         if ($model->current_status == Order::STATUS_NEW || $model->current_status == Order::STATUS_SUPPORTING || $model->current_status == Order::STATUS_SUPPORTED) {
             $model->current_status = ($model->total_paid_amount_local > 0) ? Order::STATUS_READY2PURCHASE && $model->ready_purchase = $now : $model->current_status;
