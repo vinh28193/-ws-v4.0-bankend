@@ -166,12 +166,14 @@ class OrderController extends BaseApiController
         Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());
 
         $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
-        if ($model->getScenario() == 'confirmPurchase') {
+        if ($model->getScenario() == 'confirmPurchase' && $model->total_paid_amount_local == 0) {
             $model->supported = $now;
+            $model->current_status = Order::STATUS_SUPPORTED;
 
         }
-        if ($model->current_status == Order::STATUS_NEW || $model->current_status == Order::STATUS_SUPPORTING || $model->current_status == Order::STATUS_SUPPORTED) {
-            $model->current_status = ($model->total_paid_amount_local > 0) ? Order::STATUS_READY2PURCHASE && $model->ready_purchase = $now : $model->current_status;
+        if (($model->current_status == Order::STATUS_NEW || $model->current_status == Order::STATUS_SUPPORTING || $model->current_status == Order::STATUS_SUPPORTED) && $model->total_paid_amount_local > 0) {
+            $model->current_status =  Order::STATUS_READY2PURCHASE;
+            $model->ready_purchase = $now;
         }
         if (!$model->save()) {
             Yii::$app->wsLog->push('order', $model->getScenario(), null, [

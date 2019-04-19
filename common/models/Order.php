@@ -143,7 +143,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     {
         return ArrayHelper::merge(parent::scenarios(), [
             self::SCENARIO_UPDATE_STATUS => [
-                'current_status'
+                'current_status', 'supported', 'ready_purchase'
             ],
             self::SCENARIO_CONFIRM_PURCHASE => [
                 'current_status'
