@@ -8,6 +8,7 @@
 
 namespace api\controllers;
 
+use common\components\KeyChatList;
 use common\promotion\PromotionForm;
 use Yii;
 use common\calculators\ConditionBuilder;
@@ -94,5 +95,9 @@ class TesterController extends \yii\rest\Controller
 //        var_dump(strlen(json_encode($posts)));die;
         echo json_encode($posts);
         die;
+    }
+
+    public function actionChat(){
+
     }
 }

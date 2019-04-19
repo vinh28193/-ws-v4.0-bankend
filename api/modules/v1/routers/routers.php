@@ -101,16 +101,13 @@ return [
         'prefix' => 'v1',
         'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
         'tokens' => [
-            '{id}' => '<id:\\w[\\w,]*>',
-            '{token}' => '<token:\\d[\\d,]*>',
+            '{content}' => '<content:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
-            'PUT,PATCH {id}' => 'update',
-            'DELETE {id}' => 'delete',
-            'GET,HEAD {id}' => 'view',
+            'DELETE {content}' => 'delete',
             'POST' => 'create',
-            'OPTIONS {id}' => 'options',
+            'OPTIONS {content}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => []
