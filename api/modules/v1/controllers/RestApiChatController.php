@@ -12,6 +12,7 @@ use common\helpers\ChatHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use api\modules\v1\controllers\service\ChatlistsServiceController;
+use common\components\StoreManager;
 
 class RestApiChatController extends BaseApiController
 {
@@ -92,7 +93,15 @@ class RestApiChatController extends BaseApiController
             $isSupporting = 1; //1:true;0:false
             if($_post['type_chat'] == 'GROUP_WS')
             {
-                $filename  = 'chatsupport-vi.json';
+
+                $obj_store = new StoreManager; 
+                $domain_id = $obj_store->isVN();
+                $domain_id = (int)$domain_id;
+                $filename = 'chatsupport-in.json';
+                if($domain_id == 1)
+                {
+                   $filename = 'chatsupport-vi.json'; 
+                }
                 $listchats = ChatlistsServiceController::readFileChat($filename);
                 $check_string_chat = ChatlistsServiceController::checkStringInFile($_post['message'],$listchats);
           
