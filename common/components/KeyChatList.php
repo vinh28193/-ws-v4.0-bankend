@@ -6,6 +6,7 @@ namespace common\components;
 use Yii;
 use yii\di\Instance;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\FileHelper;
 
@@ -17,29 +18,22 @@ class KeyChatList extends \yii\base\Component
      */
     public $storeManager = 'storeManager';
 
-    public $collection;
+    public $_collections = [];
 
-    public function getCollection()
+    public function load()
     {
-        if ($this->collection === null) {
-            $this->collection = new ArrayCollection();
+        if (empty($this->_collections)) {
             $file = $this->getFileName();
             if (is_file($file) && ($content = file_get_contents($file)) !== false) {
                 $content = Json::decode($content, true);
-                foreach ($content as $value) {
-                    $this->collection->add($value, $value);
-                }
+                $this->_collections = $content;
             }
         }
-        return $this->collection;
     }
 
     public function save()
     {
-        $content = $this->getCollection()->toArray();
-        $content = array_keys($content);
-        $content = Json::encode($content);
-        return file_put_contents($this->getFileName(), $content);
+        return file_put_contents($this->getFileName(), Json::encode(array_values($this->_collections)));
     }
 
     /**
@@ -56,22 +50,43 @@ class KeyChatList extends \yii\base\Component
      */
     public function read()
     {
-        return array_keys($this->getCollection()->toArray());
+        $this->load();
+        return $this->_collections;
+    }
+
+    public function has($value)
+    {
+        $this->load();
+        return in_array($value, array_values($this->_collections));
     }
 
     public function write($value)
     {
-        $this->getCollection()->set($value, $value);
-        return $this->save();
+        $this->load();
+        if (!$this->has($value)) {
+            array_unshift($this->_collections, $value);
+            $this->save();
+        }
+        return false;
 
     }
 
 
-    public function remove($key)
+    public function remove($index)
     {
-        $this->getCollection()->remove($key);
+        $this->load();
+        if (isset($this->_collections[$index])) {
+            unset($this->_collections[$index]);
+            return $this->save();
+        }
+        return false;
+    }
+
+    public function clear(){
+        $this->_collections = [];
         return $this->save();
     }
+
 
     protected function getFileName()
     {

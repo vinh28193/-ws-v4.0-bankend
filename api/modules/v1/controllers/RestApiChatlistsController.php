@@ -75,10 +75,10 @@ class RestApiChatlistsController extends BaseApiController
     }
 
 
-    public function actionDelete($content)
+    public function actionDelete($id)
     {
-        if (!$this->keyChatManger->remove($content)) {
-            return $this->response(false, 'can not remove chat key: ' . $content);
+        if (!$this->keyChatManger->remove($id)) {
+            return $this->response(false, 'can not remove chat key: ' . $id);
         }
         return $this->response(true, 'Success', $this->keyChatManger->read());
 

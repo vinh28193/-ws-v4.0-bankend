@@ -98,6 +98,16 @@ class TesterController extends \yii\rest\Controller
     }
 
     public function actionChat(){
-
+        $keyChat = new KeyChatList();
+        $keyChat->clear();
+        $keyChat->write('abc');
+        $keyChat->write('test');
+        $keyChat->write('123');
+        var_dump($keyChat->read());
+        $keyChat->write('s');
+        var_dump($keyChat->read());
+        $keyChat->write('Không nghe máy');
+        var_dump($keyChat->read());
+        die();
     }
 }

@@ -107,9 +107,9 @@ return [
         'patterns' => [
             'GET,HEAD' => 'index',
             'GET,HEAD {id}' => 'view',
-            'DELETE {content}' => 'delete',
+            'DELETE {id}' => 'delete',
             'POST' => 'create',
-            'OPTIONS {content}' => 'options',
+            'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => []
