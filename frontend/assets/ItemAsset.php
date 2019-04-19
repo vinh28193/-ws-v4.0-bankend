@@ -18,7 +18,7 @@ class ItemAsset extends AssetBundle
 
     public $depends = [
         'yii\web\JqueryAsset',
-        'yii\bootstrap\BootstrapPluginAsset',
+        'yii\bootstrap4\BootstrapPluginAsset',
         'frontend\assets\FrontendAsset',
         'frontend\assets\FancyboxPlusAsset',
     ];
