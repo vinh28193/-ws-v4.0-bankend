@@ -567,24 +567,28 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         }
 
         if (isset($params['timeKey']) && isset($params['startTime']) && isset($params['endTime'])) {
+            $start = (int)(Yii::$app->formatter->asTimestamp($params['startTime']));
+            $end = (int)(Yii::$app->formatter->asTimestamp($params['endTime']));
             if ($params['timeKey'] == 'ALL') {
                 $query->andFilterWhere(['or',
-                    ['between', 'order.created_at', $params['startTime'], $params['endTime']],
-                    ['between', 'order.updated_at', $params['startTime'], $params['endTime']],
-                    ['between', 'order.new', $params['startTime'], $params['endTime']],
-                    ['between', 'order.purchased', $params['startTime'], $params['endTime']],
-                    ['between', 'order.seller_shipped', $params['startTime'], $params['endTime']],
-                    ['between', 'order.stockin_us', $params['startTime'], $params['endTime']],
-                    ['between', 'order.stockout_us', $params['startTime'], $params['endTime']],
-                    ['between', 'order.stockin_local', $params['startTime'], $params['endTime']],
-                    ['between', 'order.stockout_local', $params['startTime'], $params['endTime']],
-                    ['between', 'order.at_customer', $params['startTime'], $params['endTime']],
-                    ['between', 'order.returned', $params['startTime'], $params['endTime']],
-                    ['between', 'order.cancelled', $params['startTime'], $params['endTime']],
-                    ['between', 'order.lost', $params['startTime'], $params['endTime']],
+                    ['between', 'order.created_at', $start, $end],
+                    ['between', 'order.updated_at', $start, $end],
+                    ['between', 'order.new', $start, $end],
+                    ['between', 'order.purchased', $start, $end],
+                    ['between', 'order.seller_shipped', $start, $end],
+                    ['between', 'order.stockin_us', $start, $end],
+                    ['between', 'order.stockout_us', $start, $end],
+                    ['between', 'order.stockin_local', $start, $end],
+                    ['between', 'order.stockout_local', $start, $end],
+                    ['between', 'order.at_customer', $start, $end],
+                    ['between', 'order.returned', $start, $end],
+                    ['between', 'order.cancelled', $start, $end],
+                    ['between', 'order.supporting', $start, $end],
+                    ['between', 'order.supported', $start, $end],
+                    ['between', 'order.ready_purchase', $start, $end],
                 ]);
             } elseif ($params['timeKey'] != 'ALL') {
-                $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
+                $query->andFilterWhere(['between', $params['timeKey'], $start, $end]);
             }
         }
 
