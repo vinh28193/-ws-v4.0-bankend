@@ -3,17 +3,18 @@
 use yii\db\Migration;
 
 /**
- * Class m190419_020953_add_column_table_order
+ * Class m190419_043838_add_column_table_order
  */
-class m190419_020953_add_column_table_order extends Migration
+class m190419_043838_add_column_table_order extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->addColumn('order','mark_supported','bigint(20) NULL');
+        $this->addColumn('order','supported','bigint(20) NULL');
         $this->addColumn('order','ready_purchase','bigint(20) NULL');
+        $this->addColumn('order','supporting','bigint(20) NULL');
     }
 
     /**
@@ -21,7 +22,7 @@ class m190419_020953_add_column_table_order extends Migration
      */
     public function safeDown()
     {
-        echo "m190419_020953_add_column_table_order cannot be reverted.\n";
+        echo "m190419_043838_add_column_table_order cannot be reverted.\n";
 
         return false;
     }
@@ -35,7 +36,7 @@ class m190419_020953_add_column_table_order extends Migration
 
     public function down()
     {
-        echo "m190419_020953_add_column_table_order cannot be reverted.\n";
+        echo "m190419_043838_add_column_table_order cannot be reverted.\n";
 
         return false;
     }
