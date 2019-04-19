@@ -8,14 +8,12 @@ use yii\web\AssetBundle;
 class FontawesomeAsset extends AssetBundle
 {
 
-    public $sourcePath = '@bower/fontawesome';
-
     public $js = [
-        'js/fontawesome.js'
+        'https://use.fontawesome.com/releases/v5.8.1/js/all.js'
     ];
 
     public $css = [
-        'css/fontawesome.css'
+        'https://use.fontawesome.com/releases/v5.8.1/css/all.css'
     ];
 
     public $depends = [
