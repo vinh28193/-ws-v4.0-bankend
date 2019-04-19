@@ -67,11 +67,12 @@ class RestApiChatlistsController extends BaseApiController
 
     public function actionCreate()
     {
+        
         $_post = (array)$this->post;
 
         if (isset($_post) !== null) {
    
-            $content = (isset($_POST['content'])) ?  $_POST['content'] : 'null';
+            $content = (isset($_post['content'])) ?  $_post['content'] : 'null';
             $content_file  = ChatlistsServiceController::writeFileChat($content,$this->filename);
             return $this->response(true, 'Success', $content_file);
         }
