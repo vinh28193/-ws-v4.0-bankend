@@ -136,9 +136,16 @@ class RestApiChatController extends BaseApiController
                  // code vandinh staus order is new or chat supporting
                    
                     $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}, order new to supporting";
-                    Order::updateAll([
-                        'current_status' => Order::STATUS_SUPPORTING
-                    ],['ordercode' => $_post['Order_path']]);
+                    if ($isNew === true) {
+                        Order::updateAll([
+                            'current_status' => Order::STATUS_SUPPORTING,
+                            'supporting' => Yii::$app->getFormatter()->asTimestamp('now')
+                        ],['ordercode' => $_post['Order_path']]);
+                    } else {
+                        Order::updateAll([
+                            'current_status' => Order::STATUS_SUPPORTING
+                        ],['ordercode' => $_post['Order_path']]);
+                    }
                 //code update action log
                     if (!$model->save())
                      {

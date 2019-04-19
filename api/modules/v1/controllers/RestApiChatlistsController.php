@@ -4,14 +4,7 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\components\KeyChatList;
-use common\modelsMongo\RestApiCall;
-use Yii;
-use common\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
-use yii\web\NotFoundHttpException;
-use yii\web\ServerErrorHttpException;
-use api\modules\v1\controllers\service\ChatlistsServiceController;
-use common\components\StoreManager;
 
 class RestApiChatlistsController extends BaseApiController
 {
