@@ -36,14 +36,18 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+
     ],
     'params' => $params,
+    'modules' => [
+        'ebay' => [
+            'class' => 'frontend\modules\ebay\EbayModule',
+        ],
+    ],
 ];

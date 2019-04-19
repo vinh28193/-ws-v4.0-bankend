@@ -7,17 +7,24 @@ use yii\web\AssetBundle;
 /**
  * Main frontend application asset bundle.
  */
-class AppAsset extends AssetBundle
+class FrontendAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+        'css/style.css',
+        'css/variables.css'
     ];
     public $js = [
+        'js/style.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+        'frontend\assets\JQueryEzPlus',
+        'frontend\assets\FontawesomeAsset',
+//        'frontend\assets\PopperAsset',
+        'frontend\assets\OwlCarousel',
+        'frontend\assets\SlickCarouselAsset'
     ];
 }
