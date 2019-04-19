@@ -71,7 +71,10 @@ class Promotion extends DbPromotion
         }
         foreach ($conditions as $condition) {
             if (($passed = $condition->checkConditionRecursive($item)) === false) {
-                return [$passed, $condition->promotionConditionConfig->description];
+                $value = $condition->value;
+                $value = is_array($value) ? implode(', ',$value) : $value;
+                $message = "{$condition->name} {$condition->promotionConditionConfig->operator} $value";
+                return [$passed,$message];
             }
         }
         return true;
@@ -93,6 +96,7 @@ class Promotion extends DbPromotion
                         $totalFeeAmount += $fee;
                     }
                 }
+                $order->totalAmount = $totalFeeAmount;
                 $request->totalValidAmount += $totalFeeAmount;
             } else {
                 $request->totalValidAmount += $order->totalAmount;
@@ -105,28 +109,30 @@ class Promotion extends DbPromotion
      * @param PromotionRequest $request
      * @param PromotionResponse $response
      */
-    public function calculatorDiscount(PromotionRequest $request, PromotionResponse &$response)
+    public function calculatorDiscount(PromotionRequest $request, PromotionResponse $response)
     {
-        if (empty($request->discountOrders)) {
-            return;
-        }
+//        if (empty($request->discountOrders)) {
+//            return;
+//        }
         $this->preRequest($request);
         $discount = $this->discount_amount;
         // nếu là % thì tính phần trăm
         if ($this->discount_calculator === self::DISCOUNT_CALCULATOR_PERCENT) {
             $discount = ($discount / 100) * $request->totalValidAmount;
+
             // nếu là % mà giá trị discount lơn hơn max thì để giá trị max
             if ($this->discount_max_amount !== null && $discount > $this->discount_max_amount) {
                 $discount = $this->discount_max_amount;
             }
         }
-
+        $orders = [];
         foreach ($request->discountOrders as $index => $order) {
             /** @var $order Order */
             if ($this->discount_fee !== null) {
                 foreach ($order->getProducts() as $key => $product) {
                     if (isset($product->additionalFees[$this->discount_fee]) && ($fee = $product->additionalFees[$this->discount_fee]) > 0) {
                         $feeDiscount = WeshopHelper::discountAmountPercent($fee, $request->totalValidAmount, $discount);
+                        $product->discountFees = [];
                         $product->discountFees[$this->discount_fee] = $feeDiscount;
                         if ($this->allow_multiple) {
                             $product->totalDiscountAmount += $feeDiscount;
@@ -136,8 +142,13 @@ class Promotion extends DbPromotion
                             $order->totalDiscountAmount = $feeDiscount;
                         }
                     }
-
                     $order->updateProduct($key, $product);
+                    $orders[$index]['products'][$key] = [
+                        'additionalFees' => $product->additionalFees,
+                        'discountFees' => $product->discountFees,
+//                        'totalAmount' => $product->totalAmount,
+                        'totalDiscountAmount' => $product->totalDiscountAmount
+                    ];
                 }
             } else {
                 $discountAmount = WeshopHelper::discountAmountPercent($order->totalAmount, $request->totalValidAmount, $discount);
@@ -147,13 +158,25 @@ class Promotion extends DbPromotion
                     $order->totalDiscountAmount = $discountAmount;
                 }
             }
+            $orders[$index]['totalAmount'] = $order->totalAmount;
+
+            $orders[$index]['totalDiscountAmount'] = $order->totalDiscountAmount;
+
         }
         if ($this->allow_multiple) {
             $request->totalDiscountAmount += $discount;
         } else {
             $request->totalDiscountAmount = $discount;
         }
-        var_dump($request->orders);
+        $orders['totalValidAmount'] = $request->totalValidAmount;
+        $response->orders[$this->code] = $orders;
+        $response->discount += $request->totalDiscountAmount;
+        $response->details[] = [
+            'id' => $this->id,
+            'code' => $this->code,
+            'type' => self::getType($this->type),
+            'message' => $this->message,
+            'value' => $discount];
     }
 
 
@@ -179,5 +202,18 @@ class Promotion extends DbPromotion
     public function getPromotionConditionConfig()
     {
         return $this->hasMany(PromotionConditionConfig::className(), ['name' => 'name'])->via('promotionConditions');
+    }
+
+    public static function getType($type = null){
+        $types = [
+            self::TYPE_COUPON => 'Coupon',
+            self::TYPE_MULTI_COUPON => 'Multi Coupon',
+            self::TYPE_COUPON_REFUND => 'Coupon Refund',
+            self::TYPE_PROMOTION => 'Promotion',
+            self::TYPE_MULTI_PRODUCT => 'Multi Product',
+            self::TYPE_MARKETING_CAMPAIGN => 'Marketing Campaign',
+            self::TYPE_OTHERS => 'Others',
+        ];
+        return $type !== null ? (isset($types[$type]) ? $types[$type] : 'Unknown') : $types;
     }
 }

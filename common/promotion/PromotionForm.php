@@ -3,9 +3,7 @@
 
 namespace common\promotion;
 
-use Yii;
 use common\models\Customer;
-use common\products\BaseProduct;
 use yii\base\Model;
 
 /**
@@ -138,88 +136,75 @@ class PromotionForm extends Model
 
     public function checkPromotion()
     {
-        $result = [
-            'success' => false,
-            'message' => 'Không có chương trình giảm giá phù hợp',
-            'detail' => [],
-            'discount' => 0
-        ];
         if (!$this->validate()) {
             $result['message'] = $this->getFirstErrors();
             return $result;
         }
 
         $response = new PromotionResponse();
-        $test = [];
         foreach ($this->findPromotion() as $key => $promotion) {
             /** @var $promotion Promotion */
             $request = new PromotionRequest();
-            $request->promotion = $promotion;
-            $request->orders = $this->_orders;
-            $test[$promotion->code]['count'] = count($request->orders);
-            foreach ($request->orders as $index => $order) {
+
+            foreach ($this->_orders as $index => $order) {
                 /** @var  $order PromotionItem */
                 $passed = $promotion->checkCondition($order);
-                $test[$promotion->code]['orders']["order $index"] = $passed;
                 if ($passed !== true && is_array($passed) && count($passed) === 2) {
+                    $response->errors[$index][$promotion->code] = $passed[1];
                     continue;
                 }
                 $request->discountOrders[$index] = $order;
-                $test[$promotion->code]['passed'][] = $index;
             }
-            $promotion->calculatorDiscount($request, $response);
+            if (count($request->discountOrders) > 0) {
+                $promotion->calculatorDiscount($request, $response);
+                $response->success = true;
+                $response->message = 'app dụng trương chình thành công';
+            }
         }
-        var_dump($response->requests);
-        die;
-        return $response;
+        if (($coupon = $this->findCoupon()) !== null) {
+            $request = new PromotionRequest();
 
-//        $promotions = $this->findPromotion();
-//        foreach ($this->_orders as $index => $order) {
-//            $order->paymentService = $this->paymentService;
-//            foreach ($promotions as $promotion) {
-//                $this->debug[] = "promotion `{$promotion->code}`";
-//                if ($promotion->allow_order) {
-//                    /** @var $promotion Promotion */
-//                    $passed = $promotion->checkCondition($order);
-//                    $this->debug[] = "check for order";
-//                    if ($passed !== true && is_array($passed) && count($passed) === 2) {
-//                        $result['detail'][] = $order;
-//                        continue;
-//                    }
-//                    $this->debug[] = "passed promotion '$promotion->code'";
-//                    $order = $promotion->calculatorDiscount($order);
-//                    if ($order->totalDiscountAmount > 0) {
-//                        $result['success'] = true;
-//                        $result['detail'][] = $order;
-//                    }
-//                } else {
-//                    $this->debug[] = "check for 3 product";
-//                    foreach ($order->getProducts() as $index => $product) {
-//                        /** @var $promotion Promotion */
-//                        $passed = $promotion->checkCondition($product);
-//                        $this->debug[] = "checking product $index";
-//                        if ($passed !== true && is_array($passed) && count($passed) === 2) {
-//                            continue;
-//                        }
-//                        $product = $promotion->calculatorDiscount($product);
-//                        $order->updateProduct($index, $product);
-//                        $result['detail'][] = $order;
-//                    }
-//                }
-//            }
-//        }
-//        var_dump($result);
-//        die;
-//        return $result;
+            foreach ($this->_orders as $index => $order) {
+                /** @var  $order PromotionItem */
+                $passed = $coupon->checkCondition($order);
+                if ($passed !== true && is_array($passed) && count($passed) === 2) {
+                    $response->errors[$index][$coupon->code] = $passed[1];
+                    continue;
+                }
+                $request->discountOrders[$index] = $order;
+            }
+            if (count($request->discountOrders) > 0) {
+                $coupon->calculatorDiscount($request, $response);
+                $response->success = true;
+                $response->message = $coupon->message;
+            }
+        }
+        return $response;
     }
 
+    /**
+     * @return Promotion|null
+     */
+    protected function findCoupon()
+    {
+        return Promotion::find()->where([
+            'AND',
+            ['code' => $this->couponCode],
+            ['type' => Promotion::TYPE_COUPON],
+            ['status' => 1]
+        ])->one();
+    }
 
     /**
-     * @return Promotion[]|null
+     * @return Promotion[]|array
      */
     protected function findPromotion()
     {
-        return Promotion::find()->all();
+        return Promotion::find()->where([
+            'AND',
+            ['type' => Promotion::TYPE_PROMOTION],
+            ['status' => 1]
+        ])->all();
     }
 
 }

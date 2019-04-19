@@ -14,7 +14,7 @@
  * giảm 200k weshop_fee cho đơn hàng Ebay, mà giá trị từ 4.000.000 trở lên
  */
 return [
-    'couponCode' => 'test',
+    'couponCode' => 'TEST200',
     'paymentService' => 'VCB_22',
     'customerId' => 1,
     'totalAmount' => 17000000,

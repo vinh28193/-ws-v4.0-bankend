@@ -11,8 +11,8 @@ class Order extends PromotionItem
 
     public function setProducts($products)
     {
-        foreach ($products as $product) {
-            $this->_products[] = new Product($product);
+        foreach ($products as $key => $product) {
+            $this->_products[$key] = new Product($product);
         }
     }
 

@@ -89,6 +89,7 @@ class TesterController extends \yii\rest\Controller
     {
 
         // remake params $_POST
+
         $posts = require dirname(dirname(__DIR__)).'/common/promotion/mock-post.php';
 //        var_dump(strlen(json_encode($posts)));die;
         $form = new PromotionForm();
