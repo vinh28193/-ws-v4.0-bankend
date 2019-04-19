@@ -28,6 +28,6 @@ class DraftExtensionTrackingMap extends \common\models\db\DraftExtensionTracking
     }
 
     public function getPurchase(){
-        return $this->hasOne(Order::className(),['id' => 'purchase_invoice_number']);
+        return $this->hasOne(PurchaseOrder::className(),['purchase_order_number' => 'purchase_invoice_number']);
     }
 }
