@@ -67,15 +67,12 @@ class RestApiChatlistsController extends BaseApiController
 
     public function actionCreate()
     {
-        
-        $_post = (array)$this->post;
 
-        if (isset($_post) !== null) {
-   
-            $content = (isset($_post['content'])) ?  $_post['content'] : 'null';
-            $content_file  = ChatlistsServiceController::writeFileChat($content,$this->filename);
-            return $this->response(true, 'Success', $content_file);
-        }
+        $paramRequests = Yii::$app->getRequest()->getBodyParams();
+        $content = (isset($paramRequests['content'])) ?  $paramRequests['content'] : 'null';
+        $content_file  = ChatlistsServiceController::writeFileChat($content,$this->filename);
+        return $this->response(true, 'Success', $content_file);
+        // }
 
     }
 
