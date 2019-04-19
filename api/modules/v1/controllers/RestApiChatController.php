@@ -105,7 +105,7 @@ class RestApiChatController extends BaseApiController
             $isSupporting = 1; //1:true;0:false
             if($_post['type_chat'] == 'GROUP_WS')
             {
-                $isSupporting = $this->keyChatManger->getCollection()->has($_post['message']);
+                $isSupporting = $this->keyChatManger->has($_post['message']);
             }
             //end code vandinh
             $_rest_data = ["ChatMongoWs" => [
