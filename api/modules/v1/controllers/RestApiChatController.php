@@ -7,8 +7,12 @@ use common\modelsMongo\RestApiCall;
 use common\modelsMongo\ChatMongoWs;
 use common\models\Order;
 use Yii;
+use common\data\ActiveDataProvider;
+use common\helpers\ChatHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
+use api\modules\v1\controllers\service\ChatlistsServiceController;
+use common\components\StoreManager;
 
 class RestApiChatController extends BaseApiController
 {
@@ -75,7 +79,7 @@ class RestApiChatController extends BaseApiController
         if (isset($_post) !== null) {
             @date_default_timezone_set('Asia/Ho_Chi_Minh');
             $model = new ChatMongoWs();
-//            $model->attributes = $_post;
+                //  $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();
             $_user_id = $_user_Identity->getId();
             $_user_email = $_user_Identity['email'];
@@ -85,6 +89,26 @@ class RestApiChatController extends BaseApiController
             $_user_app = 'Weshop2019'; /***Todo Set**/
             $_request_ip = Yii::$app->getRequest()->getUserIP();
             $isNew = isset($_post['isNew']) && $_post['isNew'] === 'yes';
+            //code vandinh : status order
+            $isSupporting = 1; //1:true;0:false
+            if($_post['type_chat'] == 'GROUP_WS')
+            {
+
+                $obj_store = new StoreManager; 
+                $domain_id = $obj_store->isVN();
+                $domain_id = (int)$domain_id;
+                $filename = 'chatsupport-in.json';
+                if($domain_id == 1)
+                {
+                   $filename = 'chatsupport-vi.json'; 
+                }
+                $listchats = ChatlistsServiceController::readFileChat($filename);
+                $check_string_chat = ChatlistsServiceController::checkStringInFile($_post['message'],$listchats);
+          
+                $isSupporting = $check_string_chat;
+
+            }
+            //end code vandinh
             $_rest_data = ["ChatMongoWs" => [
                 "success" => true,
                 "message" => is_array($_post['message']) ? @json_encode($_post['message']) : $_post['message'] ,
@@ -103,13 +127,37 @@ class RestApiChatController extends BaseApiController
                 "is_employee_vew" => null
             ]];
 
+
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
-                if($isNew === true){
+                if($isNew === true && $isSupporting == 1)
+                {
+
+                 // code vandinh staus order is new or chat supporting
+                   
+                    $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}, order new to supporting";
                     Order::updateAll([
                         'current_status' => Order::STATUS_SUPPORTING
                     ],['ordercode' => $_post['Order_path']]);
+                //code update action log
+                    if (!$model->save())
+                     {
+                        Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+                            'id' => $_post['Order_path'],
+                            'request' => $this->post,
+                            'response' => $model->getErrors()
+                        ]);
+                        return $this->response(false, $model->getFirstErrors());
+                     }
+                    ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM');
+                    Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+                    'id' => $_post['Order_path'],
+                    'request' => $this->post,
+                    'response' => $_post['message']
+                ]);
+                  
                 }
+                
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
@@ -156,6 +204,10 @@ class RestApiChatController extends BaseApiController
         Yii::$app->api->sendSuccessResponse($model->attributes);
     }
 
+    public function actionAddlistchat()
+    {
+        return 1;
+    }
     public function findModel($id)
     {
         if (($model = ChatMongoWs::findOne($id)) !== null) {
@@ -164,4 +216,28 @@ class RestApiChatController extends BaseApiController
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
     }
+
+
+        /**
+     * @param $dirtyAttributes
+     * @param $reference \common\components\db\ActiveRecord
+     * @return string
+     */
+
+
+    protected function resolveChatMessage($dirtyAttributes, $reference)
+    {
+
+        $results = [];
+        foreach ($dirtyAttributes as $name => $value) {
+            if (strpos($name, '_id') !== false && is_numeric($value)) {
+                continue;
+            }
+            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+        }
+
+        return implode(", ", $results);
+    }
+
+
 }

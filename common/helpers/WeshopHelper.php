@@ -163,4 +163,11 @@ class WeshopHelper
 
         return self::strToUpperCase($prefix . $reference);
     }
+
+    public static function discountAmountPercent($itemAmount, $orderAmount, $discountAmount)
+    {
+        $percent = ($itemAmount / $orderAmount) * 100;
+        $percent = self::roundNumber($percent, 2);
+        return ($discountAmount * $percent) / 100;
+    }
 }
