@@ -9,10 +9,11 @@ use common\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use api\modules\v1\controllers\service\ChatlistsServiceController;
+use common\components\StoreManager;
 class RestApiChatlistsController extends BaseApiController
 {
 
-
+    public $filename;
     public function rules()
     {
         return [
@@ -47,21 +48,31 @@ class RestApiChatlistsController extends BaseApiController
         ];
     }
 
+    public function init(){
+        $obj_store = new StoreManager; 
+        $domain_id = $obj_store->isVN();
+        $domain_id = (int)$domain_id;
+        $this->filename = 'chatsupport-in.json';
+        if($domain_id == 1)
+        {
+           $this->filename = 'chatsupport-vi.json'; 
+        }
+        
+    }
     public function actionIndex()
     {
-   
-    	$filename = 'chatsupport-vi.json';
-    	$content  = ChatlistsServiceController::readFileChat($filename);
+    	$content  = ChatlistsServiceController::readFileChat($this->filename);
         return $this->response(true, 'Success', $content);
     }
 
     public function actionCreate()
     {
         $_post = (array)$this->post;
+
         if (isset($_post) !== null) {
-            $filename = 'chatsupport-vi.json';
-            $content = (isset($_post['content'])) ?  $_post['content'] : 'null';
-            $content_file  = ChatlistsServiceController::writeFileChat($content,$filename);
+   
+            $content = (isset($_POST['content'])) ?  $_POST['content'] : 'null';
+            $content_file  = ChatlistsServiceController::writeFileChat($content,$this->filename);
             return $this->response(true, 'Success', $content_file);
         }
 
@@ -74,8 +85,8 @@ class RestApiChatlistsController extends BaseApiController
         if($id != null)
         {
             $key = $id;
-            $filename = 'chatsupport-vi.json';
-            $content_file = ChatlistsServiceController::removeKeyFileChat($key,$filename);
+            
+            $content_file = ChatlistsServiceController::removeKeyFileChat($key,$this->filename);
             $this->can('canDelete', ['key' => $key]);
             return $this->response(true, 'Success', $content_file);  
         }
