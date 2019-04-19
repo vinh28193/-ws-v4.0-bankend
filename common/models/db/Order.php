@@ -251,6 +251,10 @@ class Order extends \common\components\db\ActiveRecord
             'total_purchase_quantity' => 'Total Purchase Quantity',
             'remove' => 'Remove',
             'version' => 'Version',
+            'supported' => 'Supported',
+            'supporting' => 'Supporting',
+            'ready_purcahse' => 'Ready Purcahse',
+            'mark_supporting' => 'Mark Supporting',
         ];
     }
 
