@@ -102,6 +102,24 @@ return [
         'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
         'tokens' => [
             '{content}' => '<content:\\w[\\w,]*>',
+            '{id}' => '<id:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'GET,HEAD {id}' => 'view',
+            'DELETE {content}' => 'delete',
+            'POST' => 'create',
+            'OPTIONS {content}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
+        'tokens' => [
+            '{content}' => '<content:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',

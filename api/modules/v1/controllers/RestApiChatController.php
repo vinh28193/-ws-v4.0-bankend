@@ -3,6 +3,7 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
+use common\components\KeyChatList;
 use common\modelsMongo\RestApiCall;
 use common\modelsMongo\ChatMongoWs;
 use common\models\Order;
@@ -53,6 +54,17 @@ class RestApiChatController extends BaseApiController
             ],
         ];
     }
+    /**
+     * @var KeyChatList
+     */
+    public $keyChatManger;
+
+
+    public function init()
+    {
+        parent::init();
+        $this->keyChatManger = new KeyChatList();
+    }
 
     public function verbs()
     {
@@ -93,20 +105,7 @@ class RestApiChatController extends BaseApiController
             $isSupporting = 1; //1:true;0:false
             if($_post['type_chat'] == 'GROUP_WS')
             {
-
-                $obj_store = new StoreManager; 
-                $domain_id = $obj_store->isVN();
-                $domain_id = (int)$domain_id;
-                $filename = 'chatsupport-in.json';
-                if($domain_id == 1)
-                {
-                   $filename = 'chatsupport-vi.json'; 
-                }
-                $listchats = ChatlistsServiceController::readFileChat($filename);
-                $check_string_chat = ChatlistsServiceController::checkStringInFile($_post['message'],$listchats);
-          
-                $isSupporting = $check_string_chat;
-
+                $isSupporting = $this->keyChatManger->getCollection()->has($_post['message']);
             }
             //end code vandinh
             $_rest_data = ["ChatMongoWs" => [
