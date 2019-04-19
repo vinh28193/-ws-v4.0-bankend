@@ -12,6 +12,7 @@ namespace api\modules\v1\controllers;
 use api\controllers\BaseApiController;
 use common\components\db\ActiveQuery;
 use common\data\ActiveDataProvider;
+use common\helpers\ChatHelper;
 use common\helpers\ExcelHelper;
 use common\models\Manifest;
 use common\models\TrackingCode;
@@ -188,11 +189,13 @@ class TrackingCodeController extends BaseApiController
             $message[] = "from `$name` {$token['total']} executed $error error/{$token['success']} success";
         }
         $message = implode(", ",$message);
-//        ChatHelper::push($message,$model->ordercode,'WS_CUSTOMER', 'SYSTEM');
-//        Yii::$app->wsLog->order->push('Us Sending', null, [
-//            'id' => $model->order->ordercode,
-//            'request' => $this->post,
-//        ]);
+
+        /** Log + Push chat**/
+        ChatHelper::push($message,$model->ordercode,'GROUP_WS', 'SYSTEM');
+        Yii::$app->wsLog->order->push('Us Sending', null, [
+            'id' => $model->order->ordercode,
+            'request' => $this->post,
+        ]);
         return $this->response(true, $message);
     }
 

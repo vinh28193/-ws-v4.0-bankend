@@ -7,5 +7,6 @@
  */
 
 return [
-    'http://localhost:4200'
+    'http://localhost:4200',
+    'http://192.168.11.252:8130'
 ];

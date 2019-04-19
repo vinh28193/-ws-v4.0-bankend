@@ -123,7 +123,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     {
         return ArrayHelper::merge(parent::timestampFields(), [
             'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us',
-            'stockout_us', 'stockin_local', 'stockout_local', 'at_customer','returned','lost' , 'cancelled'
+            'stockout_us', 'stockin_local', 'stockout_local', 'at_customer','returned','lost' , 'cancelled', 'supporting', 'supported', 'ready_purchase'
         ]);
     }
 
@@ -143,7 +143,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     {
         return ArrayHelper::merge(parent::scenarios(), [
             self::SCENARIO_UPDATE_STATUS => [
-                'current_status'
+                'current_status', 'supported', 'ready_purchase'
             ],
             self::SCENARIO_CONFIRM_PURCHASE => [
                 'current_status'
@@ -216,7 +216,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             [['support_email'], 'safe', 'on' => self::SCENARIO_SALE_ASSIGN],
             [
                 [
-                    'store_id', 'customer_id', 'new',
+                    'store_id', 'customer_id', 'new', 'supported', 'supporting', 'ready_purchase',
                     'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost',
                     'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'remove'
                 ], 'integer'
@@ -567,24 +567,28 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         }
 
         if (isset($params['timeKey']) && isset($params['startTime']) && isset($params['endTime'])) {
+            $start = (int)(Yii::$app->formatter->asTimestamp($params['startTime']));
+            $end = (int)(Yii::$app->formatter->asTimestamp($params['endTime']));
             if ($params['timeKey'] == 'ALL') {
                 $query->andFilterWhere(['or',
-                    ['between', 'order.created_at', $params['startTime'], $params['endTime']],
-                    ['between', 'order.updated_at', $params['startTime'], $params['endTime']],
-                    ['between', 'order.new', $params['startTime'], $params['endTime']],
-                    ['between', 'order.purchased', $params['startTime'], $params['endTime']],
-                    ['between', 'order.seller_shipped', $params['startTime'], $params['endTime']],
-                    ['between', 'order.stockin_us', $params['startTime'], $params['endTime']],
-                    ['between', 'order.stockout_us', $params['startTime'], $params['endTime']],
-                    ['between', 'order.stockin_local', $params['startTime'], $params['endTime']],
-                    ['between', 'order.stockout_local', $params['startTime'], $params['endTime']],
-                    ['between', 'order.at_customer', $params['startTime'], $params['endTime']],
-                    ['between', 'order.returned', $params['startTime'], $params['endTime']],
-                    ['between', 'order.cancelled', $params['startTime'], $params['endTime']],
-                    ['between', 'order.lost', $params['startTime'], $params['endTime']],
+                    ['between', 'order.created_at', $start, $end],
+                    ['between', 'order.updated_at', $start, $end],
+                    ['between', 'order.new', $start, $end],
+                    ['between', 'order.purchased', $start, $end],
+                    ['between', 'order.seller_shipped', $start, $end],
+                    ['between', 'order.stockin_us', $start, $end],
+                    ['between', 'order.stockout_us', $start, $end],
+                    ['between', 'order.stockin_local', $start, $end],
+                    ['between', 'order.stockout_local', $start, $end],
+                    ['between', 'order.at_customer', $start, $end],
+                    ['between', 'order.returned', $start, $end],
+                    ['between', 'order.cancelled', $start, $end],
+                    ['between', 'order.supporting', $start, $end],
+                    ['between', 'order.supported', $start, $end],
+                    ['between', 'order.ready_purchase', $start, $end],
                 ]);
             } elseif ($params['timeKey'] != 'ALL') {
-                $query->andFilterWhere(['between', $params['timeKey'], $params['startTime'], $params['endTime']]);
+                $query->andFilterWhere(['between', $params['timeKey'], $start, $end]);
             }
         }
 
