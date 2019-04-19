@@ -11,11 +11,11 @@ class FontawesomeAsset extends AssetBundle
     public $sourcePath = '@bower/fontawesome';
 
     public $js = [
-        'css/fontawesome.js'
+        'js/fontawesome.js'
     ];
 
     public $css = [
-        'js/fontawesome.js'
+        'css/fontawesome.css'
     ];
 
     public $depends = [
