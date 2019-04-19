@@ -216,7 +216,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             [['support_email'], 'safe', 'on' => self::SCENARIO_SALE_ASSIGN],
             [
                 [
-                    'store_id', 'customer_id', 'new',
+                    'store_id', 'customer_id', 'new', 'supported', 'supporting', 'ready_purchase',
                     'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost',
                     'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'remove'
                 ], 'integer'
