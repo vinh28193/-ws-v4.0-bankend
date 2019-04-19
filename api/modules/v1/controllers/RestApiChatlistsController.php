@@ -8,10 +8,12 @@ use Yii;
 use common\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
+use api\modules\v1\controllers\service\ChatlistsServiceController;
+use common\components\StoreManager;
 class RestApiChatlistsController extends BaseApiController
 {
 
-
+    public $filename;
     public function rules()
     {
         return [
@@ -46,77 +48,51 @@ class RestApiChatlistsController extends BaseApiController
         ];
     }
 
+    public function init(){
+        $obj_store = new StoreManager; 
+        $domain_id = $obj_store->isVN();
+        $domain_id = (int)$domain_id;
+        $this->filename = 'chatsupport-in.json';
+        if($domain_id == 1)
+        {
+           $this->filename = 'chatsupport-vi.json'; 
+        }
+        
+    }
     public function actionIndex()
     {
-
-    	$filename = 'chat-vi.json';
-    	$content  = $this->readFileChat($filename);
+    	$content  = ChatlistsServiceController::readFileChat($this->filename);
         return $this->response(true, 'Success', $content);
     }
 
     public function actionCreate()
     {
-
-    	$filename = 'chat-vi.json';
-    	$content = (isset($_POST['content'])) ?  $_POST['content'] : 'null';
-    	$content_file  = $this->writeFileChat($content,$filename);
-        return $this->response(true, 'Success', $content_file);
-    }
-
-    public function actionUpdate($id)
-    {
         
+        $_post = (array)$this->post;
+
+        if (isset($_post) !== null) {
+   
+            $content = (isset($_post['content'])) ?  $_post['content'] : 'null';
+            $content_file  = ChatlistsServiceController::writeFileChat($content,$this->filename);
+            return $this->response(true, 'Success', $content_file);
+        }
+
     }
+
 
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
-        $this->can('canDelete', ['id' => $model->id]);
-        $model->delete();
-        Yii::$app->api->sendSuccessResponse($model->attributes);
-    }
 
-
-    protected function writeFileChat($content,$filename)
-    {
-        
-    	$path = Yii::getAlias('@webroot/listchats/'.$filename);
-        $tempArray = $this->readFileChat($filename);
-        $content     = mb_strtolower($content);
-        if(empty($tempArray))
+        if($id != null)
         {
-         $tempArray = array();  
+            $key = $id;
+            
+            $content_file = ChatlistsServiceController::removeKeyFileChat($key,$this->filename);
+            $this->can('canDelete', ['key' => $key]);
+            return $this->response(true, 'Success', $content_file);  
         }
-        array_push($tempArray, $content);
 
-        $jsonData = json_encode($tempArray);
-
-        file_put_contents($path, $jsonData);
-
-        return $tempArray;
-
+        
     }
 
-    protected function readFileChat($filename)
-    {
-    	$path = Yii::getAlias('@webroot/listchats/'.$filename);
-        $content = file_get_contents($path);
-        $listchats = json_decode($content, true);
-        return $listchats;
-    }
-
-    protected function deleteContentFileChat($key,$filename)
-    {
-    	$path = Yii::getAlias('@webroot/listchats/'.$filename);
-        $content = file_get_contents($path);
-        $listchats = json_decode($content, true);
-        return $listchats;
-    }
-
-    protected function checkStringInFile($string,$file)
-    {
-               $return = false;
-               if(in_array($string, $file)) $return = true;
-               return $return;
-    }
 }

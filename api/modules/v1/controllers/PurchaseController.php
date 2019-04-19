@@ -7,12 +7,11 @@ use common\models\db\Customer;
 use common\models\db\ListAccountPurchase;
 use common\models\db\PurchaseOrder;
 use common\models\db\PurchasePaymentCard;
-use common\models\db\PurchaseProduct;
+use common\models\PurchaseProduct;
 use common\models\Order;
 use common\models\Product;
 use common\models\User;
 use common\models\Warehouse;
-use common\models\weshop\FormCartPurchase;
 use common\models\weshop\FormPurchaseItem;
 use common\models\weshop\FormRequestPurchase;
 use Yii;
@@ -365,6 +364,18 @@ class PurchaseController extends BaseApiController
             $tran->rollBack();
             return $this->response(false,'something error');
         }
+    }
+    public function actionView($id){
+        $purchase = PurchaseProduct::find()->where(['order_id' => $id])
+            ->with([
+                'purchaseOrder' => function($q) {
+                /** @var ActiveQuery $q */
+                    $q->with(['draftExtensionTrackingMap']);
+                },
+                'product'
+            ])
+            ->asArray()->all();
+        return $this->response(true,'Success',$purchase);
     }
 }
 
