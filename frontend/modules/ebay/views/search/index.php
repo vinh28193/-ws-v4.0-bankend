@@ -1,10 +1,19 @@
 <?php
+
 use yii\helpers\Html;
-use frontend\assets\SearchAsset;
+use frontend\widgets\SearchWidget;
 
 /* @var $this yii\web\View */
+/* @var $results array */
+/* @var $form common\products\forms\ProductSearchForm */
 
-SearchAsset::register($this);
+echo SearchWidget::widget([
+    'portals' => 'ebay',
+    'options' => [
+        'class' => 'search-2-content',
+        'id' => 'wsEbaySearch'
+    ]
+]);
 
 ?>
 <div class="search-2-content">
@@ -16,8 +25,10 @@ SearchAsset::register($this);
                     <ul id="sub-menu-collapse">
                         <li class="accordion">
                             <a href="#">Quần áo, Giày dép & Trang sức</a>
-                            <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-1" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
-                            <div id="sub-1" class="collapse" aria-labelledby="headingOne" data-parent="#sub-menu-collapse">
+                            <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-1"
+                               aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
+                            <div id="sub-1" class="collapse" aria-labelledby="headingOne"
+                                 data-parent="#sub-menu-collapse">
                                 <ul>
                                     <li><a href="#">Danh mục 1</a></li>
                                     <li><a href="#">Danh mục 2</a></li>
@@ -28,8 +39,10 @@ SearchAsset::register($this);
                         </li>
                         <li class="accordion">
                             <a href="#">Nữ giới</a>
-                            <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-2" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
-                            <div id="sub-2" class="collapse" aria-labelledby="headingOne" data-parent="#sub-menu-collapse">
+                            <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-2"
+                               aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
+                            <div id="sub-2" class="collapse" aria-labelledby="headingOne"
+                                 data-parent="#sub-menu-collapse">
                                 <ul>
                                     <li><a href="#">Danh mục 1</a></li>
                                     <li><a href="#">Danh mục 2</a></li>
@@ -40,8 +53,10 @@ SearchAsset::register($this);
                         </li>
                         <li class="accordion">
                             <a href="#">Đồng hồ đeo tay</a>
-                            <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-3" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
-                            <div id="sub-3" class="collapse" aria-labelledby="headingOne" data-parent="#sub-menu-collapse">
+                            <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-3"
+                               aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
+                            <div id="sub-3" class="collapse" aria-labelledby="headingOne"
+                                 data-parent="#sub-menu-collapse">
                                 <ul>
                                     <li><a href="#">Danh mục 1</a></li>
                                     <li><a href="#">Danh mục 2</a></li>
@@ -52,8 +67,10 @@ SearchAsset::register($this);
                         </li>
                         <li class="accordion">
                             <a href="#">Tiểu thuyết & Khác</a>
-                            <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-4" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
-                            <div id="sub-4" class="collapse" aria-labelledby="headingOne" data-parent="#sub-menu-collapse">
+                            <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-4"
+                               aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
+                            <div id="sub-4" class="collapse" aria-labelledby="headingOne"
+                                 data-parent="#sub-menu-collapse">
                                 <ul>
                                     <li><a href="#">Danh mục 1</a></li>
                                     <li><a href="#">Danh mục 2</a></li>
@@ -197,7 +214,9 @@ SearchAsset::register($this);
                     </div>
                     <div class="right">
                         <div class="btn-group">
-                            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sắp xếp theo</button>
+                            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">Sắp xếp theo
+                            </button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <button class="dropdown-item" type="button">Action</button>
                                 <button class="dropdown-item" type="button">Another action</button>
@@ -215,7 +234,8 @@ SearchAsset::register($this);
                     <div class="col-md-4 col-sm-6">
                         <a href="#" class="item">
                             <div class="thumb">
-                                <img src="https://static-v3.weshop.com.vn/upload/x/2/z/6/c/1/c/o/6/b/bulova-men-s-96c125-quartz-b-36709.jpg" alt="" title=""/>
+                                <img src="https://static-v3.weshop.com.vn/upload/x/2/z/6/c/1/c/o/6/b/bulova-men-s-96c125-quartz-b-36709.jpg"
+                                     alt="" title=""/>
                             </div>
                             <div class="info">
                                 <div class="rate text-orange">
@@ -239,7 +259,8 @@ SearchAsset::register($this);
                     <div class="col-md-4 col-sm-6">
                         <a href="#" class="item">
                             <div class="thumb">
-                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51O7o0kQcZL._AC_US200_.jpg" alt="" title=""/>
+                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51O7o0kQcZL._AC_US200_.jpg"
+                                     alt="" title=""/>
                             </div>
                             <div class="info">
                                 <div class="rate text-orange">
@@ -263,7 +284,8 @@ SearchAsset::register($this);
                     <div class="col-md-4 col-sm-6">
                         <a href="#" class="item">
                             <div class="thumb">
-                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51fHqtA0juL._AC_US200_.jpg" alt="" title=""/>
+                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51fHqtA0juL._AC_US200_.jpg"
+                                     alt="" title=""/>
                             </div>
                             <div class="info">
                                 <div class="rate text-orange">
@@ -286,7 +308,8 @@ SearchAsset::register($this);
                     <div class="col-md-4 col-sm-6">
                         <a href="#" class="item">
                             <div class="thumb">
-                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
+                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
+                                     alt="" title=""/>
                             </div>
                             <div class="info">
                                 <div class="rate text-orange">
@@ -310,7 +333,8 @@ SearchAsset::register($this);
                     <div class="col-md-4 col-sm-6">
                         <a href="#" class="item">
                             <div class="thumb">
-                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51fHqtA0juL._AC_US200_.jpg" alt="" title=""/>
+                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51fHqtA0juL._AC_US200_.jpg"
+                                     alt="" title=""/>
                             </div>
                             <div class="info">
                                 <div class="rate text-orange">
@@ -333,7 +357,8 @@ SearchAsset::register($this);
                     <div class="col-md-4 col-sm-6">
                         <a href="#" class="item">
                             <div class="thumb">
-                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
+                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
+                                     alt="" title=""/>
                             </div>
                             <div class="info">
                                 <div class="rate text-orange">
@@ -356,7 +381,8 @@ SearchAsset::register($this);
                     <div class="col-md-4 col-sm-6">
                         <a href="#" class="item">
                             <div class="thumb">
-                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51fHqtA0juL._AC_US200_.jpg" alt="" title=""/>
+                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51fHqtA0juL._AC_US200_.jpg"
+                                     alt="" title=""/>
                             </div>
                             <div class="info">
                                 <div class="rate text-orange">
@@ -379,7 +405,8 @@ SearchAsset::register($this);
                     <div class="col-md-4 col-sm-6">
                         <a href="#" class="item">
                             <div class="thumb">
-                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
+                                <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
+                                     alt="" title=""/>
                             </div>
                             <div class="info">
                                 <div class="rate text-orange">
