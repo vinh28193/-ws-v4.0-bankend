@@ -171,10 +171,10 @@ class OrderController extends BaseApiController
             $model->current_status = Order::STATUS_SUPPORTED;
 
         }
-        if (($model->current_status == Order::STATUS_NEW || $model->current_status == Order::STATUS_SUPPORTING || $model->current_status == Order::STATUS_SUPPORTED) && $model->total_paid_amount_local > 0) {
-            $model->current_status =  Order::STATUS_READY2PURCHASE;
-            $model->ready_purchase = $now;
-        }
+//        if (($model->current_status == Order::STATUS_NEW || $model->current_status == Order::STATUS_SUPPORTING || $model->current_status == Order::STATUS_SUPPORTED) && $model->total_paid_amount_local > 0) {
+//            $model->current_status =  Order::STATUS_READY2PURCHASE;
+//            $model->ready_purchase = $now;
+//        }
         if (!$model->save()) {
             Yii::$app->wsLog->push('order', $model->getScenario(), null, [
                 'id' => $model->ordercode,
