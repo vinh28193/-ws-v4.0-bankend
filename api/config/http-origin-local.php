@@ -7,5 +7,6 @@
  */
 
 return [
-    'http://localhost:4200'
+    'http://localhost:4200',
+    'https://weshop-v4.operation.local.vn'
 ];
