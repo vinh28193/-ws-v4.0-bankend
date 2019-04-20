@@ -16,7 +16,6 @@ class SearchController extends EbayController
         $form->type = 'amazon';
         $form->load($queryParams);
         $results = $form->search();
-        var_dump($results);die;
         return $this->render('index', [
             'results' => $results,
             'form' => $form
