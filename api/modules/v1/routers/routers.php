@@ -101,16 +101,31 @@ return [
         'prefix' => 'v1',
         'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
         'tokens' => [
+            '{content}' => '<content:\\w[\\w,]*>',
             '{id}' => '<id:\\w[\\w,]*>',
-            '{token}' => '<token:\\d[\\d,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
-            'PUT,PATCH {id}' => 'update',
-            'DELETE {id}' => 'delete',
             'GET,HEAD {id}' => 'view',
+            'DELETE {id}' => 'delete',
             'POST' => 'create',
             'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
+        'tokens' => [
+            '{content}' => '<content:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'DELETE {content}' => 'delete',
+            'POST' => 'create',
+            'OPTIONS {content}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => []
@@ -421,20 +436,11 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'controller' => ['promotion' => 'promotion'],
-        'tokens' => [
-            '{id}' => '<id:\\w[\\w,]*>',
-            '{token}' => '<token:\\d[\\d,]*>',
-        ],
         'patterns' => [
-            'GET,HEAD' => 'index',
-            'PUT,PATCH {id}' => 'update',
-            'DELETE {id}' => 'delete',
-            'GET,HEAD {id}' => 'view',
-            'POST' => 'create',
-            'OPTIONS {id}' => 'options',
+            'GET' => 'index',
+            'POST' => 'check',
             'OPTIONS' => 'options',
         ],
-        'extraPatterns' => []
     ],
     [
         'class' => \common\filters\ApiUrlRule::className(),

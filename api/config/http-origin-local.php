@@ -8,5 +8,7 @@
 
 return [
     'http://localhost:4200',
-    'https://weshop-v4.operation.local.vn'
+    'https://weshop-v4.operation.local.vn',
+    'http://192.168.11.252:8130'
 ];
+
