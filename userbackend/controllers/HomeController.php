@@ -4,7 +4,6 @@ namespace userbackend\controllers;
 
 use Yii;
 use common\models\Order;
-use userbackend\models\HomeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

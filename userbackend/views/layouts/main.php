@@ -131,24 +131,24 @@ UserBackendAsset::register($this);
                     <div class="col-md-4 item-box">
                         <div class="title">Weshop Quốc tế:</div>
                         <ul>
-                            <li><a href="#"><img src="./img/flag2_vie.png" alt="" title=""/></a></li>
-                            <li><a href="#"><img src="./img/flag2_us.png" alt="" title=""/></a></li>
-                            <li><a href="#"><img src="./img/flag2_indo.png" alt="" title=""/></a></li>
+                            <li><a href="#"><img src="/img/flag2_vie.png" alt="" title=""/></a></li>
+                            <li><a href="#"><img src="/img/flag2_us.png" alt="" title=""/></a></li>
+                            <li><a href="#"><img src="/img/flag2_indo.png" alt="" title=""/></a></li>
                         </ul>
                     </div>
                     <div class="col-md-5 item-box">
                         <div class="title">Chấp nhận thanh toán:</div>
                         <ul>
-                            <li><a href="#"><img src="./img/pay_master.png" alt="" title=""/></a></li>
-                            <li><a href="#"><img src="./img/pay_visa.png" alt="" title=""/></a></li>
-                            <li><a href="#"><img src="./img/pay_jcb.png" alt="" title=""/></a></li>
+                            <li><a href="#"><img src="/img/pay_master.png" alt="" title=""/></a></li>
+                            <li><a href="#"><img src="/img/pay_visa.png" alt="" title=""/></a></li>
+                            <li><a href="#"><img src="/img/pay_jcb.png" alt="" title=""/></a></li>
                         </ul>
                     </div>
                     <div class="col-md-3 item-box">
                         <div class="title">Hợp tác:</div>
                         <ul>
-                            <li><a href="#"><img src="./img/operate_ebay.png" alt="" title=""/></a></li>
-                            <li><a href="#"><img src="./img/operate_amz.png" alt="" title=""/></a></li>
+                            <li><a href="#"><img src="/img/operate_ebay.png" alt="" title=""/></a></li>
+                            <li><a href="#"><img src="/img/operate_amz.png" alt="" title=""/></a></li>
                         </ul>
                     </div>
                 </div>
@@ -202,11 +202,11 @@ UserBackendAsset::register($this);
                                     </span>
                             </div>
                         </div>
-                        <div class="sticker-bct"><a href="#" target="_blank"><img src="./img/chung_nhan_bct.png" alt="" title=""/></a></div>
+                        <div class="sticker-bct"><a href="#" target="_blank"><img src="/img/chung_nhan_bct.png" alt="" title=""/></a></div>
                         <div class="connect">
                             <span>Kết nối với Weshop qua:</span>
-                            <a href="#" target="_blank"><img src="./img/social_fb.png" alt="" title=""/></a>
-                            <a href="#" target="_blank"><img src="./img/social_youtube.png" alt="" title=""/></a>
+                            <a href="#" target="_blank"><img src="/img/social_fb.png" alt="" title=""/></a>
+                            <a href="#" target="_blank"><img src="/img/social_youtube.png" alt="" title=""/></a>
                         </div>
                     </div>
                 </div>
