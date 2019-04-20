@@ -54,3 +54,6 @@ api/tests/_support/ApiTester.php
 #------------------
 .phpunit.result.cache
 laradock-ws-v4.0-api/
+
+#-----------------
+/api/config/http-origin-local.php
