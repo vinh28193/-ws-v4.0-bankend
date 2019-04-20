@@ -549,4 +549,22 @@ return [
             'OPTIONS create'=> 'options',
         ]
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['s-tracking-code' => 'service/tracking-code-service'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'POST' => 'merge',
+            'POST {id}' => 'map-unknown',
+            'DELETE {id}' => 'split-tracking',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [
+        ]
+    ],
 ];

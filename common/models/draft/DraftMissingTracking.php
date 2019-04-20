@@ -6,6 +6,8 @@ namespace common\models\draft;
 
 class DraftMissingTracking extends \common\models\db\DraftMissingTracking
 {
+    const MERGE_CALLBACK = 'MERGE_CALLBACK';
+    const MERGE_MANUAL = 'MERGE_MANUAL';
     /**
      * {@inheritdoc}
      * @return \common\models\queries\DraftMissingTrackingQuery the active query used by this AR class.

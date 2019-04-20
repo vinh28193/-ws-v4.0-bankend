@@ -6,6 +6,8 @@ namespace common\models\draft;
 
 class DraftWastingTracking extends \common\models\db\DraftWastingTracking
 {
+    const MERGE_CALLBACK = 'MERGE_CALLBACK';
+    const MERGE_MANUAL = 'MERGE_MANUAL';
     /**
      * {@inheritdoc}
      * @return \common\models\queries\DraftWastingTrackingQuery the active query used by this AR class.

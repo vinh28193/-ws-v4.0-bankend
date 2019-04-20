@@ -14,6 +14,9 @@ use common\components\db\ActiveQuery;
 use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
 use common\helpers\ExcelHelper;
+use common\models\draft\DraftMissingTracking;
+use common\models\draft\DraftPackageItem;
+use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use common\models\TrackingCode;
 use Yii;
@@ -43,7 +46,8 @@ class TrackingCodeController extends BaseApiController
     {
         return [
             'index' => ['GET'],
-            'create' => ['POST']
+            'create' => ['POST'],
+            'update' => ['PUT'],
         ];
     }
 
@@ -106,6 +110,8 @@ class TrackingCodeController extends BaseApiController
                 if($tracking){
                     $q->andWhere(['like','tracking_code',$tracking]);
                 }
+                $q->andWhere(['<>','status',DraftWastingTracking::MERGE_CALLBACK]);
+                $q->andWhere(['<>','status',DraftWastingTracking::MERGE_MANUAL]);
 //                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
             }
             ,'draftMissingTrackings' => function($q){
@@ -114,6 +120,8 @@ class TrackingCodeController extends BaseApiController
                 if($tracking){
                     $q->andWhere(['like','tracking_code',$tracking]);
                 }
+                $q->andWhere(['<>','status',DraftMissingTracking::MERGE_CALLBACK]);
+                $q->andWhere(['<>','status',DraftMissingTracking::MERGE_MANUAL]);
 //                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
             }
             ,'draftPackageItems' => function($q){
@@ -200,6 +208,10 @@ class TrackingCodeController extends BaseApiController
     }
 
     function getList(){
+
+    }
+
+    public function actionUpdate($id){
 
     }
 }

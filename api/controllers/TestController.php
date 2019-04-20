@@ -110,7 +110,7 @@ class TestController extends Controller
                 $draft->note_boxme = $note;
                 $draft->createOrUpdate(false);
                 DraftWastingTracking::updateAll([
-                    'status' => 'CALLBACK'
+                    'status' => DraftWastingTracking::MERGE_CALLBACK
                 ], [
                     'tracking_code' => $tracking,
                     'product_id' => $soi,
@@ -119,7 +119,7 @@ class TestController extends Controller
                 ]);
 
                 DraftMissingTracking::updateAll([
-                    'status' => 'CALLBACK'
+                    'status' => DraftMissingTracking::MERGE_CALLBACK
                 ], [
                     'tracking_code' => $tracking,
                     'product_id' => $soi,
@@ -148,7 +148,7 @@ class TestController extends Controller
                 $data_draft[0]->image = $image;
                 $data_draft[0]->warehouse_tag_boxme = $tag_code;
                 $data_draft[0]->note_boxme = $note;
-                $data_draft[0]->status = "MERGE_CALLBACK";
+                $data_draft[0]->status = DraftMissingTracking::MERGE_CALLBACK;
                 $data_draft[0]->save(false);
 
                 $draft = new DraftPackageItem();
