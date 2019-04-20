@@ -13,9 +13,10 @@ class SearchController extends EbayController
     {
         $queryParams = Yii::$app->getRequest()->getQueryParams();
         $form = new ProductSearchForm();
-        $form->type = 'ebay';
+        $form->type = 'amazon';
         $form->load($queryParams);
         $results = $form->search();
+        var_dump($results);die;
         return $this->render('index', [
             'results' => $results,
             'form' => $form
