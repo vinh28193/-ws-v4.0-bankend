@@ -57,3 +57,4 @@ laradock-ws-v4.0-api/
 
 #-----------------
 /api/config/http-origin-local.php
+./api/config/http-origin-local.php
