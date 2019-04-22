@@ -1,7 +1,7 @@
 <?php
 
 
-namespace common\widgets;
+namespace frontend\widgets;
 
 use Yii;
 use frontend\assets\ItemAsset;
@@ -157,11 +157,7 @@ class WeshopItemDetailWidget extends Widget
                 ]);
                 $options[] = Html::tag('div', $optionHtml, ['class' => 'option-box']);
             } else {
-                $items = [];
-                foreach ($variationOption->values as $key =>  $value) {
-                    $items[] = [$key => $value];
-                }
-                $optionHtml .= Html::dropDownList('dropdown',null,$items,[]);
+                $optionHtml .= Html::dropDownList('dropdown',null,$variationOption->values,[]);
                 $options[] = Html::tag('div', $optionHtml, ['class' => 'option-box form-inline']);
             }
 

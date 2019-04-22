@@ -2,7 +2,7 @@
 
 
 use yii\widgets\Pjax;
-use common\widgets\WeshopItemDetailWidget;
+use frontend\widgets\WeshopItemDetailWidget;
 
 /* @var $this yii\web\View */
 /* @var $item \common\products\BaseProduct */
