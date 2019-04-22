@@ -4,14 +4,13 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\modelsMongo\RestApiCall;
-use common\modelsMongo\ChatMongoWs;
+use common\modelsMongo\PushNotifications;
 use common\models\Order;
 use Yii;
 use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
-use api\modules\v1\controllers\service\ChatlistsServiceController;
 
 class NotificationsController extends BaseApiController
 {
@@ -68,7 +67,7 @@ class NotificationsController extends BaseApiController
 
     public function actionIndex()
     {
-        $response = ChatMongoWs::search($params = '');
+        $response = PushNotifications::search($params = '');
         return $this->response(true, 'Success', $response);
     }
 
@@ -79,7 +78,7 @@ class NotificationsController extends BaseApiController
 
         if (isset($_post) !== null) {
             @date_default_timezone_set('Asia/Ho_Chi_Minh');
-            $model = new ChatMongoWs();
+            $model = new PushNotifications();
                 //  $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();
             $_user_id = $_user_Identity->getId();
@@ -180,7 +179,7 @@ class NotificationsController extends BaseApiController
     public function actionView($id)
     {
         if ($id !== null) {
-            $response = ChatMongoWs::find()
+            $response = PushNotifications::find()
                 ->where(['Order_path' => $id])
                 ->asArray()->all();
             return $this->response(true, "Get  $id success", $response);
@@ -203,7 +202,7 @@ class NotificationsController extends BaseApiController
     }
     public function findModel($id)
     {
-        if (($model = ChatMongoWs::findOne($id)) !== null) {
+        if (($model = PushNotifications::findOne($id)) !== null) {
             return $model;
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
