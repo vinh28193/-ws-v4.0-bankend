@@ -592,4 +592,13 @@ return [
             'OPTIONS mark-hold/<id:\d+>'=> 'options',
         ]
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['cms'],
+        'patterns' => [
+            'GET,POST' => 'index',
+            'OPTIONS' => 'options',
+        ],
+    ],
 ];
