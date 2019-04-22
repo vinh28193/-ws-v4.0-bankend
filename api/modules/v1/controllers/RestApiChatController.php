@@ -102,7 +102,7 @@ class RestApiChatController extends BaseApiController
             $_request_ip = Yii::$app->getRequest()->getUserIP();
             // $isNew = isset($_post['isNew']) && $_post['isNew'] === 'yes';
             //code vandinh : status order
-
+ 
             $isSupported = 0; //1:true;0:false
             if($_post['type_chat'] == 'GROUP_WS')
             {
