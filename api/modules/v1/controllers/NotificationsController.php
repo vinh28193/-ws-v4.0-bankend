@@ -60,8 +60,6 @@ class NotificationsController extends BaseApiController
             'update' => ['PATCH', 'PUT'],
             'view' => ['GET'],
             'delete' => ['DELETE'],
-            'group-viewed' => ['POST'],
-            'customer-viewed' => ['POST']
         ];
     }
 
@@ -196,10 +194,7 @@ class NotificationsController extends BaseApiController
         Yii::$app->api->sendSuccessResponse($model->attributes);
     }
 
-    public function actionAddlistchat()
-    {
-        return 1;
-    }
+
     public function findModel($id)
     {
         if (($model = PushNotifications::findOne($id)) !== null) {
@@ -208,28 +203,5 @@ class NotificationsController extends BaseApiController
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
     }
-
-
-        /**
-     * @param $dirtyAttributes
-     * @param $reference \common\components\db\ActiveRecord
-     * @return string
-     */
-
-
-    protected function resolveChatMessage($dirtyAttributes, $reference)
-    {
-
-        $results = [];
-        foreach ($dirtyAttributes as $name => $value) {
-            if (strpos($name, '_id') !== false && is_numeric($value)) {
-                continue;
-            }
-            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
-        }
-
-        return implode(", ", $results);
-    }
-
 
 }
