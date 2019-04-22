@@ -7,9 +7,11 @@ use yii\web\AssetBundle;
 
 class ItemAsset extends AssetBundle
 {
+    public $basePath = '@webroot';
+    public $baseUrl = '@web';
 
     public $js = [
-
+        'js/ws.item.js'
     ];
 
     public $css = [

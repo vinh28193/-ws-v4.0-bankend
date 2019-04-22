@@ -14,7 +14,9 @@ class ItemController extends EbayController
         $form->id = $id;
         $form->type = 'ebay';
         $item = $form->detail();
-        return $this->render('index',['item' => $item]);
+        return $this->render('index',[
+            'item' => $item
+        ]);
 
     }
 }
