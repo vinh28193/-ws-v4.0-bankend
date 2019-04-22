@@ -579,11 +579,17 @@ return [
         'patterns' => [
             'GET,HEAD' => 'index',
             'POST' => 'merge',
-            'POST {id}' => 'map-unknown',
+            'POST {id}' => 'map-unknown,seller-refund,mark-hold',
             'DELETE {id}' => 'split-tracking',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
+            'POST map-unknown/<id:\d+>'=> 'map-unknown',
+            'OPTIONS map-unknown/<id:\d+>'=> 'options',
+            'POST seller-refund/<id:\d+>'=> 'seller-refund',
+            'OPTIONS seller-refund/<id:\d+>'=> 'options',
+            'POST mark-hold/<id:\d+>'=> 'mark-hold',
+            'OPTIONS mark-hold/<id:\d+>'=> 'options',
         ]
     ],
 ];

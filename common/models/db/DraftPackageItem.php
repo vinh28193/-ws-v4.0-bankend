@@ -29,6 +29,7 @@ use Yii;
  * @property string $note_boxme note của boxme
  * @property string $image
  * @property string $tracking_merge  List tracking khi merge từ thừa và thiếu 
+ * @property int $hold DDasnhh dấu hàng hold. 1 là hold
  */
 class DraftPackageItem extends \common\components\db\ActiveRecord
 {
@@ -47,7 +48,7 @@ class DraftPackageItem extends \common\components\db\ActiveRecord
     {
         return [
             [['tracking_code'], 'required'],
-            [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'hold'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
             [['image', 'tracking_merge'], 'string'],
             [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme'], 'string', 'max' => 255],
@@ -82,6 +83,7 @@ class DraftPackageItem extends \common\components\db\ActiveRecord
             'note_boxme' => 'Note Boxme',
             'image' => 'Image',
             'tracking_merge' => 'Tracking Merge',
+            'hold' => 'Hold',
         ];
     }
 }

@@ -10,12 +10,20 @@ namespace common\models\draft;
 
 
 use common\models\Manifest;
+use common\models\Order;
+use common\models\Product;
+use common\models\ProductFee;
+use common\models\PurchaseOrder;
+use common\models\PurchaseProduct;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class DraftPackageItem
  * @package common\models\draft
  * @property Manifest $manifest
+ * @property Product $product
+ * @property Order $order
+ * @property PurchaseOrder $purchaseOrder
  */
 class DraftPackageItem extends \common\models\db\DraftPackageItem
 {
@@ -49,6 +57,10 @@ class DraftPackageItem extends \common\models\db\DraftPackageItem
 
     public function getManifest(){
         return $this->hasOne(\common\models\Manifest::className(), ['id' => 'manifest_id']);
+    }
+
+    public function getPurchaseOrder(){
+        return $this->hasOne(PurchaseOrder::className(), ['purchase_order_number' => 'purchase_invoice_number']);
     }
 
     public function fields()

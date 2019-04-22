@@ -127,6 +127,7 @@ class TrackingCodeController extends BaseApiController
             ,'draftPackageItems' => function($q){
                 /** @var ActiveQuery $q */
                 $tracking = \Yii::$app->request->get('trackingC');
+                $q->with(['product']);
                 if($tracking){
                     $q->andWhere(['like','tracking_code',$tracking]);
                 }
