@@ -112,6 +112,7 @@ class TrackingCodeController extends BaseApiController
                 }
                 $q->andWhere(['<>','status',DraftWastingTracking::MERGE_CALLBACK]);
                 $q->andWhere(['<>','status',DraftWastingTracking::MERGE_MANUAL]);
+                $q->orderBy('id desc');
 //                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
             }
             ,'draftMissingTrackings' => function($q){
@@ -122,6 +123,7 @@ class TrackingCodeController extends BaseApiController
                 }
                 $q->andWhere(['<>','status',DraftMissingTracking::MERGE_CALLBACK]);
                 $q->andWhere(['<>','status',DraftMissingTracking::MERGE_MANUAL]);
+                $q->orderBy('id desc');
 //                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
             }
             ,'draftPackageItems' => function($q){
@@ -131,6 +133,7 @@ class TrackingCodeController extends BaseApiController
                 if($tracking){
                     $q->andWhere(['like','tracking_code',$tracking]);
                 }
+                $q->orderBy('id desc');
 //                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
             }
             ,'unknownTrackings' => function($q){
@@ -139,6 +142,7 @@ class TrackingCodeController extends BaseApiController
                 if($tracking){
                     $q->andWhere(['like','tracking_code',$tracking]);
                 }
+                $q->orderBy('id desc');
 //                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
             }
         ]);

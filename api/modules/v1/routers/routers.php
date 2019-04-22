@@ -590,6 +590,7 @@ return [
             'OPTIONS seller-refund/<id:\d+>'=> 'options',
             'POST mark-hold/<id:\d+>'=> 'mark-hold',
             'OPTIONS mark-hold/<id:\d+>'=> 'options',
+            'OPTIONS {id}' => 'options',
         ]
     ],
     [

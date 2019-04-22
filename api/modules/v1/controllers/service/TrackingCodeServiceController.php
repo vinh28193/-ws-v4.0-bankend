@@ -47,11 +47,21 @@ class TrackingCodeServiceController extends BaseApiController
         }
         $missing = $this->post['merge']['type'] == 'miss' ? DraftMissingTracking::findOne($this->post['merge']['data']['id']) : DraftMissingTracking::findOne($this->post['target']['data']['id']);
         $wasting = $this->post['merge']['type'] == 'wast' ? DraftWastingTracking::findOne($this->post['merge']['data']['id']) : DraftWastingTracking::findOne($this->post['target']['data']['id']);
-        $model = new DraftPackageItem();
-        $model->tracking_code = $missing->tracking_code;
-        $model->tracking_merge = $missing->tracking_code.','.$wasting->tracking_code;
-        $model->product_id = $missing->product_id ? $missing->product_id : $wasting->product_id;
-        $model->order_id = $missing->order_id ? $missing->order_id : $wasting->order_id;
+        $model = DraftPackageItem::find()->where([
+            'tracking_code' => $missing->tracking_code,
+            'status' => DraftPackageItem::STATUS_SPLITED,
+            'product_id' => $missing->product_id ? $missing->product_id : $wasting->product_id,
+            'order_id' => $missing->order_id ? $missing->order_id : $wasting->order_id
+        ])->one();
+        if(!$model){
+            $model = new DraftPackageItem();
+            $model->tracking_code = $missing->tracking_code;
+            $model->tracking_merge = $missing->tracking_code.','.$wasting->tracking_code;
+            $model->product_id = $missing->product_id ? $missing->product_id : $wasting->product_id;
+            $model->order_id = $missing->order_id ? $missing->order_id : $wasting->order_id;
+            $model->created_at = time();
+            $model->created_by = Yii::$app->user->getId();
+        }
         $model->quantity = $wasting->quantity;
         $model->weight = $wasting->weight;
         $model->dimension_l = $wasting->dimension_l;
@@ -61,9 +71,7 @@ class TrackingCodeServiceController extends BaseApiController
         $model->manifest_code = $missing->manifest_code;
         $model->purchase_invoice_number = $missing->purchase_invoice_number ? $missing->purchase_invoice_number : $wasting->purchase_invoice_number;
         $model->status = $wasting->status;
-        $model->created_at = time();
         $model->updated_at = time();
-        $model->created_by = Yii::$app->user->getId();
         $model->updated_by = Yii::$app->user->getId();
         $model->item_name = $wasting->item_name;
         $model->warehouse_tag_boxme = $wasting->warehouse_tag_boxme;
@@ -92,11 +100,48 @@ class TrackingCodeServiceController extends BaseApiController
         return $this->response(true,'Map tracking success!');
     }
     public function actionSplitTracking($id){
-        $model = DraftPackageItem::findOne($id);
+        /** @var DraftPackageItem $model */
+        $model = DraftPackageItem::find()->where(['id' => $id])->active()->one();
         if(!$model){
             return $this->response(false,'Cannot find your tracking!');
         }
-        
+        $model->status = DraftPackageItem::STATUS_SPLITED;
+        $model->save(0);
+        $arr_tracking = explode(',',$model->tracking_merge);
+        foreach ($arr_tracking as $k => $v){
+            if($k == 1){
+                /** @var DraftWastingTracking $class */
+                $class = DraftWastingTracking::className();
+            }else{
+                /** @var DraftMissingTracking $class */
+                $class = DraftMissingTracking::className();
+            }
+            $tmp =  $class::find()->where([
+                'status' => $class::MERGE_MANUAL,
+                'tracking_code' => $v
+            ])->one();
+            if(!$tmp){
+                $tmp = new $class();
+            }
+            $data = $model->getAttributes();
+            unset($data['id']);
+            $tmp->setAttributes($data,false);
+            $tmp->status = $class::SPILT_MANUAL;
+            $tmp->tracking_code = $v;
+            if($k == 1){
+                $tmp->product_id = '';
+                $tmp->order_id = '';
+            }else{
+                $tmp->item_name = '';
+                $tmp->weight = '';
+                $tmp->dimension_l = '';
+                $tmp->dimension_h = '';
+                $tmp->dimension_w = '';
+                $tmp->image = '';
+            }
+            $tmp->save(0);
+        }
+        return $this->response(true,'Split success!');
     }
 
     public function actionSellerRefund($id)

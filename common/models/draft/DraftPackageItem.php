@@ -28,6 +28,7 @@ use yii\helpers\ArrayHelper;
 class DraftPackageItem extends \common\models\db\DraftPackageItem
 {
     const STATUS_PARSER = "PARSER";
+    const STATUS_SPLITED = "SPLITED";
     /**
      * @return array
      */
