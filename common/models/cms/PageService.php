@@ -15,7 +15,7 @@ use common\components\StoreManager;
 class PageService
 {
 
-    public static function getPage($id = null, $store = 1, $type = null, $status = 1)
+    public static function getPage($type, $store = 1, $id = null)
     {
         $key = 'PAGE_CACHE_KEY_PREFIX';
         if ($id !== null) {
@@ -25,13 +25,11 @@ class PageService
         if (!($page = Yii::$app->cache->get($key))) {
             $query = WsPage::find();
             $where = ['AND'];
+            $where[] = ['type' => $type];
             $where[] = ['store_id' => $store];
-            $where[] = ['status' => $status];
+            $where[] = ['status' => 1];
             if ($id !== null) {
                 $where[] = ['id' => $id];
-            }
-            if ($type !== null) {
-                $where[] = ['type' => $type];
             }
             $query->where($where);
             $page = $query->one();
@@ -67,19 +65,17 @@ class PageService
         return $items;
     }
 
-    public static function getAlias($store, $type = null)
+    public static function getAlias($type, $store = 1)
     {
-        if ($type === null) {
-            return [];
-        } elseif ($type === 'AMZ') {
+        if ($type === WsPage::TYPE_AMZ) {
             $type = 'amazon';
-        } elseif ($type === 'EBAY') {
+        } elseif ($type === WsPage::TYPE_EBAY) {
             $type = 'ebay';
-        } elseif ($type === 'HOME') {
+        } elseif ($type === WsPage::TYPE_HOME) {
             $type = 'open';
         }
         $key = 'ALIAS_' . $store . $type;
-        $alias = Yii::$app->request->post('noCache',false) == 1 ? null : Yii::$app->cache->get($key);
+        $alias = Yii::$app->request->post('noCache', false) == 1 ? null : Yii::$app->cache->get($key);
         if (!($alias)) {
             if ($type !== null && ($alias = WsAlias::findOne(['store_id' => $store, 'type' => $type])) !== null) {
                 $alias = [
@@ -165,10 +161,10 @@ class PageService
     {
 
         $key = 'LIST_PRODUCT_BY_GROUP_TOP_' . $groupId;
-        $products = Yii::$app->request->post('noCache',false) == 1 ? null : Yii::$app->cache->get($key);
+        $products = Yii::$app->request->post('noCache', false) == 1 ? null : Yii::$app->cache->get($key);
         if (!$products) {
             $products = WsProduct::find()
-                ->select('*,(ws_product.calculated_sell_price * '.self::getStoreManager()->getExchangeRate().') as Local_calculated_sell_price')
+                ->select('*,(ws_product.calculated_sell_price * ' . self::getStoreManager()->getExchangeRate() . ') as Local_calculated_sell_price')
 //                ->select([
 //                    'item_id', 'item_url', 'item_sku', 'name', 'image_origin', 'image', 'start_price', 'sell_price', 'weight', 'category_id',
 //                    'calculated_start_price', 'calculated_sell_price', 'rate_count', 'rate_star', 'category_name', 'start_time', 'end_time', 'provider',
@@ -208,7 +204,8 @@ class PageService
     /**
      * @return StoreManager
      */
-    public static function getStoreManager(){
+    public static function getStoreManager()
+    {
         return Yii::$app->storeManager;
     }
 }

@@ -14,6 +14,9 @@ class WsAlias extends \common\models\db_cms\WsAlias
         return $this->hasMany(WsAliasItem::className(), ['ws_alias_id' => 'id'])->where(['status' => 1])->orderBy('sort ASC');
     }
 
+    public function getData(){
+
+    }
     public function getLandingProduct()
     {
         $key = 'ITEM_PRODUCT_AMAZONE_BY_' . '_ALIAS_' . $this->id . '-' . WsAliasItem::TYPE_LANDING;

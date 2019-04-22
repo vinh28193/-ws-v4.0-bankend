@@ -49,5 +49,8 @@ return [
         'ebay' => [
             'class' => 'frontend\modules\ebay\EbayModule',
         ],
+        'cms' => [
+            'class' => 'frontend\modules\cms\Module',
+        ]
     ],
 ];

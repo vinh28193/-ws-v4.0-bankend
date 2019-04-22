@@ -1,16 +1,16 @@
 <?php
 
-namespace frontend\modules\home;
+namespace frontend\modules\cms;
 
 /**
  * home module definition class
  */
-class HomeModule extends \yii\base\Module
+class Module extends \yii\base\Module
 {
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'frontend\modules\home\controllers';
+    public $controllerNamespace = 'frontend\modules\cms\controllers';
 
     /**
      * {@inheritdoc}
