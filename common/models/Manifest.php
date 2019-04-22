@@ -9,11 +9,18 @@
 namespace common\models;
 
 use common\models\db\Manifest as DbManifest;
+use common\models\draft\DraftMissingTracking;
+use common\models\draft\DraftPackageItem;
+use common\models\draft\DraftWastingTracking;
 
 /**
  * Class Manifest
  * @package common\models
  * @property Package[] $packages
+ * @property DraftWastingTracking[] $draftWastingTrackings
+ * @property DraftMissingTracking[] $draftMissingTrackings
+ * @property DraftPackageItem[] $draftPackageItems
+ * @property DraftPackageItem[] $unknownTrackings
  */
 class Manifest extends DbManifest
 {
@@ -47,5 +54,20 @@ class Manifest extends DbManifest
         }
         return $manifest;
 
+    }
+
+    public function getDraftPackageItems(){
+        return $this->hasMany(DraftPackageItem::className(),['manifest_id' => 'id'])->where(['and',['is not','product_id',null],['<>','product_id',''],['<>','status',DraftPackageItem::STATUS_SPLITED]]);
+    }
+
+    public function getUnknownTrackings(){
+        return $this->hasMany(DraftPackageItem::className(),['manifest_id' => 'id'])->where(['or',['product_id' => null],['product_id' => '']])->andWhere(['<>','status',DraftPackageItem::STATUS_SPLITED]);
+    }
+
+    public function getDraftMissingTrackings(){
+        return $this->hasMany(DraftMissingTracking::className(),['manifest_id' => 'id']);
+    }
+    public function getDraftWastingTrackings(){
+        return $this->hasMany(DraftWastingTracking::className(),['manifest_id' => 'id']);
     }
 }

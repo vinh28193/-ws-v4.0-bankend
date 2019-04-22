@@ -10,8 +10,13 @@ namespace api\modules\v1\controllers;
 
 
 use api\controllers\BaseApiController;
+use common\components\db\ActiveQuery;
 use common\data\ActiveDataProvider;
+use common\helpers\ChatHelper;
 use common\helpers\ExcelHelper;
+use common\models\draft\DraftMissingTracking;
+use common\models\draft\DraftPackageItem;
+use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use common\models\TrackingCode;
 use Yii;
@@ -41,7 +46,8 @@ class TrackingCodeController extends BaseApiController
     {
         return [
             'index' => ['GET'],
-            'create' => ['POST']
+            'create' => ['POST'],
+            'update' => ['PUT'],
         ];
     }
 
@@ -50,21 +56,98 @@ class TrackingCodeController extends BaseApiController
      */
     public function actionIndex()
     {
-        $queryParams = Yii::$app->request->getQueryParams();
-        $query = TrackingCode::find();
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSizeParam' => 'ps',
-                'pageParam' => 'p',
-                'params' => $queryParams,
-            ],
-            'sort' => [
-                'params' => $queryParams,
-            ],
-        ]);
+//        $queryParams = Yii::$app->request->getQueryParams();
+//        $query = TrackingCode::find();
+//        $dataProvider = new ActiveDataProvider([
+//            'query' => $query,
+//            'pagination' => [
+//                'pageSizeParam' => 'ps',
+//                'pageParam' => 'p',
+//                'params' => $queryParams,
+//            ],
+//            'sort' => [
+//                'params' => $queryParams,
+//            ],
+//        ]);
+//
+//        return $this->response(true, 'Ok', $dataProvider);
+        $page_m = \Yii::$app->request->get('p_m',1);
+        $limit_m = \Yii::$app->request->get('ps_m',20);
+        $manifest_Code = \Yii::$app->request->get('manifest_code');
+        $trackingC = \Yii::$app->request->get('trackingC');
+        $trackingU = \Yii::$app->request->get('trackingU');
+        $trackingW = \Yii::$app->request->get('trackingW');
+        $trackingM = \Yii::$app->request->get('trackingM');
 
-        return $this->response(true, 'Ok', $dataProvider);
+        $page = \Yii::$app->request->get('p',1);
+        $limit = \Yii::$app->request->get('ps',20);
+//        $model = DraftDataTracking::find()->with([
+//            'draftExtensionTrackingMap',
+//            'trackingCode',
+//            'draftBoxmeTracking',
+//            'draftMissingTracking',
+//            'draftWastingTracking',
+//            'draftPackageItem'])->where(['is not', 'product_id', null]);
+//        $countD = clone $model;
+//        $data['_items'] = $model->limit($limit)->offset($page*$limit - $limit)->asArray()->orderBy('id desc')->all();
+//        $data['_total'] = $countD->count();
+        $model = Manifest::find()->where(['active' => 1]);
+        //#Todo filter
+
+        $manifests = clone $model;
+        if($manifest_Code){
+            $model->andWhere(['manifest_code'=>$manifest_Code]);
+            $manifests->andWhere(['manifest_code'=>$manifest_Code]);
+        }
+        if(!$trackingC && !$trackingM && !$trackingU && !$trackingW){
+            $data['_total_manifest'] = $manifests->count();
+            $data['_manifest'] = $manifests->with(['receiveWarehouse','sendWarehouse'])->orderBy('id desc')->limit($limit_m)->offset($limit_m*$page_m - $limit_m)->asArray()->all();
+        }
+        $model->with([
+            'draftWastingTrackings' => function($q){
+                /** @var ActiveQuery $q */
+                $tracking = \Yii::$app->request->get('trackingW');
+                if($tracking){
+                    $q->andWhere(['like','tracking_code',$tracking]);
+                }
+                $q->andWhere(['<>','status',DraftWastingTracking::MERGE_CALLBACK]);
+                $q->andWhere(['<>','status',DraftWastingTracking::MERGE_MANUAL]);
+                $q->orderBy('id desc');
+//                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
+            }
+            ,'draftMissingTrackings' => function($q){
+                /** @var ActiveQuery $q */
+                $tracking = \Yii::$app->request->get('trackingM');
+                if($tracking){
+                    $q->andWhere(['like','tracking_code',$tracking]);
+                }
+                $q->andWhere(['<>','status',DraftMissingTracking::MERGE_CALLBACK]);
+                $q->andWhere(['<>','status',DraftMissingTracking::MERGE_MANUAL]);
+                $q->orderBy('id desc');
+//                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
+            }
+            ,'draftPackageItems' => function($q){
+                /** @var ActiveQuery $q */
+                $tracking = \Yii::$app->request->get('trackingC');
+                $q->with(['product']);
+                if($tracking){
+                    $q->andWhere(['like','tracking_code',$tracking]);
+                }
+                $q->orderBy('id desc');
+//                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
+            }
+            ,'unknownTrackings' => function($q){
+                /** @var ActiveQuery $q */
+                $tracking = \Yii::$app->request->get('trackingU');
+                if($tracking){
+                    $q->andWhere(['like','tracking_code',$tracking]);
+                }
+                $q->orderBy('id desc');
+//                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
+            }
+        ]);
+        $data['_items'] = $model->limit($limit)->offset($page*$limit - $limit)->orderBy('id desc')->asArray()->one();
+        return $this->response(true, "Success", $data);
     }
 
     public function actionCreate()
@@ -127,5 +210,13 @@ class TrackingCodeController extends BaseApiController
             'request' => $this->post,
         ]);
         return $this->response(true, $message);
+    }
+
+    function getList(){
+
+    }
+
+    public function actionUpdate($id){
+
     }
 }

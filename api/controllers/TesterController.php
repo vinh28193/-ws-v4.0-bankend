@@ -8,6 +8,7 @@
 
 namespace api\controllers;
 
+use common\components\KeyChatList;
 use common\promotion\PromotionForm;
 use Yii;
 use common\calculators\ConditionBuilder;
@@ -92,9 +93,21 @@ class TesterController extends \yii\rest\Controller
 
         $posts = require dirname(dirname(__DIR__)).'/common/promotion/mock-post.php';
 //        var_dump(strlen(json_encode($posts)));die;
-        $form = new PromotionForm();
-        $form->loadParam([]);
-        echo json_encode($form->checkPromotion());
+        echo json_encode($posts);
         die;
+    }
+
+    public function actionChat(){
+        $keyChat = new KeyChatList();
+        $keyChat->clear();
+        $keyChat->write('abc');
+        $keyChat->write('test');
+        $keyChat->write('123');
+        var_dump($keyChat->read());
+        $keyChat->write('s');
+        var_dump($keyChat->read());
+        $keyChat->write('Không nghe máy');
+        var_dump($keyChat->read());
+        die();
     }
 }

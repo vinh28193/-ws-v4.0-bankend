@@ -175,7 +175,7 @@ class ActionLogWS extends ActiveRecord
 //        foreach (['data_output', 'data_input'] as $name) {
 //            $fields["raw_{$name}"] = $name;
 //            $fields[$name] = function ($model) use ($name) {
-//                return @json_decode($model->$name,true);
+//                return @json_encode($model->$name,true);
 //            };
 //        }
         return $fields;

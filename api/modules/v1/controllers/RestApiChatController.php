@@ -3,6 +3,7 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
+use common\components\KeyChatList;
 use common\modelsMongo\RestApiCall;
 use common\modelsMongo\ChatMongoWs;
 use common\models\Order;
@@ -53,6 +54,17 @@ class RestApiChatController extends BaseApiController
             ],
         ];
     }
+    /**
+     * @var KeyChatList
+     */
+    public $keyChatManger;
+
+
+    public function init()
+    {
+        parent::init();
+        $this->keyChatManger = new KeyChatList();
+    }
 
     public function verbs()
     {
@@ -93,20 +105,7 @@ class RestApiChatController extends BaseApiController
             $isSupporting = 1; //1:true;0:false
             if($_post['type_chat'] == 'GROUP_WS')
             {
-
-                $obj_store = new StoreManager; 
-                $domain_id = $obj_store->isVN();
-                $domain_id = (int)$domain_id;
-                $filename = 'chatsupport-in.json';
-                if($domain_id == 1)
-                {
-                   $filename = 'chatsupport-vi.json'; 
-                }
-                $listchats = ChatlistsServiceController::readFileChat($filename);
-                $check_string_chat = ChatlistsServiceController::checkStringInFile($_post['message'],$listchats);
-          
-                $isSupporting = $check_string_chat;
-
+                $isSupporting = $this->keyChatManger->has($_post['message']);
             }
             //end code vandinh
             $_rest_data = ["ChatMongoWs" => [
@@ -134,11 +133,22 @@ class RestApiChatController extends BaseApiController
                 {
 
                  // code vandinh staus order is new or chat supporting
-                   
+
                     $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}, order new to supporting";
-                    Order::updateAll([
-                        'current_status' => Order::STATUS_SUPPORTING
-                    ],['ordercode' => $_post['Order_path']]);
+                    // ToDo : @Phuc : Phải check xuống db lần nữa xem hiện tại trang thái Của Order là gì ?
+                    // + Có thỏa mã điều kiện chuyển sang SUPPORTED không ?
+                    // thi mới chuyển SUPPORTED
+
+                    if ($isNew === true) {
+                        Order::updateAll([
+                            'current_status' => Order::STATUS_SUPPORTING,
+                            'supporting' => Yii::$app->getFormatter()->asTimestamp('now') // ToDo Sai Cái này chỉ Supported khi nhân viên Chát
+                        ],['ordercode' => $_post['Order_path']]);
+                    } else {
+                        Order::updateAll([
+                            'current_status' => Order::STATUS_SUPPORTING
+                        ],['ordercode' => $_post['Order_path']]);
+                    }
                 //code update action log
                     if (!$model->save())
                      {
@@ -155,9 +165,9 @@ class RestApiChatController extends BaseApiController
                     'request' => $this->post,
                     'response' => $_post['message']
                 ]);
-                  
+
                 }
-                
+
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);

@@ -104,7 +104,7 @@ class PromotionForm extends Model
 
     public function loadParam($params)
     {
-        $params = require 'mock-post.php';
+//        $params = require 'mock-post.php';
 //        foreach ($params as $name => $value) {
 //            $this->$name = $value;
 //        }

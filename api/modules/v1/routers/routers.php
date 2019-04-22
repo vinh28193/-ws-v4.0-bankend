@@ -101,16 +101,31 @@ return [
         'prefix' => 'v1',
         'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
         'tokens' => [
+            '{content}' => '<content:\\w[\\w,]*>',
             '{id}' => '<id:\\w[\\w,]*>',
-            '{token}' => '<token:\\d[\\d,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
-            'PUT,PATCH {id}' => 'update',
-            'DELETE {id}' => 'delete',
             'GET,HEAD {id}' => 'view',
+            'DELETE {id}' => 'delete',
             'POST' => 'create',
             'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
+        'tokens' => [
+            '{content}' => '<content:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'DELETE {content}' => 'delete',
+            'POST' => 'create',
+            'OPTIONS {content}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => []
@@ -421,20 +436,11 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'controller' => ['promotion' => 'promotion'],
-        'tokens' => [
-            '{id}' => '<id:\\w[\\w,]*>',
-            '{token}' => '<token:\\d[\\d,]*>',
-        ],
         'patterns' => [
-            'GET,HEAD' => 'index',
-            'PUT,PATCH {id}' => 'update',
-            'DELETE {id}' => 'delete',
-            'GET,HEAD {id}' => 'view',
-            'POST' => 'create',
-            'OPTIONS {id}' => 'options',
+            'GET' => 'index',
+            'POST' => 'check',
             'OPTIONS' => 'options',
         ],
-        'extraPatterns' => []
     ],
     [
         'class' => \common\filters\ApiUrlRule::className(),
@@ -542,5 +548,58 @@ return [
             'POST create'=> 'create',
             'OPTIONS create'=> 'options',
         ]
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['notifications' => 'notifications'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'subscribe',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['s-tracking-code' => 'service/tracking-code-service'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'POST' => 'merge',
+            'POST {id}' => 'map-unknown,seller-refund,mark-hold',
+            'DELETE {id}' => 'split-tracking',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [
+            'POST map-unknown/<id:\d+>'=> 'map-unknown',
+            'OPTIONS map-unknown/<id:\d+>'=> 'options',
+            'POST seller-refund/<id:\d+>'=> 'seller-refund',
+            'OPTIONS seller-refund/<id:\d+>'=> 'options',
+            'POST mark-hold/<id:\d+>'=> 'mark-hold',
+            'OPTIONS mark-hold/<id:\d+>'=> 'options',
+            'OPTIONS {id}' => 'options',
+        ]
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['cms'],
+        'patterns' => [
+            'GET,POST' => 'index',
+            'OPTIONS' => 'options',
+        ],
     ],
 ];

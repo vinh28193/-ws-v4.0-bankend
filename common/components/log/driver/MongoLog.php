@@ -84,7 +84,7 @@ class MongoLog extends ActionLogWS implements LoggingDriverInterface
     public function resolveRawValue($value)
     {
         if (is_array($value)) {
-            $value = @serialize($value);
+            $value = @json_encode($value);
         }
         return $value;
     }
