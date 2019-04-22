@@ -1,13 +1,22 @@
 <?php
 
 use frontend\assets\ItemAsset;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
+/* @var $item \common\products\BaseProduct */
+
 ItemAsset::register($this);
 
-?>
+Pjax::begin([
+    'options' => [
+        'id' => 'ebay-item',
+        'class' => 'detail-content'
+    ]
+]);
 
-<div class="row detail-content">
+?>
+<div class="row">
     <div class="col-md-9">
         <div class="detail-block">
             <div class="thumb-slider">
@@ -420,6 +429,8 @@ ItemAsset::register($this);
         </div>
     </div>
 </div>
+
+<?php Pjax::end();?>
 <div class="detail-block-2">
     <div class="row">
         <div class="col-md-3">
