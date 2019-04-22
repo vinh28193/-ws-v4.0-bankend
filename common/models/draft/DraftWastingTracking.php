@@ -8,6 +8,7 @@ class DraftWastingTracking extends \common\models\db\DraftWastingTracking
 {
     const MERGE_CALLBACK = 'MERGE_CALLBACK';
     const MERGE_MANUAL = 'MERGE_MANUAL';
+    const MERGE_BYHAND = 'MERGE_BYHAND'; // ToDo merge tracking Code by Employe supper or Support
     /**
      * {@inheritdoc}
      * @return \common\models\queries\DraftWastingTrackingQuery the active query used by this AR class.
