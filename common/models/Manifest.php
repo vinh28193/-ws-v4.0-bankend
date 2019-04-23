@@ -57,11 +57,11 @@ class Manifest extends DbManifest
     }
 
     public function getDraftPackageItems(){
-        return $this->hasMany(DraftPackageItem::className(),['manifest_id' => 'id'])->where(['and',['is not','product_id',null],['<>','product_id','']]);
+        return $this->hasMany(DraftPackageItem::className(),['manifest_id' => 'id'])->where(['and',['is not','product_id',null],['<>','product_id',''],['<>','status',DraftPackageItem::STATUS_SPLITED]]);
     }
 
     public function getUnknownTrackings(){
-        return $this->hasMany(DraftPackageItem::className(),['manifest_id' => 'id'])->where(['or',['product_id' => null],['product_id' => '']]);
+        return $this->hasMany(DraftPackageItem::className(),['manifest_id' => 'id'])->where(['or',['product_id' => null],['product_id' => '']])->andWhere(['<>','status',DraftPackageItem::STATUS_SPLITED]);
     }
 
     public function getDraftMissingTrackings(){

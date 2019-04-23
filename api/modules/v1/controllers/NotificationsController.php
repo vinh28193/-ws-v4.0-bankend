@@ -73,6 +73,7 @@ class NotificationsController extends BaseApiController
     public function actionSubscribe()
     {
 
+
           $_post = (array)$this->post;
           $_user_Identity = Yii::$app->user->getIdentity();
           $user_id = $_user_Identity->getId();
@@ -130,7 +131,7 @@ class NotificationsController extends BaseApiController
             } 
 
         }   
- 
+
     }
 
     public function actionUpdate($id)

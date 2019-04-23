@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $package_id id của package
- * @property string $package_code
+ * @property string $package_code Mã kiện của weshop
  * @property string $box_me_warehouse_tag mã thẻ kho box me
  * @property int $order_id order id
  * @property string $sku sku sản phẩm
@@ -32,6 +32,7 @@ use Yii;
  * @property string $price Giá trị 1 sản phẩm
  * @property string $cod
  * @property string $version version 4.0
+ * @property int $hold DDasnhh dấu hàng hold. 1 là hold
  */
 class PackageItem extends \common\components\db\ActiveRecord
 {
@@ -49,9 +50,9 @@ class PackageItem extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['package_id', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'created_at', 'updated_at', 'remove'], 'integer'],
+            [['package_id', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'created_at', 'updated_at', 'remove', 'hold'], 'integer'],
             [['weight', 'change_weight', 'dimension_l', 'dimension_w', 'dimension_h', 'price', 'cod'], 'number'],
-            [['package_code'], 'string', 'max' => 50],
+            [['package_code'], 'string', 'max' => 32],
             [['box_me_warehouse_tag', 'sku', 'version'], 'string', 'max' => 255],
             [['current_status'], 'string', 'max' => 100],
         ];
@@ -88,6 +89,7 @@ class PackageItem extends \common\components\db\ActiveRecord
             'price' => 'Price',
             'cod' => 'Cod',
             'version' => 'Version',
+            'hold' => 'Hold',
         ];
     }
 }

@@ -8,7 +8,10 @@ use api\controllers\BaseApiController;
 use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftPackageItem;
 use common\models\draft\DraftWastingTracking;
+use common\models\Package;
+use common\models\PackageItem;
 use common\models\Product;
+use common\models\PurchaseProduct;
 use Yii;
 
 class TrackingCodeServiceController extends BaseApiController
@@ -18,7 +21,7 @@ class TrackingCodeServiceController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['merge','index','map-unknown','split-tracking'],
+                'actions' => ['merge', 'index', 'map-unknown', 'split-tracking', 'seller-refund','mark-hold'],
                 'roles' => $this->getAllRoles(true),
             ],
         ];
@@ -30,6 +33,8 @@ class TrackingCodeServiceController extends BaseApiController
             'split-tracking' => ['DELETE'],
             'merge' => ['POST'],
             'map-unknown' => ['POST'],
+            'mark-hold' => ['POST'],
+            'seller-refund' => ['POST'],
             'index' => ['GET'],
         ];
     }
@@ -42,11 +47,21 @@ class TrackingCodeServiceController extends BaseApiController
         }
         $missing = $this->post['merge']['type'] == 'miss' ? DraftMissingTracking::findOne($this->post['merge']['data']['id']) : DraftMissingTracking::findOne($this->post['target']['data']['id']);
         $wasting = $this->post['merge']['type'] == 'wast' ? DraftWastingTracking::findOne($this->post['merge']['data']['id']) : DraftWastingTracking::findOne($this->post['target']['data']['id']);
-        $model = new DraftPackageItem();
-        $model->tracking_code = $missing->tracking_code;
-        $model->tracking_merge = $missing->tracking_code.','.$wasting->tracking_code;
-        $model->product_id = $missing->product_id ? $missing->product_id : $wasting->product_id;
-        $model->order_id = $missing->order_id ? $missing->order_id : $wasting->order_id;
+        $model = DraftPackageItem::find()->where([
+            'tracking_code' => $missing->tracking_code,
+            'status' => DraftPackageItem::STATUS_SPLITED,
+            'product_id' => $missing->product_id ? $missing->product_id : $wasting->product_id,
+            'order_id' => $missing->order_id ? $missing->order_id : $wasting->order_id
+        ])->one();
+        if(!$model){
+            $model = new DraftPackageItem();
+            $model->tracking_code = $missing->tracking_code;
+            $model->tracking_merge = $missing->tracking_code.','.$wasting->tracking_code;
+            $model->product_id = $missing->product_id ? $missing->product_id : $wasting->product_id;
+            $model->order_id = $missing->order_id ? $missing->order_id : $wasting->order_id;
+            $model->created_at = time();
+            $model->created_by = Yii::$app->user->getId();
+        }
         $model->quantity = $wasting->quantity;
         $model->weight = $wasting->weight;
         $model->dimension_l = $wasting->dimension_l;
@@ -56,9 +71,7 @@ class TrackingCodeServiceController extends BaseApiController
         $model->manifest_code = $missing->manifest_code;
         $model->purchase_invoice_number = $missing->purchase_invoice_number ? $missing->purchase_invoice_number : $wasting->purchase_invoice_number;
         $model->status = $wasting->status;
-        $model->created_at = time();
         $model->updated_at = time();
-        $model->created_by = Yii::$app->user->getId();
         $model->updated_by = Yii::$app->user->getId();
         $model->item_name = $wasting->item_name;
         $model->warehouse_tag_boxme = $wasting->warehouse_tag_boxme;
@@ -87,10 +100,85 @@ class TrackingCodeServiceController extends BaseApiController
         return $this->response(true,'Map tracking success!');
     }
     public function actionSplitTracking($id){
+        /** @var DraftPackageItem $model */
+        $model = DraftPackageItem::find()->where(['id' => $id])->active()->one();
+        if(!$model){
+            return $this->response(false,'Cannot find your tracking!');
+        }
+        $model->status = DraftPackageItem::STATUS_SPLITED;
+        $model->save(0);
+        $arr_tracking = explode(',',$model->tracking_merge);
+        foreach ($arr_tracking as $k => $v){
+            if($k == 1){
+                /** @var DraftWastingTracking $class */
+                $class = DraftWastingTracking::className();
+            }else{
+                /** @var DraftMissingTracking $class */
+                $class = DraftMissingTracking::className();
+            }
+            $tmp =  $class::find()->where([
+                'status' => $class::MERGE_MANUAL,
+                'tracking_code' => $v
+            ])->one();
+            if(!$tmp){
+                $tmp = new $class();
+            }
+            $data = $model->getAttributes();
+            unset($data['id']);
+            $tmp->setAttributes($data,false);
+            $tmp->status = $class::SPILT_MANUAL;
+            $tmp->tracking_code = $v;
+            if($k == 1){
+                $tmp->product_id = '';
+                $tmp->order_id = '';
+            }else{
+                $tmp->item_name = '';
+                $tmp->weight = '';
+                $tmp->dimension_l = '';
+                $tmp->dimension_h = '';
+                $tmp->dimension_w = '';
+                $tmp->image = '';
+            }
+            $tmp->save(0);
+        }
+        return $this->response(true,'Split success!');
+    }
+
+    public function actionSellerRefund($id)
+    {
+        /** @var DraftPackageItem $model */
         $model = DraftPackageItem::findOne($id);
         if(!$model){
             return $this->response(false,'Cannot find your tracking!');
         }
-        
+//        $model->status = 'SELLER_'.strtoupper($this->post['type']);
+//        $model->save(0);
+        $model->product->seller_refund_amount = $model->product->seller_refund_amount ? floatval($model->product->seller_refund_amount) + $this->post['amount'] : $this->post['amount'];
+        $model->product->save(0);
+        if($model->purchaseOrder){
+            /** @var PurchaseProduct $proPurchase */
+            $proPurchase = PurchaseProduct::find()->where(['purchase_order_id' => $model->purchaseOrder->id, 'product_id' => $model->product_id])->one();
+            $proPurchase->seller_refund_amount = $proPurchase->seller_refund_amount ? floatval($proPurchase->seller_refund_amount) + $this->post['amount'] :  $this->post['amount'];
+            $proPurchase->save(0);
+        }
+        return $this->response(true,'Update seller refund '.$this->post['type'].' success!');
+    }
+    public function actionMarkHold($id){
+        $model = DraftPackageItem::findOne($id);
+        $model->hold = $this->post['hold'];
+        $model->save(0);
+        /** @var Package $pack */
+        $pack = Package::find()->where(['tracking_seller' => $model->tracking_code,'manifest_code' => $model->manifest_code])->one();
+        if($pack){
+            PackageItem::updateAll(
+                ['hold' => $this->post['hold']],
+                [
+                    'package_id' => $pack->id,
+                    'sku' => $model->product ? strtolower($model->product->portal) == 'ebay' ? $model->product->parent_sku : $model->product->sku : null,
+                    'updated_at' => time()
+                ]
+            );
+        }
+        return $this->response(true, $this->post['hold'] ? 'hold success!' : 'UnHold success!');
     }
 }
