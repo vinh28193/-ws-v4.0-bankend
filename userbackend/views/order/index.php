@@ -24,24 +24,26 @@ $this->params['breadcrumbs'][] = $this->title;
             </thead>
             <tbody>
             <?php foreach ($models  as $order) { ?>
-            <tr>
+            <tr style="border-bottom: 1px solid #ebebeb">
                 <td>
-                    <div class="product-info">
-                        <div class="thumb">
-<!--                            <img src="--><?php //$order->products->link_img ?><!--" alt=""/>-->
+                    <?php foreach ($order->products as $product) {?>
+                        <div class="product-info">
+                            <div class="thumb">
+                                <img src="<?= !is_null($product->link_img) ? $product->link_img : 'no-image' ?>" alt=""/>
+                            </div>
+                            <div class="info">
+                                <b><?= $product->product_name ?></b>
+                                <span><?= $product->quantity_purchase ?></span>
+                            </div>
                         </div>
-                        <div class="info">
-<!--                            <b>--><?php //$order->products->product_name ?><!--</b>-->
-<!--                            <span>--><?php //$order->products->quantity ?><!--</span>-->
-                        </div>
-                    </div>
+                    <?php } ?>
                 </td>
-                <td><a href="#"><?php $order->ordercode ?></a></td>
+                <td><a href="#"><?= $order->ordercode ?></a></td>
                 <td>
-                    <b><?php $order->new ?></b>
+                    <b><?= $order->new ?></b>
                 </td>
                 <td><b class="total text-orange"></b></td>
-                <td><b><?php $order->current_status ?></b></td>
+                <td><b><?= $order->current_status ?></b></td>
             </tr>
             <?php } ?>
             </tbody>

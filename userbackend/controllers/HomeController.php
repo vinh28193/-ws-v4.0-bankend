@@ -34,7 +34,14 @@ class HomeController extends Controller
      */
     public function actionIndex()
     {
-
-        return $this->render('index');
+//        $userId = Yii::$app->user->getIdentity()->scope;
+        $orders = Order::find()
+//            ->where(['=', 'customer_id', $userId]);
+        ->all();
+        $total = count($orders);
+        return $this->render('index', [
+            'orders' => $orders,
+            'total' => $total
+        ]);
     }
 }

@@ -17,7 +17,7 @@
         <div class="statistic-item">
             <span class="icon-box icon2"><i class="icon"></i></span>
             <div class="name">Đơn hàng</div>
-            <div class="info">500</div>
+            <div class="info"><?= $total ?></div>
             <a href="#">Chi tiết >></a>
         </div>
     </div>
@@ -57,21 +57,13 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <?php foreach ($orders as $order) { ?>
                         <tr>
-                            <td><a href="#">CP27673122</a> </td>
+                            <td><a href="#"><?= $order->ordercode ?></a> </td>
                             <td>Kho Việt Nam</td>
                             <td>17:34 04/04/2019</td>
                         </tr>
-                        <tr>
-                            <td><a href="#">CP27673122</a> </td>
-                            <td>Kho Việt Nam</td>
-                            <td>17:34 04/04/2019</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">CP27673122</a> </td>
-                            <td>Kho Việt Nam</td>
-                            <td>17:34 04/04/2019</td>
-                        </tr>
+                        <?php } ?>
                         </tbody>
                     </table>
                 </div>

@@ -35,20 +35,15 @@ class OrderController extends Controller
      */
     public function actionIndex()
     {
-        $post = Yii::$app->request->get('statsu');
+//        $userId = Yii::$app->user->getIdentity()->scope;
+        $post = Yii::$app->request->get('status');
         $dataProvider = OrderSearch::find()
             ->with('products');
-        if (isset($post)) {
-            $dataProvider ->where(['current_status', $post]);
+//            ->andWhere(['=', 'customer_id', $userId]);
+        if (isset($post) && !empty($post)) {
+            $dataProvider ->andWhere(['=','current_status', $post]);
         }
         $models = $dataProvider->all();
-//        var_dump($models);
-//        die();
-//        $countQuery = clone $dataProvider;
-//        $pages = new Pagination(['totalCount' => $countQuery->count()]);
-//        $models = $dataProvider->offset($pages->offset)
-//            ->limit($pages->limit)
-//            ->all();
 
         return $this->render('index', [
             'models' => $models,

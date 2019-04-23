@@ -62,7 +62,7 @@ UserBackendAsset::register($this);
             </div>
             <ul id="be-menu-collapse" class="be-menu-collapse">
                 <li>
-                    <a href="#"><i class="icon icon1"></i> Thống kê chung</a>
+                    <?php echo Html::a('<span class="icon icon1"></span>Thống kê Chung', ['/home']);?>
                 </li>
                 <li class="accordion">
                     <a href="#"><i class="icon icon2"></i> Quản lí tiền</a>
@@ -81,14 +81,30 @@ UserBackendAsset::register($this);
                     <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-2" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
                     <div id="sub-2" class="sub-collapse collapse" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                         <ul>
-                            <li><a href="#">Tất cả đơn hàng</a></li>
-                            <li><a href="#">Chờ thanh toán</a></li>
-                            <li><a href="#">Đã thanh toán</a></li>
-                            <li><a href="#">Đã mua hàng</a></li>
-                            <li><a href="#">Đã về kho US</a></li>
-                            <li><a href="#">Đã về kho Việt Nam</a></li>
-                            <li><a href="#">Đã giao</a></li>
-                            <li><a href="#">Đã hủy</a></li>
+                            <li>
+                                <?php echo Html::a('Tất cả các đơn', ['/order'],['class' => 'active']); ?>
+                            </li>
+                            <li>
+                                <?php echo Html::a('Chờ Thanh Toán', ['/order?status=SUPPORTING']);?>
+                            </li>
+                            <li>
+                                <?php echo Html::a('Đã thanh toán', ['/order?status=READY2PURCHASE']);?>
+                            </li>
+                            <li>
+                                <?php echo Html::a('Đã mua hàng', ['/order?status=PURCHASED']);?>
+                            </li>
+                            <li>
+                                <?php echo Html::a('Đã về kho US', ['/order?status=STOCKIN_US']);?>
+                            </li>
+                            <li>
+                                <?php echo Html::a('Đã về kho Việt Nam', ['/order?status=STOCKIN_LOCAL']);?>
+                            </li>
+                            <li>
+                                <?php echo Html::a('Đã giao', ['/order?status=NEW']);?>
+                            </li>
+                            <li>
+                                <?php echo Html::a('Đã hủy', ['/order?status=CANCEL']);?>
+                            </li>
                         </ul>
                     </div>
                 </li>
