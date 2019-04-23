@@ -72,12 +72,15 @@ class CreateOrderForm extends BaseForm
      */
     public function calculateParams($model)
     {
+        $params = [];
         $wh = $model->warehouseSend;
 
         $from = [
             'pickup_id' => $wh->ref_warehouse_id,
             'country' => Location::COUNTRY_VN
         ];
+
+        $params['form'] = $from;
         $to = new ShipTo([
             'contact_name' => $model->receiver_name,
             'phone' => $model->receiver_phone,
@@ -87,6 +90,8 @@ class CreateOrderForm extends BaseForm
             'province' => $model->receiver_province_id,
             'zipcode' => $model->receiver_post_code,
         ]);
+        $params['to'] = $to->getAttributes();
+
         if (!$to->validate()) {
             $model->updateAttributes([
                 'current_status' => ModelShipment::STATUS_FAILED
@@ -130,8 +135,8 @@ class CreateOrderForm extends BaseForm
             'order_type' => Config::ORDER_TYPE_CONSOLIDATE,
             'auto_approve' => $model->is_hold ? Config::ACCEPTED : Config::NOT_ACCEPT,
             'insurance' => $model->is_insurance ? Config::ACCEPTED : Config::NOT_ACCEPT,
-            'currency' => $model->con
-        ])
+            'currency' => $model->receiverCountry->country_code
+        ]);
     }
 
     /**
