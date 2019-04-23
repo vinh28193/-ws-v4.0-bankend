@@ -9,9 +9,9 @@
 namespace common\models\boxme;
 
 
-class ParcelInfoForm
+class ParcelForm
 {
-    /** @var ItemInfoForm[] $items */
+    /** @var ItemForm[] $items */
     public $items;
     public $weight;
     public $inspect_note;

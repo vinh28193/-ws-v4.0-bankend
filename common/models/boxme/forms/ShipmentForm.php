@@ -9,7 +9,7 @@
 namespace common\models\boxme;
 
 
-class ShipmentInfoForm
+class ShipmentForm
 {
     public $content = "";
     public $cod_amount = "";
@@ -17,6 +17,6 @@ class ShipmentInfoForm
     public $total_amount = "";
     public $chargeable_weight = "";
     public $description = "Cho khách hàng xem khi giao hàng"; // | Show to customers when delivery
-    /** @var ParcelInfoForm[] $parcels */
+    /** @var ParcelForm[] $parcels */
     public $parcels;
 }

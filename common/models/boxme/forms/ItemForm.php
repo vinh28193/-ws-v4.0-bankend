@@ -9,7 +9,7 @@
 namespace common\models\boxme;
 
 
-class ItemInfoForm
+class ItemForm
 {
     public $sku = "";
     public $origin_country = "";
