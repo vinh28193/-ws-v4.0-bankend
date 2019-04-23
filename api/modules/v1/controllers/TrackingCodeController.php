@@ -94,7 +94,7 @@ class TrackingCodeController extends BaseApiController
         if($trackingM){
             $miss->andWhere(['like','tracking_code',$trackingM]);
         }
-        $wast = DraftMissingTracking::find()->where(['manifest_id' => $data['_items']['id']])
+        $wast = DraftWastingTracking::find()->where(['manifest_id' => $data['_items']['id']])
             ->andWhere(['<>','status',DraftWastingTracking::MERGE_CALLBACK])
             ->andWhere(['<>','status',DraftWastingTracking::MERGE_MANUAL]);
         if($trackingW){
@@ -116,10 +116,10 @@ class TrackingCodeController extends BaseApiController
         $data['_items']['draftPackageItems_total'] = $complete->count();
         $data['_items']['unknownTrackings_total'] = $unknown->count();
 
-        $data['_items']['draftWastingTrackings'] = $wast->orderBy('id desc')->limit($limit_w)->offset($page_w*$limit_w - $limit_w)->asArray()->all();
-        $data['_items']['draftMissingTrackings'] = $miss->orderBy('id desc')->limit($limit_ms)->offset($page_ms*$limit_ms - $limit_ms)->asArray()->all();
-        $data['_items']['draftPackageItems'] = $complete->orderBy('id desc')->limit($limit_c)->offset($page_c*$limit_c - $limit_c)->asArray()->all();
-        $data['_items']['unknownTrackings'] = $unknown->orderBy('id desc')->limit($limit_u)->offset($page_u*$limit_u - $limit_u)->asArray()->all();
+        $data['_items']['draftWastingTrackings'] = $wast->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_w)->offset($page_w*$limit_w - $limit_w)->asArray()->all();
+        $data['_items']['draftMissingTrackings'] = $miss->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_ms)->offset($page_ms*$limit_ms - $limit_ms)->asArray()->all();
+        $data['_items']['draftPackageItems'] = $complete->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_c)->offset($page_c*$limit_c - $limit_c)->asArray()->all();
+        $data['_items']['unknownTrackings'] = $unknown->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_u)->offset($page_u*$limit_u - $limit_u)->asArray()->all();
         return $this->response(true, "Success", $data);
     }
 
