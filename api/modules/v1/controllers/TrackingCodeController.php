@@ -67,7 +67,7 @@ class TrackingCodeController extends BaseApiController
         $limit_ms = \Yii::$app->request->get('ps_ms',20);
         $page_u = \Yii::$app->request->get('p_mu',1);
         $limit_u = \Yii::$app->request->get('ps_mu',20);
-        $manifest_Code = \Yii::$app->request->get('q');
+        $manifest_id = \Yii::$app->request->get('m');
         $trackingC = \Yii::$app->request->get('trackingC');
         $trackingU = \Yii::$app->request->get('trackingU');
         $trackingW = \Yii::$app->request->get('trackingW');
@@ -79,9 +79,9 @@ class TrackingCodeController extends BaseApiController
         //#Todo filter
         http://weshop-v4.back-end.local.vn/v1/tracking-code?trackingC=&trackingW=&trackingM=&trackingU=&ps_ms=20&ps_u=20&ps_c=20&ps_w=20&p_ms=1&p_u=1&p_c=1&p_w=1&ps_m=20&p_m=1
         $manifests = clone $model;
-        if($manifest_Code){
-            $model->andWhere(['manifest_code'=>$manifest_Code]);
-            $manifests->andWhere(['manifest_code'=>$manifest_Code]);
+        if($manifest_id){
+            $model->andWhere(['id'=>$manifest_id]);
+            $manifests->andWhere(['id'=>$manifest_id]);
         }
         if(!$trackingC && !$trackingM && !$trackingU && !$trackingW){
             $data['_total_manifest'] = $manifests->count();
