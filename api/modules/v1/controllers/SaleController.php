@@ -75,7 +75,7 @@ class SaleController extends BaseApiController
             $message .= "$role ";
         }
         $message .= "{$user->username} assign order {$model->ordercode} to {$sale->username}";
-        Yii::$app->wsLog->push('order', 'assign', null, [
+        Yii::$app->wsLog->push('order', 'assign sale', null, [
             'id' => $model->ordercode,
             'request' => $saleId,
             'response' => $message

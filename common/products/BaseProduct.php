@@ -175,7 +175,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
 
     /**
      * @param bool $refresh
-     * @return mixed|void
+     * @return Category
      */
     public function getCustomCategory($refresh = false)
     {

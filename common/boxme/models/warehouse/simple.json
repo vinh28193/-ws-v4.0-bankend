@@ -1,0 +1,101 @@
+{
+  "hawb": "RVS000-88",
+  "hawb_quantity": 6,
+  "hawb_email": "boxme@asia.com",
+  "hawb_type":0,
+  "hawb_warehouse": "BMVN_HCM",
+  "parcels": [
+    {
+      "item_weight": "463",
+      "tracking_code": "AA363863802342367",
+      "tracking_soi": "SOI-436038",
+      "tracking_type": "Normal",
+      "item_quantity": "",
+      "item_content": "(リベルト エドウィン) LIBERTO EDWIN ワークブーツ スノーブーツ レイン シューズ ブーツ 防水 防寒 折り返し メンズ 靴",
+      "item_note": "{\"色(color)\":\"キャメル(キャメル)\",\"サイズ(size)\":\"26.0 cm(26.0 cm)\"}",
+      "item_volume": "",
+      "item_inspect": "0",
+      "arr_images": [
+        {
+          "urls": "https://images-na.ssl-images-amazon.com/images/I/51TfYX%2BX7IL.jpg"
+        }
+      ]
+    },
+    {
+      "item_weight": "2300",
+      "tracking_code": "AG09374753641",
+      "tracking_soi": "SOI-436040",
+      "tracking_type": "Normal",
+      "item_quantity": "",
+      "item_content": "",
+      "item_note": "{\"Size\":\"R650\"}",
+      "item_volume": "",
+      "item_inspect": "0",
+      "arr_images": [
+        {
+          "urls": "https://images-na.ssl-images-amazon.com/images/I/519S5LhxhkL.jpg"
+        }
+      ]
+    },
+    {
+      "item_weight": "2300",
+      "tracking_code": "AE231212312437",
+      "tracking_soi": "SOI-436040",
+      "tracking_type": "Normal",
+      "item_quantity": "",
+      "item_content": "",
+      "item_note": "{\"Size\":\"R650\"}",
+      "item_volume": "",
+      "item_inspect": "0",
+      "arr_images": [
+        {
+          "urls": "https://images-na.ssl-images-amazon.com/images/I/519S5LhxhkL.jpg"
+        }
+      ]
+    },
+    {
+      "item_weight": "2300",
+      "tracking_code": "AF92743864473",
+      "tracking_soi": "SOI-436042",
+      "tracking_type": "Normal",
+      "item_quantity": "",
+      "item_content": "",
+      "item_note": "{\"Size\":\"R650\"}",
+      "item_volume": "",
+      "item_inspect": "0",
+      "arr_images": [
+        {
+          "urls": "https://images-na.ssl-images-amazon.com/images/I/519S5LhxhkL.jpg"
+        }
+      ]
+    },
+    {
+      "item_weight": "234",
+      "tracking_code": "AD342342980634",
+      "tracking_soi": "SOI-436043",
+      "tracking_type": "Normal",
+      "item_quantity": "",
+      "item_content": "iRobot Roomba 650 Robot Vacuum",
+      "item_note": "{\"Size\":\"R650\"}",
+      "item_volume": "",
+      "item_inspect": "1",
+      "arr_images": [ ]
+    },
+    {
+      "item_weight": "100",
+      "tracking_code": "AA363863802342367",
+      "tracking_soi": "SOI-436038",
+      "tracking_type": "Normal",
+      "item_quantity": "",
+      "item_content": "(リベルト エドウィン) LIBERTO EDWIN ワークブーツ スノーブーツ レイン シューズ ブーツ 防水 防寒 折り返し メンズ 靴",
+      "item_note": "{\"色(color)\":\"キャメル(キャメル)\",\"サイズ(size)\":\"26.0 cm(26.0 cm)\"}",
+      "item_volume": "",
+      "item_inspect": "0",
+      "arr_images": [
+        {
+          "urls": "https://images-na.ssl-images-amazon.com/images/I/51TfYX%2BX7IL.jpg"
+        }
+      ]
+    }
+  ]
+}

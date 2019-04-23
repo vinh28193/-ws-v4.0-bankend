@@ -464,6 +464,25 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
+        'controller' => ['link-image' => 'image-mongo'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
         'controller' => ['ext' => 'service/extension'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
@@ -600,6 +619,26 @@ return [
         'patterns' => [
             'GET,POST' => 'index',
             'OPTIONS' => 'options',
+
+        ],
+    ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['courier' => 'service/courier'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'POST create' => 'create',
+            'GET suggest/{id}' => 'calculate',
+            'GET cancel/{code}' => 'cancel',
+            'OPTIONS' => 'options',
+            'OPTIONS order' => 'options',
+            'OPTIONS suggest/{id}' => 'options',
+            'OPTIONS cancel/{code}' => 'options',
         ],
     ],
 ];

@@ -12,6 +12,16 @@ use api\controllers\BaseApiController;
 use common\data\ActiveDataProvider;
 use common\models\Shipment;
 
+/**
+ * Class ShipmentController
+ * @package api\modules\v1\controllers
+ *
+ * shipment router
+ * GET => index
+ * POST => create
+ * POST id => calculate
+ * GET id => cancel
+ */
 class ShipmentController extends BaseApiController
 {
 
@@ -64,6 +74,5 @@ class ShipmentController extends BaseApiController
         $query->filter($params);
 
         return $this->response(true, "get shipment success", $dataProvider);
-
     }
 }
