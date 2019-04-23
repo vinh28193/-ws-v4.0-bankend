@@ -6,7 +6,7 @@
  * Time: 14:45
  */
 
-namespace common\models\boxme\forms;
+namespace common\boxme\forms;
 
 use yii\base\Model;
 
