@@ -37,7 +37,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_PAY_BACK = 'updatePayBack';
     const SCENARIO_UPDATE_SELLER_REFUND = 'updateSellerRefund';
     const SCENARIO_UPDATE_PROMOTION = 'updatePromotionId';
-    const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupporting';
+    const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupported';
 
     /**
      * order type
