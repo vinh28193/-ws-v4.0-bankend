@@ -13,7 +13,7 @@ class m190422_140516_alter_shipment_table extends Migration
     public function safeUp()
     {
         $this->alterColumn('shipment','courier_logo',$this->string(32)->comment('mã hãng vận chuyển'));
-        $this->alterColumn('shipment','is_insurance',$this->smallInteger()->defaultValue(0)->after('is_hold')->comment('đánh dấu bảo hiểm'));
+        $this->addColumn('shipment','is_insurance',$this->smallInteger()->defaultValue(0)->after('is_hold')->comment('đánh dấu bảo hiểm'));
     }
 
     /**

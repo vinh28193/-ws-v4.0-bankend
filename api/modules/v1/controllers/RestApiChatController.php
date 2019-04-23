@@ -91,7 +91,7 @@ class RestApiChatController extends BaseApiController
         if (isset($_post) !== null) {
             @date_default_timezone_set('Asia/Ho_Chi_Minh');
             $model = new ChatMongoWs();
-                //  $model->attributes = $_post;
+            //  $model->attributes = $_post;
             $_user_Identity = Yii::$app->user->getIdentity();
             $_user_id = $_user_Identity->getId();
             $_user_email = $_user_Identity['email'];
@@ -100,13 +100,25 @@ class RestApiChatController extends BaseApiController
             //----ToDo Need More Infor param
             $_user_app = 'Weshop2019'; /***Todo Set**/
             $_request_ip = Yii::$app->getRequest()->getUserIP();
-            $isNew = isset($_post['isNew']) && $_post['isNew'] === 'yes';
+            // $isNew = isset($_post['isNew']) && $_post['isNew'] === 'yes';
             //code vandinh : status order
-            $isSupporting = 1; //1:true;0:false
+ 
+            $isSupported = 0; //1:true;0:false
             if($_post['type_chat'] == 'GROUP_WS')
             {
-                $isSupporting = $this->keyChatManger->has($_post['message']);
+                $isSupported = $this->keyChatManger->has($_post['message']);
+
             }
+            $order =  Order::find()->where(['ordercode' => $_post['Order_path']])->one();
+            $current_status = $order->current_status;
+            $isNew = false;
+            if($current_status == Order::STATUS_NEW)
+            {
+                $isNew = true;
+            }
+            $isNew = $isNew ? true : false;
+            $isSupported = $isSupported ? true : false;
+
             //end code vandinh
             $_rest_data = ["ChatMongoWs" => [
                 "success" => true,
@@ -129,26 +141,26 @@ class RestApiChatController extends BaseApiController
 
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
-                if($isNew === true && $isSupporting == 1)
+                // chat group ws from new to supported
+               
+                if($isNew === true &&  $isSupported === true)
+                {
+                        Order::updateAll([
+                            'current_status' => Order::STATUS_SUPPORTED  
+                        ],['ordercode' => $_post['Order_path']]);
+                }
+                //chat group customer from new to supporting
+                if($isNew === true && $_post['type_chat'] == 'WS_CUSTOMER')
                 {
 
                  // code vandinh staus order is new or chat supporting
-
+                  
                     $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}, order new to supporting";
-                    // ToDo : @Phuc : Phải check xuống db lần nữa xem hiện tại trang thái Của Order là gì ?
-                    // + Có thỏa mã điều kiện chuyển sang SUPPORTED không ?
-                    // thi mới chuyển SUPPORTED
-
-                    if ($isNew === true) {
-                        Order::updateAll([
-                            'current_status' => Order::STATUS_SUPPORTING,
-                            'supporting' => Yii::$app->getFormatter()->asTimestamp('now') // ToDo Sai Cái này chỉ Supported khi nhân viên Chát
-                        ],['ordercode' => $_post['Order_path']]);
-                    } else {
+                
                         Order::updateAll([
                             'current_status' => Order::STATUS_SUPPORTING
                         ],['ordercode' => $_post['Order_path']]);
-                    }
+                
                 //code update action log
                     if (!$model->save())
                      {
@@ -165,9 +177,9 @@ class RestApiChatController extends BaseApiController
                     'request' => $this->post,
                     'response' => $_post['message']
                 ]);
-
+                  
                 }
-
+                
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
