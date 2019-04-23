@@ -25,6 +25,7 @@ use Yii;
  * @property int $updated_at
  * @property int $created_by
  * @property int $updated_by
+ * @property string $type_tracking split, normal, unknown
  */
 class DraftDataTracking extends \common\components\db\ActiveRecord
 {
@@ -45,7 +46,7 @@ class DraftDataTracking extends \common\components\db\ActiveRecord
             [['tracking_code'], 'required'],
             [['product_id', 'order_id', 'manifest_id', 'quantity', 'number_get_detail', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
-            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status'], 'string', 'max' => 255],
+            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'type_tracking'], 'string', 'max' => 255],
         ];
     }
 
@@ -73,6 +74,7 @@ class DraftDataTracking extends \common\components\db\ActiveRecord
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
+            'type_tracking' => 'Type Tracking',
         ];
     }
 }
