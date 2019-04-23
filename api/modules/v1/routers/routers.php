@@ -613,12 +613,13 @@ return [
             '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
-            'POST' => 'create',
-            'GET {id}' => 'calculate',
-            'GET {code}' => 'cancel',
+            'POST create' => 'create',
+            'GET suggest/{id}' => 'calculate',
+            'GET cancel/{code}' => 'cancel',
             'OPTIONS' => 'options',
-            'OPTIONS {id}' => 'options',
-            'OPTIONS {code}' => 'options',
+            'OPTIONS order' => 'options',
+            'OPTIONS suggest/{id}' => 'options',
+            'OPTIONS cancel/{code}' => 'options',
         ],
     ],
 ];

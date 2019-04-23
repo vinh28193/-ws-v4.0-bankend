@@ -6,7 +6,7 @@
  * Time: 14:41
  */
 
-namespace common\boxme\forms;
+namespace common\boxme\models;
 
 use yii\base\Model;
 use yii\db\Expression;
@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 use common\boxme\Location;
 use common\models\db\SystemDistrictMapping;
 
-class ShipToForm extends Model
+class ShipTo extends Model
 {
     public $contact_name;
     public $company_name;

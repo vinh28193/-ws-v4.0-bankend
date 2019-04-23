@@ -6,14 +6,14 @@
  * Time: 14:52
  */
 
-namespace common\boxme\forms;
+namespace common\boxme\models;
 
 use yii\base\Model;
 
-class ParcelForm extends Model
+class Parcel extends Model
 {
     /**
-     * @var ItemForm[] $items
+     * @var Item[] $items
      */
     public $items;
     /**
@@ -82,7 +82,7 @@ class ParcelForm extends Model
                 $this->addError($attribute, 'Invalid Items');
             }
             foreach ($values as $value) {
-                if ($value instanceof ParcelForm && !$value->validate()) {
+                if ($value instanceof Item && !$value->validate()) {
                     $this->addError($attribute, $value->getErrors());
                 }
             }

@@ -6,11 +6,11 @@
  * Time: 14:49
  */
 
-namespace common\boxme\forms;
+namespace common\boxme\models;
 
 use yii\base\Model;
 
-class ShipmentForm extends Model
+class Shipment extends Model
 {
     /**
      * @var string
@@ -29,7 +29,7 @@ class ShipmentForm extends Model
     public $chargeable_weight;
     public $description = 'Cho khách hàng xem khi giao hàng'; // | Show to customers when delivery
     /**
-     * @var ParcelForm[] $parcels
+     * @var Parcel[] $parcels
      */
     public $parcels;
 
