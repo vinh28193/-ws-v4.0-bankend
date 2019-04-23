@@ -154,19 +154,9 @@ class RestApiChatController extends BaseApiController
                 {
 
                  // code vandinh staus order is new or chat supporting
-
-
+                  
                     $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}, order new to supporting";
-                    // ToDo : @Phuc : Phải check xuống db lần nữa xem hiện tại trang thái Của Order là gì ?
-                    // + Có thỏa mã điều kiện chuyển sang SUPPORTED không ?
-                    // thi mới chuyển SUPPORTED
-
-                    if ($isNew === true) {
-                        Order::updateAll([
-                            'current_status' => Order::STATUS_SUPPORTING,
-                            'supporting' => Yii::$app->getFormatter()->asTimestamp('now') // ToDo Sai Cái này chỉ Supported khi nhân viên Chát
-                        ],['ordercode' => $_post['Order_path']]);
-                    } else {
+                
                         Order::updateAll([
                             'current_status' => Order::STATUS_SUPPORTING
                         ],['ordercode' => $_post['Order_path']]);
@@ -187,9 +177,9 @@ class RestApiChatController extends BaseApiController
                     'request' => $this->post,
                     'response' => $_post['message']
                 ]);
-
+                  
                 }
-
+                
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
