@@ -600,6 +600,25 @@ return [
         'patterns' => [
             'GET,POST' => 'index',
             'OPTIONS' => 'options',
+
+        ],
+    ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['courier' => 'service/courier'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'POST' => 'create',
+            'GET {id}' => 'calculate',
+            'GET {code}' => 'cancel',
+            'OPTIONS' => 'options',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS {code}' => 'options',
         ],
     ],
 ];
