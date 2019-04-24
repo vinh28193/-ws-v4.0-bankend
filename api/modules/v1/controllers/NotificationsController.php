@@ -80,7 +80,7 @@ class NotificationsController extends BaseApiController
           $_user_email = $_user_Identity['email'];
           $_user_AuthKey = $_user_Identity->getAuthKey();
           $_user_name = $_user_Identity['username'];
-          // $token = $_post['token'];
+          $token = $_post['token'];
           $fingerprint = $_post['fingerprint'];
           $details     = $_post['details'];
           $ordercode   = $_post['ordercode'];
@@ -91,9 +91,6 @@ class NotificationsController extends BaseApiController
             'code' => $ordercode,
             'subscribed_on' => $date_now
           ];
-
-          //gan bien
-          $token = 'fdsfsdfds';
 
           $_rest_data = ["PushNotifications" => [
             'user_id' => $user_id,
@@ -217,7 +214,9 @@ class NotificationsController extends BaseApiController
         {
             // delete notification
             $model->delete();
-            Yii::$app->api->sendSuccessResponse($model->attributes);
+            $model = ['order_list'=>0];
+            return $this->response(true, "Delete success", $model);
+
 
         }
     
