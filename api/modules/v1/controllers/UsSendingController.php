@@ -64,15 +64,19 @@ class UsSendingController extends BaseApiController
             $ext->andWhere(['tracking_code'=>$tracking_e]);
         }
 
-
+        $data['_tracking_total'] = 0;
+        $data['_tracking'] = [];
+        $data['_ext_total'] = 0;
+        $data['_ext'] = [];
         $data['_manifest_total'] = $manifest->count();
         $data['_manifest'] = $manifest->limit($limit)->offset($limit*$page - $limit)->orderBy('id desc')->asArray()->all();
-        $tracking->andWhere(['manifest_id' => $data['_manifest'][0]['id']]);
-        $data['_tracking_total'] = $tracking->count();
-        $data['_tracking'] = $tracking->limit($limit_t)->offset($limit_t*$page_t - $limit_t)->orderBy('id desc')->asArray()->all();
-        $data['_ext_total'] = $ext->count();
-        $data['_ext'] = $ext->limit($limit_e)->offset($limit_e*$page_e - $limit_e)->orderBy('id desc')->asArray()->all();
-        return $this->response(true, "Success", $data);
+        if($data['_manifest']){
+            $tracking->andWhere(['manifest_id' => $data['_manifest'][0]['id']]);
+            $data['_tracking_total'] = $tracking->count();
+            $data['_tracking'] = $tracking->limit($limit_t)->offset($limit_t*$page_t - $limit_t)->orderBy('id desc')->asArray()->all();
+            $data['_ext_total'] = $ext->count();
+            $data['_ext'] = $ext->limit($limit_e)->offset($limit_e*$page_e - $limit_e)->orderBy('id desc')->asArray()->all();
+        }
     }
     public function actionCreate()
     {
