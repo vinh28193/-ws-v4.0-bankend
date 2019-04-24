@@ -71,7 +71,8 @@ class PushNotifications extends ActiveRecord
             'user_email',
             'user_name',
             'details',
-            'order_list'
+            'order_list',
+            'nv'
 
         ];
     }
@@ -90,10 +91,11 @@ class PushNotifications extends ActiveRecord
                 'user_email',
                 'user_name',
                 'details',
-                'order_list'
+                'order_list',
+                'nv'
 
             ], 'safe'],
-            [[ 'token','fingerprint','user_id','user_email', 'user_name','details','order_list'], 'required'],
+            [[ 'token','fingerprint','user_id','user_email', 'user_name','details','order_list','nv'], 'required'],
         ];
     }
 
@@ -116,7 +118,8 @@ class PushNotifications extends ActiveRecord
             'subscribed_on' =>' Ngày User click vào button nhận Thống báo  ',
             'fingerprint' => 'UUID devices : đinh danh cua mỗi thiết bị nhận thông báo , Mỗi một người dùng có N thiết bị nhận thông báo',
             'details' => ' Thông tin Về Thiết bị ',
-            'order_list' => 'Danh sách đơn hàng'
+            'order_list' => 'Danh sách đơn hàng',
+            'nv'=> 'Ung dung'
             /*
                  "details": [
                     "browser" : String,

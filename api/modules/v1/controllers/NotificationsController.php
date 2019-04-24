@@ -80,7 +80,7 @@ class NotificationsController extends BaseApiController
           $_user_email = $_user_Identity['email'];
           $_user_AuthKey = $_user_Identity->getAuthKey();
           $_user_name = $_user_Identity['username'];
-          $token = $_post['token'];
+          // $token = $_post['token'];
           $fingerprint = $_post['fingerprint'];
           $details     = $_post['details'];
           $ordercode   = $_post['ordercode'];
@@ -91,6 +91,9 @@ class NotificationsController extends BaseApiController
             'code' => $ordercode,
             'subscribed_on' => $date_now
           ];
+
+          //gan bien
+          $token = 'fdsfsdfds';
 
           $_rest_data = ["PushNotifications" => [
             'user_id' => $user_id,
@@ -113,13 +116,19 @@ class NotificationsController extends BaseApiController
         {
 
             $order_list = $query->order_list; 
-            if(!in_array($order_code, $order_list))
+            if(!array_key_exists($ordercode, $order_list))
             {   
-
-                $order_list[] = $order_code;
+                
+                $order_list[$ordercode] = array(
+                    'code' => $ordercode,
+                   'subscribed_on' => $date_now
+                );
                 $query->order_list = $order_list;
-                $query->save();
-                return $this->response(true, 'Success', $query);
+                if($query->save());
+                {
+                 return $this->response(true, 'Success', $query);
+                }
+                return $this->response(false, 'Error delete ordercode');
 
             }
         }else
@@ -127,7 +136,7 @@ class NotificationsController extends BaseApiController
             $model = new PushNotifications();
             if ($model->load($_rest_data) and $model->save())
             {
-                   return $this->response(true, 'Success', $_rest_data);
+                return $this->response(true, 'Success', $_rest_data);
             } 
 
         }   
@@ -153,22 +162,65 @@ class NotificationsController extends BaseApiController
     public function actionView($id)
     {
         
-        if ($id !== null) {
-            $response = PushNotifications::find()
-                ->where(['Order_path' => $id])
-                ->asArray()->all();
-            return $this->response(true, "Get  $id success", $response);
-        } else {
-            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        $_post = (array)$this->get;
+        $fingerprint = (int)$_post['id'];
+        $model = PushNotifications::find()
+                ->where(['fingerprint' => $fingerprint])
+                ->one();
+        if(!empty($model))
+        {
+         return $this->response(true, "Success",$model);
+        }
+        else
+        {
+         return $this->response(false, "Fingerprint not exists", $model);
         }
     }
 
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
-        $this->can('canDelete', ['id' => $model->id]);
-        $model->delete();
-        Yii::$app->api->sendSuccessResponse($model->attributes);
+        $_post = (array)$this->get;
+
+        $fingerprint = (int)$_post['id'];
+        $ordercode = $_post['ordercode'];
+
+        $model = PushNotifications::find()
+                ->where(['fingerprint' => $fingerprint])
+                ->one();
+
+        if(empty($model))
+        {
+         return $this->response(false, "Fingerprint not exists", $model);
+        }        
+
+        $order_list = $model->order_list;
+        $count = count($order_list);
+        if($count > 1)
+        {
+
+            // update notification
+            if(array_key_exists($ordercode, $order_list))
+            {
+                unset($order_list[$ordercode]);
+                $model->order_list = $order_list;
+                $model->save();
+                return $this->response(true, "Delete success", $model);
+
+            }
+             else
+            {
+             return $this->response(false, "Ordercode not exists");
+
+            }
+        }
+        else
+        {
+            // delete notification
+            $model->delete();
+            Yii::$app->api->sendSuccessResponse($model->attributes);
+
+        }
+    
     }
 
 
