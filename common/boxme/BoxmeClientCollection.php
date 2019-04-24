@@ -10,10 +10,10 @@ use yii\base\InvalidConfigException;
 class BoxmeClientCollection extends Component
 {
 
+    public $env = BoxmeClient::ENV_PRODUCT;
     private $_clients = [
         Location::COUNTRY_VN => [
             'class' => 'common\boxme\BoxmeClient',
-            'env' => BoxmeClient::ENV_SANDBOX,
             'params' => [
                 BoxmeClient::ENV_SANDBOX => [
                     'api_key' => '424d0c829922f4ba3046b7344b008ced8a40964840a673c588fe10be4440769a',
@@ -27,7 +27,6 @@ class BoxmeClientCollection extends Component
         ],
         Location::COUNTRY_ID => [
             'class' => 'common\boxme\BoxmeClient',
-            'env' => BoxmeClient::ENV_SANDBOX,
             'params' => [
                 BoxmeClient::ENV_SANDBOX => [
                     'api_key' => '424d0c829922f4ba3046b7344b008ced8a40964840a673c588fe10be4440769a',
@@ -49,6 +48,7 @@ class BoxmeClientCollection extends Component
      */
     protected function createClient($config)
     {
+        $config['env'] = $this->env;
         return Yii::createObject($config);
     }
 

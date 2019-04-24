@@ -29,11 +29,39 @@ class CalculateForm extends BaseForm
     public $isInsurance = false;
     public $sortMode = Config::SORT_MODE_PRICE;
 
-    public function rules()
+    public function attributes()
     {
         return [
-
+            'warehouseId', 'toAddress', 'toDistrict', 'toProvince', 'toCountry',
+            'toZipCode', 'toName', 'toPhone',
+            'totalParcel', 'totalWeight', 'totalQuantity',
+            'totalCod', 'totalAmount',
+            'isInsurance', 'sortMode',
         ];
+    }
+
+    public function rules()
+    {
+       return [
+            [
+                 [
+                     'warehouseId', 'toAddress', 'toDistrict', 'toProvince', 'toCountry',
+                     'toZipCode', 'toName', 'toPhone',
+                     'totalParcel', 'totalWeight', 'totalQuantity',
+                     'totalCod', 'totalAmount'
+                 ],'required'
+            ],
+           [
+               [
+                   'warehouseId','toDistrict', 'toProvince', 'toCountry','totalQuantity'
+               ] , 'integer'
+           ],
+           [
+               [
+                   'toName','toPhone', 'sortMode'
+               ] , 'string'
+           ]
+       ];
     }
 
     public function calculate()
@@ -51,7 +79,7 @@ class CalculateForm extends BaseForm
             'contact_name' => $this->toName,
             'phone' => $this->toPhone,
             'address' => $this->toAddress,
-            'country' => $this->toCountry,
+            'country' => $location,
             'province' => $this->toProvince,
             'district' => $this->toDistrict,
             'zipcode' => $this->toZipCode
@@ -59,6 +87,7 @@ class CalculateForm extends BaseForm
         if (!$to->validate()) {
             return [false, $to->getFirstErrors(), []];
         }
+        $params['ship_to'] = $to->getAttributes();
         $params['shipments']['content'] = '';
         $params['shipments']['total_parcel'] = 1;
         $params['shipments']['total_amount'] = $this->totalAmount ? $this->totalAmount : 0;
@@ -76,9 +105,10 @@ class CalculateForm extends BaseForm
         $client = $collection->getClient($location);
         $client->env = 'product';
         if (($response = $client->pricingCalculate($params)) === false) {
+
             return [false, 'can not http to box me now', []];
         }
-        return [true, 'calculate success', $response];
+        return $response;
 
     }
 

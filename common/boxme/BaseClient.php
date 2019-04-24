@@ -30,10 +30,10 @@ class BaseClient extends BaseObject
     {
         parent::init();
         if (!isset($this->params[$this->env]) || ($params = $this->params[$this->env]) === null) {
-            throw new InvalidConfigException("params for env `{$this->env}` can not be null");
+            throw new InvalidConfigException('params for env `{$this->env}` can not be null');
         }
         if (!isset($params['api_key']) || !isset($params['base_url'])) {
-            throw new InvalidConfigException("params for env `{$this->env}` can not missing config of `api_key` and `base_url`");
+            throw new InvalidConfigException('params for env `{$this->env}` can not missing config of `api_key` and `base_url`');
         }
         $this->api_key = $params['api_key'];
         $this->base_url = $params['base_url'];
@@ -57,13 +57,16 @@ class BaseClient extends BaseObject
             // Todo Log here
             if (!$response->getIsOk()) {
                 Yii::error($result, __METHOD__);
-                return false;
             }
             return $result;
         } catch (Exception $exception) {
-            // Todo Log Exception
             Yii::error($exception, __METHOD__);
-            return false;
+            return [
+                'error' => true,
+                'error_code' =>  $exception->getCode(),
+                'messages' =>  $exception->getMessage(),
+                'data' => []
+            ];
         }
     }
 
