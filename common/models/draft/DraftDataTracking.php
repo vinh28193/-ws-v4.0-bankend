@@ -26,6 +26,8 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
     const STATUS_MAKE_US_SENDING = "MAKE_US_SENDING";
     const STATUS_CHECK_DONE = "CHECK_DONE";
     const STATUS_CHECK_DETAIL = "CHECK_DETAIL";
+    const STATUS_CALLBACK_SUCCESS = "CALLBACK";
+    const STATUS_MERGE_WAST = "MERGE_WAST";
     const TYPE_NORMAL = "NORMAL";
     const TYPE_SPLIT = "SPLIT";
     const TYPE_UNKNOWN = "UNKNOWN";

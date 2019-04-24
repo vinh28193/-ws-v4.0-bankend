@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
+use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftPackageItem;
 use common\models\draft\DraftWastingTracking;
@@ -45,8 +46,15 @@ class TrackingCodeServiceController extends BaseApiController
         if(!isset($this->post['target']) || !isset($this->post['target']['data']) || !$this->post['target']['data'] || !isset($this->post['target']['type']) || !$this->post['target']['type']){
             return $this->response(false,'data target empty');
         }
-        $missing = $this->post['merge']['type'] == 'miss' ? DraftMissingTracking::findOne($this->post['merge']['data']['id']) : DraftMissingTracking::findOne($this->post['target']['data']['id']);
+        $missing = $this->post['merge']['type'] == 'miss' ? DraftDataTracking::findOne($this->post['merge']['data']['id']) : DraftDataTracking::findOne($this->post['target']['data']['id']);
         $wasting = $this->post['merge']['type'] == 'wast' ? DraftWastingTracking::findOne($this->post['merge']['data']['id']) : DraftWastingTracking::findOne($this->post['target']['data']['id']);
+        if(!$wasting || $wasting->status == DraftWastingTracking::MERGE_MANUAL
+            || $wasting->status == DraftWastingTracking::MERGE_CALLBACK
+        || !$missing || $missing->status == DraftDataTracking::STATUS_CALLBACK_SUCCESS
+        || $wasting->status == DraftDataTracking::STATUS_MERGE_WAST
+        ){
+            return $this->response(false,'data merge not incorrect!');
+        }
         $model = DraftPackageItem::find()->where([
             'tracking_code' => $missing->tracking_code,
             'status' => DraftPackageItem::STATUS_SPLITED,
@@ -78,7 +86,7 @@ class TrackingCodeServiceController extends BaseApiController
         $model->note_boxme = $wasting->note_boxme;
         $model->image = $wasting->image;
         $model->save();
-        $missing->status = DraftMissingTracking::MERGE_MANUAL;
+        $missing->status = DraftDataTracking::STATUS_MERGE_WAST;
         $missing->save();
         $wasting->status = DraftWastingTracking::MERGE_MANUAL;
         $wasting->save();
