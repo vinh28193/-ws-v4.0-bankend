@@ -71,7 +71,7 @@ class UsSendingController extends BaseApiController
         $data['_tracking_total'] = $tracking->count();
         $data['_tracking'] = $tracking->limit($limit_t)->offset($limit_t*$page_t - $limit_t)->orderBy('id desc')->asArray()->all();
         $data['_ext_total'] = $ext->count();
-        $data['_ext'] = $ext->limit($limit_t)->offset($limit_t*$page_t - $limit_t)->orderBy('id desc')->asArray()->all();
+        $data['_ext'] = $ext->limit($limit_e)->offset($limit_e*$page_e - $limit_e)->orderBy('id desc')->asArray()->all();
         return $this->response(true, "Success", $data);
     }
     public function actionCreate()

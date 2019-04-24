@@ -274,8 +274,8 @@ class BoxMeController extends Controller
     public function actionEmulatorCallback($manifest_code)
     {
         echo "Bắt đầu quá trình giả lập :" . PHP_EOL;
-        /** @var DraftBoxmeTracking[] $track */
-        $track = DraftBoxmeTracking::find()
+        /** @var DraftDataTracking[] $track */
+        $track = DraftDataTracking::find()
             ->where(['manifest_code' => $manifest_code])->limit(500)->all();
         echo "Sẽ có :" . count($track) . " tracking được giả lập callback" . PHP_EOL;
         echo "[";
@@ -511,5 +511,45 @@ class BoxMeController extends Controller
         $manifest->status = Manifest::STATUS_TYPE_GET_DONE;
         $manifest->save(0);
         $this->stdout('Đã lấy xong'.PHP_EOL);
+    }
+    public function actionEmulatorCallbackDetail($manifest_id){
+        $manifest = Manifest::findOne($manifest_id);
+        if(!$manifest){
+            $this->stdout('Không tìm thấy lô có id là '.$manifest_id);
+            die;
+        }
+        $this->stdout('Bắt đầu chạy ... '.PHP_EOL);
+        $code = $manifest->manifest_code.'-'.$manifest_id;
+        $pageTotal = 2;
+        for ($page = 1; $page <= $pageTotal; $page++) {
+            $data = BoxMeClient::GetDetail($code, $page, 'vn');
+            $url = 'https://wms.boxme.asia/v1/packing/detail/' . $code . '/?page=' . $page;
+            if ($data['success']) {
+                if ($page == 1) $pageTotal = $data['total_page'];
+                echo "Tổng tracking " . $data['total_item'] . "." . PHP_EOL;
+                echo "Tổng trang " . $data['total_page'] . "." . PHP_EOL;
+                echo "trang " . $page . "." . PHP_EOL;
+                foreach ($data['results'] as $result) {
+                    $url = ArrayHelper::getValue(\Yii::$app->params,'url_api','http://weshop-v4.back-end.local.vn').'/test/callback-boxme';
+                    $client = new \yii\httpclient\Client();
+                    $request = $client->createRequest();
+                    $request->setFullUrl($url);
+                    $request->setFormat('json');
+                    $request->setMethod('POST');
+                    $request->setData($result);
+                    $response = $client->send($request);
+                    if (!$response->isOk) {
+                        $res = $response->getData();
+                        echo $res['messages'].PHP_EOL;
+//                return $res['messages'];
+                    }
+                    $res = $response->getData();
+                }
+            } else {
+                echo "Lỗi gọi api" . PHP_EOL;
+                echo $data['message'] . PHP_EOL;
+               die;
+            }
+        }
     }
 }
