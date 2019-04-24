@@ -1,0 +1,58 @@
+<?php
+
+return [
+    'system_country0' => [
+        'id' => '1',
+        'name' => 'Việt Nam ',
+        'country_code' => 'VN',
+        'country_code_2' => 'vn',
+        'language' => 'vi',
+        'status' => '1',
+        'version' => '4.0',
+    ],
+    'system_country1' => [
+        'id' => '2',
+        'name' => 'Indonesia',
+        'country_code' => 'ID',
+        'country_code_2' => 'id',
+        'language' => 'id',
+        'status' => '1',
+        'version' => '4.0',
+    ],
+    'system_country2' => [
+        'id' => '3',
+        'name' => 'Malaysia',
+        'country_code' => 'MY',
+        'country_code_2' => 'my',
+        'language' => 'my',
+        'status' => '0',
+        'version' => '4.0',
+    ],
+    'system_country3' => [
+        'id' => '4',
+        'name' => 'Singapore',
+        'country_code' => 'SG',
+        'country_code_2' => 'sg',
+        'language' => 'sg',
+        'status' => '0',
+        'version' => '4.0',
+    ],
+    'system_country4' => [
+        'id' => '6',
+        'name' => 'United State',
+        'country_code' => 'US',
+        'country_code_2' => 'us',
+        'language' => 'us',
+        'status' => '0',
+        'version' => '4.0',
+    ],
+    'system_country5' => [
+        'id' => '7',
+        'name' => 'ThaiLand',
+        'country_code' => 'TH',
+        'country_code_2' => 'th',
+        'language' => 'th',
+        'status' => '1',
+        'version' => '4.0',
+    ],
+];

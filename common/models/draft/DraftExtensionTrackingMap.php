@@ -18,6 +18,7 @@ class DraftExtensionTrackingMap extends \common\models\db\DraftExtensionTracking
 {
     const JOB_CHECKED = "JOB_CHECKED";
     const US_RECEIVED = "US_RECEIVED";
+    const STATUST_NEW = "NEW";
 
     public function getOrder(){
         return $this->hasOne(Order::className(),['id' => 'order_id']);

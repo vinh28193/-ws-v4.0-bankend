@@ -6,11 +6,11 @@
  * Time: 14:45
  */
 
-namespace common\boxme\forms;
+namespace common\boxme\models;
 
 use yii\base\Model;
 
-class ConfigForm extends Model
+class Config extends Model
 {
 
     const ORDER_TYPE_CONSOLIDATE = 'consolidate';

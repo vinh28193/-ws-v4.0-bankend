@@ -67,7 +67,7 @@ class TrackingCodeController extends BaseApiController
         $limit_ms = \Yii::$app->request->get('ps_ms',20);
         $page_u = \Yii::$app->request->get('p_mu',1);
         $limit_u = \Yii::$app->request->get('ps_mu',20);
-        $manifest_Code = \Yii::$app->request->get('q');
+        $manifest_id = \Yii::$app->request->get('m');
         $trackingC = \Yii::$app->request->get('trackingC');
         $trackingU = \Yii::$app->request->get('trackingU');
         $trackingW = \Yii::$app->request->get('trackingW');
@@ -79,9 +79,9 @@ class TrackingCodeController extends BaseApiController
         //#Todo filter
         http://weshop-v4.back-end.local.vn/v1/tracking-code?trackingC=&trackingW=&trackingM=&trackingU=&ps_ms=20&ps_u=20&ps_c=20&ps_w=20&p_ms=1&p_u=1&p_c=1&p_w=1&ps_m=20&p_m=1
         $manifests = clone $model;
-        if($manifest_Code){
-            $model->andWhere(['manifest_code'=>$manifest_Code]);
-            $manifests->andWhere(['manifest_code'=>$manifest_Code]);
+        if($manifest_id){
+            $model->andWhere(['id'=>$manifest_id]);
+            $manifests->andWhere(['id'=>$manifest_id]);
         }
         if(!$trackingC && !$trackingM && !$trackingU && !$trackingW){
             $data['_total_manifest'] = $manifests->count();
@@ -94,7 +94,7 @@ class TrackingCodeController extends BaseApiController
         if($trackingM){
             $miss->andWhere(['like','tracking_code',$trackingM]);
         }
-        $wast = DraftMissingTracking::find()->where(['manifest_id' => $data['_items']['id']])
+        $wast = DraftWastingTracking::find()->where(['manifest_id' => $data['_items']['id']])
             ->andWhere(['<>','status',DraftWastingTracking::MERGE_CALLBACK])
             ->andWhere(['<>','status',DraftWastingTracking::MERGE_MANUAL]);
         if($trackingW){
@@ -116,10 +116,10 @@ class TrackingCodeController extends BaseApiController
         $data['_items']['draftPackageItems_total'] = $complete->count();
         $data['_items']['unknownTrackings_total'] = $unknown->count();
 
-        $data['_items']['draftWastingTrackings'] = $wast->orderBy('id desc')->limit($limit_w)->offset($page_w*$limit_w - $limit_w)->asArray()->all();
-        $data['_items']['draftMissingTrackings'] = $miss->orderBy('id desc')->limit($limit_ms)->offset($page_ms*$limit_ms - $limit_ms)->asArray()->all();
-        $data['_items']['draftPackageItems'] = $complete->orderBy('id desc')->limit($limit_c)->offset($page_c*$limit_c - $limit_c)->asArray()->all();
-        $data['_items']['unknownTrackings'] = $unknown->orderBy('id desc')->limit($limit_u)->offset($page_u*$limit_u - $limit_u)->asArray()->all();
+        $data['_items']['draftWastingTrackings'] = $wast->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_w)->offset($page_w*$limit_w - $limit_w)->asArray()->all();
+        $data['_items']['draftMissingTrackings'] = $miss->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_ms)->offset($page_ms*$limit_ms - $limit_ms)->asArray()->all();
+        $data['_items']['draftPackageItems'] = $complete->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_c)->offset($page_c*$limit_c - $limit_c)->asArray()->all();
+        $data['_items']['unknownTrackings'] = $unknown->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_u)->offset($page_u*$limit_u - $limit_u)->asArray()->all();
         return $this->response(true, "Success", $data);
     }
 

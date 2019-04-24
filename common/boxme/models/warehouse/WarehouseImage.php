@@ -1,7 +1,7 @@
 <?php
 
 
-namespace common\boxme\forms\warehouse;
+namespace common\boxme\models\warehouse;
 
 use yii\base\Model;
 

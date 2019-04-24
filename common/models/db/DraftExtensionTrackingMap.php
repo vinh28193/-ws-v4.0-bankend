@@ -23,6 +23,7 @@ use Yii;
  * @property int $updated_at
  * @property int $created_by
  * @property int $updated_by
+ * @property int $draft_data_tracking_id
  */
 class DraftExtensionTrackingMap extends \common\components\db\ActiveRecord
 {
@@ -41,7 +42,7 @@ class DraftExtensionTrackingMap extends \common\components\db\ActiveRecord
     {
         return [
             [['tracking_code', 'product_id', 'order_id', 'purchase_invoice_number'], 'required'],
-            [['product_id', 'order_id', 'quantity', 'number_run', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['product_id', 'order_id', 'quantity', 'number_run', 'created_at', 'updated_at', 'created_by', 'updated_by', 'draft_data_tracking_id'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
             [['tracking_code', 'purchase_invoice_number', 'status'], 'string', 'max' => 255],
         ];
@@ -69,6 +70,7 @@ class DraftExtensionTrackingMap extends \common\components\db\ActiveRecord
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
+            'draft_data_tracking_id' => 'Draft Data Tracking ID',
         ];
     }
 }

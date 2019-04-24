@@ -86,7 +86,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','manifest','tracking'],
+        'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','us-sending','manifest','tracking'],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
@@ -634,12 +634,22 @@ return [
             '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
-            'POST' => 'create',
-            'GET {id}' => 'calculate',
-            'GET {code}' => 'cancel',
+            'POST create' => 'create',
+            'POST suggest' => 'calculate',
+            'GET cancel/{code}' => 'cancel',
             'OPTIONS' => 'options',
-            'OPTIONS {id}' => 'options',
-            'OPTIONS {code}' => 'options',
+            'OPTIONS order' => 'options',
+            'OPTIONS suggest' => 'options',
+            'OPTIONS cancel/{code}' => 'options',
+        ],
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['wh' => 'warehouse'],
+        'patterns' => [
+            'GET' => 'index',
+            'OPTIONS' => 'options',
         ],
     ],
 ];
