@@ -48,20 +48,48 @@ class UsSendingController extends BaseApiController
         $page_t = \Yii::$app->request->get('p_t',1);
         $limit_e = \Yii::$app->request->get('ps_e',20);
         $page_e = \Yii::$app->request->get('p_e',1);
-        $tracking_t = \Yii::$app->request->get('t_t');
-        $tracking_e = \Yii::$app->request->get('t_e');
+        $filter_t = \Yii::$app->request->get('f_t');
+        $filter_e = \Yii::$app->request->get('f_e');
+        $filter_t = $filter_t ? @json_decode(@base64_decode($filter_t),true) : false;
+        $filter_e = $filter_e ? @json_decode(@base64_decode($filter_e),true) : false;
         $manifest = Manifest::find()->with(['receiveWarehouse']);
         if($manifest_id){
             $manifest->andWhere(['manifest_id'=>$manifest_id]);
         }
         $tracking = DraftDataTracking::find()->with(['order','product']);
-        if($tracking_t){
-            $tracking->andWhere(['tracking_code'=>$tracking_t]);
+        $tracking->leftJoin('product','product.id = '.DraftDataTracking::tableName().'.product_id')
+            ->leftJoin('order','order.id = '.DraftDataTracking::tableName().'.order_id');
+        if($filter_t){
+            if(isset($filter_t['tracking_code']) && $filter_t['tracking_code']){
+                $tracking->andWhere(['tracking_code'=>$filter_t['tracking_code']]);
+            }
+            if(isset($filter_t['sku']) && $filter_t['sku']){
+                $tracking->andWhere(['product.sku'=>$filter_t['sku']]);
+            }
+            if(isset($filter_t['order_code']) && $filter_t['order_code']){
+                $tracking->andWhere(['order.ordercode'=>$filter_t['order_code']]);
+            }
+            if(isset($filter_t['type_tracking']) && $filter_t['type_tracking']){
+                $tracking->andWhere(['type_tracking'=>$filter_t['type_tracking']]);
+            }
         }
         $ext = DraftExtensionTrackingMap::find()->with(['order','product'])
             ->where(['or',['status' => DraftExtensionTrackingMap::STATUST_NEW],['draft_data_tracking_id' => null],['draft_data_tracking_id' => '']]);
-        if($tracking_e){
-            $ext->andWhere(['tracking_code'=>$tracking_e]);
+        $ext->leftJoin('product','product.id = '.DraftExtensionTrackingMap::tableName().'.product_id')
+            ->leftJoin('order','order.id = '.DraftExtensionTrackingMap::tableName().'.order_id');
+        if($filter_e){
+            if(isset($filter_e['tracking_code']) && $filter_e['tracking_code']){
+                $ext->andWhere(['tracking_code'=>$filter_e['tracking_code']]);
+            }
+            if(isset($filter_e['sku']) && $filter_e['sku']){
+                $ext->andWhere(['product.sku'=>$filter_e['sku']]);
+            }
+            if(isset($filter_e['order_code']) && $filter_e['order_code']){
+                $ext->andWhere(['order.ordercode'=>$filter_e['order_code']]);
+            }
+            if(isset($filter_e['type_tracking']) && $filter_e['type_tracking']){
+                $ext->andWhere(['type_tracking'=>$filter_e['type_tracking']]);
+            }
         }
 
         $data['_tracking_total'] = 0;
