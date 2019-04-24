@@ -38,6 +38,8 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_SELLER_REFUND = 'updateSellerRefund';
     const SCENARIO_UPDATE_PROMOTION = 'updatePromotionId';
     const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupported';
+    const SCENARIO_UPDATE_ORDER_STATUS = 'updateOrderStatus';
+    const SCENARIO_UPDATE_ORDER_TIME = 'updateTimeNull';
 
     /**
      * order type
@@ -168,6 +170,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_UPDATE_MARK_SUPPORTING => [
                 'current_status', 'mark_supporting'
+            ],
+            self::SCENARIO_UPDATE_ORDER_STATUS => [
+                'current_status', 'new', 'supporting', 'supported', 'ready_purchase', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost'
+            ],
+            self::SCENARIO_UPDATE_ORDER_TIME => [
+                'current_status', 'new', 'supporting', 'supported', 'ready_purchase', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost'
             ],
         ]);
     }

@@ -62,14 +62,16 @@ return [
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
             '{image}' => '<image:\\d[\\d,]*>',
+            '{code}' =>  '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
             'DELETE {id}' => 'delete',
-            'GET,HEAD {id}' => 'view',
+            'GET,HEAD {code}' => 'view',
             'POST' => 'create',
             'OPTIONS {id}' => 'options',
+            'OPTIONS {code}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [

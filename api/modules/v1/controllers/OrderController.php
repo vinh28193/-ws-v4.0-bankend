@@ -128,14 +128,14 @@ class OrderController extends BaseApiController
      * @return array
      * @throws NotFoundHttpException
      */
-    public function actionView($id)
+    public function actionView($code)
     {
-        if ($id !== null) {
+        if ($code !== null) {
             $query = Order::find();
-            $request = $query->where([$query->getColumnName('id') => $id])
+            $request = $query->where([$query->getColumnName('ordercode') => $code])
                 ->withFullRelations()
                 ->asArray()->all();
-            return $this->response(true, "Get order $id success", $request);
+            return $this->response(true, "Get order $code success", $request);
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
@@ -156,6 +156,7 @@ class OrderController extends BaseApiController
      */
     public function actionUpdate($id)
     {
+        $post = Yii::$app->request->post();
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $model = $this->findModel($id, false);
         $this->can('canUpdate', $model);
@@ -170,6 +171,13 @@ class OrderController extends BaseApiController
             $model->supported = $now;
             $model->current_status = Order::STATUS_SUPPORTED;
 
+        }
+        if ($model->getScenario() == 'updateOrderStatus') {
+            $model->{$post['Order']['status']} = $now;
+            $model->current_status = strtoupper($post['Order']['current_status']);
+        }
+        if ($model->getScenario() == 'updateTimeNull') {
+            $model->{$post['Order']['column']} = null;
         }
 //        if (($model->current_status == Order::STATUS_NEW || $model->current_status == Order::STATUS_SUPPORTING || $model->current_status == Order::STATUS_SUPPORTED) && $model->total_paid_amount_local > 0) {
 //            $model->current_status =  Order::STATUS_READY2PURCHASE;
