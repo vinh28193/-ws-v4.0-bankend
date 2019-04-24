@@ -84,7 +84,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','manifest','tracking'],
+        'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','us-sending','manifest','tracking'],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
@@ -464,6 +464,25 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
+        'controller' => ['link-image' => 'image-mongo'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
         'controller' => ['ext' => 'service/extension'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
@@ -613,12 +632,13 @@ return [
             '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
-            'POST' => 'create',
-            'GET {id}' => 'calculate',
-            'GET {code}' => 'cancel',
+            'POST create' => 'create',
+            'GET suggest/{id}' => 'calculate',
+            'GET cancel/{code}' => 'cancel',
             'OPTIONS' => 'options',
-            'OPTIONS {id}' => 'options',
-            'OPTIONS {code}' => 'options',
+            'OPTIONS order' => 'options',
+            'OPTIONS suggest/{id}' => 'options',
+            'OPTIONS cancel/{code}' => 'options',
         ],
     ],
 ];

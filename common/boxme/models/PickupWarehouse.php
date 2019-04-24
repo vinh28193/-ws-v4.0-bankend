@@ -1,10 +1,10 @@
 <?php
 
-namespace common\boxme\forms;
+namespace common\boxme\models;
 
 use yii\base\Model;
 
-class PickupFrom extends Model
+class PickupWarehouse extends Model
 {
     public $id;
     public $country;

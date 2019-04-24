@@ -20,9 +20,13 @@ use common\models\db\Shipment as DbShipment;
 
 class Shipment extends DbShipment
 {
-    const STATUS_REMOVE_SHIPMENT = "REMOVED";
-    const STATUS_NEW = "NEW";
-    const STATUS_LOCAL_INSPECT_DONE = "LOCAL_INSPECT_DONE";
+    // operation status
+    const STATUS_NEW = 'NEW';
+    const STATUS_WAITING = 'WAITING';
+    const STATUS_CREATED = 'CREATED';
+    const STATUS_FAILED = 'FAILED';
+    // callback status
+    const STATUS_PICKING = 'PICKING';
 
     /**
      * @inheritdoc

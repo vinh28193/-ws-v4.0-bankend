@@ -3,7 +3,19 @@
 
 namespace common\models\draft;
 
+use common\models\Manifest;
+use common\models\Order;
+use common\models\Product;
+use common\models\PurchaseOrder;
 
+/**
+ * Class DraftWastingTracking
+ * @package common\models\draft
+ * @property Manifest $manifest
+ * @property Product $product
+ * @property Order $order
+ * @property PurchaseOrder $purchaseOrder
+ */
 class DraftWastingTracking extends \common\models\db\DraftWastingTracking
 {
     const MERGE_CALLBACK = 'MERGE_CALLBACK';
@@ -40,5 +52,22 @@ class DraftWastingTracking extends \common\models\db\DraftWastingTracking
             print_r($draft_data->errors);
             die;
         }
+    }
+    public function getOrder()
+    {
+        return $this->hasOne(Order::className(), ['id' => 'order_id']);
+    }
+
+    public function getProduct()
+    {
+        return $this->hasOne(Product::className(), ['id' => 'product_id']);
+    }
+
+    public function getManifest(){
+        return $this->hasOne(Manifest::className(), ['id' => 'manifest_id']);
+    }
+
+    public function getPurchaseOrder(){
+        return $this->hasOne(PurchaseOrder::className(), ['purchase_order_number' => 'purchase_invoice_number']);
     }
 }

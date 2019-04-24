@@ -6,12 +6,12 @@
  * Time: 14:56
  */
 
-namespace common\boxme\forms;
+namespace common\boxme\models;
 
 use yii\base\Model;
 
 
-class ItemForm extends Model
+class Item extends Model
 {
     public $sku;
     public $origin_country;

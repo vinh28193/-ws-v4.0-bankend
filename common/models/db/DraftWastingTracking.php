@@ -28,6 +28,7 @@ use Yii;
  * @property string $warehouse_tag_boxme wtag của boxme
  * @property string $note_boxme note của boxme
  * @property string $image
+ * @property string $tracking_merge List tracking đã được merge
  */
 class DraftWastingTracking extends \common\components\db\ActiveRecord
 {
@@ -48,7 +49,7 @@ class DraftWastingTracking extends \common\components\db\ActiveRecord
             [['tracking_code'], 'required'],
             [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
-            [['image'], 'string'],
+            [['image', 'tracking_merge'], 'string'],
             [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme'], 'string', 'max' => 255],
         ];
     }
@@ -80,6 +81,7 @@ class DraftWastingTracking extends \common\components\db\ActiveRecord
             'warehouse_tag_boxme' => 'Warehouse Tag Boxme',
             'note_boxme' => 'Note Boxme',
             'image' => 'Image',
+            'tracking_merge' => 'Tracking Merge',
         ];
     }
 }

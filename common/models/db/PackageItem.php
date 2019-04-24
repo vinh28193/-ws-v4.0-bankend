@@ -12,7 +12,7 @@ use Yii;
  * @property string $package_code Mã kiện của weshop
  * @property string $box_me_warehouse_tag mã thẻ kho box me
  * @property int $order_id order id
- * @property string $sku sku sản phẩm
+ * @property int $product_id Product id
  * @property int $quantity số lượng
  * @property double $weight cân nặng tịnh , đơn vị gram, box me trả về
  * @property double $change_weight cân nặng quy đổi , đơn vị gram,box me trả về
@@ -32,7 +32,10 @@ use Yii;
  * @property string $price Giá trị 1 sản phẩm
  * @property string $cod
  * @property string $version version 4.0
- * @property int $hold DDasnhh dấu hàng hold. 1 là hold
+ * @property int $hold Đánh dấu hàng hold. 1 là hold
+ *
+ * @property Order $order
+ * @property Package $package
  */
 class PackageItem extends \common\components\db\ActiveRecord
 {
@@ -50,11 +53,13 @@ class PackageItem extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['package_id', 'order_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'created_at', 'updated_at', 'remove', 'hold'], 'integer'],
+            [['package_id', 'order_id', 'product_id', 'quantity', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'created_at', 'updated_at', 'remove', 'hold'], 'integer'],
             [['weight', 'change_weight', 'dimension_l', 'dimension_w', 'dimension_h', 'price', 'cod'], 'number'],
             [['package_code'], 'string', 'max' => 32],
-            [['box_me_warehouse_tag', 'sku', 'version'], 'string', 'max' => 255],
+            [['box_me_warehouse_tag', 'version'], 'string', 'max' => 255],
             [['current_status'], 'string', 'max' => 100],
+            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
+            [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Package::className(), 'targetAttribute' => ['package_id' => 'id']],
         ];
     }
 
@@ -69,7 +74,7 @@ class PackageItem extends \common\components\db\ActiveRecord
             'package_code' => 'Package Code',
             'box_me_warehouse_tag' => 'Box Me Warehouse Tag',
             'order_id' => 'Order ID',
-            'sku' => 'Sku',
+            'product_id' => 'Product ID',
             'quantity' => 'Quantity',
             'weight' => 'Weight',
             'change_weight' => 'Change Weight',
@@ -91,5 +96,21 @@ class PackageItem extends \common\components\db\ActiveRecord
             'version' => 'Version',
             'hold' => 'Hold',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrder()
+    {
+        return $this->hasOne(Order::className(), ['id' => 'order_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPackage()
+    {
+        return $this->hasOne(Package::className(), ['id' => 'package_id']);
     }
 }

@@ -15,7 +15,10 @@ use common\models\queries\PackageItemQuery;
 /**
  * Class PackageItem
  * @package common\models
- * @property $order Order
+ *
+ * @property Order $order
+ * @property  Package $package
+ * @property Product $product
  *
  */
 
@@ -57,9 +60,9 @@ class PackageItem extends DbPackageItem
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProducts()
+    public function getProduct()
     {
-        return $this->hasMany(Product::className(), ['order_id' => 'id'])->via('order');
+        return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
 
     /**

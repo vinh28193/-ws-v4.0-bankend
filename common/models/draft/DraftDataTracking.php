@@ -1,5 +1,9 @@
 <?php
 namespace common\models\draft;
+use common\models\Manifest;
+use common\models\Order;
+use common\models\Product;
+use common\models\PurchaseOrder;
 use common\models\TrackingCode;
 
 /**
@@ -11,6 +15,10 @@ use common\models\TrackingCode;
  * @property DraftMissingTracking $draftMissingTracking
  * @property DraftWastingTracking $draftWastingTracking
  * @property DraftPackageItem $draftPackageItem
+ * @property Manifest $manifest
+ * @property Product $product
+ * @property Order $order
+ * @property PurchaseOrder $purchaseOrder
  */
 class DraftDataTracking extends \common\models\db\DraftDataTracking
 {
@@ -18,6 +26,9 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
     const STATUS_MAKE_US_SENDING = "MAKE_US_SENDING";
     const STATUS_CHECK_DONE = "CHECK_DONE";
     const STATUS_CHECK_DETAIL = "CHECK_DETAIL";
+    const TYPE_NORMAL = "NORMAL";
+    const TYPE_SPLIT = "SPLIT";
+    const TYPE_UNKNOWN = "UNKNOWN";
 
     public function createOrUpdate($validate = true){
         $draft_data = self::find()->where([
@@ -77,5 +88,21 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
         return $this->hasOne(DraftPackageItem::className(),['tracking_code' => 'tracking_code','product_id' => 'product_id']);
 //        return DraftPackageItem::find()->where(['tracking_code' => $this->tracking_code,'product_id' => $this->product_id])->one();
     }
+    public function getOrder()
+    {
+        return $this->hasOne(Order::className(), ['id' => 'order_id']);
+    }
 
+    public function getProduct()
+    {
+        return $this->hasOne(Product::className(), ['id' => 'product_id']);
+    }
+
+    public function getManifest(){
+        return $this->hasOne(Manifest::className(), ['id' => 'manifest_id']);
+    }
+
+    public function getPurchaseOrder(){
+        return $this->hasOne(PurchaseOrder::className(), ['purchase_order_number' => 'purchase_invoice_number']);
+    }
 }
