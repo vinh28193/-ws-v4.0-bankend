@@ -4,6 +4,19 @@
 namespace common\models\draft;
 
 
+use common\models\Manifest;
+use common\models\Order;
+use common\models\Product;
+use common\models\PurchaseOrder;
+
+/**
+ * Class DraftMissingTracking
+ * @package common\models\draft
+ * @property Manifest $manifest
+ * @property Product $product
+ * @property Order $order
+ * @property PurchaseOrder $purchaseOrder
+ */
 class DraftMissingTracking extends \common\models\db\DraftMissingTracking
 {
     const MERGE_CALLBACK = 'MERGE_CALLBACK';
@@ -36,5 +49,22 @@ class DraftMissingTracking extends \common\models\db\DraftMissingTracking
         }
         $draft_data->setAttributes($this->getAttributes());
         return $draft_data->save($validate);
+    }
+    public function getOrder()
+    {
+        return $this->hasOne(\common\models\Order::className(), ['id' => 'order_id']);
+    }
+
+    public function getProduct()
+    {
+        return $this->hasOne(\common\models\Product::className(), ['id' => 'product_id']);
+    }
+
+    public function getManifest(){
+        return $this->hasOne(\common\models\Manifest::className(), ['id' => 'manifest_id']);
+    }
+
+    public function getPurchaseOrder(){
+        return $this->hasOne(PurchaseOrder::className(), ['purchase_order_number' => 'purchase_invoice_number']);
     }
 }

@@ -9,6 +9,9 @@
 namespace common\models;
 
 use common\models\db\Manifest as DbManifest;
+use common\models\db\Store;
+use common\models\db\User;
+use common\models\db\Warehouse;
 use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftPackageItem;
 use common\models\draft\DraftWastingTracking;
@@ -21,12 +24,20 @@ use common\models\draft\DraftWastingTracking;
  * @property DraftMissingTracking[] $draftMissingTrackings
  * @property DraftPackageItem[] $draftPackageItems
  * @property DraftPackageItem[] $unknownTrackings
+ * @property User $createdBy
+ * @property Warehouse $receiveWarehouse
+ * @property Store $store
+ * @property User $updatedBy
+ * @property Warehouse $sendWarehouse
  */
 class Manifest extends DbManifest
 {
     const STATUS_ACTIVE = 1;
     const STATUS_DELETED = 0;
-
+    const STATUS_NEW = 'NEW';
+    const STATUS_EMPTY = 'EMPTY';
+    const STATUS_MERGING = 'MERGING';
+    const STATUS_MERGE_DONE = 'MERGE_DONE';
     /**
      * @inheritdoc
      */
@@ -50,6 +61,7 @@ class Manifest extends DbManifest
         $query = self::find()->andWhere($build)->andWhere(['active' => 1]);
         if (($manifest = $query->one()) === null) {
             $manifest = new Manifest($build);
+            $manifest->status = self::STATUS_NEW;
             $manifest->save(false);
         }
         return $manifest;
@@ -69,5 +81,54 @@ class Manifest extends DbManifest
     }
     public function getDraftWastingTrackings(){
         return $this->hasMany(DraftWastingTracking::className(),['manifest_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiveWarehouse()
+    {
+        return $this->hasOne(Warehouse::className(), ['id' => 'receive_warehouse_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStore()
+    {
+        return $this->hasOne(Store::className(), ['id' => 'store_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'updated_by']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSendWarehouse()
+    {
+        return $this->hasOne(Warehouse::className(), ['id' => 'send_warehouse_id']);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return \common\models\queries\ManifestQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new \common\models\queries\ManifestQuery(get_called_class());
     }
 }

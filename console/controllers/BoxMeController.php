@@ -7,7 +7,7 @@ namespace console\controllers;
 use common\components\boxme\BoxMeClient;
 use common\components\lib\TextUtility;
 use common\components\TrackingCode;
-use common\models\db\DraftExtensionTrackingMap;
+use \common\models\draft\DraftExtensionTrackingMap;
 use common\models\db\PurchaseOrder;
 use common\models\db\PurchaseProduct;
 use common\models\draft\DraftBoxmeTracking;
@@ -15,6 +15,7 @@ use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftPackageItem;
 use common\models\draft\DraftWastingTracking;
 use common\models\draft\DraftDataTracking;
+use common\models\Manifest;
 use common\models\Order;
 use common\models\Package;
 use common\models\PackageItem;
@@ -104,10 +105,17 @@ class BoxMeController extends Controller
     public function actionMergeExtensionUsSending()
     {
         $this->stdout("Bắt đầu merge ...." . PHP_EOL);
+        /** @var Manifest $manifest */
+        $manifest = Manifest::find()->where(['status' => Manifest::STATUS_NEW])->one();
+        if(!$manifest){
+            echo "Stop. Đã hết lô.";
+            die;
+        }
+        $manifest->status = Manifest::STATUS_MERGING;
+        $manifest->save(0);
         /** @var \common\models\TrackingCode[] $trackingCode */
-        $trackingCode = \common\models\TrackingCode::find()->where(['status_merge' => null])
-            ->orWhere(['status_merge' => \common\models\TrackingCode::STATUS_MERGE_NEW])
-            ->limit(500)->all();
+        $trackingCode = \common\models\TrackingCode::find()->where(['or',['status_merge' => null], ['status_merge' => \common\models\TrackingCode::STATUS_MERGE_NEW]])
+            ->andWhere(['manifest_id' => $manifest->id])->all();
         $this->stdout("Có tổng cộng: " . count($trackingCode) . " tracking sẽ được chạy." . PHP_EOL);
         foreach ($trackingCode as $tracking) {
             if (!$tracking->tracking_code) {
@@ -115,19 +123,37 @@ class BoxMeController extends Controller
                 continue;
             }
             $this->stdout($tracking->tracking_code . PHP_EOL);
-            /** @var DraftDataTracking[] $draft_data */
-            $draft_data = DraftDataTracking::find()->where([
-                'tracking_code' => $tracking->tracking_code,
-            ])->all();
-            if ($draft_data) {
-                foreach ($draft_data as $datum) {
-                    $datum->manifest_id = $tracking->manifest_id;
-                    $datum->manifest_code = $tracking->manifest_code;
-                    $datum->updated_at = time();
-                    $datum->status = in_array($datum->status, [DraftDataTracking::STATUS_CHECK_DETAIL, DraftDataTracking::STATUS_CHECK_DONE]) ? $datum->status : ($datum->status == DraftDataTracking::STATUS_EXTENSION ? DraftDataTracking::STATUS_CHECK_DONE : DraftDataTracking::STATUS_MAKE_US_SENDING);
-                    $datum->save(false);
+            /** @var DraftExtensionTrackingMap[] $exts */
+            $exts = DraftExtensionTrackingMap::find()
+                ->where(['like','tracking_code','%'.$tracking->tracking_code])
+                ->andWhere(['status' => DraftExtensionTrackingMap::STATUST_NEW])
+                ->all();
+            if($exts){
+                foreach ($exts as $ext){
+                    /** @var DraftDataTracking $draft_data */
+                    $draft_data = DraftDataTracking::find()->where([
+                        'tracking_code' => $tracking->tracking_code,
+                        'manifest_id' => $tracking->manifest_id,
+                        'manifest_code' => $tracking->manifest_code,
+                        'order_id' => $ext->order_id,
+                        'product_id' => $ext->product_id,
+                        'purchase_invoice_number' => $ext->purchase_invoice_number,
+                    ])->one();
+                    if (!$draft_data) {
+                        $draft_data_one = new DraftDataTracking();
+                        $data = $ext->getAttributes();
+                        unset($data['id']);
+                        $draft_data_one->setAttributes($data,false);
+                        $draft_data_one->tracking_code = $tracking->tracking_code;
+                        $draft_data_one->manifest_id = $tracking->manifest_id;
+                        $draft_data_one->manifest_code = $tracking->manifest_code;
+                        $draft_data_one->created_at = time();
+                        $draft_data_one->updated_at = time();
+                        $draft_data_one->status = DraftDataTracking::STATUS_CHECK_DONE;
+                        $draft_data_one->save(0);
+                    }
                 }
-            } else {
+            }else{
                 $draft_data_one = new DraftDataTracking();
                 $draft_data_one->tracking_code = $tracking->tracking_code;
                 $draft_data_one->manifest_id = $tracking->manifest_id;
@@ -140,6 +166,8 @@ class BoxMeController extends Controller
             $tracking->status_merge = \common\models\TrackingCode::STATUS_MERGE_DONE;
             $tracking->save(0);
         }
+        $manifest->status = Manifest::STATUS_MERGE_DONE;
+        $manifest->save(0);
         $this->stdout("Merge kết thúc ...." . PHP_EOL);
     }
 
