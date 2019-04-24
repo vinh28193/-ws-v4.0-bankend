@@ -77,6 +77,7 @@ class UsSendingController extends BaseApiController
             $data['_ext_total'] = $ext->count();
             $data['_ext'] = $ext->limit($limit_e)->offset($limit_e*$page_e - $limit_e)->orderBy('id desc')->asArray()->all();
         }
+        return $this->response(true, "Success", $data);
     }
     public function actionCreate()
     {
