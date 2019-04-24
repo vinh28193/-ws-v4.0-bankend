@@ -38,7 +38,7 @@ class WarehouseAction extends \yii\base\Action
         if(!($warehouses = $this->cache->get(self::CACHE_KEY))){
             $query = new Query();
             $query->from(['wh' => Warehouse::tableName()]);
-            $query->select(['id','name']);
+            $query->select(['id','name', 'description', 'address', 'warehouse_group']);
             $warehouses = $query->all(Warehouse::getDb());
             $this->cache->set($warehouses,self::CACHE_KEY,self::CACHE_DURATION);
         }

@@ -633,12 +633,21 @@ return [
         ],
         'patterns' => [
             'POST create' => 'create',
-            'GET suggest/{id}' => 'calculate',
+            'POST suggest' => 'calculate',
             'GET cancel/{code}' => 'cancel',
             'OPTIONS' => 'options',
             'OPTIONS order' => 'options',
-            'OPTIONS suggest/{id}' => 'options',
+            'OPTIONS suggest' => 'options',
             'OPTIONS cancel/{code}' => 'options',
+        ],
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['wh' => 'warehouse'],
+        'patterns' => [
+            'GET' => 'index',
+            'OPTIONS' => 'options',
         ],
     ],
 ];
