@@ -38,6 +38,8 @@ class Manifest extends DbManifest
     const STATUS_EMPTY = 'EMPTY';
     const STATUS_MERGING = 'MERGING';
     const STATUS_MERGE_DONE = 'MERGE_DONE';
+    const STATUS_TYPE_GETTING = 'TYPE_GETTING';
+    const STATUS_TYPE_GET_DONE = 'TYPE_GET_DONE';
     /**
      * @inheritdoc
      */
