@@ -20,7 +20,7 @@ class ShipmentQuery extends ActiveQuery
      */
     public function filterRelation()
     {
-        $this->joinWith(['customer','packageItems']);
+        $this->joinWith(['customer','warehouseSend','packageItems.product']);
         return $this;
     }
 

@@ -62,14 +62,16 @@ return [
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
             '{image}' => '<image:\\d[\\d,]*>',
+            '{code}' =>  '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
             'DELETE {id}' => 'delete',
-            'GET,HEAD {id}' => 'view',
+            'GET,HEAD {code}' => 'view',
             'POST' => 'create',
             'OPTIONS {id}' => 'options',
+            'OPTIONS {code}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
@@ -633,12 +635,21 @@ return [
         ],
         'patterns' => [
             'POST create' => 'create',
-            'GET suggest/{id}' => 'calculate',
+            'POST suggest' => 'calculate',
             'GET cancel/{code}' => 'cancel',
             'OPTIONS' => 'options',
             'OPTIONS order' => 'options',
-            'OPTIONS suggest/{id}' => 'options',
+            'OPTIONS suggest' => 'options',
             'OPTIONS cancel/{code}' => 'options',
+        ],
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['wh' => 'warehouse'],
+        'patterns' => [
+            'GET' => 'index',
+            'OPTIONS' => 'options',
         ],
     ],
 ];

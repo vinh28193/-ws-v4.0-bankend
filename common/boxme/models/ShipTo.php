@@ -27,10 +27,12 @@ class ShipTo extends Model
     public $district;
     public $zipcode;
 
+    public $area;
+
     public function attributes()
     {
         return [
-            'contact_name', 'company_name', 'address', 'address2', 'phone', 'phone2', 'country', 'province', 'district', 'zipcode', 'area','pickup_id',
+            'contact_name', 'company_name', 'address', 'address2', 'phone', 'phone2', 'country', 'province', 'district', 'zipcode', 'area',
         ];
     }
 
@@ -38,7 +40,7 @@ class ShipTo extends Model
     {
         $mapping = $mapping = $this->getMapping();
         return [
-            [['province', 'district', 'pickup_id'], 'integer'],
+            [['province', 'district'], 'integer'],
             [['contact_name', 'company_name', 'address', 'address2', 'phone', 'phone2', 'country', 'zipcode'], 'string'],
             [['contact_name', 'address', 'phone', 'country', 'province', 'district'], 'required'],
             ['zipcode', 'required', 'when' => function ($self) {
@@ -47,9 +49,9 @@ class ShipTo extends Model
             ['district', function ($attribute, $param) use ($mapping) {
                 if (!$this->hasErrors()) {
                     if ($mapping === null) {
-                        $this->addError($attribute, 'Not Found mapping boxme_district_id');
+                        $this->addError($attribute, 'Not Found mapping box_me_district_id');
                     }else{
-                        $this->$attribute = $mapping->boxme_district_id; // Trả lại dữ liệu mới cho $attribute (district)
+                        $this->$attribute = $mapping->box_me_district_id; // Trả lại dữ liệu mới cho $attribute (district)
                     }
 
                 }
@@ -57,9 +59,9 @@ class ShipTo extends Model
             ['province', function ($attribute, $param) use ($mapping) {
                 if (!$this->hasErrors()) {
                     if ($mapping === null) {
-                        $this->addError($attribute, 'Not Found mapping boxme_city_id');
+                        $this->addError($attribute, 'Not Found mapping box_me_province_id');
                     }else{
-                        $this->$attribute = $mapping->boxme_city_id; // Trả lại dữ liệu mới cho $attribute (province)
+                        $this->$attribute = $mapping->box_me_province_id; // Trả lại dữ liệu mới cho $attribute (province)
                     }
 
                 }
@@ -74,18 +76,24 @@ class ShipTo extends Model
             }, 'when' => function ($self) {
                 return $self->country === Location::COUNTRY_ID;
             }],
+            ['zipcode', 'default','value' => ' ', 'when' => function ($self) {
+                return $self->country === Location::COUNTRY_VN;
+            }],
             [['company_name','address2','phone2'],'default','value' => ' ']
         ];
     }
 
+    /**
+     * @return SystemDistrictMapping
+     */
     public function getMapping()
     {
         return SystemDistrictMapping::find()->where([
             'AND',
-            ['system_district_id' => $this->district],
-            ['system_province_id' => $this->province],
-            ['IS NOT', 'boxme_district_id', new Expression('NULL')],
-            ['IS NOT', 'boxme_city_id', new Expression('NULL')]
+            ['district_id' => $this->district],
+            ['province_id' => $this->province],
+            ['IS NOT', 'box_me_district_id', new Expression('NULL')],
+            ['IS NOT', 'box_me_province_id', new Expression('NULL')]
         ])->orderBy(['id' => SORT_DESC])->one();
     }
 

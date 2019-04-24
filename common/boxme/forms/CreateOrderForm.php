@@ -12,6 +12,8 @@ use common\boxme\models\ShipTo;
 use common\models\Shipment as ModelShipment;
 use yii\helpers\ArrayHelper;
 
+use common\boxme\BoxmeClientCollection;
+
 class CreateOrderForm extends BaseForm
 {
 
@@ -46,8 +48,16 @@ class CreateOrderForm extends BaseForm
         }
     }
 
+    /**
+     * @param $shipment ModelShipment
+     * @throws \yii\base\InvalidConfigException
+     */
     public function calculate($shipment)
     {
+        $collection = new BoxmeClientCollection();
+        $client = $collection->getClient(Location::COUNTRY_VN);
+        $params = $this->calculateParams($shipment);
+        return $client->pricingCalculate($params);
 
     }
 

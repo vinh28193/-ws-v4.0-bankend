@@ -198,7 +198,9 @@ class NotificationsController extends BaseApiController
         } else {
             // delete notification
             $model->delete();
-            Yii::$app->api->sendSuccessResponse($model->attributes);
+            $model = ['order_list'=>0];
+            return $this->response(true, "Delete success", $model);
+
 
         }
 
