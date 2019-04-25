@@ -140,4 +140,35 @@ class DraftPackageItemController extends BaseApiController
 
         return implode(", ", $results);
     }
+
+    public function actionUpdate($id)
+    {
+        $post = Yii::$app->request->post();
+        $model = DraftPackageItem::findOne($id);
+        if ($model) {
+            $model->tracking_code = $post['tracking_code'];
+            $model->weight = $post['weight'];
+            $model->quantity = $post['quantity'];
+            $model->dimension_l = $post['dimension_l'];
+            $model->dimension_h = $post['dimension_h'];
+            $model->dimension_w = $post['dimension_w'];
+            $dirtyAttributes = $model->getDirtyAttributes();
+            $messages = "order {$model->order->ordercode} Update Draft Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+            if (!$model->save()) {
+                Yii::$app->wsLog->push('order', 'updateDraftPackageItem', null, [
+                    'id' => $model->order->ordercode,
+                    'request' => $this->post,
+                    'response' => $model->getErrors()
+                ]);
+                return $this->response(false, $messages);
+            }
+            ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
+            Yii::$app->wsLog->push('order', 'update draft package item', null, [
+                'id' => $model->order->ordercode,
+                'request' => $this->post,
+                'response' => $dirtyAttributes
+            ]);
+            return $this->response(true, $messages);
+        }
+    }
 }
