@@ -19,6 +19,7 @@ use common\models\TrackingCode;
  * @property Product $product
  * @property Order $order
  * @property PurchaseOrder $purchaseOrder
+ * @property DraftPackageItem[] $draftPackageItems
  */
 class DraftDataTracking extends \common\models\db\DraftDataTracking
 {
@@ -106,5 +107,8 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
 
     public function getPurchaseOrder(){
         return $this->hasOne(PurchaseOrder::className(), ['purchase_order_number' => 'purchase_invoice_number']);
+    }
+    public function getDraftPackageItems(){
+        return $this->hasMany(DraftPackageItem::className(), ['draft_data_tracking_id' => 'id']);
     }
 }

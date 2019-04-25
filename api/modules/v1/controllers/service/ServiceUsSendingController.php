@@ -7,7 +7,9 @@ namespace api\modules\v1\controllers\service;
 use api\controllers\BaseApiController;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftPackageItem;
+use common\models\Manifest;
 use common\models\Product;
+use common\models\PurchaseProduct;
 
 class ServiceUsSendingController extends BaseApiController
 {
@@ -25,7 +27,7 @@ class ServiceUsSendingController extends BaseApiController
     public function verbs()
     {
         return [
-            'split-tracking' => ['DELETE'],
+            'get-type' => ['PUT'],
             'merge' => ['POST'],
             'map-unknown' => ['POST'],
             'mark-hold' => ['POST'],
@@ -61,5 +63,68 @@ class ServiceUsSendingController extends BaseApiController
             $model->save(0);
         }
         return $this->response(true,'Map tracking success!');
+    }
+    public function actionGetType($id){
+        $manifest = Manifest::findOne($id);
+        if(!$manifest){
+            return $this->response(false,"Cannot find manifest ".$id);
+        }
+        $tracking = DraftDataTracking::find()
+            ->where(['manifest_id' => $manifest->id])
+            ->select('count(id) as `countId`, tracking_code')
+            ->groupBy('tracking_code')->asArray()->all();
+        if(!$tracking){
+            return $this->response(false,"Tracking is empty with manifest ".$manifest->manifest_code.'-'.$id);
+        }
+        $manifest->status = Manifest::STATUS_TYPE_GETTING;
+        $manifest->save(0);
+        DraftDataTracking::updateAll(
+            ['type_tracking' => DraftDataTracking::TYPE_NORMAL],
+            ['manifest_id' => $manifest->id]
+        );
+        foreach ($tracking as $dataTracking){
+            if($dataTracking['countId'] > 1){
+                DraftDataTracking::updateAll(
+                    ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
+                    [
+                        'manifest_id' => $manifest->id,
+                        'tracking_code' => $dataTracking['tracking_code']
+                    ]
+                );
+            }
+        }
+        DraftDataTracking::updateAll(
+            ['type_tracking' => DraftDataTracking::TYPE_UNKNOWN],
+            [   'and',
+                ['manifest_id' => $manifest->id],
+                ['or',['product_id' => null],['product_id' => '']],
+                ['or',['order_id' => null],['order_id' => '']],
+            ]
+        );
+        $manifest->status = Manifest::STATUS_TYPE_GET_DONE;
+        $manifest->save(0);
+        return $this->response(True,"Re Get Type manifest ".$manifest->manifest_code.'-'.$id. ' success!');
+    }
+
+    public function actionSellerRefund($id)
+    {
+        $model = DraftDataTracking::findOne($id);
+        if(!$model){
+            return $this->response(false,'Cannot find your tracking!');
+        }
+//        $model->status = 'SELLER_'.strtoupper($this->post['type']);
+//        $model->save(0);
+        $model->product->seller_refund_amount = $model->product->seller_refund_amount ? floatval($model->product->seller_refund_amount) + $this->post['amount'] : $this->post['amount'];
+        $model->product->save(0);
+        if($model->purchaseOrder){
+            /** @var PurchaseProduct $proPurchase */
+            $proPurchase = PurchaseProduct::find()->where(['purchase_order_id' => $model->purchaseOrder->id, 'product_id' => $model->product_id])->one();
+            $proPurchase->seller_refund_amount = $proPurchase->seller_refund_amount ? floatval($proPurchase->seller_refund_amount) + $this->post['amount'] :  $this->post['amount'];
+            $proPurchase->save(0);
+        }
+        $model->seller_refund_amount = $model->seller_refund_amount ? floatval($model->seller_refund_amount) + $this->post['amount'] :  $this->post['amount'];
+        $model->save(0);
+        DraftPackageItem::updateAll(['seller_refund_amount' => $model->seller_refund_amount],['draft_data_tracking_id' => $model->id]);
+        return $this->response(true,'Update seller refund '.$this->post['type'].' success!');
     }
 }

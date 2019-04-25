@@ -169,6 +169,9 @@ class TrackingCodeServiceController extends BaseApiController
             $proPurchase->seller_refund_amount = $proPurchase->seller_refund_amount ? floatval($proPurchase->seller_refund_amount) + $this->post['amount'] :  $this->post['amount'];
             $proPurchase->save(0);
         }
+        $model->seller_refund_amount = $model->seller_refund_amount ? floatval($model->seller_refund_amount) + $this->post['amount'] :  $this->post['amount'];
+        $model->save(0);
+        DraftDataTracking::updateAll(['seller_refund_amount' => $model->seller_refund_amount],['id' => $model->draft_data_tracking_id]);
         return $this->response(true,'Update seller refund '.$this->post['type'].' success!');
     }
     public function actionMarkHold($id){
