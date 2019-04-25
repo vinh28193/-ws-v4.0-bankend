@@ -27,12 +27,11 @@ class ShipTo extends Model
     public $district;
     public $zipcode;
 
-    public $area;
 
     public function attributes()
     {
         return [
-            'contact_name', 'company_name', 'address', 'address2', 'phone', 'phone2', 'country', 'province', 'district', 'zipcode', 'area',
+            'contact_name', 'company_name', 'address', 'address2', 'phone', 'phone2', 'country', 'province', 'district', 'zipcode',
         ];
     }
 

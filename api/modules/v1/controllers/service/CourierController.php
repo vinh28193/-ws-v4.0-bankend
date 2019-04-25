@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers\service;
 
 use common\models\PackageItem;
 use common\models\Product;
+use common\models\Shipment as ModelShipment;
 use Yii;
 use Exception;
 use common\models\Shipment;
@@ -89,8 +90,29 @@ class CourierController extends BaseApiController
             Yii::error($exception, __METHOD__);
             return $this->response(false, $exception->getMessage());
         }
+        $createForm = new CreateOrderForm();
+        /* @var $model ModelShipment */
+        list($isSuccess, $mess) = $createForm->createByShipment($shipment);
+        return $this->response($isSuccess, $mess);
 
-        return $this->response(true, 'mess', $this->post);
+
+    }
+
+    public function actionCreateBulk()
+    {
+        $post = $this->post;
+        $ids = ArrayHelper::getValue($post, 'ids', []);
+        if (count($ids) === 0) {
+            return $this->response(false, "nothing to create");
+        }
+        $rules = ArrayHelper::getValue($post, 'rules', []);
+        $createForm = new CreateOrderForm();
+        $createForm->ids = $ids;
+        $createForm->rules = $rules;
+        if (($rs = $createForm->create()) === false) {
+            return $this->response(false, $createForm->getFirstErrors());
+        }
+        return $this->response(true, $rs);
     }
 
     public function actionCalculate()
@@ -108,7 +130,8 @@ class CourierController extends BaseApiController
         return $form->calculate();
     }
 
-    public function actionCancel($code)
+
+    public function actionCancel()
     {
 
     }

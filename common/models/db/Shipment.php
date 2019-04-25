@@ -34,7 +34,7 @@ use Yii;
  * @property int $total_quantity Tổng số lượng
  * @property int $is_hold đánh dấu hàng hold, 0 là không hold, 1 là hold
  * @property int $is_insurance đánh dấu bảo hiểm
- * @property int $courier_code mã hãng vận chuyển
+ * @property string $courier_code mã hãng vận chuyển
  * @property string $courier_logo mã hãng vận chuyển
  * @property string $courier_estimate_time thời gian ước tính của hãng vận chuyển
  * @property string $list_old_shipment_code danh sách mã shipment cũ đã bị cancel
@@ -66,10 +66,10 @@ class Shipment extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['warehouse_tags', 'note_by_customer', 'note', 'courier_estimate_time', 'list_old_shipment_code'], 'string'],
+            [['warehouse_tags', 'note_by_customer', 'note', 'courier_logo', 'courier_estimate_time', 'list_old_shipment_code'], 'string'],
             [['total_weight', 'total_shipping_fee', 'total_price', 'total_cod'], 'number'],
-            [['warehouse_send_id', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'total_quantity', 'is_hold', 'is_insurance', 'courier_code', 'created_at', 'updated_at'], 'integer'],
-            [['shipment_code', 'courier_logo'], 'string', 'max' => 32],
+            [['warehouse_send_id', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'total_quantity', 'is_hold', 'is_insurance', 'created_at', 'updated_at'], 'integer'],
+            [['shipment_code', 'courier_code'], 'string', 'max' => 32],
             [['receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'shipment_status', 'version'], 'string', 'max' => 255],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['receiver_address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Address::className(), 'targetAttribute' => ['receiver_address_id' => 'id']],
