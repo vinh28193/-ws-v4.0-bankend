@@ -17,6 +17,7 @@ use common\models\Product;
 class DraftExtensionTrackingMap extends \common\models\db\DraftExtensionTrackingMap
 {
     const JOB_CHECKED = "JOB_CHECKED";
+    const MAPPED = "MAPPED";
     const US_RECEIVED = "US_RECEIVED";
     const STATUST_NEW = "NEW";
 

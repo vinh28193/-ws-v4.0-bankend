@@ -14,6 +14,7 @@ use common\components\db\ActiveQuery;
 use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
 use common\helpers\ExcelHelper;
+use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftPackageItem;
 use common\models\draft\DraftWastingTracking;
@@ -88,9 +89,9 @@ class TrackingCodeController extends BaseApiController
             $data['_manifest'] = $manifests->with(['receiveWarehouse','sendWarehouse'])->orderBy('id desc')->limit($limit_m)->offset($limit_m*$page_m - $limit_m)->asArray()->all();
         }
         $data['_items'] = $model->limit($limit)->offset($page*$limit - $limit)->orderBy('id desc')->asArray()->one();
-        $miss = DraftMissingTracking::find()->where(['manifest_id' => $data['_items']['id']])
-            ->andWhere(['<>','status',DraftWastingTracking::MERGE_CALLBACK])
-            ->andWhere(['<>','status',DraftWastingTracking::MERGE_MANUAL]);
+        $miss = DraftDataTracking::find()->where(['manifest_id' => $data['_items']['id']])
+            ->andWhere(['<>','status',DraftDataTracking::STATUS_CALLBACK_SUCCESS])
+            ->andWhere(['<>','status',DraftDataTracking::STATUS_MERGE_WAST]);
         if($trackingM){
             $miss->andWhere(['like','tracking_code',$trackingM]);
         }
@@ -227,6 +228,14 @@ class TrackingCodeController extends BaseApiController
         $modal->updated_by = Yii::$app->user->getId();
         $modal->updated_at = time();
         $modal->save(0);
+        DraftDataTracking::updateAll([
+            'order_id' => $product->order_id,
+            'product_id' => $product->id,
+            'purchase_invoice_number' => $this->post['purchase_invoice_number'],
+            'updated_by' => Yii::$app->user->getId(),
+            'updated_at' => time(),
+            'item_name' => $this->post['item_name']
+        ],['id' => $modal->draft_data_tracking_id]);
         return $this->response(true,'Update success!');
     }
 }

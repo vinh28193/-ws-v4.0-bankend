@@ -58,6 +58,24 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
+        'controller' => ['list-chat-mongo'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>'
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
         'controller' => ['order'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
@@ -573,7 +591,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['notifications' => 'notifications'],
+        'controller' => ['notifications' => 'notifications','downloadexcel' => 'download-file-excel'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -612,6 +630,8 @@ return [
             'POST mark-hold/<id:\d+>'=> 'mark-hold',
             'OPTIONS mark-hold/<id:\d+>'=> 'options',
             'OPTIONS {id}' => 'options',
+            'POST insert-shipment'=> 'insert-shipment',
+            'OPTIONS insert-shipment'=> 'options',
         ]
     ],
     [
@@ -651,5 +671,30 @@ return [
             'GET' => 'index',
             'OPTIONS' => 'options',
         ],
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['s-us-send' => 'service/service-us-sending'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'POST' => 'merge',
+            'POST {id}' => 'map-unknown,seller-refund,mark-hold,insert-shipment',
+            'PUT {id}' => 'get-type',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [
+            'POST map-unknown/<id:\d+>'=> 'map-unknown',
+            'OPTIONS map-unknown/<id:\d+>'=> 'options',
+            'POST seller-refund/<id:\d+>'=> 'seller-refund',
+            'OPTIONS seller-refund/<id:\d+>'=> 'options',
+            'POST insert-tracking'=> 'insert-tracking',
+            'OPTIONS insert-tracking'=> 'options',
+            'OPTIONS {id}' => 'options',
+        ]
     ],
 ];

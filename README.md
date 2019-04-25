@@ -632,10 +632,8 @@ READY_PURCHASE or PURCHASE_PART or ( PURCHASING and ( PURCHASE_ASSIGNEE_ID = use
 1.	Tạo 1 lô tracking
 2.	Chạy job giả lập dữ liệu extension      		php yii box-me/emulator-extension manifest_code token
 3.	Chạy job merge extension						php yii box-me/merge-extension-us-sending
-4.	Chạy Get http://weshop-v4.back-end.local.vn/v1/boxme/get-detail/<manifest_id>
-5.	Chạy job get_getDetail							php yii box-me/check-detail-boxme
-6.	Chạy job giả lập dữ liệu callback				php yii box-me/emulator-callback manifest_code
-7.	Tạo các order,product,product_fee tương ứng.	
+4.	Get Type Tracking
+5.	Chạy job giả lập dữ liệu callback				php yii box-me/emulator-callback-detail manifest_id	
 
 
 #----------Tables packet tam----------
