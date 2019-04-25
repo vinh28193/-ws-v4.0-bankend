@@ -89,14 +89,14 @@ class DraftPackageItemController extends BaseApiController
         $model->price = $post['price'];
         $model->order_id = $post['order_id'];
         $dirtyAttributes = $model->getDirtyAttributes();
-        $messages = "order {$post['ordercode']} Create Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        $messages = "order {$post['ordercode']} Create Draft Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if (!$model->save()) {
-            Yii::$app->wsLog->push('order', 'createPackageItem', null, [
+            Yii::$app->wsLog->push('order', 'createDraftPackageItem', null, [
                 'id' => $model->order->ordercode,
                 'request' => $this->post,
                 'response' => $model->getErrors()
             ]);
-            return $this->response(false, 'create package item error');
+            return $this->response(false, 'create draft package item error');
         }
         ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
         Yii::$app->wsLog->push('order', $model->getScenario(), null, [
@@ -104,7 +104,7 @@ class DraftPackageItemController extends BaseApiController
             'request' => $this->post,
             'response' => $dirtyAttributes
         ]);
-        return $this->response(true, 'create package item success', $model);
+        return $this->response(true, 'create draft package item success', $model);
     }
 
     public function actionDelete($id)
@@ -118,13 +118,13 @@ class DraftPackageItemController extends BaseApiController
             return $this->response(false, 'delete draft package item' . $id . 'error');
         }
         $dirtyAttributes = $model->getDirtyAttributes();
-        $messages = "order {$model->order->ordercode} Delete Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        $messages = "order {$model->order->ordercode} Delete Draft Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
         ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
-        Yii::$app->wsLog->push('order', 'deletePackageItem', null, [
+        Yii::$app->wsLog->push('order', 'deleteDraftPackageItem', null, [
             'id' => $model->order->ordercode,
             'request' => $this->post,
         ]);
-        return $this->response(true, 'update package item' . $id . 'success');
+        return $this->response(true, 'update draft package item' . $id . 'success');
     }
 
     protected function resolveChatMessage($dirtyAttributes, $reference)
