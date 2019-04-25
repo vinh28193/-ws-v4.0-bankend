@@ -24,6 +24,7 @@ use yii\helpers\ArrayHelper;
  * @property Product $product
  * @property Order $order
  * @property PurchaseOrder $purchaseOrder
+ * @property DraftDataTracking $draftDataTracking
  */
 class DraftPackageItem extends \common\models\db\DraftPackageItem
 {
@@ -62,6 +63,9 @@ class DraftPackageItem extends \common\models\db\DraftPackageItem
 
     public function getPurchaseOrder(){
         return $this->hasOne(PurchaseOrder::className(), ['purchase_order_number' => 'purchase_invoice_number']);
+    }
+    public function getDraftDataTracking(){
+        return $this->hasOne(DraftDataTracking::className(), ['id' => 'draft_data_tracking_id']);
     }
 
     public function fields()

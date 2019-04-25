@@ -682,7 +682,7 @@ return [
             'GET,HEAD' => 'index',
             'POST' => 'merge',
             'POST {id}' => 'map-unknown,seller-refund,mark-hold',
-            'DELETE {id}' => 'split-tracking',
+            'PUT {id}' => 'get-type',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [

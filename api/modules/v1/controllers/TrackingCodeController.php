@@ -228,6 +228,14 @@ class TrackingCodeController extends BaseApiController
         $modal->updated_by = Yii::$app->user->getId();
         $modal->updated_at = time();
         $modal->save(0);
+        DraftDataTracking::updateAll([
+            'order_id' => $product->order_id,
+            'product_id' => $product->id,
+            'purchase_invoice_number' => $this->post['purchase_invoice_number'],
+            'updated_by' => Yii::$app->user->getId(),
+            'updated_at' => time(),
+            'item_name' => $this->post['item_name']
+        ],['id' => $modal->draft_data_tracking_id]);
         return $this->response(true,'Update success!');
     }
 }

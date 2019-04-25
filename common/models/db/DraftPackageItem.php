@@ -31,6 +31,8 @@ use Yii;
  * @property string $tracking_merge  List tracking khi merge từ thừa và thiếu 
  * @property int $hold DDasnhh dấu hàng hold. 1 là hold
  * @property string $type_tracking split, normal, unknown
+ * @property string $seller_refund_amount Sô tiền seller hoàn
+ * @property int $draft_data_tracking_id
  */
 class DraftPackageItem extends \common\components\db\ActiveRecord
 {
@@ -49,8 +51,8 @@ class DraftPackageItem extends \common\components\db\ActiveRecord
     {
         return [
             [['tracking_code'], 'required'],
-            [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'hold'], 'integer'],
-            [['weight', 'dimension_l', 'dimension_w', 'dimension_h'], 'number'],
+            [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'hold', 'draft_data_tracking_id'], 'integer'],
+            [['weight', 'dimension_l', 'dimension_w', 'dimension_h', 'seller_refund_amount'], 'number'],
             [['image', 'tracking_merge'], 'string'],
             [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme', 'type_tracking'], 'string', 'max' => 255],
         ];
@@ -86,6 +88,8 @@ class DraftPackageItem extends \common\components\db\ActiveRecord
             'tracking_merge' => 'Tracking Merge',
             'hold' => 'Hold',
             'type_tracking' => 'Type Tracking',
+            'seller_refund_amount' => 'Seller Refund Amount',
+            'draft_data_tracking_id' => 'Draft Data Tracking ID',
         ];
     }
 }
