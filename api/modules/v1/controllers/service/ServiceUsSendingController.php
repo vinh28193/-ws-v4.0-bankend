@@ -13,6 +13,7 @@ use common\models\Manifest;
 use common\models\Product;
 use common\models\PurchaseProduct;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class ServiceUsSendingController extends BaseApiController
 {
@@ -33,7 +34,7 @@ class ServiceUsSendingController extends BaseApiController
             'get-type' => ['PUT'],
             'merge' => ['POST'],
             'map-unknown' => ['POST'],
-            'mark-hold' => ['POST'],
+            'insert-tracking' => ['POST'],
             'seller-refund' => ['POST'],
             'index' => ['GET'],
         ];
@@ -171,5 +172,35 @@ class ServiceUsSendingController extends BaseApiController
             $data->save(0);
         }
         return $this->response(true,'Merge success!');
+    }
+
+    public function actionInsertTracking(){
+        if(!$this->post['tracking_code'] || !$this->post['info']){
+            return $this->response(false,'Please fill all field require!');
+        }
+        $count = 0;
+        foreach ($this->post['info'] as $info){
+            $order_id = ArrayHelper::getValue($info,'order_id');
+            $product_id = ArrayHelper::getValue($info,'product_id');
+            $purchase_number_invoice = ArrayHelper::getValue($info,'purchase_number_invoice');
+            if($product_id && $purchase_number_invoice){
+                $product = Product::findOne($product_id);
+                if($product && (!$order_id || $order_id == $product->order_id)){
+                    $model = new DraftExtensionTrackingMap();
+                    $model->tracking_code = $this->post['tracking_code'];
+                    $model->order_id = $product->order_id;
+                    $model->product_id = $product->id;
+                    $model->purchase_invoice_number = $purchase_number_invoice;
+                    $model->status = DraftExtensionTrackingMap::STATUST_NEW;
+                    $model->created_by = Yii::$app->user->getId();
+                    $model->updated_by = Yii::$app->user->getId();
+                    $model->created_at = time();
+                    $model->updated_by = time();
+                    $model->save(0);
+                    $count ++;
+                }
+            }
+        }
+        return $this->response(true,'Insert '.$count.' tracking success!');
     }
 }

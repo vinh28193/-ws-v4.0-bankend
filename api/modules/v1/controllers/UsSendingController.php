@@ -93,7 +93,6 @@ class UsSendingController extends BaseApiController
                 $ext->andWhere(['type_tracking'=>$filter_e['type_tracking']]);
             }
         }
-
         $data['_tracking_total'] = 0;
         $data['_tracking'] = [];
         $data['_ext_total'] = 0;
