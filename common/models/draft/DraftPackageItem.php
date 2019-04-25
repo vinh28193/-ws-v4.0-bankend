@@ -51,6 +51,10 @@ class DraftPackageItem extends \common\models\db\DraftPackageItem
     {
         return $this->hasOne(\common\models\Order::className(), ['id' => 'order_id']);
     }
+    public function getShipment()
+    {
+        return $this->hasOne(\common\models\Shipment::className(), ['id' => 'shipment_id']);
+    }
 
     public function getProduct()
     {
