@@ -591,7 +591,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['notifications' => 'notifications','downloadexcel' => 'download-file-excel'],
+        'controller' => ['notifications' => 'notifications','downloadexcel' => 'download-file-excel','trackinglogs'=>'rest-api-tracking-log'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -658,7 +658,7 @@ return [
             'POST suggest' => 'calculate',
             'GET cancel/{code}' => 'cancel',
             'OPTIONS' => 'options',
-            'OPTIONS order' => 'options',
+            'OPTIONS create' => 'options',
             'OPTIONS suggest' => 'options',
             'OPTIONS cancel/{code}' => 'options',
         ],

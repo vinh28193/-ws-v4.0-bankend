@@ -26,9 +26,9 @@ class PackageItem extends DbPackageItem
 {
     public function rules()
     {
-        return [
-            [['package_code'], 'required'],
-        ];
+        return array_merge(parent::rules(),[
+
+        ]);
     }
 
     /**
