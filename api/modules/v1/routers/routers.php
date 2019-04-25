@@ -630,6 +630,8 @@ return [
             'POST mark-hold/<id:\d+>'=> 'mark-hold',
             'OPTIONS mark-hold/<id:\d+>'=> 'options',
             'OPTIONS {id}' => 'options',
+            'POST insert-shipment'=> 'insert-shipment',
+            'OPTIONS insert-shipment'=> 'options',
         ]
     ],
     [
@@ -681,7 +683,7 @@ return [
         'patterns' => [
             'GET,HEAD' => 'index',
             'POST' => 'merge',
-            'POST {id}' => 'map-unknown,seller-refund,mark-hold',
+            'POST {id}' => 'map-unknown,seller-refund,mark-hold,insert-shipment',
             'PUT {id}' => 'get-type',
             'OPTIONS' => 'options',
         ],
