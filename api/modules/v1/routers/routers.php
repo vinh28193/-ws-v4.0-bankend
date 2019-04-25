@@ -573,7 +573,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['notifications' => 'notifications','downloadexcel' => 'download-file-excel'],
+        'controller' => ['notifications' => 'notifications','downloadexcel' => 'download-file-excel','trackinglogs'=>'rest-api-tracking-log'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
