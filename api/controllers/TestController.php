@@ -79,7 +79,7 @@ class TestController extends Controller
         $soi = intval(str_replace('SOI-', '', $soi));
         $soi = $soi ? $soi : null;
         /** @var DraftDataTracking[] $finds */
-        $finds = DraftDataTracking::find()->where([
+        $finds = DraftDataTracking::find()->with('product')->where([
             'product_id' => $soi,
             'manifest_id' => $manifest_id,
             'manifest_code' => $manifest_code,
@@ -97,6 +97,7 @@ class TestController extends Controller
                     $draft->manifest_id = $manifest_id;
                     $draft->quantity = $quantity;
                     $draft->weight = $weight;
+                    $draft->price = $find->product ? $find->product->price_amount_local : 0;
                     $draft->product_id = $soi;
                     $draft->order_id = $find->order_id;
                     $draft->purchase_invoice_number = $find->purchase_invoice_number;
