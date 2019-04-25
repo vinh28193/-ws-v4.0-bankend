@@ -672,8 +672,8 @@ return [
             'OPTIONS map-unknown/<id:\d+>'=> 'options',
             'POST seller-refund/<id:\d+>'=> 'seller-refund',
             'OPTIONS seller-refund/<id:\d+>'=> 'options',
-            'POST mark-hold/<id:\d+>'=> 'mark-hold',
-            'OPTIONS mark-hold/<id:\d+>'=> 'options',
+            'POST insert-tracking'=> 'insert-tracking',
+            'OPTIONS insert-tracking'=> 'options',
             'OPTIONS {id}' => 'options',
         ]
     ],
