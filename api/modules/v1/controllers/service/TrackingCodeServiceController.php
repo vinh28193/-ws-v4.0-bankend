@@ -22,7 +22,7 @@ class TrackingCodeServiceController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['merge', 'index', 'map-unknown', 'split-tracking', 'seller-refund','mark-hold'],
+                'actions' => ['merge', 'index', 'map-unknown', 'split-tracking', 'seller-refund','mark-hold','insert-shipment'],
                 'roles' => $this->getAllRoles(true),
             ],
         ];
@@ -35,6 +35,7 @@ class TrackingCodeServiceController extends BaseApiController
             'merge' => ['POST'],
             'map-unknown' => ['POST'],
             'mark-hold' => ['POST'],
+            'insert-shipment' => ['POST'],
             'seller-refund' => ['POST'],
             'index' => ['GET'],
         ];
@@ -169,6 +170,9 @@ class TrackingCodeServiceController extends BaseApiController
             $proPurchase->seller_refund_amount = $proPurchase->seller_refund_amount ? floatval($proPurchase->seller_refund_amount) + $this->post['amount'] :  $this->post['amount'];
             $proPurchase->save(0);
         }
+        $model->seller_refund_amount = $model->seller_refund_amount ? floatval($model->seller_refund_amount) + $this->post['amount'] :  $this->post['amount'];
+        $model->save(0);
+        DraftDataTracking::updateAll(['seller_refund_amount' => $model->seller_refund_amount],['id' => $model->draft_data_tracking_id]);
         return $this->response(true,'Update seller refund '.$this->post['type'].' success!');
     }
     public function actionMarkHold($id){
@@ -188,5 +192,9 @@ class TrackingCodeServiceController extends BaseApiController
             );
         }
         return $this->response(true, $this->post['hold'] ? 'hold success!' : 'UnHold success!');
+    }
+    public function actionInsertShipment(){
+        print_r($this->post);
+        die;
     }
 }

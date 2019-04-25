@@ -89,6 +89,7 @@ class TestController extends Controller
             foreach ($finds as $find) {
                 if ($find != DraftBoxmeTracking::STATUS_CALLBACK_SUCCESS) {
                     $find->status = DraftBoxmeTracking::STATUS_CALLBACK_SUCCESS;
+                    $find->item_name = $item_name;
                     $find->save(0);
                     $draft = new DraftPackageItem();
                     $draft->tracking_code = $tracking;
@@ -100,7 +101,8 @@ class TestController extends Controller
                     $draft->order_id = $find->order_id;
                     $draft->purchase_invoice_number = $find->purchase_invoice_number;
                     $draft->status = $status;
-
+                    $draft->draft_data_tracking_id = $find->id;
+                    $draft->seller_refund_amount = $find->seller_refund_amount;
                     $draft->dimension_l = isset($vol[0]) ? $vol[0] : null;
                     $draft->dimension_w = isset($vol[1]) ? $vol[1] : null;
                     $draft->dimension_h = isset($vol[2]) ? $vol[2] : null;

@@ -8,7 +8,9 @@ use api\controllers\BaseApiController;
 use common\helpers\ExcelHelper;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
+use common\models\draft\DraftPackageItem;
 use common\models\Manifest;
+use common\models\Product;
 use common\models\TrackingCode;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -91,7 +93,6 @@ class UsSendingController extends BaseApiController
                 $ext->andWhere(['type_tracking'=>$filter_e['type_tracking']]);
             }
         }
-
         $data['_tracking_total'] = 0;
         $data['_tracking'] = [];
         $data['_ext_total'] = 0;
@@ -169,44 +170,35 @@ class UsSendingController extends BaseApiController
         return $this->response(true, $message);
     }
     public function actionUpdate($id){
-        $manifest = Manifest::findOne($id);
-        if(!$manifest){
-            return $this->response(false,"Cannot find manifest ".$id);
+        $modal = DraftDataTracking::findOne($id);
+        if(!$modal){
+            return $this->response(false,'Cannot find your tracking!');
         }
-        $tracking = DraftDataTracking::find()
-            ->where(['manifest_id' => $manifest->id])
-            ->select('count(id) as `countId`, tracking_code')
-            ->groupBy('tracking_code')->asArray()->all();
-        if(!$tracking){
-            return $this->response(false,"Tracking is empty with manifest ".$manifest->manifest_code.'-'.$id);
+        $product = Product::findOne($this->post['product_id']);
+        if(!$product){
+            return $this->response(false,'Cannot find your product id!');
         }
-        $manifest->status = Manifest::STATUS_TYPE_GETTING;
-        $manifest->save(0);
-        DraftDataTracking::updateAll(
-            ['type_tracking' => DraftDataTracking::TYPE_NORMAL],
-            ['manifest_id' => $manifest->id]
-        );
-        foreach ($tracking as $dataTracking){
-            if($dataTracking['countId'] > 1){
-                DraftDataTracking::updateAll(
-                    ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
-                    [
-                        'manifest_id' => $manifest->id,
-                        'tracking_code' => $dataTracking['tracking_code']
-                    ]
-                );
-            }
+        if($this->post['order_id'] && $product->order_id != $this->post['order_id']){
+            return $this->response(false,'Order id and product id not mapping!');
         }
-        DraftDataTracking::updateAll(
-            ['type_tracking' => DraftDataTracking::TYPE_UNKNOWN],
-            [   'and',
-                ['manifest_id' => $manifest->id],
-                ['or',['product_id' => null],['product_id' => '']],
-                ['or',['order_id' => null],['order_id' => '']],
-            ]
-        );
-        $manifest->status = Manifest::STATUS_TYPE_GET_DONE;
-        $manifest->save(0);
-        return $this->response(True,"Re Get Type manifest ".$manifest->manifest_code.'-'.$id. ' success!');
+        if(!$this->post['item_name'] || !$this->post['purchase_invoice_number']){
+            return $this->response(false,'Fill all field!');
+        }
+        $modal->order_id = $product->order_id;
+        $modal->product_id = $product->id;
+        $modal->purchase_invoice_number = $this->post['purchase_invoice_number'];
+        $modal->updated_by = Yii::$app->user->getId();
+        $modal->updated_at = time();
+        $modal->item_name = $this->post['item_name'];
+        $modal->save(0);
+        DraftPackageItem::updateAll([
+            'order_id' => $product->order_id,
+            'product_id' => $product->id,
+            'purchase_invoice_number' => $this->post['purchase_invoice_number'],
+            'updated_by' => Yii::$app->user->getId(),
+            'updated_at' => time(),
+            'item_name' => $this->post['item_name']
+        ],['draft_data_tracking_id' => $modal->id]);
+        return $this->response(true,'Update success!');
     }
 }

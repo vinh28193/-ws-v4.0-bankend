@@ -58,6 +58,24 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
+        'controller' => ['list-chat-mongo'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>'
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
         'controller' => ['order'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
@@ -612,6 +630,8 @@ return [
             'POST mark-hold/<id:\d+>'=> 'mark-hold',
             'OPTIONS mark-hold/<id:\d+>'=> 'options',
             'OPTIONS {id}' => 'options',
+            'POST insert-shipment'=> 'insert-shipment',
+            'OPTIONS insert-shipment'=> 'options',
         ]
     ],
     [
@@ -638,7 +658,7 @@ return [
             'POST suggest' => 'calculate',
             'GET cancel/{code}' => 'cancel',
             'OPTIONS' => 'options',
-            'OPTIONS order' => 'options',
+            'OPTIONS create' => 'options',
             'OPTIONS suggest' => 'options',
             'OPTIONS cancel/{code}' => 'options',
         ],
@@ -663,8 +683,8 @@ return [
         'patterns' => [
             'GET,HEAD' => 'index',
             'POST' => 'merge',
-            'POST {id}' => 'map-unknown,seller-refund,mark-hold',
-            'DELETE {id}' => 'split-tracking',
+            'POST {id}' => 'map-unknown,seller-refund,mark-hold,insert-shipment',
+            'PUT {id}' => 'get-type',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
@@ -672,8 +692,8 @@ return [
             'OPTIONS map-unknown/<id:\d+>'=> 'options',
             'POST seller-refund/<id:\d+>'=> 'seller-refund',
             'OPTIONS seller-refund/<id:\d+>'=> 'options',
-            'POST mark-hold/<id:\d+>'=> 'mark-hold',
-            'OPTIONS mark-hold/<id:\d+>'=> 'options',
+            'POST insert-tracking'=> 'insert-tracking',
+            'OPTIONS insert-tracking'=> 'options',
             'OPTIONS {id}' => 'options',
         ]
     ],
