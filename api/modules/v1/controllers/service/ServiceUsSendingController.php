@@ -6,10 +6,13 @@ namespace api\modules\v1\controllers\service;
 
 use api\controllers\BaseApiController;
 use common\models\draft\DraftDataTracking;
+use common\models\draft\DraftExtensionTrackingMap;
 use common\models\draft\DraftPackageItem;
+use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use common\models\Product;
 use common\models\PurchaseProduct;
+use Yii;
 
 class ServiceUsSendingController extends BaseApiController
 {
@@ -44,7 +47,7 @@ class ServiceUsSendingController extends BaseApiController
         if(!$product){
             return $this->response(false,'Cannot find your product id!');
         }
-        $count = DraftDataTracking::find()->where(['tracking_code' => $model])->count();
+        $count = DraftDataTracking::find()->where(['tracking_code' => $model->tracking_code])->count();
         $model->product_id = $product->id;
         $model->order_id = $product->order_id;
         $model->save();
@@ -126,5 +129,47 @@ class ServiceUsSendingController extends BaseApiController
         $model->save(0);
         DraftPackageItem::updateAll(['seller_refund_amount' => $model->seller_refund_amount],['draft_data_tracking_id' => $model->id]);
         return $this->response(true,'Update seller refund '.$this->post['type'].' success!');
+    }
+    public function actionMerge(){
+        if(!isset($this->post['data_id']) || !isset($this->post['data_tracking_code']) || !$this->post['data_id'] || !($this->post['data_tracking_code'])){
+            return $this->response(false,'data merge empty');
+        }
+        if(!isset($this->post['ext_id']) || !isset($this->post['ext_tracking_code']) || !$this->post['ext_id'] || !($this->post['ext_tracking_code'])){
+            return $this->response(false,'data merge empty');
+        }
+        $data = DraftDataTracking::findOne($this->post['data_id']);
+        $ext = DraftExtensionTrackingMap::findOne($this->post['ext_id']);
+        if(!$data || $data->type_tracking != DraftDataTracking::TYPE_UNKNOWN || $data->product_id || $data->order_id
+            || !$ext
+            || $ext->status == DraftExtensionTrackingMap::JOB_CHECKED
+            || $ext->status == DraftExtensionTrackingMap::MAPPED
+        ){
+            return $this->response(false,'data merge not incorrect!');
+        }
+        $data->product_id = $ext->product_id;
+        $data->order_id = $ext->order_id;
+        $data->quantity = $ext->quantity;
+        $data->purchase_invoice_number = $ext->purchase_invoice_number;
+        $data->tracking_merge = $data->tracking_merge . ','.strtolower($ext->tracking_code);
+        $data->save(0);
+        $ext->status = DraftExtensionTrackingMap::MAPPED;
+        $ext->draft_data_tracking_id = $data->id;
+        $ext->save(0);
+        $count = DraftDataTracking::find()->where(['tracking_code' => $data->tracking_code])->count();
+        if($count > 1){
+            DraftDataTracking::updateAll(
+                ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
+                [
+                    'and',
+                    ['tracking_code' => $data->tracking_code],
+                    ['<>' ,'product_id' , ''],
+                    ['<>' ,'product_id' , null],
+                ]
+            );
+        }else{
+            $data->type_tracking = DraftDataTracking::TYPE_NORMAL;
+            $data->save(0);
+        }
+        return $this->response(true,'Merge success!');
     }
 }
