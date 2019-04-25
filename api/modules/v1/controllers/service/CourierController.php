@@ -37,13 +37,16 @@ class CourierController extends BaseApiController
     public function actionCalculate()
     {
         $bodyParams = Yii::$app->request->bodyParams;
-        var_dump($bodyParams);die;
-//        $form = new CalculateForm();
-//        if(!$form->load($bodyParams, '')){
-//            return $this->response(false, 'can not resolve current parameter', []);
-//        }
-//        list($success, $message, $data) = $form->calculate();
-//        return $this->response($success, $message, $data);
+        $form = new CalculateForm();
+        if (!$form->load($bodyParams, '')) {
+            return [
+                'error' => true,
+                'error_code' => 'Error Validate',
+                'messages' => $form->getFirstErrors(),
+                'data' => []
+            ];
+        }
+        return $form->calculate();
     }
 
     public function actionCancel($code)
