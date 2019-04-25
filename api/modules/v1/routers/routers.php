@@ -573,7 +573,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['notifications' => 'notifications'],
+        'controller' => ['notifications' => 'notifications','downloadexcel' => 'download-file-excel'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
