@@ -19,7 +19,7 @@ return [
     'package_code' => FixtureUtility::getRandomCode(11,1),
     'box_me_warehouse_tag' => $faker->randomElement(['CB_TAG-'.FixtureUtility::getRandomCode(16),null]),
     'order_id' => $faker->numberBetween(1,999),
-    'sku' => $faker->md5,
+    'product_id' => $faker->numberBetween(1,999),
     'quantity' => $faker->numberBetween(1,999),
     'weight' => $faker->numberBetween(1,999),
     'dimension_l' => $dl = $faker->numberBetween(1,999),

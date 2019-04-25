@@ -66,7 +66,7 @@ class PackageItemController extends BaseApiController
 
     public function actionView($id)
     {
-        $query = PackageItem::find()->where(['order_id' => $id])->asArray()->all();
+        $query = PackageItem::find()->where(['order_id' => $id])->with('shipment')->asArray()->all();
         return $this->response(true, 'get data success', $query);
     }
 
