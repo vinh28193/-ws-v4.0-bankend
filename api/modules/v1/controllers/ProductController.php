@@ -12,6 +12,8 @@ namespace api\modules\v1\controllers;
 use api\controllers\BaseApiController;
 use common\models\Product;
 use Yii;
+use common\helpers\ChatHelper;
+use common\data\ActiveDataProvider;
 
 class ProductController extends BaseApiController
 {
@@ -81,10 +83,32 @@ class ProductController extends BaseApiController
             if (isset($post['variant'])) {
                 $product->variations = $post['variant'];
             }
+            $dirtyAttributes = $product->getDirtyAttributes();
+            $messages = "order {$post['order_path']} Create Product {$this->resolveChatMessage($dirtyAttributes,$product)}";
+
             if (!$product->save()) {
                 return $this->response(false, 'error', $product->getErrors());
             }
+            ChatHelper::push($messages, $post['order_path'], 'GROUP_WS', 'SYSTEM');
+            Yii::$app->wsLog->push('order', "update product {$post['title']}", null, [
+                'id' => $post['order_path'],
+                'request' => $this->post,
+                'response' => $dirtyAttributes
+            ]);
             return $this->response(true, 'success', $product);
         }
+    }
+    protected function resolveChatMessage($dirtyAttributes, $reference)
+    {
+
+        $results = [];
+        foreach ($dirtyAttributes as $name => $value) {
+            if (strpos($name, '_id') !== false && is_numeric($value)) {
+                continue;
+            }
+            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+        }
+
+        return implode(", ", $results);
     }
 }
