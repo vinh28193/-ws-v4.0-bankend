@@ -22,7 +22,7 @@ class TrackingCodeServiceController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['merge', 'index', 'map-unknown', 'split-tracking', 'seller-refund','mark-hold'],
+                'actions' => ['merge', 'index', 'map-unknown', 'split-tracking', 'seller-refund','mark-hold','insert-shipment'],
                 'roles' => $this->getAllRoles(true),
             ],
         ];
@@ -35,6 +35,7 @@ class TrackingCodeServiceController extends BaseApiController
             'merge' => ['POST'],
             'map-unknown' => ['POST'],
             'mark-hold' => ['POST'],
+            'insert-shipment' => ['POST'],
             'seller-refund' => ['POST'],
             'index' => ['GET'],
         ];
@@ -191,5 +192,9 @@ class TrackingCodeServiceController extends BaseApiController
             );
         }
         return $this->response(true, $this->post['hold'] ? 'hold success!' : 'UnHold success!');
+    }
+    public function actionInsertShipment(){
+        print_r($this->post);
+        die;
     }
 }
