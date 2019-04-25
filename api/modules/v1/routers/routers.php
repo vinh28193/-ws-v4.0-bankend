@@ -58,6 +58,24 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
+        'controller' => ['list-chat-mongo'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>'
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
         'controller' => ['order'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',

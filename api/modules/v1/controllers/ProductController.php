@@ -69,9 +69,18 @@ class ProductController extends BaseApiController
         $post = Yii::$app->request->post();
         if ($id) {
             $product = Product::findOne($id);
-            $product->quantity_inspect =  $post['quantityI'];
-            $product->quantity_purchase =  $post['quantityP'];
-            $product->quantity_customer =  (int)$post['quantityC'];
+            if (isset($post['quantityI'])) {
+                $product->quantity_inspect =  $post['quantityI'];
+            }
+            if (isset($post['quantityP'])) {
+                $product->quantity_purchase =  $post['quantityP'];
+            }
+            if (isset($post['quantityC'])) {
+                $product->quantity_customer =  (int)$post['quantityC'];
+            }
+            if (isset($post['variant'])) {
+                $product->variations = $post['variant'];
+            }
             if (!$product->save()) {
                 return $this->response(false, 'error', $product->getErrors());
             }
