@@ -46,23 +46,18 @@ class TrackingLogWs extends ActiveRecord
             '_id',
             'created_at',
             'updated_at',
-            'date',
+           
 
-            'user_id',
-            'user_email',
-            'user_name',
-            'user_avatar',
-
-            'user_app',
-            'user_request_suorce',
+            'tracking',
+            'user',
+            'log_type',
+        
             'request_ip',
+            'note',
+            'time_create',
+            'object'
 
-            'store',
-            'manifest',
-            'time_warehosue'
-            'boxme_warehosue'
-
-            'Role','user_id','data_input','data_output', 'action_path','status' ,'LogTypWalletWs','id'
+     
         ];
     }
 
@@ -72,54 +67,51 @@ class TrackingLogWs extends ActiveRecord
             [[
                 'created_at',
                 'updated_at',
-                'date',
+                
+	            'tracking',
+	            'user',
+	            'log_type',
+	        
+	            'request_ip',
+	            'note',
+	            'time_create',
+	            'object'
 
-                'user_id',
-                'user_email',
-                'user_name',
-                'user_avatar',
-
-                'user_app',
-                'user_request_suorce',
-                'request_ip',
 
             ], 'safe'],
-            [[ 'Role','user_id','data_input','data_output', 'action_path','status' ,'LogTypWalletWs','id' ], 'required'],
+            [[ 'tracking','log_type','request_ip', 'note','object'], 'required'],
         ];
     }
 
+   /*
+   User_name tác động đến tracking được lưu ở note
+   */
     public function attributeLabels()
     {
+
         return [
             '_id' => 'ID',
-
             //User : Who ai tác
+            'tracking' => 'Mã tracking',
             'user_id' => 'id nhân viên ',
             'user_email' => 'Email nhân viên chat ',
             'user_name' => 'tên nhân viên chat',
-            'user_avatar' => 'Hình đại diện của User',
             'Role' => 'Role của nhân viên đang thao tác vào action',
 
             //Action thao tác là gì ?
-            'action_path' => 'Tên của action / nút bấm thao tác là gì ?',
-            'LogTypWalletWs'=> 'Order', // LogType : Order | Product | PACKEAGE | PACKEGEITEM : and Id để join
-            'id' => 'Id để join với LogTypWalletWs ',
-
-            'status' => 'Trạng thái Thanh Toans',
-
-            // data
-            'data_input' => 'dữ liệu ban đầu trước khi ghi log',
-            'data_output' => 'dữ liệu sau khi xử lý',
-
+            'log_type' => 'vd :Us sendding',
             // time
             'created_at' => 'created_at',
             'updated_at' => 'updated_at',
-            'date' => 'Date create data',
 
             // ENV nào bắn lên
             'user_app' => 'Tên Application Id ',
-            'user_request_suorce' => 'suorce gửi app chát Phân biệt : APP/FRONTEND/BACK_END ',
-            'request_ip' => 'IP request send message',
+            'request_ip' => 'Địa chỉ thao tác',
+            'store' => 'Cửa hàng',
+            'time_warehosue' => 'Thời gian thiết lập tại warehouse',
+            'boxme_warehosue' => 'Kho chứa hàng',
+            'manifest'        => 'ip đơn hàng',
+            'time_create' =>'Thời gian tạo'
             ];
     }
 
@@ -135,12 +127,12 @@ class TrackingLogWs extends ActiveRecord
             $params = $search;
         }
 
-        $limit = isset($limit) ? $limit : 10;
+        $limit = isset($limit) ? $limit : 100;
         $page = isset($page) ? $page : 1;
 
         $offset = ($page - 1) * $limit;
 
-        $query = WalletLogWs::find()
+        $query = TrackingLogWs::find()
             ->limit($limit)
             ->offset($offset);
 
