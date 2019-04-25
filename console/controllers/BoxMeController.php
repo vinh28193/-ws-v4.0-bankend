@@ -383,7 +383,7 @@ class BoxMeController extends Controller
                 $response = $client->send($request);
                 if($response->isOk){
                     $dta_2 = json_decode($response->getContent(), true);
-                    $order_id = $dta_2['data']['order']['id'];
+                    $order_id = array_pop($dta_2['data'])['order']['id'];
                     $order = Order::findOne($order_id);
                     if($order){
                         Product::updateAll(['id' => $product_id],['order_id' => $order->id]);
