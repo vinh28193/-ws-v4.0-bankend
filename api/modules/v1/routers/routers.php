@@ -638,7 +638,7 @@ return [
             'POST suggest' => 'calculate',
             'GET cancel/{code}' => 'cancel',
             'OPTIONS' => 'options',
-            'OPTIONS order' => 'options',
+            'OPTIONS create' => 'options',
             'OPTIONS suggest' => 'options',
             'OPTIONS cancel/{code}' => 'options',
         ],

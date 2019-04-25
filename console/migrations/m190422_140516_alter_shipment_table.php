@@ -12,7 +12,7 @@ class m190422_140516_alter_shipment_table extends Migration
      */
     public function safeUp()
     {
-        $this->alterColumn('shipment','courier_logo',$this->string(32)->comment('mã hãng vận chuyển'));
+        $this->alterColumn('shipment','courier_code',$this->string(32)->comment('mã hãng vận chuyển'));
         $this->addColumn('shipment','is_insurance',$this->smallInteger()->defaultValue(0)->after('is_hold')->comment('đánh dấu bảo hiểm'));
     }
 
@@ -22,7 +22,7 @@ class m190422_140516_alter_shipment_table extends Migration
     public function safeDown()
     {
         $this->dropColumn('shipment','is_insurance');
-        $this->alterColumn('shipment','courier_logo',$this->integer(11)->comment('mã hãng vận chuyển'));
+        $this->alterColumn('shipment','courier_code',$this->integer(11)->comment('mã hãng vận chuyển'));
     }
 
     /*
