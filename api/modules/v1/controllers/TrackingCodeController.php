@@ -175,6 +175,18 @@ class TrackingCodeController extends BaseApiController
                     if (!$model->save(false)) {
                         $tokens[$name]['error'][] = $row;
                     }
+                     //save tracking log
+                    $params = array(
+                        'manifest'=>$manifest->manifest_code,
+                        'trackingcode' => $trackingCode,
+                        'text' => 'Chuyển từ kho mỹ',
+                        'log_type' => 'US Sending',
+                        'store' => $store,
+                        'boxme_warehosue' => $warehouse
+                    );
+                   
+                    Yii::$app->wsLog->push('TrackingLog',null,null,$params);
+
                     $count++;
                 }
                 $tokens[$name]['success'] = $count;

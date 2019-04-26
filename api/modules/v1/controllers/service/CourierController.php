@@ -132,6 +132,14 @@ class CourierController extends BaseApiController
                 'data' => []
             ];
         }
+        if($form->toCountry != 1 && !$form->toZipCode){
+            return [
+                'error' => true,
+                'error_code' => 'Error Validate',
+                'messages' => "Zipcode Indo cannot null!",
+                'data' => []
+            ];
+        }
         return $form->calculate();
     }
 
