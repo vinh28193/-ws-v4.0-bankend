@@ -148,6 +148,8 @@ class BoxMeController extends Controller
                         $draft_data->tracking_code = strtolower($tracking->tracking_code);
                         $draft_data->manifest_id = $tracking->manifest_id;
                         $draft_data->manifest_code = $tracking->manifest_code;
+                        $draft_data->item_name = $ext->product ? $ext->product->product_name : '';
+                        $draft_data->image = $ext->product ? $ext->product->link_img : '';
                         $draft_data->created_at = time();
                         $draft_data->updated_at = time();
                         $draft_data->status = DraftDataTracking::STATUS_CHECK_DONE;
