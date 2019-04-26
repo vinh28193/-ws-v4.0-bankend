@@ -202,6 +202,7 @@ class BoxMeController extends Controller
             if ($k > $cn) {
                 break;
             }
+            echo ($item->manifest_code . "-" . $item->manifest_id).PHP_EOL;
             $data = BoxMeClient::GetDetail($item->manifest_code . "-" . $item->manifest_id, 1, 'vn', $item->tracking_code);
             if ($data['success']) {
                 foreach ($data['results'] as $key => $result) {
