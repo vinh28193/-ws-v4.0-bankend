@@ -30,6 +30,7 @@ use Yii;
  * @property string $item_name
  * @property string $seller_refund_amount Sô tiền seller hoàn
  * @property string $ws_tracking_code Mã tracking của weshop
+ * @property string $image
  */
 class DraftDataTracking extends \common\components\db\ActiveRecord
 {
@@ -50,7 +51,7 @@ class DraftDataTracking extends \common\components\db\ActiveRecord
             [['tracking_code'], 'required'],
             [['product_id', 'order_id', 'manifest_id', 'quantity', 'number_get_detail', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h', 'seller_refund_amount'], 'number'],
-            [['tracking_merge', 'item_name'], 'string'],
+            [['tracking_merge', 'item_name', 'image'], 'string'],
             [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'type_tracking', 'ws_tracking_code'], 'string', 'max' => 255],
         ];
     }
@@ -84,6 +85,7 @@ class DraftDataTracking extends \common\components\db\ActiveRecord
             'item_name' => 'Item Name',
             'seller_refund_amount' => 'Seller Refund Amount',
             'ws_tracking_code' => 'Ws Tracking Code',
+            'image' => 'Image',
         ];
     }
 }
