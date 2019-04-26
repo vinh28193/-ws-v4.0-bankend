@@ -88,10 +88,9 @@ class TrackingLog extends TrackingLogWs implements LoggingDriverInterface
 	        ]];	
 
 	         $model = new TrackingLogWs();
-	         if($model->load($_rest_data) && $model->save())
-	         {
-	         	 return $this->response(true, 'Success', $model); 
-	         }
+	         $model->load($_rest_data);
+             $model->save();
+	     
 		         
 	         
 	      }
