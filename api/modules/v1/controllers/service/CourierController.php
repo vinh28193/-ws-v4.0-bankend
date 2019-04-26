@@ -39,7 +39,7 @@ class CourierController extends BaseApiController
     {
         $post = $this->post;
 
-        $transaction = Shipment::getDb()->beginTransaction();
+
         if (($id = ArrayHelper::remove($post, 'id', null)) === null) {
             return $this->response(false, "can not action when unknown Id");
         }
@@ -50,6 +50,7 @@ class CourierController extends BaseApiController
         if (count($parcels) === 0) {
             return $this->response(false, "can not action when missing all parcel");
         }
+        $transaction = Shipment::getDb()->beginTransaction();
         try {
             if (!$shipment->load($post, '')) {
                 $transaction->rollBack();
@@ -83,6 +84,7 @@ class CourierController extends BaseApiController
                 $packageItem->load($parcel, '');
                 $packageItem->save(false);
             }
+            $shipment->reCalculateTotal();
             $transaction->commit();
             $shipment->refresh();
         } catch (\Exception $exception) {

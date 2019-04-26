@@ -14,7 +14,8 @@ use Yii;
 
 class Package extends DbPackage
 {
-
+    const STATUS_STOCK_IN_LOCAL = 'STOCK_IN_LOCAL';
+    const STATUS_STOCK_OUT_LOCAL = 'STOCK_OUT_LOCAL';
     /**
      * @inheritdoc
      * @return PackageQuery the active query used by this AR class.

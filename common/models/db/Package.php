@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "package".
  *
  * @property int $id
- * @property string $package_code
+ * @property string $package_code Mã kiện của weshop
  * @property string $tracking_seller mã giao dịch của weshop
  * @property string $order_ids List mã order cách nhau bằng dấu ,
  * @property string $tracking_reference_1 mã tracking tham chiếu 1
@@ -30,6 +30,7 @@ use Yii;
  * @property string $updated_at thời gian cập nhật
  * @property int $remove
  * @property string $version version 4.0
+ * @property int $shipment_id
  */
 class Package extends \common\components\db\ActiveRecord
 {
@@ -49,8 +50,8 @@ class Package extends \common\components\db\ActiveRecord
         return [
             [['order_ids', 'tracking_reference_1', 'tracking_reference_2', 'manifest_code'], 'string'],
             [['package_weight', 'package_change_weight', 'package_dimension_l', 'package_dimension_w', 'package_dimension_h'], 'number'],
-            [['seller_shipped', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'lost', 'warehouse_id', 'created_at', 'updated_at', 'remove'], 'integer'],
-            [['package_code'], 'string', 'max' => 50],
+            [['seller_shipped', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'lost', 'warehouse_id', 'created_at', 'updated_at', 'remove', 'shipment_id'], 'integer'],
+            [['package_code'], 'string', 'max' => 32],
             [['tracking_seller', 'version'], 'string', 'max' => 255],
             [['current_status'], 'string', 'max' => 100],
         ];
@@ -85,6 +86,7 @@ class Package extends \common\components\db\ActiveRecord
             'updated_at' => 'Updated At',
             'remove' => 'Remove',
             'version' => 'Version',
+            'shipment_id' => 'Shipment ID',
         ];
     }
 }
