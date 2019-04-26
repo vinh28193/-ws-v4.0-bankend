@@ -157,7 +157,7 @@ class CreateOrderForm extends BaseForm
             $product = $packageItem->product;
             $parcel = new Parcel([
                 'weight' => $packageItem->weight,
-                'referral_code' => $packageItem->box_me_warehouse_tag,
+                'referral_code' => $packageItem->warehouse_tag_boxme,
                 'items' => [
                     new Item([
                         'name' => $product->product_name,

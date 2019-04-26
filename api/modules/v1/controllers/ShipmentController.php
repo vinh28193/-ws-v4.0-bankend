@@ -66,9 +66,8 @@ class ShipmentController extends BaseApiController
     {
         $params = $this->get;
         $query = Shipment::find();
-
         $query->filterRelation();
-
+        $query->filter($params);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -80,7 +79,7 @@ class ShipmentController extends BaseApiController
             ],
         ]);
 
-        $query->filter($params);
+
 
         return $this->response(true, "get shipment success", $dataProvider);
     }
@@ -145,7 +144,7 @@ class ShipmentController extends BaseApiController
         if (count($ids) === 0) {
             return $this->response(false, "nothing to update");
         }
-        $shipments = Shipment::find()->where(['AND', ['IN', 'id', $ids], ['remove' => 0]])->all();
+        $shipments = Shipment::find()->where(['AND', ['IN', 'id', $ids], ['active' => 1]])->all();
         if (empty($shipments) || count($shipments) < 1) {
             return $this->response(false, "nothing to update");
         }
@@ -174,6 +173,7 @@ class ShipmentController extends BaseApiController
                     $moved++;
                 }
                 // todo remove shipment
+                $shipment->active = 0;
                 $shipment->save(false);
                 $form[] = $shipment->id;
 

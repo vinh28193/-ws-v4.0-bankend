@@ -623,7 +623,7 @@ return [
         'patterns' => [
             'GET,HEAD' => 'index',
             'POST' => 'merge',
-            'POST {id}' => 'map-unknown,seller-refund,mark-hold',
+            'POST {id}' => 'map-unknown,seller-refund,mark-hold,insert-shipment',
             'DELETE {id}' => 'split-tracking',
             'OPTIONS' => 'options',
         ],

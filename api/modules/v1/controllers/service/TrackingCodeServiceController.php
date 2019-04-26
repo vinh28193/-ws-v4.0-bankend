@@ -37,7 +37,7 @@ class TrackingCodeServiceController extends BaseApiController
             'merge' => ['POST'],
             'map-unknown' => ['POST'],
             'mark-hold' => ['POST'],
-            'insert-shipment' => ['POSsT'],
+            'insert-shipment' => ['POST'],
             'seller-refund' => ['POST'],
             'index' => ['GET'],
         ];
@@ -282,7 +282,7 @@ class TrackingCodeServiceController extends BaseApiController
                 $shipment->save(0);
                 $packageNew->shipment_id = $shipment->id;
                 $packageNew->save(0);
-                $packageNew->package_code = TextUtility::GeneratePackingCode($this->id,'VN');
+                $packageNew->package_code = TextUtility::GeneratePackingCode($packageNew->id,'VN');
                 $packageNew->save(0);
                 $package->shipment_id = $shipment->id;
                 $package->package_code = $packageNew->package_code;
@@ -294,7 +294,7 @@ class TrackingCodeServiceController extends BaseApiController
             $shipment->save(0);
             $packageNew->shipment_id = $shipment->id;
             $packageNew->save(0);
-            $packageNew->package_code = TextUtility::GeneratePackingCode($this->id,'VN');
+            $packageNew->package_code = TextUtility::GeneratePackingCode($packageNew->id,'VN');
             $packageNew->save(0);
             DraftPackageItem::updateAll([
                 'shipment_id' => $shipment->id,
