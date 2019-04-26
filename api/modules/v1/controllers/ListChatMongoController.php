@@ -47,8 +47,6 @@ class ListChatMongoController extends BaseApiController
     }
     public function actionCreate() {
         $post = Yii::$app->request->post();
-        var_dump($post);
-        die();
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $chat = new ListChat();
         $chat->note = $post['noteC'];
