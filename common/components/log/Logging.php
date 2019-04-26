@@ -46,6 +46,9 @@ class Logging extends \yii\base\Component
         ],
         'payment' => [
             'class' => 'common\components\log\driver\PaymentLog',
+        ],
+        'TrackingLog' => [
+            'class' => 'common\components\log\driver\TrackingLog',
         ]
     ];
 
