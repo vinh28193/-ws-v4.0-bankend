@@ -7,6 +7,7 @@ namespace console\controllers;
 use common\components\boxme\BoxMeClient;
 use common\components\lib\TextUtility;
 use common\components\TrackingCode;
+use common\helpers\WeshopHelper;
 use \common\models\draft\DraftExtensionTrackingMap;
 use common\models\db\PurchaseOrder;
 use common\models\db\PurchaseProduct;
@@ -153,6 +154,8 @@ class BoxMeController extends Controller
                         $draft_data->tracking_merge = strtolower($tracking->tracking_code);
                         $draft_data->tracking_merge .= strtolower($tracking->tracking_code) == strtolower($ext->tracking_code) ? '' : ','.strtolower($ext->tracking_code);
                         $draft_data->save(0);
+                        $draft_data->ws_tracking_code = WeshopHelper::generateTag($draft_data->id,'WSVNTK');
+                        $draft_data->save(0);
                     }
                     $ext->draft_data_tracking_id = $draft_data->id;
                     $ext->status = DraftExtensionTrackingMap::JOB_CHECKED;
@@ -167,6 +170,8 @@ class BoxMeController extends Controller
                 $draft_data_one->updated_at = time();
                 $draft_data_one->status = DraftDataTracking::STATUS_MAKE_US_SENDING;
                 $draft_data_one->tracking_merge = strtolower($tracking->tracking_code);
+                $draft_data_one->save(0);
+                $draft_data_one->ws_tracking_code = WeshopHelper::generateTag($draft_data_one->id,'WSVNTK');
                 $draft_data_one->save(0);
             }
             $tracking->status_merge = \common\models\TrackingCode::STATUS_MERGE_DONE;
