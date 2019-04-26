@@ -3,6 +3,8 @@
 
 namespace api\modules\v1\controllers\service;
 
+use common\boxme\BoxmeClientCollection;
+use common\boxme\Location;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\Shipment as ModelShipment;
@@ -30,8 +32,9 @@ class CourierController extends BaseApiController
     {
         return [
             'create' => ['POST'],
+            'bulk' => ['POST'],
             'calculate' => ['POST'],
-            'cancel' => ['GET']
+            'cancel' => ['POST']
         ];
     }
 
@@ -135,6 +138,38 @@ class CourierController extends BaseApiController
 
     public function actionCancel()
     {
+        $ids = ArrayHelper::getValue($this->post, 'ids', []);
+        if (count($ids) === 0) {
+            $this->response(true, "no thing to cancel");
+        }
+        $shipments = Shipment::find()->with('warehouseSend')->where('AND', ['IN', 'id' => $ids], ['active' => 1])->all();
+        if (count($shipments) === 0) {
+            $this->response(true, "no thing to cancel");
+        }
+        $error = [];
+        $success = 0;
+        foreach ($shipments as $shipment) {
+            /** @var $shipment Shipment */
+            $collection = new BoxmeClientCollection();
+            $client = $collection->getClient($shipment->warehouseSend->country_id === 2 ? Location::COUNTRY_ID : Location::COUNTRY_VN);
+            $res = $client->cancelOrder($shipment->shipment_code);
+            if ($res['error'] === false) {
+                $error[] = $shipment->shipment_code;
+            }
+            $shipment->shipment_code = null;
+            $shipment->shipment_status = Shipment::STATUS_NEW;
+            $shipment->courier_code = null;
+            $shipment->courier_logo = null;
+            $shipment->total_shipping_fee = null;
+            $shipment->save(false);
+            $success++;
+        }
+        $mess = "cancel success $success shipment";
+        if (count($error) > 0) {
+            $error = implode(',', $error);
+            $mess .= ", can not cancel $error";
+        }
 
+        $this->response(true, $mess);
     }
 }
