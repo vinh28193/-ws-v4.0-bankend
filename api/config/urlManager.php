@@ -18,6 +18,8 @@ return [
         '1/me'=>'site/me',
         '1/logout'=>'site/logout',
 
+        'callback/update-item' => 'callback/update-item',
+
         'test/get-custom-fee'=>'test/get-custom-fee',
         'test/callback-boxme'=>'test/callback-boxme',
 
