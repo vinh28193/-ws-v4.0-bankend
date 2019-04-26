@@ -9,6 +9,7 @@
 namespace api\modules\v1\controllers;
 
 use common\helpers\WeshopHelper;
+use common\models\db\Package;
 use Yii;
 use Exception;
 use yii\helpers\ArrayHelper;
@@ -155,11 +156,18 @@ class ShipmentController extends BaseApiController
         try {
             /** @var $firstShipment Shipment */
             $firstShipment = array_shift($shipments);
-            $mess = "Moved {moved} form {form} to {$firstShipment->id}";
+            $mess = "Moved {moved} in {package} form shipment {form} to {$firstShipment->id}";
             $moved = 0;
             $form = [];
+            $packageCodes = [];
             foreach ($shipments as $shipment) {
                 /** @var $shipment Shipment */
+                foreach ($shipment->packages as $package){
+                    /** @var $shipment Package */
+                    $package->shipment_id = $firstShipment->id;
+                    $packageCodes[] = $package->package_code;
+                    $package->save(false);
+                }
                 foreach ($shipment->packageItems as $packageItem) {
                     $packageItem->shipment_id = $firstShipment->id;
                     $packageItem->save(false);
@@ -170,7 +178,7 @@ class ShipmentController extends BaseApiController
                 $form[] = $shipment->id;
 
             }
-            $mess = str_replace(['{moved}', '{form}'], [$moved, implode(',', $form)], $mess);
+            $mess = str_replace(['{moved}', '{package}' ,'{form}'], [$moved, implode(',', $packageCodes), implode(',', $form)], $mess);
             $firstShipment->reCalculateTotal();
             $transaction->commit();
             return $this->response(true, $mess);
