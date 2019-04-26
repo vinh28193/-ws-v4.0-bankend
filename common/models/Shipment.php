@@ -65,4 +65,26 @@ class Shipment extends DbShipment
     {
         return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
     }
+
+    /**
+     *
+     */
+    public function reCalculateTotal(){
+        $totalQuantity = 0;
+        $totalWeight = 0;
+        $totalCod = 0;
+        $totalPrice = 0;
+        foreach ($this->packageItems as $packageItem){
+            $totalQuantity += $packageItem->quantity;
+            $totalWeight += $packageItem->weight;
+            $totalCod += $packageItem->cod;
+            $totalPrice += $packageItem->price;
+        }
+        $this->updateAttributes([
+            'total_quantity' => $totalQuantity,
+            'total_weight' => $totalWeight,
+            'total_cod' => $totalCod,
+            'total_price' => $totalPrice
+        ]);
+    }
 }

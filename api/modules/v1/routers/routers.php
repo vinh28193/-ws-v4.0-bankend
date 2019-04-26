@@ -114,7 +114,12 @@ return [
             'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
         ],
-        'extraPatterns' => []
+        'extraPatterns' => [
+            'POST m' => 'merge',
+            'GET r/<id:\d+>' => 'remove-item',
+            'OPTIONS m' => 'options',
+            'OPTIONS r/<id:\d+>' => 'options',
+        ]
     ],
     [
         'class' => \common\filters\ApiUrlRule::className(),
@@ -649,18 +654,16 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'controller' => ['courier' => 'service/courier'],
-        'tokens' => [
-            '{id}' => '<id:\\d[\\d,]*>',
-            '{code}' => '<code:\\w[\\w,]*>',
-        ],
         'patterns' => [
             'POST create' => 'create',
+            'POST bulk' => 'create-bulk',
             'POST suggest' => 'calculate',
-            'GET cancel/{code}' => 'cancel',
+            'POST cancel' => 'cancel',
             'OPTIONS' => 'options',
             'OPTIONS create' => 'options',
+            'OPTIONS bulk' => 'options',
             'OPTIONS suggest' => 'options',
-            'OPTIONS cancel/{code}' => 'options',
+            'OPTIONS cancel' => 'options',
         ],
     ],
     [
