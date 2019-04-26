@@ -178,10 +178,10 @@ class TrackingCodeController extends BaseApiController
                      //save tracking log
                     $params = array(
                         'manifest'=>$manifest,
-                        'trackingcode' => $trackingcode,
+                        'trackingcode' => $trackingCode,
                         'text' => 'Chuyển từ kho mỹ',
                         'log_type' => 'US Sending',
-                        '$store' => $store,
+                        'store' => $store,
                         'boxme_warehosue' => $warehouse
                     );
                    

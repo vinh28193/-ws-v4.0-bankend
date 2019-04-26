@@ -50,7 +50,7 @@ class TrackingLog extends TrackingLogWs implements LoggingDriverInterface
          }
          $manifest = $params['manifest'];
          $_request_ip = Yii::$app->getRequest()->getUserIP();
-         $boxme_warehosue = $params['boxme'];
+         $boxme_warehosue = $params['boxme_warehosue'];
          $text     = $params['text'];
          $store = $params['store'];
          $log_type = $params['log_type'];
@@ -64,7 +64,7 @@ class TrackingLog extends TrackingLogWs implements LoggingDriverInterface
           $note->text = $text;    
 
           $query = TrackingLogWs::find()
-                ->where(['tracking' => $trackingcode])
+                ->where(['tracking' => $params['trackingcode']])
                 ->one();
 
  	     if(empty($query))
