@@ -46,7 +46,7 @@ class CalculateForm extends BaseForm
             [
                  [
                      'warehouseId', 'toAddress', 'toDistrict', 'toProvince', 'toCountry',
-                     'toZipCode', 'toName', 'toPhone',
+                     'toName', 'toPhone',
                      'totalParcel', 'totalWeight', 'totalQuantity',
                      'totalCod', 'totalAmount'
                  ],'required'
