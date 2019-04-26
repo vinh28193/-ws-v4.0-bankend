@@ -6,8 +6,8 @@ namespace common\components\lib;
 
 class TextUtility
 {
-    public static function GeneratePackingCode($id){
+    public static function GeneratePackingCode($id,$contry = 'VN'){
         $idStr = $id> 999 ? $id : substr('000'.$id,(strlen('000'.$id) - 4),4);
-        return 'WSVNPK'.$idStr;
+        return strtoupper('WS'.$contry.'PK'.$idStr);
     }
 }
