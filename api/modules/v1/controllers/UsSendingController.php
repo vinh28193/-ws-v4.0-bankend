@@ -252,7 +252,7 @@ class UsSendingController extends BaseApiController
         }
         $fileDirPath = 'file';
         if (!file_exists($fileDirPath)) {
-            mkdir($fileDirPath, 0777, true);
+            @mkdir($fileDirPath, 0777, true);
         }
         $writer = new Xlsx($spreadsheet);
         $writer->save($fileName);
