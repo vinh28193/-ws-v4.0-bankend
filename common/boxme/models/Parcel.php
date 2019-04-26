@@ -43,7 +43,7 @@ class Parcel extends Model
     public function rules()
     {
         return [
-            [['weight', 'description', 'items', 'referral_code'], 'required'],
+            [['weight', 'items', 'referral_code'], 'required'],
             [['weight'], 'integer'],
             [['description', 'inspect_note'], 'string'],
             [['items'], 'safe'],

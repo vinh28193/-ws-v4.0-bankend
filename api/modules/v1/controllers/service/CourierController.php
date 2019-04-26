@@ -3,8 +3,11 @@
 
 namespace api\modules\v1\controllers\service;
 
+use common\boxme\BoxmeClientCollection;
+use common\boxme\Location;
 use common\models\PackageItem;
 use common\models\Product;
+use common\models\Shipment as ModelShipment;
 use Yii;
 use Exception;
 use common\models\Shipment;
@@ -29,8 +32,9 @@ class CourierController extends BaseApiController
     {
         return [
             'create' => ['POST'],
+            'bulk' => ['POST'],
             'calculate' => ['POST'],
-            'cancel' => ['GET']
+            'cancel' => ['POST']
         ];
     }
 
@@ -38,7 +42,7 @@ class CourierController extends BaseApiController
     {
         $post = $this->post;
 
-        $transaction = Shipment::getDb()->beginTransaction();
+
         if (($id = ArrayHelper::remove($post, 'id', null)) === null) {
             return $this->response(false, "can not action when unknown Id");
         }
@@ -49,6 +53,7 @@ class CourierController extends BaseApiController
         if (count($parcels) === 0) {
             return $this->response(false, "can not action when missing all parcel");
         }
+        $transaction = Shipment::getDb()->beginTransaction();
         try {
             if (!$shipment->load($post, '')) {
                 $transaction->rollBack();
@@ -82,6 +87,7 @@ class CourierController extends BaseApiController
                 $packageItem->load($parcel, '');
                 $packageItem->save(false);
             }
+            $shipment->reCalculateTotal();
             $transaction->commit();
             $shipment->refresh();
         } catch (\Exception $exception) {
@@ -89,8 +95,29 @@ class CourierController extends BaseApiController
             Yii::error($exception, __METHOD__);
             return $this->response(false, $exception->getMessage());
         }
+        $createForm = new CreateOrderForm();
+        /* @var $model ModelShipment */
+        list($isSuccess, $mess) = $createForm->createByShipment($shipment);
+        return $this->response($isSuccess, $mess);
 
-        return $this->response(true, 'mess', $this->post);
+
+    }
+
+    public function actionCreateBulk()
+    {
+        $post = $this->post;
+        $ids = ArrayHelper::getValue($post, 'ids', []);
+        if (count($ids) === 0) {
+            return $this->response(false, "nothing to create");
+        }
+        $rules = ArrayHelper::getValue($post, 'rules', []);
+        $createForm = new CreateOrderForm();
+        $createForm->ids = $ids;
+        $createForm->rules = $rules;
+        if (($rs = $createForm->create()) === false) {
+            return $this->response(false, $createForm->getFirstErrors());
+        }
+        return $this->response(true, $rs);
     }
 
     public function actionCalculate()
@@ -108,8 +135,41 @@ class CourierController extends BaseApiController
         return $form->calculate();
     }
 
-    public function actionCancel($code)
-    {
 
+    public function actionCancel()
+    {
+        $ids = ArrayHelper::getValue($this->post, 'ids', []);
+        if (count($ids) === 0) {
+            $this->response(true, "no thing to cancel");
+        }
+        $shipments = Shipment::find()->with('warehouseSend')->where('AND', ['IN', 'id' => $ids], ['active' => 1])->all();
+        if (count($shipments) === 0) {
+            $this->response(true, "no thing to cancel");
+        }
+        $error = [];
+        $success = 0;
+        foreach ($shipments as $shipment) {
+            /** @var $shipment Shipment */
+            $collection = new BoxmeClientCollection();
+            $client = $collection->getClient($shipment->warehouseSend->country_id === 2 ? Location::COUNTRY_ID : Location::COUNTRY_VN);
+            $res = $client->cancelOrder($shipment->shipment_code);
+            if ($res['error'] === false) {
+                $error[] = $shipment->shipment_code;
+            }
+            $shipment->shipment_code = null;
+            $shipment->shipment_status = Shipment::STATUS_NEW;
+            $shipment->courier_code = null;
+            $shipment->courier_logo = null;
+            $shipment->total_shipping_fee = null;
+            $shipment->save(false);
+            $success++;
+        }
+        $mess = "cancel success $success shipment";
+        if (count($error) > 0) {
+            $error = implode(',', $error);
+            $mess .= ", can not cancel $error";
+        }
+
+        $this->response(true, $mess);
     }
 }

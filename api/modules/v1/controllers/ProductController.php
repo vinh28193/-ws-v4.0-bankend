@@ -83,11 +83,14 @@ class ProductController extends BaseApiController
             if (isset($post['variant'])) {
                 $product->variations = $post['variant'];
             }
+            if (isset($post['policy_id'])) {
+                $product->custom_category_id = $post['policy_id'];
+            }
             if (isset($post['category_id'])) {
                 $product->custom_category_id = $post['category_id'];
             }
             $dirtyAttributes = $product->getDirtyAttributes();
-            $messages = "order {$post['order_path']} Create Product {$this->resolveChatMessage($dirtyAttributes,$product)}";
+            $messages = "order {$post['order_path']} Update Product {$this->resolveChatMessage($dirtyAttributes,$product)}";
 
             if (!$product->save()) {
                 return $this->response(false, 'error', $product->getErrors());

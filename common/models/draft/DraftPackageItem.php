@@ -80,7 +80,7 @@ class DraftPackageItem extends \common\models\db\DraftPackageItem
             if ($this->$name === null) {
                 continue;
             }
-            unset($fields[$name]);
+//            unset($fields[$name]);
             $key = str_replace('dimension_', '', $name);
             $dimension[$key] = $this->$name;
         }

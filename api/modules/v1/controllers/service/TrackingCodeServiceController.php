@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
+use common\components\lib\TextUtility;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftPackageItem;
@@ -13,6 +14,7 @@ use common\models\Package;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\PurchaseProduct;
+use common\models\Shipment;
 use Yii;
 
 class TrackingCodeServiceController extends BaseApiController
@@ -114,6 +116,10 @@ class TrackingCodeServiceController extends BaseApiController
         if(!$model){
             return $this->response(false,'Cannot find your tracking!');
         }
+        if($model->shipment_id){
+            return $this->response(false,'Package '.$model->id.' was in a shipment!');
+        }
+
         $model->status = DraftPackageItem::STATUS_SPLITED;
         $model->save(0);
         $arr_tracking = explode(',',$model->tracking_merge);
@@ -194,7 +200,108 @@ class TrackingCodeServiceController extends BaseApiController
         return $this->response(true, $this->post['hold'] ? 'hold success!' : 'UnHold success!');
     }
     public function actionInsertShipment(){
-        print_r($this->post);
-        die;
+        $isCreateAll = false;
+        $qr = DraftPackageItem::find()->with(['order', 'manifest']);
+        if(isset($this->post['listCheck']) && $this->post['listCheck']){
+            $qr->where(['id' => $this->post['listCheck']]);
+        }else{
+            if(isset($this->post['manifest_id']) && $this->post['manifest_id']){
+                $qr->where(['manifest_id' => $this->post['manifest_id']]);
+                $isCreateAll = true;
+            }else{
+                return $this->response(false, 'Cannot find package!');
+            }
+        }
+        /** @var DraftPackageItem[] $packages */
+        $packages = $qr->orderBy('id desc')->all();
+        if(!$packages){
+            return $this->response(false, 'Cannot find package!');
+        }
+        $list_id = [];
+        if(!$isCreateAll){
+            $shipment = new Shipment();
+            $shipment->version = '4.0';
+            $shipment->shipment_status = Shipment::STATUS_NEW;
+            $packageNew = new Package();
+        }
+        $listHold = [];
+        foreach ($packages as $package){
+            if($package->hold){
+                return $this->response(false, 'Package '.$package->id .' is hold!');
+                break;
+            }
+            if($package->shipment_id){
+                return $this->response(false, 'Package '.$package->id .' was in a shipment!');
+                break;
+            }
+            if($package->remove){
+                continue;
+            }
+            if($isCreateAll){
+                $shipment = new Shipment();
+                $shipment->version = '4.0';
+                $shipment->shipment_status = Shipment::STATUS_NEW;
+                $packageNew = new Package();
+            }
+            $list_id[] = $package->id;
+            $packageNew->current_status = Package::STATUS_STOCK_IN_LOCAL;
+            $packageNew->stock_in_local = $package->stock_in_local;
+            $packageNew->manifest_code = $package->manifest_code;
+            $packageNew->tracking_seller = !$packageNew->tracking_seller ? $package->tracking_code : '';
+            $packageNew->tracking_reference_1 = !$packageNew->tracking_reference_1
+                                                && $packageNew->tracking_seller != $package->tracking_code
+                                                ? $package->tracking_code : '';
+            $packageNew->tracking_reference_2 = !$packageNew->tracking_reference_1 && $packageNew->tracking_reference_2
+                                                && $packageNew->tracking_reference_1 != $package->tracking_code
+                                                && $packageNew->tracking_seller != $package->tracking_code
+                                                ? $package->tracking_code : '';
+            $packageNew->warehouse_id = $package->manifest->receive_warehouse_id;
+            $packageNew->created_at = time();
+            $packageNew->updated_at = time();
+            $packageNew->remove = 0;
+            $packageNew->version = '4.0';
+
+            $shipment->warehouse_tags = $shipment->warehouse_tags ? $shipment->warehouse_tags .',' .$package->warehouse_tag_boxme : $shipment->warehouse_tags ;
+            $shipment->total_weight = $shipment->total_weight ? $shipment->total_weight + $package->weight : $package->weight;
+            $shipment->customer_id = $package->order->customer_id;
+            $shipment->receiver_email = $package->order->receiver_email;
+            $shipment->receiver_name = $package->order->receiver_name;
+            $shipment->receiver_phone = $package->order->receiver_phone;
+            $shipment->receiver_address = $package->order->receiver_address;
+            $shipment->receiver_country_id = $package->order->receiver_country_id;
+            $shipment->receiver_country_name = $package->order->receiver_country_name;
+            $shipment->receiver_province_id = $package->order->receiver_province_id;
+            $shipment->receiver_province_name = $package->order->receiver_province_name;
+            $shipment->receiver_district_id = $package->order->receiver_district_id;
+            $shipment->receiver_district_name = $package->order->receiver_district_name;
+            $shipment->note_by_customer = $package->order->note_by_customer;
+            $shipment->total_price = $shipment->total_price ? $shipment->total_price + $package->price : $package->price;
+            $shipment->total_cod = $shipment->total_cod ? $shipment->total_cod + $package->cod : $package->cod;
+            $shipment->total_quantity = $shipment->total_quantity ? $shipment->total_quantity + $package->quantity : $package->quantity;
+            if($isCreateAll){
+                $shipment->save(0);
+                $packageNew->shipment_id = $shipment->id;
+                $packageNew->save(0);
+                $packageNew->package_code = TextUtility::GeneratePackingCode($packageNew->id,'VN');
+                $packageNew->save(0);
+                $package->shipment_id = $shipment->id;
+                $package->package_code = $packageNew->package_code;
+                $package->package_id = $packageNew->id;
+                $package->save(0);
+            }
+        }
+        if(!$isCreateAll){
+            $shipment->save(0);
+            $packageNew->shipment_id = $shipment->id;
+            $packageNew->save(0);
+            $packageNew->package_code = TextUtility::GeneratePackingCode($packageNew->id,'VN');
+            $packageNew->save(0);
+            DraftPackageItem::updateAll([
+                'shipment_id' => $shipment->id,
+                'package_code' => $packageNew->package_code,
+                'package_id' => $packageNew->id,
+            ],['id' => $list_id]);
+        }
+        return $this->response(true, 'Create Shipment success! Note: Package hold ('.implode(',',$listHold).') will not be created!');
     }
 }

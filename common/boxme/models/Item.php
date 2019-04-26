@@ -25,8 +25,8 @@ class Item extends Model
     {
         return [
             [['weight', 'quantity'], 'integer'],
-            [['description', 'amount', 'name', 'sku'], 'string'],
-            [['weight', 'description', 'quantity', 'amount', 'name'], 'required'],
+            [['description', 'name', 'sku'], 'string'],
+            [['weight', 'quantity', 'amount', 'name'], 'required'],
             ['weight', 'integer', 'min' => 1],
             ['amount', function ($attribute, $param) {
                 if (!$this->hasErrors() && ((int)($value = $this->$attribute) < 1)) {

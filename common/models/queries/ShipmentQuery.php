@@ -8,6 +8,7 @@
 
 namespace common\models\queries;
 
+use common\models\Package;
 use yii\helpers\ArrayHelper;
 use common\helpers\WeshopHelper;
 use common\components\db\ActiveQuery;
@@ -20,7 +21,8 @@ class ShipmentQuery extends ActiveQuery
      */
     public function filterRelation()
     {
-        $this->joinWith(['customer','warehouseSend','packageItems.product']);
+        $this->with(['customer','warehouseSend']);
+        $this->joinWith(['packages', 'packageItems' ,'packageItems.product', 'packageItems.order']);
         return $this;
     }
 
@@ -28,7 +30,30 @@ class ShipmentQuery extends ActiveQuery
      * @param $params
      * @return $this
      */
-    public function filter($params){
+    public function filter($params)
+    {
+
+        if (isset($params['q']) && ($q = $params['q']) !== null && $q !== '') {
+            if (isset($params['qref']) && ($qref = $params['qref']) !== null && $qref !== '') {
+                if ($qref === 'shipmentCode') {
+                    $this->andWhere([$this->getColumnName('shipment_code') => $q]);
+                } elseif ($qref === 'packageCode') {
+                    $this->andWhere([$this->getColumnName('package_code', Package::tableName()) => $q]);
+                }
+            } else {
+                $this->andWhere([
+                    'OR',
+                    [$this->getColumnName('shipment_code') => $q],
+                    [$this->getColumnName('package_code', Package::tableName()) => $q]
+                ]);
+            }
+        }
+        if (isset($params['s']) && ($status = $params['s']) !== null && $status !== '') {
+            $this->andWhere([$this->getColumnName('shipment_status') => $status]);
+        }
+        if (isset($params['wh']) && ($warehouse = $params['s']) !== null && $warehouse !== '') {
+            $this->andWhere([$this->getColumnName('warehouse_send_id') => $warehouse]);
+        }
         return $this;
     }
 }
