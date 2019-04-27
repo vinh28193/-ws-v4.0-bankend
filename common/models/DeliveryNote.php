@@ -8,11 +8,11 @@
 
 namespace common\models;
 
-use common\models\db\Package as DbPackage;
+use common\models\db\DeliveryNote as DbDeliveryNote;
 use common\models\queries\PackageQuery;
 use Yii;
 
-class DeliveryNote extends DbPackage
+class DeliveryNote extends DbDeliveryNote
 {
 
     const STATUS_AT_THE_VN_WAREHOUSE = 'AT_THE_VN_WAREHOUSE'; //4- Tại kho VN : (Hàng được kho kiểm xong và đang ở tại kho Boxme)

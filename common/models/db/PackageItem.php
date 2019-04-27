@@ -35,7 +35,7 @@ use Yii;
  * @property int $hold Đánh dấu hàng hold. 1 là hold
  *
  * @property Order $order
- * @property Package $package
+ * @property DeliveryNote $package
  */
 class PackageItem extends \common\components\db\ActiveRecord
 {
@@ -59,7 +59,7 @@ class PackageItem extends \common\components\db\ActiveRecord
             [['box_me_warehouse_tag', 'version'], 'string', 'max' => 255],
             [['current_status'], 'string', 'max' => 100],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
-            [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Package::className(), 'targetAttribute' => ['package_id' => 'id']],
+            [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => DeliveryNote::className(), 'targetAttribute' => ['package_id' => 'id']],
         ];
     }
 
@@ -111,6 +111,6 @@ class PackageItem extends \common\components\db\ActiveRecord
      */
     public function getPackage()
     {
-        return $this->hasOne(Package::className(), ['id' => 'package_id']);
+        return $this->hasOne(DeliveryNote::className(), ['id' => 'package_id']);
     }
 }

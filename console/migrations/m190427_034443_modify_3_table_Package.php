@@ -23,6 +23,10 @@ class m190427_034443_modify_3_table_Package extends Migration
         $this->renameColumn('delivery_note','package_dimension_l','delivery_note_dimension_l');
         $this->renameColumn('delivery_note','package_dimension_w','delivery_note_dimension_w');
         $this->renameColumn('delivery_note','package_dimension_h','delivery_note_dimension_h');
+
+        $this->renameColumn('tracking_code','package_id','delivery_note_id');
+        $this->renameColumn('tracking_code','package_code','delivery_note_code');
+        $this->renameColumn('tracking_code','package_item_id','package_id');
     }
 
     /**
