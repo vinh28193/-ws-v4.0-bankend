@@ -59,12 +59,14 @@ class OrderQuery extends \common\components\db\ActiveQuery
     public function withFullRelations(){
         $this->with([
             'products.productFees',
-            'packageItems',
             'walletTransactions',
             'seller',
             'purchaseAssignee',
             'purchaseProducts',
             'promotion',
+            'package' => function ($q) {
+                $q->select(['order_id', 'tracking_code', 'id']);
+            },
             'saleSupport' => function ($q) {
                 /** @var ActiveQuery $q */
                 $q->select(['username','email','id','status', 'created_at', 'updated_at']);

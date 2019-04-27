@@ -428,10 +428,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPackageItems()
-    {
-        return $this->hasMany(PackageItem::className(), ['order_id' => 'id']);
-    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -444,6 +440,11 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     public function getDraftExtensionTrackingMap()
     {
         return $this->hasMany(DraftExtensionTrackingMap::className(), ['order_id' => 'id']);
+    }
+
+    public function getPackage()
+    {
+        return $this->hasOne(Package::className(), ['order_id' => 'id']);
     }
 
     public function getCoupon()
