@@ -74,4 +74,28 @@ class ListChatMongoController extends BaseApiController
         }
         return $this->response(true, 'success', $chat);
     }
+
+    public function  actionUpdate($id) {
+        $now = Yii::$app->getFormatter()->asTimestamp('now');
+        $post = Yii::$app->request->post();
+        if ($id) {
+            $chat = ListChat::findOne(['code' => (int)$id]);
+            if (isset($post['noteU'])) {
+                $chat->note = $post['noteU'];
+            }
+            if (isset($post['contentU'])) {
+                $chat->content = $post['contentU'];
+            }
+            $chat->update_time = $now;
+            if (isset($post['status'])) {
+                $chat->status = $post['status'];
+            }
+            if (!$chat->save()) {
+                return $this->response(false, 'error', $chat->getErrors());
+            }
+            return$this->response(true, 'success', $chat);
+        }
+        return $this->response(false, '$id not found');
+
+    }
 }
