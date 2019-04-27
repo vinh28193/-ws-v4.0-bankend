@@ -70,8 +70,8 @@ class PackageItem extends \common\components\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'package_id' => 'Package ID',
-            'package_code' => 'Package Code',
+            'package_id' => 'DeliveryNote ID',
+            'package_code' => 'DeliveryNote Code',
             'box_me_warehouse_tag' => 'Box Me Warehouse Tag',
             'order_id' => 'Order ID',
             'product_id' => 'Product ID',

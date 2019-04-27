@@ -17,7 +17,7 @@ use common\models\queries\PackageItemQuery;
  * @package common\models
  *
  * @property Order $order
- * @property  Package $package
+ * @property  DeliveryNote $package
  * @property Product $product
  *
  */
@@ -54,7 +54,7 @@ class PackageItem extends DbPackageItem
      */
     public function getPackage()
     {
-        return $this->hasOne(Package::className(), ['id' => 'package_id']);
+        return $this->hasOne(DeliveryNote::className(), ['id' => 'package_id']);
     }
 
     /**

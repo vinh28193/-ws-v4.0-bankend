@@ -4,7 +4,7 @@
 namespace common\boxme;
 
 
-use common\models\Package;
+use common\models\DeliveryNote;
 use common\models\Shipment;
 use yii\helpers\ArrayHelper;
 
@@ -53,17 +53,17 @@ class OrderCode
      * @var array mapping package status
      */
     public static $mappingPackageStatus = [
-        Package::STATUS_AT_THE_VN_WAREHOUSE => [
+        DeliveryNote::STATUS_AT_THE_VN_WAREHOUSE => [
             700, 701, 702, 703,
         ],
-        Package::STATUS_REQUEST_SHIP_OUT => [
+        DeliveryNote::STATUS_REQUEST_SHIP_OUT => [
             200, 201, 202, 203, 210, 211,
         ],
-        Package::STATUS_DELIVERING_TO_CUSTOMER => [
+        DeliveryNote::STATUS_DELIVERING_TO_CUSTOMER => [
             300, 310, 400, 410, 420, 430, 500, 510, 511, 520, 530,
         ],
-        Package::STATUS_DELIVERED => [800],
-        Package::STATUS_RETURNED => [600]
+        DeliveryNote::STATUS_DELIVERED => [800],
+        DeliveryNote::STATUS_RETURNED => [600]
     ];
 
     /**

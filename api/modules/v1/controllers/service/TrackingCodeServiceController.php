@@ -10,7 +10,7 @@ use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
 use common\models\draft\DraftPackageItem;
 use common\models\draft\DraftWastingTracking;
-use common\models\Package;
+use common\models\DeliveryNote;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\PurchaseProduct;
@@ -185,8 +185,8 @@ class TrackingCodeServiceController extends BaseApiController
         $model = DraftPackageItem::findOne($id);
         $model->hold = $this->post['hold'];
         $model->save(0);
-        /** @var Package $pack */
-        $pack = Package::find()->where(['tracking_seller' => $model->tracking_code,'manifest_code' => $model->manifest_code])->one();
+        /** @var DeliveryNote $pack */
+        $pack = DeliveryNote::find()->where(['tracking_seller' => $model->tracking_code,'manifest_code' => $model->manifest_code])->one();
         if($pack){
             PackageItem::updateAll(
                 ['hold' => $this->post['hold']],
@@ -222,16 +222,16 @@ class TrackingCodeServiceController extends BaseApiController
             $shipment = new Shipment();
             $shipment->version = '4.0';
             $shipment->shipment_status = Shipment::STATUS_NEW;
-            $packageNew = new Package();
+            $packageNew = new DeliveryNote();
         }
         $listHold = [];
         foreach ($packages as $package){
             if($package->hold){
-                return $this->response(false, 'Package '.$package->id .' is hold!');
+                return $this->response(false, 'DeliveryNote '.$package->id .' is hold!');
                 break;
             }
             if($package->shipment_id){
-                return $this->response(false, 'Package '.$package->id .' was in a shipment!');
+                return $this->response(false, 'DeliveryNote '.$package->id .' was in a shipment!');
                 break;
             }
             if($package->remove){
@@ -241,10 +241,10 @@ class TrackingCodeServiceController extends BaseApiController
                 $shipment = new Shipment();
                 $shipment->version = '4.0';
                 $shipment->shipment_status = Shipment::STATUS_NEW;
-                $packageNew = new Package();
+                $packageNew = new DeliveryNote();
             }
             $list_id[] = $package->id;
-            $packageNew->current_status = Package::STATUS_STOCK_IN_LOCAL;
+            $packageNew->current_status = DeliveryNote::STATUS_STOCK_IN_LOCAL;
             $packageNew->stock_in_local = $package->stock_in_local;
             $packageNew->manifest_code = $package->manifest_code;
             $packageNew->tracking_seller = !$packageNew->tracking_seller ? $package->tracking_code : '';

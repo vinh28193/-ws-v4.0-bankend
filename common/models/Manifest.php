@@ -19,7 +19,7 @@ use common\models\draft\DraftWastingTracking;
 /**
  * Class Manifest
  * @package common\models
- * @property Package[] $packages
+ * @property DeliveryNote[] $packages
  * @property DraftWastingTracking[] $draftWastingTrackings
  * @property DraftMissingTracking[] $draftMissingTrackings
  * @property DraftPackageItem[] $draftPackageItems

@@ -12,7 +12,7 @@ use common\models\db\Package as DbPackage;
 use common\models\queries\PackageQuery;
 use Yii;
 
-class Package extends DbPackage
+class DeliveryNote extends DbPackage
 {
 
     const STATUS_AT_THE_VN_WAREHOUSE = 'AT_THE_VN_WAREHOUSE'; //4- Tại kho VN : (Hàng được kho kiểm xong và đang ở tại kho Boxme)

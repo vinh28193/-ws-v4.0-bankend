@@ -5,7 +5,7 @@ namespace common\boxme;
 
 
 use common\models\draft\DraftPackageItem;
-use common\models\Package;
+use common\models\DeliveryNote;
 use common\models\Shipment;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -53,16 +53,16 @@ class BoxmeCallBackAction extends Action
 //                    foreach ($shipment->packages as $package){
 //
 //                    }
-                    Package::updateAll([
-                        'current_status' => Package::STATUS_REQUEST_SHIP_OUT
+                    DeliveryNote::updateAll([
+                        'current_status' => DeliveryNote::STATUS_REQUEST_SHIP_OUT
                     ],['shipment_id' => $shipment->id]);
                     break;
                case 300:  // 3000: Hãng vận chuyển đã lấy hàng
                    $shipment->shipment_status = Shipment::STATUS_PICKING;
                    $shipment->save(false);
 
-                   Package::updateAll([
-                       'current_status' => Package::STATUS_DELIVERING_TO_CUSTOMER,
+                   DeliveryNote::updateAll([
+                       'current_status' => DeliveryNote::STATUS_DELIVERING_TO_CUSTOMER,
                    ],['shipment_id' => $shipment->id]);
 
                    DraftPackageItem::updateAll([
