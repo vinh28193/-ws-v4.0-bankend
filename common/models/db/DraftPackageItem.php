@@ -46,6 +46,7 @@ use Yii;
  * @property string $version Version
  * @property int $package_id
  * @property string $package_code
+ * @property string $ws_tracking_code Mã tracking của weshop
  */
 class DraftPackageItem extends \common\components\db\ActiveRecord
 {
@@ -67,7 +68,7 @@ class DraftPackageItem extends \common\components\db\ActiveRecord
             [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'hold', 'draft_data_tracking_id', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'remove', 'package_id'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h', 'seller_refund_amount', 'price', 'cod'], 'number'],
             [['image', 'tracking_merge'], 'string'],
-            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme', 'type_tracking', 'current_status', 'version', 'package_code'], 'string', 'max' => 255],
+            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme', 'type_tracking', 'current_status', 'version', 'package_code', 'ws_tracking_code'], 'string', 'max' => 255],
         ];
     }
 
@@ -116,6 +117,7 @@ class DraftPackageItem extends \common\components\db\ActiveRecord
             'version' => 'Version',
             'package_id' => 'Package ID',
             'package_code' => 'Package Code',
+            'ws_tracking_code' => 'Ws Tracking Code',
         ];
     }
 }

@@ -14,8 +14,14 @@ use Yii;
 
 class Package extends DbPackage
 {
-    const STATUS_STOCK_IN_LOCAL = 'STOCK_IN_LOCAL';
-    const STATUS_STOCK_OUT_LOCAL = 'STOCK_OUT_LOCAL';
+
+    const STATUS_AT_THE_VN_WAREHOUSE = 'AT_THE_VN_WAREHOUSE'; //4- Tại kho VN : (Hàng được kho kiểm xong và đang ở tại kho Boxme)
+    const STATUS_REQUEST_SHIP_OUT = 'REQUEST_SHIP_OUT'; // 5 Yêu cầu giao
+    const STATUS_DELIVERING_TO_CUSTOMER = 'DELIVERING_TO_CUSTOMER'; // Đang giao cho khách
+    const STATUS_DELIVERED = 'DELIVERED'; // Đã nhận hàng
+    const STATUS_RETURNED = 'RETURNED'; // Đã hoàn lại kho
+    const STATUS_STOCK_IN_LOCAL = 'STATUS_STOCK_IN_LOCAL'; // Đã hoàn lại kho
+
     /**
      * @inheritdoc
      * @return PackageQuery the active query used by this AR class.

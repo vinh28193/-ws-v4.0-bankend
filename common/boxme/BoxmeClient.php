@@ -15,7 +15,7 @@ class BoxmeClient extends BaseClient
      */
     public function createOrder($params)
     {
-        return $this->createRequest('courier/pricing/calculate', $params);
+        return $this->createRequest('courier/pricing/create_order', $params);
     }
 
     /**
