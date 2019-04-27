@@ -60,7 +60,7 @@ class UsSendingController extends BaseApiController
         $filter_e = $filter_e ? @json_decode(@base64_decode($filter_e),true) : false;
         $manifest = Manifest::find()->with(['receiveWarehouse']);
         if($manifest_id){
-            $manifest->andWhere(['manifest_id'=>$manifest_id]);
+            $manifest->andWhere(['id'=>$manifest_id]);
         }
         $tracking = DraftDataTracking::find()->with(['order','product']);
         $tracking->leftJoin('product','product.id = '.DraftDataTracking::tableName().'.product_id')
