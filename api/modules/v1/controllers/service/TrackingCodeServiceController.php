@@ -182,12 +182,10 @@ class TrackingCodeServiceController extends BaseApiController
         /** @var DeliveryNote $pack */
         $pack = DeliveryNote::find()->where(['tracking_seller' => $model->tracking_code,'manifest_code' => $model->manifest_code])->one();
         if($pack){
-            PackageItem::updateAll(
-                ['hold' => $this->post['hold']],
+            Shipment::updateAll(
+                ['is_hold' => $this->post['hold']],
                 [
-                    'package_id' => $pack->id,
-                    'sku' => $model->product ? strtolower($model->product->portal) == 'ebay' ? $model->product->parent_sku : $model->product->sku : null,
-                    'updated_at' => time()
+                    'id' => $pack->shipment_id,
                 ]
             );
         }
