@@ -64,7 +64,8 @@ class RestApiTrackingLogController extends BaseApiController
     {
 
     	// TrackingLogWs::deleteAll();
-        $response = TrackingLogWs::search($params = '');
+        $params = Yii::$app->request->get();
+        $response = TrackingLogWs::search($params);
         return $this->response(true, 'Success', $response);
     }
 

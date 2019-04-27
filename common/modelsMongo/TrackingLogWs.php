@@ -119,44 +119,55 @@ class TrackingLogWs extends ActiveRecord
 
     static public function search($params)
     {
-        $page = Yii::$app->getRequest()->getQueryParam('page');
-        $limit = Yii::$app->getRequest()->getQueryParam('limit');
-        $order = Yii::$app->getRequest()->getQueryParam('order');
-        $search = Yii::$app->getRequest()->getQueryParam('search');
-        if (isset($search)) {
-            $params = $search;
-        }
 
-        $limit = isset($limit) ? $limit : 100;
-        $page = isset($page) ? $page : 1;
-
-        $offset = ($page - 1) * $limit;
-
-        $query = TrackingLogWs::find()
-            ->limit($limit)
-            ->offset($offset);
-
-        if (isset($order)) {
-            $query->orderBy($order);
-        }
-
-
-        if (isset($order)) {
-            $query->orderBy($order);
-        }
-
-        $additional_info = [
-            'currentPage' => $page,
-            'pageCount' => $page,
-            'perPage' => $limit,
-            'totalCount' => (int)$query->count()
-        ];
-
-        $data = new \stdClass();
-        $data->_items = $query->all();
-        $data->_links = '';
-        $data->_meta = $additional_info;
-        return $data;
-
+    
+            $limit = 20;
+            $page          = Yii::$app->getRequest()->getQueryParam('page');
+            $perPage       = Yii::$app->getRequest()->getQueryParam('perPage');
+            $trackingcode  = Yii::$app->getRequest()->getQueryParam('trackingcode');
+            $request_ip    = Yii::$app->getRequest()->getQueryParam('request_ip');
+            $log_type      = Yii::$app->getRequest()->getQueryParam('log_type');
+            $user          = Yii::$app->getRequest()->getQueryParam('user');
+            $note          = Yii::$app->getRequest()->getQueryParam('note');
+            $query = TrackingLogWs::find();
+           
+            if(!isset($page))
+            {
+                $page = 1;
+            }
+            if(isset($trackingcode)){
+                 $query->andWhere(['like', 'tracking', $trackingcode]);
+            }
+            if(isset($request_ip)){
+                 $query->andWhere(['request_ip' =>$request_ip]);
+            }
+            if(isset($log_type)){
+                 $query->andWhere(['like', 'log_type', $log_type]);
+            }
+            if(isset($user)){
+                 $query->andWhere(['like', 'user', $user]);
+            }
+            // if(isset($note)){
+            //      $query->andWhere(['like', 'note', $note]);
+            // }
+            // if ($timeStart && $timeEnd){
+            //     $query->andWhere(['or',
+            //         ['>=', 'created_at', $timeStart],
+            //         ['<=', 'created_at', $timeEnd]
+            //     ]);
+            //  }
+            $query->orderBy('created_at desc')->limit($limit)
+           ->offset($page* $limit - $limit);
+            $additional_info = [
+                'currentPage' => $page,
+                'pageCount' => $page,
+                'perPage' => $limit,
+                'totalCount' => (int)$query->count()
+            ];
+            $data = new \stdClass();
+            $data->_items = $query->all();
+            $data->_links = '';
+            $data->_meta = $additional_info;
+            return $data;
     }
 }
