@@ -45,10 +45,13 @@ class ListChatMongoController extends BaseApiController
         $get = Yii::$app->request->get();
         $chat = ListChat::find();
         if (isset($get['noteL'])) {
-            $chat->where(['note', $get['noteL']]);
+            $chat->where(['LIKE', 'note', $get['noteL']]);
         }
         if (isset($get['contentL'])) {
-            $chat->where(['content', $get['contentL']]);
+            $chat->where(['LIKE', 'content', $get['contentL']]);
+        }
+        if (isset($get['statusTT'])) {
+            $chat->where(['LIKE', 'status', (int)$get['statusTT']]);
         }
         return $this->response(true, 'success',  $chat->asArray()->all());
     }
@@ -98,4 +101,5 @@ class ListChatMongoController extends BaseApiController
         return $this->response(false, '$id not found');
 
     }
+
 }
