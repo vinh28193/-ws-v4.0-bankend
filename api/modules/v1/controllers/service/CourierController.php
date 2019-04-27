@@ -160,11 +160,15 @@ class CourierController extends BaseApiController
         $success = 0;
         foreach ($shipments as $shipment) {
             /** @var $shipment Shipment */
+            if($shipment->shipment_status !== Shipment::STATUS_CREATED || $shipment->shipment_code === null){
+                $error[] = "not found BM code or invalid status";
+                continue;
+            }
             $collection = new BoxmeClientCollection();
             $client = $collection->getClient($shipment->warehouseSend->country_id === 2 ? Location::COUNTRY_ID : Location::COUNTRY_VN);
             $res = $client->cancelOrder($shipment->shipment_code);
             if ($res['error'] === true) {
-                $error[] = $shipment->shipment_code;
+                $error[] = $res['messages'];
                 continue;
             }
             $shipment->shipment_code = null;
