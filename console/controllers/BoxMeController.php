@@ -195,6 +195,7 @@ class BoxMeController extends Controller
         $track = \common\models\TrackingCode::find()
             ->where(['manifest_code' => $manifest_code])->limit(500)->all();
         $cn = round(count($track));
+        echo ($track[0]->manifest_code . "-" . $track[0]->manifest_id).PHP_EOL;
         echo "Sẽ có :" . $cn . " tracking được giả lập extension" . PHP_EOL;
         echo "[";
         $purchase_id = 2000;

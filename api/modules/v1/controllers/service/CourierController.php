@@ -5,6 +5,8 @@ namespace api\modules\v1\controllers\service;
 
 use common\boxme\BoxmeClientCollection;
 use common\boxme\Location;
+use common\models\draft\DraftDataTracking;
+use common\models\draft\DraftPackageItem;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\Shipment as ModelShipment;
@@ -65,8 +67,8 @@ class CourierController extends BaseApiController
                     $transaction->rollBack();
                     return $this->response(false, "failed a parcel not found parameter ID ");
                 }
-                /** @var $packageItem PackageItem */
-                if (($packageItem = PackageItem::find()->where(['and', ['id' => $pId], ['shipment_id' => $shipment->id]])->one()) === null) {
+                /** @var $packageItem DraftPackageItem */
+                if (($packageItem = DraftPackageItem::find()->where(['and', ['id' => $pId], ['shipment_id' => $shipment->id]])->one()) === null) {
                     $transaction->rollBack();
                     return $this->response(false, "failed not found package item $pId in shipment {$shipment->id}");
                 }

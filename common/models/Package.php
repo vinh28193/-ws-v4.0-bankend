@@ -20,6 +20,7 @@ class Package extends DbPackage
     const STATUS_DELIVERING_TO_CUSTOMER = 'DELIVERING_TO_CUSTOMER'; // Đang giao cho khách
     const STATUS_DELIVERED = 'DELIVERED'; // Đã nhận hàng
     const STATUS_RETURNED = 'RETURNED'; // Đã hoàn lại kho
+    const STATUS_STOCK_IN_LOCAL = 'STATUS_STOCK_IN_LOCAL'; // Đã hoàn lại kho
 
     /**
      * @inheritdoc

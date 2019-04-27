@@ -47,7 +47,7 @@ class UsSendingController extends BaseApiController
         ];
     }
     public function actionIndex(){
-        $manifest_id = \Yii::$app->request->get('id');
+        $manifest_id = \Yii::$app->request->get('m');
         $limit = \Yii::$app->request->get('ps',20);
         $page = \Yii::$app->request->get('p',1);
         $limit_t = \Yii::$app->request->get('ps_t',20);
@@ -60,7 +60,7 @@ class UsSendingController extends BaseApiController
         $filter_e = $filter_e ? @json_decode(@base64_decode($filter_e),true) : false;
         $manifest = Manifest::find()->with(['receiveWarehouse']);
         if($manifest_id){
-            $manifest->andWhere(['manifest_id'=>$manifest_id]);
+            $manifest->andWhere(['id'=>$manifest_id]);
         }
         $tracking = DraftDataTracking::find()->with(['order','product']);
         $tracking->leftJoin('product','product.id = '.DraftDataTracking::tableName().'.product_id')
@@ -252,7 +252,7 @@ class UsSendingController extends BaseApiController
         }
         $fileDirPath = 'file';
         if (!file_exists($fileDirPath)) {
-            mkdir($fileDirPath, 0777, true);
+            @mkdir($fileDirPath, 0777, true);
         }
         $writer = new Xlsx($spreadsheet);
         $writer->save($fileName);
