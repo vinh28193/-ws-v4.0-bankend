@@ -37,14 +37,16 @@ class CreateOrderForm extends BaseForm
                 $this->addError('ids', "not found current filter");
             }
             return false;
-        } elseif ($count > self::LIMIT_CREATE) {
-            $ids = ArrayHelper::getColumn($models, 'id', false);
-            $total = count($ids);
-            $onQueue = ModelShipment::updateAll([
-                'status' => ModelShipment::STATUS_WAITING,
-            ], ['id' => $ids]);
-            return "pushed $onQueue/$total in queue for waiting create";
-        } else {
+        }
+//        elseif ($count > self::LIMIT_CREATE) {
+//            $ids = ArrayHelper::getColumn($models, 'id', false);
+//            $total = count($ids);
+//            $onQueue = ModelShipment::updateAll([
+//                'status' => ModelShipment::STATUS_WAITING,
+//            ], ['id' => $ids]);
+//            return "pushed $onQueue/$total in queue for waiting create";
+//        } else
+        {
             $errors = [];
             $success = 0;
             foreach ($models as $model) {
@@ -153,21 +155,24 @@ class CreateOrderForm extends BaseForm
         }
         $parcels = [];
         $errors = [];
-        foreach ($model->packageItems as $packageItem) {
-            $product = $packageItem->product;
+        foreach ($model->packages as $package) {
+            if ((($images = $package->image) === null) || count(($images = explode(',', $images))) === 0) {
+                $errors[] = 'package offset image 0 or not have image';
+                continue;
+            }
             $parcel = new Parcel([
-                'weight' => $packageItem->weight,
-                'referral_code' => $packageItem->warehouse_tag_boxme,
+                'weight' => $package->weight,
+                'referral_code' => $package->warehouse_tag_boxme,
                 'items' => [
                     new Item([
-                        'name' => $product->product_name,
-                        'weight' => $packageItem->weight,
-                        'quantity' => $packageItem->quantity,
-                        'amount' => $packageItem->price + (($packageItem->cod !== null && $packageItem->cod > 0) ? (int)$packageItem->cod : 0),
+                        'name' => $package->item_name,
+                        'weight' => $package->weight,
+                        'quantity' => $package->quantity,
+                        'amount' => $package->price + (($package->cod !== null && $package->cod > 0) ? (int)$package->cod : 0),
                     ])
                 ],
                 'images' => [
-                    $product->link_img
+                    $images[0]
                 ]
             ]);
             if (!$parcel->validate()) {
@@ -194,7 +199,7 @@ class CreateOrderForm extends BaseForm
         $params['config']['delivery_service'] = $model->courier_code ? $model->courier_code : '';
         $params['config']['insurance'] = $model->courier_code === 'BM_DBS' ? Config::NOT_ACCEPT : ($model->is_insurance ? Config::ACCEPTED : Config::NOT_ACCEPT);
         $params['config']['currency'] = $location === Location::COUNTRY_VN ? Location::CURRENCY_VN : Location::CURRENCY_ID;
-        $params['payment']['cod_amount'] = $model->total_cod;
+        $params['payment']['cod_amount'] = $model->total_cod !== null ? $model->total_cod : 0;
         return [true, $params];
     }
 
