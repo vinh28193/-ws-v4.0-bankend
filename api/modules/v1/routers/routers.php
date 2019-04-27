@@ -60,15 +60,19 @@ return [
         'prefix' => 'v1',
         'controller' => ['list-chat-mongo'],
         'tokens' => [
-            '{id}' => '<id:\\d[\\d,]*>'
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{code}' =>  '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
+            'PUT,PATCH {code}' => 'update',
             'DELETE {id}' => 'delete',
+            'DELETE {code}' => 'delete',
             'GET,HEAD {id}' => 'view',
             'POST' => 'create',
             'OPTIONS {id}' => 'options',
+            'OPTIONS {code}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => []
