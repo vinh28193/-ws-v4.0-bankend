@@ -46,7 +46,7 @@ class CreateOrderForm extends BaseForm
 //            ], ['id' => $ids]);
 //            return "pushed $onQueue/$total in queue for waiting create";
 //        } else
-            {
+        {
             $errors = [];
             $success = 0;
             foreach ($models as $model) {
@@ -156,7 +156,7 @@ class CreateOrderForm extends BaseForm
         $parcels = [];
         $errors = [];
         foreach ($model->packages as $package) {
-            if((($images = $package->image) === null) || count(($images = explode(',',$images))) === 0){
+            if ((($images = $package->image) === null) || count(($images = explode(',', $images))) === 0) {
                 $errors[] = 'package offset image 0 or not have image';
                 continue;
             }
@@ -199,7 +199,7 @@ class CreateOrderForm extends BaseForm
         $params['config']['delivery_service'] = $model->courier_code ? $model->courier_code : '';
         $params['config']['insurance'] = $model->courier_code === 'BM_DBS' ? Config::NOT_ACCEPT : ($model->is_insurance ? Config::ACCEPTED : Config::NOT_ACCEPT);
         $params['config']['currency'] = $location === Location::COUNTRY_VN ? Location::CURRENCY_VN : Location::CURRENCY_ID;
-        $params['payment']['cod_amount'] = $model->total_cod;
+        $params['payment']['cod_amount'] = $model->total_cod !== null ? $model->total_cod : 0;
         return [true, $params];
     }
 
