@@ -128,11 +128,11 @@ class CourierController extends BaseApiController
     {
         $ids = ArrayHelper::getValue($this->post, 'ids', []);
         if (count($ids) === 0) {
-            $this->response(true, "no thing to cancel");
+            return $this->response(true, "no thing to cancel");
         }
         $shipments = Shipment::find()->with('warehouseSend')->where(['AND', ['IN', 'id', $ids], ['active' => 1]])->all();
         if (count($shipments) === 0) {
-            $this->response(true, "no thing to cancel");
+            return $this->response(true, "no thing to cancel");
         }
         $error = [];
         $success = 0;
@@ -163,6 +163,6 @@ class CourierController extends BaseApiController
             $mess .= ", can not cancel $error";
         }
 
-        $this->response(true, $mess);
+        return $this->response(true, $mess);
     }
 }
