@@ -5,6 +5,8 @@ namespace api\modules\v1\controllers\service;
 
 use common\boxme\BoxmeClientCollection;
 use common\boxme\Location;
+use common\models\draft\DraftDataTracking;
+use common\models\Package;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\Shipment as ModelShipment;
@@ -65,8 +67,8 @@ class CourierController extends BaseApiController
                     $transaction->rollBack();
                     return $this->response(false, "failed a parcel not found parameter ID ");
                 }
-                /** @var $packageItem PackageItem */
-                if (($packageItem = PackageItem::find()->where(['and', ['id' => $pId], ['shipment_id' => $shipment->id]])->one()) === null) {
+                /** @var $packageItem Package */
+                if (($packageItem = Package::find()->where(['and', ['id' => $pId], ['shipment_id' => $shipment->id]])->one()) === null) {
                     $transaction->rollBack();
                     return $this->response(false, "failed not found package item $pId in shipment {$shipment->id}");
                 }
@@ -150,7 +152,7 @@ class CourierController extends BaseApiController
         if (count($ids) === 0) {
             $this->response(true, "no thing to cancel");
         }
-        $shipments = Shipment::find()->with('warehouseSend')->where('AND', ['IN', 'id' => $ids], ['active' => 1])->all();
+        $shipments = Shipment::find()->with('warehouseSend')->where(['AND', ['IN', 'id' , $ids], ['active' => 1]])->all();
         if (count($shipments) === 0) {
             $this->response(true, "no thing to cancel");
         }
@@ -158,11 +160,16 @@ class CourierController extends BaseApiController
         $success = 0;
         foreach ($shipments as $shipment) {
             /** @var $shipment Shipment */
+            if($shipment->shipment_status !== Shipment::STATUS_CREATED || $shipment->shipment_code === null){
+                $error[] = "not found BM code or invalid status";
+                continue;
+            }
             $collection = new BoxmeClientCollection();
             $client = $collection->getClient($shipment->warehouseSend->country_id === 2 ? Location::COUNTRY_ID : Location::COUNTRY_VN);
             $res = $client->cancelOrder($shipment->shipment_code);
-            if ($res['error'] === false) {
-                $error[] = $shipment->shipment_code;
+            if ($res['error'] === true) {
+                $error[] = $res['messages'];
+                continue;
             }
             $shipment->shipment_code = null;
             $shipment->shipment_status = Shipment::STATUS_NEW;

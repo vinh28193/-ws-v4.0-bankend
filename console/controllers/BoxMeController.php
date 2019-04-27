@@ -7,17 +7,18 @@ namespace console\controllers;
 use common\components\boxme\BoxMeClient;
 use common\components\lib\TextUtility;
 use common\components\TrackingCode;
+use common\helpers\WeshopHelper;
 use \common\models\draft\DraftExtensionTrackingMap;
 use common\models\db\PurchaseOrder;
 use common\models\db\PurchaseProduct;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\draft\DraftDataTracking;
 use common\models\Manifest;
 use common\models\Order;
-use common\models\Package;
+use common\models\DeliveryNote;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\ProductFee;
@@ -147,11 +148,15 @@ class BoxMeController extends Controller
                         $draft_data->tracking_code = strtolower($tracking->tracking_code);
                         $draft_data->manifest_id = $tracking->manifest_id;
                         $draft_data->manifest_code = $tracking->manifest_code;
+                        $draft_data->item_name = $ext->product ? $ext->product->product_name : '';
+                        $draft_data->image = $ext->product ? $ext->product->link_img : '';
                         $draft_data->created_at = time();
                         $draft_data->updated_at = time();
                         $draft_data->status = DraftDataTracking::STATUS_CHECK_DONE;
                         $draft_data->tracking_merge = strtolower($tracking->tracking_code);
                         $draft_data->tracking_merge .= strtolower($tracking->tracking_code) == strtolower($ext->tracking_code) ? '' : ','.strtolower($ext->tracking_code);
+                        $draft_data->save(0);
+                        $draft_data->ws_tracking_code = WeshopHelper::generateTag($draft_data->id,'WSVNTK');
                         $draft_data->save(0);
                     }
                     $ext->draft_data_tracking_id = $draft_data->id;
@@ -167,6 +172,8 @@ class BoxMeController extends Controller
                 $draft_data_one->updated_at = time();
                 $draft_data_one->status = DraftDataTracking::STATUS_MAKE_US_SENDING;
                 $draft_data_one->tracking_merge = strtolower($tracking->tracking_code);
+                $draft_data_one->save(0);
+                $draft_data_one->ws_tracking_code = WeshopHelper::generateTag($draft_data_one->id,'WSVNTK');
                 $draft_data_one->save(0);
             }
             $tracking->status_merge = \common\models\TrackingCode::STATUS_MERGE_DONE;
@@ -188,6 +195,7 @@ class BoxMeController extends Controller
         $track = \common\models\TrackingCode::find()
             ->where(['manifest_code' => $manifest_code])->limit(500)->all();
         $cn = round(count($track));
+        echo ($track[0]->manifest_code . "-" . $track[0]->manifest_id).PHP_EOL;
         echo "Sẽ có :" . $cn . " tracking được giả lập extension" . PHP_EOL;
         echo "[";
         $purchase_id = 2000;
@@ -397,13 +405,13 @@ class BoxMeController extends Controller
     }
 
     public function actionParserPackage(){
-        /** @var DraftPackageItem[] $draft_package */
-        $draft_package = DraftPackageItem::find()
+        /** @var Package[] $draft_package */
+        $draft_package = Package::find()
             ->with(['manifest'])
-            ->where(['<>' ,'status' , DraftPackageItem::STATUS_PARSER])
+            ->where(['<>' ,'status' , Package::STATUS_PARSER])
             ->limit(500)->all();
         foreach ($draft_package as $packageItem){
-            $package = Package::find()
+            $package = DeliveryNote::find()
                 ->where(['manifest_code' => $packageItem->manifest_code])
                 ->andWhere([
                     'or',
@@ -412,7 +420,7 @@ class BoxMeController extends Controller
                     ['like','tracking_reference_2',$packageItem->tracking_code]
                 ])->orderBy('id desc')->one();
             if(!$package){
-                $package = new Package();
+                $package = new DeliveryNote();
                 $package->tracking_seller = $packageItem->tracking_code;
                 $package->manifest_code = $packageItem->manifest_code;
                 $package->package_weight = 0;

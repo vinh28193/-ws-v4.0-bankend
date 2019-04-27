@@ -13,17 +13,17 @@ use common\models\db\Store;
 use common\models\db\User;
 use common\models\db\Warehouse;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 
 /**
  * Class Manifest
  * @package common\models
- * @property Package[] $packages
+ * @property DeliveryNote[] $packages
  * @property DraftWastingTracking[] $draftWastingTrackings
  * @property DraftMissingTracking[] $draftMissingTrackings
- * @property DraftPackageItem[] $draftPackageItems
- * @property DraftPackageItem[] $unknownTrackings
+ * @property Package[] $draftPackageItems
+ * @property Package[] $unknownTrackings
  * @property User $createdBy
  * @property Warehouse $receiveWarehouse
  * @property Store $store
@@ -71,11 +71,11 @@ class Manifest extends DbManifest
     }
 
     public function getDraftPackageItems(){
-        return $this->hasMany(DraftPackageItem::className(),['manifest_id' => 'id'])->where(['and',['is not','product_id',null],['<>','product_id',''],['<>','status',DraftPackageItem::STATUS_SPLITED]]);
+        return $this->hasMany(Package::className(),['manifest_id' => 'id'])->where(['and',['is not','product_id',null],['<>','product_id',''],['<>','status',Package::STATUS_SPLITED]]);
     }
 
     public function getUnknownTrackings(){
-        return $this->hasMany(DraftPackageItem::className(),['manifest_id' => 'id'])->where(['or',['product_id' => null],['product_id' => '']])->andWhere(['<>','status',DraftPackageItem::STATUS_SPLITED]);
+        return $this->hasMany(Package::className(),['manifest_id' => 'id'])->where(['or',['product_id' => null],['product_id' => '']])->andWhere(['<>','status',Package::STATUS_SPLITED]);
     }
 
     public function getDraftMissingTrackings(){

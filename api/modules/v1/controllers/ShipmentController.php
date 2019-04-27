@@ -9,7 +9,7 @@
 namespace api\modules\v1\controllers;
 
 use common\helpers\WeshopHelper;
-use common\models\db\Package;
+use common\models\db\DeliveryNote;
 use Yii;
 use Exception;
 use yii\helpers\ArrayHelper;
@@ -162,7 +162,7 @@ class ShipmentController extends BaseApiController
             foreach ($shipments as $shipment) {
                 /** @var $shipment Shipment */
                 foreach ($shipment->packages as $package){
-                    /** @var $shipment Package */
+                    /** @var $package DeliveryNote */
                     $package->shipment_id = $firstShipment->id;
                     $packageCodes[] = $package->package_code;
                     $package->save(false);

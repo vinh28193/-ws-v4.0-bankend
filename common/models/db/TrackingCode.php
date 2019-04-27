@@ -12,9 +12,9 @@ use Yii;
  * @property int $store_id Store ID reference
  * @property int $manifest_id Manifest Id
  * @property string $manifest_code Manifest code
- * @property int $package_id Package id after sent
- * @property string $package_code Mã kiện của weshop
- * @property int $package_item_id Package item id after create item
+ * @property int $delivery_note_id Package id after sent
+ * @property string $delivery_note_code Mã kiện của weshop
+ * @property int $package_id Package item id after create item
  * @property string $tracking_code
  * @property string $order_ids Order id(s)
  * @property string $weshop_tag Weshop Tag
@@ -53,11 +53,11 @@ class TrackingCode extends \common\components\db\ActiveRecord
     {
         return [
             [['store_id'], 'required'],
-            [['store_id', 'manifest_id', 'package_id', 'package_item_id', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
+            [['store_id', 'manifest_id', 'delivery_note_id', 'package_id', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['warehouse_note', 'operation_note'], 'string'],
             [['weight', 'quantity', 'dimension_width', 'dimension_length', 'dimension_height'], 'number'],
             [['version', 'tracking_code', 'order_ids', 'status_merge'], 'string', 'max' => 255],
-            [['manifest_code', 'package_code', 'weshop_tag', 'warehouse_alias', 'warehouse_tag', 'status'], 'string', 'max' => 32],
+            [['manifest_code', 'delivery_note_code', 'weshop_tag', 'warehouse_alias', 'warehouse_tag', 'status'], 'string', 'max' => 32],
             [['warehouse_status'], 'string', 'max' => 10],
         ];
     }
@@ -73,9 +73,9 @@ class TrackingCode extends \common\components\db\ActiveRecord
             'store_id' => 'Store ID',
             'manifest_id' => 'Manifest ID',
             'manifest_code' => 'Manifest Code',
+            'delivery_note_id' => 'Delivery Note ID',
+            'delivery_note_code' => 'Delivery Note Code',
             'package_id' => 'Package ID',
-            'package_code' => 'Package Code',
-            'package_item_id' => 'Package Item ID',
             'tracking_code' => 'Tracking Code',
             'order_ids' => 'Order Ids',
             'weshop_tag' => 'Weshop Tag',

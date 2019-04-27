@@ -8,12 +8,15 @@ use api\controllers\BaseApiController;
 use common\helpers\ExcelHelper;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
-use common\models\draft\DraftPackageItem;
+use common\models\Package;
 use common\models\Manifest;
 use common\models\Product;
 use common\models\TrackingCode;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 class UsSendingController extends BaseApiController
 {
@@ -40,10 +43,11 @@ class UsSendingController extends BaseApiController
             'index' => ['GET'],
             'create' => ['POST'],
             'update' => ['PUT'],
+            'view' => ['GET'],
         ];
     }
     public function actionIndex(){
-        $manifest_id = \Yii::$app->request->get('id');
+        $manifest_id = \Yii::$app->request->get('m');
         $limit = \Yii::$app->request->get('ps',20);
         $page = \Yii::$app->request->get('p',1);
         $limit_t = \Yii::$app->request->get('ps_t',20);
@@ -56,7 +60,7 @@ class UsSendingController extends BaseApiController
         $filter_e = $filter_e ? @json_decode(@base64_decode($filter_e),true) : false;
         $manifest = Manifest::find()->with(['receiveWarehouse']);
         if($manifest_id){
-            $manifest->andWhere(['manifest_id'=>$manifest_id]);
+            $manifest->andWhere(['id'=>$manifest_id]);
         }
         $tracking = DraftDataTracking::find()->with(['order','product']);
         $tracking->leftJoin('product','product.id = '.DraftDataTracking::tableName().'.product_id')
@@ -191,7 +195,7 @@ class UsSendingController extends BaseApiController
         $modal->updated_at = time();
         $modal->item_name = $this->post['item_name'];
         $modal->save(0);
-        DraftPackageItem::updateAll([
+        Package::updateAll([
             'order_id' => $product->order_id,
             'product_id' => $product->id,
             'purchase_invoice_number' => $this->post['purchase_invoice_number'],
@@ -200,5 +204,58 @@ class UsSendingController extends BaseApiController
             'item_name' => $this->post['item_name']
         ],['draft_data_tracking_id' => $modal->id]);
         return $this->response(true,'Update success!');
+    }
+    /** XUất excel cho boxme */
+    public function actionView($id){
+        /** @var DraftDataTracking[] $TrackingCodes */
+        $TrackingCodes = DraftDataTracking::find()->with(['order'])->where(['manifest_id' => $id])->all();
+        if(!$TrackingCodes){
+            return $this->response(false,'Manifest empty!');
+        }
+        $data = [
+            'A1' => 'STT',
+            'B1' => 'Packing Code',
+            'C1' => 'Tracking Code',
+            'D1' => 'Tracking Code WS',
+            'E1' => 'Item Name',
+            'F1' => 'Tracking Type',
+            'G1' => 'Image',
+            'H1' => 'Quantity',
+            'I1' => 'Note',
+        ];
+
+        $rows = [];
+        $rowIndex = 1;
+        $fileName = 'file/canfind.xlsx';
+
+        foreach ($TrackingCodes as $key => $val) {
+            $fileName = 'file/' . $val->manifest_code.'-'.$val->manifest_id . '.xlsx';
+            $rowIndex++;
+            $rows['A' . $rowIndex] = $key+1;
+            $rows['B' . $rowIndex] = $val->manifest_code.'-'.$val->manifest_id;
+            $rows['C' . $rowIndex] = $val->tracking_code;
+            $rows['D' . $rowIndex] = $val->ws_tracking_code;
+            $rows['E' . $rowIndex] = $val->item_name;
+            $rows['F' . $rowIndex] = $val->type_tracking;
+            $rows['G' . $rowIndex] = $val->image;
+            $rows['H' . $rowIndex] = $val->quantity;
+            $rows['I' . $rowIndex] = $val->order ? $val->order->note : '';
+            $data = ArrayHelper::merge($data, $rows);
+        }
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        if (!empty($data)) {
+            foreach ($data as $key => $val) {
+                $sheet->setCellValue($key, $val);
+                $sheet->getColumnDimension(preg_replace('/[0-9]+/', '', $key))->setAutoSize(true);
+            }
+        }
+        $fileDirPath = 'file';
+        if (!file_exists($fileDirPath)) {
+            @mkdir($fileDirPath, 0777, true);
+        }
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($fileName);
+        return $this->response(true,'Ok', ['link' => Url::home(true).'/'.$fileName]);
     }
 }
