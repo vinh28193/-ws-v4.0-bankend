@@ -62,8 +62,11 @@ class RestApiTrackingLogController extends BaseApiController
 
     public function actionIndex()
     {
-
+        $get = Yii::$app->request->get();
     	// TrackingLogWs::deleteAll();
+        foreach ($get['idPro'] as $value) {
+
+    }
         $response = TrackingLogWs::search($params = '');
         return $this->response(true, 'Success', $response);
     }

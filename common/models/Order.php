@@ -12,6 +12,7 @@ use common\models\db\Coupon;
 use common\models\db\DraftExtensionTrackingMap;
 use common\models\db\Order as DbOrder;
 use common\models\db\Promotion;
+use common\models\draft\DraftDataTracking;
 use common\models\queries\OrderQuery;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
