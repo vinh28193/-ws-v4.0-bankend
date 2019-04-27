@@ -47,7 +47,7 @@ class UsSendingController extends BaseApiController
         ];
     }
     public function actionIndex(){
-        $manifest_id = \Yii::$app->request->get('id');
+        $manifest_id = \Yii::$app->request->get('m');
         $limit = \Yii::$app->request->get('ps',20);
         $page = \Yii::$app->request->get('p',1);
         $limit_t = \Yii::$app->request->get('ps_t',20);
