@@ -9,6 +9,7 @@
 namespace common\models;
 
 
+use common\helpers\WeshopHelper;
 use common\models\draft\DraftDataTracking;
 use yii\helpers\ArrayHelper;
 
@@ -121,6 +122,13 @@ class Package extends \common\models\db\Package
             }
         }
         $draft_data->setAttributes($this->getAttributes());
-        return $draft_data->save($validate);
+        if($draft_data->save($validate)){
+            if(!$draft_data->package_code){
+                $draft_data->package_code = WeshopHelper::generateTag($draft_data->id,'WSVNPK',16);
+                $draft_data->save();
+            }
+            return true;
+        }
+        return false;
     }
 }

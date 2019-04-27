@@ -156,7 +156,7 @@ class WeshopHelper
     public static function generateTag($reference, $prefix = 'WS', $length = 16)
     {
         $length -= strlen($prefix);
-        $length -= strlen($reference);
+        $length -= strlen($reference."");
         if ($length > 1) {
             $reference .= substr(md5($reference), 0, $length - 1);
         }
