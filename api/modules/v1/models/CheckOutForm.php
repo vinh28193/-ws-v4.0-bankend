@@ -155,12 +155,14 @@ class CheckOutForm extends Model
                 $request = $item['request'];
                 return $request['type'] . ':' . $request['seller'];
             });
+
             foreach ($items as $key => $arrays) {
                 list($type, $sellerId) = explode(':', $key);
                 /** @var  $provider null |Provider */
                 $provider = null;
                 $providers = $arrays;
                 $providers = reset($providers)['response']->providers;
+
                 foreach ($providers as $p) {
                     if (
                         (strtoupper($type) === BaseProduct::TYPE_EBAY && $p->name === $sellerId) ||
@@ -170,7 +172,9 @@ class CheckOutForm extends Model
                         break;
                     }
                 }
-
+                if($provider === null){
+                    $provider = $providers[0];
+                }
                 if (($seller = Seller::findOne(['AND', ['seller_name' => $provider->name], ['portal' => $type]])) === null) {
                     $seller = new Seller();
                     $seller->seller_name = $sellerId;

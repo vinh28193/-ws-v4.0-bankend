@@ -12,18 +12,17 @@ use common\models\db\Coupon;
 use common\models\db\DraftExtensionTrackingMap;
 use common\models\db\Order as DbOrder;
 use common\models\db\Promotion;
-use common\models\draft\DraftDataTracking;
 use common\models\queries\OrderQuery;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\i18n\Formatter;
 use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\db\Expression;
 
 /**
  * @property  Product[] $products
+ * @property  Package[] $packages
  */
 class Order extends DbOrder implements RuleOwnerAccessInterface
 {
@@ -428,6 +427,13 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     /**
      * @return \yii\db\ActiveQuery
      */
+//    public function getPackages()
+//    {
+//        return $this->hasMany(Package::className(), ['order_id' => 'id']);
+//    }
+    public function getPackage() {
+        return $this->hasOne(Package::className(), ['order_id' => 'id']);
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -440,11 +446,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     public function getDraftExtensionTrackingMap()
     {
         return $this->hasMany(DraftExtensionTrackingMap::className(), ['order_id' => 'id']);
-    }
-
-    public function getPackage()
-    {
-        return $this->hasOne(Package::className(), ['order_id' => 'id']);
     }
 
     public function getCoupon()

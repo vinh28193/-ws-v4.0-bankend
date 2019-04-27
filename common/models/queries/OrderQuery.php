@@ -64,9 +64,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'purchaseAssignee',
             'purchaseProducts',
             'promotion',
-            'package' => function ($q) {
-                $q->select(['order_id', 'tracking_code', 'id']);
-            },
+            'package',
             'saleSupport' => function ($q) {
                 /** @var ActiveQuery $q */
                 $q->select(['username','email','id','status', 'created_at', 'updated_at']);
@@ -78,7 +76,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
         $this->joinWith([
             'products',
             'coupon',
-            'customer'
+            'customer',
         ]);
         return $this;
     }
