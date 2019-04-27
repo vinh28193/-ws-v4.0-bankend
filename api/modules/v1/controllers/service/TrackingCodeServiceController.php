@@ -6,6 +6,7 @@ namespace api\modules\v1\controllers\service;
 
 use api\controllers\BaseApiController;
 use common\components\lib\TextUtility;
+use common\helpers\WeshopHelper;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
 use common\models\Package;
@@ -222,7 +223,7 @@ class TrackingCodeServiceController extends BaseApiController
             $shipment = new Shipment();
             $shipment->version = '4.0';
             $shipment->shipment_status = Shipment::STATUS_NEW;
-            $packageNew = new DeliveryNote();
+            $deliverynote = new DeliveryNote();
         }
         $listHold = [];
         foreach ($packages as $package){
@@ -241,25 +242,25 @@ class TrackingCodeServiceController extends BaseApiController
                 $shipment = new Shipment();
                 $shipment->version = '4.0';
                 $shipment->shipment_status = Shipment::STATUS_NEW;
-                $packageNew = new DeliveryNote();
+                $deliverynote = new DeliveryNote();
             }
             $list_id[] = $package->id;
-            $packageNew->current_status = DeliveryNote::STATUS_STOCK_IN_LOCAL;
-            $packageNew->stock_in_local = $package->stock_in_local;
-            $packageNew->manifest_code = $package->manifest_code;
-            $packageNew->tracking_seller = !$packageNew->tracking_seller ? $package->tracking_code : '';
-            $packageNew->tracking_reference_1 = !$packageNew->tracking_reference_1
-                                                && $packageNew->tracking_seller != $package->tracking_code
+            $deliverynote->current_status = DeliveryNote::STATUS_STOCK_IN_LOCAL;
+            $deliverynote->stock_in_local = $package->stock_in_local;
+            $deliverynote->manifest_code = $package->manifest_code;
+            $deliverynote->tracking_seller = !$deliverynote->tracking_seller ? $package->tracking_code : '';
+            $deliverynote->tracking_reference_1 = !$deliverynote->tracking_reference_1
+                                                && $deliverynote->tracking_seller != $package->tracking_code
                                                 ? $package->tracking_code : '';
-            $packageNew->tracking_reference_2 = !$packageNew->tracking_reference_1 && $packageNew->tracking_reference_2
-                                                && $packageNew->tracking_reference_1 != $package->tracking_code
-                                                && $packageNew->tracking_seller != $package->tracking_code
+            $deliverynote->tracking_reference_2 = !$deliverynote->tracking_reference_1 && $deliverynote->tracking_reference_2
+                                                && $deliverynote->tracking_reference_1 != $package->tracking_code
+                                                && $deliverynote->tracking_seller != $package->tracking_code
                                                 ? $package->tracking_code : '';
-            $packageNew->warehouse_id = $package->manifest->receive_warehouse_id;
-            $packageNew->created_at = time();
-            $packageNew->updated_at = time();
-            $packageNew->remove = 0;
-            $packageNew->version = '4.0';
+            $deliverynote->warehouse_id = $package->manifest->receive_warehouse_id;
+            $deliverynote->created_at = time();
+            $deliverynote->updated_at = time();
+            $deliverynote->remove = 0;
+            $deliverynote->version = '4.0';
 
             $shipment->warehouse_tags = $shipment->warehouse_tags ? $shipment->warehouse_tags .',' .$package->warehouse_tag_boxme : $shipment->warehouse_tags ;
             $shipment->total_weight = $shipment->total_weight ? $shipment->total_weight + $package->weight : $package->weight;
@@ -280,26 +281,26 @@ class TrackingCodeServiceController extends BaseApiController
             $shipment->total_quantity = $shipment->total_quantity ? $shipment->total_quantity + $package->quantity : $package->quantity;
             if($isCreateAll){
                 $shipment->save(0);
-                $packageNew->shipment_id = $shipment->id;
-                $packageNew->save(0);
-                $packageNew->package_code = TextUtility::GeneratePackingCode($packageNew->id,'VN');
-                $packageNew->save(0);
+                $deliverynote->shipment_id = $shipment->id;
+                $deliverynote->save(0);
+                $deliverynote->delivery_note_code = WeshopHelper::generateTag($deliverynote->id,'WSVNDN', 16);
+                $deliverynote->save(0);
                 $package->shipment_id = $shipment->id;
-                $package->package_code = $packageNew->package_code;
-                $package->package_id = $packageNew->id;
+                $package->delivery_note_code = $deliverynote->delivery_note_code;
+                $package->delivery_note_id = $deliverynote->id;
                 $package->save(0);
             }
         }
         if(!$isCreateAll){
             $shipment->save(0);
-            $packageNew->shipment_id = $shipment->id;
-            $packageNew->save(0);
-            $packageNew->package_code = TextUtility::GeneratePackingCode($packageNew->id,'VN');
-            $packageNew->save(0);
+            $deliverynote->shipment_id = $shipment->id;
+            $deliverynote->save(0);
+            $deliverynote->delivery_note_code = WeshopHelper::generateTag($deliverynote->id,'WSVNDN', 16);
+            $deliverynote->save(0);
             Package::updateAll([
                 'shipment_id' => $shipment->id,
-                'package_code' => $packageNew->package_code,
-                'package_id' => $packageNew->id,
+                'delivery_note_code' => $deliverynote->delivery_note_code,
+                'delivery_note_id' => $deliverynote->id,
             ],['id' => $list_id]);
         }
         return $this->response(true, 'Create Shipment success! Note: Package hold ('.implode(',',$listHold).') will not be created!');
