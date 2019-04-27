@@ -33,7 +33,16 @@ class Shipment extends DbShipment
     const STATUS_CREATED = 'CREATED';
     const STATUS_FAILED = 'FAILED';
     // callback status
-    const STATUS_PICKING = 'PICKING';
+    const STATUS_APPROVED = 'APPROVED'; // 200: đơn đã duyêt
+    const STATUS_PICKING = 'PICKING'; //300: Hãng vận chuyển đã lấy hàng
+    const STATUS_SHIPPED = 'SHIPPED';
+    const STATUS_DELIVERING = 'DELIVERING'; // 304: đơn hàng đang vận chuyển
+    const STATUS_DELIVERED = 'DELIVERED'; //800
+    const STATUS_RETURNING = 'RETURNING'; // 400,410,420,430,500,510,511,520
+    const STATUS_RETURNED = 'RETURNED'; // 600
+    const STATUS_CANCELED = 'CANCELED'; //700,701,702,703,705
+    // common status
+    const STATUS_DESTROY = 'DESTROY'; // callback 810 or operation destroy
 
     /**
      * @inheritdoc

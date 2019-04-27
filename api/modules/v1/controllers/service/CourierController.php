@@ -150,7 +150,7 @@ class CourierController extends BaseApiController
         if (count($ids) === 0) {
             $this->response(true, "no thing to cancel");
         }
-        $shipments = Shipment::find()->with('warehouseSend')->where('AND', ['IN', 'id' => $ids], ['active' => 1])->all();
+        $shipments = Shipment::find()->with('warehouseSend')->where(['AND', ['IN', 'id' , $ids], ['active' => 1]])->all();
         if (count($shipments) === 0) {
             $this->response(true, "no thing to cancel");
         }
@@ -161,8 +161,9 @@ class CourierController extends BaseApiController
             $collection = new BoxmeClientCollection();
             $client = $collection->getClient($shipment->warehouseSend->country_id === 2 ? Location::COUNTRY_ID : Location::COUNTRY_VN);
             $res = $client->cancelOrder($shipment->shipment_code);
-            if ($res['error'] === false) {
+            if ($res['error'] === true) {
                 $error[] = $shipment->shipment_code;
+                continue;
             }
             $shipment->shipment_code = null;
             $shipment->shipment_status = Shipment::STATUS_NEW;
