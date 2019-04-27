@@ -5,13 +5,12 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
-use common\components\lib\TextUtility;
 use common\helpers\WeshopHelper;
+use common\models\DeliveryNote;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
-use common\models\Package;
 use common\models\draft\DraftWastingTracking;
-use common\models\DeliveryNote;
+use common\models\Package;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\PurchaseProduct;
@@ -59,21 +58,14 @@ class TrackingCodeServiceController extends BaseApiController
         ){
             return $this->response(false,'data merge not incorrect!');
         }
-        $model = Package::find()->where([
-            'tracking_code' => $missing->tracking_code,
-            'status' => Package::STATUS_SPLITED,
-            'product_id' => $missing->product_id ? $missing->product_id : $wasting->product_id,
-            'order_id' => $missing->order_id ? $missing->order_id : $wasting->order_id
-        ])->one();
-        if(!$model){
-            $model = new Package();
-            $model->tracking_code = $missing->tracking_code;
-            $model->tracking_merge = $missing->tracking_code.','.$wasting->tracking_code;
-            $model->product_id = $missing->product_id ? $missing->product_id : $wasting->product_id;
-            $model->order_id = $missing->order_id ? $missing->order_id : $wasting->order_id;
-            $model->created_at = time();
-            $model->created_by = Yii::$app->user->getId();
-        }
+
+        $model = new Package();
+        $model->tracking_code = $missing->tracking_code;
+        $model->tracking_merge = $missing->tracking_code . ',' . $wasting->tracking_code;
+        $model->product_id = $missing->product_id ? $missing->product_id : $wasting->product_id;
+        $model->order_id = $missing->order_id ? $missing->order_id : $wasting->order_id;
+        $model->created_at = time();
+        $model->created_by = Yii::$app->user->getId();
         $model->quantity = $wasting->quantity;
         $model->weight = $wasting->weight;
         $model->dimension_l = $wasting->dimension_l;
@@ -122,6 +114,7 @@ class TrackingCodeServiceController extends BaseApiController
         }
 
         $model->status = Package::STATUS_SPLITED;
+        $model->remove = 0;
         $model->save(0);
         $arr_tracking = explode(',',$model->tracking_merge);
         foreach ($arr_tracking as $k => $v){

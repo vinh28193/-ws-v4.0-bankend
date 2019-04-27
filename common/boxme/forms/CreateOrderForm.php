@@ -120,7 +120,7 @@ class CreateOrderForm extends BaseForm
     protected function findModels()
     {
         $query = ModelShipment::find();
-        $query->with(['warehouseSend', 'packageItems', 'packageItems.product']);
+        $query->with(['warehouseSend', 'packages', 'packageItems.product']);
         if ($this->ids !== null) {
             $query->where(['id' => $this->ids]);
         } else {

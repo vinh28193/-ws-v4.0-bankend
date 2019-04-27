@@ -22,6 +22,7 @@ use common\components\AdditionalFeeTrait;
  * @property ProductFee $unitPrice
  * @property ProductFee $usTax
  * @property Order $order
+ * @property  Package[] $packages
  *
  *
  */
@@ -163,5 +164,13 @@ class Product extends DbProduct
     public function getOrder()
     {
         return $this->hasOne(Order::className(), ['id' => 'order_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPackages()
+    {
+        return $this->hasMany(Package::className(), ['order_id' => 'id']);
     }
 }
