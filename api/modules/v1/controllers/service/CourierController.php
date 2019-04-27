@@ -52,44 +52,22 @@ class CourierController extends BaseApiController
             return $this->response(false, "can not action when not found shipment $id");
         }
         $parcels = ArrayHelper::remove($post, 'parcels', []);
-        if (count($parcels) === 0) {
-            return $this->response(false, "can not action when missing all parcel");
-        }
+//        if (count($parcels) === 0) {
+//            return $this->response(false, "can not action when missing all parcel");
+//        }
         $transaction = Shipment::getDb()->beginTransaction();
+        foreach (['total_price', 'total_cod', 'payment_method', 'description', 'note_for_courier'] as $remove) {
+            if (isset($post[$remove])) {
+                unset($post[$remove]);
+            }
+        }
         try {
             if (!$shipment->load($post, '')) {
                 $transaction->rollBack();
                 return $this->response(false, "shipment can not resolve parameter");
             }
             $shipment->save(false);
-            foreach ($parcels as $parcel) {
-                if (($pId = ArrayHelper::remove($parcel, 'id', null)) === null) {
-                    $transaction->rollBack();
-                    return $this->response(false, "failed a parcel not found parameter ID ");
-                }
-                /** @var $packageItem Package */
-                if (($packageItem = Package::find()->where(['and', ['id' => $pId], ['shipment_id' => $shipment->id]])->one()) === null) {
-                    $transaction->rollBack();
-                    return $this->response(false, "failed not found package item $pId in shipment {$shipment->id}");
-                }
-//                if(($productId = ArrayHelper::remove($parcel,'product_id')) === null){
-//                    $transaction->rollBack();
-//                    return $this->response(false, "failed a parcel not found parameter Product ID");
-//                }
-//                if(($product = Product::findOne($productId)) === null){
-//                    $transaction->rollBack();
-//                    return $this->response(false, "failed not found product $productId for package item {$packageItem->id}");
-//                }
-//                if($name = ArrayHelper::remove($parcel,'name') !== null){
-//
-//                }
-                unset($parcel['product_id']);
-                unset($parcel['image']);
-                unset($parcel['name']);
-                $packageItem->load($parcel, '');
-                $packageItem->save(false);
-            }
-            $shipment->reCalculateTotal();
+//            $shipment->reCalculateTotal();
             $transaction->commit();
             $shipment->refresh();
         } catch (\Exception $exception) {
@@ -134,7 +112,7 @@ class CourierController extends BaseApiController
                 'data' => []
             ];
         }
-        if($form->toCountry != 1 && !$form->toZipCode){
+        if ($form->toCountry != 1 && !$form->toZipCode) {
             return [
                 'error' => true,
                 'error_code' => 'Error Validate',
@@ -152,7 +130,7 @@ class CourierController extends BaseApiController
         if (count($ids) === 0) {
             $this->response(true, "no thing to cancel");
         }
-        $shipments = Shipment::find()->with('warehouseSend')->where(['AND', ['IN', 'id' , $ids], ['active' => 1]])->all();
+        $shipments = Shipment::find()->with('warehouseSend')->where(['AND', ['IN', 'id', $ids], ['active' => 1]])->all();
         if (count($shipments) === 0) {
             $this->response(true, "no thing to cancel");
         }
@@ -160,7 +138,7 @@ class CourierController extends BaseApiController
         $success = 0;
         foreach ($shipments as $shipment) {
             /** @var $shipment Shipment */
-            if($shipment->shipment_status !== Shipment::STATUS_CREATED || $shipment->shipment_code === null){
+            if ($shipment->shipment_status !== Shipment::STATUS_CREATED || $shipment->shipment_code === null) {
                 $error[] = "not found BM code or invalid status";
                 continue;
             }
