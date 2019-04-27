@@ -139,7 +139,7 @@ class Shipment extends DbShipment
         $totalWeight = 0;
         $totalCod = 0;
         $totalPrice = 0;
-        foreach ($this->packageItems as $packageItem){
+        foreach ($this->packages as $packageItem){
             $totalQuantity += $packageItem->quantity;
             $totalWeight += $packageItem->weight;
             $totalCod += $packageItem->cod;
