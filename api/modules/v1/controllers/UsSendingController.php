@@ -8,7 +8,7 @@ use api\controllers\BaseApiController;
 use common\helpers\ExcelHelper;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
-use common\models\draft\Package;
+use common\models\Package;
 use common\models\Manifest;
 use common\models\Product;
 use common\models\TrackingCode;

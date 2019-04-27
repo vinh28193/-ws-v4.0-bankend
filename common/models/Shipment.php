@@ -8,7 +8,7 @@
 
 namespace common\models;
 
-use common\models\draft\Package;
+use common\models\Package;
 use Yii;
 use common\models\queries\ShipmentQuery;
 use common\models\db\Shipment as DbShipment;

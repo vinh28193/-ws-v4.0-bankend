@@ -10,11 +10,11 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\models\draft\DraftDataTracking;
-use common\models\draft\Package;
+use common\models\Package;
 use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
 use Yii;
-use common\models\draft\PackageSearch;
+use common\models\PackageSearch;
 
 /**
  * Class DraftPackageItemController

@@ -6,7 +6,7 @@
  * Time: 11:10
  */
 
-namespace common\models\draft;
+namespace common\models;
 
 use common\data\ActiveDataProvider;
 use yii\base\Model;

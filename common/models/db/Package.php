@@ -48,7 +48,7 @@ use Yii;
  * @property string $package_code
  * @property string $ws_tracking_code Mã tracking của weshop
  */
-class DraftPackageItem extends \common\components\db\ActiveRecord
+class Package extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

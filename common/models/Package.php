@@ -6,15 +6,10 @@
  * Time: 10:53
  */
 
-namespace common\models\draft;
+namespace common\models;
 
 
-use common\models\Manifest;
-use common\models\Order;
-use common\models\Product;
-use common\models\ProductFee;
-use common\models\PurchaseOrder;
-use common\models\PurchaseProduct;
+use common\models\draft\DraftDataTracking;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -26,7 +21,7 @@ use yii\helpers\ArrayHelper;
  * @property PurchaseOrder $purchaseOrder
  * @property DraftDataTracking $draftDataTracking
  */
-class Package extends \common\models\db\DraftPackageItem
+class Package extends \common\models\db\Package
 {
     const STATUS_PARSER = "PARSER";
     const STATUS_SPLITED = "SPLITED";

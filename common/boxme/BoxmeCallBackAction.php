@@ -4,7 +4,7 @@
 namespace common\boxme;
 
 
-use common\models\draft\Package;
+use common\models\Package;
 use common\models\DeliveryNote;
 use common\models\Shipment;
 use Yii;

@@ -7,7 +7,7 @@ namespace api\modules\v1\controllers\service;
 use api\controllers\BaseApiController;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
-use common\models\draft\Package;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use common\models\Product;

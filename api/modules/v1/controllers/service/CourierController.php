@@ -6,7 +6,7 @@ namespace api\modules\v1\controllers\service;
 use common\boxme\BoxmeClientCollection;
 use common\boxme\Location;
 use common\models\draft\DraftDataTracking;
-use common\models\draft\Package;
+use common\models\Package;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\Shipment as ModelShipment;

@@ -12,7 +12,7 @@ namespace api\controllers;
 use common\models\Category;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftDataTracking;
-use common\models\draft\Package;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use yii\base\Controller;
 use yii\helpers\ArrayHelper;

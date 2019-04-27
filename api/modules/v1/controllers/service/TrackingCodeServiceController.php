@@ -8,7 +8,7 @@ use api\controllers\BaseApiController;
 use common\components\lib\TextUtility;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\Package;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\DeliveryNote;
 use common\models\PackageItem;

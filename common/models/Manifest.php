@@ -13,7 +13,7 @@ use common\models\db\Store;
 use common\models\db\User;
 use common\models\db\Warehouse;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\Package;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 
 /**

@@ -7,7 +7,7 @@ namespace common\boxme;
 use common\helpers\UtilityHelper;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftDataTracking;
-use common\models\draft\Package;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use yii\helpers\StringHelper;

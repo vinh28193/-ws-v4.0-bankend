@@ -13,7 +13,7 @@ use common\models\db\PurchaseOrder;
 use common\models\db\PurchaseProduct;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\Package;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\draft\DraftDataTracking;
 use common\models\Manifest;
