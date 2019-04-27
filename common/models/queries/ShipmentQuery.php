@@ -33,6 +33,7 @@ class ShipmentQuery extends ActiveQuery
     public function filter($params)
     {
 
+        $this->andWhere(['active' => 0]);
         if (isset($params['q']) && ($q = $params['q']) !== null && $q !== '') {
             if (isset($params['qref']) && ($qref = $params['qref']) !== null && $qref !== '') {
                 if ($qref === 'shipmentCode') {
