@@ -8,7 +8,7 @@
 
 namespace common\models;
 
-use common\models\draft\DraftPackageItem;
+use common\models\Package;
 use Yii;
 use common\models\queries\ShipmentQuery;
 use common\models\db\Shipment as DbShipment;
@@ -16,7 +16,7 @@ use common\models\db\Shipment as DbShipment;
  * Class Shipment
  * @package common\models
  * @property Package[] $packages
- * @property DraftPackageItem[] $packageItems
+ * @property Package[] $packageItems
  * @property Customer $customer
  * @property Address $receiverAddress
  * @property SystemCountry $receiverCountry
@@ -79,7 +79,7 @@ class Shipment extends DbShipment
      */
     public function getPackageItems()
     {
-        return $this->hasMany(DraftPackageItem::className(), ['shipment_id' => 'id']);
+        return $this->hasMany(Package::className(), ['shipment_id' => 'id']);
     }
 
     /**

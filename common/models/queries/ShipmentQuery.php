@@ -8,7 +8,7 @@
 
 namespace common\models\queries;
 
-use common\models\Package;
+use common\models\DeliveryNote;
 use yii\helpers\ArrayHelper;
 use common\helpers\WeshopHelper;
 use common\components\db\ActiveQuery;
@@ -39,13 +39,13 @@ class ShipmentQuery extends ActiveQuery
                 if ($qref === 'shipmentCode') {
                     $this->andWhere([$this->getColumnName('shipment_code') => $q]);
                 } elseif ($qref === 'packageCode') {
-                    $this->andWhere([$this->getColumnName('package_code', Package::tableName()) => $q]);
+                    $this->andWhere([$this->getColumnName('package_code', DeliveryNote::tableName()) => $q]);
                 }
             } else {
                 $this->andWhere([
                     'OR',
                     [$this->getColumnName('shipment_code') => $q],
-                    [$this->getColumnName('package_code', Package::tableName()) => $q]
+                    [$this->getColumnName('package_code', DeliveryNote::tableName()) => $q]
                 ]);
             }
         }

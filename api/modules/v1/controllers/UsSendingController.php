@@ -8,7 +8,7 @@ use api\controllers\BaseApiController;
 use common\helpers\ExcelHelper;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
-use common\models\draft\DraftPackageItem;
+use common\models\Package;
 use common\models\Manifest;
 use common\models\Product;
 use common\models\TrackingCode;
@@ -195,7 +195,7 @@ class UsSendingController extends BaseApiController
         $modal->updated_at = time();
         $modal->item_name = $this->post['item_name'];
         $modal->save(0);
-        DraftPackageItem::updateAll([
+        Package::updateAll([
             'order_id' => $product->order_id,
             'product_id' => $product->id,
             'purchase_invoice_number' => $this->post['purchase_invoice_number'],

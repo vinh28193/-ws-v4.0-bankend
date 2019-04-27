@@ -7,7 +7,7 @@ namespace common\boxme;
 use common\helpers\UtilityHelper;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftDataTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use yii\helpers\StringHelper;
@@ -144,7 +144,7 @@ class WarehouseInspect
             foreach ($finds as $find) {
                 /* @var $find DraftDataTracking */
                 if ($find->status === DraftBoxmeTracking::STATUS_CALLBACK_SUCCESS) {
-                    $draftQuery = DraftPackageItem::find();
+                    $draftQuery = Package::find();
                     $draftQuery->where([
                         'AND',
                         ['tracking_code' => $find->tracking_code],
@@ -170,7 +170,7 @@ class WarehouseInspect
                 $attributes['price'] = $find->product ? $find->product->price_amount_local : 0;
                 $attributes['product_id'] = $find->product_id;
                 $attributes['order_id'] = $find->order_id;
-                $draft = new DraftPackageItem($attributes);
+                $draft = new Package($attributes);
                 $draft->createOrUpdate(false);
                 $msg[] = "create new package {$draft->id}";
                 $log['attributes'][$draft->id] = $attributes;

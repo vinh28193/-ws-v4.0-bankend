@@ -5,32 +5,48 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "package".
+ * This is the model class for table "draft_package_item".
  *
  * @property int $id
- * @property string $package_code Mã kiện của weshop
- * @property string $tracking_seller mã giao dịch của weshop
- * @property string $order_ids List mã order cách nhau bằng dấu ,
- * @property string $tracking_reference_1 mã tracking tham chiếu 1
- * @property string $tracking_reference_2 mã tracking tham chiếu 2
- * @property string $manifest_code mã lô hàng
- * @property double $package_weight cân nặng tịnh của cả gói , đơn vị gram
- * @property double $package_change_weight cân nặng quy đổi của cả gói , đơn vị gram
- * @property double $package_dimension_l chiều dài của cả gói , đơn vị cm
- * @property double $package_dimension_w chiều rộng của cả gói , đơn vị cm
- * @property double $package_dimension_h chiều cao của cả gói , đơn vị cm
- * @property string $seller_shipped
- * @property string $stock_in_us
- * @property string $stock_out_us
- * @property string $stock_in_local
- * @property string $lost
- * @property string $current_status
- * @property int $warehouse_id id kho nhận
- * @property string $created_at thời gian tạo
- * @property string $updated_at thời gian cập nhật
- * @property int $remove
- * @property string $version version 4.0
+ * @property string $tracking_code
+ * @property int $product_id
+ * @property int $order_id
+ * @property int $quantity
+ * @property double $weight
+ * @property double $dimension_l
+ * @property double $dimension_w
+ * @property double $dimension_h
+ * @property int $manifest_id
+ * @property string $manifest_code
+ * @property string $purchase_invoice_number
+ * @property string $status
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $created_by
+ * @property int $updated_by
+ * @property string $item_name tên sản phẩm trả về từ boxme
+ * @property string $warehouse_tag_boxme wtag của boxme
+ * @property string $note_boxme note của boxme
+ * @property string $image
+ * @property string $tracking_merge  List tracking khi merge từ thừa và thiếu 
+ * @property int $hold DDasnhh dấu hàng hold. 1 là hold
+ * @property string $type_tracking split, normal, unknown
+ * @property string $seller_refund_amount Sô tiền seller hoàn
+ * @property int $draft_data_tracking_id
+ * @property int $stock_in_local Thời gian nhập kho local
+ * @property int $stock_out_local Thời gian xuất kho local
+ * @property int $at_customer Thời gian tới tay khách hàng
+ * @property int $returned Thời gian hoàn trả
+ * @property int $lost Thời gian mất hàng
+ * @property string $current_status Trạng thái hiện tại
  * @property int $shipment_id
+ * @property int $remove Xoá
+ * @property string $price Giá trị của 1 sản phẩm
+ * @property string $cod Tiền cod
+ * @property string $version Version
+ * @property int $package_id
+ * @property string $package_code
+ * @property string $ws_tracking_code Mã tracking của weshop
  */
 class Package extends \common\components\db\ActiveRecord
 {
@@ -39,7 +55,7 @@ class Package extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'package';
+        return 'draft_package_item';
     }
 
     /**
@@ -48,12 +64,11 @@ class Package extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_ids', 'tracking_reference_1', 'tracking_reference_2', 'manifest_code'], 'string'],
-            [['package_weight', 'package_change_weight', 'package_dimension_l', 'package_dimension_w', 'package_dimension_h'], 'number'],
-            [['seller_shipped', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'lost', 'warehouse_id', 'created_at', 'updated_at', 'remove', 'shipment_id'], 'integer'],
-            [['package_code'], 'string', 'max' => 32],
-            [['tracking_seller', 'version'], 'string', 'max' => 255],
-            [['current_status'], 'string', 'max' => 100],
+            [['tracking_code'], 'required'],
+            [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'hold', 'draft_data_tracking_id', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'remove', 'package_id'], 'integer'],
+            [['weight', 'dimension_l', 'dimension_w', 'dimension_h', 'seller_refund_amount', 'price', 'cod'], 'number'],
+            [['image', 'tracking_merge'], 'string'],
+            [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme', 'type_tracking', 'current_status', 'version', 'package_code', 'ws_tracking_code'], 'string', 'max' => 255],
         ];
     }
 
@@ -64,29 +79,45 @@ class Package extends \common\components\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'package_code' => 'Package Code',
-            'tracking_seller' => 'Tracking Seller',
-            'order_ids' => 'Order Ids',
-            'tracking_reference_1' => 'Tracking Reference 1',
-            'tracking_reference_2' => 'Tracking Reference 2',
+            'tracking_code' => 'Tracking Code',
+            'product_id' => 'Product ID',
+            'order_id' => 'Order ID',
+            'quantity' => 'Quantity',
+            'weight' => 'Weight',
+            'dimension_l' => 'Dimension L',
+            'dimension_w' => 'Dimension W',
+            'dimension_h' => 'Dimension H',
+            'manifest_id' => 'Manifest ID',
             'manifest_code' => 'Manifest Code',
-            'package_weight' => 'Package Weight',
-            'package_change_weight' => 'Package Change Weight',
-            'package_dimension_l' => 'Package Dimension L',
-            'package_dimension_w' => 'Package Dimension W',
-            'package_dimension_h' => 'Package Dimension H',
-            'seller_shipped' => 'Seller Shipped',
-            'stock_in_us' => 'Stock In Us',
-            'stock_out_us' => 'Stock Out Us',
-            'stock_in_local' => 'Stock In Local',
-            'lost' => 'Lost',
-            'current_status' => 'Current Status',
-            'warehouse_id' => 'Warehouse ID',
+            'purchase_invoice_number' => 'Purchase Invoice Number',
+            'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'remove' => 'Remove',
-            'version' => 'Version',
+            'created_by' => 'Created By',
+            'updated_by' => 'Updated By',
+            'item_name' => 'Item Name',
+            'warehouse_tag_boxme' => 'Warehouse Tag Boxme',
+            'note_boxme' => 'Note Boxme',
+            'image' => 'Image',
+            'tracking_merge' => 'Tracking Merge',
+            'hold' => 'Hold',
+            'type_tracking' => 'Type Tracking',
+            'seller_refund_amount' => 'Seller Refund Amount',
+            'draft_data_tracking_id' => 'Draft Data Tracking ID',
+            'stock_in_local' => 'Stock In Local',
+            'stock_out_local' => 'Stock Out Local',
+            'at_customer' => 'At Customer',
+            'returned' => 'Returned',
+            'lost' => 'Lost',
+            'current_status' => 'Current Status',
             'shipment_id' => 'Shipment ID',
+            'remove' => 'Remove',
+            'price' => 'Price',
+            'cod' => 'Cod',
+            'version' => 'Version',
+            'package_id' => 'Package ID',
+            'package_code' => 'Package Code',
+            'ws_tracking_code' => 'Ws Tracking Code',
         ];
     }
 }

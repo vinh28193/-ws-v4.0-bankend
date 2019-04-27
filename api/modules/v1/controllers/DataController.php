@@ -30,7 +30,7 @@ use common\models\db\Category;
  **/
 
 /** Gói Kiện hàng về : Từ người bán gửi về Kho Mỹ **/
-use common\models\Package;
+use common\models\DeliveryNote;
 use common\models\PackageItem;
 
 /** Package Tạm + Dữ liệu Kiểm thực tế với BOXME **/

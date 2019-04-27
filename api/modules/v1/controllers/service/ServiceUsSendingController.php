@@ -7,7 +7,7 @@ namespace api\modules\v1\controllers\service;
 use api\controllers\BaseApiController;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
-use common\models\draft\DraftPackageItem;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use common\models\Product;
@@ -128,7 +128,7 @@ class ServiceUsSendingController extends BaseApiController
         }
         $model->seller_refund_amount = $model->seller_refund_amount ? floatval($model->seller_refund_amount) + $this->post['amount'] :  $this->post['amount'];
         $model->save(0);
-        DraftPackageItem::updateAll(['seller_refund_amount' => $model->seller_refund_amount],['draft_data_tracking_id' => $model->id]);
+        Package::updateAll(['seller_refund_amount' => $model->seller_refund_amount],['draft_data_tracking_id' => $model->id]);
         return $this->response(true,'Update seller refund '.$this->post['type'].' success!');
     }
     public function actionMerge(){
