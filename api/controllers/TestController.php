@@ -12,7 +12,7 @@ namespace api\controllers;
 use common\models\Category;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftDataTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\draft\Package;
 use common\models\draft\DraftWastingTracking;
 use yii\base\Controller;
 use yii\helpers\ArrayHelper;
@@ -91,7 +91,7 @@ class TestController extends Controller
                     $find->status = DraftBoxmeTracking::STATUS_CALLBACK_SUCCESS;
                     $find->item_name = $item_name;
                     $find->save(0);
-                    $draft = new DraftPackageItem();
+                    $draft = new Package();
                     $draft->tracking_code = $tracking;
                     $draft->manifest_code = $manifest_code;
                     $draft->manifest_id = $manifest_id;

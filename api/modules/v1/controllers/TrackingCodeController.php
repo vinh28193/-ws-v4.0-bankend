@@ -16,7 +16,7 @@ use common\helpers\ChatHelper;
 use common\helpers\ExcelHelper;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\draft\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use common\models\Product;
@@ -101,13 +101,13 @@ class TrackingCodeController extends BaseApiController
         if($trackingW){
             $wast->andWhere(['like','tracking_code',$trackingW]);
         }
-        $complete = DraftPackageItem::find()->where(['manifest_id' => $data['_items']['id']])
-            ->andWhere(['and',['is not','product_id',null],['<>','product_id',''],['<>','status',DraftPackageItem::STATUS_SPLITED]]);
+        $complete = Package::find()->where(['manifest_id' => $data['_items']['id']])
+            ->andWhere(['and',['is not','product_id',null],['<>','product_id',''],['<>','status',Package::STATUS_SPLITED]]);
         if($trackingC){
             $complete->andWhere(['like','tracking_code',$trackingC]);
         }
-        $unknown = DraftPackageItem::find()->where(['manifest_id' => $data['_items']['id']])
-            ->andWhere(['or',['product_id' => null],['product_id' => '']])->andWhere(['<>','status',DraftPackageItem::STATUS_SPLITED]);
+        $unknown = Package::find()->where(['manifest_id' => $data['_items']['id']])
+            ->andWhere(['or',['product_id' => null],['product_id' => '']])->andWhere(['<>','status',Package::STATUS_SPLITED]);
         if($trackingU){
             $unknown->andWhere(['like','tracking_code',$trackingU]);
         }
@@ -219,7 +219,7 @@ class TrackingCodeController extends BaseApiController
     }
 
     public function actionUpdate($id){
-        $modal = DraftPackageItem::findOne($id);
+        $modal = Package::findOne($id);
         if(!$modal){
             return $this->response(false,'Cannot find your tracking!');
         }

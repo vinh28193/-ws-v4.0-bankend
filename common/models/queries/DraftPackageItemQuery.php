@@ -2,7 +2,7 @@
 
 namespace common\models\queries;
 
-use common\models\draft\DraftPackageItem;
+use common\models\draft\Package;
 
 /**
  * This is the ActiveQuery class for [[\common\models\db\DraftPackageItem]].
@@ -13,7 +13,7 @@ class DraftPackageItemQuery extends \common\components\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere(['<>','status',DraftPackageItem::STATUS_SPLITED]);
+        return $this->andWhere(['<>','status',Package::STATUS_SPLITED]);
     }
 
     /**

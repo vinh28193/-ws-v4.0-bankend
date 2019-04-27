@@ -13,7 +13,7 @@ use common\models\db\PurchaseOrder;
 use common\models\db\PurchaseProduct;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\draft\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\draft\DraftDataTracking;
 use common\models\Manifest;
@@ -405,10 +405,10 @@ class BoxMeController extends Controller
     }
 
     public function actionParserPackage(){
-        /** @var DraftPackageItem[] $draft_package */
-        $draft_package = DraftPackageItem::find()
+        /** @var Package[] $draft_package */
+        $draft_package = Package::find()
             ->with(['manifest'])
-            ->where(['<>' ,'status' , DraftPackageItem::STATUS_PARSER])
+            ->where(['<>' ,'status' , Package::STATUS_PARSER])
             ->limit(500)->all();
         foreach ($draft_package as $packageItem){
             $package = DeliveryNote::find()

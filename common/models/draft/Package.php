@@ -26,7 +26,7 @@ use yii\helpers\ArrayHelper;
  * @property PurchaseOrder $purchaseOrder
  * @property DraftDataTracking $draftDataTracking
  */
-class DraftPackageItem extends \common\models\db\DraftPackageItem
+class Package extends \common\models\db\DraftPackageItem
 {
     const STATUS_PARSER = "PARSER";
     const STATUS_SPLITED = "SPLITED";

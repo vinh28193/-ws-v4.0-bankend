@@ -10,11 +10,11 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\models\draft\DraftDataTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\draft\Package;
 use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
 use Yii;
-use common\models\draft\DraftPackageItemSearch;
+use common\models\draft\PackageSearch;
 
 /**
  * Class DraftPackageItemController
@@ -71,14 +71,14 @@ class DraftPackageItemController extends BaseApiController
     public function actionView($id)
     {
         if ($id) {
-            $package = DraftPackageItem::find()->where(['order_id' => (int)$id])->with('shipment')->asArray()->all();
+            $package = Package::find()->where(['order_id' => (int)$id])->with('shipment')->asArray()->all();
             return $this->response(true, 'success', $package);
         }
     }
     public function actionCreate()
     {
         $post = Yii::$app->request->post();
-        $model = new DraftPackageItem();
+        $model = new Package();
         $model->product_id = $post['product_id'];
         $model->tracking_code = $post['tracking_code'];
         $model->weight = $post['weight'];
@@ -109,7 +109,7 @@ class DraftPackageItemController extends BaseApiController
 
     public function actionDelete($id)
     {
-        $model = DraftPackageItem::findOne($id);
+        $model = Package::findOne($id);
         if (!$model->delete()) {
             Yii::$app->wsLog->push('order', 'deleteDraftPackageItem', null, [
                 'id' => $model->order->ordercode,
@@ -144,7 +144,7 @@ class DraftPackageItemController extends BaseApiController
     public function actionUpdate($id)
     {
         $post = Yii::$app->request->post();
-        $model = DraftPackageItem::findOne($id);
+        $model = Package::findOne($id);
         if ($model) {
             $model->tracking_code = $post['tracking_code'];
             $model->weight = $post['weight'];

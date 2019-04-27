@@ -8,7 +8,7 @@ use api\controllers\BaseApiController;
 use common\components\lib\TextUtility;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\draft\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\DeliveryNote;
 use common\models\PackageItem;
@@ -58,14 +58,14 @@ class TrackingCodeServiceController extends BaseApiController
         ){
             return $this->response(false,'data merge not incorrect!');
         }
-        $model = DraftPackageItem::find()->where([
+        $model = Package::find()->where([
             'tracking_code' => $missing->tracking_code,
-            'status' => DraftPackageItem::STATUS_SPLITED,
+            'status' => Package::STATUS_SPLITED,
             'product_id' => $missing->product_id ? $missing->product_id : $wasting->product_id,
             'order_id' => $missing->order_id ? $missing->order_id : $wasting->order_id
         ])->one();
         if(!$model){
-            $model = new DraftPackageItem();
+            $model = new Package();
             $model->tracking_code = $missing->tracking_code;
             $model->tracking_merge = $missing->tracking_code.','.$wasting->tracking_code;
             $model->product_id = $missing->product_id ? $missing->product_id : $wasting->product_id;
@@ -96,7 +96,7 @@ class TrackingCodeServiceController extends BaseApiController
         return $this->response(true,'Merge success!');
     }
     public function actionMapUnknown($id){
-        $model = DraftPackageItem::findOne($id);
+        $model = Package::findOne($id);
         if(!$model){
             return $this->response(false,'Cannot find your tracking!');
         }
@@ -111,8 +111,8 @@ class TrackingCodeServiceController extends BaseApiController
         return $this->response(true,'Map tracking success!');
     }
     public function actionSplitTracking($id){
-        /** @var DraftPackageItem $model */
-        $model = DraftPackageItem::find()->where(['id' => $id])->active()->one();
+        /** @var Package $model */
+        $model = Package::find()->where(['id' => $id])->active()->one();
         if(!$model){
             return $this->response(false,'Cannot find your tracking!');
         }
@@ -120,7 +120,7 @@ class TrackingCodeServiceController extends BaseApiController
             return $this->response(false,'Package '.$model->id.' was in a shipment!');
         }
 
-        $model->status = DraftPackageItem::STATUS_SPLITED;
+        $model->status = Package::STATUS_SPLITED;
         $model->save(0);
         $arr_tracking = explode(',',$model->tracking_merge);
         foreach ($arr_tracking as $k => $v){
@@ -161,8 +161,8 @@ class TrackingCodeServiceController extends BaseApiController
 
     public function actionSellerRefund($id)
     {
-        /** @var DraftPackageItem $model */
-        $model = DraftPackageItem::findOne($id);
+        /** @var Package $model */
+        $model = Package::findOne($id);
         if(!$model){
             return $this->response(false,'Cannot find your tracking!');
         }
@@ -182,7 +182,7 @@ class TrackingCodeServiceController extends BaseApiController
         return $this->response(true,'Update seller refund '.$this->post['type'].' success!');
     }
     public function actionMarkHold($id){
-        $model = DraftPackageItem::findOne($id);
+        $model = Package::findOne($id);
         $model->hold = $this->post['hold'];
         $model->save(0);
         /** @var DeliveryNote $pack */
@@ -201,7 +201,7 @@ class TrackingCodeServiceController extends BaseApiController
     }
     public function actionInsertShipment(){
         $isCreateAll = false;
-        $qr = DraftPackageItem::find()->with(['order', 'manifest']);
+        $qr = Package::find()->with(['order', 'manifest']);
         if(isset($this->post['listCheck']) && $this->post['listCheck']){
             $qr->where(['id' => $this->post['listCheck']]);
         }else{
@@ -212,7 +212,7 @@ class TrackingCodeServiceController extends BaseApiController
                 return $this->response(false, 'Cannot find package!');
             }
         }
-        /** @var DraftPackageItem[] $packages */
+        /** @var Package[] $packages */
         $packages = $qr->orderBy('id desc')->all();
         if(!$packages){
             return $this->response(false, 'Cannot find package!');
@@ -296,7 +296,7 @@ class TrackingCodeServiceController extends BaseApiController
             $packageNew->save(0);
             $packageNew->package_code = TextUtility::GeneratePackingCode($packageNew->id,'VN');
             $packageNew->save(0);
-            DraftPackageItem::updateAll([
+            Package::updateAll([
                 'shipment_id' => $shipment->id,
                 'package_code' => $packageNew->package_code,
                 'package_id' => $packageNew->id,

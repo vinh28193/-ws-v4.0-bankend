@@ -4,7 +4,7 @@
 namespace common\boxme;
 
 
-use common\models\draft\DraftPackageItem;
+use common\models\draft\Package;
 use common\models\DeliveryNote;
 use common\models\Shipment;
 use Yii;
@@ -65,7 +65,7 @@ class BoxmeCallBackAction extends Action
                        'current_status' => DeliveryNote::STATUS_DELIVERING_TO_CUSTOMER,
                    ],['shipment_id' => $shipment->id]);
 
-                   DraftPackageItem::updateAll([
+                   Package::updateAll([
                         'stock_out_local' => $this->today()
                    ],['shipment_id' => $shipment->id]);
                    break;
