@@ -30,10 +30,12 @@ class ListChat extends \yii\mongodb\ActiveRecord
     {
         return [
             '_id',
+            'code',
             'note',
             'content',
             'status',
             'time_start',
+            'update_time',
         ];
     }
 
@@ -43,7 +45,7 @@ class ListChat extends \yii\mongodb\ActiveRecord
     public function rules()
     {
         return [
-            [['note', 'content', 'status', 'time_start'], 'safe']
+            [['note', 'code', 'content', 'status', 'time_start', 'update_time'], 'safe']
         ];
     }
 
@@ -54,10 +56,12 @@ class ListChat extends \yii\mongodb\ActiveRecord
     {
         return [
             '_id' => 'ID',
+            'code' => 'Code',
             'note' => 'Note',
             'content' => 'Content',
             'status' => 'Status',
             'time_start' => 'Time Start',
+            'update_time' => 'Update time',
         ];
     }
 }

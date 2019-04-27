@@ -16,7 +16,6 @@ use yii\helpers\ArrayHelper;
 class WarehouseInspect
 {
 
-
     public static function update($row)
     {
         if (($packing_code = ArrayHelper::getValue($row, 'packing_code')) == null) {
@@ -121,9 +120,26 @@ class WarehouseInspect
             $attributes['tracking_code'] = $trackingCode;
             $attributes['manifest_code'] = $manifestCode;
             $attributes['manifest_id'] = $manifestId;
-            $wasting = new DraftWastingTracking($attributes);
-            $wasting->createOrUpdate(false);
-            $msg[] = "created new  wasting {$wasting->id}";
+            $wastingQuery = DraftWastingTracking::find()->where([
+                'AND',
+                [
+                    'OR',
+                    ['tracking_code' => $trackingCode],
+                    ['LIKE', 'tracking_merge', $trackingCode]
+                ],
+                ['manifest_id' => $manifestId],
+//                ['ws_tracking_code' => $wsTracking]
+
+            ]);
+            if (($wasting = $wastingQuery->one()) === null) {
+                $wasting = new DraftWastingTracking();
+            }
+            if (isset($attributes['ws_tracking_code'])) {
+                unset($attributes['ws_tracking_code']);
+            }
+            $wasting->setAttributes($attributes, false);
+            $wasting->save(false);
+            $msg[] = "created new wasting {$wasting->id}";
         } else {
             foreach ($finds as $find) {
                 /* @var $find DraftDataTracking */
@@ -136,7 +152,7 @@ class WarehouseInspect
                         ['ws_tracking_code' => $find->ws_tracking_code]
                     ]);
                     if (($draft = $draftQuery->one()) !== null) {
-                        $msg[]= "update for package {$draft->id}";
+                        $msg[] = "update for package {$draft->id}";
                         $draft->updateAttributes($attributes);
                         $log['attributes'][$draft->id] = $attributes;
                         continue;
@@ -156,13 +172,13 @@ class WarehouseInspect
                 $attributes['order_id'] = $find->order_id;
                 $draft = new DraftPackageItem($attributes);
                 $draft->createOrUpdate(false);
-                $msg[]= "create new package {$draft->id}";
+                $msg[] = "create new package {$draft->id}";
                 $log['attributes'][$draft->id] = $attributes;
                 DraftWastingTracking::updateAll([
                     'status' => DraftWastingTracking::MERGE_CALLBACK
                 ], [
                     'tracking_code' => $trackingCode,
-                    'ws_tracking_code' => $wsTracking,
+//                    'ws_tracking_code' => $wsTracking,
                     'manifest_id' => $manifestId,
                     'manifest_code' => $manifestCode,
                 ]);
@@ -173,6 +189,6 @@ class WarehouseInspect
                 $find->save(false);
             }
         }
-        return [true, implode(', ',$msg)];
+        return [true, implode(', ', $msg)];
     }
 }

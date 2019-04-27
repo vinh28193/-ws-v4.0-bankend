@@ -4,7 +4,11 @@
 namespace common\boxme;
 
 
+use common\models\draft\DraftPackageItem;
+use common\models\Package;
+use common\models\Shipment;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yii\base\Action;
 
@@ -19,6 +23,7 @@ class BoxmeCallBackAction extends Action
             $this->updateOrderTracking($post);
         }elseif (isset($post['packing_code']) && isset($post['packing_code'])){
             $response = $this->updateItem($post);
+            Yii::info($response);
         }
         $success = true;
         $message = 'update callback success, time:'.date('Y-m-d H:i:s');
@@ -39,6 +44,44 @@ class BoxmeCallBackAction extends Action
     }
 
     private function updateOrderTracking($post){
+        if(($statusCode = ArrayHelper::getValue($post,'StatusCode')) !== null && (($trackingCode = ArrayHelper::getValue($post,'TrackingCode')) !== null && ($shipment = $this->findShipment($trackingCode)) !== null)){
+           switch ($statusCode){
+               case 200:  // 200: đơn đã duyêt
+                   $shipment->shipment_status = Shipment::STATUS_APPROVED;
+                   $shipment->save(false);
+                   // update package
+//                    foreach ($shipment->packages as $package){
+//
+//                    }
+                    Package::updateAll([
+                        'current_status' => Package::STATUS_REQUEST_SHIP_OUT
+                    ],['shipment_id' => $shipment->id]);
+                    break;
+               case 300:  // 3000: Hãng vận chuyển đã lấy hàng
+                   $shipment->shipment_status = Shipment::STATUS_PICKING;
+                   $shipment->save(false);
 
+                   Package::updateAll([
+                       'current_status' => Package::STATUS_DELIVERING_TO_CUSTOMER,
+                   ],['shipment_id' => $shipment->id]);
+
+                   DraftPackageItem::updateAll([
+                        'stock_out_local' => $this->today()
+                   ],['shipment_id' => $shipment->id]);
+                   break;
+           }
+        }
+    }
+
+    /**
+     * @param $bmCode
+     * @return Shipment|null
+     */
+    protected function findShipment($bmCode){
+        return Shipment::findOne(['shipment_code' =>$bmCode]);
+    }
+
+    public function today(){
+        return Yii::$app->getFormatter()->asTimestamp('now');
     }
 }

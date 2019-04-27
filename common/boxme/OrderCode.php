@@ -5,6 +5,7 @@ namespace common\boxme;
 
 
 use common\models\Package;
+use common\models\Shipment;
 use yii\helpers\ArrayHelper;
 
 class OrderCode
@@ -45,9 +46,12 @@ class OrderCode
         703 => 'Cancelled by system',
         704 => 'Pending for audit (Operator need check and verify next status of order)',
         800 => 'Delivered (Delivery successfull (Final status).)',
-        810 => 'Destroy parcel	(Destroy parcel and dont need return to pickup address (Final status))',
+        810 => 'Destroy parcel (Destroy parcel and dont need return to pickup address (Final status))',
     ];
 
+    /**
+     * @var array mapping package status
+     */
     public static $mappingPackageStatus = [
         Package::STATUS_AT_THE_VN_WAREHOUSE => [
             700, 701, 702, 703,
@@ -63,6 +67,21 @@ class OrderCode
     ];
 
     /**
+     * mapping shipment status
+     * @var array
+     */
+    public static $mappingShipmentStatus = [
+        Shipment::STATUS_APPROVED => [200],
+        Shipment::STATUS_PICKING => [300],
+        Shipment::STATUS_DELIVERING => [304],
+        Shipment::STATUS_DELIVERED => [800],
+        Shipment::STATUS_RETURNING => [400, 410, 420, 430, 500, 510, 511, 520],
+        Shipment::STATUS_RETURNED => [600],
+        Shipment::STATUS_CANCELED => [700,701,702,703,705],
+        Shipment::STATUS_DESTROY => [810]
+    ];
+
+    /**
      * @param $code integer
      * @return string
      */
@@ -72,16 +91,34 @@ class OrderCode
     }
 
     /**
+     * @param $code
+     * @param $mappings
+     * @return bool|int|string
+     */
+    private static function getStatusByCode($code, $mappings)
+    {
+        foreach ($mappings as $status => $lists) {
+            if (ArrayHelper::isIn($code, $lists)) {
+                return $status;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param $code integer
      * @return bool|string
      */
     public static function getPackageStatus($code)
     {
-        foreach (self::$mappingPackageStatus as $status => $listCodes) {
-            if (ArrayHelper::isIn($code, $listCodes)) {
-                return $status;
-            }
-        }
-        return false;
+        return self::getStatusByCode($code, self::$mappingPackageStatus);
+    }
+
+    /**
+     * @param $code
+     * @return bool|int|string
+     */
+    public static function getShipmentStatus($code){
+        return self::getStatusByCode($code, self::$mappingShipmentStatus);
     }
 }
