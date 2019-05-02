@@ -27,6 +27,6 @@ class Pagination extends \yii\data\Pagination
             $request = Yii::$app->getRequest();
             $params = $request instanceof Request ? ($request->getIsGet() ? $request->getQueryParams() : $request->getBodyParams()) : [];
         }
-        return isset($params[$name]) && is_scalar($params[$name]) ? (($param = $params[$name]) === 'all' ? -1 : $param) : $defaultValue; $param === 'all' ? -1 : $param;
+        return isset($params[$name]) && is_scalar($params[$name]) ? (($param = $params[$name]) === 'all' ? -1 : $param) : $defaultValue;
     }
 }
