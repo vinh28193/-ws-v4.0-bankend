@@ -153,8 +153,8 @@ return [
                 [
                     'class' => 'common\wsTelegramChatPush\TelegramTarget',
                     'levels' => ['error'],
-                    'botToken' => '764381102:AAE9qR9ZxLS4qOpFlauOM1rItFSxhrjic3A', // bot token secret key
-                    'chatId' => '855666866', // chat id or channel username with @ like 12345 or @channel
+                    'botToken' => '808279157:AAEbCkWEhLjvybgm9uH3ce0JsvA0j5DPtl4', // bot token secret key
+                    'chatId' => '-1001468209025', // chat id or channel username with @ like 12345 or @channel
                 ],
             ],
         ],
