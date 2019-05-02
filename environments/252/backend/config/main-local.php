@@ -40,14 +40,8 @@ if (!YII_ENV_TEST) {
                 'queryNs' => 'common\models\queries',
                 'queryBaseClass' => 'common\components\db\ActiveQuery'
             ],
-            'cms_model' => [
-                'class' => 'yii\gii\generators\model\Generator',
-                'db' => 'db_cms',
-                'ns' => 'common\models\db_cms',
-                'baseClass' => 'common\components\db\ActiveRecord',
-                'generateQuery' => false,
-                'queryNs' => 'common\models\queries\cms',
-                'queryBaseClass' => 'common\components\db\ActiveQuery'
+            'model_cms' => [
+                'class' => 'common\gii\generators\cms\Generator',
             ],
             'mongoDbModel' => [
                 'class' => 'yii\mongodb\gii\model\Generator'
