@@ -42,26 +42,26 @@ class CalculateForm extends BaseForm
 
     public function rules()
     {
-       return [
+        return [
             [
-                 [
-                     'warehouseId', 'toAddress', 'toDistrict', 'toProvince', 'toCountry',
-                     'toName', 'toPhone',
-                     'totalParcel', 'totalWeight', 'totalQuantity',
-                     'totalCod', 'totalAmount'
-                 ],'required'
+                [
+                    'warehouseId', 'toAddress', 'toDistrict', 'toProvince', 'toCountry',
+                    'toName', 'toPhone',
+                    'totalParcel', 'totalWeight', 'totalQuantity',
+                    'totalCod', 'totalAmount'
+                ], 'required'
             ],
-           [
-               [
-                   'warehouseId','toDistrict', 'toProvince', 'toCountry','totalQuantity'
-               ] , 'integer'
-           ],
-           [
-               [
-                   'toName','toPhone', 'sortMode'
-               ] , 'string'
-           ]
-       ];
+            [
+                [
+                    'warehouseId', 'toDistrict', 'toProvince', 'toCountry', 'totalQuantity'
+                ], 'integer'
+            ],
+            [
+                [
+                    'toName', 'toPhone', 'sortMode'
+                ], 'string'
+            ]
+        ];
     }
 
     public function calculate()
@@ -123,5 +123,25 @@ class CalculateForm extends BaseForm
             return null;
         }
         return Warehouse::findOne($this->warehouseId);
+    }
+
+    public function gojekId()
+    {
+        return [
+            'total_fee' => 0,
+            'cod_value' => 0,
+            'tax' => 0,
+            'duty' => 0,
+            'discount' => 0,
+            'shipping_fee' => 0,
+            'courier_name' => 'Gojek _(BM_DBS)',
+            'service_id' => 0,
+            'service_code' => 'BM_DBS',
+            'service_name' => 'Gojek .Nhận hàng tại kho BoxMe',
+            'courier_logo' => 'https://bilba.go-jek.com/dist/img/gojek-logo.png',
+            'min_delivery_time' => 0,
+            'max_delivery_time' => 10,
+            'currency' => 'IDR',
+        ];
     }
 }
