@@ -12,9 +12,106 @@ use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use yii\helpers\StringHelper;
 use yii\helpers\ArrayHelper;
+use yii\httpclient\Client;
 
 class WarehouseInspect
 {
+
+    public static $errors = [];
+
+    public static function inspect($packingCode, $keyWord = null, $page = 1)
+    {
+        $info = [];
+        $result = self::handleResponse($packingCode, $keyWord, $page);
+        $info[] = $result;
+        if ($result['totalPage'] >= 2) {
+            for ($index = 2; $index <= $result['totalPage']; $index++) {
+                $info[] = self::handleResponse($packingCode, $keyWord, $index);
+            }
+        }
+        return $info;
+    }
+
+    private static function handleResponse($packingCode, $keyWord, $page)
+    {
+
+        $response = self::createHttpRequest($packingCode, $keyWord, $page);
+        list($success, $data) = $response;
+        if ($success === false) {
+            return [
+                'page' => $page,
+                'totalPage' => 0,
+                'totalItem' => 0,
+                'totalInspect' => 0,
+                'traceMessage' => $data
+            ];
+        }
+
+        list($totalItem, $totalPage, $rows) = $data;
+        list($completed, $message) = self::updates($rows);
+        return [
+            'page' => $page,
+            'totalPage' => $totalPage,
+            'totalItem' => $totalItem,
+            'totalInspect' => $completed,
+            'traceMessage' => $message
+        ];
+    }
+
+    public static function createHttpRequest($packingCode, $keyWord, $page)
+    {
+        $token = 'Q9v5AX0JsM5nLWUs3zDt8YQN3z9a55qP';
+        $url = "https://wms.boxme.asia/v1/packing/detail/$packingCode/?page=$page";
+        if ($keyWord !== null) {
+            $url .= "&q=$keyWord";
+        }
+        $client = new Client();
+        $request = $client->createRequest();
+        $request->addHeaders([
+            'Authorization' => $token,
+            'Content-type' => 'application/json'
+        ]);
+        $request->setFullUrl($url);
+        $response = $client->send($request);
+        if (!$response->isOk) {
+            return [false, "can not connect to $url"];
+        }
+        $response = $response->getData();
+        if (isset($response['success']) && $response['success'] === false) {
+            return [false, "http not success "];
+        }
+        if (($totalItem = ArrayHelper::getValue($response, 'total_item', 0)) === 0) {
+            return [false, "total_item = 0 "];
+        }
+        $totalPage = ArrayHelper::getValue($response, 'total_page', 0);
+        $result = ArrayHelper::getValue($response, 'results', []);
+        if ($page !== 1) {
+            $totalItem = count($result);
+            $totalPage = $page;
+        }
+        return [true, [$totalItem, $totalPage, $result]];
+    }
+
+    private static function updates($rows)
+    {
+        if (!is_array($rows)) {
+            $rows = [$rows];
+        }
+        $totalUpdate = 0;
+        $messages = [];
+        foreach ($rows as $row) {
+            // Validate Data
+            if (!isset($row['tracking_code']) || !isset($row['soi_tracking'])) {
+                continue;
+            }
+            list($success, $message) = self::update($row);
+            $messages[] = $message;
+            if ($success) {
+                $totalUpdate++;
+            }
+        }
+        return [$totalUpdate, $messages];
+    }
 
     public static function update($row)
     {
