@@ -16,13 +16,13 @@ use common\models\queries\OrderQuery;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\i18n\Formatter;
 use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\db\Expression;
 
 /**
  * @property  Product[] $products
+ * @property  Package[] $packages
  */
 class Order extends DbOrder implements RuleOwnerAccessInterface
 {
@@ -37,7 +37,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_PAY_BACK = 'updatePayBack';
     const SCENARIO_UPDATE_SELLER_REFUND = 'updateSellerRefund';
     const SCENARIO_UPDATE_PROMOTION = 'updatePromotionId';
-    const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupporting';
+    const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupported';
+    const SCENARIO_UPDATE_ORDER_STATUS = 'updateOrderStatus';
+    const SCENARIO_UPDATE_ORDER_TIME = 'updateTimeNull';
 
     /**
      * order type
@@ -168,6 +170,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_UPDATE_MARK_SUPPORTING => [
                 'current_status', 'mark_supporting'
+            ],
+            self::SCENARIO_UPDATE_ORDER_STATUS => [
+                'current_status', 'new', 'supporting', 'supported', 'ready_purchase', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost'
+            ],
+            self::SCENARIO_UPDATE_ORDER_TIME => [
+                'current_status', 'new', 'supporting', 'supported', 'ready_purchase', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost'
             ],
         ]);
     }
@@ -419,9 +427,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPackageItems()
+    public function getPackages()
     {
-        return $this->hasMany(PackageItem::className(), ['order_id' => 'id']);
+        return $this->hasMany(Package::className(), ['order_id' => 'id']);
     }
 
     /**

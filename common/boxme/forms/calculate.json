@@ -1,0 +1,38 @@
+{
+  "ship_from": {
+    "pickup_id": 28976,
+    "country": "VN"
+  },
+  "ship_to": {
+    "contact_name": "vinh",
+    "company_name": " ",
+    "address": "18 tam trinh",
+    "address2": " ",
+    "phone": "098765432",
+    "phone2": " ",
+    "country": "1",
+    "province": 79,
+    "district": 770,
+    "zipcode": "",
+    "area": null
+  },
+  "shipments": {
+    "content": "",
+    "total_parcel": 1,
+    "total_amount": "10000000",
+    "chargeable_weight": "4000"
+  },
+  "config": {
+    "order_type": "normal",
+    "insurance": "N",
+    "document": "N",
+    "sort_mode": "best_price",
+    "currency": "VND"
+  },
+  "payment": {
+    "cod_amount": 0
+  },
+  "referral": {
+    "order_number": ""
+  }
+}

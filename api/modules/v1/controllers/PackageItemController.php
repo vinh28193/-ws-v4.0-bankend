@@ -64,11 +64,11 @@ class PackageItemController extends BaseApiController
         return $this->response(true, 'get data success', $dataProvider);
     }
 
-    public function actionView($id)
-    {
-        $query = PackageItem::find()->where(['order_id' => $id])->asArray()->all();
-        return $this->response(true, 'get data success', $query);
-    }
+//    public function actionView($id)
+//    {
+//        $query = PackageItem::find()->where(['order_id' => $id])->with('shipment')->asArray()->all();
+//        return $this->response(true, 'get data success', $query);
+//    }
 
     public function actionCreate()
     {
@@ -85,7 +85,7 @@ class PackageItemController extends BaseApiController
         $model->change_weight = $post['change_weight'];
         $model->box_me_warehouse_tag = $post['box_me_warehouse_tag'];
         $dirtyAttributes = $model->getDirtyAttributes();
-        $messages = "order {$post['ordercode']} Create Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        $messages = "order {$post['ordercode']} Create DeliveryNote Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if (!$model->save()) {
             Yii::$app->wsLog->push('order', 'createPackageItem', null, [
                 'id' => $model->order->ordercode,
@@ -115,7 +115,7 @@ class PackageItemController extends BaseApiController
             $model->dimension_h = $post['dimension_h'];
             $model->dimension_w = $post['dimension_w'];
             $dirtyAttributes = $model->getDirtyAttributes();
-            $messages = "order {$model->order->ordercode} Create Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+            $messages = "order {$model->order->ordercode} Create DeliveryNote Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
             if (!$model->save()) {
                 Yii::$app->wsLog->push('order', 'updatePackageItem', null, [
                     'id' => $model->order->ordercode,
@@ -145,7 +145,7 @@ class PackageItemController extends BaseApiController
             return $this->response(false, 'delete package item' . $id . 'error');
         }
         $dirtyAttributes = $model->getDirtyAttributes();
-        $messages = "order {$model->order->ordercode} Delete Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        $messages = "order {$model->order->ordercode} Delete DeliveryNote Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
         ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
         Yii::$app->wsLog->push('order', 'deletePackageItem', null, [
             'id' => $model->order->ordercode,

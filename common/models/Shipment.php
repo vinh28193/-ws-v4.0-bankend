@@ -8,21 +8,41 @@
 
 namespace common\models;
 
+use common\models\Package;
 use Yii;
 use common\models\queries\ShipmentQuery;
 use common\models\db\Shipment as DbShipment;
 /**
  * Class Shipment
  * @package common\models
- * @property PackageItem[] $packageItems
+ * @property Package[] $packages
+ * @property Package[] $packageItems
  * @property Customer $customer
+ * @property Address $receiverAddress
+ * @property SystemCountry $receiverCountry
+ * @property SystemDistrict $receiverDistrict
+ * @property SystemStateProvince $receiverProvince
+ * @property Warehouse $warehouseSend
  */
 
 class Shipment extends DbShipment
 {
-    const STATUS_REMOVE_SHIPMENT = "REMOVED";
-    const STATUS_NEW = "NEW";
-    const STATUS_LOCAL_INSPECT_DONE = "LOCAL_INSPECT_DONE";
+    // operation status
+    const STATUS_NEW = 'NEW';
+    const STATUS_WAITING = 'WAITING';
+    const STATUS_CREATED = 'CREATED';
+    const STATUS_FAILED = 'FAILED';
+    // callback status
+    const STATUS_APPROVED = 'APPROVED'; // 200: đơn đã duyêt
+    const STATUS_PICKING = 'PICKING'; //300: Hãng vận chuyển đã lấy hàng
+    const STATUS_SHIPPED = 'SHIPPED';
+    const STATUS_DELIVERING = 'DELIVERING'; // 304: đơn hàng đang vận chuyển
+    const STATUS_DELIVERED = 'DELIVERED'; //800
+    const STATUS_RETURNING = 'RETURNING'; // 400,410,420,430,500,510,511,520
+    const STATUS_RETURNED = 'RETURNED'; // 600
+    const STATUS_CANCELED = 'CANCELED'; //700,701,702,703,705
+    // common status
+    const STATUS_DESTROY = 'DESTROY'; // callback 810 or operation destroy
 
     /**
      * @inheritdoc
@@ -49,9 +69,17 @@ class Shipment extends DbShipment
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPackageItems()
+    public function getPackages()
     {
-        return $this->hasMany(PackageItem::className(), ['shipment_id' => 'id']);
+        return $this->hasMany(Package::className(), ['shipment_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDeliveryNotes()
+    {
+        return $this->hasMany(DeliveryNote::className(), ['shipment_id' => 'id']);
     }
 
     /**
@@ -60,5 +88,68 @@ class Shipment extends DbShipment
     public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverAddress()
+    {
+        return $this->hasOne(Address::className(), ['id' => 'receiver_address_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverCountry()
+    {
+        return $this->hasOne(SystemCountry::className(), ['id' => 'receiver_country_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverDistrict()
+    {
+        return $this->hasOne(SystemDistrict::className(), ['id' => 'receiver_district_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceiverProvince()
+    {
+        return $this->hasOne(SystemStateProvince::className(), ['id' => 'receiver_province_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWarehouseSend()
+    {
+        return $this->hasOne(Warehouse::className(), ['id' => 'warehouse_send_id']);
+    }
+
+
+    /**
+     *
+     */
+    public function reCalculateTotal(){
+        $totalQuantity = 0;
+        $totalWeight = 0;
+        $totalCod = 0;
+        $totalPrice = 0;
+        foreach ($this->packages as $packageItem){
+            $totalQuantity += $packageItem->quantity;
+            $totalWeight += $packageItem->weight;
+            $totalCod += $packageItem->cod;
+            $totalPrice += $packageItem->price;
+        }
+        $this->updateAttributes([
+            'total_quantity' => $totalQuantity,
+            'total_weight' => $totalWeight,
+            'total_cod' => $totalCod,
+            'total_price' => $totalPrice
+        ]);
     }
 }

@@ -6,12 +6,12 @@
  * Time: 11:10
  */
 
-namespace common\models\draft;
+namespace common\models;
 
 use common\data\ActiveDataProvider;
 use yii\base\Model;
 
-class DraftPackageItemSearch extends DraftPackageItem
+class PackageSearch extends Package
 {
 
     /**
@@ -52,7 +52,7 @@ class DraftPackageItemSearch extends DraftPackageItem
      */
     public function search($params)
     {
-        $query = DraftPackageItem::find();
+        $query = Package::find();
         $query->with([
             'order' => function (\common\models\queries\OrderQuery $orderQuery) {
                 $orderQuery->defaultSelect();

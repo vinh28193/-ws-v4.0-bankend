@@ -41,9 +41,17 @@ class CategoryCustomerPolicyController extends BaseApiController
     }
 
     public function actionView($id) {
-        $model = CategoryCustomPolicy::find()
-        ->where(['store_id' => $id])
-        ->asArray()->all();
+        if ($id) {
+            $model = CategoryCustomPolicy::find()
+                ->where(['store_id' => $id])
+                ->asArray()->all();
+            return $this->response(true, 'get data success', $model);
+        }
+        return $this->response(false, 'error');
+    }
+
+    public function actionIndex() {
+        $model = CategoryCustomPolicy::find()->asArray()->all();
         return $this->response(true, 'get data success', $model);
     }
 }

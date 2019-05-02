@@ -1,8 +1,8 @@
 <?php
 namespace common\components\boxme;
 use common\models\boxme\ConfigForm;
-use common\models\boxme\ShipInfoForm;
-use common\models\boxme\ShipmentInfoForm;
+use common\models\boxme\ShipToForm;
+use common\models\boxme\ShipmentForm;
 use Yii;
 
 /**
@@ -15,9 +15,9 @@ use Yii;
 class BoxMeClient
 {
     /**
-     * @param ShipInfoForm $ship_from
-     * @param ShipInfoForm $ship_to
-     * @param ShipmentInfoForm $shipment
+     * @param ShipToForm $ship_from
+     * @param ShipToForm $ship_to
+     * @param ShipmentForm $shipment
      * @param ConfigForm $config
      * @return array|mixed|\yii\httpclient\Response|null
      * @throws \yii\base\InvalidConfigException

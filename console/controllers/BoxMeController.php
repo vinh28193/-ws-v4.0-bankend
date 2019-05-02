@@ -7,16 +7,18 @@ namespace console\controllers;
 use common\components\boxme\BoxMeClient;
 use common\components\lib\TextUtility;
 use common\components\TrackingCode;
-use common\models\db\DraftExtensionTrackingMap;
+use common\helpers\WeshopHelper;
+use \common\models\draft\DraftExtensionTrackingMap;
 use common\models\db\PurchaseOrder;
 use common\models\db\PurchaseProduct;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\draft\DraftDataTracking;
+use common\models\Manifest;
 use common\models\Order;
-use common\models\Package;
+use common\models\DeliveryNote;
 use common\models\PackageItem;
 use common\models\Product;
 use common\models\ProductFee;
@@ -104,10 +106,17 @@ class BoxMeController extends Controller
     public function actionMergeExtensionUsSending()
     {
         $this->stdout("Bắt đầu merge ...." . PHP_EOL);
+        /** @var Manifest $manifest */
+        $manifest = Manifest::find()->where(['status' => Manifest::STATUS_NEW])->one();
+        if(!$manifest){
+            echo "Stop. Đã hết lô.";
+            die;
+        }
+        $manifest->status = Manifest::STATUS_MERGING;
+        $manifest->save(0);
         /** @var \common\models\TrackingCode[] $trackingCode */
-        $trackingCode = \common\models\TrackingCode::find()->where(['status_merge' => null])
-            ->orWhere(['status_merge' => \common\models\TrackingCode::STATUS_MERGE_NEW])
-            ->limit(500)->all();
+        $trackingCode = \common\models\TrackingCode::find()->where(['or',['status_merge' => null], ['status_merge' => \common\models\TrackingCode::STATUS_MERGE_NEW]])
+            ->andWhere(['manifest_id' => $manifest->id])->all();
         $this->stdout("Có tổng cộng: " . count($trackingCode) . " tracking sẽ được chạy." . PHP_EOL);
         foreach ($trackingCode as $tracking) {
             if (!$tracking->tracking_code) {
@@ -115,19 +124,46 @@ class BoxMeController extends Controller
                 continue;
             }
             $this->stdout($tracking->tracking_code . PHP_EOL);
-            /** @var DraftDataTracking[] $draft_data */
-            $draft_data = DraftDataTracking::find()->where([
-                'tracking_code' => $tracking->tracking_code,
-            ])->all();
-            if ($draft_data) {
-                foreach ($draft_data as $datum) {
-                    $datum->manifest_id = $tracking->manifest_id;
-                    $datum->manifest_code = $tracking->manifest_code;
-                    $datum->updated_at = time();
-                    $datum->status = in_array($datum->status, [DraftDataTracking::STATUS_CHECK_DETAIL, DraftDataTracking::STATUS_CHECK_DONE]) ? $datum->status : ($datum->status == DraftDataTracking::STATUS_EXTENSION ? DraftDataTracking::STATUS_CHECK_DONE : DraftDataTracking::STATUS_MAKE_US_SENDING);
-                    $datum->save(false);
+            /** @var DraftExtensionTrackingMap[] $exts */
+            $exts = DraftExtensionTrackingMap::find()
+                ->where('tracking_code like \'%'.$tracking->tracking_code.'\'')
+                ->andWhere(['status' => DraftExtensionTrackingMap::STATUST_NEW])
+                ->all();
+            if($exts){
+                foreach ($exts as $ext){
+                    /** @var DraftDataTracking $draft_data */
+                    $draft_data = DraftDataTracking::find()->where([
+                        'tracking_code' => $tracking->tracking_code,
+                        'manifest_id' => $tracking->manifest_id,
+                        'manifest_code' => $tracking->manifest_code,
+                        'order_id' => $ext->order_id,
+                        'product_id' => $ext->product_id,
+                        'purchase_invoice_number' => $ext->purchase_invoice_number,
+                    ])->one();
+                    if (!$draft_data) {
+                        $draft_data = new DraftDataTracking();
+                        $data = $ext->getAttributes();
+                        unset($data['id']);
+                        $draft_data->setAttributes($data,false);
+                        $draft_data->tracking_code = strtolower($tracking->tracking_code);
+                        $draft_data->manifest_id = $tracking->manifest_id;
+                        $draft_data->manifest_code = $tracking->manifest_code;
+                        $draft_data->item_name = $ext->product ? $ext->product->product_name : '';
+                        $draft_data->image = $ext->product ? $ext->product->link_img : '';
+                        $draft_data->created_at = time();
+                        $draft_data->updated_at = time();
+                        $draft_data->status = DraftDataTracking::STATUS_CHECK_DONE;
+                        $draft_data->tracking_merge = strtolower($tracking->tracking_code);
+                        $draft_data->tracking_merge .= strtolower($tracking->tracking_code) == strtolower($ext->tracking_code) ? '' : ','.strtolower($ext->tracking_code);
+                        $draft_data->save(0);
+                        $draft_data->ws_tracking_code = WeshopHelper::generateTag($draft_data->id,'WSVNTK');
+                        $draft_data->save(0);
+                    }
+                    $ext->draft_data_tracking_id = $draft_data->id;
+                    $ext->status = DraftExtensionTrackingMap::JOB_CHECKED;
+                    $ext->save(0);
                 }
-            } else {
+            }else{
                 $draft_data_one = new DraftDataTracking();
                 $draft_data_one->tracking_code = $tracking->tracking_code;
                 $draft_data_one->manifest_id = $tracking->manifest_id;
@@ -135,11 +171,19 @@ class BoxMeController extends Controller
                 $draft_data_one->created_at = time();
                 $draft_data_one->updated_at = time();
                 $draft_data_one->status = DraftDataTracking::STATUS_MAKE_US_SENDING;
+                $draft_data_one->tracking_merge = strtolower($tracking->tracking_code);
+                $draft_data_one->save(0);
+                $draft_data_one->ws_tracking_code = WeshopHelper::generateTag($draft_data_one->id,'WSVNTK');
                 $draft_data_one->save(0);
             }
             $tracking->status_merge = \common\models\TrackingCode::STATUS_MERGE_DONE;
             $tracking->save(0);
         }
+        $manifest->status = Manifest::STATUS_EMPTY;
+        if(count($trackingCode)){
+            $manifest->status = Manifest::STATUS_MERGE_DONE;
+        }
+        $manifest->save(0);
         $this->stdout("Merge kết thúc ...." . PHP_EOL);
     }
 
@@ -151,6 +195,7 @@ class BoxMeController extends Controller
         $track = \common\models\TrackingCode::find()
             ->where(['manifest_code' => $manifest_code])->limit(500)->all();
         $cn = round(count($track));
+        echo ($track[0]->manifest_code . "-" . $track[0]->manifest_id).PHP_EOL;
         echo "Sẽ có :" . $cn . " tracking được giả lập extension" . PHP_EOL;
         echo "[";
         $purchase_id = 2000;
@@ -186,7 +231,7 @@ class BoxMeController extends Controller
                                 $ext->created_by = 1;
                                 $ext->updated_by = 1;
                             }
-                            $ext->status = "US_RECEIVED";
+                            $ext->status = DraftExtensionTrackingMap::STATUST_NEW;
                             $ext->quantity = $quantity;
                             $ext->number_run = $ext->number_run ? $ext->number_run + 1 : 1;
                             if (!$ext->save()) {
@@ -237,8 +282,8 @@ class BoxMeController extends Controller
     public function actionEmulatorCallback($manifest_code)
     {
         echo "Bắt đầu quá trình giả lập :" . PHP_EOL;
-        /** @var DraftBoxmeTracking[] $track */
-        $track = DraftBoxmeTracking::find()
+        /** @var DraftDataTracking[] $track */
+        $track = DraftDataTracking::find()
             ->where(['manifest_code' => $manifest_code])->limit(500)->all();
         echo "Sẽ có :" . count($track) . " tracking được giả lập callback" . PHP_EOL;
         echo "[";
@@ -308,13 +353,13 @@ class BoxMeController extends Controller
         if($product){
             return Order::findOne($product->order_id);
         }
-        $url = ArrayHelper::getValue(\Yii::$app->params,'url_api','http://weshop-v4.back-end.local.vn')."/v1/data";
-        $data['sku'] = "312226695751";
-        $data['seller'] = "yibe_98";
+        $url = ArrayHelper::getValue(\Yii::$app->params,'url_api','http://weshop-v4.back-end.local.vn')."/v1/cart";
+        $data['sku'] = "302899518304";
+        $data['seller'] = "sasy420";
         $data['quantity'] = "1";
         $data['source'] = "ebay";
-        $data['image'] = 'https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/iEcAAOSwLMFciIYI/$_12.JPG?set_id=880000500F';
-        $data['parentSku'] = "312226695751";
+        $data['image'] = 'https://i.ebayimg.com/00/s/MTI0OFgxNDI1/z/DaQAAOSwn1Fbq-H2/$_12.JPG';
+        $data['parentSku'] = "302899518304";
         $client = new \yii\httpclient\Client();
         $request = $client->createRequest();
         $request->setFullUrl($url);
@@ -327,13 +372,32 @@ class BoxMeController extends Controller
         $response = $client->send($request);
         if ($response->isOk) {
             $dta = json_decode($response->getContent(), true);
-            if ($dta['status']) {
-                $order_id = $dta['data']['order']['id'];
-                $order = Order::findOne($order_id);
-                if($order){
-                    Product::updateAll(['id' => $product_id],['order_id' => $order->id]);
-                    ProductFee::updateAll(['product_id' => $product_id],['order_id' => $order->id]);
-                    return $order;
+            if ($dta['success']) {
+                $url = ArrayHelper::getValue(\Yii::$app->params,'url_api','http://weshop-v4.back-end.local.vn')."/v1/check-out";
+                $data_2['cartIds'] = $dta['data']['key'];
+                $data_2['paymentProvider'] = 1;
+                $data_2['paymentMethod'] = 1;
+                $data_2['bankCode'] = null;
+                $data_2['couponCode'] = null;
+                $client = new \yii\httpclient\Client();
+                $request = $client->createRequest();
+                $request->setFullUrl($url);
+                $request->addHeaders([
+                    'X-Access-Token' => $token
+                ]);
+                $request->setFormat('json');
+                $request->setMethod('POST');
+                $request->setData($data_2);
+                $response = $client->send($request);
+                if($response->isOk){
+                    $dta_2 = json_decode($response->getContent(), true);
+                    $order_id = array_pop($dta_2['data'])['order']['id'];
+                    $order = Order::findOne($order_id);
+                    if($order){
+                        Product::updateAll(['id' => $product_id],['order_id' => $order->id]);
+                        ProductFee::updateAll(['product_id' => $product_id],['order_id' => $order->id]);
+                        return $order;
+                    }
                 }
             }
         }
@@ -341,13 +405,13 @@ class BoxMeController extends Controller
     }
 
     public function actionParserPackage(){
-        /** @var DraftPackageItem[] $draft_package */
-        $draft_package = DraftPackageItem::find()
+        /** @var Package[] $draft_package */
+        $draft_package = Package::find()
             ->with(['manifest'])
-            ->where(['<>' ,'status' , DraftPackageItem::STATUS_PARSER])
+            ->where(['<>' ,'status' , Package::STATUS_PARSER])
             ->limit(500)->all();
         foreach ($draft_package as $packageItem){
-            $package = Package::find()
+            $package = DeliveryNote::find()
                 ->where(['manifest_code' => $packageItem->manifest_code])
                 ->andWhere([
                     'or',
@@ -356,7 +420,7 @@ class BoxMeController extends Controller
                     ['like','tracking_reference_2',$packageItem->tracking_code]
                 ])->orderBy('id desc')->one();
             if(!$package){
-                $package = new Package();
+                $package = new DeliveryNote();
                 $package->tracking_seller = $packageItem->tracking_code;
                 $package->manifest_code = $packageItem->manifest_code;
                 $package->package_weight = 0;
@@ -409,6 +473,90 @@ class BoxMeController extends Controller
                     ['receive_warehouse_id' => $wh->id,'receive_warehouse_name' => $wh->name],
                     ['purchase_order_id' => $item->id]
                 );
+            }
+        }
+    }
+    public function actionGetTypeTracking(){
+        $this->stdout('Bắt đầu lấy kiểu tracking ...'.PHP_EOL);
+        $manifest = Manifest::find()->where(['status' => Manifest::STATUS_MERGE_DONE])->limit(1)->one();
+        if(!$manifest){
+            $this->stdout('Không có lô nào'.PHP_EOL);
+            die;
+        }
+        $manifest->status = Manifest::STATUS_TYPE_GETTING;
+        $manifest->save(0);
+        $tracking = DraftDataTracking::find()
+            ->where(['manifest_id' => $manifest->id])
+            ->select('count(id) as `countId`, tracking_code')
+            ->groupBy('tracking_code')->asArray()->all();
+        if(!$tracking){
+            $this->stdout('Không có Tracking nào'.PHP_EOL);
+            die;
+        }
+        DraftDataTracking::updateAll(
+            ['type_tracking' => DraftDataTracking::TYPE_NORMAL],
+            ['manifest_id' => $manifest->id]
+        );
+        foreach ($tracking as $dataTracking){
+            if($dataTracking['countId'] > 1){
+                DraftDataTracking::updateAll(
+                    ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
+                    [
+                        'manifest_id' => $manifest->id,
+                        'tracking_code' => $dataTracking['tracking_code']
+                    ]
+                );
+            }
+        }
+        DraftDataTracking::updateAll(
+            ['type_tracking' => DraftDataTracking::TYPE_UNKNOWN],
+            [   'and',
+                ['manifest_id' => $manifest->id],
+                ['or',['product_id' => null],['product_id' => '']],
+                ['or',['order_id' => null],['order_id' => '']],
+            ]
+        );
+        $manifest->status = Manifest::STATUS_TYPE_GET_DONE;
+        $manifest->save(0);
+        $this->stdout('Đã lấy xong'.PHP_EOL);
+    }
+    public function actionEmulatorCallbackDetail($manifest_id){
+        $manifest = Manifest::findOne($manifest_id);
+        if(!$manifest){
+            $this->stdout('Không tìm thấy lô có id là '.$manifest_id);
+            die;
+        }
+        $this->stdout('Bắt đầu chạy ... '.PHP_EOL);
+        $code = $manifest->manifest_code.'-'.$manifest_id;
+        $pageTotal = 2;
+        for ($page = 1; $page <= $pageTotal; $page++) {
+            $data = BoxMeClient::GetDetail($code, $page, 'vn');
+            $url = 'https://wms.boxme.asia/v1/packing/detail/' . $code . '/?page=' . $page;
+            if ($data['success']) {
+                if ($page == 1) $pageTotal = $data['total_page'];
+                echo "Tổng tracking " . $data['total_item'] . "." . PHP_EOL;
+                echo "Tổng trang " . $data['total_page'] . "." . PHP_EOL;
+                echo "trang " . $page . "." . PHP_EOL;
+                foreach ($data['results'] as $result) {
+                    $url = ArrayHelper::getValue(\Yii::$app->params,'url_api','http://weshop-v4.back-end.local.vn').'/test/callback-boxme';
+                    $client = new \yii\httpclient\Client();
+                    $request = $client->createRequest();
+                    $request->setFullUrl($url);
+                    $request->setFormat('json');
+                    $request->setMethod('POST');
+                    $request->setData($result);
+                    $response = $client->send($request);
+                    if (!$response->isOk) {
+                        $res = $response->getData();
+                        echo $res['messages'].PHP_EOL;
+//                return $res['messages'];
+                    }
+                    $res = $response->getData();
+                }
+            } else {
+                echo "Lỗi gọi api" . PHP_EOL;
+                echo $data['message'] . PHP_EOL;
+               die;
             }
         }
     }

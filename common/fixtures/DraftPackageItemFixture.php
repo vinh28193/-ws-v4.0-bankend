@@ -12,7 +12,7 @@ use yii\test\ActiveFixture;
 class DraftPackageItemFixture extends  ActiveFixture
 {
 
-    public $modelClass = 'common\models\draft\DraftPackageItem';
+    public $modelClass = 'common\models\Package';
 
     public $dataFile = '@common/fixtures/data/data_fixed/draft_package_item.php';
 }

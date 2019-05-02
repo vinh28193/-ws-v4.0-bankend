@@ -10,6 +10,7 @@ namespace api\modules\v1\controllers;
 
 
 use api\controllers\BaseApiController;
+use common\models\Category;
 use common\products\forms\ProductDetailFrom;
 use common\products\BaseProduct;
 use common\products\forms\ProductSearchForm;
@@ -38,9 +39,9 @@ class ProductGateController extends BaseApiController
     public function verbs()
     {
         return [
-            'detail' => ['GET','POST'],
-            'search' => ['GET','POST'],
-            'calculator' => ['GET','POST']
+            'detail' => ['GET', 'POST'],
+            'search' => ['GET', 'POST'],
+            'calculator' => ['GET', 'POST']
         ];
     }
 
@@ -67,18 +68,34 @@ class ProductGateController extends BaseApiController
         return $this->response(true, "success", $response);
     }
 
-    public function actionCalculator(){
-        $paramRequests = Yii::$app->getRequest()->getQueryParam();
+    public function actionCalculator()
+    {
+        $paramRequests = Yii::$app->getRequest()->getQueryParams();
         $form = new ProductDetailFrom();
         $form->load($paramRequests, '');
         /** @var $product false | BaseProduct */
-        if (($product= $form->detail()) === false) {
+        if (($product = $form->detail()) === false) {
             return $this->response(false, $form->getFirstErrors());
         }
-        $data = [
+        $data = ['type' => $product->type];
+        $calculate = [];
+        foreach ($product->getAdditionalFees()->keys() as $key){
+            $calculate[$key] = implode('/',$product->getAdditionalFees()->getTotalAdditionFees($key));
+        }
+        $calculate['exchange'] = $product->getExchangeRate();
+        $data['calculate'] = $calculate;
+        $data['item'] = [
             'type' => $product->type,
-            ''
+            'item_id' => $product->item_id,
+            'item_sku' => $product->item_sku,
+            'item_name' => $product->item_name,
+            'item_origin_url' => $product->item_origin_url,
+            'start_price' => $product->start_price,
+            'is_for_wholesale' => $product->getIsForWholeSale() ? 'Yes' : 'No',
+            'shipping_weight' => $product->getShippingWeight(),
+            'shipping_quantity' => $product->getShippingQuantity(),
         ];
-        return $this->response(true, "get detail success", $res->getAdditionalFees());
+        $data['custom'] = ($custom = $product->getCustomCategory()) instanceof Category ? $custom->getAttributes() : [];
+        return $this->response(true, "get calculate success", $data);
     }
 }

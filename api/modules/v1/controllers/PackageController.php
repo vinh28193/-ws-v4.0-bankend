@@ -10,7 +10,7 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\data\ActiveDataProvider;
-use common\models\Package;
+use common\models\DeliveryNote;
 use Yii;
 
 class PackageController extends BaseApiController
@@ -47,7 +47,7 @@ class PackageController extends BaseApiController
     public function actionIndex()
     {
         $requestParams = Yii::$app->getRequest()->getQueryParams();
-        $query = Package::find();
+        $query = DeliveryNote::find();
         $query->filterRelation();
         $query->defaultSelect();
         $dataProvider = new ActiveDataProvider([

@@ -14,10 +14,12 @@ use common\components\db\ActiveQuery;
 use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
 use common\helpers\ExcelHelper;
+use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
-use common\models\draft\DraftPackageItem;
+use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
+use common\models\Product;
 use common\models\TrackingCode;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -56,24 +58,17 @@ class TrackingCodeController extends BaseApiController
      */
     public function actionIndex()
     {
-//        $queryParams = Yii::$app->request->getQueryParams();
-//        $query = TrackingCode::find();
-//        $dataProvider = new ActiveDataProvider([
-//            'query' => $query,
-//            'pagination' => [
-//                'pageSizeParam' => 'ps',
-//                'pageParam' => 'p',
-//                'params' => $queryParams,
-//            ],
-//            'sort' => [
-//                'params' => $queryParams,
-//            ],
-//        ]);
-//
-//        return $this->response(true, 'Ok', $dataProvider);
         $page_m = \Yii::$app->request->get('p_m',1);
         $limit_m = \Yii::$app->request->get('ps_m',20);
-        $manifest_Code = \Yii::$app->request->get('manifest_code');
+        $page_c = \Yii::$app->request->get('p_c',1);
+        $limit_c = \Yii::$app->request->get('ps_c',20);
+        $page_w = \Yii::$app->request->get('p_w',1);
+        $limit_w = \Yii::$app->request->get('ps_w',20);
+        $page_ms = \Yii::$app->request->get('p_ms',1);
+        $limit_ms = \Yii::$app->request->get('ps_ms',20);
+        $page_u = \Yii::$app->request->get('p_mu',1);
+        $limit_u = \Yii::$app->request->get('ps_mu',20);
+        $manifest_id = \Yii::$app->request->get('m');
         $trackingC = \Yii::$app->request->get('trackingC');
         $trackingU = \Yii::$app->request->get('trackingU');
         $trackingW = \Yii::$app->request->get('trackingW');
@@ -81,74 +76,69 @@ class TrackingCodeController extends BaseApiController
 
         $page = \Yii::$app->request->get('p',1);
         $limit = \Yii::$app->request->get('ps',20);
-//        $model = DraftDataTracking::find()->with([
-//            'draftExtensionTrackingMap',
-//            'trackingCode',
-//            'draftBoxmeTracking',
-//            'draftMissingTracking',
-//            'draftWastingTracking',
-//            'draftPackageItem'])->where(['is not', 'product_id', null]);
-//        $countD = clone $model;
-//        $data['_items'] = $model->limit($limit)->offset($page*$limit - $limit)->asArray()->orderBy('id desc')->all();
-//        $data['_total'] = $countD->count();
         $model = Manifest::find()->where(['active' => 1]);
         //#Todo filter
-
+        http://weshop-v4.back-end.local.vn/v1/tracking-code?trackingC=&trackingW=&trackingM=&trackingU=&ps_ms=20&ps_u=20&ps_c=20&ps_w=20&p_ms=1&p_u=1&p_c=1&p_w=1&ps_m=20&p_m=1
         $manifests = clone $model;
-        if($manifest_Code){
-            $model->andWhere(['manifest_code'=>$manifest_Code]);
-            $manifests->andWhere(['manifest_code'=>$manifest_Code]);
+        if($manifest_id){
+            $model->andWhere(['id'=>$manifest_id]);
+            $manifests->andWhere(['id'=>$manifest_id]);
         }
         if(!$trackingC && !$trackingM && !$trackingU && !$trackingW){
             $data['_total_manifest'] = $manifests->count();
             $data['_manifest'] = $manifests->with(['receiveWarehouse','sendWarehouse'])->orderBy('id desc')->limit($limit_m)->offset($limit_m*$page_m - $limit_m)->asArray()->all();
         }
-        $model->with([
-            'draftWastingTrackings' => function($q){
-                /** @var ActiveQuery $q */
-                $tracking = \Yii::$app->request->get('trackingW');
-                if($tracking){
-                    $q->andWhere(['like','tracking_code',$tracking]);
-                }
-                $q->andWhere(['<>','status',DraftWastingTracking::MERGE_CALLBACK]);
-                $q->andWhere(['<>','status',DraftWastingTracking::MERGE_MANUAL]);
-                $q->orderBy('id desc');
-//                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
-            }
-            ,'draftMissingTrackings' => function($q){
-                /** @var ActiveQuery $q */
-                $tracking = \Yii::$app->request->get('trackingM');
-                if($tracking){
-                    $q->andWhere(['like','tracking_code',$tracking]);
-                }
-                $q->andWhere(['<>','status',DraftMissingTracking::MERGE_CALLBACK]);
-                $q->andWhere(['<>','status',DraftMissingTracking::MERGE_MANUAL]);
-                $q->orderBy('id desc');
-//                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
-            }
-            ,'draftPackageItems' => function($q){
-                /** @var ActiveQuery $q */
-                $tracking = \Yii::$app->request->get('trackingC');
-                $q->with(['product']);
-                if($tracking){
-                    $q->andWhere(['like','tracking_code',$tracking]);
-                }
-                $q->orderBy('id desc');
-//                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
-            }
-            ,'unknownTrackings' => function($q){
-                /** @var ActiveQuery $q */
-                $tracking = \Yii::$app->request->get('trackingU');
-                if($tracking){
-                    $q->andWhere(['like','tracking_code',$tracking]);
-                }
-                $q->orderBy('id desc');
-//                $q->orderBy('id desc')->limit($this->get['l'])->offset($this->get['l']*$this->get['p'] - $this->get['l']);
-            }
-        ]);
         $data['_items'] = $model->limit($limit)->offset($page*$limit - $limit)->orderBy('id desc')->asArray()->one();
+        $miss = DraftDataTracking::find()->where(['manifest_id' => $data['_items']['id']])
+            ->andWhere(['<>','status',DraftDataTracking::STATUS_CALLBACK_SUCCESS])
+            ->andWhere(['<>','status',DraftDataTracking::STATUS_MERGE_WAST]);
+        if($trackingM){
+            $miss->andWhere(['like','tracking_code',$trackingM]);
+        }
+        $wast = DraftWastingTracking::find()->where(['manifest_id' => $data['_items']['id']])
+            ->andWhere(['<>','status',DraftWastingTracking::MERGE_CALLBACK])
+            ->andWhere(['<>','status',DraftWastingTracking::MERGE_MANUAL]);
+        if($trackingW){
+            $wast->andWhere(['like','tracking_code',$trackingW]);
+        }
+        $complete = Package::find()->where(['manifest_id' => $data['_items']['id']])
+            ->andWhere(['and',['is not','product_id',null],['<>','product_id',''],['<>','status',Package::STATUS_SPLITED]]);
+        if($trackingC){
+            $complete->andWhere(['like','tracking_code',$trackingC]);
+        }
+        $unknown = Package::find()->where(['manifest_id' => $data['_items']['id']])
+            ->andWhere(['or',['product_id' => null],['product_id' => '']])->andWhere(['<>','status',Package::STATUS_SPLITED]);
+        if($trackingU){
+            $unknown->andWhere(['like','tracking_code',$trackingU]);
+        }
+
+        $data['_items']['draftWastingTrackings_total'] = $wast->count();
+        $data['_items']['draftMissingTrackings_total'] = $miss->count();
+        $data['_items']['draftPackageItems_total'] = $complete->count();
+        $data['_items']['unknownTrackings_total'] = $unknown->count();
+
+        $data['_items']['draftWastingTrackings'] = $wast->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_w)->offset($page_w*$limit_w - $limit_w)->asArray()->all();
+        $data['_items']['draftMissingTrackings'] = $miss->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_ms)->offset($page_ms*$limit_ms - $limit_ms)->asArray()->all();
+        $data['_items']['draftPackageItems'] = $complete->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_c)->offset($page_c*$limit_c - $limit_c)->asArray()->all();
+        $data['_items']['unknownTrackings'] = $unknown->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_u)->offset($page_u*$limit_u - $limit_u)->asArray()->all();
         return $this->response(true, "Success", $data);
     }
+
+    /**
+     * @param ActiveQuery $find
+     * @param string $tracking_code
+     * @param int $limit
+     * @param int $page
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    function getDataListTracking($find , $tracking_code = '' ,$limit = 20, $page = 1){
+        if($tracking_code){
+            $find->andWhere(['like','tracking_code',$tracking_code]);
+        }
+        $rs = $find->orderBy('id desc')->limit($limit)->offset($page*$limit - $limit)->asArray()->all();
+        return $rs;
+    }
+
 
     public function actionCreate()
     {
@@ -185,6 +175,18 @@ class TrackingCodeController extends BaseApiController
                     if (!$model->save(false)) {
                         $tokens[$name]['error'][] = $row;
                     }
+                     //save tracking log
+                    $params = array(
+                        'manifest'=>$manifest->manifest_code,
+                        'trackingcode' => $trackingCode,
+                        'text' => 'Chuyển từ kho mỹ',
+                        'log_type' => 'US Sending',
+                        'store' => $store,
+                        'boxme_warehosue' => $warehouse
+                    );
+                   
+                    Yii::$app->wsLog->push('TrackingLog',null,null,$params);
+
                     $count++;
                 }
                 $tokens[$name]['success'] = $count;
@@ -203,12 +205,12 @@ class TrackingCodeController extends BaseApiController
         }
         $message = implode(", ",$message);
 
-        /** Log + Push chat**/
-        ChatHelper::push($message,$model->ordercode,'GROUP_WS', 'SYSTEM');
-        Yii::$app->wsLog->order->push('Us Sending', null, [
-            'id' => $model->order->ordercode,
-            'request' => $this->post,
-        ]);
+//        /** Log + Push chat**/
+//        ChatHelper::push($message,$model->ordercode,'GROUP_WS', 'SYSTEM');
+//        Yii::$app->wsLog->order->push('Us Sending', null, [
+//            'id' => $model->order->ordercode,
+//            'request' => $this->post,
+//        ]);
         return $this->response(true, $message);
     }
 
@@ -217,6 +219,35 @@ class TrackingCodeController extends BaseApiController
     }
 
     public function actionUpdate($id){
-
+        $modal = Package::findOne($id);
+        if(!$modal){
+            return $this->response(false,'Cannot find your tracking!');
+        }
+        $product = Product::findOne($this->post['product_id']);
+        if(!$product){
+            return $this->response(false,'Cannot find your product id!');
+        }
+        if($product->order_id != $this->post['order_id']){
+            return $this->response(false,'Order id and product id not mapping!');
+        }
+        if(!$this->post['item_name'] || !$this->post['purchase_invoice_number']){
+            return $this->response(false,'Fill all field!');
+        }
+        $modal->order_id = $product->order_id;
+        $modal->product_id = $product->id;
+        $modal->item_name = $this->post['item_name'];
+        $modal->purchase_invoice_number = $this->post['purchase_invoice_number'];
+        $modal->updated_by = Yii::$app->user->getId();
+        $modal->updated_at = time();
+        $modal->save(0);
+        DraftDataTracking::updateAll([
+            'order_id' => $product->order_id,
+            'product_id' => $product->id,
+            'purchase_invoice_number' => $this->post['purchase_invoice_number'],
+            'updated_by' => Yii::$app->user->getId(),
+            'updated_at' => time(),
+            'item_name' => $this->post['item_name']
+        ],['id' => $modal->draft_data_tracking_id]);
+        return $this->response(true,'Update success!');
     }
 }

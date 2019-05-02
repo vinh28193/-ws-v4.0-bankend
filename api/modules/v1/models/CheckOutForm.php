@@ -155,12 +155,14 @@ class CheckOutForm extends Model
                 $request = $item['request'];
                 return $request['type'] . ':' . $request['seller'];
             });
+
             foreach ($items as $key => $arrays) {
                 list($type, $sellerId) = explode(':', $key);
                 /** @var  $provider null |Provider */
                 $provider = null;
                 $providers = $arrays;
                 $providers = reset($providers)['response']->providers;
+
                 foreach ($providers as $p) {
                     if (
                         (strtoupper($type) === BaseProduct::TYPE_EBAY && $p->name === $sellerId) ||
@@ -170,7 +172,9 @@ class CheckOutForm extends Model
                         break;
                     }
                 }
-
+                if($provider === null){
+                    $provider = $providers[0];
+                }
                 if (($seller = Seller::findOne(['AND', ['seller_name' => $provider->name], ['portal' => $type]])) === null) {
                     $seller = new Seller();
                     $seller->seller_name = $sellerId;
@@ -194,13 +198,13 @@ class CheckOutForm extends Model
                 $order->receiver_email = 'vinhvv@peacesoft.net';
                 $order->receiver_name = 'vinh dev';
                 $order->receiver_phone = '0987654321';
-                $order->receiver_address = '18 tam trinh';
+                $order->receiver_address = 'Tang 16 VTC - 18 Tam Trinh';
                 $order->receiver_country_id = 1;
-                $order->receiver_province_id = 1;
-                $order->receiver_district_id = 1;
+                $order->receiver_province_id = 25;
+                $order->receiver_district_id = 287;
                 $order->receiver_country_name = "Việt Nam";
                 $order->receiver_province_name = "Hà Nội";
-                $order->receiver_district_name = "Phố Bì";
+                $order->receiver_district_name = "Quận Hoàng Mai";
                 $order->receiver_post_code = '10000';
                 $order->receiver_address_id = 1;
                 $order->payment_type = 'online_payment';
