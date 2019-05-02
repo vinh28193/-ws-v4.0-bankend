@@ -8,7 +8,7 @@ use yii\httpclient\Client;
 /**
  * Telegram Bot
  *
- * @author Ali Irani <ali@irani.im>
+ * @author Jack <phuchc@pacesoft.net>
  */
 class TelegramBot extends Component
 {

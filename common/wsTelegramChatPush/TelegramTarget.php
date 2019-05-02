@@ -47,9 +47,9 @@ class TelegramTarget extends Target
         foreach (['botToken', 'chatId'] as $property) {
             if ($this->$property === null) {
                // throw new InvalidConfigException(self::className() . "::\$$property property must be set");
-                $this->botToken = '764381102:AAE9qR9ZxLS4qOpFlauOM1rItFSxhrjic3A';
-                $this->chatId = '855666866';
-                $this->messages = 'MY TEST';
+                $this->botToken = '808279157:AAEbCkWEhLjvybgm9uH3ce0JsvA0j5DPtl4';
+                $this->chatId = '-1001468209025';
+                $this->messages = 'MY_MESSAGE_TEXT';
             }
         }
     }
