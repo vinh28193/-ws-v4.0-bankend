@@ -117,7 +117,7 @@ class ProductController extends BaseApiController
                 'products',
                 'promotion',
                 'ProductFees',
-                'packageItems',
+                'packages',
                 'walletTransactions',
                 'seller',
                 'saleSupport' => function(\yii\db\ActiveQuery $q){

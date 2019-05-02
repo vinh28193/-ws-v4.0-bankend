@@ -10,6 +10,7 @@ namespace api\modules\v1\controllers;
 
 use common\helpers\WeshopHelper;
 use common\models\db\DeliveryNote;
+use common\models\db\Package;
 use Yii;
 use Exception;
 use yii\helpers\ArrayHelper;
@@ -100,34 +101,34 @@ class ShipmentController extends BaseApiController
                 return $this->response(false, "shipment can not resolve parameter");
             }
             $shipment->save(false);
-            foreach ($parcels as $parcel) {
-                if (($pId = ArrayHelper::remove($parcel, 'id', null)) === null) {
-                    $transaction->rollBack();
-                    return $this->response(false, "failed a parcel not found parameter ID ");
-                }
-                /** @var $packageItem PackageItem */
-                if (($packageItem = PackageItem::find()->where(['and', ['id' => $pId], ['shipment_id' => $shipment->id]])->one()) === null) {
-                    $transaction->rollBack();
-                    return $this->response(false, "failed not found package item $pId in shipment {$shipment->id}");
-                }
-//                if(($productId = ArrayHelper::remove($parcel,'product_id')) === null){
+//            foreach ($parcels as $parcel) {
+//                if (($pId = ArrayHelper::remove($parcel, 'id', null)) === null) {
 //                    $transaction->rollBack();
-//                    return $this->response(false, "failed a parcel not found parameter Product ID");
+//                    return $this->response(false, "failed a parcel not found parameter ID ");
 //                }
-//                if(($product = Product::findOne($productId)) === null){
+//                /** @var $packageItem PackageItem */
+//                if (($packageItem = PackageItem::find()->where(['and', ['id' => $pId], ['shipment_id' => $shipment->id]])->one()) === null) {
 //                    $transaction->rollBack();
-//                    return $this->response(false, "failed not found product $productId for package item {$packageItem->id}");
+//                    return $this->response(false, "failed not found package item $pId in shipment {$shipment->id}");
 //                }
-//                if($name = ArrayHelper::remove($parcel,'name') !== null){
-//
-//                }
-                unset($parcel['product_id']);
-                unset($parcel['image']);
-                unset($parcel['name']);
-                $packageItem->load($parcel, '');
-                $packageItem->save(false);
-            }
-            $shipment->reCalculateTotal();
+////                if(($productId = ArrayHelper::remove($parcel,'product_id')) === null){
+////                    $transaction->rollBack();
+////                    return $this->response(false, "failed a parcel not found parameter Product ID");
+////                }
+////                if(($product = Product::findOne($productId)) === null){
+////                    $transaction->rollBack();
+////                    return $this->response(false, "failed not found product $productId for package item {$packageItem->id}");
+////                }
+////                if($name = ArrayHelper::remove($parcel,'name') !== null){
+////
+////                }
+//                unset($parcel['product_id']);
+//                unset($parcel['image']);
+//                unset($parcel['name']);
+//                $packageItem->load($parcel, '');
+//                $packageItem->save(false);
+//            }
+//            $shipment->reCalculateTotal();
             $transaction->commit();
             return $this->response(true, "shipment $id is up to date");
         } catch (Exception $exception) {
@@ -161,15 +162,16 @@ class ShipmentController extends BaseApiController
             $packageCodes = [];
             foreach ($shipments as $shipment) {
                 /** @var $shipment Shipment */
-                foreach ($shipment->packages as $package){
-                    /** @var $package DeliveryNote */
-                    $package->shipment_id = $firstShipment->id;
-                    $packageCodes[] = $package->package_code;
-                    $package->save(false);
+                foreach ($shipment->deliveryNotes as $deliveryNotes) {
+                    /** @var $deliveryNotes \common\models\DeliveryNote */
+                    $deliveryNotes->shipment_id = $firstShipment->id;
+                    $deliveryNotes->save(false);
                 }
-                foreach ($shipment->packageItems as $packageItem) {
-                    $packageItem->shipment_id = $firstShipment->id;
-                    $packageItem->save(false);
+                foreach ($shipment->packages as $package){
+                    /** @var $package Package */
+                    $package->shipment_id = $firstShipment->id;
+                    $packageCodes[] = $package->delivery_note_code;
+                    $package->save(false);
                     $moved++;
                 }
                 // todo remove shipment

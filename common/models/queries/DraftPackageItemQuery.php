@@ -13,7 +13,8 @@ class DraftPackageItemQuery extends \common\components\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere(['<>','status',Package::STATUS_SPLITED]);
+        $this->andWhere(['or',['status' => ''],['status' => null],['status' => 0]]);
+        return $this;
     }
 
     /**
@@ -22,6 +23,7 @@ class DraftPackageItemQuery extends \common\components\db\ActiveQuery
      */
     public function all($db = null)
     {
+        $this->active();
         return parent::all($db);
     }
 
@@ -31,6 +33,7 @@ class DraftPackageItemQuery extends \common\components\db\ActiveQuery
      */
     public function one($db = null)
     {
+        $this->active();
         return parent::one($db);
     }
 }
