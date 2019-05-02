@@ -68,6 +68,9 @@ return [
         '1/api/social'=>'api-social/index',
         '1/api/social/convert-token'=>'api-social/convert-token',
 
+        ### API DEBUG LOG TELEGRAM
+        '1/api/wstelegram'=>'ws-telegram-chat-push/index',
+
         ### Login api V1
         'v1/<name>/<controller:\w+>/<action:\w+>'=>'v1/<controller>/<action>',
         'v1/<name>/api/<controller:\w+>/<action:\w+>'=>'v1/api/<controller>/<action>',
