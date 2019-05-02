@@ -140,11 +140,21 @@ return [
         ],
 
         'log' => [
+            /*
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                ],
+            ],
+            */
+            'targets' => [
+                [
+                    'class' => 'common\wsTelegramChatPush\TelegramTarget',
+                    'levels' => ['error'],
+                    'botToken' => '808279157:AAEbCkWEhLjvybgm9uH3ce0JsvA0j5DPtl4', // bot token secret key
+                    'chatId' => '-1001468209025', // chat id or channel username with @ like 12345 or @channel
                 ],
             ],
         ],

@@ -122,4 +122,9 @@ class Package extends \common\components\db\ActiveRecord
             'package_code' => 'Package Code',
         ];
     }
+
+    public function getShipment()
+    {
+        return $this->hasOne(Shipment::className(), ['id' => 'shipment_id']);
+    }
 }

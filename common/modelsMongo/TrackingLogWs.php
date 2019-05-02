@@ -129,6 +129,7 @@ class TrackingLogWs extends ActiveRecord
             $log_type      = Yii::$app->getRequest()->getQueryParam('log_type');
             $user          = Yii::$app->getRequest()->getQueryParam('user');
             $note          = Yii::$app->getRequest()->getQueryParam('note');
+            $sort_time     = Yii::$app->getRequest()->getQueryParam('sort_time');
             $query = TrackingLogWs::find();
            
             if(!isset($page))
@@ -136,7 +137,7 @@ class TrackingLogWs extends ActiveRecord
                 $page = 1;
             }
             if(isset($trackingcode)){
-                 $query->andWhere(['like', 'tracking', $trackingcode]);
+                 $query->andWhere(['tracking' =>$trackingcode]);
             }
             if(isset($request_ip)){
                  $query->andWhere(['request_ip' =>$request_ip]);
@@ -156,8 +157,14 @@ class TrackingLogWs extends ActiveRecord
             //         ['<=', 'created_at', $timeEnd]
             //     ]);
             //  }
-            $query->orderBy('created_at desc')->limit($limit)
-           ->offset($page* $limit - $limit);
+            $query->orderBy('created_at desc');
+            if(isset($sort_time) && $sort_time == 2)
+            {
+               $query->orderBy('created_at ASC');
+            }
+
+            $query->limit($limit)
+            ->offset($page* $limit - $limit);
             $additional_info = [
                 'currentPage' => $page,
                 'pageCount' => $page,
