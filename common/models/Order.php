@@ -40,6 +40,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupported';
     const SCENARIO_UPDATE_ORDER_STATUS = 'updateOrderStatus';
     const SCENARIO_UPDATE_ORDER_TIME = 'updateTimeNull';
+    const SCENARIO_UPDATE_READY2PURCHASE = 'updateReady2Purchase';
 
     /**
      * order type
@@ -149,6 +150,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_CONFIRM_PURCHASE => [
                 'current_status'
+            ],
+            self::SCENARIO_UPDATE_READY2PURCHASE => [
+                'current_status', 'ready_purchase'
             ],
             self::SCENARIO_SALE_ASSIGN => [
                 'sale_support_id', 'support_email'

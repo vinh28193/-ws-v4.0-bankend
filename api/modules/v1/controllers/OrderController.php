@@ -176,6 +176,10 @@ class OrderController extends BaseApiController
             $model->{$post['Order']['status']} = $now;
             $model->current_status = strtoupper($post['Order']['current_status']);
         }
+        if ($model->getScenario() == 'updateReady2Purchase') {
+            $model->ready_purchase = $now;
+            $model->current_status = Order::STATUS_READY2PURCHASE;
+        }
         if ($model->getScenario() == 'updateTimeNull') {
             $model->{$post['Order']['column']} = null;
         }
