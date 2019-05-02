@@ -94,7 +94,6 @@ class PageForm extends Model
      */
     public function initBlock()
     {
-
         if (!$this->validate()) {
             return false;
         }
