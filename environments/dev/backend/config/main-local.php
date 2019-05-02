@@ -40,6 +40,9 @@ if (!YII_ENV_TEST) {
                 'queryNs' => 'common\models\queries',
                 'queryBaseClass' => 'common\components\db\ActiveQuery'
             ],
+            'model_cms' => [
+                'class' => 'common\gii\generators\cms\Generator',
+            ],
             'mongoDbModel' => [
                 'class' => 'yii\mongodb\gii\model\Generator'
             ]
