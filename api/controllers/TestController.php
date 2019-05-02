@@ -87,8 +87,8 @@ class TestController extends Controller
             ->all();
         if ($finds) {
             foreach ($finds as $find) {
-                if ($find != DraftBoxmeTracking::STATUS_CALLBACK_SUCCESS) {
-                    $find->status = DraftBoxmeTracking::STATUS_CALLBACK_SUCCESS;
+                if ($find != DraftDataTracking::STATUS_LOCAL_INSPECTED) {
+                    $find->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
                     $find->item_name = $item_name;
                     $find->save(0);
                     $draft = new Package();

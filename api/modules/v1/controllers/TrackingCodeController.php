@@ -90,8 +90,8 @@ class TrackingCodeController extends BaseApiController
         }
         $data['_items'] = $model->limit($limit)->offset($page*$limit - $limit)->orderBy('id desc')->asArray()->one();
         $miss = DraftDataTracking::find()->where(['manifest_id' => $data['_items']['id']])
-            ->andWhere(['<>','status',DraftDataTracking::STATUS_CALLBACK_SUCCESS])
-            ->andWhere(['<>','status',DraftDataTracking::STATUS_MERGE_WAST]);
+            ->andWhere(['<>','status',DraftDataTracking::STATUS_LOCAL_INSPECTED])
+            ->andWhere(['<>','status',DraftDataTracking::STATUS_LOCAL_RECEIVED]);
         if($trackingM){
             $miss->andWhere(['like','tracking_code',$trackingM]);
         }
