@@ -16,13 +16,13 @@ use common\models\queries\OrderQuery;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\i18n\Formatter;
 use yii\web\NotFoundHttpException;
 use yii\db\Query;
 use yii\db\Expression;
 
 /**
  * @property  Product[] $products
+ * @property  Package[] $packages
  */
 class Order extends DbOrder implements RuleOwnerAccessInterface
 {
@@ -427,9 +427,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPackageItems()
-    {
-        return $this->hasMany(PackageItem::className(), ['order_id' => 'id']);
+//    public function getPackages()
+//    {
+//        return $this->hasMany(Package::className(), ['order_id' => 'id']);
+//    }
+    public function getPackage() {
+        return $this->hasOne(Package::className(), ['order_id' => 'id']);
     }
 
     /**

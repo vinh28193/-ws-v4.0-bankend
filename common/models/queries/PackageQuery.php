@@ -49,7 +49,7 @@ class PackageQuery extends ActiveQuery
     public function filterRelation()
     {
         $this->defaultSelect();
-        $this->joinWith(['packageItems' => function (PackageItemQuery $q) {
+        $this->joinWith(['package' => function (PackageItemQuery $q) {
             $q->defaultSelect();
             $q->remove();
             $q->with(['order' => function (OrderQuery $orderQuery) {

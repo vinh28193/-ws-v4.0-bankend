@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: HUYKAKA
- * Date: 4/3/2019
- * Time: 5:12 PM
- */
-
 namespace api\controllers;
 use common\models\ListAccountPurchase;
 use common\models\Order;
@@ -37,7 +30,7 @@ class AddonController extends BaseApiController
     {
         return [
             [
-                'actions' => ['authorize', 'register','access-token','index', 'order-list','view'],
+                'actions' => ['index', 'order-list','view'],
                 'allow' => true
             ],
             [

@@ -50,9 +50,6 @@ class ListChatMongoController extends BaseApiController
         if (isset($get['contentL'])) {
             $chat->where(['LIKE', 'content', $get['contentL']]);
         }
-        if (isset($get['statusTT'])) {
-            $chat->where(['LIKE', 'status', (int)$get['statusTT']]);
-        }
         return $this->response(true, 'success',  $chat->asArray()->all());
     }
     public function actionCreate() {
@@ -91,6 +88,9 @@ class ListChatMongoController extends BaseApiController
             }
             $chat->update_time = $now;
             if (isset($post['status'])) {
+                $chat->status = $post['status'];
+            }
+            if (isset($post['checkStatusValue']) && $post['checkStatusValue'] == 'checkStatusValue') {
                 $chat->status = $post['status'];
             }
             if (!$chat->save()) {
