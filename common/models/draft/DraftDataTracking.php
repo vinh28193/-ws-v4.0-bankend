@@ -2,6 +2,7 @@
 namespace common\models\draft;
 use common\models\Manifest;
 use common\models\Order;
+use common\models\Package;
 use common\models\Product;
 use common\models\PurchaseOrder;
 use common\models\TrackingCode;
@@ -23,12 +24,9 @@ use common\models\TrackingCode;
  */
 class DraftDataTracking extends \common\models\db\DraftDataTracking
 {
-    const STATUS_EXTENSION = "EXTENSION";
-    const STATUS_MAKE_US_SENDING = "MAKE_US_SENDING";
-    const STATUS_CHECK_DONE = "CHECK_DONE";
-    const STATUS_CHECK_DETAIL = "CHECK_DETAIL";
-    const STATUS_CALLBACK_SUCCESS = "CALLBACK";
-    const STATUS_MERGE_WAST = "MERGE_WAST";
+    const STATUS_US_SENDING = "US_SENDING";
+    const STATUS_LOCAL_RECEIVED = "LOCAL_RECEIVED";
+    const STATUS_LOCAL_INSPECTED = "LOCAL_INSPECTED";
     const TYPE_NORMAL = "NORMAL";
     const TYPE_SPLIT = "SPLIT";
     const TYPE_UNKNOWN = "UNKNOWN";
@@ -49,9 +47,7 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
                 $draft_data = new self();
             }
         }
-        $status = $draft_data->status != null && $draft_data->status != $this->status ? self::STATUS_CHECK_DONE : $this->status;
         $draft_data->setAttributes($this->getAttributes());
-        $draft_data->status = $status;
         return $draft_data->save($validate);
     }
 
