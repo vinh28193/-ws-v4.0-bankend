@@ -172,7 +172,7 @@ class OrderController extends BaseApiController
                 $model->supported = $now;
                 $model->current_status = Order::STATUS_SUPPORTED;
             }
-            if ($model->total_paid_amount_local > 0 && $post['checkR2p'] != 'yes') {
+            if ($model->total_paid_amount_local > 0 && isset($post['checkR2p']) && $post['checkR2p'] != 'yes') {
                 $model->ready_purchase = $now;
                 $model->current_status = Order::STATUS_READY2PURCHASE;
             }
