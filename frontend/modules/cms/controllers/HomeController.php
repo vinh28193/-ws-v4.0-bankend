@@ -15,11 +15,13 @@ class HomeController extends CmsController
     public function actionIndex()
     {
         $form = new PageForm();
-        $form->type = WsPage::TYPE_HOME;
-        if (($data = $form->initBlock()) === false) {
+        if (($data = $form->initBlock($this->getPage())) === false) {
             return $this->redirect('not-found');
         }
-        var_dump($data);die();
+        echo "<pre>";
+        var_dump($data);
+        echo "</pre>";
+        die();
         return $this->render('index', $data);
     }
 }

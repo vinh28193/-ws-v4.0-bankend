@@ -182,7 +182,7 @@ class PageService
         $key = 'LIST_PRODUCT_BY_GROUP_TOP_' . $groupId;
         if (!($products = self::getCache()->get($key)) || $flushCache) {
             $products = WsProduct::find()
-                ->select('*,(ws_product.calculated_sell_price * ' . self::getStoreManager()->getExchangeRate() . ') as local_calculated_sell_price')
+//                ->select('*,(ws_product.calculated_sell_price * ' . self::getStoreManager()->getExchangeRate() . ') as local_calculated_sell_price')
 //                ->select([
 //                    'item_id', 'item_url', 'item_sku', 'name', 'image_origin', 'image', 'start_price', 'sell_price', 'weight', 'category_id',
 //                    'calculated_start_price', 'calculated_sell_price', 'rate_count', 'rate_star', 'category_name', 'start_time', 'end_time', 'provider',

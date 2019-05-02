@@ -6,6 +6,12 @@ namespace frontend\controllers;
 use common\models\cms\PageService;
 use common\models\cms\WsPage;
 
+/**
+ * Class CmsController
+ * @package frontend\controllers
+ *
+ * @property $page WsPage
+ */
 class CmsController extends FrontendController
 {
     public $layout = '@frontend/views/layouts/cms';
@@ -17,6 +23,9 @@ class CmsController extends FrontendController
      */
     private $_page;
 
+    /**
+     * @return WsPage|null
+     */
     public function getPage()
     {
         if ($this->_page === null) {
@@ -25,5 +34,11 @@ class CmsController extends FrontendController
         return $this->_page;
     }
 
+    /**
+     * @param $page
+     */
+    public function setPage($page){
+        $this->_page = $page;
+    }
 
 }

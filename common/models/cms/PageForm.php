@@ -89,10 +89,7 @@ class PageForm extends Model
         return reset($error);
     }
 
-    /**
-     * @return array|bool
-     */
-    public function initBlock()
+    public function initPage()
     {
         if (!$this->validate()) {
             return false;
@@ -112,9 +109,23 @@ class PageForm extends Model
             $results['slide'] = ArrayHelper::toArray(PageService::getSlider($page->id));
         }
         $offset = ($this->page - 1) * self::PAGE_ITEM_LIMIT;
-        $items = [];
-        if ((count($pageItems = PageService::getPageitem($page->id, self::PAGE_ITEM_LIMIT, $offset))) > 0) {
+        return ArrayHelper::merge($results, [
+            'content' => $this->initBlock($page, self::PAGE_ITEM_LIMIT, $offset)
+        ]);
 
+    }
+
+    /**
+     * @param $page
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function initBlock($page, $limit = self::PAGE_ITEM_LIMIT, $offset = 1)
+    {
+
+        $items = [];
+        if ((count($pageItems = PageService::getPageitem($page->id, $limit, $offset))) > 0) {
             foreach ($pageItems as $key => $item) {
                 /** @var $item WsPageItem */
                 if (($block = PageService::getBlockByPageItem($item->id)) === null) {
@@ -168,7 +179,6 @@ class PageForm extends Model
                 $items[] = $data;
             }
         }
-        $results['content'] = $items;
-        return $results;
+        return $items;
     }
 }
