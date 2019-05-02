@@ -14,18 +14,15 @@ use yii\helpers\Console;
 use common\boxme\WarehouseInspect;
 use common\boxme\WarehousePacking;
 use common\models\Manifest;
-use common\models\Shipment;
 
-class PackingController extends \yii\console\Controller
+class ManifestController extends \yii\console\Controller
 {
-
 
     public function actionInspect()
     {
         $start = microtime(true);
         $now = Yii::$app->formatter->asDatetime('now');
         $this->stdout("action start at: $now", Console::FG_GREEN);
-        $this->stdout("open connection to: {$this->db->dsn}", Console::FG_GREEN);
         $startFetchTime = microtime(true);
         $this->stdout("fetching ....", Console::FG_GREEN);
         $manifestQuery = new Query();
@@ -64,7 +61,7 @@ class PackingController extends \yii\console\Controller
 //                $this->consoleLog($result, "updatePage$page");
             }
             $process++;
-            Shipment::updateAll([
+            Manifest::updateAll([
                 'status' => Manifest::STATUS_INSPECT_DONE
             ], ['id' => $manifestId]);
             $manifestTime = microtime(true) - $manifestStart;
@@ -107,5 +104,7 @@ class PackingController extends \yii\console\Controller
             $manifestTime = microtime(true) - $manifestStart;
             $this->stdout("update  packing {$manifest->manifest_code} completed (time: " . sprintf('%.3f', $manifestTime) . "s)", Console::FG_GREEN);
         }
+        $time = microtime(true) - $start;
+        $this->stdout("action completed (time: " . sprintf('%.3f', $time) . "s)", Console::FG_GREEN);
     }
 }
