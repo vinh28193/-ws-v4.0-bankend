@@ -427,9 +427,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPackages()
-    {
-        return $this->hasMany(Package::className(), ['order_id' => 'id']);
+//    public function getPackages()
+//    {
+//        return $this->hasMany(Package::className(), ['order_id' => 'id']);
+//    }
+    public function getPackage() {
+        return $this->hasOne(Package::className(), ['order_id' => 'id']);
     }
 
     /**
