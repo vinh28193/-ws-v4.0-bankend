@@ -25,6 +25,7 @@ class FrontendAsset extends AssetBundle
         'frontend\assets\FontawesomeAsset',
 //        'frontend\assets\PopperAsset',
         'frontend\assets\OwlCarousel',
-        'frontend\assets\SlickCarouselAsset'
+        'frontend\assets\SlickCarouselAsset',
+        'frontend\assets\JQueryLazy'
     ];
 }

@@ -38,10 +38,11 @@ class WsStaticCMSWidget extends Widget
         $checkBlock5 = false;
         foreach ($this->data as $key => $value) {
             $type = $value['block']['type'];
-            if ($type == WeshopBlockWidget::BLOCK5){
+            if ($type === WeshopBlockWidget::BLOCK5){
                 $block5[] = $value;
             }
             switch ($type) {
+
                 case WeshopBlockWidget::LANDING:
                     $content .= HotDealWidget::widget([
                         'block' => $value,
@@ -74,10 +75,10 @@ class WsStaticCMSWidget extends Widget
         }
         $contentBlock5 = '';
         if(count($block5) > 0){
-            $contentBlock5 = '<div class="product-block amazon block-column">
+            $contentBlock5 = '<div class="product-block block-column">
                             <div class="container">
                                 <div class="row">';
-            foreach ($block5 as $item) {
+            foreach ($block5 as $i => $item) {
                 $contentBlock5 .= FiveWidget::widget(['block' => $item]);
             }
             $contentBlock5 .= '</div></div></div>';

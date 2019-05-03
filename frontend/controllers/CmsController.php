@@ -3,6 +3,7 @@
 
 namespace frontend\controllers;
 
+use common\models\cms\PageForm;
 use common\models\cms\PageService;
 use common\models\cms\WsPage;
 
@@ -14,6 +15,8 @@ use common\models\cms\WsPage;
  */
 class CmsController extends FrontendController
 {
+
+    public $layout = '@frontend/views/layouts/cms';
 
     public $type = WsPage::TYPE_HOME;
 
@@ -60,13 +63,18 @@ class CmsController extends FrontendController
         return parent::render($view, $params);
     }
 
-    public function renderContent($content)
+    /**
+     * @param int $p
+     * @param int $limit
+     * @return array
+     */
+    public function renderBlock($p = 1, $limit = 6)
     {
-        $layoutFile = $this->findLayoutFile($this->getView());
-        if ($layoutFile !== false) {
-            return $this->getView()->renderFile($layoutFile, ['content' => $content], $this);
+        if($limit > 1){
+            $offset = ($p - 1) * $limit;
+        }else{
+            $offset = -1;
         }
-
-        return $content;
+        return (new PageForm())->initBlock($this->page, $limit, $offset);
     }
 }

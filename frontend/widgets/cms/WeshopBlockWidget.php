@@ -40,7 +40,7 @@ class WeshopBlockWidget extends \yii\bootstrap4\Widget
     /**
      * @var bool
      */
-    public $iphoneOld = false;
+    public $iphoneOld = true;
 
     public function render($view, $params = [])
     {
