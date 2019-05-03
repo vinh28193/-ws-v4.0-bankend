@@ -13,10 +13,19 @@ class ProductWidget extends WeshopBlockWidget
     const TYPE_CENTER = 'product-center';
     const TYPE_MOBILE = 'product-mobile';
 
+    /**
+     * @var array
+     */
     public $product;
 
+    /**
+     * @var string
+     */
     public $type = self::TYPE_CENTER;
 
+    /**
+     * @return string|void
+     */
     public function run()
     {
         parent::run();
