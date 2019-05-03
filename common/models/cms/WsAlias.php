@@ -25,7 +25,7 @@ class WsAlias extends \common\models\db_cms\WsAlias
             $landingProduct = $this->getWsAliasItems()->where(['type' => WsAliasItem::TYPE_LANDING, 'status' => 1, 'is_head' => 0])
                 ->with([
                     'wsProductGroups.wsProducts' => function (\yii\db\ActiveQuery $query) {
-                        $query->select('ws_product.*,(ws_product.calculated_sell_price * ' . Yii::$app->storeManager->getExchangeRate() . ') as Local_calculated_sell_price');
+//                        $query->select('ws_product.*,(ws_product.calculated_sell_price * ' . Yii::$app->storeManager->getExchangeRate() . ') as Local_calculated_sell_price');
                         $query->asArray();
                     }
                 ])->asArray()->all();

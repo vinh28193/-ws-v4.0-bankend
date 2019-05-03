@@ -63,6 +63,19 @@ class CmsController extends FrontendController
         return parent::render($view, $params);
     }
 
+    public function renderContent($content)
+    {
+        $layoutFile = $this->findLayoutFile($this->getView());
+        if ($layoutFile !== false) {
+            return $this->getView()->renderFile($layoutFile, [
+                'content' => $content,
+                'type' => $this->type,
+            ], $this);
+        }
+
+        return $content;
+    }
+
     /**
      * @param int $p
      * @param int $limit
