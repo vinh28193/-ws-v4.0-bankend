@@ -29,6 +29,30 @@ class WarehouseManagementController extends BaseApiController
     }
 
     public function actionIndex() {
+        $limit = \Yii::$app->request->get('limit');
+        $page = \Yii::$app->request->get('page');
+        $data = $this->getFilter();
+        $res['total'] = $data->count();
+        $res['data'] = $data = $data->orderBy('id desc')->limit($limit)->offset($page*$limit - $limit)->asArray()->all();
+        return $this->response(true,'ok', $res);
+    }
+    public function actionCreate(){
+        if(!$this->post['tracking_codes'] || !$this->post['time_received']){
+            return $this->response(false, 'Tracking code and time received cannot null!');
+        }
+        $trackingS = explode(',',str_replace(' ','',$this->post['tracking_codes']));
+        $time = str_replace('T',' ',strtoupper($this->post['time_received']));
+        $time = str_replace('Z','',strtoupper($time));
+        $time = explode('.',$time)[0];
+        foreach ($trackingS as $tracking){
+            $trackingNew = new TrackingCode();
+            $trackingNew->tracking_code = $tracking;
+            $trackingNew->status = TrackingCode::STATUS_US_RECEIVED;
+            $trackingNew->CreateOrUpdate(false);
+        }
+        return $this->response(true, 'Mark us received success!');
+    }
+    public function getFilter(){
         $manifestCode = \Yii::$app->request->get('manifestCode');
         $trackingCode = \Yii::$app->request->get('trackingCode');
         $packageCode = \Yii::$app->request->get('packageCode');
@@ -61,24 +85,6 @@ class WarehouseManagementController extends BaseApiController
         if($tab){
             $data->andWhere(['tracking_code.status' => strtoupper($tab)]);
         }
-        $res['total'] = $data->count();
-        $res['data'] = $data = $data->orderBy('id desc')->limit(20)->offset(0)->asArray()->all();
-        return $this->response(true,'ok', $res);
-    }
-    public function actionCreate(){
-        if(!$this->post['tracking_codes'] || !$this->post['time_received']){
-            return $this->response(false, 'Tracking code and time received cannot null!');
-        }
-        $trackingS = explode(',',str_replace(' ','',$this->post['tracking_codes']));
-        $time = str_replace('T',' ',strtoupper($this->post['time_received']));
-        $time = str_replace('Z','',strtoupper($time));
-        $time = explode('.',$time)[0];
-        foreach ($trackingS as $tracking){
-            $trackingNew = new TrackingCode();
-            $trackingNew->tracking_code = $tracking;
-            $trackingNew->status = TrackingCode::STATUS_US_RECEIVED;
-            $trackingNew->CreateOrUpdate(false);
-        }
-        return $this->response(true, 'Mark us received success!');
+        return $data;
     }
 }
