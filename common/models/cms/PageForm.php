@@ -11,7 +11,9 @@ namespace common\models\cms;
 
 use Yii;
 use yii\base\Model;
+use yii\di\Instance;
 use yii\helpers\ArrayHelper;
+use common\components\StoreManager;
 
 class PageForm extends Model
 {
@@ -23,6 +25,17 @@ class PageForm extends Model
 
     public $type;
 
+    /**
+     * @var string |StoreManager
+     */
+    public $storeManager = 'storeManager';
+
+    public function init()
+    {
+        parent::init();
+        $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
+    }
+
     public function attributes()
     {
         return ['id', 'store', 'page', 'type'];
@@ -31,19 +44,18 @@ class PageForm extends Model
     public function rules()
     {
         return [
-            ['store', 'required'],
             ['type', 'required'],
             ['type', 'string'],
-            ['type', function($attribute, $params, $validator){
-                if(!$this->hasErrors() && $value = $this->$attribute){
-                    if(!ArrayHelper::isIn($value,[
+            ['type', function ($attribute, $params, $validator) {
+                if (!$this->hasErrors() && $value = $this->$attribute) {
+                    if (!ArrayHelper::isIn($value, [
                         WsPage::TYPE_HOME,
                         WsPage::TYPE_AMZ,
                         WsPage::TYPE_EBAY,
                         WsPage::TYPE_LANDING,
                         WsPage::TYPE_LANDING_REQUEST
-                    ])){
-                        $this->addError($attribute,'Unknown type "'.$value.'"');
+                    ])) {
+                        $this->addError($attribute, 'Unknown type "' . $value . '"');
                     }
                 }
             }],
@@ -51,8 +63,8 @@ class PageForm extends Model
                 return $model->type === WsPage::TYPE_LANDING;
             }],
             ['id', 'integer'],
-            ['store','default','value' => 1],
-            ['page','default','value' => 1]
+            ['store', 'default', 'value' => 1],
+            ['page', 'default', 'value' => 1]
         ];
     }
 
@@ -77,16 +89,12 @@ class PageForm extends Model
         return reset($error);
     }
 
-    /**
-     * @return array|bool
-     */
-    public function initBlock()
+    public function initPage()
     {
-
         if (!$this->validate()) {
             return false;
         }
-        if (($page = PageService::getPage($this->id, $this->store, $this->type, 1)) === null) {
+        if (($page = PageService::getPage($this->type, $this->store, $this->id)) === null) {
             if ($this->id !== null) {
                 $this->addError('id', 'Not found page #' . $this->id . ' type "' . $this->type . '" for store "' . $this->store . '"');
             } else {
@@ -96,14 +104,28 @@ class PageForm extends Model
             return false;
         }
         $results = [];
-        if($this->type !== WsPage::TYPE_LANDING && $this->type !== WsPage::TYPE_LANDING_REQUEST){
-            $results['alias'] =  PageService::getAlias($this->store,$this->type);
+        if ($this->type !== WsPage::TYPE_LANDING && $this->type !== WsPage::TYPE_LANDING_REQUEST) {
+            $results['alias'] = PageService::getAlias($this->type, $this->store);
             $results['slide'] = ArrayHelper::toArray(PageService::getSlider($page->id));
         }
         $offset = ($this->page - 1) * self::PAGE_ITEM_LIMIT;
-        $items = [];
-        if ((count($pageItems = PageService::getPageitem($page->id, self::PAGE_ITEM_LIMIT, $offset))) > 0) {
+        return ArrayHelper::merge($results, [
+            'content' => $this->initBlock($page, self::PAGE_ITEM_LIMIT, $offset)
+        ]);
 
+    }
+
+    /**
+     * @param $page
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function initBlock($page, $limit = self::PAGE_ITEM_LIMIT, $offset = 1)
+    {
+
+        $items = [];
+        if ((count($pageItems = PageService::getPageitem($page->id, $limit, $offset))) > 0) {
             foreach ($pageItems as $key => $item) {
                 /** @var $item WsPageItem */
                 if (($block = PageService::getBlockByPageItem($item->id)) === null) {
@@ -157,7 +179,6 @@ class PageForm extends Model
                 $items[] = $data;
             }
         }
-        $results['content'] = $items;
-        return $results;
+        return $items;
     }
 }

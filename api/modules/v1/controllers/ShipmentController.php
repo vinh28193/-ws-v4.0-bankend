@@ -72,7 +72,9 @@ class ShipmentController extends BaseApiController
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pageSizeParam' => 'perPage',
+                'pageSizeLimit' => [1,500],
+                'pageSizeParam' => 'prep',
+                'pageParam' => 'p',
                 'params' => $params,
             ],
             'sort' => [

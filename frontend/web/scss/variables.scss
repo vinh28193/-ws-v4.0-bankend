@@ -1,0 +1,79 @@
+//Created by nktquan@gmail.com
+
+@mixin font-face($font-family, $url, $weight) {
+  @font-face {
+    font-family: '#{$font-family}';
+    src: url('#{$url}.ttf') format('truetype');
+    font-weight: $weight;
+    font-style: normal;
+  }
+}
+
+@mixin background_url($url) {
+  background: url($url) no-repeat center;
+  background-size: contain;
+}
+
+@mixin rotate($deg) {
+  -webkit-transform: rotate($deg);
+  -moz-transform: rotate($deg);
+  -ms-transform: rotate($deg);
+  -o-transform: rotate($deg);
+  transform: rotate($deg);
+}
+
+@mixin grayscale($a) {
+  filter: grayscale($a);
+  -o-filter: grayscale($a);
+  -moz-filter: grayscale($a);
+  -webkit-filter: grayscale($a);
+}
+
+@include font-face('Quicksand', '../fonts/Quicksand/QUICKSAND-REGULAR', 400);
+@include font-face('Quicksand', '../fonts/Quicksand/QUICKSAND-LIGHT', 200);
+@include font-face('Quicksand', '../fonts/Quicksand/QUICKSAND-MEDIUM', 500);
+@include font-face('Quicksand', '../fonts/Quicksand/QUICKSAND-BOLD', 700);
+
+%clear-both {
+  content: '';
+  display: block;
+  clear: both;
+}
+%display-inline {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+%transition-all-3 {
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s;
+}
+
+%thumbnail_fixed {
+  position: absolute;
+  top: 50%;
+  max-width: 100%;
+  max-height: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+%currency {
+  font-style: normal;
+  font-size: 14px;
+  text-decoration: underline;
+  display: inline-block;
+  vertical-align: top;
+}
+
+$color_main_blue: #2b96b6;
+$color_main_orange: #e67425;
+$color_main_text: #555555;
+$color_product_text: #393939;
+$color_main_amz: #232f3d;
+$color_sub_amz: #fcbc70;
+$color_ebay_blue: #0063d1;
+$color_border_line: #ebebeb;
