@@ -23,7 +23,8 @@ class WarehouseManagementController extends BaseApiController
     protected function verbs()
     {
         return [
-            'index' => ['get']
+            'index' => ['get'],
+            'create' => ['post'],
         ];
     }
 
@@ -33,6 +34,7 @@ class WarehouseManagementController extends BaseApiController
         $packageCode = \Yii::$app->request->get('packageCode');
         $shipmentCode = \Yii::$app->request->get('shipmentCode');
         $tracking_ws = \Yii::$app->request->get('WsTrackingCode');
+        $tab = \Yii::$app->request->get('tabFilter');
         $data = TrackingCode::find()->with(['draftDataTrackings'])->where(['tracking_code.remove' => 0]);
         if($manifestCode){
             $data->andWhere(['like','tracking_code.manifest_code' , $manifestCode]);
@@ -56,7 +58,27 @@ class WarehouseManagementController extends BaseApiController
                 }
             }
         }
-        $data = $data->limit(20)->offset(0)->asArray()->all();
-        return $this->response(true,'ok', $data);
+        if($tab){
+            $data->andWhere(['tracking_code.status' => strtoupper($tab)]);
+        }
+        $res['total'] = $data->count();
+        $res['data'] = $data = $data->orderBy('id desc')->limit(20)->offset(0)->asArray()->all();
+        return $this->response(true,'ok', $res);
+    }
+    public function actionCreate(){
+        if(!$this->post['tracking_codes'] || !$this->post['time_received']){
+            return $this->response(false, 'Tracking code and time received cannot null!');
+        }
+        $trackingS = explode(',',str_replace(' ','',$this->post['tracking_codes']));
+        $time = str_replace('T',' ',strtoupper($this->post['time_received']));
+        $time = str_replace('Z','',strtoupper($time));
+        $time = explode('.',$time)[0];
+        foreach ($trackingS as $tracking){
+            $trackingNew = new TrackingCode();
+            $trackingNew->tracking_code = $tracking;
+            $trackingNew->status = TrackingCode::STATUS_US_RECEIVED;
+            $trackingNew->CreateOrUpdate(false);
+        }
+        return $this->response(true, 'Mark us received success!');
     }
 }

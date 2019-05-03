@@ -32,33 +32,35 @@ class TrackingCode extends DbTrackingCode
     const STATUS_MERGE_NEW = 'NEW';
     const STATUS_MERGE_DONE = 'DONE';
     public function CreateOrUpdate($validate = true){
-        if($this->tracking_code){
-            $model = TrackingCode::find()->where(['tracking_code' => $this->tracking_code,'remove' => 0])->one();
-            if ($model){
-                $this->order_ids = $model->order_ids.','.$this->order_ids;
-                $this->quantity += $model->quantity;
-                $this->created_by = $model->created_by;
-                $this->created_at += $model->created_at;
-            }else{
-                $model = new self();
-            }
-        }else{
-            $model = new TrackingCode();
+        $model = TrackingCode::find()->where(['tracking_code' => $this->tracking_code,'remove' => 0])->one();
+        if ($model){
+            return true;
         }
-        $model->setAttributes($this->getAttributes());
-//        print_r($model);die;
-        return $model->save($validate);
+        $this->save($validate);
+        return $this->save($validate);
     }
     public function getDraftDataTrackings(){
         return $this->hasMany(DraftDataTracking::className(),['tracking_code' => 'tracking_code', 'manifest_id' => 'manifest_id']);
     }
-    public static function UpdateStatusTracking($trackingcode){
-        /** @var DraftDataTracking[] $modals */
-        $modals = DraftDataTracking::find()
-            ->where(['tracking_code' => $trackingcode])->all();
-//        $status = se
-        foreach ($modals as $modal){
-
+    public static function UpdateStatusTracking($trackingcode,$status){
+        /** @var TrackingCode[] $trackings */
+        $trackings = TrackingCode::find()
+            ->where(['tracking_code' => $trackingcode,'remove' => 0])
+            ->all();
+        foreach ($trackings as $tracking){
+            $tracking->status = $status;
+            $tracking->save(0);
         }
+//        /** @var DraftDataTracking[] $modals */
+//        $modals = DraftDataTracking::find()
+//            ->where(['tracking_code' => $trackingcode])->all();
+//        $status = '';
+//        foreach ($modals as $modal){
+//            if($modal->status == DraftDataTracking::STATUS_US_SENDING){
+//                $status = TrackingCode::STATUS_US_SENDING;
+//            }if($modal->status == DraftDataTracking::STATUS_US_SENDING){
+//                $status = TrackingCode::STATUS_US_SENDING;
+//            }
+//        }
     }
 }
