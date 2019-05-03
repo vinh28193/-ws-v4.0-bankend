@@ -14,20 +14,23 @@
 
 <li>
     <div class="item">
-        <div class="thumb">
-            <span>
-                <img src="<?= $image; ?>" alt="<?= $name; ?>" title="<?= $name; ?>"/>
-            </span>
-        </div>
-        <div class="info">
+        <a href="#">
             <div class="name"><?= $name; ?></div>
-            <div class="price"><?= $sellPrice; ?></div>
-            <div class="old-price"><?= $oldPrice; ?></div>
-            <?php
-            if ($saleTag > 0) {
-                echo '<span class="sale-tag">' . $saleTag . '% OFF</span>';
-            }
-            ?>
-        </div>
+            <div class="info">
+                <div class="price"><?= $sellPrice; ?></div>
+                <div class="old-price"><?= $oldPrice; ?></div>
+                <?php
+                if ($saleTag > 0) {
+                    echo '<span class="sale-tag">' . $saleTag . '% OFF</span>';
+                }
+                ?>
+            </div>
+            <div class="thumb">
+                <span>
+                    <img src="<?= $image; ?>" alt="<?= $name; ?>" title="<?= $name; ?>"/>
+                </span>
+            </div>
+        </a>
     </div>
 </li>
+
