@@ -14,6 +14,9 @@ class WsAlias extends \common\models\db_cms\WsAlias
         return $this->hasMany(WsAliasItem::className(), ['ws_alias_id' => 'id'])->where(['status' => 1])->orderBy('sort ASC');
     }
 
+    public function getData(){
+
+    }
     public function getLandingProduct()
     {
         $key = 'ITEM_PRODUCT_AMAZONE_BY_' . '_ALIAS_' . $this->id . '-' . WsAliasItem::TYPE_LANDING;
@@ -48,7 +51,6 @@ class WsAlias extends \common\models\db_cms\WsAlias
         $key = 'ITEM_PRODUCT_AMAZONE_BY_ALIAS_' . $this->id . '-' . WsAliasItem::TYPE_SLIDER;
         if (!($imageGrid = Yii::$app->cache->get($key))) {
             $imageGrid = $this->getWsAliasItems()->where(['type' => WsAliasItem::TYPE_SLIDER, 'status' => 1, 'is_head' => 0])->with('wsImageGroups.wsImages')->asArray()->all();
-
             Yii::$app->cache->set($key, $imageGrid, 60 * 60 * 24);
         }
         return $imageGrid;

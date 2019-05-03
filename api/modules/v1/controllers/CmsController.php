@@ -33,7 +33,7 @@ class CmsController extends BaseApiController
         if (!$form->load(Yii::$app->getRequest()->post())) {
             return $this->response(false, 'can not load parameter');
         }
-        if (($data = $form->initBlock()) === false) {
+        if (($data = $form->initPage()) === false) {
             return $this->response(false, $form->getFirstErrors());
         }
         return $this->response(true, 'get data complete', $data);
