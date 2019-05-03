@@ -29,11 +29,14 @@ class WarehouseManagementController extends BaseApiController
     }
 
     public function actionIndex() {
-        $limit = \Yii::$app->request->get('limit');
-        $page = \Yii::$app->request->get('page');
+        $limit = \Yii::$app->request->get('limit',20);
+        $page = \Yii::$app->request->get('page',1);
         $data = $this->getFilter();
         $res['total'] = $data->count();
-        $res['data'] = $data = $data->orderBy('id desc')->limit($limit)->offset($page*$limit - $limit)->asArray()->all();
+        if($limit != 'all'){
+            $data = $data->limit($limit)->offset($page*$limit - $limit);
+        }
+        $res['data'] = $data = $data->orderBy('id desc')->asArray()->all();
         return $this->response(true,'ok', $res);
     }
     public function actionCreate(){
@@ -45,10 +48,12 @@ class WarehouseManagementController extends BaseApiController
         $time = str_replace('Z','',strtoupper($time));
         $time = explode('.',$time)[0];
         foreach ($trackingS as $tracking){
-            $trackingNew = new TrackingCode();
-            $trackingNew->tracking_code = $tracking;
-            $trackingNew->status = TrackingCode::STATUS_US_RECEIVED;
-            $trackingNew->CreateOrUpdate(false);
+            if($tracking){
+                $trackingNew = new TrackingCode();
+                $trackingNew->tracking_code = $tracking;
+                $trackingNew->status = TrackingCode::STATUS_US_RECEIVED;
+                $trackingNew->CreateOrUpdate(false);
+            }
         }
         return $this->response(true, 'Mark us received success!');
     }
@@ -82,7 +87,7 @@ class WarehouseManagementController extends BaseApiController
                 }
             }
         }
-        if($tab){
+        if($tab && $tab != 'all'){
             $data->andWhere(['tracking_code.status' => strtoupper($tab)]);
         }
         return $data;
