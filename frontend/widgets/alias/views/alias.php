@@ -87,9 +87,9 @@ use frontend\widgets\alias\AliasImageGridWidget;
             <?php
             $aliasCategories= Json::decode($alias['alias_categories'], true);
             ?>
-            <?php foreach ($aliasCategories as $aliasCategorie): ?>
+            <?php foreach ($aliasCategories as $aliasCategory): ?>
                 <li>
-                    <a href="<?= $aliasCategorie['url'] ?>"><?= $aliasCategorie['name'] ?></a>
+                    <a href="<?= $aliasCategory['url'] ?>"><?= $aliasCategory['name'] ?></a>
                 </li>
             <?php endforeach; ?>
         <?php endif; ?>
