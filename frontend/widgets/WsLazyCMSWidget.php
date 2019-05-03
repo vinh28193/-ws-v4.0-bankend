@@ -46,7 +46,7 @@ class WsLazyCMSWidget extends Widget
             async: true,
             success: function (res) {
                 element.html(res);
-                element.load();
+//                element.load();
                 $('img.lazy').lazyload({
                     effect: 'fadeIn',
                     effectTime: 2000,

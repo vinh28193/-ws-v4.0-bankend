@@ -23,6 +23,8 @@ class ProductWidget extends WeshopBlockWidget
      */
     public $type = self::TYPE_CENTER;
 
+    public $iphoneOld = false;
+
     /**
      * @return string|void
      */

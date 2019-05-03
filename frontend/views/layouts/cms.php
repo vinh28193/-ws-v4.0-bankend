@@ -397,7 +397,7 @@ $this->beginContent('@frontend/views/layouts/common.php')
                                 </div>
                             </li>
                             <li class="brand">
-                                <a href="#">Mua hàng <img src="./img/logo_amz.png" alt="" class="brand-logo"/><i class="fa fa-angle-right pull-right"></i></a>
+                                <a href="#">Mua hàng <img src="/img/logo_amz.png" alt="" class="brand-logo"/><i class="fa fa-angle-right pull-right"></i></a>
                                 <div class="sub-menu-2">
                                     <div class="ebay-sub-menu amazon">
                                         <div class="left">
@@ -459,7 +459,7 @@ $this->beginContent('@frontend/views/layouts/common.php')
                                 </div>
                             </li>
                             <li class="brand">
-                                <a href="#">Mua hàng <img src="./img/logo_ebay.png" alt="" class="brand-logo"/><i class="fa fa-angle-right pull-right"></i></a>
+                                <a href="#">Mua hàng <img src="/img/logo_ebay.png" alt="" class="brand-logo"/><i class="fa fa-angle-right pull-right"></i></a>
                                 <div class="sub-menu-2">
                                     <div class="ebay-sub-menu">
                                         <div class="left">

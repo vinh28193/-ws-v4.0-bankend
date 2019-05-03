@@ -1,5 +1,8 @@
 <?php
 
+use yii\helpers\Html;
+use frontend\widgets\imagelazy\ImageLazyLoadWidget;
+
 /* @var $this yii\web\View */
 /* @var $block array */
 /* @var $iphoneOld boolean */
@@ -9,6 +12,7 @@
 /* @var $sellPrice string */
 /* @var $oldPrice string */
 /* @var $saleTag integer */
+
 
 ?>
 
@@ -27,7 +31,15 @@
             </div>
             <div class="thumb">
                 <span>
-                    <img src="<?= $image; ?>" alt="<?= $name; ?>" title="<?= $name; ?>"/>
+                    <?php
+                        if ($iphoneOld) {
+                            echo Html::img($image);
+                        }else{
+                            echo ImageLazyLoadWidget::widget([
+                                'src' => $image
+                            ]);
+                        }
+                    ?>
                 </span>
             </div>
         </a>
