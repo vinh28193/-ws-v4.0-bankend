@@ -53,8 +53,8 @@ class TrackingCodeServiceController extends BaseApiController
         $wasting = $this->post['merge']['type'] == 'wast' ? DraftWastingTracking::findOne($this->post['merge']['data']['id']) : DraftWastingTracking::findOne($this->post['target']['data']['id']);
         if(!$wasting || $wasting->status == DraftWastingTracking::MERGE_MANUAL
             || $wasting->status == DraftWastingTracking::MERGE_CALLBACK
-        || !$missing || $missing->status == DraftDataTracking::STATUS_CALLBACK_SUCCESS
-        || $wasting->status == DraftDataTracking::STATUS_MERGE_WAST
+        || !$missing || $missing->status == DraftDataTracking::STATUS_LOCAL_INSPECTED
+            || $missing->status == DraftDataTracking::STATUS_LOCAL_RECEIVED
         ){
             return $this->response(false,'data merge not incorrect!');
         }
@@ -82,7 +82,7 @@ class TrackingCodeServiceController extends BaseApiController
         $model->note_boxme = $wasting->note_boxme;
         $model->image = $wasting->image;
         $model->save();
-        $missing->status = DraftDataTracking::STATUS_MERGE_WAST;
+        $missing->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
         $missing->save();
         $wasting->status = DraftWastingTracking::MERGE_MANUAL;
         $wasting->save();
@@ -182,12 +182,10 @@ class TrackingCodeServiceController extends BaseApiController
         /** @var DeliveryNote $pack */
         $pack = DeliveryNote::find()->where(['tracking_seller' => $model->tracking_code,'manifest_code' => $model->manifest_code])->one();
         if($pack){
-            PackageItem::updateAll(
-                ['hold' => $this->post['hold']],
+            Shipment::updateAll(
+                ['is_hold' => $this->post['hold']],
                 [
-                    'package_id' => $pack->id,
-                    'sku' => $model->product ? strtolower($model->product->portal) == 'ebay' ? $model->product->parent_sku : $model->product->sku : null,
-                    'updated_at' => time()
+                    'id' => $pack->shipment_id,
                 ]
             );
         }

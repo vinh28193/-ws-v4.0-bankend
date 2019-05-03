@@ -8,8 +8,8 @@ use api\controllers\BaseApiController;
 use common\helpers\ExcelHelper;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
-use common\models\Package;
 use common\models\Manifest;
+use common\models\Package;
 use common\models\Product;
 use common\models\TrackingCode;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -138,12 +138,24 @@ class UsSendingController extends BaseApiController
                         $tokens[$name]['error'][] = $row;
                         continue;
                     }
-                    $model = new TrackingCode([
-                        'tracking_code' => $trackingCode,
-                        'store_id' => $manifest->store_id,
-                        'manifest_code' => $manifest->manifest_code,
-                        'manifest_id' => $manifest->id
-                    ]);
+                    $model = TrackingCode::find()
+                        ->where([
+                            'tracking_code' => $trackingCode,
+                            'remove' => 0,
+                            'status' => TrackingCode::STATUS_US_RECEIVED
+                        ])->andWhere([
+                           'or',
+                           ['<>','manifest_code',''],
+                           ['is not','manifest_code',null],
+                        ])->limit(0)->one();
+                    if(!$model){
+                        $model = new TrackingCode();
+                    }
+                    $model->tracking_code = $trackingCode;
+                    $model->store_id = $manifest->store_id;
+                    $model->manifest_id = $manifest->id;
+                    $model->manifest_code = $manifest->manifest_code;
+                    $model->status = TrackingCode::STATUS_US_SENDING;
                     if (!$model->save(false)) {
                         $tokens[$name]['error'][] = $row;
                     }
