@@ -1,64 +1,38 @@
 <?php
 
+/* @var $this yii\web\View */
+/* @var $wsCategoryGroups array */
+/* @var $wsAliasItem array */
 
 ?>
 
 
 <div class="left">
     <div class="title-box">
-        <div class="title">Shop Amazon</div>
-        <div class="desc">Worldwide shopping, Best price, Free Shipping, To door
-            Delivery
-        </div>
+        <div class="title"><?= $wsAliasItem['name']; ?></div>
+        <div class="desc"></div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <div class="item">
-                <div class="title">Amazon Video</div>
-                <ul>
-                    <li><a href="#">All videos</a></li>
-                    <li><a href="#">Included with Prime</a></li>
-                    <li><a href="#">Add-on Subscriptions</a></li>
-                    <li><a href="#">Rent or Buy</a></li>
-                    <li><a href="#">Free to Watch</a></li>
-                </ul>
+        <?php if ($wsCategoryGroups != null) foreach ($wsCategoryGroups['wsParentCategories'] as $category): ?>
+            <div class="col-md-6">
+                <div class="item">
+                    <div class="title"><?= $category['local_name']; ?></div>
+                    <ul>
+                        <?php foreach ($category['wsCategories'] as $subCate): ?>
+                            <li>
+                                <a href="<?= $subCate['url'] ?>"><?= $subCate['local_name'] ?></a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="item">
-                <div class="title">More to Explore</div>
-                <ul>
-                    <li><a href="#">Video shots</a></li>
-                    <li><a href="#">Style Code Live</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="item">
-                <div class="title">More to Explore</div>
-                <ul>
-                    <li><a href="#">Video shots</a></li>
-                    <li><a href="#">Style Code Live</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="item">
-                <div class="title">Amazon Video</div>
-                <ul>
-                    <li><a href="#">All videos</a></li>
-                    <li><a href="#">Included with Prime</a></li>
-                    <li><a href="#">Add-on Subscriptions</a></li>
-                    <li><a href="#">Rent or Buy</a></li>
-                    <li><a href="#">Free to Watch</a></li>
-                </ul>
-            </div>
-        </div>
+        <?php endforeach; ?>
     </div>
 </div>
 <div class="right">
     <div class="banner-sub">
-        <a href="#"><img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg"
-                alt="" title=""></a>
+        <a href="<?= $wsAliasItem['url']; ?>">
+            <img src="<?= $wsAliasItem['image']; ?>" alt="<?= $wsAliasItem['name']; ?>" title="">
+        </a>
     </div>
 </div>

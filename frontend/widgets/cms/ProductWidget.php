@@ -12,6 +12,7 @@ class ProductWidget extends WeshopBlockWidget
     const TYPE_LEFT = 'product-left';
     const TYPE_CENTER = 'product-center';
     const TYPE_MOBILE = 'product-mobile';
+    const TYPE_ALIAS = 'product-alias';
 
     /**
      * @var array
