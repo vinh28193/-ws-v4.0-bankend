@@ -11,17 +11,14 @@ use frontend\controllers\CmsController;
 class HomeController extends CmsController
 {
 
+    public $layout = '@frontend/views/layouts/home';
 
     public function actionIndex()
     {
         $form = new PageForm();
-        if (($data = $form->initBlock($this->getPage())) === false) {
+        if (($data = $form->initBlock($this->page)) === false) {
             return $this->redirect('not-found');
         }
-        echo "<pre>";
-        var_dump($data);
-        echo "</pre>";
-        die();
-        return $this->render('index', $data);
+        return $this->render('index', ['data' => $data]);
     }
 }

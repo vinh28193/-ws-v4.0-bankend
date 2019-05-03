@@ -126,7 +126,7 @@ class PageService
 
     public static function getBlockByPageItem($pageItemId, $flushCache = false)
     {
-        $key = 'ITEM_BLOCK_BY_PAGE_ITEM_ID_' . $pageItemId;
+        $key = "ITEM_BLOCK_BY_PAGE_ITEM_{$pageItemId}_ID";
         if (!($blocks = self::getCache()->get($key)) || $flushCache) {
             $blocks = WsBlock::find()
                 ->where([

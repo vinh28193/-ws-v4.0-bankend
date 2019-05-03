@@ -14,7 +14,6 @@ use common\models\cms\WsPage;
  */
 class CmsController extends FrontendController
 {
-    public $layout = '@frontend/views/layouts/cms';
 
     public $type = WsPage::TYPE_HOME;
 
@@ -29,7 +28,7 @@ class CmsController extends FrontendController
     public function getPage()
     {
         if ($this->_page === null) {
-            $this->_page = PageService::getPage($this->type, 1);
+            $this->_page = $this->getActivePage();
         }
         return $this->_page;
     }
@@ -37,8 +36,37 @@ class CmsController extends FrontendController
     /**
      * @param $page
      */
-    public function setPage($page){
+    public function setPage($page)
+    {
         $this->_page = $page;
     }
 
+    /**
+     * @return WsPage|null
+     */
+    protected function getActivePage()
+    {
+        return PageService::getPage($this->type, 1);
+    }
+
+    /**
+     * @param string $view
+     * @param array $params
+     * @return string
+     */
+    public function render($view, $params = [])
+    {
+        $params = array_merge(['page' => $this->page], $params);
+        return parent::render($view, $params);
+    }
+
+    public function renderContent($content)
+    {
+        $layoutFile = $this->findLayoutFile($this->getView());
+        if ($layoutFile !== false) {
+            return $this->getView()->renderFile($layoutFile, ['content' => $content], $this);
+        }
+
+        return $content;
+    }
 }
