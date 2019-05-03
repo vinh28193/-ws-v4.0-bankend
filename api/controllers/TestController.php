@@ -89,7 +89,11 @@ class TestController extends Controller
         if ($finds) {
             foreach ($finds as $find) {
                 if ($find != DraftDataTracking::STATUS_LOCAL_INSPECTED) {
-                    $find->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
+                    $find->status = DraftDataTracking::STATUS_LOCAL_RECEIVED;
+                    if(strtolower($status) == 'close'){
+                        $find->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
+                        TrackingCode::UpdateStatusTracking($find->tracking_code,$find->status);
+                    }
                     $find->item_name = $item_name;
                     $find->save(0);
                     TrackingCode::UpdateStatusTracking($tracking,TrackingCode::STATUS_LOCAL_INSPECTED);
