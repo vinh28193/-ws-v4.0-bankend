@@ -1,10 +1,7 @@
 <?php
-
 /* @var $this yii\web\View */
 /* @var $wsImageGroups array */
 ?>
-
-
 <div class="left">
     <ul>
         <?php for ($i = 0; $i < 4; $i++):

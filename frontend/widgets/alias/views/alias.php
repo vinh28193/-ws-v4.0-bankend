@@ -81,6 +81,7 @@ use frontend\widgets\alias\AliasImageGridWidget;
                     </li>
                     <?php endforeach; ?>
                 </ul>
+                <input type="hidden" name="menu-global-slide" value="<?=$i ?>"/>
             </div>
         </li>
         <?php if ($alias['alias_categories'] !== null): ?>
