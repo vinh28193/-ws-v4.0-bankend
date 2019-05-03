@@ -7,6 +7,49 @@
     "content-hash": "83ba4cdca37dda3c1ab7f9c7c12d2bce",
     "packages": [
         {
+            "name": "airani/yii2-telegram-log",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/airani/yii2-telegram-log.git",
+                "reference": "27afd15aaeb8adfac66a6ef94141cc6eb1566fe7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/airani/yii2-telegram-log/zipball/27afd15aaeb8adfac66a6ef94141cc6eb1566fe7",
+                "reference": "27afd15aaeb8adfac66a6ef94141cc6eb1566fe7",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0.0",
+                "yiisoft/yii2-httpclient": "~2.0"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "airani\\log\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Irani",
+                    "email": "ali@irani.im"
+                }
+            ],
+            "description": "Yii 2.0 telegram log target, send logs to the telegram chats or channels",
+            "keywords": [
+                "bot",
+                "log",
+                "telegram",
+                "yii2"
+            ],
+            "time": "2016-07-14T07:44:14+00:00"
+        },
+        {
             "name": "bower-asset/bootstrap",
             "version": "v3.4.1",
             "source": {
@@ -939,12 +982,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "aba16d68e2099a01fcb2e1127cbabd258713eb8a"
+                "reference": "b22e508d2db967630445c553572d1e9eb997ecef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/aba16d68e2099a01fcb2e1127cbabd258713eb8a",
-                "reference": "aba16d68e2099a01fcb2e1127cbabd258713eb8a",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/b22e508d2db967630445c553572d1e9eb997ecef",
+                "reference": "b22e508d2db967630445c553572d1e9eb997ecef",
                 "shasum": ""
             },
             "require": {
@@ -993,7 +1036,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2019-03-10T07:53:21+00:00"
+            "time": "2019-04-21T09:22:17+00:00"
         },
         {
             "name": "symfony/polyfill-iconv",
@@ -1841,12 +1884,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "40f7393ee1daa2588279b21accb5e2fe7340744f"
+                "reference": "6df9679eb540a155bae7951752c535cb18aea95a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/40f7393ee1daa2588279b21accb5e2fe7340744f",
-                "reference": "40f7393ee1daa2588279b21accb5e2fe7340744f",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/6df9679eb540a155bae7951752c535cb18aea95a",
+                "reference": "6df9679eb540a155bae7951752c535cb18aea95a",
                 "shasum": ""
             },
             "require": {
@@ -1925,7 +1968,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2019-04-08T10:58:16+00:00"
+            "time": "2019-04-24T11:57:16+00:00"
         },
         {
             "name": "codeception/phpunit-wrapper",
@@ -3892,12 +3935,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/code-unit-reverse-lookup.git",
-                "reference": "383c44e104c1fd46ecc915f55145bd2831318747"
+                "reference": "98f24b1e5ffc7f5b390d2e23c2090270f2d53215"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/code-unit-reverse-lookup/zipball/383c44e104c1fd46ecc915f55145bd2831318747",
-                "reference": "383c44e104c1fd46ecc915f55145bd2831318747",
+                "url": "https://api.github.com/repos/sebastianbergmann/code-unit-reverse-lookup/zipball/98f24b1e5ffc7f5b390d2e23c2090270f2d53215",
+                "reference": "98f24b1e5ffc7f5b390d2e23c2090270f2d53215",
                 "shasum": ""
             },
             "require": {
@@ -3929,7 +3972,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2019-02-11T12:48:46+00:00"
+            "time": "2019-04-26T13:00:11+00:00"
         },
         {
             "name": "sebastian/comparator",
@@ -4103,12 +4146,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "8be786b3b65fbe706733d44a4b4a53d5391a4772"
+                "reference": "60907c7464f882649c1e9c66cc7db95382de196e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/8be786b3b65fbe706733d44a4b4a53d5391a4772",
-                "reference": "8be786b3b65fbe706733d44a4b4a53d5391a4772",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/60907c7464f882649c1e9c66cc7db95382de196e",
+                "reference": "60907c7464f882649c1e9c66cc7db95382de196e",
                 "shasum": ""
             },
             "require": {
@@ -4162,7 +4205,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2019-02-11T12:49:46+00:00"
+            "time": "2019-04-26T13:00:28+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -4221,12 +4264,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/object-enumerator.git",
-                "reference": "41af86e2a7b06e7e364c81a705b1f7caf6110218"
+                "reference": "3b05f70a5fd28edaf34c1edbd9c3bba096991654"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/object-enumerator/zipball/41af86e2a7b06e7e364c81a705b1f7caf6110218",
-                "reference": "41af86e2a7b06e7e364c81a705b1f7caf6110218",
+                "url": "https://api.github.com/repos/sebastianbergmann/object-enumerator/zipball/3b05f70a5fd28edaf34c1edbd9c3bba096991654",
+                "reference": "3b05f70a5fd28edaf34c1edbd9c3bba096991654",
                 "shasum": ""
             },
             "require": {
@@ -4260,7 +4303,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2019-02-11T12:50:05+00:00"
+            "time": "2019-04-26T12:51:10+00:00"
         },
         {
             "name": "sebastian/object-reflector",
@@ -4268,12 +4311,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/object-reflector.git",
-                "reference": "fae17b5d19ab523c9e821e5559d27e4c8a5bdee1"
+                "reference": "bcbaf4e179fde2d030cc7294c0047e36b95c98a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/object-reflector/zipball/fae17b5d19ab523c9e821e5559d27e4c8a5bdee1",
-                "reference": "fae17b5d19ab523c9e821e5559d27e4c8a5bdee1",
+                "url": "https://api.github.com/repos/sebastianbergmann/object-reflector/zipball/bcbaf4e179fde2d030cc7294c0047e36b95c98a5",
+                "reference": "bcbaf4e179fde2d030cc7294c0047e36b95c98a5",
                 "shasum": ""
             },
             "require": {
@@ -4305,7 +4348,7 @@
             ],
             "description": "Allows reflection of object attributes, including inherited and non-public ones",
             "homepage": "https://github.com/sebastianbergmann/object-reflector/",
-            "time": "2019-02-11T12:48:12+00:00"
+            "time": "2019-04-26T13:00:41+00:00"
         },
         {
             "name": "sebastian/recursion-context",
@@ -4313,12 +4356,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/recursion-context.git",
-                "reference": "87b0893f697db6d75943e26d50bf91c82796a371"
+                "reference": "e1bad3c48a61b5e93e4d59ffd8b1d878606726a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/87b0893f697db6d75943e26d50bf91c82796a371",
-                "reference": "87b0893f697db6d75943e26d50bf91c82796a371",
+                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/e1bad3c48a61b5e93e4d59ffd8b1d878606726a0",
+                "reference": "e1bad3c48a61b5e93e4d59ffd8b1d878606726a0",
                 "shasum": ""
             },
             "require": {
@@ -4358,7 +4401,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2019-02-11T12:48:28+00:00"
+            "time": "2019-04-26T13:00:07+00:00"
         },
         {
             "name": "sebastian/resource-operations",
