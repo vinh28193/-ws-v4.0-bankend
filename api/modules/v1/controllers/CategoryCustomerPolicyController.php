@@ -34,7 +34,7 @@ class CategoryCustomerPolicyController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index'],
+                'actions' => ['index', 'view'],
                 'roles' => $this->getAllRoles(true)
             ],
         ];
