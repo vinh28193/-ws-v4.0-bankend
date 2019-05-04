@@ -13,11 +13,11 @@
 
     var defaults = {
         variation_mapping: [],
-        options_group: [],
+        variation_options: [],
         sellers: [],
         conditions: [],
         images: [],
-        current_variation: []
+        current_variation: undefined
     };
 
     var methods = {
@@ -27,12 +27,19 @@
                 if ($item.data('wsItem')) {
                     return;
                 }
-                var setting = $.extend({}, options, defaults || {});
-                $item.data('wsItem', setting);
+                var settings = $.extend({}, defaults, options || {});
+                $.each(settings.variation_options, function (key,option) {
+                    console.log(option);
+                });
+                $item.data('wsItem', settings);
             });
         },
         data: function () {
             return this.data('wsItem');
         },
+    }
+
+    var watchVariationOptions = function ($item, options) {
+
     }
 })(jQuery);

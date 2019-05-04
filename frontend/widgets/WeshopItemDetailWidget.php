@@ -44,17 +44,25 @@ class WeshopItemDetailWidget extends Widget
 
     protected function prepareItem()
     {
-
+        usort($this->item->variation_options, function ($a,$b){
+            if(empty($a->images_mapping)){
+                return -1;
+            }else {
+                return 1;
+            }
+        });
     }
 
     public function getClientOptions()
     {
+
         $options = [
             'variation_mapping' => $this->item->variation_mapping,
             'variation_options' => $this->item->variation_options,
             'sellers' => $this->item->providers,
             'conditions' => $this->item->condition,
             'images' => $this->item->primary_images,
+            'current_variation' => $this->item->current_variation
         ];
         return $options;
     }
@@ -70,7 +78,7 @@ class WeshopItemDetailWidget extends Widget
         $view = $this->getView();
         ItemAsset::register($view);
         $view->registerJs("jQuery('#$id').wsItem($options);", $view::POS_END);
-        $view->registerJs("console.log($('#$id').wsItem('data'))", $view::POS_END);
+        $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
     }
 
     protected function renderEntries()
@@ -138,6 +146,7 @@ class WeshopItemDetailWidget extends Widget
     {
         $variationOptions = $this->item->variation_options;
         $options = [];
+        Html::addCssClass($options,'variation_select');
         foreach ($variationOptions as $index => $variationOption) {
             /* @var $variationOption \common\products\VariationOption */
             $optionHtml = Html::label($variationOption->name);
@@ -157,7 +166,7 @@ class WeshopItemDetailWidget extends Widget
                 ]);
                 $options[] = Html::tag('div', $optionHtml, ['class' => 'option-box']);
             } else {
-                $optionHtml .= Html::dropDownList('dropdown',null,$variationOption->values,[]);
+                $optionHtml .= Html::dropDownList($variationOption->name,null,$variationOption->values,[]);
                 $options[] = Html::tag('div', $optionHtml, ['class' => 'option-box form-inline']);
             }
 
