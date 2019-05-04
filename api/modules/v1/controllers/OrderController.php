@@ -165,6 +165,7 @@ class OrderController extends BaseApiController
             'purchased',
             'seller_shipped',
             'stockin_us',
+            'stockout_us',
             'stockin_local',
             'stockout_local',
             'at_customer',
