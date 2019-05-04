@@ -14,6 +14,7 @@ use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftDataTracking;
 use common\models\Package;
 use common\models\draft\DraftWastingTracking;
+use common\models\TrackingCode;
 use yii\base\Controller;
 use yii\helpers\ArrayHelper;
 
@@ -88,9 +89,14 @@ class TestController extends Controller
         if ($finds) {
             foreach ($finds as $find) {
                 if ($find != DraftDataTracking::STATUS_LOCAL_INSPECTED) {
-                    $find->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
+                    $find->status = DraftDataTracking::STATUS_LOCAL_RECEIVED;
+                    if(strtolower($status) == 'close'){
+                        $find->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
+                        TrackingCode::UpdateStatusTracking($find->tracking_code,$find->status);
+                    }
                     $find->item_name = $item_name;
                     $find->save(0);
+                    TrackingCode::UpdateStatusTracking($tracking,TrackingCode::STATUS_LOCAL_INSPECTED);
                     $draft = new Package();
                     $draft->tracking_code = $tracking;
                     $draft->manifest_code = $manifest_code;

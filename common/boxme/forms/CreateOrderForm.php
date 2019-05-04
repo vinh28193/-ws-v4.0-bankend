@@ -2,6 +2,8 @@
 
 namespace common\boxme\forms;
 
+use common\models\Package;
+use common\models\TrackingCode;
 use Yii;
 use common\boxme\CourierHelper;
 use common\boxme\Location;
@@ -111,6 +113,11 @@ class CreateOrderForm extends BaseForm
         $model->shipment_code = $result['data']['tracking_number'];
         $model->shipment_status = ModelShipment::STATUS_CREATED;
         $isSave = $model->save(false);
+        /** @var Package[] $listTracking */
+        $listTracking  = Package::find()->where(['shipment_id' => $model->id])->all();
+        foreach ($listTracking as $tracking){
+            TrackingCode::UpdateStatusTracking($tracking->tracking_code, TrackingCode::STATUS_CREATED_SHIPMENT);
+        }
         return [$isSave, "create order {$model->shipment_code} success"];
     }
 
