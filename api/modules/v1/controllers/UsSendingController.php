@@ -155,6 +155,7 @@ class UsSendingController extends BaseApiController
                     $model->store_id = $manifest->store_id;
                     $model->manifest_id = $manifest->id;
                     $model->manifest_code = $manifest->manifest_code;
+                    $model->stock_out_us = time();
                     $model->status = TrackingCode::STATUS_US_SENDING;
                     if (!$model->save(false)) {
                         $tokens[$name]['error'][] = $row;

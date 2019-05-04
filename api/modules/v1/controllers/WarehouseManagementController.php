@@ -51,6 +51,7 @@ class WarehouseManagementController extends BaseApiController
             if($tracking){
                 $trackingNew = new TrackingCode();
                 $trackingNew->tracking_code = $tracking;
+                $trackingNew->stock_in_us = time();
                 $trackingNew->status = TrackingCode::STATUS_US_RECEIVED;
                 $trackingNew->CreateOrUpdate(false);
             }

@@ -152,6 +152,8 @@ class BoxMeController extends Controller
                         $draft_data->image = $ext->product ? $ext->product->link_img : '';
                         $draft_data->created_at = time();
                         $draft_data->updated_at = time();
+                        $draft_data->stock_in_us = $tracking->stock_in_us;
+                        $draft_data->stock_out_us = $tracking->stock_out_us;
                         $draft_data->status = DraftDataTracking::STATUS_US_SENDING;
                         $draft_data->tracking_merge = strtoupper($tracking->tracking_code);
                         $draft_data->tracking_merge .= strtoupper($tracking->tracking_code) == strtoupper($ext->tracking_code) ? '' : ','.strtoupper($ext->tracking_code);
@@ -170,6 +172,8 @@ class BoxMeController extends Controller
                 $draft_data_one->manifest_code = $tracking->manifest_code;
                 $draft_data_one->created_at = time();
                 $draft_data_one->updated_at = time();
+                $draft_data_one->stock_in_us = $tracking->stock_in_us;
+                $draft_data_one->stock_out_us = $tracking->stock_out_us;
                 $draft_data_one->status = DraftDataTracking::STATUS_US_SENDING;
                 $draft_data_one->tracking_merge = strtoupper($tracking->tracking_code);
                 $draft_data_one->save(0);

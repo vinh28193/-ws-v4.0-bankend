@@ -9,14 +9,8 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\data\ActiveDataProvider;
-use common\models\db\Package;
-use common\models\DeliveryNote;
+use common\models\Package;
 use common\helpers\ChatHelper;
-use common\components\db\ActiveRecord;
-use yii\helpers\Inflector;
-use yii\web\NotFoundHttpException;
-use yii\web\ServerErrorHttpException;
 use Yii;
 
 class PackageController extends BaseApiController
@@ -52,25 +46,34 @@ class PackageController extends BaseApiController
      */
     public function actionIndex()
     {
-        $requestParams = Yii::$app->getRequest()->getQueryParams();
-        $query = DeliveryNote::find();
-        $query->filterRelation();
-        $query->defaultSelect();
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSizeParam' => 'ps',
-                'pageParam' => 'p',
-                'params' => $requestParams,
-            ],
-            'sort' => [
-                'params' => $requestParams,
-            ],
-        ]);
-
-        $query->filter($requestParams);
-
-        return $this->response(true, 'get data success', $dataProvider);
+        $limit = Yii::$app->request->get('limit',20);
+        $page = Yii::$app->request->get('page',1);
+        $tracking_code = Yii::$app->request->get('tracking_code');
+        $sku = Yii::$app->request->get('sku');
+        $order_code = Yii::$app->request->get('order_code');
+        $type_tracking = Yii::$app->request->get('type_tracking');
+        $query = Package::find()
+            ->with(['order','manifest.receiveWarehouse'])
+            ->leftJoin('product','product.id = package.product_id')
+            ->leftJoin('order','order.id = package.order_id');
+        if($tracking_code){
+            $query->andWhere(['like' , 'package.tracking_code' , $tracking_code]);
+        }
+        if($sku){
+            $query->andWhere(['or',['like','product.sku',$sku],['like','product.parent_sku',$sku]]);
+        }
+        if($order_code){
+            $query->andWhere([['like','order.ordercode',$order_code]]);
+        }
+        if($type_tracking){
+            $query->andWhere([['package.type_tracking',$type_tracking]]);
+        }
+        $data['total'] = $query->count();
+        if($limit != 'all'){
+            $query->limit($limit)->offset($limit*$page-$limit);
+        }
+        $data['data'] = $query->orderBy('id desc')->asArray()->all();
+        return $this->response(true, 'get data success', $data);
     }
     public function actionView($id)
     {
