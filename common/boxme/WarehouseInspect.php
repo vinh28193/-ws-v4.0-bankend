@@ -166,7 +166,7 @@ class WarehouseInspect
                 $attributes['purchase_invoice_number'] = $find->purchase_invoice_number;
                 $attributes['seller_refund_amount'] = $find->seller_refund_amount;
                 $attributes['type_tracking'] = $find->type_tracking;
-                $attributes['tracking_merge'] = strtolower($find->tracking_code) == strtolower($trackingCode) ? $find->tracking_merge : strtolower($trackingCode) . ',' . $find->tracking_merge;
+                $attributes['tracking_merge'] = strtoupper($find->tracking_code) == strtoupper($trackingCode) ? $find->tracking_merge : strtoupper($trackingCode) . ',' . $find->tracking_merge;
                 $attributes['price'] = $find->product ? $find->product->price_amount_local : 0;
                 $attributes['product_id'] = $find->product_id;
                 $attributes['order_id'] = $find->order_id;

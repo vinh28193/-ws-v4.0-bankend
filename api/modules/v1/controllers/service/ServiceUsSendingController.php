@@ -55,12 +55,7 @@ class ServiceUsSendingController extends BaseApiController
         if($count > 1){
             DraftDataTracking::updateAll(
                 ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
-                [
-                    'and',
-                    ['tracking_code' => $model->tracking_code],
-                    ['<>' ,'product_id' , ''],
-                    ['<>' ,'product_id' , null],
-                ]
+                ['tracking_code' => $model->tracking_code]
             );
         }else{
             $model->type_tracking = DraftDataTracking::TYPE_NORMAL;
@@ -151,7 +146,7 @@ class ServiceUsSendingController extends BaseApiController
         $data->order_id = $ext->order_id;
         $data->quantity = $ext->quantity;
         $data->purchase_invoice_number = $ext->purchase_invoice_number;
-        $data->tracking_merge = $data->tracking_merge . ','.strtolower($ext->tracking_code);
+        $data->tracking_merge = $data->tracking_merge . ','.strtoupper($ext->tracking_code);
         $data->save(0);
         $ext->status = DraftExtensionTrackingMap::MAPPED;
         $ext->draft_data_tracking_id = $data->id;
@@ -160,12 +155,7 @@ class ServiceUsSendingController extends BaseApiController
         if($count > 1){
             DraftDataTracking::updateAll(
                 ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
-                [
-                    'and',
-                    ['tracking_code' => $data->tracking_code],
-                    ['<>' ,'product_id' , ''],
-                    ['<>' ,'product_id' , null],
-                ]
+                ['tracking_code' => $data->tracking_code]
             );
         }else{
             $data->type_tracking = DraftDataTracking::TYPE_NORMAL;
