@@ -156,6 +156,22 @@ class OrderController extends BaseApiController
      */
     public function actionUpdate($id)
     {
+        $StatusOrder = array(
+            'new',
+            'supporting',
+            'supported',
+            'ready_purchase',
+            'purchase_start',
+            'purchased',
+            'seller_shipped',
+            'stockin_us',
+            'stockin_local',
+            'stockout_local',
+            'at_customer',
+            'returned',
+            'cancel',
+            'lost',
+        );
         $post = Yii::$app->request->post();
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $model = $this->findModel($id, false);
@@ -179,8 +195,13 @@ class OrderController extends BaseApiController
             }
         }
         if ($model->getScenario() == 'updateOrderStatus') {
-            $model->{$post['Order']['status']} = $now;
-            $model->current_status = strtoupper($post['Order']['current_status']);
+            for ($i = 0; $i < (int)($post['Order']['status']); $i++) {
+                if ($model->{$StatusOrder[$i]} == null) {
+                    $model->{$StatusOrder[$i]} = $now;
+                }
+            }
+//            $model->current_status = strtoupper($post['Order']['current_status']);
+            $model->current_status = strtoupper($StatusOrder[(int)($post['Order']['status'])]);
         }
         if ($model->getScenario() == 'updateReady2Purchase') {
             $model->ready_purchase = $now;
