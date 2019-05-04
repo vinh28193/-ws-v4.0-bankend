@@ -92,7 +92,7 @@ class WeshopItemDetailWidget extends Widget
 
     protected function renderDetailBlock()
     {
-        $detail = Yii::$app->controller->renderPartial('_slider');
+        $detail = $this->renderSlider();
         $detail .= $this->renderFullInfo();
         return Html::tag('div', $detail, ['class' => 'detail-block']);
     }
@@ -100,13 +100,14 @@ class WeshopItemDetailWidget extends Widget
     public function renderSlider()
     {
         return Yii::$app->controller->renderPartial('_slider', [
-            'images' => $this->item->primary_images
+            'images' => $this->item->primary_images,
+            'alt'    =>  $this->item->item_name
         ]);
     }
 
     public function renderFullInfo()
     {
-        $html = '<a href="#" class="brand">Bulova</a>';
+        $html = Html::tag('a',$this->item->getCategoryName(),['href'=>'#','class'=> 'brand']);
         $title = Html::tag('h2', $this->item->item_name);
         if (($salePercent = $this->item->getSalePercent()) > 0) {
             $title .= ' <span class="sale-tag">' . $salePercent . '% OFF</span>';
@@ -128,6 +129,8 @@ class WeshopItemDetailWidget extends Widget
             $price .= Html::tag('span', $salePercent, ['class' => 'save']);
         }
         $html .= Html::tag('div', $price, ['class' => 'price']);
+        $html .= Html::tag('div','(Giá trọn gói về Việt Nam với trọng lượng ước tính 450 gram)
+',['class' => 'total-price']);
         $html .= $this->renderOptionBox();
         $html .= '<ul class="info-list">
                 <li>Imported</li>
@@ -146,20 +149,28 @@ class WeshopItemDetailWidget extends Widget
     {
         $variationOptions = $this->item->variation_options;
         $options = [];
-        Html::addCssClass($options,'variation_select');
+        // Html::addCssClass($options,'variation_select');
         foreach ($variationOptions as $index => $variationOption) {
             /* @var $variationOption \common\products\VariationOption */
             $optionHtml = Html::label($variationOption->name);
             if (($optionImages = $variationOption->images_mapping) !== null && count($optionImages) > 0) {
                 $lis = [];
+                $i = 0;
                 foreach ($optionImages as $optionImage) {
                     /* @var $optionImage \common\products\VariationOptionImage */
-                    $image = $optionImage->images[0];
-                    /* @var $image \common\products\Image */
-                    $lis[] = '<li><span>' . Html::img($image->thumb, [
+                    if($optionImage->images != null)
+                    {
+                        $i++;
+                        $image = $optionImage->images[0];
+                        $active = '';
+                        if($i == 1) $active = 'active';
+                       /* @var $image \common\products\Image */
+                        $lis[] = "<li class =".$active."><span>" . Html::img($image->thumb, [
                             'alt' => $optionImage->value,
                             'style' => 'width:100px'
                         ]) . '</span></li>';
+                    }
+                  
                 }
                 $optionHtml .= Html::tag('ul', implode("\n", $lis), [
                     'class' => 'style-list'
