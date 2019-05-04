@@ -69,7 +69,7 @@ class CmsController extends FrontendController
         if ($layoutFile !== false) {
             return $this->getView()->renderFile($layoutFile, [
                 'content' => $content,
-                'type' => $this->type,
+                'page' => $this->page,
             ], $this);
         }
 

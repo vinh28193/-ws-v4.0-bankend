@@ -21,13 +21,13 @@ use yii\helpers\Html;
         <div class="thumb">
             <a href="#">
                 <?php
-                if ($iphoneOld) {
+//                if ($iphoneOld) {
                     echo Html::img($image);
-                }else{
-                    echo ImageLazyLoadWidget::widget([
-                        'src' => $image
-                    ]);
-                }
+//                }else{
+//                    echo ImageLazyLoadWidget::widget([
+//                        'src' => $image
+//                    ]);
+//                }
                 ?>
             </a>
             <?php
