@@ -35,6 +35,10 @@ use Yii;
  * @property int $updated_by Updated by
  * @property int $updated_at Updated at (timestamp)
  * @property string $status_merge Trạng thái của tracking với việc đối chiếu tracking với bảng ext
+ * @property int $stock_in_us
+ * @property int $stock_out_us
+ * @property int $stock_in_local
+ * @property int $stock_out_local
  */
 class TrackingCode extends \common\components\db\ActiveRecord
 {
@@ -53,7 +57,7 @@ class TrackingCode extends \common\components\db\ActiveRecord
     {
         return [
             [['store_id'], 'required'],
-            [['store_id', 'manifest_id', 'delivery_note_id', 'package_id', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
+            [['store_id', 'manifest_id', 'delivery_note_id', 'package_id', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'stock_out_local'], 'integer'],
             [['warehouse_note', 'operation_note'], 'string'],
             [['weight', 'quantity', 'dimension_width', 'dimension_length', 'dimension_height'], 'number'],
             [['version', 'tracking_code', 'order_ids', 'status_merge'], 'string', 'max' => 255],
@@ -96,6 +100,10 @@ class TrackingCode extends \common\components\db\ActiveRecord
             'updated_by' => 'Updated By',
             'updated_at' => 'Updated At',
             'status_merge' => 'Status Merge',
+            'stock_in_us' => 'Stock In Us',
+            'stock_out_us' => 'Stock Out Us',
+            'stock_in_local' => 'Stock In Local',
+            'stock_out_local' => 'Stock Out Local',
         ];
     }
 }
