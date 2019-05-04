@@ -24,3 +24,24 @@ echo WeshopItemDetailWidget::widget([
 ]);
 Pjax::end(); ?>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.slick-slider').slick({
+            infinite: true,
+            vertical: true,
+            arrows: true,
+            prevArrow: $('.slider-prev'),
+            nextArrow: $('.slider-next'),
+            slidesToShow: 5
+        });
+
+        $('#detail-big-img').ezPlus({
+            imageCrossfade: true,
+            easing: true,
+            scrollZoom: true,
+            cursor: 'zoom-in',
+            gallery: 'detail-slider',
+            galleryActiveClass: 'active'
+        });
+    });
+</script>
