@@ -91,8 +91,13 @@ class ListChatMongoController extends BaseApiController
             if (isset($post['status'])) {
                 $chat->status = $post['status'];
             }
-            if (isset($post['checkStatusValue']) && $post['checkStatusValue'] == 'checkStatusValue' && $post['statusChat']) {
-                $chat->status = $post['statusChat'];
+            if (isset($post['checkStatusValue']) && $post['checkStatusValue'] == 'checkStatusValue') {
+                if ($chat->status == 0) {
+                    $chat->status = 1;
+                }
+                else if ($chat->status == 1) {
+                    $chat->status = 0;
+                }
             }
             if (!$chat->save()) {
                 return $this->response(false, 'error', $chat->getErrors());
