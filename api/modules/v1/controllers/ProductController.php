@@ -35,7 +35,7 @@ class ProductController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index'],
+                'actions' => ['index', 'update'],
                 'roles' => $this->getAllRoles(true)
             ],
         ];
