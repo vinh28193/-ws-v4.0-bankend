@@ -9,10 +9,10 @@ use common\models\cms\WsPage;
 use common\models\cms\PageService;
 use frontend\controllers\CmsController;
 
-class EbayController extends CmsController
+class AmazonJpController extends CmsController
 {
 
-    public $type = WsPage::TYPE_EBAY;
+    public $type = WsPage::TYPE_AMZ_JP;
 
     public function actionIndex()
     {
@@ -23,6 +23,7 @@ class EbayController extends CmsController
                 'content' => $this->renderBlock($p,self::MAX_ITEM_SIZE),
             ]);
         }
+    
         $totalCount = PageService::getPageItem($this->getPage()->id,-1,-1);
         $numPages = (int)($totalCount / self::MAX_ITEM_SIZE) + (($totalCount % self::MAX_ITEM_SIZE > 0) ? 1 : 0);
         return $this->render('index', [

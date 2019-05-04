@@ -10,6 +10,7 @@ use yii\bootstrap4\Widget;
 use yii\helpers\Json;
 use yii\web\View;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
 
 class WsLazyCMSWidget extends Widget
 {
@@ -20,6 +21,7 @@ class WsLazyCMSWidget extends Widget
 
     public $ajaxUrl = 'http://weshop-4.0.frontend.vn/cms/ebay';
 
+
     public function init()
     {
         parent::init();
@@ -28,8 +30,15 @@ class WsLazyCMSWidget extends Widget
     public function run()
     {
         parent::run();
+        $this->setAjaxUrl();
         $this->registerLazyJs();
         echo $this->renderLazyContent();
+    }
+
+    public function setAjaxUrl()
+    {
+        $cur_url = Yii::$app->request->url;
+        $this->ajaxUrl = 'http://weshop-4.0.frontend.vn'.$cur_url;
     }
 
     public function registerLazyJs()

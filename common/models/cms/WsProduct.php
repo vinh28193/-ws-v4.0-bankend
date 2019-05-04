@@ -36,6 +36,7 @@ class WsProduct extends \common\models\db_cms\WsProduct
         if (!$this->_local_start_price) {
             $this->_local_start_price = WeshopHelper::roundNumber($this->calculated_start_price * $this->getStoreManager()->getExchangeRate());
         }
+
         return $this->_local_start_price;
     }
 
@@ -43,6 +44,7 @@ class WsProduct extends \common\models\db_cms\WsProduct
 
     public function setLocalSellPrice($local_sell_price)
     {
+        
         $this->_local_sell_price = $local_sell_price;
     }
 

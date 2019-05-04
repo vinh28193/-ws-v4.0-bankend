@@ -281,7 +281,11 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
      */
     public function getLocalizeTotalPrice()
     {
-        return $this->getAdditionalFees()->getTotalAdditionFees()[1];
+
+        $price = $this->getAdditionalFees()->getTotalAdditionFees()[1];
+        $price = round($price,-3);
+        $price = number_format($price,'','.','.');
+        return $price;
     }
 
     /**
