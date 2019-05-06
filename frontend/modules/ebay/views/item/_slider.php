@@ -33,8 +33,6 @@ use yii\helpers\Html;
                      
                 ?> 
        
-<!--           <div class="out-of-date">
-              <span><i class="fas fa-exclamation-triangle"></i><br/>Hàng hết hạn bán</span>
-          </div> -->
+
       </div>
   </div>
