@@ -90,16 +90,7 @@ class ProductDetailFrom extends BaseForm
             return false;
         }
         if ($this->isSku()) {
-            foreach ($product->variation_mapping as $variation) {
-                if ($variation->variation_sku === $this->sku) {
-                    $product->sell_price = $variation->variation_price;
-                    $product->available_quantity = $variation->available_quantity;
-                    $product->quantity_sold = $variation->quantity_sold;
-                    $product->item_sku = $this->sku;
-                    break;
-                }
-            }
-            $product->current_variation = $product->getSpecific($this->sku);
+            $product->updateBySku($this->sku);
         }
         if ($this->weight !== null && trim($this->weight) > 0) {
             $product->shipping_weight = $this->weight;
