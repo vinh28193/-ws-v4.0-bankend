@@ -9,7 +9,8 @@ use common\products\forms\ProductDetailFrom;
 class ItemController extends EbayController
 {
 
-    public function actionIndex($id){
+    public function actionIndex($id)
+    {
         $form = new ProductDetailFrom();
         $form->id = $id;
         $form->type = 'ebay';
@@ -17,6 +18,5 @@ class ItemController extends EbayController
         return $this->render('index',[
             'item' => $item
         ]);
-
     }
 }

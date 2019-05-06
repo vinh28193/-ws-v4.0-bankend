@@ -14,7 +14,6 @@ Pjax::begin([
         'class' => 'detail-content'
     ]
 ]);
-
 echo ItemDetailWidget::widget([
     'item' => $item,
     'options' => [
