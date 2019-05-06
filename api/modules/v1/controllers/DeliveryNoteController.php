@@ -8,6 +8,7 @@ use api\controllers\BaseApiController;
 use common\helpers\WeshopHelper;
 use common\models\DeliveryNote;
 use common\models\Package;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 class DeliveryNoteController extends BaseApiController
@@ -42,9 +43,59 @@ class DeliveryNoteController extends BaseApiController
     public function actionCreate(){
         $listPackage = \Yii::$app->request->post('listPackage');
         $infoDeliveryNote = \Yii::$app->request->post('infoDeliveryNote');
-        if(!$infoDeliveryNote || !$listPackage){
+        $create1vs1 = \Yii::$app->request->post('create1vs1');
+
+        if((!$create1vs1 && !$infoDeliveryNote) || !$listPackage){
             return $this->response(false, 'Info delivery note or list package cannot null!');
         }
+        if($infoDeliveryNote){
+           return $this->create($listPackage,$infoDeliveryNote);
+        }
+        if($create1vs1){
+            return $this->createMulti($listPackage);
+        }
+        return $this->response(false, 'Some thing error!');
+    }
+    function createMulti($listIds){
+        $packages = Package::find()->with(['order'])->where(['id' => $listIds])->all();
+        if(!$packages){
+            return $this->response(false, 'Cannot find package !');
+        }
+        $count = 0;
+        foreach ($packages as $package){
+            if($package->delivery_note_code || $package->hold || $package->shipment_id ){
+                continue;
+            }
+            if(!$package->order_id){
+                continue;
+            }
+            $deliveryNote = new DeliveryNote();
+            $deliveryNote->tracking_seller = $package->tracking_code;
+            $deliveryNote->order_ids = $package->order_id;
+            $deliveryNote->manifest_code = $package->manifest_code;
+            $deliveryNote->delivery_note_weight = $package->weight;
+            $deliveryNote->delivery_note_dimension_h = $package->dimension_h;
+            $deliveryNote->delivery_note_dimension_l = $package->dimension_l;
+            $deliveryNote->delivery_note_dimension_w = $package->dimension_w;
+            if($package->dimension_h && $package->dimension_l && $package->dimension_w){
+                $deliveryNote->delivery_note_change_weight = ($package->dimension_h * $package->dimension_w * $package->dimension_l)/5;
+            }
+            $deliveryNote->seller_shipped = $package->stock_in_us;
+            $deliveryNote->stock_in_us = $package->stock_in_us;
+            $deliveryNote->stock_out_us = $package->stock_out_us;
+            $deliveryNote->stock_in_local = $package->stock_in_local;
+            $deliveryNote->current_status = DeliveryNote::STATUS_REQUEST_SHIP_OUT;
+            $deliveryNote->save(false);
+            $deliveryNote->delivery_note_code = WeshopHelper::generateTag($deliveryNote->id,'WSVNDN');
+            $deliveryNote->save(false);
+            $package->delivery_note_code = $deliveryNote->delivery_note_code;
+            $package->delivery_note_id = $deliveryNote->id;
+            $package->save(0);
+            $count ++;
+        }
+        return $this->response(true,'Create '.$count.'/'.count($listIds).' Delivery note success!');
+    }
+    function create($listPackage,$infoDeliveryNote){
         $weight = ArrayHelper::getValue($infoDeliveryNote,'weight',0);
         $length = ArrayHelper::getValue($infoDeliveryNote,'length',0);
         $width = ArrayHelper::getValue($infoDeliveryNote,'width',0);
@@ -55,17 +106,22 @@ class DeliveryNoteController extends BaseApiController
         $orderIds = [];
         $manifestCodes = [];
         /** @var Package[] $packages */
-        $packages = Package::find()->where(['id' => $listPackage])->all();
+        $packages = Package::find()->with(['order'])->where(['id' => $listPackage])->all();
         if(!$packages){
             return $this->response(false, 'Cannot find package !');
         }
+        $customer_id = '';
         foreach ($packages as $package){
-            if($package->delivery_note_code){
+            if($package->delivery_note_code || $package->hold || $package->shipment_id ){
                 return $this->response(false, 'Some package has been included in the delivery note!');
                 break;
             }
             if(!$package->order_id){
                 return $this->response(false, 'Have tracking unknown!');
+                break;
+            }
+            if($customer_id && $customer_id != $package->order->customer_id){
+                return $this->response(false, 'You must choose the same customer!');
                 break;
             }
             $orderIds = array_merge([$package->order_id],$orderIds);
@@ -99,5 +155,57 @@ class DeliveryNoteController extends BaseApiController
             ['id' => $listPackage]
         );
         return $this->response(true, 'Create Delivery success!');
+    }
+    public function actionDelete($id){
+        $model = Package::findOne($id);
+        if(!$model){
+            return $this->response(false, 'Cannot fill package!');
+        }
+        if($model->shipment_id){
+            return $this->response(false, 'Package has shipment!');
+        }
+        $deliveryNote = DeliveryNote::findOne($model->delivery_note_id);
+        if(!$deliveryNote){
+            return $this->response(false, 'Cannot fill delivery note!');
+        }
+        if($deliveryNote->shipment_id){
+            return $this->response(false, 'Delivery note has shipment!');
+        }
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $packages = Package::find()->where(['<>','id',$model->id])->andWhere(['delivery_note_id' => $deliveryNote->id])->orderBy('id desc')->all();
+            if($packages){
+                $orderIds = [];
+                $manifestCodes = [];
+                foreach ($packages as $package){
+                    if($package->delivery_note_code || $package->hold || $package->shipment_id ){
+                        return $this->response(false, 'Some package has been included in the delivery note!');
+                        break;
+                    }
+                    if(!$package->order_id){
+                        return $this->response(false, 'Have tracking unknown!');
+                        break;
+                    }
+                    $orderIds = array_merge([$package->order_id],$orderIds);
+                    $manifestCodes = array_merge([$package->manifest_code],$manifestCodes);
+                }
+                $deliveryNote->tracking_seller = $deliveryNote->tracking_seller == $model->tracking_code ? $packages[0]->tracking_code : $deliveryNote->tracking_seller;
+                $deliveryNote->tracking_reference_1 = $deliveryNote->tracking_reference_1 == $model->tracking_code ? $packages[0]->tracking_code : $deliveryNote->tracking_reference_1;
+                $deliveryNote->tracking_reference_2 = $deliveryNote->tracking_reference_2 == $model->tracking_code ? $packages[0]->tracking_code : $deliveryNote->tracking_reference_2;
+                $deliveryNote->order_ids = implode(',',$orderIds);
+                $deliveryNote->manifest_code = implode(',',$manifestCodes);
+                $deliveryNote->delivery_note_weight = $deliveryNote->delivery_note_weight - $model->weight > 0 ? $deliveryNote->delivery_note_weight - $model->weight : 0;;
+                $deliveryNote->save(false);
+            }
+            $model->delivery_note_code = null;
+            $model->delivery_note_id = null;
+            $model->save(0);
+            $transaction->commit();
+            return $this->response(true, 'Remove success!');
+        } catch (\Exception $exception) {
+            Yii::error($exception, __METHOD__);
+            $transaction->rollBack();
+            return $this->response(true, 'Remove fail!');
+        }
     }
 }

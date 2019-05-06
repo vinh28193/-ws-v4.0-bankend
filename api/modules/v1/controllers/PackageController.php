@@ -53,6 +53,7 @@ class PackageController extends BaseApiController
         $sku = Yii::$app->request->get('sku');
         $order_code = Yii::$app->request->get('order_code');
         $type_tracking = Yii::$app->request->get('type_tracking');
+        $status = Yii::$app->request->get('status');
         $query = Package::find()
             ->with(['order','manifest.receiveWarehouse'])
             ->leftJoin('product','product.id = package.product_id')
@@ -70,7 +71,15 @@ class PackageController extends BaseApiController
             $query->whereLikeMore('package.ordercode' , $order_code);
         }
         if($type_tracking){
-            $query->whereLikeMore('package.type_tracking' , $type_tracking);
+            $query->andWhere(['package.type_tracking' => $type_tracking]);
+        }
+        if($status){
+            if($status == 'created'){
+                $query->andWhere(['and',['is not','package.delivery_note_code' , null],['<>','package.delivery_note_code' , '']]);
+            }
+            if($status == 'not_create'){
+                $query->andWhere(['or',['package.delivery_note_code' => null],['package.delivery_note_code' => '']]);
+            }
         }
         $data['total'] = $query->count();
         if($limit != 'all'){
