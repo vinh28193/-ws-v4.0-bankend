@@ -92,6 +92,9 @@ class ProductController extends BaseApiController
             if (isset($post['noteCustomer'])) {
                 $product->note_by_customer = $post['noteCustomer'];
             }
+            if (isset($post['note_boxme'])) {
+                $product->note_boxme = $post['note_boxme'];
+            }
             $dirtyAttributes = $product->getDirtyAttributes();
             $messages = "order {$post['order_path']} Update Product {$this->resolveChatMessage($dirtyAttributes,$product)}";
 
