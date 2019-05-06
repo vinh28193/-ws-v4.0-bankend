@@ -34,8 +34,8 @@ class PackageController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index'],
-                'roles' => ['operation','master_operation']
+                'actions' => ['index', 'view'],
+                'roles' => ['operation','master_operation', 'tester', 'master_sale', 'sale']
             ],
         ];
     }
@@ -89,19 +89,50 @@ class PackageController extends BaseApiController
         $model = Package::findOne($id);
         if (!$model->delete()) {
             Yii::$app->wsLog->push('order', 'deletePackageItem', null, [
-                'id' => $model->$post['ordercode'],
+                'id' => $model->order->ordercode,
                 'request' => $this->post,
             ]);
             return $this->response(false, 'delete package' . $id . 'error');
         }
         $dirtyAttributes = $model->getDirtyAttributes();
-        $messages = "order {$model->$post['ordercode']} Delete Package {$this->resolveChatMessage($dirtyAttributes,$model)}";
-        ChatHelper::push($messages, $model->$post['ordercode'], 'GROUP_WS', 'SYSTEM');
+        $messages = "order {$model->order->ordercode} Delete Package {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
         Yii::$app->wsLog->push('order', 'deletePackage', null, [
-            'id' => $model->$post['ordercode'],
+            'id' => $model->order->ordercode,
             'request' => $this->post,
         ]);
         return $this->response(true, 'delete package' . $id . 'success');
+    }
+
+    public function actionCreate()
+    {
+        $post = Yii::$app->request->post();
+        $model = new Package();
+        $model->weight = $post['weight'];
+        $model->quantity = $post['quantity'];
+        $model->dimension_l = $post['dimension_l'];
+        $model->dimension_h = $post['dimension_h'];
+        $model->dimension_w = $post['dimension_w'];
+        $model->price = $post['price'];
+        $model->order_id = $post['order_id'];
+        $model->tracking_code = $post['tracking_code'];
+        $dirtyAttributes = $model->getDirtyAttributes();
+        $messages = "order {$post['ordercode']} Create DeliveryNote Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        if (!$model->save()) {
+            Yii::$app->wsLog->push('order', 'createPackageItem', null, [
+                'id' => $model->order->ordercode,
+                'request' => $this->post,
+                'response' => $model->getErrors()
+            ]);
+            return $this->response(false, 'create package item error');
+        }
+        ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
+        Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+            'id' => $model->order->ordercode,
+            'request' => $this->post,
+            'response' => $dirtyAttributes
+        ]);
+        return $this->response(true, 'create package item success', $model);
     }
 
     protected function resolveChatMessage($dirtyAttributes, $reference)
