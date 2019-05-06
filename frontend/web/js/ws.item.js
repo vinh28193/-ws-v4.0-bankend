@@ -53,15 +53,14 @@
                 $item.trigger($.Event(events.afterInit));
             });
         },
-        changeVariation: function (variationName, variationValue) {
+        changeVariation: function (variationOption, selectedValue) {
             var $item = $(this);
             var data = $item.data('wsItem');
-
-            var messages = {};
+            // update Image here;
             var deferredArrays = deferredArray();
             var params = data.params;
-            currentVariations = currentVariations.filter(c => c.name !== variationName);
-            currentVariations.push({name: variationName, value: variationValue});
+            currentVariations = currentVariations.filter(c => c.name !== variationOption.name);
+            currentVariations.push({name:  variationOption.name, value: selectedValue});
             console.log(currentVariations);
             const activeVariation = findVariation(params.variation_mapping, currentVariations);
             if (activeVariation !== undefined) {
@@ -116,11 +115,11 @@
         var type = $input.attr('type');
         if (type === 'spanList') {
             $input.on('click.wsItem', function (e) {
-                methods.changeVariation.call($item, name, $(this).data('value'));
+                methods.changeVariation.call($item, variationOption, $(this).data('value'));
             });
         } else {
             $input.on('change.wsItem', function (e) {
-                methods.changeVariation.call($item, name, $(this).val());
+                methods.changeVariation.call($item, variationOption, $(this).val());
             });
         }
     };
