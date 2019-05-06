@@ -170,7 +170,7 @@ class OrderController extends BaseApiController
             'stockout_local',
             'at_customer',
             'returned',
-            'cancel',
+            'cancelled',
             'lost',
         );
         $post = Yii::$app->request->post();
