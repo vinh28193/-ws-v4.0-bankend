@@ -30,40 +30,90 @@
                 }
                 var settings = $.extend({}, defaults, options || {});
                 $.each(settings.variation_options, function (index, variationOption) {
+                    checkValidVariation($item, variationOption);
                     watchVariationOptions($item, variationOption);
                 });
+                setUpDefaultOptions($item);
                 $item.data('wsItem', settings);
             });
         },
-        changeVariation: function (value) {
+        changeVariation: function (variationName, variationValue) {
             var $item = $(this);
             var data = $item.data('wsItem');
-            console.log(value);
+            var requireOptions = data.variation_options.length;
+            currentVariations = currentVariations.filter(c => c.name !== variationName);
+            currentVariations.push({name: variationName, value: variationValue});
+            const activeVariation = findVariation(data.variation_mapping, currentVariations);
+            console.log(activeVariation);
         },
         data: function () {
             return this.data('wsItem');
         },
     };
-
+    var setUpDefaultOptions = function (item) {
+        
+    };
     var watchVariationOptions = function ($item, variationOption) {
         var $input = findInput($item, variationOption);
-        console.log($input);
+        var name = variationOption.name;
         var type = $input.attr('type');
-        console.log('type:' + type);
-        $input.on('change.wsItem', function (e) {
-            methods.changeVariation.call($item, $(this).val());
-        });
+        if (type === 'spanList') {
+            $input.on('click.wsItem', function (e) {
+                methods.changeVariation.call($item, name, $(this).data('value'));
+            });
+        } else {
+            $input.on('change.wsItem', function (e) {
+                methods.changeVariation.call($item, name, $(this).val());
+            });
+        }
     };
-
+    var checkValidVariation = function ($item,variationOption) {
+        
+    };
+    var findVariation = function (mapping, options) {
+        return $.grep(mapping, function (i) {
+            return JSON.stringify(i.options_group.sort(sortBy('name'))) == JSON.stringify(options.sort(sortBy('name')));
+        })[0];
+    };
     var findInput = function ($item, variationOption) {
         var name = variationOption.name;
         var $dataRef = '[data-ref=' + variationOption.name + ']';
         var selection = $dataRef + ' #' + name.toLowerCase();
         var $input = $item.find(selection);
-        if ($input.length && $input[0].tagName.toLowerCase() === 'div') {
-            return $input.find('input');
+        if ($input.length && $input[0].tagName.toLowerCase() === 'ul') {
+            return $input.find('span');
         } else {
             return $input;
         }
     }
+    var sortBy = function sortBy(key, reverse) {
+
+        // Move smaller items towards the front
+        // or back of the array depending on if
+        // we want to sort the array in reverse
+        // order or not.
+        var moveSmaller = reverse ? 1 : -1;
+
+        // Move larger items towards the front
+        // or back of the array depending on if
+        // we want to sort the array in reverse
+        // order or not.
+        var moveLarger = reverse ? -1 : 1;
+
+        /**
+         * @param  {*} a
+         * @param  {*} b
+         * @return {Number}
+         */
+        return function (a, b) {
+            if (a[key] < b[key]) {
+                return moveSmaller;
+            }
+            if (a[key] > b[key]) {
+                return moveLarger;
+            }
+            return 0;
+        };
+
+    };
 })(jQuery);

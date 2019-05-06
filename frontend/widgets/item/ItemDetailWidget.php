@@ -174,20 +174,16 @@ class ItemDetailWidget extends Widget
                     $image = $optionImage->images[0];
                     /* @var $image \common\products\Image */
                     $list2[$optionImage->value] = $optionImage->value;
-                    $lis[] = '<li><span>' .
-                        Html::hiddenInput($optionImage->value) .
+                    $lis[] = '<li><span type="spanList" data-value="'.$optionImage->value.'">' .
                         Html::img($image->thumb, [
                             'alt' => $optionImage->value,
                             'style' => 'width:100px'
                         ]) . '</span></li>';
                 }
                 Html::addCssClass($elementOptions, 'style-list');
-                $elementOptions = ArrayHelper::merge([
-                    'type' => 'select'
-                ], $elementOptions);
                 $element = Html::tag('ul', implode("\n", $lis), $elementOptions);
                 Html::addCssClass($optionBoxOptions, 'option-box');
-                $element = Html::radioList($name, null, $list2, $elementOptions);
+//                $element = Html::radioList($name, null, $list2, $elementOptions);
 
             } else {
                 $elementOptions = ArrayHelper::merge([
