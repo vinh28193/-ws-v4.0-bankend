@@ -170,7 +170,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 'total_refund_amount_local'
             ],
             self::SCENARIO_UPDATE_SELLER_REFUND => [
-                'purchase_amount_buck', 'purchase_amount_refund'
+                'purchase_refund_transaction_id', 'purchase_amount_refund'
             ],
             self::SCENARIO_UPDATE_MARK_SUPPORTING => [
                 'current_status', 'mark_supporting'
