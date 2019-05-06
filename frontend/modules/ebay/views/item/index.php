@@ -25,6 +25,7 @@ echo ItemDetailWidget::widget([
 Pjax::end(); ?>
 
 <script type="text/javascript">
+    
     $(document).ready(function () {
         $('.slick-slider').slick({
             infinite: true,

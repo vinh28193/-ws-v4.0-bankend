@@ -16,6 +16,8 @@ use common\models\cms\WsPage;
 class CmsController extends FrontendController
 {
 
+    const MAX_ITEM_SIZE = 4;
+    
     public $layout = '@frontend/views/layouts/cms';
 
     public $type = WsPage::TYPE_HOME;
