@@ -532,6 +532,10 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 $query->andFilterWhere(['>','order.total_paid_amount_local' , 0]);
             } elseif ($params['paymentStatus'] === 'UNPAID') {
                 $query->andFilterWhere(['=', 'order.total_paid_amount_local', 0]);
+            } elseif ($params['paymentStatus'] === 'REFUND_PARTIAL') {
+                $query->andFilterWhere(['>', 'order.total_paid_amount_local', new Expression('[[order.total_refund_amount_local]]')]);
+            } elseif ($params['paymentStatus'] === 'REFUND_FULL') {
+                $query->andFilterWhere(['=', 'order.total_paid_amount_local', new Expression('[[order.total_refund_amount_local]]')]);
             }
         }
         if (isset($params['type'])) {
