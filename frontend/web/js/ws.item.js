@@ -35,8 +35,10 @@
                 $item.data('wsItem', settings);
             });
         },
-        changeVariation:function(value) {
-
+        changeVariation: function (value) {
+            var $item = $(this);
+            var data = $item.data('wsItem');
+            console.log(value);
         },
         data: function () {
             return this.data('wsItem');
@@ -47,16 +49,18 @@
         var $input = findInput($item, variationOption);
         console.log($input);
         var type = $input.attr('type');
+        console.log('type:' + type);
         $input.on('change.wsItem', function (e) {
-            console.log($(this).val());
+            methods.changeVariation.call($item, $(this).val());
         });
     };
 
     var findInput = function ($item, variationOption) {
+        var name = variationOption.name;
         var $dataRef = '[data-ref=' + variationOption.name + ']';
-        var selection = $dataRef + ' select,' + $dataRef + ' ul';
+        var selection = $dataRef + ' #' + name.toLowerCase();
         var $input = $item.find(selection);
-        if ($input.length && $input[0].tagName.toLowerCase() === 'ul') {
+        if ($input.length && $input[0].tagName.toLowerCase() === 'div') {
             return $input.find('input');
         } else {
             return $input;

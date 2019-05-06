@@ -7,7 +7,6 @@ use frontend\widgets\item\ItemDetailWidget;
 /* @var $this yii\web\View */
 /* @var $item \common\products\BaseProduct */
 
-
 Pjax::begin([
     'options' => [
         'id' => 'ebay-item',
