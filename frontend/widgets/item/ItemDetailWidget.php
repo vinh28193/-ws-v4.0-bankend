@@ -13,6 +13,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\web\Request;
 use yii\widgets\Pjax;
@@ -62,7 +63,7 @@ class ItemDetailWidget extends Widget
     {
 
         $options = [
-            'ajaxUrl' => 'http://weshop-4.0.frontend.vn/ebay/item/variation',
+            'ajaxUrl' => Url::toRoute('ebay/item/variation'),
             'ajaxMethod' => 'POST',
             'queryParams' => $this->getQueryParams()
         ];

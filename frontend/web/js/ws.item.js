@@ -25,7 +25,7 @@
     };
     var defaultOptions = {
         ajaxUrl: undefined,
-        ajaxMethod:'POST',
+        ajaxMethod: 'POST',
         queryParams: []
     };
     var currentVariations = [];
@@ -62,6 +62,7 @@
             var params = data.params;
             currentVariations = currentVariations.filter(c => c.name !== variationName);
             currentVariations.push({name: variationName, value: variationValue});
+            console.log(currentVariations);
             const activeVariation = findVariation(params.variation_mapping, currentVariations);
             if (activeVariation !== undefined) {
                 $.when.apply(this, deferredArrays).always(function () {
