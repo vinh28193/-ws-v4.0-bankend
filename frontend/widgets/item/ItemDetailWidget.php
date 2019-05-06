@@ -14,6 +14,8 @@ use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\web\JsExpression;
+use yii\web\Request;
+use yii\widgets\Pjax;
 
 class ItemDetailWidget extends Widget
 {
@@ -36,13 +38,13 @@ class ItemDetailWidget extends Widget
             throw new InvalidConfigException(get_class($this) . "::product must be instance of: " . BaseProduct::className());
         }
         $this->prepareItem();
+        $this->registerClientScript();
     }
 
     public function run()
     {
         parent::run();
-        $this->registerClientScript();
-        return $this->renderEntries();
+        echo $this->renderEntries();
     }
 
     protected function prepareItem()
@@ -60,11 +62,9 @@ class ItemDetailWidget extends Widget
     {
 
         $options = [
-            'variation_mapping' => $this->item->variation_mapping,
-            'variation_options' => $this->item->variation_options,
-            'sellers' => $this->item->providers,
-            'conditions' => $this->item->condition,
-            'images' => $this->item->primary_images,
+            'ajaxUrl' => 'http://weshop-4.0.frontend.vn/ebay/item/variation',
+            'ajaxMethod' => 'POST',
+            'queryParams' => $this->getQueryParams()
         ];
         return $options;
     }
@@ -76,10 +76,17 @@ class ItemDetailWidget extends Widget
     public function registerClientScript()
     {
         $id = $this->options['id'];
+        $params = Json::htmlEncode([
+            'variation_mapping' => $this->item->variation_mapping,
+            'variation_options' => $this->item->variation_options,
+            'sellers' => $this->item->providers,
+            'conditions' => $this->item->condition,
+            'images' => $this->item->primary_images,
+        ]);
         $options = Json::htmlEncode($this->getClientOptions());
         $view = $this->getView();
         ItemAsset::register($view);
-        $view->registerJs("jQuery('#$id').wsItem($options);", $view::POS_END);
+        $view->registerJs("jQuery('#$id').wsItem($params,$options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
     }
 
@@ -212,5 +219,9 @@ class ItemDetailWidget extends Widget
     protected function renderDescription()
     {
         return '';
+    }
+
+    public function getQueryParams(){
+       return ($request = Yii::$app->getRequest()) instanceof Request ? $request->getQueryParams() : [];
     }
 }

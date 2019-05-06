@@ -11,47 +11,103 @@
         }
     };
 
-    var defaults = {
+    var events = {
+        ajaxBeforeSend: 'ajaxBeforeSend',
+        ajaxComplete: 'ajaxComplete',
+        afterInit: 'afterInit'
+    };
+    var defaultParams = {
         variation_mapping: [],
         variation_options: [],
         sellers: [],
         conditions: [],
         images: [],
     };
-
+    var defaultOptions = {
+        ajaxUrl: undefined,
+        ajaxMethod:'POST',
+        queryParams: []
+    };
     var currentVariations = [];
 
     var methods = {
-        init: function (options) {
+        init: function (params, options) {
             return this.each(function () {
                 var $item = $(this);
                 if ($item.data('wsItem')) {
                     return;
                 }
-                var settings = $.extend({}, defaults, options || {});
-                $.each(settings.variation_options, function (index, variationOption) {
+                params = $.extend({}, defaultParams, params || {});
+                options = $.extend({}, defaultOptions, options || {});
+
+                $.each(params.variation_options, function (index, variationOption) {
                     checkValidVariation($item, variationOption);
                     watchVariationOptions($item, variationOption);
                 });
                 setUpDefaultOptions($item);
-                $item.data('wsItem', settings);
+                $item.data('wsItem', {
+                    options: options,
+                    params: params,
+                    ajaxCalling: false
+                });
+                $item.trigger($.Event(events.afterInit));
             });
         },
         changeVariation: function (variationName, variationValue) {
             var $item = $(this);
             var data = $item.data('wsItem');
-            var requireOptions = data.variation_options.length;
+
+            var messages = {};
+            var deferredArrays = deferredArray();
+            var params = data.params;
             currentVariations = currentVariations.filter(c => c.name !== variationName);
             currentVariations.push({name: variationName, value: variationValue});
-            const activeVariation = findVariation(data.variation_mapping, currentVariations);
-            console.log(activeVariation);
+            const activeVariation = findVariation(params.variation_mapping, currentVariations);
+            if (activeVariation !== undefined) {
+                $.when.apply(this, deferredArrays).always(function () {
+                    var queryParams = data.options.queryParams;
+                    queryParams.sku = activeVariation.variation_sku;
+                    $.ajax({
+                        url: data.options.ajaxUrl,
+                        type: 'POST',
+                        data: queryParams,
+                        dataType: 'json',
+                        complete: function (jqXHR, textStatus) {
+                            $item.trigger(events.ajaxComplete, [jqXHR, textStatus]);
+                        },
+                        beforeSend: function (jqXHR, settings) {
+                            $item.trigger(events.ajaxBeforeSend, [jqXHR, settings]);
+                        },
+                        success: function (content) {
+                            updateContent($item, content, data.ajaxed)
+                        },
+                        error: function () {
+                            data.ajaxed = false;
+                        }
+                    });
+                });
+            }
         },
         data: function () {
             return this.data('wsItem');
         },
     };
+    var deferredArray = function () {
+        var array = [];
+        array.add = function (callback) {
+            this.push(new $.Deferred(callback));
+        };
+        return array;
+    };
     var setUpDefaultOptions = function (item) {
-        
+
+    };
+
+    var updateContent = function ($item, content, isCalling) {
+        console.log(content);
+    };
+    changeImage = function (imgs) {
+
     };
     var watchVariationOptions = function ($item, variationOption) {
         var $input = findInput($item, variationOption);
@@ -67,8 +123,8 @@
             });
         }
     };
-    var checkValidVariation = function ($item,variationOption) {
-        
+    var checkValidVariation = function ($item, variationOption) {
+
     };
     var findVariation = function (mapping, options) {
         return $.grep(mapping, function (i) {
@@ -86,6 +142,7 @@
             return $input;
         }
     }
+
     var sortBy = function sortBy(key, reverse) {
 
         // Move smaller items towards the front
