@@ -16,7 +16,8 @@ use yii\helpers\Html;
                 $html_slider = html::tag('a',$img,[
                   'class'=>'elevatezoom-gallery',
                   'data-image'=>$image->thumb,
-                  'data-zoom-image'=>$image->thumb
+                  'data-zoom-image'=>$image->thumb,
+                  'width' => '100'
                    ]);
               echo  html::tag('div',$img,['class'=> 'item']);
              }?>
@@ -28,13 +29,17 @@ use yii\helpers\Html;
                                 'alt' => $alt,
                                 'id'  => 'detail-big-img',
                                 'class'=> 'detail-big-img',
-                                'data-zoom-image' => $images[0]->thumb
+                                'data-zoom-image' => $images[0]->thumb,
+                                'width' => '400'
                             ]);
                      
                 ?> 
        
-<!--           <div class="out-of-date">
-              <span><i class="fas fa-exclamation-triangle"></i><br/>Hàng hết hạn bán</span>
-          </div> -->
+
       </div>
   </div>
+  <style type="text/css">
+    .detail-big-img{
+      max-width: 400px
+    }
+  </style>

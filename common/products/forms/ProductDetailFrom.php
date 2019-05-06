@@ -14,7 +14,6 @@ use yii\helpers\ArrayHelper;
 class ProductDetailFrom extends BaseForm
 {
 
-
     /**
      * @var string
      */

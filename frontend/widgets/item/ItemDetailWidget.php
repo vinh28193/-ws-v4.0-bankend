@@ -214,7 +214,11 @@ class ItemDetailWidget extends Widget
 
     protected function renderSlide()
     {
-        return $this->render('item/slide');
+        return $this->render('item/slide',[           
+            'images' => $this->item->primary_images,
+            'alt'    => $this->item->item_name
+          ]
+    );
     }
 
     protected function renderDescription()

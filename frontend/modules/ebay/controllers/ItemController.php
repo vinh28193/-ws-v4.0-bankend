@@ -23,6 +23,7 @@ class ItemController extends EbayController
         return $this->render('index', [
             'item' => $item
         ]);
+
     }
 
     public function actionVariation()
