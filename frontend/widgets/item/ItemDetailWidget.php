@@ -65,7 +65,6 @@ class ItemDetailWidget extends Widget
             'sellers' => $this->item->providers,
             'conditions' => $this->item->condition,
             'images' => $this->item->primary_images,
-            'current_variation' => $this->item->current_variation
         ];
         return $options;
     }
@@ -166,13 +165,15 @@ class ItemDetailWidget extends Widget
             $elementOptions = [
                 'id' => Inflector::camel2id($name)
             ];
-            $label = Html::label($name,isset($elementOptions['id']) ? $elementOptions['id'] : null ,[]);
+            $label = Html::label($name, isset($elementOptions['id']) ? $elementOptions['id'] : null, []);
             if (($optionImages = $variationOption->images_mapping) !== null && count($optionImages) > 0) {
                 $lis = [];
+                $list2 = [];
                 foreach ($optionImages as $optionImage) {
                     /* @var $optionImage \common\products\VariationOptionImage */
                     $image = $optionImage->images[0];
                     /* @var $image \common\products\Image */
+                    $list2[$optionImage->value] = $optionImage->value;
                     $lis[] = '<li><span>' .
                         Html::hiddenInput($optionImage->value) .
                         Html::img($image->thumb, [
@@ -180,11 +181,20 @@ class ItemDetailWidget extends Widget
                             'style' => 'width:100px'
                         ]) . '</span></li>';
                 }
-                Html::addCssClass($elementOptions,'style-list');
+                Html::addCssClass($elementOptions, 'style-list');
+                $elementOptions = ArrayHelper::merge([
+                    'type' => 'select'
+                ], $elementOptions);
                 $element = Html::tag('ul', implode("\n", $lis), $elementOptions);
                 Html::addCssClass($optionBoxOptions, 'option-box');
+                $element = Html::radioList($name, null, $list2, $elementOptions);
+
             } else {
-                $element = Html::dropDownList($variationOption->name, null, $variationOption->values, $elementOptions);
+                $elementOptions = ArrayHelper::merge([
+                    'type' => 'dropDown'
+                ], $elementOptions);
+                $items = $variationOption->values;
+                $element = Html::dropDownList($variationOption->name, null, array_combine($items, $items), $elementOptions);
                 Html::addCssClass($optionBoxOptions, 'option-box form-inline');
 
             }

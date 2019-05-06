@@ -9,6 +9,7 @@
 namespace common\helpers;
 
 use yii\base\InvalidArgumentException;
+use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 
 class WeshopHelper
@@ -156,7 +157,7 @@ class WeshopHelper
     public static function generateTag($reference, $prefix = 'WS', $length = 16)
     {
         $length -= strlen($prefix);
-        $length -= strlen($reference."");
+        $length -= strlen($reference . "");
         if ($length > 1) {
             $reference .= substr(md5($reference), 0, $length - 1);
         }
@@ -169,5 +170,35 @@ class WeshopHelper
         $percent = ($itemAmount / $orderAmount) * 100;
         $percent = self::roundNumber($percent, 2);
         return ($discountAmount * $percent) / 100;
+    }
+
+    public static function imageList($name, $selection = null, $items = [], $options = [])
+    {
+        $formatter = ArrayHelper::remove($options, 'item');
+        $itemOptions = ArrayHelper::remove($options, 'itemOptions', []);
+        $encode = ArrayHelper::remove($options, 'encode', true);
+        $separator = ArrayHelper::remove($options, 'separator', "\n");
+        $tag = ArrayHelper::remove($options, 'tag', 'ul');
+
+        $lines = [];
+        $index = 0;
+        foreach ($items as $value => $src) {
+            $active = $selection !== null &&
+                (!ArrayHelper::isTraversable($selection) && !strcmp($value, $selection)
+                    || ArrayHelper::isTraversable($selection) && ArrayHelper::isIn((string)$value, $selection));
+            if ($formatter !== null) {
+                $lines[] = call_user_func($formatter, $index, $src, $name, $active, $value);
+            } else {
+                $lines[] = '<li><span>' . Html::img($src, array_merge([
+                        'value' => $value,
+                        'style' => 'width:100px'
+                    ], $itemOptions)) . '</span></li>';
+            }
+            $index++;
+        }
+        $visibleContent = implode($separator, $lines);
+
+
+        return Html::tag($tag, $visibleContent, $options);
     }
 }
