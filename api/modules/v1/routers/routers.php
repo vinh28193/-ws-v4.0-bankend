@@ -108,7 +108,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','us-sending','manifest','tracking' , 'warehouse-ws' => 'warehouse-management'],
+        'controller' => ['p' => 'package', 's' => 'shipment', 'tracking-code','us-sending','manifest','tracking' , 'warehouse-ws' => 'warehouse-management' , 'dn' => 'delivery-note'],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',

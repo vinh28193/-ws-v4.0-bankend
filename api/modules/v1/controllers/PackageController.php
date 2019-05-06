@@ -49,6 +49,7 @@ class PackageController extends BaseApiController
         $limit = Yii::$app->request->get('limit',20);
         $page = Yii::$app->request->get('page',1);
         $tracking_code = Yii::$app->request->get('tracking_code');
+        $package_code = Yii::$app->request->get('package_code');
         $sku = Yii::$app->request->get('sku');
         $order_code = Yii::$app->request->get('order_code');
         $type_tracking = Yii::$app->request->get('type_tracking');
@@ -57,16 +58,19 @@ class PackageController extends BaseApiController
             ->leftJoin('product','product.id = package.product_id')
             ->leftJoin('order','order.id = package.order_id');
         if($tracking_code){
-            $query->andWhere(['like' , 'package.tracking_code' , $tracking_code]);
+            $query->whereLikeMore('package.tracking_code' , $tracking_code);
+        }
+        if($package_code){
+            $query->whereLikeMore('package.package_code' , $package_code);
         }
         if($sku){
-            $query->andWhere(['or',['like','product.sku',$sku],['like','product.parent_sku',$sku]]);
+            $query->whereLikeMoreMultiColumn(['package.sku','product.parent_sku'] , $sku);
         }
         if($order_code){
-            $query->andWhere([['like','order.ordercode',$order_code]]);
+            $query->whereLikeMore('package.ordercode' , $order_code);
         }
         if($type_tracking){
-            $query->andWhere([['package.type_tracking',$type_tracking]]);
+            $query->whereLikeMore('package.type_tracking' , $type_tracking);
         }
         $data['total'] = $query->count();
         if($limit != 'all'){

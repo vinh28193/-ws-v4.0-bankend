@@ -152,7 +152,7 @@ class BoxMeController extends Controller
                         $draft_data->image = $ext->product ? $ext->product->link_img : '';
                         $draft_data->created_at = time();
                         $draft_data->updated_at = time();
-                        $draft_data->stock_in_us = $tracking->stock_in_us;
+                        $draft_data->stock_in_us = $tracking->stock_in_us ? $tracking->stock_in_us : $ext->created_at;
                         $draft_data->stock_out_us = $tracking->stock_out_us;
                         $draft_data->status = DraftDataTracking::STATUS_US_SENDING;
                         $draft_data->tracking_merge = strtoupper($tracking->tracking_code);
