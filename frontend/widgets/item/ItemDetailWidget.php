@@ -1,7 +1,7 @@
 <?php
 
 
-namespace frontend\widgets;
+namespace frontend\widgets\item;
 
 use Yii;
 use frontend\assets\ItemAsset;
@@ -9,11 +9,13 @@ use yii\bootstrap\Widget;
 use common\products\BaseProduct;
 use yii\base\InvalidConfigException;
 use yii\bootstrap4\Dropdown;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\web\JsExpression;
 
-class WeshopItemDetailWidget extends Widget
+class ItemDetailWidget extends Widget
 {
 
     /**
@@ -26,6 +28,7 @@ class WeshopItemDetailWidget extends Widget
      * This method is called at the end of the constructor.
      * The default implementation will trigger an [[EVENT_INIT]] event.
      */
+
     public function init()
     {
         parent::init();
@@ -39,15 +42,15 @@ class WeshopItemDetailWidget extends Widget
     {
         parent::run();
         $this->registerClientScript();
-        echo $this->renderEntries();
+        return $this->renderEntries();
     }
 
     protected function prepareItem()
     {
-        usort($this->item->variation_options, function ($a,$b){
-            if(empty($a->images_mapping)){
+        usort($this->item->variation_options, function ($a, $b) {
+            if (empty($a->images_mapping)) {
                 return -1;
-            }else {
+            } else {
                 return 1;
             }
         });
@@ -83,31 +86,37 @@ class WeshopItemDetailWidget extends Widget
 
     protected function renderEntries()
     {
-        $content = Html::tag('div', $this->renderDetailBlock(), [
+
+        $entries = Html::beginTag('div', $this->options);
+        $entries .= Html::tag('div', $this->renderDetailBlock(), [
             'class' => 'col-md-9'
         ]);
-        $content .= $this->renderSlide();
-        return Html::tag('div', $content, $this->options);
+        $entries .= Html::tag('div', $this->renderPaymentOption(), [
+            'class' => 'col-md-3'
+        ]);
+        $entries .= Html::endTag('div');
+        return $entries;
     }
 
     protected function renderDetailBlock()
     {
-        $detail = $this->renderSlider();
-        $detail .= $this->renderFullInfo();
-        return Html::tag('div', $detail, ['class' => 'detail-block']);
+        $detailBlock = Html::beginTag('div', ['class' => 'detail-block']);
+        $detailBlock .= $this->renderSlide();
+        $detailBlock .= $this->renderFullInfo();
+        $detailBlock .= Html::endTag('div');
+        return $detailBlock;
     }
 
-    public function renderSlider()
+    public function renderPaymentOption()
     {
-        return Yii::$app->controller->renderPartial('_slider', [
-            'images' => $this->item->primary_images,
-            'alt'    =>  $this->item->item_name
+        return $this->render('payment', [
+            'images' => $this->item->primary_images
         ]);
     }
 
     public function renderFullInfo()
     {
-        $html = Html::tag('a',$this->item->getCategoryName(),['href'=>'#','class'=> 'brand']);
+        $html = '<a href="#" class="brand">Bulova</a>';
         $title = Html::tag('h2', $this->item->item_name);
         if (($salePercent = $this->item->getSalePercent()) > 0) {
             $title .= ' <span class="sale-tag">' . $salePercent . '% OFF</span>';
@@ -129,8 +138,6 @@ class WeshopItemDetailWidget extends Widget
             $price .= Html::tag('span', $salePercent, ['class' => 'save']);
         }
         $html .= Html::tag('div', $price, ['class' => 'price']);
-        $html .= Html::tag('div','(Giá trọn gói về Việt Nam với trọng lượng ước tính 450 gram)
-',['class' => 'total-price']);
         $html .= $this->renderOptionBox();
         $html .= '<ul class="info-list">
                 <li>Imported</li>
@@ -148,51 +155,56 @@ class WeshopItemDetailWidget extends Widget
     protected function renderOptionBox()
     {
         $variationOptions = $this->item->variation_options;
-        $options = [];
-        // Html::addCssClass($options,'variation_select');
+        if (empty($variationOptions)) {
+            return '';
+        }
+        $optionBoxs = [];
         foreach ($variationOptions as $index => $variationOption) {
             /* @var $variationOption \common\products\VariationOption */
-            $optionHtml = Html::label($variationOption->name);
+            $optionBoxOptions = [];
+            $name = $variationOption->name;
+            $elementOptions = [
+                'id' => Inflector::camel2id($name)
+            ];
+            $label = Html::label($name,isset($elementOptions['id']) ? $elementOptions['id'] : null ,[]);
             if (($optionImages = $variationOption->images_mapping) !== null && count($optionImages) > 0) {
                 $lis = [];
-                $i = 0;
                 foreach ($optionImages as $optionImage) {
                     /* @var $optionImage \common\products\VariationOptionImage */
-                    if($optionImage->images != null)
-                    {
-                        $i++;
-                        $image = $optionImage->images[0];
-                        $active = '';
-                        if($i == 1) $active = 'active';
-                       /* @var $image \common\products\Image */
-                        $lis[] = "<li class =".$active."><span>" . Html::img($image->thumb, [
+                    $image = $optionImage->images[0];
+                    /* @var $image \common\products\Image */
+                    $lis[] = '<li><span>' .
+                        Html::hiddenInput($optionImage->value) .
+                        Html::img($image->thumb, [
                             'alt' => $optionImage->value,
                             'style' => 'width:100px'
                         ]) . '</span></li>';
-                    }
-                  
                 }
-                $optionHtml .= Html::tag('ul', implode("\n", $lis), [
-                    'class' => 'style-list'
-                ]);
-                $options[] = Html::tag('div', $optionHtml, ['class' => 'option-box']);
+                Html::addCssClass($elementOptions,'style-list');
+                $element = Html::tag('ul', implode("\n", $lis), $elementOptions);
+                Html::addCssClass($optionBoxOptions, 'option-box');
             } else {
-                $optionHtml .= Html::dropDownList($variationOption->name,null,$variationOption->values,[]);
-                $options[] = Html::tag('div', $optionHtml, ['class' => 'option-box form-inline']);
+                $element = Html::dropDownList($variationOption->name, null, $variationOption->values, $elementOptions);
+                Html::addCssClass($optionBoxOptions, 'option-box form-inline');
+
             }
+            Html::addCssClass($optionBoxOptions, 'variation_select');
+            $optionBoxOptions = ArrayHelper::merge([
+                'data-ref' => $name,
+            ], $optionBoxOptions);
+            $optionBoxs[] = Html::tag('div', $label . $element, $optionBoxOptions);
 
         }
-        $options = implode("\n", $options);
-        return $options;
+        return implode("\n", $optionBoxs);;
     }
 
     protected function renderSlide()
     {
-        return Yii::$app->controller->renderPartial('_right');
+        return $this->render('item/slide');
     }
 
     protected function renderDescription()
     {
-        return Yii::$app->controller->renderPartial('_item_deception');
+        return '';
     }
 }

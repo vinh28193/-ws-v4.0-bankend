@@ -2,7 +2,7 @@
 
 
 use yii\widgets\Pjax;
-use frontend\widgets\WeshopItemDetailWidget;
+use frontend\widgets\item\ItemDetailWidget;
 
 /* @var $this yii\web\View */
 /* @var $item \common\products\BaseProduct */
@@ -15,7 +15,7 @@ Pjax::begin([
     ]
 ]);
 
-echo WeshopItemDetailWidget::widget([
+echo ItemDetailWidget::widget([
     'item' => $item,
     'options' => [
         'id' => 'ebay-item-detail',
