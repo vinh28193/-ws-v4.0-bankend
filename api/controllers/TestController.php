@@ -90,13 +90,22 @@ class TestController extends Controller
             foreach ($finds as $find) {
                 if ($find != DraftDataTracking::STATUS_LOCAL_INSPECTED) {
                     $find->status = DraftDataTracking::STATUS_LOCAL_RECEIVED;
+                    $find->stock_in_local = $find->stock_in_local ? $find->stock_in_local : time();
                     if(strtolower($status) == 'close'){
                         $find->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
-                        TrackingCode::UpdateStatusTracking($find->tracking_code,$find->status);
                     }
+                    TrackingCode::updateAll(
+                        [
+                            'status' => $find->status,
+                            'stock_in_local' => $find->stock_in_local,
+                        ],
+                        [
+                            'tracking_code' => $find->tracking_code,
+                            'remove' => 0,
+                        ]
+                    );
                     $find->item_name = $item_name;
                     $find->save(0);
-                    TrackingCode::UpdateStatusTracking($tracking,TrackingCode::STATUS_LOCAL_INSPECTED);
                     $draft = new Package();
                     $draft->tracking_code = $tracking;
                     $draft->manifest_code = $manifest_code;
@@ -113,6 +122,9 @@ class TestController extends Controller
                     $draft->dimension_l = isset($vol[0]) ? $vol[0] : null;
                     $draft->dimension_w = isset($vol[1]) ? $vol[1] : null;
                     $draft->dimension_h = isset($vol[2]) ? $vol[2] : null;
+                    $draft->stock_in_us = $find->stock_in_us;
+                    $draft->stock_out_us = $find->stock_out_us;
+                    $draft->stock_in_local = $find->stock_in_local;
                     $draft->item_name = $item_name;
                     $draft->image = $image;
                     $draft->warehouse_tag_boxme = $tag_code;

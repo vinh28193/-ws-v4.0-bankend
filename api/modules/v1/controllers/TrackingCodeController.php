@@ -21,6 +21,7 @@ use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use common\models\Product;
 use common\models\TrackingCode;
+use common\models\Warehouse;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -148,13 +149,25 @@ class TrackingCodeController extends BaseApiController
         if (($store = ArrayHelper::getValue($post, 'store')) === null) {
             return $this->response(false, "create form undefined store !.");
         }
-        if (($warehouse = ArrayHelper::getValue($post, 'warehouse')) === null) {
+        if (($warehouse_id = ArrayHelper::getValue($post, 'warehouse')) === null) {
+            return $this->response(false, "create form undefined warehouse !.");
+        }
+        if (($warehouse_us_id = ArrayHelper::getValue($post, 'warehouse_us')) === null) {
             return $this->response(false, "create form undefined warehouse !.");
         }
         if (($manifest = ArrayHelper::getValue($post, 'manifest')) === null) {
             return $this->response(false, "create form undefined manifest !.");
         }
+        if (($date = ArrayHelper::getValue($post, 'date')) === null) {
+            return $this->response(false, "Date undefined !");
+        }
+        $warehouse = Warehouse::findOne($warehouse_id);
+        $warehouse_us = Warehouse::findOne($warehouse_us_id);
+        if(!$warehouse){
+            return $this->response(false, "Cannot find warehouse !");
+        }
         $transaction = Yii::$app->getDb()->beginTransaction();
+
         try {
             $manifest = Manifest::createSafe($manifest, 1, 1);
 
@@ -166,12 +179,31 @@ class TrackingCodeController extends BaseApiController
                         $tokens[$name]['error'][] = $row;
                         continue;
                     }
-                    $model = new TrackingCode([
-                        'tracking_code' => $trackingCode,
-                        'store_id' => $manifest->store_id,
-                        'manifest_code' => $manifest->manifest_code,
-                        'manifest_id' => $manifest->id
-                    ]);
+                    $model = TrackingCode::find()
+                        ->where([
+                            'tracking_code' => $trackingCode,
+                            'remove' => 0,
+                            'status' => TrackingCode::STATUS_US_RECEIVED
+                        ])->andWhere([
+                            'or',
+                            ['manifest_code'=>''],
+                            ['manifest_code'=>null],
+                            ['manifest_code'=>$manifest->manifest_code],
+                        ])->limit(1)->one();
+                    if(!$model){
+                        $model = new TrackingCode();
+                    }
+                    $model->tracking_code = $trackingCode;
+                    $model->store_id = $manifest->store_id;
+                    $model->manifest_id = $manifest->id;
+                    $model->manifest_code = $manifest->manifest_code;
+                    $model->stock_out_us = strtotime($date);
+                    $model->stock_in_us = $model->stock_in_us ? $model->stock_in_us : strtotime($date) - (60*60*24*3);
+                    $model->warehouse_us_id = $warehouse_us->id;
+                    $model->warehouse_us_name = $warehouse_us->name;
+                    $model->warehouse_local_id = $warehouse->id;
+                    $model->warehouse_local_name = $warehouse->name;
+                    $model->status = TrackingCode::STATUS_US_SENDING;
                     if (!$model->save(false)) {
                         $tokens[$name]['error'][] = $row;
                     }
@@ -186,7 +218,6 @@ class TrackingCodeController extends BaseApiController
                     );
                    
                     Yii::$app->wsLog->push('TrackingLog',null,null,$params);
-
                     $count++;
                 }
                 $tokens[$name]['success'] = $count;
