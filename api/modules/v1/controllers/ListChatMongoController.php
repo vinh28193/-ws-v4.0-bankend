@@ -38,6 +38,11 @@ class ListChatMongoController extends BaseApiController
                 'actions' => ['index'],
                 'roles' => $this->getAllRoles(true)
             ],
+            [
+                'allow' => true,
+                'actions' => ['update', 'delete', 'create'],
+                'roles' => ['sale', 'master_sale', 'tester'],
+            ],
         ];
     }
 
