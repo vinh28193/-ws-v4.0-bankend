@@ -176,7 +176,7 @@ class OrderController extends BaseApiController
         $post = Yii::$app->request->post();
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $model = $this->findModel($id, false);
-        $this->can('canUpdate', $model);
+        //$this->can('canUpdate', $model);
         $check = $model->loadWithScenario($this->post);
         $dirtyAttributes = $model->getDirtyAttributes();
 

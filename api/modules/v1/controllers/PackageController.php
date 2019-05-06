@@ -34,8 +34,8 @@ class PackageController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index'],
-                'roles' => ['operation','master_operation']
+                'actions' => ['index', 'view'],
+                'roles' => ['operation','master_operation', 'tester']
             ],
         ];
     }
