@@ -187,12 +187,20 @@ class OrderController extends BaseApiController
         if ($model->getScenario() == 'confirmPurchase') {
             if (isset($post['Order']['checkR2p'])) {
                 if ($post['Order']['checkR2p'] == 'yes') {
-                    $model->ready_purchase = $now;
+                    for ($i = 0; $i < 4; $i++) {
+                        if ($model->{$StatusOrder[$i]} == null) {
+                            $model->{$StatusOrder[$i]} = $now;
+                        }
+                    }
                     $model->current_status = Order::STATUS_READY2PURCHASE;
+                } else if ($post['Order']['checkR2p'] != 'yes') {
+                    for ($i = 0; $i < 3; $i++) {
+                        if ($model->{$StatusOrder[$i]} == null) {
+                            $model->{$StatusOrder[$i]} = $now;
+                        }
+                    }
+                    $model->current_status = Order::STATUS_SUPPORTED;
                 }
-            } else {
-                $model->supported = $now;
-                $model->current_status = Order::STATUS_SUPPORTED;
             }
         }
         if ($model->getScenario() == 'updateOrderStatus') {
