@@ -12,36 +12,51 @@
     };
 
     var defaults = {
-        absoluteUrl: undefined
+        typeOfSearch: undefined,
+        enableFilter: true,
+        filterParams: 'filter',
+        absoluteUrl: undefined,
+        filterContentUrls: []
     };
 
-    var queryParams = {};
+    var eventHandlers = {};
 
-    var Response = {
-        success: false,
-        message: 'failed',
-        data: []
-    };
     var methods = {
         init: function (options) {
             return this.each(function () {
                 var $search = $(this);
-                if ($search.data('wsSearch')) {
-                    return;
-                }
                 var settings = $.extend({}, defaults, options || {});
-                if (settings.absoluteUrl === undefined) {
-                    settings.absoluteUrl = $search.attr('data-action');
-                }
-                $.each(yii.getQueryParams(settings.absoluteUrl), function (name, value) {
-                    queryParams[name] = value;
-                });
+                var portalNames = Object.keys(settings.filterContentUrls);
 
+                $search.data('wsSearch', {
+                    settings: settings,
+                    portals: portalNames,
+                });
+                initEventHandler($search, 'filter', 'change', 'input.form-check-input', function (event) {
+
+                })
 
             });
         },
-        queryParams: function () {
-            return queryParams;
+        applyFilter: function ($search, portal) {
+            console.log(portal)
         },
+        data: function () {
+            return this.data('wsSearch');
+        },
+    };
+    var initEventHandler = function ($search, type, event, selector, callback) {
+        var id = $search.attr('id');
+        var prevHandler = eventHandlers[id];
+        if (prevHandler !== undefined && prevHandler[type] !== undefined) {
+            var data = prevHandler[type];
+            $(document).off(data.event, data.selector);
+        }
+        if (prevHandler === undefined) {
+            eventHandlers[id] = {};
+        }
+        console.log(event + selector + callback);
+        $(document).on(event, selector, callback);
+        eventHandlers[id][type] = {event: event, selector: selector};
     }
 })(jQuery);

@@ -21,13 +21,17 @@ use yii\helpers\Html;
                 <?php $value = Html::encode($value); ?>
                 <li>
                     <div class="form-check">
+                        <?php
+                            $id = $filter['name'] . $value;
+                        ?>
                         <?= Html::checkbox('filter', false, [
                             'class' => 'form-check-input',
                             'value' => $value,
+                            'id' => $id,
                             'data-for' => $filter['name'],
                             'data-value' => $value
                         ]); ?>
-                        <?= Html::label($value, null, [
+                        <?= Html::label($value, $id, [
                             'class' => 'form-check-label',
                         ]); ?>
                     </div>
