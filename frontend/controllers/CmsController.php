@@ -16,6 +16,8 @@ use common\models\cms\WsPage;
 class CmsController extends FrontendController
 {
 
+    const MAX_ITEM_SIZE = 4;
+    
     public $layout = '@frontend/views/layouts/cms';
 
     public $type = WsPage::TYPE_HOME;
@@ -61,6 +63,19 @@ class CmsController extends FrontendController
     {
         $params = array_merge(['page' => $this->page], $params);
         return parent::render($view, $params);
+    }
+
+    public function renderContent($content)
+    {
+        $layoutFile = $this->findLayoutFile($this->getView());
+        if ($layoutFile !== false) {
+            return $this->getView()->renderFile($layoutFile, [
+                'content' => $content,
+                'page' => $this->page,
+            ], $this);
+        }
+
+        return $content;
     }
 
     /**

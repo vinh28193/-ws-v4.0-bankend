@@ -154,6 +154,16 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
     }
 
     /**
+     * @return float|int
+     */
+    public function getCategoryName()
+    {
+        if (!empty($this->category_name)) {
+            return $this->category_name;
+        }
+    }
+
+    /**
      * @return string
      */
     public function getItemType()
@@ -284,9 +294,6 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
         return $this->getAdditionalFees()->getTotalAdditionFees()[1];
     }
 
-    /**
-     * @return null | integer
-     */
     public function getLocalizeTotalStartPrice()
     {
         if ($this->start_price == null || $this->start_price == 0) return null;

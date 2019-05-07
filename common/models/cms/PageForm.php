@@ -169,7 +169,7 @@ class PageForm extends Model
                 }
 
                 if ($groupImage = PageService::getItemGroupImage($block->id, WsImageGroup::TYPE_BRAND)) {
-                    $data['brands'] = ArrayHelper::toArray(PageService::getImageByGroupId($groupImage->id));
+                    $data['images'] = ArrayHelper::toArray(PageService::getImageByGroupId($groupImage->id));
 //                    $data['images'] = ArrayHelper::toArray(PageService::getImageByGroupId($groupImage->id));
                 }
 
