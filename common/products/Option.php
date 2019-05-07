@@ -18,7 +18,7 @@ class Option extends \yii\base\BaseObject
     public function init()
     {
         parent::init();
-        $this->name = preg_replace('/[^A-Za-z0-9\-\. ][\p{Han}\p{Katakana}\p{Hiragana}]/', '', $this->name);
+//        $this->name = preg_replace('/[^A-Za-z0-9\-\. ][\p{Han}\p{Katakana}\p{Hiragana}]/', '', $this->name);
     }
 
 

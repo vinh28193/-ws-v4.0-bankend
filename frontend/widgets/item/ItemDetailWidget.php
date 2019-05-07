@@ -32,12 +32,22 @@ class ItemDetailWidget extends Widget
      * The default implementation will trigger an [[EVENT_INIT]] event.
      */
 
+    public $slideOptions = [
+        'class' => 'thumb-slider'
+    ];
+
+    public $priceOptions = [];
+
     public function init()
     {
         parent::init();
         if ($this->item === null || !$this->item instanceof BaseProduct) {
             throw new InvalidConfigException(get_class($this) . "::product must be instance of: " . BaseProduct::className());
         }
+        if(!isset($this->slideOptions['class'])){
+            Html::addCssClass($this->slideOptions,'item-slider');
+        }
+        Html::addCssClass($this->priceOptions,'price');
         $this->prepareItem();
         $this->registerClientScript();
     }
@@ -63,9 +73,11 @@ class ItemDetailWidget extends Widget
     {
 
         $options = [
-            'ajaxUrl' => Url::toRoute('ebay/item/variation'),
+            'ajaxUrl' => Url::toRoute('item/variation'),
             'ajaxMethod' => 'POST',
-            'queryParams' => $this->getQueryParams()
+            'queryParams' => $this->getQueryParams(),
+            'priceCssSelection' => $this->priceOptions['class'],
+            'slideCssSelection' => $this->slideOptions['class']
         ];
         return $options;
     }
@@ -139,12 +151,15 @@ class ItemDetailWidget extends Widget
                        </div>
                        <span>87 người đánh giá</span>
                   </div>';
-        $price = Html::tag('strong', $this->item->getLocalizeTotalPrice() . Html::tag('span', 'đ', ['class' => 'currency']), ['class' => 'text-orange']);
+        $currency = Html::tag('span', 'đ', ['class' => 'currency']);
+        $price = Html::tag('strong', $this->item->getLocalizeTotalPrice() .$currency , ['class' => 'text-orange']);
+        $style = 'display:none';
         if ($salePercent > 0 && ($startPrice = $this->item->getLocalizeTotalStartPrice()) > 0) {
-            $price .= Html::tag('b', $this->item->getLocalizeTotalStartPrice() . Html::tag('span', 'đ', ['class' => 'currency']), ['class' => 'old-price']);
-            $price .= Html::tag('span', $salePercent, ['class' => 'save']);
+            $style = 'display:block';
         }
-        $html .= Html::tag('div', $price, ['class' => 'price']);
+        $price .= Html::tag('b', $this->item->getLocalizeTotalStartPrice() .$currency, array_merge(['class' => 'old-price'],['style' => $style]));
+        $price .= Html::tag('span', $salePercent, array_merge(['class' => 'save'],['style' => $style]));
+        $html .= Html::tag('div', $price, $this->priceOptions);
         $html .= $this->renderOptionBox();
         $html .= '<ul class="info-list">
                 <li>Imported</li>
@@ -175,21 +190,19 @@ class ItemDetailWidget extends Widget
             ];
             $label = Html::label($name, isset($elementOptions['id']) ? $elementOptions['id'] : null, []);
             if (($optionImages = $variationOption->images_mapping) !== null && count($optionImages) > 0) {
-                $lis = [];
-                $list2 = [];
-                foreach ($optionImages as $optionImage) {
+                $lines = [];
+                foreach ($optionImages as $i => $optionImage) {
                     /* @var $optionImage \common\products\VariationOptionImage */
                     $image = $optionImage->images[0];
                     /* @var $image \common\products\Image */
-                    $list2[$optionImage->value] = $optionImage->value;
-                    $lis[] = '<li><span type="spanList" data-value="'.$optionImage->value.'">' .
+                    $lines[] = '<li><span type="spanList" data-index="'.$i.'" data-value="'.$optionImage->value.'">' .
                         Html::img($image->thumb, [
                             'alt' => $optionImage->value,
                             'style' => 'width:100px'
                         ]) . '</span></li>';
                 }
                 Html::addCssClass($elementOptions, 'style-list');
-                $element = Html::tag('ul', implode("\n", $lis), $elementOptions);
+                $element = Html::tag('ul', implode("\n", $lines), $elementOptions);
                 Html::addCssClass($optionBoxOptions, 'option-box');
 //                $element = Html::radioList($name, null, $list2, $elementOptions);
 
@@ -197,8 +210,7 @@ class ItemDetailWidget extends Widget
                 $elementOptions = ArrayHelper::merge([
                     'type' => 'dropDown'
                 ], $elementOptions);
-                $items = $variationOption->values;
-                $element = Html::dropDownList($variationOption->name, null, array_combine($items, $items), $elementOptions);
+                $element = Html::dropDownList($variationOption->name, null,  $variationOption->values, $elementOptions);
                 Html::addCssClass($optionBoxOptions, 'option-box form-inline');
 
             }
@@ -209,16 +221,12 @@ class ItemDetailWidget extends Widget
             $optionBoxs[] = Html::tag('div', $label . $element, $optionBoxOptions);
 
         }
-        return implode("\n", $optionBoxs);;
+        return implode("\n", $optionBoxs);
     }
 
     protected function renderSlide()
     {
-        return $this->render('item/slide',[           
-            'images' => $this->item->primary_images,
-            'alt'    => $this->item->item_name
-          ]
-    );
+        return Html::tag('div','',$this->slideOptions);
     }
 
     protected function renderDescription()
