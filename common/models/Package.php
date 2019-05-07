@@ -125,7 +125,7 @@ class Package extends \common\models\db\Package
         if($draft_data->save($validate)){
             if(!$draft_data->package_code){
                 $draft_data->package_code = WeshopHelper::generateTag($draft_data->id,'WSVNPK',16);
-                $draft_data->save();
+                $draft_data->save($validate);
             }
             return true;
         }

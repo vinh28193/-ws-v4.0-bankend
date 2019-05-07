@@ -108,6 +108,7 @@ class TestController extends Controller
                     $find->save(0);
                     $draft = new Package();
                     $draft->tracking_code = $tracking;
+                    $draft->ws_tracking_code = $find->ws_tracking_code;
                     $draft->manifest_code = $manifest_code;
                     $draft->manifest_id = $manifest_id;
                     $draft->quantity = $quantity;
