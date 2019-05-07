@@ -291,19 +291,9 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
      */
     public function getLocalizeTotalPrice()
     {
-        return $this->format_price($this->getAdditionalFees()->getTotalAdditionFees()[1]);
+        return $this->getAdditionalFees()->getTotalAdditionFees()[1];
     }
 
-    /**
-     * @return null | integer
-     */
-    public function format_price($price)
-    {
-
-        $price = round($price,-3);
-        $price = number_format($price,0,'.','.');
-        return $price;  
-    }
     public function getLocalizeTotalStartPrice()
     {
         if ($this->start_price == null || $this->start_price == 0) return null;
@@ -315,7 +305,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
             $deal = $this->deal_price;
             $this->deal_price = null;
             $this->init();
-            $temp = $this->$this->getAdditionalFees()->getTotalAdditionFees();
+            $temp = $this->getAdditionalFees()->getTotalAdditionFees();
             $this->deal_price = $deal;
         }
         //restore the sell_price to be $tempPrice before

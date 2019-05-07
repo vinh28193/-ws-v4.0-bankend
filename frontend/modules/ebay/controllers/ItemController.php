@@ -44,12 +44,15 @@ class ItemController extends EbayController
             foreach ($item->getAdditionalFees()->keys() as $key) {
                 $fees[$key] = $item->getAdditionalFees()->getTotalAdditionFees($key)[1];
             }
-//            $response['content'] = [
-//                'fees' => $fees,
-//                'queryParams' => $post,
-//                'totalFee' => $item->getAdditionalFees()->getTotalAdditionFees()
-//            ];
-            $response['content'] = $item->current_variation;
+            $response['success'] = true;
+            $response['message'] = 'success';
+            $response['content'] = [
+                'fees' => $fees,
+                'queryParams' => $post,
+                'sellPrice' => $item->getLocalizeTotalPrice(),
+                'startPrice' => $item->getLocalizeTotalStartPrice(),
+                'salePercent' => $item->getSalePercent()
+            ];
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $response;

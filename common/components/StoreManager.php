@@ -8,6 +8,7 @@
 
 namespace common\components;
 
+use common\helpers\WeshopHelper;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidArgumentException;
@@ -163,6 +164,9 @@ class StoreManager extends Component
         return 'vi';
     }
 
+    public function roundMoney($money){
+        return WeshopHelper::roundNumber($money,-3);
+    }
     public function showMoney($money)
     {
         return $money . ' ' . $this->getStore()->currency;

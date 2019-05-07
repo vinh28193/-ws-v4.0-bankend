@@ -19,8 +19,10 @@ trait ProductTrait
         foreach ((array)$this->variation_options as $datum) {
             $it = new VariationOption();
             $it->images_mapping = $datum['images_mapping'];
-            $it->name = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['name']);
-            $it->values = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['values']);
+//            $it->name = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['name']);
+//            $it->values = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['values']);
+            $it->name = $datum['name'];
+            $it->values =$datum['values'];
             $it->setImagesMapping();
             $rs[] = $it;
         }
