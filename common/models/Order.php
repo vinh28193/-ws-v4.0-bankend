@@ -158,7 +158,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 'sale_support_id', 'support_email'
             ],
             self::SCENARIO_UPDATE_ADJUST_PAYMENT => [
-                'total_paid_amount_local'
+                'total_paid_amount_local', 'check_update_payment'
             ],
             self::SCENARIO_UPDATE_COUPON => [
                 'coupon_id'
@@ -251,7 +251,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 [
                     'exchange_rate_fee', 'exchange_rate_purchase',
                     'revenue_xu', 'xu_count', 'xu_amount',
-                    'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund'
+                    'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund', 'check_update_payment'
                 ], 'number'
             ],
             [
