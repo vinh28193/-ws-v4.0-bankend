@@ -38,7 +38,39 @@ class DeliveryNoteController extends BaseApiController
         ];
     }
     public function actionIndex(){
-
+        $limit = Yii::$app->request->get('limit',20);
+        $page = Yii::$app->request->get('page',1);
+        $delivery_code = Yii::$app->request->get('delivery_note_code');
+        $tracking_code = Yii::$app->request->get('tracking_code');
+        $package_code = Yii::$app->request->get('package_code');
+        $sku = Yii::$app->request->get('sku');
+        $order_code = Yii::$app->request->get('order_code');
+        $type_tracking = Yii::$app->request->get('type_tracking');
+        $status = Yii::$app->request->get('status');
+        $query = DeliveryNote::find()->where(['and',['<>','remove',''],['is not','remove',null]]);
+        if($tracking_code){
+            $query->whereLikeMore('package.tracking_code' , $tracking_code);
+        }
+        if($package_code){
+            $query->whereLikeMore('package.package_code' , $package_code);
+        }
+        if($sku){
+            $query->whereLikeMoreMultiColumn(['package.sku','product.parent_sku'] , $sku);
+        }
+        if($order_code){
+            $query->whereLikeMore('package.ordercode' , $order_code);
+        }
+        if($type_tracking){
+            $query->andWhere(['package.type_tracking' => $type_tracking]);
+        }
+        if($status){
+            if($status == 'created'){
+                $query->andWhere(['and',['is not','package.delivery_note_code' , null],['<>','package.delivery_note_code' , '']]);
+            }
+            if($status == 'not_create'){
+                $query->andWhere(['or',['package.delivery_note_code' => null],['package.delivery_note_code' => '']]);
+            }
+        }
     }
     public function actionCreate(){
         $listPackage = \Yii::$app->request->post('listPackage');
@@ -57,6 +89,7 @@ class DeliveryNoteController extends BaseApiController
         return $this->response(false, 'Some thing error!');
     }
     function createMulti($listIds){
+        /** @var Package[] $packages */
         $packages = Package::find()->with(['order'])->where(['id' => $listIds])->all();
         if(!$packages){
             return $this->response(false, 'Cannot find package !');
@@ -70,6 +103,18 @@ class DeliveryNoteController extends BaseApiController
                 continue;
             }
             $deliveryNote = new DeliveryNote();
+            $deliveryNote->customer_id = $package->order->customer_id;
+            $deliveryNote->receiver_name = $package->order->receiver_name;
+            $deliveryNote->receiver_email = $package->order->receiver_email;
+            $deliveryNote->receiver_phone = $package->order->receiver_phone;
+            $deliveryNote->receiver_district_name = $package->order->receiver_district_name;
+            $deliveryNote->receiver_district_id = $package->order->receiver_district_id;
+            $deliveryNote->receiver_province_name = $package->order->receiver_province_name;
+            $deliveryNote->receiver_province_id = $package->order->receiver_province_id;
+            $deliveryNote->receiver_country_name = $package->order->receiver_country_name;
+            $deliveryNote->receiver_country_id = $package->order->receiver_country_id;
+            $deliveryNote->receiver_address = $package->order->receiver_address;
+            $deliveryNote->receiver_post_code = $package->order->receiver_post_code;
             $deliveryNote->tracking_seller = $package->tracking_code;
             $deliveryNote->order_ids = $package->order_id;
             $deliveryNote->manifest_code = $package->manifest_code;
@@ -132,6 +177,18 @@ class DeliveryNoteController extends BaseApiController
             $weightChange = ($height * $width * $length)/5; // cm => gram
         }
         $deliveryNote = new DeliveryNote();
+        $deliveryNote->customer_id = $customer_id;
+        $deliveryNote->receiver_name = ArrayHelper::getValue($infoDeliveryNote,'receiver_name');
+        $deliveryNote->receiver_email = ArrayHelper::getValue($infoDeliveryNote,'receiver_email');
+        $deliveryNote->receiver_phone = ArrayHelper::getValue($infoDeliveryNote,'receiver_phone');
+        $deliveryNote->receiver_district_name = ArrayHelper::getValue($infoDeliveryNote,'receiver_district_name');
+        $deliveryNote->receiver_district_id = ArrayHelper::getValue($infoDeliveryNote,'receiver_district_id');
+        $deliveryNote->receiver_province_name = ArrayHelper::getValue($infoDeliveryNote,'receiver_province_name');
+        $deliveryNote->receiver_province_id = ArrayHelper::getValue($infoDeliveryNote,'receiver_province_id');
+        $deliveryNote->receiver_country_name = ArrayHelper::getValue($infoDeliveryNote,'receiver_country_name');
+        $deliveryNote->receiver_country_id = ArrayHelper::getValue($infoDeliveryNote,'receiver_country_id');
+        $deliveryNote->receiver_address = ArrayHelper::getValue($infoDeliveryNote,'receiver_address');
+        $deliveryNote->receiver_post_code = ArrayHelper::getValue($infoDeliveryNote,'receiver_post_code');
         $deliveryNote->tracking_seller = $packages[0]->tracking_code;
         $deliveryNote->tracking_reference_1 = isset($packages[1]) && $packages[1] ? $packages[1]->tracking_code : null;
         $deliveryNote->tracking_reference_2 = isset($packages[2]) && $packages[2] ? $packages[2]->tracking_code : null;

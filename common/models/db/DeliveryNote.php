@@ -31,6 +31,18 @@ use Yii;
  * @property int $remove
  * @property string $version version 4.0
  * @property int $shipment_id
+ * @property int $customer_id
+ * @property string $receiver_name
+ * @property string $receiver_email
+ * @property string $receiver_phone
+ * @property string $receiver_address
+ * @property int $receiver_country_id
+ * @property string $receiver_country_name
+ * @property int $receiver_province_id
+ * @property string $receiver_province_name
+ * @property int $receiver_district_id
+ * @property string $receiver_district_name
+ * @property string $receiver_post_code
  */
 class DeliveryNote extends \common\components\db\ActiveRecord
 {
@@ -50,9 +62,9 @@ class DeliveryNote extends \common\components\db\ActiveRecord
         return [
             [['order_ids', 'tracking_reference_1', 'tracking_reference_2', 'manifest_code'], 'string'],
             [['delivery_note_weight', 'delivery_note_change_weight', 'delivery_note_dimension_l', 'delivery_note_dimension_w', 'delivery_note_dimension_h'], 'number'],
-            [['seller_shipped', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'lost', 'warehouse_id', 'created_at', 'updated_at', 'remove', 'shipment_id'], 'integer'],
+            [['seller_shipped', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'lost', 'warehouse_id', 'created_at', 'updated_at', 'remove', 'shipment_id', 'customer_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id'], 'integer'],
             [['delivery_note_code'], 'string', 'max' => 32],
-            [['tracking_seller', 'version'], 'string', 'max' => 255],
+            [['tracking_seller', 'version', 'receiver_name', 'receiver_email', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code'], 'string', 'max' => 255],
             [['current_status'], 'string', 'max' => 100],
         ];
     }
@@ -87,6 +99,18 @@ class DeliveryNote extends \common\components\db\ActiveRecord
             'remove' => 'Remove',
             'version' => 'Version',
             'shipment_id' => 'Shipment ID',
+            'customer_id' => 'Customer ID',
+            'receiver_name' => 'Receiver Name',
+            'receiver_email' => 'Receiver Email',
+            'receiver_phone' => 'Receiver Phone',
+            'receiver_address' => 'Receiver Address',
+            'receiver_country_id' => 'Receiver Country ID',
+            'receiver_country_name' => 'Receiver Country Name',
+            'receiver_province_id' => 'Receiver Province ID',
+            'receiver_province_name' => 'Receiver Province Name',
+            'receiver_district_id' => 'Receiver District ID',
+            'receiver_district_name' => 'Receiver District Name',
+            'receiver_post_code' => 'Receiver Post Code',
         ];
     }
 }
