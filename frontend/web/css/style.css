@@ -1,21 +1,21 @@
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-REGULAR.ttf") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-REGULAR.TTF") format("truetype");
   font-weight: 400;
   font-style: normal; }
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-LIGHT.ttf") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-LIGHT.TTF") format("truetype");
   font-weight: 200;
   font-style: normal; }
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-MEDIUM.ttf") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-MEDIUM.TTF") format("truetype");
   font-weight: 500;
   font-style: normal; }
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-BOLD.ttf") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-BOLD.TTF") format("truetype");
   font-weight: 700;
   font-style: normal; }
 .container:after, .navbar-2 .navbar-header ul li .dropdown-menu .sub-head:after, .navbar-2 .navbar-header ul li .dropdown-menu ul li:after, .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu:after, .navbar-2 .navbar-right li .dropdown-menu .buyship:after, .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline:after, .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol:after, .navbar-ws:after, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-menu:after, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2.top-store-cate:after, .buy-amazon .right .bottom:after {
