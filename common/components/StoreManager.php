@@ -13,6 +13,7 @@ use Yii;
 use yii\base\Component;
 use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
+use yii\helpers\StringHelper;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -164,12 +165,21 @@ class StoreManager extends Component
         return 'vi';
     }
 
-    public function roundMoney($money){
-        return WeshopHelper::roundNumber($money,-3);
+    public function roundMoney($money)
+    {
+        return WeshopHelper::roundNumber($money, -3);
     }
+
     public function showMoney($money)
     {
-        return $money . ' ' . $this->getStore()->currency;
+        $currency = $this->getStore()->currency;
+        $decimal = 0;
+        if ($currency === 'USD') {
+            $decimal = 2;
+        }
+        $money = number_format($money, $decimal);
+        $money = StringHelper::normalizeNumber($money);
+        return $money . ' ' . $currency;
     }
 
 

@@ -4,7 +4,6 @@ namespace userbackend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Order;
 
 /**
  * OrderSearch represents the model behind the search form of `common\models\Order`.
@@ -17,8 +16,8 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['id', 'store_id', 'customer_id', 'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove', 'mark_supporting', 'supported', 'ready_purchase', 'supporting'], 'integer'],
-            [['ordercode', 'type_order', 'customer_type', 'portal', 'utm_source', 'current_status', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'note_by_customer', 'note', 'seller_name', 'seller_store', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'purchase_order_id', 'purchase_transaction_id', 'purchase_account_id', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'version'], 'safe'],
+            [['id', 'store_id', 'customer_id', 'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove', 'supported', 'ready_purchase', 'supporting', 'check_update_payment'], 'integer'],
+            [['ordercode', 'type_order', 'customer_type', 'portal', 'utm_source', 'current_status', 'quotation_note', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'note_by_customer', 'note', 'seller_name', 'seller_store', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'purchase_order_id', 'purchase_transaction_id', 'purchase_account_id', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'version', 'mark_supporting'], 'safe'],
             [['total_final_amount_local', 'total_amount_local', 'total_origin_fee_local', 'total_price_amount_origin', 'total_paid_amount_local', 'total_refund_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_fee_amount_local', 'total_custom_fee_amount_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'revenue_xu', 'xu_count', 'xu_amount', 'total_weight', 'total_weight_temporary', 'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund'], 'number'],
         ];
     }
@@ -39,7 +38,7 @@ class OrderSearch extends Order
      *
      * @return ActiveDataProvider
      */
-    public function search2($params)
+    public function search($params)
     {
         $query = Order::find();
 
@@ -123,10 +122,10 @@ class OrderSearch extends Order
             'total_quantity' => $this->total_quantity,
             'total_purchase_quantity' => $this->total_purchase_quantity,
             'remove' => $this->remove,
-            'mark_supporting' => $this->mark_supporting,
             'supported' => $this->supported,
             'ready_purchase' => $this->ready_purchase,
             'supporting' => $this->supporting,
+            'check_update_payment' => $this->check_update_payment,
         ]);
 
         $query->andFilterWhere(['like', 'ordercode', $this->ordercode])
@@ -158,7 +157,8 @@ class OrderSearch extends Order
             ->andFilterWhere(['like', 'purchase_account_email', $this->purchase_account_email])
             ->andFilterWhere(['like', 'purchase_card', $this->purchase_card])
             ->andFilterWhere(['like', 'purchase_refund_transaction_id', $this->purchase_refund_transaction_id])
-            ->andFilterWhere(['like', 'version', $this->version]);
+            ->andFilterWhere(['like', 'version', $this->version])
+            ->andFilterWhere(['like', 'mark_supporting', $this->mark_supporting]);
 
         return $dataProvider;
     }

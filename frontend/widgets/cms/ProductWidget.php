@@ -3,6 +3,7 @@
 
 namespace frontend\widgets\cms;
 
+use common\components\StoreManager;
 use Yii;
 
 class ProductWidget extends WeshopBlockWidget
@@ -32,17 +33,31 @@ class ProductWidget extends WeshopBlockWidget
     public function run()
     {
         parent::run();
+        $price = $this->getStoreManager()->roundMoney($this->product['calculated_sell_price'] * $this->getStoreManager()->getExchangeRate());
+        $oldPrice = '';
+        $saleTag = 0;
+        if (($oldPrice = $this->product['calculated_start_price']) !== null) {
+            $oldPrice = $this->getStoreManager()->roundMoney($oldPrice * $this->getStoreManager()->getExchangeRate());
+            $saleTag = round((($oldPrice - $price) / $oldPrice) * 100);
+            $oldPrice = $this->getStoreManager()->showMoney($oldPrice);
+        }
+        $price = $this->getStoreManager()->showMoney($price);
         echo $this->render("product/{$this->type}", [
             'url' => '#',
             'name' => $this->product['name'],
             'image' => $this->product['image'],
-            'sellPrice' => $this->product['calculated_sell_price'] * $this->getExRate(),
-            'oldPrice' => ($oldPrice = $this->product['calculated_start_price']) !== null ? $oldPrice : '',
-            'saleTag' => 50,
+            'sellPrice' => $price,
+            'oldPrice' => $oldPrice,
+            'saleTag' => $saleTag
         ]);
     }
 
-    public function getExRate(){
-        return 23000;
+    /**
+     * @return StoreManager
+     */
+
+    public function getStoreManager()
+    {
+        return Yii::$app->storeManager;
     }
 }

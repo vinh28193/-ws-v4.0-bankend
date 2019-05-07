@@ -24,27 +24,27 @@ $this->params['breadcrumbs'][] = $this->title;
             </thead>
             <tbody>
             <?php foreach ($models  as $order) { ?>
-            <tr style="border-bottom: 1px solid #ebebeb">
-                <td>
-                    <?php foreach ($order->products as $product) {?>
-                        <div class="product-info">
-                            <div class="thumb">
-                                <img src="<?= !is_null($product->link_img) ? $product->link_img : 'no-image' ?>" alt=""/>
+                <tr style="border-bottom: 1px solid #ebebeb">
+                    <td>
+                        <?php foreach ($order->products as $product) {?>
+                            <div class="product-info">
+                                <div class="thumb">
+                                    <img src="<?= !is_null($product->link_img) ? $product->link_img : 'no-image' ?>" alt=""/>
+                                </div>
+                                <div class="info">
+                                    <b><?= $product->product_name ?></b>
+                                    <span><?= $product->quantity_purchase ?></span>
+                                </div>
                             </div>
-                            <div class="info">
-                                <b><?= $product->product_name ?></b>
-                                <span><?= $product->quantity_purchase ?></span>
-                            </div>
-                        </div>
-                    <?php } ?>
-                </td>
-                <td><a href="#"><?= $order->ordercode ?></a></td>
-                <td>
-                    <b><?= $order->new ?></b>
-                </td>
-                <td><b class="total text-orange"></b></td>
-                <td><b><?= $order->current_status ?></b></td>
-            </tr>
+                        <?php } ?>
+                    </td>
+                    <td><a href="#"><?= $order->ordercode ?></a></td>
+                    <td>
+                        <b><?= $order->new ?></b>
+                    </td>
+                    <td><b class="total text-orange"></b></td>
+                    <td><b><?= $order->current_status ?></b></td>
+                </tr>
             <?php } ?>
             </tbody>
         </table>

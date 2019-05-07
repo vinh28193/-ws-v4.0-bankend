@@ -35,6 +35,15 @@ class Customer extends ActiveRecord implements IdentityInterface
         return '{{%customer}}';
     }
 
+    public function getStore()
+    {
+        return $this->hasOne(Store::className(), ['id' => 'store_id']);
+    }
+    public function getAddress()
+    {
+        return $this->hasOne(Address::className(), ['customer_id' => 'id']);
+    }
+
     /**
      * @inheritdoc
      */
