@@ -3,18 +3,37 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\modelsMongo\RestApiCall;
 use common\modelsMongo\PushNotifications;
 use common\models\Order;
 use Yii;
-use common\data\ActiveDataProvider;
-use common\helpers\ChatHelper;
-use yii\web\NotFoundHttpException;
-use yii\web\ServerErrorHttpException;
+use yii\caching\DbDependency;
+
+//use common\data\ActiveDataProvider;
+//use common\helpers\ChatHelper;
+//use yii\web\NotFoundHttpException;
+//use yii\web\ServerErrorHttpException;
+//use common\modelsMongo\RestApiCall;
 
 
 class NotificationsController extends BaseApiController
 {
+//    public function behaviors()
+//    {
+//        $behaviors = parent::behaviors();
+//        $behaviors['pageCache'] = [
+//            'class' => 'yii\filters\PageCache',
+//            'only' => ['index'],
+//            'duration' => 24 * 3600 * 365, // 1 year
+//            'dependency' => [
+//                'class' => 'yii\caching\DbDependency',
+//                'dependencies' => [
+//                    new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . PushNotifications::tableName()])
+//                ]
+//            ],
+//        ];
+//        return $behaviors;
+//    }
+
     /** Role :
      * case 'cms':
      * case 'warehouse':
