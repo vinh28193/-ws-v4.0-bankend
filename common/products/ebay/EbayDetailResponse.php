@@ -32,26 +32,26 @@ class EbayDetailResponse extends BaseResponse
     public function parser($response)
     {
         if ($response['success']) {
-            $temp_i = 0;
-            foreach ($response['data']['variation_options'] as $option) {
-                $response['data']['variation_options'][$temp_i]['name'] = str_replace("\"", "''", $option["name"]);
-                $temp_j = 0;
-                foreach ($option['values'] as $item) {
-                    $response['data']['variation_options'][$temp_i]['values'][$temp_j] = str_replace("\"", "''", $item);
-                    $temp_j++;
-                }
-                $temp_i++;
-            }
-            $temp_i = 0;
-            foreach ($response['data']['variation_mapping'] as $option) {
-                $temp_j = 0;
-                foreach ($option['options_group'] as $item) {
-                    $response['data']['variation_mapping'][$temp_i]['options_group'][$temp_j]['name'] = str_replace("\"", "''", $item["name"]);
-                    $response['data']['variation_mapping'][$temp_i]['options_group'][$temp_j]['value'] = str_replace("\"", "''", $item["value"]);
-                    $temp_j++;
-                }
-                $temp_i++;
-            }
+//            $temp_i = 0;
+//            foreach ($response['data']['variation_options'] as $option) {
+//                $response['data']['variation_options'][$temp_i]['name'] = str_replace("\"", "''", $option["name"]);
+//                $temp_j = 0;
+//                foreach ($option['values'] as $item) {
+//                    $response['data']['variation_options'][$temp_i]['values'][$temp_j] = str_replace("\"", "''", $item);
+//                    $temp_j++;
+//                }
+//                $temp_i++;
+//            }
+//            $temp_i = 0;
+//            foreach ($response['data']['variation_mapping'] as $option) {
+//                $temp_j = 0;
+//                foreach ($option['options_group'] as $item) {
+//                    $response['data']['variation_mapping'][$temp_i]['options_group'][$temp_j]['name'] = str_replace("\"", "''", $item["name"]);
+//                    $response['data']['variation_mapping'][$temp_i]['options_group'][$temp_j]['value'] = str_replace("\"", "''", $item["value"]);
+//                    $temp_j++;
+//                }
+//                $temp_i++;
+//            }
             $response = $response['data'];
             if (isset($response['provider'])) {
                 $response['providers'][] = $response['provider'];

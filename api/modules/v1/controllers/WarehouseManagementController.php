@@ -6,6 +6,7 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\models\TrackingCode;
+use common\models\Warehouse;
 use yii\helpers\ArrayHelper;
 
 class WarehouseManagementController extends BaseApiController
@@ -40,17 +41,23 @@ class WarehouseManagementController extends BaseApiController
         return $this->response(true,'ok', $res);
     }
     public function actionCreate(){
-        if(!$this->post['tracking_codes'] || !$this->post['time_received']){
-            return $this->response(false, 'Tracking code and time received cannot null!');
+        if(!$this->post['tracking_codes'] || !$this->post['time_received'] || !$this->post['warehouse_received']){
+            return $this->response(false, 'Tracking code , time received and warehouse received cannot null!');
+        }
+        $warehouse = Warehouse::findOne($this->post['warehouse_received']);
+        if(!$warehouse){
+            return $this->response(false, 'Cannot find warehouse '.$this->post['warehouse_received'].'!');
         }
         $trackingS = explode(',',str_replace(' ','',$this->post['tracking_codes']));
-        $time = str_replace('T',' ',strtoupper($this->post['time_received']));
-        $time = str_replace('Z','',strtoupper($time));
-        $time = explode('.',$time)[0];
+
         foreach ($trackingS as $tracking){
             if($tracking){
+                $tracking = trim($tracking,"\t\n");
                 $trackingNew = new TrackingCode();
                 $trackingNew->tracking_code = $tracking;
+                $trackingNew->stock_in_us = strtotime($this->post['time_received']);
+                $trackingNew->warehouse_us_id = $warehouse->id;
+                $trackingNew->warehouse_us_name = $warehouse->name;
                 $trackingNew->status = TrackingCode::STATUS_US_RECEIVED;
                 $trackingNew->CreateOrUpdate(false);
             }

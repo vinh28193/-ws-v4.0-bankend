@@ -35,7 +35,7 @@ class ProductController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index'],
+                'actions' => ['index', 'update'],
                 'roles' => $this->getAllRoles(true)
             ],
         ];
@@ -88,6 +88,12 @@ class ProductController extends BaseApiController
             }
             if (isset($post['category_id'])) {
                 $product->custom_category_id = $post['category_id'];
+            }
+            if (isset($post['noteCustomer'])) {
+                $product->note_by_customer = $post['noteCustomer'];
+            }
+            if (isset($post['note_boxme'])) {
+                $product->note_boxme = $post['note_boxme'];
             }
             $dirtyAttributes = $product->getDirtyAttributes();
             $messages = "order {$post['order_path']} Update Product {$this->resolveChatMessage($dirtyAttributes,$product)}";

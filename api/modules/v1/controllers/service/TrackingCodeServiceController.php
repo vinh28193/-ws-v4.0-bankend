@@ -99,8 +99,26 @@ class TrackingCodeServiceController extends BaseApiController
         }
         $model->product_id = $product->id;
         $model->order_id = $product->order_id;
-        $model->item_name = $model->item_name && strtolower($model->item_name) != 'none' ? $model->item_name : $product->product_name;
+        $model->item_name = $model->item_name && strtoupper($model->item_name) != 'none' ? $model->item_name : $product->product_name;
         $model->save();
+        $count = DraftDataTracking::find()->where(['tracking_code' => $model->tracking_code])->count();
+        if($count > 1){
+            DraftDataTracking::updateAll(
+                ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
+                ['tracking_code' => $model->tracking_code]
+            );
+            Package::updateAll(
+                ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
+                ['tracking_code' => $model->tracking_code]
+            );
+        }else{
+            DraftDataTracking::updateAll(
+                ['type_tracking' => DraftDataTracking::TYPE_NORMAL],
+                ['tracking_code' => $model->tracking_code]
+            );
+            $model->type_tracking = DraftDataTracking::TYPE_NORMAL;
+            $model->save(0);
+        }
         return $this->response(true,'Map tracking success!');
     }
     public function actionSplitTracking($id){

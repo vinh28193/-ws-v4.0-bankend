@@ -82,12 +82,16 @@ class PageService
 
     public static function getAlias($type, $store = 1, $flushCache = false)
     {
+
+
         if ($type === WsPage::TYPE_AMZ) {
             $type = 'amazon';
         } elseif ($type === WsPage::TYPE_EBAY) {
             $type = 'ebay';
         } elseif ($type === WsPage::TYPE_HOME) {
             $type = 'open';
+        } elseif ($type === WsPage::TYPE_AMZ_JP) {
+             $type = 'amazon-jp';
         }
         $key = 'ALIAS_' . $store . $type;
         if (!($alias = self::getCache()->get($key)) || $flushCache) {

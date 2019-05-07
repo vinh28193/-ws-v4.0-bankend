@@ -39,6 +39,7 @@ use Yii;
  * @property string $version version 4.0
  * @property string $condition Tình trạng đơn hàng
  * @property string $seller_refund_amount Số tiền người bán hoàn chả
+ * @property string $note_boxme note Boxme
  *
  * @property PurchaseProduct[] $purchaseProducts
  */
@@ -60,7 +61,7 @@ class Product extends \common\components\db\ActiveRecord
         return [
             [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'created_at', 'product_name'], 'required'],
             [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove'], 'integer'],
-            [['link_img', 'link_origin', 'variations', 'note_by_customer', 'product_name'], 'string'],
+            [['link_img', 'link_origin', 'variations', 'note_by_customer', 'note_boxme', 'product_name'], 'string'],
             [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_fee_product_local', 'price_purchase', 'shipping_fee_purchase', 'tax_fee_purchase', 'total_weight_temporary', 'seller_refund_amount'], 'number'],
             [['portal', 'sku', 'parent_sku', 'version', 'condition'], 'string', 'max' => 255],
             [['product_link'], 'string', 'max' => 500],
@@ -96,6 +97,7 @@ class Product extends \common\components\db\ActiveRecord
             'variations' => 'Variations',
             'variation_id' => 'Variation ID',
             'note_by_customer' => 'Note By Customer',
+            'note_boxme' => 'Note Boxme',
             'total_weight_temporary' => 'Total Weight Temporary',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

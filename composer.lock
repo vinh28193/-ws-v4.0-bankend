@@ -4,51 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "83ba4cdca37dda3c1ab7f9c7c12d2bce",
+    "content-hash": "c2b52e55c5b97a3951d067563df29c9a",
     "packages": [
-        {
-            "name": "airani/yii2-telegram-log",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/airani/yii2-telegram-log.git",
-                "reference": "27afd15aaeb8adfac66a6ef94141cc6eb1566fe7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/airani/yii2-telegram-log/zipball/27afd15aaeb8adfac66a6ef94141cc6eb1566fe7",
-                "reference": "27afd15aaeb8adfac66a6ef94141cc6eb1566fe7",
-                "shasum": ""
-            },
-            "require": {
-                "yiisoft/yii2": "~2.0.0",
-                "yiisoft/yii2-httpclient": "~2.0"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "airani\\log\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ali Irani",
-                    "email": "ali@irani.im"
-                }
-            ],
-            "description": "Yii 2.0 telegram log target, send logs to the telegram chats or channels",
-            "keywords": [
-                "bot",
-                "log",
-                "telegram",
-                "yii2"
-            ],
-            "time": "2016-07-14T07:44:14+00:00"
-        },
         {
             "name": "bower-asset/bootstrap",
             "version": "v3.4.1",
@@ -156,7 +113,7 @@
             "version": "3.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
+                "url": "git@github.com:jquery/jquery-dist.git",
                 "reference": "9e8ec3d10fad04748176144f108d7355662ae75e"
             },
             "dist": {
@@ -186,6 +143,25 @@
                 "bower-asset/jquery": ">=1.2.1"
             },
             "type": "bower-asset"
+        },
+        {
+            "name": "bower-asset/jquery.lazyload",
+            "version": "1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tuupola/lazyload.git",
+                "reference": "6e2fb5f64967de5a8bf539733d4cf7e736100c7a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tuupola/lazyload/zipball/6e2fb5f64967de5a8bf539733d4cf7e736100c7a",
+                "reference": "6e2fb5f64967de5a8bf539733d4cf7e736100c7a"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ],
+            "time": "2017-09-12T11:53:55+00:00"
         },
         {
             "name": "bower-asset/owl.carousel",
@@ -1279,12 +1255,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "b80830c5f8c221b8bd6a830c5b2f45544f82c4d7"
+                "reference": "bc4a92f50f1678cab8861994e7ee9a3abd50b8f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/b80830c5f8c221b8bd6a830c5b2f45544f82c4d7",
-                "reference": "b80830c5f8c221b8bd6a830c5b2f45544f82c4d7",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/bc4a92f50f1678cab8861994e7ee9a3abd50b8f2",
+                "reference": "bc4a92f50f1678cab8861994e7ee9a3abd50b8f2",
                 "shasum": ""
             },
             "require": {
@@ -1371,7 +1347,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2019-04-16T14:27:26+00:00"
+            "time": "2019-04-30T17:08:00+00:00"
         },
         {
             "name": "yiisoft/yii2-authclient",
@@ -1431,12 +1407,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-bootstrap.git",
-                "reference": "1fd918d9fa46ae34059086b3711e34e451aba42d"
+                "reference": "fa476cf19c5637a8a497ad2222149be1569fad80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/1fd918d9fa46ae34059086b3711e34e451aba42d",
-                "reference": "1fd918d9fa46ae34059086b3711e34e451aba42d",
+                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/fa476cf19c5637a8a497ad2222149be1569fad80",
+                "reference": "fa476cf19c5637a8a497ad2222149be1569fad80",
                 "shasum": ""
             },
             "require": {
@@ -1486,7 +1462,7 @@
                 "bootstrap",
                 "yii2"
             ],
-            "time": "2019-04-18T12:59:55+00:00"
+            "time": "2019-04-23T13:18:59+00:00"
         },
         {
             "name": "yiisoft/yii2-bootstrap4",
@@ -1494,12 +1470,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-bootstrap4.git",
-                "reference": "bbabe9f0a154146ef8a59ee8b03a02fdf269baed"
+                "reference": "0f8b00a67fee75ea8b7ffc4e94d353fb12657d27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap4/zipball/bbabe9f0a154146ef8a59ee8b03a02fdf269baed",
-                "reference": "bbabe9f0a154146ef8a59ee8b03a02fdf269baed",
+                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap4/zipball/0f8b00a67fee75ea8b7ffc4e94d353fb12657d27",
+                "reference": "0f8b00a67fee75ea8b7ffc4e94d353fb12657d27",
                 "shasum": ""
             },
             "require": {
@@ -1555,7 +1531,7 @@
                 "bootstrap4",
                 "yii2"
             ],
-            "time": "2019-03-30T21:00:53+00:00"
+            "time": "2019-04-30T19:59:27+00:00"
         },
         {
             "name": "yiisoft/yii2-composer",
@@ -1668,12 +1644,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-httpclient.git",
-                "reference": "4915e7466cc6a412e23952c7873885e2f4e4cfdc"
+                "reference": "d0c78184665c82f39874382895a33b06885563ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-httpclient/zipball/4915e7466cc6a412e23952c7873885e2f4e4cfdc",
-                "reference": "4915e7466cc6a412e23952c7873885e2f4e4cfdc",
+                "url": "https://api.github.com/repos/yiisoft/yii2-httpclient/zipball/d0c78184665c82f39874382895a33b06885563ce",
+                "reference": "d0c78184665c82f39874382895a33b06885563ce",
                 "shasum": ""
             },
             "require": {
@@ -1710,7 +1686,7 @@
                 "httpclient",
                 "yii2"
             ],
-            "time": "2019-04-18T11:24:35+00:00"
+            "time": "2019-04-30T14:57:59+00:00"
         },
         {
             "name": "yiisoft/yii2-mongodb",
@@ -3249,16 +3225,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.3.0",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "94fd0001232e47129dd3504189fa1c7225010d08"
+                "reference": "bdd9f737ebc2a01c06ea7ff4308ec6697db9b53c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/94fd0001232e47129dd3504189fa1c7225010d08",
-                "reference": "94fd0001232e47129dd3504189fa1c7225010d08",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/bdd9f737ebc2a01c06ea7ff4308ec6697db9b53c",
+                "reference": "bdd9f737ebc2a01c06ea7ff4308ec6697db9b53c",
                 "shasum": ""
             },
             "require": {
@@ -3296,7 +3272,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-11-30T07:14:17+00:00"
+            "time": "2019-04-30T17:48:53+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -4677,12 +4653,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "c96781d350bcf402f3ee578c4d9c7f0d2e1e4605"
+                "reference": "d3636025e8253c6144358ec0a62773cae588395b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/c96781d350bcf402f3ee578c4d9c7f0d2e1e4605",
-                "reference": "c96781d350bcf402f3ee578c4d9c7f0d2e1e4605",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/d3636025e8253c6144358ec0a62773cae588395b",
+                "reference": "d3636025e8253c6144358ec0a62773cae588395b",
                 "shasum": ""
             },
             "require": {
@@ -4740,7 +4716,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2019-04-15T17:24:46+00:00"
+            "time": "2019-04-27T14:29:50+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -4862,12 +4838,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "24e03676c2fa5f54c6c5b296133d39aec34d38cc"
+                "reference": "861c10069b0a073618c7c2d60eacbccafa72f697"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/24e03676c2fa5f54c6c5b296133d39aec34d38cc",
-                "reference": "24e03676c2fa5f54c6c5b296133d39aec34d38cc",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/861c10069b0a073618c7c2d60eacbccafa72f697",
+                "reference": "861c10069b0a073618c7c2d60eacbccafa72f697",
                 "shasum": ""
             },
             "require": {
@@ -4923,7 +4899,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-06T14:04:46+00:00"
+            "time": "2019-04-27T13:05:39+00:00"
         },
         {
             "name": "symfony/finder",
@@ -5019,7 +4995,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -5295,12 +5271,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-debug.git",
-                "reference": "0465d9f719b204e258d42f6b8522b3fb2182fd07"
+                "reference": "5d4020c5734cbfaa686afe4ddf438bd5ee51ee53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/0465d9f719b204e258d42f6b8522b3fb2182fd07",
-                "reference": "0465d9f719b204e258d42f6b8522b3fb2182fd07",
+                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/5d4020c5734cbfaa686afe4ddf438bd5ee51ee53",
+                "reference": "5d4020c5734cbfaa686afe4ddf438bd5ee51ee53",
                 "shasum": ""
             },
             "require": {
@@ -5344,7 +5320,7 @@
                 "debugger",
                 "yii2"
             ],
-            "time": "2019-04-17T18:36:16+00:00"
+            "time": "2019-04-30T15:21:55+00:00"
         },
         {
             "name": "yiisoft/yii2-gii",

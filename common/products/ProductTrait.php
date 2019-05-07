@@ -19,8 +19,10 @@ trait ProductTrait
         foreach ((array)$this->variation_options as $datum) {
             $it = new VariationOption();
             $it->images_mapping = $datum['images_mapping'];
-            $it->name = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['name']);
-            $it->values = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['values']);
+//            $it->name = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['name']);
+//            $it->values = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['values']);
+            $it->name = $datum['name'];
+            $it->values =$datum['values'];
             $it->setImagesMapping();
             $rs[] = $it;
         }
@@ -69,13 +71,15 @@ trait ProductTrait
         $this->primary_images = $rs;
     }
 
-    public function setProviders(){
+    public function setProviders()
+    {
         $providers = [];
-        foreach ((array)$this->providers as $provider){
-            $providers[] = !is_object($provider) ? new Provider($provider) : $provider ;
+        foreach ((array)$this->providers as $provider) {
+            $providers[] = !is_object($provider) ? new Provider($provider) : $provider;
         }
         $this->providers = $providers;
     }
+
     public function checkOutOfStock()
     {
         return $this->available_quantity - $this->quantity_sold < 0 ? $this->available_quantity : $this->available_quantity - $this->quantity_sold;
@@ -108,12 +112,14 @@ trait ProductTrait
 
     public function updateBySku($sku)
     {
+        if (count($this->variation_mapping) == 0) {
+            return true;
+        }
         $this->parent_item = $this;
         if ($this->type === self::TYPE_AMAZON_US) {
             $this->item_origin_url = str_replace($this->item_sku, $sku, $this->item_origin_url);
         }
         $this->item_sku = $sku;
-
         foreach ((array)$this->variation_mapping as $item) {
             if ($item->variation_sku === $sku) {
                 $this->start_price = $item->variation_start_price ? $item->variation_start_price : $this->start_price;
@@ -121,11 +127,13 @@ trait ProductTrait
                 $this->available_quantity = $item->available_quantity;  // ? $item->available_quantity : $this->available_quantity;
                 $this->quantity_sold = $item->quantity_sold;            // ? $item->quantity_sold : $this->quantity_sold;
                 $this->current_variation = $item->options_group ? $item->options_group : $this->current_variation;
+                $specific = [];
+                foreach ($item->options_group as $option) {
+                    $specific = array_merge($specific, [$option->name => $option->value]);
+                }
+                $this->current_variation = json_encode($specific);
                 break;
             }
-        }
-        if (count($this->variation_mapping) == 0) {
-            return true;
         }
         return false;
     }

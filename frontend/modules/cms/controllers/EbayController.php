@@ -3,15 +3,14 @@
 
 namespace frontend\modules\cms\controllers;
 
-use common\models\cms\PageService;
+
 use Yii;
 use common\models\cms\WsPage;
+use common\models\cms\PageService;
 use frontend\controllers\CmsController;
 
 class EbayController extends CmsController
 {
-
-    const MAX_ITEM_SIZE = 4;
 
     public $type = WsPage::TYPE_EBAY;
 

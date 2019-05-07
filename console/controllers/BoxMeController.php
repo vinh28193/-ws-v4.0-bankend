@@ -145,16 +145,18 @@ class BoxMeController extends Controller
                         $data = $ext->getAttributes();
                         unset($data['id']);
                         $draft_data->setAttributes($data,false);
-                        $draft_data->tracking_code = strtolower($tracking->tracking_code);
+                        $draft_data->tracking_code = strtoupper($tracking->tracking_code);
                         $draft_data->manifest_id = $tracking->manifest_id;
                         $draft_data->manifest_code = $tracking->manifest_code;
                         $draft_data->item_name = $ext->product ? $ext->product->product_name : '';
                         $draft_data->image = $ext->product ? $ext->product->link_img : '';
                         $draft_data->created_at = time();
                         $draft_data->updated_at = time();
+                        $draft_data->stock_in_us = $tracking->stock_in_us ? $tracking->stock_in_us : $ext->created_at;
+                        $draft_data->stock_out_us = $tracking->stock_out_us;
                         $draft_data->status = DraftDataTracking::STATUS_US_SENDING;
-                        $draft_data->tracking_merge = strtolower($tracking->tracking_code);
-                        $draft_data->tracking_merge .= strtolower($tracking->tracking_code) == strtolower($ext->tracking_code) ? '' : ','.strtolower($ext->tracking_code);
+                        $draft_data->tracking_merge = strtoupper($tracking->tracking_code);
+                        $draft_data->tracking_merge .= strtoupper($tracking->tracking_code) == strtoupper($ext->tracking_code) ? '' : ','.strtoupper($ext->tracking_code);
                         $draft_data->save(0);
                         $draft_data->ws_tracking_code = WeshopHelper::generateTag($draft_data->id,'WSVNTK');
                         $draft_data->save(0);
@@ -170,8 +172,10 @@ class BoxMeController extends Controller
                 $draft_data_one->manifest_code = $tracking->manifest_code;
                 $draft_data_one->created_at = time();
                 $draft_data_one->updated_at = time();
+                $draft_data_one->stock_in_us = $tracking->stock_in_us;
+                $draft_data_one->stock_out_us = $tracking->stock_out_us;
                 $draft_data_one->status = DraftDataTracking::STATUS_US_SENDING;
-                $draft_data_one->tracking_merge = strtolower($tracking->tracking_code);
+                $draft_data_one->tracking_merge = strtoupper($tracking->tracking_code);
                 $draft_data_one->save(0);
                 $draft_data_one->ws_tracking_code = WeshopHelper::generateTag($draft_data_one->id,'WSVNTK');
                 $draft_data_one->save(0);
@@ -558,6 +562,23 @@ class BoxMeController extends Controller
                 echo $data['message'] . PHP_EOL;
                die;
             }
+        }
+    }
+    public function actionTest() {
+        /** @var DraftDataTracking[] $draftData */
+        $draftData = DraftDataTracking::find()->all();
+        foreach ($draftData as $datum){
+            $datum->tracking_code = strtoupper($datum->tracking_code);
+            $datum->tracking_merge = strtoupper($datum->tracking_merge);
+            $datum->save(0);
+        }
+
+        /** @var Package[] $packages */
+        $packages = Package::find()->all();
+        foreach ($packages as $package){
+            $package->tracking_code = strtoupper($package->tracking_code);
+            $package->tracking_merge = strtoupper($package->tracking_merge);
+            $package->save(0);
         }
     }
 }

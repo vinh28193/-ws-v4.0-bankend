@@ -156,10 +156,27 @@ class OrderController extends BaseApiController
      */
     public function actionUpdate($id)
     {
+        $StatusOrder = array(
+            'new',
+            'supporting',
+            'supported',
+            'ready_purchase',
+            'purchase_start',
+            'purchased',
+            'seller_shipped',
+            'stockin_us',
+            'stockout_us',
+            'stockin_local',
+            'stockout_local',
+            'at_customer',
+            'returned',
+            'cancelled',
+            'lost',
+        );
         $post = Yii::$app->request->post();
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $model = $this->findModel($id, false);
-        $this->can('canUpdate', $model);
+        //$this->can('canUpdate', $model);
         $check = $model->loadWithScenario($this->post);
         $dirtyAttributes = $model->getDirtyAttributes();
 
@@ -168,20 +185,32 @@ class OrderController extends BaseApiController
 
         $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if ($model->getScenario() == 'confirmPurchase') {
-            if ($model->total_paid_amount_local == 0) {
-                $model->supported = $now;
-                $model->current_status = Order::STATUS_SUPPORTED;
-            }
-            if ($model->total_paid_amount_local > 0 && isset($post['checkR2p'])) {
-                if ($post['checkR2p'] != 'yes') {
-                    $model->ready_purchase = $now;
+            if (isset($post['Order']['checkR2p'])) {
+                if ($post['Order']['checkR2p'] == 'yes') {
+                    for ($i = 0; $i < 4; $i++) {
+                        if ($model->{$StatusOrder[$i]} == null) {
+                            $model->{$StatusOrder[$i]} = $now;
+                        }
+                    }
                     $model->current_status = Order::STATUS_READY2PURCHASE;
+                } else if ($post['Order']['checkR2p'] != 'yes') {
+                    for ($i = 0; $i < 3; $i++) {
+                        if ($model->{$StatusOrder[$i]} == null) {
+                            $model->{$StatusOrder[$i]} = $now;
+                        }
+                    }
+                    $model->current_status = Order::STATUS_SUPPORTED;
                 }
             }
         }
         if ($model->getScenario() == 'updateOrderStatus') {
-            $model->{$post['Order']['status']} = $now;
-            $model->current_status = strtoupper($post['Order']['current_status']);
+            for ($i = 0; $i < (int)($post['Order']['status']); $i++) {
+                if ($model->{$StatusOrder[$i]} == null) {
+                    $model->{$StatusOrder[$i]} = $now;
+                }
+            }
+//            $model->current_status = strtoupper($post['Order']['current_status']);
+            $model->current_status = strtoupper($StatusOrder[(int)($post['Order']['status'])]);
         }
         if ($model->getScenario() == 'updateReady2Purchase') {
             $model->ready_purchase = $now;

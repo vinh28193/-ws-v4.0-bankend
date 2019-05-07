@@ -9,14 +9,8 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\data\ActiveDataProvider;
-use common\models\db\Package;
-use common\models\DeliveryNote;
+use common\models\Package;
 use common\helpers\ChatHelper;
-use common\components\db\ActiveRecord;
-use yii\helpers\Inflector;
-use yii\web\NotFoundHttpException;
-use yii\web\ServerErrorHttpException;
 use Yii;
 
 class PackageController extends BaseApiController
@@ -40,8 +34,8 @@ class PackageController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index'],
-                'roles' => ['operation','master_operation']
+                'actions' => ['index', 'view'],
+                'roles' => ['operation','master_operation', 'tester', 'master_sale', 'sale']
             ],
         ];
     }
@@ -52,25 +46,47 @@ class PackageController extends BaseApiController
      */
     public function actionIndex()
     {
-        $requestParams = Yii::$app->getRequest()->getQueryParams();
-        $query = DeliveryNote::find();
-        $query->filterRelation();
-        $query->defaultSelect();
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSizeParam' => 'ps',
-                'pageParam' => 'p',
-                'params' => $requestParams,
-            ],
-            'sort' => [
-                'params' => $requestParams,
-            ],
-        ]);
-
-        $query->filter($requestParams);
-
-        return $this->response(true, 'get data success', $dataProvider);
+        $limit = Yii::$app->request->get('limit',20);
+        $page = Yii::$app->request->get('page',1);
+        $tracking_code = Yii::$app->request->get('tracking_code');
+        $package_code = Yii::$app->request->get('package_code');
+        $sku = Yii::$app->request->get('sku');
+        $order_code = Yii::$app->request->get('order_code');
+        $type_tracking = Yii::$app->request->get('type_tracking');
+        $status = Yii::$app->request->get('status');
+        $query = Package::find()
+            ->with(['order','manifest.receiveWarehouse'])
+            ->leftJoin('product','product.id = package.product_id')
+            ->leftJoin('order','order.id = package.order_id');
+        if($tracking_code){
+            $query->whereLikeMore('package.tracking_code' , $tracking_code);
+        }
+        if($package_code){
+            $query->whereLikeMore('package.package_code' , $package_code);
+        }
+        if($sku){
+            $query->whereLikeMoreMultiColumn(['package.sku','product.parent_sku'] , $sku);
+        }
+        if($order_code){
+            $query->whereLikeMore('package.ordercode' , $order_code);
+        }
+        if($type_tracking){
+            $query->andWhere(['package.type_tracking' => $type_tracking]);
+        }
+        if($status){
+            if($status == 'created'){
+                $query->andWhere(['and',['is not','package.delivery_note_code' , null],['<>','package.delivery_note_code' , '']]);
+            }
+            if($status == 'not_create'){
+                $query->andWhere(['or',['package.delivery_note_code' => null],['package.delivery_note_code' => '']]);
+            }
+        }
+        $data['total'] = $query->count();
+        if($limit != 'all'){
+            $query->limit($limit)->offset($limit*$page-$limit);
+        }
+        $data['data'] = $query->orderBy('id desc')->asArray()->all();
+        return $this->response(true, 'get data success', $data);
     }
     public function actionView($id)
     {
@@ -86,19 +102,50 @@ class PackageController extends BaseApiController
         $model = Package::findOne($id);
         if (!$model->delete()) {
             Yii::$app->wsLog->push('order', 'deletePackageItem', null, [
-                'id' => $model->$post['ordercode'],
+                'id' => $model->order->ordercode,
                 'request' => $this->post,
             ]);
             return $this->response(false, 'delete package' . $id . 'error');
         }
         $dirtyAttributes = $model->getDirtyAttributes();
-        $messages = "order {$model->$post['ordercode']} Delete Package {$this->resolveChatMessage($dirtyAttributes,$model)}";
-        ChatHelper::push($messages, $model->$post['ordercode'], 'GROUP_WS', 'SYSTEM');
+        $messages = "order {$model->order->ordercode} Delete Package {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
         Yii::$app->wsLog->push('order', 'deletePackage', null, [
-            'id' => $model->$post['ordercode'],
+            'id' => $model->order->ordercode,
             'request' => $this->post,
         ]);
         return $this->response(true, 'delete package' . $id . 'success');
+    }
+
+    public function actionCreate()
+    {
+        $post = Yii::$app->request->post();
+        $model = new Package();
+        $model->weight = $post['weight'];
+        $model->quantity = $post['quantity'];
+        $model->dimension_l = $post['dimension_l'];
+        $model->dimension_h = $post['dimension_h'];
+        $model->dimension_w = $post['dimension_w'];
+        $model->price = $post['price'];
+        $model->order_id = $post['order_id'];
+        $model->tracking_code = $post['tracking_code'];
+        $dirtyAttributes = $model->getDirtyAttributes();
+        $messages = "order {$post['ordercode']} Create DeliveryNote Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        if (!$model->save()) {
+            Yii::$app->wsLog->push('order', 'createPackageItem', null, [
+                'id' => $model->order->ordercode,
+                'request' => $this->post,
+                'response' => $model->getErrors()
+            ]);
+            return $this->response(false, 'create package item error');
+        }
+        ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
+        Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+            'id' => $model->order->ordercode,
+            'request' => $this->post,
+            'response' => $dirtyAttributes
+        ]);
+        return $this->response(true, 'create package item success', $model);
     }
 
     protected function resolveChatMessage($dirtyAttributes, $reference)

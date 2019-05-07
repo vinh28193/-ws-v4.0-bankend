@@ -34,7 +34,8 @@
     "bower-asset/ez-plus": "~1.2.4",
     "yiisoft/yii2-bootstrap4": "^1.0@dev",
     "bower-asset/fancybox-plus": "dev-master",
-    "bower-asset/fontawesome": "dev-master"
+    "bower-asset/fontawesome": "dev-master",
+    "bower-asset/jquery.lazyload": "~1.9"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

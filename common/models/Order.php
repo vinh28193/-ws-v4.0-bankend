@@ -37,7 +37,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_PAY_BACK = 'updatePayBack';
     const SCENARIO_UPDATE_SELLER_REFUND = 'updateSellerRefund';
     const SCENARIO_UPDATE_PROMOTION = 'updatePromotionId';
-    const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupported';
+    const SCENARIO_UPDATE_MARK_SUPPORTING = 'updateMarkSupporting';
     const SCENARIO_UPDATE_ORDER_STATUS = 'updateOrderStatus';
     const SCENARIO_UPDATE_ORDER_TIME = 'updateTimeNull';
     const SCENARIO_UPDATE_READY2PURCHASE = 'updateReady2Purchase';
@@ -158,7 +158,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 'sale_support_id', 'support_email'
             ],
             self::SCENARIO_UPDATE_ADJUST_PAYMENT => [
-                'total_paid_amount_local'
+                'total_paid_amount_local', 'check_update_payment'
             ],
             self::SCENARIO_UPDATE_COUPON => [
                 'coupon_id'
@@ -170,7 +170,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 'total_refund_amount_local'
             ],
             self::SCENARIO_UPDATE_SELLER_REFUND => [
-                'purchase_amount_buck', 'purchase_amount_refund'
+                'purchase_refund_transaction_id', 'purchase_amount_refund'
             ],
             self::SCENARIO_UPDATE_MARK_SUPPORTING => [
                 'current_status', 'mark_supporting'
@@ -251,7 +251,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 [
                     'exchange_rate_fee', 'exchange_rate_purchase',
                     'revenue_xu', 'xu_count', 'xu_amount',
-                    'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund'
+                    'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund', 'check_update_payment'
                 ], 'number'
             ],
             [
@@ -532,6 +532,10 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 $query->andFilterWhere(['>','order.total_paid_amount_local' , 0]);
             } elseif ($params['paymentStatus'] === 'UNPAID') {
                 $query->andFilterWhere(['=', 'order.total_paid_amount_local', 0]);
+            } elseif ($params['paymentStatus'] === 'REFUND_PARTIAL') {
+                $query->andFilterWhere(['>', 'order.total_paid_amount_local', new Expression('[[order.total_refund_amount_local]]')]);
+            } elseif ($params['paymentStatus'] === 'REFUND_FULL') {
+                $query->andFilterWhere(['=', 'order.total_paid_amount_local', new Expression('[[order.total_refund_amount_local]]')]);
             }
         }
         if (isset($params['type'])) {

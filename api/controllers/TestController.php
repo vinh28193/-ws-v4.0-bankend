@@ -58,7 +58,7 @@ class TestController extends Controller
         $packing_code = ArrayHelper::getValue($result, 'packing_code');
         $soi = ArrayHelper::getValue($result, 'soi_tracking');
         $tracking = ArrayHelper::getValue($result, 'tracking_code');
-        $tracking = strtolower($tracking);
+        $tracking = strtoupper($tracking);
         $tag_code = ArrayHelper::getValue($result, 'tag_code');
         $volume = ArrayHelper::getValue($result, 'volume');
         $quantity = ArrayHelper::getValue($result, 'quantity');
@@ -89,12 +89,26 @@ class TestController extends Controller
         if ($finds) {
             foreach ($finds as $find) {
                 if ($find != DraftDataTracking::STATUS_LOCAL_INSPECTED) {
-                    $find->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
+                    $find->status = DraftDataTracking::STATUS_LOCAL_RECEIVED;
+                    $find->stock_in_local = $find->stock_in_local ? $find->stock_in_local : time();
+                    if(strtolower($status) == 'close'){
+                        $find->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
+                    }
+                    TrackingCode::updateAll(
+                        [
+                            'status' => $find->status,
+                            'stock_in_local' => $find->stock_in_local,
+                        ],
+                        [
+                            'tracking_code' => $find->tracking_code,
+                            'remove' => 0,
+                        ]
+                    );
                     $find->item_name = $item_name;
                     $find->save(0);
-                    TrackingCode::UpdateStatusTracking($tracking,TrackingCode::STATUS_LOCAL_INSPECTED);
                     $draft = new Package();
                     $draft->tracking_code = $tracking;
+                    $draft->ws_tracking_code = $find->ws_tracking_code;
                     $draft->manifest_code = $manifest_code;
                     $draft->manifest_id = $manifest_id;
                     $draft->quantity = $quantity;
@@ -109,12 +123,15 @@ class TestController extends Controller
                     $draft->dimension_l = isset($vol[0]) ? $vol[0] : null;
                     $draft->dimension_w = isset($vol[1]) ? $vol[1] : null;
                     $draft->dimension_h = isset($vol[2]) ? $vol[2] : null;
+                    $draft->stock_in_us = $find->stock_in_us;
+                    $draft->stock_out_us = $find->stock_out_us;
+                    $draft->stock_in_local = $find->stock_in_local;
                     $draft->item_name = $item_name;
                     $draft->image = $image;
                     $draft->warehouse_tag_boxme = $tag_code;
                     $draft->note_boxme = $note;
                     $draft->type_tracking = $find->type_tracking;
-                    $draft->tracking_merge = strtolower($find->tracking_code) == strtolower($tracking) ? $find->tracking_merge : strtolower($tracking).','.$find->tracking_merge;
+                    $draft->tracking_merge = strtoupper($find->tracking_code) == strtoupper($tracking) ? $find->tracking_merge : strtoupper($tracking).','.$find->tracking_merge;
                     $draft->createOrUpdate(false);
                     DraftWastingTracking::updateAll([
                         'status' => DraftWastingTracking::MERGE_CALLBACK

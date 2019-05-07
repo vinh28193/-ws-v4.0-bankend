@@ -63,6 +63,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'seller',
             'purchaseAssignee',
             'purchaseProducts',
+            'purchaseProducts.purchaseOrder',
             'promotion',
             'package',
             'saleSupport' => function ($q) {
