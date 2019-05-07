@@ -12,9 +12,26 @@ namespace api\modules\v1\controllers;
 use api\controllers\BaseApiController;
 use common\models\db\CategoryCustomPolicy;
 use Yii;
-
+use yii\caching\DbDependency;
 class CategoryCustomerPolicyController extends BaseApiController
 {
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['pageCache'] = [
+            'class' => 'yii\filters\PageCache',
+            'only' => ['index'],
+            'duration' => 24 * 3600 * 365, // 1 year
+            'dependency' => [
+                'class' => 'yii\caching\ChainedDependency',
+                'dependencies' => [
+                    new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . CategoryCustomPolicy::tableName()])
+                ]
+            ],
+        ];
+        return $behaviors;
+    }
+
     /**
      * @inheritdoc
      */
