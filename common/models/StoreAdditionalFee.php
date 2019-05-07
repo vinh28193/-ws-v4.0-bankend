@@ -8,6 +8,7 @@
 
 namespace common\models;
 
+use Yii;
 use yii\helpers\Json;
 use common\calculators\CalculatorService;
 use common\components\AdditionalFeeInterface;
@@ -44,7 +45,7 @@ class StoreAdditionalFee extends DbStoreAdditionalFee
             $value = CalculatorService::calculator($condition, $additional);
         }
 
-        return [$value, $value * $additional->getExchangeRate()];
+        return [$value, Yii::$app->storeManager->roundMoney($value * $additional->getExchangeRate())];
 
     }
 }
