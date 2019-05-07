@@ -172,6 +172,7 @@
     var updatePrice = function ($item, content, isCalling) {
         var data = $item.data('wsItem');
         var selection = 'div.' + data.options.priceCssSelection;
+        $(selection).find('strong.text-orange').html(content.sellPrice);
         console.log(content);
     };
     var changeImage = function ($item, images) {
