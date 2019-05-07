@@ -305,7 +305,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
             $deal = $this->deal_price;
             $this->deal_price = null;
             $this->init();
-            $temp = $this->$this->getAdditionalFees()->getTotalAdditionFees();
+            $temp = $this->getAdditionalFees()->getTotalAdditionFees();
             $this->deal_price = $deal;
         }
         //restore the sell_price to be $tempPrice before

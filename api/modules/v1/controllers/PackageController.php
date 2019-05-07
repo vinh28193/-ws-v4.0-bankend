@@ -65,10 +65,10 @@ class PackageController extends BaseApiController
             $query->whereLikeMore('package.package_code' , $package_code);
         }
         if($sku){
-            $query->whereLikeMoreMultiColumn(['package.sku','product.parent_sku'] , $sku);
+            $query->whereLikeMoreMultiColumn(['product.sku','product.parent_sku'] , $sku);
         }
         if($order_code){
-            $query->whereLikeMore('package.ordercode' , $order_code);
+            $query->whereLikeMore('order.ordercode' , $order_code);
         }
         if($type_tracking){
             $query->andWhere(['package.type_tracking' => $type_tracking]);

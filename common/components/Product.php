@@ -417,4 +417,12 @@ class Product implements AdditionalFeeInterface
     {
         return $this->store->getExchangeRate();
     }
+
+    /**
+     * @return boolean
+     */
+    public function getIsNew()
+    {
+        // TODO: Implement getIsNew() method.
+    }
 }

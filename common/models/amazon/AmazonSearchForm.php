@@ -24,9 +24,9 @@ class AmazonSearchForm
     }
 
     $originDatas = get_object_vars($this);
-    if (empty($this->asin_id)) {
-      return $originDatas;
-    }
+//    if (empty($this->asin_id)) {
+//      return $originDatas;
+//    }
 
     $data = [];
     foreach ($originDatas as $key => $originData) {

@@ -13,9 +13,27 @@ use common\helpers\ChatHelper;
 use common\models\Order;
 use common\models\User;
 use Yii;
+use yii\caching\DbDependency;
 
 class SaleController extends BaseApiController
 {
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['pageCache'] = [
+            'class' => 'yii\filters\PageCache',
+            'only' => ['index'],
+            'duration' => 24 * 3600 * 365, // 1 year
+            'dependency' => [
+                'class' => 'yii\caching\ChainedDependency',
+                'dependencies' => [
+                    new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
+                ]
+            ],
+        ];
+        return $behaviors;
+    }
+
     protected function rules()
     {
         return [

@@ -14,10 +14,11 @@ class SearchController extends EbayController
     {
         $queryParams = Yii::$app->getRequest()->getQueryParams();
         $form = new ProductSearchForm();
-        $form->type = 'ebay';
         $form->load($queryParams);
-        if(($results = $form->search()) === false || (isset($results['products']) && $results['products'] === 0)){
-            return $this->render('@frontend/common/no_search_results');
+        $form->type = 'ebay';
+        Yii::info($form->getAttributes(), __METHOD__);
+        if (($results = $form->search()) === false || (isset($results['products']) && $results['products'] === 0)) {
+            return $this->renderPartial('@frontend/common/no_search_results');
         }
         return $this->render('index', [
             'results' => $results,

@@ -149,9 +149,8 @@ class AdditionalFeeCollection extends ArrayCollection
         ) {
             list($amount, $amountLocal) = $result;
         }else{
-
             $amount *= $additional->getShippingQuantity();
-            $amountLocal = $amount * $additional->getExchangeRate();
+            $amountLocal = $this->getStoreManager()->roundMoney($amount * $additional->getExchangeRate());
         }
         return [
             'type' => $config->name,

@@ -82,4 +82,61 @@ class ActiveQuery extends \yii\db\ActiveQuery
 //            return [$columns[0] => $this->expression($columns[1])];
 //        }
     }
+    /**
+     * @param string $column
+     * @param string $value
+     * @return $this
+     */
+    public function whereMore($column,$value){
+        $values = explode(',',$value);
+        $this->andWhere([$column=>$values]);
+        return $this;
+    }
+    /**
+     * @param string[] $columns
+     * @param string $value
+     * @return $this
+     */
+    public function whereMoreMultiColumn($columns,$value){
+        $values = explode(',',$value);
+        $condition = ['or'];
+        foreach ($columns as $column){
+            $condition[] = [$column => $values];
+        }
+        $condition = count($values) > 1 ? $condition : $condition[1];
+        $this->andWhere($condition);
+        return $this;
+    }
+    /**
+     * @param string $column
+     * @param string $value
+     * @return $this
+     */
+    public function whereLikeMore($column,$value){
+        $values = explode(',',$value);
+        $condition = ['or'];
+        foreach ($values as $v){
+            $condition[] = ['like',$column,$v];
+        }
+        $condition = count($values) > 1 ? $condition : $condition[1];
+        $this->andWhere($condition);
+        return $this;
+    }
+    /**
+     * @param string[] $columns
+     * @param string $value
+     * @return $this
+     */
+    public function whereLikeMoreMultiColumn($columns,$value){
+        $values = explode(',',$value);
+        $condition = ['or'];
+        foreach ($columns as $column){
+            foreach ($values as $v){
+                $condition[] = ['like',$column,$v];
+            }
+        }
+        $condition = count($values) > 1 ? $condition : $condition[1];
+        $this->andWhere($condition);
+        return $this;
+    }
 }
