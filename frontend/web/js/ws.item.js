@@ -97,9 +97,11 @@
                             $item.trigger(events.ajaxBeforeSend, [jqXHR, settings]);
                         },
                         success: function (response) {
-                            console.log(response);
-                            // content = $.extend({}, priceUpdateResponse, content || {});
-                            // updatePrice($item, content, data.ajaxed)
+                            if(response.success){
+                                data.ajaxed = true;
+                                var content = $.extend({}, priceUpdateResponse, response.content || {});
+                                updatePrice($item, content, data.ajaxed)
+                            }
                         },
                         error: function () {
                             data.ajaxed = false;
