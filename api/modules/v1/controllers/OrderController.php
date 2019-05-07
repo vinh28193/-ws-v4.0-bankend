@@ -31,7 +31,7 @@ class OrderController extends BaseApiController
             'dependency' => [
                 'class' => 'yii\caching\ChainedDependency',
                 'dependencies' => [
-                    new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
+                    //new DbDependency(['sql' => 'SELECT MAX(id) FROM ' . Order::tableName()])
                 ]
             ],
         ];
