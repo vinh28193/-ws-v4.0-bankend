@@ -9,6 +9,7 @@ use frontend\widgets\search\SearchResultWidget;
 /* @var $form common\products\forms\ProductSearchForm */
 
 echo SearchResultWidget::widget([
+    'results' => $results,
     'options' => [
         'class' => 'search-2-content',
         'id' => 'wsEbaySearch'
@@ -31,6 +32,15 @@ JS;
 //$this->registerJs($js, \yii\web\View::POS_END);
 ?>
 
+<div class="row">
+    <div class="col-md-3">
+        <div class="filter-content">
 
+        </div>
+    </div>
+    <div class="col-md-9">
+
+    </div>
+</div>
 
 

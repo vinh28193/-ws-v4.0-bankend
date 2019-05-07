@@ -5,16 +5,17 @@ namespace frontend\widgets\search;
 use frontend\assets\SearchAsset;
 use Yii;
 use yii\base\Widget;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
 
 class SearchResultWidget extends Widget
 {
-
+    public $results = [];
     public $options = [];
 
-    public $portals = ['amazon', 'ebay'];
+    public $portal = 'ebay';
 
     public $clientOptions = [
 
@@ -23,10 +24,11 @@ class SearchResultWidget extends Widget
     public function init()
     {
         parent::init();
-        if (is_string($this->portals)) {
-            $this->portals = [$this->portals];
-        }
-        $this->options['data-action'] = $this->getClientOptions()['absoluteUrl'];
+        $this->options = ArrayHelper::merge([
+            'data-action' => $this->getClientOptions()['absoluteUrl'],
+            'data-portal' => $this->portal
+        ], $this->options);
+        Html::addCssClass($options, "{$this->portal}-search");
     }
 
     public function run()
@@ -38,7 +40,7 @@ class SearchResultWidget extends Widget
         $options = Json::htmlEncode($this->getClientOptions());
         $view->registerJs("jQuery('#$id').wsSearch($options);");
         $view->registerJs("console.log($('#$id').wsSearch('data'))");
-        return $this->renderPortals();
+        return Html::tag('div', $this->renderResults(), $this->options);
     }
 
     protected function getClientOptions()
@@ -48,22 +50,36 @@ class SearchResultWidget extends Widget
             'absoluteUrl' => Yii::$app->request->absoluteUrl,
             'enableFilter' => true,
             'filterParam' => 'filter',
-            'portals' =>$this->portals
+            'portal' => $this->portal
         ];
     }
 
-    protected function renderPortals()
+    protected function renderResults()
     {
-        $content = Html::beginTag('div', $this->options);
-        foreach ($this->portals as $name) {
-            $options = [
-                'data-portal' => $name,
-            ];
-            Html::addCssClass($options, "$name-search");
-            $content .= Html::tag('div', '', $options);
-        }
-        $content .= Html::endTag('div');
-        return $content;
+        $results = Html::beginTag('div', ['class' => 'row']);
+        $results .= Html::tag('div', $this->renderLeft(), [
+            'class' => 'col-md-3'
+        ]);
+        $results .= Html::tag('div', $this->renderRight(), [
+            'class' => 'col-md-9'
+        ]);
+
+        $results .= Html::endTag('div');
+        return $results;
     }
 
+    protected function renderLeft()
+    {
+        return $this->render('left', [
+            'categories' => ArrayHelper::getValue($this->results, 'categories', []),
+            'filters' => ArrayHelper::getValue($this->results, 'filters', [])
+        ]);
+    }
+
+    protected function renderRight()
+    {
+        return $this->render('right', [
+            'products' => ArrayHelper::getValue($this->results, 'products', []),
+        ]);
+    }
 }

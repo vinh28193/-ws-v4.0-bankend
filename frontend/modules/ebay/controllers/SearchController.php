@@ -12,22 +12,17 @@ class SearchController extends EbayController
 
     public function actionIndex()
     {
-        $request = Yii::$app->getRequest();
-        if($request->isAjax){
-            $queryParams = $request->getQueryParams();
-            $form = new ProductSearchForm();
-            $form->load($queryParams);
-            $form->type = 'ebay';
-            if(($results = $form->search()) === false || (isset($results['products']) && $results['products'] === 0)){
-                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return $this->renderPartial('@frontend/common/no_search_results');
-            }
-            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return $this->renderPartial('content/content', [
-                'results' => $results,
-                'form' => $form
-            ]);
+        $queryParams = Yii::$app->getRequest()->getQueryParams();
+        $form = new ProductSearchForm();
+        $form->load($queryParams);
+        $form->type = 'ebay';
+        Yii::info($form->getAttributes(), __METHOD__);
+        if (($results = $form->search()) === false || (isset($results['products']) && $results['products'] === 0)) {
+            return $this->renderPartial('@frontend/common/no_search_results');
         }
-        return $this->render('index');
+        return $this->render('index', [
+            'results' => $results,
+            'form' => $form
+        ]);
     }
 }

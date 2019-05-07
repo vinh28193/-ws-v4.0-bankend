@@ -16,7 +16,7 @@
         enableFilter: true,
         filterParams: 'filter',
         absoluteUrl: undefined,
-        portals: []
+        portal: undefined
     };
 
     var eventHandlers = {};
@@ -29,40 +29,54 @@
                 if (settings.absoluteUrl === undefined) {
                     settings.absoluteUrl = $search.data('action')
                 }
-                $search.data('wsSearch', settings);
+                var $queryParams = {};
+                $.each(yii.getQueryParams(settings.absoluteUrl), function (name, value) {
+                    $queryParams[name] = value;
+                });
+                $queryParams.type = [];
+                $queryParams.type = settings.portal;
+
+                var pos = settings.absoluteUrl.indexOf('?');
+                var url = pos < 0 ? settings.absoluteUrl : settings.absoluteUrl.substring(0, pos);
+                var hashPos = settings.absoluteUrl.indexOf('#');
+                if (pos >= 0 && hashPos >= 0) {
+                    url += settings.absoluteUrl.substring(hashPos);
+                }
+                $search.data('wsSearch', {
+                    settings: settings,
+                    ajaxUrl: url,
+                    queryParams: $queryParams
+                });
+
                 initEventHandler($search, 'filter', 'change', 'input.form-check-input', function (event) {
                     methods.applyFilter.call($search, $(this));
                     return false;
                 });
-                methods.search.apply($search);
+
+                // methods.search.apply($search);
                 return false;
             });
         },
         search: function () {
             var $search = $(this);
             var data = $search.data('wsSearch');
-            $.each(data.portals, function (index, portal) {
-                var queryParams = {};
-                $.each(yii.getQueryParams(data.absoluteUrl), function (name, value) {
-                    queryParams[name] = value;
-                });
-                if (!('type' in queryParams)) {
-                    queryParams['type'] = portal
-                }
-                var deferredArrays = deferredArray();
-
-                $.when.apply(this, deferredArrays).always(function () {
-                    $.ajax({
-                        url: data.absoluteUrl,
-                        type: 'GET',
-                        data: queryParams,
-                        dataType: 'json',
-                        success: function (response) {
-                            $search.find('div.' + portal + '-search').html(response);
-                        },
-                        error: function () {
-                        }
-                    });
+            var queryParams = data.queryParams;
+            var ajaxUrl = data.ajaxUrl;
+            if (ajaxUrl === undefined) {
+                return;
+            }
+            var deferredArrays = deferredArray();
+            $.when.apply(this, deferredArrays).always(function () {
+                $.ajax({
+                    url: ajaxUrl,
+                    type: 'GET',
+                    data: queryParams,
+                    dataType: 'json',
+                    success: function (response) {
+                        $search.find('div.' + data.settings.portal + '-search').html(response);
+                    },
+                    error: function () {
+                    }
                 });
             });
         },
@@ -71,15 +85,35 @@
             var $search = $(this);
             var data = $search.data('wsSearch');
             var settings = data.settings;
-            var queryParams = {};
-            $.each(yii.getQueryParams(data.absoluteUrl), function (name, value) {
-                if (!(name in queryParams)) {
-                    queryParams[name] = [];
-                }
-                queryParams[name].push(value);
+            var queryParams = data.queryParams;
+            var filters = queryParams.filter;
+
+            var value = $element.val();
+            if (settings.portal === 'ebay') {
+                filters = ebayFilterParams(filters, $element.data('for'), $element.data('value'));
+            } else {
+                filters = value;
+            }
+
+            queryParams.filter = filters;
+            var ajaxUrl = data.ajaxUrl;
+            if (ajaxUrl === undefined) {
+                return;
+            }
+
+
+            $search.find('form.search-filter-form').remove();
+            var $form = $('<form/>', {
+                action: ajaxUrl,
+                method: 'get',
+                'class': 'search-filter-form',
+                style: 'display:none',
+                'data-pjax': ''
+            }).appendTo($search);
+            $.each(queryParams, function (name, value) {
+                $form.append($('<input/>').attr({type: 'hidden', name: name, value: value}));
             });
-            console.log($element);
-            methods.search.apply($search);
+            $form.submit();
         },
         data: function () {
             return this.data('wsSearch');
@@ -105,16 +139,18 @@
         $(document).on(event, selector, callback);
         eventHandlers[id][type] = {event: event, selector: selector};
     };
-
-    var ebayFilterParams = function (params, value) {
-        params = params.split(';');
-        value = value.split(':');
+    // filters = Color:Red,Blue;Display:FullHd,Asus
+    var ebayFilterParams = function (params, key, value) {
         var newParam = [];
         var pushed = false;
+        if (params === undefined) {
+            return key + ':' + value;
+        }
+        params = params.split(';');
         $.each(params, function (index, parameter) {
             var paramSplit = parameter.split(':');
-            if (value[0] === paramSplit[0]) {
-                paramSplit[1] = makeParam(paramSplit[1], value[1], ',');
+            if (key === paramSplit[0]) {
+                paramSplit[1] = makeParam(paramSplit[1], value, ',');
                 pushed = true;
             }
             if (paramSplit[1] !== '' && paramSplit[1] !== null) {
@@ -122,7 +158,7 @@
             }
         });
         if (!pushed) {
-            newParam.push(value.join(':'));
+            newParam.push(key + ':' + value);
         }
         return newParam.join(';');
     };
