@@ -23,7 +23,6 @@ class SearchResultWidget extends Widget
     public function init()
     {
         parent::init();
-        $portals = [];
         if (is_string($this->portals)) {
             $this->portals = [$this->portals];
         }
@@ -44,16 +43,12 @@ class SearchResultWidget extends Widget
 
     protected function getClientOptions()
     {
-        $filterContentUrls = [];
-        foreach ($this->portals as $portal){
-            $filterContentUrls[$portal] = Url::to("$portal/search");
-        }
         return [
             'typeOfSearch' => 'keyword',
             'absoluteUrl' => Yii::$app->request->absoluteUrl,
             'enableFilter' => true,
             'filterParam' => 'filter',
-            'filterContentUrls' => $filterContentUrls
+            'portals' =>$this->portals
         ];
     }
 
