@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 
 //$this->title = 'Customers';
 //$this->params['breadcrumbs'][] = $this->title;
-
+echo Html::getInputName($model, 'last_name');
 ?>
 <div class="be-acc">
     <div class="ba-block1">
