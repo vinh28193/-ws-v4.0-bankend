@@ -36,7 +36,7 @@ class HomeController extends Controller
     {
 //        $userId = Yii::$app->user->getIdentity()->scope;
         $orders = Order::find()
-//            ->where(['=', 'customer_id', $userId]);
+//            ->where(['=', 'customer_id', 50])
         ->all();
         $total = count($orders);
         return $this->render('index', [

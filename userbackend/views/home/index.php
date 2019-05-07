@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="be-body">
-                <div class="be-table">
+                <div class="be-table table-scrollbar">
                     <table class="table">
                         <thead>
                         <tr>
@@ -57,12 +57,19 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($orders as $order) { ?>
+                        <?php if ($orders) {
+                        foreach ($orders as $order) { ?>
                         <tr>
                             <td><a href="#"><?= $order->ordercode ?></a> </td>
                             <td>Kho Việt Nam</td>
                             <td>17:34 04/04/2019</td>
                         </tr>
+                        <?php }} else {?>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="no-data text-orange text-center">Chưa có đơn hàng nào!</div>
+                                </td>
+                            </tr>
                         <?php } ?>
                         </tbody>
                     </table>
@@ -96,51 +103,6 @@
                         </div>
                     </li>
                 </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="be-box">
-            <div class="be-top">
-                <div class="title">Thông tin đơn hàng mới cập nhập</div>
-                <div class="top-action">
-                    <a href="#">-</a>
-                    <a href="#">x</a>
-                </div>
-            </div>
-            <div class="be-body">
-                <div class="be-table">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">Mã đơn hàng</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Thời gian</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td colspan="3">
-                                <div class="no-data text-orange text-center">Chưa có đơn hàng nào!</div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="be-box">
-            <div class="be-top">
-                <div class="title">Trao đổi thông tin mới</div>
-                <div class="top-action">
-                    <a href="#">-</a>
-                    <a href="#">x</a>
-                </div>
-            </div>
-            <div class="be-body">
-                <div class="new-update no-data text-orange text-center">Chưa có thông tin mới!</div>
             </div>
         </div>
     </div>
