@@ -47,9 +47,17 @@ class DeliveryNoteController extends BaseApiController
         $order_code = Yii::$app->request->get('order_code');
         $type_tracking = Yii::$app->request->get('type_tracking');
         $status = Yii::$app->request->get('status');
-        $query = DeliveryNote::find()->where(['and',['<>','remove',''],['is not','remove',null]]);
+        $query = DeliveryNote::find()
+            ->joinWith(['packages'])
+            ->with(['packages.order','customer','warehouse'])
+//            ->innerJoin('package', 'package.delivery_note_id = delivery_note.id')
+            ->where(['delivery_note.remove'=>0]);
+        if($delivery_code){
+            $query->whereLikeMore('delivery_note.delivery_note_code' , $delivery_code);
+        }
         if($tracking_code){
-            $query->whereLikeMore('package.tracking_code' , $tracking_code);
+            $query->whereLikeMoreMultiColumn(['package.tracking_code','delivery_note.tracking_seller','delivery_note.tracking_reference_1','delivery_note.tracking_reference_2'] , $tracking_code);
+            $query->whereLikeMore('delivery_note.tracking_seller' , $tracking_code);
         }
         if($package_code){
             $query->whereLikeMore('package.package_code' , $package_code);
@@ -71,6 +79,12 @@ class DeliveryNoteController extends BaseApiController
                 $query->andWhere(['or',['package.delivery_note_code' => null],['package.delivery_note_code' => '']]);
             }
         }
+        $data['total'] = $query->count('DISTINCT `delivery_note`.id');
+        if($limit != 'all'){
+            $query->limit($limit)->offset($limit*$page-$limit);
+        }
+        $data['data'] = $query->orderBy('id desc')->asArray()->all();
+        return $this->response(true, 'get data success', $data);
     }
     public function actionCreate(){
         $listPackage = \Yii::$app->request->post('listPackage');
@@ -90,7 +104,7 @@ class DeliveryNoteController extends BaseApiController
     }
     function createMulti($listIds){
         /** @var Package[] $packages */
-        $packages = Package::find()->with(['order'])->where(['id' => $listIds])->all();
+        $packages = Package::find()->with(['order','manifest'])->where(['id' => $listIds])->all();
         if(!$packages){
             return $this->response(false, 'Cannot find package !');
         }
@@ -117,6 +131,7 @@ class DeliveryNoteController extends BaseApiController
             $deliveryNote->receiver_post_code = $package->order->receiver_post_code;
             $deliveryNote->tracking_seller = $package->tracking_code;
             $deliveryNote->order_ids = $package->order_id;
+            $deliveryNote->warehouse_id = $package->manifest->receive_warehouse_id;
             $deliveryNote->manifest_code = $package->manifest_code;
             $deliveryNote->delivery_note_weight = $package->weight;
             $deliveryNote->delivery_note_dimension_h = $package->dimension_h;
@@ -156,6 +171,9 @@ class DeliveryNoteController extends BaseApiController
             return $this->response(false, 'Cannot find package !');
         }
         $customer_id = '';
+        $warehouse = '';
+        $pack_wood = '';
+        $insurance = '';
         foreach ($packages as $package){
             if($package->delivery_note_code || $package->hold || $package->shipment_id ){
                 return $this->response(false, 'Some package has been included in the delivery note!');
@@ -169,14 +187,33 @@ class DeliveryNoteController extends BaseApiController
                 return $this->response(false, 'You must choose the same customer!');
                 break;
             }
-            $orderIds = array_merge([$package->order_id],$orderIds);
-            $manifestCodes = array_merge([$package->manifest_code],$manifestCodes);
+            if($warehouse && $warehouse != $package->manifest->receive_warehouse_id){
+                return $this->response(false, 'You must choose the same warehouse!');
+                break;
+            }
+            if($package->insurance == 1){
+                $insurance = 1;
+            }
+            if($package->pack_wood == 1){
+                $pack_wood = 1;
+            }
+            $customer_id = $package->order->customer_id;
+            $warehouse = $package->manifest->receive_warehouse_id;
+            if(!in_array($package->order_id,$orderIds)){
+                $orderIds[] = $package->order_id;
+            }
+            if(!in_array($package->manifest_code,$manifestCodes)){
+                $manifestCodes[] = $package->manifest_code;
+            }
         }
         $weightChange = 0;
         if($height && $width && $length){
             $weightChange = ($height * $width * $length)/5; // cm => gram
         }
         $deliveryNote = new DeliveryNote();
+        $deliveryNote->pack_wood = $pack_wood;
+        $deliveryNote->insurance = $insurance;
+        $deliveryNote->warehouse_id = $warehouse;
         $deliveryNote->customer_id = $customer_id;
         $deliveryNote->receiver_name = ArrayHelper::getValue($infoDeliveryNote,'receiver_name');
         $deliveryNote->receiver_email = ArrayHelper::getValue($infoDeliveryNote,'receiver_email');
@@ -252,6 +289,9 @@ class DeliveryNoteController extends BaseApiController
                 $deliveryNote->order_ids = implode(',',$orderIds);
                 $deliveryNote->manifest_code = implode(',',$manifestCodes);
                 $deliveryNote->delivery_note_weight = $deliveryNote->delivery_note_weight - $model->weight > 0 ? $deliveryNote->delivery_note_weight - $model->weight : 0;;
+                $deliveryNote->save(false);
+            }else{
+                $deliveryNote->remove = 1;
                 $deliveryNote->save(false);
             }
             $model->delivery_note_code = null;
