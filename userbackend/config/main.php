@@ -34,11 +34,12 @@ return [
             'name' => 'advanced-frontend',
         ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'class' => 'common\wsTelegramChatPush\TelegramTarget',
+                    'levels' => ['error'],
+                    'botToken' => '685361653:AAEQWxQ2lHdvrjEElZfgIaiBRxJTvOCHp1A', // bot token secret key
+                    'chatId' => '855666866', // chat id or channel username with @ like 12345 or @channel
                 ],
             ],
         ],
