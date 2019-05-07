@@ -58,13 +58,13 @@
                         </thead>
                         <tbody>
                         <?php if ($orders) {
-                        foreach ($orders as $order) { ?>
-                        <tr>
-                            <td><a href="#"><?= $order->ordercode ?></a> </td>
-                            <td>Kho Việt Nam</td>
-                            <td>17:34 04/04/2019</td>
-                        </tr>
-                        <?php }} else {?>
+                            foreach ($orders as $order) { ?>
+                                <tr>
+                                    <td><a href="#"><?= $order->ordercode ?></a> </td>
+                                    <td>Kho Việt Nam</td>
+                                    <td>17:34 04/04/2019</td>
+                                </tr>
+                            <?php }} else {?>
                             <tr>
                                 <td colspan="3">
                                     <div class="no-data text-orange text-center">Chưa có đơn hàng nào!</div>
