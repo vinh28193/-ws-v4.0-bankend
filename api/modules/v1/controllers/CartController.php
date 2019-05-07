@@ -47,6 +47,7 @@ class CartController extends BaseApiController
 
     public function actionCreate()
     {
+        Yii::info($this->post,'POST');
         if (($key = $this->getCart()->addItem($this->post)) === false) {
             $this->response(false, 'can not add item');
         };
