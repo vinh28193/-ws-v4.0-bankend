@@ -2,7 +2,7 @@ var ws = ws || (function ($) {
 
     var pub = {
         init: function () {
-            console.log('js init completed');
+            console.log('js ws init completed');
         },
         loading: function (show) {
             show = show || false;
@@ -42,6 +42,23 @@ var ws = ws || (function ($) {
             $options.url = url;
 
             $.ajax($options);
+        },
+        alert: function ($smg, type) {
+
+        },
+        i18n: function (category, message, params = [], language = null) {
+
+        },
+        roundNumber: function (number, precision) {
+            precision = precision || 0;
+            const $factor = Math.pow(10, precision);
+            return Math.round(number * $factor) / $factor;
+        },
+        numberFormat: function (number, decimal, dec_point, thousands_sep) {
+            decimal = decimal || 0;
+            dec_point = dec_point || '.';
+            thousands_sep = thousands_sep || ',';
+
         }
     };
 
