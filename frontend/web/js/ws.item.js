@@ -96,8 +96,7 @@
                 $.when.apply(this, deferredArrays).always(function () {
                     var queryParams = data.options.queryParams;
                     queryParams.sku = activeVariation.variation_sku;
-                    $.ajax({
-                        url: data.options.ajaxUrl,
+                    ws.ajax(data.options.ajaxUrl, {
                         type: 'POST',
                         data: queryParams,
                         dataType: 'json',
@@ -117,9 +116,15 @@
                         error: function () {
                             data.ajaxed = false;
                         }
-                    });
+                    }, true);
                 });
             }
+        },
+        destroy: function () {
+            return this.each(function () {
+                $(this).off('.wsItem');
+                $(this).removeData('wsItem');
+            });
         },
         data: function () {
             return this.data('wsItem');

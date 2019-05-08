@@ -115,6 +115,11 @@
             });
             $form.submit();
         },
+        destroy: function () {
+            this.off('.wsSearch');
+            this.removeData('wsSearch');
+            return this;
+        },
         data: function () {
             return this.data('wsSearch');
         },

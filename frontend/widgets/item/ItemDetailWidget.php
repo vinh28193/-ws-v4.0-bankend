@@ -48,6 +48,7 @@ class ItemDetailWidget extends Widget
             Html::addCssClass($this->slideOptions, 'item-slider');
         }
         Html::addCssClass($this->priceOptions, 'price');
+        Html::addCssClass($this->options,'detail-content');
         $this->prepareItem();
         $this->registerClientScript();
     }
