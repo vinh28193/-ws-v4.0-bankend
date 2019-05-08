@@ -10,7 +10,7 @@ namespace api\modules\v1\controllers;
 
 use common\boxme\forms\CreateOrderForm;
 use common\helpers\WeshopHelper;
-use common\models\db\DeliveryNote;
+use common\models\DeliveryNote;
 use common\models\db\Package;
 use common\models\Shipment as ModelShipment;
 use Yii;
@@ -18,7 +18,6 @@ use Exception;
 use yii\helpers\ArrayHelper;
 use api\controllers\BaseApiController;
 use common\data\ActiveDataProvider;
-use common\models\PackageItem;
 use common\models\Shipment;
 
 /**
@@ -205,7 +204,48 @@ class ShipmentController extends BaseApiController
         if (($ids = ArrayHelper::remove($post, 'listIds', null)) === null) {
             return $this->response(false, "can not action when unknown Id");
         }
+
+        if (($courier = ArrayHelper::remove($post, 'courier', null)) === null) {
+            return $this->response(false, "Please select courier!");
+        }
+        /** @var DeliveryNote[] $listDelivery */
+        $listDelivery = DeliveryNote::find()->with(['packages'])->where(['id' => $ids])->all();
+        $warehouse_tags = [];
+        if(count($listDelivery) !== count($ids)){
+            return $this->response(false, "Some delivery error!");
+        }
+        foreach ($listDelivery as $item){
+            if($item->shipment_id){
+                return $this->response(false, "Have delivery was created shipment!");
+            }
+            foreach ($item->packages as $package){
+                if(!in_array($package->warehouse_tag_boxme,$warehouse_tags)){
+                    $warehouse_tags[] =  $package->warehouse_tag_boxme;
+                }
+            }
+        }
         $shipment = new Shipment();
+        $shipment->customer_id = ArrayHelper::remove($post, 'customer_id', null);
+        $shipment->total_weight = ArrayHelper::remove($post, 'weight', 0);
+        $shipment->total_price = ArrayHelper::remove($post, 'price', 0);
+        $shipment->total_cod = ArrayHelper::remove($post, 'cod', 0);
+        $shipment->warehouse_send_id = ArrayHelper::remove($post, 'warehouse_pickup', null);
+        $shipment->receiver_name = ArrayHelper::remove($post, 'receiver_name', null);
+        $shipment->receiver_email = ArrayHelper::remove($post, 'receiver_email', null);
+        $shipment->receiver_phone = ArrayHelper::remove($post, 'receiver_phone', null);
+        $shipment->receiver_district_name = ArrayHelper::remove($post, 'receiver_district_name', null);
+        $shipment->receiver_district_id = ArrayHelper::remove($post, 'receiver_district_id', null);
+        $shipment->receiver_province_id = ArrayHelper::remove($post, 'receiver_province_id', null);
+        $shipment->receiver_province_name = ArrayHelper::remove($post, 'receiver_province_name', null);
+        $shipment->receiver_country_name = ArrayHelper::remove($post, 'receiver_country_name', null);
+        $shipment->receiver_country_id = ArrayHelper::remove($post, 'receiver_country_id', null);
+        $shipment->receiver_address = ArrayHelper::remove($post, 'receiver_address', null);
+        $shipment->receiver_post_code = ArrayHelper::remove($post, 'receiver_post_code', null);
+        $shipment->is_insurance = ArrayHelper::remove($post, 'insurance', null);
+        $shipment->courier_code = ArrayHelper::remove($courier, 'service_code', null);
+        $shipment->courier_logo = ArrayHelper::remove($courier, 'courier_logo', null);
+        $shipment->courier_estimate_time = ArrayHelper::remove($courier, 'min_delivery_time', '') .' days - '.ArrayHelper::remove($courier, 'max_delivery_time', '').' days';
+        $shipment->total_shipping_fee = ArrayHelper::remove($courier, 'shipping_fee', '') .' days - '.ArrayHelper::remove($courier, 'max_delivery_time', '').' days';
         $transaction = Shipment::getDb()->beginTransaction();
         foreach (['total_price', 'total_cod', 'payment_method', 'description', 'note_for_courier'] as $remove) {
             if (isset($post[$remove])) {
@@ -213,22 +253,24 @@ class ShipmentController extends BaseApiController
             }
         }
         try {
-            if (!$shipment->load($post, '')) {
-                $transaction->rollBack();
-                return $this->response(false, "shipment can not resolve parameter");
-            }
             $shipment->save(false);
+            DeliveryNote::updateAll(['shipment_id' => $shipment->id, 'current_status' => Shipment::STATUS_CREATED],['id' => $ids]);
+            Package::updateAll(['shipment_id' => $shipment->id, 'current_status' => Shipment::STATUS_CREATED],['delivery_note_id' => $ids]);
+            $shipment = Shipment::findOne($shipment->id);
+            $createForm = new CreateOrderForm();
+            /* @var $model ModelShipment */
+            list($isSuccess, $mess) = $createForm->createByShipment($shipment);
 //            $shipment->reCalculateTotal();
-            $transaction->commit();
-            $shipment->refresh();
+            if($isSuccess){
+                $transaction->commit();
+            }else{
+                $transaction->rollBack();
+            }
+            return $this->response($isSuccess, $mess);
         } catch (\Exception $exception) {
             $transaction->rollBack();
             Yii::error($exception, __METHOD__);
             return $this->response(false, $exception->getMessage());
         }
-        $createForm = new CreateOrderForm();
-        /* @var $model ModelShipment */
-        list($isSuccess, $mess) = $createForm->createByShipment($shipment);
-        return $this->response($isSuccess, $mess);
     }
 }

@@ -112,6 +112,7 @@ class CreateOrderForm extends BaseForm
         }
         $model->shipment_code = $result['data']['tracking_number'];
         $model->shipment_status = ModelShipment::STATUS_CREATED;
+        $model->total_shipping_fee = $result['data']['total_fee'];
         $isSave = $model->save(false);
         /** @var Package[] $listTracking */
         $listTracking  = Package::find()->where(['shipment_id' => $model->id])->all();
@@ -155,11 +156,10 @@ class CreateOrderForm extends BaseForm
             'province' => $model->receiver_province_id,
             'zipcode' => $model->receiver_post_code,
         ]);
-        $params['ship_to'] = $to->getAttributes();
-
         if (!$to->validate()) {
             return [false, $to->getFirstErrors()];
         }
+        $params['ship_to'] = $to->getAttributes();
         $parcels = [];
         $errors = [];
         foreach ($model->packages as $package) {
@@ -172,7 +172,8 @@ class CreateOrderForm extends BaseForm
                 'referral_code' => $package->warehouse_tag_boxme,
                 'items' => [
                     new Item([
-                        'name' => $package->item_name,
+                        'sku' => strtolower($package->product->portal) == 'ebay' ? $package->product->parent_sku : $package->product->sku,
+                        'name' => $package->product_id .' - '. $package->item_name,
                         'weight' => $package->weight,
                         'quantity' => $package->quantity,
                         'amount' => $package->price + (($package->cod !== null && $package->cod > 0) ? (int)$package->cod : 0),
@@ -201,10 +202,10 @@ class CreateOrderForm extends BaseForm
         $params['config']['sort_mode'] = Config::SORT_MODE_PRICE;
         $params['config']['order_type'] = Config::ORDER_TYPE_CONSOLIDATE;
         $params['config']['return_mode'] = 2;
-        $params['config']['auto_approve'] = $model->is_hold ? Config::ACCEPTED : Config::NOT_ACCEPT;
+        $params['config']['auto_approve'] = !$model->is_hold ? Config::ACCEPTED : Config::NOT_ACCEPT;
         $params['config']['unit_metric'] = "metric";
         $params['config']['delivery_service'] = $model->courier_code ? $model->courier_code : '';
-        $params['config']['insurance'] = $model->courier_code === 'BM_DBS' ? Config::NOT_ACCEPT : ($model->is_insurance ? Config::ACCEPTED : Config::NOT_ACCEPT);
+        $params['config']['insurance'] = $model->courier_code === 'BM_DBS' ? Config::NOT_ACCEPT : ($model->total_price + $model->total_cod > 5000000 ? Config::ACCEPTED : Config::NOT_ACCEPT);
         $params['config']['currency'] = $location === Location::COUNTRY_VN ? Location::CURRENCY_VN : Location::CURRENCY_ID;
         $params['payment']['cod_amount'] = $model->total_cod !== null ? $model->total_cod : 0;
         return [true, $params];
