@@ -37,6 +37,7 @@ phpunit.phar
 /api/runtime/
 /backend/runtime/
 /userbackend/runtime/
+/wallet/runtime/
 /i18n-cache/
 
 # common
