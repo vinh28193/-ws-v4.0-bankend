@@ -188,7 +188,7 @@ class PageService
             $products = WsProduct::find()
                 ->select('*,(ws_product.calculated_sell_price * ' . self::getStoreManager()->getExchangeRate() . ') as local_calculated_sell_price')
                 ->addSelect('*,(ws_product.calculated_start_price * ' . self::getStoreManager()->getExchangeRate() . ') as local_calculated_start_price')
-                /// @TOdo : Lấy Currency Từ bảng khác cho thêm ở đây
+                /// @TOdo : Lấy ExchangeRate Từ bảng khác cho thêm ở đây
 //                ->select([
 //                    'item_id', 'item_url', 'item_sku', 'name', 'image_origin', 'image', 'start_price', 'sell_price', 'weight', 'category_id',
 //                    'calculated_start_price', 'calculated_sell_price', 'rate_count', 'rate_star', 'category_name', 'start_time', 'end_time', 'provider',
