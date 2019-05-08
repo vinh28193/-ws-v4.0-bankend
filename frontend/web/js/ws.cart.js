@@ -27,6 +27,7 @@
                 }
                 var settings = $.extend({}, defaults, options || {});
                 $cart.data('wsCart', {settings: settings});
+                
             });
         },
         add: function (params) {
@@ -59,10 +60,5 @@
         }
         $(document).on(event, selector, callback);
         eventHandlers[key][type] = {event: event, selector: selector};
-    };
-
-    var ajax = function (url, options) {
-        options.url = url;
-        $.ajax(options);
     };
 })(jQuery);

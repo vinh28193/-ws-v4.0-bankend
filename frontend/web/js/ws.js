@@ -1,6 +1,7 @@
 var ws = ws || (function ($) {
 
     var pub = {
+        i18nMessages: [],
         init: function () {
             console.log('js ws init completed');
         },
@@ -48,6 +49,10 @@ var ws = ws || (function ($) {
         },
         i18n: function (category, message, params = [], language = null) {
 
+        },
+        i18nLoadMessages:function($messages){
+            // clear up data pls
+            pub.i18nMessages = $messages;
         },
         roundNumber: function (number, precision) {
             precision = precision || 0;
