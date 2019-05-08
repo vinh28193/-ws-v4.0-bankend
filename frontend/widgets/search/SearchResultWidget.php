@@ -22,10 +22,16 @@ class SearchResultWidget extends Widget
      * @var ProductSearchForm
      */
     public $form;
+    /**
+     * @var array
+     */
     public $options = [];
 
-    public $portal = 'ebay';
+    public $portal;
 
+    /**
+     * @var array
+     */
     public $clientOptions = [
 
     ];
@@ -37,6 +43,9 @@ class SearchResultWidget extends Widget
             'data-action' => $this->getClientOptions()['absoluteUrl'],
             'data-portal' => $this->portal
         ], $this->options);
+        if($this->portal === null){
+            $this->portal = $this->form->type;
+        }
         Html::addCssClass($options, "{$this->portal}-search");
     }
 
@@ -54,13 +63,13 @@ class SearchResultWidget extends Widget
 
     protected function getClientOptions()
     {
-        return [
+        return ArrayHelper::merge([
             'typeOfSearch' => 'keyword',
             'absoluteUrl' => Yii::$app->request->absoluteUrl,
             'enableFilter' => true,
             'filterParam' => 'filter',
             'portal' => $this->portal
-        ];
+        ],$this->clientOptions);
     }
 
     protected function renderResults()
@@ -80,6 +89,7 @@ class SearchResultWidget extends Widget
     protected function renderLeft()
     {
         return $this->render('left', [
+            'portal' => $this->portal,
             'category' => $this->form->category,
             'filter' => $this->form->filter,
             'categories' => ArrayHelper::getValue($this->results, 'categories', []),
@@ -91,6 +101,7 @@ class SearchResultWidget extends Widget
     protected function renderRight()
     {
         return $this->render('right', [
+            'portal' => $this->portal,
             'keyword' => $this->form->keyword,
             'total_product' => ArrayHelper::getValue($this->results, 'total_product', 0),
             'total_page' => ArrayHelper::getValue($this->results, 'total_page', 0),
