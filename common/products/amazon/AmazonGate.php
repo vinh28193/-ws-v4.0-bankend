@@ -593,7 +593,7 @@ class AmazonGate extends BaseGate
                 return (int)$price > 0;
             });
             $param['sell_price'] = $sell_price;
-            $item['prices_range'] = null;
+            $item['prices_range'] = [];
             if (count($param['sell_price']) > 1) {
                 if (min($param['sell_price']) < max($param['sell_price'])) {
                     $item['prices_range'] = [min($param['sell_price']), max($param['sell_price'])];
@@ -667,22 +667,31 @@ class AmazonGate extends BaseGate
         $response['tax_fee'] = $exRate->jpyToUsd($response['tax_fee']);
         $response['deal_price'] = $exRate->jpyToUsd($response['deal_price']);
         $response['start_price'] = $exRate->jpyToUsd($response['start_price']);
-        foreach ($response['sell_price_special'] as $k => $v) {
-            $response['sell_price_special'][$k] = $exRate->jpyToUsd($v);
-        }
-        foreach ($response['relate_products'] as $k => $v) {
-            $response['relate_products'][$k]['sell_price'] = $exRate->jpyToUsd($v['sell_price']);
-        }
-        foreach ($response['suggest_set_purchase'] as $k => $v) {
-            foreach ($v['sell_price'] as $key => $val) {
-                $response['suggest_set_purchase'][$k]['sell_price'][$key] = $exRate->jpyToUsd($val);
+        if(isset($response['sell_price_special']) && is_array($response['sell_price_special'])){
+            foreach ($response['sell_price_special'] as $k => $v) {
+                $response['sell_price_special'][$k] = $exRate->jpyToUsd($v);
             }
         }
-        foreach ($response['suggest_set_session'] as $k => $v) {
+        if(isset($response['relate_products']) && is_array($response['relate_products'])){
+            foreach ($response['relate_products'] as $k => $v) {
+                $response['relate_products'][$k]['sell_price'] = $exRate->jpyToUsd($v['sell_price']);
+            }
+        }
+
+        if(isset($response['suggest_set_purchase']) && is_array($response['suggest_set_purchase'])){
+            foreach ($response['suggest_set_purchase'] as $k => $v) {
+                foreach ($v['sell_price'] as $key => $val) {
+                    $response['suggest_set_purchase'][$k]['sell_price'][$key] = $exRate->jpyToUsd($val);
+                }
+            }
+        }
+
+        if(isset($response['suggest_set_session']) && is_array($response['suggest_set_session'])){
             foreach ($v['sell_price'] as $key => $val) {
                 $response['suggest_set_session'][$k]['sell_price'][$key] = $exRate->jpyToUsd($val);
             }
         }
+
         foreach ($response['providers'] as $k => $v) {
             $response['providers'][$k]['price'] = $exRate->jpyToUsd($v['price']);
             $response['providers'][$k]['shipping_fee'] = $exRate->jpyToUsd($v['shipping_fee']);

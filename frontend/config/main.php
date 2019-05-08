@@ -59,6 +59,12 @@ return [
         'ebay' => [
             'class' => 'frontend\modules\ebay\EbayModule',
         ],
+        'amazon' => [
+            'class' => 'frontend\modules\amazon\Module',
+        ],
+        'amazon-jp' => [
+            'class' => 'frontend\modules\amazonJp\Module',
+        ],
         'cms' => [
             'class' => 'frontend\modules\cms\Module',
         ]

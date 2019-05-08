@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
+/* @var string $portal */
 /* @var array $keyword */
 /* @var integer $total_product */
 /* @var integer $total_page */
@@ -11,12 +12,12 @@ use yii\helpers\Html;
 /* @var array $sorts */
 
 ?>
-<div class="search-content search-2">
+<div class="search-content search-2 <?= $portal ?>">
     <div class="title-box">
         <div class="left">
-            <div class="text">Tìm kiếm “<?=$keyword;?>” từ</div>
+            <div class="text">Tìm kiếm “<?= $keyword; ?>” từ</div>
             <img src="/img/logo_ebay.png" alt=""/>
-            <span>Hiển thị 1-<?=$total_page;?> của <?=$total_product;?> kết quả.</span>
+            <span>Hiển thị 1-<?= $total_page; ?> của <?= $total_product; ?> kết quả.</span>
         </div>
         <div class="right">
             <div class="btn-group">
@@ -40,6 +41,7 @@ use yii\helpers\Html;
         <?php
         foreach ($products as $product) {
             echo $this->render('_item', [
+                'portal' => $portal,
                 'product' => $product
             ]);
         }

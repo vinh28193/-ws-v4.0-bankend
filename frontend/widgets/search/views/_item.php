@@ -1,10 +1,11 @@
 <?php
 
 use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $product array */
-
+/* @var yii\web\View $this */
+/* @var string $portal */
+/* @var array $product */
 /*
  * Todo price, price range
  * Todo rate
@@ -16,13 +17,13 @@ use yii\helpers\Html;
  * @see \yii\web\UrlRuleInterface
  */
 $url = Yii::$app->getUrlManager()->createUrl([
-    'ebay/item',
+    "{$portal}/item",
     'id' => $product['item_id']
 ]);
 ?>
 
 <div class="col-md-4 col-sm-6">
-    <a href="<?=$url;?>" class="item">
+    <a href="<?= $url; ?>" class="item">
         <div class="thumb">
             <?= Html::img($product['image'], [
                 'alt' => $product['item_name'],

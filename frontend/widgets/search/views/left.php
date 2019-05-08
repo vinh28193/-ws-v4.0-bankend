@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
+/* @var string $portal */
 /* @var string $category */
 /* @var string $filter */
 /* @var array $categories */
@@ -15,7 +16,7 @@ use yii\helpers\Html;
 // push start
 $url = function ($id) {
     return Yii::$app->getUrlManager()->createUrl([
-        'ebay/search',
+        "$portal/search",
         'category' => $id
     ]);
 }
@@ -47,33 +48,11 @@ $url = function ($id) {
         </ul>
     </div>
 
-    <?php foreach ($filters as $filter): ?>
-        <div class="filter-box">
-            <?= Html::tag('div', $filter['name'], ['class' => 'title']); ?>
-            <ul>
-                <?php foreach ($filter['values'] as $value): ?>
-                    <?php /* @var $value string */ ?>
-                    <?php $value = Html::encode($value); ?>
-                    <li>
-                        <div class="form-check">
-                            <?php
-                            $id = $filter['name'] . $value;
-                            ?>
-                            <?= Html::checkbox('filter', false, [
-                                'class' => 'form-check-input',
-                                'value' => $value,
-                                'id' => $id,
-                                'data-for' => $filter['name'],
-                                'data-value' => $value
-                            ]); ?>
-                            <?= Html::label($value, $id, [
-                                'class' => 'form-check-label',
-                            ]); ?>
-                        </div>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    <?php endforeach; ?>
+    <?php foreach ($filters as $filter){
+        if($portal === 'amazon-jp'){
+            $portal = 'amazon';
+        }
+        echo $this->render("filter/{$portal}",['filter' => $filter]);
+    }?>
 </div>
 
