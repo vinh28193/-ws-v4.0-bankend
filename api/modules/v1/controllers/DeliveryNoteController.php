@@ -40,6 +40,8 @@ class DeliveryNoteController extends BaseApiController
     public function actionIndex(){
         $limit = Yii::$app->request->get('limit',20);
         $page = Yii::$app->request->get('page',1);
+        $manifest_code = Yii::$app->request->get('manifest_code');
+        $customer_id = Yii::$app->request->get('customer_id');
         $delivery_code = Yii::$app->request->get('delivery_note_code');
         $tracking_code = Yii::$app->request->get('tracking_code');
         $package_code = Yii::$app->request->get('package_code');
@@ -52,6 +54,12 @@ class DeliveryNoteController extends BaseApiController
             ->with(['packages.order','customer','warehouse','shipment'])
 //            ->innerJoin('package', 'package.delivery_note_id = delivery_note.id')
             ->where(['delivery_note.remove'=>0]);
+        if($manifest_code){
+            $query->whereLikeMore('delivery_note.manifest_code' , $manifest_code);
+        }
+        if($customer_id){
+            $query->whereMore('delivery_note.customer_id' , $customer_id);
+        }
         if($delivery_code){
             $query->whereLikeMore('delivery_note.delivery_note_code' , $delivery_code);
         }
