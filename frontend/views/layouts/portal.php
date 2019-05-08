@@ -1,7 +1,7 @@
 <?php
 
 use frontend\assets\FancyboxPlusAsset;
-
+use frontend\widgets\search\SearchBoxWidget;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
@@ -669,17 +669,9 @@ $this->registerJs($js, \yii\web\View::POS_END);
                     </li>
                 </ul>
             </div>
-            <div class="search-box">
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Nhập từ khóa cần tìm"/>
-                        <span class="input-group-btn">
-                    <button type="button" class="btn btn-default"><i class="fas fa-search"></i></button>
-                </span>
-                    </div>
-                </div>
-                <span class="search-tag"><i class="search-icon"></i></span>
-            </div>
+            <?php
+                echo SearchBoxWidget::widget([])
+            ?>
         </div>
     </div>
     <div class="container">

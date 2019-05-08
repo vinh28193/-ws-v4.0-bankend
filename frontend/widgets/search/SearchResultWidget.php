@@ -2,17 +2,26 @@
 
 namespace frontend\widgets\search;
 
-use frontend\assets\SearchAsset;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use frontend\assets\SearchAsset;
+use common\products\forms\ProductSearchForm;
+
 
 class SearchResultWidget extends Widget
 {
+    /**
+     * @var array
+     */
     public $results = [];
+    /**
+     * @var ProductSearchForm
+     */
+    public $form;
     public $options = [];
 
     public $portal = 'ebay';
@@ -71,6 +80,8 @@ class SearchResultWidget extends Widget
     protected function renderLeft()
     {
         return $this->render('left', [
+            'category' => $this->form->category,
+            'filter' => $this->form->filter,
             'categories' => ArrayHelper::getValue($this->results, 'categories', []),
             'filters' => ArrayHelper::getValue($this->results, 'filters', [])
         ]);
@@ -79,6 +90,7 @@ class SearchResultWidget extends Widget
     protected function renderRight()
     {
         return $this->render('right', [
+            'keyword' => $this->form->filter,
             'products' => ArrayHelper::getValue($this->results, 'products', []),
         ]);
     }
