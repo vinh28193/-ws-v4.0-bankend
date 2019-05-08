@@ -44,7 +44,7 @@ class WsProduct extends \common\models\db_cms\WsProduct
 
     public function setLocalSellPrice($local_sell_price)
     {
-        
+
         $this->_local_sell_price = $local_sell_price;
     }
 
