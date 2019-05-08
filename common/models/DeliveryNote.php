@@ -12,6 +12,13 @@ use common\models\db\DeliveryNote as DbDeliveryNote;
 use common\models\queries\PackageQuery;
 use Yii;
 
+/**
+ * Class DeliveryNote
+ * @package common\models
+ * @property Package[] $packages
+ * @property Warehouse $warehouse
+ * @property Customer $customer
+ */
 class DeliveryNote extends DbDeliveryNote
 {
 
@@ -69,6 +76,13 @@ class DeliveryNote extends DbDeliveryNote
     {
         $fields = parent::fields();
         return parent::fields();
+    }
+
+    public function getPackages(){
+        return $this->hasMany(Package::className(),['delivery_note_id' => 'id']);
+    }
+    public function getCustomer(){
+        return $this->hasOne(Customer::className(),['id' => 'customer_id']);
     }
 
 }

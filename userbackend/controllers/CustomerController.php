@@ -2,17 +2,20 @@
 
 namespace userbackend\controllers;
 
+use common\models\Address;
+use common\models\db\SystemDistrictMapping;
+use common\models\SystemDistrict;
 use Yii;
-use common\models\Order;
-use userbackend\models\OrderSearch;
+use common\models\Customer;
+use userbackend\models\CustomerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * OrderController implements the CRUD actions for Order model.
+ * CustomerController implements the CRUD actions for Customer model.
  */
-class OrderController extends Controller
+class CustomerController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,29 +33,37 @@ class OrderController extends Controller
     }
 
     /**
-     * Lists all Order models.
+     * Lists all Customer models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $userId = Yii::$app->user->getIdentity()->getId();
-        $post = Yii::$app->request->get('status');
-        $dataProvider = Order::find()
-            ->with('products')
-            ->where(['=', 'customer_id', $userId]);
-        if (isset($post) && !empty($post)) {
-            $dataProvider ->andWhere(['=','current_status', $post]);
+        $id = Yii::$app->user->getIdentity()->getId();
+        $model = CustomerSearch::find()->where(['id' =>  $id])->with('store')->one();
+        $address = Address::find()->where(['customer_id' => $model->id])->one();
+        if(Yii::$app->request->isPost){
+            if ($model->load(Yii::$app->request->post())) {
+                $model->save();
+            } if ($address->load(Yii::$app->request->post())) {
+                $address->save();
+            }
         }
-        $models = $dataProvider->all();
 
         return $this->render('index', [
-            'models' => $models,
-//            'pages' => $pages
+            'model' => $model,
+            'address' => $address
+        ]);
+    }
+
+    public function actionListDistrict($id) {
+        $district = SystemDistrictMapping::find()->select(['id', 'name', 'province_id'])->where(['province_id' => $id])->all();
+        return $this->render('index', [
+            'district' => $district
         ]);
     }
 
     /**
-     * Displays a single Order model.
+     * Displays a single Customer model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -65,13 +76,13 @@ class OrderController extends Controller
     }
 
     /**
-     * Creates a new Order model.
+     * Creates a new Customer model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Order();
+        $model = new Customer();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -83,7 +94,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Updates an existing Order model.
+     * Updates an existing Customer model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -91,19 +102,22 @@ class OrderController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
+        var_dump($id);
+        die();
+        $model = Customer::findOne($id);
+        var_dump($model);
+        die();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
+        return $this->render('view', [
             'model' => $model,
         ]);
     }
 
     /**
-     * Deletes an existing Order model.
+     * Deletes an existing Customer model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -117,15 +131,15 @@ class OrderController extends Controller
     }
 
     /**
-     * Finds the Order model based on its primary key value.
+     * Finds the Customer model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Order the loaded model
+     * @return Customer the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Order::findOne($id)) !== null) {
+        if (($model = Customer::findOne($id)) !== null) {
             return $model;
         }
 

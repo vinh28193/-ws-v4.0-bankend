@@ -50,6 +50,8 @@ use Yii;
  * @property string $package_code
  * @property int $stock_in_us
  * @property int $stock_out_us
+ * @property int $insurance 0: auto, 1: insurance, 2: unInsurance
+ * @property int $pack_wood 0: unInsurance, 1: insurance
  */
 class Package extends \common\components\db\ActiveRecord
 {
@@ -68,7 +70,7 @@ class Package extends \common\components\db\ActiveRecord
     {
         return [
             [['tracking_code'], 'required'],
-            [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'hold', 'draft_data_tracking_id', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'remove', 'delivery_note_id', 'stock_in_us', 'stock_out_us'], 'integer'],
+            [['product_id', 'order_id', 'quantity', 'manifest_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'hold', 'draft_data_tracking_id', 'stock_in_local', 'stock_out_local', 'at_customer', 'returned', 'lost', 'shipment_id', 'remove', 'delivery_note_id', 'stock_in_us', 'stock_out_us', 'insurance', 'pack_wood'], 'integer'],
             [['weight', 'dimension_l', 'dimension_w', 'dimension_h', 'seller_refund_amount', 'price', 'cod'], 'number'],
             [['image', 'tracking_merge'], 'string'],
             [['tracking_code', 'manifest_code', 'purchase_invoice_number', 'status', 'item_name', 'warehouse_tag_boxme', 'note_boxme', 'type_tracking', 'current_status', 'version', 'delivery_note_code', 'ws_tracking_code', 'package_code'], 'string', 'max' => 255],
@@ -124,6 +126,8 @@ class Package extends \common\components\db\ActiveRecord
             'package_code' => 'Package Code',
             'stock_in_us' => 'Stock In Us',
             'stock_out_us' => 'Stock Out Us',
+            'insurance' => 'Insurance',
+            'pack_wood' => 'Pack Wood',
         ];
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 /* @var $this \yii\web\View */
 /* @var $content string */
 use yii\helpers\Html;
@@ -35,7 +34,7 @@ UserBackendAsset::register($this);
 
 <div class="wrapper backend">
     <div class="navbar-2 be-header">
-        <a href="#" class="be-logo"><img src="img/weshop-logo-vn.png" alt=""/></a>
+        <a href="#" class="be-logo"><img src="../img/weshop-logo-vn.png" alt=""/></a>
         <ul class="be-nav">
             <li><span class="text-orange">50.800.000đ</span></li>
             <li>
@@ -55,9 +54,9 @@ UserBackendAsset::register($this);
     <div class="be-container">
         <div class="be-menu">
             <div class="user-info">
-                <img class="avatar" src="https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png" alt=""/>
-                <div class="name">Linh Kiều</div>
-                <div class="email">linhkieu12@gmailinator.com</div>
+                <img class="avatar" src="<?= Yii::$app->user->getIdentity()->avatar?>" alt=""/>
+                <div class="name"><?= Yii::$app->user->getIdentity()->username?></div>
+                <div class="email"><?= Yii::$app->user->getIdentity()->email?></div>
                 <span class="status online">Online</span>
             </div>
             <ul id="be-menu-collapse" class="be-menu-collapse">
@@ -80,7 +79,7 @@ UserBackendAsset::register($this);
                     <a href="#"><i class="icon icon3"></i> Đơn hàng</a>
                     <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-2" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
                     <div id="sub-2" class="sub-collapse collapse" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
-                        <ul>
+                        <ul class="style-nav">
                             <li>
                                 <?php echo Html::a('Tất cả các đơn', ['/order'],['class' => 'active']); ?>
                             </li>
@@ -119,7 +118,9 @@ UserBackendAsset::register($this);
                     <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-3" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
                     <div id="sub-3" class="sub-collapse collapse" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                         <ul>
-                            <li><a href="#">Tài khoản cá nhân</a></li>
+                            <li>
+                                <?php echo Html::a('Tài khoản cá nhân', ['/customer']);?>
+                            </li>
                             <li><a href="#">Sản phẩm đã lưu</a></li>
                             <li><a href="#">Cấp độ Vip</a></li>
                         </ul>

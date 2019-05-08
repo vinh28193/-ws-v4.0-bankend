@@ -4,11 +4,12 @@ namespace userbackend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use common\models\Order;
 
 /**
- * OrderSearch represents the model behind the search form of `common\models\Order`.
+ * HomeSearch represents the model behind the search form of `common\models\Order`.
  */
-class OrderSearch extends Order
+class HomeSearch extends Order
 {
     /**
      * {@inheritdoc}
