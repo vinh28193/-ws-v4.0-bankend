@@ -9,14 +9,18 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', function($app){
+        // dev mode bootstrap
+        $class = Yii::$app->user->identityClass;
+        Yii::$app->user->setIdentity($class::findOne(1));
+    }],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\Customer',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
@@ -67,6 +71,12 @@ return [
         ],
         'cms' => [
             'class' => 'frontend\modules\cms\Module',
+        ],
+        'cart' => [
+            'class' => 'frontend\modules\cart\Module',
+        ],
+        'checkout' => [
+            'class' => 'frontend\modules\checkout\Module',
         ]
     ],
 ];
