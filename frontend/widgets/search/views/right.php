@@ -3,14 +3,20 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
+/* @var array $keyword */
+/* @var integer $total_product */
+/* @var integer $total_page */
+/* @var integer $item_per_page */
 /* @var array $products */
+/* @var array $sorts */
+
 ?>
 <div class="search-content search-2">
     <div class="title-box">
         <div class="left">
-            <div class="text">Tìm kiếm “Bulova” từ</div>
+            <div class="text">Tìm kiếm “<?=$keyword;?>” từ</div>
             <img src="/img/logo_ebay.png" alt=""/>
-            <span>Hiển thị 1-48 của 1.000 kết quả.</span>
+            <span>Hiển thị 1-<?=$total_page;?> của <?=$total_product;?> kết quả.</span>
         </div>
         <div class="right">
             <div class="btn-group">

@@ -3,8 +3,12 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
+/* @var string $category */
+/* @var string $filter */
 /* @var array $categories */
 /* @var array $filters */
+/* @var array $conditions*/
+
 
 // Todo UrlRule
 // Hãy tham khảo mục filter để làm phần này
