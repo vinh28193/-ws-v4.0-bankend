@@ -38,8 +38,12 @@ UserBackendAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
-
+<?php
+    $check = Yii::$app->getRequest()->getQueryParams();
+    $checkUrl = Yii::$app->getRequest()->url;
+?>
 <div class="wrapper backend">
+    <?php var_dump($checkUrl) ?>
     <div class="navbar-2 be-header">
         <a href="#" class="be-logo"><img src="../img/weshop-logo-vn.png" alt=""/></a>
         <ul class="be-nav">
@@ -77,7 +81,7 @@ UserBackendAsset::register($this);
                 <span class="status online">Online</span>
             </div>
             <ul id="be-menu-collapse" class="be-menu-collapse" style="margin-bottom: 0">
-                <li class="active">
+                <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/home') { $active = 'active'?> active <?php }}?>">
                     <?php echo Html::a('<span class="icon icon1"></span>Thống kê Chung', ['/home']);?>
                 </li>
                 <li class="accordion">
@@ -94,31 +98,45 @@ UserBackendAsset::register($this);
                 </li>
                 <li class="accordion">
                     <a href="#"><i class="icon icon3"></i> Đơn hàng</a>
-                    <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-2" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
-                    <div id="sub-2" class="sub-collapse collapse" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
+                    <?php
+                    if (isset($check['status'])) {
+                        if ($check['status'] === 'SUPPORTING' || $check['status'] === 'READY2PURCHASE' || $check['status'] === 'PURCHASED' || $check['status'] === 'STOCKIN_US' || $check['status'] === 'STOCKIN_LOCAL' || $check['status'] === 'AT_CUSTOMER' || $check['status'] === 'CANCEL') {
+                            $collapsed = array('collapsed', 'true', 'show');
+                        } else {
+                           $collapsed = ['a1', 'a2', 'a3'];
+                        }
+                    }
+//                    if (isset($checkUrl)) {
+//                        if ($checkUrl === '/order') {
+//                            $collapsed = array('collapsed', 'true', 'show');
+//                        }
+//                    }
+                    ?>
+                    <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($check['status'])){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                    <div id="sub-2" class="sub-collapse collapse <?php if (isset($check['status'])){?> <?=$collapsed[2]?> <?php } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                         <ul class="style-nav">
-                            <li>
+                            <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/order') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Tất cả các đơn', ['/order'],['class' => 'active']); ?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'SUPPORTING') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Chờ Thanh Toán', ['/order?status=SUPPORTING']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'READY2PURCHASE') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã thanh toán', ['/order?status=READY2PURCHASE']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'PURCHASED') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã mua hàng', ['/order?status=PURCHASED']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'STOCKIN_US') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã về kho US', ['/order?status=STOCKIN_US']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'STOCKIN_LOCAL') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã về kho Việt Nam', ['/order?status=STOCKIN_LOCAL']);?>
                             </li>
-                            <li>
-                                <?php echo Html::a('Đã giao', ['/order?status=NEW']);?>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'AT_CUSTOMER') { $active = 'active'?> active <?php }}?>">
+                                <?php echo Html::a('Đã giao', ['/order?status=AT_CUSTOMER']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'CANCEL') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã hủy', ['/order?status=CANCEL']);?>
                             </li>
                         </ul>
