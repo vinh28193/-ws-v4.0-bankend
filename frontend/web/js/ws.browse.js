@@ -1,4 +1,4 @@
-var wsBrowse = (function ($) {
+ws.browse = (function ($) {
     var pub = {
         searchNew: function ($element, baseUrl) {
             var keyword = $($element).val();

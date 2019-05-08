@@ -38,15 +38,14 @@ class SearchBoxWidget extends Widget
     protected function registerClientScript()
     {
         $view = $this->getView();
-        SearchBrowseAssets::register($view);
         $url = $this->redirectHref;
         $js = <<<JS
     $('button#searchBoxButton').on('click',function(event) {
-            wsBrowse.searchNew('input#searchBoxInput','$url');
+            ws.browse.searchNew('input#searchBoxInput','$url');
     });
     $('input#searchBoxInput').on('keyup',function(event) {
         if (event.keyCode == 13) {
-            wsBrowse.searchNew(this,'$url');
+            ws.browse.searchNew(this,'$url');
         }
     });
 JS;

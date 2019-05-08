@@ -14,10 +14,22 @@ use yii\bootstrap4\Widget;
 class CartWidget extends Widget
 {
 
+    /**
+     * @var array
+     */
     public $items;
 
+    /**
+     * @var bool
+     */
     public $isGroup = false;
 
+    public $updateAction = 'cart/update';
+
+    public $removeAction = 'cart/remove';
+    /**
+     * @inheritDoc
+     */
     public function init()
     {
         parent::init();
