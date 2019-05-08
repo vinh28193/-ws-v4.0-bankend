@@ -61,13 +61,13 @@ class WsLazyCMSWidget extends Widget
                 });
             }
         });
-            },";
+    },";
         }
         $js =<<<JS
-        $(".lazy-content").Lazy({
-            // custom loaders
-            $func
-        });
+$(".lazy-content").Lazy({
+    // custom loaders
+    $func
+});
 JS;
         $this->getView()->registerJs($js, View::POS_READY);
 

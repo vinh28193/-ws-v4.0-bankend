@@ -147,28 +147,29 @@ trait ProductTrait
         $checkAmazonNew = false;
         $seller = '';
         foreach ($this->providers as $provider) {
+            /** @var $provider Provider */
             if ($provider->condition == 'New') {
 
                 if ($provider->name == 'Amazon.com') {
-                    $seller = $provider->provId;
+                    $seller = $provider->prov_id;
                     break;
                 } elseif (!$checkAmazon && strpos(' -' . $provider->name, "Amazon")) {
-                    $seller = $provider->provId;
+                    $seller = $provider->prov_id;
                     $checkAmazon = true;
                 } else {
-                    $seller = $provider->provId;
+                    $seller = $provider->prov_id;
                 }
                 $checkAmazonNew = true;
             } else {
                 if (!$checkAmazonNew) {
                     if ($provider->name == 'Amazon.com') {
-                        $seller = $provider->provId;
+                        $seller = $provider->prov_id;
                         $checkAmazon = true;
                     } elseif (!$checkAmazon && strpos(' -' . $provider->name, "Amazon")) {
-                        $seller = $provider->provId;
+                        $seller = $provider->prov_id;
                         $checkAmazon = true;
                     } else {
-                        $seller = $provider->provId;
+                        $seller = $provider->prov_id;
                     }
                 }
             }

@@ -17,6 +17,11 @@
         afterInit: 'afterInit'
     };
     var defaultParams = {
+        id: undefined,
+        sku: undefined,
+        seller: undefined,
+        condition: undefined,
+        type: undefined,
         variation_mapping: [],
         variation_options: [],
         sellers: [],
@@ -48,7 +53,6 @@
                 }
                 params = $.extend({}, defaultParams, params || {});
                 options = $.extend({}, defaultOptions, options || {});
-
 
 
                 $.each(params.variation_options, function (index, variationOption) {

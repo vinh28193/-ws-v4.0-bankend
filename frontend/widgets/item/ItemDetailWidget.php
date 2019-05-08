@@ -44,10 +44,10 @@ class ItemDetailWidget extends Widget
         if ($this->item === null || !$this->item instanceof BaseProduct) {
             throw new InvalidConfigException(get_class($this) . "::product must be instance of: " . BaseProduct::className());
         }
-        if(!isset($this->slideOptions['class'])){
-            Html::addCssClass($this->slideOptions,'item-slider');
+        if (!isset($this->slideOptions['class'])) {
+            Html::addCssClass($this->slideOptions, 'item-slider');
         }
-        Html::addCssClass($this->priceOptions,'price');
+        Html::addCssClass($this->priceOptions, 'price');
         $this->prepareItem();
         $this->registerClientScript();
     }
@@ -90,6 +90,11 @@ class ItemDetailWidget extends Widget
     {
         $id = $this->options['id'];
         $params = Json::htmlEncode([
+            'id' => $this->item->item_id,
+            'sku' => $this->item->item_sku,
+            'seller' => $this->item->getSeller(),
+            'condition' => $this->item->getIsNew(),
+            'type' => $this->item->getItemType(),
             'variation_mapping' => $this->item->variation_mapping,
             'variation_options' => $this->item->variation_options,
             'sellers' => $this->item->providers,
@@ -152,13 +157,13 @@ class ItemDetailWidget extends Widget
                        <span>87 người đánh giá</span>
                   </div>';
         $currency = Html::tag('span', 'đ', ['class' => 'currency']);
-        $price = Html::tag('strong', $this->item->getLocalizeTotalPrice() .$currency , ['class' => 'text-orange']);
+        $price = Html::tag('strong', $this->item->getLocalizeTotalPrice() . $currency, ['class' => 'text-orange']);
         $style = 'display:none';
         if ($salePercent > 0 && ($startPrice = $this->item->getLocalizeTotalStartPrice()) > 0) {
             $style = 'display:block';
         }
-        $price .= Html::tag('b', $this->item->getLocalizeTotalStartPrice() .$currency, array_merge(['class' => 'old-price'],['style' => $style]));
-        $price .= Html::tag('span', $salePercent, array_merge(['class' => 'save'],['style' => $style]));
+        $price .= Html::tag('b', $this->item->getLocalizeTotalStartPrice() . $currency, array_merge(['class' => 'old-price'], ['style' => $style]));
+        $price .= Html::tag('span', $salePercent, array_merge(['class' => 'save'], ['style' => $style]));
         $html .= Html::tag('div', $price, $this->priceOptions);
         $html .= $this->renderOptionBox();
         $html .= '<ul class="info-list">
@@ -195,7 +200,7 @@ class ItemDetailWidget extends Widget
                     /* @var $optionImage \common\products\VariationOptionImage */
                     $image = $optionImage->images[0];
                     /* @var $image \common\products\Image */
-                    $lines[] = '<li><span type="spanList" data-index="'.$i.'" data-value="'.$optionImage->value.'">' .
+                    $lines[] = '<li><span type="spanList" data-index="' . $i . '" data-value="' . $optionImage->value . '">' .
                         Html::img($image->thumb, [
                             'alt' => $optionImage->value,
                             'style' => 'width:100px'
@@ -210,7 +215,7 @@ class ItemDetailWidget extends Widget
                 $elementOptions = ArrayHelper::merge([
                     'type' => 'dropDown'
                 ], $elementOptions);
-                $element = Html::dropDownList($variationOption->name, null,  $variationOption->values, $elementOptions);
+                $element = Html::dropDownList($variationOption->name, null, $variationOption->values, $elementOptions);
                 Html::addCssClass($optionBoxOptions, 'option-box form-inline');
 
             }
@@ -226,7 +231,7 @@ class ItemDetailWidget extends Widget
 
     protected function renderSlide()
     {
-        return Html::tag('div','',$this->slideOptions);
+        return Html::tag('div', '', $this->slideOptions);
     }
 
     protected function renderDescription()
@@ -234,7 +239,8 @@ class ItemDetailWidget extends Widget
         return '';
     }
 
-    public function getQueryParams(){
-       return ($request = Yii::$app->getRequest()) instanceof Request ? $request->getQueryParams() : [];
+    public function getQueryParams()
+    {
+        return ($request = Yii::$app->getRequest()) instanceof Request ? $request->getQueryParams() : [];
     }
 }
