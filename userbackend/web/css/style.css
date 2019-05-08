@@ -5052,3 +5052,7 @@ a {
     font-size: 18px; }
 
 /*# sourceMappingURL=style.css.map */
+.style-croll {
+  overflow-y: auto;    /* Trigger vertical scroll    */
+  overflow-x: hidden;
+}

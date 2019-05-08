@@ -55,11 +55,21 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function actionListDistrict($id) {
-        $district = SystemDistrictMapping::find()->select(['id', 'name', 'province_id'])->where(['province_id' => $id])->all();
-        return $this->render('index', [
-            'district' => $district
-        ]);
+    public function actionSubcat() {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $cat_id = (int)$parents[0];
+                $out = SystemDistrict::filterDistrictByProvinceId($cat_id);
+                if(!empty($out)){
+                    return ['output'=>$out, 'selected'=> $out[0]['id']];
+                }
+
+            }
+        }
+        return ['output'=>'', 'selected'=>''];
     }
 
     /**

@@ -4,14 +4,13 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
+use kartik\depdrop\DepDrop;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel userbackend\models\CustomerSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-//$this->title = 'Customers';
-//$this->params['breadcrumbs'][] = $this->title;
-echo Html::getInputName($model, 'last_name');
 ?>
 <div class="be-acc">
     <div class="ba-block1">
@@ -38,17 +37,22 @@ echo Html::getInputName($model, 'last_name');
                 $provi=ArrayHelper::map($provider,'id','name');
             ?>
             <div class="form-group">
-                <?= $form->field($address, 'province_id', ['template' => " <i class=\"icon globe\"></i>{input}\n{hint}\n{error}"])->dropDownList($provi, ['id' => $model->address->province_id, 'onchange'=>'
-				$.get( "'.Yii::$app->urlManager->createUrl('list-district?id=').'"+$(this).val(), function( data ) {
-				});
-			']);?>
+                <?= $form->field($address, 'province_id', ['template' => " <i class=\"icon globe\"></i>{input}\n{hint}\n{error}"])->dropDownList($provi, ['id' => 'province_id'], ['data' => [1 => $model->address->district_name],]);?>
             </div>
             <?php
             $district=\common\models\SystemDistrict::find()->all();
             $distr=ArrayHelper::map($district,'id','name')
             ?>
             <div class="form-group">
-                <?= $form->field($address, 'district_id', ['template' => " <i class=\"icon city\"></i>{input}\n{hint}\n{error}"])->dropDownList($distr, ['id' => $model->address->district_id]) ?>
+                <?= $form->field($address, 'district_id', ['template' => " <i class=\"icon city\"></i>{input}\n{hint}\n{error}"])->widget(DepDrop::classname(), [
+                    'data' => $distr,
+                    'options'=>['id'=> 'district_id'],
+                    'pluginOptions'=>[
+                        'depends'=>['province_id'],
+                        'placeholder'=>'Select...',
+                        'url'=>Url::to(['customer/subcat'])
+                    ]
+                ]); ?>
             </div>
             <div class="form-group">
                 <?= $form->field($address, 'address', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
