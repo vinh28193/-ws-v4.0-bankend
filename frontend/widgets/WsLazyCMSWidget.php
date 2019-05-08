@@ -25,21 +25,19 @@ class WsLazyCMSWidget extends Widget
     public function init()
     {
         parent::init();
+        if($this->ajaxUrl === null){
+            $this->ajaxUrl = Url::toRoute(Yii::$app->request->url);
+        }
+        $this->registerLazyJs();
     }
 
     public function run()
     {
         parent::run();
-        $this->setAjaxUrl();
-        $this->registerLazyJs();
+
         echo $this->renderLazyContent();
     }
 
-    public function setAjaxUrl()
-    {
-        $cur_url = Yii::$app->request->url;
-        $this->ajaxUrl = 'http://weshop-4.0.frontend.vn'.$cur_url;
-    }
 
     public function registerLazyJs()
     {
@@ -48,7 +46,7 @@ class WsLazyCMSWidget extends Widget
             $url = $this->ajaxUrl;
             $url .= '?p='.$k;
             $func .= "
-                \nproductBlock{$k}: function (element){
+    \nproductBlock{$k}: function (element){
         $.ajax({
             url: '{$url}',
             method: 'GET',
