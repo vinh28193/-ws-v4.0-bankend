@@ -9,6 +9,7 @@ use yii\grid\GridView;
 
 $this->title = 'Orders';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="be-order">
     <div class="be-table">

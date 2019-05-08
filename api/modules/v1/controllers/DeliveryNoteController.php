@@ -81,10 +81,10 @@ class DeliveryNoteController extends BaseApiController
         }
         if($status){
             if($status == 'created'){
-                $query->andWhere(['and',['is not','package.delivery_note_code' , null],['<>','package.delivery_note_code' , '']]);
+                $query->andWhere(['and',['is not','delivery_note.shipment_id' , null],['<>','delivery_note.shipment_id' , '']]);
             }
             if($status == 'not_create'){
-                $query->andWhere(['or',['package.delivery_note_code' => null],['package.delivery_note_code' => '']]);
+                $query->andWhere(['or',['delivery_note.shipment_id' => null],['delivery_note.shipment_id' => '']]);
             }
         }
         $data['total'] = $query->count('DISTINCT `delivery_note`.id');

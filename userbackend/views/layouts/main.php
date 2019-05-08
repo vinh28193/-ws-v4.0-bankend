@@ -1,8 +1,15 @@
 <?php
 /* @var $this \yii\web\View */
+
 /* @var $content string */
+
 use yii\helpers\Html;
 use userbackend\assets\UserBackendAsset;
+
+use yii\bootstrap\Nav;
+
+use yii\bootstrap\NavBar;
+
 UserBackendAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -54,13 +61,23 @@ UserBackendAsset::register($this);
     <div class="be-container">
         <div class="be-menu">
             <div class="user-info">
-                <img class="avatar" src="<?= Yii::$app->user->getIdentity()->avatar?>" alt=""/>
-                <div class="name"><?= Yii::$app->user->getIdentity()->username?></div>
-                <div class="email"><?= Yii::$app->user->getIdentity()->email?></div>
+                <?php
+                if (Yii::$app->user->getIdentity()) {
+                    ?>
+                    <img class="avatar" src="<?= Yii::$app->user->getIdentity()->avatar ?>" alt=""/>
+                    <div class="name"><?= Yii::$app->user->getIdentity()->username ?></div>
+                    <div class="email"><?= Yii::$app->user->getIdentity()->email ?></div>
+                <?php } else { ?>
+                    <img class="avatar"
+                         src="https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png"
+                         alt=""/>
+                    <div class="name"></div>
+                    <div class="email"></div>
+                <?php } ?>
                 <span class="status online">Online</span>
             </div>
-            <ul id="be-menu-collapse" class="be-menu-collapse">
-                <li>
+            <ul id="be-menu-collapse" class="be-menu-collapse" style="margin-bottom: 0">
+                <li class="active">
                     <?php echo Html::a('<span class="icon icon1"></span>Thống kê Chung', ['/home']);?>
                 </li>
                 <li class="accordion">
@@ -127,7 +144,38 @@ UserBackendAsset::register($this);
                     </div>
                 </li>
             </ul>
+            <?php
+            if (Yii::$app->user->isGuest) {
+
+                $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
+
+                $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+
+            } else {
+
+                $menuItems[] = [
+
+                    'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+
+                    'url' => ['/site/logout'],
+
+                    'linkOptions' => ['data-method' => 'post']
+
+                ];
+
+            }
+
+            echo Nav::widget([
+
+                'options' => ['class' => 'be-menu-collapse'],
+
+                'items' => $menuItems,
+
+            ]);
+
+            ?>
         </div>
+
         <div class="be-content">
             <div class="be-content-header">
                 <div class="be-title">Thống kê chung</div>
@@ -138,7 +186,7 @@ UserBackendAsset::register($this);
                     </ol>
                 </nav>
             </div>
-            <?=$content;?>
+            <?= $content; ?>
         </div>
     </div>
     <footer class="footer">
@@ -213,13 +261,16 @@ UserBackendAsset::register($this);
                         <div class="title-register">Đăng ký để nhận tin khuyến mãi</div>
                         <div class="form-group contact">
                             <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Nhập email để nhận hotdeal hấp dẫn">
+                                <input class="form-control" type="text"
+                                       placeholder="Nhập email để nhận hotdeal hấp dẫn">
                                 <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="contact-ico"></i></button>
+                                        <button type="button" class="btn btn-default"><i
+                                                    class="contact-ico"></i></button>
                                     </span>
                             </div>
                         </div>
-                        <div class="sticker-bct"><a href="#" target="_blank"><img src="/img/chung_nhan_bct.png" alt="" title=""/></a></div>
+                        <div class="sticker-bct"><a href="#" target="_blank"><img src="/img/chung_nhan_bct.png" alt=""
+                                                                                  title=""/></a></div>
                         <div class="connect">
                             <span>Kết nối với Weshop qua:</span>
                             <a href="#" target="_blank"><img src="/img/social_fb.png" alt="" title=""/></a>
@@ -233,9 +284,13 @@ UserBackendAsset::register($this);
             <div class="container">
                 <div class="title">Công ty cổ phần thương mại điện tử Weshop Việt Nam</div>
                 <ul>
-                    <li><b>Hà Nội:</b> Tầng 3, tòa nhà VTC Online số 18 đường Tam Trinh, Phường Minh Khai, Quận Hai Bà Trưng, Thành phố Hà Nội, Việt Nam</li>
+                    <li><b>Hà Nội:</b> Tầng 3, tòa nhà VTC Online số 18 đường Tam Trinh, Phường Minh Khai, Quận Hai Bà
+                        Trưng, Thành phố Hà Nội, Việt Nam
+                    </li>
                     <li><b>Hồ Chí Minh:</b> Lầu 3, tòa nhà VTC online, 132 Cộng Hòa, Phường 4, Q. Tân Bình</li>
-                    <li><b>Mã số doanh nghiệp:</b> 0106693795 do Sở Kế hoạch và Đầu tư TP. Hà Nội cấp lần đầu ngày 17/11/2014</li>
+                    <li><b>Mã số doanh nghiệp:</b> 0106693795 do Sở Kế hoạch và Đầu tư TP. Hà Nội cấp lần đầu ngày
+                        17/11/2014
+                    </li>
                 </ul>
             </div>
         </div>
