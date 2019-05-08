@@ -19,14 +19,14 @@ class WsLazyCMSWidget extends Widget
 
     public $content;
 
-    public $ajaxUrl = 'http://weshop-4.0.frontend.vn/cms/ebay';
+    public $ajaxUrl;
 
 
     public function init()
     {
         parent::init();
         if($this->ajaxUrl === null){
-            $this->ajaxUrl = Url::toRoute(Yii::$app->request->url);
+            $this->ajaxUrl = Yii::$app->request->url;
         }
         $this->registerLazyJs();
     }
