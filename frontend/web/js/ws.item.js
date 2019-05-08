@@ -49,15 +49,22 @@
                 params = $.extend({}, defaultParams, params || {});
                 options = $.extend({}, defaultOptions, options || {});
 
+
+
                 $.each(params.variation_options, function (index, variationOption) {
                     checkValidVariation($item, variationOption);
                     watchVariationOptions($item, variationOption);
                 });
+
                 $item.data('wsItem', {
                     options: options,
                     params: params,
                     ajaxCalling: false
                 });
+                var images = params.images;
+                if (images.length > 0) {
+                    changeImage($item, images);
+                }
                 setUpDefaultOptions($item);
                 $item.trigger($.Event(events.afterInit));
             });
@@ -97,7 +104,7 @@
                             $item.trigger(events.ajaxBeforeSend, [jqXHR, settings]);
                         },
                         success: function (response) {
-                            if(response.success){
+                            if (response.success) {
                                 data.ajaxed = true;
                                 var content = $.extend({}, priceUpdateResponse, response.content || {});
                                 updatePrice($item, content, data.ajaxed)

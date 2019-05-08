@@ -83,15 +83,20 @@ class SearchResultWidget extends Widget
             'category' => $this->form->category,
             'filter' => $this->form->filter,
             'categories' => ArrayHelper::getValue($this->results, 'categories', []),
-            'filters' => ArrayHelper::getValue($this->results, 'filters', [])
+            'filters' => ArrayHelper::getValue($this->results, 'filters', []),
+            'conditions' => ArrayHelper::getValue($this->results, 'conditions', [])
         ]);
     }
 
     protected function renderRight()
     {
         return $this->render('right', [
-            'keyword' => $this->form->filter,
+            'keyword' => $this->form->keyword,
+            'total_product' => ArrayHelper::getValue($this->results, 'total_product', 0),
+            'total_page' => ArrayHelper::getValue($this->results, 'total_page', 0),
+            'item_per_page' => ArrayHelper::getValue($this->results, 'item_per_page', 0),
             'products' => ArrayHelper::getValue($this->results, 'products', []),
+            'sorts' => ArrayHelper::getValue($this->results, 'sorts', []),
         ]);
     }
 }

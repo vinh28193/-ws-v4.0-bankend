@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var string $filter */
 /* @var array $categories */
 /* @var array $filters */
-
+/* @var array $conditions*/
 
 
 // Todo UrlRule
