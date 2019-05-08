@@ -48,7 +48,7 @@ class DeliveryNoteController extends BaseApiController
         $type_tracking = Yii::$app->request->get('type_tracking');
         $status = Yii::$app->request->get('status');
         $query = DeliveryNote::find()
-            ->joinWith(['packages'])
+            ->innerJoinWith(['packages'])
             ->with(['packages.order','customer','warehouse'])
 //            ->innerJoin('package', 'package.delivery_note_id = delivery_note.id')
             ->where(['delivery_note.remove'=>0]);

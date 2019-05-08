@@ -8,9 +8,11 @@
 
 namespace api\modules\v1\controllers;
 
+use common\boxme\forms\CreateOrderForm;
 use common\helpers\WeshopHelper;
 use common\models\db\DeliveryNote;
 use common\models\db\Package;
+use common\models\Shipment as ModelShipment;
 use Yii;
 use Exception;
 use yii\helpers\ArrayHelper;
@@ -196,5 +198,37 @@ class ShipmentController extends BaseApiController
     public function actionRemoveItem($id)
     {
 
+    }
+    public function actionCreate(){
+        $post = $this->post;
+
+        if (($ids = ArrayHelper::remove($post, 'listIds', null)) === null) {
+            return $this->response(false, "can not action when unknown Id");
+        }
+        $shipment = new Shipment();
+        $transaction = Shipment::getDb()->beginTransaction();
+        foreach (['total_price', 'total_cod', 'payment_method', 'description', 'note_for_courier'] as $remove) {
+            if (isset($post[$remove])) {
+                unset($post[$remove]);
+            }
+        }
+        try {
+            if (!$shipment->load($post, '')) {
+                $transaction->rollBack();
+                return $this->response(false, "shipment can not resolve parameter");
+            }
+            $shipment->save(false);
+//            $shipment->reCalculateTotal();
+            $transaction->commit();
+            $shipment->refresh();
+        } catch (\Exception $exception) {
+            $transaction->rollBack();
+            Yii::error($exception, __METHOD__);
+            return $this->response(false, $exception->getMessage());
+        }
+        $createForm = new CreateOrderForm();
+        /* @var $model ModelShipment */
+        list($isSuccess, $mess) = $createForm->createByShipment($shipment);
+        return $this->response($isSuccess, $mess);
     }
 }
