@@ -58,6 +58,7 @@ class WarehouseManagementController extends BaseApiController
                 $trackingNew->stock_in_us = strtotime($this->post['time_received']);
                 $trackingNew->warehouse_us_id = $warehouse->id;
                 $trackingNew->warehouse_us_name = $warehouse->name;
+                $trackingNew->store_id = ArrayHelper::getValue($this->post,'store_1',1);
                 $trackingNew->status = TrackingCode::STATUS_US_RECEIVED;
                 $trackingNew->CreateOrUpdate(false);
             }
