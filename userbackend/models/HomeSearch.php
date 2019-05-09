@@ -39,7 +39,7 @@ class HomeSearch extends Order
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function searchHome($params)
     {
         $query = Order::find();
 

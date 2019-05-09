@@ -3,6 +3,7 @@
 
 namespace frontend\widgets\cart;
 
+use common\products\BaseProduct;
 use Yii;
 use yii\web\View;
 use yii\helpers\Html;
@@ -13,10 +14,22 @@ use yii\bootstrap4\Widget;
 class CartWidget extends Widget
 {
 
+    /**
+     * @var array
+     */
     public $items;
 
+    /**
+     * @var bool
+     */
     public $isGroup = false;
 
+    public $updateAction = 'cart/update';
+
+    public $removeAction = 'cart/remove';
+    /**
+     * @inheritDoc
+     */
     public function init()
     {
         parent::init();
@@ -34,7 +47,7 @@ class CartWidget extends Widget
         parent::run();
         $html = Html::beginTag('div', $this->options);
         $html .= $this->renderSummary();
-        $html .= Html::tag('div',$this->renderItems(),['class' => 'cart-box']);
+        $html .= Html::tag('div', $this->renderItems(), ['class' => 'cart-box']);
         $html .= Html::endTag('div');
         return $html;
     }
@@ -58,54 +71,44 @@ class CartWidget extends Widget
     protected function renderItems()
     {
         $items = [];
-        foreach ($this->items as $item){
+        foreach ($this->items as $item) {
             $items[] = $this->renderItem($item);
         }
-        return Html::tag('ul',implode("\n",$items),['class' => 'cart-item']);
+        return Html::tag('ul', implode("\n", $items), ['class' => 'cart-item']);
     }
 
     protected function renderItem($item)
     {
-        return <<< HTML
-<li>
-    <div class="thumb">
-        <img src="https://images-na.ssl-images-amazon.com/images/I/51aLZ8NqnaL.jpg" alt="">
-    </div>
-    <div class="info">
-        <div class="left">
-            <a href="#" class="name">Citizen Eco-Drive Women's GA10580-59Q Axiom Diamond Pink Gold-Tone 30mm Watch</a>
-            <div class="rate">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <i class="far fa-star"></i>
-            </div>
-            <ol>
-                <li>Bán bởi: <a href="#">Multiple supplier.</a>/ New</li>
-                <li>Band Color: red</li>
-                <li>Tạm tính: 0.45 kg</li>
-            </ol>
-        </div>
-        <div class="right">
-            <div class="qty form-inline">
-                <label>Số lượng:</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary" type="button">-</button>
-                    </div>
-                    <input type="text" class="form-control" value="1" aria-label="" aria-describedby="basic-addon1">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button">+</button>
-                    </div>
-                </div>
-            </div>
-            <div class="price">5.800.000 <i class="currency">đ</i></div>
-            <a href="#" class="del"><i class="far fa-trash-alt"></i> Xóa</a>
-        </div>
-    </div>
-</li>
-HTML;
+        $sellerId = isset($item['request']['seller']) ? $item['request']['seller'] : null;
+        if ($sellerId === null || ($product = ArrayHelper::getValue($item, 'response')) === null || !$product instanceof BaseProduct) {
+            return Html::tag('li', 'Invalid Item');
+        }
+        $provider = $sellerId;
+        foreach ($product->providers as $p) {
+            if (
+                (strtoupper($product->type) === BaseProduct::TYPE_EBAY && $p->name === $provider) ||
+                (strtoupper($product->type) !== BaseProduct::TYPE_EBAY && $p->prov_id === $provider)
+            ) {
+                $provider = $p;
+                break;
+            }
+        }
+        $imageSrc = isset($item['request']['image']) ? $item['request']['image'] : $product->current_image;
+        return $this->render('item', [
+            'key' => ArrayHelper::getValue($item,'key',''),
+            'name' => $product->item_name,
+            'type' => $product->type,
+            'originLink' => $product->item_origin_url,
+            'link' => '#',
+            'imageSrc' => $imageSrc,
+            'provider' => $provider,
+            'variation' => $product->current_variation,
+            'quantity' => $product->quantity,
+            'availableQuantity' => $product->available_quantity,
+            'soldQuantity' => $product->quantity_sold,
+            'weight' => $product->shipping_weight,
+            'price' => $product->getLocalizeTotalPrice(),
+        ]);
 
     }
 }

@@ -46,7 +46,7 @@
                     <a href="#">x</a>
                 </div>
             </div>
-            <div class="be-body">
+            <div class="be-body style-croll pb-1" style="height: 15em" >
                 <div class="be-table table-scrollbar">
                     <table class="table">
                         <thead>
@@ -86,22 +86,31 @@
                     <a href="#">x</a>
                 </div>
             </div>
-            <div class="be-body">
+            <div class="be-body style-croll" style="height: 15em">
                 <ul class="new-update">
-                    <li>
-                        <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#">CP77968802</a> vào lúc 10:47 23/01/2019</p>
-                        <div class="mess-content">
-                            <i class="logo"><img src="./img/weshop_small_logo.png" alt=""/></i>
-                            <span>Bạn gì ơi có online không tớ nhờ tý</span>
-                        </div>
-                    </li>
-                    <li>
-                        <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#">CP77968802</a> vào lúc 10:47 23/01/2019</p>
-                        <div class="mess-content">
-                            <i class="logo"><img src="./img/weshop_small_logo.png" alt=""/></i>
-                            <span>Bạn gì ơi có online không tớ nhờ tý</span>
-                        </div>
-                    </li>
+                    <?php foreach ($orders as $order) {
+                        $chats = \common\modelsMongo\ChatMongoWs::find()->where([
+                                'and',
+                            ['Order_path' => $order->ordercode],
+                            ['type_chat' => 'WS_CUSTOMER']
+                        ])->all();
+                        if (count($chats) == 0) {
+                            break;
+                        }
+                        ?>
+                        <li>
+                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#"><?= $order->ordercode ?></a> vào lúc 10:47 23/01/2019</p>
+                            <?php if ($chats) { foreach ($chats as $chat) { ?>
+                            <div class="mess-content mb-1">
+                                <i class="logo"><img src="./img/weshop_small_logo.png" alt=""/></i>
+                                <span><?= $chat->message ?></span>
+                            </div>
+                            <?php }} ?>
+                        </li>
+                    <?php } ?>
+                    <?php if (count($chats) == 0) { ?>
+                        <div class="no-data text-orange text-center">Chưa có thông tin mới</div>
+                    <?php } ?>
                 </ul>
             </div>
         </div>

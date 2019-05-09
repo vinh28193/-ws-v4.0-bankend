@@ -1,21 +1,21 @@
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-REGULAR.TTF") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-REGULAR.ttf") format("truetype");
   font-weight: 400;
   font-style: normal; }
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-LIGHT.TTF") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-LIGHT.ttf") format("truetype");
   font-weight: 200;
   font-style: normal; }
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-MEDIUM.TTF") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-MEDIUM.ttf") format("truetype");
   font-weight: 500;
   font-style: normal; }
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-BOLD.TTF") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-BOLD.ttf") format("truetype");
   font-weight: 700;
   font-style: normal; }
 .container:after, .navbar-2 .navbar-header ul li .dropdown-menu .sub-head:after, .navbar-2 .navbar-header ul li .dropdown-menu ul li:after, .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu:after, .navbar-2 .navbar-right li .dropdown-menu .buyship:after, .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline:after, .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol:after, .navbar-ws:after, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-menu:after, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2.top-store-cate:after, .buy-amazon .right .bottom:after {
@@ -41,7 +41,7 @@ a, .btn, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-s
   -o-transform: scale(1.05);
   transform: scale(1.05); }
 
-.keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-slider .item .item-box .thumb a img, .product-list .item .thumb img, .cart-box .cart-item li .thumb img, .order-list li .thumb img, .method-list li span img, .product-block .pd-content .right .right-1 ul li .item .thumb img, .product-block .pd-content .right .right-2 ul li .item .thumb img, .related-product ul li a .thumb img, .detail-block .thumb-slider .detail-slider .item img, .detail-block .product-full-info .option-box .style-list li span img, .otp-modal .modal-dialog .modal-content .modal-body .form-group .input-group .input-group-text img, .be-box .be-body .new-update li .mess-content .logo img, .be-recharge .tab-content .be-method-list li span img, .be-order .be-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .od-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .package-table .table tbody tr td .product-info .thumb img, .be-noti .noti-list li .thumb img, .voucher-wallet .vb-content .voucher-list li .thumb img, .ws-coin .wc-table .be-table .table tbody tr td .product-info .thumb img, .saved-pd .be-table .table tbody tr td .product-info .thumb img, .vip-level .vl_block2 .point-list li .thumb img {
+.keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-slider .item .item-box .thumb a img, .deal-shock .deal-content ul li .item .thumb img, .product-list .item .thumb img, .cart-box .cart-item li .thumb img, .order-list li .thumb img, .method-list li span img, .product-block .pd-content .right .right-1 ul li .item .thumb img, .product-block .pd-content .right .right-2 ul li .item .thumb img, .related-product ul li a .thumb img, .detail-block .thumb-slider .detail-slider .item img, .detail-block .product-full-info .option-box .style-list li span img, .otp-modal .modal-dialog .modal-content .modal-body .form-group .input-group .input-group-text img, .be-box .be-body .new-update li .mess-content .logo img, .be-recharge .tab-content .be-method-list li span img, .be-order .be-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .od-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .package-table .table tbody tr td .product-info .thumb img, .be-noti .noti-list li .thumb img, .voucher-wallet .vb-content .voucher-list li .thumb img, .ws-coin .wc-table .be-table .table tbody tr td .product-info .thumb img, .saved-pd .be-table .table tbody tr td .product-info .thumb img, .vip-level .vl_block2 .point-list li .thumb img {
   position: absolute;
   top: 50%;
   max-width: 100%;
@@ -149,13 +149,13 @@ a {
   background: linear-gradient(to bottom, #f3f3f3 0%, #eaeaea 80%, #c1c1c1 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#c1c1c1', GradientType=0 ); }
   .navbar-2 .container {
-    display: block;
+    display: flex;
+    justify-content: space-between;
     position: relative; }
   .navbar-2 ul {
-    display: block; }
+    display: flex; }
     .navbar-2 ul li {
-      position: inherit;
-      float: left; }
+      position: inherit; }
       .navbar-2 ul li a {
         color: #555555;
         font-weight: 500;
@@ -222,400 +222,396 @@ a {
         overflow: hidden;
         margin-top: 0;
         padding: 0; }
-  .navbar-2 .navbar-header {
-    float: left; }
-    .navbar-2 .navbar-header ul li:nth-child(1) .dropdown-menu, .navbar-2 .navbar-header ul li:nth-child(2) .dropdown-menu {
-      height: 540px; }
-    .navbar-2 .navbar-header ul li:first-child a {
-      padding-left: 0; }
-    .navbar-2 .navbar-header ul li:last-child {
-      position: relative; }
-      .navbar-2 .navbar-header ul li:last-child .dropdown-menu {
-        left: 0;
-        width: 300px; }
-        .navbar-2 .navbar-header ul li:last-child .dropdown-menu a {
-          font-weight: 400; }
-    .navbar-2 .navbar-header ul li .title2 {
-      width: 250px;
-      background: #ededed;
-      color: #555555;
-      font-weight: bold;
-      padding: 12px;
-      position: relative;
-      margin-bottom: 15px;
-      cursor: pointer; }
-      .navbar-2 .navbar-header ul li .title2.active {
-        margin-bottom: 25px; }
-        .navbar-2 .navbar-header ul li .title2.active:after {
-          content: '';
-          display: block;
-          width: 0;
-          height: 0;
-          border-style: solid;
-          border-width: 15px 125px 0 125px;
-          border-color: #ededed transparent transparent transparent;
-          position: absolute;
-          top: 100%;
-          left: 0; }
-    .navbar-2 .navbar-header ul li .homepage a {
-      display: block;
-      text-transform: inherit;
-      margin-right: 0;
-      width: 250px;
-      padding: 15px 10px;
-      border-bottom: 1px solid #EDEDED;
-      background: #fff !important;
-      margin-bottom: 5px;
-      color: #000;
-      font-weight: 500; }
-    .navbar-2 .navbar-header ul li .dropdown-menu .sub-head {
-      border-bottom: 1px solid #EDEDED;
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      width: 250px; }
-      .navbar-2 .navbar-header ul li .dropdown-menu .sub-head .desc {
-        font-size: 10px; }
-      .navbar-2 .navbar-header ul li .dropdown-menu .sub-head ul li.open .sub-menu {
-        display: block; }
-    .navbar-2 .navbar-header ul li .dropdown-menu ul li {
-      float: none; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li a {
-        padding: 5px 10px;
+  .navbar-2 .navbar-header ul li:nth-child(1) .dropdown-menu, .navbar-2 .navbar-header ul li:nth-child(2) .dropdown-menu {
+    height: 540px; }
+  .navbar-2 .navbar-header ul li:first-child a {
+    padding-left: 0; }
+  .navbar-2 .navbar-header ul li:last-child {
+    position: relative; }
+    .navbar-2 .navbar-header ul li:last-child .dropdown-menu {
+      left: 0;
+      width: 300px; }
+      .navbar-2 .navbar-header ul li:last-child .dropdown-menu a {
+        font-weight: 400; }
+  .navbar-2 .navbar-header ul li .title2 {
+    width: 250px;
+    background: #ededed;
+    color: #555555;
+    font-weight: bold;
+    padding: 12px;
+    position: relative;
+    margin-bottom: 15px;
+    cursor: pointer; }
+    .navbar-2 .navbar-header ul li .title2.active {
+      margin-bottom: 25px; }
+      .navbar-2 .navbar-header ul li .title2.active:after {
+        content: '';
         display: block;
-        font-weight: normal;
-        text-transform: inherit;
-        color: #555555;
-        background: transparent;
-        height: inherit; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li a:hover {
-          color: #2b96b6; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li.open a {
-        width: 250px;
-        color: #0654BA;
-        background: transparent;
-        font-weight: bold; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu {
-        display: none;
-        width: calc(1170px - 282px);
-        float: left;
-        height: 540px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 15px 125px 0 125px;
+        border-color: #ededed transparent transparent transparent;
         position: absolute;
-        top: 0;
-        right: 0;
-        border-left: 1px solid #EDEDED;
-        padding: 15px; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .left {
-          width: 55%;
-          float: left;
-          padding-right: 15px; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .right {
-          width: 45%;
-          float: left; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box {
-          line-height: 1.2;
-          border-bottom: 1px solid #ededed;
-          padding-bottom: 15px;
-          margin-bottom: 15px;
-          color: #353535; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box .title {
-            font-size: 16px;
-            font-weight: 700; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box .desc {
-            font-size: 12px;
-            margin-top: 3px; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item .title {
-          font-weight: 500; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul {
-          padding-left: 10px;
-          border: none;
-          margin-bottom: 12px; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li {
-            border: none;
-            padding: 2px 0; }
-            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li a {
-              margin: 0;
-              padding: 0;
-              width: inherit;
-              font-size: 13px;
-              color: #555555;
-              font-weight: 400; }
-              .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li a:hover {
-                color: #2b96b6; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub {
-          width: 100%;
-          height: 505px;
-          overflow: hidden; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub a {
-            width: auto;
-            padding: 0; }
-            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub a img {
-              width: 385px;
-              height: 505px; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box {
-          border-bottom: 1px solid #ededed;
-          padding-bottom: 15px; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box .title {
-            font-size: 17px;
-            font-weight: 700;
-            color: #555;
-            line-height: 1.2; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box .sub-title {
-            color: #555;
-            line-height: 1.2; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .sub-bg {
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          z-index: -1;
-          max-width: 300px;
-          max-height: 450px;
-          overflow: hidden; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .sub-bg img {
-            width: 300px;
-            height: 450px; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left {
-          width: 560px;
-          float: left; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left .title-2 {
-            color: #e67425;
-            margin-bottom: 5px;
-            font-weight: 500; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol {
-            padding-left: 0; }
-            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol li {
-              border-right: none; }
-              .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol li a {
-                width: 250px;
-                padding: 5px 10px;
-                display: block;
-                font-weight: 400;
-                text-transform: inherit;
-                color: #000;
-                background: 0 0;
-                position: relative; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li.open .sub-menu {
-        display: block; }
-    .navbar-2 .navbar-header ul li .dropdown-menu .see-all a {
+        top: 100%;
+        left: 0; }
+  .navbar-2 .navbar-header ul li .homepage a {
+    display: block;
+    text-transform: inherit;
+    margin-right: 0;
+    width: 250px;
+    padding: 15px 10px;
+    border-bottom: 1px solid #EDEDED;
+    background: #fff !important;
+    margin-bottom: 5px;
+    color: #000;
+    font-weight: 500; }
+  .navbar-2 .navbar-header ul li .dropdown-menu .sub-head {
+    border-bottom: 1px solid #EDEDED;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    width: 250px; }
+    .navbar-2 .navbar-header ul li .dropdown-menu .sub-head .desc {
+      font-size: 10px; }
+    .navbar-2 .navbar-header ul li .dropdown-menu .sub-head ul li.open .sub-menu {
+      display: block; }
+  .navbar-2 .navbar-header ul li .dropdown-menu ul li {
+    float: none; }
+    .navbar-2 .navbar-header ul li .dropdown-menu ul li a {
+      padding: 5px 10px;
       display: block;
-      width: 250px;
-      background: 0 0;
+      font-weight: normal;
       text-transform: inherit;
       color: #555555;
-      font-size: 14px;
-      padding: 15px 10px;
-      height: 50px; }
-      .navbar-2 .navbar-header ul li .dropdown-menu .see-all a .fas {
-        font-size: 12px;
-        margin-left: 8px; }
-  .navbar-2 .navbar-right {
-    float: right; }
-    .navbar-2 .navbar-right li a {
-      padding: 14px 17px; }
-    .navbar-2 .navbar-right li:last-child a {
-      position: relative; }
-    .navbar-2 .navbar-right li .dropdown-menu .buyship {
-      display: block; }
-      .navbar-2 .navbar-right li .dropdown-menu .buyship .left {
-        width: 75%;
-        float: left;
-        min-height: 296px; }
-        .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline {
-          padding-top: 20px; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li {
-            width: 25%;
-            float: left;
-            text-align: center;
-            list-style: none;
-            padding: 15px 9px;
-            border: none;
-            position: relative; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li:after {
-              content: '';
-              display: block;
-              width: 116%;
-              height: 1px;
-              background: #000;
-              position: absolute;
-              left: 50%;
-              top: 51px; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li:last-child:after {
-              display: none; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico {
-              display: inline-block;
-              width: 68px;
-              height: 68px;
-              position: relative;
-              z-index: 9; }
-              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico1 {
-                background: url("../img/buyship_1.png") no-repeat center;
-                background-size: contain; }
-              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico2 {
-                background: url("../img/buyship_2.png") no-repeat center;
-                background-size: contain; }
-              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico3 {
-                background: url("../img/buyship_3.png") no-repeat center;
-                background-size: contain; }
-              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico4 {
-                background: url("../img/buyship_4.png") no-repeat center;
-                background-size: contain; }
-              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico5 {
-                background: url("../img/buyship_5.png") no-repeat center;
-                background-size: contain; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .step {
-              text-transform: uppercase;
-              font-size: 14px;
-              font-weight: 700;
-              margin-top: 35px;
-              position: relative; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li p {
-              font-size: 12px; }
-        .navbar-2 .navbar-right li .dropdown-menu .buyship .left .btn-primary {
-          border: 1px solid #2b96b6;
-          background: #fff;
-          color: #2b96b6;
-          font-weight: 500;
-          width: inherit;
-          display: inline-block;
-          padding: 10px 20px;
-          height: inherit; }
-      .navbar-2 .navbar-right li .dropdown-menu .buyship .right {
-        width: 25%;
-        float: left;
-        background: #fafafa;
-        border-left: 1px solid #ededed;
-        min-height: 296px;
-        padding: 15px; }
-        .navbar-2 .navbar-right li .dropdown-menu .buyship .right .title {
-          font-size: 14px;
-          font-weight: 700;
-          text-transform: uppercase; }
-        .navbar-2 .navbar-right li .dropdown-menu .buyship .right .sub-title {
-          text-transform: uppercase;
-          font-size: 11px; }
-        .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol {
-          padding-left: 0;
-          margin-bottom: 10px; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li {
-            border: none;
-            margin: 5px 0; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li:before {
-              content: "";
-              background-color: #2b96b6;
-              display: block;
-              float: left;
-              width: 6px;
-              height: 6px;
-              border-radius: 50%;
-              margin-top: 8px; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li span {
-              display: block;
-              margin-left: 18px; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li a {
-              display: block;
-              margin-left: 18px;
-              color: #555555;
-              text-decoration: underline;
-              padding: 0;
-              height: inherit;
-              font-weight: 400; }
-        .navbar-2 .navbar-right li .dropdown-menu .buyship .right .btn {
-          margin-top: 0;
-          font-size: 13px;
-          font-weight: 700;
-          border-radius: 3px;
-          padding: 10px 20px;
-          display: inline-block;
-          width: 100%;
-          color: #fff;
-          background: #2b96b6;
-          border-color: #2b96b6;
-          height: inherit; }
-    .navbar-2 .navbar-right li:nth-child(5) {
-      position: relative; }
-      .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu {
-        left: inherit;
-        right: 0;
-        width: 300px;
-        padding: 15px; }
-        .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .title {
-          font-weight: 700;
-          margin-bottom: 10px; }
-        .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .input-group .form-control {
-          height: 36px;
-          border: 1px solid #ccc; }
-        .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .input-group .btn-search {
-          border: 1px solid #ccc;
-          background: #cccccc;
-          color: #555555; }
-    .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu {
-      left: inherit;
-      right: 15px;
-      width: 300px;
+      background: transparent;
+      height: inherit; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li a:hover {
+        color: #2b96b6; }
+    .navbar-2 .navbar-header ul li .dropdown-menu ul li.open a {
+      width: 250px;
+      color: #0654BA;
+      background: transparent;
+      font-weight: bold; }
+    .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu {
+      display: none;
+      width: calc(1170px - 282px);
+      float: left;
+      height: 540px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-left: 1px solid #EDEDED;
       padding: 15px; }
-      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li {
-        border-left: 0;
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .left {
+        width: 55%;
+        float: left;
+        padding-right: 15px; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .right {
+        width: 45%;
+        float: left; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box {
+        line-height: 1.2;
         border-bottom: 1px solid #ededed;
-        display: block;
-        float: none; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li:last-child {
-          border-bottom: none; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a {
-          height: inherit;
-          background: 0 0;
-          text-transform: inherit;
-          font-weight: 400;
-          display: block;
-          padding: 7px 0;
-          color: #555555; }
-          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a:before {
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        color: #353535; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box .title {
+          font-size: 16px;
+          font-weight: 700; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box .desc {
+          font-size: 12px;
+          margin-top: 3px; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item .title {
+        font-weight: 500; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul {
+        padding-left: 10px;
+        border: none;
+        margin-bottom: 12px; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li {
+          border: none;
+          padding: 2px 0; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li a {
+            margin: 0;
+            padding: 0;
+            width: inherit;
+            font-size: 13px;
+            color: #555555;
+            font-weight: 400; }
+            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li a:hover {
+              color: #2b96b6; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub {
+        width: 100%;
+        height: 505px;
+        overflow: hidden; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub a {
+          width: auto;
+          padding: 0; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub a img {
+            width: 385px;
+            height: 505px; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box {
+        border-bottom: 1px solid #ededed;
+        padding-bottom: 15px; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box .title {
+          font-size: 17px;
+          font-weight: 700;
+          color: #555;
+          line-height: 1.2; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box .sub-title {
+          color: #555;
+          line-height: 1.2; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .sub-bg {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        z-index: -1;
+        max-width: 300px;
+        max-height: 450px;
+        overflow: hidden; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .sub-bg img {
+          width: 300px;
+          height: 450px; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left {
+        width: 560px;
+        float: left; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left .title-2 {
+          color: #e67425;
+          margin-bottom: 5px;
+          font-weight: 500; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol {
+          padding-left: 0; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol li {
+            border-right: none; }
+            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol li a {
+              width: 250px;
+              padding: 5px 10px;
+              display: block;
+              font-weight: 400;
+              text-transform: inherit;
+              color: #000;
+              background: 0 0;
+              position: relative; }
+    .navbar-2 .navbar-header ul li .dropdown-menu ul li.open .sub-menu {
+      display: block; }
+  .navbar-2 .navbar-header ul li .dropdown-menu .see-all a {
+    display: block;
+    width: 250px;
+    background: 0 0;
+    text-transform: inherit;
+    color: #555555;
+    font-size: 14px;
+    padding: 15px 10px;
+    height: 50px; }
+    .navbar-2 .navbar-header ul li .dropdown-menu .see-all a .fas {
+      font-size: 12px;
+      margin-left: 8px; }
+  .navbar-2 .navbar-right li a {
+    padding: 14px 17px; }
+  .navbar-2 .navbar-right li:last-child a {
+    position: relative; }
+  .navbar-2 .navbar-right li .dropdown-menu .buyship {
+    display: block; }
+    .navbar-2 .navbar-right li .dropdown-menu .buyship .left {
+      width: 75%;
+      float: left;
+      min-height: 296px; }
+      .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline {
+        padding-top: 20px; }
+        .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li {
+          width: 25%;
+          float: left;
+          text-align: center;
+          list-style: none;
+          padding: 15px 9px;
+          border: none;
+          position: relative; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li:after {
+            content: '';
+            display: block;
+            width: 116%;
+            height: 1px;
+            background: #000;
+            position: absolute;
+            left: 50%;
+            top: 51px; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li:last-child:after {
+            display: none; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico {
+            display: inline-block;
+            width: 68px;
+            height: 68px;
+            position: relative;
+            z-index: 9; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico1 {
+              background: url("../img/buyship_1.png") no-repeat center;
+              background-size: contain; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico2 {
+              background: url("../img/buyship_2.png") no-repeat center;
+              background-size: contain; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico3 {
+              background: url("../img/buyship_3.png") no-repeat center;
+              background-size: contain; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico4 {
+              background: url("../img/buyship_4.png") no-repeat center;
+              background-size: contain; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico5 {
+              background: url("../img/buyship_5.png") no-repeat center;
+              background-size: contain; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .step {
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 35px;
+            position: relative; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li p {
+            font-size: 12px; }
+      .navbar-2 .navbar-right li .dropdown-menu .buyship .left .btn-primary {
+        border: 1px solid #2b96b6;
+        background: #fff;
+        color: #2b96b6;
+        font-weight: 500;
+        width: inherit;
+        display: inline-block;
+        padding: 10px 20px;
+        height: inherit; }
+    .navbar-2 .navbar-right li .dropdown-menu .buyship .right {
+      width: 25%;
+      float: left;
+      background: #fafafa;
+      border-left: 1px solid #ededed;
+      min-height: 296px;
+      padding: 15px; }
+      .navbar-2 .navbar-right li .dropdown-menu .buyship .right .title {
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase; }
+      .navbar-2 .navbar-right li .dropdown-menu .buyship .right .sub-title {
+        text-transform: uppercase;
+        font-size: 11px; }
+      .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol {
+        padding-left: 0;
+        margin-bottom: 10px; }
+        .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li {
+          border: none;
+          margin: 5px 0; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li:before {
             content: "";
             background-color: #2b96b6;
-            display: inline-block;
+            display: block;
             float: left;
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            margin-top: 8px;
-            margin-right: 8px; }
-          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a:hover {
-            color: #e67425; }
-          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a span {
-            display: inline-block; }
-      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact {
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 3px;
-        background: #f3f3f3; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .contact-icon {
-          width: 40px;
-          height: 40px;
-          float: left; }
-          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .contact-icon img {
-            width: 40px; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item {
-          margin-left: 50px;
-          padding-top: 5px; }
-          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item a, .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item span {
+            margin-top: 8px; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li span {
             display: block;
-            height: inherit;
-            background: 0 0;
+            margin-left: 18px; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li a {
+            display: block;
+            margin-left: 18px;
+            color: #555555;
+            text-decoration: underline;
             padding: 0;
-            font-weight: 400;
-            text-transform: inherit;
-            font-size: 12px;
-            color: #555555; }
-          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item a {
-            text-decoration: underline; }
-      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .support {
-        text-align: center; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .support a {
-          width: inherit;
+            height: inherit;
+            font-weight: 400; }
+      .navbar-2 .navbar-right li .dropdown-menu .buyship .right .btn {
+        margin-top: 0;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 3px;
+        padding: 10px 20px;
+        display: inline-block;
+        width: 100%;
+        color: #fff;
+        background: #2b96b6;
+        border-color: #2b96b6;
+        height: inherit; }
+  .navbar-2 .navbar-right li:nth-child(5) {
+    position: relative; }
+    .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu {
+      left: inherit;
+      right: 0;
+      width: 300px;
+      padding: 15px; }
+      .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .title {
+        font-weight: 700;
+        margin-bottom: 10px; }
+      .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .input-group .form-control {
+        height: 36px;
+        border: 1px solid #ccc; }
+      .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .input-group .btn-search {
+        border: 1px solid #ccc;
+        background: #cccccc;
+        color: #555555; }
+  .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu {
+    left: inherit;
+    right: 15px;
+    width: 300px;
+    padding: 15px; }
+    .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li {
+      border-left: 0;
+      border-bottom: 1px solid #ededed;
+      display: block;
+      float: none; }
+      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li:last-child {
+        border-bottom: none; }
+      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a {
+        height: inherit;
+        background: 0 0;
+        text-transform: inherit;
+        font-weight: 400;
+        display: block;
+        padding: 7px 0;
+        color: #555555; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a:before {
+          content: "";
+          background-color: #2b96b6;
+          display: inline-block;
+          float: left;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          margin-top: 8px;
+          margin-right: 8px; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a:hover {
+          color: #e67425; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a span {
+          display: inline-block; }
+    .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 3px;
+      background: #f3f3f3; }
+      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .contact-icon {
+        width: 40px;
+        height: 40px;
+        float: left; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .contact-icon img {
+          width: 40px; }
+      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item {
+        margin-left: 50px;
+        padding-top: 5px; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item a, .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item span {
+          display: block;
           height: inherit;
+          background: 0 0;
           padding: 0;
-          text-transform: inherit;
           font-weight: 400;
-          color: #2b96b6;
-          font-size: 13px; }
+          text-transform: inherit;
+          font-size: 12px;
+          color: #555555; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item a {
+          text-decoration: underline; }
+    .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .support {
+      text-align: center; }
+      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .support a {
+        width: inherit;
+        height: inherit;
+        padding: 0;
+        text-transform: inherit;
+        font-weight: 400;
+        color: #2b96b6;
+        font-size: 13px; }
 
 .navbar-ws {
   background: #fff;
@@ -690,6 +686,9 @@ a {
         height: 450px;
         padding-top: 20px;
         display: none; }
+        @media (max-width: 992px) {
+          .keep-navbar .cate-nav ul li .sub-menu {
+            height: 379px; } }
         .keep-navbar .cate-nav ul li .sub-menu:before {
           content: '';
           display: block;
@@ -707,7 +706,7 @@ a {
           float: none; }
           .keep-navbar .cate-nav ul li .sub-menu ul li a {
             background: transparent;
-            color: #000000;
+            color: #555555;
             position: relative;
             padding: 10px 15px;
             width: 100%; }
@@ -738,6 +737,8 @@ a {
         .keep-navbar .cate-nav ul li.globe-sub .sub-menu li a {
           width: 248px;
           height: inherit; }
+          .keep-navbar .cate-nav ul li.globe-sub .sub-menu li a:hover {
+            color: #e67425; }
         .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 {
           display: none;
           width: 892px;
@@ -891,13 +892,15 @@ a {
                   padding: 0;
                   width: inherit;
                   font-size: 14px;
-                  color: #555;
+                  color: #555555;
                   border-top: none;
                   font-weight: 400;
                   white-space: normal;
                   line-height: 1.2;
                   max-height: 36px;
                   overflow: hidden; }
+                  .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-menu .left .item ul li a:hover {
+                    color: #e67425; }
           .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-menu .right {
             width: 45%;
             float: left; }
@@ -949,6 +952,9 @@ a {
                 margin-top: 0; }
         .keep-navbar .cate-nav ul li.globe-sub .sub-menu li:hover .sub-menu-2 {
           display: block; }
+          @media (max-width: 992px) {
+            .keep-navbar .cate-nav ul li.globe-sub .sub-menu li:hover .sub-menu-2 {
+              display: none; } }
       .keep-navbar .cate-nav ul li.open .sub-menu {
         display: block; }
   .keep-navbar .search-box {
@@ -977,7 +983,7 @@ a {
     background: #232f3d; }
     .keep-navbar.amazon .cate-nav ul .globe-sub a {
       background: #fcbc70;
-      color: #000; }
+      color: #555555; }
       .keep-navbar.amazon .cate-nav ul .globe-sub a .text-title {
         vertical-align: top; }
       .keep-navbar.amazon .cate-nav ul .globe-sub a img {
@@ -1067,6 +1073,9 @@ a {
     position: absolute;
     top: calc((450px - 32px)/2);
     opacity: .5; }
+    @media (max-width: 992px) {
+      .slider-2 .owl-carousel .owl-nav .owl-prev, .slider-2 .owl-carousel .owl-nav .owl-next {
+        top: calc((380px - 32px)/2); } }
     .slider-2 .owl-carousel .owl-nav .owl-prev span, .slider-2 .owl-carousel .owl-nav .owl-next span {
       display: none; }
     .slider-2 .owl-carousel .owl-nav .owl-prev:hover, .slider-2 .owl-carousel .owl-nav .owl-next:hover {
@@ -1098,7 +1107,7 @@ a {
       border-radius: 50%;
       border: 2px solid #fff; }
       .slider-2 .owl-carousel .owl-dots .owl-dot.active {
-        background: #000; }
+        background: #555555; }
       .slider-2 .owl-carousel .owl-dots .owl-dot span {
         display: none; }
 
@@ -1119,16 +1128,7 @@ a {
         z-index: 0; }
         .deal-shock .deal-content ul li .item .thumb {
           position: relative;
-          overflow: hidden; }
-          .deal-shock .deal-content ul li .item .thumb a {
-            display: table-cell;
-            width: 218px;
-            height: 218px;
-            vertical-align: middle;
-            text-align: center; }
-          .deal-shock .deal-content ul li .item .thumb img {
-            max-width: 218px;
-            max-height: 218px; }
+          padding-bottom: 100%; }
         .deal-shock .deal-content ul li .item .info-box {
           padding: 10px 0;
           height: 90px;
@@ -1283,15 +1283,18 @@ a {
   margin-top: 50px;
   border: 1px solid #EFEFEF;
   border-top: 2px solid #e67425;
-  height: 451px; }
+  height: 451px;
+  display: flex; }
   .buy-amazon .left {
-    width: 196px;
+    flex: 0 0 196px;
     background: #232f3d;
-    float: left;
     text-align: center;
     padding-top: 10px;
     height: 448px;
     position: relative; }
+    @media (max-width: 992px) {
+      .buy-amazon .left {
+        display: none; } }
     .buy-amazon .left .ebay-line {
       display: block;
       height: 3px;
@@ -1353,8 +1356,10 @@ a {
       .buy-amazon .left .banner-deal img {
         width: 100%; }
   .buy-amazon .right {
-    width: 942px;
-    float: left; }
+    flex: 0 0 942px; }
+    @media (max-width: 992px) {
+      .buy-amazon .right {
+        flex: 0 0 100%; } }
     .buy-amazon .right .top {
       text-align: center;
       padding: 5px 0;
@@ -1490,6 +1495,9 @@ a {
       top: 0;
       left: 377px;
       overflow: hidden; }
+      @media (max-width: 992px) {
+        .buy-amazon.buy-ebay .right .bottom .banner-2 {
+          left: 384px; } }
       .buy-amazon.buy-ebay .right .bottom .banner-2 a {
         text-align: center;
         vertical-align: middle; }
@@ -1521,6 +1529,9 @@ a {
       width: 21%;
       top: inherit;
       bottom: 0; }
+      @media (max-width: 992px) {
+        .buy-amazon.buy-ebay .right .bottom .banner-4 {
+          left: 384px; } }
       .buy-amazon.buy-ebay .right .bottom .banner-4 a {
         text-align: center;
         vertical-align: middle; }
@@ -1538,7 +1549,7 @@ a {
       top: inherit;
       left: inherit;
       overflow: hidden;
-      width: 376px; }
+      width: 40%; }
       .buy-amazon.buy-ebay .right .bottom .banner-5 a {
         display: table-cell;
         text-align: center;
@@ -1642,6 +1653,9 @@ a {
     border: 1px solid #ebebeb;
     border-radius: 3px;
     display: flex; }
+    @media (max-width: 992px) {
+      .auth-content .auth-box {
+        width: 100%; } }
     .auth-content .auth-box .left {
       flex: 1 1 30%;
       width: 50%;

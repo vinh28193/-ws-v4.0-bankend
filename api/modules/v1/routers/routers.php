@@ -718,4 +718,22 @@ return [
             'OPTIONS' => 'options',
         ]
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['dns' => 'service/delivery-note-service'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'POST' => 'merge',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [
+            'POST merge'=> 'merge',
+            'OPTIONS merge'=> 'options',
+        ]
+    ],
 ];

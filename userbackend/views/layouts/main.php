@@ -1,8 +1,15 @@
 <?php
 /* @var $this \yii\web\View */
+
 /* @var $content string */
+
 use yii\helpers\Html;
 use userbackend\assets\UserBackendAsset;
+
+use yii\bootstrap\Nav;
+
+use yii\bootstrap\NavBar;
+
 UserBackendAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -31,8 +38,12 @@ UserBackendAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
-
+<?php
+    $check = Yii::$app->getRequest()->getQueryParams();
+    $checkUrl = Yii::$app->getRequest()->url;
+?>
 <div class="wrapper backend">
+    <?php var_dump($checkUrl) ?>
     <div class="navbar-2 be-header">
         <a href="#" class="be-logo"><img src="../img/weshop-logo-vn.png" alt=""/></a>
         <ul class="be-nav">
@@ -54,13 +65,23 @@ UserBackendAsset::register($this);
     <div class="be-container">
         <div class="be-menu">
             <div class="user-info">
-                <img class="avatar" src="<?= Yii::$app->user->getIdentity()->avatar?>" alt=""/>
-                <div class="name"><?= Yii::$app->user->getIdentity()->username?></div>
-                <div class="email"><?= Yii::$app->user->getIdentity()->email?></div>
+                <?php
+                if (Yii::$app->user->getIdentity()) {
+                    ?>
+                    <img class="avatar" src="<?= Yii::$app->user->getIdentity()->avatar ?>" alt=""/>
+                    <div class="name"><?= Yii::$app->user->getIdentity()->username ?></div>
+                    <div class="email"><?= Yii::$app->user->getIdentity()->email ?></div>
+                <?php } else { ?>
+                    <img class="avatar"
+                         src="https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png"
+                         alt=""/>
+                    <div class="name"></div>
+                    <div class="email"></div>
+                <?php } ?>
                 <span class="status online">Online</span>
             </div>
-            <ul id="be-menu-collapse" class="be-menu-collapse">
-                <li>
+            <ul id="be-menu-collapse" class="be-menu-collapse" style="margin-bottom: 0">
+                <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/home') { $active = 'active'?> active <?php }}?>">
                     <?php echo Html::a('<span class="icon icon1"></span>Thống kê Chung', ['/home']);?>
                 </li>
                 <li class="accordion">
@@ -77,31 +98,45 @@ UserBackendAsset::register($this);
                 </li>
                 <li class="accordion">
                     <a href="#"><i class="icon icon3"></i> Đơn hàng</a>
-                    <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-2" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
-                    <div id="sub-2" class="sub-collapse collapse" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
+                    <?php
+                    if (isset($check['status'])) {
+                        if ($check['status'] === 'SUPPORTING' || $check['status'] === 'READY2PURCHASE' || $check['status'] === 'PURCHASED' || $check['status'] === 'STOCKIN_US' || $check['status'] === 'STOCKIN_LOCAL' || $check['status'] === 'AT_CUSTOMER' || $check['status'] === 'CANCEL') {
+                            $collapsed = array('collapsed', 'true', 'show');
+                        } else {
+                           $collapsed = ['a1', 'a2', 'a3'];
+                        }
+                    }
+//                    if (isset($checkUrl)) {
+//                        if ($checkUrl === '/order') {
+//                            $collapsed = array('collapsed', 'true', 'show');
+//                        }
+//                    }
+                    ?>
+                    <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($check['status'])){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                    <div id="sub-2" class="sub-collapse collapse <?php if (isset($check['status'])){?> <?=$collapsed[2]?> <?php } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                         <ul class="style-nav">
-                            <li>
+                            <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/order') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Tất cả các đơn', ['/order'],['class' => 'active']); ?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'SUPPORTING') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Chờ Thanh Toán', ['/order?status=SUPPORTING']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'READY2PURCHASE') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã thanh toán', ['/order?status=READY2PURCHASE']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'PURCHASED') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã mua hàng', ['/order?status=PURCHASED']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'STOCKIN_US') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã về kho US', ['/order?status=STOCKIN_US']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'STOCKIN_LOCAL') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã về kho Việt Nam', ['/order?status=STOCKIN_LOCAL']);?>
                             </li>
-                            <li>
-                                <?php echo Html::a('Đã giao', ['/order?status=NEW']);?>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'AT_CUSTOMER') { $active = 'active'?> active <?php }}?>">
+                                <?php echo Html::a('Đã giao', ['/order?status=AT_CUSTOMER']);?>
                             </li>
-                            <li>
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'CANCEL') { $active = 'active'?> active <?php }}?>">
                                 <?php echo Html::a('Đã hủy', ['/order?status=CANCEL']);?>
                             </li>
                         </ul>
@@ -127,7 +162,38 @@ UserBackendAsset::register($this);
                     </div>
                 </li>
             </ul>
+            <?php
+            if (Yii::$app->user->isGuest) {
+
+                $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
+
+                $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+
+            } else {
+
+                $menuItems[] = [
+
+                    'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+
+                    'url' => ['/site/logout'],
+
+                    'linkOptions' => ['data-method' => 'post']
+
+                ];
+
+            }
+
+            echo Nav::widget([
+
+                'options' => ['class' => 'be-menu-collapse'],
+
+                'items' => $menuItems,
+
+            ]);
+
+            ?>
         </div>
+
         <div class="be-content">
             <div class="be-content-header">
                 <div class="be-title">Thống kê chung</div>
@@ -138,7 +204,7 @@ UserBackendAsset::register($this);
                     </ol>
                 </nav>
             </div>
-            <?=$content;?>
+            <?= $content; ?>
         </div>
     </div>
     <footer class="footer">
@@ -213,13 +279,16 @@ UserBackendAsset::register($this);
                         <div class="title-register">Đăng ký để nhận tin khuyến mãi</div>
                         <div class="form-group contact">
                             <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Nhập email để nhận hotdeal hấp dẫn">
+                                <input class="form-control" type="text"
+                                       placeholder="Nhập email để nhận hotdeal hấp dẫn">
                                 <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="contact-ico"></i></button>
+                                        <button type="button" class="btn btn-default"><i
+                                                    class="contact-ico"></i></button>
                                     </span>
                             </div>
                         </div>
-                        <div class="sticker-bct"><a href="#" target="_blank"><img src="/img/chung_nhan_bct.png" alt="" title=""/></a></div>
+                        <div class="sticker-bct"><a href="#" target="_blank"><img src="/img/chung_nhan_bct.png" alt=""
+                                                                                  title=""/></a></div>
                         <div class="connect">
                             <span>Kết nối với Weshop qua:</span>
                             <a href="#" target="_blank"><img src="/img/social_fb.png" alt="" title=""/></a>
@@ -233,9 +302,13 @@ UserBackendAsset::register($this);
             <div class="container">
                 <div class="title">Công ty cổ phần thương mại điện tử Weshop Việt Nam</div>
                 <ul>
-                    <li><b>Hà Nội:</b> Tầng 3, tòa nhà VTC Online số 18 đường Tam Trinh, Phường Minh Khai, Quận Hai Bà Trưng, Thành phố Hà Nội, Việt Nam</li>
+                    <li><b>Hà Nội:</b> Tầng 3, tòa nhà VTC Online số 18 đường Tam Trinh, Phường Minh Khai, Quận Hai Bà
+                        Trưng, Thành phố Hà Nội, Việt Nam
+                    </li>
                     <li><b>Hồ Chí Minh:</b> Lầu 3, tòa nhà VTC online, 132 Cộng Hòa, Phường 4, Q. Tân Bình</li>
-                    <li><b>Mã số doanh nghiệp:</b> 0106693795 do Sở Kế hoạch và Đầu tư TP. Hà Nội cấp lần đầu ngày 17/11/2014</li>
+                    <li><b>Mã số doanh nghiệp:</b> 0106693795 do Sở Kế hoạch và Đầu tư TP. Hà Nội cấp lần đầu ngày
+                        17/11/2014
+                    </li>
                 </ul>
             </div>
         </div>
