@@ -2,18 +2,20 @@ var ws = ws || (function ($) {
 
     var pub = {
         i18nMessages: [],
+        eventHandlers: {},
         init: function () {
             console.log('js ws init completed');
         },
+        // Todo loading
         loading: function (show) {
             show = show || false;
-            console.log('loading ' + (show ? 'start' : 'end'));
+            console.log('loading: ' + (show ? 'start' : 'end'));
         },
         ajax: function (url, $options, loading = false) {
             if (loading) {
                 pub.loading(true);
             }
-            // ajax('url',function(response, textStatus, xhr){ // handel}) => meaning send with default setting
+            // ajax('url',function(response, textStatus, xhr){ // handler when success },true); => meaning send with default setting
             if ($.isFunction($options)) {
                 $options = {'success': $options};
             }
@@ -44,13 +46,13 @@ var ws = ws || (function ($) {
 
             $.ajax($options);
         },
-        alert: function ($smg, type) {
-
+        sweetalert: function (smg, type, options) {
+            alert(type + ':' + smg);
         },
         i18n: function (category, message, params = [], language = null) {
 
         },
-        i18nLoadMessages:function($messages){
+        i18nLoadMessages: function ($messages) {
             // clear up data pls
             pub.i18nMessages = $messages;
         },
@@ -64,6 +66,26 @@ var ws = ws || (function ($) {
             dec_point = dec_point || '.';
             thousands_sep = thousands_sep || ',';
 
+        },
+        // hạn chế việc kích hoạt 1 event quá nhiều,
+        // nếu event đã được kích hoạt trước đó thì sẽ bị off đi
+        // sử lý theo lần kích hoạt cuối cùng
+        initEventHandler: function ($target, type, event, selector, callback) {
+            var id = $target;
+            if (typeof id !== 'string') {
+                id = id.attr('id');
+            }
+
+            var prevHandler = pub.eventHandlers[id];
+            if (prevHandler !== undefined && prevHandler[type] !== undefined) {
+                var data = prevHandler[type];
+                $(document).off(data.event, data.selector);
+            }
+            if (prevHandler === undefined) {
+                pub.eventHandlers[id] = {};
+            }
+            $(document).on(event, selector, callback);
+            pub.eventHandlers[id][type] = {event: event, selector: selector};
         }
     };
 

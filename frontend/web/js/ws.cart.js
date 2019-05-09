@@ -27,13 +27,43 @@
                 }
                 var settings = $.extend({}, defaults, options || {});
                 $cart.data('wsCart', {settings: settings});
-                
+                ws.initEventHandler($cart, 'updateQuantity', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
+                    var self = $(this);
+                    var options = getQuantityInputOptions($(self.data('update')));
+                    if (options.max === '' || options.max < options.value) {
+                        alert('can not update cart');
+                    }
+                    var data = {};
+                    data.id = options.id;
+                    data.quantity = options.value + 1;
+                    methods.update.call($cart, data)
+                });
+                ws.initEventHandler($cart, 'deleteCart', 'click', 'a.del', function (event) {
+
+                })
             });
+        },
+        refresh: function () {
+
         },
         add: function (params) {
 
         },
-        update: function ($key, params) {
+        update: function ($data) {
+            var $cart = $(this);
+            var data = $cart.data('wsCart');
+            var $ajaxOptions = {
+                dataType: 'json',
+                method: 'post',
+                data: $data,
+                success: function (response, textStatus, xhr) {
+                    updateItem(response)
+                }
+            };
+            ws.ajax(data.settings.updateUrl, $ajaxOptions, true);
+
+        },
+        hiden: function ($key) {
 
         },
         remove: function ($key) {
@@ -49,16 +79,16 @@
             return this.data('wsCart');
         },
     };
-    var initEventHandler = function (key, type, event, selector, callback) {
-        var prevHandler = eventHandlers[key];
-        if (prevHandler !== undefined && prevHandler[type] !== undefined) {
-            var data = prevHandler[type];
-            $(document).off(data.event, data.selector);
+    var getQuantityInputOptions = function ($input) {
+        return {
+            id: $input.attr('id'),
+            value: Number($input.attr('value')),
+            operator: 'up',
+            min: $input.data('min'),
+            max: $input.data('max'),
         }
-        if (prevHandler === undefined) {
-            eventHandlers[key] = {};
-        }
-        $(document).on(event, selector, callback);
-        eventHandlers[key][type] = {event: event, selector: selector};
+    };
+    var updateItem = function ($data) {
+        console.log($data)
     };
 })(jQuery);

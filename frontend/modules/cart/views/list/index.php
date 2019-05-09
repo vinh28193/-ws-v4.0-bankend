@@ -20,6 +20,6 @@ $js = <<< JS
         alert('clicked');
    }) ;
 JS;
-$this->registerJs($js);
+//$this->registerJs($js);
 ?>
 

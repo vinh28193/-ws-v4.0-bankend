@@ -115,10 +115,12 @@ trait ProductTrait
         if (count($this->variation_mapping) == 0) {
             return true;
         }
+
         $this->parent_item = $this;
         if ($this->type === self::TYPE_AMAZON_US) {
             $this->item_origin_url = str_replace($this->item_sku, $sku, $this->item_origin_url);
         }
+
         $this->item_sku = $sku;
         foreach ((array)$this->variation_mapping as $item) {
             if ($item->variation_sku === $sku) {
@@ -126,13 +128,12 @@ trait ProductTrait
                 $this->sell_price = $item->variation_price ? $item->variation_price : $this->sell_price;
                 $this->available_quantity = $item->available_quantity;  // ? $item->available_quantity : $this->available_quantity;
                 $this->quantity_sold = $item->quantity_sold;            // ? $item->quantity_sold : $this->quantity_sold;
-                $this->current_variation = $item->options_group ? $item->options_group : $this->current_variation;
                 $specific = [];
                 foreach ($item->options_group as $option) {
                     $specific = array_merge($specific, [$option->name => $option->value]);
                 }
                 $this->current_variation = json_encode($specific);
-                break;
+                return true;
             }
         }
         return false;

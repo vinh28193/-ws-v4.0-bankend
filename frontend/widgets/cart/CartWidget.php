@@ -4,10 +4,13 @@
 namespace frontend\widgets\cart;
 
 use common\products\BaseProduct;
+
+use common\widgets\Pjax;
 use Yii;
 use yii\web\View;
 use yii\helpers\Html;
 use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap4\Widget;
 
@@ -24,9 +27,10 @@ class CartWidget extends Widget
      */
     public $isGroup = false;
 
-    public $updateAction = 'cart/update';
+    public $updateAction = 'update';
 
-    public $removeAction = 'cart/remove';
+    public $removeAction = 'remove';
+
     /**
      * @inheritDoc
      */
@@ -39,6 +43,13 @@ class CartWidget extends Widget
 //                return $request['type'] . ':' . $request['seller'];
 //            });
         }
+        $this->removeAction = Url::toRoute($this->removeAction);
+        $this->updateAction = Url::toRoute($this->updateAction);
+        $this->registerClientScript();
+        Pjax::begin([
+            'linkSelector' => false,
+            'formSelector' => false
+        ]);
 
     }
 
@@ -49,12 +60,27 @@ class CartWidget extends Widget
         $html .= $this->renderSummary();
         $html .= Html::tag('div', $this->renderItems(), ['class' => 'cart-box']);
         $html .= Html::endTag('div');
-        return $html;
+        echo $html;
+        Pjax::end();
+    }
+
+    protected function getClientOptions()
+    {
+
+        return ArrayHelper::merge([
+            'updateUrl' => $this->updateAction,
+            'removeUrl' => $this->removeAction
+        ], $this->clientOptions);
     }
 
     protected function registerClientScript()
     {
-
+        $id = $this->options['id'];
+        $options = Json::htmlEncode($this->getClientOptions());
+        $view = $this->getView();
+        CartAsset::register($view);
+        $view->registerJs("jQuery('#$id').wsCart($options);", $view::POS_END);
+        $view->registerJs("console.log($('#$id').wsCart('data'));", $view::POS_END);
     }
 
     protected function renderSummary()
@@ -95,7 +121,7 @@ class CartWidget extends Widget
         }
         $imageSrc = isset($item['request']['image']) ? $item['request']['image'] : $product->current_image;
         return $this->render('item', [
-            'key' => ArrayHelper::getValue($item,'key',''),
+            'key' => ArrayHelper::getValue($item, 'key', ''),
             'name' => $product->item_name,
             'type' => $product->type,
             'originLink' => $product->item_origin_url,
@@ -103,10 +129,10 @@ class CartWidget extends Widget
             'imageSrc' => $imageSrc,
             'provider' => $provider,
             'variation' => $product->current_variation,
-            'quantity' => $product->quantity,
+            'quantity' => $product->getShippingQuantity(),
             'availableQuantity' => $product->available_quantity,
             'soldQuantity' => $product->quantity_sold,
-            'weight' => $product->shipping_weight,
+            'weight' => $product->getShippingWeight(),
             'price' => $product->getLocalizeTotalPrice(),
         ]);
 

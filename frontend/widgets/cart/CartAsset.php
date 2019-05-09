@@ -21,9 +21,7 @@ class CartAsset extends AssetBundle
 
     public $depends = [
         'yii\web\JqueryAsset',
-        'yii\bootstrap4\BootstrapPluginAsset'
+        'yii\bootstrap4\BootstrapPluginAsset',
+        'frontend\assets\FrontendAsset',
     ];
-}
-{
-
 }

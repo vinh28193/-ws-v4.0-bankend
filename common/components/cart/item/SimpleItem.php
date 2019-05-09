@@ -8,6 +8,7 @@
 
 namespace common\components\cart\item;
 
+use Yii;
 use common\products\BaseProduct;
 use common\products\forms\ProductDetailFrom;
 
@@ -36,15 +37,16 @@ class SimpleItem extends BaseCartItem
             $params['id'] = $this->parentSku;
             $params['sku'] = $this->sku;
         }
-        $form = new ProductDetailFrom();
-        $form->load($params, '');
+
+        $form = new ProductDetailFrom($params);
         /** @var $product false | \common\products\BaseProduct BaseProduct */
         if (($product = $form->detail(false)) === false) {
-            \Yii::info($form->getFirstErrors(), "add_to_cart");
+            Yii::info($form->getFirstErrors(), "add_to_cart");
             return [false, $form->getFirstErrors()];
 
         }
         $product->current_image = $this->image;
+        $params['image'] = $this->image;
         return [true, ['request' => $params, 'response' => $product]];
     }
 

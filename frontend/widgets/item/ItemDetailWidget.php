@@ -4,7 +4,6 @@
 namespace frontend\widgets\item;
 
 use Yii;
-use frontend\assets\ItemAsset;
 use yii\bootstrap\Widget;
 use common\products\BaseProduct;
 use yii\base\InvalidConfigException;
@@ -104,7 +103,7 @@ class ItemDetailWidget extends Widget
         ]);
         $options = Json::htmlEncode($this->getClientOptions());
         $view = $this->getView();
-        ItemAsset::register($view);
+        ItemDetailAsset::register($view);
         $view->registerJs("jQuery('#$id').wsItem($params,$options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
     }
