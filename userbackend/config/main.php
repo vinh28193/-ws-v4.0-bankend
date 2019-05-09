@@ -16,6 +16,7 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'userbackend\controllers',
     'defaultRoute' => 'site/index',
     'components' => [

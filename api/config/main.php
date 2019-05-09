@@ -35,6 +35,7 @@ return [
             ],
         ],
     ],
+    'timeZone' => 'Asia/Ho_Chi_Minh',
     'components' => [
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
@@ -138,7 +139,6 @@ return [
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],
-
         'log' => [
             /*
             'traceLevel' => YII_DEBUG ? 3 : 0,
