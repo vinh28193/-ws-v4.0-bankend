@@ -106,28 +106,30 @@ UserBackendAsset::register($this);
                            $collapsed = ['a1', 'a2', 'a3'];
                         }
                     }
-//                    if (isset($checkUrl)) {
-//                        if ($checkUrl === '/order') {
-//                            $collapsed = array('collapsed', 'true', 'show');
-//                        }
-//                    }
+                    if (isset($checkUrl)) {
+                        if ($checkUrl == '/order') {
+                            $collapsed = array('collapsed', 'true', 'show');
+                        } else {
+                            $collapsed = ['a1', 'a2', 'a3'];
+                        }
+                    }
                     ?>
-                    <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($check['status'])){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
-                    <div id="sub-2" class="sub-collapse collapse <?php if (isset($check['status'])){?> <?=$collapsed[2]?> <?php } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
+                    <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($checkUrl)){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                    <div id="sub-2" class="sub-collapse collapse <?php if (isset($check['status'])){?> <?=$collapsed[2]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[2]?> <?php } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                         <ul class="style-nav">
-                            <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/order') { $active = 'active'?> active <?php }}?>">
+                            <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/order') { ?> active <?php }}?><?php if (isset($checkUrl)) { if ($checkUrl == '/order') { ?> active <?php }}?>">
                                 <?php echo Html::a('Tất cả các đơn', ['/order'],['class' => 'active']); ?>
                             </li>
-                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'SUPPORTING') { $active = 'active'?> active <?php }}?>">
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'SUPPORTING') { ?> active <?php }}?>">
                                 <?php echo Html::a('Chờ Thanh Toán', ['/order?status=SUPPORTING']);?>
                             </li>
-                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'READY2PURCHASE') { $active = 'active'?> active <?php }}?>">
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'READY2PURCHASE') { ?> active <?php }}?>">
                                 <?php echo Html::a('Đã thanh toán', ['/order?status=READY2PURCHASE']);?>
                             </li>
-                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'PURCHASED') { $active = 'active'?> active <?php }}?>">
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'PURCHASED') { ?> active <?php }}?>">
                                 <?php echo Html::a('Đã mua hàng', ['/order?status=PURCHASED']);?>
                             </li>
-                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'STOCKIN_US') { $active = 'active'?> active <?php }}?>">
+                            <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'STOCKIN_US') { ?> active <?php }}?>">
                                 <?php echo Html::a('Đã về kho US', ['/order?status=STOCKIN_US']);?>
                             </li>
                             <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'STOCKIN_LOCAL') { $active = 'active'?> active <?php }}?>">
