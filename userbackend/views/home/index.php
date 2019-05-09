@@ -46,7 +46,7 @@
                     <a href="#">x</a>
                 </div>
             </div>
-            <div class="be-body style-croll pb-1" style="height: 15em" >
+            <div class="be-body style-croll pb-1" style="height: 15em; overflow-y: scroll;" >
                 <div class="be-table table-scrollbar">
                     <table class="table">
                         <thead>
@@ -86,7 +86,7 @@
                     <a href="#">x</a>
                 </div>
             </div>
-            <div class="be-body style-croll" style="height: 15em">
+            <div class="be-body style-croll" style="height: 15em; overflow-y: scroll;">
                 <ul class="new-update">
                     <?php foreach ($orders as $order) {
                         $chats = \common\modelsMongo\ChatMongoWs::find()->where([
