@@ -245,7 +245,7 @@ class ShipmentController extends BaseApiController
         $shipment->courier_code = ArrayHelper::remove($courier, 'service_code', null);
         $shipment->courier_logo = ArrayHelper::remove($courier, 'courier_logo', null);
         $shipment->courier_estimate_time = ArrayHelper::remove($courier, 'min_delivery_time', '') .' days - '.ArrayHelper::remove($courier, 'max_delivery_time', '').' days';
-        $shipment->total_shipping_fee = ArrayHelper::remove($courier, 'shipping_fee', '') .' days - '.ArrayHelper::remove($courier, 'max_delivery_time', '').' days';
+        $shipment->total_shipping_fee = ArrayHelper::remove($courier, 'shipping_fee', 0);
         $transaction = Shipment::getDb()->beginTransaction();
         foreach (['total_price', 'total_cod', 'payment_method', 'description', 'note_for_courier'] as $remove) {
             if (isset($post[$remove])) {
