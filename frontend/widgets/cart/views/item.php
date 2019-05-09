@@ -20,7 +20,7 @@ $name = Html::encode($name);
 ?>
 
 
-<li data-key="<?=$key;?>">
+<li data-key="<?=$key;?>" class="item">
     <div class="thumb">
         <img src="<?= $imageSrc ?>" alt="<?= $name; ?>">
     </div>
@@ -50,16 +50,16 @@ $name = Html::encode($name);
             </ol>
         </div>
         <div class="right">
-            <div class="qty form-inline">
+            <div class="qty form-inline quantity-option">
                 <label>Số lượng:</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary" type="button">-</button>
+                        <button class="btn btn-outline-secondary button-quantity-up" data-for="<?=$key?>" data-update="#<?=$key?>" type="button">-</button>
                     </div>
-                    <input type="text" class="form-control" value="<?= $quantity; ?>" data-min="1"
+                    <input type="text" class="form-control" value="<?= $quantity; ?>" data-min="1" id="<?=$key;?>"
                            data-max="<?= $availableQuantity; ?>" aria-label="" aria-describedby="basic-addon1">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button">+</button>
+                        <button class="btn btn-outline-secondary button-quantity-down" data-for="<?=$key?>" data-update="#<?=$key?>" type="button">+</button>
                     </div>
                 </div>
             </div>

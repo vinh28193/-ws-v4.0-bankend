@@ -14,6 +14,7 @@ return [
         //'ipFilter',
         'admin',
     ],
+    'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'backend\controllers',
     'defaultRoute' => 'site/index',
     'modules' => [
