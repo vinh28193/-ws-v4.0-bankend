@@ -14,6 +14,7 @@ return [
         $class = Yii::$app->user->identityClass;
         Yii::$app->user->setIdentity($class::findOne(1));
     }],
+    'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
