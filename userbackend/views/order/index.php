@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php } ?>
                     </td>
                     <td>
-                        <?php echo Html::a($order->ordercode, ['/order/' . $order->ordercode],['class' => 'active']); ?>
+                        <?php echo Html::a($order->ordercode, ['/order/' . $order->id],['class' => 'active']); ?>
                     </td>
                     <td>
                         <b><?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?></b>

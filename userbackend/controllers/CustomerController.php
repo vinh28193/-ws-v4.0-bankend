@@ -4,6 +4,7 @@ namespace userbackend\controllers;
 
 use common\models\Address;
 use common\models\db\SystemDistrictMapping;
+use common\models\Order;
 use common\models\SystemDistrict;
 use Yii;
 use common\models\Customer;
@@ -52,6 +53,14 @@ class CustomerController extends Controller
         return $this->render('index', [
             'model' => $model,
             'address' => $address
+        ]);
+    }
+
+    public function actionVip() {
+        $userId = Yii::$app->user->getIdentity()->getId();
+        $models = Order::find()->with('products')->where(['customer_id' => $userId])->all();
+        return $this->render('vip', [
+            'models' => $models,
         ]);
     }
 

@@ -36,9 +36,9 @@ class PromotionUserController extends Controller
     public function actionIndex()
     {
         $userId = Yii::$app->user->getIdentity()->getId();
-        $model = PromotionUserSearch::find()->with('promotion')->where(['customer_id' => $userId])->all();
+        $models = PromotionUserSearch::find()->with('promotion')->where(['customer_id' => $userId])->all();
         return $this->render('index', [
-           'model' => $model,
+           'models' => $models,
         ]);
     }
 
