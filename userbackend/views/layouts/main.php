@@ -185,7 +185,6 @@ UserBackendAsset::register($this);
                             </ul>
                         </div>
                     </li>
-                    <?= $checkUrl ?>
                 </ul>
                 <?php
                 if (!Yii::$app->user->isGuest) {
