@@ -33,36 +33,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="vb-content">
                     <ul class="voucher-list">
-                        <li>
-                            <div class="thumb"><img src="./img/voucher1.jpg" alt=""/></div>
-                            <div class="info">
-                                <div class="name">
-                                    <b>Weshop</b>
-                                    <a href="#" class="text-blue">Dùng ngay</a>
+                        <?php foreach ($models as $model) { ?>
+                            <li>
+                                <div class="thumb"><img src="./img/voucher1.jpg" alt=""/></div>
+                                <div class="info">
+                                    <div class="name">
+                                        <b><?= $model->promotion->name ?></b>
+                                        <a href="#" class="text-blue">Dùng ngay</a>
+                                    </div>
+                                    <p>Đơn Tối Thiểu 0đ, giảm tối đa 50k, Cho một số sản phẩm<br/>
+                                        Mã: <b><?= $model->promotion->code ?></b></p>
+                                    <div class="date">
+                                        <span>HSD: 15.03.2019</span>
+                                        <a href="#" class="text-blue">Chi tiết >></a>
+                                    </div>
                                 </div>
-                                <p>Đơn Tối Thiểu 0đ, giảm tối đa 50k, Cho một số sản phẩm<br/>
-                                    Mã: <b>HAPPYBIRTHDAY18</b></p>
-                                <div class="date">
-                                    <span>HSD: 15.03.2019</span>
-                                    <a href="#" class="text-blue">Chi tiết >></a>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="thumb"><img src="./img/voucher1.jpg" alt=""/></div>
-                            <div class="info">
-                                <div class="name">
-                                    <b>Weshop</b>
-                                    <a href="#" class="text-blue">Dùng ngay</a>
-                                </div>
-                                <p>Đơn Tối Thiểu 0đ, giảm tối đa 50k, Cho một số sản phẩm<br/>
-                                    Mã: <b>HAPPYBIRTHDAY18</b></p>
-                                <div class="date">
-                                    <span>HSD: 15.03.2019</span>
-                                    <a href="#" class="text-blue">Chi tiết >></a>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>

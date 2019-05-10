@@ -57,9 +57,9 @@ class OrderController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($code)
+    public function actionView($id)
     {
-        $model = Order::find()->with('products')->where(['ordercode' => $code])->one();
+        $model = Order::find()->with('products')->where(['id' => $id])->one();
         return $this->render('view', [
             'model' => $model,
         ]);

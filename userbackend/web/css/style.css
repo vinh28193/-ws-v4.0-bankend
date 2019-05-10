@@ -1,21 +1,21 @@
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-REGULAR.ttf") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-REGULAR.TTF") format("truetype");
   font-weight: 400;
   font-style: normal; }
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-LIGHT.ttf") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-LIGHT.TTF") format("truetype");
   font-weight: 200;
   font-style: normal; }
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-MEDIUM.ttf") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-MEDIUM.TTF") format("truetype");
   font-weight: 500;
   font-style: normal; }
 @font-face {
   font-family: "Quicksand";
-  src: url("../fonts/Quicksand/QUICKSAND-BOLD.ttf") format("truetype");
+  src: url("../fonts/Quicksand/QUICKSAND-BOLD.TTF") format("truetype");
   font-weight: 700;
   font-style: normal; }
 .container:after, .navbar-2 .navbar-header ul li .dropdown-menu .sub-head:after, .navbar-2 .navbar-header ul li .dropdown-menu ul li:after, .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu:after, .navbar-2 .navbar-right li .dropdown-menu .buyship:after, .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline:after, .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol:after, .navbar-ws:after, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-menu:after, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2.top-store-cate:after, .buy-amazon .right .bottom:after {
@@ -27,14 +27,14 @@
   display: inline-block;
   vertical-align: middle; }
 
-a, .btn, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-slider .owl-carousel .owl-nav .owl-prev, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-slider .owl-carousel .owl-nav .owl-next, .slider-2 .owl-carousel .owl-nav .owl-prev, .slider-2 .owl-carousel .owl-nav .owl-next, .buy-amazon .right .top ul li a img, .buy-amazon .right .bottom .banner-3 a img, .buy-amazon .right .bottom .banner-4 a img, .buy-amazon .right .bottom .banner-5 a img, .buy-amazon .right .bottom .banner-6 a img, .buy-amazon .right .bottom .banner-7 a img, .buy-amazon .right a img, .product-viewed .owl-carousel .owl-nav .owl-prev, .product-viewed .owl-carousel .owl-nav .owl-next, .filter-content .filter-box ul li a.dropdown-collapse .fas, .product-block .pd-content .right ul li .item .item-bg .btn, .product-block .pd-tag-box .brand-list ul li a, .detail-block .product-full-info .info-list, .be-container .be-menu .be-menu-collapse li.accordion a.dropdown-collapse .fas {
+a, .btn, .navbar-2, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-slider .owl-carousel .owl-nav .owl-prev, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-slider .owl-carousel .owl-nav .owl-next, .slider-2 .owl-carousel .owl-nav .owl-prev, .slider-2 .owl-carousel .owl-nav .owl-next, .buy-amazon .right .top ul li a img, .buy-amazon .right .bottom .banner-3 a img, .buy-amazon .right .bottom .banner-4 a img, .buy-amazon .right .bottom .banner-5 a img, .buy-amazon .right .bottom .banner-6 a img, .buy-amazon .right .bottom .banner-7 a img, .buy-amazon .right a img, .product-list .item .thumb, .product-viewed .owl-carousel .owl-nav .owl-prev, .product-viewed .owl-carousel .owl-nav .owl-next, .filter-content .filter-box ul li a.dropdown-collapse .fas, .product-block .pd-content .right .right-1 ul li .item .thumb, .product-block .pd-content .right .right-2 ul li .item .thumb, .product-block .pd-content .right ul li .item .item-bg .btn, .product-block .pd-tag-box .brand-list ul li a, .detail-block .product-full-info .info-list, .be-container .be-menu .be-menu-collapse li.accordion a.dropdown-collapse .fas {
   -webkit-transition: all .3s;
   -moz-transition: all .3s;
   -ms-transition: all .3s;
   -o-transition: all .3s;
   transition: all .3s; }
 
-.buy-amazon .right a:hover img {
+.buy-amazon .right a:hover img, .product-list .item:hover .thumb, .product-block .pd-content .right .right-1 ul li .item:hover .thumb, .product-block .pd-content .right .right-2 ul li .item:hover .thumb {
   -webkit-transform: scale(1.05);
   -moz-transform: scale(1.05);
   -ms-transform: scale(1.05);
@@ -152,7 +152,15 @@ a {
     .navbar-2 {
       height: 51px;
       width: 51px;
-      right: inherit; } }
+      right: inherit; }
+      .navbar-2:before {
+        font-family: "Font Awesome 5 Free";
+        content: '\f0c9';
+        font-size: 20px;
+        font-weight: 900;
+        position: absolute;
+        top: 9px;
+        left: 16px; } }
   .navbar-2 .container {
     display: block;
     position: relative; }
@@ -628,12 +636,15 @@ a {
     .navbar-2.open {
       width: 300px;
       height: 100vh;
-      align-items: baseline; } }
+      align-items: baseline; }
+      .navbar-2.open:before {
+        display: none; } }
   @media (max-width: 768px) {
     .navbar-2.open .container {
       display: block; }
       .navbar-2.open .container .navbar-header {
-        float: none; }
+        float: none;
+        display: none; }
       .navbar-2.open .container ul {
         float: none; }
         .navbar-2.open .container ul li {
@@ -1703,6 +1714,9 @@ a {
       @media (max-width: 992px) {
         .auth-content .auth-box .left {
           padding: 30px 20px; } }
+      @media (max-width: 576px) {
+        .auth-content .auth-box .left {
+          width: 100%; } }
       .auth-content .auth-box .left .title {
         font-size: 24px;
         text-align: center;
@@ -1749,6 +1763,9 @@ a {
       @media (max-width: 992px) {
         .auth-content .auth-box .right {
           padding: 30px 50px; } }
+      @media (max-width: 576px) {
+        .auth-content .auth-box .right {
+          display: none; } }
       .auth-content .auth-box .right h2 {
         font-size: 24px;
         font-weight: 500;
@@ -1863,6 +1880,12 @@ a {
       border-radius: 2px;
       font-size: 14px;
       font-weight: 500; }
+      @media (max-width: 768px) {
+        .other-login .social-button .btn {
+          width: 150px; } }
+      @media (max-width: 576px) {
+        .other-login .social-button .btn {
+          width: 230px; } }
       .other-login .social-button .btn.btn-fb {
         background-image: linear-gradient(3deg, #39579a, #365db6);
         color: #fff; }
@@ -2102,6 +2125,9 @@ a {
     margin-bottom: 20px; }
   .product-viewed .owl-carousel {
     margin: 0 -15px; }
+    @media (max-width: 768px) {
+      .product-viewed .owl-carousel {
+        margin: 0; } }
     .product-viewed .owl-carousel .item-box {
       padding: 0 15px; }
       .product-viewed .owl-carousel .item-box .item .info .name {
@@ -2128,6 +2154,9 @@ a {
       position: absolute;
       top: 40%;
       opacity: .5; }
+      @media (max-width: 768px) {
+        .product-viewed .owl-carousel .owl-nav .owl-prev, .product-viewed .owl-carousel .owl-nav .owl-next {
+          display: none !important; } }
       .product-viewed .owl-carousel .owl-nav .owl-prev span, .product-viewed .owl-carousel .owl-nav .owl-next span {
         display: none; }
       .product-viewed .owl-carousel .owl-nav .owl-prev:hover, .product-viewed .owl-carousel .owl-nav .owl-next:hover {
@@ -2150,6 +2179,9 @@ a {
   background: #f4f5f7;
   border-radius: 3px;
   padding: 24px 20px; }
+  @media (max-width: 768px) {
+    .filter-content {
+      margin-bottom: 30px; } }
   .filter-content .filter-box {
     margin-bottom: 36px;
     padding-bottom: 24px;
@@ -2319,12 +2351,13 @@ a {
             font-weight: 500;
             margin-right: 8px; }
           .cart-box .cart-item li .info .right .qty .input-group .form-control {
-            width: 32px;
+            width: 40px;
             height: 30px;
             border-radius: 2px;
             border: solid 1px #ebebeb;
             background-image: linear-gradient(to top, #dedede, #ffffff);
-            text-align: center; }
+            text-align: center;
+            padding: .375rem .15rem; }
           .cart-box .cart-item li .info .right .qty .input-group .btn {
             height: 30px;
             border: none;
