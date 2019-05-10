@@ -46,6 +46,12 @@ var ws = ws || (function ($) {
 
             $.ajax($options);
         },
+        goback: function(){
+            history.back()
+        },
+        redirect: function(href){
+            document.location.href = href;
+        },
         sweetalert: function (smg, type, options) {
             alert(type + ':' + smg);
         },
@@ -67,9 +73,10 @@ var ws = ws || (function ($) {
             thousands_sep = thousands_sep || ',';
 
         },
-        // hạn chế việc kích hoạt 1 event quá nhiều,
-        // nếu event đã được kích hoạt trước đó thì sẽ bị off đi
-        // sử lý theo lần kích hoạt cuối cùng
+        // hạn chế việc khai báo event quá nhiều,
+        // nếu event đã khai báo trước đó thì sẽ bị off đi
+        // xử lý theo lần khai báo cuối cùng
+        // nếu cả 2 cần phải được khai báo thì hay thay đổi `type`
         initEventHandler: function ($target, type, event, selector, callback) {
             var id = $target;
             if (typeof id !== 'string') {
@@ -79,11 +86,13 @@ var ws = ws || (function ($) {
             var prevHandler = pub.eventHandlers[id];
             if (prevHandler !== undefined && prevHandler[type] !== undefined) {
                 var data = prevHandler[type];
+
                 $(document).off(data.event, data.selector);
             }
             if (prevHandler === undefined) {
                 pub.eventHandlers[id] = {};
             }
+            console.log('event: "' + event + '" will be trigger with selector: "' + selector + '"');
             $(document).on(event, selector, callback);
             pub.eventHandlers[id][type] = {event: event, selector: selector};
         }

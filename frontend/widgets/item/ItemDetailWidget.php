@@ -47,7 +47,7 @@ class ItemDetailWidget extends Widget
             Html::addCssClass($this->slideOptions, 'item-slider');
         }
         Html::addCssClass($this->priceOptions, 'price');
-        Html::addCssClass($this->options,'detail-content');
+        Html::addCssClass($this->options, 'detail-content');
         $this->prepareItem();
         $this->registerClientScript();
     }
@@ -75,6 +75,7 @@ class ItemDetailWidget extends Widget
         $options = [
             'ajaxUrl' => Url::toRoute('item/variation'),
             'ajaxMethod' => 'POST',
+            'paymentUrl' => '#',
             'queryParams' => $this->getQueryParams(),
             'priceCssSelection' => $this->priceOptions['class'],
             'slideCssSelection' => $this->slideOptions['class']

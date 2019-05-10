@@ -11,10 +11,14 @@
         }
     };
 
+    var paymentMethod = undefined;
+
     var events = {
         ajaxBeforeSend: 'ajaxBeforeSend',
         ajaxComplete: 'ajaxComplete',
-        afterInit: 'afterInit'
+        afterInit: 'afterInit',
+        afterAddToCart: 'afterAddToCart',
+        afterBuyNow: 'afterBuyNow'
     };
     var defaultParams = {
         id: undefined,
@@ -31,6 +35,7 @@
     var defaultOptions = {
         ajaxUrl: undefined,
         ajaxMethod: 'POST',
+        paymentUrl: undefined,
         queryParams: [],
         priceCssSelection: 'price',
         slideCssSelection: 'detail-slider'
@@ -70,6 +75,23 @@
                     changeImage($item, images);
                 }
                 setUpDefaultOptions($item);
+                ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'button#addToCart', function (event) {
+                    // console.log(this);
+                    methods.addToCart.apply($item);
+                    return false;
+                });
+                ws.initEventHandler($item, 'buyNow', 'click.wsItem', 'button.btn-buy', function (event) {
+                    methods.buyNow.apply($item);
+                    return false;
+                });
+                ws.initEventHandler($item, 'follow', 'click.wsItem', 'button#follow', function (event) {
+                    methods.follow.apply($item);
+                    return false;
+                });
+                ws.initEventHandler($item, 'quote', 'click.wsItem', 'button#quote', function (event) {
+                    methods.quote.apply($item);
+                    return false;
+                });
                 $item.trigger($.Event(events.afterInit));
             });
         },
@@ -119,6 +141,19 @@
                     }, true);
                 });
             }
+        },
+        addToCart: function () {
+
+        },
+        buyNow: function () {
+            var $item = $(this);
+            paymentItem($item, 'buyNow', paymentMethod);
+        },
+        follow: function () {
+
+        },
+        quote: function () {
+
         },
         destroy: function () {
             return this.each(function () {
@@ -279,4 +314,16 @@
         };
 
     };
+    var paymentItem = function ($item, type, paymentMethod) {
+        var data = $item.data('wsItem');
+        var params = data.params;
+        $ajaxOptions = {
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: params.id
+            }
+
+        }
+    }
 })(jQuery);

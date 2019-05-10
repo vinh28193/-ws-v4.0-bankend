@@ -48,7 +48,7 @@
                     queryParams: $queryParams
                 });
 
-                ws.initEventHandler($search, 'filter', 'change', 'input.form-check-input', function (event) {
+                ws.initEventHandler($search, 'filter', 'change.wsSearch', 'input.form-check-input', function (event) {
                     methods.applyFilter.call($search, $(this));
                     return false;
                 });
@@ -67,8 +67,7 @@
             }
             var deferredArrays = deferredArray();
             $.when.apply(this, deferredArrays).always(function () {
-                $.ajax({
-                    url: ajaxUrl,
+                ws.ajax(ajaxUrl, {
                     type: 'GET',
                     data: queryParams,
                     dataType: 'json',
@@ -77,7 +76,7 @@
                     },
                     error: function () {
                     }
-                });
+                }, true);
             });
         },
 

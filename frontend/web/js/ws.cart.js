@@ -27,20 +27,23 @@
                 }
                 var settings = $.extend({}, defaults, options || {});
                 $cart.data('wsCart', {settings: settings});
-                ws.initEventHandler($cart, 'updateQuantity', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
-                    var self = $(this);
-                    var options = getQuantityInputOptions($(self.data('update')));
-                    if (options.max === '' || options.max < options.value) {
-                        alert('can not update cart');
-                    }
-                    var data = {};
-                    data.id = options.id;
-                    data.quantity = options.value + 1;
-                    methods.update.call($cart, data)
+                ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
+                    methods.update.call($cart, $(this));
                 });
-                ws.initEventHandler($cart, 'deleteCart', 'click', 'a.del', function (event) {
+                ws.initEventHandler($cart, 'remove', 'click.wsCart', 'a.delete-item', function (event) {
+                    var key = $(this).data('key');
+                    if (key === undefined) {
+                        return false;
+                    }
+                    methods.remove.call($cart, key)
 
-                })
+                });
+                ws.initEventHandler($cart, 'continue', 'click.wsCart', 'button.btn-continue', function (event) {
+                    methods.continue.apply($cart);
+                });
+                ws.initEventHandler($cart, 'payment', 'click.wsCart', 'button.btn-payment', function (event) {
+                    methods.payment.apply($cart);
+                });
             });
         },
         refresh: function () {
@@ -49,15 +52,38 @@
         add: function (params) {
 
         },
-        update: function ($data) {
+        update: function ($item) {
             var $cart = $(this);
             var data = $cart.data('wsCart');
+            var options = getQuantityInputOptions($($item.data('update')));
+            var operator = $item.data('operator');
+            if (options.max === '' || options.max < options.value) {
+                alert('can not update cart');
+            }
+            var param = {};
+            param.id = options.id;
+            param.quantity = options.value;
+            if (operator === 'up') {
+                param.quantity += 1;
+                if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
+                    param.quantity = options.max;
+                    alert('you can buy greater than ' + options.max)
+                }
+            } else {
+                param.quantity -= 1;
+                if (param.quantity < 1) {
+                    param.quantity = 1;
+                    alert('you can buy less than 1')
+                }
+            }
+            var container = '#' + $cart.attr('id');
             var $ajaxOptions = {
                 dataType: 'json',
                 method: 'post',
-                data: $data,
+                data: param,
                 success: function (response, textStatus, xhr) {
-                    updateItem(response)
+                    // updateItem(response);
+                    $.pjax.reload({container: container});
                 }
             };
             ws.ajax(data.settings.updateUrl, $ajaxOptions, true);
@@ -67,7 +93,30 @@
 
         },
         remove: function ($key) {
-
+            var $cart = $(this);
+            var data = $cart.data('wsCart');
+            var container = '#' + $cart.attr('id');
+            var $ajaxOptions = {
+                dataType: 'json',
+                method: 'post',
+                data: {id: $key},
+                success: function (response, textStatus, xhr) {
+                    // updateItem(response);
+                    $.pjax.reload({container: container});
+                }
+            };
+            ws.ajax(data.settings.removeUrl, $ajaxOptions, true);
+        },
+        continue: function () {
+            ws.goback();
+        },
+        payment: function () {
+            var $cart = $(this);
+            var data = $cart.data('wsCart');
+            var keys = [];
+            $.each(filterCartItems($cart), function (i,$input) {
+                console.log($input);
+            });
         },
         destroy: function () {
             return this.each(function () {
@@ -83,10 +132,13 @@
         return {
             id: $input.attr('id'),
             value: Number($input.attr('value')),
-            operator: 'up',
             min: $input.data('min'),
             max: $input.data('max'),
         }
+    };
+    var filterCartItems = function ($cart) {
+        var inputs = $cart.find('input[name="items"]');
+        console.log(inputs);
     };
     var updateItem = function ($data) {
         console.log($data)

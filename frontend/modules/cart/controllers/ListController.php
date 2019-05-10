@@ -3,24 +3,26 @@
 
 namespace frontend\modules\cart\controllers;
 
-use common\products\BaseProduct;
+
 use Yii;
 use frontend\modules\cart\Module;
-use frontend\controllers\PortalController;
-
-class ListController extends PortalController
+use common\products\BaseProduct;
+class ListController extends CartController
 {
-
-    /**
-     * @var Module
-     */
-    public $module;
 
     public function actionIndex()
     {
         $cartManager = $this->module->cartManager;
 //        $cartManager->update('8fe5cb7c582f868fa22c4ef56a652c0b',['image' => 'https://images-na.ssl-images-amazon.com/images/I/51aLZ8NqnaL.jpg', 'quantity' => 10]);
         $items = $cartManager->getItems();
+        if(Yii::$app->getRequest()->getIsPjax()){
+            if (count($items) === 0) {
+                return $this->renderAjax('empty');
+            }
+            return $this->renderAjax('index', [
+                'items' => $items
+            ]);
+        }
         if (count($items) === 0) {
             return $this->render('empty');
         }
@@ -47,18 +49,20 @@ class ListController extends PortalController
         if (($product = $cartManager->update($key, $params)) === false) {
             return ['success' => false, 'message' => 'Can not update now'];
         }
-        return ['success' => true, 'message' => 'updated "' . $key . '" success', 'data' => [
-            'key' => $key,
-            'quantity' => $product->getShippingQuantity(),
-            'availableQuantity' => $product->available_quantity,
-            'soldQuantity' => $product->quantity_sold,
-            'weight' => $product->getShippingWeight(),
-            'price' => $product->getLocalizeTotalPrice()
-        ]];
+        return ['success' => true, 'message' => 'updated "' . $key . '" success'];
     }
 
     public function actionRemove()
     {
-
+        $cartManager = $this->module->cartManager;
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $params = Yii::$app->getRequest()->getBodyParams();
+        if (!isset($params['id']) || ($key = $params['id']) === null || $key === '') {
+            return ['success' => false, 'message' => 'Invalid params'];
+        }
+        if(!$cartManager->removeItem($key)){
+            return ['success' => false, 'message' => "can not delete item `$key`"];
+        }
+        return ['success' => false, 'message' => "item `$key` had been deleted"];
     }
 }
