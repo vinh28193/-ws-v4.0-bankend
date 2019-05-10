@@ -14,7 +14,7 @@ class ItemController extends AmazonController
     public function actionIndex($id)
     {
         $form = new ProductDetailFrom();
-        $form->load(Yii::$app->getRequest()->getQueryParams(),'');
+        $form->load($this->request->getQueryParams(),'');
         $form->id = $id;
         $form->type = 'amazon';
         if (($item = $form->detail()) === false) {

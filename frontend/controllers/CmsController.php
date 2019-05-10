@@ -17,7 +17,7 @@ class CmsController extends FrontendController
 {
 
     const MAX_ITEM_SIZE = 4;
-    
+
     public $layout = '@frontend/views/layouts/cms';
 
     public $type = WsPage::TYPE_HOME;
@@ -54,6 +54,20 @@ class CmsController extends FrontendController
         return PageService::getPage($this->type, 1);
     }
 
+    public function defaultLayoutParams()
+    {
+        return array_merge(parent::defaultLayoutParams(), [
+            ['page' => $this->page]
+        ]);
+    }
+
+    public function defaultViewParams()
+    {
+        return array_merge(parent::defaultLayoutParams(), [
+            ['page' => $this->page]
+        ]);
+    }
+
     /**
      * @param string $view
      * @param array $params
@@ -85,9 +99,9 @@ class CmsController extends FrontendController
      */
     public function renderBlock($p = 1, $limit = 6)
     {
-        if($limit > 1){
+        if ($limit > 1) {
             $offset = ($p - 1) * $limit;
-        }else{
+        } else {
             $offset = -1;
         }
         return (new PageForm())->initBlock($this->page, $limit, $offset);

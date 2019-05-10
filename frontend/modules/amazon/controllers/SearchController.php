@@ -13,7 +13,7 @@ class SearchController extends AmazonController
 
     public function actionIndex()
     {
-        $queryParams = Yii::$app->getRequest()->getQueryParams();
+        $queryParams = $this->request->getQueryParams();
         $form = new ProductSearchForm();
         $form->load($queryParams);
         $form->type = 'amazon';
