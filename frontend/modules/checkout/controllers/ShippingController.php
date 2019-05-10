@@ -4,7 +4,7 @@
 namespace frontend\modules\checkout\controllers;
 
 
-class ReceiverController extends CheckoutController
+class ShippingController extends CheckoutController
 {
 
     public $step = 2;
