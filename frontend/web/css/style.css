@@ -148,13 +148,21 @@ a {
   background: -ms-linear-gradient(top, #f3f3f3 0%, #eaeaea 80%, #c1c1c1 100%);
   background: linear-gradient(to bottom, #f3f3f3 0%, #eaeaea 80%, #c1c1c1 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#c1c1c1', GradientType=0 ); }
+  @media (max-width: 768px) {
+    .navbar-2 {
+      height: 51px;
+      width: 51px;
+      right: inherit; } }
   .navbar-2 .container {
-    display: flex;
-    justify-content: space-between;
+    display: block;
     position: relative; }
+    @media (max-width: 768px) {
+      .navbar-2 .container {
+        display: none; } }
   .navbar-2 ul {
-    display: flex; }
+    display: block; }
     .navbar-2 ul li {
+      float: left;
       position: inherit; }
       .navbar-2 ul li a {
         color: #555555;
@@ -222,396 +230,419 @@ a {
         overflow: hidden;
         margin-top: 0;
         padding: 0; }
-  .navbar-2 .navbar-header ul li:nth-child(1) .dropdown-menu, .navbar-2 .navbar-header ul li:nth-child(2) .dropdown-menu {
-    height: 540px; }
-  .navbar-2 .navbar-header ul li:first-child a {
-    padding-left: 0; }
-  .navbar-2 .navbar-header ul li:last-child {
-    position: relative; }
-    .navbar-2 .navbar-header ul li:last-child .dropdown-menu {
-      left: 0;
-      width: 300px; }
-      .navbar-2 .navbar-header ul li:last-child .dropdown-menu a {
-        font-weight: 400; }
-  .navbar-2 .navbar-header ul li .title2 {
-    width: 250px;
-    background: #ededed;
-    color: #555555;
-    font-weight: bold;
-    padding: 12px;
-    position: relative;
-    margin-bottom: 15px;
-    cursor: pointer; }
-    .navbar-2 .navbar-header ul li .title2.active {
-      margin-bottom: 25px; }
-      .navbar-2 .navbar-header ul li .title2.active:after {
-        content: '';
-        display: block;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 15px 125px 0 125px;
-        border-color: #ededed transparent transparent transparent;
-        position: absolute;
-        top: 100%;
-        left: 0; }
-  .navbar-2 .navbar-header ul li .homepage a {
-    display: block;
-    text-transform: inherit;
-    margin-right: 0;
-    width: 250px;
-    padding: 15px 10px;
-    border-bottom: 1px solid #EDEDED;
-    background: #fff !important;
-    margin-bottom: 5px;
-    color: #000;
-    font-weight: 500; }
-  .navbar-2 .navbar-header ul li .dropdown-menu .sub-head {
-    border-bottom: 1px solid #EDEDED;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    width: 250px; }
-    .navbar-2 .navbar-header ul li .dropdown-menu .sub-head .desc {
-      font-size: 10px; }
-    .navbar-2 .navbar-header ul li .dropdown-menu .sub-head ul li.open .sub-menu {
-      display: block; }
-  .navbar-2 .navbar-header ul li .dropdown-menu ul li {
-    float: none; }
-    .navbar-2 .navbar-header ul li .dropdown-menu ul li a {
-      padding: 5px 10px;
+  .navbar-2 .navbar-header {
+    float: left; }
+    .navbar-2 .navbar-header ul li:nth-child(1) .dropdown-menu, .navbar-2 .navbar-header ul li:nth-child(2) .dropdown-menu {
+      height: 540px; }
+    .navbar-2 .navbar-header ul li:first-child a {
+      padding-left: 0; }
+    .navbar-2 .navbar-header ul li:last-child {
+      position: relative; }
+      .navbar-2 .navbar-header ul li:last-child .dropdown-menu {
+        left: 0;
+        width: 300px; }
+        .navbar-2 .navbar-header ul li:last-child .dropdown-menu a {
+          font-weight: 400; }
+    .navbar-2 .navbar-header ul li .title2 {
+      width: 250px;
+      background: #ededed;
+      color: #555555;
+      font-weight: bold;
+      padding: 12px;
+      position: relative;
+      margin-bottom: 15px;
+      cursor: pointer; }
+      .navbar-2 .navbar-header ul li .title2.active {
+        margin-bottom: 25px; }
+        .navbar-2 .navbar-header ul li .title2.active:after {
+          content: '';
+          display: block;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 15px 125px 0 125px;
+          border-color: #ededed transparent transparent transparent;
+          position: absolute;
+          top: 100%;
+          left: 0; }
+    .navbar-2 .navbar-header ul li .homepage a {
       display: block;
-      font-weight: normal;
+      text-transform: inherit;
+      margin-right: 0;
+      width: 250px;
+      padding: 15px 10px;
+      border-bottom: 1px solid #EDEDED;
+      background: #fff !important;
+      margin-bottom: 5px;
+      color: #000;
+      font-weight: 500; }
+    .navbar-2 .navbar-header ul li .dropdown-menu .sub-head {
+      border-bottom: 1px solid #EDEDED;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      width: 250px; }
+      .navbar-2 .navbar-header ul li .dropdown-menu .sub-head .desc {
+        font-size: 10px; }
+      .navbar-2 .navbar-header ul li .dropdown-menu .sub-head ul li.open .sub-menu {
+        display: block; }
+    .navbar-2 .navbar-header ul li .dropdown-menu ul li {
+      float: none; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li a {
+        padding: 5px 10px;
+        display: block;
+        font-weight: normal;
+        text-transform: inherit;
+        color: #555555;
+        background: transparent;
+        height: inherit; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li a:hover {
+          color: #2b96b6; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li.open a {
+        width: 250px;
+        color: #0654BA;
+        background: transparent;
+        font-weight: bold; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu {
+        display: none;
+        width: calc(1170px - 282px);
+        float: left;
+        height: 540px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-left: 1px solid #EDEDED;
+        padding: 15px; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .left {
+          width: 55%;
+          float: left;
+          padding-right: 15px; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .right {
+          width: 45%;
+          float: left; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box {
+          line-height: 1.2;
+          border-bottom: 1px solid #ededed;
+          padding-bottom: 15px;
+          margin-bottom: 15px;
+          color: #353535; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box .title {
+            font-size: 16px;
+            font-weight: 700; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box .desc {
+            font-size: 12px;
+            margin-top: 3px; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item .title {
+          font-weight: 500; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul {
+          padding-left: 10px;
+          border: none;
+          margin-bottom: 12px; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li {
+            border: none;
+            padding: 2px 0; }
+            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li a {
+              margin: 0;
+              padding: 0;
+              width: inherit;
+              font-size: 13px;
+              color: #555555;
+              font-weight: 400; }
+              .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li a:hover {
+                color: #2b96b6; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub {
+          width: 100%;
+          height: 505px;
+          overflow: hidden; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub a {
+            width: auto;
+            padding: 0; }
+            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub a img {
+              width: 385px;
+              height: 505px; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box {
+          border-bottom: 1px solid #ededed;
+          padding-bottom: 15px; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box .title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #555;
+            line-height: 1.2; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box .sub-title {
+            color: #555;
+            line-height: 1.2; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .sub-bg {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          z-index: -1;
+          max-width: 300px;
+          max-height: 450px;
+          overflow: hidden; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .sub-bg img {
+            width: 300px;
+            height: 450px; }
+        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left {
+          width: 560px;
+          float: left; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left .title-2 {
+            color: #e67425;
+            margin-bottom: 5px;
+            font-weight: 500; }
+          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol {
+            padding-left: 0; }
+            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol li {
+              border-right: none; }
+              .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol li a {
+                width: 250px;
+                padding: 5px 10px;
+                display: block;
+                font-weight: 400;
+                text-transform: inherit;
+                color: #000;
+                background: 0 0;
+                position: relative; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li.open .sub-menu {
+        display: block; }
+    .navbar-2 .navbar-header ul li .dropdown-menu .see-all a {
+      display: block;
+      width: 250px;
+      background: 0 0;
       text-transform: inherit;
       color: #555555;
-      background: transparent;
-      height: inherit; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li a:hover {
-        color: #2b96b6; }
-    .navbar-2 .navbar-header ul li .dropdown-menu ul li.open a {
-      width: 250px;
-      color: #0654BA;
-      background: transparent;
-      font-weight: bold; }
-    .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu {
-      display: none;
-      width: calc(1170px - 282px);
-      float: left;
-      height: 540px;
-      position: absolute;
-      top: 0;
-      right: 0;
-      border-left: 1px solid #EDEDED;
-      padding: 15px; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .left {
-        width: 55%;
-        float: left;
-        padding-right: 15px; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .right {
-        width: 45%;
-        float: left; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box {
-        line-height: 1.2;
-        border-bottom: 1px solid #ededed;
-        padding-bottom: 15px;
-        margin-bottom: 15px;
-        color: #353535; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box .title {
-          font-size: 16px;
-          font-weight: 700; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .title-box .desc {
-          font-size: 12px;
-          margin-top: 3px; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item .title {
-        font-weight: 500; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul {
-        padding-left: 10px;
-        border: none;
-        margin-bottom: 12px; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li {
-          border: none;
-          padding: 2px 0; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li a {
-            margin: 0;
-            padding: 0;
-            width: inherit;
-            font-size: 13px;
-            color: #555555;
-            font-weight: 400; }
-            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .item ul li a:hover {
-              color: #2b96b6; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub {
-        width: 100%;
-        height: 505px;
-        overflow: hidden; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub a {
-          width: auto;
-          padding: 0; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .banner-sub a img {
-            width: 385px;
-            height: 505px; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box {
-        border-bottom: 1px solid #ededed;
-        padding-bottom: 15px; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box .title {
-          font-size: 17px;
-          font-weight: 700;
-          color: #555;
-          line-height: 1.2; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .title-box .sub-title {
-          color: #555;
-          line-height: 1.2; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .sub-bg {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        z-index: -1;
-        max-width: 300px;
-        max-height: 450px;
-        overflow: hidden; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .sub-bg img {
-          width: 300px;
-          height: 450px; }
-      .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left {
-        width: 560px;
-        float: left; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left .title-2 {
-          color: #e67425;
-          margin-bottom: 5px;
-          font-weight: 500; }
-        .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol {
-          padding-left: 0; }
-          .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol li {
-            border-right: none; }
-            .navbar-2 .navbar-header ul li .dropdown-menu ul li .sub-menu .amazon-sub-content .left ol li a {
-              width: 250px;
-              padding: 5px 10px;
-              display: block;
-              font-weight: 400;
-              text-transform: inherit;
-              color: #000;
-              background: 0 0;
-              position: relative; }
-    .navbar-2 .navbar-header ul li .dropdown-menu ul li.open .sub-menu {
+      font-size: 14px;
+      padding: 15px 10px;
+      height: 50px; }
+      .navbar-2 .navbar-header ul li .dropdown-menu .see-all a .fas {
+        font-size: 12px;
+        margin-left: 8px; }
+  .navbar-2 .navbar-right {
+    float: right; }
+    .navbar-2 .navbar-right li a {
+      padding: 14px 17px; }
+    .navbar-2 .navbar-right li:last-child a {
+      position: relative; }
+    .navbar-2 .navbar-right li .dropdown-menu .buyship {
       display: block; }
-  .navbar-2 .navbar-header ul li .dropdown-menu .see-all a {
-    display: block;
-    width: 250px;
-    background: 0 0;
-    text-transform: inherit;
-    color: #555555;
-    font-size: 14px;
-    padding: 15px 10px;
-    height: 50px; }
-    .navbar-2 .navbar-header ul li .dropdown-menu .see-all a .fas {
-      font-size: 12px;
-      margin-left: 8px; }
-  .navbar-2 .navbar-right li a {
-    padding: 14px 17px; }
-  .navbar-2 .navbar-right li:last-child a {
-    position: relative; }
-  .navbar-2 .navbar-right li .dropdown-menu .buyship {
-    display: block; }
-    .navbar-2 .navbar-right li .dropdown-menu .buyship .left {
-      width: 75%;
-      float: left;
-      min-height: 296px; }
-      .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline {
-        padding-top: 20px; }
-        .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li {
-          width: 25%;
-          float: left;
-          text-align: center;
-          list-style: none;
-          padding: 15px 9px;
-          border: none;
-          position: relative; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li:after {
-            content: '';
-            display: block;
-            width: 116%;
-            height: 1px;
-            background: #000;
-            position: absolute;
-            left: 50%;
-            top: 51px; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li:last-child:after {
-            display: none; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico {
-            display: inline-block;
-            width: 68px;
-            height: 68px;
-            position: relative;
-            z-index: 9; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico1 {
-              background: url("../img/buyship_1.png") no-repeat center;
-              background-size: contain; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico2 {
-              background: url("../img/buyship_2.png") no-repeat center;
-              background-size: contain; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico3 {
-              background: url("../img/buyship_3.png") no-repeat center;
-              background-size: contain; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico4 {
-              background: url("../img/buyship_4.png") no-repeat center;
-              background-size: contain; }
-            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico5 {
-              background: url("../img/buyship_5.png") no-repeat center;
-              background-size: contain; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .step {
-            text-transform: uppercase;
-            font-size: 14px;
-            font-weight: 700;
-            margin-top: 35px;
+      .navbar-2 .navbar-right li .dropdown-menu .buyship .left {
+        width: 75%;
+        float: left;
+        min-height: 296px; }
+        .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline {
+          padding-top: 20px; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li {
+            width: 25%;
+            float: left;
+            text-align: center;
+            list-style: none;
+            padding: 15px 9px;
+            border: none;
             position: relative; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li p {
-            font-size: 12px; }
-      .navbar-2 .navbar-right li .dropdown-menu .buyship .left .btn-primary {
-        border: 1px solid #2b96b6;
-        background: #fff;
-        color: #2b96b6;
-        font-weight: 500;
-        width: inherit;
-        display: inline-block;
-        padding: 10px 20px;
-        height: inherit; }
-    .navbar-2 .navbar-right li .dropdown-menu .buyship .right {
-      width: 25%;
-      float: left;
-      background: #fafafa;
-      border-left: 1px solid #ededed;
-      min-height: 296px;
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li:after {
+              content: '';
+              display: block;
+              width: 116%;
+              height: 1px;
+              background: #000;
+              position: absolute;
+              left: 50%;
+              top: 51px; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li:last-child:after {
+              display: none; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico {
+              display: inline-block;
+              width: 68px;
+              height: 68px;
+              position: relative;
+              z-index: 9; }
+              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico1 {
+                background: url("../img/buyship_1.png") no-repeat center;
+                background-size: contain; }
+              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico2 {
+                background: url("../img/buyship_2.png") no-repeat center;
+                background-size: contain; }
+              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico3 {
+                background: url("../img/buyship_3.png") no-repeat center;
+                background-size: contain; }
+              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico4 {
+                background: url("../img/buyship_4.png") no-repeat center;
+                background-size: contain; }
+              .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .buyship-ico.ico5 {
+                background: url("../img/buyship_5.png") no-repeat center;
+                background-size: contain; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li .step {
+              text-transform: uppercase;
+              font-size: 14px;
+              font-weight: 700;
+              margin-top: 35px;
+              position: relative; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .left .timeline li p {
+              font-size: 12px; }
+        .navbar-2 .navbar-right li .dropdown-menu .buyship .left .btn-primary {
+          border: 1px solid #2b96b6;
+          background: #fff;
+          color: #2b96b6;
+          font-weight: 500;
+          width: inherit;
+          display: inline-block;
+          padding: 10px 20px;
+          height: inherit; }
+      .navbar-2 .navbar-right li .dropdown-menu .buyship .right {
+        width: 25%;
+        float: left;
+        background: #fafafa;
+        border-left: 1px solid #ededed;
+        min-height: 296px;
+        padding: 15px; }
+        .navbar-2 .navbar-right li .dropdown-menu .buyship .right .title {
+          font-size: 14px;
+          font-weight: 700;
+          text-transform: uppercase; }
+        .navbar-2 .navbar-right li .dropdown-menu .buyship .right .sub-title {
+          text-transform: uppercase;
+          font-size: 11px; }
+        .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol {
+          padding-left: 0;
+          margin-bottom: 10px; }
+          .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li {
+            border: none;
+            margin: 5px 0; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li:before {
+              content: "";
+              background-color: #2b96b6;
+              display: block;
+              float: left;
+              width: 6px;
+              height: 6px;
+              border-radius: 50%;
+              margin-top: 8px; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li span {
+              display: block;
+              margin-left: 18px; }
+            .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li a {
+              display: block;
+              margin-left: 18px;
+              color: #555555;
+              text-decoration: underline;
+              padding: 0;
+              height: inherit;
+              font-weight: 400; }
+        .navbar-2 .navbar-right li .dropdown-menu .buyship .right .btn {
+          margin-top: 0;
+          font-size: 13px;
+          font-weight: 700;
+          border-radius: 3px;
+          padding: 10px 20px;
+          display: inline-block;
+          width: 100%;
+          color: #fff;
+          background: #2b96b6;
+          border-color: #2b96b6;
+          height: inherit; }
+    .navbar-2 .navbar-right li:nth-child(5) {
+      position: relative; }
+      .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu {
+        left: inherit;
+        right: 0;
+        width: 300px;
+        padding: 15px; }
+        .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .title {
+          font-weight: 700;
+          margin-bottom: 10px; }
+        .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .input-group .form-control {
+          height: 36px;
+          border: 1px solid #ccc; }
+        .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .input-group .btn-search {
+          border: 1px solid #ccc;
+          background: #cccccc;
+          color: #555555; }
+    .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu {
+      left: inherit;
+      right: 15px;
+      width: 300px;
       padding: 15px; }
-      .navbar-2 .navbar-right li .dropdown-menu .buyship .right .title {
-        font-size: 14px;
-        font-weight: 700;
-        text-transform: uppercase; }
-      .navbar-2 .navbar-right li .dropdown-menu .buyship .right .sub-title {
-        text-transform: uppercase;
-        font-size: 11px; }
-      .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol {
-        padding-left: 0;
-        margin-bottom: 10px; }
-        .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li {
-          border: none;
-          margin: 5px 0; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li:before {
+      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li {
+        border-left: 0;
+        border-bottom: 1px solid #ededed;
+        display: block;
+        float: none; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li:last-child {
+          border-bottom: none; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a {
+          height: inherit;
+          background: 0 0;
+          text-transform: inherit;
+          font-weight: 400;
+          display: block;
+          padding: 7px 0;
+          color: #555555; }
+          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a:before {
             content: "";
             background-color: #2b96b6;
-            display: block;
+            display: inline-block;
             float: left;
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            margin-top: 8px; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li span {
-            display: block;
-            margin-left: 18px; }
-          .navbar-2 .navbar-right li .dropdown-menu .buyship .right ol li a {
-            display: block;
-            margin-left: 18px;
-            color: #555555;
-            text-decoration: underline;
-            padding: 0;
-            height: inherit;
-            font-weight: 400; }
-      .navbar-2 .navbar-right li .dropdown-menu .buyship .right .btn {
-        margin-top: 0;
-        font-size: 13px;
-        font-weight: 700;
+            margin-top: 8px;
+            margin-right: 8px; }
+          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a:hover {
+            color: #e67425; }
+          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a span {
+            display: inline-block; }
+      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact {
+        padding: 10px;
+        margin: 10px 0;
         border-radius: 3px;
-        padding: 10px 20px;
-        display: inline-block;
-        width: 100%;
-        color: #fff;
-        background: #2b96b6;
-        border-color: #2b96b6;
-        height: inherit; }
-  .navbar-2 .navbar-right li:nth-child(5) {
-    position: relative; }
-    .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu {
-      left: inherit;
-      right: 0;
-      width: 300px;
-      padding: 15px; }
-      .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .title {
-        font-weight: 700;
-        margin-bottom: 10px; }
-      .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .input-group .form-control {
-        height: 36px;
-        border: 1px solid #ccc; }
-      .navbar-2 .navbar-right li:nth-child(5) .dropdown-menu .checking-order .input-group .btn-search {
-        border: 1px solid #ccc;
-        background: #cccccc;
-        color: #555555; }
-  .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu {
-    left: inherit;
-    right: 15px;
-    width: 300px;
-    padding: 15px; }
-    .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li {
-      border-left: 0;
-      border-bottom: 1px solid #ededed;
-      display: block;
-      float: none; }
-      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li:last-child {
-        border-bottom: none; }
-      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a {
-        height: inherit;
-        background: 0 0;
-        text-transform: inherit;
-        font-weight: 400;
-        display: block;
-        padding: 7px 0;
-        color: #555555; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a:before {
-          content: "";
-          background-color: #2b96b6;
-          display: inline-block;
-          float: left;
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          margin-top: 8px;
-          margin-right: 8px; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a:hover {
-          color: #e67425; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu ul li a span {
-          display: inline-block; }
-    .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact {
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 3px;
-      background: #f3f3f3; }
-      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .contact-icon {
-        width: 40px;
-        height: 40px;
-        float: left; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .contact-icon img {
-          width: 40px; }
-      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item {
-        margin-left: 50px;
-        padding-top: 5px; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item a, .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item span {
-          display: block;
+        background: #f3f3f3; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .contact-icon {
+          width: 40px;
+          height: 40px;
+          float: left; }
+          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .contact-icon img {
+            width: 40px; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item {
+          margin-left: 50px;
+          padding-top: 5px; }
+          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item a, .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item span {
+            display: block;
+            height: inherit;
+            background: 0 0;
+            padding: 0;
+            font-weight: 400;
+            text-transform: inherit;
+            font-size: 12px;
+            color: #555555; }
+          .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item a {
+            text-decoration: underline; }
+      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .support {
+        text-align: center; }
+        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .support a {
+          width: inherit;
           height: inherit;
-          background: 0 0;
           padding: 0;
-          font-weight: 400;
           text-transform: inherit;
-          font-size: 12px;
-          color: #555555; }
-        .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .contact .item a {
-          text-decoration: underline; }
-    .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .support {
-      text-align: center; }
-      .navbar-2 .navbar-right li:nth-child(6) .dropdown-menu .support a {
-        width: inherit;
-        height: inherit;
-        padding: 0;
-        text-transform: inherit;
-        font-weight: 400;
-        color: #2b96b6;
-        font-size: 13px; }
+          font-weight: 400;
+          color: #2b96b6;
+          font-size: 13px; }
+  @media (max-width: 768px) {
+    .navbar-2.open {
+      width: 300px;
+      height: 100vh;
+      align-items: baseline; } }
+  @media (max-width: 768px) {
+    .navbar-2.open .container {
+      display: block; }
+      .navbar-2.open .container .navbar-header {
+        float: none; }
+      .navbar-2.open .container ul {
+        float: none; }
+        .navbar-2.open .container ul li {
+          float: none; }
+          .navbar-2.open .container ul li:first-child a {
+            padding-left: 20px; }
+          .navbar-2.open .container ul li a .badge {
+            right: inherit;
+            left: 28px; } }
 
 .navbar-ws {
   background: #fff;
@@ -675,6 +706,8 @@ a {
         font-weight: bold;
         color: #fff;
         height: 60px; }
+        .keep-navbar .cate-nav ul li a:hover {
+          opacity: .7; }
       .keep-navbar .cate-nav ul li .sub-menu {
         position: absolute;
         top: 60px;
@@ -726,6 +759,8 @@ a {
         width: 250px;
         background: #e67425;
         text-decoration: none; }
+        .keep-navbar .cate-nav ul li.globe-sub a:hover {
+          opacity: 1; }
         .keep-navbar .cate-nav ul li.globe-sub a .fas {
           margin-right: 6px; }
       .keep-navbar .cate-nav ul li.globe-sub .text-title {
@@ -1642,6 +1677,9 @@ a {
 
 .auth-content {
   margin: 100px 0; }
+  @media (max-width: 768px) {
+    .auth-content {
+      margin: 15px 0; } }
   .auth-content .logo {
     text-align: center;
     margin-bottom: 20px; }
@@ -1662,6 +1700,9 @@ a {
       border-right: 1px solid #ebebeb;
       padding: 45px 75px;
       min-height: 580px; }
+      @media (max-width: 992px) {
+        .auth-content .auth-box .left {
+          padding: 30px 20px; } }
       .auth-content .auth-box .left .title {
         font-size: 24px;
         text-align: center;
@@ -1705,6 +1746,9 @@ a {
       background-size: contain;
       background-size: cover;
       background-position: center bottom -120px; }
+      @media (max-width: 992px) {
+        .auth-content .auth-box .right {
+          padding: 30px 50px; } }
       .auth-content .auth-box .right h2 {
         font-size: 24px;
         font-weight: 500;
@@ -3272,7 +3316,8 @@ a {
         width: 400px; }
   .detail-block .product-full-info {
     font-size: 12px;
-    margin-left: 20px; }
+    margin-left: 20px;
+    width: calc(100% - 470px); }
     .detail-block .product-full-info .brand {
       color: #2b96b6; }
     .detail-block .product-full-info .title {
@@ -3376,19 +3421,21 @@ a {
         font-size: 12px;
         padding: .25rem .75rem; }
     .detail-block .product-full-info .option-box .style-list {
-      display: flex; }
-      .detail-block .product-full-info .option-box .style-list li ~ li {
-        margin-left: 4px; }
-      .detail-block .product-full-info .option-box .style-list li span {
-        display: block;
-        width: 40px;
-        height: 50px;
-        border-radius: 3px;
-        border: solid 1px #ebebeb;
-        position: relative;
-        cursor: pointer; }
-      .detail-block .product-full-info .option-box .style-list li.active span, .detail-block .product-full-info .option-box .style-list li:hover span {
-        border-color: #e67425; }
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -2px; }
+      .detail-block .product-full-info .option-box .style-list li {
+        margin: 2px; }
+        .detail-block .product-full-info .option-box .style-list li span {
+          display: block;
+          width: 40px;
+          height: 50px;
+          border-radius: 3px;
+          border: solid 1px #ebebeb;
+          position: relative;
+          cursor: pointer; }
+        .detail-block .product-full-info .option-box .style-list li.active span, .detail-block .product-full-info .option-box .style-list li:hover span {
+          border-color: #e67425; }
     .detail-block .product-full-info .info-list {
       margin-bottom: 10px;
       margin-top: 24px;

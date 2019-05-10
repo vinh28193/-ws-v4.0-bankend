@@ -7,14 +7,21 @@ use yii\web\AssetBundle;
 
 class ItemDetailAsset extends AssetBundle
 {
-    public $sourcePath = '@frontend/widgets/item/assets';
+    public $basePath = '@webroot';
+    public $baseUrl = '@web';
 
     public $js = [
-        'ws.item.js'
+        'js/ws.item.js'
+    ];
+
+    public $css = [
+
     ];
 
     public $depends = [
         'yii\web\JqueryAsset',
         'yii\bootstrap4\BootstrapPluginAsset',
+        'frontend\assets\FrontendAsset',
+        'frontend\assets\FancyboxPlusAsset',
     ];
 }

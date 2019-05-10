@@ -7,7 +7,7 @@ use yii\web\Controller;
 /**
  * Default controller for the `cart` module
  */
-class DefaultController extends Controller
+class DefaultController extends CartController
 {
     /**
      * Renders the index view for the module

@@ -71,6 +71,7 @@ class AmazonGate extends BaseGate
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
+
         $tokens = ["Check with `$request->store`, validated success"];
         $tokens[] = "refresh cache " . ($refresh === true ? 'true' : 'false');
         if (!$this->isEmpty($request->parent_asin_id) && $request->parent_asin_id !== $request->asin_id) {
@@ -289,9 +290,11 @@ class AmazonGate extends BaseGate
      */
     private function lookupInternal(AmazonDetailRequest $request)
     {
+
         $attempts = 0;
-        do {
-            $attempts++;
+
+//        do {
+//            $attempts++;
             $httpClient = $this->getHttpClient();
             $httpRequest = $httpClient->createRequest();
             $httpRequest->setUrl($this->lookupUrl);
@@ -300,14 +303,14 @@ class AmazonGate extends BaseGate
             $httpRequest->setMethod('POST');
             $httpResponse = $httpClient->send($httpRequest);
             $response = $httpResponse->getData();
-            if ($this->isValidResponse($response)) {
-                break;
+            if (!$this->isValidResponse($response)) {
+                return [false, 'can not send request'];
             }
 
-        } while ($attempts < 3);
-        if (!isset($response)) {
-            return [false, 'can not send request'];
-        }
+//        } while ($attempts < 3);
+//        if (!isset($response)) {
+//            return [false, 'can not send request'];
+//        }
         $amazon = $response['response'];
         $rs = [];
         $rs['categories'] = array_unique($amazon['node_ids']);

@@ -82,6 +82,8 @@ class ProductDetailFrom extends BaseForm
         if (!$this->validate()) {
             return false;
         }
+
+
         /** @var $success boolean */
         /** @var $product BaseProduct */
         list($success, $product) = $this->getActiveGate()->lookup($this->getParams(), $renew);
@@ -110,7 +112,7 @@ class ProductDetailFrom extends BaseForm
 
     public function isSku()
     {
-        return $this->sku !== null && trim($this->sku) !== '';
+        return $this->sku !== null && trim($this->sku) !== '' && trim($this->sku) !== trim($this->id);
     }
 
     protected function getParams()

@@ -40,24 +40,21 @@ FrontendAsset::register($this);
             <div class="navbar-header">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="flag us"></i>
                             <span>Từ Mỹ</span>
                         </a>
                         <div class="dropdown-menu animated fadeIn">
                             <div class="title2 active">Mua hời nhất tại eBay</div>
                             <ul>
-                                <li class="sub-2">
+                                <li class="sub-2 open">
                                     <a href="#">Thời trang</a>
                                     <div class="sub-menu">
                                         <div class="ebay-sub-menu">
                                             <div class="left">
                                                 <div class="title-box">
                                                     <div class="title">Shop eBay</div>
-                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To
-                                                        door Delivery
-                                                    </div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -108,9 +105,7 @@ FrontendAsset::register($this);
                                             </div>
                                             <div class="right">
                                                 <div class="banner-sub">
-                                                    <a href="#"><img
-                                                                src="https://static-v3.weshop.com.vn/uploadImages/ea2dff/ea2dff8f1ef1dc3082523658afa31530.png"
-                                                                alt="" title=""/></a>
+                                                    <a href="#"><img src="https://static-v3.weshop.com.vn/uploadImages/ea2dff/ea2dff8f1ef1dc3082523658afa31530.png" alt="" title=""/></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -157,8 +152,7 @@ FrontendAsset::register($this);
                         </div>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="flag jp"></i>
                             <span>Từ Nhật</span>
                         </a>
@@ -173,9 +167,7 @@ FrontendAsset::register($this);
                                                 <div class="title">Amazon Kinder & Fire</div>
                                                 <div class="sub-title">Chỉ có tại Amazon</div>
                                             </div>
-                                            <div class="sub-bg"><img
-                                                        src="https://static-v3.weshop.com.vn/uploadImages/ea2dff/ea2dff8f1ef1dc3082523658afa31530.png"
-                                                        alt="" title=""/></div>
+                                            <div class="sub-bg"><img src="https://static-v3.weshop.com.vn/uploadImages/ea2dff/ea2dff8f1ef1dc3082523658afa31530.png" alt="" title=""/></div>
                                             <div class="left">
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -247,8 +239,7 @@ FrontendAsset::register($this);
                         </div>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="flag uk"></i>
                             <span>Từ Anh</span>
                         </a>
@@ -261,8 +252,7 @@ FrontendAsset::register($this);
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown"><a href="#">Blog</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Mua hộ
                     </a>
                     <div class="dropdown-menu animated fadeIn">
@@ -301,9 +291,7 @@ FrontendAsset::register($this);
                                     <li><span>Vận chuyển rẻ, chỉ 14 ngày</span></li>
                                     <li><span>Miễn thủ tục hải quan</span></li>
                                     <li><span>Bảo hiểm rủi ro hàng hóa</span></li>
-                                    <li>
-                                        <span>Mua bất cứ site nào và Không cần dùng tới tài khoản Paypal, thẻ tín dụng</span>
-                                    </li>
+                                    <li><span>Mua bất cứ site nào và Không cần dùng tới tài khoản Paypal, thẻ tín dụng</span></li>
                                 </ol>
                                 <a href="#" class="btn btn-block">Xem các địa chỉ mua sắm</a>
                             </div>
@@ -311,8 +299,7 @@ FrontendAsset::register($this);
                     </div>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Ship hộ
                     </a>
                     <div class="dropdown-menu animated fadeIn">
@@ -320,12 +307,12 @@ FrontendAsset::register($this);
                             <div class="left">
                                 <ul class="timeline">
                                     <li>
-                                        <i class="buyship-ico ico1"></i>
+                                        <i class="buyship-ico ico5"></i>
                                         <div class="step">Bước 1</div>
                                         <p>Đăng ký tài khoản Weshop Có ngay địa chỉ riêng tại Mỹ!</p>
 
                                     <li>
-                                        <i class="buyship-ico ico2"></i>
+                                        <i class="buyship-ico ico1"></i>
                                         <div class="step">Bước 2</div>
                                         <p>Tự mua tại bất kỳ website nào và chuyển hàng tới địa chỉ Mỹ của bạn.</p>
 
@@ -351,9 +338,7 @@ FrontendAsset::register($this);
                                     <li><span>Miễn phí lưu kho 14 ngày</span></li>
                                     <li><span>Và nhiều dịch vụ khác</span></li>
                                 </ol>
-                                <button type="button" class="btn ws-btn btn-block" data-toggle="modal"
-                                        data-target="#wood-alert">Yêu cầu ship hàng
-                                </button>
+                                <button type="button" class="btn ws-btn btn-block" data-toggle="modal" data-target="#wood-alert">Yêu cầu ship hàng</button>
                             </div>
                         </div>
                     </div>
@@ -361,11 +346,10 @@ FrontendAsset::register($this);
                 <li>
                     <a href="#" data-toggle="modal" data-target="#login">
                         <i class="nav-ico user"></i>
-                    </a>
+                    </a >
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <i class="nav-ico map"></i>
                     </a>
                     <div class="dropdown-menu animated fadeIn">
@@ -381,8 +365,7 @@ FrontendAsset::register($this);
                     </div>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <i class="nav-ico question"></i>
                     </a>
                     <div class="dropdown-menu animated fadeIn">
@@ -431,8 +414,7 @@ FrontendAsset::register($this);
                             </li>
                         </ul>
                         <div class="contact">
-                            <div class="contact-icon"><img src="https://weshop.com.vn/images/support-icon.png" alt=""
-                                                           title=""></div>
+                            <div class="contact-icon"><img src="https://weshop.com.vn/images/support-icon.png" alt="" title=""></div>
                             <div class="item">
                                 <a href="mailto:support@weshop.com.vn" target="_top">support@weshop.com.vn</a>
                                 <span>19006755</span>

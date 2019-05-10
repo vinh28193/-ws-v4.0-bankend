@@ -170,9 +170,11 @@ class StoreManager extends Component
         return WeshopHelper::roundNumber($money, -3);
     }
 
-    public function showMoney($money)
+    public function showMoney($money, $currency = null)
     {
-        $currency = $this->getStore()->currency;
+        if($currency === null) {
+            $currency = $this->getStore()->currency;
+        }
         $decimal = 0;
         if ($currency === 'USD') {
             $decimal = 2;

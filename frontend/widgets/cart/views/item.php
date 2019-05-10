@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-/* @var string $key*/
+/* @var string $key */
 /* @var string $name */
 /* @var string $type */
 /* @var string $imageSrc */
@@ -20,7 +20,8 @@ $name = Html::encode($name);
 ?>
 
 
-<li data-key="<?=$key;?>" class="item">
+<li data-key="<?= $key; ?>" class="item <?= $type; ?>">
+    <?php echo Html::hiddenInput('items', $key) ?>
     <div class="thumb">
         <img src="<?= $imageSrc ?>" alt="<?= $name; ?>">
     </div>
@@ -46,7 +47,7 @@ $name = Html::encode($name);
                 }
                 ?>
 
-                <li>Tạm tính: <?= $weight ?> Gram</li>
+                <li>Tạm tính: <span class="weight-option"><?= $weight ?></span> Gram</li>
             </ol>
         </div>
         <div class="right">
@@ -54,17 +55,23 @@ $name = Html::encode($name);
                 <label>Số lượng:</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary button-quantity-up" data-for="<?=$key?>" data-update="#<?=$key?>" type="button">-</button>
+                        <button class="btn btn-outline-secondary button-quantity-down" data-pjax="1"
+                                data-for="<?= $key ?>"
+                                data-update="#<?= $key ?>" data-operator="down" type="button">-
+                        </button>
                     </div>
-                    <input type="text" class="form-control" value="<?= $quantity; ?>" data-min="1" id="<?=$key;?>"
+                    <input type="text" class="form-control" value="<?= $quantity; ?>" data-min="1" id="<?= $key; ?>"
                            data-max="<?= $availableQuantity; ?>" aria-label="" aria-describedby="basic-addon1">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary button-quantity-down" data-for="<?=$key?>" data-update="#<?=$key?>" type="button">+</button>
+                        <button class="btn btn-outline-secondary button-quantity-up" data-pjax="1"
+                                data-for="<?= $key ?>"
+                                data-update="#<?= $key ?>" data-operator="up" type="button">+
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="price"><?= $price; ?> <i class="currency">đ</i></div>
-            <a href="#" class="del"><i class="far fa-trash-alt"></i> Xóa</a>
+            <div class="price price-option"><?= $price; ?></div>
+            <a href="#" class="del delete-item" data-key="<?= $key; ?>"><i class="far fa-trash-alt"></i> Xóa</a>
         </div>
     </div>
 </li>
