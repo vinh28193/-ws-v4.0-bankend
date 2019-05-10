@@ -161,7 +161,7 @@ UserBackendAsset::register($this);
                     </li>
                     <?php
                     if (isset($checkUrl)) {
-                        if ($checkUrl == '/customer') {
+                        if ($checkUrl == '/customer' || $checkUrl == '/customer/vip') {
                             $collapsed1 = array('collapsed', 'true', 'show');
                         } else {
                             $collapsed1 = ['a1', 'a2', 'a3'];
@@ -170,17 +170,22 @@ UserBackendAsset::register($this);
                     ?>
                     <li class="accordion">
                         <a href="#"><i class="icon icon6"></i> Tài khoản cá nhân</a>
-                        <a class="dropdown-collapse <?php if (isset($checkUrl)){ if ($checkUrl == '/customer') {?> <?=$collapsed1[0]?> <?php }} ?>" data-toggle="collapse" data-target="#sub-3" aria-expanded="<?php if (isset($checkUrl)){if ($checkUrl == '/customer') {?> <?=$collapsed1[1]?> <?php } } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
-                        <div id="sub-3" class="sub-collapse collapse <?php if (isset($checkUrl)) { if ($checkUrl == '/customer') {?> <?=$collapsed1[2]?> <?php } } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
+                        <a class="dropdown-collapse <?php if (isset($checkUrl)){ if ($checkUrl == '/customer' || $checkUrl == '/customer/vip') {?> <?=$collapsed1[0]?> <?php }} ?>" data-toggle="collapse" data-target="#sub-3" aria-expanded="<?php if (isset($checkUrl)){if ($checkUrl == '/customer' || $checkUrl == '/customer/vip') {?> <?=$collapsed1[1]?> <?php } } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                        <div id="sub-3" class="sub-collapse collapse <?php if (isset($checkUrl)) { if ($checkUrl == '/customer' || $checkUrl == '/customer/vip') {?> <?=$collapsed1[2]?> <?php } } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul>
                                 <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/customer') { $active = 'active'?> active <?php }}?>">
                                     <?php echo Html::a('Tài khoản cá nhân', ['/customer']);?>
                                 </li>
                                 <li><a href="#">Sản phẩm đã lưu</a></li>
-                                <li><a href="#">Cấp độ Vip</a></li>
+                                <li>
+                                <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/customer/vip') {?> active <?php }}?>">
+                                    <?php echo Html::a('Cấp độ Vip', ['/customer/vip']);?>
+                                </li>
+                                </li>
                             </ul>
                         </div>
                     </li>
+                    <?= $checkUrl ?>
                 </ul>
                 <?php
                 if (!Yii::$app->user->isGuest) {

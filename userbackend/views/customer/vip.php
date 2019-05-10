@@ -63,7 +63,7 @@ use yii\helpers\Html;
                     <?php foreach ($model->products as $product) { ?>
                     <div class="thumb">
                         <img src="<?= $product->link_img ?>" alt=""/>
-                    </div>
+                    </div></br>
                     <?php } ?>
                     <div class="info">
                         <div class="detail">
