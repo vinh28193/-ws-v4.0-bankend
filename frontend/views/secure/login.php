@@ -1,10 +1,15 @@
 <?php
 
+use yii\helpers\Html;
+use yii\bootstrap4\ActiveForm;
+
+/* @var yii\web\View $this */
+
+$this->title = 'Đăng nhập';
+
+echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 ?>
 
-<div class="title">
-    <span>Đăng nhập</span>
-</div>
 <form class="auth-form">
     <div class="form-group">
         <i class="icon user"></i>
