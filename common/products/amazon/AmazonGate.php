@@ -228,9 +228,9 @@ class AmazonGate extends BaseGate
      */
     private function searchInternal($request)
     {
-//        $attempts = 0;
-//        do {
-//            $attempts++;
+        $attempts = 0;
+        do {
+            $attempts++;
             $httpClient = $this->getHttpClient();
             $httpRequest = $httpClient->createRequest();
             $httpRequest->setUrl($this->searchUrl);
@@ -239,14 +239,14 @@ class AmazonGate extends BaseGate
             $httpRequest->setMethod('POST');
             $httpResponse = $httpClient->send($httpRequest);
             $response = $httpResponse->getData();
-            if (!isset($response['response']) || !isset($response['total_product'])) {
-                return [false, 'can not send request'];
+            if (isset($response['response']) || isset($response['total_product'])) {
+                break;
             }
 
-//        } while ($attempts < 3);
-//        if (!isset($response)) {
-//            return [false, 'can not send request'];
-//        }
+        } while ($attempts < 3);
+        if (!isset($response)) {
+            return [false, 'can not send request'];
+        }
         if (!isset($response['response'])) {
             return [false, 'invalid response'];
         };

@@ -7,8 +7,10 @@ use yii\web\Controller;
 /**
  * Default controller for the `checkout` module
  */
-class DefaultController extends Controller
+class DefaultController extends CheckoutController
 {
+    public $step = 1;
+
     /**
      * Renders the index view for the module
      * @return string

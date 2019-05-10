@@ -50,12 +50,16 @@ class ItemDetailWidget extends Widget
         Html::addCssClass($this->options, 'detail-content');
         $this->prepareItem();
         $this->registerClientScript();
+        Pjax::begin([
+            'options' => $this->options,
+        ]);
     }
 
     public function run()
     {
         parent::run();
         echo $this->renderEntries();
+        Pjax::end();
     }
 
     protected function prepareItem()
@@ -112,14 +116,12 @@ class ItemDetailWidget extends Widget
     protected function renderEntries()
     {
 
-        $entries = Html::beginTag('div', $this->options);
-        $entries .= Html::tag('div', $this->renderDetailBlock(), [
+        $entries = Html::tag('div', $this->renderDetailBlock(), [
             'class' => 'col-md-9'
         ]);
         $entries .= Html::tag('div', $this->renderPaymentOption(), [
             'class' => 'col-md-3'
         ]);
-        $entries .= Html::endTag('div');
         return $entries;
     }
 
