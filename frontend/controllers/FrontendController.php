@@ -15,6 +15,7 @@ use common\components\StoreManager;
  * @package frontend\controllers
  *
  * @property-read  StoreManager $storeManager;
+ * @property-read  Request $request;
  */
 class FrontendController extends Controller
 {
