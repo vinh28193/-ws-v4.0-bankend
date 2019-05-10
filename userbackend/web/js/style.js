@@ -85,4 +85,30 @@ $( document ).ready(function() {
     $('.other-page .globe-sub').mouseleave(function () {
         $(this).removeClass('open');
     });
+
+    $('.detail-block .see-more').click(function() {
+        $(this).toggleClass('open');
+        $('.detail-block .info-list').toggleClass('open');
+    });
+
+    if($(window).width() < 768) {
+        $('.navbar-2').click(function () {
+            if ($(this).hasClass('open')) {
+                return;
+            } else {
+                $(this).addClass('open');
+            }
+        });
+
+        $(document).mouseup(function(e) {
+            var navbar = $(".navbar-2");
+
+            // if the target of the click isn't the container nor a descendant of the container
+            if (!navbar.is(e.target) && navbar.has(e.target).length === 0)
+            {
+                navbar.removeClass('open');
+            }
+        });
+    };
+
 });

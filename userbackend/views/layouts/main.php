@@ -43,7 +43,6 @@ UserBackendAsset::register($this);
     $checkUrl = Yii::$app->getRequest()->url;
 ?>
 <div class="wrapper backend">
-    <?php var_dump($checkUrl) ?>
     <div class="navbar-2 be-header">
         <a href="#" class="be-logo"><img src="../img/weshop-logo-vn.png" alt=""/></a>
         <ul class="be-nav">
@@ -99,13 +98,6 @@ UserBackendAsset::register($this);
                 <li class="accordion">
                     <a href="#"><i class="icon icon3"></i> Đơn hàng</a>
                     <?php
-                    if (isset($check['status'])) {
-                        if ($check['status'] === 'SUPPORTING' || $check['status'] === 'READY2PURCHASE' || $check['status'] === 'PURCHASED' || $check['status'] === 'STOCKIN_US' || $check['status'] === 'STOCKIN_LOCAL' || $check['status'] === 'AT_CUSTOMER' || $check['status'] === 'CANCEL') {
-                            $collapsed = array('collapsed', 'true', 'show');
-                        } else {
-                           $collapsed = ['a1', 'a2', 'a3'];
-                        }
-                    }
                     if (isset($checkUrl)) {
                         if ($checkUrl == '/order') {
                             $collapsed = array('collapsed', 'true', 'show');
@@ -113,8 +105,15 @@ UserBackendAsset::register($this);
                             $collapsed = ['a1', 'a2', 'a3'];
                         }
                     }
+                    if (isset($check['status'])) {
+                        if ($check['status'] === 'SUPPORTING' || $check['status'] === 'READY2PURCHASE' || $check['status'] === 'PURCHASED' || $check['status'] === 'STOCKIN_US' || $check['status'] === 'STOCKIN_LOCAL' || $check['status'] === 'AT_CUSTOMER' || $check['status'] === 'CANCEL') {
+                            $collapsed = array('collapsed', 'true', 'show');
+                        } else {
+                            $collapsed = ['a1', 'a2', 'a3'];
+                        }
+                    }
                     ?>
-                    <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($checkUrl)){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                    <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($checkUrl)){?> <?=$collapsed[1]?> <?php } ?><?php if (isset($check['status'])){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
                     <div id="sub-2" class="sub-collapse collapse <?php if (isset($check['status'])){?> <?=$collapsed[2]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[2]?> <?php } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                         <ul class="style-nav">
                             <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/order') { ?> active <?php }}?><?php if (isset($checkUrl)) { if ($checkUrl == '/order') { ?> active <?php }}?>">
@@ -145,7 +144,7 @@ UserBackendAsset::register($this);
                     </div>
                 </li>
                 <li>
-                    <a href="#"><i class="icon icon4"></i> Ví voucher</a>
+                    <?php echo Html::a('<span class="icon icon4"></span>Ví voucher', ['/promotion-user']);?>
                 </li>
                 <li>
                     <a href="#"><i class="icon icon5"></i> Weshop xu</a>
