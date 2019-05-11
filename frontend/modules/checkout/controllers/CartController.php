@@ -1,14 +1,15 @@
 <?php
 
 
-namespace frontend\modules\cart\controllers;
+namespace frontend\modules\checkout\controllers;
 
 
-use Yii;
-use frontend\modules\cart\Module;
 use common\products\BaseProduct;
-class ListController extends CartController
+use Yii;
+
+class CartController extends BillingController
 {
+
 
     public function actionIndex()
     {
@@ -34,6 +35,14 @@ class ListController extends CartController
     public function actionRefresh()
     {
 
+    }
+
+    public function actionAdd(){
+        Yii::info(Yii::$app->request->post(),'POST');
+        if (($key = $this->module->cartManager->addItem(Yii::$app->request->post())) === false) {
+            return ['success' => false,'message' => 'Can not Buy now this item'];
+        };
+        return  ['success' => true,'message' => 'Can not Buy now this item', 'data' => $key];
     }
 
     public function actionUpdate()
@@ -65,4 +74,5 @@ class ListController extends CartController
         }
         return ['success' => false, 'message' => "item `$key` had been deleted"];
     }
+
 }

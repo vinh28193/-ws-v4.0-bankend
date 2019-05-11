@@ -169,7 +169,7 @@ class TrackingCodeController extends BaseApiController
         $transaction = Yii::$app->getDb()->beginTransaction();
 
         try {
-            $manifest = Manifest::createSafe($manifest, 1, 1);
+            $manifest = Manifest::createSafe($manifest, $warehouse->id, 1);
 
             foreach (ExcelHelper::readFromFile('file') as $name => $sheet) {
                 $count = 0;
