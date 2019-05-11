@@ -10,6 +10,7 @@ use common\models\Order;
 use common\models\Product;
 use common\components\StoreManager;
 use yii\base\InvalidParamException;
+use yii\helpers\Json;
 
 
 class Payment extends Model
@@ -109,8 +110,19 @@ class Payment extends Model
 
     }
 
-    public function initPaymentView()
-    {
+    public function initPaymentView(){
+        $view = Yii::$app->getView();
+        PaymentAssets::register($view);
+        $options = Json::htmlEncode($this->getClientOptions());
+        $view->registerJs("ws.payment.init($options);");
         $provinders = $this->loadPaymemtProviderFromCache();
+        return $view->render('payment',[
+            'provinders' => $provinders,
+            'payment' => $this
+        ]);
+    }
+
+    public function getClientOptions(){
+
     }
 }
