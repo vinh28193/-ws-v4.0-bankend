@@ -75,6 +75,7 @@ class LoginCustomerForm extends Model
     {
         if ($this->_user === null) {
             $this->_user = Customer::findByUsername($this->username);
+//            $this->_user = Customer::find()->where(['username' => $this->username]);
         }
 
         return $this->_user;

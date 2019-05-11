@@ -43,6 +43,11 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
+    public static function findByUsername($username)
+    {
+        return static::findOne(['username' => $username]);
+    }
+
 
 
     /**

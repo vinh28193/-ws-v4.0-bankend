@@ -94,9 +94,7 @@
                             ['Order_path' => $order->ordercode],
                             ['type_chat' => 'WS_CUSTOMER']
                         ])->all();
-                        if (count($chats) == 0) {
-                            break;
-                        }
+                       $total = count($chats);
                         ?>
                         <li>
                             <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#"><?= $order->ordercode ?></a> vào lúc 10:47 23/01/2019</p>
@@ -108,8 +106,8 @@
                             <?php }} ?>
                         </li>
                     <?php } ?>
-                    <?php if (count($chats) == 0) { ?>
-                        <div class="no-data text-orange text-center">Chưa có thông tin mới</div>
+                    <?php if ($total == 0) { ?>
+                        <div class="no-data text-orange text-center pt-5">Chưa có thông tin mới</div>
                     <?php } ?>
                 </ul>
             </div>
