@@ -7,7 +7,10 @@ use yii\base\BaseObject;
 
 abstract class BasePaymentProvider extends BaseObject
 {
-
+    /**
+     * @var $payment Payment
+     */
+    public $payment;
 
     /**
      * @param $request
