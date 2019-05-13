@@ -326,4 +326,40 @@ class WeshopHelper
                 break;
         }
     }
+    public static function getArrayPage($totalPage, $pageCurrent = 1, $limitPage = 10){
+        $arr = [];
+        $tb = ceil($limitPage / 2);
+        for ($ind = 0;$ind <= $totalPage;$ind ++){
+            if ($totalPage > $limitPage) {
+                if ($pageCurrent <= $tb) {
+                    if ($limitPage >= $ind + 1) {
+                        $arr[] = ($ind + 1);
+                    }
+                } else {
+                    if (($ind + 1 > $pageCurrent - $tb && $pageCurrent + $tb > $ind + 1)) {
+                        $arr[] = ($ind + 1);
+                    }
+                }
+            } else {
+                $arr[] = ($ind + 1);
+            }
+        }
+        return $arr;
+    }
+    public static function getLogoByPortal($portal){
+        switch (strtolower($portal)){
+            case 'ebay':
+                return '/img/logo_ebay.png';
+                break;
+            case 'amazon':
+                return '/img/logo_amz.png';
+                break;
+            case 'amazon-jp':
+                return '/img/logo_amz_jp.png';
+                break;
+            default:
+                return '/img/logo_ws.png';
+                break;
+        }
+    }
 }
