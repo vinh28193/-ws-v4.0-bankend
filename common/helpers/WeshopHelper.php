@@ -281,6 +281,49 @@ class WeshopHelper
     }
 
     public static function generateUrlDetail($portal,$name,$sku,$sid = null){
-        return '/'.$portal.'/item/'.self::alias($name).'-'.$sku.'html';
+        return '/'.$portal.'/item/'.self::alias($name).'-'.$sku.'.html';
+    }
+
+    /**
+     * @param $amount
+     * @param int $country // 1: Viet Nam, 2: US, 7: Indo. Dựa theo store id
+     * @param string $symbol
+     * @param int $round
+     */
+    public static function showMoney($amount, $country = 1, $symbol = '',$round = 0){
+        switch ($country){
+            case 1:
+                $symbol = $symbol ? $symbol : 'đ';
+                $floorNumber = $round ? $round : 1000;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return number_format($finalPrice, 0, ',', '.') . ' '.$symbol;
+                break;
+            case 2:
+                $symbol = $symbol ? $symbol : '$';
+                $floorNumber = $round ? $round : 2;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return $symbol.' '.number_format($finalPrice, 2, '.', ',');
+                break;
+            case 7:
+                $symbol = $symbol ? $symbol : 'RP';
+                $floorNumber = $round ? $round : 0;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return $symbol.' '.number_format($finalPrice, 0, '.', ',');
+                break;
+            default:
+                $symbol = $symbol ? $symbol : 'đ';
+                $floorNumber = $round ? $round : 1000;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return number_format($finalPrice, 0, ',', '.') . ' '.$symbol;
+                break;
+        }
     }
 }

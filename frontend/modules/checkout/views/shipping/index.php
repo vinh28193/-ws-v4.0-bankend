@@ -1,4 +1,4 @@
 <?php
 
 
-echo $this->render('step/step1');
+echo $this->render('step/step3');
