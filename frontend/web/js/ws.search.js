@@ -48,7 +48,7 @@
                     queryParams: $queryParams
                 });
 
-                initEventHandler($search, 'filter', 'change', 'input.form-check-input', function (event) {
+                ws.initEventHandler($search, 'filter', 'change.wsSearch', 'input.form-check-input', function (event) {
                     methods.applyFilter.call($search, $(this));
                     return false;
                 });
@@ -67,8 +67,7 @@
             }
             var deferredArrays = deferredArray();
             $.when.apply(this, deferredArrays).always(function () {
-                $.ajax({
-                    url: ajaxUrl,
+                ws.ajax(ajaxUrl, {
                     type: 'GET',
                     data: queryParams,
                     dataType: 'json',
@@ -77,7 +76,7 @@
                     },
                     error: function () {
                     }
-                });
+                }, true);
             });
         },
 
@@ -130,19 +129,6 @@
             this.push(new $.Deferred(callback));
         };
         return array;
-    };
-    var initEventHandler = function ($search, type, event, selector, callback) {
-        var id = $search.attr('id');
-        var prevHandler = eventHandlers[id];
-        if (prevHandler !== undefined && prevHandler[type] !== undefined) {
-            var data = prevHandler[type];
-            $(document).off(data.event, data.selector);
-        }
-        if (prevHandler === undefined) {
-            eventHandlers[id] = {};
-        }
-        $(document).on(event, selector, callback);
-        eventHandlers[id][type] = {event: event, selector: selector};
     };
     // filters = Color:Red,Blue;Display:FullHd,Asus
     var ebayFilterParams = function (params, key, value) {

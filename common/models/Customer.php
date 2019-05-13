@@ -9,50 +9,12 @@ use yii\web\IdentityInterface;
 
 /**
  * Customer model
- *
- * @property integer $id
- * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $email
- * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
- * @property string $password write-only password
  */
-class Customer extends ActiveRecord implements IdentityInterface
+class Customer extends \common\models\db\Customer implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
 
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%customer}}';
-    }
-
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'store_id']);
-    }
-    public function getAddress()
-    {
-        return $this->hasOne(Address::className(), ['customer_id' => 'id']);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
-    }
 
     /**
      * @inheritdoc
@@ -76,37 +38,36 @@ class Customer extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
-    /*
     public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
-    */
 
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        $access_token = AccessTokens::findOne(['token' => $token]);
-        if ($access_token) {
-            if ($access_token->expires_at < time()) {
-                Yii::$app->api->sendFailedResponse('Access token expired');
-            }
-
-            return static::findOne(['id' => $access_token->user_id]);
-        } else {
-            return (false);
-        }
-        //throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
-    }
-
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
-     */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'active' => self::STATUS_ACTIVE]);
+        return static::findOne(['username' => $username]);
+    }
+
+
+
+    /**
+     * Finds user by username/email/phone
+     *
+     * @param string $condition
+     * @return static|null
+     */
+    public static function findAdvance($condition)
+    {
+        return static::findOne([
+            'AND',
+            [
+                'OR',
+                 ['email' => $condition],
+                 ['phone' => $condition],
+                 ['username' => $condition]
+            ],
+            ['active' => self::STATUS_ACTIVE]
+        ]);
     }
 
     /**

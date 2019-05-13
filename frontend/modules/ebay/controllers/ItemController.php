@@ -10,12 +10,23 @@ use common\products\forms\ProductDetailFrom;
 class ItemController extends EbayController
 {
 
-    public function actionIndex($id)
+    public function actionDetail($id)
     {
         $form = new ProductDetailFrom();
         $form->id = $id;
         $form->type = 'ebay';
-        if (($item = $form->detail()) === false) {
+        $item = $form->detail();
+        if(Yii::$app->request->isPjax){
+            if ($item === false) {
+                return $this->renderAjax('@frontend/views/common/item_error', [
+                    'errors' => $form->getErrors()
+                ]);
+            }
+            return $this->renderAjax('index', [
+                'item' => $item
+            ]);
+        }
+        if ($item  === false) {
             return $this->render('@frontend/views/common/item_error', [
                 'errors' => $form->getErrors()
             ]);

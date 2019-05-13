@@ -10,11 +10,11 @@ use yii\helpers\Html;
 /* @var array $filters */
 /* @var array $conditions*/
 
-
 // Todo UrlRule
 // Hãy tham khảo mục filter để làm phần này
 // push start
-$url = function ($id) {
+$url = function ($id) use($portal) {
+
     return Yii::$app->getUrlManager()->createUrl([
         "$portal/search",
         'category' => $id

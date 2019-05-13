@@ -8,7 +8,6 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
-use frontend\assets\SearchAsset;
 use common\products\forms\ProductSearchForm;
 
 
@@ -88,6 +87,7 @@ class SearchResultWidget extends Widget
 
     protected function renderLeft()
     {
+
         return $this->render('left', [
             'portal' => $this->portal,
             'category' => $this->form->category,

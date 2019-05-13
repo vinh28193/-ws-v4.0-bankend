@@ -26,4 +26,17 @@ class RedisController  extends FrontendController
 
     }
 
+    public function actionCaches()
+    {
+        $cache = Yii::$app->cache;
+        $key   = 'new';
+        $data  = $cache->get($key);
+        if ($data === false) {
+            $key  = 'new';
+            $data = 'A newly cache added';
+            $cache->set($key, $data);
+        }
+        echo $data;
+    }
+
 }

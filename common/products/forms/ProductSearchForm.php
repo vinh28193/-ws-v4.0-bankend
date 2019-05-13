@@ -128,7 +128,7 @@ class ProductSearchForm extends BaseForm
         $this->setScenarioByType();
         list($success, $rs) = $this->getActiveGate()->search($this->getParams(), $refresh);
         if (!$success && is_string($rs)) {
-            $this->addError('keyword', $product);
+            $this->addError('keyword', $rs);
             return false;
         }
         return $rs;

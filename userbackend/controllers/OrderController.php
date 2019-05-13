@@ -59,8 +59,9 @@ class OrderController extends Controller
      */
     public function actionView($id)
     {
+        $model = Order::find()->with('products')->where(['id' => $id])->one();
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 

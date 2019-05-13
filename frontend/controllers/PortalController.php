@@ -5,6 +5,7 @@ namespace frontend\controllers;
 
 
 use common\products\BaseProduct;
+use yii\helpers\ArrayHelper;
 
 class PortalController extends FrontendController
 {
@@ -12,16 +13,10 @@ class PortalController extends FrontendController
 
     public $portal = BaseProduct::TYPE_EBAY;
 
-    public function renderContent($content)
+    public function defaultLayoutParams()
     {
-        $layoutFile = $this->findLayoutFile($this->getView());
-        if ($layoutFile !== false) {
-            return $this->getView()->renderFile($layoutFile, [
-                'content' => $content,
-                'portal' => $this->portal,
-            ], $this);
-        }
-
-        return $content;
+        return ArrayHelper::merge(parent::defaultLayoutParams(),[
+            'portal' => $this->portal,
+        ]);
     }
 }

@@ -4,7 +4,6 @@
 namespace frontend\widgets\item;
 
 use Yii;
-use frontend\assets\ItemAsset;
 use yii\bootstrap\Widget;
 use common\products\BaseProduct;
 use yii\base\InvalidConfigException;
@@ -48,15 +47,19 @@ class ItemDetailWidget extends Widget
             Html::addCssClass($this->slideOptions, 'item-slider');
         }
         Html::addCssClass($this->priceOptions, 'price');
-        Html::addCssClass($this->options,'detail-content');
+        Html::addCssClass($this->options, 'detail-content');
         $this->prepareItem();
         $this->registerClientScript();
+        Pjax::begin([
+            'options' => $this->options,
+        ]);
     }
 
     public function run()
     {
         parent::run();
         echo $this->renderEntries();
+        Pjax::end();
     }
 
     protected function prepareItem()
@@ -76,6 +79,7 @@ class ItemDetailWidget extends Widget
         $options = [
             'ajaxUrl' => Url::toRoute('item/variation'),
             'ajaxMethod' => 'POST',
+            'paymentUrl' => '#',
             'queryParams' => $this->getQueryParams(),
             'priceCssSelection' => $this->priceOptions['class'],
             'slideCssSelection' => $this->slideOptions['class']
@@ -104,7 +108,7 @@ class ItemDetailWidget extends Widget
         ]);
         $options = Json::htmlEncode($this->getClientOptions());
         $view = $this->getView();
-        ItemAsset::register($view);
+        ItemDetailAsset::register($view);
         $view->registerJs("jQuery('#$id').wsItem($params,$options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
     }
@@ -112,14 +116,12 @@ class ItemDetailWidget extends Widget
     protected function renderEntries()
     {
 
-        $entries = Html::beginTag('div', $this->options);
-        $entries .= Html::tag('div', $this->renderDetailBlock(), [
+        $entries = Html::tag('div', $this->renderDetailBlock(), [
             'class' => 'col-md-9'
         ]);
         $entries .= Html::tag('div', $this->renderPaymentOption(), [
             'class' => 'col-md-3'
         ]);
-        $entries .= Html::endTag('div');
         return $entries;
     }
 

@@ -552,7 +552,8 @@ class BoxMeController extends Controller
                     $response = $client->send($request);
                     if (!$response->isOk) {
                         $res = $response->getData();
-                        echo $res['messages'].PHP_EOL;
+                        print_r($res);
+                        echo "lỗi".PHP_EOL;
 //                return $res['messages'];
                     }
                     $res = $response->getData();

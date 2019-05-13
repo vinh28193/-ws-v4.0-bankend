@@ -11,9 +11,10 @@ class ItemController extends AmazonController
 {
 
 
-    public function actionIndex($id)
+    public function actionDetail($id)
     {
         $form = new ProductDetailFrom();
+        $form->load($this->request->getQueryParams(),'');
         $form->id = $id;
         $form->type = 'amazon';
         if (($item = $form->detail()) === false) {

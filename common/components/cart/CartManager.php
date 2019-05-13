@@ -162,6 +162,55 @@ class CartManager extends Component
     }
 
     /**
+     * @param $key
+     * @return bool
+     * @throws \Throwable
+     */
+    public function refreshItem($key)
+    {
+        try {
+            if (($value = $this->getItem($key)) === false) {
+                return false;
+            }
+
+            $item = new SimpleItem();
+            $params = $value['request'];
+            foreach ((array)$params as $name => $val) {
+                if ($name === 'with_detail') {
+                    continue;
+                } elseif ($name === 'type') {
+                    $name = 'source';
+                } elseif ($name === 'id') {
+                    $name = 'parentSku';
+                }
+                $item->$name = $val;
+            }
+            // Todo Validate data before call
+            // pass new param for CartItem
+            list($ok, $value) = $item->process();
+            if (!$ok) {
+                return false;
+            }
+            $value = $this->getSerializer()->serializer($value);
+            $key = $this->normalPrimaryKey($key);
+            return $this->getStorage()->setItem($key, $value);
+        } catch (\Exception $exception) {
+            Yii::info($exception);
+            return false;
+        }
+    }
+
+    /**
+     *
+     */
+    public function refreshItems()
+    {
+        foreach (array_keys($this->getItems()) as $key) {
+            $this->refreshItem($key);
+        }
+    }
+
+    /**
      * @param $params
      * @return bool
      * @throws \Throwable
@@ -221,29 +270,42 @@ class CartManager extends Component
 
     public function update($key, $params = [])
     {
-        $key = $this->normalPrimaryKey($key);
-
         try {
-            if ($this->hasItem($key)) {
-                if (($item = $this->getItem($key)) === false) {
-                    return false;
-                }
-                if (isset($params['seller']) !== null && ($seller = $params['seller']) !== null && !$this->compareValue($item->seller, $seller, 'string')) {
-                    $item->seller = $seller;
-                }
-                if (isset($params['quantity']) !== null && ($quantity = $params['quantity']) !== null && !$this->compareValue($item->quantity, $quantity, 'int')) {
-                    $item->quantity = $quantity;
-                }
-                if (isset($params['image']) !== null && ($image = $params['image']) !== null && !$this->compareValue($item->image, $image, 'string')) {
-                    $item->image = $image;
-                }
-                $item = $item->process();
-                $item = $this->getSerializer()->serializer($item);
-                $this->getStorage()->setItem($key, $item);
-                return true;
-            } else {
+            if (($value = $this->getItem($key)) === false) {
                 return false;
             }
+            $item = new SimpleItem();
+            $oldParams = $value['request'];
+            foreach ((array)$oldParams as $name => $val) {
+                if ($name === 'with_detail') {
+                    continue;
+                } elseif ($name === 'type') {
+                    $name = 'source';
+                } elseif ($name === 'id') {
+                    $name = 'parentSku';
+                }
+                $item->$name = $val;
+            }
+
+            if (isset($params['seller']) && ($seller = $params['seller']) !== null && !$this->compareValue($item->seller, $seller, 'string')) {
+                $item->seller = $seller;
+            }
+
+            if (isset($params['quantity']) && ($quantity = $params['quantity']) !== null && !$this->compareValue($item->quantity, $quantity, 'int')) {
+                $item->quantity = $quantity;
+            }
+            if (isset($params['image']) && ($image = $params['image']) !== null && !$this->compareValue($item->image, $image, 'string')) {
+                $item->image = $image;
+            }
+
+            list($ok, $raw) = $item->process();
+            if (!$ok) {
+                return false;
+            }
+            $value = $this->getSerializer()->serializer($raw);
+            $key = $this->normalPrimaryKey($key);
+            $this->getStorage()->setItem($key, $value);
+            return $raw['response'];
 
         } catch (\Exception $exception) {
             Yii::info($exception);

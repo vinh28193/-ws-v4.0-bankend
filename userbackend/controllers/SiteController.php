@@ -1,6 +1,8 @@
 <?php
 namespace userbackend\controllers;
 
+use common\models\Customer;
+use userbackend\models\PasswordForm;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\helpers\Url;
@@ -99,7 +101,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect('/home');
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -218,6 +220,24 @@ class SiteController extends Controller
         }
 
         return $this->render('resetPassword', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionChangePassword()
+    {
+        $id = Yii::$app->user->id;
+        try {
+            $model = new PasswordForm($id);
+        } catch (InvalidParamException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        if ($model->load(\Yii::$app->request->post()) && $model->validate() && $model->changePassword()) {
+            Yii::$app->session->setFlash('success', 'Password Changed!');
+        }
+
+        return $this->render('changePassword', [
             'model' => $model,
         ]);
     }

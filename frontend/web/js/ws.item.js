@@ -11,10 +11,14 @@
         }
     };
 
+    var paymentMethod = undefined;
+
     var events = {
         ajaxBeforeSend: 'ajaxBeforeSend',
         ajaxComplete: 'ajaxComplete',
-        afterInit: 'afterInit'
+        afterInit: 'afterInit',
+        afterAddToCart: 'afterAddToCart',
+        afterBuyNow: 'afterBuyNow'
     };
     var defaultParams = {
         id: undefined,
@@ -31,6 +35,7 @@
     var defaultOptions = {
         ajaxUrl: undefined,
         ajaxMethod: 'POST',
+        paymentUrl: undefined,
         queryParams: [],
         priceCssSelection: 'price',
         slideCssSelection: 'detail-slider'
@@ -70,6 +75,23 @@
                     changeImage($item, images);
                 }
                 setUpDefaultOptions($item);
+                ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'button#addToCart', function (event) {
+                    // console.log(this);
+                    methods.addToCart.apply($item);
+                    return false;
+                });
+                ws.initEventHandler($item, 'buyNow', 'click.wsItem', 'button.btn-buy', function (event) {
+                    methods.buyNow.apply($item);
+                    return false;
+                });
+                ws.initEventHandler($item, 'follow', 'click.wsItem', 'button#follow', function (event) {
+                    methods.follow.apply($item);
+                    return false;
+                });
+                ws.initEventHandler($item, 'quote', 'click.wsItem', 'button#quote', function (event) {
+                    methods.quote.apply($item);
+                    return false;
+                });
                 $item.trigger($.Event(events.afterInit));
             });
         },
@@ -119,6 +141,19 @@
                     }, true);
                 });
             }
+        },
+        addToCart: function () {
+
+        },
+        buyNow: function () {
+            var $item = $(this);
+            paymentItem($item, 'buyNow', paymentMethod);
+        },
+        follow: function () {
+
+        },
+        quote: function () {
+
         },
         destroy: function () {
             return this.each(function () {
@@ -189,7 +224,15 @@
         var data = $item.data('wsItem');
         var selection = 'div.' + data.options.priceCssSelection;
         $(selection).find('strong.text-orange').html(content.sellPrice);
+        if (content.queryParams.sku !== undefined) {
+            data.params.sku = content.queryParams.sku;
+            $item.data('wsItem', data);
+        }
         console.log(content);
+    };
+    var tester = function ($item) {
+        var data = $item.data('wsItem');
+        console.log(data);
     };
     var changeImage = function ($item, images) {
         var data = $item.data('wsItem');
@@ -279,4 +322,24 @@
         };
 
     };
+    var paymentItem = function ($item, type, paymentMethod) {
+        var data = $item.data('wsItem');
+        var params = data.params;
+        var data = {
+            source: params.type,
+            seller: params.seller,
+            sku: params.id,
+            image: params.images[0].main
+        };
+        if (params.sku !== null && params.sku !== data.id) {
+            data.parentSku = data.sku;
+            data.sku = params.sku;
+        }
+        console.log(data);
+        var $ajaxOptions = {
+            type: 'POST',
+            dataType: 'json',
+            data: data
+        }
+    }
 })(jQuery);

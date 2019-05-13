@@ -43,7 +43,7 @@ class ProductWidget extends WeshopBlockWidget
         }
         $price = $this->getStoreManager()->showMoney($price);
         echo $this->render("product/{$this->type}", [
-            'url' => '#',
+            'url' => $this->product['item_url'],
             'name' => $this->product['name'],
             'image' => $this->product['image'],
             'sellPrice' => $price,

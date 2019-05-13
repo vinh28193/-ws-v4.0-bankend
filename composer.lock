@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b0809665d29f157835a298973fe375a",
+    "content-hash": "1edd9bd5000f3996891ab614a424d979",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -218,6 +218,22 @@
             ]
         },
         {
+            "name": "bower-asset/sweetalert2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:sweetalert2/sweetalert2.git",
+                "reference": "40bd865bd74da37fb4cac6fe95058d7b89d8994b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sweetalert2/sweetalert2/zipball/40bd865bd74da37fb4cac6fe95058d7b89d8994b",
+                "reference": "40bd865bd74da37fb4cac6fe95058d7b89d8994b"
+            },
+            "type": "bower-asset",
+            "time": "2019-05-11T12:48:13+00:00"
+        },
+        {
             "name": "bower-asset/yii2-pjax",
             "version": "2.0.7.1",
             "source": {
@@ -357,6 +373,51 @@
                 "php"
             ],
             "time": "2018-10-21T19:22:05+00:00"
+        },
+        {
+            "name": "drsdre/yii2-wizardwidget",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/drsdre/yii2-wizardwidget.git",
+                "reference": "51ef01d315875830af2565121fe1f3b1bf32850c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/drsdre/yii2-wizardwidget/zipball/51ef01d315875830af2565121fe1f3b1bf32850c",
+                "reference": "51ef01d315875830af2565121fe1f3b1bf32850c",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": ">=2.0.6",
+                "yiisoft/yii2-bootstrap": "~2.0.0"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "drsdre\\wizardwidget\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "A.F.Schuurman",
+                    "email": "andre.schuurman+yii2-wizardwidget@gmail.com"
+                }
+            ],
+            "description": "Multi step wizard widget using tabs to guide a user through steps to complete a task. Based on the Form wizard (using tabs) from lukepzak (see http://bootsnipp.com/snippets/featured/form-wizard-using-tabs).",
+            "keywords": [
+                "extension",
+                "tabs",
+                "ui",
+                "widget",
+                "wizard",
+                "yii2"
+            ],
+            "time": "2016-12-28T13:00:02+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -6660,7 +6721,8 @@
         "bower-asset/fancybox-plus": 20,
         "bower-asset/fontawesome": 20,
         "kartik-v/yii2-widgets": 20,
-        "kartik-v/yii2-widget-depdrop": 20
+        "kartik-v/yii2-widget-depdrop": 20,
+        "bower-asset/sweetalert2": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

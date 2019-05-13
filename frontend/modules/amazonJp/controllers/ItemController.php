@@ -10,7 +10,7 @@ use common\products\forms\ProductDetailFrom;
 
 class ItemController extends AmazonJpController
 {
-    public function actionIndex($id)
+    public function actionDetail($id)
     {
         $form = new ProductDetailFrom();
         $form->id = $id;
