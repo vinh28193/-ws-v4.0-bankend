@@ -14,11 +14,16 @@ class ProductWidget extends WeshopBlockWidget
     const TYPE_CENTER = 'product-center';
     const TYPE_MOBILE = 'product-mobile';
     const TYPE_ALIAS = 'product-alias';
+    const TYPE_COL = 'product-col';
 
     /**
      * @var array
      */
     public $product;
+    /**
+     * @var array
+     */
+    public $classCustom = 'col-md-3 col-sm-6';
 
     /**
      * @var string
@@ -36,7 +41,7 @@ class ProductWidget extends WeshopBlockWidget
         $price = $this->getStoreManager()->roundMoney($this->product['calculated_sell_price'] * $this->getStoreManager()->getExchangeRate());
         $oldPrice = '';
         $saleTag = 0;
-        if (($oldPrice = $this->product['calculated_start_price']) !== null) {
+        if (($oldPrice = $this->product['calculated_start_price'])) {
             $oldPrice = $this->getStoreManager()->roundMoney($oldPrice * $this->getStoreManager()->getExchangeRate());
             $saleTag = round((($oldPrice - $price) / $oldPrice) * 100);
             $oldPrice = $this->getStoreManager()->showMoney($oldPrice);
@@ -48,6 +53,7 @@ class ProductWidget extends WeshopBlockWidget
             'image' => $this->product['image'],
             'sellPrice' => $price,
             'oldPrice' => $oldPrice,
+            'classCustom' => $this->classCustom,
             'saleTag' => $saleTag
         ]);
     }

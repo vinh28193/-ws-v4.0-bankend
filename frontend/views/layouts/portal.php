@@ -28,7 +28,6 @@ $('#detail-big-img').ezPlus({
     cursor: 'pointer'
 });
 JS;
-
 $this->registerJs($js, \yii\web\View::POS_END);
 ?>
     <div class="keep-navbar <?= strtolower($portal) == 'amazon-jp' ? 'amazon' : strtolower($portal) ?> other-page">
@@ -42,10 +41,10 @@ $this->registerJs($js, \yii\web\View::POS_END);
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a href="#">Weshop Global</a></li>
-                <li class="breadcrumb-item"><a href="#">Shop Amazon</a></li>
-                <li class="breadcrumb-item active">Tìm kiếm từ khóa “Bulova”</li>
+                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/">Weshop Global</a></li>
+                <li class="breadcrumb-item"><a href="/<?= $portal?>.html">Shop Amazon</a></li>
+                <li class="breadcrumb-item active">Tìm kiếm từ khóa <?= Yii::$app->request->get('keyword','') ?></li>
             </ol>
         </nav>
         <?= $content; ?>

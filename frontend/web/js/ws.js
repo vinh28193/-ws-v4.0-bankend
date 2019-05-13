@@ -8,8 +8,11 @@ var ws = ws || (function ($) {
         },
         // Todo loading
         loading: function (show) {
-            show = show || false;
-            console.log('loading: ' + (show ? 'start' : 'end'));
+            if(show){
+                $('#loading').css('display','block');
+            }else {
+                $('#loading').css('display','none');
+            }
         },
         ajax: function (url, $options, loading = false) {
             if (loading) {
@@ -104,13 +107,6 @@ var ws = ws || (function ($) {
 $(function () {
     ws.init();
 });
-var EnableLoading = function (enable) {
-    if(enable){
-        $('#loading').css('display','block');
-    }else {
-        $('#loading').css('display','none');
-    }
-};
 var showFilter = function (id) {
     if($("#"+id).css('display') === 'none'){
         $("#"+id).css('display','block');
@@ -122,3 +118,11 @@ var showFilter = function (id) {
         $("#ico-"+id).addClass('fa-chevron-down');
     }
 };
+ws.initEventHandler('searchNew','searchBoxButton','click', 'button#searchBoxButton',function(event) {
+    ws.browse.searchNew('input#searchBoxInput','$url');
+});
+ws.initEventHandler('searchNew','searchBoxInput','keyup', 'input#searchBoxInput',function(event) {
+    if (event.keyCode === 13) {
+        ws.browse.searchNew(this,'$url');
+    }
+});

@@ -40,14 +40,7 @@ class SearchBoxWidget extends Widget
         $view = $this->getView();
         $url = $this->redirectHref;
         $js = <<<JS
-ws.initEventHandler('searchNew','searchBoxButton','click', 'button#searchBoxButton',function(event) {
-    ws.browse.searchNew('input#searchBoxInput','$url');
-});
-ws.initEventHandler('searchNew','searchBoxInput','keyup', 'input#searchBoxInput',function(event) {
-    if (event.keyCode === 13) {
-        ws.browse.searchNew(this,'$url');
-    }
-});
+        
 JS;
         $view->registerJs($js);
     }
