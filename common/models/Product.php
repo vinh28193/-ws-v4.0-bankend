@@ -30,14 +30,6 @@ class Product extends DbProduct
 {
     use AdditionalFeeTrait;
 
-//    public function behaviors()
-//    {
-//        return ArrayHelper::merge(parent::behaviors(),[
-//            'ProductFee' => [
-//                'class' => \common\behaviors\AdditionalFeeBehavior::className(),
-//            ],
-//        ]);
-//    }
 
 
     /**

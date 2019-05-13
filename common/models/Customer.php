@@ -8,7 +8,11 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * Customer model
+ * Class Customer
+ * @package common\models
+ *
+ * @property Address $primaryAddress;
+ * @property Address $defaultShippingAddress;
  */
 class Customer extends \common\models\db\Customer implements IdentityInterface
 {
@@ -118,7 +122,14 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      */
     public function getAuthKey()
     {
-//        return $this->auth_key;
+        /**
+         * Todo : vì cái này liên quan tới việc tự động login
+         * cần thiết cho hành động "remember me"
+         * cần phải khác biệt với mối user
+         * hãy generate và lưu tương ứng với mỗi user
+         */
+
+        return "ws{$this->getId()}Customer2019";
     }
 
     /**
@@ -126,7 +137,7 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-//        return $this->getAuthKey() === $authKey;
+        return $this->getAuthKey() === $authKey;
     }
 
     /**
@@ -151,26 +162,24 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
     }
 
     /**
-     * Generates "remember me" authentication key
+     * @return null
      */
-    public function generateAuthKey()
-    {
-//        $this->auth_key = Yii::$app->security->generateRandomString();
+    public function getPrimaryAddress(){
+        return $this->hasOne(Address::className(),['customer_id' => 'id'])->where([
+            'AND',
+            ['type' => Address::TYPE_PRIMARY],
+            ['is_default' => Address::IS_DEFAULT]
+        ]);
     }
 
     /**
-     * Generates new password reset token
+     * @return null
      */
-    public function generatePasswordResetToken()
-    {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
-    }
-
-    /**
-     * Removes password reset token
-     */
-    public function removePasswordResetToken()
-    {
-        $this->password_reset_token = null;
+    public function getDefaultShippingAddress(){
+        return $this->hasOne(Address::className(),['customer_id' => 'id'])->where([
+            'AND',
+            ['type' => Address::TYPE_SHIPPING],
+            ['is_default' => Address::IS_DEFAULT]
+        ]);
     }
 }
