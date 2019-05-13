@@ -10,10 +10,23 @@ use frontend\models\SignupForm;
 use app\models\User;
 use yii\web\BadRequestHttpException;
 
+/****APP Call Back FaceBook Google etc *****/
+use common\components\AuthHandler;
+
 class SecureController extends FrontendController
 {
 
     public $layout = 'secure';
+
+    public function actions()
+    {
+        $actions = parent::actions();
+        $actions['auth'] = [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthSuccess'],
+            ];
+         return $actions;
+    }
 
     /**
      * Logs in a user.
@@ -60,5 +73,13 @@ class SecureController extends FrontendController
         return $this->render('register', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @param $client
+     */
+    public function onAuthSuccess($client)
+    {
+        (new AuthHandler($client))->handle();
     }
 }
