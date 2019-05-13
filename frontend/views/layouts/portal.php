@@ -31,7 +31,7 @@ JS;
 
 $this->registerJs($js, \yii\web\View::POS_END);
 ?>
-    <div class="keep-navbar other-page">
+    <div class="keep-navbar <?= strtolower($portal) == 'amazon-jp' ? 'amazon' : strtolower($portal) ?> other-page">
         <div class="container">
             <?php
             echo AliasWidget::widget(['type' => $portal]);
