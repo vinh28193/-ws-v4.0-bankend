@@ -1,5 +1,13 @@
 <?php
 
+use yii\helpers\Html;
+use kartik\depdrop\DepDrop;
+use yii\bootstrap4\ActiveForm;
+use yii\helpers\Url;
+
+/* @var yii\web\View $this */
+/* @var frontend\modules\checkout\models\ShippingForm $shippingForm */
+/* @var array $provinces */
 
 ?>
 <div class="container checkout-content">
@@ -12,6 +20,45 @@
         <div class="col-md-8">
             <div class="title">Thông tin mua hàng</div>
             <div class="payment-box">
+                <?php
+                $form = ActiveForm::begin([
+                    'class' => 'payment-form'
+                ]);
+                echo Html::activeHiddenInput($shippingForm,'customer_id');
+
+                echo $form->field($shippingForm,'buyer_name',[
+                    'template' => '<i class="icon user"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->textInput();
+
+                echo $form->field($shippingForm,'buyer_phone',[
+                    'template' => '<i class="icon phone"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->textInput();
+
+                echo $form->field($shippingForm,'buyer_phone',[
+                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->textInput();
+
+                echo $form->field($shippingForm,'buyer_province_id',[
+                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->dropDownList($provinces);
+
+                echo $form->field($shippingForm,'buyer_district_id',[
+                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->widget(DepDrop::classname(),[
+                    'options'=>['id'=> 'district_id'],
+                    'pluginOptions'=>[
+                        'depends'=>['province_id'],
+                        'placeholder'=>'Select...',
+                        'url'=> Url::to(['customer/subcat'])
+                    ]
+                ]);
+
+                ?>
                 <form class="payment-form">
                     <div class="form-group">
                         <i class="icon user"></i>
@@ -26,7 +73,8 @@
                         <input type="email" class="form-control" placeholder="Email">
                     </div>
                     <div class="form-group dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-city" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-city"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="icon globe"></i> Chọn Tỉnh/ Thành Phố
                         </button>
                         <div class="dropdown-menu" aria-labelledby="select-city">
@@ -37,7 +85,8 @@
                         </div>
                     </div>
                     <div class="form-group dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-district" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-district"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="icon city"></i> Chọn Quận/ Huyện
                         </button>
                         <div class="dropdown-menu" aria-labelledby="select-district">
@@ -60,7 +109,8 @@
                             <label class="form-check-label" for="remember">Lưu thông tin địa chỉ</label>
                         </div>
                     </div>
-                    <a href="#" class="other-receiver active"><i class="fas fa-check-circle"></i> Thông tin người nhận hàng khác người đặt hàng</a>
+                    <a href="#" class="other-receiver active"><i class="fas fa-check-circle"></i> Thông tin người nhận
+                        hàng khác người đặt hàng</a>
                     <div class="form-group">
                         <i class="icon user"></i>
                         <input type="text" class="form-control" placeholder="Họ và tên">
@@ -74,7 +124,8 @@
                         <input type="email" class="form-control" placeholder="Email">
                     </div>
                     <div class="form-group dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-city2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-city2"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="icon globe"></i> Chọn Tỉnh/ Thành Phố
                         </button>
                         <div class="dropdown-menu" aria-labelledby="select-city2">
@@ -85,7 +136,8 @@
                         </div>
                     </div>
                     <div class="form-group dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-district2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-district2"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="icon city"></i> Chọn Quận/ Huyện
                         </button>
                         <div class="dropdown-menu" aria-labelledby="select-district2">
@@ -114,7 +166,8 @@
                             </div>
                             <div class="info">
                                 <div class="left">
-                                    <a href="#" class="name">Citizen Eco-Drive Women's GA10580-59Q Axiom Diamond Pink Gold-Tone 30mm Watch</a>
+                                    <a href="#" class="name">Citizen Eco-Drive Women's GA10580-59Q Axiom Diamond Pink
+                                        Gold-Tone 30mm Watch</a>
                                     <p>Bán bởi: <a href="#">Multiple supplier.</a></p>
                                     <div class="rate">
                                         <i class="fas fa-star"></i>
@@ -139,7 +192,8 @@
                             </div>
                             <div class="info">
                                 <div class="left">
-                                    <a href="#" class="name">Citizen Eco-Drive Women's GA10580-59Q Axiom Diamond Pink Gold-Tone 30mm Watch</a>
+                                    <a href="#" class="name">Citizen Eco-Drive Women's GA10580-59Q Axiom Diamond Pink
+                                        Gold-Tone 30mm Watch</a>
                                     <p>Bán bởi: <a href="#">Multiple supplier.</a></p>
                                     <div class="rate">
                                         <i class="fas fa-star"></i>
