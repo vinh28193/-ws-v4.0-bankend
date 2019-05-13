@@ -17,7 +17,7 @@ use yii\web\View;
  * @see \yii\web\UrlRule
  * @see \yii\web\UrlRuleInterface
  */
-$url = WeshopHelper::generateUrlDetail('ebay',$product['item_name'],$product['item_id']);
+$url = WeshopHelper::generateUrlDetail($portal,$product['item_name'],$product['item_id']);
 $localSellprice = $product['sell_price'] * Yii::$app->storeManager->getExchangeRate();
 $localStartPrice = 0;
 if($product['retail_price']){

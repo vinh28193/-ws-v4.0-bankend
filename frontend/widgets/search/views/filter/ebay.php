@@ -12,7 +12,7 @@ use yii\web\View;
         <div onclick="showFilter('<?= md5($filter['name']) ?>')" style="cursor: pointer">
             <h6>
                 <?= Html::tag('b', $filter['name'], []); ?>
-                <span><i class="fa fa-chevron-down" id="ico-<?= md5($filter['name']) ?>"></i></span>
+                <span><i class="fa fa-chevron-up" id="ico-<?= md5($filter['name']) ?>"></i></span>
             </h6>
         </div>
         <ul style="display: block" id="<?= md5($filter['name']) ?>">
