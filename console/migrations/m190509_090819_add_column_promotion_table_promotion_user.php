@@ -12,7 +12,7 @@ class m190509_090819_add_column_promotion_table_promotion_user extends Migration
      */
     public function safeUp()
     {
-//        $this->addColumn('promotion_user', 'promotion_id',$this->integer());
+        $this->addColumn('promotion_user', 'promotion_id',$this->integer());
     }
 
     /**
