@@ -5244,3 +5244,8 @@ a {
   width: 64px;
   height: 64px;
 }
+.content-404 {
+  padding: 170px 0;
+  background: #2796b6;
+  text-align: center;
+}

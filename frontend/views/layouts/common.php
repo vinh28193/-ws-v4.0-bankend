@@ -530,7 +530,6 @@ FrontendAsset::register($this);
             </div>
         </div>
     </div>
-
     <?= $content; ?>
 
     <footer class="footer">

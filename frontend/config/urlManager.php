@@ -9,8 +9,9 @@ return [
     'rules' => [
         // home
         '' => 'cms/home/index',
-        'index.php' => 'weshop/home/index',
-        'index.html' => 'weshop/home/index',
+        'index.php' => 'cms/home/index',
+        'index.html' => 'cms/home/index',
+        'search/<keyword:[^/]+>.html' => 'cms/search/index',
 
         // ebay
         'ebay.html' => 'cms/ebay/index',
