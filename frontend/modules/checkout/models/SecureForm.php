@@ -11,7 +11,7 @@ class SecureForm extends Model
 
     public $loginId;
     public $password;
-    public $isNew = false;
+    public $isNew = 'yes';
     public $rememberMe = true;
 
 

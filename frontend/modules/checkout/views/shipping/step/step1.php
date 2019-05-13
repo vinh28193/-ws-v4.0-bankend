@@ -6,6 +6,34 @@ use frontend\modules\checkout\models\SecureForm;
 
 /* @var yii\web\View $this */
 $model = new SecureForm();
+
+$formId = 'secureForm';
+$isNewCheckBox = Html::getInputName($model, 'isNew');
+$passWordName = Html::getInputName($model, 'password');
+$js = <<<JS
+
+$(document).on("change", "input:radio[name='$isNewCheckBox']:checked", function (e) {
+    e.preventDefault();
+    console.log($(this).val());
+    return false;
+});
+
+$(document).on("beforeSubmit", "form#$formId", function (e) {
+    e.preventDefault();
+    var form = $(this);
+    // return false if form still have some validation errors
+    if (form.find('.has-error').length) 
+    {
+        return false;
+    }
+    var data = form.serialize();
+    console.log(data);
+    // send data to actionSave by ajax request.
+    return false; // Cancel form submitting.
+});
+JS;
+
+$this->registerJs($js);
 ?>
 
 <div class="container checkout-content">
@@ -19,17 +47,43 @@ $model = new SecureForm();
         <?php
         $form = ActiveForm::begin([
             'options' => [
-                'class' => 'auth-form'
+                'class' => 'auth-form',
+                'id' => $formId,
             ],
 
         ]);
         echo $form->field($model, 'loginId', [
             'template' => '<i class="icon user"></i>{input}{hint}{error}',
             'options' => [
-                'class' => 'form-group checkout-2-form'
+                'class' => 'form-group'
             ]
         ])
-            ->textInput([])
+            ->textInput(['placeholder' => 'Email hoặc số điện thoại']);
+        echo $form->field($model, 'isNew', [
+            'template' => '{input}{hint}{error}',
+            'options' => [
+                'class' => 'check-member'
+            ]
+        ])->radioList([
+            'yes' => 'Đã là thành viên Weshop',
+            'no' => 'Tôi là khách hàng mới'
+        ]);
+
+        echo $form->field($model, 'password', [
+            'template' => '<i class="icon password"></i>{input}{hint}{error}',
+            'options' => [
+                'class' => 'form-group'
+            ]
+        ])->textInput(['placeholder' => 'Email hoặc số điện thoại']);
+
+        echo $form->field($model, 'rememberMe', [
+            'template' => '{input}{hint}{error}',
+            'options' => [
+                'class' => 'check-info'
+            ]
+        ])->checkbox();
+        echo Html::submitButton('Đăng nhập để mua hàng', ['class' => 'btn btn-login', 'style' => 'margin-top: 0.75rem;']);
+        ActiveForm::end();
         ?>
         <div class="other-login">
             <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
