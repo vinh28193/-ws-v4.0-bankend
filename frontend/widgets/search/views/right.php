@@ -1,23 +1,24 @@
 <?php
 
+use common\helpers\WeshopHelper;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var string $portal */
 /* @var array $keyword */
 /* @var integer $total_product */
+/* @var integer $page */
 /* @var integer $total_page */
 /* @var integer $item_per_page */
 /* @var array $products */
 /* @var array $sorts */
-
 ?>
 <div class="search-content search-2 <?= $portal ?>">
     <div class="title-box">
         <div class="left">
             <div class="text">Tìm kiếm “<?= $keyword; ?>” từ</div>
-            <img src="/img/logo_ebay.png" alt=""/>
-            <span>Hiển thị 1-<?= $total_page; ?> của <?= $total_product; ?> kết quả.</span>
+            <img src="<?= WeshopHelper::getLogoByPortal($portal) ?>" alt=""/>
+            <span>Hiển thị 1-<?= count($products) ?> của <?= $total_product; ?> kết quả.</span>
         </div>
         <div class="right">
             <div class="btn-group">
@@ -49,18 +50,46 @@ use yii\helpers\Html;
 
 <nav aria-label="...">
     <ul class="pagination justify-content-center">
-        <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true"></a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item active" aria-current="page">
-            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><span class="more">...</span></li>
-        <li class="page-item"><a class="page-link last" href="#">20</a></li>
+        <?php
+        $url_page = function ($p){
+            $param = [explode('?',\yii\helpers\Url::current())[0]];
+            $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
+            $param['page'] = $p;
+//           $param['portal'] = $portal;
+            return Yii::$app->getUrlManager()->createUrl($param);
+        };
+        $arr = WeshopHelper::getArrayPage($total_page,$page);
+        if($arr && count($arr) > 1){
+        ?>
+            <li class="page-item disabled">
+                <a class="page-link" href="<?= $page>1 ? $url_page($page-1) : 'javascript: void (0)' ?>" tabindex="-1" aria-disabled="true"></a>
+            </li>
+        <?php
+        if($arr[0] != 1){
+            echo "<li class='page-item'><a class='page-link' href='".$url_page(1)."'>1</a></li>";
+            echo "<li class='page-item'><span class='more'>...</span></li>";
+        }
+        foreach ($arr as $p){
+            if($p == $page){
+                echo "<li class='page-item active' aria-current='page'>" .
+                    "<a class='page-link' href='".$url_page($p)."'>" .
+                    "".$p." <span class='sr-only'>(current)</span>".
+                    "</a>" .
+                    "</li>";
+            }elseif ($p == $total_page){
+                echo "<li class='page-item active' aria-current='page'><a class='page-link last' href='".$url_page($p)."'>".$p."</a></li>";
+            }else{
+                echo "<li class='page-item'><a class='page-link' href='".$url_page($p)."'>".$p."</a></li>";
+            }
+        }
+            if($arr[count($arr)-1] != $total_page){
+                echo "<li class='page-item'><span class='more'>...</span></li>";
+                echo "<li class='page-item'><a class='page-link last' href='".$url_page($total_page)."'>".$total_page."</a></li>";
+            }
+        ?>
         <li class="page-item">
-            <a class="page-link" href="#"></a>
+            <a class="page-link" href="<?= $page<$total_page ? $url_page($page+1) : 'javascript: void (0)' ?>"></a>
         </li>
+        <?php } ?>
     </ul>
 </nav>

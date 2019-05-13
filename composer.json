@@ -38,6 +38,7 @@
     "bower-asset/jquery.lazyload": "~1.9",
     "kartik-v/yii2-widgets": "dev-master",
     "kartik-v/yii2-widget-depdrop": "dev-master",
+    "yiisoft/yii2-redis": "~2.0.0",
     "bower-asset/sweetalert2": "dev-master",
     "drsdre/yii2-wizardwidget": "*"
   },

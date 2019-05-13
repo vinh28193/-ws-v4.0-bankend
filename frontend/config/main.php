@@ -25,9 +25,25 @@ return [
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
+        'redis'         => [
+            'class'    => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port'     => 6379,
+            'database' => 0,
+        ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
-            'name' => 'advanced-frontend',
+            'name' => 'adv-frontend-ws-2019',
+            'class' => 'yii\redis\Session',
+
+        ],
+        'cache' => [
+//            'class' => 'yii\redis\Cache',
+//            'redis' => [
+//                'hostname' => 'localhost',
+//                'port' => 6379,
+//                'database' => 0,
+//            ]
         ],
         'log' => [
             /*

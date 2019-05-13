@@ -104,3 +104,21 @@ var ws = ws || (function ($) {
 $(function () {
     ws.init();
 });
+var EnableLoading = function (enable) {
+    if(enable){
+        $('#loading').css('display','block');
+    }else {
+        $('#loading').css('display','none');
+    }
+};
+var showFilter = function (id) {
+    if($("#"+id).css('display') === 'none'){
+        $("#"+id).css('display','block');
+        $("#ico-"+id).removeClass('fa-chevron-down');
+        $("#ico-"+id).addClass('fa-chevron-up');
+    }else {
+        $("#"+id).css('display','none');
+        $("#ico-"+id).removeClass('fa-chevron-up');
+        $("#ico-"+id).addClass('fa-chevron-down');
+    }
+};
