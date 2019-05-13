@@ -9,11 +9,7 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', function($app){
-        // dev mode bootstrap
-        $class = Yii::$app->user->identityClass;
-        Yii::$app->user->setIdentity($class::findOne(1));
-    }],
+    'bootstrap' => ['log'],
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [

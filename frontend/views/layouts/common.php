@@ -2,8 +2,8 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-
 use yii\helpers\Html;
+use yii\bootstrap\Nav;
 use frontend\assets\FrontendAsset;
 
 FrontendAsset::register($this);
@@ -404,9 +404,11 @@ FrontendAsset::register($this);
                     </div>
                 </li>
                 <li>
-                    <a href="#" data-toggle="modal" data-target="#login">
-                        <i class="nav-ico user"></i>
-                    </a >
+                    <?php if (Yii::$app->user->isGuest) {
+                        echo Html::a('<i class="nav-ico user"></i>login', ['/secure/login']);
+                    }else {
+                        echo Html::a('<i class="nav-ico user"></i>logout (' . Yii::$app->user->identity->username .')', ['/secure/logout'], ['data' => ['method' => 'post']]);
+                    }?>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
