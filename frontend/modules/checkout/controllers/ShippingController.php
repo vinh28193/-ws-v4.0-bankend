@@ -8,9 +8,21 @@ use common\components\cart\CartHelper;
 use frontend\modules\checkout\models\ShippingForm;
 use frontend\modules\checkout\Payment;
 use common\models\SystemStateProvince;
+use yii\helpers\ArrayHelper;
 
 class ShippingController extends CheckoutController
 {
+
+    public function actions()
+    {
+        return ArrayHelper::merge(parent::actions(),[
+            'sub-district' => [
+                'class' => 'common\actions\DepDropAction',
+                'defaultSelect' => true,
+                'useAction' => 'common\models\SystemDistrict::select2Data'
+            ]
+        ]);
+    }
 
     public function actionIndex()
     {

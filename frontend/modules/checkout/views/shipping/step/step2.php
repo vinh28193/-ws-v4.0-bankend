@@ -8,6 +8,7 @@ use yii\helpers\Url;
 /* @var yii\web\View $this */
 /* @var frontend\modules\checkout\models\ShippingForm $shippingForm */
 /* @var array $provinces */
+/* @var frontend\modules\checkout\Payment $payment */
 
 ?>
 <div class="container checkout-content">
@@ -24,135 +25,89 @@ use yii\helpers\Url;
                 $form = ActiveForm::begin([
                     'class' => 'payment-form'
                 ]);
-                echo Html::activeHiddenInput($shippingForm,'customer_id');
+                echo Html::activeHiddenInput($shippingForm, 'customer_id');
 
-                echo $form->field($shippingForm,'buyer_name',[
+                echo $form->field($shippingForm, 'buyer_name', [
                     'template' => '<i class="icon user"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->textInput();
 
-                echo $form->field($shippingForm,'buyer_phone',[
+                echo $form->field($shippingForm, 'buyer_phone', [
                     'template' => '<i class="icon phone"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->textInput();
 
-                echo $form->field($shippingForm,'buyer_phone',[
+                echo $form->field($shippingForm, 'buyer_phone', [
                     'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->textInput();
 
-                echo $form->field($shippingForm,'buyer_province_id',[
+                echo $form->field($shippingForm, 'buyer_province_id', [
                     'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->dropDownList($provinces);
 
-                echo $form->field($shippingForm,'buyer_district_id',[
+                echo $form->field($shippingForm, 'buyer_district_id', [
                     'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->widget(DepDrop::classname(),[
-                    'options'=>['id'=> 'district_id'],
-                    'pluginOptions'=>[
-                        'depends'=>['province_id'],
-                        'placeholder'=>'Select...',
-                        'url'=> Url::to(['customer/subcat'])
+                ])->widget(DepDrop::classname(), [
+                    'options' => ['id' => 'district_id'],
+                    'pluginOptions' => [
+                        'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
+                        'placeholder' => 'Select District',
+                        'url' => Url::toRoute(['sub-district'])
                     ]
                 ]);
 
+                echo $form->field($shippingForm, 'note_by_customer', [
+                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->textarea(['rows' => 3, 'placeholder' => 'Ghi chú thêm ( không bắt buộc)']);
+
+                echo $form->field($shippingForm, 'save_my_address', [
+                    'template' => '{input}{hint}{error}',
+                    'options' => [
+                        'class' => 'check-info'
+                    ]
+                ])->checkbox();
+
+                echo '<a href="#" class="other-receiver"><i class="fas fa-check-circle"></i> Thông tin người nhận
+                hàng khác người đặt hàng</a>';
+
+                echo $form->field($shippingForm, 'receiver_name', [
+                    'template' => '<i class="icon user"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->textInput();
+
+                echo $form->field($shippingForm, 'receiver_phone', [
+                    'template' => '<i class="icon phone"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->textInput();
+
+                echo $form->field($shippingForm, 'receiver_phone', [
+                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->textInput();
+
+                echo $form->field($shippingForm, 'receiver_province_id', [
+                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->dropDownList($provinces);
+
+                echo $form->field($shippingForm, 'receiver_district_id', [
+                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->widget(DepDrop::classname(), [
+                    'options' => ['id' => 'district_id'],
+                    'pluginOptions' => [
+                        'depends' => [Html::getInputId($shippingForm, 'receiver_province_id')],
+                        'placeholder' => 'Select District',
+                        'url' => Url::toRoute(['sub-district'])
+                    ]
+                ]);
+                echo Html::submitButton('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block']);
+                ActiveForm::end();
                 ?>
-                <form class="payment-form">
-                    <div class="form-group">
-                        <i class="icon user"></i>
-                        <input type="text" class="form-control" placeholder="Họ và tên">
-                    </div>
-                    <div class="form-group">
-                        <i class="icon phone"></i>
-                        <input type="tel" class="form-control" placeholder="Số điên thoại">
-                    </div>
-                    <div class="form-group">
-                        <i class="icon email"></i>
-                        <input type="email" class="form-control" placeholder="Email">
-                    </div>
-                    <div class="form-group dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-city"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="icon globe"></i> Chọn Tỉnh/ Thành Phố
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="select-city">
-                            <input type="text" class="form-control" placeholder="Nhập tên tỉnh/thành phố">
-                            <a class="dropdown-item" href="#">Hà Nội</a>
-                            <a class="dropdown-item" href="#">TP. Hồ Chí Minh</a>
-                            <a class="dropdown-item" href="#">Đà Nẵng</a>
-                        </div>
-                    </div>
-                    <div class="form-group dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-district"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="icon city"></i> Chọn Quận/ Huyện
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="select-district">
-                            <input type="text" class="form-control" placeholder="Nhập tên quận/huyện">
-                            <a class="dropdown-item" href="#">Quận Hai Bà Trưng</a>
-                            <a class="dropdown-item" href="#">Quận Hoàn Kiếm</a>
-                            <a class="dropdown-item" href="#">Quận Cầu Giấy</a>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <i class="icon mapmaker"></i>
-                        <input type="text" class="form-control" placeholder="Địa chỉ (số nhà/ ngách/ tên đường) ">
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" rows="3" placeholder="Ghi chú thêm ( không bắt buộc)"></textarea>
-                    </div>
-                    <div class="check-info">
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="remember">
-                            <label class="form-check-label" for="remember">Lưu thông tin địa chỉ</label>
-                        </div>
-                    </div>
-                    <a href="#" class="other-receiver active"><i class="fas fa-check-circle"></i> Thông tin người nhận
-                        hàng khác người đặt hàng</a>
-                    <div class="form-group">
-                        <i class="icon user"></i>
-                        <input type="text" class="form-control" placeholder="Họ và tên">
-                    </div>
-                    <div class="form-group">
-                        <i class="icon phone"></i>
-                        <input type="tel" class="form-control" placeholder="Số điên thoại">
-                    </div>
-                    <div class="form-group">
-                        <i class="icon email"></i>
-                        <input type="email" class="form-control" placeholder="Email">
-                    </div>
-                    <div class="form-group dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-city2"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="icon globe"></i> Chọn Tỉnh/ Thành Phố
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="select-city2">
-                            <input type="text" class="form-control" placeholder="Nhập tên tỉnh/thành phố">
-                            <a class="dropdown-item" href="#">Hà Nội</a>
-                            <a class="dropdown-item" href="#">TP. Hồ Chí Minh</a>
-                            <a class="dropdown-item" href="#">Đà Nẵng</a>
-                        </div>
-                    </div>
-                    <div class="form-group dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="select-district2"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="icon city"></i> Chọn Quận/ Huyện
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="select-district2">
-                            <input type="text" class="form-control" placeholder="Nhập tên quận/huyện">
-                            <a class="dropdown-item" href="#">Quận Hai Bà Trưng</a>
-                            <a class="dropdown-item" href="#">Quận Hoàn Kiếm</a>
-                            <a class="dropdown-item" href="#">Quận Cầu Giấy</a>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <i class="icon mapmaker"></i>
-                        <input type="text" class="form-control" placeholder="Địa chỉ (số nhà/ ngách/ tên đường) ">
-                    </div>
-                    <button type="submit" class="btn btn-payment btn-block">Chọn hình thức thanh toán</button>
-                </form>
             </div>
         </div>
         <div class="col-md-4">

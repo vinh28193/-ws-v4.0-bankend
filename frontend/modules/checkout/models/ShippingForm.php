@@ -15,7 +15,6 @@ use yii\base\Model;
 class ShippingForm extends Model
 {
 
-
     public $customer_id;
 
     public $buyer_name;
@@ -74,7 +73,7 @@ class ShippingForm extends Model
                 $this->save_my_address = true;
             } else {
                 $buyerName = implode(' ', [$buyer->first_name, $buyer->last_name]);
-                $this->buyer_address = $buyerName;
+                $this->buyer_name = $buyerName;
                 $this->buyer_email = $buyer->email;
                 $this->buyer_phone = $buyer->phone;
                 $this->buyer_address = $buyer->address;
@@ -89,7 +88,7 @@ class ShippingForm extends Model
                 $this->save_my_shipping = true;
             }else {
                 $buyerName = implode(' ', [$buyer->first_name, $buyer->last_name]);
-                $this->receiver_address = $buyerName;
+                $this->receiver_name = $buyerName;
                 $this->receiver_email = $buyer->email;
                 $this->receiver_phone = $buyer->phone;
                 $this->receiver_address = $buyer->address;
