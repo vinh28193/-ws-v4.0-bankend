@@ -17,7 +17,7 @@ use frontend\widgets\imagelazy\ImageLazyLoadWidget;
 <li>
     <div class="item">
         <div class="thumb">
-            <a href="#">
+            <a href="<?= $url ?>">
                 <?php
                 if ($iphoneOld) {
                     echo Html::img($image);
@@ -32,7 +32,7 @@ use frontend\widgets\imagelazy\ImageLazyLoadWidget;
         <div class="info-box">
             <div class="info">
                 <div class="name">
-                    <a href="#"><?php echo $name; ?></a>
+                    <a href="<?= $url ?>"><?php echo $name; ?></a>
                 </div>
                 <div class="price-box">
                     <strong><?= $sellPrice; ?></strong>
