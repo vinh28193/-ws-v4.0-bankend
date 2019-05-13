@@ -83,8 +83,9 @@ class Payment extends Model
         return parent::rules();
     }
 
-    public function initDefaultMethod(){
-        switch ($this->storeManager->getId()){
+    public function initDefaultMethod()
+    {
+        switch ($this->storeManager->getId()) {
             case 1:
                 $this->payment_method = 1;
                 $this->payment_provider = 22;
@@ -92,9 +93,12 @@ class Payment extends Model
                 break;
         }
     }
-    public function loadPaymentProviderFromCache(){
-        return [];
+
+    public function loadPaymentProviderFromCache()
+    {
+        return PaymentService::loadPaymentByStoreFromDb($this->storeManager->id);
     }
+
     public function processPayment()
     {
 
@@ -110,19 +114,47 @@ class Payment extends Model
 
     }
 
-    public function initPaymentView(){
+    public function initPaymentView()
+    {
         $view = Yii::$app->getView();
         PaymentAssets::register($view);
         $options = Json::htmlEncode($this->getClientOptions());
         $view->registerJs("ws.payment.init($options);");
-        $provinders = $this->loadPaymemtProviderFromCache();
-        return $view->render('payment',[
-            'provinders' => $provinders,
+        $providers = $this->loadPaymemtProviderFromCache();
+        return $view->render('payment', [
+            'provinders' => $providers,
             'payment' => $this
         ]);
     }
 
-    public function getClientOptions(){
-
+    public function getClientOptions()
+    {
+        return [
+            'page' => $this->page,
+            'orders' => $this->orders,
+            'use_xu' => $this->use_xu,
+            'bulk_point' => $this->bulk_point,
+            'coupon_code' => $this->coupon_code,
+            'discount_detail' => $this->discount_detail,
+            'total_discount_amount' => $this->total_discount_amount,
+            'currency' => $this->currency,
+            'total_amount' => $this->total_amount,
+            'total_amount_display' => $this->total_amount_display,
+            'payment_bank_code' => $this->payment_bank_code,
+            'payment_method' => $this->payment_method,
+            'payment_method_name' => $this->payment_method_name,
+            'payment_provider' => $this->payment_provider,
+            'payment_provider_name' => $this->payment_provider_name,
+            'payment_token' => $this->payment_token,
+            'installment_bank' => $this->installment_bank,
+            'installment_method' => $this->installment_method,
+            'installment_month' => $this->installment_month,
+            'instalment_type' => $this->instalment_type,
+            'ga' => $this->ga,
+            'otp_verify_method' => $this->otp_verify_method,
+            'shipment_options_status' => $this->shipment_options_status,
+            'transaction_id' => $this->transaction_id,
+            'transaction_fee' => $this->transaction_fee,
+        ];
     }
 }

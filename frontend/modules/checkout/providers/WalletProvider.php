@@ -1,11 +1,13 @@
 <?php
 
+
 namespace frontend\models\checkout\providers;
 
-use frontend\modules\checkout\Payment;
-use frontend\modules\checkout\PaymentProviderInterface;
 
-class NganLuongProvider extends \yii\base\BaseObject implements PaymentProviderInterface
+use frontend\modules\checkout\PaymentProviderInterface;
+use frontend\modules\checkout\Payment;
+
+class Wallet extends \yii\base\BaseObject implements PaymentProviderInterface
 {
 
     public function create(Payment $payment)
@@ -15,6 +17,6 @@ class NganLuongProvider extends \yii\base\BaseObject implements PaymentProviderI
 
     public static function handle($data)
     {
-        // TODO: Implement handle() method.
+        // TODO: Implement verify() method.
     }
 }
