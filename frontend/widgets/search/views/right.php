@@ -58,7 +58,8 @@ use yii\helpers\Html;
 //           $param['portal'] = $portal;
             return Yii::$app->getUrlManager()->createUrl($param);
         };
-        $arr = WeshopHelper::getArrayPage($total_page,$page);
+        $limitPage = 10;
+        $arr = WeshopHelper::getArrayPage($total_page,$page,$limitPage);
         if($arr && count($arr) > 1){
         ?>
             <li class="page-item disabled">

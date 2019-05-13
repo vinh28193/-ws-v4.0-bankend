@@ -329,7 +329,7 @@ class WeshopHelper
     public static function getArrayPage($totalPage, $pageCurrent = 1, $limitPage = 10){
         $arr = [];
         $tb = ceil($limitPage / 2);
-        for ($ind = 0;$ind <= $totalPage;$ind ++){
+        for ($ind = 0;$ind < $totalPage;$ind ++){
             if ($totalPage > $limitPage) {
                 if ($pageCurrent <= $tb) {
                     if ($limitPage >= $ind + 1) {

@@ -44,8 +44,8 @@ if($product['sell_price'] && $product['retail_price'] && $product['retail_price'
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star-half-alt"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <i class="far fa-star"></i>
                 <span>(87)</span>
             </div>
             <?= Html::tag('div', $product['item_name'], ['class' => 'name']) ?>
