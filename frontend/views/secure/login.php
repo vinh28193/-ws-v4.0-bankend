@@ -22,7 +22,7 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 <div class="check-info">
     <?= $form->field($model, 'rememberMe')->checkbox(['class' => 'form-check-input']) ?>
     <div style="color:#999;margin:1em 0">
-        <?= Html::a('Quên mật khẩu ?', ['site/request-password-reset']) ?>.
+        <?= Html::a('Quên mật khẩu ?', ['secure/request-password-reset']) ?>
     </div>
 </div>
 
@@ -34,14 +34,20 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 <div class="other-login">
     <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
     <div class="social-button">
-        <a href="#" class="btn btn-fb">
+        <!--a href="#" class="btn btn-fb facebook auth-link" href="/secure/auth?authclient=facebook" title="Facebook"
             <i class="social-icon fb"></i>
             <span>Facebook</span>
         </a>
-        <a href="#" class="btn btn-google">
+        <a href="#" class="btn btn-google google auth-link" href="/secure/auth?authclient=google" title="Google"
             <i class="social-icon google"></i>
             <span>Google</span>
-        </a>
+        </a-->
+        <?=yii\authclient\widgets\AuthChoice::widget([
+            'baseAuthUrl' => ['secure/auth'],
+            'popupMode' => false,
+        ])
+        ?>
+
     </div>
     <p>Quý khách chưa có tài khoản
         <?php echo Html::a('Đăng ký ngay', ['/secure/register']); ?>

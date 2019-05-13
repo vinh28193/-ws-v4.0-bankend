@@ -62,16 +62,11 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      */
     public static function findAdvance($condition)
     {
-        return static::findOne([
-            'AND',
-            [
-                'OR',
-                 ['email' => $condition],
-                 ['phone' => $condition],
-                 ['username' => $condition]
-            ],
-            ['active' => self::STATUS_ACTIVE]
-        ]);
+        return static::find()->where([
+            'or',
+            ['email' => $condition],
+            ['active' => 1]
+        ])->one();
     }
 
     /**
@@ -87,7 +82,7 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
+            'reset_password_token' => $token,
             'active' => self::STATUS_ACTIVE,
         ]);
     }
@@ -162,7 +157,31 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
     }
 
     /**
+     * Generates "remember me" authentication key
+     */
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
+    }
+
+    /**
+     * Generates new password reset token
+     */
+    public function generatePasswordResetToken()
+    {
+        $this->reset_password_token = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    /**
      * @return null
+     */
+    public function removePasswordResetToken()
+    {
+        $this->reset_password_token = null;
+    }
+
+    /**
+     * Generates new password reset token
      */
     public function getPrimaryAddress(){
         return $this->hasOne(Address::className(),['customer_id' => 'id'])->where([
@@ -182,4 +201,6 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
             ['is_default' => Address::IS_DEFAULT]
         ]);
     }
+
+
 }

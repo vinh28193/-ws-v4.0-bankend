@@ -22,6 +22,8 @@ class CmsController extends FrontendController
 
     public $type = WsPage::TYPE_HOME;
 
+    public $isShow = true;
+
     /**
      * @var WsPage
      */
@@ -57,7 +59,7 @@ class CmsController extends FrontendController
     public function defaultLayoutParams()
     {
         return array_merge(parent::defaultLayoutParams(), [
-            ['page' => $this->page]
+            'page' => $this->page,'isShow' => $this->isShow
         ]);
     }
 
@@ -66,30 +68,6 @@ class CmsController extends FrontendController
         return array_merge(parent::defaultLayoutParams(), [
             ['page' => $this->page]
         ]);
-    }
-
-    /**
-     * @param string $view
-     * @param array $params
-     * @return string
-     */
-    public function render($view, $params = [])
-    {
-        $params = array_merge(['page' => $this->page], $params);
-        return parent::render($view, $params);
-    }
-
-    public function renderContent($content)
-    {
-        $layoutFile = $this->findLayoutFile($this->getView());
-        if ($layoutFile !== false) {
-            return $this->getView()->renderFile($layoutFile, [
-                'content' => $content,
-                'page' => $this->page,
-            ], $this);
-        }
-
-        return $content;
     }
 
     /**

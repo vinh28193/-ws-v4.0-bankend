@@ -1,10 +1,10 @@
 ws.browse = (function ($) {
     var pub = {
         searchNew: function ($element, baseUrl) {
-            $('#loading').css('display','block');
+            ws.loading(true);
             var temp = location.href.split('/');
             var keyword = encodeURI($($element).val());
-            if(temp.length >= 4 && temp[3] !== 'search'){
+            if(temp.length >= 4 && temp[3] && temp[3] !== 'search' && temp[3] !== ''){
                 return window.location.assign('/'+temp[3]+'/search/'+keyword+'.html');
             }else {
                 return window.location.assign('/search/'+keyword+'.html');

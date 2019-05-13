@@ -267,7 +267,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
 
     public function getIsNew()
     {
-        $condition = strtoupper($this->condition);
+        $condition = strtoupper($this->condition ? $this->condition : '');
         return ($condition === 'NEW' || strpos($condition, 'NEW') !== false || $condition === strtoupper('Manufacturer refurbished'));
     }
 

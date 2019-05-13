@@ -32,7 +32,7 @@ if($product['sell_price'] && $product['retail_price'] && $product['retail_price'
 ?>
 
 <div class="col-md-4 col-sm-6">
-    <a href="<?= $url; ?>" class="item" onclick="EnableLoading(true);">
+    <a href="<?= $url; ?>" class="item" onclick="ws.loading(true);">
         <div class="thumb">
             <?= Html::img($product['image'], [
                 'alt' => $product['item_name'],
