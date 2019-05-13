@@ -97,18 +97,20 @@ class EbaySearchRequest extends \common\products\BaseRequest
         $aspectFilters = [];
         if(!$this->isEmpty($filter)){
             foreach (explode(';', $filter) as $element) {
-                list($name, $value) = explode(':', $element);
-                if (ArrayHelper::isIn($name, $itemFilterParam)) {
-                    $item = [];
-                    $item['name'] = $name;
-                    $item['value'] = explode(',', $value);
-                    $itemFilters[] = $item;
+                if($element){
+                    list($name, $value) = explode(':', $element);
+                    if (ArrayHelper::isIn($name, $itemFilterParam)) {
+                        $item = [];
+                        $item['name'] = $name;
+                        $item['value'] = explode(',', $value);
+                        $itemFilters[] = $item;
 
-                } else {
-                    $aspect = [];
-                    $aspect['name'] = $name;
-                    $aspect['value'] = explode(',', $value);
-                    $aspectFilters[] = $aspect;
+                    } else {
+                        $aspect = [];
+                        $aspect['name'] = $name;
+                        $aspect['value'] = explode(',', $value);
+                        $aspectFilters[] = $aspect;
+                    }
                 }
             }
         }

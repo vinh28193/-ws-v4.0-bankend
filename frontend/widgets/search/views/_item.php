@@ -1,5 +1,6 @@
 <?php
 
+use common\helpers\WeshopHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -16,14 +17,22 @@ use yii\web\View;
  * @see \yii\web\UrlRule
  * @see \yii\web\UrlRuleInterface
  */
-$url = Yii::$app->getUrlManager()->createUrl([
-    "{$portal}/item",
-    'id' => $product['item_id']
-]);
+$url = WeshopHelper::generateUrlDetail('ebay',$product['item_name'],$product['item_id']);
+$localSellprice = $product['sell_price'] * Yii::$app->storeManager->getExchangeRate();
+$localStartPrice = 0;
+if($product['retail_price']){
+    $localStartPrice = $product['retail_price'] * Yii::$app->storeManager->getExchangeRate();
+}
+$salePercent = 0;
+if($product['sell_price'] && $product['retail_price'] && $product['retail_price'] > $product['sell_price']) {
+    $salePercent = 100 - round(($product['sell_price']/$product['retail_price'])*100,0);
+}
+//print_r($product);
+//die;
 ?>
 
 <div class="col-md-4 col-sm-6">
-    <a href="<?= $url; ?>" class="item">
+    <a href="<?= $url; ?>" class="item" onclick="EnableLoading(true);">
         <div class="thumb">
             <?= Html::img($product['image'], [
                 'alt' => $product['item_name'],
@@ -35,14 +44,23 @@ $url = Yii::$app->getUrlManager()->createUrl([
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <i class="far fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star-half-alt"></i>
                 <span>(87)</span>
             </div>
             <?= Html::tag('div', $product['item_name'], ['class' => 'name']) ?>
             <div class="price">
-                <strong>20.430.000</strong>
-                <span>6.800.000</span>
+                <?php
+                    if($localSellprice){
+                        echo "<strong>".WeshopHelper::showMoney($localSellprice)."</strong>";
+                        if($localStartPrice && $salePercent){
+                            echo "<span>".WeshopHelper::showMoney($localStartPrice)."</span>";
+                            echo "<span class='sale-tag'>".$salePercent."% OFF</span>";
+                        }
+                    }else{
+                        echo "<strong>Nhấp vào để xem chi tiết</strong>";
+                    }
+                ?>
             </div>
             <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>
         </div>

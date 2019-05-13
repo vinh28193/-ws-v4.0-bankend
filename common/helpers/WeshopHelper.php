@@ -281,6 +281,85 @@ class WeshopHelper
     }
 
     public static function generateUrlDetail($portal,$name,$sku,$sid = null){
-        return '/'.$portal.'/item/'.self::alias($name).'-'.$sku.'html';
+        return '/'.$portal.'/item/'.self::alias($name).'-'.$sku.'.html';
+    }
+
+    /**
+     * @param $amount
+     * @param int $country // 1: Viet Nam, 2: US, 7: Indo. Dựa theo store id
+     * @param string $symbol
+     * @param int $round
+     */
+    public static function showMoney($amount, $country = 1, $symbol = '',$round = 0){
+        switch ($country){
+            case 1:
+                $symbol = $symbol ? $symbol : 'đ';
+                $floorNumber = $round ? $round : 1000;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return number_format($finalPrice, 0, ',', '.') . ' '.$symbol;
+                break;
+            case 2:
+                $symbol = $symbol ? $symbol : '$';
+                $floorNumber = $round ? $round : 2;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return $symbol.' '.number_format($finalPrice, 2, '.', ',');
+                break;
+            case 7:
+                $symbol = $symbol ? $symbol : 'RP';
+                $floorNumber = $round ? $round : 0;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return $symbol.' '.number_format($finalPrice, 0, '.', ',');
+                break;
+            default:
+                $symbol = $symbol ? $symbol : 'đ';
+                $floorNumber = $round ? $round : 1000;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return number_format($finalPrice, 0, ',', '.') . ' '.$symbol;
+                break;
+        }
+    }
+    public static function getArrayPage($totalPage, $pageCurrent = 1, $limitPage = 10){
+        $arr = [];
+        $tb = ceil($limitPage / 2);
+        for ($ind = 0;$ind <= $totalPage;$ind ++){
+            if ($totalPage > $limitPage) {
+                if ($pageCurrent <= $tb) {
+                    if ($limitPage >= $ind + 1) {
+                        $arr[] = ($ind + 1);
+                    }
+                } else {
+                    if (($ind + 1 > $pageCurrent - $tb && $pageCurrent + $tb > $ind + 1)) {
+                        $arr[] = ($ind + 1);
+                    }
+                }
+            } else {
+                $arr[] = ($ind + 1);
+            }
+        }
+        return $arr;
+    }
+    public static function getLogoByPortal($portal){
+        switch (strtolower($portal)){
+            case 'ebay':
+                return '/img/logo_ebay.png';
+                break;
+            case 'amazon':
+                return '/img/logo_amz.png';
+                break;
+            case 'amazon-jp':
+                return '/img/logo_amz_jp.png';
+                break;
+            default:
+                return '/img/logo_ws.png';
+                break;
+        }
     }
 }

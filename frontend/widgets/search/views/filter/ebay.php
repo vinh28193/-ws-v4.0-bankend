@@ -1,14 +1,21 @@
 <?php
 
 use yii\helpers\Html;
+use yii\web\View;
+
 /* @var $this yii\web\View */
 /* @var $filter array */
 ?>
 
 <div class="filter-box">
     <div class="filter-box">
-        <?= Html::tag('div', $filter['name'], ['class' => 'title']); ?>
-        <ul>
+        <div onclick="showFilter('<?= md5($filter['name']) ?>')" style="cursor: pointer">
+            <h6>
+                <?= Html::tag('b', $filter['name'], []); ?>
+                <span><i class="fa fa-chevron-down" id="ico-<?= md5($filter['name']) ?>"></i></span>
+            </h6>
+        </div>
+        <ul style="display: block" id="<?= md5($filter['name']) ?>">
             <?php foreach ($filter['values'] as $value): ?>
                 <?php /* @var $value string */ ?>
                 <?php $value = Html::encode($value); ?>

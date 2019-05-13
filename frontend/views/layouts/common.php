@@ -643,6 +643,11 @@ FrontendAsset::register($this);
 
 
 <?php $this->endBody() ?>
+<div class="loading_new" id="loading" style="display:none;">
+    <div class="loading-inner-new">
+        <img src="/img/gif/loading.gif">
+    </div>
+</div>
 </body>
 </html>
 <?php $this->endPage() ?>

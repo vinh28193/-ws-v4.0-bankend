@@ -102,6 +102,7 @@ class SearchResultWidget extends Widget
     {
         return $this->render('right', [
             'portal' => $this->portal,
+            'page' => Yii::$app->request->get('page' , 1),
             'keyword' => $this->form->keyword,
             'total_product' => ArrayHelper::getValue($this->results, 'total_product', 0),
             'total_page' => ArrayHelper::getValue($this->results, 'total_page', 0),
