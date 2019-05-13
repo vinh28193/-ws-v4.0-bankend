@@ -405,9 +405,9 @@ FrontendAsset::register($this);
                 </li>
                 <li>
                     <?php if (Yii::$app->user->isGuest) {
-                        echo Html::a('<i class="nav-ico user"></i>login', ['/secure/login']);
+                        echo Html::a('<i class="nav-ico user"></i>', ['/secure/login']);
                     }else {
-                        echo Html::a('<i class="nav-ico user"></i>logout (' . Yii::$app->user->identity->username .')', ['/secure/logout'], ['data' => ['method' => 'post']]);
+                        echo Html::a('<i class="nav-ico user"></i> (' . Yii::$app->user->identity->username .')', ['/secure/logout'], ['data' => ['method' => 'post']]);
                     }?>
                 </li>
                 <li class="dropdown">
