@@ -113,7 +113,67 @@ FrontendAsset::register($this);
                                 </li>
                                 <li class="sub-2">
                                     <a href="#">Đồng hồ - Trang sức</a>
-                                    <div class="sub-menu"></div>
+                                    <div class="sub-menu">
+                                        <div class="ebay-sub-menu">
+                                            <div class="left">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Test</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Collectibles & art</div>
+                                                            <ul>
+                                                                <li><a href="#">Collectibles</a></li>
+                                                                <li><a href="#">Antiques</a></li>
+                                                                <li><a href="#">Sports memorabilia</a></li>
+                                                                <li><a href="#">Art</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Collectibles & art</div>
+                                                            <ul>
+                                                                <li><a href="#">Collectibles</a></li>
+                                                                <li><a href="#">Antiques</a></li>
+                                                                <li><a href="#">Sports memorabilia</a></li>
+                                                                <li><a href="#">Art</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Collectibles & art</div>
+                                                            <ul>
+                                                                <li><a href="#">Collectibles</a></li>
+                                                                <li><a href="#">Antiques</a></li>
+                                                                <li><a href="#">Sports memorabilia</a></li>
+                                                                <li><a href="#">Art</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Collectibles & art</div>
+                                                            <ul>
+                                                                <li><a href="#">Collectibles</a></li>
+                                                                <li><a href="#">Antiques</a></li>
+                                                                <li><a href="#">Sports memorabilia</a></li>
+                                                                <li><a href="#">Art</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                <div class="banner-sub">
+                                                    <a href="#"><img src="https://static-v3.weshop.com.vn/uploadImages/ea2dff/ea2dff8f1ef1dc3082523658afa31530.png" alt="" title=""/></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li class="sub-2">
                                     <a href="#">Đồ điện tử</a>
@@ -442,7 +502,7 @@ FrontendAsset::register($this);
         <div class="container">
             <div class="logo">
                 <span class="menu-toggle"></span>
-                <a href="#" class="logo-pc">
+                <a href="/" class="logo-pc">
                     <img src="/img/weshop-logo-vn.png" alt="" title=""/>
                 </a>
             </div>

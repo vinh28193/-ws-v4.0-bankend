@@ -33,7 +33,7 @@ class Store extends BbStore implements StoreInterface
      */
     public static function getActiveStore($condition)
     {
-        
+
         if(($store = self::findOne($condition)) === null){
             $condition = reset($condition);
             throw new NotFoundHttpException("Not found Store $condition");

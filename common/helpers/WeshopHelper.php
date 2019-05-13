@@ -201,4 +201,129 @@ class WeshopHelper
 
         return Html::tag($tag, $visibleContent, $options);
     }
+    public static function alias($str = NULL)
+    {
+        $str = self::removeutf8($str);
+        $str = preg_replace('/[^a-zA-Z0-9-]/i', '', $str);
+        $str = str_replace(array(
+            '------------------',
+            '-----------------',
+            '----------------',
+            '---------------',
+            '--------------',
+            '-------------',
+            '------------',
+            '-----------',
+            '----------',
+            '---------',
+            '--------',
+            '-------',
+            '------',
+            '-----',
+            '----',
+            '---',
+            '--',
+        ),
+            '-',
+            $str
+        );
+        $str = str_replace(array(
+            '------------------',
+            '-----------------',
+            '----------------',
+            '---------------',
+            '--------------',
+            '-------------',
+            '------------',
+            '-----------',
+            '----------',
+            '---------',
+            '--------',
+            '-------',
+            '------',
+            '-----',
+            '----',
+            '---',
+            '--',
+        ),
+            '-',
+            $str
+        );
+        if (!empty($str)) {
+            if ($str[strlen($str) - 1] == '-') {
+                $str = substr($str, 0, -1);
+            }
+            if ($str[0] == '-') {
+                $str = substr($str, 1);
+            }
+        }
+        return strtolower($str);
+    }
+
+    public static function removeutf8($str = NULL)
+    {
+        $chars = array(
+            'a' => array('ấ', 'ầ', 'ẩ', 'ẫ', 'ậ', 'Ấ', 'Ầ', 'Ẩ', 'Ẫ', 'Ậ', 'ắ', 'ằ', 'ẳ', 'ẵ', 'ặ', 'Ắ', 'Ằ', 'Ẳ', 'Ẵ', 'Ặ', 'á', 'à', 'ả', 'ã', 'ạ', 'â', 'ă', 'Á', 'À', 'Ả', 'Ã', 'Ạ', 'Â', 'Ă'),
+            'e' => array('ế', 'ề', 'ể', 'ễ', 'ệ', 'Ế', 'Ề', 'Ể', 'Ễ', 'Ệ', 'é', 'è', 'ẻ', 'ẽ', 'ẹ', 'ê', 'É', 'È', 'Ẻ', 'Ẽ', 'Ẹ', 'Ê'),
+            'i' => array('í', 'ì', 'ỉ', 'ĩ', 'ị', 'Í', 'Ì', 'Ỉ', 'Ĩ', 'Ị'),
+            'o' => array('ố', 'ồ', 'ổ', 'ỗ', 'ộ', 'Ố', 'Ồ', 'Ổ', 'Ô', 'Ộ', 'ớ', 'ờ', 'ở', 'ỡ', 'ợ', 'Ớ', 'Ờ', 'Ở', 'Ỡ', 'Ợ', 'ó', 'ò', 'ỏ', 'õ', 'ọ', 'ô', 'ơ', 'Ó', 'Ò', 'Ỏ', 'Õ', 'Ọ', 'Ô', 'Ơ'),
+            'u' => array('ứ', 'ừ', 'ử', 'ữ', 'ự', 'Ứ', 'Ừ', 'Ử', 'Ữ', 'Ự', 'ú', 'ù', 'ủ', 'ũ', 'ụ', 'ư', 'Ú', 'Ù', 'Ủ', 'Ũ', 'Ụ', 'Ư'),
+            'y' => array('ý', 'ỳ', 'ỷ', 'ỹ', 'ỵ', 'Ý', 'Ỳ', 'Ỷ', 'Ỹ', 'Ỵ'),
+            'd' => array('đ', 'Đ'),
+            '-' => array(' '),
+        );
+        foreach ($chars as $key => $arr) {
+            foreach ($arr as $val) {
+                $str = str_replace($val, $key, $str);
+            }
+        }
+        return $str;
+    }
+
+    public static function generateUrlDetail($portal,$name,$sku,$sid = null){
+        return '/'.$portal.'/item/'.self::alias($name).'-'.$sku.'.html';
+    }
+
+    /**
+     * @param $amount
+     * @param int $country // 1: Viet Nam, 2: US, 7: Indo. Dựa theo store id
+     * @param string $symbol
+     * @param int $round
+     */
+    public static function showMoney($amount, $country = 1, $symbol = '',$round = 0){
+        switch ($country){
+            case 1:
+                $symbol = $symbol ? $symbol : 'đ';
+                $floorNumber = $round ? $round : 1000;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return number_format($finalPrice, 0, ',', '.') . ' '.$symbol;
+                break;
+            case 2:
+                $symbol = $symbol ? $symbol : '$';
+                $floorNumber = $round ? $round : 2;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return $symbol.' '.number_format($finalPrice, 2, '.', ',');
+                break;
+            case 7:
+                $symbol = $symbol ? $symbol : 'RP';
+                $floorNumber = $round ? $round : 0;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return $symbol.' '.number_format($finalPrice, 0, '.', ',');
+                break;
+            default:
+                $symbol = $symbol ? $symbol : 'đ';
+                $floorNumber = $round ? $round : 1000;
+                $price = $amount / $floorNumber;
+                $roundPrice = round($price);
+                $finalPrice = $floorNumber * $roundPrice;
+                return number_format($finalPrice, 0, ',', '.') . ' '.$symbol;
+                break;
+        }
+    }
 }
