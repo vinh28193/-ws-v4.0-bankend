@@ -12,7 +12,7 @@ class m190513_135229_add_column_auth_key_table_customer extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('customer', 'auth_key',$this->string());
+         $this->addColumn('customer', 'auth_key',$this->string());
     }
 
     /**
