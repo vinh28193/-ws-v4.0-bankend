@@ -17,27 +17,28 @@ class ShippingForm extends Model
 
 
     public $customer_id;
-    public $buyer_email;
+
     public $buyer_name;
+    public $buyer_email;
     public $buyer_phone;
     public $buyer_address;
     public $buyer_post_code;
     public $buyer_country_id;
-    public $buyer_district_id;
     public $buyer_province_id;
+    public $buyer_district_id;
 
     public $note_by_customer;
 
     public $receiver_address_id;
 
-    public $receiver_email;
     public $receiver_name;
+    public $receiver_email;
     public $receiver_phone;
     public $receiver_address;
     public $receiver_post_code;
     public $receiver_country_id;
-    public $receiver_district_id;
     public $receiver_province_id;
+    public $receiver_district_id;
 
     public $enable_buyer = false;
     public $save_my_address = false;

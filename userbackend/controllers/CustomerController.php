@@ -9,6 +9,7 @@ use common\models\SystemDistrict;
 use Yii;
 use common\models\Customer;
 use userbackend\models\CustomerSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -31,6 +32,17 @@ class CustomerController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actions()
+    {
+        return ArrayHelper::merge(parent::actions(),[
+            'subcat' => [
+                'class' => 'common\actions\DepDropAction',
+                'defaultSelect' => true,
+                'useAction' => 'common\models\SystemDistrict::select2Data'
+            ]
+        ]);
     }
 
     /**
@@ -62,23 +74,6 @@ class CustomerController extends Controller
         return $this->render('vip', [
             'models' => $models,
         ]);
-    }
-
-    public function actionSubcat() {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = [];
-        if (isset($_POST['depdrop_parents'])) {
-            $parents = $_POST['depdrop_parents'];
-            if ($parents != null) {
-                $cat_id = (int)$parents[0];
-                $out = SystemDistrict::filterDistrictByProvinceId($cat_id);
-                if(!empty($out)){
-                    return ['output'=>$out, 'selected'=> $out[0]['id']];
-                }
-
-            }
-        }
-        return ['output'=>'', 'selected'=>''];
     }
 
     /**

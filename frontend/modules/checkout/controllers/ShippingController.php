@@ -7,7 +7,7 @@ use Yii;
 use common\components\cart\CartHelper;
 use frontend\modules\checkout\models\ShippingForm;
 use frontend\modules\checkout\Payment;
-use frontend\modules\checkout\PaymentService;
+use common\models\SystemStateProvince;
 
 class ShippingController extends CheckoutController
 {
@@ -29,11 +29,14 @@ class ShippingController extends CheckoutController
             'total_amount' => $params['totalAmount'],
             'total_amount_display' => $params['totalAmount']
         ]);
+
         $shippingForm = new ShippingForm();
+        $provinces = SystemStateProvince::select2Data(1);
         return $this->render('index',[
             'activeStep' => $activeStep,
             'shippingForm' => $shippingForm,
             'payment' => $payment,
+            'provinces' => $provinces
         ]);
     }
 
