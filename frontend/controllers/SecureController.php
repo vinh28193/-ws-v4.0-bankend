@@ -20,22 +20,15 @@ class SecureController extends FrontendController
      * @return mixed
      */
 
-    public function actionLogin(){
-
+    public function actionLogin()
+    {
         if (!Yii::$app->user->isGuest) {
-            $model = new LoginForm();
-            if ($model->load($this->request->post()) && $model->login()) {
-                return $this->goBack();
-            } else {
-                return $this->render('login', [
-                    'model' => $model,
-                ]);
-            }
+            return $this->goHome();
         }
 
         $model = new LoginForm();
-        if ($model->load($this->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->goHome();
         } else {
             return $this->render('login', [
                 'model' => $model,

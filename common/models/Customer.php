@@ -8,7 +8,11 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * Customer model
+ * Class Customer
+ * @package common\models
+ *
+ * @property Address $primaryAddress;
+ * @property Address $defaultShippingAddress;
  */
 class Customer extends \common\models\db\Customer implements IdentityInterface
 {
@@ -58,16 +62,11 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      */
     public static function findAdvance($condition)
     {
-        return static::findOne([
-            'AND',
-            [
-                'OR',
-                 ['email' => $condition],
-                 ['phone' => $condition],
-                 ['username' => $condition]
-            ],
-            ['active' => self::STATUS_ACTIVE]
-        ]);
+        return static::find()->where([
+            'or',
+            ['email' => $condition],
+            ['active' => 1]
+        ])->one();
     }
 
     /**
@@ -118,7 +117,14 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      */
     public function getAuthKey()
     {
-//        return $this->auth_key;
+        /**
+         * Todo : vì cái này liên quan tới việc tự động login
+         * cần thiết cho hành động "remember me"
+         * cần phải khác biệt với mối user
+         * hãy generate và lưu tương ứng với mỗi user
+         */
+
+        return "ws{$this->getId()}Customer2019";
     }
 
     /**
@@ -126,7 +132,7 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-//        return $this->getAuthKey() === $authKey;
+        return $this->getAuthKey() === $authKey;
     }
 
     /**
@@ -155,7 +161,7 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      */
     public function generateAuthKey()
     {
-//        $this->auth_key = Yii::$app->security->generateRandomString();
+        $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
     /**
@@ -167,10 +173,34 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
     }
 
     /**
-     * Removes password reset token
+     * @return null
      */
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
     }
+
+    /**
+     * Generates new password reset token
+     */
+    public function getPrimaryAddress(){
+        return $this->hasOne(Address::className(),['customer_id' => 'id'])->where([
+            'AND',
+            ['type' => Address::TYPE_PRIMARY],
+            ['is_default' => Address::IS_DEFAULT]
+        ]);
+    }
+
+    /**
+     * @return null
+     */
+    public function getDefaultShippingAddress(){
+        return $this->hasOne(Address::className(),['customer_id' => 'id'])->where([
+            'AND',
+            ['type' => Address::TYPE_SHIPPING],
+            ['is_default' => Address::IS_DEFAULT]
+        ]);
+    }
+
+
 }

@@ -24,24 +24,24 @@
                         <div id="method1" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
                             <div class="method-content">
                                 <ul class="method-list">
-                                    <li><span class="active"><img src="./img/bank/vietcombank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/techcombank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/donga.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/mb.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/vib.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/viettin.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/eximbank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/acb.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/hdbank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/maritime.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/navibank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/vietabank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/vp.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/sacombank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/gpbank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/agribank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/bidv.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/oceanbank.png" alt="" title=""/></span></li>
+                                    <li><span class="active"><img src="/img/bank/vietcombank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/techcombank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/donga.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/mb.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/vib.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/viettin.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/eximbank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/acb.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/hdbank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/maritime.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/navibank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/vietabank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/vp.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/sacombank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/gpbank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/agribank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/bidv.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/oceanbank.png" alt="" title=""/></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -67,24 +67,24 @@
                                     </div>
                                 </div>
                                 <ul class="method-list">
-                                    <li><span class="active"><img src="./img/bank/vietcombank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/techcombank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/donga.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/mb.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/vib.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/viettin.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/eximbank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/acb.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/hdbank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/maritime.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/navibank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/vietabank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/vp.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/sacombank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/gpbank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/agribank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/bidv.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/oceanbank.png" alt="" title=""/></span></li>
+                                    <li><span class="active"><img src="/img/bank/vietcombank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/techcombank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/donga.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/mb.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/vib.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/viettin.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/eximbank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/acb.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/hdbank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/maritime.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/navibank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/vietabank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/vp.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/sacombank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/gpbank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/agribank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/bidv.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/oceanbank.png" alt="" title=""/></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -99,9 +99,9 @@
                         <div id="method2" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
                             <div class="method-content">
                                 <ul class="method-list">
-                                    <li><span class="active"><img src="./img/bank/jcb.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/MASTERCARD.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/VISA.png" alt="" title=""/></span></li>
+                                    <li><span class="active"><img src="/img/bank/jcb.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/MASTERCARD.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/VISA.png" alt="" title=""/></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -142,7 +142,7 @@
 
                         <div id="method6" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
                             <div class="method-content wallet">
-                                <button type="button" class="btn btn-add-credit" data-toggle="modal" data-target="#otp-confirm"><img src="./img/payment_wallet.png"/><span>Nạp tiền</span></button>
+                                <button type="button" class="btn btn-add-credit" data-toggle="modal" data-target="#otp-confirm"><img src="/img/payment_wallet.png"/><span>Nạp tiền</span></button>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Tổng số tiền chính trong tài khoản:</label>
@@ -198,24 +198,24 @@
                         <div id="method7" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
                             <div class="method-content">
                                 <ul class="method-list">
-                                    <li><span class="active" data-toggle="modal" data-target="#qr-pay"><img src="./img/bank/vietcombank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/techcombank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/donga.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/mb.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/vib.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/viettin.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/eximbank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/acb.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/hdbank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/maritime.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/navibank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/vietabank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/vp.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/sacombank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/gpbank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/agribank.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/bidv.png" alt="" title=""/></span></li>
-                                    <li><span><img src="./img/bank/oceanbank.png" alt="" title=""/></span></li>
+                                    <li><span class="active" data-toggle="modal" data-target="#qr-pay"><img src="/img/bank/vietcombank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/techcombank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/donga.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/mb.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/vib.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/viettin.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/eximbank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/acb.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/hdbank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/maritime.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/navibank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/vietabank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/vp.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/sacombank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/gpbank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/agribank.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/bidv.png" alt="" title=""/></span></li>
+                                    <li><span><img src="/img/bank/oceanbank.png" alt="" title=""/></span></li>
                                 </ul>
                             </div>
                         </div>

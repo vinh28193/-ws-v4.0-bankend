@@ -3,6 +3,7 @@
 
 namespace frontend\modules\checkout;
 
+use frontend\modules\checkout\models\ShippingForm;
 use Yii;
 use yii\di\Instance;
 use yii\base\Model;
@@ -23,20 +24,15 @@ class Payment extends Model
 
     public $order_bin;
 
-    public $customer_name;
-    public $customer_email;
-    public $customer_phone;
-    public $customer_address;
-    public $customer_city;
-    public $customer_postcode;
-    public $customer_district;
-    public $customer_district_id;
-    public $customer_country;
-
     /**
      * @var $order Order[]
      */
     public $orders;
+
+    /**
+     * @var ShippingForm
+     */
+    public $shippingForm;
 
     public $use_xu = 0;
     public $bulk_point = 0;
