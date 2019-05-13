@@ -46,6 +46,7 @@ class AmazonGate extends BaseGate
             $results = $this->searchInternal($request);
             $this->cache->set($request->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
         }
+
         list($ok, $response) = $results;
         if ($ok && is_array($response)) {
             return [$ok, (new AmazonSearchResponse($this))->parser($response)];

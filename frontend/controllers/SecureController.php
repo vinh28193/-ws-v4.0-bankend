@@ -3,8 +3,12 @@
 
 namespace frontend\controllers;
 
+use common\models\Customer;
 use Yii;
 use frontend\models\LoginForm;
+use frontend\models\SignupForm;
+use app\models\User;
+use yii\web\BadRequestHttpException;
 
 class SecureController extends FrontendController
 {
@@ -19,7 +23,14 @@ class SecureController extends FrontendController
     public function actionLogin(){
 
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            $model = new LoginForm();
+            if ($model->load($this->request->post()) && $model->login()) {
+                return $this->goBack();
+            } else {
+                return $this->render('login', [
+                    'model' => $model,
+                ]);
+            }
         }
 
         $model = new LoginForm();
@@ -39,7 +50,22 @@ class SecureController extends FrontendController
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
+    }
+
+    public function actionRegister()
+    {
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
+        }
+
+        return $this->render('register', [
+            'model' => $model,
+        ]);
     }
 }

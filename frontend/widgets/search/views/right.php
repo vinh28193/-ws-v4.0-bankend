@@ -12,26 +12,43 @@ use yii\helpers\Html;
 /* @var integer $item_per_page */
 /* @var array $products */
 /* @var array $sorts */
+$sort = Yii::$app->request->get('sort','price');
+$url_page = function ($p){
+    $param = [explode('?',\yii\helpers\Url::current())[0]];
+    $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
+    $param['page'] = $p;
+//           $param['portal'] = $portal;
+    return Yii::$app->getUrlManager()->createUrl($param);
+};
 ?>
 <div class="search-content search-2 <?= $portal ?>">
     <div class="title-box">
-        <div class="left">
+        <div class="left" style="width: 50%; text-align: left;">
             <div class="text">Tìm kiếm “<?= $keyword; ?>” từ</div>
             <img src="<?= WeshopHelper::getLogoByPortal($portal) ?>" alt=""/>
             <span>Hiển thị 1-<?= count($products) ?> của <?= $total_product; ?> kết quả.</span>
         </div>
-        <div class="right">
+        <div class="right" style="width: 50%; text-align: right;">
             <div class="btn-group">
-                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sắp xếp theo</button>
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= isset($sorts[$sort]) ? $sorts[$sort] : 'Sắp xếp theo' ?></button>
                 <div class="dropdown-menu dropdown-menu-right" x-placement="top-end" style="position: absolute; transform: translate3d(-56px, -102px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <button class="dropdown-item" type="button">Action</button>
-                    <button class="dropdown-item" type="button">Another action</button>
-                    <button class="dropdown-item" type="button">Something else here</button>
+                    <?php
+                        foreach ($sorts as $k => $v){
+                            $param = [explode('?',\yii\helpers\Url::current())[0]];
+                            $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
+                            $param['sort'] = $k;
+                            if(isset($param['keyword'])){
+                                unset($param['keyword']);
+                            }
+                            $url = Yii::$app->getUrlManager()->createUrl($param);
+                            echo '<a href="'.$url.'" class="dropdown-item">'.$v.'</a>';
+                        }
+                    ?>
                 </div>
             </div>
             <ul class="control-page">
-                <li><a href="#" class="control prev"></a></li>
-                <li><a href="#" class="control next"></a></li>
+                <li><a href="<?= $page > 1 ? $url_page($page-1) : '#' ?>" class="control prev"></a></li>
+                <li><a href="<?= $page < $total_page ? $url_page($page+1) : '#' ?>" class="control next"></a></li>
             </ul>
         </div>
     </div>
@@ -51,14 +68,8 @@ use yii\helpers\Html;
 <nav aria-label="...">
     <ul class="pagination justify-content-center">
         <?php
-        $url_page = function ($p){
-            $param = [explode('?',\yii\helpers\Url::current())[0]];
-            $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
-            $param['page'] = $p;
-//           $param['portal'] = $portal;
-            return Yii::$app->getUrlManager()->createUrl($param);
-        };
-        $arr = WeshopHelper::getArrayPage($total_page,$page);
+        $limitPage = 10;
+        $arr = WeshopHelper::getArrayPage($total_page,$page,$limitPage);
         if($arr && count($arr) > 1){
         ?>
             <li class="page-item disabled">

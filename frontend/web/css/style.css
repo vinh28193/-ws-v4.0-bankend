@@ -5217,6 +5217,9 @@ a {
     font-size: 18px; }
 
 /*# sourceMappingURL=style.css.map */
+.help-block-error {
+  color: red;
+}
 .loading_new {
   position: fixed;
   width: 100%;

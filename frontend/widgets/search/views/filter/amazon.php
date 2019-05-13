@@ -10,7 +10,7 @@ use yii\helpers\Html;
         <div onclick="showFilter('<?= md5($filter['name']) ?>')" style="cursor: pointer">
             <h6>
                 <?= Html::tag('b', $filter['name'], []); ?>
-                <span><i class="fa fa-chevron-down" id="ico-<?= md5($filter['name']) ?>"></i></span>
+                <span><i class="fa fa-chevron-up" id="ico-<?= md5($filter['name']) ?>"></i></span>
             </h6>
         </div>
         <ul style="display: block" id="<?= md5($filter['name']) ?>">
@@ -20,7 +20,7 @@ use yii\helpers\Html;
                 <li>
                     <div class="form-check">
                         <?php
-                        $value = $filter['name'] . $value;
+//                        $value = $filter['name'] . $value;
                         ?>
                         <?= Html::checkbox('filter', $item['is_selected'], [
                             'class' => 'form-check-input',

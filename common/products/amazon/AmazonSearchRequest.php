@@ -19,17 +19,17 @@ class AmazonSearchRequest extends AmazonRequest
         $rules = parent::rules();
         $rules = ArrayHelper::merge($rules, [
             ['sort', 'default', 'value' => 'date-desc-rank'],
-            ['sort', function ($attribute, $params, $validator) {
-                if (!$this->hasErrors()) {
-                    $value = $this->$attribute;
-                    if (ArrayHelper::isIn($value, ['price-asc-rank', 'price-desc-rank', 'relevancerank', 'review-rank'])) {
-                        $this->addError($attribute, Yii::t('frontend', 'Unknown {attribute}: {sorter}', [
-                            'attribute' => $this->getAttributeLabel($attribute),
-                            'sorter' => $value,
-                        ]));
-                    }
-                }
-            }],
+//            ['sort', function ($attribute, $params, $validator) {
+//                if (!$this->hasErrors()) {
+//                    $value = $this->$attribute;
+//                    if (ArrayHelper::isIn($value, ['price-asc-rank', 'price-desc-rank', 'relevancerank', 'review-rank'])) {
+//                        $this->addError($attribute, Yii::t('frontend', 'Unknown {attribute}: {sorter}', [
+//                            'attribute' => $this->getAttributeLabel($attribute),
+//                            'sorter' => $value,
+//                        ]));
+//                    }
+//                }
+//            }],
         ]);
 
         return $rules;

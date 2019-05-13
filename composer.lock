@@ -17,7 +17,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/twbs/bootstrap/zipball/68b0d231a13201eb14acd3dc84e51543d16e5f7e",
-                "reference": "68b0d231a13201eb14acd3dc84e51543d16e5f7e"
+                "reference": "68b0d231a13201eb14acd3dc84e51543d16e5f7e",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.9.1,<4.0"
@@ -38,7 +39,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/igorlino/elevatezoom-plus/zipball/845b7237fb2a44882b686efe109d476019bf60a6",
-                "reference": "845b7237fb2a44882b686efe109d476019bf60a6"
+                "reference": "845b7237fb2a44882b686efe109d476019bf60a6",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.11.2"
@@ -59,7 +61,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/igorlino/fancybox-plus/zipball/9480d43d339a0d15b66c0aa48f293112411d4b22",
-                "reference": "9480d43d339a0d15b66c0aa48f293112411d4b22"
+                "reference": "9480d43d339a0d15b66c0aa48f293112411d4b22",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.11.2",
@@ -82,7 +85,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/e05a1219784935ff5beb6bfb17cdc86bc848d0bb",
-                "reference": "e05a1219784935ff5beb6bfb17cdc86bc848d0bb"
+                "reference": "e05a1219784935ff5beb6bfb17cdc86bc848d0bb",
+                "shasum": null
             },
             "type": "bower-asset",
             "time": "2019-05-07T17:37:12+00:00"
@@ -98,7 +102,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/RobinHerbots/Inputmask/zipball/5e670ad62f50c738388d4dcec78d2888505ad77b",
-                "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
+                "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.7"
@@ -119,7 +124,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/9e8ec3d10fad04748176144f108d7355662ae75e",
-                "reference": "9e8ec3d10fad04748176144f108d7355662ae75e"
+                "reference": "9e8ec3d10fad04748176144f108d7355662ae75e",
+                "shasum": null
             },
             "type": "bower-asset",
             "license": [
@@ -137,7 +143,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/jozefizso/bower-jquery-easing/zipball/f267050cab9d37960dfd76bf71f279e93848fba1",
-                "reference": "f267050cab9d37960dfd76bf71f279e93848fba1"
+                "reference": "f267050cab9d37960dfd76bf71f279e93848fba1",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.2.1"
@@ -155,7 +162,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/tuupola/lazyload/zipball/6e2fb5f64967de5a8bf539733d4cf7e736100c7a",
-                "reference": "6e2fb5f64967de5a8bf539733d4cf7e736100c7a"
+                "reference": "6e2fb5f64967de5a8bf539733d4cf7e736100c7a",
+                "shasum": null
             },
             "type": "bower-asset",
             "license": [
@@ -174,7 +182,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/OwlFonk/OwlCarousel2/zipball/af851f9b567630d115930abd5480ffebccc72372",
-                "reference": "af851f9b567630d115930abd5480ffebccc72372"
+                "reference": "af851f9b567630d115930abd5480ffebccc72372",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.8.3"
@@ -192,7 +201,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/bestiejs/punycode.js/zipball/38c8d3131a82567bfef18da09f7f4db68c84f8a3",
-                "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3"
+                "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3",
+                "shasum": null
             },
             "type": "bower-asset"
         },
@@ -207,7 +217,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/kenwheeler/slick/zipball/0f40c9d6a02a5c08b5f4dd80fdada3a854a59bee",
-                "reference": "0f40c9d6a02a5c08b5f4dd80fdada3a854a59bee"
+                "reference": "0f40c9d6a02a5c08b5f4dd80fdada3a854a59bee",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.7"
@@ -228,10 +239,10 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/sweetalert2/sweetalert2/zipball/40bd865bd74da37fb4cac6fe95058d7b89d8994b",
-                "reference": "40bd865bd74da37fb4cac6fe95058d7b89d8994b"
+                "reference": "40bd865bd74da37fb4cac6fe95058d7b89d8994b",
+                "shasum": null
             },
-            "type": "bower-asset",
-            "time": "2019-05-11T12:48:13+00:00"
+            "type": "bower-asset"
         },
         {
             "name": "bower-asset/yii2-pjax",
@@ -244,7 +255,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/yiisoft/jquery-pjax/zipball/aef7b953107264f00234902a3880eb50dafc48be",
-                "reference": "aef7b953107264f00234902a3880eb50dafc48be"
+                "reference": "aef7b953107264f00234902a3880eb50dafc48be",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.8"
@@ -2022,7 +2034,9 @@
             "version": "4.3.1",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/bootstrap/-/bootstrap-4.3.1.tgz"
+                "url": "https://registry.npmjs.org/bootstrap/-/bootstrap-4.3.1.tgz",
+                "reference": null,
+                "shasum": null
             },
             "type": "npm-asset",
             "license": [
@@ -6329,7 +6343,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
