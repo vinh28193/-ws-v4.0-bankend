@@ -3,7 +3,7 @@
 return [
     'payment_method_provider0' => [
         'id' => '1',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '1',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -14,7 +14,7 @@ return [
     ],
     'payment_method_provider1' => [
         'id' => '2',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '3',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -25,7 +25,7 @@ return [
     ],
     'payment_method_provider2' => [
         'id' => '3',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '25',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -36,7 +36,7 @@ return [
     ],
     'payment_method_provider3' => [
         'id' => '4',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '26',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -47,7 +47,7 @@ return [
     ],
     'payment_method_provider4' => [
         'id' => '5',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '27',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -58,7 +58,7 @@ return [
     ],
     'payment_method_provider5' => [
         'id' => '6',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '28',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -68,19 +68,8 @@ return [
         'updated_at' => null,
     ],
     'payment_method_provider6' => [
-        'id' => '7',
-        'store_id' => '0',
-        'payment_method_id' => '29',
-        'payment_provider_id' => '42',
-        'status' => '1',
-        'created_by' => null,
-        'created_at' => null,
-        'updated_by' => null,
-        'updated_at' => null,
-    ],
-    'payment_method_provider7' => [
         'id' => '8',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '31',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -89,11 +78,22 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider8' => [
+    'payment_method_provider7' => [
         'id' => '9',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '44',
-        'payment_provider_id' => '42',
+        'payment_provider_id' => '43',
+        'status' => '1',
+        'created_by' => null,
+        'created_at' => null,
+        'updated_by' => null,
+        'updated_at' => null,
+    ],
+    'payment_method_provider8' => [
+        'id' => '10',
+        'store_id' => '1',
+        'payment_method_id' => '57',
+        'payment_provider_id' => '44',
         'status' => '1',
         'created_by' => null,
         'created_at' => null,
@@ -101,19 +101,8 @@ return [
         'updated_at' => null,
     ],
     'payment_method_provider9' => [
-        'id' => '10',
-        'store_id' => '0',
-        'payment_method_id' => '57',
-        'payment_provider_id' => '42',
-        'status' => '1',
-        'created_by' => null,
-        'created_at' => null,
-        'updated_by' => null,
-        'updated_at' => null,
-    ],
-    'payment_method_provider10' => [
         'id' => '11',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '60',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -122,9 +111,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider11' => [
+    'payment_method_provider10' => [
         'id' => '12',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '61',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -133,9 +122,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider12' => [
+    'payment_method_provider11' => [
         'id' => '13',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '62',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -144,9 +133,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider13' => [
+    'payment_method_provider12' => [
         'id' => '14',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '63',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -155,9 +144,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider14' => [
+    'payment_method_provider13' => [
         'id' => '15',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '67',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -166,9 +155,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider15' => [
+    'payment_method_provider14' => [
         'id' => '16',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '68',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -177,9 +166,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider16' => [
+    'payment_method_provider15' => [
         'id' => '17',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '69',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -188,9 +177,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider17' => [
+    'payment_method_provider16' => [
         'id' => '18',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '70',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -199,9 +188,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider18' => [
+    'payment_method_provider17' => [
         'id' => '19',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '71',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -210,9 +199,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider19' => [
+    'payment_method_provider18' => [
         'id' => '20',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '74',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -221,9 +210,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider20' => [
+    'payment_method_provider19' => [
         'id' => '21',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '75',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -232,9 +221,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider21' => [
+    'payment_method_provider20' => [
         'id' => '22',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '76',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -243,9 +232,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider22' => [
+    'payment_method_provider21' => [
         'id' => '23',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '77',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -254,9 +243,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider23' => [
+    'payment_method_provider22' => [
         'id' => '24',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '78',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -265,9 +254,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider24' => [
+    'payment_method_provider23' => [
         'id' => '25',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '79',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -276,9 +265,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider25' => [
+    'payment_method_provider24' => [
         'id' => '26',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '80',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -287,9 +276,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider26' => [
+    'payment_method_provider25' => [
         'id' => '27',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '81',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -298,9 +287,9 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider27' => [
+    'payment_method_provider26' => [
         'id' => '28',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '82',
         'payment_provider_id' => '42',
         'status' => '1',
@@ -309,11 +298,22 @@ return [
         'updated_by' => null,
         'updated_at' => null,
     ],
-    'payment_method_provider28' => [
+    'payment_method_provider27' => [
         'id' => '29',
-        'store_id' => '0',
+        'store_id' => '1',
         'payment_method_id' => '83',
         'payment_provider_id' => '42',
+        'status' => '1',
+        'created_by' => null,
+        'created_at' => null,
+        'updated_by' => null,
+        'updated_at' => null,
+    ],
+    'payment_method_provider28' => [
+        'id' => '30',
+        'store_id' => '1',
+        'payment_method_id' => '29',
+        'payment_provider_id' => '45',
         'status' => '1',
         'created_by' => null,
         'created_at' => null,
