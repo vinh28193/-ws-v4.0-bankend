@@ -1,10 +1,31 @@
 <?php
+/**
+ * @var $item \common\products\BaseProduct
+ */
 
+use common\helpers\WeshopHelper;
+print_r($item);
+die;
+$sellerCurrent = Yii::$app->request->get('seller');
+$sellerCurrent = $sellerCurrent ? $sellerCurrent : $item->getSeller();
+$url = function ($seller_id){
+    $param = [explode('?',\yii\helpers\Url::current())[0]];
+    $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
+    $param['seller'] = $seller_id;
+    if(isset($param['id'])){
+        unset($param['id']);
+    }
+    if(isset($param['name'])){
+        unset($param['name']);
+    }
+//           $param['portal'] = $portal;
+    return Yii::$app->getUrlManager()->createUrl($param);
+};
 
 ?>
 
 <div class="border-block payment-info">
-    <div class="qty form-inline">
+    <div class="qty form-inline" id="quantityGroup">
         <label>Số lượng:</label>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -16,9 +37,13 @@
             </div>
         </div>
     </div>
+    <div class="qty form-inline" id="outOfStock" style="display: none;">
+        <label style="color: red">Sản phẩm hết hàng</label>
+    </div>
     <div class="action-box">
-        <button type="button" class="btn btn-block btn-buy">Mua ngay</button>
-        <button type="button" class="btn btn-block btn-installment">Thanh toán trả góp</button>
+        <button type="button" id="buyNowBtn" class="btn btn-block btn-buy" style="display: block">Mua ngay</button>
+        <button type="button" id="quoteBtn" class="btn btn-block btn-buy" style="display: none">Yêu cầu báo giá</button>
+        <button type="button" id="installmentBtn" class="btn btn-block btn-installment">Thanh toán trả góp</button>
         <div class="text-center more">
             <a href="#"><i class="icon fav"></i></a>
             <a href="#"><i class="icon cart"></i></a>
@@ -34,7 +59,7 @@
             <li><img src="/img/detail_payment_5.png"></li>
         </ul>
     </div>
-    <p>Sản phẩm dự kiến giao khoảng ngày <span class="text-orange">28/02/2019</span> tới <span class="text-orange">07/03/2019</span> nếu quý khách thanh toán trong hôm nay.</p>
+    <p>Sản phẩm dự kiến giao khoảng ngày <span class="text-orange"><?= date('d/m/Y',time()+(60*60*24*15)) ?></span> tới <span class="text-orange"><?= date('d/m/Y',time()+(60*60*24*30)) ?></span> nếu quý khách thanh toán trong hôm nay.</p>
     <div class="guaranteed">
         <div class="title">Đảm bảo khách hàng</div>
         <ul>
@@ -48,36 +73,37 @@
         Hotline: <b class="text-orange">1900.6755</b>
     </div>
 </div>
-<div class="border-block other-supplier">
-    <div class="title">Nhà cung cấp khác</div>
-    <ul>
-        <li>
-            <b class="text-orange">50.800.000<span class="currency">đ</span></b>
-            <div class="seller">Bán bởi: <span class="text-blue">Multiple supplier</span></div>
-            <div class="rate text-orange">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <i class="far fa-star"></i>
-            </div>
-            <button type="button" class="btn btn-view">Xem ngay</button>
-        </li>
-        <li>
-            <b class="text-orange">50.800.000<span class="currency">đ</span></b>
-            <div class="seller">Bán bởi: <span class="text-blue">Multiple supplier</span></div>
-            <div class="rate text-orange">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <i class="far fa-star"></i>
-            </div>
-            <button type="button" class="btn btn-view">Xem ngay</button>
-        </li>
-        <li><a href="#" class="see-all text-blue">Xem tất cả <i class="fas fa-caret-down"></i></a></li>
-    </ul>
-</div>
+<?php
+if(count($item->providers) > 1){?>
+    <div class="border-block other-supplier">
+        <div class="title">Nhà cung cấp khác</div>
+        <ul>
+            <?php foreach($item->providers as $k => $provider) {
+                if ($provider->prov_id != $sellerCurrent) {
+                    $temp = $item;
+                    $temp->updateBySeller($provider->prov_id);
+                    ?>
+                    <li data-href="<?= $k > 1 ? 'more_seller' : '' ?>" style="display: <?= $k > 1 ? 'none' : 'block' ?>">
+                        <b class="text-orange"><?= WeshopHelper::showMoney($temp->getLocalizeTotalPrice(), 1, '') ?>
+                            <span class="currency">đ</span></b>
+                        <div class="seller">Bán bởi: <span class="text-blue"><?= $provider->name ?></span></div>
+                        <div class="rate text-orange">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <a href="<?= $url($provider->prov_id) ?>" target="_blank" class="btn btn-view">Xem ngay</a>
+                    </li>
+                <?php }
+            }?>
+            <li><a href="javascript:void (0)" onclick="viewMoreSeller(true)" style="display:block;" id="viewMoreSellerBtn" class="see-all text-blue">Xem tất cả <b><?= count($item->providers) -1 ?></b> người bán<i class="fas fa-caret-down"></i></a></li>
+            <li><a href="javascript:void (0)" onclick="viewMoreSeller(false)" style="display:none;" id="HideSellerBtn" class="see-all text-blue">Ẩn bớt<i class="fas fa-caret-up"></i></a></li>
+        </ul>
+    </div>
+<?php }
+?>
 <div class="border-block related-product">
     <div class="title">Sản phẩm tương tự</div>
     <ul>

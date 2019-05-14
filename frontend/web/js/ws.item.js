@@ -177,14 +177,30 @@
     var checkOutOfStock = function (activeVariation) {
         if(!activeVariation){
             alert("Hết hàng!");
+            markOutofStock(true);
             return false;
         }else {
             if(activeVariation.available_quantity > 0 && activeVariation.quantity_sold>=0 && activeVariation.available_quantity - activeVariation.quantity_sold <= 0 ){
                 alert("Hết hàng!");
+                markOutofStock(true);
                 return false;
             }
         }
+        markOutofStock(false);
         return true;
+    };
+    var markOutofStock = function (outOfStock) {
+        if(outOfStock){
+            $("#outOfStock").css('display','block');
+            $("#quantityGroup").css('display','none');
+            $("#quoteBtn").css('display','block');
+            $("#buyNowBtn").css('display','none');
+        }else {
+            $("#outOfStock").css('display','none');
+            $("#quantityGroup").css('display','inline-flex');
+            $("#quoteBtn").css('display','none');
+            $("#buyNowBtn").css('display','block');
+        }
     };
     var setUpDefaultOptions = function ($item) {
         var data = $item.data('wsItem');
@@ -404,4 +420,15 @@
 var changeBigImage = function (e) {
     $('#detail-slider div.item').removeClass('active');
     $(e).parent().addClass('active');
+};
+var viewMoreSeller = function (more) {
+    if(more){
+        $('[data-href=more_seller]').css('display','block');
+        $('#HideSellerBtn').css('display','block');
+        $('#viewMoreSellerBtn').css('display','none');
+    }else {
+        $('[data-href=more_seller]').css('display','none');
+        $('#HideSellerBtn').css('display','none');
+        $('#viewMoreSellerBtn').css('display','block');
+    }
 };
