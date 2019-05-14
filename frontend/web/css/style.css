@@ -5256,3 +5256,6 @@ a {
 .old-price{
   text-decoration: line-through;
 }
+.p1 {
+  padding: 0;
+}

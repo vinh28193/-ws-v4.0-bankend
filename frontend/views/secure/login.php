@@ -37,9 +37,11 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
     <div class="social-button-ws">
 
         <?php $authAuthChoice = AuthChoice::begin([  'baseAuthUrl' => ['secure/auth'] , 'popupMode' => false, ]); ?>
+                <div class="social-button">
              <?php foreach ($authAuthChoice->getClients() as $client): ?>
-                   <?= $authAuthChoice->clientLink($client) ?>
+                 <?= $authAuthChoice->clientLink($client) ?>
              <?php endforeach; ?>
+                </div>
          <?php AuthChoice::end(); ?>
 
         <?php
@@ -51,17 +53,6 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
         */
         ?>
 
-    </div>
-
-    <div class="social-button">
-        <a href="#" class="btn btn-fb facebook auth-link" href="/secure/auth?authclient=facebook" title="Facebook"
-            <i class="social-icon fb"></i>
-            <span>Facebook</span>
-        </a>
-        <a href="#" class="btn btn-google google auth-link" href="/secure/auth?authclient=google" title="Google"
-            <i class="social-icon google"></i>
-            <span>Google</span>
-        </a>
     </div>
 
     <p>Quý khách chưa có tài khoản
