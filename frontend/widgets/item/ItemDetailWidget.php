@@ -137,8 +137,9 @@ class ItemDetailWidget extends Widget
     public function renderPaymentOption()
     {
         return $this->render('payment', [
-            'images' => $this->item->primary_images
-        ]);
+            'images' => $this->item->primary_images,
+                'item' => $this->item
+    ]);
     }
     public function renderFullInfo(){
         return $this->render('item/info',[

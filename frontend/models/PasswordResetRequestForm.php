@@ -46,7 +46,7 @@ class PasswordResetRequestForm extends Model
         if (!$user) {
             return false;
         }
-        
+
         if (!Customer::isPasswordResetTokenValid($user->reset_password_token)) {
             $user->generatePasswordResetToken();
             if (!$user->save()) {
@@ -64,5 +64,14 @@ class PasswordResetRequestForm extends Model
             ->setTo($this->email)
             ->setSubject('Password reset for ' . Yii::$app->name)
             ->send();
+    }
+
+    public  function FindEmail()
+    {
+        /* @var $user Customer */
+        $cus = Customer::findOne([
+            'email' => $this->email,
+        ]);
+        return $cus;
     }
 }

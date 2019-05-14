@@ -31,6 +31,10 @@ class PromotionForm extends Model
     public $couponCode;
 
     /**
+     * @var integer so luong xu su dung
+     */
+    public $xu;
+    /**
      * @var integer
      */
     public $customerId;
@@ -55,17 +59,6 @@ class PromotionForm extends Model
      */
     private $_orders;
 
-    public $success = false;
-
-    public $message = 'Không có trương trình giảm giá';
-
-    private $_detail = [];
-
-    public function addDetail($detail)
-    {
-        $this->_detail[] = $detail;
-    }
-
     public $debug = [];
 
     /**
@@ -74,7 +67,9 @@ class PromotionForm extends Model
     public function setOrders($orders)
     {
         foreach ($orders as $key => $order) {
+            $order['paymentService'] = $this->paymentService;
             $this->_orders[$key] = new Order($order);
+
         }
     }
 
@@ -150,35 +145,65 @@ class PromotionForm extends Model
                 /** @var  $order PromotionItem */
                 $passed = $promotion->checkCondition($order);
                 if ($passed !== true && is_array($passed) && count($passed) === 2) {
-                    $response->errors[$index][$promotion->code] = $passed[1];
+                    $response->errors[$promotion->code][$index] = $passed[1];
                     continue;
                 }
                 $request->discountOrders[$index] = $order;
             }
             if (count($request->discountOrders) > 0) {
                 $promotion->calculatorDiscount($request, $response);
-                $response->success = true;
+                if (isset($response->errors[$promotion->code]) && count($response->errors[$promotion->code]) > 0) {
+                    unset($response->errors[$promotion->code]);
+                }
                 $response->message = 'app dụng trương chình thành công';
             }
         }
-        if (($coupon = $this->findCoupon()) !== null) {
+        if ($this->couponCode !== null) {
             $request = new PromotionRequest();
-
+            if (($coupon = $this->findCoupon()) === null) {
+                $response->errors[$this->couponCode] = "Not Found Coupon `{$this->couponCode}` ";
+                $response->success = count($response->details) > 0 && $response->discount > 0;
+                return $response;
+            }
             foreach ($this->_orders as $index => $order) {
                 /** @var  $order PromotionItem */
                 $passed = $coupon->checkCondition($order);
                 if ($passed !== true && is_array($passed) && count($passed) === 2) {
-                    $response->errors[$index][$coupon->code] = $passed[1];
+                    $response->errors[$coupon->code][$index] = $passed[1];
                     continue;
                 }
                 $request->discountOrders[$index] = $order;
             }
             if (count($request->discountOrders) > 0) {
                 $coupon->calculatorDiscount($request, $response);
-                $response->success = true;
+                if (isset($response->errors[$coupon->code]) && count($response->errors[$coupon->code]) > 0) {
+                    unset($response->errors[$coupon->code]);
+                }
                 $response->message = $coupon->message;
             }
         }
+        if ($this->xu !== null && $this->xu > 0) {
+            if (($xuPromotion = $this->findXu()) !== null) {
+                $passed = $xuPromotion->checkCondition(new PromotionItem([
+                    'paymentService' => $this->paymentService,
+                ]));
+                if ($passed === true) {
+                    $discount = $this->xu * 1000;
+                    $response->discount += $discount;
+                    $response->details[] = [
+                        'id' => $xuPromotion->id,
+                        'code' => $xuPromotion->code,
+                        'type' => Promotion::getType($xuPromotion->type),
+                        'message' => $xuPromotion->message,
+                        'value' => $discount
+                    ];
+                }
+
+            }
+
+
+        }
+        $response->success = count($response->details) > 0 && $response->discount > 0;
         return $response;
     }
 
@@ -207,4 +232,15 @@ class PromotionForm extends Model
         ])->all();
     }
 
+    /**
+     * @return Promotion|null
+     */
+    protected function findXu()
+    {
+        return Promotion::find()->where([
+            'AND',
+            ['type' => Promotion::TYPE_XU],
+            ['status' => 1]
+        ])->one();
+    }
 }
