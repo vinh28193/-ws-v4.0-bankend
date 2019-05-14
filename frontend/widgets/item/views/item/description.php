@@ -1,123 +1,56 @@
 <?php
 /**
  * @var $item \common\products\BaseProduct
+ * @var $product \common\products\RelateProduct
  */
 
-?>
-<div class="product-viewed product-list">
-    <div class="title">Sản phảm liên quan:</div>
-    <div id="product-viewed-2" class="owl-carousel owl-theme">
-        <div class="item-box">
-            <a href="#" class="item">
-                <div class="thumb">
-                    <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
-                </div>
-                <div class="info">
-                    <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                    <div class="price">
-                        <strong>20.430.000</strong>
-                        <span>6.800.000</span>
-                        <span class="sale-tag">30% OFF</span>
+use common\helpers\WeshopHelper;
+if($item->relate_products) {
+    ?>
+    <div class="product-viewed product-list">
+        <div class="title">Sản phẩm liên quan:</div>
+        <div id="product-viewed-2" class="owl-carousel owl-theme">
+            <?php foreach ($item->relate_products as $product){
+                $percent = $product->retail_price && $product->sell_price ? round(($product->retail_price - $product->sell_price) / $product->retail_price,0) : 0;
+                ?>
+            <div class="item-box">
+                <a href="<?= WeshopHelper::generateUrlDetail($item->type,$product->title,$product->item_id) ?>" class="item">
+                    <div class="thumb">
+                        <img src="<?= $product->image ?>" alt=""
+                             title=""/>
                     </div>
-                </div>
-            </a>
-        </div>
-        <div class="item-box">
-            <a href="#" class="item">
-                <div class="thumb">
-                    <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
-                </div>
-                <div class="info">
-                    <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                    <div class="price">
-                        <strong>20.430.000</strong>
-                        <span>6.800.000</span>
+                    <div class="info">
+                        <div class="name"><?= $product->title ?></div>
+                        <div class="price">
+                            <strong><?php
+                                if($product->sell_price){
+                                    echo WeshopHelper::showMoney($product->sell_price*Yii::$app->storeManager->getExchangeRate(),1);
+                                }else{
+                                    echo "Nhấp vào để xem chi tiết";
+                                }
+                                ?></strong>
+                            <?php if($product->retail_price && $product->sell_price < $product->retail_price) {?>
+                                <span><?= WeshopHelper::showMoney($product->retail_price*Yii::$app->storeManager->getExchangeRate(),1); ?></span>
+                            <?php
+                            if ($percent>0){
+                                echo '<span class="sale-tag">'.$percent.'% OFF</span>';
+                            }
+                            }?>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
-        <div class="item-box">
-            <a href="#" class="item">
-                <div class="thumb">
-                    <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
-                </div>
-                <div class="info">
-                    <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                    <div class="price">
-                        <strong>20.430.000</strong>
-                        <span>6.800.000</span>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="item-box">
-            <a href="#" class="item">
-                <div class="thumb">
-                    <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
-                </div>
-                <div class="info">
-                    <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                    <div class="price">
-                        <strong>20.430.000</strong>
-                        <span>6.800.000</span>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="item-box">
-            <a href="#" class="item">
-                <div class="thumb">
-                    <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
-                </div>
-                <div class="info">
-                    <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                    <div class="price">
-                        <strong>20.430.000</strong>
-                        <span>6.800.000</span>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="item-box">
-            <a href="#" class="item">
-                <div class="thumb">
-                    <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
-                </div>
-                <div class="info">
-                    <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                    <div class="price">
-                        <strong>20.430.000</strong>
-                        <span>6.800.000</span>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="item-box">
-            <a href="#" class="item">
-                <div class="thumb">
-                    <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg" alt="" title=""/>
-                </div>
-                <div class="info">
-                    <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                    <div class="price">
-                        <strong>20.430.000</strong>
-                        <span>6.800.000</span>
-                    </div>
-                </div>
-            </a>
+                </a>
+            </div>
+            <?php } ?>
         </div>
     </div>
-</div>
+    <?php
+}
+?>
 <div class="detail-block-2">
     <div class="title">Mô tả sản phẩm:</div>
     <ul>
-        <li>Brushed and polished stainless steel case measures 42mm diameter by 13mm thick.</li>
-        <li>Genuine leather strap includes a special deployment clasp.</li>
-        <li>Patterned brown dial has classic rose gold tone luminous hands.</li>
-        <li>Roman numeral hour markers make this handsome watch absolutely stunning.</li>
-        <li>Skeleton sub dials allow you to see the wonders of the precise Automatic movement within the case.</li>
-        <li>Twenty-four hour and seconds sub dials.</li>
-        <li>The scratch resistant mineral crystal protects the water resistant case.</li>
+        <?= $item->description ? '<li>'.$item->description.'</li>' : '' ?>
+        <?= isset($item->sort_desc) && $item->sort_desc ? '<li>'.$item->sort_desc.'</li>' : '' ?>
     </ul>
 </div>
 <div class="detail-block-2">
@@ -126,36 +59,7 @@
             <div class="title">Chi tiết sản phẩm:</div>
         </div>
         <div class="col-md-6">
-            <div class="detail-table">
-                <table class="table table-striped">
-                    <tbody>
-                    <tr>
-                        <td>Brand, Seller, or Collection Name</td>
-                        <td>Brand, Seller, or Collection Name</td>
-                    </tr>
-                    <tr>
-                        <td>Model number</td>
-                        <td>Model number</td>
-                    </tr>
-                    <tr>
-                        <td>Brand, Seller, or Collection Name</td>
-                        <td>Brand, Seller, or Collection Name</td>
-                    </tr>
-                    <tr>
-                        <td>Model number</td>
-                        <td>Model number</td>
-                    </tr>
-                    <tr>
-                        <td>Brand, Seller, or Collection Name</td>
-                        <td>Brand, Seller, or Collection Name</td>
-                    </tr>
-                    <tr>
-                        <td>Model number</td>
-                        <td>Model number</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <?= isset($item->manufacturer_description) && $item->manufacturer_description ? $item->manufacturer_description : '' ?>
         </div>
     </div>
 </div>

@@ -299,7 +299,7 @@ class WeshopHelper
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);
                 $finalPrice = $floorNumber * $roundPrice;
-                return number_format($finalPrice, 0, ',', '.') . ' '.$symbol;
+                return number_format($finalPrice, 0, ',', '.') . $symbol;
                 break;
             case 2:
                 $symbol = $symbol !== null ? $symbol : '$';
@@ -307,7 +307,7 @@ class WeshopHelper
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);
                 $finalPrice = $floorNumber * $roundPrice;
-                return $symbol.' '.number_format($finalPrice, 2, '.', ',');
+                return $symbol.number_format($finalPrice, 2, '.', ',');
                 break;
             case 7:
                 $symbol = $symbol !== null ? $symbol : 'RP';
@@ -315,7 +315,7 @@ class WeshopHelper
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);
                 $finalPrice = $floorNumber * $roundPrice;
-                return $symbol.' '.number_format($finalPrice, 0, '.', ',');
+                return $symbol.number_format($finalPrice, 0, '.', ',');
                 break;
             default:
                 $symbol = $symbol !== null ? $symbol : 'đ';
@@ -323,7 +323,7 @@ class WeshopHelper
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);
                 $finalPrice = $floorNumber * $roundPrice;
-                return number_format($finalPrice, 0, ',', '.') . ' '.$symbol;
+                return number_format($finalPrice, 0, ',', '.') . $symbol;
                 break;
         }
     }

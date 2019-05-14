@@ -3588,8 +3588,7 @@ a {
       border-top: none; }
     .detail-content .product-viewed .owl-carousel .item-box .item .name {
       font-size: 12px;
-      white-space: normal; }
-
+      white-space: nowrap; }
 .ZoomContainer .zoomWindow {
   border: 1px solid #ebebeb !important; }
 
@@ -5261,4 +5260,7 @@ a {
 }
 .detail-block .thumb-slider .zoomWrapper{
   width: auto !important;
+}
+.name{
+  white-space: nowrap;
 }
