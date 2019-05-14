@@ -247,8 +247,8 @@
             else {
                 html += '<div class="item">';
             }
-            html += '<a href="#" data-image="' + value.thumb + '" data-zoom-image="' + value.main + '"> ' +
-                '<img src="' + value.thumb + '" width="100"/>' +
+            html += '<a href="#" data-image="' + value.main + '" data-zoom-image="' + value.main + '"> ' +
+                '<img src="' + value.main + '" width="100"/>' +
                 '</a>';
             html += '</div>'
         });
@@ -262,6 +262,7 @@
         var $input = findInput($item, variationOption);
         var name = variationOption.name;
         var type = $input.attr('type');
+        console.log($input);
         if (type === 'spanList') {
             $input.on('click.wsItem', function (e) {
                 methods.changeVariation.call($item, variationOption, $(this).data('index'));
@@ -281,9 +282,9 @@
         })[0];
     };
     var findInput = function ($item, variationOption) {
-        var name = variationOption.name;
-        var $dataRef = '[data-ref=' + variationOption.name + ']';
-        var selection = $dataRef + ' #' + name.toLowerCase();
+        var id = variationOption.id;
+        var $dataRef = '[data-ref=' + variationOption.id + ']';
+        var selection = $dataRef + ' #' + id.toLowerCase();
         var $input = $item.find(selection);
         if ($input.length && $input[0].tagName.toLowerCase() === 'ul') {
             return $input.find('span');

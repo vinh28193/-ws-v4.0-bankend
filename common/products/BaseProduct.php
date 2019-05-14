@@ -74,7 +74,9 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
     public $shipping_weight = 1;
     public $is_prime = false;
     public $tax_fee;
+    /** @var $variation_options VariationOption[] */
     public $variation_options;
+    /** @var $variation_mapping VariationMapping[] */
     public $variation_mapping;
     public $technical_specific;
     public $condition;

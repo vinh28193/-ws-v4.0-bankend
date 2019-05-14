@@ -1,11 +1,26 @@
 <?php
+
+use common\helpers\WeshopHelper;
+use common\products\BaseProduct;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\helpers\Inflector;
+
+/**
+ * @var $item BaseProduct
+ */
+
 ?>
 
 <div class="product-full-info">
-    <a href="#" class="brand">Bulova</a>
+    <a href="#" class="brand"><?= $item->providers ? $item->providers[0]->name : '---' ?></a>
     <div class="title">
-        <h2>Women's Bugi BUR223GN Diamond Flower Engraved Gold Tone Stainless Steel Watch</h2>
-        <span class="sale-tag">30% OFF</span>
+        <h2><?= $item->item_name ?></h2>
+        <?php
+        if (($salePercent = $item->getSalePercent()) > 0) {
+            echo ' <span class="sale-tag">' . $salePercent . '% OFF</span>';
+        }
+        ?>
     </div>
     <div class="rating">
         <div class="rate text-orange">
@@ -18,31 +33,44 @@
         <span>87 người đánh giá</span>
     </div>
     <div class="price">
-        <strong class="text-orange">5.600.000<span class="currency">đ</span></strong>
-        <b class="old-price">9.800.000<span class="currency">đ</span></b>
-        <span class="save">(Tiết kiệm: 814.000đ)</span>
+        <strong class="text-orange"><?=  WeshopHelper::showMoney($item->getLocalizeTotalPrice(),1,'') ?><span class="currency">đ</span></strong>
+        <?php if ($item->start_price){ ?>
+            <b class="old-price"><?=  WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(),1,'') ?><span class="currency">đ</span></b>
+            <span class="save">(Tiết kiệm: <?=  WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(),1,'') ?>đ)</span>
+        <?php } ?>
     </div>
-    <div class="total-price">(Giá trọn gói về Việt Nam với trọng lượng ước tính <span>450 gram</span>)</div>
+    <div class="total-price">(Giá trọn gói về Việt Nam với trọng lượng ước tính <span><?= $item->getShippingWeight() ?> gram</span>)</div>
     <div class="option-box form-inline">
-        <label>Chọn size:</label>
-        <div class="dropdown">
-            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">M</button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">S</a>
-                <a class="dropdown-item" href="#">M</a>
-                <a class="dropdown-item" href="#">L</a>
+        <label>Tình trạng: <?= $item->condition ?></label>
+    </div>
+    <?php
+    if($item->variation_options){
+        $countVariation = count($item->variation_options);
+        $checkBoxImg = false;
+        foreach ($item->variation_options as $index => $variationOption) {
+            /* @var $variationOption \common\products\VariationOption */
+            if($variationOption->images_mapping && !$checkBoxImg){ $checkBoxImg = true;?>
+                    <div class="option-box">
+                        <label><?= $variationOption->name ?>: <?= $variationOption->values ? $variationOption->values[0] : '---' ?></label>
+                        <ul class="style-list">
+                            <?php foreach ($variationOption->images_mapping as $k => $value) {?>
+                                <li type="spanList" class="<?= $k == 0 ? 'active' : '' ?>"><span><img src="<?= $value->images ? $value->images[0]->thumb : '/img/no_image.png' ?>" alt="<?= $value->value ?>" title="<?= $value->value ?>"/></span></li>
+                            <?php }?>
+                        </ul>
+                    </div>
+           <?php }else{?>
+            <div class="option-box form-inline">
+                <label><?= $variationOption->name ?>:</label>
+                <select class="form-control form-control-sm" type="dropDown" id="<?= ($variationOption->id) ?>" name="<?= ($variationOption->id) ?>" data-ref="<?= ($variationOption->id) ?>">
+                    <?php foreach ($variationOption->values as $k => $v) {?>
+                    <option value="<?= $k ?>"><?= $v ?></option>
+                <?php }?>
+                </select>
             </div>
-        </div>
-        <label>Tình trạng: Hàng mới</label>
-    </div>
-    <div class="option-box">
-        <label>Màu sắc: màu đỏ</label>
-        <ul class="style-list">
-            <li class="active"><span><img src="https://i.ebayimg.com/00/s/MTA3N1gxNjAw/z/p0EAAOSwVcZb1ovR/$_57.JPG" alt=""/></span></li>
-            <li><span><img src="https://i.ebayimg.com/00/s/MTI5MVgxNjAw/z/qsUAAOSwR6Bb1oxl/$_57.JPG" alt=""/></span></li>
-            <li><span><img src="https://i.ebayimg.com/00/s/OTg2WDE2MDA=/z/syUAAOSwIaRb1oxr/$_57.JPG" alt=""/></span></li>
-        </ul>
-    </div>
+            <?php }
+        }
+    }
+    ?>
     <ul class="info-list">
         <li>Imported</li>
         <li>Due to a recent redesign by Bulova, recently manufactured Bulova watches,including all watches sold and shipped by Amazon, will not feature the Bulova tuning fork logo on the watch face.</li>

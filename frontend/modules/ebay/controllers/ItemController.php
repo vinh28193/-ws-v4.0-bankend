@@ -31,6 +31,8 @@ class ItemController extends EbayController
                 'errors' => $form->getErrors()
             ]);
         }
+//        print_r($item);
+//        die;
         return $this->render('index', [
             'item' => $item
         ]);
