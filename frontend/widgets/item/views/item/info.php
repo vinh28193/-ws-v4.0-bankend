@@ -85,5 +85,8 @@ $salePercent = $item->getSalePercent();
         <li>Water resistant to 99 feet (30 M): withstands rain and splashes of water, but not showering or submersion</li>
         <li>Case Diameter: 42 mm ; Case Thickness: 11.2 mm ; 3-year Limited Warranty</li>
     </ul>
-    <a href="#" class="more text-blue">Xem thêm <i class="fas fa-caret-down"></i></a>
+    <div class="see-more text-blue">
+        <span class="more">Xem thêm <i class="fas fa-caret-down"></i></span>
+        <span class="less">Ẩn bớt <i class="fas fa-caret-up"></i></span>
+    </div>
 </div>

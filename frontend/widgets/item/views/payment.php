@@ -4,8 +4,6 @@
  */
 
 use common\helpers\WeshopHelper;
-print_r($item);
-die;
 $sellerCurrent = Yii::$app->request->get('seller');
 $sellerCurrent = $sellerCurrent ? $sellerCurrent : $item->getSeller();
 $url = function ($seller_id){
