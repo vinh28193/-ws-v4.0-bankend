@@ -18,8 +18,8 @@ return [
             'clients' => [
                 'google' => [
                     'class' => 'yii\authclient\clients\Google',
-                    'clientId' => '745561014114-4emhnbr67v62flr2qbmfarho216cogc0.apps.googleusercontent.com',
-                    'clientSecret' => 'WCSvO39GF8OppvoTqLp3Ilg3',
+                    'clientId' => '359287477925-tv9dqbpja9m218v4laaadl6h9ehqqj6e.apps.googleusercontent.com',
+                    'clientSecret' => 'ambyLUowISOHJguxtMxI8y8D',
                 ],
                 'facebook' => [
                     'class' => 'yii\authclient\clients\Facebook',
