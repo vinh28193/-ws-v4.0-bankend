@@ -37,8 +37,6 @@ class Module extends \yii\base\Module
         if (!$this->user instanceof IdentityInterface) {
             $this->user = Yii::$app->user->identity;
         }
-        $view = Yii::$app->getView();
-        PaymentAssets::register($view);
         // custom initialization code goes here
     }
 }

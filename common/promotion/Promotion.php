@@ -169,7 +169,7 @@ class Promotion extends DbPromotion
             $request->totalDiscountAmount = $discount;
         }
         $orders['totalValidAmount'] = $request->totalValidAmount;
-        $response->orders[$this->code] = $orders;
+        $response->orders[implode('-',[self::getType($this->type),$this->code])] = $orders;
         $response->discount += $request->totalDiscountAmount;
         $response->details[] = [
             'id' => $this->id,

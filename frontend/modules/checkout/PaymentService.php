@@ -62,4 +62,54 @@ class PaymentService
                 return 'Unknown';
         }
     }
+
+    public static function createCheckPromotionParam(Payment $payment)
+    {
+        if (empty($payment->orders)) {
+            return [];
+        }
+        $orders = [];
+        foreach ($payment->orders as $idx => $order) {
+            $item = [];
+            $item['itemType'] = strtolower($order['portal']);
+            $item['shippingWeight'] = self::toNumber($order['total_weight_temporary']);
+            $item['shippingQuantity'] = self::toNumber($order['total_quantity']);
+            $item['totalAmount'] = self::toNumber($order['totalAmount']);
+            if (count($order['products']) === 0) {
+                continue;
+            }
+            $products = [];
+            foreach ($order['products'] as $pid => $product) {
+                $pItem = [];
+                $pItem['itemType'] = strtolower($product['portal']);
+                $pItem['shippingWeight'] = self::toNumber($product['total_weight_temporary']);
+                $pItem['shippingQuantity'] = self::toNumber($product['quantity_customer']);
+                $pItem['categoryId'] = isset($product['category']['alias']) ? self::toNumber($product['category']['alias']) : null;
+                $pItem['totalAmount'] = self::toNumber($product['total_price_amount_local']);
+                if (count($product['fees']) === 0) {
+                    continue;
+                }
+                $fees = [];
+                foreach ($product['fees'] as $key => $fee) {
+                    $fees[$key] = isset($fee['local_amount']) ? self::toNumber($fee['local_amount']) : 0;
+                }
+                $pItem['additionalFees'] = $fees;
+                $products[$pid] = $pItem;
+            }
+            $item['products'] = $products;
+            $orders[$idx] = $item;
+        }
+        return [
+            'couponCode' => $payment->coupon_code,
+            'paymentService' => implode('_', [$payment->payment_method, $payment->payment_bank_code]),
+            'totalAmount' => $payment->total_amount,
+            'customerId' => Yii::$app->getUser()->getId(),
+            'orders' => $orders
+        ];
+    }
+
+    public static function toNumber($value)
+    {
+        return (integer)$value;
+    }
 }

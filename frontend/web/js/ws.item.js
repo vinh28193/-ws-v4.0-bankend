@@ -43,9 +43,10 @@
     var priceUpdateResponse = {
         fees: [],
         queryParams: [],
-        sellPrice: 0,
-        startPrice: 0,
-        salePercent: 0
+        sellPrice: '',
+        startPrice: '',
+        salePercent: 0,
+        contentPrice: '',
     };
     var currentVariations = [];
 
@@ -58,7 +59,6 @@
                 }
                 params = $.extend({}, defaultParams, params || {});
                 options = $.extend({}, defaultOptions, options || {});
-
 
                 $.each(params.variation_options, function (index, variationOption) {
                     checkValidVariation($item, variationOption);
@@ -113,33 +113,35 @@
             var params = data.params;
             currentVariations = currentVariations.filter(c => c.name !== name);
             currentVariations.push({name: name, value: value});
-            const activeVariation = findVariation(params.variation_mapping, currentVariations);
-            if (activeVariation !== undefined) {
-                $.when.apply(this, deferredArrays).always(function () {
-                    var queryParams = data.options.queryParams;
-                    queryParams.sku = activeVariation.variation_sku;
-                    ws.ajax(data.options.ajaxUrl, {
-                        type: 'POST',
-                        data: queryParams,
-                        dataType: 'json',
-                        complete: function (jqXHR, textStatus) {
-                            $item.trigger(events.ajaxComplete, [jqXHR, textStatus]);
-                        },
-                        beforeSend: function (jqXHR, settings) {
-                            $item.trigger(events.ajaxBeforeSend, [jqXHR, settings]);
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                data.ajaxed = true;
-                                var content = $.extend({}, priceUpdateResponse, response.content || {});
-                                updatePrice($item, content, data.ajaxed)
+            if(currentVariations.length === data.params.variation_options.length){
+                const activeVariation = findVariation(params.variation_mapping, currentVariations);
+                if (checkOutOfStock(activeVariation)) {
+                    $.when.apply(this, deferredArrays).always(function () {
+                        var queryParams = data.options.queryParams;
+                        queryParams.sku = activeVariation.variation_sku;
+                        ws.ajax(data.options.ajaxUrl, {
+                            type: 'POST',
+                            data: queryParams,
+                            dataType: 'json',
+                            complete: function (jqXHR, textStatus) {
+                                $item.trigger(events.ajaxComplete, [jqXHR, textStatus]);
+                            },
+                            beforeSend: function (jqXHR, settings) {
+                                $item.trigger(events.ajaxBeforeSend, [jqXHR, settings]);
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    data.ajaxed = true;
+                                    var content = $.extend({}, priceUpdateResponse, response.content || {});
+                                    updatePrice($item, content, data.ajaxed)
+                                }
+                            },
+                            error: function () {
+                                data.ajaxed = false;
                             }
-                        },
-                        error: function () {
-                            data.ajaxed = false;
-                        }
-                    }, true);
-                });
+                        }, true);
+                    });
+                }
             }
         },
         addToCart: function () {
@@ -172,21 +174,34 @@
         };
         return array;
     };
+    var checkOutOfStock = function (activeVariation) {
+        if(!activeVariation){
+            alert("Hết hàng!");
+            return false;
+        }else {
+            if(activeVariation.available_quantity > 0 && activeVariation.quantity_sold>=0 && activeVariation.available_quantity - activeVariation.quantity_sold <= 0 ){
+                alert("Hết hàng!");
+                return false;
+            }
+        }
+        return true;
+    };
     var setUpDefaultOptions = function ($item) {
         var data = $item.data('wsItem');
         if (data.params.variation_mapping.length === 0) {
             return;
         }
         var activeVariation = [];
-        var sku = data.options.queryParams.sku;
+        var sku = data.params.sku;
         if (sku !== undefined) {
             activeVariation = data.params.variation_mapping.filter(m => m.variation_sku === sku);
         }
         if (activeVariation.length === 0) {
-            activeVariation = data.params.variation_mapping[0];
+            return;
+            // activeVariation = data.params.variation_mapping[0];
         }
         var images = data.params.images;
-        $.each(activeVariation.options_group, function (index, group) {
+        $.each(activeVariation[0].options_group, function (index, group) {
             for (var i = 0; i < data.params.variation_options.length; i++) {
                 var variation_options = data.params.variation_options[i];
                 if (group.name === variation_options.name) {
@@ -195,10 +210,13 @@
                         if (values[j] === group.value) {
                             var $input = findInput($item, variation_options);
                             var type = $input.attr('type');
+                            currentVariations.push({name: group.name, value: group.value});
                             if (type === 'spanList' && $input.length > 0 && typeof $input[j] !== 'undefined') {
-                                console.log($input[j]);
+                                $('span[type=spanList]').parent().removeClass('active');
+                                $('span[tabindex='+j+']').parent().addClass('active');
+                                $('#label_'+variation_options.id).html(group.name+': '+group.value);
                             } else if (type === 'dropDown' && $input.length > 0) {
-                                console.log($input[0]);
+                                $input.val(j);
                             }
                             if (variation_options.images_mapping.length > 0) {
                                 const imgs = variation_options.images_mapping.filter(i => i.value === values[j]);
@@ -220,19 +238,64 @@
     var activeVariationMaping = function ($item, mapping) {
 
     };
+    var checkVariationOutStock = function (variation,variation_mapping,variationcurrent) {
+        var itemTemp = [];
+        variation_mapping.forEach(function (entry) {
+            var temp = 0;
+            for (var i = 0; i < variationcurrent.length; i++) {
+                for (var j = 0; j < entry.options_group.length; j++) {
+                    if (variationcurrent[i]['name'] === entry.options_group[j]['name'] && variationcurrent[i]['value'] === entry.options_group[j]['value']) {
+                        temp = temp + 1;
+                    }
+                }
+            }
+            if (temp === variationcurrent.length && (entry.quantity_sold - entry.available_quantity) !== 0) {
+                itemTemp.push(entry);
+            }
+        });
+        $('div[rel=specifics] select option').attr("disabled", "disabled");
+        itemTemp.forEach(function (datatemp) {
+            var  i = 0;
+            datatemp.options_group.forEach(function (itemvarri) {
+                // console.log(itemvarri);
+                i ++ ;
+                if (i === -1) {
+                    $("select[name='" + itemvarri.name.replace(/\'/g,"\\'") + "'] option").removeAttr("disabled");
+                }
+                // else if(i === (variationcurrent.length +1 )){
+                //   txtHtml =  $("select[name='"+itemvarri.name+"']").html();
+                // }else if(i === variationcurrent.length){
+                //     $("select[name='"+itemvarri.name+"']").html(txtHtml);
+                // }
+                else {
+
+                    $('select[name="' + itemvarri.name.replace(/\'/g,"\\'") + '"] option[value="' + itemvarri.value + '"]').removeAttr("disabled");
+                }
+            });
+        });
+        $("div[rel=specifics] select option[value='0']").removeAttr("disabled");
+    };
     var updatePrice = function ($item, content, isCalling) {
         var data = $item.data('wsItem');
         var selection = 'div.' + data.options.priceCssSelection;
         $(selection).find('strong.text-orange').html(content.sellPrice);
+        if(content.contentPrice){
+            $(selection).html(content.contentPrice);
+        }
+        if(content.salePercent > 0){
+            $('#sale-tag').html(content.salePercent + '% OFF');
+            $('#sale-tag').css('display','block');
+        }else {
+            $('#sale-tag').html('--% OFF');
+            $('#sale-tag').css('display','none');
+        }
         if (content.queryParams.sku !== undefined) {
             data.params.sku = content.queryParams.sku;
             $item.data('wsItem', data);
         }
-        console.log(content);
     };
     var tester = function ($item) {
         var data = $item.data('wsItem');
-        console.log(data);
     };
     var changeImage = function ($item, images) {
         var html = '';
@@ -250,15 +313,18 @@
         $('#detail-slider').html(html);
         $('#detail-big-img').attr('src',images[0].main);
         $('#detail-big-img').attr('data-zoom-image',images[0].main);
+        $('#detail-slider .active a').click();
     };
     var watchVariationOptions = function ($item, variationOption) {
         var $input = findInput($item, variationOption);
-        var name = variationOption.name;
         var type = $input.attr('type');
-        console.log($input);
         if (type === 'spanList') {
             $input.on('click.wsItem', function (e) {
-                methods.changeVariation.call($item, variationOption, $(this).data('index'));
+                $('span[type=spanList]').parent().removeClass('active');
+                $(this).parent().addClass('active');
+                var index = $(this).attr('tabindex');
+                $('#label_'+variationOption.id).html(variationOption.name+': '+variationOption.values[index]);
+                methods.changeVariation.call($item, variationOption, index);
             });
         } else {
             $input.on('change.wsItem', function (e) {
@@ -276,9 +342,8 @@
     };
     var findInput = function ($item, variationOption) {
         var id = variationOption.id;
-        var selection = ' #' + id.toLowerCase();
-        console.log(selection);
-        var $input = $item.find(selection);
+        var selection = ' [data-ref=' + id+']'.toLowerCase();
+        var $input = $(selection);
         if ($input.length && $input[0].tagName.toLowerCase() === 'ul') {
             return $input.find('span');
         } else {
@@ -329,7 +394,6 @@
             data.parentSku = data.sku;
             data.sku = params.sku;
         }
-        console.log(data);
         var $ajaxOptions = {
             type: 'POST',
             dataType: 'json',

@@ -3,9 +3,10 @@
 
 namespace frontend\modules\amazon\controllers;
 
-use Yii;
+use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
 use common\products\forms\ProductDetailFrom;
+use Yii;
 
 class ItemController extends AmazonController
 {
@@ -46,14 +47,21 @@ class ItemController extends AmazonController
             foreach ($item->getAdditionalFees()->keys() as $key) {
                 $fees[$key] = $item->getAdditionalFees()->getTotalAdditionFees($key)[1];
             }
+//            $item->start_price = $item->sell_price + 10;
             $response['success'] = true;
             $response['message'] = 'success';
+            $contentPrice = '<strong class="text-orange">' . WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, '') . '<span class="currency">đ</span></strong>';
+            if ($item->start_price) {
+                $contentPrice .= '<b class="old-price">' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(), 1, '') . '<span class="currency">đ</span></b>';
+                $contentPrice .= '<span class="save">(Tiết kiệm: ' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') . 'đ)</span>';
+            }
             $response['content'] = [
                 'fees' => $fees,
                 'queryParams' => $post,
                 'sellPrice' => $item->getLocalizeTotalPrice(),
                 'startPrice' => $item->getLocalizeTotalStartPrice(),
-                'salePercent' => $item->getSalePercent()
+                'salePercent' => $item->getSalePercent(),
+                'contentPrice' => $contentPrice,
             ];
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

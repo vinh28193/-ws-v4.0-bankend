@@ -53,7 +53,7 @@ class ProductDetailFrom extends BaseForm
         return ArrayHelper::merge(parent::rules(), [
             ['id', 'required'],
             ['id', 'string', 'min' => 3, 'max' => 40],
-            ['sku', 'string', 'min' => 3, 'max' => 12],
+            ['sku', 'string', 'min' => 3],
             ['quantity', 'default', 'value' => 1],
             ['seller', 'string'],
             ['seller', 'filter', 'filter' => '\yii\helpers\Html::encode'],
@@ -78,7 +78,6 @@ class ProductDetailFrom extends BaseForm
      */
     public function detail($renew = false)
     {
-
         if (!$this->validate()) {
             return false;
         }

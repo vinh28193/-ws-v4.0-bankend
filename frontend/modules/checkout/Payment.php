@@ -3,6 +3,7 @@
 
 namespace frontend\modules\checkout;
 
+use common\promotion\PromotionForm;
 use frontend\modules\checkout\models\ShippingForm;
 use Yii;
 use yii\di\Instance;
@@ -57,7 +58,7 @@ class Payment extends Model
     public $use_xu = 0;
     public $bulk_point = 0;
     public $coupon_code;
-    public $discount_detail;
+    public $discount_detail = [];
     public $total_discount_amount = 0;
 
     public $currency;
@@ -86,12 +87,29 @@ class Payment extends Model
      */
     public $storeManager = 'storeManager';
 
+    /**
+     * @var yii\web\View
+     */
+    public $view;
+
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function init()
     {
         parent::init();
         $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
+        $this->view = Yii::$app->getView();
         $this->initDefaultMethod();
-
+        $this->registerClientScript();
+//        $response = $this->checkPromotion();
+//        if ($response->success && $response->discount > 0 && count($response->details) > 0) {
+//            $this->discount_detail = $response->details;
+//            $this->total_discount_amount = $response->discount;
+//        }
+        $this->currency = $this->storeManager->getStore()->currency;
+        $this->total_amount_display -= $this->total_discount_amount;
+        $this->total_amount_display = $this->storeManager->showMoney($this->total_amount_display);
     }
 
     public function rules()
@@ -110,6 +128,18 @@ class Payment extends Model
         }
     }
 
+    public function registerClientScript()
+    {
+        PaymentAssets::register($this->view);
+        $options = Json::htmlEncode($this->getClientOptions());
+        $this->view->registerJs("ws.payment.init($options);");
+        if ($this->shippingForm !== null) {
+//            $this->view->registerJs("ws.payment.filterShippingAddress();")
+        }
+
+        $this->view->registerJs("console.log(ws.payment.payment);");
+    }
+
     public function loadPaymentProviderFromCache()
     {
         return PaymentService::loadPaymentByStoreFromDb(1);
@@ -122,7 +152,10 @@ class Payment extends Model
 
     public function checkPromotion($checkOnly = true)
     {
-
+        $form = new PromotionForm();
+        $params = PaymentService::createCheckPromotionParam($this);
+        $form->loadParam($params);
+        return $form->checkPromotion();
     }
 
     public function createGaData()
@@ -133,8 +166,6 @@ class Payment extends Model
     public function initPaymentView()
     {
         $view = Yii::$app->getView();
-        $options = Json::htmlEncode($this->getClientOptions());
-        $view->registerJs("ws.payment.init($options);");
         $providers = $this->loadPaymentProviderFromCache();
         if ($this->page === self::PAGE_TOP_UP) {
             $this->payment_method = 25;
@@ -144,11 +175,11 @@ class Payment extends Model
         $group = [];
         foreach ($providers as $provider) {
             foreach ($provider['paymentMethodProviders'] as $paymentMethodProvider) {
-                if ($paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_ALIPAY_INSTALMENT && ($this->total_amount < self::ALEPAY_INSTALMENT_MIN || count($this->orders) > 1 )){
+                if ($paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_ALIPAY_INSTALMENT && ($this->total_amount < self::ALEPAY_INSTALMENT_MIN || count($this->orders) > 1)) {
                     continue;
                 }
 
-                if ($paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_MANDIRI_INSTALMENT && $this->total_amount < 500000){
+                if ($paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_MANDIRI_INSTALMENT && $this->total_amount < 500000) {
                     continue;
                 }
 
@@ -159,7 +190,7 @@ class Payment extends Model
                         $paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_WSVP ||
                         $paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_MASTER_VISA
                     )
-                ){
+                ) {
                     continue;
                 }
 
@@ -203,43 +234,4 @@ class Payment extends Model
         ];
     }
 
-    public static function getGroupName($group)
-    {
-        switch ($group) {
-            case self::PAYMENT_GROUP_MASTER_VISA:
-                return 'Credit Card';
-            case self::PAYMENT_GROUP_BANK:
-                return 'Bank Transfer';
-            case self::PAYMENT_GROUP_NL_WALLET:
-                return 'NganLuong E-Wallet';
-            case self::PAYMENT_GROUP_WSVP:
-                return 'Over WeShop\'s counter';
-            case self::PAYMENT_GROUP_WS_WALLET:
-                return 'WeShop E-Wallet';
-            case self::PAYMENT_GROUP_COD:
-                return 'COD';
-            case self::PAYMENT_GROUP_DRAGON:
-                return 'Dragon Pay';
-            case self::PAYMENT_GROUP_PAYNAMIC:
-                return 'Paynamic';
-            case self::PAYMENT_GROUP_MOLMY:
-                return 'MOL';
-            case self::PAYMENT_GROUP_C2P2:
-                return 'C2P2 Account';
-            case self::PAYMENT_GROUP_ALIPAY_INSTALMENT:
-                return 'Thanh toán trả góp';
-            case self::PAYMENT_GROUP_MANDIRI_INSTALMENT:
-                return 'Cicilan Bank';
-            case self::PAYMENT_GROUP_MCPAY:
-                return 'Kartu Kredit';
-            case self::PAYMENT_GROUP_WEPAY:
-                return 'Wepay';
-            case self::PAYMENT_GROUP_DOKU:
-                return 'Doku';
-            case self::PAYMENT_GROUP_NL_QRCODE:
-                return 'QR Code';
-            case self::PAYMENT_GROUP_MY_BANK_TRANSFER:
-                return 'Bank Transfer';
-        }
-    }
 }
