@@ -40,7 +40,7 @@ $salePercent = $item->getSalePercent();
     </div>
     <div class="total-price">(Giá trọn gói về Việt Nam với trọng lượng ước tính <span><?= $item->getShippingWeight() ?> kg</span>)</div>
     <div class="option-box form-inline">
-        <label>Tình trạng: <?= $item->condition ?></label>
+        <label>Tình trạng: <?= $item->condition ? $item->condition : 'Không xác định' ?></label>
     </div>
     <?php
     if($item->variation_options){
