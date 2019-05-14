@@ -36,7 +36,7 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
     <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
     <div class="social-button-ws">
 
-        <?php $authAuthChoice = AuthChoice::begin([  'baseAuthUrl' => ['site/auth'] ]); ?>
+        <?php $authAuthChoice = AuthChoice::begin([  'baseAuthUrl' => ['secure/auth'] , 'popupMode' => false, ]); ?>
              <?php foreach ($authAuthChoice->getClients() as $client): ?>
                    <?= $authAuthChoice->clientLink($client) ?>
              <?php endforeach; ?>
