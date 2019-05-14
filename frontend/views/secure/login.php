@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
+use yii\authclient\widgets\AuthChoice;
 
 /* @var yii\web\View $this */
 
@@ -33,22 +34,36 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 <?php ActiveForm::end(); ?>
 <div class="other-login">
     <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
+    <div class="social-button-ws">
+
+        <?php $authAuthChoice = AuthChoice::begin([  'baseAuthUrl' => ['secure/auth'] , 'popupMode' => false, ]); ?>
+             <?php foreach ($authAuthChoice->getClients() as $client): ?>
+                   <?= $authAuthChoice->clientLink($client) ?>
+             <?php endforeach; ?>
+         <?php AuthChoice::end(); ?>
+
+        <?php
+        /*
+        =yii\authclient\widgets\AuthChoice::widget([
+            'baseAuthUrl' => ['secure/auth'],
+            'popupMode' => false,
+        ])
+        */
+        ?>
+
+    </div>
+
     <div class="social-button">
-        <!--a href="#" class="btn btn-fb facebook auth-link" href="/secure/auth?authclient=facebook" title="Facebook"
+        <a href="#" class="btn btn-fb facebook auth-link" href="/secure/auth?authclient=facebook" title="Facebook"
             <i class="social-icon fb"></i>
             <span>Facebook</span>
         </a>
         <a href="#" class="btn btn-google google auth-link" href="/secure/auth?authclient=google" title="Google"
             <i class="social-icon google"></i>
             <span>Google</span>
-        </a-->
-        <?=yii\authclient\widgets\AuthChoice::widget([
-            'baseAuthUrl' => ['secure/auth'],
-            'popupMode' => false,
-        ])
-        ?>
-
+        </a>
     </div>
+
     <p>Quý khách chưa có tài khoản
         <?php echo Html::a('Đăng ký ngay', ['/secure/register']); ?>
     </p>
