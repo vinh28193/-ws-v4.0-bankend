@@ -95,15 +95,17 @@ class SecureController extends FrontendController
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
+                @sleep(10); // sleep for 10 seconds
                 return $this->goHome();
             } else {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
             }
         }
+
         return $this->render('requestPasswordResetToken', [
             'model' => $model,
         ]);
+
     }
 
     /**
