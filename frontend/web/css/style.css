@@ -3417,7 +3417,8 @@ a {
       margin-left: 10px;
       height: 400px !important; }
       .detail-block .thumb-slider .zoomWrapper .detail-big-img {
-        width: 400px; }
+        /*width: 400px;*/
+      }
   .detail-block .product-full-info {
     font-size: 12px;
     margin-left: 20px;

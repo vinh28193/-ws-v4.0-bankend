@@ -254,7 +254,8 @@ class AdditionalFeeCollection extends ArrayCollection
     {
         $totalFees = 0;
         $totalLocalFees = 0;
-        foreach ((array)$this->mget($names) as $name => $array) {
+        $fees = (array)$this->mget($names);
+        foreach ($fees as $name => $array) {
             if (in_array($name, $except)) {
                 continue;
             }

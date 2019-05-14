@@ -194,6 +194,7 @@ trait ProductTrait
                 $this->is_free_ship = $provider->is_free_ship;
                 $this->tax_fee = $provider->tax_fee;
                 $this->shipping_fee = $provider->shipping_fee;
+                $this->init();
                 return true;
             }
         }

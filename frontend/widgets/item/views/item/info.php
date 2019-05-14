@@ -28,6 +28,9 @@ $salePercent = $item->getSalePercent();
         </div>
         <span>87 người đánh giá</span>
     </div>
+    <div class="origin">
+        <a target="_blank" href="<?= $item->item_origin_url ?>">Xem link gốc -></a>
+    </div>
     <div class="price">
         <strong class="text-orange"><?=  WeshopHelper::showMoney($item->getLocalizeTotalPrice(),1,'') ?><span class="currency">đ</span></strong>
         <?php if ($item->start_price){ ?>
@@ -37,7 +40,7 @@ $salePercent = $item->getSalePercent();
     </div>
     <div class="total-price">(Giá trọn gói về Việt Nam với trọng lượng ước tính <span><?= $item->getShippingWeight() ?> kg</span>)</div>
     <div class="option-box form-inline">
-        <label>Tình trạng: <?= $item->condition ?></label>
+        <label>Tình trạng: <?= $item->condition ? $item->condition : 'Không xác định' ?></label>
     </div>
     <?php
     if($item->variation_options){
@@ -82,5 +85,8 @@ $salePercent = $item->getSalePercent();
         <li>Water resistant to 99 feet (30 M): withstands rain and splashes of water, but not showering or submersion</li>
         <li>Case Diameter: 42 mm ; Case Thickness: 11.2 mm ; 3-year Limited Warranty</li>
     </ul>
-    <a href="#" class="more text-blue">Xem thêm <i class="fas fa-caret-down"></i></a>
+    <div class="see-more text-blue">
+        <span class="more">Xem thêm <i class="fas fa-caret-down"></i></span>
+        <span class="less">Ẩn bớt <i class="fas fa-caret-up"></i></span>
+    </div>
 </div>

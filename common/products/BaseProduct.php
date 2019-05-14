@@ -130,6 +130,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
             $this->setImages();
             $this->setTechnicalSpecific();
             $this->setProviders();
+            $this->generateOriginLink();
             $this->isInitialized = true;
         }
     }
@@ -140,6 +141,9 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
      * @return string
      */
     protected function generateOriginLink(){
+        if($this->type == 'ebay'){
+            $this->item_origin_url = "http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=5575037825&toolid=10001&campid=5337238823&customid=&icep_item=" . $this->item_id . "&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg";
+        }
         return $this->item_origin_url;
     }
 

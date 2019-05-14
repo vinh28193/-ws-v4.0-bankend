@@ -122,6 +122,6 @@ class CustomerController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        return $this->render('@frontend/views/common/404');
     }
 }

@@ -8,9 +8,9 @@ use yii\helpers\Html;
 
 <div class="thumb-slider">
     <div class="detail-slider">
-        <i class="fas fa-chevron-up slider-prev"></i>
-        <i class="fas fa-chevron-down slider-next"></i>
-        <div id="detail-slider" class="slick-slider">
+<!--        <i class="fas fa-chevron-up slider-prev"></i>-->
+<!--        <i class="fas fa-chevron-down slider-next"></i>-->
+        <div id="detail-slider">
             <?php
                 foreach ($item->primary_images as $image){ ?>
                     <div class="item">
@@ -26,7 +26,7 @@ use yii\helpers\Html;
             <img id="detail-big-img" class="detail-big-img"
                  src="<?= $item->primary_images ? $item->primary_images[0]->main : '/img/no_image.png' ?>"
                  data-zoom-image="<?= $item->primary_images ? $item->primary_images[0]->main : '/img/no_image.png' ?>"
-                 width="400" style="height: 100%"/>
+                 style="height: inherit;"/>
         <!--<div class="out-of-date">-->
         <!--<span><i class="fas fa-exclamation-triangle"></i><br/>Hàng hết hạn bán</span>-->
         <!--</div>-->
