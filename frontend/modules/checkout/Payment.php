@@ -107,8 +107,7 @@ class Payment extends Model
 //            $this->discount_detail = $response->details;
 //            $this->total_discount_amount = $response->discount;
 //        }
-        $this->currency = $this->storeManager->getStore()->currency;
-        $this->total_amount_display -= $this->total_discount_amount;
+        $this->currency = 'vnđ';
         $this->total_amount_display = $this->storeManager->showMoney($this->total_amount_display);
     }
 
