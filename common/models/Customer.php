@@ -82,7 +82,7 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
+            'reset_password_token' => $token,
             'active' => self::STATUS_ACTIVE,
         ]);
     }
@@ -169,7 +169,7 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+        $this->reset_password_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
@@ -177,7 +177,7 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      */
     public function removePasswordResetToken()
     {
-        $this->password_reset_token = null;
+        $this->reset_password_token = null;
     }
 
     /**

@@ -55,9 +55,10 @@ class DepDropAction extends \yii\base\Action
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if (($parents = ArrayHelper::getValue($_POST, $this->depdropParam)) !== null) {
             $parents = reset($parents);
+            $parents = (integer)$parents;
             $out = call_user_func($this->useAction, $parents);
             if (!empty($out)) {
-                return ['output' => $out, 'selected' => $this->defaultSelect && count($out) > 0 ? $out[0]['id'] : ''];
+                return ['output' => $out, 'selected' => ($this->defaultSelect && count($out) > 0) ? $out[0][$this->selectedParam] : ''];
             }
         }
 

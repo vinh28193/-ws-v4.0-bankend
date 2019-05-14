@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 use yii\base\InvalidArgumentException;
 use common\components\StoreManager;
 
+
 /**
  * Class FrontendController
  * @package frontend\controllers
@@ -77,6 +78,8 @@ class FrontendController extends Controller
             ],
         ]);
     }
+
+
 
     /**
      * @inheritDoc

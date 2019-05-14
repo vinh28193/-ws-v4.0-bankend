@@ -3,7 +3,7 @@
 
 namespace frontend\modules\checkout;
 
-
+use Yii;
 use yii\base\ViewContextInterface;
 
 class PaymentViewContext implements ViewContextInterface
@@ -14,6 +14,6 @@ class PaymentViewContext implements ViewContextInterface
      */
     public function getViewPath()
     {
-
+        return Yii::getAlias('@frontend/modules/checkout/views/payment');
     }
 }

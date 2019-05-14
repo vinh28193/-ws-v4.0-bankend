@@ -15,9 +15,9 @@ class SystemDistrict extends \common\models\db\SystemDistrict
         if (!($provinces = Yii::$app->cache->get($cacheKey)) || $refreshCache) {
             $query = new Query();
             $query->from(['d' => self::tableName()]);
-            $query->select(["d.$dataKey", "d.$dataValue"]);
-            $query->where(['AND', ['d.remove' => 0], ['d.province_id ' => $country]]);
-            $provinces = ArrayHelper::map($query->all(self::getDb()), $dataKey, $dataValue);
+            $query->select(["id" => "d.$dataKey", "name" => "d.$dataValue"]);
+            $query->where(['AND', ['d.remove' => 0], ['d.province_id' => $country]]);
+            $provinces = $query->all(self::getDb());
             Yii::$app->cache->set($cacheKey, $provinces, 3600);
         }
         return $provinces;

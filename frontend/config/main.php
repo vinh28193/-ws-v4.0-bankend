@@ -13,6 +13,22 @@ return [
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'google' => [
+                    'class' => 'yii\authclient\clients\Google',
+                    'clientId' => '745561014114-4emhnbr67v62flr2qbmfarho216cogc0.apps.googleusercontent.com',
+                    'clientSecret' => 'WCSvO39GF8OppvoTqLp3Ilg3',
+                ],
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => '450961485732787',
+                    'clientSecret' => '212b51f106650cd45b1dc77a5a4d4850',
+                ],
+                // etc.
+            ],
+        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
@@ -32,14 +48,6 @@ return [
             'name' => 'adv-frontend-ws-2019',
             'class' => 'yii\redis\Session',
 
-        ],
-        'cache' => [
-//            'class' => 'yii\redis\Cache',
-//            'redis' => [
-//                'hostname' => 'localhost',
-//                'port' => 6379,
-//                'database' => 0,
-//            ]
         ],
         'log' => [
             /*
