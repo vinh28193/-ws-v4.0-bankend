@@ -668,3 +668,21 @@ READY_PURCHASE or PURCHASE_PART or ( PURCHASING and ( PURCHASE_ASSIGNEE_ID = use
 
 6. draft_package_item (hàng đầy đủ): Nhận dữ liệu khi mà bên boxme nhận được tracking 
                  và đối chiếu draft_data_tracking hoặc draft_boxme_tracking có tracking.
+                 
+                 
+                 
+        /*
+        'session' => array(
+            'class' => 'yii\web\CacheSession',
+            'cache' => 'sessionCache',
+        ),
+        'sessionCache' => array(
+            'class' => 'yii\caching\MemCache',
+        ),
+        'cache' => [
+           'class' => 'yii\caching\MemCache',
+        ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
+        */

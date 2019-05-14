@@ -3,6 +3,7 @@
 
 namespace frontend\modules\ebay\controllers;
 
+use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
 use Yii;
 use common\products\forms\ProductDetailFrom;
@@ -31,6 +32,8 @@ class ItemController extends EbayController
                 'errors' => $form->getErrors()
             ]);
         }
+//        print_r($item);
+//        die;
         return $this->render('index', [
             'item' => $item
         ]);
@@ -57,12 +60,18 @@ class ItemController extends EbayController
             }
             $response['success'] = true;
             $response['message'] = 'success';
+            $contentPrice = '<strong class="text-orange">' . WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, '') . '<span class="currency">đ</span></strong>';
+            if ($item->start_price) {
+                $contentPrice .= '<b class="old-price">' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(), 1, '') . '<span class="currency">đ</span></b>';
+                $contentPrice .= '<span class="save">(Tiết kiệm: ' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') . 'đ)</span>';
+            }
             $response['content'] = [
                 'fees' => $fees,
                 'queryParams' => $post,
                 'sellPrice' => $item->getLocalizeTotalPrice(),
                 'startPrice' => $item->getLocalizeTotalStartPrice(),
-                'salePercent' => $item->getSalePercent()
+                'salePercent' => $item->getSalePercent(),
+                'contentPrice' => $contentPrice,
             ];
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

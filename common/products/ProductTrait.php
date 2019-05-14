@@ -24,6 +24,7 @@ trait ProductTrait
             $it->name = $datum['name'];
             $it->values =$datum['values'];
             $it->setImagesMapping();
+            $it->setId();
             $rs[] = $it;
         }
         $this->variation_options = $rs;

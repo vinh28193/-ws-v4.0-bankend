@@ -59,22 +59,6 @@ return [
             ]
         ],
 
-        /*
-        'session' => array(
-            'class' => 'yii\web\CacheSession',
-            'cache' => 'sessionCache',
-        ),
-        'sessionCache' => array(
-            'class' => 'yii\caching\MemCache',
-        ),
-        'cache' => [
-           'class' => 'yii\caching\MemCache',
-        ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
-        ],
-        */
-
         'session' => [
             // this is the name of the session cookie used for login on the backend
             'name' => 'advanced-backend',

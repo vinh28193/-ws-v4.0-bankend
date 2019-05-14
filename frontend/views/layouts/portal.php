@@ -11,22 +11,25 @@ use frontend\widgets\search\SearchBoxWidget;
 $this->beginContent('@frontend/views/layouts/common.php');
 FancyboxPlusAsset::register($this);
 $js = <<<JS
-$('.slick-slider').slick({
-    infinite: true,
-    vertical: true,
-    arrows: true,
-    prevArrow: $('.slider-prev'),
-    nextArrow: $('.slider-next'),
-    slidesToShow: 5
-});
+$(document).ready(function () {
+        $('.slick-slider').slick({
+            infinite: true,
+            vertical: true,
+            arrows: true,
+            prevArrow: $('.slider-prev'),
+            nextArrow: $('.slider-next'),
+            slidesToShow: 5
+        });
 
-$('#detail-big-img').ezPlus({
-    zoomLensFadeIn: 500,
-    gallery: 'gal1',
-    imageCrossfade: true,
-    scrollZoom: false,
-    cursor: 'pointer'
-});
+        $('#detail-big-img').ezPlus({
+            imageCrossfade: true,
+            easing: true,
+            scrollZoom: true,
+            cursor: 'zoom-in',
+            gallery: 'detail-slider',
+            galleryActiveClass: 'active'
+        });
+    });
 JS;
 $this->registerJs($js, \yii\web\View::POS_END);
 ?>

@@ -3,14 +3,16 @@
 namespace common\products;
 
 /**
+ * @property String $id;
  * @property String $name;
  * @property String[] $values;
- * @property VariationOptionImage[] $images_mappings;
+ * @property VariationOptionImage[] $images_mapping;
  */
 
 class VariationOption extends \yii\base\BaseObject
 {
 
+    public $id;
     public $name;
     public $values;
     public $images_mapping = [];
@@ -19,7 +21,10 @@ class VariationOption extends \yii\base\BaseObject
     {
         $this->setImagesMapping();
     }
-
+    public function setId(){
+        $this->id = md5($this->name);
+        return $this->id;
+    }
     public function setImagesMapping()
     {
         $rs = [];
