@@ -1,36 +1,57 @@
 <?php
 
+use yii\bootstrap4\Html;
+use yii\bootstrap4\Dropdown;
+use yii\helpers\Json;
+use yii\web\JsExpression;
 
+/* @var yii\web\View $this */
+/* @var integer $group */
+/* @var frontend\modules\checkout\Payment $payment */
+/* @var array $methods */
+$isNew = $payment->payment_method !== 1 && $payment->payment_bank_code === null;
+$items = $methods;
+$items = Json::htmlEncode($items);
+$css = <<< CSS
+.select-method {
+    height: 33px;
+    background-color: rgb(242, 243, 245);
+    color: rgb(85, 85, 85);
+    width: 250px;
+    font-size: 12px;
+    text-align: left;
+    position: relative;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(235, 235, 235);
+    border-image: initial;
+}
+CSS;
+
+$this->registerCss($css);
+$this->registerJs("ws.payment.registerMethods($items);");
+$this->registerJs("ws.payment.methodChange($isNew);");
 ?>
 
 <div class="method-item">
-    <a class="btn method-select" data-toggle="collapse" data-target="#method1" aria-expanded="false">
-        <i class="icon method_1"></i>
-        <div class="name">Chuyển khoản ngân hàng</div>
+    <a class="btn method-select" data-toggle="collapse" data-target="#method<?= $group; ?>" aria-expanded="false">
+        <i class="icon method_<?= $group; ?>"></i>
+        <div class="name">Thẻ ATM nội địa/ Internet banking</div>
         <div class="desc">Số thẻ của bạn được giữ an toàn 100% và chỉ được sử dụng cho giao dịch này.</div>
     </a>
 
-    <div id="method1" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
+    <div id="method<?= $group; ?>" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
         <div class="method-content">
-            <ul class="method-list">
-                <li><span class="active"><img src="./img/bank/vietcombank.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/techcombank.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/donga.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/mb.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/vib.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/viettin.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/eximbank.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/acb.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/hdbank.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/maritime.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/navibank.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/vietabank.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/vp.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/sacombank.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/gpbank.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/agribank.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/bidv.png" alt="" title=""/></span></li>
-                <li><span><img src="./img/bank/oceanbank.png" alt="" title=""/></span></li>
+            <div class="form-group pick-method">
+                <label>Chọn phương thức thanh toán</label>
+                <select class="form-control select-method" onchange="ws.payment.methodChange(true)" id="bankOptions">
+                    <?php foreach ($methods as $ky => $method): ?>
+                        <option value="<?= $method['paymentMethod']['id'] ?>" <?= $method['paymentMethod']['id'] == $payment->payment_method ? "selected" : "" ?>><?= $method['paymentMethod']['name']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <ul class="method-list" id="atm_content">
             </ul>
         </div>
     </div>

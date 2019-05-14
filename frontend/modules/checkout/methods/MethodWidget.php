@@ -10,6 +10,10 @@ class MethodWidget extends Widget
 {
 
     /**
+     * @var integer Group
+     */
+    public $group;
+    /**
      * @var array
      */
     public $methods;
@@ -28,6 +32,7 @@ class MethodWidget extends Widget
     public function render($view, $params = [])
     {
         $params = ArrayHelper::merge([
+            'group' => $this->group,
             'methods' => $this->methods,
             'payment' => $this->payment
         ],$params);
@@ -35,13 +40,15 @@ class MethodWidget extends Widget
     }
 
     /**
+     * @param $group
      * @param $methods
      * @param $payment
      * @return mixed
      */
-    public static function create($methods,$payment){
+    public static function create($group,$methods,$payment){
         $class = get_called_class();
         return $class::widget([
+            'group' => $group,
             'methods' => $methods,
             'payment' => $payment
         ]);

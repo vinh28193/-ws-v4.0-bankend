@@ -29,7 +29,7 @@ class CartHelper
             return [];
         }
         $orders = [];
-        $totalAmount = 0;
+        $totalFinalAmount = 0;
         foreach (self::group($items) as $key => $arrays) {
             list($type, $sellerId) = explode(':', $key);
             /** @var  $provider null |Provider */
@@ -50,6 +50,9 @@ class CartHelper
                 'seller_link_store' => $provider->website
             ];
             $products = [];
+            $totalOrderAmount = 0;
+            $totalOrderQuantity = 0;
+            $totalOrderWeightTemporary = 0;
             foreach ($arrays as $id => $array) {
                 /** @var $item BaseProduct */
                 if (!isset($array['response']) || !($item = $array['response']) instanceof BaseProduct) {
@@ -64,8 +67,10 @@ class CartHelper
                 $product['link_origin'] = $item->item_origin_url;
                 $product['product_link'] = 'https://weshop.com.vn/link/sanpham.html';
                 $product['product_name'] = $item->item_name;
-                $product['quantity_customer'] = $item->quantity;
-                $product['total_weight_temporary'] = $item->shipping_weight;     //"cân nặng  trong lượng tạm tính"
+                $product['quantity_customer'] = $item->getShippingQuantity();
+                $product['total_weight_temporary'] = $item->getShippingWeight();     //"cân nặng  trong lượng tạm tính"
+                $totalOrderQuantity += $product['quantity_customer'];
+                $totalOrderWeightTemporary += $product['total_weight_temporary'];
                 $product['category'] = [
                     'alias' => $item->category_id,
                     'site' => $type,
@@ -81,22 +86,28 @@ class CartHelper
                 $product['price_amount_local'] = $additionalFees->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
                 // Tổng tiền local tất tần tận
                 $product['total_price_amount_local'] = $additionalFees->getTotalAdditionFees()[1];
-                $totalAmount += $product['total_price_amount_local'];
+                $totalOrderAmount += $product['total_price_amount_local'];
+                $totalFinalAmount += $product['total_price_amount_local'];
 
                 $productFees = [];
                 foreach ($additionalFees->keys() as $key) {
-                    $productFees[$key] = array_combine(['amount', 'amount_local'], $item->getAdditionalFees()->getTotalAdditionFees($key));
+                    $fee = [];
+                    list($fee['amount'],$fee['local_amount']) = $item->getAdditionalFees()->getTotalAdditionFees($key);
+                    $fee['discount_amount'] = 0;
+                    $productFees[$key] = $fee;
                 }
                 $product['fees'] = $productFees;
                 $products[$id] = $product;
             }
-
+            $order['total_weight_temporary'] = $totalOrderWeightTemporary;
+            $order['total_quantity'] = $totalOrderQuantity;
+            $order['totalAmount'] = $totalOrderAmount;
             $order['products'] = $products;
             $orders[] = $order;
         }
         return [
             'orders' => $orders,
-            'totalAmount' => $totalAmount
+            'totalAmount' => $totalFinalAmount
         ];
     }
 }

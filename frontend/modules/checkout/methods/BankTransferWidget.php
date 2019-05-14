@@ -10,6 +10,6 @@ class BankTransferWidget extends MethodWidget
     public function run()
     {
         parent::run();
-        $this->render('bank_transfer');
+        return $this->render('bank_transfer');
     }
 }
