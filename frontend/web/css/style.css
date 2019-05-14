@@ -3417,7 +3417,7 @@ a {
       margin-left: 10px;
       height: 400px !important; }
       .detail-block .thumb-slider .zoomWrapper .detail-big-img {
-        width: 400px;
+        /*width: 400px;*/
       }
   .detail-block .product-full-info {
     font-size: 12px;
@@ -5255,6 +5255,9 @@ a {
 }
 .old-price{
   text-decoration: line-through;
+}
+.p1 {
+  padding: 0;
 }
 .detail-block .thumb-slider .zoomWrapper{
   width: auto !important;

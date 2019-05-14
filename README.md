@@ -686,3 +686,30 @@ READY_PURCHASE or PURCHASE_PART or ( PURCHASING and ( PURCHASE_ASSIGNEE_ID = use
             'class' => 'yii\caching\FileCache',
         ],
         */
+
+
+#gmail send
+#MAIL_DRIVER=smtp
+#MAIL_HOST=smtp.gmail.com
+#MAIL_PORT=25
+#mail_username=phuchc@peacesoft.net
+#MAIL_PASSWORD= 'iejexjqamytmirco'
+#MAIL_ENCRYPTION=tls
+
+       'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'viewPath' => '@common/mail',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            'useFileTransport' => true,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com',
+                'username' => 'no-reply-wsvn@weshop.com.vn',
+                'password' => 'n*3NGa9&@WS2019now',
+                'port' => '587',
+                'encryption' => 'tls',
+            ],
+        ],
+    ],

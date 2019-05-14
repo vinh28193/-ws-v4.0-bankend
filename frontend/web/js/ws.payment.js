@@ -7,7 +7,7 @@ ws.payment = (function ($) {
         coupon_code: undefined,
         discount_detail: [],
         total_discount_amount: 0,
-        currency: undefined,
+        currency: 'vnđ',
         total_amount: 0,
         total_amount_display: 0,
         payment_bank_code: undefined,
@@ -33,6 +33,7 @@ ws.payment = (function ($) {
         shipping: [],
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
+            pub.payment.currency = 'vnd';
             if (pub.payment.page !== 4) {
                 setTimeout(function () {
                     pub.checkPromotion();
@@ -67,7 +68,7 @@ ws.payment = (function ($) {
             isNew = isNew || false;
             var method = '';
             var current_item = {};
-            console.log('methodChange ' + (isNew === true ? 'true' : 'false'));
+
             if (isNew) {
                 method = $('#bankOptions').val();
                 pub.payment.payment_method = method;
@@ -88,6 +89,8 @@ ws.payment = (function ($) {
                     return false;
                 }
             }
+            console.log(method);
+            console.log(current_item);
             var html = '';
             $.each(current_item.paymentMethod.paymentMethodBanks, function (index, item) {
                 html += '<li rel="s_bankCode" id="bank_code_' + item.paymentBank.code + '_' + current_item.payment_method_id + '" onclick="ws.payment.selectMethod(' + current_item.payment_provider_id + ',' + current_item.payment_method_id + ',\'' + item.paymentBank.code + '\')">\n' +
@@ -128,31 +131,43 @@ ws.payment = (function ($) {
             }
             pub.checkPromotion();
         },
-        filterShippingAddress: function ($form) {
-
+        createOrder: function () {
+            var $termAgree = $('input#termCheckout').is(':checked');
+            if(!$termAgree){
+                return;
+            }
+        },
+        filterShippingAddress: function () {
+            var $form = $('form.payment-form');
+            if (!$form) {
+                return false;
+            }
+            var formDataArray = $form.serializeArray();
+            pub.shipping = formDataArray;
+            return formDataArray;
         },
     };
     var updatePaymentByPromotion = function ($response) {
-        if (!$response.success && $response.errors.length > 0) {
-            // show error
+        var input = $('input[name=couponCode]');
+        if (!$response.success || pub.payment.coupon_code in $response.errors) {
+            // console.log($response.errors[pub.payment.coupon_code]);
+            // var error = $response.errors[pub.payment.coupon_code];
+            // input.parents('div.form-group').addClass('has-danger');
+            // input.parents.append('<div class="form-control-feedback">dadasd</div>');
+            // console.log(error);
         }
+        var box = $('#billingBox');
+        var discountBox = box.find('li#discountPrice');
+        discountBox.css('display', 'none');
         if ($response.details.length > 0 && $response.discount > 0) {
             pub.payment.discount_detail = $response.details;
             pub.payment.total_discount_amount = $response.discount;
             pub.payment.total_amount_display = pub.payment.total_amount - pub.payment.total_discount_amount;
-            var box = $('#billingBox');
-            box.html('');
-            box.append(initPromotionView(pub.payment.discount_detail));
-            if (pub.payment.total_discount_amount > 0) {
-                var discount = '<li><div class="left">Khuyến mãi giảm giá::</div>\n' +
-                    '<div class="right"> ' + pub.payment.total_discount_amount + '<i class="currency">' + pub.payment.currency + '</i></div>\n' +
-                    '</li>';
-                box.append(discount);
-            }
-            var price = '<li><div class="left">Tổng tiền thanh toán:</div>\n' +
-                '<div class="right"> ' + pub.payment.total_amount_display + '<i class="currency">' + pub.payment.currency + '</i></div>\n' +
-                '</li>';
-            box.append(price);
+            discountBox.css('display', 'flex');
+            discountBox.find('div.right').html(ws.numberFormat(pub.payment.total_discount_amount, -3) + ' ' + pub.payment.currency);
+            box.find('li#finalPrice').find('div.right').html(ws.numberFormat(pub.payment.total_amount_display, -3) + ' ' + pub.payment.currency);
+            box.find('li[rel="detail"]').remove();
+            box.prepend(initPromotionView(pub.payment.discount_detail));
         }
 
     };
@@ -163,13 +178,12 @@ ws.payment = (function ($) {
             text += '<li rel="detail" data-key="' + item.id + '" data-code="' + item.code + '" data-type="' + item.type + '">';
             text += '<div class="left">';
             if (item.type === 'Coupon') {
-                var handle = ws.payment.changeCouponCode(String(item.code));
-                text += '<a href="javascript:void(0);" class="del-coupon"  onclick="' + handle + '">' +
+                text += '<a href="javascript:void(0);" class="del-coupon"  onclick="ws.payment.changeCouponCode(\'' + item.code + '\')">' +
                     '<i class="fa fa-times-circle"></i> ' +
                     '</a>';
             }
             text += item.code + '<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="' + item.message + '" data-original-title="' + item.message + '"></i></div>';
-            text += '<div class="right">' + item.value + '<i class="currency">' + pub.payment.currency + '</i></div>';
+            text += '<div class="right">' + item.value + ' ' + pub.payment.currency + '</div>';
             text += '</li>';
         });
         return text;

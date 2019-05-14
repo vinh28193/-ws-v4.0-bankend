@@ -42,10 +42,10 @@ use frontend\modules\checkout\methods\NLWalletWidget;
     ?>
 </div>
 <div class="form-group form-check term">
-    <input type="checkbox" class="form-check-input" id="term">
+    <input type="checkbox" class="form-check-input" id="termCheckout">
     <label class="form-check-label" for="term">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và điều
             kiện</a> giao dịch của Weshop.</label>
 </div>
-<button type="submit" class="btn btn-payment btn-block" data-toggle="modal" data-target="#checkout-success">Thanh toán
+<button type="submit" class="btn btn-payment btn-block" id="btnCheckout" data-toggle="modal" data-target="#checkout-success">Thanh toán
     ngay
 </button>
