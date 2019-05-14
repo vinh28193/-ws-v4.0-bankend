@@ -139,7 +139,8 @@ class EbaySearchRequest extends \common\products\BaseRequest
         $post['itemFilter'] = $itemFilters;
         $itemFilters = [];
         if (!$this->isEmpty($this->type)) {
-            $itemFilters[] = $this->makeParam('ListingType', $this->type == 1 ? ['Auction', 'AuctionWithBIN'] : ['FixedPrice', 'StoreInventory']);
+//            $itemFilters[] = $this->makeParam('ListingType', $this->type == 1 ? ['Auction', 'AuctionWithBIN'] : ['FixedPrice', 'StoreInventory']);
+//            $itemFilters[] = $this->makeParam('ListingType', []);
         }
         if (!$this->isEmpty($this->max_price)) {
             $itemFilters[] = $this->makeParam('MaxPrice',$this->max_price);

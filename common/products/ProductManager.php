@@ -24,7 +24,7 @@ class ProductManager extends Component
     private $_gates = [
         'ebay' => [
             'class' => 'common\products\ebay\EbayGate',
-            'baseUrl' => 'http://128.199.98.129:6567/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
+            'baseUrl' => 'https://api-lbc.weshop.asia/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
             'searchUrl' => 'search',
             'lookupUrl' => 'product'
         ],

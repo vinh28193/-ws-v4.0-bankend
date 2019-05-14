@@ -64,7 +64,12 @@ use yii\helpers\Html;
                 </div>
             </li>
         </ul>
-        <div class="coupon" id="discountCoupon">
+        <div id="discountErrors">
+            <div class="alert alert-danger" role="alert">
+                <strong>Oh snap!</strong> Change a few things up and try submitting again.
+            </div>
+        </div>
+        <div class="coupon" id="discountInputCoupon">
             <label>Mã giảm giá:</label>
             <div class="input-group discount-input">
                 <input type="text" class="form-control" name="couponCode">
@@ -73,6 +78,16 @@ use yii\helpers\Html;
                 </div>
             </div>
         </div>
+        <span class="text-danger">Mã giảm giá TEST300 không phù hợp điều kiện</span>
     </div>
-    <ul class="billing" id="billingBox"></ul>
+    <ul class="billing" id="billingBox">
+        <li id="discountPrice" style="display: <?=$payment->total_discount_amount > 0 ?'block': 'none'?>">
+            <div class="left">Khuyến mãi giảm giá:</div>
+            <div class="right"><span><?=$payment->total_discount_amount;?></span></div>
+        </li>
+        <li id="finalPrice">
+            <div class="left">Tổng tiền thanh toán:</div>
+            <div class="right"><span><?=$payment->total_amount_display;?></span></div>
+        </li>
+    </ul>
 </div>

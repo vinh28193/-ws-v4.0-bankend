@@ -18,16 +18,13 @@ use yii\helpers\ArrayHelper;
 class Promotion extends DbPromotion
 {
 
-    /**
-     * 1:Coupon/2:MultiCoupon/3:CouponRefund/4:Promotion/5:MultiProduct/6:MarketingCampaign/7:Others
-     */
+
     const TYPE_COUPON = 1;
-    const TYPE_MULTI_COUPON = 2;
-    const TYPE_COUPON_REFUND = 3;
+    const TYPE_COUPON_REFUND = 2;
+    const TYPE_XU = 3;
     const TYPE_PROMOTION = 4;
-    const TYPE_MULTI_PRODUCT = 5;
-    const TYPE_MARKETING_CAMPAIGN = 6;
-    const TYPE_OTHERS = 7;
+    const TYPE_MARKETING_CAMPAIGN = 5;
+    const TYPE_OTHERS = 6;
 
     /**
      * 1:%,2:fix value
@@ -72,9 +69,9 @@ class Promotion extends DbPromotion
         foreach ($conditions as $condition) {
             if (($passed = $condition->checkConditionRecursive($item)) === false) {
                 $value = $condition->value;
-                $value = is_array($value) ? implode(', ',$value) : $value;
+                $value = is_array($value) ? implode(', ', $value) : $value;
                 $message = "{$condition->name} {$condition->promotionConditionConfig->operator} $value";
-                return [$passed,$message];
+                return [$passed, $message];
             }
         }
         return true;
@@ -169,7 +166,7 @@ class Promotion extends DbPromotion
             $request->totalDiscountAmount = $discount;
         }
         $orders['totalValidAmount'] = $request->totalValidAmount;
-        $response->orders[implode('-',[self::getType($this->type),$this->code])] = $orders;
+        $response->orders[implode('-', [self::getType($this->type), $this->code])] = $orders;
         $response->discount += $request->totalDiscountAmount;
         $response->details[] = [
             'id' => $this->id,
@@ -204,13 +201,13 @@ class Promotion extends DbPromotion
         return $this->hasMany(PromotionConditionConfig::className(), ['name' => 'name'])->via('promotionConditions');
     }
 
-    public static function getType($type = null){
+    public static function getType($type = null)
+    {
         $types = [
             self::TYPE_COUPON => 'Coupon',
-            self::TYPE_MULTI_COUPON => 'Multi Coupon',
-            self::TYPE_COUPON_REFUND => 'Coupon Refund',
             self::TYPE_PROMOTION => 'Promotion',
-            self::TYPE_MULTI_PRODUCT => 'Multi Product',
+            self::TYPE_XU => 'Xu',
+            self::TYPE_COUPON_REFUND => 'Coupon Refund',
             self::TYPE_MARKETING_CAMPAIGN => 'Marketing Campaign',
             self::TYPE_OTHERS => 'Others',
         ];

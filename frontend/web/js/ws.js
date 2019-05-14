@@ -5,13 +5,14 @@ var ws = ws || (function ($) {
         eventHandlers: {},
         init: function () {
             // console.log('js ws init completed');
+            console.log(pub.numberFormat(12345.67788,-3));
         },
         // Todo loading
         loading: function (show) {
-            if(show){
-                $('#loading').css('display','block');
-            }else {
-                $('#loading').css('display','none');
+            if (show) {
+                $('#loading').css('display', 'block');
+            } else {
+                $('#loading').css('display', 'none');
             }
         },
         ajax: function (url, $options, loading = false) {
@@ -49,10 +50,10 @@ var ws = ws || (function ($) {
 
             $.ajax($options);
         },
-        goback: function(){
+        goback: function () {
             history.back()
         },
-        redirect: function(href){
+        redirect: function (href) {
             document.location.href = href;
         },
         sweetalert: function (smg, type, options) {
@@ -70,11 +71,17 @@ var ws = ws || (function ($) {
             const $factor = Math.pow(10, precision);
             return Math.round(number * $factor) / $factor;
         },
-        numberFormat: function (number, decimal, dec_point, thousands_sep) {
+        numberFormat: function (number, decimal = 2, dec_point = '.', thousands_sep = ',') {
+            number = number || 0;
             decimal = decimal || 0;
             dec_point = dec_point || '.';
             thousands_sep = thousands_sep || ',';
-
+            number = pub.roundNumber(number, decimal);
+            decimal = decimal < 0 ? 0 : decimal;
+            decimal = Math.abs(decimal);
+            let i = parseInt(number = Math.abs(Number(number) || 0).toFixed(decimal)).toString();
+            let j = (i.length > 3) ? i.length % 3 : 0;
+            return (j ? i.substr(0, j) + thousands_sep : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands_sep) + (decimal ? dec_point + Math.abs(number - i).toFixed(decimal).slice(2) : '');
         },
         // hạn chế việc khai báo event quá nhiều,
         // nếu event đã khai báo trước đó thì sẽ bị off đi
@@ -108,21 +115,21 @@ $(function () {
     ws.init();
 });
 var showFilter = function (id) {
-    if($("#"+id).css('display') === 'none'){
-        $("#"+id).css('display','block');
-        $("#ico-"+id).removeClass('fa-chevron-down');
-        $("#ico-"+id).addClass('fa-chevron-up');
-    }else {
-        $("#"+id).css('display','none');
-        $("#ico-"+id).removeClass('fa-chevron-up');
-        $("#ico-"+id).addClass('fa-chevron-down');
+    if ($("#" + id).css('display') === 'none') {
+        $("#" + id).css('display', 'block');
+        $("#ico-" + id).removeClass('fa-chevron-down');
+        $("#ico-" + id).addClass('fa-chevron-up');
+    } else {
+        $("#" + id).css('display', 'none');
+        $("#ico-" + id).removeClass('fa-chevron-up');
+        $("#ico-" + id).addClass('fa-chevron-down');
     }
 };
-ws.initEventHandler('searchNew','searchBoxButton','click', 'button#searchBoxButton',function(event) {
-    ws.browse.searchNew('input#searchBoxInput','$url');
+ws.initEventHandler('searchNew', 'searchBoxButton', 'click', 'button#searchBoxButton', function (event) {
+    ws.browse.searchNew('input#searchBoxInput', '$url');
 });
-ws.initEventHandler('searchNew','searchBoxInput','keyup', 'input#searchBoxInput',function(event) {
+ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input#searchBoxInput', function (event) {
     if (event.keyCode === 13) {
-        ws.browse.searchNew(this,'$url');
+        ws.browse.searchNew(this, '$url');
     }
 });

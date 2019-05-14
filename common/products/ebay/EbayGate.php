@@ -44,6 +44,7 @@ class EbayGate extends BaseGate
      */
     private function searchRequest($params)
     {
+
         $httpClient = $this->getHttpClient();
         $httpRequest = $httpClient->createRequest();
         $httpRequest->setUrl($this->searchUrl);
