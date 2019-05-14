@@ -24,6 +24,8 @@ class AuthHandler
 
     public function handle()
     {
+        @date_default_timezone_set('Asia/Ho_Chi_Minh');
+
         $attributes = $this->client->getUserAttributes();
         $email = ArrayHelper::getValue($attributes, 'email');
         $id = ArrayHelper::getValue($attributes, 'id');
@@ -37,25 +39,31 @@ class AuthHandler
         ])->one();
 
         if (Yii::$app->user->isGuest) {
-            if ($auth) { // login
+            if ($auth) {
+                // login
+
                 /* @var User $user */
                 $user = $auth->user;
-                if(is_null($user)){ echo "<pre>"; print_r($auth); echo "</pre>"; die("977777777");}
                 $this->updateUserInfo($user);
                 Yii::$app->user->login($user, $duration);
-            } else { // signup
+            } else {
+                // signup
+
                 if ($email !== null && User::find()->where(['email' => $email])->exists()) {
                     Yii::$app->getSession()->setFlash('error', [
                         Yii::t('app', "User with the same email as in {client} account already exists but isn't linked to it. Login using email first to link it.", ['client' => $this->client->getTitle()]),
                     ]);
                 } else {
+
                     $password = Yii::$app->security->generateRandomString(6);
                     $user = new User([
                         'username' => $nickname ? $nickname : $email,
                         'github' => $nickname,
                         'email' => $email,
                         'password' => $password,
+                        'updated_at'=> time(),
                     ]);
+
                     $user->generateAuthKey();
                     $user->generatePasswordResetToken();
 
@@ -67,6 +75,7 @@ class AuthHandler
                             'source' => $this->client->getId(),
                             'source_id' => (string)$id,
                         ]);
+
                         if ($auth->save()) {
                             $transaction->commit();
                             Yii::$app->user->login($user, $duration);
@@ -88,7 +97,9 @@ class AuthHandler
                     }
                 }
             }
-        } else { // user already logged in
+        } else {
+            // user already logged in
+
             if (!$auth) { // add auth provider
                 $auth = new Auth([
                     'user_id' => Yii::$app->user->id,

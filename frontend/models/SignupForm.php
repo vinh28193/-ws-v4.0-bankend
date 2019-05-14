@@ -39,6 +39,7 @@ class SignupForm extends Model
             ['password', 'string', 'min' => 6],
 
             ['replacePassword', 'compare', 'compareAttribute' => 'password'],
+
         ];
     }
 

@@ -4,7 +4,7 @@
 namespace frontend\controllers;
 
 
-class ErrorController extends FrontendController
+class ErrorController extends CmsController
 {
 
     /**

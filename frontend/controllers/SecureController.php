@@ -14,7 +14,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 
 /****APP Call Back FaceBook Google etc *****/
-use common\components\AuthHandler;
+use common\components\AuthCustomerHandler;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
@@ -22,40 +22,6 @@ class SecureController extends FrontendController
 {
 
     public $layout = 'secure';
-
-
-    /**
-     * @inheritdoc
-     */
-    /*
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup','index'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout','index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-    */
 
     public function actions()
     {
@@ -120,7 +86,7 @@ class SecureController extends FrontendController
      */
     public function onAuthSuccess($client)
     {
-        (new AuthHandler($client))->handle();
+        (new AuthCustomerHandler($client))->handle();
     }
 
     public function actionRequestPasswordReset()
