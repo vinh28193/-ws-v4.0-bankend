@@ -5259,3 +5259,6 @@ a {
 .p1 {
   padding: 0;
 }
+.detail-block .thumb-slider .zoomWrapper{
+  width: auto !important;
+}

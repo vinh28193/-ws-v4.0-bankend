@@ -140,6 +140,17 @@ trait ProductTrait
         return false;
     }
 
+    public function getCurrentProvider($seller_id = ''){
+        $seller_id = $seller_id ? $seller_id : \Yii::$app->request->get('seller');
+        $seller_id = $seller_id ? $seller_id : $this->getSeller();
+        foreach ($this->providers as $provider) {
+            /** @var $provider Provider */
+            if($provider->prov_id == $seller_id){
+                return $provider;
+            }
+        }
+    }
+
     /**
      * @return string
      */
