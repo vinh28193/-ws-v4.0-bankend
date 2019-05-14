@@ -281,7 +281,7 @@ class WeshopHelper
     }
 
     public static function generateUrlDetail($portal,$name,$sku,$sid = null){
-        return '/'.$portal.'/item/'.self::alias($name).'-'.$sku.'.html';
+        return '/'.strtolower($portal).'/item/'.self::alias($name).'-'.$sku.'.html';
     }
 
     /**

@@ -1,65 +1,30 @@
 <?php
 /**
  * @var $item \common\products\BaseProduct
- * @var $product \common\products\RelateProduct
  */
 
-use common\helpers\WeshopHelper;
-if($item->relate_products) {
-    ?>
-    <div class="product-viewed product-list">
-        <div class="title">Sản phẩm liên quan:</div>
-        <div id="product-viewed-2" class="owl-carousel owl-theme">
-            <?php foreach ($item->relate_products as $product){
-                $percent = $product->retail_price && $product->sell_price ? round(($product->retail_price - $product->sell_price) / $product->retail_price,0) : 0;
-                ?>
-            <div class="item-box">
-                <a href="<?= WeshopHelper::generateUrlDetail($item->type,$product->title,$product->item_id) ?>" class="item">
-                    <div class="thumb">
-                        <img src="<?= $product->image ?>" alt=""
-                             title=""/>
-                    </div>
-                    <div class="info">
-                        <div class="name"><?= $product->title ?></div>
-                        <div class="price">
-                            <strong><?php
-                                if($product->sell_price){
-                                    echo WeshopHelper::showMoney($product->sell_price*Yii::$app->storeManager->getExchangeRate(),1);
-                                }else{
-                                    echo "Nhấp vào để xem chi tiết";
-                                }
-                                ?></strong>
-                            <?php if($product->retail_price && $product->sell_price < $product->retail_price) {?>
-                                <span><?= WeshopHelper::showMoney($product->retail_price*Yii::$app->storeManager->getExchangeRate(),1); ?></span>
-                            <?php
-                            if ($percent>0){
-                                echo '<span class="sale-tag">'.$percent.'% OFF</span>';
-                            }
-                            }?>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <?php } ?>
-        </div>
-    </div>
-    <?php
-}
 ?>
 <div class="detail-block-2">
-    <div class="title">Mô tả sản phẩm:</div>
-    <ul>
-        <?= $item->description ? '<li>'.$item->description.'</li>' : '' ?>
-        <?= isset($item->sort_desc) && $item->sort_desc ? '<li>'.$item->sort_desc.'</li>' : '' ?>
-    </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="title">Mô tả sản phẩm:</div>
+        </div>
+        <div class="col-md-12">
+            <iframe width="853" height="480" src="/description/<?= strtolower($item->type) ?>-<?= strtolower($item->item_id) ?>.html" frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+    </div>
 </div>
 <div class="detail-block-2">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-12">
             <div class="title">Chi tiết sản phẩm:</div>
         </div>
-        <div class="col-md-6">
-            <?= isset($item->manufacturer_description) && $item->manufacturer_description ? $item->manufacturer_description : '' ?>
+        <div class="col-md-12">
+            <iframe width="853" height="480" src="/description/<?= strtolower($item->type) ?>-<?= strtolower($item->item_id) ?>.html" frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
         </div>
     </div>
 </div>
