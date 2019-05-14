@@ -196,6 +196,7 @@ class Payment extends Model
                 $group[$paymentMethodProvider['paymentMethod']['group']][] = $paymentMethodProvider;
             }
         }
+        ksort($group);
         return $view->render('payment', [
             'payment' => $this,
             'group' => $group
