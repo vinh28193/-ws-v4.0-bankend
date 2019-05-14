@@ -15,7 +15,6 @@ class SignupForm extends Model
     public $password;
     public $phone;
     public $replacePassword;
-    public $auth_key;
 
 
     /**
@@ -41,7 +40,6 @@ class SignupForm extends Model
 
             ['replacePassword', 'compare', 'compareAttribute' => 'password'],
 
-            ['auth_key', 'required']
         ];
     }
 
