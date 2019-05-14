@@ -43,9 +43,11 @@
     var priceUpdateResponse = {
         fees: [],
         queryParams: [],
-        sellPrice: 0,
-        startPrice: 0,
-        salePercent: 0
+        sellPrice: '',
+        startPrice: '',
+        salePercent: 0,
+        savePrice: '',
+        contentPrice: '',
     };
     var currentVariations = [];
 
@@ -58,7 +60,6 @@
                 }
                 params = $.extend({}, defaultParams, params || {});
                 options = $.extend({}, defaultOptions, options || {});
-
 
                 $.each(params.variation_options, function (index, variationOption) {
                     checkValidVariation($item, variationOption);
@@ -113,6 +114,7 @@
             var params = data.params;
             currentVariations = currentVariations.filter(c => c.name !== name);
             currentVariations.push({name: name, value: value});
+            console.log(currentVariations);
             const activeVariation = findVariation(params.variation_mapping, currentVariations);
             if (activeVariation !== undefined) {
                 $.when.apply(this, deferredArrays).always(function () {
@@ -178,15 +180,16 @@
             return;
         }
         var activeVariation = [];
-        var sku = data.options.queryParams.sku;
+        var sku = data.params.sku;
         if (sku !== undefined) {
             activeVariation = data.params.variation_mapping.filter(m => m.variation_sku === sku);
         }
         if (activeVariation.length === 0) {
-            activeVariation = data.params.variation_mapping[0];
+            return;
+            // activeVariation = data.params.variation_mapping[0];
         }
         var images = data.params.images;
-        $.each(activeVariation.options_group, function (index, group) {
+        $.each(activeVariation[0].options_group, function (index, group) {
             for (var i = 0; i < data.params.variation_options.length; i++) {
                 var variation_options = data.params.variation_options[i];
                 if (group.name === variation_options.name) {
@@ -195,10 +198,13 @@
                         if (values[j] === group.value) {
                             var $input = findInput($item, variation_options);
                             var type = $input.attr('type');
+                            currentVariations.push({name: group.name, value: group.value});
                             if (type === 'spanList' && $input.length > 0 && typeof $input[j] !== 'undefined') {
-                                console.log($input[j]);
+                                $('span[type=spanList]').parent().removeClass('active');
+                                $('span[tabindex='+j+']').parent().addClass('active');
+                                $('#label_'+variation_options.id).html(group.name+': '+group.value);
                             } else if (type === 'dropDown' && $input.length > 0) {
-                                console.log($input[0]);
+                                $input.val(j);
                             }
                             if (variation_options.images_mapping.length > 0) {
                                 const imgs = variation_options.images_mapping.filter(i => i.value === values[j]);
@@ -224,6 +230,16 @@
         var data = $item.data('wsItem');
         var selection = 'div.' + data.options.priceCssSelection;
         $(selection).find('strong.text-orange').html(content.sellPrice);
+        if(content.contentPrice){
+            $(selection).html(content.contentPrice);
+        }
+        if(content.salePercent > 0){
+            $('#sale-tag').html(content.salePercent + '% OFF');
+            $('#sale-tag').css('display','block');
+        }else {
+            $('#sale-tag').html('--% OFF');
+            $('#sale-tag').css('display','none');
+        }
         if (content.queryParams.sku !== undefined) {
             data.params.sku = content.queryParams.sku;
             $item.data('wsItem', data);
@@ -250,15 +266,18 @@
         $('#detail-slider').html(html);
         $('#detail-big-img').attr('src',images[0].main);
         $('#detail-big-img').attr('data-zoom-image',images[0].main);
+        $('#detail-slider .active a').click();
     };
     var watchVariationOptions = function ($item, variationOption) {
         var $input = findInput($item, variationOption);
-        var name = variationOption.name;
         var type = $input.attr('type');
-        console.log($input);
         if (type === 'spanList') {
             $input.on('click.wsItem', function (e) {
-                methods.changeVariation.call($item, variationOption, $(this).data('index'));
+                $('span[type=spanList]').parent().removeClass('active');
+                $(this).parent().addClass('active');
+                var index = $(this).attr('tabindex');
+                $('#label_'+variationOption.id).html(variationOption.name+': '+variationOption.values[index]);
+                methods.changeVariation.call($item, variationOption, index);
             });
         } else {
             $input.on('change.wsItem', function (e) {
@@ -276,9 +295,8 @@
     };
     var findInput = function ($item, variationOption) {
         var id = variationOption.id;
-        var selection = ' #' + id.toLowerCase();
-        console.log(selection);
-        var $input = $item.find(selection);
+        var selection = ' [data-ref=' + id+']'.toLowerCase();
+        var $input = $(selection);
         if ($input.length && $input[0].tagName.toLowerCase() === 'ul') {
             return $input.find('span');
         } else {

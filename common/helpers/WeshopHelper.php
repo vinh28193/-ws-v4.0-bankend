@@ -294,7 +294,7 @@ class WeshopHelper
     public static function showMoney($amount, $country = 1, $symbol = null,$round = 0){
         switch ($country){
             case 1:
-                $symbol = $symbol != null ? $symbol : 'đ';
+                $symbol = $symbol !== null ? $symbol : 'đ';
                 $floorNumber = $round ? $round : 1000;
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);
@@ -302,7 +302,7 @@ class WeshopHelper
                 return number_format($finalPrice, 0, ',', '.') . ' '.$symbol;
                 break;
             case 2:
-                $symbol = $symbol ? $symbol : '$';
+                $symbol = $symbol !== null ? $symbol : '$';
                 $floorNumber = $round ? $round : 2;
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);
@@ -310,7 +310,7 @@ class WeshopHelper
                 return $symbol.' '.number_format($finalPrice, 2, '.', ',');
                 break;
             case 7:
-                $symbol = $symbol ? $symbol : 'RP';
+                $symbol = $symbol !== null ? $symbol : 'RP';
                 $floorNumber = $round ? $round : 0;
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);
@@ -318,7 +318,7 @@ class WeshopHelper
                 return $symbol.' '.number_format($finalPrice, 0, '.', ',');
                 break;
             default:
-                $symbol = $symbol ? $symbol : 'đ';
+                $symbol = $symbol !== null ? $symbol : 'đ';
                 $floorNumber = $round ? $round : 1000;
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);

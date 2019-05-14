@@ -9,18 +9,14 @@ use yii\helpers\Inflector;
 /**
  * @var $item BaseProduct
  */
-
+$salePercent = $item->getSalePercent();
 ?>
 
 <div class="product-full-info">
     <a href="#" class="brand"><?= $item->providers ? $item->providers[0]->name : '---' ?></a>
     <div class="title">
         <h2><?= $item->item_name ?></h2>
-        <?php
-        if (($salePercent = $item->getSalePercent()) > 0) {
-            echo ' <span class="sale-tag">' . $salePercent . '% OFF</span>';
-        }
-        ?>
+        <span id="sale-tag" class="sale-tag" style="display: <?= $salePercent >0 ? 'block' : 'none' ?>"><?= $salePercent > 0 ? $salePercent : '' ?>% OFF</span>
     </div>
     <div class="rating">
         <div class="rate text-orange">
@@ -39,7 +35,7 @@ use yii\helpers\Inflector;
             <span class="save">(Tiết kiệm: <?=  WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(),1,'') ?>đ)</span>
         <?php } ?>
     </div>
-    <div class="total-price">(Giá trọn gói về Việt Nam với trọng lượng ước tính <span><?= $item->getShippingWeight() ?> gram</span>)</div>
+    <div class="total-price">(Giá trọn gói về Việt Nam với trọng lượng ước tính <span><?= $item->getShippingWeight() ?> kg</span>)</div>
     <div class="option-box form-inline">
         <label>Tình trạng: <?= $item->condition ?></label>
     </div>
@@ -51,17 +47,23 @@ use yii\helpers\Inflector;
             /* @var $variationOption \common\products\VariationOption */
             if($variationOption->images_mapping && !$checkBoxImg){ $checkBoxImg = true;?>
                     <div class="option-box">
-                        <label><?= $variationOption->name ?>: <?= $variationOption->values ? $variationOption->values[0] : '---' ?></label>
-                        <ul class="style-list">
-                            <?php foreach ($variationOption->images_mapping as $k => $value) {?>
-                                <li type="spanList" class="<?= $k == 0 ? 'active' : '' ?>"><span><img src="<?= $value->images ? $value->images[0]->thumb : '/img/no_image.png' ?>" alt="<?= $value->value ?>" title="<?= $value->value ?>"/></span></li>
-                            <?php }?>
+                        <label id="label_<?= $variationOption->id ?>"><?= $variationOption->name ?>: ---</label>
+                        <ul class="style-list" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
+                            <?php foreach ($variationOption->values as $k => $value) {
+                                foreach ($variationOption->images_mapping as $image){
+                                    if(strtolower($image->value) == strtolower($value)){?>
+                                <li><span type="spanList" tabindex="<?= $k ?>" ><img src="<?= $image->images ? $image->images[0]->thumb : '/img/no_image.png' ?>" alt="<?= $value ?>" title="<?= $value ?>"/></span></li>
+                            <?php break;
+                                    }
+                                }
+                            }?>
                         </ul>
                     </div>
            <?php }else{?>
             <div class="option-box form-inline">
                 <label><?= $variationOption->name ?>:</label>
                 <select class="form-control form-control-sm" type="dropDown" id="<?= ($variationOption->id) ?>" name="<?= ($variationOption->id) ?>" data-ref="<?= ($variationOption->id) ?>">
+                    <option value=""></option>
                     <?php foreach ($variationOption->values as $k => $v) {?>
                     <option value="<?= $k ?>"><?= $v ?></option>
                 <?php }?>

@@ -5252,3 +5252,6 @@ a {
 #detail-slider .item.active {
   border: 1px solid red;
 }
+.old-price{
+  text-decoration: line-through;
+}
