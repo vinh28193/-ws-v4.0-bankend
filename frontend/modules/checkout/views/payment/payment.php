@@ -13,25 +13,25 @@ use frontend\modules\checkout\methods\NLWalletWidget;
     foreach ($group as $id => $item) {
         switch ($id) {
             case Payment::PAYMENT_GROUP_MASTER_VISA:
-                echo VisaMasterWidget::create($item,$payment);
+                echo VisaMasterWidget::create($id,$item,$payment);
                 break;
             case Payment::PAYMENT_GROUP_BANK:
-                echo BankTransferWidget::create($item,$payment);
+                echo BankTransferWidget::create($id,$item,$payment);
                 break;
             case Payment::PAYMENT_GROUP_NL_WALLET:
-                echo VisaMasterWidget::create($item,$payment);
+                echo VisaMasterWidget::create($id,$item,$payment);
                 break;
             case Payment::PAYMENT_GROUP_WSVP:
-                echo BankTransferWidget::create($item,$payment);
+                echo VisaMasterWidget::create($id,$item,$payment);
                 break;
             case Payment::PAYMENT_GROUP_WS_WALLET:
-                echo BankTransferWidget::create($item,$payment);
+                echo VisaMasterWidget::create($id,$item,$payment);
                 break;
             case Payment::PAYMENT_GROUP_COD:
-                echo BankTransferWidget::create($item,$payment);
+                echo VisaMasterWidget::create($id,$item,$payment);
                 break;
             case Payment::PAYMENT_GROUP_ALIPAY_INSTALMENT:
-                echo BankTransferWidget::create($item,$payment);
+                echo VisaMasterWidget::create($id,$item,$payment);
                 break;
             default:
                 echo "not found Group";
