@@ -29,17 +29,30 @@ ws.payment = (function ($) {
     var pub = {
         payment: {},
         options: {},
-        installmentMethods: [],
+        methods: [],
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
             if (pub.payment.page !== 4) {
                 setTimeout(function () {
-                    pub.payment.checkPromotion($);
+                    pub.checkPromotion();
                 }, 300)
             }
         },
         selectMethod: function (providerId, methodId, bankCode) {
-
+            console.log('selected providerId:' + providerId + ' methodId:'+methodId +' bankCode:' +bankCode);
+            pub.payment.payment_provider = providerId;
+            pub.payment.payment_method = methodId;
+            pub.payment.payment_bank_code = bankCode;
+            $.each($('li[rel=s_bankCode]'), function () {
+                $(this).find('span').removeClass('active');
+            });
+            if ($('#bank_code_' + bankCode + '_' + methodId).length > 0) {
+                $('#bank_code_' + bankCode + '_' + methodId).find('span').addClass('active');
+            }
+            pub.checkPromotion();
+        },
+        methodChange: function(isNew) {
+            isNew = isNew || false;
         },
         checkPromotion: function () {
 

@@ -12,8 +12,14 @@ use frontend\modules\checkout\WizardWidget;
 $showStep = true;
 
 //echo $this->render('step/step1', ['activeStep' => $activeStep]);
-echo $this->render('step/step2',[
+//echo $this->render('step/step2',[
+//    'activeStep' => $activeStep,
+//    'shippingForm' => $shippingForm,
+//    'provinces' => $provinces,
+//    'payment' => $payment,
+//]);
+echo $this->render('step/step3',[
     'activeStep' => $activeStep,
     'shippingForm' => $shippingForm,
-    'provinces' => $provinces,
+    'payment' => $payment,
 ]);

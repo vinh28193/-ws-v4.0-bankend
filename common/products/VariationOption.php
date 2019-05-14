@@ -11,15 +11,20 @@ namespace common\products;
 class VariationOption extends \yii\base\BaseObject
 {
 
+    public $id;
     public $name;
     public $values;
     public $images_mapping = [];
 
     public function init()
     {
+        $this->getId();
         $this->setImagesMapping();
     }
-
+    public function getId(){
+        $this->id = md5($this->name);
+        return $this->id;
+    }
     public function setImagesMapping()
     {
         $rs = [];

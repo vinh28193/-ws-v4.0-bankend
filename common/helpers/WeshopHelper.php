@@ -289,11 +289,12 @@ class WeshopHelper
      * @param int $country // 1: Viet Nam, 2: US, 7: Indo. Dựa theo store id
      * @param string $symbol
      * @param int $round
+     * @return string
      */
-    public static function showMoney($amount, $country = 1, $symbol = '',$round = 0){
+    public static function showMoney($amount, $country = 1, $symbol = null,$round = 0){
         switch ($country){
             case 1:
-                $symbol = $symbol ? $symbol : 'đ';
+                $symbol = $symbol != null ? $symbol : 'đ';
                 $floorNumber = $round ? $round : 1000;
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);

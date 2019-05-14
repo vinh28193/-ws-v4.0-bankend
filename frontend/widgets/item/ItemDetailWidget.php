@@ -109,8 +109,30 @@ class ItemDetailWidget extends Widget
         $options = Json::htmlEncode($this->getClientOptions());
         $view = $this->getView();
         ItemDetailAsset::register($view);
+        $js =<<<JS
+$(document).ready(function () {
+        $('.slick-slider').slick({
+            infinite: true,
+            vertical: true,
+            arrows: true,
+            prevArrow: $('.slider-prev'),
+            nextArrow: $('.slider-next'),
+            slidesToShow: 5
+        });
+
+        $('#detail-big-img').ezPlus({
+            imageCrossfade: true,
+            easing: true,
+            scrollZoom: true,
+            cursor: 'zoom-in',
+            gallery: 'detail-slider',
+            galleryActiveClass: 'active'
+        });
+    });
+JS;
         $view->registerJs("jQuery('#$id').wsItem($params,$options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
+        $view->registerJs($js, $view::POS_END);
     }
 
     protected function renderEntries()
@@ -140,46 +162,10 @@ class ItemDetailWidget extends Widget
             'images' => $this->item->primary_images
         ]);
     }
-
-    public function renderFullInfo()
-    {
-        $html = '<a href="#" class="brand">Bulova</a>';
-        $title = Html::tag('h2', $this->item->item_name);
-        if (($salePercent = $this->item->getSalePercent()) > 0) {
-            $title .= ' <span class="sale-tag">' . $salePercent . '% OFF</span>';
-        }
-        $html .= Html::tag('div', $title, ['class' => 'title']);
-        $html .= '<div class="rating">
-                       <div class="rate text-orange">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <i class="far fa-star"></i>
-                       </div>
-                       <span>87 người đánh giá</span>
-                  </div>';
-        $currency = Html::tag('span', 'đ', ['class' => 'currency']);
-        $price = Html::tag('strong', $this->item->getLocalizeTotalPrice() . $currency, ['class' => 'text-orange']);
-        $style = 'display:none';
-        if ($salePercent > 0 && ($startPrice = $this->item->getLocalizeTotalStartPrice()) > 0) {
-            $style = 'display:block';
-        }
-        $price .= Html::tag('b', $this->item->getLocalizeTotalStartPrice() . $currency, array_merge(['class' => 'old-price'], ['style' => $style]));
-        $price .= Html::tag('span', $salePercent, array_merge(['class' => 'save'], ['style' => $style]));
-        $html .= Html::tag('div', $price, $this->priceOptions);
-        $html .= $this->renderOptionBox();
-        $html .= '<ul class="info-list">
-                <li>Imported</li>
-                <li>Due to a recent redesign by Bulova, recently manufactured Bulova watches,including all watches sold and shipped by Amazon, will not feature the Bulova tuning fork logo on the watch face.</li>
-                <li>Brown patterned and rose gold dial</li>
-                <li>Leather strap,</li>
-                <li>Slightly domed mineral crystal</li>
-                <li>Water resistant to 99 feet (30 M): withstands rain and splashes of water, but not showering or submersion</li>
-                <li>Case Diameter: 42 mm ; Case Thickness: 11.2 mm ; 3-year Limited Warranty</li>
-            </ul>
-            <a href="#" class="more text-blue">Xem thêm <i class="fas fa-caret-down"></i></a>';
-        return Html::tag('div', $html, ['class' => 'product-full-info']);
+    public function renderFullInfo(){
+        return $this->render('item/info',[
+            'item' => $this->item
+        ]);
     }
 
     protected function renderOptionBox()
@@ -234,7 +220,9 @@ class ItemDetailWidget extends Widget
 
     protected function renderSlide()
     {
-        return Html::tag('div', '', $this->slideOptions);
+        return $this->render('item/slide',[
+            'item' => $this->item
+        ]);
     }
 
     protected function renderDescription()
