@@ -235,28 +235,21 @@
         console.log(data);
     };
     var changeImage = function ($item, images) {
-        var data = $item.data('wsItem');
-        var selection = 'div.' + data.options.slideCssSelection;
-        var html = '<div class="detail-slider">' +
-            '<i class="fas fa-chevron-up slider-prev"></i>' +
-            '<i class="fas fa-chevron-down slider-next"></i>' +
-            '        <div id="detail-slider" class="slick-slider">';
+        var html = '';
         $.each(images, function (index, value) {
             if (index == 0)
                 html += '<div class="item active">';
             else {
                 html += '<div class="item">';
             }
-            html += '<a href="#" data-image="' + value.main + '" data-zoom-image="' + value.main + '"> ' +
+            html += '<a href="javascript:void (0);"  onclick="changeBigImage(this)"  data-image="' + value.main + '" data-zoom-image="' + value.main + '"> ' +
                 '<img src="' + value.main + '" width="100"/>' +
                 '</a>';
             html += '</div>'
         });
-        html += '</div></div>';
-        html += '<div class="big-img">' +
-            '<img id="detail-big-img" class="detail-big-img" src="' + images[0].main + '" data-zoom-image="' + images[0].main + '" width="400"/>' +
-            '</div>';
-        $(selection).html(html);
+        $('#detail-slider').html(html);
+        $('#detail-big-img').attr('src',images[0].main);
+        $('#detail-big-img').attr('data-zoom-image',images[0].main);
     };
     var watchVariationOptions = function ($item, variationOption) {
         var $input = findInput($item, variationOption);
@@ -283,8 +276,8 @@
     };
     var findInput = function ($item, variationOption) {
         var id = variationOption.id;
-        var $dataRef = '[data-ref=' + variationOption.id + ']';
-        var selection = $dataRef + ' #' + id.toLowerCase();
+        var selection = ' #' + id.toLowerCase();
+        console.log(selection);
         var $input = $item.find(selection);
         if ($input.length && $input[0].tagName.toLowerCase() === 'ul') {
             return $input.find('span');
@@ -344,3 +337,7 @@
         }
     }
 })(jQuery);
+var changeBigImage = function (e) {
+    $('#detail-slider div.item').removeClass('active');
+    $(e).parent().addClass('active');
+};

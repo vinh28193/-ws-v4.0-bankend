@@ -5249,3 +5249,6 @@ a {
   background: #2796b6;
   text-align: center;
 }
+#detail-slider .item.active {
+  border: 1px solid red;
+}
