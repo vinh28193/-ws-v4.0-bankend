@@ -46,7 +46,6 @@
         sellPrice: '',
         startPrice: '',
         salePercent: 0,
-        savePrice: '',
         contentPrice: '',
     };
     var currentVariations = [];

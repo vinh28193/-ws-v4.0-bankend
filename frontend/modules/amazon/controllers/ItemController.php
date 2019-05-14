@@ -50,19 +50,18 @@ class ItemController extends AmazonController
 //            $item->start_price = $item->sell_price + 10;
             $response['success'] = true;
             $response['message'] = 'success';
-            $contenPrice = '<strong class="text-orange">' . WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, '') . '<span class="currency">đ</span></strong>';
+            $contentPrice = '<strong class="text-orange">' . WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, '') . '<span class="currency">đ</span></strong>';
             if ($item->start_price) {
-                $contenPrice .= '<b class="old-price">' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(), 1, '') . '<span class="currency">đ</span></b>';
-                $contenPrice .= '<span class="save">(Tiết kiệm: ' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') . 'đ)</span>';
+                $contentPrice .= '<b class="old-price">' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(), 1, '') . '<span class="currency">đ</span></b>';
+                $contentPrice .= '<span class="save">(Tiết kiệm: ' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') . 'đ)</span>';
             }
             $response['content'] = [
                 'fees' => $fees,
                 'queryParams' => $post,
-                'sellPrice' => WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, ''),
-                'startPrice' => $item->start_price ? WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(), 1, '') : null,
-                'savePrice' => $item->start_price ? WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') : null,
+                'sellPrice' => $item->getLocalizeTotalPrice(),
+                'startPrice' => $item->getLocalizeTotalStartPrice(),
                 'salePercent' => $item->getSalePercent(),
-                'contentPrice' => $contenPrice,
+                'contentPrice' => $contentPrice,
             ];
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
