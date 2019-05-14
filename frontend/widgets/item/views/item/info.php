@@ -28,6 +28,9 @@ $salePercent = $item->getSalePercent();
         </div>
         <span>87 người đánh giá</span>
     </div>
+    <div class="origin">
+        <a target="_blank" href="<?= $item->item_origin_url ?>">Xem link gốc -></a>
+    </div>
     <div class="price">
         <strong class="text-orange"><?=  WeshopHelper::showMoney($item->getLocalizeTotalPrice(),1,'') ?><span class="currency">đ</span></strong>
         <?php if ($item->start_price){ ?>
