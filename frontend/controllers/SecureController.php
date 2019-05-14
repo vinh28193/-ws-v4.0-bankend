@@ -23,9 +23,11 @@ class SecureController extends FrontendController
 
     public $layout = 'secure';
 
+
     /**
      * @inheritdoc
      */
+    /*
     public function behaviors()
     {
         return [
@@ -53,6 +55,7 @@ class SecureController extends FrontendController
             ],
         ];
     }
+    */
 
     public function actions()
     {
