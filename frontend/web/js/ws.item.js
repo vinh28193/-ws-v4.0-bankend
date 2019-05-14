@@ -276,8 +276,8 @@
     };
     var findInput = function ($item, variationOption) {
         var id = variationOption.id;
-        var $dataRef = '[data-ref=' + variationOption.id + ']';
-        var selection = $dataRef + ' #' + id.toLowerCase();
+        var selection = ' #' + id.toLowerCase();
+        console.log(selection);
         var $input = $item.find(selection);
         if ($input.length && $input[0].tagName.toLowerCase() === 'ul') {
             return $input.find('span');
@@ -338,10 +338,6 @@
     }
 })(jQuery);
 var changeBigImage = function (e) {
-    var url_image = $(e).attr('data-image');
-    console.log(url_image);
-    $('#detail-big-img').attr('src',url_image);
-    $('#detail-big-img').attr('data-zoom-image',url_image);
     $('#detail-slider div.item').removeClass('active');
     $(e).parent().addClass('active');
 };

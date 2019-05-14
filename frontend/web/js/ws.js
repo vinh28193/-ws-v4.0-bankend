@@ -4,7 +4,7 @@ var ws = ws || (function ($) {
         i18nMessages: [],
         eventHandlers: {},
         init: function () {
-            console.log('js ws init completed');
+            // console.log('js ws init completed');
         },
         // Todo loading
         loading: function (show) {
@@ -95,7 +95,7 @@ var ws = ws || (function ($) {
             if (prevHandler === undefined) {
                 pub.eventHandlers[id] = {};
             }
-            console.log('event: "' + event + '" will be trigger with selector: "' + selector + '"');
+            // console.log('event: "' + event + '" will be trigger with selector: "' + selector + '"');
             $(document).on(event, selector, callback);
             pub.eventHandlers[id][type] = {event: event, selector: selector};
         }

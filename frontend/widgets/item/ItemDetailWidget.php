@@ -109,30 +109,8 @@ class ItemDetailWidget extends Widget
         $options = Json::htmlEncode($this->getClientOptions());
         $view = $this->getView();
         ItemDetailAsset::register($view);
-        $js =<<<JS
-$(document).ready(function () {
-        $('.slick-slider').slick({
-            infinite: true,
-            vertical: true,
-            arrows: true,
-            prevArrow: $('.slider-prev'),
-            nextArrow: $('.slider-next'),
-            slidesToShow: 5
-        });
-
-        $('#detail-big-img').ezPlus({
-            imageCrossfade: true,
-            easing: true,
-            scrollZoom: true,
-            cursor: 'zoom-in',
-            gallery: 'detail-slider',
-            galleryActiveClass: 'active'
-        });
-    });
-JS;
         $view->registerJs("jQuery('#$id').wsItem($params,$options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
-        $view->registerJs($js, $view::POS_END);
     }
 
     protected function renderEntries()
