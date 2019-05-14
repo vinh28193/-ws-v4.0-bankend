@@ -44,7 +44,6 @@ class AuthHandler
 
                 /* @var User $user */
                 $user = $auth->user;
-                if(is_null($user)){ echo "<pre>"; print_r($auth); echo "</pre>"; die("977777777");}
                 $this->updateUserInfo($user);
                 Yii::$app->user->login($user, $duration);
             } else {
