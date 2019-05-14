@@ -8,14 +8,14 @@ use yii\helpers\Html;
 
 <div class="thumb-slider">
     <div class="detail-slider">
-        <i class="fas fa-chevron-up slider-prev"></i>
-        <i class="fas fa-chevron-down slider-next"></i>
-        <div id="detail-slider" class="slick-slider">
+<!--        <i class="fas fa-chevron-up slider-prev"></i>-->
+<!--        <i class="fas fa-chevron-down slider-next"></i>-->
+        <div id="detail-slider">
             <?php
                 foreach ($item->primary_images as $image){ ?>
                     <div class="item">
                         <a href="javascript:void (0);" onclick="changeBigImage(this)" data-image="<?= $image->main ?>" data-zoom-image="<?= $image->main ?>">
-                            <img src="<?= $image->main ?>" width="100"/>
+                            <img src="<?= $image->main ?>"/>
                         </a>
                     </div>
                 <?php }
