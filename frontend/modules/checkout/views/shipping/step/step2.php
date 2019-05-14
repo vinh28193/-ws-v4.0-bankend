@@ -111,7 +111,7 @@ use yii\helpers\Url;
             </div>
         </div>
         <div class="col-md-4">
-            <?php echo $this->render('_cart',['items' => $payment->orders]) ?>
+            <?php echo $this->render('_cart',['payment' => $payment]) ?>
         </div>
     </div>
 </div>

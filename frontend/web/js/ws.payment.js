@@ -68,7 +68,7 @@ ws.payment = (function ($) {
             isNew = isNew || false;
             var method = '';
             var current_item = {};
-            console.log('methodChange ' + (isNew === true ? 'true' : 'false'));
+
             if (isNew) {
                 method = $('#bankOptions').val();
                 pub.payment.payment_method = method;
@@ -89,6 +89,8 @@ ws.payment = (function ($) {
                     return false;
                 }
             }
+            console.log(method);
+            console.log(current_item);
             var html = '';
             $.each(current_item.paymentMethod.paymentMethodBanks, function (index, item) {
                 html += '<li rel="s_bankCode" id="bank_code_' + item.paymentBank.code + '_' + current_item.payment_method_id + '" onclick="ws.payment.selectMethod(' + current_item.payment_provider_id + ',' + current_item.payment_method_id + ',\'' + item.paymentBank.code + '\')">\n' +
@@ -130,10 +132,19 @@ ws.payment = (function ($) {
             pub.checkPromotion();
         },
         createOrder: function () {
-
+            var $termAgree = $('input#termCheckout').is(':checked');
+            if(!$termAgree){
+                return;
+            }
         },
-        filterShippingAddress: function ($form) {
-
+        filterShippingAddress: function () {
+            var $form = $('form.payment-form');
+            if (!$form) {
+                return false;
+            }
+            var formDataArray = $form.serializeArray();
+            pub.shipping = formDataArray;
+            return formDataArray;
         },
     };
     var updatePaymentByPromotion = function ($response) {

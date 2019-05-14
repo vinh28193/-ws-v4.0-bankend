@@ -32,6 +32,7 @@ CSS;
 $this->registerCss($css);
 $this->registerJs("ws.payment.registerMethods($items);");
 $this->registerJs("ws.payment.methodChange($isNew);");
+
 ?>
 
 <div class="method-item">
