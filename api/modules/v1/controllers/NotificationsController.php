@@ -97,7 +97,7 @@ class NotificationsController extends BaseApiController
         $_user_email = $_user_Identity['email'];
         $_user_AuthKey = $_user_Identity->getAuthKey();
         $_user_name = $_user_Identity['username'];
-        $token = $_post['token'];
+        $token = isset($_post['token']) ? $_post['token'] : 'null';
         $fingerprint = $_post['fingerprint'];
         $details = $_post['details'];
         $ordercode = $_post['ordercode'];
