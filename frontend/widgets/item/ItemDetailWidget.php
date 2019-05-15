@@ -122,6 +122,9 @@ class ItemDetailWidget extends Widget
         $entries .= Html::tag('div', $this->renderPaymentOption(), [
             'class' => 'col-md-3'
         ]);
+        $entries .= Html::tag('div', $this->renderDescription('extra'), [
+            'class' => 'col-md-12'
+        ]);
         return $entries;
     }
 
@@ -131,7 +134,8 @@ class ItemDetailWidget extends Widget
         $detailBlock .= $this->renderSlide();
         $detailBlock .= $this->renderFullInfo();
         $detailBlock .= Html::endTag('div');
-        $detailBlock .= $this->renderDescription();
+        $detailBlock .= $this->renderRelateProduct();
+        $detailBlock .= $this->renderDescription('mini');
         return $detailBlock;
     }
 
@@ -205,9 +209,15 @@ class ItemDetailWidget extends Widget
         ]);
     }
 
-    protected function renderDescription()
+    protected function renderRelateProduct()
     {
-       return  $this->render('item/description',['item' => $this->item]);
+        return  $this->render('item/relate_product',['item' => $this->item]);
+
+    }
+
+    protected function renderDescription($type)
+    {
+       return  $this->render('item/description',['item' => $this->item, 'type' => $type]);
 
     }
 
