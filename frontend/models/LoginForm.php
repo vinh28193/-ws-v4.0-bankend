@@ -25,10 +25,14 @@ class LoginForm extends Model
         return [
             // username and password are both required
             [['email', 'password'], 'required'],
+            ['email', 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+            ['password', 'required'],
         ];
     }
 
@@ -73,7 +77,6 @@ class LoginForm extends Model
         if ($this->_user === null) {
             $this->_user = Customer::findAdvance($this->email);
         }
-
         return $this->_user;
     }
 }

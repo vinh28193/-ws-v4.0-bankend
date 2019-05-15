@@ -15,7 +15,7 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 ]
 ]); ?>
 <div class="form-group">
-    <?= $form->field($model, 'email',['template' => " <i class=\"icon email\"></i>{input}\n{hint}\n{error}"])->textInput()->input('text', ['placeholder' => "Email hoặc số điện thoại"])?>
+    <?= $form->field($model, 'email',['template' => " <i class=\"icon email\"></i>{input}\n{hint}\n{error}"])->textInput()->input('text', ['placeholder' => " Nhập Email"])?>
 </div>
 <div class="form-group">
     <?= $form->field($model, 'password', ['template' => "<i class=\"icon password\"></i>{input}\n{hint}\n{error}"])->passwordInput(['placeholder' => "Mật khẩu"]) ?>

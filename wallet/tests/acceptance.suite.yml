@@ -1,0 +1,17 @@
+actor: AcceptanceTester
+modules:
+    enabled:
+        - wallet\tests\Helper\Acceptance
+        #- PhpBrowser
+        - WebDriver:
+        - Yii2:
+    config:
+        #PhpBrowser:
+        #    url: http://127.0.0.1:8080/
+        WebDriver:
+            url: http://127.0.0.1:8080/
+            browser: firefox
+        Yii2:
+            part: [orm, fixtures] # allow to use AR methods
+            cleanup: false # don't wrap test in transaction
+            entryScript: index-test.php

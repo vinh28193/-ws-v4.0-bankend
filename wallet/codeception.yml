@@ -1,0 +1,38 @@
+namespace: wallet\tests
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    helpers: tests/_support
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+modules:
+    config:
+        Yii2:
+            configFile: 'config/test-local.php'
+config:
+    # the entry script URL (with host info) for functional and acceptance tests
+    # PLEASE ADJUST IT TO THE ACTUAL ENTRY SCRIPT URL
+    test_entry_url: http://127.0.0.1:8080/index-test.php
+coverage:
+    enabled: true
+    #remote: false
+    #c3_url: 'http://api.wallet/index-test.php/'
+    blacklist:
+        include:
+            - runtime/*
+            - views/*
+            - controllers/*
+            - modules/v1/*
+            - web/*
+            - ../common/*
+        exclude:
+            - assets/*
+            - config/*
+            - ../environments/*
+            - ../vendor/*
+            - ../console/*
+            - ../backend/*
