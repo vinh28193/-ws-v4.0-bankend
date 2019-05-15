@@ -23,6 +23,17 @@ if($type == 'extra'){
             <div class="col-md-12">
                 <div class="title"><?= $type == 'extra' ? 'Chi tiết sản phẩm' : 'Mô tả sản phẩm:' ?></div>
             </div>
+            <div class="col-md-12 row">
+                <?php
+                if($type == 'extra' && $item->technical_specific){
+                    foreach ($item->technical_specific as $value) {?>
+                        <div class="col-md-6 row">
+                            <div class="col-md-6"><b><?= $value->name ?>:</b></div>
+                            <div class="col-md-6"><?= $value->value ?></div>
+                        </div>
+                    <?php }
+                } ?>
+            </div>
             <div class="col-md-12">
                 <?php
                 if($checkShow){?>
