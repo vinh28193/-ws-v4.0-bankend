@@ -97,12 +97,17 @@ class NotificationsController extends BaseApiController
         $_user_email = $_user_Identity['email'];
         $_user_AuthKey = $_user_Identity->getAuthKey();
         $_user_name = $_user_Identity['username'];
-        $token = isset($_post['token']) ? $_post['token'] : 'null';
+        $token = isset($_post['token']) ? $_post['token'] : '';
         $fingerprint = isset($_post['fingerprint'])? $_post['fingerprint'] : '';
         $details = isset($_post['details']) ? $_post['details'] : '';
         $ordercode = isset($_post['ordercode']) ? $_post['ordercode'] : '';
         $nv = isset($_post['nv']) ? $_post['nv'] : '';
         $date_now = Yii::$app->formatter->asDateTime('now');
+
+
+        if($token== ''){
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        }
 
         $order_item = [
             'code' => $ordercode,
