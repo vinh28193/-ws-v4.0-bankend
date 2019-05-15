@@ -158,7 +158,7 @@ class PromotionForm extends Model
                 $response->message = 'app dụng trương chình thành công';
             }
         }
-        if ($this->couponCode !== null) {
+        if ($this->couponCode !== null && $this->couponCode !== '') {
             $request = new PromotionRequest();
             if (($coupon = $this->findCoupon()) === null) {
                 $response->errors[$this->couponCode] = "Not Found Coupon `{$this->couponCode}` ";

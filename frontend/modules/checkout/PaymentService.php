@@ -12,7 +12,7 @@ class PaymentService
     public static function loadPaymentByStoreFromDb($store)
     {
         $query = PaymentProvider::find();
-        $query->with('paymentMethodProviders.paymentMethod.paymentMethodBanks.paymentBank');
+        $query->with('paymentMethodProviders', 'paymentMethodProviders.paymentMethod', 'paymentMethodProviders.paymentMethod.paymentMethodBanks','paymentMethodProviders.paymentMethod.paymentMethodBanks.paymentBank');
         $query->where([
             'AND',
             ['store_id' => $store],

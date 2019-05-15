@@ -2,6 +2,7 @@
 
 namespace frontend\modules\checkout\models;
 
+use common\models\Address;
 use common\models\Customer;
 use Yii;
 use yii\base\Model;
@@ -60,12 +61,33 @@ class ShippingForm extends Model
         return $this->_user;
     }
 
-    /**
-     * @throws \yii\web\ForbiddenHttpException
-     */
-    public function init()
+    public function ensureReceiver()
     {
-        parent::init();
+        if ($this->enable_buyer === true || $this->receiver_address_id === null) {
+            $name = explode(' ',$this->receiver_name);
+            $firstName = array_pop($name);
+            $lastName = implode(' ',$name);
+            $address = new Address([
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $this->buyer_email,
+                'phone' => $this->buyer_phone,
+                'address' => $this->buyer_address,
+                'post_code' => $this->buyer_post_code,
+                'district_id' => $this->buyer_district_id,
+                'province_id' => $this->buyer_province_id,
+                'country_id' => $this->buyer_country_id,
+                'type' => Address::TYPE_SHIPPING,
+                'is_default' => 0,
+                'remove' => 0,
+            ]);
+            $address->save(false);
+            $this->receiver_address_id = $address->id;
+        }
+    }
+
+    public function setDefaultValues()
+    {
         /** @var  $user  Customer */
         if (($user = $this->getUser()) !== null) {
             if (($buyer = $user->primaryAddress) === null) {
@@ -83,10 +105,11 @@ class ShippingForm extends Model
                 $this->buyer_country_id = $buyer->country_id;
             }
 
-            if(($receiver = $user->defaultShippingAddress) === null){
+            if (($receiver = $user->defaultShippingAddress) === null) {
                 $this->enable_receiver = true;
                 $this->save_my_shipping = true;
-            }else {
+            } else {
+                $this->receiver_address_id = $receiver->id;
                 $buyerName = implode(' ', [$buyer->first_name, $buyer->last_name]);
                 $this->receiver_name = $buyerName;
                 $this->receiver_email = $buyer->email;
@@ -98,6 +121,5 @@ class ShippingForm extends Model
                 $this->receiver_country_id = $buyer->country_id;
             }
         }
-
     }
 }

@@ -1,8 +1,13 @@
 <?php
+
 use frontend\modules\checkout\Payment;
 use frontend\modules\checkout\methods\VisaMasterWidget;
 use frontend\modules\checkout\methods\BankTransferWidget;
 use frontend\modules\checkout\methods\NLWalletWidget;
+use frontend\modules\checkout\methods\WSOfficeWidget;
+use frontend\modules\checkout\methods\WSWalletWidget;
+use frontend\modules\checkout\methods\UnknownWidget;
+
 /* @var yii\web\View $this */
 /* @var frontend\modules\checkout\Payment $payment */
 /* @var array $group */
@@ -10,32 +15,28 @@ use frontend\modules\checkout\methods\NLWalletWidget;
 
 <div class="accordion payment-method" id="payment-method">
     <?php
-    var_dump(array_keys($group));
     foreach ($group as $id => $item) {
         switch ($id) {
             case Payment::PAYMENT_GROUP_MASTER_VISA:
-                echo VisaMasterWidget::create($id,$item,$payment);
+                echo VisaMasterWidget::create($id, $item, $payment);
                 break;
             case Payment::PAYMENT_GROUP_BANK:
-                echo BankTransferWidget::create($id,$item,$payment);
+                echo BankTransferWidget::create($id, $item, $payment);
                 break;
             case Payment::PAYMENT_GROUP_NL_WALLET:
-                echo VisaMasterWidget::create($id,$item,$payment);
+                echo NLWalletWidget::create($id, $item, $payment);
                 break;
             case Payment::PAYMENT_GROUP_WSVP:
-                echo VisaMasterWidget::create($id,$item,$payment);
+                echo WSOfficeWidget::create($id, $item, $payment);
                 break;
             case Payment::PAYMENT_GROUP_WS_WALLET:
-                echo VisaMasterWidget::create($id,$item,$payment);
+                echo WSWalletWidget::create($id, $item, $payment);
                 break;
             case Payment::PAYMENT_GROUP_COD:
-                echo VisaMasterWidget::create($id,$item,$payment);
-                break;
-            case Payment::PAYMENT_GROUP_ALIPAY_INSTALMENT:
-                echo VisaMasterWidget::create($id,$item,$payment);
+                echo UnknownWidget::create($id, $item, $payment);
                 break;
             default:
-                echo "not found Group";
+                echo UnknownWidget::create($id, $item, $payment);
                 break;
 
         }
@@ -47,6 +48,7 @@ use frontend\modules\checkout\methods\NLWalletWidget;
     <label class="form-check-label" for="term">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và điều
             kiện</a> giao dịch của Weshop.</label>
 </div>
-<button type="submit" class="btn btn-payment btn-block" id="btnCheckout" data-toggle="modal" data-target="#checkout-success">Thanh toán
+<button type="submit" class="btn btn-payment btn-block" id="btnCheckout" data-toggle="modal"
+        data-target="#checkout-success" onclick="ws.payment.createOrder()">Thanh toán
     ngay
 </button>
