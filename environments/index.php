@@ -40,6 +40,8 @@ return [
             'userbackend/web/assets',
             'frontend/runtime',
             'frontend/web/assets',
+            'wallet/runtime',
+            'wallet/web/assets',
         ],
         'setExecutable' => [
             'yii',
@@ -50,6 +52,7 @@ return [
             'backend/config/main-local.php',
             'userbackend/config/main-local.php',
             'frontend/config/main-local.php',
+            'wallet/config/main-local.php',
         ],
     ],
     'Production' => [
@@ -63,6 +66,8 @@ return [
             'userbackend/web/assets',
             'frontend/runtime',
             'frontend/web/assets',
+            'wallet/runtime',
+            'wallet/web/assets',
         ],
         'setExecutable' => [
             'yii',
@@ -72,6 +77,7 @@ return [
             'backend/config/main-local.php',
             'userbackend/config/main-local.php',
             'frontend/config/main-local.php',
+            'wallet/config/main-local.php',
         ],
     ],
     '252' => [
@@ -85,6 +91,8 @@ return [
             'userbackend/web/assets',
             'frontend/runtime',
             'frontend/web/assets',
+            'wallet/runtime',
+            'wallet/web/assets',
         ],
         'setExecutable' => [
             'yii',
@@ -94,6 +102,7 @@ return [
             'backend/config/main-local.php',
             'frontend/config/main-local.php',
             'userbackend/config/main-local.php',
+            'wallet/config/main-local.php',
         ],
     ],
 ];

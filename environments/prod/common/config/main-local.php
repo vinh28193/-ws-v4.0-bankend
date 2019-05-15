@@ -34,5 +34,9 @@ return [
                 'encryption' => 'tls',
             ],
         ],
+        'mongodb' => [
+            'class' => '\yii\mongodb\Connection',
+            'dsn' => 'mongodb://192.168.11.252:27017/admin',
+        ],
     ],
 ];
