@@ -27,7 +27,7 @@ class EbaySearchGate extends EbayGate
         if (!$request->validate()) {
             throw new ServerErrorHttpException("Error when validate");
         }
-        return $this->sendRequest($request, true);
+        //return $this->sendRequest($request, true);
     }
 
     public function parseResponse($response)
