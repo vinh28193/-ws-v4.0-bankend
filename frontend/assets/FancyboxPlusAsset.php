@@ -14,7 +14,8 @@ class FancyboxPlusAsset extends AssetBundle
         'https://cdn.rawgit.com/igorlino/fancybox-plus/1.3.6/css/jquery.fancybox-plus.css'
     ];
     public $depends = [
-        'frontend\assets\FrontendAsset'
+        'yii\web\JqueryAsset',
+        'yii\bootstrap4\BootstrapPluginAsset',
     ];
 
 }

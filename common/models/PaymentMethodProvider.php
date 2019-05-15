@@ -4,6 +4,13 @@
 namespace common\models;
 
 
+/**
+ * Class PaymentMethodProvider
+ * @package common\models
+ *
+ * @property PaymentProvider $paymentProvider
+ * @property PaymentMethod $paymentMethod
+ */
 class PaymentMethodProvider extends \common\models\db\PaymentMethodProvider
 {
 

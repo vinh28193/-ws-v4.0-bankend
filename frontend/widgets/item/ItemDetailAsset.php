@@ -22,6 +22,5 @@ class ItemDetailAsset extends AssetBundle
         'yii\web\JqueryAsset',
         'yii\bootstrap4\BootstrapPluginAsset',
         'frontend\assets\FrontendAsset',
-        'frontend\assets\FancyboxPlusAsset',
     ];
 }

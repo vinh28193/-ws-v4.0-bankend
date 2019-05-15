@@ -7,6 +7,7 @@ use common\components\cart\CartHelper;
 use common\helpers\WeshopHelper;
 use common\models\Category;
 use common\models\Order;
+use common\models\PaymentTransaction;
 use common\models\Product;
 use common\models\ProductFee;
 use common\models\Seller;
@@ -16,14 +17,17 @@ use frontend\modules\checkout\models\ShippingForm;
 use Yii;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\web\Response;
 use frontend\modules\checkout\Payment;
 
 class PaymentController extends CheckoutController
 {
 
-    public function actionCreateOrder()
+    public function actionProcess()
     {
+        $start = microtime(true);
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $start = microtime(true);
         Yii::$app->response->format = Response::FORMAT_JSON;
         $now = Yii::$app->getFormatter()->asDatetime('now');
@@ -40,15 +44,19 @@ class PaymentController extends CheckoutController
             return ['success' => false, 'message' => 'invalid parameter'];
         }
         $payment = new Payment($bodyParams['payment']);
-        $payment->createTransaction();
         $shippingForm = new ShippingForm($bodyParams['shipping']);
         $shippingForm->setDefaultValues(); // remove it get from POST pls
         $shippingForm->ensureReceiver();
 
-//        if (!$shippingForm->validate()) {
-//            return ['success' => false, 'message' => $shippingForm->getFirstErrors()];
-//        }
-        $payment->shippingForm = $shippingForm;
+        $payment->customer_name = $shippingForm->buyer_name;
+        $payment->customer_email = $shippingForm->buyer_email;
+        $payment->customer_phone = $shippingForm->buyer_phone;
+        $payment->customer_address = $shippingForm->buyer_address;
+        $payment->customer_city = $shippingForm->buyer_province_id;
+        $payment->customer_postcode = $shippingForm->buyer_post_code;
+        $payment->customer_district = $shippingForm->buyer_district_id;
+        $payment->customer_country = $shippingForm->buyer_country_id;
+        $payment->createTransactionCode();
         $orderParams = CartHelper::createOrderParams($items);
         $params = ArrayHelper::getValue($orderParams, 'orders');
         $totalAmount = ArrayHelper::getValue($orderParams, 'totalAmount', 0);
@@ -57,6 +65,54 @@ class PaymentController extends CheckoutController
         }
         $payment->orders = $params;
         $payment->total_amount = $totalAmount;
+        /* @var $results PromotionResponse */
+        $payment->checkPromotion();
+        $paymentTransaction = new PaymentTransaction();
+        $paymentTransaction->customer_id = Yii::$app->getUser()->getId();
+        $paymentTransaction->store_id = $payment->storeManager->getId();
+        $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
+        $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
+        $paymentTransaction->transaction_code = $payment->transaction_code;
+        $paymentTransaction->transaction_customer_name = $payment->customer_name;
+        $paymentTransaction->transaction_customer_email = $payment->customer_email;
+        $paymentTransaction->transaction_customer_phone = $payment->customer_phone;
+        $paymentTransaction->transaction_customer_address = $payment->customer_address;
+        $paymentTransaction->transaction_customer_postcode = $payment->customer_postcode;
+        $paymentTransaction->transaction_customer_address = $payment->customer_address;
+        $paymentTransaction->transaction_customer_district = $payment->customer_district;
+        $paymentTransaction->transaction_customer_city = $payment->customer_city;
+        $paymentTransaction->transaction_customer_country = $payment->customer_country;
+        $paymentTransaction->payment_provider = $payment->payment_provider_name;
+        $paymentTransaction->payment_method = $payment->payment_method_name;
+        $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
+        $paymentTransaction->coupon_code = $payment->coupon_code;
+        $paymentTransaction->used_xu = $payment->use_xu;
+        $paymentTransaction->bulk_point = $payment->bulk_point;
+        $paymentTransaction->total_discount_amount = $payment->total_discount_amount;
+        $paymentTransaction->before_discount_amount_local = $payment->total_amount;
+        $paymentTransaction->transaction_amount_local = $payment->total_amount - $payment->total_discount_amount;
+        $paymentTransaction->orders = Json::encode($payment->orders);
+        $paymentTransaction->shipping = $shippingForm->receiver_address_id;
+        $paymentTransaction->save(false);
+        $res = $payment->processPayment($paymentTransaction);
+        $time = $time = sprintf('%.3f', microtime(true) - $start);
+        Yii::info("action time : $time", __METHOD__);
+        return ['success' => true, 'message' => 'create success', 'data' => $res];
+    }
+
+    public function actionReturn($merchant)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $now = Yii::$app->getFormatter()->asDatetime('now');
+
+        $post = Yii::$app->request->post();
+        $get = Yii::$app->request->get();
+
+        $start = microtime(true);
+
+        $promotionDebug = [];
+
+        $payment = new Payment();
         /* @var $results PromotionResponse */
         $results = $payment->checkPromotion();
         $transaction = Order::getDb()->beginTransaction();
@@ -76,10 +132,7 @@ class PaymentController extends CheckoutController
                 $order->type_order = Order::TYPE_SHOP;
                 $order->portal = isset($params['portal']) ? $params['portal'] : explode(':', $key)[0];
                 $order->customer_type = 'Retail';
-                $order->current_status = Order::STATUS_NEW;
-                $order->store_id = $this->storeManager->getId();
                 $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
-                $order->customer_id = Yii::$app->getUser()->getId();
                 $order->payment_type = 'online_payment';
                 $order->receiver_email = $shippingForm->receiver_email;
                 $order->receiver_name = $shippingForm->receiver_name;
@@ -97,7 +150,7 @@ class PaymentController extends CheckoutController
                     return ['success' => false, 'message' => 'can not create order from not found seller'];
                 }
                 // 2 .seller
-                if (($seller = Seller::findOne(['AND', ['seller_name' => $sellerParams['seller_name']], ['portal' => isset($sellerParams['portal']) ? $sellerParams['portal'] : $order->portal]])) === null) {
+                if (($seller = Seller::find()->where(['AND', ['seller_name' => $sellerParams['seller_name']], ['portal' => isset($sellerParams['portal']) ? $sellerParams['portal'] : $order->portal]])->one()) === null) {
                     $seller = new Seller();
                     $seller->seller_name = $sellerParams['seller_name'];
                     $seller->portal = isset($sellerParams['portal']) ? $sellerParams['portal'] : $order->portal;
@@ -134,9 +187,11 @@ class PaymentController extends CheckoutController
 
                     }
                 }
-                $order->updateAttributes([
-                    'total_promotion_amount_local' => $orderDiscount
-                ]);
+                if ($orderDiscount > 0) {
+                    $order->updateAttributes([
+                        'total_promotion_amount_local' => $orderDiscount
+                    ]);
+                }
                 $updateOrderAttributes = [];
                 // 4 products
                 if (($products = ArrayHelper::getValue($params, 'products')) === null) {
@@ -147,12 +202,13 @@ class PaymentController extends CheckoutController
                     $myDiscounts = [];
                     if (!empty($productPromotions)) {
                         foreach ($productPromotions as $promotion => $data) {
-                            if ($current = ArrayHelper::getValue($data, $id) === null) {
+                            if (($current = ArrayHelper::getValue($data, $id)) === null) {
                                 continue;
                             }
                             $myDiscounts[$promotion] = $current;
                         }
                     }
+//                    Yii::info($myDiscounts, $id);
                     // 5 create product
                     $product = new Product();
                     $product->order_id = $order->id;
@@ -276,7 +332,8 @@ class PaymentController extends CheckoutController
                         $productFee->order_id = $order->id;
                         $productFee->product_id = $product->id;
                         $productFee->amount = $feeValue['amount'];
-                        $productFee->local_amount = $feeValue['amount'];
+                        $productFee->local_amount = $feeValue['local_amount'];
+                        $productFee->discount_amount = 0;
                         $productFee->currency = $feeValue['currency'];
                         if (!$productFee->save(false)) {
                             $transaction->rollBack();
@@ -286,7 +343,7 @@ class PaymentController extends CheckoutController
                         $discountForFeeAmount = 0;
                         if (!empty($feeDiscounts)) {
                             foreach ($feeDiscounts as $promotion => $data) {
-                                if ($forCurrentFee = ArrayHelper::getValue($data, $feeName) === null) {
+                                if (($forCurrentFee = ArrayHelper::getValue($data, $productFee->type)) === null) {
                                     continue;
                                 }
                                 $discountForFeeAmount += $forCurrentFee;
@@ -299,8 +356,9 @@ class PaymentController extends CheckoutController
                                 ];
                             }
                         }
-                        $productFee->updateAttributes(['discount_amount' => $discountForFeeAmount]);
-
+                        if ($discountForFeeAmount > 0) {
+                            $productFee->updateAttributes(['discount_amount' => $discountForFeeAmount]);
+                        }
                         if ($orderAttribute !== '') {
                             if ($orderAttribute === 'total_origin_fee_local') {
                                 // Tổng giá gốc của các sản phẩm tại nơi xuất xứ (giá tại nơi xuất xứ)
@@ -323,7 +381,5 @@ class PaymentController extends CheckoutController
             $transaction->rollBack();
             Yii::error($exception, __METHOD__);
         }
-        Yii::info($promotionDebug, __METHOD__);
-        return ['success' => true, 'message' => 'create success'];
     }
 }

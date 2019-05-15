@@ -10,6 +10,14 @@ ws.payment = (function ($) {
         currency: 'vnđ',
         total_amount: 0,
         total_amount_display: 0,
+        customer_name: undefined,
+        customer_email: undefined,
+        customer_phone: undefined,
+        customer_address: undefined,
+        customer_postcode: undefined,
+        customer_country: undefined,
+        customer_city: undefined,
+        customer_district: undefined,
         payment_bank_code: undefined,
         payment_method: undefined,
         payment_method_name: undefined,
@@ -131,13 +139,13 @@ ws.payment = (function ($) {
             }
             pub.checkPromotion();
         },
-        createOrder: function () {
+        process: function () {
             // var $termAgree = $('input#termCheckout').is(':checked');
             // if(!$termAgree){
             //     return;
             // }
 
-            ws.ajax('/checkout/payment/create-order', {
+            ws.ajax('/checkout/payment/process', {
                 dataType: 'json',
                 type: 'post',
                 data: {payment: pub.payment, shipping: {enable_buyer: false}},
@@ -149,10 +157,20 @@ ws.payment = (function ($) {
         },
         filterShippingAddress: function () {
             var $form = $('form.payment-form');
-            if (!$form) {
+            if (!$form.length > 0) {
                 return false;
             }
+            var values = {};
             var formDataArray = $form.serializeArray();
+            formDataArray.map(function (x) {
+                if ('buyerPhone' === x.name || 'receiverPhone' === x.name) {
+                    var val = $.trim(x.value);
+                    values[x.name] = val.indexOf("0") === 0 ? val : '0' + val;
+                    values[x.name] = val.replace('+84', '0');
+                } else {
+                    values[x.name] = $.trim(x.value);
+                }
+            });
             pub.shipping = formDataArray;
             return formDataArray;
         },
