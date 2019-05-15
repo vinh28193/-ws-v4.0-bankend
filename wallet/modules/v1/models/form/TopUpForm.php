@@ -11,7 +11,7 @@ namespace wallet\modules\v1\models\form;
 
 use common\models\PaymentMethod;
 use common\models\PaymentProvider;
-use common\modelsMongo\WalletLogWs as MongoWalletLog;
+use common\modelsMongo\WalletLog as MongoWalletLog;
 use wallet\modules\v1\models\WalletTransaction;
 use yii\base\Model;
 
