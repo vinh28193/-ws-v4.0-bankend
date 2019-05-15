@@ -10,6 +10,7 @@ namespace wallet\modules\v1\controllers;
 
 
 use common\components\RedisQueue;
+use common\models\Customer;
 use wallet\controllers\ServiceController;
 use wallet\modules\v1\models\form\CallBackPaymentForm;
 use wallet\modules\v1\models\WalletClient;
@@ -21,20 +22,23 @@ class WalletNoAuthController extends ServiceController
     {
         $customer = \Yii::$app->request->post('customer');
         $client = WalletClient::findOne(['customer_id'=>$customer['id']]);
+        $checkCus = Customer::findOne($customer['id']);
         if($client!=null){
             return $this->response(false.'Customer wallet exists'.null);
+        }elseif (!$checkCus){
+            return $this->response(false.'Customer not exists'.null);
         }else{
             $client= new WalletClient();
-            $client->customer_id=$customer['id'];
-            $client->password_hash=$customer['password'];
-            $client->auth_key=$customer['salt'];
-            $client->username=$customer['username'];
-            $client->email=$customer['email'];
-            $client->customer_phone =isset($customer['phone'])?$customer['phone']:'';
-            $client->customer_name=(isset($customer['firstName'])?$customer['firstName']:'').' '.(isset($customer['lastName'])?$customer['lastName']:'');
+            $client->customer_id=$checkCus->id;
+            $client->password_hash=$checkCus->password_hash;
+            $client->auth_key=$checkCus->auth_client;
+            $client->username=$checkCus->username;
+            $client->email=$checkCus->email;
+            $client->customer_phone =$checkCus->phone;
+            $client->customer_name=$checkCus->last_name.' '.$checkCus->first_name;
             $client->created_at=date('Y-m-d H:i:s');
             $client->status=1;
-            $client->store_id=$customer['storeId'];
+            $client->store_id=$checkCus->store_id;
             $client->save(false);
             return $this->response(true.'Create wallet success'.null);
         }

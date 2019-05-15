@@ -12,7 +12,7 @@ namespace wallet\modules\v1\controllers;
 use wallet\controllers\ServiceController;
 use wallet\modules\v1\filters\auth\CompositeAuth;
 use wallet\modules\v1\filters\ErrorToExceptionFilter;
-use common\helpers\CorsCustom;
+use common\filters\Cors as CorsCustom;
 use yii\filters\AccessControl;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\QueryParamAuth;

@@ -22,6 +22,7 @@
     "yiisoft/yii2-bootstrap": "~2.0.0",
     "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
     "yiisoft/yii2-faker": "^2.0@dev",
+    "bshaffer/oauth2-server-php": "~1.7",
     "fzaninotto/faker": "^1.9@dev",
     "yiisoft/yii2-mongodb": "^2.1@dev",
     "yiisoft/yii2-authclient": "~2.1.0",

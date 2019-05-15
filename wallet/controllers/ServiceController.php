@@ -8,11 +8,10 @@
 
 namespace wallet\controllers;
 
+use common\filters\Cors;
 use Yii;
 use yii\web\Response;
 use yii\rest\Controller;
-use common\helpers\CorsCustom;
-use common\models\model\Website;
 
 class ServiceController extends Controller
 {
@@ -20,7 +19,7 @@ class ServiceController extends Controller
     {
         $behaviors = parent::behaviors();
         $behaviors['corsFilter'] = [
-            'class' => CorsCustom::className(),
+            'class' => Cors::className(),
         ];
         return $behaviors;
     }
@@ -38,11 +37,6 @@ class ServiceController extends Controller
             $res['data'] = $data;
         }
         return $res;
-    }
-
-    public function getWebsite($storeId)
-    {
-        return new Website($storeId);
     }
 
     public function renderJSON($success = false, $message = null, $data = null, $total = null)

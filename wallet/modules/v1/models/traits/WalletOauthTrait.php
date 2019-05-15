@@ -196,8 +196,8 @@ trait WalletOauthTrait
      */
     public function validatePassword($password)
     {
-        return sha1($password. self::getAuthKey()) === $this->password_hash;
-//        return Yii::$app->security->validatePassword($password, $this->client_secret);
+//        return sha1($password. self::getAuthKey()) === $this->password_hash;
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
     /**
