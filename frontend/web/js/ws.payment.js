@@ -23,7 +23,7 @@ ws.payment = (function ($) {
         ga: undefined,
         otp_verify_method: 1,
         shipment_options_status: 1,
-        transaction_id: undefined,
+        transaction_code: undefined,
         transaction_fee: 0
     };
     var pub = {
@@ -132,10 +132,20 @@ ws.payment = (function ($) {
             pub.checkPromotion();
         },
         createOrder: function () {
-            var $termAgree = $('input#termCheckout').is(':checked');
-            if(!$termAgree){
-                return;
-            }
+            // var $termAgree = $('input#termCheckout').is(':checked');
+            // if(!$termAgree){
+            //     return;
+            // }
+
+            ws.ajax('/checkout/payment/create-order', {
+                dataType: 'json',
+                type: 'post',
+                data: {payment: pub.payment, shipping: {enable_buyer: false}},
+                success: function (response, textStatus, xhr) {
+                    console.log(response);
+                }
+            })
+
         },
         filterShippingAddress: function () {
             var $form = $('form.payment-form');

@@ -43,6 +43,7 @@ class ShippingController extends CheckoutController
         ]);
 
         $shippingForm = new ShippingForm();
+        $shippingForm->setDefaultValues();
         $provinces = SystemStateProvince::select2Data(1);
         return $this->render('index',[
             'activeStep' => $activeStep,

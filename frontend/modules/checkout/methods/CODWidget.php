@@ -4,7 +4,7 @@
 namespace frontend\modules\checkout\methods;
 
 
-class CODWidget
+class CODWidget extends MethodWidget
 {
 
 }
