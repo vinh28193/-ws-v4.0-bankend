@@ -28,6 +28,7 @@ class SignupForm extends Model
             ['last_name', 'unique', 'targetClass' => '\common\models\Customer', 'message' => 'This last name has already been taken.'],
             ['last_name', 'string', 'min' => 4, 'max' => 255],
             ['phone', 'string', 'min' => 2, 'max' => 255],
+            // ['phone', 'countryValue' => 'US'],
 
             ['email', 'trim'],
             ['email', 'required'],

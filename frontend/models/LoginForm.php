@@ -60,7 +60,7 @@ class LoginForm extends Model
      */
     public function login()
     {
-        if ($this->validate()) {
+        if ($this->validate() and $this->validatePassword('password',$this->password)) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
 
@@ -77,7 +77,6 @@ class LoginForm extends Model
         if ($this->_user === null) {
             $this->_user = Customer::findAdvance($this->email);
         }
-
         return $this->_user;
     }
 }
