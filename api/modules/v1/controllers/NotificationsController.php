@@ -114,8 +114,7 @@ class NotificationsController extends BaseApiController
             'user_email' => $_user_email,
             'user_name' => $_user_name,
             'order_list' => array($ordercode => $order_item),
-            // Infor Field Notification
-            'token' => $token,
+            'token' => $token,  // Infor Field Notification Token ma dinh danh thiet bị để nhận Notification
             'fingerprint' => $fingerprint,
             'nv' => $nv,
             'details' => $details
