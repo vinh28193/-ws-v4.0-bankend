@@ -40,7 +40,12 @@
     "kartik-v/yii2-widget-depdrop": "dev-master",
     "yiisoft/yii2-redis": "~2.0.0",
     "bower-asset/sweetalert2": "dev-master",
-    "drsdre/yii2-wizardwidget": "*"
+    "drsdre/yii2-wizardwidget": "*",
+    "ext-json": "*",
+    "rdok/elasticemail-php": "dev-master",
+    "geometria-lab/rediska": "^0.5.10",
+    "ext-simplexml": "*",
+    "ext-dom": "*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
