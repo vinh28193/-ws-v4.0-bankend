@@ -4,12 +4,12 @@
 namespace frontend\modules\checkout\methods;
 
 
-class AlepayWidget extends MethodWidget
+class UnknownWidget extends MethodWidget
 {
 
     public function run()
     {
         parent::run();
-        echo $this->render('alepay');
+        return $this->render('unknown');
     }
 }

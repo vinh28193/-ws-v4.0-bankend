@@ -18,6 +18,7 @@ use yii\helpers\Json;
 class Payment extends Model
 {
     const PAGE_CHECKOUT = 'CHECKOUT';
+    const PAGE_INSTALMENT = 'INSTALMENT';
     const PAGE_BILLING = 'BILLING';
     const PAGE_TOP_UP = 'TOP_UP';
 
@@ -43,7 +44,8 @@ class Payment extends Model
 
     public $page = self::PAGE_CHECKOUT;
 
-    public $order_bin;
+    public $transaction_code;
+    public $transaction_fee;
 
     /**
      * @var $order Order[]
@@ -79,8 +81,6 @@ class Payment extends Model
     public $ga;
     public $otp_verify_method = 0;
     public $shipment_options_status = 2;
-    public $transaction_id;
-    public $transaction_fee;
 
     /**
      * @var string|StoreManager
@@ -102,11 +102,6 @@ class Payment extends Model
         $this->view = Yii::$app->getView();
         $this->initDefaultMethod();
         $this->registerClientScript();
-//        $response = $this->checkPromotion();
-//        if ($response->success && $response->discount > 0 && count($response->details) > 0) {
-//            $this->discount_detail = $response->details;
-//            $this->total_discount_amount = $response->discount;
-//        }
         $this->currency = 'vnđ';
         $this->total_amount_display = $this->storeManager->showMoney($this->total_amount_display);
     }
@@ -132,16 +127,17 @@ class Payment extends Model
         PaymentAssets::register($this->view);
         $options = Json::htmlEncode($this->getClientOptions());
         $this->view->registerJs("ws.payment.init($options);");
-        if ($this->shippingForm !== null) {
-//            $this->view->registerJs("ws.payment.filterShippingAddress();")
-        }
-
         $this->view->registerJs("console.log(ws.payment.payment);");
     }
 
     public function loadPaymentProviderFromCache()
     {
         return PaymentService::loadPaymentByStoreFromDb(1);
+    }
+
+    public function createTransaction()
+    {
+
     }
 
     public function processPayment()
@@ -165,39 +161,40 @@ class Payment extends Model
     public function initPaymentView()
     {
         $view = Yii::$app->getView();
-        $providers = $this->loadPaymentProviderFromCache();
+
         if ($this->page === self::PAGE_TOP_UP) {
             $this->payment_method = 25;
             $this->payment_provider = 22;
             $this->payment_bank_code = 'VCB';
+        } elseif ($this->page === self::PAGE_INSTALMENT) {
+            return $this->view->render('installment', [
+                'payment' => $this
+            ]);
         }
+        $providers = $this->loadPaymentProviderFromCache();
         $group = [];
         foreach ($providers as $provider) {
             foreach ($provider['paymentMethodProviders'] as $paymentMethodProvider) {
-                if ($paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_ALIPAY_INSTALMENT && ($this->total_amount < self::ALEPAY_INSTALMENT_MIN || count($this->orders) > 1)) {
+                $k = (int)$paymentMethodProvider['paymentMethod']['group'];
+                if ($k === self::PAYMENT_GROUP_ALIPAY_INSTALMENT || $k === self::PAYMENT_GROUP_MANDIRI_INSTALMENT) {
                     continue;
                 }
 
-                if ($paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_MANDIRI_INSTALMENT && $this->total_amount < 500000) {
-                    continue;
-                }
-
-                if (
-                    $this->page == self::PAGE_TOP_UP &&
+                if ($this->page == self::PAGE_TOP_UP &&
                     (
-                        $paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_WS_WALLET ||
-                        $paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_WSVP ||
-                        $paymentMethodProvider['paymentMethod']['group'] === self::PAYMENT_GROUP_MASTER_VISA
+                        $k === self::PAYMENT_GROUP_WS_WALLET ||
+                        $k === self::PAYMENT_GROUP_WSVP ||
+                        $k === self::PAYMENT_GROUP_MASTER_VISA
                     )
                 ) {
                     continue;
                 }
 
-                $group[$paymentMethodProvider['paymentMethod']['group']][] = $paymentMethodProvider;
+                $group[$k][] = $paymentMethodProvider;
             }
         }
         ksort($group);
-        return $view->render('payment', [
+        return $view->render('normal', [
             'payment' => $this,
             'group' => $group
         ], new PaymentViewContext());
@@ -229,7 +226,7 @@ class Payment extends Model
             'ga' => $this->ga,
             'otp_verify_method' => $this->otp_verify_method,
             'shipment_options_status' => $this->shipment_options_status,
-            'transaction_id' => $this->transaction_id,
+            'transaction_code' => $this->transaction_code,
             'transaction_fee' => $this->transaction_fee,
         ];
     }

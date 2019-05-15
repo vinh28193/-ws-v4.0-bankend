@@ -1,59 +1,20 @@
 <?php
 
+/* @var yii\web\View $this */
+/* @var integer $group */
+/* @var frontend\modules\checkout\Payment $payment */
+/* @var array $methods */
 ?>
 
-
 <div class="method-item">
-    <a class="btn method-select" data-toggle="collapse" data-target="#method3" aria-expanded="false">
-        <i class="icon method_3"></i>
+    <a class="btn method-select" data-toggle="collapse" data-target="#method<?=$group?>" aria-expanded="false">
+        <i class="icon method_<?= $group; ?>"></i>
         <div class="name">Ví điện tử Ngân Lượng</div>
-        <div class="desc">Miễn phí giao dịch, Đăng ký ví NgânLượng.vn miễn phí <a href="#" target="_blank">tại đây</a> .</div>
+        <div class="desc">Miễn phí giao dịch</div>
     </a>
-    <div id="method3" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
+    <div id="method<?= $group; ?>" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
         <div class="method-content wallet">
-            <button type="button" class="btn btn-add-credit" data-toggle="modal" data-target="#otp-confirm"><img src="./img/payment_wallet.png"/><span>Nạp tiền</span></button>
-            <div class="row">
-                <div class="col-md-6">
-                    <label>Tổng số tiền chính trong tài khoản:</label>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="text" class="form-control" value="50.000.000 VNĐ" disabled>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label>Số tiền đóng băng: </label>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="text" class="form-control" value="3.000.000 VNĐ" disabled>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label>Số tiền có thể mua sắm:</label>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="text" class="form-control" value="47.000.000 VNĐ" disabled>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <small class="warning text-orange">Tài khoản của bạn không đủ tiền. Vui lòng nạp tiền để tiến hành sử dụng</small>
-                </div>
-                <div class="col-md-6">
-                    <b>Chọn hình thức nhận OTP:</b>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="wallet" id="wallet1" checked>
-                        <label class="form-check-label" for="wallet1">Số điện thoại (0902524586)</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="wallet" id="wallet2">
-                        <label class="form-check-label" for="wallet2">Số E-mail (minhtuong.@gmail.com)</label>
-                    </div>
-                </div>
-            </div>
+            <div>Đăng ký ví NgânLượng.vn miễn phí <a href="">tại đây</a></div>
         </div>
     </div>
 </div>

@@ -4,7 +4,13 @@
 namespace frontend\modules\checkout\methods;
 
 
-class NLWalletWidget
+class NLWalletWidget extends  MethodWidget
 {
 
+
+    public function run()
+    {
+        parent::run();
+        return $this->render('nl_wallet');
+    }
 }

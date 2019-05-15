@@ -1,14 +1,15 @@
 <?php
 
+
 namespace frontend\models\checkout\providers;
 
-use yii\base\BaseObject;
+
 use frontend\modules\checkout\Payment;
+use yii\base\BaseObject;
 use frontend\modules\checkout\PaymentProviderInterface;
 
-class NganLuongProvider extends BaseObject implements PaymentProviderInterface
+class WalletHideProvider extends BaseObject implements  PaymentProviderInterface
 {
-
     public function create(Payment $payment)
     {
         // TODO: Implement create() method.
@@ -18,4 +19,5 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
     {
         // TODO: Implement handle() method.
     }
+
 }

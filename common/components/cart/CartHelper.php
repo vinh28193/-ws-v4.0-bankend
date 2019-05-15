@@ -63,7 +63,7 @@ class CartHelper
                 $product['portal'] = $item->type;
                 $product['sku'] = $item->item_sku;
                 $product['parent_sku'] = $item->item_id;
-                $product['link_img'] = isset($request['image']) ? $request['image'] : $item->current_image;
+                $product['link_img'] = isset($request['image']) ? $request['image'] : ($item->current_image !== null ? $item->current_image : $item->primary_images[0]->main);
                 $product['link_origin'] = $item->item_origin_url;
                 $product['product_link'] = 'https://weshop.com.vn/link/sanpham.html';
                 $product['product_name'] = $item->item_name;
@@ -90,11 +90,13 @@ class CartHelper
                 $totalFinalAmount += $product['total_price_amount_local'];
 
                 $productFees = [];
-                foreach ($additionalFees->keys() as $key) {
+                foreach ($additionalFees->keys() as $feeName) {
                     $fee = [];
-                    list($fee['amount'],$fee['local_amount']) = $item->getAdditionalFees()->getTotalAdditionFees($key);
+                    list($fee['amount'],$fee['local_amount']) = $item->getAdditionalFees()->getTotalAdditionFees($feeName);
                     $fee['discount_amount'] = 0;
-                    $productFees[$key] = $fee;
+                    $fee['name']  = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($feeName)->label;
+                    $fee['currency'] = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($feeName)->currency;
+                    $productFees[$feeName] = $fee;
                 }
                 $product['fees'] = $productFees;
                 $products[$id] = $product;
@@ -103,7 +105,7 @@ class CartHelper
             $order['total_quantity'] = $totalOrderQuantity;
             $order['totalAmount'] = $totalOrderAmount;
             $order['products'] = $products;
-            $orders[] = $order;
+            $orders[$key] = $order;
         }
         return [
             'orders' => $orders,
