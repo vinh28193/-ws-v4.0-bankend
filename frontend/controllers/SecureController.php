@@ -45,7 +45,7 @@ class SecureController extends FrontendController
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        if ($model->load(Yii::$app->request->post()) && $model->login() && $model->validate()) {
             return $this->goHome();
         } else {
             return $this->render('login', [
