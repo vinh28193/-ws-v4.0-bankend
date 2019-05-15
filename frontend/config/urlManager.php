@@ -12,6 +12,7 @@ return [
         'index.php' => 'cms/home/index',
         'index.html' => 'cms/home/index',
         'search/<keyword:[^/]+>.html' => 'cms/search/index',
+        'description/<type:[^/]+>-<id:[^/]+>.html' => 'cms/description/index',
 
         // ebay
         'ebay.html' => 'cms/ebay/index',

@@ -131,6 +131,8 @@ class ItemDetailWidget extends Widget
         $detailBlock .= $this->renderSlide();
         $detailBlock .= $this->renderFullInfo();
         $detailBlock .= Html::endTag('div');
+        $detailBlock .= $this->renderRelateProduct();
+        $detailBlock .= $this->renderDescription();
         return $detailBlock;
     }
 
@@ -204,9 +206,16 @@ class ItemDetailWidget extends Widget
         ]);
     }
 
+    protected function renderRelateProduct()
+    {
+        return  $this->render('item/relate_product',['item' => $this->item]);
+
+    }
+
     protected function renderDescription()
     {
-        return '';
+       return  $this->render('item/description',['item' => $this->item]);
+
     }
 
     public function getQueryParams()

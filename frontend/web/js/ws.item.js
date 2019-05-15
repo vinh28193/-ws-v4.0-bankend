@@ -133,6 +133,21 @@
                                 if (response.success) {
                                     data.ajaxed = true;
                                     var content = $.extend({}, priceUpdateResponse, response.content || {});
+                                    var temp = location.href.split('?');
+                                    if(temp.length){
+                                        var url = temp[0];
+                                        if(queryParams.seller){
+                                            url += '?seller=' +queryParams.seller;
+                                        }
+                                        if(queryParams.sku){
+                                            if(queryParams.seller){
+                                                url += '&sku=' +queryParams.sku;
+                                            }else {
+                                                url += '?sku=' +queryParams.sku;
+                                            }
+                                        }
+                                        window.history.pushState(url, url, url);
+                                    }
                                     updatePrice($item, content, data.ajaxed)
                                 }
                             },

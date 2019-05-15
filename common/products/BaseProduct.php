@@ -86,6 +86,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
     public $bid;
     public $parent_item;
     public $us_tax_rate;
+    /** @var RelateProduct $relate_products */
     public $relate_products;
     public $current_variation;
     public $type = self::TYPE_EBAY;

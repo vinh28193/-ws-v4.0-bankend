@@ -10,6 +10,7 @@ use frontend\modules\checkout\methods\NLWalletWidget;
 
 <div class="accordion payment-method" id="payment-method">
     <?php
+    var_dump(array_keys($group));
     foreach ($group as $id => $item) {
         switch ($id) {
             case Payment::PAYMENT_GROUP_MASTER_VISA:
