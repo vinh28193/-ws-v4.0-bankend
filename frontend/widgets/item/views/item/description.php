@@ -27,7 +27,7 @@ if($type == 'extra'){
                 <?php
                 if($checkShow){?>
                     <iframe height="480" style="width: inherit"
-                            src="/description/<?= strtolower($item->type) ?>-<?= strtolower($item->item_id) ?>.html?description=<?= $type ?>"
+                            src="/description/<?= strtolower($item->type) ?>-<?= ($item->item_id) ?>.html?description=<?= $type ?>"
                             frameborder="0"
                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen></iframe>
