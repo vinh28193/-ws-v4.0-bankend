@@ -159,7 +159,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     public function getCurrentWalletClient()
     {
         if (!$this->_wallet_client) {
-            $identity = Yii::$app->user->identity;
+            $identity = Yii::$app->user->isGuest;
             if(!$this->isNewRecord && ($identity === null || ($identity && $identity->getId() !== $this->wallet_client_id))){
                 $this->_wallet_client = WalletClient::findIdentity($this->wallet_client_id);
             }else{

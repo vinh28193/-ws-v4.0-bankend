@@ -33,7 +33,9 @@ class TopupController extends WalletServiceController
 
         $user =Yii::$app->user->getIdentity();
         $post = Yii::$app->request->post();
-
+        if(!$user){
+            return $this->renderJSON(false,'Please verify identity!',[]);
+        }
         $topup = new TopUpForm();
         //$topup->merchant_id = $user->id;
 //        $topup->amount_total = $post['amount_total'];
