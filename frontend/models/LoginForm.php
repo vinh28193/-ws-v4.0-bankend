@@ -6,6 +6,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\Customer;
+use common\models\User;
 
 class LoginForm extends Model
 {
@@ -75,7 +76,7 @@ class LoginForm extends Model
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = Customer::findAdvance($this->email);
+            $this->_user = User::findAdvance($this->email);
         }
         return $this->_user;
     }

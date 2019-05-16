@@ -57,7 +57,7 @@ class SignupForm extends Model
             return null;
         }
 
-        $user = new Customer();
+        $user = new User();
         $user->last_name = $this->last_name;
         $user->first_name = $this->first_name;
         $user->email = $this->email;

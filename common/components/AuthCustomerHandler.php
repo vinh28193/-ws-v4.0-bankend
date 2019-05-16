@@ -53,13 +53,13 @@ class AuthCustomerHandler
         ])->one();
 
         if (Yii::$app->user->isGuest) {
-            if ($email !== null && Customer::find()->where(['email' => $email])->exists()) {
+            if ($email !== null && User::find()->where(['email' => $email])->exists()) {
                 Yii::$app->getSession()->setFlash('error', [
                     Yii::t('app', "User with the same email as in {client} account already exists but isn't linked to it. Login using email first to link it.", ['client' => $this->client->getTitle()]),
                 ]);
             } else {
                 $password = Yii::$app->security->generateRandomString(6);
-                $Customer = new Customer([
+                $Customer = new User([
                     'username' => $nickname ? $nickname : $email,
                     'email' => $email,
                     'password' => $password,
@@ -80,7 +80,7 @@ class AuthCustomerHandler
                 $Customer->generateAuthKey();
                 $Customer->generatePasswordResetToken();
 
-                $transaction = Customer::getDb()->beginTransaction();
+                $transaction = User::getDb()->beginTransaction();
 
                 if ($Customer->save()) {
                     $auth = new Auth([
@@ -104,7 +104,7 @@ class AuthCustomerHandler
 
                 } else {
                     Yii::$app->getSession()->setFlash('error', [
-                        Yii::t('app', 'Unable to save Customer : {errors}'),
+                        Yii::t('app', 'Unable to save User : {errors}'),
                     ]);
                 }
             }
@@ -119,7 +119,7 @@ class AuthCustomerHandler
     }
 
     /**
-     * @param Customer $user
+     * @param User $user
      */
 //    private function updateUserInfo(Customer $user)
 //    {
