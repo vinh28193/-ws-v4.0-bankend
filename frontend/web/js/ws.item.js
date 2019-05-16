@@ -95,10 +95,12 @@
                     return false;
                 });
                 ws.initEventHandler($item, 'quantity', 'click.wsItem', 'button.btnQuantity', function (event) {
+                    defaultParams = params;
                     methods.changeQuantity.apply(this);
                     return false;
                 });
                 ws.initEventHandler($item, 'quantityChange', 'change.wsItem', 'input#quantity', function (event) {
+                    defaultParams = params;
                     methods.changeQuantity.apply(this);
                     return false;
                 });
@@ -129,6 +131,13 @@
                     $.when.apply(this, deferredArrays).always(function () {
                         var queryParams = data.options.queryParams;
                         queryParams.sku = activeVariation.variation_sku;
+                        data.params.available_quantity = activeVariation.available_quantity;
+                        data.params.quantity_sold = activeVariation.quantity_sold;
+                        var quantityInstock = 0;
+                        if(data.params.available_quantity){
+                            quantityInstock = data.params.quantity_sold ? data.params.available_quantity - data.params.quantity_sold : data.params.available_quantity;
+                        }
+                        $('#instockQuantity').html(quantityInstock);
                         ws.ajax(data.options.ajaxUrl, {
                             type: 'POST',
                             data: queryParams,
@@ -192,7 +201,6 @@
         },
         changeQuantity: function () {
             console.log(defaultParams);
-            console.log(currentVariations);
             var type = $(this).attr('data-href');
             var value = Number($('#quantity').val());
             var valueOld = Number($('#quantity').val());
@@ -203,7 +211,10 @@
                 value -= 1;
             }
             value = value < 1 ? 1 : value;
-            var numberInstock = Number(defaultParams.available_quantity) - Number(defaultParams.quantity_sold);
+            var numberInstock = 50;
+            if(defaultParams.available_quantity){
+                numberInstock = Number(defaultParams.available_quantity) - Number(defaultParams.quantity_sold);
+            }
             if(value > numberInstock){
                 $('#quantity').val(valueOld === value ? 1 : valueOld);
                 return ws.sweetalert('Bạn không thể mua quá '+numberInstock+' sản phẩm.','Lỗi: ');

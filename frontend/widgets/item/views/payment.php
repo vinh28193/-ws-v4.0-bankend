@@ -19,10 +19,18 @@ $url = function ($seller_id){
 //           $param['portal'] = $portal;
     return Yii::$app->getUrlManager()->createUrl($param);
 };
-
+$instockQuanty = 0;
+if($item->available_quantity){
+    $instockQuanty = $item->quantity_sold ? $item->available_quantity - $item->quantity_sold : $item->available_quantity;
+}
 ?>
 
 <div class="border-block payment-info">
+    <?php if(strtolower($item->type) == 'ebay') {?>
+    <div class="qty form-inline" id="" style="display: block; font-size: 10px">
+        <b id="instockQuantity" ><?= $instockQuanty ?></b><i> sản phẩm có thể mua</i>
+    </div>
+    <?php } ?>
     <div class="qty form-inline" id="quantityGroup">
         <label>Số lượng:</label>
         <div class="input-group">
