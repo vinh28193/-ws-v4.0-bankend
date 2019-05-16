@@ -6,6 +6,7 @@ use common\components\ReponseData;
 use common\models\logs\PaymentGatewayLogs;
 use common\models\WalletTransaction;
 use Yii;
+use Exception;
 use yii\base\BaseObject;
 use common\models\PaymentProvider;
 use common\payment\Payment;
@@ -23,54 +24,104 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
 
     public function create(Payment $payment)
     {
-        $param = [];
-        $yiiParams = Yii::$app->params['nganluong'];
-        $param['function'] = 'SetExpressCheckout';
-        // Product
-        $param['merchant_id'] = $yiiParams['prod_trunggian']['ID'];
-        $param['merchant_password'] = md5($yiiParams['prod_trunggian']['PASS']);
-        $param['receiver_email'] = Yii::$app->params['nganluong']['prod_trunggian']['ACC'];
-        // SandBox
-        $this->submitUrl = str_replace('https://www.nganluong.vn', 'https://sandbox.nganluong.vn:8088/nl30', $this->submitUrl);
-        $param['merchant_id'] = $yiiParams['sandbox']['ID'];
-        $param['merchant_password'] = md5($yiiParams['sandbox']['PASS']);
-        $param['receiver_email'] = $yiiParams['sandbox']['ACC'];
 
-        $param['version'] = '3.1';
-        $param['time_limit'] = 1440;
+        $logCallback = new PaymentGatewayLogs();
+        $logCallback->response_time = date('Y-m-d H:i:s');
+        $logCallback->create_time = date('Y-m-d H:i:s');
+        $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK;
+        $logCallback->transaction_code_request = "NGAN LUONG CALLBACK";
+        $logCallback->store_id = 1;
+        try {
+            $param = [];
+            $yiiParams = Yii::$app->params['nganluong'];
+            $param['function'] = 'SetExpressCheckout';
+            // Product
+            $param['merchant_id'] = $yiiParams['prod_trunggian']['ID'];
+            $param['merchant_password'] = md5($yiiParams['prod_trunggian']['PASS']);
+            $param['receiver_email'] = Yii::$app->params['nganluong']['prod_trunggian']['ACC'];
+            // SandBox
+            $this->submitUrl = str_replace('https://www.nganluong.vn', 'https://sandbox.nganluong.vn:8088/nl30', $this->submitUrl);
+            $param['merchant_id'] = $yiiParams['sandbox']['ID'];
+            $param['merchant_password'] = md5($yiiParams['sandbox']['PASS']);
+            $param['receiver_email'] = $yiiParams['sandbox']['ACC'];
 
-        $param['order_code'] = $payment->transaction_code;
-        $param['return_url'] = $payment->return_url;
-        $param['cancel_url'] = $payment->cancel_url;
-        $param['order_description'] = '';
-        $param['total_amount'] = $payment->total_amount;
-        $param['fee_shipping'] = 0;
-        $param['payment_method'] = $this->replaceMethod($payment->payment_method_name);
-        $param['bank_code'] = $payment->payment_bank_code;
-        if (strpos($payment->payment_bank_code, 'VISA') !== false) {
-            $param['bank_code'] = 'VISA';
-        } else if (strpos($payment->payment_bank_code, 'MASTER') !== false) {
-            $param['bank_code'] = 'MASTER';
-        } else if (strpos($payment->payment_bank_code, 'QRCODE') !== false) {
-            $param['bank_code'] = 'ICB';
+            $param['version'] = '3.1';
+            $param['time_limit'] = 1440;
+
+            $param['order_code'] = $payment->transaction_code;
+            $param['return_url'] = $payment->return_url;
+            $param['cancel_url'] = $payment->cancel_url;
+            $param['order_description'] = '';
+            $param['total_amount'] = $payment->total_amount;
+            $param['fee_shipping'] = 0;
+            $param['payment_method'] = $this->replaceMethod($payment->payment_method_name);
+            $param['bank_code'] = $payment->payment_bank_code;
+            if (strpos($payment->payment_bank_code, 'VISA') !== false) {
+                $param['bank_code'] = 'VISA';
+            } else if (strpos($payment->payment_bank_code, 'MASTER') !== false) {
+                $param['bank_code'] = 'MASTER';
+            } else if (strpos($payment->payment_bank_code, 'QRCODE') !== false) {
+                $param['bank_code'] = 'ICB';
+            }
+            $param['buyer_fullname'] = $payment->customer_name;
+            $param['buyer_email'] = $payment->customer_phone;
+            $param['buyer_mobile'] = str_replace(['+84', '+084'], '0', $payment->customer_phone);
+            $param['buyer_address'] = $payment->customer_address;
+
+            if (in_array($payment->payment_bank_code, $this->checkBinCode())) {
+                $param['event_code'] = $param['bank_code'] . '_CHECK_BIN';
+            } else {
+                $param['event_code'] = '';
+            }
+            $param['event_discount'] = 0;
+
+            $logPaymentGateway = new PaymentGatewayLogs();
+            $logPaymentGateway->transaction_code_ws = $payment->transaction_code;
+            $logPaymentGateway->request_content = $param;
+            $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CHECK_CREATED;
+            $logPaymentGateway->url = $this->submitUrl;
+            $mess = "Giao dịch thanh toán không thành công!";
+            $success = true;
+            $data = [];
+            try {
+                $resp = $this->callApi($this->submitUrl, $param);
+                $logPaymentGateway->payment_method = ArrayHelper::getValue($param, 'payment_method');
+                $logPaymentGateway->payment_bank = ArrayHelper::getValue($param, 'bank_code');
+                $logPaymentGateway->amount = ArrayHelper::getValue($param, 'total_amount');
+                $logPaymentGateway->response_content = ($resp);
+                $logPaymentGateway->response_time = date('Y-m-d H:i:s');
+                $logPaymentGateway->create_time = date('Y-m-d H:i:s');
+                $logPaymentGateway->store_id = 1;
+                $logPaymentGateway->save(false);
+
+                if ($resp == null || !is_array($resp) || !isset($resp['error_code']) || empty($resp['error_code']) || $resp['error_code'] != '00' || !isset($resp['token'])) {
+                    $mess = "Lỗi thanh toán trả về NL" . $resp['error_code'];
+                    $success = false;
+                }
+                $request_content['api'] = $this->submitUrl;
+                $request_content['form'] = $param;
+                $data = [
+                    'code' => $payment->transaction_code,
+                    'token' => $resp['token'],
+                    'checkoutUrl' => isset($resp['checkout_url']) ? $resp['checkout_url'] : null,
+                    'method' => 'GET',
+                ];
+            } catch (\Exception $exception) {
+                $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
+                $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+                $logPaymentGateway->save(false);
+                return ReponseData::reponseArray(false, 'Check payment thất bại');
+            }
+            $logCallback->response_content = "Success";
+            $logCallback->save();
+            return ReponseData::reponseArray($success, $mess, $data);
+        } catch (\Exception $exception) {
+            $logCallback->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
+            $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+            $logCallback->save(false);
+            return ReponseData::reponseArray(false, 'thất bại');
         }
-        $param['buyer_fullname'] = $payment->customer_name;
-        $param['buyer_email'] = $payment->customer_phone;
-        $param['buyer_mobile'] = str_replace(['+84', '+084'], '0', $payment->customer_phone);
-        $param['buyer_address'] = $payment->customer_address;
 
-        if (in_array($payment->payment_bank_code, $this->checkBinCode())) {
-            $param['event_code'] = $param['bank_code'] . '_CHECK_BIN';
-        } else {
-            $param['event_code'] = '';
-        }
-        $param['event_discount'] = 0;
-
-        $resp = $this->callApi($this->submitUrl, $param);
-        if ($resp == null || !is_array($resp) || !isset($resp['error_code']) || empty($resp['error_code']) || $resp['error_code'] != '00' || !isset($resp['token'])) {
-            return new PaymentResponse(false, null, null, "Lỗi thanh toán trả về NL{$resp['error_code']}", "GET", $payment);
-        }
-        return new PaymentResponse(true, $resp['token'], isset($resp['checkout_url']) ? $resp['checkout_url'] : null, 'Call nl thành công', 'GET', $payment);
 
     }
 
@@ -85,19 +136,19 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK;
         $logCallback->transaction_code_request = "NGAN LUONG CALLBACK";
         $logCallback->store_id = 1;
-        try{
+        try {
             $yiiParams = Yii::$app->params['nganluong'];
 
             $orderCode = $data['order_code'];
             $transaction = WalletTransaction::findOne(['wallet_transaction_code' => $orderCode]);
-            if(!$transaction){
+            if (!$transaction) {
                 ///#Todo kiểm tra có trong transaction payment không
                 $transaction = WalletTransaction::findOne(['wallet_transaction_code' => $orderCode]);
-                if(!$transaction){
+                if (!$transaction) {
                     $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                     $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                     $logCallback->save(false);
-                    return ReponseData::reponseMess(false,'Transaction không tồn tại') ;
+                    return ReponseData::reponseArray(false, 'Transaction không tồn tại');
                 }
             }
             $param['function'] = 'GetTransactionDetail';
@@ -122,21 +173,21 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CHECK_PAYMENT;
             $logPaymentGateway->url = $this->submitUrl;
             $dataRs = [];
-            try{
+            try {
                 $resp = self::callApi($this->submitUrl, $param);
-                $logPaymentGateway->payment_method = ArrayHelper::getValue($resp,'payment_method');
-                $logPaymentGateway->payment_bank = ArrayHelper::getValue($resp,'bank_code');
-                $logPaymentGateway->amount = ArrayHelper::getValue($resp,'total_amount');
+                $logPaymentGateway->payment_method = ArrayHelper::getValue($resp, 'payment_method');
+                $logPaymentGateway->payment_bank = ArrayHelper::getValue($resp, 'bank_code');
+                $logPaymentGateway->amount = ArrayHelper::getValue($resp, 'total_amount');
                 $logPaymentGateway->response_content = ($resp);
                 $logPaymentGateway->response_time = date('Y-m-d H:i:s');
                 $logPaymentGateway->create_time = date('Y-m-d H:i:s');
                 $logPaymentGateway->store_id = 1;
                 $logPaymentGateway->save(false);
                 $mess = "Giao dịch thanh toán không thành công!";
-                if($resp['error_code'] == 00){
+                if ($resp['error_code'] == 00) {
                     $mess = "Giao dịch đã được thanh toán thành công!";
                     $success = true;
-                    if(in_array($this->page, [self::PAGE_CHECK_AND_UPDATE])){
+                    if (in_array($this->page, [self::PAGE_CHECK_AND_UPDATE])) {
                         //#Todo update payment success cho transaction payment..
 
                     }
@@ -145,20 +196,20 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 $request_content['form'] = $param;
                 $dataRs['request_content'] = $request_content;
                 $dataRs['response_content'] = $resp;
-            }catch (\Exception $exception){
-                $logPaymentGateway->request_content = $exception->getMessage()." \n ".$exception->getFile() . " \n ".$exception->getTraceAsString();
+            } catch (\Exception $exception) {
+                $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logPaymentGateway->save(false);
-                return ReponseData::reponseMess(false,'Check payment thất bại') ;
+                return ReponseData::reponseArray(false, 'Check payment thất bại');
             }
             $logCallback->response_content = "Success";
             $logCallback->save();
-            return ReponseData::reponseMess($success,$mess,$dataRs) ;
-        }catch (\Exception $e){
-            $logCallback->request_content = $e->getMessage()." \n ".$e->getFile() . " \n ".$e->getTraceAsString();
+            return ReponseData::reponseArray($success, $mess, $dataRs);
+        } catch (\Exception $e) {
+            $logCallback->request_content = $e->getMessage() . " \n " . $e->getFile() . " \n " . $e->getTraceAsString();
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);
-            return ReponseData::reponseMess(false,'Call back thất bại') ;
+            return ReponseData::reponseArray(false, 'Call back thất bại');
         }
 
     }
@@ -213,4 +264,5 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
     {
         return PaymentProvider::findOne(22);
     }
+
 }

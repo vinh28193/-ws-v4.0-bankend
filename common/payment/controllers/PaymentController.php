@@ -26,7 +26,6 @@ use common\payment\Payment;
 class PaymentController extends BasePaymentController
 {
 
-
     public function actionProcess()
     {
         $start = microtime(true);
@@ -97,9 +96,13 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->shipping = $shippingForm->receiver_address_id;
         $paymentTransaction->save(false);
         $res = $payment->processPayment();
+        if($res['success'] === false){
+            return $this->response(false, $res['message']);
+        }
+
         $time = $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
-        return $this->response(false, 'create success', $res);
+        return $this->response(true, 'create success', $res['data']);
     }
 
     public function actionReturn($merchant)
@@ -388,4 +391,5 @@ class PaymentController extends BasePaymentController
             Yii::error($exception, __METHOD__);
         }
     }
+
 }

@@ -2,12 +2,12 @@
 
 /* @var yii\web\View $this */
 /* @var integer $group */
-/* @var frontend\modules\checkout\Payment $payment */
+/* @var common\payment\Payment $payment */
 /* @var array $methods */
 ?>
 
 <div class="method-item">
-    <a class="btn method-select" data-toggle="collapse" data-target="#method<?=$group?>" aria-expanded="false">
+    <a class="btn method-select" data-toggle="collapse" data-target="#method<?=$group?>" aria-expanded="false" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
         <i class="icon method_<?= $group; ?>"></i>
         <div class="name">Ví điện tử Ngân Lượng</div>
         <div class="desc">Miễn phí giao dịch</div>

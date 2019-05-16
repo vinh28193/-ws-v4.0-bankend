@@ -11,6 +11,7 @@ use common\payment\methods\UnknownWidget;
 /* @var yii\web\View $this */
 /* @var common\payment\Payment $payment */
 /* @var array $group */
+
 ?>
 
 <div class="accordion payment-method" id="payment-method">
@@ -48,7 +49,5 @@ use common\payment\methods\UnknownWidget;
     <label class="form-check-label" for="term">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và điều
             kiện</a> giao dịch của Weshop.</label>
 </div>
-<button type="submit" class="btn btn-payment btn-block" id="btnCheckout" data-toggle="modal"
-        data-target="#checkout-success" onclick="ws.payment.process()">Thanh toán
-    ngay
+<button type="button" class="btn btn-payment btn-block" id="btnCheckout" onclick="ws.payment.process()">Thanh toán ngay
 </button>

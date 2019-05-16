@@ -40,10 +40,9 @@ class TopupController extends WalletServiceController
         $topup->load(Yii::$app->request->post(),'');
         \Yii::info('$post Params:' . json_encode($post), __METHOD__);
         $rs =  $topup->topUpRequest();
-        $data['wallet_transaction_code'] = $rs;
-        \Yii::info('topUpRequest:' . json_encode($data), __METHOD__);
+        \Yii::info('topUpRequest:' . json_encode($rs), __METHOD__);
         if($rs != false){
-            return $this->response(true,'ok',$data);
+            return $this->response(true,'ok',$rs);
         }
     }
 

@@ -492,9 +492,12 @@ FrontendAsset::register($this);
                     </div>
                 </li>
                 <li class="active">
-                    <a href="#">
+                    <a href="/my-cart.html">
                         <i class="nav-ico cart"></i>
-                        <span class="badge">2</span>
+                        <span class="badge"><?php
+                            $cartManager = new \common\components\cart\CartManager();
+                            echo $cartManager->countItems();
+                            ?></span>
                     </a>
                 </li>
             </ul>
@@ -640,8 +643,67 @@ FrontendAsset::register($this);
     </footer>
 </div>
 
-
 <?php $this->endBody() ?>
+<div class="modal otp-modal" id="otp-confirm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-title">Xác thực OTP</div>
+                <p>Mã xác thực OTP đã gửi đến email: linhkieu12@gmail.com.<br/>OTP có hiệu lực trong 5 phút.</p>
+                <form>
+                    <div class="form-group">
+                        <label>Mã OTP</label>
+                        <input type="text" class="form-control text-center">
+                    </div>
+                    <div class="form-group">
+                        <label>Mã xác nhận</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><img
+                                            src="https://thefallenbrain.files.wordpress.com/2016/05/input-black.gif"/></span>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Bạn chưa nhận được mã OTP? <a href="#">Gửi lại</a></p>
+                    <button type="button" class="btn btn-submit btn-block">Xác thực</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal qr-modal" id="qr-pay" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><img src="img/payment_qrpay.png"/></div>
+            </div>
+            <div class="modal-body">
+                <div class="bank-logo"><img src="img/bank/vietcombank.png" alt=""/></div>
+                <p>Vietcombank - Ngân hàng ngoại thương</p>
+                <div class="qr-box"><img
+                            src="https://store-images.s-microsoft.com/image/apps.33967.13510798887182917.246b0a3d-c3cc-46fc-9cea-021069d15c09.392bf5f5-ade4-4b36-aa63-bb15d5c3817a"
+                            alt=""/></div>
+                <p><a href="#">Download ảnh QR - Code!</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal success-modal" id="checkout-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <i class="fas fa-check"></i>
+                <div class="modal-title">Cám ơn bạn!</div>
+                <div class="order-code">Mã đơn hàng: <span class="text-blue" id="transactionCode"></span></div>
+                <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành toán
+                </p>
+                <button type="button" class="btn btn-submit btn-block" id="next-payment">Chuyển ngay <span
+                            id="countdown_payment">10</span></button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="loading_new" id="loading" style="display:none;">
     <div class="loading-inner-new">
         <img src="/img/gif/loading.gif">

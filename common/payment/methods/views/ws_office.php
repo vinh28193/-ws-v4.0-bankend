@@ -4,7 +4,7 @@
 ?>
 
 <div class="method-item">
-    <a class="btn method-select" data-toggle="collapse" data-target="#method4" aria-expanded="false">
+    <a class="btn method-select" data-toggle="collapse" data-target="#method4" aria-expanded="false" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
         <i class="icon method_4"></i>
         <div class="name">Thanh toán tại văn phòng</div>
         <div class="desc">Qúy khách vui lòng chọn địa điểm để thanh toán</div>

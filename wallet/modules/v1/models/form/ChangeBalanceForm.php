@@ -123,9 +123,8 @@ class ChangeBalanceForm extends Model
         //CHeck ngan luong
         $dataCheck['order_code'] = $transaction->wallet_transaction_code;
         $dataCheck['token'] = $transaction->payment_transaction;
-        $checkpayment = new NganLuong();
-        $rs = $checkpayment->handle($dataCheck);
-        $rs = json_decode($rs, true);
+        $checkPayment = new NganLuong();
+        $rs = $checkPayment->handle($dataCheck);
         if ($rs['success']) {
             if (round($rs['data']['response_content']['total_amount']) != round($this->amount) || $rs['data']['response_content']['transaction_status'] != '00') {
                 $mes = 'Đối chiếu transaction với Ngân lượng sai.';
