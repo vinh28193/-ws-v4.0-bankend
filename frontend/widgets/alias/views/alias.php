@@ -30,7 +30,7 @@ use frontend\widgets\alias\AliasImageGridWidget;
                             <a href="#">
                                 <div class="name"><?= $item['name']; ?></div>
                                 <div class="desc"><?= $item['desc']; ?></div>
-                                <i class="fa fa-angle-right"></i>
+                                <i id="eqww" class="ewewee fa fa-angle-right "></i>
                             </a>
                             <div class="sub-menu-2">
                                 <div class="title-box">
