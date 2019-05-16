@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 <div class="filter-box">
     <div class="filter-box">
-        <div onclick="showFilter('<?= md5($filter['name']) ?>')" style="cursor: pointer">
+        <div onclick="ws.showFilter('<?= md5($filter['name']) ?>')" style="cursor: pointer">
             <h6>
                 <?= Html::tag('b', $filter['name'], []); ?>
                 <span><i class="fa fa-chevron-up" id="ico-<?= md5($filter['name']) ?>"></i></span>

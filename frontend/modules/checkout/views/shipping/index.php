@@ -1,7 +1,5 @@
 <?php
 
-use frontend\modules\checkout\WizardWidget;
-
 /* @var yii\web\View $this */
 /* @var integer $activeStep */
 /* @var common\payment\Payment $payment */
@@ -14,9 +12,6 @@ if($activeStep === 1){
 }
 //echo $this->render('step/step1', ['activeStep' => $activeStep]);
 ?>
-<div class="container checkout-content">
-
-</div>
 <div id="step_checkout_1">
     <?= $this->render('step/step1', ['activeStep' => $activeStep]); ?>
 </div>

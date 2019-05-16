@@ -27,11 +27,11 @@ $url = function ($seller_id){
         <label>Số lượng:</label>
         <div class="input-group">
             <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" type="button">-</button>
+                <button class="btn btn-outline-secondary" type="button" id="downQuantity">-</button>
             </div>
-            <input type="text" class="form-control" value="1"/>
+            <input type="text" class="form-control" id="quantity" value="1"/>
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button">+</button>
+                <button class="btn btn-outline-secondary" type="button" id="upQuantity">+</button>
             </div>
         </div>
     </div>

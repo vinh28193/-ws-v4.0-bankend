@@ -14,7 +14,7 @@ class FrontendAsset extends AssetBundle
     public $css = [
         'css/style.css',
         'css/variables.css',
-        'css/mobile_style.css'
+//        'css/mobile_style.css'
     ];
     public $js = [
         'js/style.js'
