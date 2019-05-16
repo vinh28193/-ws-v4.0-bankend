@@ -1,18 +1,21 @@
 <?php
+use yii\helpers\Html;
 use Yii;
-if(YII_ENV=='dev')
-{
+/* @var $this yii\web\View */
+/* @var $model common\models\User */
+
+if (YII_ENV == 'dev') {
     //$api_host=Yii::$app->params['dev_api_url'];
     $domain = 'http://weshop-v4.front-end-ws.local.vn';
-}
-else if(YII_ENV=='prod')
-{
+} else if (YII_ENV == 'prod') {
     $domain = 'https://weshop.com.vn';
 }
 
+$verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token' => $user->auth_key]);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -81,7 +84,7 @@ else if(YII_ENV=='prod')
                                         <tr>
                                             <td style="padding:20px 20px 20px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
                                                 Chúc mừng quý khách đã trở thành thành viên của <a
-                                                    href="<?= $domain; ?>">WeShop Việt Nam</a>
+                                                        href="<?= $domain; ?>">WeShop Việt Nam</a>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -106,7 +109,7 @@ else if(YII_ENV=='prod')
                                                         </td>
                                                         <td style="padding: 15px; border: 1px solid #e3e3e3;border-left: none; vertical-align: top"
                                                             width="75%">
-                                                            <?= $accountName; ?>
+                                                            <?= Html::encode($user->username) ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -116,7 +119,7 @@ else if(YII_ENV=='prod')
                                                         </td>
                                                         <td style="padding: 15px; border: 1px solid #e3e3e3;border-left: none; vertical-align: top"
                                                             width="75%">
-                                                            <?= $email; ?>
+                                                            <?= Html::encode($user->email) ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -126,7 +129,7 @@ else if(YII_ENV=='prod')
                                                         </td>
                                                         <td style="padding: 15px; border: 1px solid #e3e3e3;border-left: none; vertical-align: top"
                                                             width="75%">
-                                                            <?= $phoneNumber; ?>
+                                                            <?= Html::encode($user->phone) ?>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -158,7 +161,7 @@ else if(YII_ENV=='prod')
                                         <tr>
                                             <td style="padding:5px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
                                                 Email hỗ trợ: <font color="#0388cd"><a
-                                                        href="mailto:support-vn@weshop.asia" target="_blank">support-vn@weshop.asia</a></font>
+                                                            href="mailto:support-vn@weshop.asia" target="_blank">support-vn@weshop.asia</a></font>
                                                 hoặc
                                             </td>
                                         </tr>
