@@ -81,8 +81,8 @@ class SignupForm extends Model
 
         $Customer->setPassword($this->password);
         $Customer->generateAuthKey();
-        $Customer->generateToken();
-        $Customer->generateAuthClient();
+//        $Customer->generateToken();
+//        $Customer->generateAuthClient();
 //        $Customer->generateXu();
 
         if ($Customer->save()) {

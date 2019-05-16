@@ -211,16 +211,16 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
         ];
     }
 
-    /*
     public static function findAdvance($condition)
     {
         return static::find()->where([
             'and',
             ['email' => $condition],
-            ['active' => 1]
+//            ['active' => 1]   chưa có trường active
         ])->one();
     }
 
+    /*
     public function generateToken()
     {
         $this->access_token = Yii::$app->security->generateRandomString();
