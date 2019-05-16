@@ -34,7 +34,7 @@ class m190221_021137_address extends Migration
             'store_id' => $this->integer(11)->comment(""),
             'type' => $this->string(255)->comment(""),
             'is_default' => $this->integer(11)->comment(""),
-            'customer_id' => $this->integer(11)->comment(""),
+            'customer_id' => $this->integer(11)->comment(" Từ 16/05/2019 customer_id --> User_id"),
 
             'created_time' => $this->bigInteger()->comment(""),
             'updated_time' => $this->bigInteger()->comment(""),

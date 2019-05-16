@@ -5261,3 +5261,6 @@ a {
 .detail-block .thumb-slider .zoomWrapper{
   width: auto !important;
 }
+.style-margin-top {
+  margin-top: 20px;
+}

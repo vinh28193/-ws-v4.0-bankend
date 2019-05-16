@@ -141,10 +141,10 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
      * @param string $password password to validate
      * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password)
-    {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
-    }
+//    public function validatePassword($password)
+//    {
+//        return Yii::$app->security->validatePassword($password, $this->password_hash);
+//    }
 
     public function generateToken()
     {

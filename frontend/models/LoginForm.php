@@ -5,6 +5,7 @@ namespace frontend\models;
 
 use Yii;
 use yii\base\Model;
+use common\models\User;
 use common\models\Customer;
 
 class LoginForm extends Model
@@ -13,7 +14,7 @@ class LoginForm extends Model
 
     public $email;
     public $password;
-    public $rememberMe = false;
+    public $rememberMe = true;
 
     private $_user;
 
@@ -47,7 +48,7 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if (!$user || $user->validatePassword($this->password)) {
+            if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect email or password.');
             }
         }
@@ -70,13 +71,14 @@ class LoginForm extends Model
     /**
      * Finds user by [[email]]
      *
-     * @return Customer|null
+     * @return User|null
      */
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = Customer::findAdvance($this->email);
+            $this->_user = User::findByEmail($this->email);
         }
+
         return $this->_user;
     }
 }
