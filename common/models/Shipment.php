@@ -17,7 +17,7 @@ use common\models\db\Shipment as DbShipment;
  * @package common\models
  * @property Package[] $packages
  * @property Package[] $packageItems
- * @property Customer $customer
+ * @property User $customer
  * @property Address $receiverAddress
  * @property SystemCountry $receiverCountry
  * @property SystemDistrict $receiverDistrict
@@ -87,7 +87,7 @@ class Shipment extends DbShipment
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+        return $this->hasOne(User::className(), ['id' => 'customer_id']);
     }
 
     /**

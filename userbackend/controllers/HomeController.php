@@ -4,6 +4,7 @@ namespace userbackend\controllers;
 
 use Yii;
 use common\models\Order;
+use common\models\User;
 use userbackend\models\HomeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -35,7 +36,7 @@ class HomeController extends Controller
      */
     public function actionIndex()
     {
-        $userId = Yii::$app->user->getIdentity()->getId();
+        $userId = Yii::$app->user->getId();
         $orders = Order::find()
             ->where(['=', 'customer_id', $userId])
             ->all();

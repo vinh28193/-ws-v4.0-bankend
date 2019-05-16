@@ -1,6 +1,5 @@
 <?php
 
-use yii\helpers\Html;
 use frontend\modules\checkout\WizardWidget;
 
 /* @var yii\web\View $this */
@@ -14,14 +13,25 @@ if($activeStep === 1){
 
 }
 //echo $this->render('step/step1', ['activeStep' => $activeStep]);
-//echo $this->render('step/step2',[
-//    'activeStep' => $activeStep,
-//    'shippingForm' => $shippingForm,
-//    'provinces' => $provinces,
-//    'payment' => $payment,
-//]);
-echo $this->render('step/step3',[
-    'activeStep' => $activeStep,
-    'shippingForm' => $shippingForm,
-    'payment' => $payment,
-]);
+?>
+<div class="container checkout-content">
+
+</div>
+<div id="step_checkout_1">
+    <?= $this->render('step/step1', ['activeStep' => $activeStep]); ?>
+</div>
+<div id="step_checkout_2">
+    <?= $this->render('step/step2', [
+        'activeStep' => $activeStep,
+        'shippingForm' => $shippingForm,
+        'provinces' => $provinces,
+        'payment' => $payment,
+    ]); ?>
+</div>
+<div id="step_checkout_3">
+    <?= $this->render('step/step3', [
+        'activeStep' => $activeStep,
+        'shippingForm' => $shippingForm,
+        'payment' => $payment,
+    ]); ?>
+</div>

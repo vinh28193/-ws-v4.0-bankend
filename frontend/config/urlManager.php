@@ -44,6 +44,6 @@ return [
         // cart
 
         // checkout
-//        'GET checkout.html' => 'checkout/checkout',
+        'GET checkout-<type:[0-9A-Za-z_-]*>.html' => 'checkout/shipping',
     ]
 ];
