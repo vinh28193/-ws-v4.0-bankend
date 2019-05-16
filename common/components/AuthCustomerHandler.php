@@ -30,10 +30,15 @@ class AuthCustomerHandler
         $attributes = $this->client->getUserAttributes();
         $email = ArrayHelper::getValue($attributes, 'email');
         $id = ArrayHelper::getValue($attributes, 'id');
+
+        $nickname = '';
         if(ArrayHelper::index($attributes, 'login')){
             $nickname = ArrayHelper::getValue($attributes, 'login');
         }else if(ArrayHelper::index($attributes, 'name')){
             $nickname = ArrayHelper::getValue($attributes, 'name');
+        }
+        if($nickname == ''){
+            $nickname = ArrayHelper::getValue($attributes, 'login');
         }
 
         $email_verified = ArrayHelper::getValue($attributes, 'email_verified');

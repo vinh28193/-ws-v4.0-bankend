@@ -43,20 +43,10 @@ class SecureController extends FrontendController
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        $customer = new Customer();
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-//            $post = (array)Yii::$app->request->post();
-//            $_pass = $post['LoginForm']['password'];
-//            var_dump($customer->validatePassword($_pass));die;
-//            if($customer->validatePassword($_pass))
-//            {
-                $model->login();
+        $model->rememberMe = false; // Mặc định không ghi nhớ
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->login() ) {
                 return $this->goHome();
-//            } else {
-//                Yii::$app->session->setFlash('false', 'Incorrect email or password.');
-//            }
-
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -101,10 +91,11 @@ class SecureController extends FrontendController
 
     public function actionRequestPasswordReset()
     {
+        //Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
             if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
                 @sleep(10); // sleep for 10 seconds
                 return $this->goHome();
             } else {
@@ -112,7 +103,7 @@ class SecureController extends FrontendController
             }
         }
 
-        return $this->render('requestPasswordResetToken', [
+        return $this->render('requestPasswordReset', [
             'model' => $model,
         ]);
 
