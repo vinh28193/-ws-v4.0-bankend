@@ -14,6 +14,7 @@ class ItemController extends EbayController
     public function actionDetail($id)
     {
         $form = new ProductDetailFrom();
+        $form->load($this->request->getQueryParams(),'');
         $form->id = $id;
         $form->type = 'ebay';
         $item = $form->detail();
@@ -32,8 +33,6 @@ class ItemController extends EbayController
                 'errors' => $form->getErrors()
             ]);
         }
-//        print_r($item);
-//        die;
         return $this->render('index', [
             'item' => $item
         ]);
