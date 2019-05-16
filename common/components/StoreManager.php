@@ -108,6 +108,19 @@ class StoreManager extends Component
         }
         return $host;
     }
+    public function getDomainByStoreId($idStore=null)
+    {
+        $idStore = $idStore ? $idStore : $this->store->id;
+
+        if ($idStore == self::STORE_VN) {
+            $host = "weshop.com.vn";
+        } else if ($idStore == self::STORE_ID) {
+            $host = "weshop.co.id";
+        } else {
+            $host = "weshop.com.vn";
+        }
+        return $host;
+    }
 
 
     /**
@@ -198,4 +211,29 @@ class StoreManager extends Component
     {
         return $this->getId() == self::STORE_ID;
     }
+    public function getBaseUrl() {
+        $urlBase = $this->getDomainByStoreId();
+        $urlBase = str_replace('http://','https://', strtolower($urlBase));
+        if(strpos($urlBase,'https://') == false){
+            $urlBase = 'https://' . $urlBase;
+        }
+        return $urlBase;
+    }
+    public function getName()
+    {
+        if ($this->isID())
+            return "Weshop Indonesia";
+        if ($this->isVN())
+            return "Weshop Indonesia";
+        return "Weshop Vietnam";
+    }
+    public function getCurrencyName()
+    {
+        if ($this->isID())
+            return "RP";
+        if ($this->isVN())
+            return "VNĐ";
+        return "USD";
+    }
+
 }

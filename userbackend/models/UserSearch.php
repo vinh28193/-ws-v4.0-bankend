@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use common\models\Address;
+use common\models\Store;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -30,6 +32,16 @@ class UserSearch extends User
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
+    }
+
+    public function getStore()
+    {
+        return $this->hasOne(Store::className(), ['id' => 'store_id']);
+    }
+
+    public function getAddress()
+    {
+        return $this->hasOne(Address::className(), ['customer_id' => 'id']);
     }
 
     /**

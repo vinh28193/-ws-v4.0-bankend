@@ -34,6 +34,37 @@ class SecureController extends FrontendController
     }
 
     /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['logout', 'signup','index'],
+                'rules' => [
+                    [
+                        'actions' => ['signup'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['logout','index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Logs in a user.
      * @return mixed
      */
@@ -44,9 +75,9 @@ class SecureController extends FrontendController
             return $this->goHome();
         }
         $model = new LoginForm();
-        $model->rememberMe = false; // Mặc định không ghi nhớ
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->login() ) {
-                return $this->goHome();
+        // $model->rememberMe = false; // Mặc định không ghi nhớ
+        if ($model->load(Yii::$app->request->post()) && $model->login() ) {
+              return $this->goHome();
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -67,7 +98,7 @@ class SecureController extends FrontendController
     public function actionRegister()
     {
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate() ) {
+        if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 if (Yii::$app->getUser()->login($user)) {
                     return $this->goHome();

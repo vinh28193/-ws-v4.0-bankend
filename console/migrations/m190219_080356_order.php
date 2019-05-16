@@ -34,7 +34,7 @@ class m190219_080356_order extends Migration
 
             // Order
             'type_order' => $this->string(255)->notNull()->comment("Hình thức mua hàng: SHOP | REQUEST | POS | SHIP"),
-            'customer_id' => $this->integer(11)->notNull()->comment(" Mã id của customer : có thể là khách buôn hoặc khách lẻ "),
+            'customer_id' => $this->integer(11)->notNull()->comment(" Mã id của customer : có thể là khách buôn hoặc khách lẻ --> 16/05/2019 customer_id --> user_id , bo bangr Customer   "),
             'customer_type' => $this->string(11)->notNull()->comment(" Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers "),
             'portal' => $this->string(255)->notNull()->comment("portal ebay, amazon us, amazon jp ...: EBAY/ AMAZON_US / AMAZON_JAPAN / OTHER / WEBSITE NGOÀI "),
 

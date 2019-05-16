@@ -4,6 +4,7 @@ namespace frontend\models;
 use common\models\Customer;
 use yii\base\Model;
 use common\models\User;
+use Yii;
 use common\models\Auth;
 
 /**
@@ -28,7 +29,6 @@ class SignupForm extends Model
             ['last_name', 'trim'],
             ['last_name', 'required'],
             ['last_name', 'string', 'min' => 2, 'max' => 255],
-            //['last_name', 'match', 'pattern' => '/^([A-Z]){1}([\w_\.!@#$%^&*()]+){5,31}$/'],
             ['phone', 'string', 'min' => 10, 'max' => 15],
             // ['phone', 'countryValue' => 'US'],
 
@@ -36,7 +36,7 @@ class SignupForm extends Model
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\Customer', 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 8,'max'=>72],
@@ -45,14 +45,13 @@ class SignupForm extends Model
 
             ['first_name', 'trim'],
             ['first_name', 'required'],
-            //['first_name', 'match', 'pattern' => '/^([A-Z]){1}([\w_\.!@#$%^&*()]+){5,31}$/'],
         ];
     }
 
     /**
-     * Signs Customer up.
+     * Signs user up.
      *
-     * @return Customer|null the saved model or null if saving fails
+     * @return User|null the saved model or null if saving fails
      */
     public function signup()
     {
@@ -60,7 +59,7 @@ class SignupForm extends Model
             return null;
         }
         @date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $Customer = new Customer([
+        $Customer = new User([
             'last_name' => $this->last_name,
             'first_name' => $this->first_name,
             'username' => $this->email,
@@ -82,9 +81,9 @@ class SignupForm extends Model
 
         $Customer->setPassword($this->password);
         $Customer->generateAuthKey();
-        $Customer->generateToken();
-        $Customer->generateAuthClient();
-        $Customer->generateXu();
+//        $Customer->generateToken();
+//        $Customer->generateAuthClient();
+//        $Customer->generateXu();
 
         if ($Customer->save()) {
             $auth = new Auth([
@@ -96,12 +95,7 @@ class SignupForm extends Model
             if ($auth->save()) {
                 Yii::$app->user->login($Customer, 0);
             } else {
-                Yii::$app->getSession()->setFlash('error', [
-                    Yii::t('app', 'Unable to save {client} account: {errors}', [
-                        'client' => $this->client->getTitle(),
-                        'errors' => json_encode($auth->getErrors()),
-                    ]),
-                ]);
+                Yii::$app->getSession()->setFlash('error', 'Error save Auth');
             }
 
         } else {

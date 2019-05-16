@@ -7,7 +7,7 @@ $this->beginContent('@frontend/views/layouts/common.php');
 ?>
 
 <div class="container">
-    <div class="auth-content">
+    <div class="auth-content style-margin-top">
         <div class="logo">
             <img src="/img/weshop-logo-vn.png" alt="" title=""/>
         </div>
