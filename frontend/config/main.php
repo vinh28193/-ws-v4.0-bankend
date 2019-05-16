@@ -42,23 +42,21 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\Customer',
-            'enableAutoLogin' => true,
+            'identityClass' => 'common\models\User',
+            'enableAutoLogin' => false,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
-        'redis'         => [
+        'redis' => [
             'class'    => 'yii\redis\Connection',
             'hostname' => 'localhost',
             'port'     => 6379,
             'database' => 0,
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
             'name' => 'adv-frontend-ws-2019',
             'class' => 'yii\redis\Session',
             'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
             'timeout' => 3600*4,
-
         ],
         'log' => [
             /*
