@@ -492,9 +492,12 @@ FrontendAsset::register($this);
                     </div>
                 </li>
                 <li class="active">
-                    <a href="#">
+                    <a href="/my-cart.html">
                         <i class="nav-ico cart"></i>
-                        <span class="badge">2</span>
+                        <span class="badge"><?php
+                            $cartManager = new \common\components\cart\CartManager();
+                            echo $cartManager->countItems();
+                            ?></span>
                     </a>
                 </li>
             </ul>

@@ -27,7 +27,7 @@ $name = Html::encode($name);
     </div>
     <div class="info">
         <div class="left">
-            <a href="#" class="name"><?= $name; ?></a>
+            <a href="<?= $link ?>" target="_blank" class="name"><?= $name; ?></a>
             <div class="rate">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>

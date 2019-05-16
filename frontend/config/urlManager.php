@@ -42,6 +42,7 @@ return [
         'GET amazon-jp/categories.html' => 'amazon-jp/amazon-jp/categories',
 
         // cart
+        'GET my-cart.html' => 'checkout/cart',
 
         // checkout
         'GET checkout-<type:[0-9A-Za-z_-]*>.html' => 'checkout/shipping',

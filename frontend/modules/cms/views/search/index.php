@@ -16,7 +16,7 @@ $keyword = Yii::$app->request->get('keyword');
     foreach ($data as $portal => $datum){ ?>
         <div class="title-box">
             <div class="left">
-                <img src="<?= WeshopHelper::getLogoByPortal($portal) ?>" alt=""/>
+                <img src="<?= WeshopHelper::getLogoByPortal($portal) ?>" width="100" alt=""/>
                 <span>Tìm kiếm “<?= $keyword ?>”</span>
             </div>
             <div class="right">
@@ -38,6 +38,7 @@ $keyword = Yii::$app->request->get('keyword');
                 $product->name = $p['item_name'];
                 $product->calculated_sell_price = $product->sell_price;
                 $product->calculated_start_price = $product->start_price;
+                $product->item_url = WeshopHelper::generateUrlDetail($portal,$product->name,$p['item_id']);
                 echo ProductWidget::widget(['type' => ProductWidget::TYPE_COL, 'product' => $product->getAttributes()]);
             } ?>
         </div>
