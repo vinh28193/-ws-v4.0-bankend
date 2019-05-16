@@ -13,7 +13,8 @@ class FrontendAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/style.css',
-        'css/variables.css'
+        'css/variables.css',
+        'css/mobile_style.css'
     ];
     public $js = [
         'js/style.js'

@@ -14,9 +14,9 @@
     var defaults = {
         updateUrl: undefined,
         removeUrl: undefined,
+        paymentUrl: undefined,
     };
 
-    var eventHandlers = {};
 
     var methods = {
         init: function (options) {
@@ -113,8 +113,25 @@
             var $cart = $(this);
             var data = $cart.data('wsCart');
             var keys = [];
-            $.each(filterCartItems($cart), function (i,$input) {
+            $.each(filterCartItems($cart), function (i, $input) {
                 keys.push($($input).val());
+            });
+            ws.ajax(data.settings.paymentUrl, {
+                dataType: 'json',
+                method: 'post',
+                data: {carts: keys},
+                success: function (response) {
+                    if (response.success) {
+                        var url = response.data || null;
+                        if (url === null) {
+                            alert('action can not complete');
+                            return false;
+                        }
+                        ws.redirect(url);
+                    } else {
+                        alert(response.message);
+                    }
+                }
             });
             console.log(keys);
 
@@ -138,7 +155,7 @@
         }
     };
     var filterCartItems = function ($cart) {
-       return $cart.find('input[name="items"]');
+        return $cart.find('input[name="items"]');
     };
     var updateItem = function ($data) {
         console.log($data)

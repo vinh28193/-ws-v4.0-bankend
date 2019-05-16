@@ -26,16 +26,15 @@ return [
                     'clientId' => '450961485732787',
                     'clientSecret' => '212b51f106650cd45b1dc77a5a4d4850',
                 ],
-                /*
-                'wallet' => [ //#Todo : 01 - Wallet Fixed ?? : Fixed cứng trong code common\models\wallet\WalletClient + Chưa dùng hết tới param bên dưới này
-                    'class' => 'common\models\wallet\WalletClient',
+                'wallet' => [
+                    'class' => 'common\payment\providers\wallet\WalletClient',
                     'clientId' => 'testclient',
                     'clientSecret' => 'testpass',
-                    'authUrl' => 'http://api.wallet.local/v1/rest/authorize',
-                    'tokenUrl' => 'http://api.wallet.local/v1/rest/token',
-                    'apiBaseUrl' => 'http://api.wallet.local/v1'
+                    'authUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/authorize',
+                    'tokenUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/token',
+                    'apiBaseUrl' => 'http://weshop-4.0.wallet.vn/v1'
                 ]
-                */
+
             ],
         ],
         'request' => [

@@ -40,19 +40,20 @@ class ShippingController extends CheckoutController
         }
         $cartType = $this->request->get('type', CartSelection::TYPE_SHOPPING);
         if (($keys = CartSelection::getSelectedItems($cartType)) === null) {
-            return $this->render('empty_cart');
+            return $this->goBack();
         }
         $items = [];
         foreach ($keys as $key) {
             $items[] = $this->module->cartManager->getItem($key, !$isGuest);
         }
-        if (empty($items) || count($items) !== CartSelection::countSelectedItems(CartSelection::TYPE_BUY_NOW)) {
-            return $this->render('empty_cart');
+        if (empty($items) || count($items) !== CartSelection::countSelectedItems($cartType)) {
+            return $this->goBack();
         }
         $params = CartHelper::createOrderParams($items);
         $payment = new Payment([
             'page' => Payment::PAGE_CHECKOUT,
             'orders' => $params['orders'],
+            'payment_type' => $cartType,
             'total_amount' => $params['totalAmount'],
             'total_amount_display' => $params['totalAmount']
         ]);

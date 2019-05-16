@@ -1,6 +1,7 @@
 ws.payment = (function ($) {
     var defaults = {
         page: undefined,
+        payment_type:undefined,
         orders: [],
         use_xu: 0,
         bulk_point: 0,
@@ -133,8 +134,10 @@ ws.payment = (function ($) {
         },
         changeCouponCode: function (code) {
             if (pub.payment.coupon_code === code) {
+                $('input[name=couponCode]').val('');
                 pub.payment.coupon_code = undefined;
             } else {
+                $('input[name=couponCode]').val(code);
                 pub.payment.coupon_code = code;
             }
             pub.checkPromotion();
@@ -186,12 +189,13 @@ ws.payment = (function ($) {
     };
     var updatePaymentByPromotion = function ($response) {
         var input = $('input[name=couponCode]');
+        var $errorDiscount = $('span#discountErrors');
+        $errorDiscount.css('display','none');
         if (!$response.success || pub.payment.coupon_code in $response.errors) {
-            // console.log($response.errors[pub.payment.coupon_code]);
-            // var error = $response.errors[pub.payment.coupon_code];
-            // input.parents('div.form-group').addClass('has-danger');
-            // input.parents.append('<div class="form-control-feedback">dadasd</div>');
-            // console.log(error);
+            console.log($response.errors[pub.payment.coupon_code]);
+            var error = $response.errors[pub.payment.coupon_code];
+            $errorDiscount.css('display','flex');
+            $errorDiscount.html(error);
         }
         var box = $('#billingBox');
         var discountBox = box.find('li#discountPrice');
@@ -201,26 +205,28 @@ ws.payment = (function ($) {
             pub.payment.total_discount_amount = $response.discount;
             pub.payment.total_amount_display = pub.payment.total_amount - pub.payment.total_discount_amount;
             discountBox.css('display', 'flex');
-            discountBox.find('div.right').html(ws.numberFormat(pub.payment.total_discount_amount, -3) + ' ' + pub.payment.currency);
+            discountBox.find('div.right').html('- ' + ws.numberFormat(pub.payment.total_discount_amount, -3) + ' ' + pub.payment.currency);
             box.find('li#finalPrice').find('div.right').html(ws.numberFormat(pub.payment.total_amount_display, -3) + ' ' + pub.payment.currency);
             box.find('li[rel="detail"]').remove();
             box.prepend(initPromotionView(pub.payment.discount_detail));
+
         }
 
     };
     var initPromotionView = function ($detail) {
         var text = '';
+
         $.each($detail, function (key, item) {
             console.log(item);
             text += '<li rel="detail" data-key="' + item.id + '" data-code="' + item.code + '" data-type="' + item.type + '">';
-            text += '<div class="left">';
+            text += '<div class="left"><div class="code">';
+            $('#discountInputCoupon').css('display', 'flex');
             if (item.type === 'Coupon') {
-                text += '<a href="javascript:void(0);" class="del-coupon"  onclick="ws.payment.changeCouponCode(\'' + item.code + '\')">' +
-                    '<i class="fa fa-times-circle"></i> ' +
-                    '</a>';
+                text += '<i class="fas fa-times text-danger remove"  title="Remove ' + item.code + '" onclick="ws.payment.changeCouponCode(\'' + item.code + '\')"></i>';
+                $('#discountInputCoupon').css('display', 'none');
             }
-            text += item.code + '<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="' + item.message + '" data-original-title="' + item.message + '"></i></div>';
-            text += '<div class="right">' + item.value + ' ' + pub.payment.currency + '</div>';
+            text += item.code + '<i class="fas fa-question-circle code-info" data-toggle="tooltip" data-placement="top" title="' + item.message + '" data-original-title="' + item.message + '"></i></div></div>';
+            text += '<div class="right"> - ' + ws.numberFormat(item.value, -3) + ' ' + pub.payment.currency + '</div>';
             text += '</li>';
         });
         return text;
