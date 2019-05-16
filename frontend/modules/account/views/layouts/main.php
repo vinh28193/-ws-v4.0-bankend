@@ -49,10 +49,10 @@ UserBackendAsset::register($this);
         <ul class="be-nav">
             <?php if (Yii::$app->user->isGuest) { ?>
                 <li>
-                    <?php echo Html::a('Signup', ['/site/signup']);?>
+                    <?php echo Html::a('Signup', ['/secure/signup']);?>
                 </li>
                 <li>
-                    <?php echo Html::a('Login', ['/site/login']);?>
+                    <?php echo Html::a('Login', ['/secure/login']);?>
                 </li>
             <?php } else { ?>
                 <li><span class="text-orange">50.800.000đ</span></li>
