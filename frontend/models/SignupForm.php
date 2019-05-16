@@ -59,7 +59,7 @@ class SignupForm extends Model
             return null;
         }
         @date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $Customer = new User([
+        $user = new User([
             'last_name' => $this->last_name,
             'first_name' => $this->first_name,
             'username' => $this->email,
@@ -77,23 +77,25 @@ class SignupForm extends Model
             'type_customer' => 1 , // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
             'avatar' => null ,
             'note_by_employee' => 'Khách hàng tạo tài khoản qua theo cách bình thường qua link Weshop',
+            'employee' => 0 , //  1 Là Nhân viên , 0 là khách hàng
+            'vip' => 0 , //  Mức độ Vip Của Khách Hàng không ap dụng cho nhân viên , theo thang điểm 0-5 số
         ]);
 
-        $Customer->setPassword($this->password);
-        $Customer->generateAuthKey();
-//        $Customer->generateToken();
-//        $Customer->generateAuthClient();
-//        $Customer->generateXu();
+        $user->setPassword($this->password);
+        $user->generateAuthKey();
+//        $user->generateToken();
+//        $user->generateAuthClient();
+//        $user->generateXu();
 
-        if ($Customer->save()) {
+        if ($user->save()) {
             $auth = new Auth([
-                'user_id' => $Customer->id,
+                'user_id' => $user->id,
                 'source' => null,
-                'source_id' => $Customer->id.'2019',
+                'source_id' => $user->id.'2019',
             ]);
 
             if ($auth->save()) {
-                Yii::$app->user->login($Customer, 0);
+                Yii::$app->user->login($user, 0);
             } else {
                 Yii::$app->getSession()->setFlash('error', 'Error save Auth');
             }
