@@ -99,15 +99,13 @@ class RestApiChatController extends BaseApiController
             $_user_name = $_user_Identity['username'];
             //----ToDo Need More Infor param
             $_user_app = 'Weshop2019'; /***Todo Set**/
-            $_request_ip = Yii::$app->getRequest()->getUserIP();
+            $_request_ip = Yii::$app->getRequest()->getUserIP(); // Yii::$app->request->userIP
             // $isNew = isset($_post['isNew']) && $_post['isNew'] === 'yes';
             //code vandinh : status order
- 
             $isSupported = 0; //1:true;0:false
             if($_post['type_chat'] == 'GROUP_WS')
             {
                 $isSupported = $this->keyChatManger->has($_post['message']);
-
             }
             $order =  Order::find()->where(['ordercode' => $_post['Order_path']])->one();
             $current_status = $order->current_status;
@@ -118,8 +116,8 @@ class RestApiChatController extends BaseApiController
             }
             $isNew = $isNew ? true : false;
             $isSupported = $isSupported ? true : false;
-
             //end code vandinh
+
             $_rest_data = ["ChatMongoWs" => [
                 "success" => true,
                 "message" => is_array($_post['message']) ? @json_encode($_post['message']) : $_post['message'] ,
@@ -142,11 +140,11 @@ class RestApiChatController extends BaseApiController
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
                 // chat group ws from new to supported
-               
+
                 if($isNew === true &&  $isSupported === true)
                 {
                         Order::updateAll([
-                            'current_status' => Order::STATUS_SUPPORTED  
+                            'current_status' => Order::STATUS_SUPPORTED
                         ],['ordercode' => $_post['Order_path']]);
                 }
                 //chat group customer from new to supporting
@@ -154,14 +152,15 @@ class RestApiChatController extends BaseApiController
                 {
 
                  // code vandinh staus order is new or chat supporting
-                  
+
                     $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}, order new to supporting";
-                
+
                         Order::updateAll([
                             'current_status' => Order::STATUS_SUPPORTING
                         ],['ordercode' => $_post['Order_path']]);
-                
+
                 //code update action log
+
                     if (!$model->save())
                      {
                         Yii::$app->wsLog->push('order', $model->getScenario(), null, [
@@ -177,9 +176,9 @@ class RestApiChatController extends BaseApiController
                     'request' => $this->post,
                     'response' => $_post['message']
                 ]);
-                  
+
                 }
-                
+
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);

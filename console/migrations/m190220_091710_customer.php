@@ -33,7 +33,7 @@ class m190220_091710_customer extends Migration
             'phone_verified' => $this->tinyInteger(4)->comment(""),
             'last_order_time' => $this->dateTime()->comment(""),
             'note_by_employee' => $this->text()->comment(""),
-            'type_customer' => $this->integer(11)->comment(" set 1 là Khách Buôn và 2 là Khách buôn - WholeSale Customer "),
+            'type_customer' => $this->integer(11)->comment(" set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer "),
             'access_token' => $this->string(255)->comment(""),
             'auth_client' => $this->string(255)->comment(""),
             'verify_token' => $this->string(255)->comment(""),
@@ -57,8 +57,8 @@ class m190220_091710_customer extends Migration
 
             'created_time' => $this->bigInteger()->comment(""),
             'updated_time' => $this->bigInteger()->comment(""),
-            'active' => $this->tinyInteger(4)->comment(""),
-            'remove' => $this->tinyInteger(4)->comment(""),
+            'active' => $this->tinyInteger(4)->comment(" 0 Chứa active , 1 là active"),
+            'remove' => $this->tinyInteger(4)->comment(" 0 là chưa xóa , tức là ẩn , 1 là đánh dấu đã xóa"),
         ],$tableOptions);
 
     }
