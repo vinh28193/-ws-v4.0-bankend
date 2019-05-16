@@ -61,7 +61,7 @@ class CustomerController extends Controller
 
         return $this->render('index', [
             'model' => $model,
-            'address' => $address
+            'address' => $address === null ? new Address() : $address,
         ]);
     }
 
