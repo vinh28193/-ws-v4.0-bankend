@@ -11,6 +11,7 @@ use common\models\User;
 class SignupForm extends Model
 {
     public $last_name;
+    public $first_name;
     public $email;
     public $password;
     public $phone;
@@ -25,7 +26,6 @@ class SignupForm extends Model
         return [
             ['last_name', 'trim'],
             ['last_name', 'required'],
-            ['last_name', 'unique', 'targetClass' => '\common\models\Customer', 'message' => 'This last name has already been taken.'],
             ['last_name', 'string', 'min' => 2, 'max' => 255],
             ['phone', 'string', 'min' => 2, 'max' => 255],
 
@@ -40,6 +40,8 @@ class SignupForm extends Model
 
             ['replacePassword', 'compare', 'compareAttribute' => 'password'],
 
+            ['first_name', 'trim'],
+            ['first_name', 'required'],
         ];
     }
 
@@ -56,10 +58,14 @@ class SignupForm extends Model
         
         $user = new Customer();
         $user->last_name = $this->last_name;
+        $user->first_name = $this->first_name;
         $user->email = $this->email;
         $user->setPassword($this->replacePassword);
         $user->generateAuthKey();
-        
+        $user->generateToken();
+        $user->generateAuthClient();
+        $user->generateXu();
+
         return $user->save() ? $user : null;
     }
 }

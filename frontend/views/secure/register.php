@@ -14,7 +14,10 @@ use yii\bootstrap\ActiveForm;
 ]
 ]); ?>
 <div class="form-group">
-    <?= $form->field($model, 'last_name',['template' => " <i class=\"icon user\"></i>{input}\n{hint}\n{error}"])->textInput(['placeholder' => "Họ Tên"]) ?>
+    <?= $form->field($model, 'first_name',['template' => " <i class=\"icon user\"></i>{input}\n{hint}\n{error}"])->textInput(['placeholder' => "Tên đầu"]) ?>
+</div>
+<div class="form-group">
+    <?= $form->field($model, 'last_name',['template' => " <i class=\"icon user\"></i>{input}\n{hint}\n{error}"])->textInput(['placeholder' => "Tên Cuối"]) ?>
 </div>
 
 <div class="form-group">

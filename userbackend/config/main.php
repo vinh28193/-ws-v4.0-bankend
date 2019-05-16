@@ -28,7 +28,7 @@ return [
             'identityClass' => 'common\models\Customer',
 
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-userbackend', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity', 'domain'=>'.yii2-members-system.dev', 'path'=>'/'],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the userbackend
