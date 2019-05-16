@@ -40,7 +40,7 @@ class PasswordResetRequestForm extends Model
     {
         /* @var $user User */
         $user = User::findOne([
-            'active' => User::STATUS_ACTIVE,
+            'status' => User::STATUS_ACTIVE,
             'email' => $this->email,
         ]);
 
@@ -48,7 +48,7 @@ class PasswordResetRequestForm extends Model
             return false;
         }
 
-        if (!User::isPasswordResetTokenValid($user->reset_password_token)) {
+        if (!User::isPasswordResetTokenValid($user->password_reset_token)) {
             $user->generatePasswordResetToken();
             if (!$user->save()) {
                 return false;
