@@ -61,6 +61,7 @@ return [
                 '<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '<module>/<controller>/<action>',
             ],
         ],
+
     ],
     'params' => $params,
 ];

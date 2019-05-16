@@ -1,17 +1,18 @@
 <?php
 
-namespace userbackend\controllers;
+namespace frontend\modules\account\controllers;
 
 use Yii;
 use common\models\Order;
+use userbackend\models\OrderSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * HomeController implements the CRUD actions for Order model.
+ * OrderController implements the CRUD actions for Order model.
  */
-class HomeController extends Controller
+class OrderController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -34,14 +35,19 @@ class HomeController extends Controller
      */
     public function actionIndex()
     {
-        $userId = Yii::$app->user->getId();
-        $orders = Order::find()
-            ->where(['=', 'customer_id', $userId])
-            ->all();
-        $total = count($orders);
+        $userId = Yii::$app->user->getIdentity()->getId();
+        $post = Yii::$app->request->get('status');
+        $dataProvider = Order::find()
+            ->with('products')
+            ->where(['=', 'customer_id', $userId]);
+        if (isset($post) && !empty($post)) {
+            $dataProvider ->andWhere(['=','current_status', $post]);
+        }
+        $models = $dataProvider->all();
+
         return $this->render('index', [
-            'orders' => $orders,
-            'total' => $total
+            'models' => $models,
+//            'pages' => $pages
         ]);
     }
 
@@ -53,8 +59,11 @@ class HomeController extends Controller
      */
     public function actionView($id)
     {
+        var_dump($id);
+        die();
+        $model = Order::find()->with('products')->where(['id' => $id])->one();
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 

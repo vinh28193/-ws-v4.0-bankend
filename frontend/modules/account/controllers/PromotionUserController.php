@@ -1,17 +1,19 @@
 <?php
 
-namespace userbackend\controllers;
+namespace frontend\modules\account\controllers;
 
+use common\models\db\Promotion;
 use Yii;
-use common\models\Order;
+use common\models\db\PromotionUser;
+use userbackend\models\PromotionUserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * HomeController implements the CRUD actions for Order model.
+ * PromotionUserController implements the CRUD actions for PromotionUser model.
  */
-class HomeController extends Controller
+class PromotionUserController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -29,24 +31,20 @@ class HomeController extends Controller
     }
 
     /**
-     * Lists all Order models.
+     * Lists all PromotionUser models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $userId = Yii::$app->user->getId();
-        $orders = Order::find()
-            ->where(['=', 'customer_id', $userId])
-            ->all();
-        $total = count($orders);
+        $userId = Yii::$app->user->getIdentity()->getId();
+        $models = Promotion::find()->with('promotion')->where(['customer_id' => $userId])->all();
         return $this->render('index', [
-            'orders' => $orders,
-            'total' => $total
+           'models' => $models,
         ]);
     }
 
     /**
-     * Displays a single Order model.
+     * Displays a single PromotionUser model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -59,13 +57,13 @@ class HomeController extends Controller
     }
 
     /**
-     * Creates a new Order model.
+     * Creates a new PromotionUser model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Order();
+        $model = new Promotion();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -77,7 +75,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Updates an existing Order model.
+     * Updates an existing PromotionUser model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -97,7 +95,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Deletes an existing Order model.
+     * Deletes an existing PromotionUser model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -111,15 +109,15 @@ class HomeController extends Controller
     }
 
     /**
-     * Finds the Order model based on its primary key value.
+     * Finds the PromotionUser model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Order the loaded model
+     * @return PromotionUser the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Order::findOne($id)) !== null) {
+        if (($model = PromotionUser::findOne($id)) !== null) {
             return $model;
         }
 
