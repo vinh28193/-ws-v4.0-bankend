@@ -175,14 +175,6 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
         $this->_wallet_client = $client;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFirstErrors()
-    {
-        $firstError = parent::getFirstErrors();
-        return reset($firstError);
-    }
 
     /**
      * @return \yii\db\ActiveQuery

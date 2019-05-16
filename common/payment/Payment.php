@@ -155,13 +155,14 @@ class Payment extends Model
         if($this->payment_provider === 42){
             $wallet = new WalletService([
                 'total_amount' => $this->total_amount - $this->total_discount_amount,
-                'payment_provider' => $this->payment_provider,
-                'payment_method' => $this->payment_method,
+                'payment_provider' => $this->payment_provider_name,
+                'payment_method' => $this->payment_method_name,
                 'bank_code' => $this->payment_bank_code,
             ]);
            $results = $wallet->topUpTransaction();
-           if($results['success'] === true && isset($results['data']) && isset($results['data']['wallet_transaction_code']['data']['code'])){
-               $code = $results['data']['wallet_transaction_code']['data']['code'];
+
+           if($results['success'] === true && isset($results['data']) && isset($results['data']['data']['code'])){
+               $code = $results['data']['data']['code'];
            }
         }
         $this->transaction_code = $code;
@@ -170,8 +171,7 @@ class Payment extends Model
 
     public function processPayment()
     {
-        var_dump($this->payment_provider);
-        die;
+
     }
 
     public function checkPromotion()
