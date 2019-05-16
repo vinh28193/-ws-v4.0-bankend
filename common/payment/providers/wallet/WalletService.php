@@ -7,9 +7,11 @@
  * Time: 10:00
  */
 
-namespace common\wallet;
+namespace common\payment\providers\wallet;
 
+use common\models\Customer;
 use Yii;
+use Exception;
 use yii\base\BaseObject;
 use yii\httpclient\Client;
 
@@ -55,6 +57,45 @@ class WalletService extends BaseObject
             $this->_walletClient = Yii::$app->authClientCollection->getClient('wallet');
         }
         return $this->_walletClient;
+    }
+
+    public function isGuest()
+    {
+        return Yii::$app->getSession()->get('wallet_token') === null;
+    }
+
+    public function login($password)
+    {
+        /** @var  $user Customer */
+        $user = Yii::$app->user->identity;
+
+        $walletClient = $this->getWalletClient();
+        try {
+            $walletClient->authenticateUser($user->username, $password);
+            return true;
+        } catch (Exception $exception) {
+            $client = new Client([
+                'baseUrl' => $walletClient->apiBaseUrl
+            ]);
+            $request = $client->createRequest();
+            $request->setUrl('wallet-no-auth/create-wallet');
+            $request->setMethod('POST');
+            $request->setData(['customer' => $user->getAttributes()]);
+            $response = $client->send($request);
+            if ($response->isOk) {
+                $response = $response->getData();
+                if ($response['success']) {
+                    try {
+                        $walletClient->authenticateUser($user->username, Yii::$app->request->post('password'));
+                        return true;
+                    } catch (Exception $e) {
+                        return false;
+                    }
+
+                }
+            }
+            return false;
+        }
     }
 
     public function init()

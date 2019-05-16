@@ -3,14 +3,15 @@
 
 namespace common\payment;
 
-
+use Yii;
+use yii\base\BaseObject;
 use yii\base\ViewContextInterface;
 
-class PaymentContextView extends \yii\base\BaseObject implements ViewContextInterface
+class PaymentContextView extends BaseObject implements ViewContextInterface
 {
 
     public function getViewPath()
     {
-        return \Yii::getAlias('@common/payment/views');
+        return Yii::getAlias('@common/payment/views');
     }
 }

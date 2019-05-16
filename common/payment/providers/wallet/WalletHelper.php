@@ -6,7 +6,7 @@
  * Time: 09:48
  */
 
-namespace common\wallet;
+namespace common\payment\providers\wallet;
 
 
 class WalletHelper

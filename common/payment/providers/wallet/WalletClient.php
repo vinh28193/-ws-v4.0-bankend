@@ -6,7 +6,7 @@
  * Time: 08:37
  */
 
-namespace common\wallet;
+namespace common\payment\providers\wallet;
 
 use yii\authclient\OAuth2;
 

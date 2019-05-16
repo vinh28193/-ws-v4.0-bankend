@@ -92,7 +92,7 @@ class AuthCustomerHandler
                     if ($auth->save()) {
                         $transaction->commit();
                         // Yii::$app->user->login($Customer, $duration);
-                        Yii::$app->user->login($Customer, 0);
+                        Yii::$app->user->login($Customer, 0);    // ToDo User Co Customer
                     } else {
                         Yii::$app->getSession()->setFlash('error', [
                             Yii::t('app', 'Unable to save {client} account: {errors}', [

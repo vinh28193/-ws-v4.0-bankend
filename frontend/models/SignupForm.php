@@ -4,6 +4,8 @@ namespace frontend\models;
 use common\models\Customer;
 use yii\base\Model;
 use common\models\User;
+use Yii;
+use common\models\Auth;
 
 /**
  * Signup form
@@ -56,17 +58,55 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
+        @date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $Customer = new User([
+            'last_name' => $this->last_name,
+            'first_name' => $this->first_name,
+            'username' => $this->email,
+            'email' => $this->email,
+            'password' => $this->password,
+            'updated_at'=> time(),
+            'store_id' => 1, // Domain Weshop Viet Nam
+            'active_shipping' => 0,
+            'total_xu' => 0,
+            'usable_xu' => 0 ,
+            'last_revenue_xu' => 0 ,
+            'email_verified' => 1 ,  // Nếu là Google Email lấy được rồi nên coi như là dã xác nhận
+            'phone_verified' => 0, // Vì là đăng kí qua Google + Facebook nên chưa xác nhân hoặc lấy được số đt của khách hàng
+            'gender' => 0 ,
+            'type_customer' => 1 , // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
+            'avatar' => null ,
+            'note_by_employee' => 'Khách hàng tạo tài khoản qua theo cách bình thường qua link Weshop',
+        ]);
 
-        $user = new User();
-        $user->last_name = $this->last_name;
-        $user->first_name = $this->first_name;
-        $user->email = $this->email;
-        $user->setPassword($this->replacePassword);
-        $user->generateAuthKey();
-        $user->generateToken();
-        $user->generateAuthClient();
-        $user->generateXu();
+        $Customer->setPassword($this->password);
+        $Customer->generateAuthKey();
+        $Customer->generateToken();
+        $Customer->generateAuthClient();
+//        $Customer->generateXu();
 
-        return $user->save() ? $user : null;
+        if ($Customer->save()) {
+            $auth = new Auth([
+                'user_id' => $Customer->id,
+                'source' => null,
+                'source_id' => $Customer->id.'2019',
+            ]);
+
+            if ($auth->save()) {
+                Yii::$app->user->login($Customer, 0);
+            } else {
+                Yii::$app->getSession()->setFlash('error', [
+                    Yii::t('app', 'Unable to save {client} account: {errors}', [
+                        'client' => $this->client->getTitle(),
+                        'errors' => json_encode($auth->getErrors()),
+                    ]),
+                ]);
+            }
+
+        } else {
+            Yii::$app->getSession()->setFlash('error', [
+                Yii::t('app', 'Unable to save Customer : {errors}'),
+            ]);
+        }
     }
 }
