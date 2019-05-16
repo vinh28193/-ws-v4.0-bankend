@@ -113,7 +113,7 @@ class SignupForm extends Model
     {
         /* @var $user User */
         $user = User::findOne([
-            'active' => User::STATUS_ACTIVE,
+            'status' => User::STATUS_ACTIVE,
             'email' => $this->email,
         ]);
 
@@ -126,10 +126,9 @@ class SignupForm extends Model
                 ['html' => 'accounts/verify_create_done', 'text' => 'passwordResetToken-text'],
                 ['user' => $user]
             )
-            //->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setFrom([Yii::$app->params['supportEmail'] => 'Weshop Việt Nam robot'])
             ->setTo($this->email)
-            ->setSubject('Password reset for ' . Yii::$app->name)
+            ->setSubject('REGISTER ACCOUNT SƯCCESS! ' . Yii::$app->name)
             ->send();
     }
 }

@@ -505,7 +505,7 @@ FrontendAsset::register($this);
             <div class="logo">
                 <span class="menu-toggle"></span>
                 <a href="/" class="logo-pc">
-                    <img src="/img/weshop-logo-vn.png" alt="" title=""/>
+                    <img src="../img/weshop-logo-vn.png" alt="" title=""/>
                 </a>
             </div>
             <div class="produce-box">

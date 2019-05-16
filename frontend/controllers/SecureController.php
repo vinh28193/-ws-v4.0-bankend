@@ -75,9 +75,9 @@ class SecureController extends FrontendController
             return $this->goHome();
         }
         $model = new LoginForm();
-        // $model->rememberMe = false; // Mặc định không ghi nhớ
+        $model->rememberMe = false; // Mặc định không ghi nhớ
         if ($model->load(Yii::$app->request->post()) && $model->login() ) {
-              return $this->goHome();
+             return $this->goHome();
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -100,9 +100,12 @@ class SecureController extends FrontendController
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    // $model->sendEmail();
+                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+                if ($model->sendEmail()) {
+                    Yii::$app->getUser()->login($user);
                     return $this->goHome();
+                } else {
+                    Yii::$app->session->setFlash('error', 'Sorry, we are unable send email address resgister.');
                 }
             }
         }
@@ -123,12 +126,12 @@ class SecureController extends FrontendController
 
     public function actionRequestPasswordReset()
     {
-        //Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
             if ($model->sendEmail()) {
-                @sleep(10); // sleep for 10 seconds
+                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+                @sleep(5); // sleep for 10 seconds
                 return $this->goHome();
             } else {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');

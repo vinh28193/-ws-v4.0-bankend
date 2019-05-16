@@ -5258,5 +5258,55 @@ a {
   text-align: center; }
   .account-info b {
     font-size: 18px; }
+  .p1 {
+    padding: 0;
+  }
 
 /*# sourceMappingURL=style.css.map */
+.help-block-error {
+  color: red;
+}
+.loading_new {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: block;
+  background: rgba(255,255,255,255);
+  top: 0;
+  left: 0;
+  opacity: .7;
+}
+.loading-inner-new {
+  width: 64px;
+  height: 64px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin: 0 auto;
+  margin-left: -32px;
+}
+.loading-inner-new img {
+  width: 64px;
+  height: 64px;
+}
+.content-404 {
+  padding: 170px 0;
+  background: #2796b6;
+  text-align: center;
+}
+#detail-slider .item.active {
+  border: 1px solid red;
+}
+.old-price{
+  text-decoration: line-through;
+}
+.p1 {
+  padding: 0;
+}
+.detail-block .thumb-slider .zoomWrapper{
+  width: auto !important;
+}
+.name{
+  white-space: nowrap;
+}

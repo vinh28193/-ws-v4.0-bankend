@@ -11,11 +11,31 @@ use yii\authclient\widgets\AuthChoice;
 /* @var yii\web\View $this */
 
 $this->title = 'Đăng nhập';
+$session = Yii::$app->session;
+//$flashes = $session->getAllFlashes();
 
 echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 ?>
 
 <p> Vui lòng điền vào các trường sau để đăng nhập :</p>
+
+
+<?php if (Yii::$app->session->hasFlash('success')): ?>
+    <div class="alert alert-success alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <h4><i class="icon fa fa-check"></i>Saved!</h4>
+        <?= Yii::$app->session->getFlash('success') ?>
+    </div>
+<?php endif; ?>
+
+
+<?php if (Yii::$app->session->hasFlash('error')): ?>
+    <div class="alert alert-danger alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <h4><i class="icon fa fa-check"></i>Saved!</h4>
+        <?= Yii::$app->session->getFlash('error') ?>
+    </div>
+<?php endif; ?>
 
 
     <?php $form = ActiveForm::begin(['id' => 'login-form', 'options' => [ 'class' => 'payment-form']]); ?>
@@ -41,7 +61,6 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
     <div class="other-login">
         <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
         <div class="social-button-ws">
-
             <?php $authAuthChoice = AuthChoice::begin([  'baseAuthUrl' => ['secure/auth'] , 'popupMode' => false, ]); ?>
                     <div class="social-button">
                  <?php foreach ($authAuthChoice->getClients() as $client): ?>

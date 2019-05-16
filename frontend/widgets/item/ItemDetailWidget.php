@@ -104,6 +104,8 @@ class ItemDetailWidget extends Widget
             'variation_options' => $this->item->variation_options,
             'sellers' => $this->item->providers,
             'conditions' => $this->item->condition,
+            'quantity_sold' => $this->item->quantity_sold,
+            'available_quantity' => $this->item->available_quantity,
             'images' => $this->item->primary_images,
         ]);
         $options = Json::htmlEncode($this->getClientOptions());
