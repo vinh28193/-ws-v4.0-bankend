@@ -11,6 +11,7 @@ namespace common\helpers;
 use yii\base\InvalidArgumentException;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 class WeshopHelper
 {
@@ -280,8 +281,15 @@ class WeshopHelper
         return $str;
     }
 
-    public static function generateUrlDetail($portal,$name,$sku,$sid = null){
-        return '/'.strtolower($portal).'/item/'.self::alias($name).'-'.$sku.'.html';
+    public static function generateUrlDetail($portal,$name,$sku,$sid = null,$seller = null){
+        $url = Url::base(true).'/'.strtolower($portal).'/item/'.self::alias($name).'-'.$sku.'.html';
+        if($sid){
+            $url .= '?sku='.$sid;
+        }
+        if($seller){
+            $url = $sid ? $url.'&seller='.$seller : $url.'?seller='.$seller;
+        }
+        return $url;
     }
 
     /**
@@ -356,7 +364,7 @@ class WeshopHelper
                 return '/img/logo_amz.png';
                 break;
             case 'amazon-jp':
-                return '/img/logo_amz_jp.png';
+                return '/img/logo_amzjp.png';
                 break;
             default:
                 return '/img/logo_ws.png';
