@@ -1,7 +1,7 @@
 <?php
 
 
-namespace common\payment;;
+namespace common\payment;
 
 
 interface PaymentProviderInterface

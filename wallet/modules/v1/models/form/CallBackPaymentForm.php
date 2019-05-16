@@ -9,15 +9,17 @@
 namespace wallet\modules\v1\models\form;
 
 use common\components\ThirdPartyLogs;
+use common\models\PaymentProvider;
 use common\modelsMongo\UtilLog;
-use common\modelsMongo\WalletLogWs as MongoWalletLog;
-use common\models\payment\vietnam\NganLuong;
+use common\modelsMongo\WalletLog as MongoWalletLog;
+use common\payment\providers\vietnam\NganLuongProvider as NganLuong;
 use wallet\modules\v1\models\enu\ResponseCode;
 use wallet\modules\v1\models\WalletClient;
 use wallet\modules\v1\models\WalletLog;
 use wallet\modules\v1\models\WalletMerchant;
 use wallet\modules\v1\models\WalletTransaction;
 use common\models\db\WalletTransaction as ChildWalletTransaction;
+use Yii;
 use yii\base\Model;
 use yii\helpers\Json;
 
@@ -58,24 +60,32 @@ class CallBackPaymentForm extends Model
         if (!$this->validate()) {
             return ['code' => 'INVALID', 'message' => $this->getErrors()];
         }
-
-        $bill = 0;
-        switch ($this->model_wallet_transaction->wallet_merchant_id) {
-
-            case WalletMerchant::WALEET_MERCHAN_ID_ESC_PRO;
-                $bill = new NganLuong();
-                $bill->token = $this->payment_transaction;
-                $bill->wallet_merchant_id = WalletMerchant::WALEET_MERCHAN_ID_ESC_PRO;
-                $rs = $bill->checkPayment();
-                break;
-
-            case WalletMerchant::WALEET_MERCHAN_ID_ESC_DEV;
-                $bill = new NganLuong();
-                $bill->token = $this->payment_transaction;
-                $bill->wallet_merchant_id = WalletMerchant::WALEET_MERCHAN_ID_ESC_DEV;
-                $rs = $bill->checkPayment();
-                break;
+//        $provider = PaymentProvider::findOne($this->model_wallet_transaction->payment_method);
+//        if(!$provider){
+//            return ['code' => 'INVALID', 'message' => "Không tìm thấy payment provider"];
+//        }
+        if(!$this->model_wallet_transaction->payment_transaction){
+            return ['code' => 'INVALID', 'message' => "Không tìm thấy payment transaction"];
         }
+        $dataCheck['order_code'] = $this->model_wallet_transaction->wallet_transaction_code;
+        $dataCheck['token'] = $this->model_wallet_transaction->payment_transaction;
+        $bill = new NganLuong();
+        $rs = $bill->handle($dataCheck);
+//        switch ($this->model_wallet_transaction->wallet_merchant_id) {
+//
+//            case WalletMerchant::WALEET_MERCHAN_ID_ESC_PRO;
+//                $bill = new NganLuong();
+//                $bill->token = $this->payment_transaction;
+//                $bill->wallet_merchant_id = WalletMerchant::WALEET_MERCHAN_ID_ESC_PRO;
+//                $rs = $bill->checkPayment();
+//                break;
+//
+//            case WalletMerchant::WALEET_MERCHAN_ID_ESC_DEV;
+//                $bill = new NganLuong();
+//                $bill->submitUrl = '';
+//                $rs = $bill->checkPayment();
+//                break;
+//        }
         $rs = json_decode($rs, true);
         $notifyType = false;
 //        $log = new UtilLog();
