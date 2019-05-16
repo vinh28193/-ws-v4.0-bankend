@@ -14,7 +14,7 @@ class LoginForm extends Model
 
     public $email;
     public $password;
-    public $rememberMe = false;
+    public $rememberMe = true;
 
     private $_user;
 
@@ -71,13 +71,14 @@ class LoginForm extends Model
     /**
      * Finds user by [[email]]
      *
-     * @return Customer|null
+     * @return User|null
      */
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = User::findAdvance($this->email);
+            $this->_user = User::findByEmail($this->email);
         }
+
         return $this->_user;
     }
 }
