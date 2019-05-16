@@ -21,8 +21,8 @@ $this->beginContent('@frontend/views/layouts/common.php')
     </div>
 
 <?php
-echo Html::beginTag('div', ['class' => 'slider-2']);
 if ($isShow){
+echo Html::beginTag('div', ['class' => 'slider-2']);
     echo SlideWidget::widget([
         'page' => $page,
         'options' => [
@@ -40,8 +40,8 @@ if ($isShow){
             'autoplay' => 1e3
         ]
     ]);
-}
 echo Html::endTag('div');
+}
 echo '<div class="container">' .
     $content.
     '</div>';

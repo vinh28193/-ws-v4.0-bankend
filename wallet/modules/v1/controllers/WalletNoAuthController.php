@@ -10,7 +10,7 @@ namespace wallet\modules\v1\controllers;
 
 
 use common\components\RedisQueue;
-use common\models\Customer;
+use common\models\User as Customer;
 use wallet\controllers\ServiceController;
 use wallet\modules\v1\models\form\CallBackPaymentForm;
 use wallet\modules\v1\models\WalletClient;

@@ -52,14 +52,24 @@ class AuthCustomerHandler
             'source_id' => $id,
         ])->one();
 
-        if (Yii::$app->user->isGuest) {
+      if (Yii::$app->user->isGuest) {
+
+         if ($auth) {
+                // login
+
+                /* @var User $user */
+                $user = $auth->user;
+                $this->updateUserInfo($user);
+                Yii::$app->user->login($user, $duration);
+         } else {
+           // signup
             if ($email !== null && User::find()->where(['email' => $email])->exists()) {
                 Yii::$app->getSession()->setFlash('error', [
                     Yii::t('app', "User with the same email as in {client} account already exists but isn't linked to it. Login using email first to link it.", ['client' => $this->client->getTitle()]),
                 ]);
             } else {
                 $password = Yii::$app->security->generateRandomString(6);
-                $Customer = new User([
+                $user = new User([
                     'username' => $nickname ? $nickname : $email,
                     'email' => $email,
                     'password' => $password,
@@ -75,24 +85,25 @@ class AuthCustomerHandler
                     'type_customer' => 1 , // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
                     'avatar' => $picture ? $picture : null ,
                     'note_by_employee' => 'Khách hàng tạo tài khoản qua '. $this->client->getId() .' .Attributes ' . serialize($attributes),
+                    'employee' => 0 , //  1 Là Nhân viên , 0 là khách hàng
+                    'vip' => 0 , //  Mức độ Vip Của Khách Hàng không ap dụng cho nhân viên , theo thang điểm 0-5 số
                 ]);
 
-                $Customer->generateAuthKey();
-                $Customer->generatePasswordResetToken();
+                $user->generateAuthKey();
+                $user->generatePasswordResetToken();
 
                 $transaction = User::getDb()->beginTransaction();
 
-                if ($Customer->save()) {
+                if ($user->save()) {
                     $auth = new Auth([
-                        'user_id' => $Customer->id,
+                        'user_id' => $user->id,
                         'source' => $this->client->getId(),
                         'source_id' => (string)$id,
                     ]);
 
                     if ($auth->save()) {
                         $transaction->commit();
-                        // Yii::$app->user->login($Customer, $duration);
-                        Yii::$app->user->login($Customer, 0);    // ToDo User Co Customer
+                        Yii::$app->user->login($user, $duration);
                     } else {
                         Yii::$app->getSession()->setFlash('error', [
                             Yii::t('app', 'Unable to save {client} account: {errors}', [
@@ -108,27 +119,57 @@ class AuthCustomerHandler
                     ]);
                 }
             }
-        } else {
-            Yii::$app->getSession()->setFlash('success', [
-                Yii::t('app', 'Linked {client} account.', [
-                    'client' => $this->client->getTitle(),
-                    'errors' => json_encode($user->getErrors()),
-                ]),
-            ]);
-        }
+
+         }
+      } else {
+          // user already logged in
+          if (!$auth) { // add auth provider
+              $auth = new Auth([
+                  'user_id' => Yii::$app->user->id,
+                  'source' => $this->client->getId(),
+                  'source_id' => (string)$attributes['id'],
+              ]);
+              if ($auth->save()) {
+                  /** @var User $user */
+                  $user = $auth->user;
+                  $this->updateUserInfo($user);
+                  Yii::$app->getSession()->setFlash('success', [
+                      Yii::t('app', 'Linked {client} account.', [
+                          'client' => $this->client->getTitle()
+                      ]),
+                  ]);
+              } else {
+                  Yii::$app->getSession()->setFlash('error', [
+                      Yii::t('app', 'Unable to link {client} account: {errors}', [
+                          'client' => $this->client->getTitle(),
+                          'errors' => json_encode($auth->getErrors()),
+                      ]),
+                  ]);
+              }
+          } else { // there's existing auth
+              Yii::$app->getSession()->setFlash('error', [
+                  Yii::t('app',
+                      'Unable to link {client} account. There is another user using it.',
+                      ['client' => $this->client->getTitle()]),
+              ]);
+          }
+      }
     }
 
     /**
      * @param User $user
      */
-//    private function updateUserInfo(Customer $user)
-//    {
-//        $attributes = $this->client->getUserAttributes();
-//        $github = ArrayHelper::getValue($attributes, 'login');
-//        if ($user->github === null && $github) {
-//            $user->github = $github;
-//            $user->save();
-//        }
-//
-//    }
+    /**
+     * @param User $user
+     */
+    private function updateUserInfo(User $user)
+    {
+        $attributes = $this->client->getUserAttributes();
+        $github = ArrayHelper::getValue($attributes, 'login');
+        if ($user->github === null && $github) {
+            $user->github = $github;
+            $user->save();
+        }
+
+    }
 }

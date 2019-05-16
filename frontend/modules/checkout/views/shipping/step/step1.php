@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
-use frontend\modules\checkout\models\SecureForm;
+use common\payment\models\SecureForm;
 
 /* @var yii\web\View $this */
 $model = new SecureForm();
