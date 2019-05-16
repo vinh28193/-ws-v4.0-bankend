@@ -44,9 +44,9 @@ class SecureController extends FrontendController
             return $this->goHome();
         }
         $model = new LoginForm();
-        $model->rememberMe = false; // Mặc định không ghi nhớ
+        // $model->rememberMe = false; // Mặc định không ghi nhớ
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->login() ) {
-                return $this->goHome();
+              return $this->goHome();
         } else {
             return $this->render('login', [
                 'model' => $model,

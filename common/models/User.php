@@ -210,17 +210,16 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
             'permission' => !empty($permissions) ? array_keys($permissions) : []
         ];
     }
-
-    /*
     public static function findAdvance($condition)
     {
         return static::find()->where([
             'and',
             ['email' => $condition],
-            ['active' => 1]
+            ['status' => 1]
         ])->one();
     }
 
+    /*
     public function generateToken()
     {
         $this->access_token = Yii::$app->security->generateRandomString();
