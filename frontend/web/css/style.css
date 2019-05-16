@@ -5258,5 +5258,8 @@ a {
   text-align: center; }
   .account-info b {
     font-size: 18px; }
+  .p1 {
+    padding: 0;
+  }
 
 /*# sourceMappingURL=style.css.map */
