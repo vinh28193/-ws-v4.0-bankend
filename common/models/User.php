@@ -221,11 +221,13 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
             'permission' => !empty($permissions) ? array_keys($permissions) : []
         ];
     }
+
     public static function findAdvance($condition)
     {
         return static::find()->where([
             'and',
             ['email' => $condition],
+//            ['active' => 1]   chưa có trường active
             ['status' => 1]
         ])->one();
     }
