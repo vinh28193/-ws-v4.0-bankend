@@ -80,7 +80,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'error',
         ],
         'urlManager' => require(__DIR__ . '/urlManager.php'),
 

@@ -1,13 +1,3 @@
-<?php
-
-/* @var $this yii\web\View */
-/* @var $name string */
-/* @var $message string */
-/* @var $exception Exception */
-
-use yii\helpers\Html;
-
-?>
 <div class="content-404">
     <span class="image"><img src="/img/404.png"></span>
     <div class="link text-white">
