@@ -10,6 +10,8 @@ $this->title = 'Đăng nhập';
 
 echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 ?>
+
+
 <?php $form = ActiveForm::begin(['id' => 'login-form', 'options' => [
     'class' => 'payment-form'
 ]

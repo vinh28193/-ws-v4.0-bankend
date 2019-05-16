@@ -7,15 +7,8 @@ namespace frontend\controllers;
 class ErrorController extends CmsController
 {
 
-    /**
-     * @inheritdoc
-     */
-    public function actions()
+    public function actionIndex()
     {
-        return [
-            'index' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
+        return $this->render('404');
     }
 }
