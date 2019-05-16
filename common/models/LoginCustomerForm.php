@@ -10,6 +10,7 @@ namespace common\models;
 
 
 
+use app\models\UserSearch;
 use yii\base\Model;
 
 class LoginCustomerForm extends Model
@@ -70,12 +71,12 @@ class LoginCustomerForm extends Model
     /**
      * Finds user by [[username]]
      *
-     * @return Customer|null
+     * @return User|null
      */
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = Customer::findByUsername($this->username);
+            $this->_user = User::findByUsername($this->username);
 //            $this->_user = Customer::find()->where(['username' => $this->username]);
         }
 
