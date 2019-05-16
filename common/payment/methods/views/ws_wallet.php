@@ -4,7 +4,7 @@
 ?>
 
 <div class="method-item">
-    <a class="btn method-select" data-toggle="collapse" data-target="#method6" aria-expanded="false">
+    <a class="btn method-select" data-toggle="collapse" data-target="#method6" aria-expanded="false" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
         <i class="icon method_6"></i>
         <div class="name">Weshop - Ewallet</div>
         <div class="desc">Qúy khách vui lòng chọn xác nhận mật khẩu</div>

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 /* @var yii\web\View $this */
 /* @var integer $group */
-/* @var frontend\modules\checkout\Payment $payment */
+/* @var common\payment\Payment $payment */
 /* @var array $methods */
 
 $imageUrl = function ($url){
