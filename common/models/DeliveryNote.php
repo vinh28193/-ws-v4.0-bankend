@@ -17,7 +17,7 @@ use Yii;
  * @package common\models
  * @property Package[] $packages
  * @property Warehouse $warehouse
- * @property Customer $customer
+ * @property User $customer
  * @property Shipment $shipment
  */
 class DeliveryNote extends DbDeliveryNote
@@ -83,7 +83,7 @@ class DeliveryNote extends DbDeliveryNote
         return $this->hasMany(Package::className(),['delivery_note_id' => 'id']);
     }
     public function getCustomer(){
-        return $this->hasOne(Customer::className(),['id' => 'customer_id']);
+        return $this->hasOne(User::className(),['id' => 'customer_id']);
     }
     public function getShipment(){
         return $this->hasOne(Shipment::className(),['id' => 'shipment_id']);

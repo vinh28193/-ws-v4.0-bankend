@@ -10,7 +10,7 @@ namespace wallet\modules\v1\models\form;
 
 
 use wallet\modules\v1\models\WalletClient;
-use common\models\db\Customer;
+use common\models\db\User as Customer;
 use yii\base\Model;
 
 class CreateWalletForm extends Model
