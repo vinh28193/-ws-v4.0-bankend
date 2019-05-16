@@ -49,8 +49,7 @@
         refresh: function () {
 
         },
-        add: function (params) {
-
+        add: function ($type) {
         },
         update: function ($item) {
             var $cart = $(this);
@@ -115,8 +114,10 @@
             var data = $cart.data('wsCart');
             var keys = [];
             $.each(filterCartItems($cart), function (i,$input) {
-                console.log($input);
+                keys.push($($input).val());
             });
+            console.log(keys);
+
         },
         destroy: function () {
             return this.each(function () {
@@ -137,8 +138,7 @@
         }
     };
     var filterCartItems = function ($cart) {
-        var inputs = $cart.find('input[name="items"]');
-        console.log(inputs);
+       return $cart.find('input[name="items"]');
     };
     var updateItem = function ($data) {
         console.log($data)

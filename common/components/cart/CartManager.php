@@ -114,9 +114,6 @@ class CartManager extends Component
     public function init()
     {
         parent::init();
-        if ($this->getUser() === null || !$this->getUser() instanceof \yii\web\IdentityInterface) {
-            throw new InvalidConfigException("missing \yii\web\IdentityInterface");
-        }
         if (get_class($this->getStorage()) === 'common\components\cart\storage\MongodbCartStorage') {
             if (get_class($this->getSerializer()) !== 'common\components\cart\serialize\NoneSerialize') {
                 throw new InvalidConfigException("common\components\cart\storage\MongodbCartStorage only use common\components\cart\serialize\NoneSerialize");
@@ -126,35 +123,41 @@ class CartManager extends Component
 
     /**
      * @param $key
+     * @param bool $safeOnly
      * @return array
      * @throws \Throwable
      */
-    private function buildPrimaryKey($key)
+    private function buildPrimaryKey($key, $safeOnly = true)
     {
-        return [$key, $this->getUser()->getId()];
+        if (($user = $this->getUser()) === null && $safeOnly) {
+            $safeOnly = false;
+        }
+        return [$key, $safeOnly ? $user->getId() : null];
     }
 
     /**
      * @param $key
+     * @param bool $safeOnly
      * @return bool
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function hasItem($key)
+    public function hasItem($key, $safeOnly = true)
     {
-        $key = $this->normalPrimaryKey($key);
+        $key = $this->normalPrimaryKey($key, $safeOnly);
         return $this->getStorage()->hasItem($key);
     }
 
     /**
      * @param $key
+     * @param bool $safeOnly
      * @return bool|mixed
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function getItem($key)
+    public function getItem($key, $safeOnly = true)
     {
-        $key = $this->normalPrimaryKey($key);
+        $key = $this->normalPrimaryKey($key, $safeOnly);
         if (($value = $this->getStorage()->getItem($key)) !== false) {
             return $this->getSerializer()->unserialize($value);
         }
@@ -210,18 +213,28 @@ class CartManager extends Component
         }
     }
 
+    public function setMeOwnerItem($key)
+    {
+        if ($this->hasItem($key, false)) {
+            $key = $this->normalPrimaryKey($key, true);
+            return $this->storage->setMeOwnerItem($key);
+        }
+        return false;
+
+    }
+
     /**
      * @param $params
+     * @param bool $safeOnly
      * @return bool
      * @throws \Throwable
      */
-    public function addItem($params)
+    public function addItem($params, $safeOnly = true)
     {
         $key = $this->createKeyFormParams($params);
-        $key = $this->normalPrimaryKey($key);
         try {
-            if ($this->hasItem($key)) {
-                if (($value = $this->getItem($key)) === false) {
+            if ($this->hasItem($key, $safeOnly)) {
+                if (($value = $this->getItem($key, $safeOnly)) === false) {
                     return false;
                 }
                 $item = new SimpleItem();
@@ -234,6 +247,7 @@ class CartManager extends Component
                 if (!$ok) {
                     return false;
                 }
+                $key = $this->normalPrimaryKey($key, $safeOnly);
                 $value = $this->getSerializer()->serializer($value);
                 return $this->getStorage()->setItem($key, $value);
             } else {
@@ -247,6 +261,7 @@ class CartManager extends Component
                 if (!$ok) {
                     return false;
                 }
+                $key = $this->normalPrimaryKey($key, $safeOnly);
                 $value = $this->getSerializer()->serializer($value);
                 return $this->getStorage()->addItem($key, $value);
             }
@@ -268,10 +283,10 @@ class CartManager extends Component
         return md5(json_encode($keys));
     }
 
-    public function update($key, $params = [])
+    public function update($key, $params = [], $safeOnly = true)
     {
         try {
-            if (($value = $this->getItem($key)) === false) {
+            if (($value = $this->getItem($key, $safeOnly)) === false) {
                 return false;
             }
             $item = new SimpleItem();
@@ -303,7 +318,7 @@ class CartManager extends Component
                 return false;
             }
             $value = $this->getSerializer()->serializer($raw);
-            $key = $this->normalPrimaryKey($key);
+            $key = $this->normalPrimaryKey($key, $safeOnly);
             $this->getStorage()->setItem($key, $value);
             return $raw['response'];
 
@@ -323,9 +338,12 @@ class CartManager extends Component
 
     }
 
-    public function getItems()
+    public function getItems($safeOnly = true)
     {
-        $items = $this->getStorage()->getItems($this->getUser()->id);
+        if (($user = $this->getUser()) === null && $safeOnly) {
+            $safeOnly = false;
+        }
+        $items = $this->getStorage()->getItems($safeOnly ? $user->getId() : null);
         $results = [];
         foreach ($items as $key => $item) {
             $results[$key] = $this->getSerializer()->unserialize($item);
@@ -334,33 +352,42 @@ class CartManager extends Component
     }
 
     /**
+     * @param bool $safeOnly
      * @return int
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function countItems()
+    public function countItems($safeOnly = true)
     {
-        return $this->getStorage()->countItems($this->getUser()->getId());
+        if (($user = $this->getUser()) === null && $safeOnly) {
+            $safeOnly = false;
+        }
+        return $this->getStorage()->countItems($safeOnly ? $user->getId() : null);
     }
 
     /**
+     * @param bool $safeOnly
      * @return bool
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function removeItems()
+    public function removeItems($safeOnly = true)
     {
-        return $this->getStorage()->removeItems($this->getUser()->getId());
+        if (($user = $this->getUser()) === null && $safeOnly) {
+            $safeOnly = false;
+        }
+        return $this->getStorage()->removeItems($safeOnly ? $user->getId() : null);
     }
 
     /**
      * @param $key
+     * @param bool $safeOnly
      * @return array
      * @throws \Throwable
      */
-    public function normalPrimaryKey($key)
+    public function normalPrimaryKey($key, $safeOnly = true)
     {
-        return $this->buildPrimaryKey($key);
+        return $this->buildPrimaryKey($key, $safeOnly);
     }
 
     /**

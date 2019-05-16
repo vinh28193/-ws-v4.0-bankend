@@ -79,7 +79,7 @@ class ItemDetailWidget extends Widget
         $options = [
             'ajaxUrl' => Url::toRoute('item/variation'),
             'ajaxMethod' => 'POST',
-            'paymentUrl' => '#',
+            'paymentUrl' => Url::to('/checkout/cart/add'),
             'queryParams' => $this->getQueryParams(),
             'priceCssSelection' => $this->priceOptions['class'],
             'slideCssSelection' => $this->slideOptions['class']

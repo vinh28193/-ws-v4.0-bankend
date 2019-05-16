@@ -168,4 +168,17 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
     {
         return self::deleteAll(['identity' => $identity]);
     }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function setMeOwnerItem($key)
+    {
+        list($key2, $id) = $key;
+        if (($item = self::find()->where(['key' => $key2])->one()) === null) {
+            return false;
+        }
+        return $item->updateAttributes(['identity' => $id]) > 0;
+    }
 }

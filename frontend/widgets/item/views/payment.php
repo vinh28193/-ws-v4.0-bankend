@@ -43,20 +43,20 @@ $url = function ($seller_id){
         <button type="button" id="quoteBtn" class="btn btn-block btn-buy" style="display: none">Yêu cầu báo giá</button>
         <button type="button" id="installmentBtn" class="btn btn-block btn-installment">Thanh toán trả góp</button>
         <div class="text-center more">
-            <a href="#"><i class="icon fav"></i></a>
-            <a href="#"><i class="icon cart"></i></a>
+            <a href="#" id="followItem" ><i class="icon fav"></i></a>
+            <a href="#" id="addToCart"><i class="icon cart"></i></a>
         </div>
     </div>
-    <div class="payment-method-2">
-        <div class="title">Hình thức thanh toán</div>
-        <ul>
-            <li><img src="/img/detail_payment_1.png"></li>
-            <li><img src="/img/detail_payment_2.png"></li>
-            <li><img src="/img/detail_payment_3.png"></li>
-            <li><img src="/img/detail_payment_4.png"></li>
-            <li><img src="/img/detail_payment_5.png"></li>
-        </ul>
-    </div>
+<!--    <div class="payment-method-2">-->
+<!--        <div class="title">Hình thức thanh toán</div>-->
+<!--        <ul>-->
+<!--            <li><img src="/img/detail_payment_1.png"></li>-->
+<!--            <li><img src="/img/detail_payment_2.png"></li>-->
+<!--            <li><img src="/img/detail_payment_3.png"></li>-->
+<!--            <li><img src="/img/detail_payment_4.png"></li>-->
+<!--            <li><img src="/img/detail_payment_5.png"></li>-->
+<!--        </ul>-->
+<!--    </div>-->
     <p>Sản phẩm dự kiến giao khoảng ngày <span class="text-orange"><?= date('d/m/Y',time()+(60*60*24*15)) ?></span> tới <span class="text-orange"><?= date('d/m/Y',time()+(60*60*24*30)) ?></span> nếu quý khách thanh toán trong hôm nay.</p>
     <div class="guaranteed">
         <div class="title">Đảm bảo khách hàng</div>
@@ -102,36 +102,36 @@ if(count($item->providers) > 1){?>
     </div>
 <?php }
 ?>
-<div class="border-block related-product">
-    <div class="title">Sản phẩm tương tự</div>
-    <ul>
-        <li>
-            <a href="#">
-                <div class="thumb"><img src="https://i.ebayimg.com/00/s/OTkxWDEwMzY=/z/AnMAAOSwJGlbTSId/$_57.JPG" alt=""/></div>
-                <div class="info">
-                    <div class="name">Bulova Mens Classic Sutton - 96A208</div>
-                    <div class="price">5.800.000<span class="currency">đ</span></div>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <div class="thumb"><img src="https://i.ebayimg.com/00/s/OTkxWDEwMzY=/z/AnMAAOSwJGlbTSId/$_57.JPG" alt=""/></div>
-                <div class="info">
-                    <div class="name">Bulova Mens Classic Sutton - 96A208</div>
-                    <div class="price">5.800.000<span class="currency">đ</span></div>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <div class="thumb"><img src="https://i.ebayimg.com/00/s/OTkxWDEwMzY=/z/AnMAAOSwJGlbTSId/$_57.JPG" alt=""/></div>
-                <div class="info">
-                    <div class="name">Bulova Mens Classic Sutton - 96A208</div>
-                    <div class="price">5.800.000<span class="currency">đ</span></div>
-                </div>
-            </a>
-        </li>
-        <li><a href="#" class="see-all">Xem tất cả <i class="fas fa-caret-down"></i></a></li>
-    </ul>
-</div>
+<!--<div class="border-block related-product">-->
+<!--    <div class="title">Sản phẩm tương tự</div>-->
+<!--    <ul>-->
+<!--        <li>-->
+<!--            <a href="#">-->
+<!--                <div class="thumb"><img src="https://i.ebayimg.com/00/s/OTkxWDEwMzY=/z/AnMAAOSwJGlbTSId/$_57.JPG" alt=""/></div>-->
+<!--                <div class="info">-->
+<!--                    <div class="name">Bulova Mens Classic Sutton - 96A208</div>-->
+<!--                    <div class="price">5.800.000<span class="currency">đ</span></div>-->
+<!--                </div>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <a href="#">-->
+<!--                <div class="thumb"><img src="https://i.ebayimg.com/00/s/OTkxWDEwMzY=/z/AnMAAOSwJGlbTSId/$_57.JPG" alt=""/></div>-->
+<!--                <div class="info">-->
+<!--                    <div class="name">Bulova Mens Classic Sutton - 96A208</div>-->
+<!--                    <div class="price">5.800.000<span class="currency">đ</span></div>-->
+<!--                </div>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <a href="#">-->
+<!--                <div class="thumb"><img src="https://i.ebayimg.com/00/s/OTkxWDEwMzY=/z/AnMAAOSwJGlbTSId/$_57.JPG" alt=""/></div>-->
+<!--                <div class="info">-->
+<!--                    <div class="name">Bulova Mens Classic Sutton - 96A208</div>-->
+<!--                    <div class="price">5.800.000<span class="currency">đ</span></div>-->
+<!--                </div>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        <li><a href="#" class="see-all">Xem tất cả <i class="fas fa-caret-down"></i></a></li>-->
+<!--    </ul>-->
+<!--</div>-->
