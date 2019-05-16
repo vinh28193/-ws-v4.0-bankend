@@ -100,7 +100,7 @@
                             <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#"><?= $order->ordercode ?></a> vào lúc 10:47 23/01/2019</p>
                             <?php if ($chats) { foreach ($chats as $chat) { ?>
                             <div class="mess-content mb-1">
-                                <i class="logo"><img src="./img/weshop_small_logo.png" alt=""/></i>
+                                <i class="logo"><img src="../img/weshop_small_logo.png" alt=""/></i>
                                 <span><?= $chat->message ?></span>
                             </div>
                             <?php }} ?>
