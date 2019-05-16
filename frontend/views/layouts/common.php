@@ -406,9 +406,9 @@ FrontendAsset::register($this);
                 <li>
                     <?php if (Yii::$app->user->isGuest) {
                         echo Html::a('<i class="nav-ico user"></i>', ['/secure/login']);
-                    }else {
-                        echo Html::a('<i class="nav-ico user"></i> (' . Yii::$app->user->identity->username .')', ['/secure/logout'], ['data' => ['method' => 'post']]);
-                    }?>
+                    }else { ?>
+                        <a href="http://weshop-v4.user-backend.local.vn/home"><i class="nav-ico user"></i></a>
+                    <?php }?>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

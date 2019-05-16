@@ -36,7 +36,6 @@ return [
                     'apiBaseUrl' => 'http://api.wallet.local/v1'
                 ]
                 */
-                // etc.
             ],
         ],
         'request' => [
@@ -57,6 +56,8 @@ return [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'adv-frontend-ws-2019',
             'class' => 'yii\redis\Session',
+            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
+            'timeout' => 3600*4,
 
         ],
         'log' => [
