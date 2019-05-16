@@ -46,7 +46,7 @@ class OtpVerifyForm extends Model
      */
     public $transactionCode;
     /**
-     * @var \common\models\wallet\WalletClient
+     * @var \common\models\db\WalletClient
      */
     public $walletClient;
     /**
@@ -66,8 +66,8 @@ class OtpVerifyForm extends Model
         if (!$this->transactionCode) {
             throw new InvalidConfigException(self::className() . '::$transactionCode must be set');
         }
-        if (!$this->getHttpClient() instanceof \common\models\wallet\WalletClient) {
-            throw new InvalidConfigException(self::className() . '::$httpClient must be instance \common\models\wallet\WalletClient');
+        if (!$this->getHttpClient() instanceof \common\models\db\WalletClient) {
+            throw new InvalidConfigException(self::className() . '::$httpClient must be instance \common\models\db\WalletClient');
         }
         if (!$this->getWebsite() instanceof \common\models\weshop\Website) {
             throw new InvalidConfigException(self::className() . '::$httpClient must be instance \common\models\weshop\Website');
@@ -96,7 +96,7 @@ class OtpVerifyForm extends Model
 
     /**
      * getter
-     * @return \common\models\wallet\WalletClient
+     * @return \common\models\db\WalletClient
      */
     public function getHttpClient()
     {

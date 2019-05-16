@@ -68,7 +68,7 @@ class Wallet extends BaseObject
     }
 
     /**
-     * @var \common\models\wallet\WalletClient
+     * @var \common\models\db\WalletClient
      */
     private $_walletClient;
 
