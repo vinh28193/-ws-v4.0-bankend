@@ -12,7 +12,7 @@ namespace wallet\modules\v1\controllers;
 use common\components\RedisQueue;
 use common\models\model\Address;
 use common\models\payment\CallBackPayment;
-use common\models\payment\vietnam\NganLuong;
+use common\payment\providers\vietnam\NganLuongProvider as NganLuong;
 use common\models\User;
 use wallet\modules\v1\models\form\CallBackPaymentForm;
 use wallet\modules\v1\models\form\TopUpForm;

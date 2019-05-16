@@ -12,7 +12,7 @@ use common\components\ThirdPartyLogs;
 use common\models\PaymentProvider;
 use common\modelsMongo\UtilLog;
 use common\modelsMongo\WalletLog as MongoWalletLog;
-use common\payment\providers\NganLuongProvider as NganLuong;
+use common\payment\providers\vietnam\NganLuongProvider as NganLuong;
 use wallet\modules\v1\models\enu\ResponseCode;
 use wallet\modules\v1\models\WalletClient;
 use wallet\modules\v1\models\WalletLog;
@@ -70,7 +70,6 @@ class CallBackPaymentForm extends Model
         $dataCheck['order_code'] = $this->model_wallet_transaction->wallet_transaction_code;
         $dataCheck['token'] = $this->model_wallet_transaction->payment_transaction;
         $bill = new NganLuong();
-        $bill->page = NganLuong::PAGE_CHECK_AND_UPDATE;
         $rs = $bill->handle($dataCheck);
 //        switch ($this->model_wallet_transaction->wallet_merchant_id) {
 //

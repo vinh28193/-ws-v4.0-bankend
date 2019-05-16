@@ -11,7 +11,7 @@ use Codeception\Exception\Fail;
 use common\components\RedisQueue;
 use common\models\model\Order;
 use common\models\payment\CallBackPayment;
-use common\models\payment\vietnam\NganLuong;
+use common\payment\providers\vietnam\NganLuongProvider as NganLuong;
 use common\models\User;
 use wallet\modules\v1\models\enu\ResponseCode;
 use wallet\modules\v1\models\form\CallBackPaymentForm;
