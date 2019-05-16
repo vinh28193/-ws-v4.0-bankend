@@ -10,15 +10,9 @@ namespace wallet\modules\v1\controllers;
 
 
 use common\components\RedisQueue;
-use common\models\model\Address;
-use common\models\payment\CallBackPayment;
-use common\payment\providers\vietnam\NganLuongProvider as NganLuong;
-use common\models\User;
+use common\models\Address;
 use wallet\modules\v1\models\form\CallBackPaymentForm;
 use wallet\modules\v1\models\form\TopUpForm;
-use wallet\controllers\ServiceController;
-use wallet\modules\v1\controllers\WalletServiceController;
-use wallet\modules\v1\models\form\TransactionForm;
 use wallet\modules\v1\models\WalletClient;
 use wallet\modules\v1\models\WalletMerchant;
 use wallet\modules\v1\models\WalletTransaction;
