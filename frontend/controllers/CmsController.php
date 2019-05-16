@@ -24,6 +24,8 @@ class CmsController extends FrontendController
 
     public $isShow = true;
 
+    public $titlePage;
+
     /**
      * @var WsPage
      */

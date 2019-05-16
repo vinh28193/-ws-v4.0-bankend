@@ -26,38 +26,37 @@ return [
                     'clientId' => '450961485732787',
                     'clientSecret' => '212b51f106650cd45b1dc77a5a4d4850',
                 ],
-//                'wallet' => [ //#Todo : 01 - Wallet Fixed ?? : Fixed cứng trong code common\models\wallet\WalletClient + Chưa dùng hết tới param bên dưới này
-//                    'class' => 'common\wallet\WalletClient',
-//                    'clientId' => 'testclient',
-//                    'clientSecret' => 'testpass',
-//                    'authUrl' => 'http://api.wallet.local/v1/rest/authorize',
-//                    'tokenUrl' => 'http://api.wallet.local/v1/rest/token',
-//                    'apiBaseUrl' => 'http://api.wallet.local/v1'
-//                ]
-                // etc.
+                /*
+                'wallet' => [ //#Todo : 01 - Wallet Fixed ?? : Fixed cứng trong code common\models\wallet\WalletClient + Chưa dùng hết tới param bên dưới này
+                    'class' => 'common\models\wallet\WalletClient',
+                    'clientId' => 'testclient',
+                    'clientSecret' => 'testpass',
+                    'authUrl' => 'http://api.wallet.local/v1/rest/authorize',
+                    'tokenUrl' => 'http://api.wallet.local/v1/rest/token',
+                    'apiBaseUrl' => 'http://api.wallet.local/v1'
+                ]
+                */
             ],
         ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\Customer',
-            'enableAutoLogin' => true,
+            'identityClass' => 'common\models\User',
+            'enableAutoLogin' => false,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
-        'redis'         => [
+        'redis' => [
             'class'    => 'yii\redis\Connection',
             'hostname' => 'localhost',
             'port'     => 6379,
             'database' => 0,
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
             'name' => 'adv-frontend-ws-2019',
             'class' => 'yii\redis\Session',
             'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
             'timeout' => 3600*4,
-
         ],
         'log' => [
             /*
@@ -79,7 +78,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'error',
         ],
         'urlManager' => require(__DIR__ . '/urlManager.php'),
 
@@ -103,6 +102,9 @@ return [
         ],
         'checkout' => [
             'class' => 'frontend\modules\checkout\Module',
+        ],
+        'payment' => [
+            'class' => 'common\payment\Module',
         ]
     ],
 ];

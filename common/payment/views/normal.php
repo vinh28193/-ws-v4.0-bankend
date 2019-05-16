@@ -49,6 +49,6 @@ use common\payment\methods\UnknownWidget;
             kiện</a> giao dịch của Weshop.</label>
 </div>
 <button type="submit" class="btn btn-payment btn-block" id="btnCheckout" data-toggle="modal"
-        data-target="#checkout-success" onclick="ws.payment.createOrder()">Thanh toán
+        data-target="#checkout-success" onclick="ws.payment.process()">Thanh toán
     ngay
 </button>

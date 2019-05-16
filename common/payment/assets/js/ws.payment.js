@@ -121,7 +121,7 @@ ws.payment = (function ($) {
             }
             var data = pub.payment;
             delete data.ga;
-            ws.ajax('/checkout/discount/check-promotion', {
+            ws.ajax('/payment/discount/check-promotion', {
                 dataType: 'json',
                 type: 'post',
                 data: data,
@@ -139,13 +139,19 @@ ws.payment = (function ($) {
             }
             pub.checkPromotion();
         },
+        login: function ($form) {
+            var loginForm = $($form);
+        },
+        walletLogin: function () {
+
+        },
         process: function () {
             // var $termAgree = $('input#termCheckout').is(':checked');
             // if(!$termAgree){
             //     return;
             // }
 
-            ws.ajax('/checkout/payment/process', {
+            ws.ajax('/payment/payment/process', {
                 dataType: 'json',
                 type: 'post',
                 data: {payment: pub.payment, shipping: {enable_buyer: false}},
@@ -153,6 +159,9 @@ ws.payment = (function ($) {
                     console.log(response);
                 }
             })
+
+        },
+        topUp: function () {
 
         },
         filterShippingAddress: function () {

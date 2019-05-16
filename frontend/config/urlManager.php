@@ -14,6 +14,9 @@ return [
         'search/<keyword:[^/]+>.html' => 'cms/search/index',
         'description/<type:[^/]+>-<id:[^/]+>.html' => 'cms/description/index',
 
+        // Message read
+        'GET 404.html' => 'common',
+
         // ebay
         'ebay.html' => 'cms/ebay/index',
         'GET ebay/item/<name:[0-9A-Za-z_-]*>-<id:[0-9_-]*>.html' => 'ebay/item/detail',

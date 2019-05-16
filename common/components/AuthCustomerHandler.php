@@ -30,10 +30,15 @@ class AuthCustomerHandler
         $attributes = $this->client->getUserAttributes();
         $email = ArrayHelper::getValue($attributes, 'email');
         $id = ArrayHelper::getValue($attributes, 'id');
+
+        $nickname = '';
         if(ArrayHelper::index($attributes, 'login')){
             $nickname = ArrayHelper::getValue($attributes, 'login');
         }else if(ArrayHelper::index($attributes, 'name')){
             $nickname = ArrayHelper::getValue($attributes, 'name');
+        }
+        if($nickname == ''){
+            $nickname = ArrayHelper::getValue($attributes, 'login');
         }
 
         $email_verified = ArrayHelper::getValue($attributes, 'email_verified');
@@ -87,7 +92,7 @@ class AuthCustomerHandler
                     if ($auth->save()) {
                         $transaction->commit();
                         // Yii::$app->user->login($Customer, $duration);
-                        Yii::$app->user->login($Customer, 0);
+                        Yii::$app->user->login($Customer, 0);    // ToDo User Co Customer
                     } else {
                         Yii::$app->getSession()->setFlash('error', [
                             Yii::t('app', 'Unable to save {client} account: {errors}', [
