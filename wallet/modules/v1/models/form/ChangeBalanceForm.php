@@ -13,7 +13,7 @@ use common\components\ReponseData;
 use common\models\db\Order;
 use common\models\db\OrderPayment;
 use common\models\db\WalletClient;
-use common\models\payment\vietnam\NganLuong;
+use common\payment\providers\vietnam\NganLuongProvider as NganLuong;
 use wallet\modules\v1\models\enu\ResponseCode;
 use wallet\modules\v1\models\WalletLog;
 use wallet\modules\v1\models\WalletMerchant;
@@ -75,6 +75,9 @@ class ChangeBalanceForm extends Model
         return false;
     }
 
+    /**
+     * @return array|\yii\db\ActiveRecord|null|WalletTransaction
+     */
     protected function getTransaction()
     {
         return WalletTransaction::find()->where(['id'=>$this->walletTransactionId])->one();
@@ -118,10 +121,10 @@ class ChangeBalanceForm extends Model
             return ReponseData::reponseArray(false, 'Không có transaction id :' . $this->walletTransactionId . ' Cho phương thức TOP_UP', []);
         }
         //CHeck ngan luong
+        $dataCheck['order_code'] = $transaction->wallet_transaction_code;
+        $dataCheck['token'] = $transaction->payment_transaction;
         $checkpayment = new NganLuong();
-        $checkpayment->token = $transaction->payment_transaction;
-        $checkpayment->wallet_merchant_id = $transaction->wallet_merchant_id;
-        $rs = $checkpayment->checkPayment(false);
+        $rs = $checkpayment->handle($dataCheck);
         $rs = json_decode($rs, true);
         if ($rs['success']) {
             if (round($rs['data']['response_content']['total_amount']) != round($this->amount) || $rs['data']['response_content']['transaction_status'] != '00') {
