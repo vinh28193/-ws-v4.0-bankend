@@ -36,7 +36,7 @@ class SignupForm extends Model
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\Customer', 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 8,'max'=>72],
@@ -81,8 +81,8 @@ class SignupForm extends Model
 
         $Customer->setPassword($this->password);
         $Customer->generateAuthKey();
-        $Customer->generateToken();
-        $Customer->generateAuthClient();
+//        $Customer->generateToken();
+//        $Customer->generateAuthClient();
 //        $Customer->generateXu();
 
         if ($Customer->save()) {
@@ -95,12 +95,7 @@ class SignupForm extends Model
             if ($auth->save()) {
                 Yii::$app->user->login($Customer, 0);
             } else {
-                Yii::$app->getSession()->setFlash('error', [
-                    Yii::t('app', 'Unable to save {client} account: {errors}', [
-                        'client' => $this->client->getTitle(),
-                        'errors' => json_encode($auth->getErrors()),
-                    ]),
-                ]);
+                Yii::$app->getSession()->setFlash('error', 'Error save Auth');
             }
 
         } else {
