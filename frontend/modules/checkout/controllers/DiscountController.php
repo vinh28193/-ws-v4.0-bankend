@@ -5,7 +5,7 @@ namespace frontend\modules\checkout\controllers;
 
 use Yii;
 use yii\web\Response;
-use frontend\modules\checkout\Payment;
+use common\payment\Payment;
 
 class DiscountController extends CheckoutController
 {

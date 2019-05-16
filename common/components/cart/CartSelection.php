@@ -48,4 +48,12 @@ class CartSelection
         }
         self::getSession()->set(self::SESSION_NAME, [$type => $selected]);
     }
+
+    public static function countSelectedItems($type)
+    {
+        if (($selected = self::getSelectedItems($type)) === null) {
+            return 0;
+        }
+        return count($selected);
+    }
 }
