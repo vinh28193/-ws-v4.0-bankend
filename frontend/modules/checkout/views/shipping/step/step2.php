@@ -6,9 +6,9 @@ use yii\bootstrap4\ActiveForm;
 use yii\helpers\Url;
 
 /* @var yii\web\View $this */
-/* @var frontend\modules\checkout\models\ShippingForm $shippingForm */
+/* @var common\payment\models\ShippingForm $shippingForm */
 /* @var array $provinces */
-/* @var frontend\modules\checkout\Payment $payment */
+/* @var common\payment\Payment $payment */
 
 ?>
 <div class="container checkout-content">

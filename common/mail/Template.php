@@ -8,15 +8,14 @@
 
 namespace common\mail;
 
-use common\components\Store;
+use common\components\StoreManager;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use common\helpers\CustomerHelper;
-use common\models\model\Website;
-use common\models\model\Customer;
-use common\models\model\Order;
+use common\models\Customer;
+use common\models\Order;
 use common\models\model\OrderItem;
 use common\models\model\OrderPayment;
 use common\models\model\OrderPaymentRequest;
@@ -701,26 +700,22 @@ class Template extends \common\models\db\NotifyTemplate
      */
     public function getReplace($needle)
     {
+        $storeManage = new StoreManager();
+        $storeManage->setStore($this->store);
         $model = $this->getActiveModel();
         switch ($needle) {
             case self::NEEDLE_COUNTRY;
-                if ($this->store ===  Store::STORE_WESHOP_VN){
+                if ($storeManage->isVN()){
                     return 'Việt Nam';
-                }elseif ($this->store ===  Store::STORE_WESHOP_ID){
+                }elseif ($storeManage->isID()){
                     return 'Indonesia';
-                }elseif ($this->store ===  Store::STORE_WESHOP_MY){
-                    return 'Malaysia';
                 }
                 break;
             case self::NEEDLE_VERSION:
-                if(($model instanceof OrderItem && $model->order->version === 1)||($model instanceof Order && $model->version === 1)){
-                   return 'Us Gift';
-                }else{
-                    return 'Weshop';
-                }
+                return 'Weshop';
                 break;
             case self::NEEDLE_WEBSITE_LOGO:
-                $baseUrl = (new Website($this->store))->getUrl();
+                $baseUrl = $storeManage->getBaseUrl();
                     return Html::a(
                         $baseUrl,
                         Html::img($baseUrl.'mail/image/weshop_logo.png',[
@@ -732,37 +727,33 @@ class Template extends \common\models\db\NotifyTemplate
                     );
                 break;
             case self::NEEDLE_WEBSITE_DOMAIN:
-                return (new Website($this->store))->getdomainCurrent();
+                return $storeManage->getDomainByStoreId($this->store);
                 break;
             case self::NEEDLE_WEBSITE_NAME:
-                return (new Website($this->store))->getName();
+                return $storeManage->getName();
                 break;
             case self::NEEDLE_WEBSITE_BASE_LINK:
-                return Html::a($this->getReplace(self::NEEDLE_WEBSITE_NAME), (new Website($this->store))->getUrl());
+                return Html::a($this->getReplace(self::NEEDLE_WEBSITE_NAME), $storeManage->getBaseUrl());
                 break;
             case self::NEEDLE_HOT_LINE:
                 // Or Todo get via Store;
-                if ($this->store === Website::STORE_WESHOP_VN) {
+                if ($storeManage->isVN()) {
                     return '1900-6755 (Hà Nội), 1900 636 027 (Hồ Chí Minh)';
-                } elseif ($this->store === Website::STORE_WESHOP_ID) {
+                } elseif ($storeManage->isID()) {
                     return '0855-7467-9968';
-                } elseif ($this->store === Website::STORE_WESHOP_MY) {
-                    return '+603-8408-1040';
                 }
                 break;
             case self::NEEDLE_EMAIL_SUPPORTER:
                 // Or Todo get via Store;
-                if ($this->store === Website::STORE_WESHOP_VN) {
+                if ($storeManage->isVN()) {
                     return 'support@weshop.com.vn';
-                } elseif ($this->store === Website::STORE_WESHOP_ID) {
+                } elseif ($storeManage->isID()) {
                     return 'support-id@weshop.asia';
-                } elseif ($this->store === Website::STORE_WESHOP_MY) {
-                    return 'support-my@weshop.asia';
                 }
                 break;
             case self::NEEDLE_CURRENCY_CODE:
             case self::NEEDLE_CURRENCY_SYMBOL:
-                return (new Website($this->store))->getCurrencyName();
+                return $storeManage->getCurrencyName();
                 break;
             case self::NEEDLE_CUSTOMER_PHONE:
                 $user = Yii::$app->user->identity;

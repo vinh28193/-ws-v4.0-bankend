@@ -15,6 +15,11 @@ use yii\helpers\ArrayHelper;
 class ShippingController extends CheckoutController
 {
 
+    public function beforeAction($action)
+    {
+        return parent::beforeAction($action);
+    }
+
     public function actions()
     {
         return ArrayHelper::merge(parent::actions(), [
@@ -29,16 +34,17 @@ class ShippingController extends CheckoutController
     public function actionIndex()
     {
         $activeStep = 2;
-        if (Yii::$app->user->isGuest) {
+        $isGuest = Yii::$app->user->isGuest;
+        if ($isGuest) {
             $activeStep = 1;
         }
-        CartSelection::setSelectedItems(CartSelection::TYPE_BUY_NOW, [
-            '7cb2d4d3bbec4374c21e8843a48154a6',
-            '68f552c8422eb643d27858c4f83be0e1'
-        ]);
+        $cartType = $this->request->get('type', CartSelection::TYPE_SHOPPING);
+        if (($keys = CartSelection::getSelectedItems($cartType)) === null) {
+            return $this->render('empty_cart');
+        }
         $items = [];
-        foreach (CartSelection::getSelectedItems(CartSelection::TYPE_BUY_NOW) as $key) {
-            $items[] = $this->module->cartManager->getItem($key);
+        foreach ($keys as $key) {
+            $items[] = $this->module->cartManager->getItem($key, !$isGuest);
         }
         if (empty($items) || count($items) !== CartSelection::countSelectedItems(CartSelection::TYPE_BUY_NOW)) {
             return $this->render('empty_cart');
