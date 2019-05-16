@@ -103,6 +103,9 @@ return [
         ],
         'checkout' => [
             'class' => 'frontend\modules\checkout\Module',
+        ],
+        'payment' => [
+            'class' => 'common\payment\Module',
         ]
     ],
 ];
