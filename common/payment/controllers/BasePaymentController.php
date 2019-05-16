@@ -7,11 +7,11 @@ use common\components\cart\CartManager;
 use Yii;
 use common\components\StoreManager;
 use yii\di\Instance;
-use yii\helpers\ArrayHelper;
+use yii\web\Controller;
 use yii\web\IdentityInterface;
 use yii\web\Request;
 
-class BasePaymentController extends \yii\rest\Controller
+class BasePaymentController extends Controller
 {
 
     public $layout = false;
