@@ -407,7 +407,7 @@ FrontendAsset::register($this);
                     <?php if (Yii::$app->user->isGuest) {
                         echo Html::a('<i class="nav-ico user"></i>', ['/secure/login']);
                     }else { ?>
-                        <a href="<?= Yii::$app->params['Url_User_Back_end'];?>/home"><?= Yii::$app->user->identity->username ? Yii::$app->user->identity->username : Yii::$app->user->identity->email ?></a>
+                        <a href="<?= Yii::$app->params['Url_User_Back_end'];?>/account/home"><?= Yii::$app->user->identity->username ? Yii::$app->user->identity->username : Yii::$app->user->identity->email ?></a>
                     <?php }?>
                 </li>
                 <li class="dropdown">
