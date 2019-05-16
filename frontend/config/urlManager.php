@@ -45,5 +45,8 @@ return [
 
         // checkout
         'GET checkout-<type:[0-9A-Za-z_-]*>.html' => 'checkout/shipping',
+
+        //account
+        'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
     ]
 ];
