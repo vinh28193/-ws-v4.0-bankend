@@ -9,6 +9,8 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = 'Request password reset';
 $this->params['breadcrumbs'][] = $this->title;
+$session = Yii::$app->session;
+//$flashes = $session->getAllFlashes();
 ?>
 <style>
     input#passwordresetrequestform-email {
@@ -20,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <!--p>Please fill out your email. A link to reset password will be sent there.</p-->
+
 
     <?php if (Yii::$app->session->hasFlash('success')): ?>
         <div class="alert alert-success alert-dismissable">
