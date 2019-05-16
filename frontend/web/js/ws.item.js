@@ -92,6 +92,10 @@
                     methods.quote.apply($item);
                     return false;
                 });
+                ws.initEventHandler($item, 'quantity', 'click.wsItem', 'button#quote', function (event) {
+                    methods.quote.apply($item);
+                    return false;
+                });
                 $item.trigger($.Event(events.afterInit));
             });
         },

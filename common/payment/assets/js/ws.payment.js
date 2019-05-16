@@ -1,7 +1,7 @@
 ws.payment = (function ($) {
     var defaults = {
         page: undefined,
-        payment_type:undefined,
+        payment_type: undefined,
         orders: [],
         use_xu: 0,
         bulk_point: 0,
@@ -159,6 +159,21 @@ ws.payment = (function ($) {
                 type: 'post',
                 data: {payment: pub.payment, shipping: {enable_buyer: false}},
                 success: function (response, textStatus, xhr) {
+                    if (response.success) {
+                        var data = response.data;
+                        var code = data.code.toUpperCase() || '';
+                        $('span#transactionCode').html(code);
+                        $('div#checkout-success').modal('show');
+
+                        ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
+                            if (data.method.toUpperCase() === 'POST') {
+                                $(data.checkoutUrl).appendTo('body').submit();
+                            } else {
+                                ws.redirect(data.checkoutUrl);
+                            }
+                        });
+                        redirectPaymentGateway(data, 1000);
+                    }
                     console.log(response);
                 }
             })
@@ -190,11 +205,11 @@ ws.payment = (function ($) {
     var updatePaymentByPromotion = function ($response) {
         var input = $('input[name=couponCode]');
         var $errorDiscount = $('span#discountErrors');
-        $errorDiscount.css('display','none');
+        $errorDiscount.css('display', 'none');
         if (!$response.success || pub.payment.coupon_code in $response.errors) {
             console.log($response.errors[pub.payment.coupon_code]);
             var error = $response.errors[pub.payment.coupon_code];
-            $errorDiscount.css('display','flex');
+            $errorDiscount.css('display', 'flex');
             $errorDiscount.html(error);
         }
         var box = $('#billingBox');
@@ -220,7 +235,7 @@ ws.payment = (function ($) {
             console.log(item);
             text += '<li rel="detail" data-key="' + item.id + '" data-code="' + item.code + '" data-type="' + item.type + '">';
             text += '<div class="left"><div class="code">';
-            $('#discountInputCoupon').css('display', 'flex');
+            $('#discountIpnputCoupon').css('display', 'flex');
             if (item.type === 'Coupon') {
                 text += '<i class="fas fa-times text-danger remove"  title="Remove ' + item.code + '" onclick="ws.payment.changeCouponCode(\'' + item.code + '\')"></i>';
                 $('#discountInputCoupon').css('display', 'none');
@@ -231,5 +246,21 @@ ws.payment = (function ($) {
         });
         return text;
     };
+    var redirectPaymentGateway = function (rs, $timeOut) {
+        runTime = setInterval(function () {
+            var second = parseInt($("#countdown_payment").text());
+            if (second > 0) {
+                $("#countdown_payment").text(second - 1);
+            } else {
+                if (rs.method == 'POST') {
+                    $(rs.checkoutUrl).appendTo('body').submit();
+                    clearInterval(runTime);
+                } else {
+                    window.location.href = rs.checkoutUrl;
+                    clearInterval(runTime);
+                }
+            }
+        }, $timeOut);
+    }
     return pub;
 })(jQuery);

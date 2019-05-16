@@ -101,6 +101,7 @@ class SecureController extends FrontendController
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 if (Yii::$app->getUser()->login($user)) {
+                    // $model->sendEmail();
                     return $this->goHome();
                 }
             }

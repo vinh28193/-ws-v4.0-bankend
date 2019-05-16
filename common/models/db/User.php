@@ -143,6 +143,16 @@ class User extends \common\components\db\ActiveRecord
         return $this->hasMany(Auth::className(), ['user_id' => 'id']);
     }
 
+    public function getStore()
+    {
+        return $this->hasOne(Store::className(), ['id' => 'store_id']);
+    }
+
+    public function getAddress()
+    {
+        return $this->hasOne(Address::className(), ['customer_id' => 'id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

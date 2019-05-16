@@ -83,9 +83,6 @@ class SignupForm extends Model
 
         $user->setPassword($this->password);
         $user->generateAuthKey();
-//        $user->generateToken();
-//        $user->generateAuthClient();
-//        $user->generateXu();
 
         if ($user->save()) {
             $auth = new Auth([
@@ -105,5 +102,34 @@ class SignupForm extends Model
                 Yii::t('app', 'Unable to save Customer : {errors}'),
             ]);
         }
+    }
+
+    /**
+     * Sends an email with a link, for resetting the password.
+     *
+     * @return bool whether the email was send
+     */
+    public function sendEmail()
+    {
+        /* @var $user User */
+        $user = User::findOne([
+            'active' => User::STATUS_ACTIVE,
+            'email' => $this->email,
+        ]);
+
+        if (!$user) {
+            return false;
+        }
+
+        return Yii::$app->mailer
+            ->compose(
+                ['html' => 'accounts/verify_create_done', 'text' => 'passwordResetToken-text'],
+                ['user' => $user]
+            )
+            //->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setFrom([Yii::$app->params['supportEmail'] => 'Weshop Việt Nam robot'])
+            ->setTo($this->email)
+            ->setSubject('Password reset for ' . Yii::$app->name)
+            ->send();
     }
 }

@@ -104,6 +104,9 @@ return [
         ],
         'payment' => [
             'class' => 'common\payment\Module',
-        ]
+        ],
+        'account' => [
+            'class' => 'frontend\modules\account\Module',
+        ],
     ],
 ];

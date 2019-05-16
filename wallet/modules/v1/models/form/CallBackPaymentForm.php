@@ -86,7 +86,6 @@ class CallBackPaymentForm extends Model
 //                $rs = $bill->checkPayment();
 //                break;
 //        }
-        $rs = json_decode($rs, true);
         $notifyType = false;
 //        $log = new UtilLog();
 //        $log->action = 'return topup Before 1';
