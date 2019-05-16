@@ -83,6 +83,18 @@ var ws = ws || (function ($) {
             let j = (i.length > 3) ? i.length % 3 : 0;
             return (j ? i.substr(0, j) + thousands_sep : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands_sep) + (decimal ? dec_point + Math.abs(number - i).toFixed(decimal).slice(2) : '');
         },
+
+        showFilter: function (id) {
+            if ($("#" + id).css('display') === 'none') {
+                $("#" + id).css('display', 'block');
+                $("#ico-" + id).removeClass('fa-chevron-down');
+                $("#ico-" + id).addClass('fa-chevron-up');
+            } else {
+                $("#" + id).css('display', 'none');
+                $("#ico-" + id).removeClass('fa-chevron-up');
+                $("#ico-" + id).addClass('fa-chevron-down');
+            }
+        },
         // hạn chế việc khai báo event quá nhiều,
         // nếu event đã khai báo trước đó thì sẽ bị off đi
         // xử lý theo lần khai báo cuối cùng
@@ -114,17 +126,6 @@ var ws = ws || (function ($) {
 $(function () {
     ws.init();
 });
-var showFilter = function (id) {
-    if ($("#" + id).css('display') === 'none') {
-        $("#" + id).css('display', 'block');
-        $("#ico-" + id).removeClass('fa-chevron-down');
-        $("#ico-" + id).addClass('fa-chevron-up');
-    } else {
-        $("#" + id).css('display', 'none');
-        $("#ico-" + id).removeClass('fa-chevron-up');
-        $("#ico-" + id).addClass('fa-chevron-down');
-    }
-};
 ws.initEventHandler('searchNew', 'searchBoxButton', 'click', 'button#searchBoxButton', function (event) {
     ws.browse.searchNew('input#searchBoxInput', '$url');
 });

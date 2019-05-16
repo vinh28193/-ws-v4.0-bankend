@@ -41,12 +41,13 @@ class ServiceController extends Controller
 
     public function renderJSON($success = false, $message = null, $data = null, $total = null)
     {
-        header('Content-Type: application/json');
-        $res['success'] = $success;
-        $res['message'] = $message;
-        $res['total'] = $total;
-        $res['data'] = $data;
-
-        echo json_encode($res, JSON_PRETTY_PRINT);
+        return $this->response($success,$message,$data,null,$total);
+//        header('Content-Type: application/json');
+//        $res['success'] = $success;
+//        $res['message'] = $message;
+//        $res['total'] = $total;
+//        $res['data'] = $data;
+//
+//        echo json_encode($res, JSON_PRETTY_PRINT);
     }
 }
