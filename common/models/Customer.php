@@ -146,6 +146,15 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
+    public function generateToken()
+    {
+        $this->access_token = Yii::$app->security->generateRandomString();
+    }
+    public function generateAuthClient()
+    {
+        $this->auth_client = Yii::$app->security->generateRandomString();
+    }
+
     /**
      * Generates password hash from password and sets it to the model
      *
@@ -154,6 +163,13 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+
+    public function generateXu() {
+        $this->total_xu = 0;
+        $this->usable_xu = 0;
+        $this->last_use_xu = 0;
+        $this->last_revenue_xu = 0;
     }
 
     /**

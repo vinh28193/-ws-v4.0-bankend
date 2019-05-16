@@ -35,7 +35,9 @@ class HomeController extends Controller
      */
     public function actionIndex()
     {
-        $userId = Yii::$app->user->getIdentity()->getId();
+        var_dump(Yii::$app->request);
+        die();
+        $userId = Yii::$app->request->cookies;
         $orders = Order::find()
             ->where(['=', 'customer_id', $userId])
             ->all();
