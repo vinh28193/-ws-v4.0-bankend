@@ -14,10 +14,10 @@ use yii\authclient\widgets\AuthChoice;
 ]
 ]); ?>
 <div class="form-group">
-    <?= $form->field($model, 'first_name',['template' => " <i class=\"icon user\"></i>{input}\n{hint}\n{error}"])->textInput(['placeholder' => "Tên đầu"]) ?>
+    <?= $form->field($model, 'first_name',['template' => " <i class=\"icon user\"></i>{input}\n{hint}\n{error}"])->textInput(['placeholder' => "Nhập Họ"]) ?>
 </div>
 <div class="form-group">
-    <?= $form->field($model, 'last_name',['template' => " <i class=\"icon user\"></i>{input}\n{hint}\n{error}"])->textInput(['placeholder' => "Tên Cuối"]) ?>
+    <?= $form->field($model, 'last_name',['template' => " <i class=\"icon user\"></i>{input}\n{hint}\n{error}"])->textInput(['placeholder' => "Nhập Tên"]) ?>
 </div>
 
 <div class="form-group">
