@@ -194,7 +194,7 @@ UserBackendAsset::register($this);
 
                         'label' => ' Logout (' . Yii::$app->user->identity->username . ')',
 
-                        'url' => ['/site/logout'],
+                        'url' => ['/secure/logout'],
 
                         'linkOptions' => ['data-method' => 'post']
 
