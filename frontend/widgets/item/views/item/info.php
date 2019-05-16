@@ -10,10 +10,11 @@ use yii\helpers\Inflector;
  * @var $item BaseProduct
  */
 $salePercent = $item->getSalePercent();
+$current_provider = $item->getCurrentProvider();
 ?>
-
+<div id="checkcate" style="display: none"><?= $item->category_id ?></div>
 <div class="product-full-info">
-    <a href="#" class="brand"><?= $item->providers ? $item->providers[0]->name : '---' ?></a>
+    <a href="#" class="brand"><?= $current_provider ? $current_provider->name : '---' ?></a>
     <div class="title">
         <h2><?= $item->item_name ?></h2>
         <span id="sale-tag" class="sale-tag" style="display: <?= $salePercent >0 ? 'block' : 'none' ?>"><?= $salePercent > 0 ? $salePercent : '' ?>% OFF</span>
@@ -28,7 +29,7 @@ $salePercent = $item->getSalePercent();
         </div>
         <span>87 người đánh giá</span>
     </div>
-    <div class="origin">
+    <div class="origin" style="display: none">
         <a target="_blank" href="<?= $item->item_origin_url ?>">Xem link gốc -></a>
     </div>
     <div class="price">

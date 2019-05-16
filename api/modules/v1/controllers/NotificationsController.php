@@ -97,12 +97,17 @@ class NotificationsController extends BaseApiController
         $_user_email = $_user_Identity['email'];
         $_user_AuthKey = $_user_Identity->getAuthKey();
         $_user_name = $_user_Identity['username'];
-        $token = $_post['token'];
-        $fingerprint = $_post['fingerprint'];
-        $details = $_post['details'];
-        $ordercode = $_post['ordercode'];
-        $nv = $_post['nv'];
+        $token = isset($_post['token']) ? $_post['token'] : '';
+        $fingerprint = isset($_post['fingerprint'])? $_post['fingerprint'] : '';
+        $details = isset($_post['details']) ? $_post['details'] : '';
+        $ordercode = isset($_post['ordercode']) ? $_post['ordercode'] : '';
+        $nv = isset($_post['nv']) ? $_post['nv'] : '';
         $date_now = Yii::$app->formatter->asDateTime('now');
+
+
+        if($token== ''){
+            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        }
 
         $order_item = [
             'code' => $ordercode,
@@ -114,8 +119,7 @@ class NotificationsController extends BaseApiController
             'user_email' => $_user_email,
             'user_name' => $_user_name,
             'order_list' => array($ordercode => $order_item),
-            // Infor Field Notification
-            'token' => $token,
+            'token' => $token,  // Infor Field Notification Token ma dinh danh thiet bị để nhận Notification
             'fingerprint' => $fingerprint,
             'nv' => $nv,
             'details' => $details

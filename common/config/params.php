@@ -3,4 +3,10 @@ return [
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
+    'CACHE_PAYMENT_PROVINDER' => 'CACHE_PAYMENT_PROVINDER',
+    'CACHE_PAYMENT_METHOD' => 'CACHE_PAYMENT_METHOD',
+    'CACHE_PAYMENT_METHOD_BY_ID_' => 'CACHE_PAYMENT_METHOD_BY_ID_',
+    'CACHE_WALLET_CLIENT_BY_CUSTOMER_ID_' => 'CACHE_WALLET_CLIENT_BY_CUSTOMER_ID_',
+    'CACHE_CUSTOMER_BY_PK_' => 'CACHE_CUSTOMER_BY_PK_',
+    'QUEUE_TRANSACTION_WALLET_NL' => 'QUEUE_TRANSACTION_WALLET_NL',
 ];

@@ -63,7 +63,7 @@ class Customer extends \common\models\db\Customer implements IdentityInterface
     public static function findAdvance($condition)
     {
         return static::find()->where([
-            'or',
+            'and',
             ['email' => $condition],
             ['active' => 1]
         ])->one();

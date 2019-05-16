@@ -21,12 +21,12 @@ class FrontendAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap4\BootstrapAsset',
+        'common\assets\JQueryEzPlus',
+        'common\assets\FontawesomeAsset',
+        'common\assets\OwlCarousel',
+        'common\assets\SlickCarouselAsset',
         'frontend\assets\WeshopAsset',
-        'frontend\assets\JQueryEzPlus',
-        'frontend\assets\FontawesomeAsset',
-//        'frontend\assets\PopperAsset',
-        'frontend\assets\OwlCarousel',
-        'frontend\assets\SlickCarouselAsset',
-        'frontend\assets\JQueryLazy'
+        'frontend\assets\JQueryLazy',
+        'frontend\assets\FancyboxPlusAsset'
     ];
 }

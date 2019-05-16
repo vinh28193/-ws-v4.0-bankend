@@ -3,6 +3,8 @@
 
 namespace frontend\modules\checkout;
 
+use common\helpers\WeshopHelper;
+use common\models\PaymentMethodProvider;
 use Yii;
 use common\models\PaymentProvider;
 
@@ -12,13 +14,30 @@ class PaymentService
     public static function loadPaymentByStoreFromDb($store)
     {
         $query = PaymentProvider::find();
-        $query->with('paymentMethodProviders.paymentMethod.paymentMethodBanks.paymentBank');
+        $query->with('paymentMethodProviders', 'paymentMethodProviders.paymentMethod', 'paymentMethodProviders.paymentMethod.paymentMethodBanks', 'paymentMethodProviders.paymentMethod.paymentMethodBanks.paymentBank');
         $query->where([
             'AND',
             ['store_id' => $store],
             ['status' => 1]
         ]);
         return $query->asArray()->all();
+    }
+
+    /**
+     * @param $provider
+     * @param $method
+     * @return PaymentMethodProvider|null
+     */
+    public static function getMethodProvider($provider, $method)
+    {
+        return PaymentMethodProvider::find()
+            ->with(['paymentProvider', 'paymentMethod'])
+            ->where([
+                'AND',
+                ['payment_provider_id' => $provider],
+                ['payment_method_id' => $method],
+            ])
+            ->one();
     }
 
     public static function getGroupName($group)
@@ -112,4 +131,10 @@ class PaymentService
     {
         return (integer)$value;
     }
+
+    public static function generateTransactionCode($prefix = 'PM')
+    {
+        return WeshopHelper::generateTag(time(), 'PM', 16);
+    }
+
 }

@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-
+use yii\authclient\widgets\AuthChoice;
 ?>
 
 <div class="title">
@@ -43,13 +43,12 @@ use yii\bootstrap\ActiveForm;
 <div class="other-login">
     <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
     <div class="social-button">
-        <a href="#" class="btn btn-fb">
-            <i class="social-icon fb"></i>
-            <span>Facebook</span>
-        </a>
-        <a href="#" class="btn btn-google">
-            <i class="social-icon google"></i>
-            <span>Google</span>
-        </a>
+        <?php $authAuthChoice = AuthChoice::begin([  'baseAuthUrl' => ['secure/auth'] , 'popupMode' => false, ]); ?>
+        <div class="social-button">
+            <?php foreach ($authAuthChoice->getClients() as $client): ?>
+                <?= $authAuthChoice->clientLink($client) ?>
+            <?php endforeach; ?>
+        </div>
+        <?php AuthChoice::end(); ?>
     </div>
 </div>

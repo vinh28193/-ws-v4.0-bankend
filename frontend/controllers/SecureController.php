@@ -43,10 +43,20 @@ class SecureController extends FrontendController
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
+        $customer = new Customer();
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goHome();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+//            $post = (array)Yii::$app->request->post();
+//            $_pass = $post['LoginForm']['password'];
+//            var_dump($customer->validatePassword($_pass));die;
+//            if($customer->validatePassword($_pass))
+//            {
+                $model->login();
+                return $this->goHome();
+//            } else {
+//                Yii::$app->session->setFlash('false', 'Incorrect email or password.');
+//            }
+
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -67,7 +77,7 @@ class SecureController extends FrontendController
     public function actionRegister()
     {
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate() ) {
             if ($user = $model->signup()) {
                 if (Yii::$app->getUser()->login($user)) {
                     return $this->goHome();

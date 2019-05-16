@@ -28,6 +28,7 @@ class SignupForm extends Model
             ['last_name', 'required'],
             ['last_name', 'string', 'min' => 2, 'max' => 255],
             ['phone', 'string', 'min' => 2, 'max' => 255],
+            // ['phone', 'countryValue' => 'US'],
 
             ['email', 'trim'],
             ['email', 'required'],
@@ -36,7 +37,7 @@ class SignupForm extends Model
             ['email', 'unique', 'targetClass' => '\common\models\Customer', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            ['password', 'string', 'min' => 8,'max'=>72],
 
             ['replacePassword', 'compare', 'compareAttribute' => 'password'],
 
@@ -55,7 +56,7 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new Customer();
         $user->last_name = $this->last_name;
         $user->first_name = $this->first_name;

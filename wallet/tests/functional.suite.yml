@@ -1,0 +1,6 @@
+class_name: FunctionalTester
+modules:
+    enabled:
+        - Yii2
+coverage:
+    enabled: true

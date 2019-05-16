@@ -8,24 +8,39 @@ use Yii;
  * This is the model class for table "wallet_transaction".
  *
  * @property int $id
- * @property string $transaction_code mã giao dịch của weshop
- * @property string $created_at thời gian giao dịch
- * @property string $updated_at thời gian cập nhật giao dịch
- * @property string $transaction_status trạng thái giao dịch
- * @property string $transaction_type Loại giao dịch: top up , payment, withdraw
- * @property int $customer_id
- * @property int $order_id
- * @property string $transaction_amount_local số tiền giao dịch, có thể âm hoặc dương
- * @property string $transaction_description mô tả giao dịch
- * @property string $note ghi chú của nhân viên
- * @property string $transaction_reference_code mã tham chiếu thu tiền , vd : mã vận đơn thu cod
- * @property string $third_party_transaction_code mã giao dịch với bên thứ 3. VD: ngân lượng
- * @property string $third_party_transaction_link Link thanh toán bên thứ 3
- * @property string $third_party_transaction_status Trạng thái thanh toán của bên thứ 3
- * @property string $third_party_transaction_time thời gian giao dịch bên thứ 3
- * @property string $before_transaction_amount_local Số tiền trước giao dịch
- * @property string $after_transaction_amount_local Số tiền sau giao dịch
- * @property string $version version 4.0
+ * @property string $wallet_transaction_code
+ * @property int $wallet_client_id
+ * @property int $wallet_merchant_id
+ * @property string $type TOP_UP/FREEZE/UN_FREEZE/PAY_ORDER/REFUND/WITH_DRAW
+ * @property string $order_number Mã thanh toán (order, addfee)
+ * @property int $status 0:Queue//1:processing//2:complete//3:cancel//4:fail
+ * @property double $amount
+ * @property double $credit_amount Số tiền nạp vào tài khoản khách(Topup,refund...)
+ * @property double $debit_amount Số tiền khách thanh toán
+ * @property string $note
+ * @property string $description Mô tả giao dịch
+ * @property int $verify_receive_type Kieu xac thuc 0:phone,1:email
+ * @property string $verify_code OTP code
+ * @property int $verify_count
+ * @property int $verify_expired_at
+ * @property string $verified_at Thoi gian xac thuc otp
+ * @property int $refresh_count
+ * @property string $refresh_expired_at
+ * @property string $create_at
+ * @property string $update_at
+ * @property string $complete_at Thoi gian giao dich thanh cong
+ * @property string $cancel_at Thoi gian giao dich bi huy
+ * @property string $fail_at Thoi gian giao dich that bai
+ * @property string $payment_method
+ * @property string $payment_provider_name
+ * @property string $payment_bank_code
+ * @property string $payment_transaction
+ * @property string $request_content
+ * @property string $response_content
+ *
+ * @property WalletLog[] $walletLogs
+ * @property WalletClient $walletClient
+ * @property WalletMerchant $walletMerchant
  */
 class WalletTransaction extends \common\components\db\ActiveRecord
 {
@@ -43,11 +58,15 @@ class WalletTransaction extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'updated_at', 'customer_id', 'order_id', 'third_party_transaction_time'], 'integer'],
-            [['transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
-            [['transaction_description', 'note', 'third_party_transaction_link'], 'string'],
-            [['transaction_code', 'transaction_status', 'transaction_type', 'transaction_reference_code', 'third_party_transaction_code', 'version'], 'string', 'max' => 255],
-            [['third_party_transaction_status'], 'string', 'max' => 200],
+            [['wallet_transaction_code', 'wallet_client_id', 'wallet_merchant_id', 'create_at'], 'required'],
+            [['wallet_client_id', 'wallet_merchant_id', 'status', 'verify_receive_type', 'verify_count', 'verify_expired_at', 'refresh_count'], 'integer'],
+            [['amount', 'credit_amount', 'debit_amount'], 'number'],
+            [['verified_at', 'create_at', 'update_at', 'complete_at', 'cancel_at', 'fail_at'], 'safe'],
+            [['wallet_transaction_code', 'type', 'order_number', 'note', 'description', 'refresh_expired_at', 'payment_method', 'payment_provider_name', 'payment_bank_code', 'payment_transaction'], 'string', 'max' => 255],
+            [['verify_code'], 'string', 'max' => 10],
+            [['request_content', 'response_content'], 'string', 'max' => 1000],
+            [['wallet_client_id'], 'exist', 'skipOnError' => true, 'targetClass' => WalletClient::className(), 'targetAttribute' => ['wallet_client_id' => 'id']],
+            [['wallet_merchant_id'], 'exist', 'skipOnError' => true, 'targetClass' => WalletMerchant::className(), 'targetAttribute' => ['wallet_merchant_id' => 'id']],
         ];
     }
 
@@ -58,24 +77,59 @@ class WalletTransaction extends \common\components\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'transaction_code' => 'Transaction Code',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'transaction_status' => 'Transaction Status',
-            'transaction_type' => 'Transaction Type',
-            'customer_id' => 'Customer ID',
-            'order_id' => 'Order ID',
-            'transaction_amount_local' => 'Transaction Amount Local',
-            'transaction_description' => 'Transaction Description',
+            'wallet_transaction_code' => 'Wallet Transaction Code',
+            'wallet_client_id' => 'Wallet Client ID',
+            'wallet_merchant_id' => 'Wallet Merchant ID',
+            'type' => 'Type',
+            'order_number' => 'Order Number',
+            'status' => 'Status',
+            'amount' => 'Amount',
+            'credit_amount' => 'Credit Amount',
+            'debit_amount' => 'Debit Amount',
             'note' => 'Note',
-            'transaction_reference_code' => 'Transaction Reference Code',
-            'third_party_transaction_code' => 'Third Party Transaction Code',
-            'third_party_transaction_link' => 'Third Party Transaction Link',
-            'third_party_transaction_status' => 'Third Party Transaction Status',
-            'third_party_transaction_time' => 'Third Party Transaction Time',
-            'before_transaction_amount_local' => 'Before Transaction Amount Local',
-            'after_transaction_amount_local' => 'After Transaction Amount Local',
-            'version' => 'Version',
+            'description' => 'Description',
+            'verify_receive_type' => 'Verify Receive Type',
+            'verify_code' => 'Verify Code',
+            'verify_count' => 'Verify Count',
+            'verify_expired_at' => 'Verify Expired At',
+            'verified_at' => 'Verified At',
+            'refresh_count' => 'Refresh Count',
+            'refresh_expired_at' => 'Refresh Expired At',
+            'create_at' => 'Create At',
+            'update_at' => 'Update At',
+            'complete_at' => 'Complete At',
+            'cancel_at' => 'Cancel At',
+            'fail_at' => 'Fail At',
+            'payment_method' => 'Payment Method',
+            'payment_provider_name' => 'Payment Provider Name',
+            'payment_bank_code' => 'Payment Bank Code',
+            'payment_transaction' => 'Payment Transaction',
+            'request_content' => 'Request Content',
+            'response_content' => 'Response Content',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWalletLogs()
+    {
+        return $this->hasMany(WalletLog::className(), ['walletTransactionId' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWalletClient()
+    {
+        return $this->hasOne(WalletClient::className(), ['id' => 'wallet_client_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWalletMerchant()
+    {
+        return $this->hasOne(WalletMerchant::className(), ['id' => 'wallet_merchant_id']);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 return [
-    'ebay-api' => 'http://192.168.11.252:8080/v3',
+    'ebay-api' => 'https://api-lbc.weshop.asia/v3',
     'boxme' =>[
         'vn' => [
             'URL' => 'https://s.boxme.asia/api/',

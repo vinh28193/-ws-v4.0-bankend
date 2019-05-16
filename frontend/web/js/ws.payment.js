@@ -10,6 +10,14 @@ ws.payment = (function ($) {
         currency: 'vnđ',
         total_amount: 0,
         total_amount_display: 0,
+        customer_name: undefined,
+        customer_email: undefined,
+        customer_phone: undefined,
+        customer_address: undefined,
+        customer_postcode: undefined,
+        customer_country: undefined,
+        customer_city: undefined,
+        customer_district: undefined,
         payment_bank_code: undefined,
         payment_method: undefined,
         payment_method_name: undefined,
@@ -23,7 +31,7 @@ ws.payment = (function ($) {
         ga: undefined,
         otp_verify_method: 1,
         shipment_options_status: 1,
-        transaction_id: undefined,
+        transaction_code: undefined,
         transaction_fee: 0
     };
     var pub = {
@@ -68,7 +76,7 @@ ws.payment = (function ($) {
             isNew = isNew || false;
             var method = '';
             var current_item = {};
-            console.log('methodChange ' + (isNew === true ? 'true' : 'false'));
+
             if (isNew) {
                 method = $('#bankOptions').val();
                 pub.payment.payment_method = method;
@@ -89,6 +97,8 @@ ws.payment = (function ($) {
                     return false;
                 }
             }
+            console.log(method);
+            console.log(current_item);
             var html = '';
             $.each(current_item.paymentMethod.paymentMethodBanks, function (index, item) {
                 html += '<li rel="s_bankCode" id="bank_code_' + item.paymentBank.code + '_' + current_item.payment_method_id + '" onclick="ws.payment.selectMethod(' + current_item.payment_provider_id + ',' + current_item.payment_method_id + ',\'' + item.paymentBank.code + '\')">\n' +
@@ -129,11 +139,40 @@ ws.payment = (function ($) {
             }
             pub.checkPromotion();
         },
-        createOrder: function () {
+        process: function () {
+            // var $termAgree = $('input#termCheckout').is(':checked');
+            // if(!$termAgree){
+            //     return;
+            // }
+
+            ws.ajax('/checkout/payment/process', {
+                dataType: 'json',
+                type: 'post',
+                data: {payment: pub.payment, shipping: {enable_buyer: false}},
+                success: function (response, textStatus, xhr) {
+                    console.log(response);
+                }
+            })
 
         },
-        filterShippingAddress: function ($form) {
-
+        filterShippingAddress: function () {
+            var $form = $('form.payment-form');
+            if (!$form.length > 0) {
+                return false;
+            }
+            var values = {};
+            var formDataArray = $form.serializeArray();
+            formDataArray.map(function (x) {
+                if ('buyerPhone' === x.name || 'receiverPhone' === x.name) {
+                    var val = $.trim(x.value);
+                    values[x.name] = val.indexOf("0") === 0 ? val : '0' + val;
+                    values[x.name] = val.replace('+84', '0');
+                } else {
+                    values[x.name] = $.trim(x.value);
+                }
+            });
+            pub.shipping = formDataArray;
+            return formDataArray;
         },
     };
     var updatePaymentByPromotion = function ($response) {
