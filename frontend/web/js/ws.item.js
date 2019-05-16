@@ -30,6 +30,8 @@
         variation_options: [],
         sellers: [],
         conditions: [],
+        quantity_sold: [],
+        available_quantity: [],
         images: [],
     };
     var defaultOptions = {
@@ -64,7 +66,7 @@
                     checkValidVariation($item, variationOption);
                     watchVariationOptions($item, variationOption);
                 });
-
+                defaultParams = params;
                 $item.data('wsItem', {
                     options: options,
                     params: params,
@@ -92,8 +94,12 @@
                     methods.quote.apply($item);
                     return false;
                 });
-                ws.initEventHandler($item, 'quantity', 'click.wsItem', 'button#quote', function (event) {
-                    methods.quote.apply($item);
+                ws.initEventHandler($item, 'quantity', 'click.wsItem', 'button.btnQuantity', function (event) {
+                    methods.changeQuantity.apply(this);
+                    return false;
+                });
+                ws.initEventHandler($item, 'quantityChange', 'change.wsItem', 'input#quantity', function (event) {
+                    methods.changeQuantity.apply(this);
                     return false;
                 });
                 $item.trigger($.Event(events.afterInit));
@@ -184,6 +190,27 @@
         data: function () {
             return this.data('wsItem');
         },
+        changeQuantity: function () {
+            console.log(defaultParams);
+            console.log(currentVariations);
+            var type = $(this).attr('data-href');
+            var value = Number($('#quantity').val());
+            var valueOld = Number($('#quantity').val());
+            if(type === 'up'){
+                value += 1;
+            }
+            if(type === 'down'){
+                value -= 1;
+            }
+            value = value < 1 ? 1 : value;
+            var numberInstock = Number(defaultParams.available_quantity) - Number(defaultParams.quantity_sold);
+            if(value > numberInstock){
+                $('#quantity').val(valueOld === value ? 1 : valueOld);
+                return ws.sweetalert('Bạn không thể mua quá '+numberInstock+' sản phẩm.','Lỗi: ');
+            }
+            $('#quantity').val(value);
+            $('#quantity').css('width',(value.toString().length * 10 + 20) + 'px');
+        }
     };
     var deferredArray = function () {
         var array = [];
@@ -416,9 +443,14 @@
 
     };
     var paymentItem = function ($item, type) {
+        var quantity = $('#quantity').val();
+        if(quantity < 1){
+            return alert('Vui lòng nhập số lượng');
+        }
         var data = $item.data('wsItem');
         var params = data.params;
         var item = {
+            quantity: quantity,
             source: params.type,
             seller: params.seller,
             sku: params.id,
