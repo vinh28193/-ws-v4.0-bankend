@@ -217,6 +217,7 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
             'and',
             ['email' => $condition],
 //            ['active' => 1]   chưa có trường active
+            ['status' => 1]
         ])->one();
     }
 
