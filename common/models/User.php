@@ -211,6 +211,7 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
         ];
     }
 
+    /*
     public static function findAdvance($condition)
     {
         return static::find()->where([
@@ -234,4 +235,5 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     {
         $this->auth_client = Yii::$app->security->generateRandomString();
     }
+    */
 }
