@@ -2,6 +2,8 @@
 
 namespace userbackend\controllers;
 
+use app\models\User;
+use app\models\UserSearch;
 use common\models\Address;
 use common\models\db\SystemDistrictMapping;
 use common\models\Order;
@@ -40,7 +42,7 @@ class CustomerController extends Controller
             'subcat' => [
                 'class' => 'common\actions\DepDropAction',
                 'defaultSelect' => true,
-                'useAction' => 'common\models\SystemDistrict::select2Data'
+                'useAction' => 'common\models\SystemDistrict::filterDistrictByProvinceId'
             ]
         ]);
     }
@@ -52,8 +54,8 @@ class CustomerController extends Controller
     public function actionIndex()
     {
         $id = Yii::$app->user->getIdentity()->getId();
-        $model = CustomerSearch::find()->where(['id' =>  $id])->with('store')->one();
-        $address = Address::find()->where(['customer_id' => $model->id])->one();
+        $model = UserSearch::find()->where(['id' =>  $id])->with('store')->one();
+        $address = Address::find()->where(['customer_id' => $id])->one();
         if(Yii::$app->request->isPost){
             if ($model->load(Yii::$app->request->post())) {
                 $model->save();
@@ -76,6 +78,23 @@ class CustomerController extends Controller
         ]);
     }
 
+//    public function actionSubcat() {
+//        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        $out = [];
+//        if (isset($_POST['depdrop_parents'])) {
+//            $parents = $_POST['depdrop_parents'];
+//            if ($parents != null) {
+//                $cat_id = (int)$parents[0];
+//                $out = SystemDistrict::filterDistrictByProvinceId($cat_id);
+//                if(!empty($out)){
+//                    return ['output'=>$out, 'selected'=> $out[0]['id']];
+//                }
+//
+//            }
+//        }
+//        return ['output'=>'', 'selected'=>''];
+//    }
+
     /**
      * Displays a single Customer model.
      * @param integer $id
@@ -96,7 +115,7 @@ class CustomerController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Customer();
+        $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -116,11 +135,7 @@ class CustomerController extends Controller
      */
     public function actionUpdate($id)
     {
-        var_dump($id);
-        die();
-        $model = Customer::findOne($id);
-        var_dump($model);
-        die();
+        $model = User::findOne($id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -153,7 +168,7 @@ class CustomerController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Customer::findOne($id)) !== null) {
+        if (($model = User::findOne($id)) !== null) {
             return $model;
         }
 

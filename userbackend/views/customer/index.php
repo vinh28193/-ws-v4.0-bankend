@@ -37,7 +37,7 @@ use yii\helpers\Url;
                 $provi=ArrayHelper::map($provider,'id','name');
             ?>
             <div class="form-group">
-                <?= $form->field($address, 'province_id', ['template' => " <i class=\"icon globe\"></i>{input}\n{hint}\n{error}"])->dropDownList($provi, ['id' => 'province_id'], ['data' => [1 => $model->address->district_name],]);?>
+                <?= $form->field($address, 'province_id', ['template' => " <i class=\"icon globe\"></i>{input}\n{hint}\n{error}"])->dropDownList($provi, ['id' => 'province_id'], ['data' => [1 => $address->district_name],]); ?>
             </div>
             <?php
             $district=\common\models\SystemDistrict::find()->all();

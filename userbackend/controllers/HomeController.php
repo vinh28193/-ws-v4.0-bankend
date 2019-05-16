@@ -4,6 +4,7 @@ namespace userbackend\controllers;
 
 use Yii;
 use common\models\Order;
+use common\models\User;
 use userbackend\models\HomeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
