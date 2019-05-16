@@ -45,7 +45,7 @@ class Payment extends Model
 
     public $page = self::PAGE_CHECKOUT;
 
-    public $carts;
+    public $payment_type;
 
     /**
      * @var $order Order[]
@@ -159,8 +159,12 @@ class Payment extends Model
                 'payment_method' => $this->payment_method,
                 'bank_code' => $this->payment_bank_code,
             ]);
+           $results = $wallet->topUpTransaction();
+           if($results['success'] === true && isset($results['data']) && isset($results['data']['wallet_transaction_code']['data']['code'])){
+               $code = $results['data']['wallet_transaction_code']['data']['code'];
+           }
         }
-        $this->transaction_code = PaymentService::generateTransactionCode('PM');
+        $this->transaction_code = $code;
         $this->transaction_fee = 0;
     }
 
@@ -237,6 +241,7 @@ class Payment extends Model
     {
         return [
             'page' => $this->page,
+            'payment_type' => $this->payment_type,
             'orders' => $this->orders,
             'customer_name' => $this->customer_name,
             'customer_email' => $this->customer_email,

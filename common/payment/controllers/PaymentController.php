@@ -34,8 +34,13 @@ class PaymentController extends BasePaymentController
         if (($customer = $this->user) === null) {
             return $this->response(false, 'not login');
         }
+        $payment = new Payment($bodyParams['payment']);
+        $shippingForm = new ShippingForm($bodyParams['shipping']);
+        $shippingForm->setDefaultValues(); // remove it get from POST pls
+        $shippingForm->ensureReceiver();
+
         $items = [];
-        foreach (CartSelection::getSelectedItems(CartSelection::TYPE_BUY_NOW) as $key) {
+        foreach (CartSelection::getSelectedItems($payment->payment_type) as $key) {
             $items[] = $this->cartManager->getItem($key);
         }
         if (empty($items)) {
@@ -44,10 +49,6 @@ class PaymentController extends BasePaymentController
         if (count($bodyParams) !== 2 || !isset($bodyParams['payment']) || empty($bodyParams['payment']) || !isset($bodyParams['shipping']) || empty($bodyParams['shipping'])) {
             return $this->response(false, 'invalid parameter');
         }
-        $payment = new Payment($bodyParams['payment']);
-        $shippingForm = new ShippingForm($bodyParams['shipping']);
-        $shippingForm->setDefaultValues(); // remove it get from POST pls
-        $shippingForm->ensureReceiver();
 
         $payment->customer_name = $shippingForm->buyer_name;
         $payment->customer_email = $shippingForm->buyer_email;
@@ -92,7 +93,7 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->total_discount_amount = $payment->total_discount_amount;
         $paymentTransaction->before_discount_amount_local = $payment->total_amount;
         $paymentTransaction->transaction_amount_local = $payment->total_amount - $payment->total_discount_amount;
-        $paymentTransaction->orders = Json::encode($payment->orders);
+        $paymentTransaction->payment_type = $payment->payment_type;
         $paymentTransaction->shipping = $shippingForm->receiver_address_id;
         $paymentTransaction->save(false);
         $res = $payment->processPayment();
@@ -137,7 +138,7 @@ class PaymentController extends BasePaymentController
                 $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
                 $order->payment_type = 'online_payment';
                 $order->receiver_email = $receiverAddress->email;
-                $order->receiver_name = $receiverAddress->last_name . ' '. $receiverAddress->last_name;
+                $order->receiver_name = $receiverAddress->last_name . ' ' . $receiverAddress->last_name;
                 $order->receiver_phone = $receiverAddress->phone;
                 $order->receiver_address = $receiverAddress->address;
                 $order->receiver_country_id = $receiverAddress->country_id;

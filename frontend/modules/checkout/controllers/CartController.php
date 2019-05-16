@@ -48,7 +48,7 @@ class CartController extends BillingController
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $params = Yii::$app->request->bodyParams;
         $type = ArrayHelper::getValue($params, 'type', CartSelection::TYPE_SHOPPING);
-        if($type !== CartSelection::TYPE_BUY_NOW && Yii::$app->user->getIsGuest()){
+        if ($type !== CartSelection::TYPE_BUY_NOW && Yii::$app->user->getIsGuest()) {
             return ['success' => false, 'message' => 'Please login to used this action'];
         }
         if (($item = ArrayHelper::getValue($params, 'item')) === null) {
@@ -97,7 +97,9 @@ class CartController extends BillingController
 
     public function actionPayment()
     {
+
         $params = Yii::$app->getRequest()->getBodyParams();
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if (($carts = ArrayHelper::getValue($params, 'carts')) === null || empty($carts)) {
             return ['success' => false, 'message' => 'No cart select'];
         }
@@ -105,6 +107,7 @@ class CartController extends BillingController
             $type = CartSelection::TYPE_SHOPPING;
         }
         CartSelection::setSelectedItems($type, $carts);
-        return ['success' => true, 'message' => 'No cart select', 'data' => Url::to('checkout/shipping')];
+        $count = CartSelection::countSelectedItems($type);
+        return ['success' => true, 'message' => "you will be $type with $count items", 'data' => Url::to('shipping')];
     }
 }

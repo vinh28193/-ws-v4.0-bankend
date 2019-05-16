@@ -3,6 +3,7 @@
 
 namespace frontend\widgets\cart;
 
+use common\components\cart\CartSelection;
 use common\products\BaseProduct;
 
 
@@ -118,7 +119,8 @@ class CartWidget extends Widget
 
         return ArrayHelper::merge([
             'updateUrl' => $this->updateAction,
-            'removeUrl' => $this->removeAction
+            'removeUrl' => $this->removeAction,
+            'paymentUrl' => Url::toRoute(['payment']),
         ], $this->clientOptions);
     }
 

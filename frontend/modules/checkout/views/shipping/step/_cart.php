@@ -15,13 +15,18 @@ use yii\helpers\Html;
                 <?php foreach ($order['products'] as $product): ?>
                     <li>
                         <div class="thumb">
-                            <img src="https://images-na.ssl-images-amazon.com/images/I/51aLZ8NqnaL.jpg" alt=""/>
+                            <img src="<?= $product['link_img']; ?>" alt="<?= $product['product_name']; ?>"/>
                         </div>
                         <div class="info">
                             <div class="left">
-                                <a href="#" class="name">Citizen Eco-Drive Women's GA10580-59Q Axiom Diamond Pink Gold-Tone 30mm
-                                    Watch</a>
-                                <p>Bán bởi: <a href="#">Multiple supplier.</a></p>
+                                <a href="<?= $product['product_link']; ?>"
+                                   class="name"><?= $product['product_name']; ?></a>
+                                <?php
+                                if(isset($order['seller']) && ($seller = $order['seller']) !== null && is_array($seller)){
+                                    echo '<p>Bán bởi: <a href="' . ($seller['seller_link_store'] !== null ? $seller['seller_link_store'] : "#") . '">' . $seller['seller_name'] . '</a></p>';
+                                }
+
+                                ?>
                                 <div class="rate">
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -32,21 +37,16 @@ use yii\helpers\Html;
                             </div>
                             <div class="right">
                                 <ol class="price">
-                                    <li>5.800.000 <i class="currency">đ</i></li>
-                                    <li>x1</li>
-                                    <li>5.800.000 <i class="currency">đ</i></li>
+                                    <li><?= $product['portal']; ?></li>
+                                    <li>x<?= $product['quantity_customer']; ?></li>
+                                    <li><?= $product['total_price_amount_local']; ?><i class="currency">đ</i></li>
                                 </ol>
                             </div>
                         </div>
                     </li>
-                <?php endforeach;?>
-            <?php endforeach;?>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
         </ul>
-        <div id="discountErrors">
-            <div class="alert alert-danger" role="alert">
-                <strong>Oh snap!</strong> Change a few things up and try submitting again.
-            </div>
-        </div>
         <div class="coupon" id="discountInputCoupon">
             <label>Mã giảm giá:</label>
             <div class="input-group discount-input">
@@ -56,7 +56,7 @@ use yii\helpers\Html;
                 </div>
             </div>
         </div>
-        <span class="text-danger">Mã giảm giá TEST300 không phù hợp điều kiện</span>
+        <span class="text-danger" id="discountErrors" style="display: none"></span>
     </div>
     <ul class="billing" id="billingBox">
         <li id="discountPrice" style="display: <?= $payment->total_discount_amount > 0 ? 'block' : 'none' ?>">

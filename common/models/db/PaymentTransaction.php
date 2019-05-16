@@ -21,13 +21,13 @@ use Yii;
  * @property string $transaction_customer_postcode
  * @property string $transaction_customer_district
  * @property string $transaction_customer_country
+ * @property string $payment_type
  * @property string $payment_provider
  * @property string $payment_method
  * @property string $payment_bank_code
  * @property string $coupon_code
  * @property int $used_xu
  * @property int $bulk_point
- * @property string $orders list cart id
  * @property int $shipping Dia chi ship
  * @property string $total_discount_amount
  * @property string $before_discount_amount_local
@@ -59,12 +59,12 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'payment_provider', 'payment_method', 'payment_bank_code', 'coupon_code', 'orders', 'shipping'], 'required'],
+            [['store_id', 'payment_type', 'payment_provider', 'payment_method', 'shipping'], 'required'],
             [['store_id', 'customer_id', 'used_xu', 'bulk_point', 'shipping', 'third_party_transaction_time', 'created_at'], 'integer'],
-            [['orders', 'transaction_description', 'note', 'third_party_transaction_link'], 'string'],
             [['total_discount_amount', 'before_discount_amount_local', 'transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
+            [['transaction_description', 'note', 'third_party_transaction_link'], 'string'],
             [['transaction_code', 'payment_bank_code', 'coupon_code'], 'string', 'max' => 32],
-            [['transaction_type', 'transaction_status'], 'string', 'max' => 10],
+            [['transaction_type', 'transaction_status', 'payment_type'], 'string', 'max' => 10],
             [['transaction_customer_name', 'transaction_customer_email', 'transaction_customer_phone', 'transaction_customer_address', 'transaction_customer_city', 'transaction_customer_postcode', 'transaction_customer_district', 'transaction_customer_country', 'transaction_reference_code', 'third_party_transaction_code'], 'string', 'max' => 255],
             [['payment_provider', 'payment_method'], 'string', 'max' => 50],
             [['third_party_transaction_status'], 'string', 'max' => 200],
@@ -91,13 +91,13 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
             'transaction_customer_postcode' => 'Transaction Customer Postcode',
             'transaction_customer_district' => 'Transaction Customer District',
             'transaction_customer_country' => 'Transaction Customer Country',
+            'payment_type' => 'Payment Type',
             'payment_provider' => 'Payment Provider',
             'payment_method' => 'Payment Method',
             'payment_bank_code' => 'Payment Bank Code',
             'coupon_code' => 'Coupon Code',
             'used_xu' => 'Used Xu',
             'bulk_point' => 'Bulk Point',
-            'orders' => 'Orders',
             'shipping' => 'Shipping',
             'total_discount_amount' => 'Total Discount Amount',
             'before_discount_amount_local' => 'Before Discount Amount Local',

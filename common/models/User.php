@@ -7,6 +7,7 @@ use Yii;
 use yii\web\IdentityInterface;
 use common\components\UserApiGlobalIdentityInterface;
 use common\components\UserPublicIdentityInterface;
+
 /**
  * User model
  *
@@ -21,7 +22,7 @@ use common\components\UserPublicIdentityInterface;
  * @property integer $updated_at
  * @property string $password write-only password
  */
-class User extends \common\models\db\User implements IdentityInterface, UserApiGlobalIdentityInterface,UserPublicIdentityInterface
+class User extends \common\models\db\User implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
@@ -248,4 +249,28 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
         $this->auth_client = Yii::$app->security->generateRandomString();
     }
     */
+    /**
+     * Generates new password reset token
+     */
+    public function getPrimaryAddress()
+    {
+        return $this->hasOne(Address::className(), ['customer_id' => 'id'])->where([
+            'AND',
+            ['type' => Address::TYPE_PRIMARY],
+            ['is_default' => Address::IS_DEFAULT]
+        ]);
+    }
+
+    /**
+     * @return null
+     */
+    public function getDefaultShippingAddress()
+    {
+        return $this->hasOne(Address::className(), ['customer_id' => 'id'])->where([
+            'AND',
+            ['type' => Address::TYPE_SHIPPING],
+            ['is_default' => Address::IS_DEFAULT]
+        ]);
+    }
+
 }

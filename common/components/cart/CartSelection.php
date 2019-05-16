@@ -37,15 +37,7 @@ class CartSelection
 
     public static function setSelectedItems($type, $items)
     {
-        if ($type === self::TYPE_BUY_NOW) {
-            $selected = !is_array($items) ? [$items] : $items;
-        } else {
-            if (($selected = self::getSelectedItems($type)) === null) {
-                $selected = [];
-            }
-            $selected[] = $items;
-            $selected = array_unique($selected);
-        }
+        $selected = !is_array($items) ? [$items] : $items;
         self::getSession()->set(self::SESSION_NAME, [$type => $selected]);
     }
 
