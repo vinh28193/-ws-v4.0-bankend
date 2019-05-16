@@ -78,7 +78,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'error',
         ],
         'urlManager' => require(__DIR__ . '/urlManager.php'),
 
@@ -102,6 +102,9 @@ return [
         ],
         'checkout' => [
             'class' => 'frontend\modules\checkout\Module',
+        ],
+        'payment' => [
+            'class' => 'common\payment\Module',
         ]
     ],
 ];

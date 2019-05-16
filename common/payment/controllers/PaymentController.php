@@ -1,10 +1,12 @@
 <?php
 
 
-namespace frontend\modules\checkout\controllers;
+namespace common\payment\controllers;
 
 use common\components\cart\CartHelper;
+use common\components\cart\CartSelection;
 use common\helpers\WeshopHelper;
+use common\models\Address;
 use common\models\Category;
 use common\models\Order;
 use common\models\PaymentTransaction;
@@ -13,35 +15,34 @@ use common\models\ProductFee;
 use common\models\Seller;
 use common\products\BaseProduct;
 use common\promotion\PromotionResponse;
-use frontend\modules\checkout\models\ShippingForm;
+use common\payment\models\ShippingForm;
 use Yii;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\Response;
-use frontend\modules\checkout\Payment;
+use common\payment\Payment;
 
-class PaymentController extends CheckoutController
+class PaymentController extends BasePaymentController
 {
+
 
     public function actionProcess()
     {
         $start = microtime(true);
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        $start = microtime(true);
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        $now = Yii::$app->getFormatter()->asDatetime('now');
-        $promotionDebug = [];
         $bodyParams = $this->request->bodyParams;
-        if (($customer = Yii::$app->user->identity) === null) {
-            return ['success' => false, 'message' => 'not login'];
+        if (($customer = $this->user) === null) {
+            return $this->response(false, 'not login');
         }
-        $items = $this->module->cartManager->getItems();
+        $items = [];
+        foreach (CartSelection::getSelectedItems(CartSelection::TYPE_BUY_NOW) as $key) {
+            $items[] = $this->cartManager->getItem($key);
+        }
         if (empty($items)) {
-            return ['success' => false, 'message' => 'empty cart'];
+            return $this->response(false, 'empty cart');
         }
         if (count($bodyParams) !== 2 || !isset($bodyParams['payment']) || empty($bodyParams['payment']) || !isset($bodyParams['shipping']) || empty($bodyParams['shipping'])) {
-            return ['success' => false, 'message' => 'invalid parameter'];
+            return $this->response(false, 'invalid parameter');
         }
         $payment = new Payment($bodyParams['payment']);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
@@ -61,14 +62,14 @@ class PaymentController extends CheckoutController
         $params = ArrayHelper::getValue($orderParams, 'orders');
         $totalAmount = ArrayHelper::getValue($orderParams, 'totalAmount', 0);
         if ($params === null || count($params) !== count($payment->orders) || (float)$totalAmount !== (float)$payment->total_amount) {
-            return ['success' => false, 'message' => 'something wrong'];
+            return $this->response(false, 'something wrong');
         }
         $payment->orders = $params;
         $payment->total_amount = $totalAmount;
         /* @var $results PromotionResponse */
         $payment->checkPromotion();
         $paymentTransaction = new PaymentTransaction();
-        $paymentTransaction->customer_id = Yii::$app->getUser()->getId();
+        $paymentTransaction->customer_id = $this->user->getId();
         $paymentTransaction->store_id = $payment->storeManager->getId();
         $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
         $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
@@ -94,10 +95,10 @@ class PaymentController extends CheckoutController
         $paymentTransaction->orders = Json::encode($payment->orders);
         $paymentTransaction->shipping = $shippingForm->receiver_address_id;
         $paymentTransaction->save(false);
-        $res = $payment->processPayment($paymentTransaction);
+        $res = $payment->processPayment();
         $time = $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
-        return ['success' => true, 'message' => 'create success', 'data' => $res];
+        return $this->response(false, 'create success', $res);
     }
 
     public function actionReturn($merchant)
@@ -113,6 +114,7 @@ class PaymentController extends CheckoutController
         $promotionDebug = [];
 
         $payment = new Payment();
+        $receiverAddress = Address::findOne(1);
         /* @var $results PromotionResponse */
         $results = $payment->checkPromotion();
         $transaction = Order::getDb()->beginTransaction();
@@ -134,18 +136,21 @@ class PaymentController extends CheckoutController
                 $order->customer_type = 'Retail';
                 $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
                 $order->payment_type = 'online_payment';
-                $order->receiver_email = $shippingForm->receiver_email;
-                $order->receiver_name = $shippingForm->receiver_name;
-                $order->receiver_phone = $shippingForm->receiver_phone;
-                $order->receiver_address = $shippingForm->receiver_phone;
-                $order->receiver_country_id = $shippingForm->receiver_country_id;
-                $order->receiver_province_id = $shippingForm->receiver_province_id;
-                $order->receiver_district_id = $shippingForm->receiver_district_id;
-                $order->receiver_post_code = $shippingForm->receiver_post_code;
-                $order->receiver_address_id = $shippingForm->receiver_address_id;
+                $order->receiver_email = $receiverAddress->email;
+                $order->receiver_name = $receiverAddress->last_name . ' '. $receiverAddress->last_name;
+                $order->receiver_phone = $receiverAddress->phone;
+                $order->receiver_address = $receiverAddress->address;
+                $order->receiver_country_id = $receiverAddress->country_id;
+                $order->receiver_country_name = $receiverAddress->country_name;
+                $order->receiver_province_id = $receiverAddress->province_id;
+                $order->receiver_province_name = $receiverAddress->province_name;
+                $order->receiver_district_id = $receiverAddress->district_id;
+                $order->receiver_district_name = $receiverAddress->district_name;
+                $order->receiver_post_code = $receiverAddress->post_code;
+                $order->receiver_address_id = $receiverAddress->id;
                 $order->total_paid_amount_local = 0;
 
-                if (($sellerParams = ArrayHelper::remove($params, 'seller')) === null || !isset($sellerParams['seller_name']) || $sellerParams['seller_name'] === null || $sellerParams['seller_name'] === '') {
+                if (($sellerParams = ArrayHelper::getValue($params, 'seller')) === null || !isset($sellerParams['seller_name']) || $sellerParams['seller_name'] === null || $sellerParams['seller_name'] === '') {
                     $transaction->rollBack();
                     return ['success' => false, 'message' => 'can not create order from not found seller'];
                 }

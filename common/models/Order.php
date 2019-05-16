@@ -93,15 +93,15 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             'insertAttributes' => [
                 'class' => \yii\behaviors\AttributesBehavior::className(),
                 'attributes' => [
-                    'receiver_country_name' => [
-                        self::EVENT_BEFORE_INSERT => [$this, 'evaluateSystemLocation']
-                    ],
-                    'receiver_province_name' => [
-                        self::EVENT_BEFORE_INSERT => [$this, 'evaluateSystemLocation']
-                    ],
-                    'receiver_district_name' => [
-                        self::EVENT_BEFORE_INSERT => [$this, 'evaluateSystemLocation']
-                    ],
+//                    'receiver_country_name' => [
+//                        self::EVENT_BEFORE_INSERT => [$this, 'evaluateSystemLocation']
+//                    ],
+//                    'receiver_province_name' => [
+//                        self::EVENT_BEFORE_INSERT => [$this, 'evaluateSystemLocation']
+//                    ],
+//                    'receiver_district_name' => [
+//                        self::EVENT_BEFORE_INSERT => [$this, 'evaluateSystemLocation']
+//                    ],
                     'customer_id' => [
                         self::EVENT_BEFORE_INSERT => [$this, 'evaluateCustomer']
                     ],
