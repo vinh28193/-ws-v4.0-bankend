@@ -15,7 +15,7 @@ $this->title = 'Đăng nhập';
 echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 ?>
 
-<p>Please fill out the following fields to login:</p>
+<p> Vui lòng điền vào các trường sau để đăng nhập :</p>
 
 
     <?php $form = ActiveForm::begin(['id' => 'login-form', 'options' => [ 'class' => 'payment-form']]); ?>
