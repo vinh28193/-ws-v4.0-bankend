@@ -98,7 +98,6 @@ use yii\helpers\Url;
                     'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->widget(DepDrop::classname(), [
-                    'options' => ['id' => 'district_id'],
                     'pluginOptions' => [
                         'depends' => [Html::getInputId($shippingForm, 'receiver_province_id')],
                         'placeholder' => 'Select District',

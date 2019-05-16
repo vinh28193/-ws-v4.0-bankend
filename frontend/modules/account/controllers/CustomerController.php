@@ -54,8 +54,19 @@ class CustomerController extends Controller
         if(Yii::$app->request->isPost){
             if ($model->load(Yii::$app->request->post())) {
                 $model->save();
-            } if ($address->load(Yii::$app->request->post())) {
+            } if ($address) {
+                $address->load(Yii::$app->request->post());
                 $address->save();
+
+            } if (!$address) {
+                $add = new Address();
+                $add->load(Yii::$app->request->post());
+                $add->customer_id = $id;
+                $add->save();
+                return $this->render('index', [
+                    'model' => $model,
+                    'address' => $add,
+                ]);
             }
         }
 

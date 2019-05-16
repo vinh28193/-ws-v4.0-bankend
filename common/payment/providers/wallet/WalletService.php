@@ -74,17 +74,11 @@ class WalletService extends BaseObject
     public function callApiRequest($url, $params, $method = "POST")
     {
         $client = $this->getWalletClient();
-        $request = $client->createApiRequest()
+        return  $client->createApiRequest()
             ->setMethod($method)
             ->setFormat('json')
             ->setUrl($url)
-            ->setData($params);
-        $response = $request->send();
-        if (!$response->isOk) {
-            $this->response(false, "Can't not connect to server");
-        }
-        $response = $response->getData();
-        return $this->response($response['success'], $response['message'], $response['data']);
+            ->setData($params)->send()->getData();
     }
 
     public function login($password)
@@ -130,13 +124,6 @@ class WalletService extends BaseObject
         $data['bank_code'] = $this->bank_code;
         $data['merchant_id'] = @self::MERCHANT_IP_PRO;
 
-        $client = $this->getWalletClient();
-        $uses = $client->getAccessToken()->getParams();
-        $wallet_client_id = ($uses['user']['id']);
-
-        if (in_array($wallet_client_id, [1, 3])) {
-            $data['merchant_id'] = @self::MERCHANT_IP_DEV;
-        }
         return $this->callApiRequest('topup/create', $data);
     }
 

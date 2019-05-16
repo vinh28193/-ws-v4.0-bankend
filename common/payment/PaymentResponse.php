@@ -12,6 +12,7 @@ class PaymentResponse
     public $checkoutUrl;
     public $message;
     public $method;
+    public $popUpContent;
 
     public $gaData;
     public $transactionCode;
