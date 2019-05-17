@@ -9,12 +9,20 @@ use Yii;
  *
  * @property int $id
  * @property int $walletTransactionId
- * @property string $TypeTransaction  TOPUP - nạp tiền REFUN - nạp tiền do refun WITHDRAW - rút tiền FREEZE - đóng băng UNFREEZEADD - mở đóng băng cộng UNFREEZEREDUCE - mở đóng băng trừ PAYMENT - thanh toán 
+ * @property string $TypeTransaction  TOPUP - nạp tiền
+ REFUN - nạp tiền do refun
+ WITHDRAW - rút tiền
+ FREEZE - đóng băng
+ UNFREEZEADD - mở đóng băng cộng
+ UNFREEZEREDUCE - mở đóng băng trừ
+ PAYMENT - thanh toán 
  * @property int $walletId
- * @property string $typeWallet CLIENT - ví client MERCHANT - ví merchant
+ * @property string $typeWallet CLIENT - ví client
+ MERCHANT - ví merchant
  * @property string $description
  * @property string $amount số tiền giao dịch
- * @property string $BeforeAccumulatedBalances số dư trước khi giao dịch - theo field current_balance 
+ * @property string $BeforeAccumulatedBalances số dư trước khi giao dịch - theo field current_balance
+ 
  * @property string $AfterAccumulatedBalances số dư sau khi giao dịch - theo field current_balance
  * @property string $createDate
  * @property int $storeId
@@ -22,7 +30,7 @@ use Yii;
  *
  * @property WalletTransaction $walletTransaction
  */
-class WalletLog extends \common\components\db\ActiveRecord
+class WalletLog extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

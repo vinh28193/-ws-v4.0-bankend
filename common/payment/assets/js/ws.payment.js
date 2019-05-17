@@ -40,20 +40,16 @@ ws.payment = (function ($) {
         options: {},
         methods: [],
         shipping: {
-            buyer : {
-                email : '',
-                phone : '',
-                full_name : '',
-                province_id : '',
-                district_id : '',
-            },
-            receiver : {
-                email : '',
-                phone : '',
-                full_name : '',
-                province_id : '',
-                district_id : '',
-            },
+            buyer_email: '',
+            buyer_phone: '',
+            buyer_name: '',
+            buyer_province_id: '',
+            buyer_district_id: '',
+            receiver_email: '',
+            receiver_phone: '',
+            receiver_name: '',
+            receiver_province_id: '',
+            receiver_district_id: '',
             other_receiver : false,
             note_by_customer : '',
             save_my_address : '',
@@ -185,24 +181,24 @@ ws.payment = (function ($) {
             console.log('register ' + pub.methods.length + ' methods');
         },
         getInfoFormShipping: function (){
-            pub.shipping.buyer.full_name = $('#shippingform-buyer_name').val();
-            pub.shipping.buyer.phone = $('#shippingform-buyer_phone').val();
-            pub.shipping.buyer.email = $('#shippingform-buyer_email').val();
-            pub.shipping.buyer.province_id = $('#shippingform-buyer_province_id').val();
-            pub.shipping.buyer.district_id = $('#shippingform-buyer_district_id').val();
-            pub.shipping.receiver.full_name = $('#shippingform-receiver_name').val();
-            pub.shipping.receiver.phone = $('#shippingform-receiver_phone').val();
-            pub.shipping.receiver.email = $('#shippingform-receiver_email').val();
-            pub.shipping.receiver.province_id = $('#shippingform-receiver_province_id').val();
-            pub.shipping.receiver.district_id = $('#shippingform-receiver_district_id').val();
+            pub.shipping.buyer_name = $('#shippingform-buyer_name').val();
+            pub.shipping.buyer_phone = $('#shippingform-buyer_phone').val();
+            pub.shipping.buyer_email = $('#shippingform-buyer_email').val();
+            pub.shipping.buyer_province_id = $('#shippingform-buyer_province_id').val();
+            pub.shipping.buyer_district_id = $('#shippingform-buyer_district_id').val();
+            pub.shipping.receiver_name = $('#shippingform-receiver_name').val();
+            pub.shipping.receiver_phone = $('#shippingform-receiver_phone').val();
+            pub.shipping.receiver_email = $('#shippingform-receiver_email').val();
+            pub.shipping.receiver_province_id = $('#shippingform-receiver_province_id').val();
+            pub.shipping.receiver_district_id = $('#shippingform-receiver_district_id').val();
             pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
-            pub.shipping.save_my_address = $('#shippingform-save_my_address :checked').val();
-            if(!pub.shipping.buyer.full_name || !pub.shipping.buyer.phone || !pub.shipping.buyer.email || !pub.shipping.buyer.province_id || !pub.shipping.buyer.district_id){
+            pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
+            if(!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id){
                 alert('Vui lòng nhập đầy đủ thông tin người mua');
                 return false;
             }
             if(pub.shipping.other_receiver){
-                if(!pub.shipping.receiver.full_name || !pub.shipping.receiver.phone || !pub.shipping.receiver.email || !pub.shipping.receiver.province_id || !pub.shipping.receiver.district_id){
+                if(!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id){
                     alert('Vui lòng nhập đầy đủ thông tin người nhận');
                     return false;
                 }
@@ -285,12 +281,15 @@ ws.payment = (function ($) {
 
         },
         process: function () {
+            if (!pub.getInfoFormShipping()){
+                return;
+            }
             var $termAgree = $('input#termCheckout').is(':checked');
             if (!$termAgree) {
                 alert('Bạn phải đồng ý với điều khoản weshop');
                 return;
             }
-
+            ws.loading(true);
             ws.ajax('/payment/payment/process', {
                 dataType: 'json',
                 type: 'post',
@@ -298,6 +297,7 @@ ws.payment = (function ($) {
                 success: function (response, textStatus, xhr) {
                     console.log(response);
                     if (response.success) {
+                        ws.loading(false);
                         var data = response.data;
                         var code = data.code.toUpperCase() || '';
                         var method = data.method.toUpperCase();
@@ -315,6 +315,7 @@ ws.payment = (function ($) {
                                 }
                             }
                         } else {
+                            ws.loading(false);
                             $('span#transactionCode').html(code);
                             $('div#checkout-success').modal('show');
                             ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {

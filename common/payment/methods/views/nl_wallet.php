@@ -14,7 +14,7 @@
     </a>
     <div id="method<?= $group; ?>" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
         <div class="method-content wallet">
-            <div>Đăng ký ví NgânLượng.vn miễn phí <a href="">tại đây</a></div>
+            <div>Đăng ký ví NgânLượng.vn miễn phí <a href="https://account.nganluong.vn/nganluong/Register.html">tại đây</a></div>
         </div>
     </div>
 </div>

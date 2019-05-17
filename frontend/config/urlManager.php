@@ -55,9 +55,9 @@ return [
         'otp/<code:[^/]+>/verify.html' => 'payment/payment/otp-verify',
         //account
 
-//        'login.html' => 'secure/login',
-//        'signup.html' => 'secure/register',
-//        'logout.html' => 'secure/logout',
+        'login.html' => 'secure/login',
+        'signup.html' => 'secure/register',
+        'logout.html' => 'secure/logout',
 //        'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
     ]
 ];
