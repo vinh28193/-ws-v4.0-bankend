@@ -353,6 +353,8 @@ class PurchaseController extends BaseApiController
             $PurchaseOrder->total_type_changing = $changeAmount > 0 ? 'up' : 'down';
             $PurchaseOrder->save(0);
 
+            // ToDo : @Phuchc Notication "Mua Hàng Thành Công" 17/05/2019 Call API
+
             Yii::$app->wsLog->push('order','purchased', null, [
                 'id' => $PurchaseOrder->id,
                 'request' => $this->post['cart'],
