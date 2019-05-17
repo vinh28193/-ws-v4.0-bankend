@@ -81,6 +81,7 @@ class SignupForm extends Model
         }
         @date_default_timezone_set('Asia/Ho_Chi_Minh');
         $user = new User([
+            'phone'=> $this->phone,
             'last_name' => $this->last_name,
             'first_name' => $this->first_name,
             'username' => $this->email,
@@ -93,7 +94,7 @@ class SignupForm extends Model
             'usable_xu' => 0 ,
             'last_revenue_xu' => 0 ,
             'email_verified' => 1 ,  // Nếu là Google Email lấy được rồi nên coi như là dã xác nhận
-            'phone_verified' => 0, // Vì là đăng kí qua Google + Facebook nên chưa xác nhân hoặc lấy được số đt của khách hàng
+            'phone_verified' => 1, // đăng kí trực tiếp nên xác nhận phone là đúng luôn chỉ còn vấn đề @ToDo Phone đúng đinh dạng Việt Nam
             'gender' => 0 ,
             'type_customer' => 1 , // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
             'avatar' => null ,
@@ -166,7 +167,7 @@ class SignupForm extends Model
             )
             ->setFrom([Yii::$app->params['supportEmail'] => 'Weshop Việt Nam robot'])
             ->setTo($this->email)
-            ->setSubject('REGISTER ACCOUNT SƯCCESS! ' . Yii::$app->name)
+            ->setSubject('REGISTER ACCOUNT SUCCESS! WESHOP VIỆT NAM')
             ->send();
     }
 }

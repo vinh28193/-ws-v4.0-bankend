@@ -4,6 +4,7 @@ namespace common\payment\providers\vietnam;
 
 use common\components\ReponseData;
 use common\models\logs\PaymentGatewayLogs;
+use common\models\PaymentTransaction;
 use common\models\WalletTransaction;
 use Yii;
 use Exception;
@@ -28,8 +29,8 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $logCallback = new PaymentGatewayLogs();
         $logCallback->response_time = date('Y-m-d H:i:s');
         $logCallback->create_time = date('Y-m-d H:i:s');
-        $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK;
-        $logCallback->transaction_code_request = "NGAN LUONG CALLBACK";
+        $logCallback->type = PaymentGatewayLogs::TYPE_CREATED;
+        $logCallback->transaction_code_request = "NGAN LUONG CREATE PAYMENT";
         $logCallback->store_id = 1;
         try {
             $param = [];
@@ -78,7 +79,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway = new PaymentGatewayLogs();
             $logPaymentGateway->transaction_code_ws = $payment->transaction_code;
             $logPaymentGateway->request_content = $param;
-            $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CHECK_CREATED;
+            $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED;
             $logPaymentGateway->url = $this->submitUrl;
             $mess = "Giao dịch thanh toán không thành công!";
             $success = true;
@@ -108,7 +109,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 ];
             } catch (\Exception $exception) {
                 $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
-                $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+                $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
                 $logPaymentGateway->save(false);
                 return ReponseData::reponseArray(false, 'Check payment thất bại');
             }
@@ -136,21 +137,21 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK;
         $logCallback->transaction_code_request = "NGAN LUONG CALLBACK";
         $logCallback->store_id = 1;
+
         try {
             $yiiParams = Yii::$app->params['nganluong'];
 
             $orderCode = $data['order_code'];
-            $transaction = WalletTransaction::findOne(['wallet_transaction_code' => $orderCode]);
-            if (!$transaction) {
-                ///#Todo kiểm tra có trong transaction payment không
-                $transaction = WalletTransaction::findOne(['wallet_transaction_code' => $orderCode]);
-                if (!$transaction) {
-                    $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
-                    $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
-                    $logCallback->save(false);
-                    return ReponseData::reponseArray(false, 'Transaction không tồn tại');
-                }
+            if (($transaction = PaymentTransaction::findOne(['transaction_code' => $orderCode])) === null) {
+                $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
+                $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+                $logCallback->save(false);
+                return ReponseData::reponseArray(false, 'Transaction không tồn tại');
             }
+            if ($transaction->transaction_type === PaymentTransaction::TRANSACTION_TYPE_TOP_UP && WalletTransaction::findOne(['wallet_transaction_code' => $transaction->transaction_code]) === null) {
+                return ReponseData::reponseArray(false, 'Transaction  wallet topUp không tồn tại');
+            }
+
             $param['function'] = 'GetTransactionDetail';
             // Product
             $param['merchant_id'] = $yiiParams['prod_trunggian']['ID'];
@@ -188,14 +189,15 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                     $mess = "Giao dịch đã được thanh toán thành công!";
                     $success = true;
                     if (in_array($this->page, [self::PAGE_CHECK_AND_UPDATE])) {
-                        //#Todo update payment success cho transaction payment..
-
+                        $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                        $transaction->save();
                     }
                 }
                 $request_content['api'] = $this->submitUrl;
                 $request_content['form'] = $param;
                 $dataRs['request_content'] = $request_content;
                 $dataRs['response_content'] = $resp;
+                $dataRs['transaction'] = $transaction;
             } catch (\Exception $exception) {
                 $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;

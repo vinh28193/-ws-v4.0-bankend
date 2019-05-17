@@ -1,41 +1,4 @@
 <?php
-
-use yii\helpers\Html;
-use yii\bootstrap4\ActiveForm;
-use common\payment\models\SecureForm;
-
-/* @var yii\web\View $this */
-$model = new SecureForm();
-$modelLogin = new \frontend\models\LoginForm();
-$modelSignup = new \frontend\models\SignupForm();
-
-$formId = 'secureForm';
-$isNewCheckBox = Html::getInputName($model, 'isNew');
-$passWordName = Html::getInputName($model, 'password');
-$js = <<<JS
-
-$(document).on("change", "input:radio[name='$isNewCheckBox']:checked", function (e) {
-    e.preventDefault();
-    console.log($(this).val());
-    return false;
-});
-
-$(document).on("beforeSubmit", "form#$formId", function (e) {
-    e.preventDefault();
-    var form = $(this);
-    // return false if form still have some validation errors
-    if (form.find('.has-error').length) 
-    {
-        return false;
-    }
-    var data = form.serialize();
-    console.log(data);
-    // send data to actionSave by ajax request.
-    return false; // Cancel form submitting.
-});
-JS;
-
-$this->registerJs($js);
 ?>
 
 <div class="container checkout-content">
@@ -50,6 +13,7 @@ $this->registerJs($js);
             <div class="form-group">
                 <i class="icon email"></i>
                 <input type="text" class="form-control" name="email" placeholder="Email">
+                <label data-href="error" style="color: red" id="email-error"></label>
             </div>
             <div class="check-member">
                 <div class="form-group form-check">
@@ -64,26 +28,31 @@ $this->registerJs($js);
             <div class="form-group" data-merge="signup-form" style="display: none">
                 <i class="icon user"></i>
                 <input type="text" class="form-control"  name="first_name" placeholder="Tên">
+                <label data-href="error" style="color: red" id="first_name-error"></label>
             </div>
             <div class="form-group" data-merge="signup-form" style="display: none">
                 <i class="icon user"></i>
                 <input type="text" class="form-control"   name="last_name" placeholder="Họ">
+                <label data-href="error" style="color: red" id="last_name-error"></label>
             </div>
             <div class="form-group" data-merge="signup-form" style="display: none">
                 <i class="icon phone"></i>
                 <input type="text" class="form-control " name="phone" placeholder="Số điện thoại">
+                <label data-href="error" style="color: red" id="phone-error"></label>
             </div>
             <div class="form-group">
                 <i class="icon password"></i>
                 <input type="password" class="form-control" name="password" placeholder="Mật khẩu">
+                <label data-href="error" style="color: red" id="password-error"></label>
             </div>
             <div class="form-group" data-merge="signup-form" style="display: none">
                 <i class="icon password"></i>
-                <input type="password" class="form-control"  name="re-password" placeholder="Nhập lại mật khẩu">
+                <input type="password" class="form-control"  name="replacePassword" placeholder="Nhập lại mật khẩu">
+                <label data-href="error" style="color: red" id="replacePassword-error"></label>
             </div>
             <div class="check-info">
                 <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="remember" checked>
+                    <input type="checkbox" class="form-check-input" name="remember" checked>
                     <label class="form-check-label" for="remember">Ghi nhớ</label>
                 </div>
                 <a href="#" class="forgot">Quên mật khẩu?</a>

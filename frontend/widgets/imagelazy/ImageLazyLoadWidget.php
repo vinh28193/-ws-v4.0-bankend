@@ -38,9 +38,7 @@ class ImageLazyLoadWidget extends Widget
      */
     public function init()
     {
-        if(empty($this->src)) {
-            throw new InvalidConfigException("You must set the 'src' property");
-        }
+        $this->src = $this->src ? $this->src : '/img/no_image.png';
         $this->options['data-original'] = $this->src;
         if(isset($this->options['class']) && !empty($this->options['class'])) {
             $this->options['class'] .= " $this->cssClass";

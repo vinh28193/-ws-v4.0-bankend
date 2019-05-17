@@ -28,6 +28,7 @@ use Yii;
  * @property string $coupon_code
  * @property int $used_xu
  * @property int $bulk_point
+ * @property string $carts list cart
  * @property int $shipping Dia chi ship
  * @property string $total_discount_amount
  * @property string $before_discount_amount_local
@@ -59,10 +60,10 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'payment_type', 'payment_provider', 'payment_method', 'shipping'], 'required'],
+            [['store_id', 'payment_type', 'payment_provider', 'payment_method', 'carts', 'shipping'], 'required'],
             [['store_id', 'customer_id', 'used_xu', 'bulk_point', 'shipping', 'third_party_transaction_time', 'created_at'], 'integer'],
+            [['carts', 'transaction_description', 'note', 'third_party_transaction_link'], 'string'],
             [['total_discount_amount', 'before_discount_amount_local', 'transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
-            [['transaction_description', 'note', 'third_party_transaction_link'], 'string'],
             [['transaction_code', 'payment_bank_code', 'coupon_code'], 'string', 'max' => 32],
             [['transaction_type', 'transaction_status', 'payment_type'], 'string', 'max' => 10],
             [['transaction_customer_name', 'transaction_customer_email', 'transaction_customer_phone', 'transaction_customer_address', 'transaction_customer_city', 'transaction_customer_postcode', 'transaction_customer_district', 'transaction_customer_country', 'transaction_reference_code', 'third_party_transaction_code'], 'string', 'max' => 255],
@@ -98,6 +99,7 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
             'coupon_code' => 'Coupon Code',
             'used_xu' => 'Used Xu',
             'bulk_point' => 'Bulk Point',
+            'carts' => 'Carts',
             'shipping' => 'Shipping',
             'total_discount_amount' => 'Total Discount Amount',
             'before_discount_amount_local' => 'Before Discount Amount Local',

@@ -2,7 +2,7 @@
 
 /* @var $this \yii\web\View */
 use yii\helpers\Html;
-
+$chat = false;
 ?>
 <div class="row">
     <div class="col-md-3">
@@ -179,11 +179,3 @@ Enter để gửi"></textarea>
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function (e) {
-        $('#exampleModalCenter').on('shown.bs.modal', function() {
-            alert('asdasd');
-        });
-    });
-
-</script>

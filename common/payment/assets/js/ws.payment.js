@@ -2,7 +2,7 @@ ws.payment = (function ($) {
     var defaults = {
         page: undefined,
         payment_type: undefined,
-        orders: [],
+        carts: [],
         use_xu: 0,
         bulk_point: 0,
         coupon_code: undefined,
@@ -58,6 +58,9 @@ ws.payment = (function ($) {
         },
         selectMethod: function (providerId, methodId, bankCode) {
             console.log('selected providerId:' + providerId + ' methodId:' + methodId + ' bankCode:' + bankCode);
+            if (methodId == 25) {
+                pub.methodChange(true);
+            }
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
             pub.payment.payment_bank_code = bankCode;
@@ -117,7 +120,7 @@ ws.payment = (function ($) {
 
         checkPromotion: function () {
 
-            if (pub.payment.orders.length === 0) {
+            if (pub.payment.carts.length === 0) {
                 return;
             }
             var data = pub.payment;
@@ -149,32 +152,46 @@ ws.payment = (function ($) {
 
         },
         process: function () {
-            // var $termAgree = $('input#termCheckout').is(':checked');
-            // if(!$termAgree){
-            //     return;
-            // }
+            var $termAgree = $('input#termCheckout').is(':checked');
+            if (!$termAgree) {
+                alert('Bạn phải đồng ý với điều khoản weshop');
+                return;
+            }
 
             ws.ajax('/payment/payment/process', {
                 dataType: 'json',
                 type: 'post',
                 data: {payment: pub.payment, shipping: {enable_buyer: false}},
                 success: function (response, textStatus, xhr) {
+                    console.log(response);
                     if (response.success) {
                         var data = response.data;
                         var code = data.code.toUpperCase() || '';
-                        $('span#transactionCode').html(code);
-                        $('div#checkout-success').modal('show');
-
-                        ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
-                            if (data.method.toUpperCase() === 'POST') {
-                                $(data.checkoutUrl).appendTo('body').submit();
-                            } else {
-                                ws.redirect(data.checkoutUrl);
+                        var method = data.method.toUpperCase();
+                        if (method === 'POPUP') {
+                            var type = data.provider.toUpperCase() || null;
+                            if (type === 'WALLET') {
+                                var $otp = $('#otp-confirm');
+                                $otp.modal('show');
+                                $otp.on("show.bs.modal", function (e) {
+                                    $(this).find(".modal-body").load(data.checkoutUrl);
+                                });
                             }
-                        });
-                        redirectPaymentGateway(data, 1000);
+                        } else {
+                            $('span#transactionCode').html(code);
+                            $('div#checkout-success').modal('show');
+                            ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
+                                if (method === 'POST') {
+                                    $(data.checkoutUrl).appendTo('body').submit();
+                                } else {
+                                    ws.redirect(data.checkoutUrl);
+                                }
+                            });
+                            redirectPaymentGateway(data, 1000);
+                        }
+
                     }
-                    console.log(response);
+
                 }
             })
 

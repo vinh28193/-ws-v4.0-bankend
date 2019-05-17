@@ -33,13 +33,15 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager'
         ],
-//        'as access' => [
-//            'class' => 'mdm\admin\classes\AccessControl',
-//            'allowActions' => [
-//                'site/*',
-//                'admin/*',
-//            ]
-//        ],
+        /*
+        'as access' => [
+            'class' => 'mdm\admin\classes\AccessControl',
+            'allowActions' => [
+                'site/*',
+                'admin/*',
+            ]
+        ],
+        */
         'i18n' => $i18n,
         'formatter' => [
             'class' => 'yii\i18n\Formatter',

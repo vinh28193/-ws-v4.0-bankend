@@ -18,7 +18,7 @@ class AuthorizeForm extends Model
     public $rememberMe = true;
 
     /**
-     * @var \common\components\UserApiGlobalIdentityInterface|\yii\web\IdentityInterface
+     * @var \common\models\User |\yii\web\IdentityInterface
      */
     private $_user;
 
@@ -97,7 +97,7 @@ class AuthorizeForm extends Model
             $expired_time = null;
             $type = 'user';
         }
-        /** @var  $user \common\components\User ApiGlobalIdentityInterface|\yii\web\IdentityInterface */
+        /** @var  $user \common\models\User ApiGlobalIdentityInterface|\yii\web\IdentityInterface */
         $user = $this->getUser();
         return Yii::$app->api->createAuthorizationCode($user->getId(), $type, $expired_time);
     }
@@ -105,14 +105,14 @@ class AuthorizeForm extends Model
     /**
      * Finds user by [[username]]
      *
-     * @return \common\components\User ApiGlobalIdentityInterface|\yii\web\IdentityInterface|null
+     * @return \common\models\User ApiGlobalIdentityInterface|\yii\web\IdentityInterface|null
      */
     protected function getUser()
     {
         if ($this->_user === null) {
-            /** @var  $class \common\components\User ApiGlobalIdentityInterface */
+            /** @var  $class \common\models\User ApiGlobalIdentityInterface */
             $class = $this->identityClass;
-            $this->_user = $class::findByUsername($this->username);
+            $this->_user = $class::findByUsernameForEmployee($this->username);
         }
 
         return $this->_user;

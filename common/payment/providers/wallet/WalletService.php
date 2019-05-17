@@ -74,7 +74,7 @@ class WalletService extends BaseObject
     public function callApiRequest($url, $params, $method = "POST")
     {
         $client = $this->getWalletClient();
-        return  $client->createApiRequest()
+        return $client->createApiRequest()
             ->setMethod($method)
             ->setFormat('json')
             ->setUrl($url)
@@ -194,6 +194,17 @@ class WalletService extends BaseObject
         $data['bank_code'] = $this->bank_code;
         $data['otp_receive_type'] = $this->otp_type;
         return $this->callApiRequest('transaction/create', $data);
+    }
+
+    public function transactionDetail()
+    {
+        return $this->callApiRequest('transaction/detail', ['transaction_code' => $this->transaction_code]);
+    }
+
+    public function transactionSuccess()
+    {
+        return $this->callApiRequest('transaction/success', ['transaction_code' => $this->transaction_code]);
+
     }
 
     public function validateOtp()
