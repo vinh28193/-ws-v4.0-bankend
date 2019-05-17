@@ -52,8 +52,8 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
         </div>
     </div>
 
-    <div class="form-group">
-        <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+    <div class="form-group" style="width: 100%">
+        <?= Html::submitButton('Đăng nhập', ['class' => 'btn btn-warning text-white sty-btn', 'name' => 'login-button']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

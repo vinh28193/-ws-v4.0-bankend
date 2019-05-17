@@ -5307,6 +5307,22 @@ a {
 .detail-block .thumb-slider .zoomWrapper{
   width: auto !important;
 }
+.style-fb {
+  background-color: #3a5897;
+  color: white;
+}
+.style-gg {
+    background-color: #DF4F3F;
+    color: white;
+}
+.style-wl {
+  background-color: #1b809e;
+  color: white;
+}
+.sty-btn {
+  width: 100%;
+  font-weight: 500;
+}
 /*.name{*/
 /*  white-space: nowrap;*/
 /*}*/
