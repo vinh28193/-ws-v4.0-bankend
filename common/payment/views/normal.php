@@ -17,6 +17,7 @@ use common\payment\methods\UnknownWidget;
 <div class="accordion payment-method" id="payment-method">
     <?php
     foreach ($group as $id => $item) {
+
         switch ($id) {
             case Payment::PAYMENT_GROUP_MASTER_VISA:
                 echo VisaMasterWidget::create($id, $item, $payment);
@@ -46,8 +47,9 @@ use common\payment\methods\UnknownWidget;
 </div>
 <div class="form-group form-check term">
     <input type="checkbox" class="form-check-input" id="termCheckout">
-    <label class="form-check-label" for="term">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và điều
+    <label class="form-check-label" for="termCheckout">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và điều
             kiện</a> giao dịch của Weshop.</label>
 </div>
 <button type="button" class="btn btn-payment btn-block" id="btnCheckout" onclick="ws.payment.process()">Thanh toán ngay
 </button>
+

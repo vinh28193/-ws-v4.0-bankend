@@ -49,6 +49,10 @@ return [
         'checkout/login.html' => 'checkout/shipping/login',
         'checkout/signup.html' => 'checkout/shipping/signup',
 
+        // payment
+//        'payment/process' => 'payment/payment/process',
+        'payment/<merchant:[^/]+>/return.html' => 'payment/payment/return',
+        'otp/<code:[^/]+>/verify.html' => 'payment/payment/otp-verify',
         //account
         'login.html' => 'secure/login',
         'signup.html' => 'secure/register',

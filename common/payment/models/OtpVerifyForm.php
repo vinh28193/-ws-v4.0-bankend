@@ -9,6 +9,7 @@
 namespace common\payment\models;
 
 use common\components\RedisLanguage;
+use common\payment\providers\wallet\WalletService;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -45,14 +46,6 @@ class OtpVerifyForm extends Model
      * @var string
      */
     public $transactionCode;
-    /**
-     * @var \common\models\db\WalletClient
-     */
-    public $walletClient;
-    /**
-     * @var \common\models\weshop\Website
-     */
-    public $website;
 
     /**
      * Initializes the object.
@@ -65,12 +58,6 @@ class OtpVerifyForm extends Model
         parent::init();
         if (!$this->transactionCode) {
             throw new InvalidConfigException(self::className() . '::$transactionCode must be set');
-        }
-        if (!$this->getHttpClient() instanceof \common\models\db\WalletClient) {
-            throw new InvalidConfigException(self::className() . '::$httpClient must be instance \common\models\db\WalletClient');
-        }
-        if (!$this->getWebsite() instanceof \common\models\weshop\Website) {
-            throw new InvalidConfigException(self::className() . '::$httpClient must be instance \common\models\weshop\Website');
         }
 
     }
@@ -88,34 +75,10 @@ class OtpVerifyForm extends Model
     public function attributeLabels()
     {
         return [
-            'captcha' => RedisLanguage::getLanguageByKey('wallet_changeemail_form_captcha_name', 'Mã xác nhận'),
-            'optCode' => RedisLanguage::getLanguageByKey('wallet_active_form_otp', 'Mã OTP:'),
+            'captcha' => 'Mã xác nhận',
+            'optCode' => 'Mã OTP',
             'otpReceive' => 'OPT Receive Type'
         ];
-    }
-
-    /**
-     * getter
-     * @return \common\models\db\WalletClient
-     */
-    public function getHttpClient()
-    {
-        if (!$this->walletClient) {
-            $this->walletClient = Yii::$app->authClientCollection->getClient('wallet');
-        }
-        return $this->walletClient;
-    }
-
-    /**
-     * getter
-     * @return \common\models\weshop\Website
-     */
-    public function getWebsite()
-    {
-        if (!$this->website) {
-            $this->website = (new \common\models\weshop\Website())->load();
-        }
-        return $this->website;
     }
 
     public function validateOtp($attribute, $params, $validator)
@@ -123,18 +86,11 @@ class OtpVerifyForm extends Model
         if (!$this->hasErrors()) {
             //Todo send http request to api.
 
-            $requestApi = $this->walletClient->createApiRequest();
-            $requestApi->setMethod('POST');
-            $requestApi->setUrl('transaction/verify-opt');
-            $requestApi->setData([
+            $walletService = new WalletService([
                 'transaction_code' => $this->transactionCode,
                 'otp_code' => $this->$attribute
             ]);
-            $responseApi = $requestApi->send();
-            if (!$responseApi->isOk) {
-                $this->addError($attribute, 'Cannot connect to server,please try again');
-            }
-            $responseApi = $responseApi->getData();
+            $responseApi = $walletService->validateOtp();
             if (!$responseApi['success']) {
                 $this->addError($attribute, $responseApi['message']);
             }
@@ -147,31 +103,16 @@ class OtpVerifyForm extends Model
             return false;
         }
         return true;
-
-
-        //Todo check $responseWalletApi Error Code
     }
 
 
     public function refreshOtp()
     {
-        $requestWalletApi = $this->walletClient->createApiRequest();
-        $requestWalletApi->setMethod('POST');
-        $requestWalletApi->setUrl('transaction/refresh-otp');
-        $requestWalletApi->setData([
+        $walletClient = new WalletService([
             'transaction_code' => $this->transactionCode,
             'otp_receive_type' => $this->otpReceive ? '1' : '0',
         ]);
-        $responseWalletApi = $requestWalletApi->send();
-        if (!$responseWalletApi->isOk) {
-            return [
-                'success' => false,
-                'message' => 'can not connect to server',
-                'data' => null,
-            ];
-        }
-        $responseWalletApi = $responseWalletApi->getData();
-        return $responseWalletApi;
+        return $walletClient->refreshOtp();
 
     }
 }

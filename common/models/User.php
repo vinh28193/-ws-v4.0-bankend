@@ -124,10 +124,13 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
      */
     public static function findByPasswordResetToken($token)
     {
-        if (!static::isPasswordResetTokenValid($token)) {
-            return null;
-        }
+        // @Phuchc ToDo Check time password reset Token
 
+//        if (!static::isPasswordResetTokenValid($token)) {
+//            return null;
+//        }
+
+        Yii::info('success', 'findByPasswordResetToken.');
         return static::findOne([
             'password_reset_token' => $token,
             'status' => self::STATUS_ACTIVE,
@@ -240,27 +243,11 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
         return static::find()->where([
             'and',
             ['email' => $condition],
-//            ['active' => 1]   chưa có trường active
             ['status' => 1]
         ])->one();
     }
 
-    /*
-    public function generateToken()
-    {
-        $this->access_token = Yii::$app->security->generateRandomString();
-    }
-    public function generateXu() {
-        $this->total_xu = 0;
-        $this->usable_xu = 0;
-        $this->last_use_xu = 0;
-        $this->last_revenue_xu = 0;
-    }
-    public function generateAuthClient()
-    {
-        $this->auth_client = Yii::$app->security->generateRandomString();
-    }
-    */
+
     /**
      * Generates new password reset token
      */

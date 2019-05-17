@@ -15,6 +15,14 @@ use yii\helpers\ArrayHelper;
 class CartHelper
 {
 
+    /**
+     * @return CartManager
+     */
+    public static function getCartManager()
+    {
+        return Yii::$app->cart;
+    }
+
     public static function group($items)
     {
         return ArrayHelper::index($items, 'key', function ($item) {
@@ -23,10 +31,14 @@ class CartHelper
         });
     }
 
-    public static function createOrderParams($items)
+    public static function createOrderParams($keys, $safeOnly = true)
     {
-        if (empty($items)) {
-            return [];
+        if (!is_array($keys)) {
+            $keys = [$keys];
+        }
+        $items = [];
+        foreach ($keys as $key) {
+            $items[$key] = self::getCartManager()->getItem($key, $safeOnly);
         }
         $orders = [];
         $totalFinalAmount = 0;
@@ -92,9 +104,9 @@ class CartHelper
                 $productFees = [];
                 foreach ($additionalFees->keys() as $feeName) {
                     $fee = [];
-                    list($fee['amount'],$fee['local_amount']) = $item->getAdditionalFees()->getTotalAdditionFees($feeName);
+                    list($fee['amount'], $fee['local_amount']) = $item->getAdditionalFees()->getTotalAdditionFees($feeName);
                     $fee['discount_amount'] = 0;
-                    $fee['name']  = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($feeName)->label;
+                    $fee['name'] = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($feeName)->label;
                     $fee['currency'] = $item->getAdditionalFees()->getStoreAdditionalFeeByKey($feeName)->currency;
                     $productFees[$feeName] = $fee;
                 }
@@ -108,6 +120,8 @@ class CartHelper
             $orders[$key] = $order;
         }
         return [
+            'countKey' => count($keys),
+            'countItem' => count($items),
             'orders' => $orders,
             'totalAmount' => $totalFinalAmount
         ];

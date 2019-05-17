@@ -31,9 +31,9 @@ return [
                     'class' => 'common\payment\providers\wallet\WalletClient',
                     'clientId' => 'testclient',
                     'clientSecret' => 'testpass',
-                    'authUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/authorize',
-                    'tokenUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/token',
-                    'apiBaseUrl' => 'http://weshop-4.0.wallet.vn/v1'
+                    'authUrl' => 'http://wallet.weshop-v4.local.vn/v1/rest/authorize',
+                    'tokenUrl' => 'http://wallet.weshop-v4.local.vn/v1/rest/token',
+                    'apiBaseUrl' => 'http://wallet.weshop-v4.local.vn/v1'
                 ]
 
             ],
@@ -52,12 +52,12 @@ return [
             'port'     => 6379,
             'database' => 0,
         ],
-        'session' => [
-            'name' => 'adv-frontend-ws-2019',
-            'class' => 'yii\redis\Session',
-            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
-            'timeout' => 3600*4,
-        ],
+//        'session' => [
+//            'name' => 'adv-frontend-ws-2019',
+//            'class' => 'yii\redis\Session',
+//            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
+//            'timeout' => 3600*4,
+//        ],
         'log' => [
             /*
             'traceLevel' => YII_DEBUG ? 3 : 0,
