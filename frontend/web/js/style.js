@@ -162,12 +162,23 @@ $( document ).ready(function() {
         $(this).addClass('open');
     });
     $('.checkout-step li').click(function () {
-        console.log($(this)[0]);
         var step = $(this)[0].firstElementChild.innerHTML;
-        console.log(step);
-        $('#step_checkout_1').css('display','none');
-        $('#step_checkout_2').css('display','none');
-        $('#step_checkout_3').css('display','none');
-        $('#step_checkout_'+step).css('display','block');
-    })
+        if($('#step_checkout_'+step).length === 1){
+            $('#step_checkout_1').css('display','none');
+            $('#step_checkout_2').css('display','none');
+            $('#step_checkout_3').css('display','none');
+            $('#step_checkout_'+step).css('display','block');
+        }
+    });
+    $('input[name=check-member]').click(function () {
+        var value = $(this).val();
+        if(value === 'new-member'){
+            $('div[data-merg=signup-form]').css('display','block');
+        }else {
+            $('div[data-merg=signup-form]').css('display','none');
+        }
+    });
+    $('#loginToCheckout').click(function () {
+
+    });
 });
