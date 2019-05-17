@@ -17,4 +17,9 @@ class WSWalletWidget extends MethodWidget
         parent::run();
         return $this->render('ws_wallet');
     }
+
+    public function registerClientScripts()
+    {
+
+    }
 }

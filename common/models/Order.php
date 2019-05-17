@@ -381,6 +381,11 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         return $this->hasOne(User::className(), ['id' => 'customer_id']);
     }
 
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'customer_id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -570,21 +575,21 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     ['product.category_id' => $params['keyWord']],
                     ['product.product_name' => $params['keyWord']],
                     ['order.payment_type' => $params['keyWord']],
-                    ['customer.email' => $params['keyWord']],
+                    ['user.email' => $params['keyWord']],
                     ['order.receiver_email' => $params['keyWord']],
                     ['order.receiver_phone' => $params['keyWord']],
-                    ['customer.phone' => $params['keyWord']],
+                    ['user.phone' => $params['keyWord']],
                 ]);
             } elseif ($params['searchKeyword'] != 'ALL') {
                 if ($params['searchKeyword'] == 'email') {
                     $query->andFilterWhere(['or',
                         ['like', 'order.receiver_email', $params['keyWord']],
-                        ['like', 'customer.email', $params['keyWord']],
+                        ['like', 'user.email', $params['keyWord']],
                     ]);
                 } elseif ($params['searchKeyword'] == 'phone') {
                     $query->andFilterWhere(['or',
                         ['like', 'order.receiver_phone', $params['keyWord']],
-                        ['like', 'customer.phone', $params['keyWord']],
+                        ['like', 'user.phone', $params['keyWord']],
                     ]);
                 }
                 $query->andFilterWhere([$params['searchKeyword'] => $params['keyWord']]);

@@ -229,6 +229,14 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     }
 
     /**
+     * Generates  token_verifiy_user_create_new
+     */
+    public function generateTokenVerifiyUserCreateNew()
+    {
+        $token_verifiy_user_create_new = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    /**
      * Removes password reset token
      */
     public function removePasswordResetToken()

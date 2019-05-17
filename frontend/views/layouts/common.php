@@ -647,9 +647,7 @@ FrontendAsset::register($this);
 <div class="modal otp-modal" id="otp-confirm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-body">
-
-            </div>
+            <div class="modal-body" id="modalContent"></div>
         </div>
     </div>
 </div>
