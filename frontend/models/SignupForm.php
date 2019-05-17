@@ -30,6 +30,7 @@ class SignupForm extends Model
             ['last_name', 'required'],
             ['last_name', 'string', 'min' => 2, 'max' => 255],
             ['phone', 'string', 'min' => 10, 'max' => 15],
+            ['phone', 'required'],
             // ['phone', 'countryValue' => 'US'],
 
             ['email', 'trim'],
