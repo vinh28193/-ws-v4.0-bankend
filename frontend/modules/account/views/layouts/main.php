@@ -131,7 +131,7 @@ UserBackendAsset::register($this);
                                     <?php echo Html::a('Tất cả các đơn', ['/account/order'],['class' => 'active']); ?>
                                 </li>
                                 <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'SUPPORTING') { ?> active <?php }}?>">
-                                    <?php echo Html::a('Chờ Thanh Toán', ['/account/order?status=SUPPORTING']);?>
+                                    <?php echo Html::a('Chưa Thanh Toán', ['/account/order?status=SUPPORTING']);?>
                                 </li>
                                 <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'READY2PURCHASE') { ?> active <?php }}?>">
                                     <?php echo Html::a('Đã thanh toán', ['/account/order?status=READY2PURCHASE']);?>
