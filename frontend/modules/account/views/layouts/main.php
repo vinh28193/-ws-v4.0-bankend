@@ -3,6 +3,9 @@
 
 /* @var $content string */
 
+use common\components\cart\CartManager;
+use common\payment\providers\wallet\WalletService;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 //use forntend\modules\acout\assets\UserBackendAsset;
 use userbackend\assets\UserBackendAsset;
@@ -55,11 +58,14 @@ UserBackendAsset::register($this);
                     <?php echo Html::a('Login', ['/secure/login']);?>
                 </li>
             <?php } else { ?>
-                <li><span class="text-orange">50.800.000đ</span></li>
+                <li><span class="text-orange"><?=
+                        \common\helpers\WeshopHelper::showMoney(
+                            ArrayHelper::getValue(ArrayHelper::getValue((new WalletService())->detailWalletClient(),'data'),'current_balance',0)
+                        ); ?></span></li>
                 <li>
                     <a href="#">
                         <i class="icon cart"></i>
-                        <i class="badge">2</i>
+                        <i class="badge"><?= (new CartManager())->countItems() ?></i>
                     </a>
                 </li>
                 <li>

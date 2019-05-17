@@ -75,7 +75,8 @@ class SecureController extends FrontendController
         $model = new LoginForm();
         $model->rememberMe = false; // Mặc định không ghi nhớ
         if ($model->load(Yii::$app->request->post()) && $model->login() ) {
-            $url_rel = Yii::$app->request->get('rel','/');
+            $url_rel = urldecode(Yii::$app->request->get('rel','/'));
+            $url_rel = $url_rel && ($url_rel[0] == '/' || $url_rel[0] == '\\') ? '/'.$url_rel : $url_rel;
              return Yii::$app->getResponse()->redirect($url_rel);
         } else {
             return $this->render('login', [
