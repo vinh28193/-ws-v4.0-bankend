@@ -138,7 +138,7 @@ class Payment extends Model
         $this->payment_method = 1;
         $this->payment_provider = 42;
         $this->payment_bank_code = 'VISA';
-
+        $this->registerClientScript();
     }
 
     private $_orders;
@@ -549,7 +549,6 @@ class Payment extends Model
 
     public function initPaymentView()
     {
-        $this->registerClientScript();
         if ($this->page === self::PAGE_TOP_UP) {
             $this->payment_method = 25;
             $this->payment_provider = 43;
