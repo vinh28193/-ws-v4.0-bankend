@@ -46,7 +46,7 @@ use yii\helpers\Url;
                 echo $form->field($shippingForm, 'buyer_province_id', [
                     'template' => '<i class="icon city"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->dropDownList(array_merge([['Chọn thành phố']],$provinces));
+                ])->dropDownList(array_merge(['Chọn thành phố'],$provinces));
 
                 echo $form->field($shippingForm, 'buyer_district_id', [
                     'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
@@ -84,7 +84,7 @@ use yii\helpers\Url;
                     'options' => ['class' => 'form-group']
                 ])->textInput(['placeholder' => 'Số điện thoại']);
 
-                echo $form->field($shippingForm, 'receiver_phone', [
+                echo $form->field($shippingForm, 'receiver_email', [
                     'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->textInput(['placeholder' => 'Địa chỉ email']);
@@ -92,7 +92,7 @@ use yii\helpers\Url;
                 echo $form->field($shippingForm, 'receiver_province_id', [
                     'template' => '<i class="icon city"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->dropDownList(array_merge([['Chọn thành phố']],$provinces));
+                ])->dropDownList(array_merge(['Chọn thành phố'],$provinces));
 
                 echo $form->field($shippingForm, 'receiver_district_id', [
                     'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',

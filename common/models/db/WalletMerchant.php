@@ -30,7 +30,7 @@ use Yii;
  *
  * @property WalletTransaction[] $walletTransactions
  */
-class WalletMerchant extends \common\components\db\ActiveRecord
+class WalletMerchant extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
