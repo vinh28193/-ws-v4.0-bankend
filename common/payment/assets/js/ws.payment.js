@@ -87,6 +87,8 @@ ws.payment = (function ($) {
             $('.checkout-step li').click(function () {
                 var step = $(this)[0].firstElementChild.innerHTML;
                 if($('#step_checkout_'+step).length === 1){
+                    $('.checkout-step li').removeClass('active');
+                    $(this).addClass('active');
                     $('#step_checkout_1').css('display','none');
                     $('#step_checkout_2').css('display','none');
                     $('#step_checkout_3').css('display','none');

@@ -2,10 +2,13 @@
 
 namespace frontend\modules\account\controllers;
 
+use common\components\cart\CartManager;
+use common\payment\providers\wallet\WalletService;
 use Yii;
 use common\models\Order;
 use common\models\User;
 use userbackend\models\HomeSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,7 +16,7 @@ use yii\filters\VerbFilter;
 /**
  * HomeController implements the CRUD actions for Order model.
  */
-class HomeController extends Controller
+class HomeController extends BaseAccountController
 {
     /**
      * {@inheritdoc}
@@ -41,9 +44,16 @@ class HomeController extends Controller
             ->where(['=', 'customer_id', $userId])
             ->all();
         $total = count($orders);
+        $wallet = null;
+        if($userId){
+            $wallet = ArrayHelper::getValue((new WalletService())->detailWalletClient(),'data');
+        }
+        $totalCart = (new CartManager())->countItems();
         return $this->render('index', [
+            'wallet' => $wallet,
             'orders' => $orders,
-            'total' => $total
+            'total' => $total,
+            'totalCart' => $totalCart
         ]);
     }
 

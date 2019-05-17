@@ -17,7 +17,7 @@ use yii\helpers\Url;
         <li><i>3</i><span>Thanh toán</span></li>
     </ul>
     <div class="step-2-content row">
-        <div class="col-md-8">
+        <div id="step_checkout_2" class="col-md-8">
             <div class="title">Thông tin mua hàng</div>
             <div class="payment-box">
                 <?php
@@ -108,6 +108,12 @@ use yii\helpers\Url;
                 echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block' , 'id' => 'btn-next-step3']);
                 ActiveForm::end();
                 ?>
+            </div>
+        </div>
+        <div id="step_checkout_3" class="col-md-8" style="display: none">
+            <div class="title">Phương thức thanh toán</div>
+            <div class="payment-box payment-step3">
+                <?php echo $payment->initPaymentView(); ?>
             </div>
         </div>
         <div class="col-md-4">
