@@ -48,8 +48,8 @@ return [
         'GET checkout-<type:[0-9A-Za-z_-]*>.html' => 'checkout/shipping',
 
         //account
-        'GET login.html' => 'secure/login',
-        'GET signup.html' => 'secure/register',
-        'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
+//        'GET login.html' => 'secure/login',
+//        'GET signup.html' => 'secure/register',
+//        'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
     ]
 ];

@@ -31,9 +31,9 @@ return [
                     'class' => 'common\payment\providers\wallet\WalletClient',
                     'clientId' => 'testclient',
                     'clientSecret' => 'testpass',
-                    'authUrl' => 'weshop-v4.wallet.local.vn/authorize',
-                    'tokenUrl' => 'weshop-v4.wallet.local.vn/token',
-                    'apiBaseUrl' => 'weshop-v4.wallet.local.vn'
+                    'authUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/authorize',
+                    'tokenUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/token',
+                    'apiBaseUrl' => 'http://weshop-4.0.wallet.vn/v1'
                 ]
 
             ],
