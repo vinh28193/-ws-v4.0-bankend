@@ -58,7 +58,6 @@ class AuthCustomerHandler
                 // login
                 /* @var User $user */
                 $user = $auth->user;
-                //var_dump($user);die;
                 // $this->updateUserInfo($user);  // Error Argument 1 passed to common\components\AuthCustomerHandler::updateUserInfo() must be an instance of common\models\User, instance of common\models\db\User given
                 Yii::$app->user->login($user, $duration);
          } else {
