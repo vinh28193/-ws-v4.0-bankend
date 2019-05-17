@@ -37,7 +37,7 @@ class CustomerController extends Controller
             'subcat' => [
                 'class' => 'common\actions\DepDropAction',
                 'defaultSelect' => true,
-                'useAction' => 'common\models\SystemDistrict::filterDistrictByProvinceId'
+                'useAction' => 'common\models\SystemDistrict::select2Data'
             ]
         ]);
     }

@@ -96,7 +96,7 @@ $chat = false;
                         ])->orderBy(['created_at' => SORT_DESC])->one();
                         ?>
                         <li>
-                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#" data-toggle="modal" data-target="#exampleModalCenter"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?> </p>
+                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#" data-toggle="modal" data-url="/echo?ordercode=<?=$order->ordercode  ?>" data-target="#exampleModalCenter"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?> </p>
                             <?php if ($chat) {  ?>
                             <div class="mess-content mb-1">
                                 <i class="logo"><img src="../img/weshop_small_logo.png" alt=""/></i>
@@ -129,7 +129,7 @@ $chat = false;
                                                 <div class="card m-0 p-0">
                                                     <div class="card-header msg_head bg-info">
                                                         <div class="d-flex bd-highlight">
-                                                            <h3 class="text-white">Trao đổi với khách hàng</h3>
+                                                            <h3 class="text-white">Trao đổi với nhân viên (12345)</h3>
                                                         </div>
                                                     </div>
                                                     <div class="card-body msg_card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
@@ -141,10 +141,9 @@ $chat = false;
                                                                              class="rounded-circle user_img_msg"  width="54px" height="15px">
                                                                     </div>
                                                                     <div>
-                                                                        <span class="msg_cotainer_send "></span><br>
                                                                         <div class="">
                                                                             <span class="mr-2">weshop</span>
-                                                                            <span  class="text-darkgray">12345</span>
+                                                                            <p  class="text-darkgray">12345</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -159,7 +158,7 @@ $chat = false;
 Nhấn Shift + Enter để xuống dòng.
 Enter để gửi"></textarea>
                                                                 <div class="input-group-btn">
-                                                                    <button style="height: 80px;" class="btn btn-default">Sent</button>
+                                                                    <button style="height: 94px;" class="btn btn-default pl-5 pr-5">Sent</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -170,7 +169,7 @@ Enter để gửi"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-right mt-2">
-                                    <button class="btn btn-danger btn-sm" data-dismiss="modal" (click)="offModeChat()">Cancel</button>
+                                    <button class="btn btn-danger btn-sm" data-dismiss="modal" >Cancel</button>
                                 </div>
                             </div>
                         </div>
