@@ -178,6 +178,10 @@ $( document ).ready(function() {
             $('div[data-merge=signup-form]').css('display','none');
         }
     });
+    $('input').change(function () {
+       var name = $(this).attr('name');
+       $('#'+name+'-error').html('');
+    });
     $('#loginToCheckout').click(function () {
         ws.loading(true);
         var typeLogin = $('input[name=check-member]:checked').val();
@@ -193,14 +197,14 @@ $( document ).ready(function() {
                 last_name: $('input[name=last_name]').val(),
                 phone: $('input[name=phone]').val(),
             };
-            url = 'checkout/login.html';
+            url = 'checkout/signup.html';
         }else {
             loginForm = {
                 email: $('input[name=email]').val(),
                 password: $('input[name=password]').val(),
                 rememberMe: $('input[name=rememberMe]').val(),
             };
-            url = 'checkout/signup.html';
+            url = 'checkout/login.html';
         }
         $.ajax({
             url: url,
