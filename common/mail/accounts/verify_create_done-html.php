@@ -4,8 +4,7 @@ use yii\helpers\Html;
 /* @var $model common\models\User */
 
 if (YII_ENV == 'dev') {
-    //$api_host=Yii::$app->params['dev_api_url'];
-    $domain = 'http://weshop-v4.front-end-ws.local.vn';
+    $domain = Yii::$app->params['Url_FrontEnd'] ? Yii::$app->params['Url_FrontEnd'] : 'http://weshop-v4.front-end-ws.local.vn';
 } else if (YII_ENV == 'prod') {
     $domain = 'https://weshop.com.vn';
 }
@@ -132,11 +131,10 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                <p style="padding: 20px 0 0 0">Để xác thực tài khoản, mời quý khách
+                                                <!--p style="padding: 20px 0 0 0">Để xác thực tài khoản, mời quý khách
                                                     click vào đường dẫn dưới đây:<br/>
-                                                    <a href="<?= $verifyLink; ?>"
-                                                       style="display: block; width: 500px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis"><?= $verifyLink; ?></a>
-                                                </p>
+                                                    <a href="<?= $verifyLink; ?>" style="display: block; width: 500px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis"><?= $verifyLink; ?></a>
+                                                </p-->
                                                 <p>Cám ơn quý khách đã đăng ký thành viên tại <a href="<?= $domain; ?>">WeShop
                                                         Việt Nam</a></p>
                                                 <p><b>BẮT ĐẦU MUA SẮM NGAY TẠI <a href="<?= $domain; ?>">WESHOP VIỆT

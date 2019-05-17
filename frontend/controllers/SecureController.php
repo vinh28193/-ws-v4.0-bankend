@@ -102,10 +102,8 @@ class SecureController extends FrontendController
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
-                Yii::info('register new 002');
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
                 $model->sendEmail();
-                Yii::info('register new 003');
                 if(Yii::$app->getUser()->login($user)){ return $this->goHome(); }
             }
         }
@@ -138,12 +136,21 @@ class SecureController extends FrontendController
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
             }
         }
-
         return $this->render('requestPasswordReset', [
             'model' => $model,
         ]);
 
     }
+
+    // ToDo Làm tiếp sau nay khi có thời gian
+    /** https://weshop-v4.front-end-ws.local.vn/secure/verify?token=ZIieKz6RnbB8Bp0MfQcWrX7xId_v5VhF
+     * Verify Account Register New
+     * @param $token
+     * @return string|\yii\web\Response
+     * @throws BadRequestHttpException
+     */
+    public function actionVerify($token)
+    {}
 
     /**
      * Resets password.
@@ -154,6 +161,7 @@ class SecureController extends FrontendController
      */
     public function actionResetPassword($token)
     {
+        Yii::info('ResetPassword.');
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidParamException $e) {
@@ -162,7 +170,7 @@ class SecureController extends FrontendController
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
             Yii::$app->session->setFlash('success', 'New password saved.');
-
+            Yii::info('success', 'ResetPassword.');
             return $this->goHome();
         }
 
