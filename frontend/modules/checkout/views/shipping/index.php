@@ -12,10 +12,10 @@ if($activeStep === 1){
 }
 //echo $this->render('step/step1', ['activeStep' => $activeStep]);
 ?>
-<div id="step_checkout_1">
+<div id="step_checkout_1" style="display: none">
     <?= $this->render('step/step1', ['activeStep' => $activeStep]); ?>
 </div>
-<div id="step_checkout_2">
+<div id="step_checkout_2" style="display: block">
     <?= $this->render('step/step2', [
         'activeStep' => $activeStep,
         'shippingForm' => $shippingForm,
@@ -23,7 +23,7 @@ if($activeStep === 1){
         'payment' => $payment,
     ]); ?>
 </div>
-<div id="step_checkout_3">
+<div id="step_checkout_3" style="display: none">
     <?= $this->render('step/step3', [
         'activeStep' => $activeStep,
         'shippingForm' => $shippingForm,

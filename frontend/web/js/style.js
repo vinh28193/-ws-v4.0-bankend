@@ -161,5 +161,13 @@ $( document ).ready(function() {
         $('.navbar-2 .navbar-header ul li .dropdown-menu ul li').removeClass('open');
         $(this).addClass('open');
     });
-
+    $('.checkout-step li').click(function () {
+        console.log($(this)[0]);
+        var step = $(this)[0].firstElementChild.innerHTML;
+        console.log(step);
+        $('#step_checkout_1').css('display','none');
+        $('#step_checkout_2').css('display','none');
+        $('#step_checkout_3').css('display','none');
+        $('#step_checkout_'+step).css('display','block');
+    })
 });

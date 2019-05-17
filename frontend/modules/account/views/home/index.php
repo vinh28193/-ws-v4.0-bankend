@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this \yii\web\View */
-
+use yii\helpers\Html;
 
 ?>
 <div class="row">
@@ -60,9 +60,9 @@
                         <?php if ($orders) {
                             foreach ($orders as $order) { ?>
                                 <tr>
-                                    <td><a href="#"><?= $order->ordercode ?></a> </td>
-                                    <td>Kho Việt Nam</td>
-                                    <td>17:34 04/04/2019</td>
+                                    <td><a href="#"><?php echo Html::a($order->ordercode, ['/account/order/' . $order->id . '.html']); ?></a> </td>
+                                    <td><?= $order->current_status ?></td>
+                                    <td><?= Yii::$app->getFormatter()->asDatetime($order->updated_at) ?></td>
                                 </tr>
                             <?php }} else {?>
                             <tr>
@@ -89,27 +89,46 @@
             <div class="be-body style-croll" style="height: 15em; overflow-y: scroll;">
                 <ul class="new-update">
                     <?php foreach ($orders as $order) {
-                        $chats = \common\modelsMongo\ChatMongoWs::find()->where([
+                        $chat = \common\modelsMongo\ChatMongoWs::find()->where([
                                 'and',
                             ['Order_path' => $order->ordercode],
                             ['type_chat' => 'WS_CUSTOMER']
-                        ])->all();
-                       $total = count($chats);
+                        ])->orderBy(['created_at' => SORT_DESC])->one();
                         ?>
                         <li>
-                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#"><?= $order->ordercode ?></a> vào lúc 10:47 23/01/2019</p>
-                            <?php if ($chats) { foreach ($chats as $chat) { ?>
+                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#" data-toggle="modal" data-target="#exampleModalCenter"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?> </p>
+                            <?php if ($chat) {  ?>
                             <div class="mess-content mb-1">
                                 <i class="logo"><img src="../img/weshop_small_logo.png" alt=""/></i>
                                 <span><?= $chat->message ?></span>
                             </div>
-                            <?php }} ?>
+                            <?php } ?>
                         </li>
                     <?php } ?>
-                    <?php if ($total == 0) { ?>
+                    <?php if (!$chat) { ?>
                         <div class="no-data text-orange text-center pt-5">Chưa có thông tin mới</div>
                     <?php } ?>
                 </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>

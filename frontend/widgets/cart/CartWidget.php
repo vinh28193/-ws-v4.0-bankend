@@ -4,6 +4,7 @@
 namespace frontend\widgets\cart;
 
 use common\components\cart\CartSelection;
+use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
 
 
@@ -91,7 +92,7 @@ class CartWidget extends Widget
             'name' => $product->item_name,
             'type' => $product->type,
             'originLink' => $product->item_origin_url,
-            'link' => '#',
+            'link' => WeshopHelper::generateUrlDetail($product->type,$product->item_name,$product->item_id, $product->item_sku,$sellerId),
             'imageSrc' => $imageSrc,
             'provider' => $provider,
             'variation' => $product->current_variation,

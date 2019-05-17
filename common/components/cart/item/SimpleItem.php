@@ -40,7 +40,7 @@ class SimpleItem extends BaseCartItem
 
         $form = new ProductDetailFrom($params);
         /** @var $product false | \common\products\BaseProduct BaseProduct */
-        if (($product = $form->detail(false)) === false) {
+        if (($product = $form->detail()) === false) {
             Yii::info($form->getFirstErrors(), "add_to_cart");
             return [false, $form->getFirstErrors()];
 

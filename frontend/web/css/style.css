@@ -5307,6 +5307,6 @@ a {
 .detail-block .thumb-slider .zoomWrapper{
   width: auto !important;
 }
-.name{
-  white-space: nowrap;
-}
+/*.name{*/
+/*  white-space: nowrap;*/
+/*}*/

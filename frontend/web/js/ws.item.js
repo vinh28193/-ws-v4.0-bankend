@@ -165,6 +165,8 @@
                                                 url += '?sku=' + queryParams.sku;
                                             }
                                         }
+                                        $('#quantity').val(1);
+                                        $('#quantity').css('width','30px');
                                         window.history.pushState(url, url, url);
                                     }
                                     updatePrice($item, content, data.ajaxed)
