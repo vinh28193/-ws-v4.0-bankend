@@ -172,10 +172,14 @@ ws.payment = (function ($) {
                             var type = data.provider.toUpperCase() || null;
                             if (type === 'WALLET') {
                                 var $otp = $('#otp-confirm');
-                                $otp.modal('show');
-                                $otp.on("show.bs.modal", function (e) {
-                                    $(this).find(".modal-body").load(data.checkoutUrl);
-                                });
+                                if ($otp.data('bs.modal').isShown) {
+                                    $otp.find('#modalContent').load(data.checkoutUrl);
+                                    return false;
+                                } else {
+                                    //if modal isn't open; open it and load content
+                                    $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
+                                    return false;
+                                }
                             }
                         } else {
                             $('span#transactionCode').html(code);

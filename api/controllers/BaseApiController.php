@@ -139,10 +139,12 @@ class BaseApiController extends \yii\rest\Controller
                 Yii::$app->user->identityClass = 'common\models\User';
                 $this->type_user = 'user';
                 break;
+            /*
             case 'customer':
                 Yii::$app->user->identityClass = 'common\models\Customer';
                 $this->type_user = 'customer';
                 break;
+            */
             default:
                 $this->type_user = 'user';
                 Yii::$app->user->identityClass = 'common\models\User';
