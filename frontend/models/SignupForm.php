@@ -49,6 +49,24 @@ class SignupForm extends Model
     }
 
     /**
+     * Validates the phone exits.
+     * This method serves as the inline validation for phone.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validatePhone($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
+            if ($user) {
+                // $this->addError($attribute, 'Phone number Exits.  please enter another number.');
+                $this->addError($attribute, 'số điện thoại đã được sử dụng vui lòng nhập số khác.');
+            }
+        }
+    }
+
+    /**
      * Signs user up.
      *
      * @return User|null the saved model or null if saving fails
@@ -83,7 +101,9 @@ class SignupForm extends Model
 
         $user->setPassword($this->password);
         $user->generateAuthKey();
+        return $user->save() ? $user : null;
 
+        /*
         if ($user->save()) {
             $auth = new Auth([
                 'user_id' => $user->id,
@@ -94,14 +114,29 @@ class SignupForm extends Model
             if ($auth->save()) {
                 Yii::$app->user->login($user, 0);
             } else {
-                Yii::$app->getSession()->setFlash('error', 'Error save Auth');
+               // Yii::$app->getSession()->setFlash('error', 'Error save Auth');
             }
 
         } else {
             Yii::$app->getSession()->setFlash('error', [
-                Yii::t('app', 'Unable to save Customer : {errors}'),
+                Yii::t('app', 'Unable to save User : {errors}'),
             ]);
         }
+        */
+    }
+
+    /**
+     * Finds user by [[phone]]
+     *
+     * @return User|null
+     */
+    protected function getUser()
+    {
+        if ($this->_user === null) {
+            $this->_user = User::findByPhone($this->phone);
+        }
+
+        return $this->_user;
     }
 
     /**
@@ -120,10 +155,10 @@ class SignupForm extends Model
         if (!$user) {
             return false;
         }
-
+        Yii::info($user, 'Send email register new');
         return Yii::$app->mailer
             ->compose(
-                ['html' => 'accounts/verify_create_done', 'text' => 'passwordResetToken-text'],
+                ['html' => 'accounts/verify_create_done-html', 'text' => 'accounts/verify_create_done-text'],
                 ['user' => $user]
             )
             ->setFrom([Yii::$app->params['supportEmail'] => 'Weshop Việt Nam robot'])

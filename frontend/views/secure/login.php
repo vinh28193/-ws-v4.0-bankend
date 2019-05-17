@@ -48,7 +48,7 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
     <div class="check-info">
         <?= $form->field($model, 'rememberMe')->checkbox(['class' => 'form-check-input']) ?>
         <div style="color:#999;margin:1em 0">
-            <?= Html::a('Quên mật khẩu ?', ['secure/request-password-reset']) ?>
+            <?= Html::a('Nếu bạn quên mật khẩu, bạn có thể khôi phục nó ?', ['secure/request-password-reset']) ?>
         </div>
     </div>
 
