@@ -28,8 +28,9 @@ class SignupForm extends Model
         return [
             ['last_name', 'trim'],
             ['last_name', 'required'],
+            [['last_name', 'first_name'], 'match', 'pattern' => '/[a-zA-Z]/', 'message' => 'Username does not enter special characters'],
             ['last_name', 'string', 'min' => 2, 'max' => 255],
-            ['phone', 'string', 'min' => 10, 'max' => 15],
+            ['phone', 'string', 'min' => 9, 'max' => 15],
             // ['phone', 'countryValue' => 'US'],
 
             ['email', 'trim'],
@@ -40,6 +41,7 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 8,'max'=>72],
+            ['password', 'match', 'pattern' => '/[0-9a-zA-Z]/', 'message' => 'Password does not enter special characters'],
 
             ['replacePassword', 'compare', 'compareAttribute' => 'password'],
 

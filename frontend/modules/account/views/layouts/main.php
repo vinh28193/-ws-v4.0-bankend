@@ -45,7 +45,7 @@ UserBackendAsset::register($this);
 ?>
 <div class="wrapper backend">
     <div class="navbar-2 be-header">
-        <a href="#" class="be-logo"><img src="../img/weshop-logo-vn.png" alt=""/></a>
+        <a href="/" class="be-logo"><img src="../img/weshop-logo-vn.png" alt=""/></a>
         <ul class="be-nav">
             <?php if (Yii::$app->user->isGuest) { ?>
                 <li>
