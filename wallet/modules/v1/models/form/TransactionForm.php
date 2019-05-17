@@ -78,7 +78,7 @@ class TransactionForm extends Model
     public function init()
     {
         parent::init();
-        if(ArrayHelper::isIn($this->getWalletClient()->getId(), [1,3])){
+        if (ArrayHelper::isIn($this->getWalletClient()->getId(), [1, 3])) {
             $this->merchant_id = 4;
         }
     }
@@ -107,14 +107,14 @@ class TransactionForm extends Model
 
     public function rules()
     {
-        return ArrayHelper::merge(parent::rules(),[
-            [['transaction_code','total_amount'],'required'],
-            [['merchant_id','total_amount'],'integer'],
-            [['transaction_code','payment_method','payment_provider','bank_code'],'string','max' => 255],
-            [['transaction_code','total_amount'],'filter', 'filter' => 'trim'],
-            ['transaction_code','filter','filter' => '\yii\helpers\Html::encode'],
-            ['type','validateType'],
-            ['otp_receive_type','validateOptReceiveType'],
+        return ArrayHelper::merge(parent::rules(), [
+            [['transaction_code', 'total_amount'], 'required'],
+            [['merchant_id', 'total_amount'], 'integer'],
+            [['transaction_code', 'payment_method', 'payment_provider', 'bank_code'], 'string', 'max' => 255],
+            [['transaction_code', 'total_amount'], 'filter', 'filter' => 'trim'],
+            ['transaction_code', 'filter', 'filter' => '\yii\helpers\Html::encode'],
+            ['type', 'validateType'],
+            ['otp_receive_type', 'validateOptReceiveType'],
         ]);
     }
 
@@ -131,7 +131,7 @@ class TransactionForm extends Model
         if (!$this->hasErrors()) {
             $walletClient = $this->walletClient;
             if (!$walletClient->crossCheckBalance($this->total_amount)) {
-                $this->addError($attribute, Yii::t('wallet','Amount greater than {balance}',[
+                $this->addError($attribute, Yii::t('wallet', 'Amount greater than {balance}', [
                     'balance' => $walletClient->getBalance(),
                 ]));
             }
@@ -145,15 +145,16 @@ class TransactionForm extends Model
      */
     public function validateType($attribute, $params, $validator)
     {
-        if(!$params){
+        if (!$params) {
             $params = [WalletTransaction::TYPE_PAY_ORDER];
         }
         if (!$this->hasErrors()) {
             if (!ArrayHelper::isIn($this->$attribute, $params)) {
-                $this->addError($attribute,Yii::t('wallet','type must be PAY_ORDER') );
+                $this->addError($attribute, Yii::t('wallet', 'type must be PAY_ORDER'));
             }
         }
     }
+
     /**
      * @param $attribute string the attribute currently being validated
      * @param $params array the additional name-value pairs given in the rule
@@ -161,12 +162,16 @@ class TransactionForm extends Model
      */
     public function validateOptReceiveType($attribute, $params, $validator)
     {
-        if(!$params){
-            $params = [WalletTransaction::VERIFY_RECEIVE_TYPE_PHONE, WalletTransaction::VERIFY_RECEIVE_TYPE_EMAIL];
+        if (!$params) {
+            $params = [
+                WalletTransaction::VERIFY_RECEIVE_TYPE_PHONE,
+                WalletTransaction::VERIFY_RECEIVE_TYPE_EMAIL,
+                WalletTransaction::VERIFY_RECEIVE_TYPE_NONE
+            ];
         }
         if (!$this->hasErrors()) {
             if (!ArrayHelper::isIn($this->$attribute, $params)) {
-                $this->addError($attribute, Yii::t('wallet','{attribute} must be either one of 0:type phone or 1:type email',[
+                $this->addError($attribute, Yii::t('wallet', '{attribute} must be either one of 0:type phone or 1:type email', [
                     'attribute' => $attribute
                 ]));
             }
@@ -181,10 +186,10 @@ class TransactionForm extends Model
      */
     public function makeTransaction()
     {
-        if(!$this->validate()){
-            return ['code' => ResponseCode::INVALID ,'message' => $this->getFirstErrors(),'data' => []];
+        if (!$this->validate()) {
+            return ['code' => ResponseCode::INVALID, 'message' => $this->getFirstErrors(), 'data' => []];
         }
-         if(ArrayHelper::isIn($this->getWalletClient()->getId(), [1,3])){
+        if (ArrayHelper::isIn($this->getWalletClient()->getId(), [1, 3])) {
             $this->merchant_id = 4;
         }
         $transaction = new WalletTransaction();
@@ -195,20 +200,20 @@ class TransactionForm extends Model
         $transaction->payment_method = $this->payment_method;
         $transaction->payment_provider_name = $this->payment_provider;
         $transaction->payment_bank_code = $this->bank_code;
-        $transaction->verify_receive_type = WalletTransaction::VERIFY_RECEIVE_TYPE_PHONE;
+        $transaction->verify_receive_type = WalletTransaction::VERIFY_RECEIVE_TYPE_NONE;
         if ($this->otp_receive_type) {
             $transaction->verify_receive_type = $this->otp_receive_type;
         }
         $transaction->totalAmount = $this->total_amount;
         $result = $transaction->createWalletTransaction();
         if ($result['code'] == ResponseCode::SUCCESS) {
-            list($queue,$code) = array_values($result['data']);
+            list($queue, $code) = array_values($result['data']);
             $result['data'] = $code;
-            if($queue === true){
+            if ($queue === true) {
                 $changeBalanceForm = new ChangeBalanceForm;
                 $changeBalanceForm->amount = $transaction->getTotalAmount();
                 $changeBalanceForm->walletTransactionId = $transaction->getPrimaryKey();
-                if(($rs = $changeBalanceForm->freeze())['success'] === false){
+                if (($rs = $changeBalanceForm->freeze())['success'] === false) {
                     $result['message'] = $rs['message'];
                     $result['data'] = $rs['data'];
                 }
