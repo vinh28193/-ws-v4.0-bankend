@@ -3,6 +3,7 @@
 
 namespace frontend\controllers;
 
+use common\models\User;
 use Yii;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
@@ -145,7 +146,10 @@ class SecureController extends FrontendController
      * @throws BadRequestHttpException
      */
     public function actionVerify($token)
-    {}
+    {
+        $user = new User();
+        $token_Veriy_User_new = $user->generateTokenVerifiyUserCreateNew();
+    }
 
     /**
      * Resets password.
