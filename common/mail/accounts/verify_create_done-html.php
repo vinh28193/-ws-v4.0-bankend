@@ -9,8 +9,8 @@ if (YII_ENV == 'dev') {
     $domain = 'https://weshop.com.vn';
 }
 
+//$verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token' => $user->auth_key]);
 $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token' => $user->auth_key]);
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

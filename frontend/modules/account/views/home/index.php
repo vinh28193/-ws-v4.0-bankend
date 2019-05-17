@@ -2,7 +2,7 @@
 
 /* @var $this \yii\web\View */
 use yii\helpers\Html;
-
+$chat = false;
 ?>
 <div class="row">
     <div class="col-md-3">
