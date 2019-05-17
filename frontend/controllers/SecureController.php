@@ -125,9 +125,9 @@ class SecureController extends FrontendController
         Yii::info('RequestPasswordReset');
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            Yii::info('success', 'Check your email for further instructions.');
+            Yii::info('success', 'Vui lòng kiểm tra email để lấy link reset mật khẩu tài khoản.');
             $model->sendEmail();
-            Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+            Yii::$app->session->setFlash('success', 'Vui lòng kiểm tra email để lấy link reset mật khẩu tài khoản.');
                 //return $this->goHome();
             return Yii::$app->getResponse()->redirect('/secure/login');
         }
