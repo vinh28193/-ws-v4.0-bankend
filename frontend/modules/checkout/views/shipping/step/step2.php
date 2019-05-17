@@ -92,7 +92,7 @@ use yii\helpers\Url;
                 echo $form->field($shippingForm, 'receiver_province_id', [
                     'template' => '<i class="icon city"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->dropDownList($provinces);
+                ])->dropDownList(array_merge([['Chọn thành phố']],$provinces));
 
                 echo $form->field($shippingForm, 'receiver_district_id', [
                     'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
