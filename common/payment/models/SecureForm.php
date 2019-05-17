@@ -9,10 +9,10 @@ use yii\base\Model;
 class SecureForm extends Model
 {
 
-    public $loginId;
+    public $email;
     public $password;
-    public $isNew = 'yes';
     public $rememberMe = true;
+    public $isNew = 'yes';
 
 
 }

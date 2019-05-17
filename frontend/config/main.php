@@ -12,6 +12,7 @@ return [
     'bootstrap' => ['log'],
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'frontend\controllers',
+    'defaultRoute' => 'cms/home',
     'components' => [
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
@@ -30,9 +31,9 @@ return [
                     'class' => 'common\payment\providers\wallet\WalletClient',
                     'clientId' => 'testclient',
                     'clientSecret' => 'testpass',
-                    'authUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/authorize',
-                    'tokenUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/token',
-                    'apiBaseUrl' => 'http://weshop-4.0.wallet.vn/v1'
+                    'authUrl' => 'http://wallet.weshop-v4.local.vn/v1/rest/authorize',
+                    'tokenUrl' => 'http://wallet.weshop-v4.local.vn/v1/rest/token',
+                    'apiBaseUrl' => 'http://wallet.weshop-v4.local.vn/v1'
                 ]
 
             ],

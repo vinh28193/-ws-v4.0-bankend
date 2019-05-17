@@ -48,12 +48,12 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
     <div class="check-info">
         <?= $form->field($model, 'rememberMe')->checkbox(['class' => 'form-check-input']) ?>
         <div style="color:#999;margin:1em 0">
-            <?= Html::a('Quên mật khẩu ?', ['secure/request-password-reset']) ?>
+            <?= Html::a('Nếu bạn quên mật khẩu, bạn có thể khôi phục nó ?', ['secure/request-password-reset']) ?>
         </div>
     </div>
 
-    <div class="form-group">
-        <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+    <div class="form-group" style="width: 100%">
+        <?= Html::submitButton('Đăng nhập', ['class' => 'btn btn-warning text-white sty-btn', 'name' => 'login-button']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -1,14 +1,21 @@
 <?php
+/* @var $this yii\web\View */
+/* @var $form yii\bootstrap\ActiveForm */
+/* @var $model frontend\models\LoginForm */
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 use yii\authclient\widgets\AuthChoice;
+/* @var yii\web\View $this */
+
+$this->title = 'Đăng kí';
+$session = Yii::$app->session;
+//$flashes = $session->getAllFlashes();
+
+echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 ?>
 
-<div class="title">
-    <span>Đăng ký</span>
-    <i class="wall"></i>
-    <?php echo Html::a('Đăng nhập', ['/secure/login']); ?>
-</div>
+<p> Vui lòng điền vào các trường sau để đăng kí tài khoản :</p>
+
 <?php $form = ActiveForm::begin(['id' => 'form-signup', 'options' => [
     'class' => 'payment-form'
 ]
@@ -36,7 +43,7 @@ use yii\authclient\widgets\AuthChoice;
 <?= $form->field($model, 'replacePassword', ['template' => "<i class=\"icon password\"></i>{input}\n{hint}\n{error}"])->passwordInput(['placeholder' => "Nhập lại mật khẩu"]) ?>
 </div>
 <div class="form-group">
-    <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+    <?= Html::submitButton('Đăng ký', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
 </div>
 
 <?php ActiveForm::end(); ?>
@@ -50,5 +57,8 @@ use yii\authclient\widgets\AuthChoice;
             <?php endforeach; ?>
         </div>
         <?php AuthChoice::end(); ?>
+    </div>
+    <div   class="text-center" style="color:#999;margin:1em 0">
+        Nếu bạn quên mật khẩu, bạn có thể <?= Html::a('khôi phục nó', ['secure/request-password-reset']) ?>.
     </div>
 </div>

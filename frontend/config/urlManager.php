@@ -52,6 +52,8 @@ return [
         'payment/<merchant:[^/]+>/return.html' => 'payment/payment/return',
         'otp/<code:[^/]+>/verify.html' => 'payment/payment/otp-verify',
         //account
+        'GET login.html' => 'secure/login',
+        'GET signup.html' => 'secure/register',
         'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
     ]
 ];

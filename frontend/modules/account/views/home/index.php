@@ -1,8 +1,8 @@
 <?php
 
 /* @var $this \yii\web\View */
-
-
+use yii\helpers\Html;
+$chat = false;
 ?>
 <div class="row">
     <div class="col-md-3">
@@ -60,9 +60,9 @@
                         <?php if ($orders) {
                             foreach ($orders as $order) { ?>
                                 <tr>
-                                    <td><a href="#"><?= $order->ordercode ?></a> </td>
-                                    <td>Kho Việt Nam</td>
-                                    <td>17:34 04/04/2019</td>
+                                    <td><a href="#"><?php echo Html::a($order->ordercode, ['/account/order/' . $order->id . '.html']); ?></a> </td>
+                                    <td><?= $order->current_status ?></td>
+                                    <td><?= Yii::$app->getFormatter()->asDatetime($order->updated_at) ?></td>
                                 </tr>
                             <?php }} else {?>
                             <tr>
@@ -89,27 +89,93 @@
             <div class="be-body style-croll" style="height: 15em; overflow-y: scroll;">
                 <ul class="new-update">
                     <?php foreach ($orders as $order) {
-                        $chats = \common\modelsMongo\ChatMongoWs::find()->where([
+                        $chat = \common\modelsMongo\ChatMongoWs::find()->where([
                                 'and',
                             ['Order_path' => $order->ordercode],
                             ['type_chat' => 'WS_CUSTOMER']
-                        ])->all();
-                       $total = count($chats);
+                        ])->orderBy(['created_at' => SORT_DESC])->one();
                         ?>
                         <li>
-                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#"><?= $order->ordercode ?></a> vào lúc 10:47 23/01/2019</p>
-                            <?php if ($chats) { foreach ($chats as $chat) { ?>
+                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#" data-toggle="modal" data-target="#exampleModalCenter"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?> </p>
+                            <?php if ($chat) {  ?>
                             <div class="mess-content mb-1">
                                 <i class="logo"><img src="../img/weshop_small_logo.png" alt=""/></i>
                                 <span><?= $chat->message ?></span>
                             </div>
-                            <?php }} ?>
+                            <?php } ?>
                         </li>
                     <?php } ?>
-                    <?php if ($total == 0) { ?>
+                    <?php if (!$chat) { ?>
                         <div class="no-data text-orange text-center pt-5">Chưa có thông tin mới</div>
                     <?php } ?>
                 </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content modal-lg">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="card m-b-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12 p-0">
+                                    <div class="modal-body p-0">
+                                        <div class="ng-star-inserted">
+                                            <div class="col-md-12 m-0 col-xl-12 chat">
+                                                <div class="card m-0 p-0">
+                                                    <div class="card-header msg_head bg-info">
+                                                        <div class="d-flex bd-highlight">
+                                                            <h3 class="text-white">Trao đổi với khách hàng</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body msg_card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+                                                        <div>
+                                                            <div>
+                                                                <div class="d-flex justify-content-start mb-4">
+                                                                    <div class="img_cont_msg">
+                                                                        <img src="../img/weshop_small_logo.png"
+                                                                             class="rounded-circle user_img_msg"  width="54px" height="15px">
+                                                                    </div>
+                                                                    <div>
+                                                                        <span class="msg_cotainer_send "></span><br>
+                                                                        <div class="">
+                                                                            <span class="mr-2">weshop</span>
+                                                                            <span  class="text-darkgray">12345</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <div class="card-body">
+                                                            <div class="input-group">
+            <textarea name="" rows="4" class="form-control type_msg"
+                      placeholder="Nhập gửi nội dung trao đổi.
+Nhấn Shift + Enter để xuống dòng.
+Enter để gửi"></textarea>
+                                                                <div class="input-group-btn">
+                                                                    <button style="height: 80px;" class="btn btn-default">Sent</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-right mt-2">
+                                    <button class="btn btn-danger btn-sm" data-dismiss="modal" (click)="offModeChat()">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

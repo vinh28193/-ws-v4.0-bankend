@@ -28,8 +28,10 @@ class SignupForm extends Model
         return [
             ['last_name', 'trim'],
             ['last_name', 'required'],
+            [['last_name', 'first_name'], 'match', 'pattern' => '/[a-zA-Z]/', 'message' => 'Username does not enter special characters'],
             ['last_name', 'string', 'min' => 2, 'max' => 255],
             ['phone', 'string', 'min' => 10, 'max' => 15],
+            ['phone', 'required'],
             // ['phone', 'countryValue' => 'US'],
 
             ['email', 'trim'],
@@ -40,12 +42,31 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 8,'max'=>72],
+            ['password', 'match', 'pattern' => '/[0-9a-zA-Z]/', 'message' => 'Password does not enter special characters'],
 
             ['replacePassword', 'compare', 'compareAttribute' => 'password'],
 
             ['first_name', 'trim'],
             ['first_name', 'required'],
         ];
+    }
+
+    /**
+     * Validates the phone exits.
+     * This method serves as the inline validation for phone.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validatePhone($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
+            if ($user) {
+                // $this->addError($attribute, 'Phone number Exits.  please enter another number.');
+                $this->addError($attribute, 'số điện thoại đã được sử dụng vui lòng nhập số khác.');
+            }
+        }
     }
 
     /**
@@ -60,6 +81,7 @@ class SignupForm extends Model
         }
         @date_default_timezone_set('Asia/Ho_Chi_Minh');
         $user = new User([
+            'phone'=> $this->phone,
             'last_name' => $this->last_name,
             'first_name' => $this->first_name,
             'username' => $this->email,
@@ -72,7 +94,7 @@ class SignupForm extends Model
             'usable_xu' => 0 ,
             'last_revenue_xu' => 0 ,
             'email_verified' => 1 ,  // Nếu là Google Email lấy được rồi nên coi như là dã xác nhận
-            'phone_verified' => 0, // Vì là đăng kí qua Google + Facebook nên chưa xác nhân hoặc lấy được số đt của khách hàng
+            'phone_verified' => 1, // đăng kí trực tiếp nên xác nhận phone là đúng luôn chỉ còn vấn đề @ToDo Phone đúng đinh dạng Việt Nam
             'gender' => 0 ,
             'type_customer' => 1 , // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
             'avatar' => null ,
@@ -83,7 +105,9 @@ class SignupForm extends Model
 
         $user->setPassword($this->password);
         $user->generateAuthKey();
+        return $user->save() ? $user : null;
 
+        /*
         if ($user->save()) {
             $auth = new Auth([
                 'user_id' => $user->id,
@@ -94,14 +118,29 @@ class SignupForm extends Model
             if ($auth->save()) {
                 Yii::$app->user->login($user, 0);
             } else {
-                Yii::$app->getSession()->setFlash('error', 'Error save Auth');
+               // Yii::$app->getSession()->setFlash('error', 'Error save Auth');
             }
 
         } else {
             Yii::$app->getSession()->setFlash('error', [
-                Yii::t('app', 'Unable to save Customer : {errors}'),
+                Yii::t('app', 'Unable to save User : {errors}'),
             ]);
         }
+        */
+    }
+
+    /**
+     * Finds user by [[phone]]
+     *
+     * @return User|null
+     */
+    protected function getUser()
+    {
+        if ($this->_user === null) {
+            $this->_user = User::findByPhone($this->phone);
+        }
+
+        return $this->_user;
     }
 
     /**
@@ -120,15 +159,15 @@ class SignupForm extends Model
         if (!$user) {
             return false;
         }
-
+        Yii::info($user, 'Send email register new');
         return Yii::$app->mailer
             ->compose(
-                ['html' => 'accounts/verify_create_done', 'text' => 'passwordResetToken-text'],
+                ['html' => 'accounts/verify_create_done-html', 'text' => 'accounts/verify_create_done-text'],
                 ['user' => $user]
             )
             ->setFrom([Yii::$app->params['supportEmail'] => 'Weshop Việt Nam robot'])
             ->setTo($this->email)
-            ->setSubject('REGISTER ACCOUNT SƯCCESS! ' . Yii::$app->name)
+            ->setSubject('REGISTER ACCOUNT SUCCESS! WESHOP VIỆT NAM')
             ->send();
     }
 }

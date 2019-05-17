@@ -6,6 +6,8 @@ use common\payment\models\SecureForm;
 
 /* @var yii\web\View $this */
 $model = new SecureForm();
+$modelLogin = new \frontend\models\LoginForm();
+$modelSignup = new \frontend\models\SignupForm();
 
 $formId = 'secureForm';
 $isNewCheckBox = Html::getInputName($model, 'isNew');
@@ -44,47 +46,50 @@ $this->registerJs($js);
     </ul>
     <div class="step-1-content">
         <div class="title">Nhập số điện thoại/ Email để tiếp tục thanh toán</div>
-        <?php
-        $form = ActiveForm::begin([
-            'options' => [
-                'class' => 'auth-form',
-                'id' => $formId,
-            ],
-
-        ]);
-        echo $form->field($model, 'loginId', [
-            'template' => '<i class="icon user"></i>{input}{hint}{error}',
-            'options' => [
-                'class' => 'form-group'
-            ]
-        ])
-            ->textInput(['placeholder' => 'Email hoặc số điện thoại']);
-        echo $form->field($model, 'isNew', [
-            'template' => '{input}{hint}{error}',
-            'options' => [
-                'class' => 'check-member'
-            ]
-        ])->radioList([
-            'yes' => 'Đã là thành viên Weshop',
-            'no' => 'Tôi là khách hàng mới'
-        ]);
-
-        echo $form->field($model, 'password', [
-            'template' => '<i class="icon password"></i>{input}{hint}{error}',
-            'options' => [
-                'class' => 'form-group'
-            ]
-        ])->textInput(['placeholder' => 'Email hoặc số điện thoại']);
-
-        echo $form->field($model, 'rememberMe', [
-            'template' => '{input}{hint}{error}',
-            'options' => [
-                'class' => 'check-info'
-            ]
-        ])->checkbox();
-        echo Html::submitButton('Đăng nhập để mua hàng', ['class' => 'btn btn-login', 'style' => 'margin-top: 0.75rem;']);
-        ActiveForm::end();
-        ?>
+        <div class="auth-form">
+            <div class="form-group">
+                <i class="icon email"></i>
+                <input type="text" class="form-control" name="email" placeholder="Email">
+            </div>
+            <div class="check-member">
+                <div class="form-group form-check">
+                    <input type="radio" class="form-check-input" id="member" value="member" name="check-member" checked>
+                    <label class="form-check-label" for="member">Đã là thành viên Weshop</label>
+                </div>
+                <div class="form-group form-check">
+                    <input type="radio" class="form-check-input" id="new-member" value="new-member" name="check-member">
+                    <label class="form-check-label" for="new-member">Tôi là khách hàng mới</label>
+                </div>
+            </div>
+            <div class="form-group" data-merge="signup-form" style="display: none">
+                <i class="icon user"></i>
+                <input type="text" class="form-control"  name="first_name" placeholder="Tên">
+            </div>
+            <div class="form-group" data-merge="signup-form" style="display: none">
+                <i class="icon user"></i>
+                <input type="text" class="form-control"   name="last_name" placeholder="Họ">
+            </div>
+            <div class="form-group" data-merge="signup-form" style="display: none">
+                <i class="icon phone"></i>
+                <input type="text" class="form-control " name="phone" placeholder="Số điện thoại">
+            </div>
+            <div class="form-group">
+                <i class="icon password"></i>
+                <input type="password" class="form-control" name="password" placeholder="Mật khẩu">
+            </div>
+            <div class="form-group" data-merge="signup-form" style="display: none">
+                <i class="icon password"></i>
+                <input type="password" class="form-control"  name="re-password" placeholder="Nhập lại mật khẩu">
+            </div>
+            <div class="check-info">
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="remember" checked>
+                    <label class="form-check-label" for="remember">Ghi nhớ</label>
+                </div>
+                <a href="#" class="forgot">Quên mật khẩu?</a>
+            </div>
+            <button type="button" id="loginToCheckout" class="btn btn-login">Đăng nhập để mua hàng</button>
+        </div>
         <div class="other-login">
             <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
             <div class="social-button">

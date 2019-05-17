@@ -77,7 +77,8 @@ class SecureController extends FrontendController
         $model = new LoginForm();
         $model->rememberMe = false; // Mặc định không ghi nhớ
         if ($model->load(Yii::$app->request->post()) && $model->login() ) {
-             return $this->goHome();
+            $url_rel = Yii::$app->request->get('rel','/');
+             return Yii::$app->getResponse()->redirect($url_rel);
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -97,16 +98,13 @@ class SecureController extends FrontendController
 
     public function actionRegister()
     {
+        Yii::info('register new');
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-                if ($model->sendEmail()) {
-                    Yii::$app->getUser()->login($user);
-                    return $this->goHome();
-                } else {
-                    Yii::$app->session->setFlash('error', 'Sorry, we are unable send email address resgister.');
-                }
+                $model->sendEmail();
+                if(Yii::$app->getUser()->login($user)){ return $this->goHome(); }
             }
         }
 
@@ -126,23 +124,30 @@ class SecureController extends FrontendController
 
     public function actionRequestPasswordReset()
     {
+        Yii::info('RequestPasswordReset');
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            Yii::info('success', 'Check your email for further instructions.');
+            $model->sendEmail();
             Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-                @sleep(5); // sleep for 10 seconds
-                return $this->goHome();
-            } else {
-                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
-            }
+                //return $this->goHome();
+            return Yii::$app->getResponse()->redirect('/secure/login');
         }
-
         return $this->render('requestPasswordReset', [
             'model' => $model,
         ]);
 
     }
+
+    // ToDo Làm tiếp sau nay khi có thời gian
+    /** https://weshop-v4.front-end-ws.local.vn/secure/verify?token=ZIieKz6RnbB8Bp0MfQcWrX7xId_v5VhF
+     * Verify Account Register New
+     * @param $token
+     * @return string|\yii\web\Response
+     * @throws BadRequestHttpException
+     */
+    public function actionVerify($token)
+    {}
 
     /**
      * Resets password.
@@ -153,6 +158,7 @@ class SecureController extends FrontendController
      */
     public function actionResetPassword($token)
     {
+        Yii::info('ResetPassword.');
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidParamException $e) {
@@ -161,7 +167,7 @@ class SecureController extends FrontendController
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
             Yii::$app->session->setFlash('success', 'New password saved.');
-
+            Yii::info('success', 'ResetPassword.');
             return $this->goHome();
         }
 

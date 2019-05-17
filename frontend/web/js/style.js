@@ -161,5 +161,24 @@ $( document ).ready(function() {
         $('.navbar-2 .navbar-header ul li .dropdown-menu ul li').removeClass('open');
         $(this).addClass('open');
     });
+    $('.checkout-step li').click(function () {
+        var step = $(this)[0].firstElementChild.innerHTML;
+        if($('#step_checkout_'+step).length === 1){
+            $('#step_checkout_1').css('display','none');
+            $('#step_checkout_2').css('display','none');
+            $('#step_checkout_3').css('display','none');
+            $('#step_checkout_'+step).css('display','block');
+        }
+    });
+    $('input[name=check-member]').click(function () {
+        var value = $(this).val();
+        if(value === 'new-member'){
+            $('div[data-merg=signup-form]').css('display','block');
+        }else {
+            $('div[data-merg=signup-form]').css('display','none');
+        }
+    });
+    $('#loginToCheckout').click(function () {
 
+    });
 });
