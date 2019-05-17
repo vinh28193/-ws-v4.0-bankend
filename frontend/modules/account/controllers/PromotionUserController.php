@@ -13,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * PromotionUserController implements the CRUD actions for PromotionUser model.
  */
-class PromotionUserController extends Controller
+class PromotionUserController extends BaseAccountController
 {
     /**
      * {@inheritdoc}

@@ -16,18 +16,11 @@ if(Yii::$app->user->isGuest){?>
         <?= $this->render('step/step1', ['activeStep' => $activeStep]); ?>
     </div>
 <?php }else{ ?>
-    <div id="step_checkout_2" style="display: <?= Yii::$app->user->isGuest ? 'none' : 'block' ?>">
+    <div style="display: <?= Yii::$app->user->isGuest ? 'none' : 'block' ?>">
         <?= $this->render('step/step2', [
             'activeStep' => $activeStep,
             'shippingForm' => $shippingForm,
             'provinces' => $provinces,
-            'payment' => $payment,
-        ]); ?>
-    </div>
-    <div id="step_checkout_3" style="display: none">
-        <?= $this->render('step/step3', [
-            'activeStep' => $activeStep,
-            'shippingForm' => $shippingForm,
             'payment' => $payment,
         ]); ?>
     </div>

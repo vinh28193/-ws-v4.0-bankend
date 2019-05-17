@@ -87,6 +87,8 @@ ws.payment = (function ($) {
             $('.checkout-step li').click(function () {
                 var step = $(this)[0].firstElementChild.innerHTML;
                 if($('#step_checkout_'+step).length === 1){
+                    $('.checkout-step li').removeClass('active');
+                    $(this).addClass('active');
                     $('#step_checkout_1').css('display','none');
                     $('#step_checkout_2').css('display','none');
                     $('#step_checkout_3').css('display','none');
@@ -162,7 +164,11 @@ ws.payment = (function ($) {
         },
         selectMethod: function (providerId, methodId, bankCode) {
             console.log('selected providerId:' + providerId + ' methodId:' + methodId + ' bankCode:' + bankCode);
-            if (methodId == 25) {
+            pub.payment.payment_provider = providerId;
+            pub.payment.payment_method = methodId;
+            pub.payment.payment_bank_code = bankCode;
+            if (methodId === 25) {
+                bankCode = 'VCB';
                 pub.methodChange(true);
             }
             pub.payment.payment_provider = providerId;
@@ -305,14 +311,7 @@ ws.payment = (function ($) {
                             var type = data.provider.toUpperCase() || null;
                             if (type === 'WALLET') {
                                 var $otp = $('#otp-confirm');
-                                if ($otp.data('bs.modal').isShown) {
-                                    $otp.find('#modalContent').load(data.checkoutUrl);
-                                    return false;
-                                } else {
-                                    //if modal isn't open; open it and load content
-                                    $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
-                                    return false;
-                                }
+                                $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
                             }
                         } else {
                             ws.loading(false);

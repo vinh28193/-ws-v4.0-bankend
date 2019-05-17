@@ -54,10 +54,12 @@ return [
         'payment/<merchant:[^/]+>/return.html' => 'payment/payment/return',
         'otp/<code:[^/]+>/verify.html' => 'payment/payment/otp-verify',
         //account
-
+        'my-weshop.html' => 'account/home',
         'login.html' => 'secure/login',
         'signup.html' => 'secure/register',
         'logout.html' => 'secure/logout',
+        'my-weshop/wallet.html' => 'account/wallet/index',
+        'my-weshop/<controller>/<action>.html' => 'account/<controller>/<action>'
 //        'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
     ]
 ];

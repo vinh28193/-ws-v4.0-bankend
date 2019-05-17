@@ -1,6 +1,11 @@
 <?php
+/**
+ * @var $this \yii\web\View
+ * @var $wallet array
+ * @var $totalCart int
+ * @var $total int
+ */
 
-/* @var $this \yii\web\View */
 use yii\helpers\Html;
 $chat = false;
 ?>
@@ -9,7 +14,11 @@ $chat = false;
         <div class="statistic-item">
             <span class="icon-box icon1"><i class="icon"></i></span>
             <div class="name">Số dư</div>
-            <div class="info">50.800.000đ</div>
+            <?php if($wallet){
+                echo '<div class="info">'.\common\helpers\WeshopHelper::showMoney($wallet['current_balance']).'</div>';
+            }else{
+                echo "<div>Vui lòng xác thực lại mật khẩu để xem</div>";
+            }?>
             <a href="#">Chi tiết >></a>
         </div>
     </div>
@@ -25,7 +34,7 @@ $chat = false;
         <div class="statistic-item">
             <span class="icon-box icon3"><i class="icon"></i></span>
             <div class="name">Giỏ hàng</div>
-            <div class="info">508</div>
+            <div class="info"><?= $totalCart ?></div>
             <a href="#">Chi tiết >></a>
         </div>
     </div>

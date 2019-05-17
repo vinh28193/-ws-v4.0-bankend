@@ -24,17 +24,17 @@ class OrderController extends BaseApiController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['pageCache'] = [
-            'class' => 'yii\filters\PageCache',
-            'only' => ['index'],
-            'duration' => 24 * 3600 * 365, // 1 year
-            'dependency' => [
-                'class' => 'yii\caching\ChainedDependency',
-                'dependencies' => [
-                    new DbDependency(['sql' => 'SELECT MAX(id) FROM `'.Order::tableName().'`'])
-                ]
-            ],
-        ];
+//        $behaviors['pageCache'] = [
+//            'class' => 'yii\filters\PageCache',
+//            'only' => ['index'],
+//            'duration' => 24 * 3600 * 365, // 1 year
+//            'dependency' => [
+//                'class' => 'yii\caching\ChainedDependency',
+//                'dependencies' => [
+//                    new DbDependency(['sql' => 'SELECT MAX(id) FROM `'.Order::tableName().'`'])
+//                ]
+//            ],
+//        ];
         return $behaviors;
     }
 
@@ -211,7 +211,7 @@ class OrderController extends BaseApiController
                 }
             }
 //            $model->current_status = strtoupper($post['Order']['current_status']);
-            $model->current_status = strtoupper($StatusOrder[(int)($post['Order']['status'])]);
+            $model->current_status = strtoupper($StatusOrder[(int)($post['Order']['status']) - 1]);
         }
         if ($model->getScenario() == 'updateReady2Purchase') {
             $model->ready_purchase = $now;
