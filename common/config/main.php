@@ -9,13 +9,12 @@ return [
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
-        /*
         'cache' => [
             'class' => 'common\components\FileCache',
             'noCacheParam' => 'noCache',
             'noCacheValidateKey' => 'yes'
         ],
-        */
+        /*
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
@@ -24,6 +23,7 @@ return [
                 'database' => 0,
             ]
         ],
+        */
         'api' => [
             'class' => 'common\components\Api',
         ],

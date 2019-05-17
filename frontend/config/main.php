@@ -54,7 +54,7 @@ return [
         ],
         'session' => [
             'name' => 'adv-frontend-ws-2019',
-            'class' => 'yii\redis\Session',
+           // 'class' => 'yii\redis\Session',
             'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
             'timeout' => 3600*4,
         ],

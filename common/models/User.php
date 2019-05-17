@@ -124,10 +124,13 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
      */
     public static function findByPasswordResetToken($token)
     {
-        if (!static::isPasswordResetTokenValid($token)) {
-            return null;
-        }
+        // ToDo Check time bi nho hon
 
+//        if (!static::isPasswordResetTokenValid($token)) {
+//            return null;
+//        }
+
+        Yii::info('success', 'findByPasswordResetToken.');
         return static::findOne([
             'password_reset_token' => $token,
             'status' => self::STATUS_ACTIVE,
