@@ -32,7 +32,7 @@ use yii\helpers\Url;
                 echo $form->field($shippingForm, 'buyer_name', [
                     'template' => '<i class="icon user"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput();
+                ])->textInput(['place']);
 
                 echo $form->field($shippingForm, 'buyer_phone', [
                     'template' => '<i class="icon phone"></i>{input}{hint}{error}',
@@ -106,7 +106,7 @@ use yii\helpers\Url;
                         'url' => Url::toRoute(['sub-district'])
                     ]
                 ]);
-                echo Html::submitButton('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block']);
+                echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block']);
                 ActiveForm::end();
                 ?>
             </div>

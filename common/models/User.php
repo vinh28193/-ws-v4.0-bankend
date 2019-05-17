@@ -95,6 +95,17 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     }
 
     /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return static|null
+     */
+    public static function findByUsernameForEmployee($username)
+    {
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE , 'employee' => 1 ]); //  1 Là Nhân viên , 0 là khách hàng
+    }
+
+    /**
      * Finds user by phone
      *
      * @param string $phone

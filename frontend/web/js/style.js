@@ -173,12 +173,58 @@ $( document ).ready(function() {
     $('input[name=check-member]').click(function () {
         var value = $(this).val();
         if(value === 'new-member'){
-            $('div[data-merg=signup-form]').css('display','block');
+            $('div[data-merge=signup-form]').css('display','block');
         }else {
-            $('div[data-merg=signup-form]').css('display','none');
+            $('div[data-merge=signup-form]').css('display','none');
         }
     });
+    $('input').change(function () {
+       var name = $(this).attr('name');
+       $('#'+name+'-error').html('');
+    });
     $('#loginToCheckout').click(function () {
-
+        ws.loading(true);
+        var typeLogin = $('input[name=check-member]:checked').val();
+        var loginForm = {};
+        var SignupForm = {};
+        var url = 'checkout.html';
+        if(typeLogin === 'new-member'){
+            SignupForm = {
+                email: $('input[name=email]').val(),
+                password: $('input[name=password]').val(),
+                replacePassword: $('input[name=replacePassword]').val(),
+                first_name: $('input[name=first_name]').val(),
+                last_name: $('input[name=last_name]').val(),
+                phone: $('input[name=phone]').val(),
+            };
+            url = 'checkout/signup.html';
+        }else {
+            loginForm = {
+                email: $('input[name=email]').val(),
+                password: $('input[name=password]').val(),
+                rememberMe: $('input[name=rememberMe]').val(),
+            };
+            url = 'checkout/login.html';
+        }
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                LoginForm: loginForm,
+                SignupForm: SignupForm,
+                rel: location.href,
+            },
+            success: function (result) {
+                if (result.success) {
+                    window.location.reload();
+                } else {
+                    ws.loading(false);
+                    $('label[data-href]').html('');
+                    $.each(result.data, function (k,v) {
+                        $('#'+k+'-error').html(v[0]);
+                    })
+                }
+            }
+        });
     });
 });
