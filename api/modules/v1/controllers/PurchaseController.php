@@ -364,6 +364,7 @@ class PurchaseController extends BaseApiController
             return $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id);
         }catch (\Exception $exception){
             $tran->rollBack();
+            Yii::error($exception);
             return $this->response(false,'something error');
         }
     }

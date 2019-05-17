@@ -101,14 +101,14 @@ UserBackendAsset::register($this);
                         <?php echo Html::a('<span class="icon icon1"></span>Thống kê Chung', ['/account/home']);?>
                     </li>
                     <li class="accordion">
-                        <a href="#"><i class="icon icon2"></i> Quản lí tiền</a>
+                        <a href="/my-weshop/wallet.html"><i class="icon icon2"></i> Quản lí tiền</a>
                         <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-1" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
                         <div id="sub-1" class="sub-collapse collapse" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul>
-                                <li><a href="#">Nạp tiền</a></li>
-                                <li><a href="#">Giao dịch</a></li>
+                                <li><a href="/my-weshop/wallet/top-up.html">Nạp tiền</a></li>
+                                <li><a href="/my-weshop/wallet/history.html">Giao dịch</a></li>
                                 <li><a href="#">Tài khoản ngân hàng</a></li>
-                                <li><a href="#">Rút tiền</a></li>
+                                <li><a href="/my-weshop/wallet/withdraw.html">Rút tiền</a></li>
                             </ul>
                         </div>
                     </li>
@@ -218,15 +218,6 @@ UserBackendAsset::register($this);
             </div>
         <?php } ?>
         <div class="be-content">
-            <div class="be-content-header">
-                <div class="be-title">Thống kê chung</div>
-                <nav aria-label="breadcrumb" class="be-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-                        <li class="breadcrumb-item active">Thống kê chung</li>
-                    </ol>
-                </nav>
-            </div>
             <?= $content; ?>
         </div>
     </div>
