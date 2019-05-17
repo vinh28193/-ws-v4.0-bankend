@@ -98,16 +98,15 @@ class SecureController extends FrontendController
 
     public function actionRegister()
     {
+        Yii::info('register new');
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
+                Yii::info('register new 002');
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-                if ($model->sendEmail()) {
-                    Yii::$app->getUser()->login($user);
-                    return $this->goHome();
-                } else {
-                    Yii::$app->session->setFlash('error', 'Sorry, we are unable send email address resgister.');
-                }
+                $model->sendEmail();
+                Yii::info('register new 003');
+                if(Yii::$app->getUser()->login($user)){ return $this->goHome(); }
             }
         }
 
@@ -127,13 +126,14 @@ class SecureController extends FrontendController
 
     public function actionRequestPasswordReset()
     {
+        Yii::info('RequestPasswordReset');
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+            Yii::info('success', 'Check your email for further instructions.');
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-                @sleep(5); // sleep for 10 seconds
-                return $this->goHome();
+                //return $this->goHome();
+                return Yii::$app->getResponse()->redirect('/secure/login');
             } else {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
             }

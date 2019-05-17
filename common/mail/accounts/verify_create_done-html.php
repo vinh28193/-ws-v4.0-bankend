@@ -1,6 +1,5 @@
 <?php
 use yii\helpers\Html;
-use Yii;
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 
@@ -79,7 +78,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                         <tbody>
                                         <tr>
                                             <td style="padding:20px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
-                                                Kính chào Quý khách <b><?= $accountName; ?>,</b></td>
+                                                Kính chào Quý khách <b><?= Html::encode($user->username) ?>,</b></td>
                                         </tr>
                                         <tr>
                                             <td style="padding:20px 20px 20px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">

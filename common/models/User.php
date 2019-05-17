@@ -95,6 +95,17 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     }
 
     /**
+     * Finds user by phone
+     *
+     * @param string $phone
+     * @return static|null
+     */
+    public static function findByPhone($phone)
+    {
+        return static::findOne(['phone' => $phone]);
+    }
+
+    /**
      * Finds user by email
      *
      * @param string $email
@@ -174,6 +185,7 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
+
 
     /**
      * Generates password hash from password and sets it to the model

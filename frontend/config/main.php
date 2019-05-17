@@ -12,6 +12,7 @@ return [
     'bootstrap' => ['log'],
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'frontend\controllers',
+    'defaultRoute' => 'cms/home',
     'components' => [
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
