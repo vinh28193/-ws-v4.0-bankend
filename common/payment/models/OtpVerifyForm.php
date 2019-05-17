@@ -110,7 +110,7 @@ class OtpVerifyForm extends Model
     {
         $walletClient = new WalletService([
             'transaction_code' => $this->transactionCode,
-            'otp_receive_type' => $this->otpReceive ? '1' : '0',
+            'otp_type' => $this->otpReceive ? '1' : '0',
         ]);
         return $walletClient->refreshOtp();
 

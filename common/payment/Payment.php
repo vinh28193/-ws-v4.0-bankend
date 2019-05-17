@@ -125,7 +125,6 @@ class Payment extends Model
         $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
         $this->view = Yii::$app->getView();
         $this->loadOrdersFromCarts();
-        $this->registerClientScript();
         $this->currency = 'vnđ';
     }
 
@@ -550,8 +549,7 @@ class Payment extends Model
 
     public function initPaymentView()
     {
-        $view = Yii::$app->getView();
-
+        $this->registerClientScript();
         if ($this->page === self::PAGE_TOP_UP) {
             $this->payment_method = 25;
             $this->payment_provider = 43;
@@ -584,7 +582,7 @@ class Payment extends Model
             }
         }
         ksort($group);
-        return $view->render('normal', [
+        return $this->view->render('normal', [
             'payment' => $this,
             'group' => $group
         ], new PaymentContextView());

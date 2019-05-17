@@ -1,18 +1,22 @@
 <?php
 
-
+/* @var yii\web\View $this */
+/* @var integer $group */
+/* @var common\payment\Payment $payment */
+/* @var array $methods */
+/* @var boolean $selected */
 ?>
 
 <div class="method-item">
-    <a class="btn method-select" data-toggle="collapse" data-target="#method6" aria-expanded="false" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
-        <i class="icon method_6"></i>
+    <a class="btn method-select" data-toggle="collapse" data-target="#method<?=$group;?>" aria-expanded="<?=$selected ? 'true' : 'false';?>" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
+        <i class="icon method_<?=$group;?>"></i>
         <div class="name">Weshop - Ewallet</div>
         <div class="desc">Qúy khách vui lòng chọn xác nhận mật khẩu</div>
     </a>
 
-    <div id="method6" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
+    <div id="method<?=$group;?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne" data-parent="#payment-method">
         <div class="method-content wallet">
-            <button type="button" class="btn btn-add-credit" data-toggle="modal" data-target="#otp-confirm"><img src="./img/payment_wallet.png"/><span>Nạp tiền</span></button>
+            <button type="button" class="btn btn-add-credit" data-toggle="modal" data-target="#otp-confirm"><img src="/img/payment_wallet.png"/><span>Nạp tiền</span></button>
             <div class="row">
                 <div class="col-md-6">
                     <label>Tổng số tiền chính trong tài khoản:</label>

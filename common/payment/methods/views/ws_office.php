@@ -1,16 +1,20 @@
 <?php
 
-
+/* @var yii\web\View $this */
+/* @var integer $group */
+/* @var common\payment\Payment $payment */
+/* @var array $methods */
+/* @var boolean $selected */
 ?>
 
 <div class="method-item">
-    <a class="btn method-select" data-toggle="collapse" data-target="#method4" aria-expanded="false" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
-        <i class="icon method_4"></i>
+    <a class="btn method-select" data-toggle="collapse" data-target="#method<?=$group;?>" aria-expanded="<?=$selected ? 'true' : 'false';?>" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
+        <i class="icon method_<?=$group;?>"></i>
         <div class="name">Thanh toán tại văn phòng</div>
         <div class="desc">Qúy khách vui lòng chọn địa điểm để thanh toán</div>
     </a>
 
-    <div id="method4" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
+    <div id="method<?=$group;?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne" data-parent="#payment-method">
         <div class="method-content office">
             <p><b>MIỄN PHÍ,</b> áp dụng tại văn phòng Weshop khu vực Hà Nội và TP. Hồ Chí Minh, thanh toán chọn 1 trong 2 địa chỉ sau:</p>
 
