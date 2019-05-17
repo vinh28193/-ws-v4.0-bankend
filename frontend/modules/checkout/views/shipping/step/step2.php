@@ -23,7 +23,9 @@ use yii\helpers\Url;
             <div class="payment-box">
                 <?php
                 $form = ActiveForm::begin([
-                    'class' => 'payment-form'
+                    'options' => [
+                        'class' => 'payment-form'
+                    ],
                 ]);
                 echo Html::activeHiddenInput($shippingForm, 'customer_id');
 
