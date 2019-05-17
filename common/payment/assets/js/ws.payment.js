@@ -39,7 +39,27 @@ ws.payment = (function ($) {
         payment: {},
         options: {},
         methods: [],
-        shipping: [],
+        shipping: {
+            buyer : {
+                email : '',
+                phone : '',
+                full_name : '',
+                province_id : '',
+                district_id : '',
+            },
+            receiver : {
+                email : '',
+                phone : '',
+                full_name : '',
+                province_id : '',
+                district_id : '',
+            },
+            other_receiver : false,
+            note_by_customer : '',
+            save_my_address : '',
+            enable_buyer: '',
+
+        },
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
             pub.payment.currency = 'vnd';
@@ -54,6 +74,94 @@ ws.payment = (function ($) {
                     pub.payment.coupon_code = $input.val();
                     pub.checkPromotion();
                 }
+            });
+            $('#other-receiver').click(function () {
+                if(!pub.shipping.other_receiver){
+                    pub.shipping.other_receiver = true;
+                    $('#other-receiver i').addClass('text-info');
+                    $('#other-receiver svg').addClass('text-info');
+                    $('#receiver-form').css('display','block');
+                }else {
+                    pub.shipping.other_receiver = false;
+                    $('#other-receiver i').removeClass('text-info');
+                    $('#other-receiver svg').removeClass('text-info');
+                    $('#receiver-form').css('display','none');
+                }
+            });
+            $('.checkout-step li').click(function () {
+                var step = $(this)[0].firstElementChild.innerHTML;
+                if($('#step_checkout_'+step).length === 1){
+                    $('#step_checkout_1').css('display','none');
+                    $('#step_checkout_2').css('display','none');
+                    $('#step_checkout_3').css('display','none');
+                    $('#step_checkout_'+step).css('display','block');
+                }
+            });
+            $('#btn-next-step3').click(function () {
+                if(pub.getInfoFormShipping()){
+                    console.log(pub.shipping);
+                    $('#step_checkout_1').css('display','none');
+                    $('#step_checkout_2').css('display','none');
+                    $('#step_checkout_3').css('display','block');
+                    window.scrollTo(0, 0);
+                }
+            });
+            $('input[name=check-member]').click(function () {
+                var value = $(this).val();
+                if(value === 'new-member'){
+                    $('div[data-merge=signup-form]').css('display','block');
+                }else {
+                    $('div[data-merge=signup-form]').css('display','none');
+                }
+            });
+            $('input').change(function () {
+                var name = $(this).attr('name');
+                $('#'+name+'-error').html('');
+            });
+            $('#loginToCheckout').click(function () {
+                ws.loading(true);
+                var typeLogin = $('input[name=check-member]:checked').val();
+                var loginForm = {};
+                var SignupForm = {};
+                var url = 'checkout.html';
+                if(typeLogin === 'new-member'){
+                    SignupForm = {
+                        email: $('input[name=email]').val(),
+                        password: $('input[name=password]').val(),
+                        replacePassword: $('input[name=replacePassword]').val(),
+                        first_name: $('input[name=first_name]').val(),
+                        last_name: $('input[name=last_name]').val(),
+                        phone: $('input[name=phone]').val(),
+                    };
+                    url = 'checkout/signup.html';
+                }else {
+                    loginForm = {
+                        email: $('input[name=email]').val(),
+                        password: $('input[name=password]').val(),
+                        rememberMe: $('input[name=rememberMe]').val(),
+                    };
+                    url = 'checkout/login.html';
+                }
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    data: {
+                        LoginForm: loginForm,
+                        SignupForm: SignupForm,
+                        rel: location.href,
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            window.location.reload();
+                        } else {
+                            ws.loading(false);
+                            $('label[data-href]').html('');
+                            $.each(result.data, function (k,v) {
+                                $('#'+k+'-error').html(v[0]);
+                            })
+                        }
+                    }
+                });
             });
         },
         selectMethod: function (providerId, methodId, bankCode) {
@@ -75,6 +183,31 @@ ws.payment = (function ($) {
         registerMethods: function ($methods) {
             pub.methods = $methods;
             console.log('register ' + pub.methods.length + ' methods');
+        },
+        getInfoFormShipping: function (){
+            pub.shipping.buyer.full_name = $('#shippingform-buyer_name').val();
+            pub.shipping.buyer.phone = $('#shippingform-buyer_phone').val();
+            pub.shipping.buyer.email = $('#shippingform-buyer_email').val();
+            pub.shipping.buyer.province_id = $('#shippingform-buyer_province_id').val();
+            pub.shipping.buyer.district_id = $('#shippingform-buyer_district_id').val();
+            pub.shipping.receiver.full_name = $('#shippingform-receiver_name').val();
+            pub.shipping.receiver.phone = $('#shippingform-receiver_phone').val();
+            pub.shipping.receiver.email = $('#shippingform-receiver_email').val();
+            pub.shipping.receiver.province_id = $('#shippingform-receiver_province_id').val();
+            pub.shipping.receiver.district_id = $('#shippingform-receiver_district_id').val();
+            pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
+            pub.shipping.save_my_address = $('#shippingform-save_my_address :checked').val();
+            if(!pub.shipping.buyer.full_name || !pub.shipping.buyer.phone || !pub.shipping.buyer.email || !pub.shipping.buyer.province_id || !pub.shipping.buyer.district_id){
+                alert('Vui lòng nhập đầy đủ thông tin người mua');
+                return false;
+            }
+            if(pub.shipping.other_receiver){
+                if(!pub.shipping.receiver.full_name || !pub.shipping.receiver.phone || !pub.shipping.receiver.email || !pub.shipping.receiver.province_id || !pub.shipping.receiver.district_id){
+                    alert('Vui lòng nhập đầy đủ thông tin người nhận');
+                    return false;
+                }
+            }
+            return true;
         },
         methodChange: function (isNew) {
             isNew = isNew || false;
