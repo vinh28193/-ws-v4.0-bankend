@@ -31,7 +31,7 @@ if($item->available_quantity){
         <b id="instockQuantity" ><?= $instockQuanty ?></b><i> sản phẩm có thể mua</i>
     </div>
     <?php } ?>
-    <div class="qty form-inline" id="quantityGroup">
+    <div class="qty form-inline" id="quantityGroup" style="display: <?= $sellerCurrent ? 'block' : 'none' ?>;">
         <label>Số lượng:</label>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -43,12 +43,12 @@ if($item->available_quantity){
             </div>
         </div>
     </div>
-    <div class="qty form-inline" id="outOfStock" style="display: none;">
+    <div class="qty form-inline" id="outOfStock" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>;">
         <label style="color: red">Sản phẩm hết hàng</label>
     </div>
     <div class="action-box">
-        <button type="button" id="buyNowBtn" class="btn btn-block btn-buy" style="display: block">Mua ngay</button>
-        <button type="button" id="quoteBtn" class="btn btn-block btn-buy" style="display: none">Yêu cầu báo giá</button>
+        <button type="button" id="buyNowBtn" class="btn btn-block btn-buy" style="display: <?= $sellerCurrent ? 'block' : 'none' ?>">Mua ngay</button>
+        <button type="button" id="quoteBtn" class="btn btn-block btn-buy" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>">Yêu cầu báo giá</button>
         <button type="button" id="installmentBtn" class="btn btn-block btn-installment">Thanh toán trả góp</button>
         <div class="text-center more">
             <a href="#" id="followItem" ><i class="icon fav"></i></a>

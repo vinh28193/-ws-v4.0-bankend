@@ -42,5 +42,15 @@ return [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://192.168.11.252:27017/admin',
         ],
+        'db_oauth'=>[
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop_oauth',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+            'enableSchemaCache' => true,
+            'schemaCacheDuration' => 7200,
+            'schemaCache' => 'cache'
+        ],
     ],
 ];

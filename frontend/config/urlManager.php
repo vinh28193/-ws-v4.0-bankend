@@ -46,10 +46,13 @@ return [
 
         // checkout
         'GET checkout-<type:[0-9A-Za-z_-]*>.html' => 'checkout/shipping',
+        'checkout/login.html' => 'checkout/shipping/login',
+        'checkout/signup.html' => 'checkout/shipping/signup',
 
         //account
-        'GET login.html' => 'secure/login',
-        'GET signup.html' => 'secure/register',
+        'login.html' => 'secure/login',
+        'signup.html' => 'secure/register',
+        'logout.html' => 'secure/logout',
         'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
     ]
 ];
