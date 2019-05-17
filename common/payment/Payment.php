@@ -331,12 +331,11 @@ class Payment extends Model
 
                     }
                 }
-                if ($orderDiscount > 0) {
-                    $order->updateAttributes([
-                        'total_promotion_amount_local' => $orderDiscount
-                    ]);
-                }
+
                 $updateOrderAttributes = [];
+
+                $updateOrderAttributes['total_promotion_amount_local'] = $orderDiscount;
+
                 // 4 products
                 if (($products = ArrayHelper::getValue($params, 'products')) === null) {
                     $transaction->rollBack();
@@ -422,6 +421,8 @@ class Payment extends Model
                         $transaction->rollBack();
                         return ['success' => false, 'message' => 'can not get fee for an item'];
                     }
+                    $orderTotalAmountLocal = 0;
+                    $totalFeeAmountLocal = 0;
                     foreach ($productFees as $feeName => $feeValue) {
                         // 10. create each fee
                         $orderAttribute = '';
@@ -483,6 +484,10 @@ class Payment extends Model
                             $transaction->rollBack();
                             return ['success' => false, 'message' => 'can not deploy an fee'];
                         }
+                        $orderTotalAmountLocal += $productFee->local_amount;
+                        if ($productFee->type !== 'product_price_origin') {
+                            $totalFeeAmountLocal += $productFee->local_amount;
+                        }
                         // 10. update discount each fee
                         $discountForFeeAmount = 0;
                         if (!empty($feeDiscounts)) {
@@ -516,8 +521,22 @@ class Payment extends Model
                         }
                     }
 
+                    // Tổng các phí các sản phẩm (trừ giá gốc tại nơi xuất xứ)
+                    $oldAmount = isset($updateOrderAttributes['total_fee_amount_local']) ? $updateOrderAttributes['total_fee_amount_local'] : 0;
+                    $oldAmount += $totalFeeAmountLocal;
+                    $updateOrderAttributes['total_fee_amount_local'] = $oldAmount;
+
+                    // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
+                    $oldAmount = isset($updateOrderAttributes['total_amount_local']) ? $updateOrderAttributes['total_amount_local'] : 0;
+                    $oldAmount += $orderTotalAmountLocal;
+                    $updateOrderAttributes['total_amount_local'] = $oldAmount;
+
+                    $updateOrderAttributes['total_final_amount_local'] = $oldAmount;
+
                 }
+
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
+                $updateOrderAttributes['total_final_amount_local'] = $updateOrderAttributes['total_amount_local'] - $updateOrderAttributes['total_promotion_amount_local'];
                 $order->updateAttributes($updateOrderAttributes);
             }
             $transaction->commit();
