@@ -124,7 +124,7 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
      */
     public static function findByPasswordResetToken($token)
     {
-        // ToDo Check time bi nho hon
+        // @Phuchc ToDo Check time password reset Token
 
 //        if (!static::isPasswordResetTokenValid($token)) {
 //            return null;

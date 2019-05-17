@@ -192,7 +192,7 @@ UserBackendAsset::register($this);
 
                     $menuItems[] = [
 
-                        'label' => ' Logout (' . Yii::$app->user->identity->username . ')',
+                        'label' => ' Đăng xuất (' . Yii::$app->user->identity->username . ')',
 
                         'url' => ['/secure/logout'],
 
