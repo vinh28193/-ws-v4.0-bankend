@@ -96,6 +96,7 @@ class ExchangeRate extends Component
      * @param $to
      * @param bool $refresh
      */
+    /*
     protected function loadFromCache($from, $to, $refresh = false)
     {
         $key = $this->buildKey($from, $to);
@@ -103,6 +104,15 @@ class ExchangeRate extends Component
             $this->_rates[$key] = $this->loadFromDb($from, $to);
         }
         $this->cache->set($key, $this->_rates, $this->cacheDuration);
+    }
+    */
+    protected function loadFromCache($from, $to, $refresh = false)
+    {
+        $key = $this->buildKey($from, $to);
+        if (!isset($this->_rates[$key]) || !($this->_rates[$key] = $this->cache->get($key)) || $refresh) {
+            $this->_rates[$key] = $this->loadFromDb($from, $to);
+        }
+        $this->cache->set($key, $this->_rates[$key], $this->cacheDuration);
     }
 
     /**
