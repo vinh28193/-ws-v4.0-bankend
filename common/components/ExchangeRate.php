@@ -99,10 +99,10 @@ class ExchangeRate extends Component
     protected function loadFromCache($from, $to, $refresh = false)
     {
         $key = $this->buildKey($from, $to);
-        if (!($this->_rates = $this->cache->get($key)) || $refresh) {
+        if (!isset($this->_rates[$key]) || !($this->_rates[$key] = $this->cache->get($key)) || $refresh) {
             $this->_rates[$key] = $this->loadFromDb($from, $to);
         }
-        $this->cache->set($key, $this->_rates, $this->cacheDuration);
+        $this->cache->set($key, $this->_rates[$key], $this->cacheDuration);
     }
 
     /**

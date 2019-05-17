@@ -31,33 +31,22 @@ class ShippingController extends CheckoutController
         ]);
     }
 
-    public function actionIndex()
+    public function actionIndex($type)
     {
         $activeStep = 2;
         $isGuest = Yii::$app->user->isGuest;
         if ($isGuest) {
             $activeStep = 1;
         }
-        $cartType = $this->request->get('type', CartSelection::TYPE_SHOPPING);
-        if (($keys = CartSelection::getSelectedItems($cartType)) === null) {
+        if (($keys = CartSelection::getSelectedItems($type)) === null) {
             return $this->goBack();
         }
-        $items = [];
-        foreach ($keys as $key) {
-            $items[] = $this->module->cartManager->getItem($key, !$isGuest);
-        }
-        if (empty($items) || count($items) !== CartSelection::countSelectedItems($cartType)) {
-            return $this->goBack();
-        }
-        $params = CartHelper::createOrderParams($items);
         $payment = new Payment([
             'page' => Payment::PAGE_CHECKOUT,
-            'orders' => $params['orders'],
-            'payment_type' => $cartType,
-            'total_amount' => $params['totalAmount'],
-            'total_amount_display' => $params['totalAmount']
+            'carts' => $keys,
+            'payment_type' => $type,
         ]);
-
+        $payment->initDefaultMethod();
         $shippingForm = new ShippingForm();
         $shippingForm->setDefaultValues();
         $provinces = SystemStateProvince::select2Data(1);

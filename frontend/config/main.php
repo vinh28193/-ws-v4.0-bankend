@@ -51,12 +51,12 @@ return [
             'port'     => 6379,
             'database' => 0,
         ],
-        'session' => [
-            'name' => 'adv-frontend-ws-2019',
-            'class' => 'yii\redis\Session',
-            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
-            'timeout' => 3600*4,
-        ],
+//        'session' => [
+//            'name' => 'adv-frontend-ws-2019',
+//            'class' => 'yii\redis\Session',
+//            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
+//            'timeout' => 3600*4,
+//        ],
         'log' => [
             /*
             'traceLevel' => YII_DEBUG ? 3 : 0,

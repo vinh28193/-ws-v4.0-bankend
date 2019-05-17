@@ -110,4 +110,5 @@ class TesterController extends \yii\rest\Controller
         var_dump($keyChat->read());
         die();
     }
+
 }

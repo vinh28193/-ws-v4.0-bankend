@@ -108,6 +108,6 @@ class CartController extends BillingController
         }
         CartSelection::setSelectedItems($type, $carts);
         $count = CartSelection::countSelectedItems($type);
-        return ['success' => true, 'message' => "you will be $type with $count items", 'data' => Url::to('shipping')];
+        return ['success' => true, 'message' => "you will be $type with $count items", 'data' => Url::toRoute(['/checkout/shipping', 'type' => CartSelection::TYPE_SHOPPING])];
     }
 }

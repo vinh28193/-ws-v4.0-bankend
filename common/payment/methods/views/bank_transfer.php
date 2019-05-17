@@ -7,11 +7,10 @@ use yii\web\JsExpression;
 
 /* @var yii\web\View $this */
 /* @var integer $group */
-/* @var frontend\modules\checkout\Payment $payment */
+/* @var common\payment\Payment $payment */
 /* @var array $methods */
-$isNew = $payment->payment_method !== 1 && $payment->payment_bank_code === null;
-$items = $methods;
-$items = Json::htmlEncode($items);
+/* @var boolean $selected */
+
 $css = <<< CSS
 .select-method {
     height: 33px;
@@ -30,19 +29,29 @@ $css = <<< CSS
 CSS;
 
 $this->registerCss($css);
+$items = $methods;
+$items = Json::htmlEncode($items);
 $this->registerJs("ws.payment.registerMethods($items);");
-$this->registerJs("ws.payment.methodChange($isNew);");
+$isNew = ($payment->payment_method !== 1 && $payment->payment_bank_code === null);
+if ($isNew) {
+    $this->registerJs("ws.payment.methodChange(true);");
+} else {
+    $this->registerJs("ws.payment.methodChange(false);");
+}
+
 
 ?>
 
 <div class="method-item">
-    <a class="btn method-select" data-toggle="collapse" data-target="#method<?= $group; ?>" aria-expanded="false" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
+    <a class="btn method-select" data-toggle="collapse" data-target="#method<?= $group; ?>" aria-expanded="false"
+       onclick="ws.payment.selectMethod(<?= $methods[0]['payment_provider_id'] ?>,<?= $methods[0]['payment_method_id'] ?>, '<?= $methods[0]['paymentMethod']['code']; ?>')">
         <i class="icon method_<?= $group; ?>"></i>
         <div class="name">Thẻ ATM nội địa/ Internet banking</div>
         <div class="desc">Số thẻ của bạn được giữ an toàn 100% và chỉ được sử dụng cho giao dịch này.</div>
     </a>
 
-    <div id="method<?= $group; ?>" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
+    <div id="method<?= $group; ?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne"
+         data-parent="#payment-method">
         <div class="method-content">
             <div class="form-group pick-method">
                 <label>Chọn phương thức thanh toán</label>

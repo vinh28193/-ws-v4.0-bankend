@@ -11,13 +11,12 @@ class WalletHideProvider extends NganLuongProvider
 {
     public function create(Payment $payment)
     {
-        $payment->return_url = Url::to(['payment/payment/return','merchant' => 'nl43']);
         return parent::create($payment);
     }
 
     public function handle($data)
     {
-        parent::handle($data);
+        return parent::handle($data);
 
     }
 }

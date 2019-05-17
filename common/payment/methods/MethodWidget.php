@@ -2,7 +2,7 @@
 
 namespace common\payment\methods;
 
-use frontend\modules\checkout\Payment;
+use common\payment\Payment;
 use yii\bootstrap4\Widget;
 use yii\helpers\ArrayHelper;
 
@@ -23,6 +23,10 @@ class MethodWidget extends Widget
      */
     public $payment;
 
+    /**
+     * @var bool
+     */
+    public $selected = false;
 
     /**
      * @param string $view
@@ -31,26 +35,38 @@ class MethodWidget extends Widget
      */
     public function render($view, $params = [])
     {
+//        var_dump($this->selected);
         $params = ArrayHelper::merge([
             'group' => $this->group,
             'methods' => $this->methods,
-            'payment' => $this->payment
+            'payment' => $this->payment,
+            'selected' => $this->selected,
         ],$params);
         return parent::render($view, $params);
     }
 
     /**
-     * @param $group
-     * @param $methods
-     * @param $payment
+     * @param $group integer
+     * @param $methods array
+     * @param $payment Payment
      * @return mixed
      */
     public static function create($group,$methods,$payment){
         $class = get_called_class();
+        $show = false;
+        foreach ($methods as $method) {
+            if ($method['payment_method_id'] == $payment->payment_method && $method['payment_provider_id'] == $payment->payment_provider) {
+                $show = true;
+                break;
+            } else {
+                continue;
+            }
+        }
         return $class::widget([
             'group' => $group,
             'methods' => $methods,
-            'payment' => $payment
+            'payment' => $payment,
+            'selected' => $show
         ]);
     }
 }

@@ -15,7 +15,6 @@ class DiscountController extends BasePaymentController
         $bodyParams = $this->request->bodyParams;
         $payment = new Payment($bodyParams);
         $response = $payment->checkPromotion();
-
         Yii::$app->response->format = Response::FORMAT_JSON;
         return $response;
     }
