@@ -96,7 +96,7 @@ $chat = false;
                         ])->orderBy(['created_at' => SORT_DESC])->one();
                         ?>
                         <li>
-                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="<?=Url::to(['documents/view/' . $orders->id]) ?>]); ?>"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?> </p>
+                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#" data-toggle="modal" data-url="/echo?ordercode=<?=$order->ordercode  ?>" data-target="#exampleModalCenter"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?> </p>
                             <?php if ($chat) {  ?>
                             <div class="mess-content mb-1">
                                 <i class="logo"><img src="../img/weshop_small_logo.png" alt=""/></i>
@@ -179,15 +179,3 @@ Enter để gửi"></textarea>
         </div>
     </div>
 </div>
-
-<script>
-    $(function(){
-        // changed id to class
-        $('.exampleModalCenter').click(function (){
-            $.get($(this).attr('href'), function(data) {
-                $('#modal').modal('show').find('#modalContent').html(data)
-            });
-            return false;
-        });
-    });
-</script>
