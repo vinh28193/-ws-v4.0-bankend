@@ -93,6 +93,15 @@ class ShippingForm extends Model
             if (($buyer = $user->primaryAddress) === null) {
                 $this->enable_buyer = true;
                 $this->save_my_address = true;
+                $buyerName = implode(' ', [$user->first_name, $user->last_name]);
+                $this->buyer_name = $buyerName;
+                $this->buyer_email = $user->email;
+                $this->buyer_phone = $user->phone;
+                $this->buyer_address = '';
+                $this->buyer_post_code = '';
+                $this->buyer_district_id = 0;
+                $this->buyer_province_id = 0;
+                $this->buyer_country_id = 0;
             } else {
                 $buyerName = implode(' ', [$buyer->first_name, $buyer->last_name]);
                 $this->buyer_name = $buyerName;
@@ -108,17 +117,26 @@ class ShippingForm extends Model
             if (($receiver = $user->defaultShippingAddress) === null) {
                 $this->enable_receiver = true;
                 $this->save_my_shipping = true;
+                $receiverName = implode(' ', [$user->first_name, $user->last_name]);
+                $this->receiver_name = $receiverName;
+                $this->receiver_email = $user->email;
+                $this->receiver_phone = $user->phone;
+                $this->receiver_address = '';
+                $this->receiver_post_code = '';
+                $this->receiver_district_id = '';
+                $this->receiver_province_id = '';
+                $this->receiver_country_id = '';
             } else {
                 $this->receiver_address_id = $receiver->id;
-                $buyerName = implode(' ', [$buyer->first_name, $buyer->last_name]);
-                $this->receiver_name = $buyerName;
-                $this->receiver_email = $buyer->email;
-                $this->receiver_phone = $buyer->phone;
-                $this->receiver_address = $buyer->address;
-                $this->receiver_post_code = $buyer->post_code;
-                $this->receiver_district_id = $buyer->district_id;
-                $this->receiver_province_id = $buyer->province_id;
-                $this->receiver_country_id = $buyer->country_id;
+                $receiverName = implode(' ', [$receiver->first_name, $receiver->last_name]);
+                $this->receiver_name = $receiverName;
+                $this->receiver_email = $receiver->email;
+                $this->receiver_phone = $receiver->phone;
+                $this->receiver_address = $receiver->address;
+                $this->receiver_post_code = $receiver->post_code;
+                $this->receiver_district_id = $receiver->district_id;
+                $this->receiver_province_id = $receiver->province_id;
+                $this->receiver_country_id = $receiver->country_id;
             }
         }
     }

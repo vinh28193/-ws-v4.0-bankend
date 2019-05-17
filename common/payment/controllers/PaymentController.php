@@ -96,11 +96,31 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->payment_type = $payment->payment_type;
         $paymentTransaction->shipping = $shippingForm->receiver_address_id;
         $paymentTransaction->save(false);
+        if ($payment->payment_provider === 42) {
+            $wallet = new WalletService([
+                'transaction_code' => $payment->transaction_code,
+                'total_amount' => $payment->total_amount - $payment->total_discount_amount,
+                'payment_provider' => $payment->payment_provider_name,
+                'payment_method' => $payment->payment_method_name,
+                'bank_code' => $payment->payment_bank_code,
+            ]);
+            $results = $wallet->topUpTransaction();
+            if ($results['success'] === true && isset($results['data']) && isset($results['data']['data']['code'])) {
+                $topUpCode = $results['data']['data']['code'];
+                $paymentTransaction->updateAttributes([
+                    'topup_transaction_code' => $topUpCode
+                ]);
+                $payment->transaction_code = $topUpCode;
+            }
+        }
         $res = $payment->processPayment();
         if ($res['success'] === false) {
             return $this->response(false, $res['message']);
         }
-
+        $paymentTransaction->third_party_transaction_code = $res['data']['token'];
+        $paymentTransaction->third_party_transaction_status = $res['data']['code'];
+        $paymentTransaction->third_party_transaction_link = $res['data']['checkoutUrl'];
+        $paymentTransaction->save(false);
         $time = $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res['data']);
@@ -110,17 +130,13 @@ class PaymentController extends BasePaymentController
     {
         $start = microtime(true);
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $now = Yii::$app->getFormatter()->asDatetime('now');
-
-        $post = Yii::$app->request->post();
-        $get = Yii::$app->request->get();
         $res = Payment::checkPayment((int)$merchant, $this->request);
         if (!isset($res) || $res['success'] === false || !isset($res['data'])) {
             return $this->redirect('failed');
         }
         $data = $res['data'];
         /** @var $paymentTransaction PaymentTransaction */
-        if(($paymentTransaction = $data['transaction']) instanceof PaymentTransaction && $paymentTransaction->transaction_status  === PaymentTransaction::TRANSACTION_STATUS_SUCCESS){
+        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction && $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
             $payment = new Payment([
                 'carts' => StringHelper::explode($paymentTransaction->carts, ','),
                 'transaction_code' => $paymentTransaction->transaction_code,
@@ -146,13 +162,13 @@ class PaymentController extends BasePaymentController
             $receiverAddress = Address::findOne($paymentTransaction->shipping);
             /* @var $results PromotionResponse */
             $createResponse = $payment->createOrder($receiverAddress);
-            if (!$createResponse['success']) {
-                $this->goHome();
+            if ($createResponse['success']) {
+                return $this->goHome();
             }
+
         }
-
-
         return $this->redirect('/checkout/cart');
+
     }
 
     public function actionOtpVerify($code)
@@ -165,6 +181,8 @@ class PaymentController extends BasePaymentController
         $data = [];
         $msg = [];
         $statusOtp = false;
+        var_dump($transaction);
+        die;
         if ($transaction['success']) {
             $data = $transaction['data'];
         }
@@ -221,6 +239,7 @@ class PaymentController extends BasePaymentController
                 $statusOtp = false;
             }
         }
+
         if (count($otpInfo) > 0) {
 
             if ($otpInfo['verified']) {
@@ -297,8 +316,7 @@ class PaymentController extends BasePaymentController
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return $out;
         }
-        var_dump($msg);
-        die;
+
         return Yii::$app->getView()->render('otp-verify', [
             'statusOtp' => $isValid,
             'isValid' => $isValid,

@@ -51,180 +51,180 @@ $this->registerJs($js, \yii\web\View::POS_END);
             </ol>
         </nav>
         <?= $content; ?>
-        <div class="product-viewed product-list">
-            <div class="title">Sản phẩm đã xem:</div>
-            <div id="product-viewed" class="owl-carousel owl-theme">
-                <div class="item-box">
-                    <a href="#" class="item">
-                        <div class="thumb">
-                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
-                                 alt="" title=""/>
-                        </div>
-                        <div class="info">
-                            <div class="rate text-orange">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <i class="far fa-star"></i>
-                                <span>(87)</span>
-                            </div>
-                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                            <div class="price">
-                                <strong>20.430.000</strong>
-                                <span>6.800.000</span>
-                            </div>
-                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>
-                        </div>
-                        <span class="sale-tag">30% OFF</span>
-                    </a>
-                </div>
-                <div class="item-box">
-                    <a href="#" class="item">
-                        <div class="thumb">
-                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
-                                 alt="" title=""/>
-                        </div>
-                        <div class="info">
-                            <div class="rate text-orange">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <i class="far fa-star"></i>
-                                <span>(87)</span>
-                            </div>
-                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                            <div class="price">
-                                <strong>20.430.000</strong>
-                                <span>6.800.000</span>
-                            </div>
-                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="item-box">
-                    <a href="#" class="item">
-                        <div class="thumb">
-                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
-                                 alt="" title=""/>
-                        </div>
-                        <div class="info">
-                            <div class="rate text-orange">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <i class="far fa-star"></i>
-                                <span>(87)</span>
-                            </div>
-                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                            <div class="price">
-                                <strong>20.430.000</strong>
-                                <span>6.800.000</span>
-                            </div>
-                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="item-box">
-                    <a href="#" class="item">
-                        <div class="thumb">
-                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
-                                 alt="" title=""/>
-                        </div>
-                        <div class="info">
-                            <div class="rate text-orange">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <i class="far fa-star"></i>
-                                <span>(87)</span>
-                            </div>
-                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                            <div class="price">
-                                <strong>20.430.000</strong>
-                                <span>6.800.000</span>
-                            </div>
-                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="item-box">
-                    <a href="#" class="item">
-                        <div class="thumb">
-                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
-                                 alt="" title=""/>
-                        </div>
-                        <div class="info">
-                            <div class="rate text-orange">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <i class="far fa-star"></i>
-                                <span>(87)</span>
-                            </div>
-                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                            <div class="price">
-                                <strong>20.430.000</strong>
-                                <span>6.800.000</span>
-                            </div>
-                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="item-box">
-                    <a href="#" class="item">
-                        <div class="thumb">
-                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
-                                 alt="" title=""/>
-                        </div>
-                        <div class="info">
-                            <div class="rate text-orange">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <i class="far fa-star"></i>
-                                <span>(87)</span>
-                            </div>
-                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                            <div class="price">
-                                <strong>20.430.000</strong>
-                                <span>6.800.000</span>
-                            </div>
-                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="item-box">
-                    <a href="#" class="item">
-                        <div class="thumb">
-                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"
-                                 alt="" title=""/>
-                        </div>
-                        <div class="info">
-                            <div class="rate text-orange">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <i class="far fa-star"></i>
-                                <span>(87)</span>
-                            </div>
-                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>
-                            <div class="price">
-                                <strong>20.430.000</strong>
-                                <span>6.800.000</span>
-                            </div>
-                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+<!--        <div class="product-viewed product-list">-->
+<!--            <div class="title">Sản phẩm đã xem:</div>-->
+<!--            <div id="product-viewed" class="owl-carousel owl-theme">-->
+<!--                <div class="item-box">-->
+<!--                    <a href="#" class="item">-->
+<!--                        <div class="thumb">-->
+<!--                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"-->
+<!--                                 alt="" title=""/>-->
+<!--                        </div>-->
+<!--                        <div class="info">-->
+<!--                            <div class="rate text-orange">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star-half-alt"></i>-->
+<!--                                <i class="far fa-star"></i>-->
+<!--                                <span>(87)</span>-->
+<!--                            </div>-->
+<!--                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>-->
+<!--                            <div class="price">-->
+<!--                                <strong>20.430.000</strong>-->
+<!--                                <span>6.800.000</span>-->
+<!--                            </div>-->
+<!--                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>-->
+<!--                        </div>-->
+<!--                        <span class="sale-tag">30% OFF</span>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                <div class="item-box">-->
+<!--                    <a href="#" class="item">-->
+<!--                        <div class="thumb">-->
+<!--                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"-->
+<!--                                 alt="" title=""/>-->
+<!--                        </div>-->
+<!--                        <div class="info">-->
+<!--                            <div class="rate text-orange">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star-half-alt"></i>-->
+<!--                                <i class="far fa-star"></i>-->
+<!--                                <span>(87)</span>-->
+<!--                            </div>-->
+<!--                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>-->
+<!--                            <div class="price">-->
+<!--                                <strong>20.430.000</strong>-->
+<!--                                <span>6.800.000</span>-->
+<!--                            </div>-->
+<!--                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>-->
+<!--                        </div>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                <div class="item-box">-->
+<!--                    <a href="#" class="item">-->
+<!--                        <div class="thumb">-->
+<!--                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"-->
+<!--                                 alt="" title=""/>-->
+<!--                        </div>-->
+<!--                        <div class="info">-->
+<!--                            <div class="rate text-orange">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star-half-alt"></i>-->
+<!--                                <i class="far fa-star"></i>-->
+<!--                                <span>(87)</span>-->
+<!--                            </div>-->
+<!--                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>-->
+<!--                            <div class="price">-->
+<!--                                <strong>20.430.000</strong>-->
+<!--                                <span>6.800.000</span>-->
+<!--                            </div>-->
+<!--                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>-->
+<!--                        </div>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                <div class="item-box">-->
+<!--                    <a href="#" class="item">-->
+<!--                        <div class="thumb">-->
+<!--                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"-->
+<!--                                 alt="" title=""/>-->
+<!--                        </div>-->
+<!--                        <div class="info">-->
+<!--                            <div class="rate text-orange">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star-half-alt"></i>-->
+<!--                                <i class="far fa-star"></i>-->
+<!--                                <span>(87)</span>-->
+<!--                            </div>-->
+<!--                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>-->
+<!--                            <div class="price">-->
+<!--                                <strong>20.430.000</strong>-->
+<!--                                <span>6.800.000</span>-->
+<!--                            </div>-->
+<!--                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>-->
+<!--                        </div>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                <div class="item-box">-->
+<!--                    <a href="#" class="item">-->
+<!--                        <div class="thumb">-->
+<!--                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"-->
+<!--                                 alt="" title=""/>-->
+<!--                        </div>-->
+<!--                        <div class="info">-->
+<!--                            <div class="rate text-orange">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star-half-alt"></i>-->
+<!--                                <i class="far fa-star"></i>-->
+<!--                                <span>(87)</span>-->
+<!--                            </div>-->
+<!--                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>-->
+<!--                            <div class="price">-->
+<!--                                <strong>20.430.000</strong>-->
+<!--                                <span>6.800.000</span>-->
+<!--                            </div>-->
+<!--                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>-->
+<!--                        </div>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                <div class="item-box">-->
+<!--                    <a href="#" class="item">-->
+<!--                        <div class="thumb">-->
+<!--                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"-->
+<!--                                 alt="" title=""/>-->
+<!--                        </div>-->
+<!--                        <div class="info">-->
+<!--                            <div class="rate text-orange">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star-half-alt"></i>-->
+<!--                                <i class="far fa-star"></i>-->
+<!--                                <span>(87)</span>-->
+<!--                            </div>-->
+<!--                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>-->
+<!--                            <div class="price">-->
+<!--                                <strong>20.430.000</strong>-->
+<!--                                <span>6.800.000</span>-->
+<!--                            </div>-->
+<!--                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>-->
+<!--                        </div>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                <div class="item-box">-->
+<!--                    <a href="#" class="item">-->
+<!--                        <div class="thumb">-->
+<!--                            <img src="https://images-fe.ssl-images-amazon.com/images/I/51I5IuT1BmL._AC_US200_.jpg"-->
+<!--                                 alt="" title=""/>-->
+<!--                        </div>-->
+<!--                        <div class="info">-->
+<!--                            <div class="rate text-orange">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star-half-alt"></i>-->
+<!--                                <i class="far fa-star"></i>-->
+<!--                                <span>(87)</span>-->
+<!--                            </div>-->
+<!--                            <div class="name">Bulova Men's 96B104 Stainless Steel ANF Dress Watch</div>-->
+<!--                            <div class="price">-->
+<!--                                <strong>20.430.000</strong>-->
+<!--                                <span>6.800.000</span>-->
+<!--                            </div>-->
+<!--                            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>-->
+<!--                        </div>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 
 <?php

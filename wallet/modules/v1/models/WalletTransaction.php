@@ -54,6 +54,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
 
     const VERIFY_RECEIVE_TYPE_PHONE = 0;
     const VERIFY_RECEIVE_TYPE_EMAIL = 1;
+    const VERIFY_RECEIVE_TYPE_NONE = 3;
 
     /**
      * on dev mode set it to make static otp code
@@ -217,7 +218,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
                     if ($this->type === self::TYPE_WITH_DRAW) {
                         $this->note = 'Withdraw amount requested greater than withdrawable balance';
                     }
-                } else {
+                } else if($this->verify_receive_type !== self::VERIFY_RECEIVE_TYPE_NONE) {
                     $this->getOtpCode();
                     $this->sendOtpCode();
                 }

@@ -118,6 +118,9 @@ class WalletService extends BaseObject
     public function topUpTransaction()
     {
         $data = [];
+        if($this->transaction_code !== null){
+            $data['transaction_code'] = $this->transaction_code;
+        }
         $data['amount_total'] = $this->total_amount;
         $data['method'] = $this->payment_method;
         $data['payment_provider'] = $this->payment_provider;
@@ -187,7 +190,7 @@ class WalletService extends BaseObject
     public function createPaymentTransaction()
     {
         $data['merchant_id'] = $this->merchant_id;
-        $data['transaction_code'] = $this->payment_transaction;
+        $data['transaction_code'] = $this->transaction_code;
         $data['total_amount'] = $this->total_amount;
         $data['payment_method'] = $this->payment_provider;
         $data['payment_provider'] = $this->payment_provider;
