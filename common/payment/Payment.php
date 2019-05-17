@@ -183,23 +183,10 @@ class Payment extends Model
             $this->payment_provider_name = $methodProvider->paymentProvider->code;
         }
         $code = PaymentService::generateTransactionCode('PM');
-        if ($this->payment_provider === 42) {
-            $wallet = new WalletService([
-                'total_amount' => $this->total_amount - $this->total_discount_amount,
-                'payment_provider' => $this->payment_provider_name,
-                'payment_method' => $this->payment_method_name,
-                'bank_code' => $this->payment_bank_code,
-            ]);
-            $results = $wallet->topUpTransaction();
-
-            if ($results['success'] === true && isset($results['data']) && isset($results['data']['data']['code'])) {
-                $code = $results['data']['data']['code'];
-            }
-        }
         $this->transaction_code = $code;
         $this->transaction_fee = 0;
-        $this->return_url = Url::to("/payment/{$this->payment_provider}/return.html",true);
-        $this->cancel_url = Url::to("/checkout/cart",true);
+        $this->return_url = Url::to("/payment/{$this->payment_provider}/return.html", true);
+        $this->cancel_url = Url::toRoute("/checkout/cart", true);
     }
 
     public function processPayment()

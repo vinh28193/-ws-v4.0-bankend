@@ -103,6 +103,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 $request_content['form'] = $param;
                 $data = [
                     'code' => $payment->transaction_code,
+                    'status' => isset($resp['error_code']) ? $resp['error_code'] : null,
                     'token' => $resp['token'],
                     'checkoutUrl' => isset($resp['checkout_url']) ? $resp['checkout_url'] : null,
                     'method' => 'GET',
@@ -142,16 +143,16 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $yiiParams = Yii::$app->params['nganluong'];
 
             $orderCode = $data['order_code'];
-            if (($transaction = PaymentTransaction::findOne(['transaction_code' => $orderCode])) === null) {
+            $findWhere = ['transaction_code' => $orderCode];
+            if (strpos($orderCode, 'WL') !== false) {
+                $findWhere = ['topup_transaction_code' => $orderCode];
+            }
+            if (($transaction = PaymentTransaction::findOne($findWhere)) === null) {
                 $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logCallback->save(false);
-                return ReponseData::reponseArray(false, 'Transaction không tồn tại');
+                return ReponseData::reponseMess(false, 'Transaction không tồn tại');
             }
-            if ($transaction->transaction_type === PaymentTransaction::TRANSACTION_TYPE_TOP_UP && WalletTransaction::findOne(['wallet_transaction_code' => $transaction->transaction_code]) === null) {
-                return ReponseData::reponseArray(false, 'Transaction  wallet topUp không tồn tại');
-            }
-
             $param['function'] = 'GetTransactionDetail';
             // Product
             $param['merchant_id'] = $yiiParams['prod_trunggian']['ID'];
@@ -167,6 +168,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $param['time_limit'] = 1440;
 
             $param['token'] = $data['token'];
+
             $logPaymentGateway = new PaymentGatewayLogs();
             $logPaymentGateway->transaction_code_ws = $orderCode;
             $logPaymentGateway->request_content = $param;
@@ -188,10 +190,8 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 if ($resp['error_code'] == 00) {
                     $mess = "Giao dịch đã được thanh toán thành công!";
                     $success = true;
-                    if (in_array($this->page, [self::PAGE_CHECK_AND_UPDATE])) {
-                        $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-                        $transaction->save();
-                    }
+                    $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                    $transaction->save();
                 }
                 $request_content['api'] = $this->submitUrl;
                 $request_content['form'] = $param;
