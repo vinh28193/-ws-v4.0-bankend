@@ -79,7 +79,7 @@ UserBackendAsset::register($this);
                     if (Yii::$app->user->getIdentity()) {
                         ?>
                         <img class="avatar" src="<?= Yii::$app->user->getIdentity()->avatar ?>" alt=""/>
-                        <div class="name"><?= Yii::$app->user->getIdentity()->username ?></div>
+                        <div class="name"><?= Yii::$app->user->getIdentity()->last_name ?></div>
                         <div class="email"><?= Yii::$app->user->getIdentity()->email ?></div>
                     <?php } else { ?>
                         <img class="avatar"
