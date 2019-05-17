@@ -106,7 +106,7 @@ use yii\helpers\Url;
                         'url' => Url::toRoute(['sub-district'])
                     ]
                 ]);
-                echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block']);
+                echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block' , 'id' => 'btn-next-step3']);
                 ActiveForm::end();
                 ?>
             </div>
