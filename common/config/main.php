@@ -9,12 +9,13 @@ return [
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+        /*
         'cache' => [
             'class' => 'common\components\FileCache',
             'noCacheParam' => 'noCache',
             'noCacheValidateKey' => 'yes'
         ],
-        /*
+        */
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
@@ -23,7 +24,6 @@ return [
                 'database' => 0,
             ]
         ],
-        */
         'api' => [
             'class' => 'common\components\Api',
         ],
@@ -33,13 +33,15 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager'
         ],
-//        'as access' => [
-//            'class' => 'mdm\admin\classes\AccessControl',
-//            'allowActions' => [
-//                'site/*',
-//                'admin/*',
-//            ]
-//        ],
+        /*
+        'as access' => [
+            'class' => 'mdm\admin\classes\AccessControl',
+            'allowActions' => [
+                'site/*',
+                'admin/*',
+            ]
+        ],
+        */
         'i18n' => $i18n,
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
