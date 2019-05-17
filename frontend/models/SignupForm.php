@@ -166,7 +166,7 @@ class SignupForm extends Model
             )
             ->setFrom([Yii::$app->params['supportEmail'] => 'Weshop Việt Nam robot'])
             ->setTo($this->email)
-            ->setSubject('REGISTER ACCOUNT SUCCESS! WESHOP VIỆT NAM' .)
+            ->setSubject('REGISTER ACCOUNT SUCCESS! WESHOP VIỆT NAM')
             ->send();
     }
 }
