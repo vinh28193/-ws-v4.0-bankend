@@ -736,4 +736,18 @@ return [
             'OPTIONS merge'=> 'options',
         ]
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['fcm-noti'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{code}' =>  '<code:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'POST' => 'create',
+        ],
+        'extraPatterns' => []
+    ],
 ];

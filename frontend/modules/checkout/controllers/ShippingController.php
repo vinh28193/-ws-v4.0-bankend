@@ -5,6 +5,7 @@ namespace frontend\modules\checkout\controllers;
 
 
 use common\components\cart\CartManager;
+use common\payment\providers\wallet\WalletService;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
 use Yii;
@@ -72,6 +73,8 @@ class ShippingController extends CheckoutController
             if($key){
                 $this->module->cartManager->setMeOwnerItem($key[0]);
             }
+            $wallet = new WalletService();
+            $wallet->login($model->password);
             return ['success' => true, 'message' => 'đăng nhập thành công'];
         } else {
             return ['success' => false, 'message' => 'đăng nhập thất bại' , 'data' => $model->errors];
@@ -92,6 +95,8 @@ class ShippingController extends CheckoutController
                     if($key){
                         $this->module->cartManager->setMeOwnerItem($key[0]);
                     }
+                    $wallet = new WalletService();
+                    $wallet->login($model->password);
                     return ['success' => true, 'message' => 'đăng ký thành công'];
                 }
             }

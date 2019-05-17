@@ -135,13 +135,14 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
      */
     public static function findByPasswordResetToken($token)
     {
-        // @Phuchc ToDo Check time password reset Token
+        $expire = \Yii::$app->params['user.passwordResetTokenExpire'];
+        $parts = explode('_', $token);
+        $timestamp = (int) end($parts);
+        if ($timestamp + $expire < time()) {
+            // token expired
+            return null;
+        }
 
-//        if (!static::isPasswordResetTokenValid($token)) {
-//            return null;
-//        }
-
-        Yii::info('success', 'findByPasswordResetToken.');
         return static::findOne([
             'password_reset_token' => $token,
             'status' => self::STATUS_ACTIVE,
@@ -225,6 +226,14 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     public function generatePasswordResetToken()
     {
         $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    /**
+     * Generates  token_verifiy_user_create_new
+     */
+    public function generateTokenVerifiyUserCreateNew()
+    {
+        $token_verifiy_user_create_new = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**

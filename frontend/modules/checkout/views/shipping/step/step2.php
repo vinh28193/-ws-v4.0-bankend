@@ -9,7 +9,6 @@ use yii\helpers\Url;
 /* @var common\payment\models\ShippingForm $shippingForm */
 /* @var array $provinces */
 /* @var common\payment\Payment $payment */
-
 ?>
 <div class="container checkout-content">
     <ul class="checkout-step">
@@ -32,28 +31,27 @@ use yii\helpers\Url;
                 echo $form->field($shippingForm, 'buyer_name', [
                     'template' => '<i class="icon user"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput(['place']);
+                ])->textInput(['placeholder' => 'Họ và tên']);
 
                 echo $form->field($shippingForm, 'buyer_phone', [
                     'template' => '<i class="icon phone"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput();
+                ])->textInput(['placeholder' => 'Số điện thoại']);
 
-                echo $form->field($shippingForm, 'buyer_phone', [
+                echo $form->field($shippingForm, 'buyer_email', [
                     'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput();
+                ])->textInput(['placeholder' => 'Địa chỉ email']);
 
                 echo $form->field($shippingForm, 'buyer_province_id', [
-                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'template' => '<i class="icon city"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->dropDownList($provinces);
+                ])->dropDownList(array_merge(['Chọn thành phố'],$provinces));
 
                 echo $form->field($shippingForm, 'buyer_district_id', [
-                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->widget(DepDrop::classname(), [
-                    'options' => ['id' => 'district_id'],
                     'pluginOptions' => [
                         'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
                         'placeholder' => 'Select District',
@@ -62,42 +60,42 @@ use yii\helpers\Url;
                 ]);
 
                 echo $form->field($shippingForm, 'note_by_customer', [
-                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+//                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->textarea(['rows' => 3, 'placeholder' => 'Ghi chú thêm ( không bắt buộc)']);
 
                 echo $form->field($shippingForm, 'save_my_address', [
                     'template' => '{input}{hint}{error}',
                     'options' => [
-                        'class' => 'check-info'
+                        'class' => 'check-info',
                     ]
                 ])->checkbox();
 
-                echo '<a href="#" class="other-receiver"><i class="fas fa-check-circle"></i> Thông tin người nhận
+                echo '<a href="javascript: void(0);" id="other-receiver" class="other-receiver"><i class="fas fa-check-circle"></i> Thông tin người nhận
                 hàng khác người đặt hàng</a>';
-
+                echo "<div id='receiver-form' style='display: none'>";
                 echo $form->field($shippingForm, 'receiver_name', [
                     'template' => '<i class="icon user"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput();
+                ])->textInput(['placeholder' => 'Họ và tên']);
 
                 echo $form->field($shippingForm, 'receiver_phone', [
                     'template' => '<i class="icon phone"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput();
+                ])->textInput(['placeholder' => 'Số điện thoại']);
 
-                echo $form->field($shippingForm, 'receiver_phone', [
+                echo $form->field($shippingForm, 'receiver_email', [
                     'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput();
+                ])->textInput(['placeholder' => 'Địa chỉ email']);
 
                 echo $form->field($shippingForm, 'receiver_province_id', [
-                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'template' => '<i class="icon city"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->dropDownList($provinces);
+                ])->dropDownList(array_merge(['Chọn thành phố'],$provinces));
 
                 echo $form->field($shippingForm, 'receiver_district_id', [
-                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
+                    'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->widget(DepDrop::classname(), [
                     'pluginOptions' => [
@@ -106,6 +104,7 @@ use yii\helpers\Url;
                         'url' => Url::toRoute(['sub-district'])
                     ]
                 ]);
+                echo "</div>";
                 echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block' , 'id' => 'btn-next-step3']);
                 ActiveForm::end();
                 ?>

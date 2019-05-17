@@ -125,7 +125,6 @@ class Payment extends Model
         $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
         $this->view = Yii::$app->getView();
         $this->loadOrdersFromCarts();
-        $this->registerClientScript();
         $this->currency = 'vnđ';
     }
 
@@ -183,23 +182,10 @@ class Payment extends Model
             $this->payment_provider_name = $methodProvider->paymentProvider->code;
         }
         $code = PaymentService::generateTransactionCode('PM');
-        if ($this->payment_provider === 42) {
-            $wallet = new WalletService([
-                'total_amount' => $this->total_amount - $this->total_discount_amount,
-                'payment_provider' => $this->payment_provider_name,
-                'payment_method' => $this->payment_method_name,
-                'bank_code' => $this->payment_bank_code,
-            ]);
-            $results = $wallet->topUpTransaction();
-
-            if ($results['success'] === true && isset($results['data']) && isset($results['data']['data']['code'])) {
-                $code = $results['data']['data']['code'];
-            }
-        }
         $this->transaction_code = $code;
         $this->transaction_fee = 0;
-        $this->return_url = Url::to("/payment/{$this->payment_provider}/return.html",true);
-        $this->cancel_url = Url::to("/checkout/cart",true);
+        $this->return_url = Url::to("/payment/{$this->payment_provider}/return.html", true);
+        $this->cancel_url = Url::toRoute("/checkout/cart", true);
     }
 
     public function processPayment()
@@ -344,12 +330,11 @@ class Payment extends Model
 
                     }
                 }
-                if ($orderDiscount > 0) {
-                    $order->updateAttributes([
-                        'total_promotion_amount_local' => $orderDiscount
-                    ]);
-                }
+
                 $updateOrderAttributes = [];
+
+                $updateOrderAttributes['total_promotion_amount_local'] = $orderDiscount;
+
                 // 4 products
                 if (($products = ArrayHelper::getValue($params, 'products')) === null) {
                     $transaction->rollBack();
@@ -435,6 +420,8 @@ class Payment extends Model
                         $transaction->rollBack();
                         return ['success' => false, 'message' => 'can not get fee for an item'];
                     }
+                    $orderTotalAmountLocal = 0;
+                    $totalFeeAmountLocal = 0;
                     foreach ($productFees as $feeName => $feeValue) {
                         // 10. create each fee
                         $orderAttribute = '';
@@ -496,6 +483,10 @@ class Payment extends Model
                             $transaction->rollBack();
                             return ['success' => false, 'message' => 'can not deploy an fee'];
                         }
+                        $orderTotalAmountLocal += $productFee->local_amount;
+                        if ($productFee->type !== 'product_price_origin') {
+                            $totalFeeAmountLocal += $productFee->local_amount;
+                        }
                         // 10. update discount each fee
                         $discountForFeeAmount = 0;
                         if (!empty($feeDiscounts)) {
@@ -529,8 +520,22 @@ class Payment extends Model
                         }
                     }
 
+                    // Tổng các phí các sản phẩm (trừ giá gốc tại nơi xuất xứ)
+                    $oldAmount = isset($updateOrderAttributes['total_fee_amount_local']) ? $updateOrderAttributes['total_fee_amount_local'] : 0;
+                    $oldAmount += $totalFeeAmountLocal;
+                    $updateOrderAttributes['total_fee_amount_local'] = $oldAmount;
+
+                    // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
+                    $oldAmount = isset($updateOrderAttributes['total_amount_local']) ? $updateOrderAttributes['total_amount_local'] : 0;
+                    $oldAmount += $orderTotalAmountLocal;
+                    $updateOrderAttributes['total_amount_local'] = $oldAmount;
+
+                    $updateOrderAttributes['total_final_amount_local'] = $oldAmount;
+
                 }
+
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
+                $updateOrderAttributes['total_final_amount_local'] = $updateOrderAttributes['total_amount_local'] - $updateOrderAttributes['total_promotion_amount_local'];
                 $order->updateAttributes($updateOrderAttributes);
             }
             $transaction->commit();
@@ -544,8 +549,7 @@ class Payment extends Model
 
     public function initPaymentView()
     {
-        $view = Yii::$app->getView();
-
+        $this->registerClientScript();
         if ($this->page === self::PAGE_TOP_UP) {
             $this->payment_method = 25;
             $this->payment_provider = 43;
@@ -578,7 +582,7 @@ class Payment extends Model
             }
         }
         ksort($group);
-        return $view->render('normal', [
+        return $this->view->render('normal', [
             'payment' => $this,
             'group' => $group
         ], new PaymentContextView());

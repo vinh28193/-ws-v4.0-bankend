@@ -96,11 +96,31 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->payment_type = $payment->payment_type;
         $paymentTransaction->shipping = $shippingForm->receiver_address_id;
         $paymentTransaction->save(false);
+        if ($payment->payment_provider === 42) {
+            $wallet = new WalletService([
+                'transaction_code' => $payment->transaction_code,
+                'total_amount' => $payment->total_amount - $payment->total_discount_amount,
+                'payment_provider' => $payment->payment_provider_name,
+                'payment_method' => $payment->payment_method_name,
+                'bank_code' => $payment->payment_bank_code,
+            ]);
+            $results = $wallet->topUpTransaction();
+            if ($results['success'] === true && isset($results['data']) && isset($results['data']['data']['code'])) {
+                $topUpCode = $results['data']['data']['code'];
+                $paymentTransaction->updateAttributes([
+                    'topup_transaction_code' => $topUpCode
+                ]);
+                $payment->transaction_code = $topUpCode;
+            }
+        }
         $res = $payment->processPayment();
         if ($res['success'] === false) {
             return $this->response(false, $res['message']);
         }
-
+        $paymentTransaction->third_party_transaction_code = $res['data']['token'];
+        $paymentTransaction->third_party_transaction_status = $res['data']['code'];
+        $paymentTransaction->third_party_transaction_link = $res['data']['checkoutUrl'];
+        $paymentTransaction->save(false);
         $time = $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res['data']);
@@ -110,17 +130,13 @@ class PaymentController extends BasePaymentController
     {
         $start = microtime(true);
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $now = Yii::$app->getFormatter()->asDatetime('now');
-
-        $post = Yii::$app->request->post();
-        $get = Yii::$app->request->get();
         $res = Payment::checkPayment((int)$merchant, $this->request);
         if (!isset($res) || $res['success'] === false || !isset($res['data'])) {
             return $this->redirect('failed');
         }
         $data = $res['data'];
         /** @var $paymentTransaction PaymentTransaction */
-        if(($paymentTransaction = $data['transaction']) instanceof PaymentTransaction && $paymentTransaction->transaction_status  === PaymentTransaction::TRANSACTION_STATUS_SUCCESS){
+        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction && $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
             $payment = new Payment([
                 'carts' => StringHelper::explode($paymentTransaction->carts, ','),
                 'transaction_code' => $paymentTransaction->transaction_code,
@@ -146,13 +162,13 @@ class PaymentController extends BasePaymentController
             $receiverAddress = Address::findOne($paymentTransaction->shipping);
             /* @var $results PromotionResponse */
             $createResponse = $payment->createOrder($receiverAddress);
-            if (!$createResponse['success']) {
-                $this->goHome();
+            if ($createResponse['success']) {
+                return $this->goHome();
             }
+
         }
-
-
         return $this->redirect('/checkout/cart');
+
     }
 
     public function actionOtpVerify($code)
@@ -221,6 +237,7 @@ class PaymentController extends BasePaymentController
                 $statusOtp = false;
             }
         }
+
         if (count($otpInfo) > 0) {
 
             if ($otpInfo['verified']) {
@@ -244,62 +261,7 @@ class PaymentController extends BasePaymentController
         }
         $msg = count($msg) > 0 ? implode('. ', $msg) : null;
 
-        if (!$request->isAjax && $request->isPost && $otpVerifyForm->load($request->post()) && $otpVerifyForm->verify()) {
-            if ($transactionDetail['type'] != self::TYPE_TRANSACTION_WITHDRAW) {
-
-                // Update orderSuccess
-                $sevice = new WalletService(['transaction_code' => $otpVerifyForm->transactionCode]);
-                $responseWalletApi = $sevice->transactionSuccess();
-                $returnUrl = Url::toRoute('return', ['mechant' => 43]);
-
-//                return $this->redirect('');
-
-//                $log = new PaymentGatewayRequests();
-//                $log->binCode = $transactionDetail['order_number'];
-//                $log->requestId = $transactionDetail['wallet_transaction_code'];
-//                $log->requestType = 'CALLBACK';
-//                $log->requestUrl = Yii::$app->request->url;
-//                $log->paymentGateway = 'WESHOP WALLET';
-//                $log->paymentBank = 'wallet';
-//                $log->amount = $transactionDetail['totalAmount'];
-//                $log->responseContent = json_encode($responseWalletApi);
-//                $log->responseTime = date('Y-m-d H:i:s');
-//                $log->storeId = 1; //vn
-
-
-            } else {
-                $msg = 'Xác thực OTP hoàn tất. Vui long chờ đợi hệ thống sử lý. Xin cảm ơn.';
-                return $this->render('detail', [
-                    'transactionDetail' => $transactionDetail,
-                    'msg' => $msg
-                ]);
-            }
-            return $this->redirect($redirectUri);
-        }
-        if ($request->isAjax) {
-            $otpVerifyForm->load($request->post());
-            $response = $otpVerifyForm->refreshOtp();
-            $out = ['success' => $response['success'], 'message' => $response['message']];
-            if ($out['success'] && $response['code'] === '0000') {
-                $data = $response['data'];
-                $receiveType = $data['receive_type'] ? 'email' : 'phone';
-                $msg = 'Gửi lại otp thành công' . '. ' .
-                    'Your otp send to' . ' ' . $receiveType . ': ' . $data['send_to'] . '. ' .
-                    'Your otp will be expire at' . ': ' .
-                    Html::tag('span', $data['expired'], ['data-time-expired' => $data['expired_timestamp'], 'data-redirect-uri' => $redirectUri, 'class' => 'otp-expired-cooldown text-red']) . '. ' .
-                    'If not receive otp, should be' . ' ' .
-                    Html::a('click here', '#', ['class' => 'text-red', 'onclick' => new JsExpression('wallet.refreshOtp()')]) . ' ' .
-                    'to resend otp or click button' . ': "' .
-                    'Gửi lại' . '"';
-                $out['message'] = $msg;
-            }
-
-            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return $out;
-        }
-        var_dump($msg);
-        die;
-        return Yii::$app->getView()->render('otp-verify', [
+        return Yii::$app->getView()->renderAjax('otp-verify', [
             'statusOtp' => $isValid,
             'isValid' => $isValid,
             'msg' => $msg,

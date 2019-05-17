@@ -16,7 +16,7 @@ use Yii;
  * @property string $user_action
  * @property string $content
  */
-class WalletTransactionLog extends \common\components\db\ActiveRecord
+class WalletTransactionLog extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
