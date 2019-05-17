@@ -20,7 +20,7 @@ if($item->relate_products) {
                                  title=""/>
                         </div>
                         <div class="info">
-                            <div class="name"><?= $product->title ?></div>
+                            <div class="name" style="white-space: nowrap"><?= $product->title ?></div>
                             <div class="price">
                                 <strong><?php
                                     if($product->sell_price){
