@@ -113,7 +113,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                             return Yii::$app->storeManager->getId();
                         },
                     ],
-                    'exchange_rate_fee' =>  [
+                    'exchange_rate_fee' => [
                         self::EVENT_BEFORE_INSERT => function ($event, $attribute) {
                             return Yii::$app->storeManager->getExchangeRate();
                         },
@@ -480,7 +480,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
      */
     public function getWalletTransactions()
     {
-        return $this->hasMany(PaymentTransaction::className(), ['order_id' => 'id']);
+        return $this->hasMany(PaymentTransaction::className(), ['transaction_code' => 'transaction_code']);
     }
 
 
