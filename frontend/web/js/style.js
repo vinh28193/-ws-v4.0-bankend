@@ -170,6 +170,11 @@ $( document ).ready(function() {
             $('#step_checkout_'+step).css('display','block');
         }
     });
+    $('#btn-next-step3').click(function () {
+        $('#step_checkout_1').css('display','none');
+        $('#step_checkout_2').css('display','none');
+        $('#step_checkout_3').css('display','block');
+    });
     $('input[name=check-member]').click(function () {
         var value = $(this).val();
         if(value === 'new-member'){

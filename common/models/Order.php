@@ -480,7 +480,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
      */
     public function getWalletTransactions()
     {
-        return $this->hasMany(PaymentTransaction::className(), ['order_id' => 'id']);
+        return $this->hasMany(WalletTransaction::className(), ['order_number' => 'id']);
     }
 
 
