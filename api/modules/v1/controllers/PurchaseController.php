@@ -228,6 +228,11 @@ class PurchaseController extends BaseApiController
         }
         return $this->response($success,$message ? $message : $mess,$data);
     }
+
+    /**
+     * @return array
+     * @throws \Throwable
+     */
     public function actionCreate(){
         $form = new FormRequestPurchase();
         $form->setAttributes($this->post,false);
@@ -353,13 +358,17 @@ class PurchaseController extends BaseApiController
             $PurchaseOrder->total_type_changing = $changeAmount > 0 ? 'up' : 'down';
             $PurchaseOrder->save(0);
 
-            // ToDo : @Phuchc Notication "Mua Hàng Thành Công" 17/05/2019 Call API
+
 
             Yii::$app->wsLog->push('order','purchased', null, [
                 'id' => $PurchaseOrder->id,
                 'request' => $this->post['cart'],
                 'response' => $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id)
             ]);
+
+            // ToDo : @Phuchc Notication "Mua Hàng Thành Công" 17/05/2019 Call API
+            //Yii::$app->wsFcnApn->Create();
+
             $tran->commit();
             return $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id);
         }catch (\Exception $exception){
