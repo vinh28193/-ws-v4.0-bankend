@@ -9,10 +9,10 @@ interface PaymentProviderInterface
 
 
     /**
-     * @param Payment $transaction
+     * @param Payment $payment
      * @return mixed
      */
-    public function create(Payment $transaction);
+    public function create(Payment $payment);
 
     /**
      * @param $data

@@ -73,14 +73,14 @@ class WalletService extends BaseObject
 
     public function callApiRequest($url, $params, $method = "POST")
     {
-        try{
+        try {
             $client = $this->getWalletClient();
             return $client->createApiRequest()
                 ->setMethod($method)
                 ->setFormat('json')
                 ->setUrl($url)
                 ->setData($params)->send()->getData();
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             return null;
         }
     }
@@ -93,7 +93,7 @@ class WalletService extends BaseObject
         $walletClient = $this->getWalletClient();
         try {
             $walletClient->authenticateUser($user->username, $password);
-           return $this->response(true, 'Login success');
+            return $this->response(true, 'Login success');
         } catch (Exception $exception) {
             $client = new Client([
                 'baseUrl' => $walletClient->apiBaseUrl
@@ -122,7 +122,7 @@ class WalletService extends BaseObject
     public function topUpTransaction()
     {
         $data = [];
-        if($this->transaction_code !== null){
+        if ($this->transaction_code !== null) {
             $data['transaction_code'] = $this->transaction_code;
         }
         $data['amount_total'] = $this->total_amount;
@@ -132,6 +132,11 @@ class WalletService extends BaseObject
         $data['merchant_id'] = @self::MERCHANT_IP_PRO;
 
         return $this->callApiRequest('topup/create', $data);
+    }
+
+    public function walletInformation()
+    {
+        return $this->callApiRequest('wallet/information', []);
     }
 
     public function pushToTopUp()
