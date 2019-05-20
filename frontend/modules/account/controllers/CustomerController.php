@@ -36,7 +36,6 @@ class CustomerController extends BaseAccountController
         return ArrayHelper::merge(parent::actions(),[
             'subcat' => [
                 'class' => 'common\actions\DepDropAction',
-                'defaultSelect' => true,
                 'useAction' => 'common\models\SystemDistrict::select2Data'
             ]
         ]);
