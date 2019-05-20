@@ -732,8 +732,11 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             if ($params['noTracking'] == 'STOCKIN_US2DAY') {
                 for ($i = 0; $i < count($countOrder); $i++) {
                     if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Friday') {
+                        var_dump(Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l'));
+                        die();
                         $query->andFilterWhere([
                             'and',
+                            ['IS NOT', 'stockin_us', new Expression('null')],
                             ['<', 'stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 4 days'))],
                             ['is', 'stockout_us', new Expression('null')],
                         ]);
@@ -741,12 +744,14 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Saturday') {
                         $query->andFilterWhere([
                             'and',
+                            ['IS NOT', 'stockin_us', new Expression('null')],
                             ['<', 'stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 3 days'))],
                             ['is', 'stockout_us', new Expression('null')],
                         ]);
                     } else {
                         $query->andFilterWhere([
                             'and',
+                            ['IS NOT', 'stockin_us', new Expression('null')],
                             ['<', 'stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 2 days'))],
                             ['is', 'stockout_us', new Expression('null')],
                         ]);
@@ -772,20 +777,23 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Friday') {
                 $pc = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
+                    ['IS NOT', 'p.purchased', new Expression('null')],
                     ['<', 'p.purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 5 days')],
-                    ['is', 'p.stockin_us', new Expression('null')],
+                    ['is', 'p.seller_shipped', new Expression('null')],
                 ])->count('p.id');
             }
             if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Saturday') {
                 $pc1 = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
+                    ['IS NOT', 'p.purchased', new Expression('null')],
                     ['<', 'p.purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 4 days')],
-                    ['is', 'p.stockin_us', new Expression('null')],
+                    ['is', 'p.seller_shipped', new Expression('null')],
                 ])->count('p.id');
             }
             if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Friday') {
                 $sk = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
+                    ['IS NOT', 'p.stockin_us', new Expression('null')],
                     ['<', 'p.stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 4 days'))],
                     ['is', 'p.stockout_us', new Expression('null')],
                 ])->count('p.id');
@@ -793,19 +801,22 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Saturday') {
                 $sk1 = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
+                    ['IS NOT', 'p.stockin_us', new Expression('null')],
                     ['<', 'p.stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 3 days'))],
                     ['is', 'p.stockout_us', new Expression('null')],
                 ])->count('p.id');
             } else {
                 $sk1 = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
+                    ['IS NOT', 'p.stockin_us', new Expression('null')],
                     ['<', 'p.stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 2 days'))],
                     ['is', 'p.stockout_us', new Expression('null')],
                 ])->count('p.id');
                 $pc2 = (new Query())->from(['p' => $cloneQuery])->where([
                     'and',
+                    ['IS NOT', 'p.purchased', new Expression('null')],
                     ['<', 'p.purchased', (int)(Yii::$app->getFormatter()->asTimestamp('now - 2 days'))],
-                    ['is', 'p.stockin_us', new Expression('null')],
+                    ['is', 'p.seller_shipped', new Expression('null')],
                 ])->count('p.id');
             }
         }
@@ -815,6 +826,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             'totalUnPaid' => (new Query())->from(['cc' => $cloneQuery])->where(['=', 'total_paid_amount_local', 0])->count('cc.id'),
             'countPurchase' => (new Query())->from(['cp' => $cloneQuery])->where([
                 'AND',
+                ['IS NOT', 'cp.seller_shipped', new Expression('null')],
                 ['<', 'cp.seller_shipped', (int)(Yii::$app->getFormatter()->asTimestamp('now - 5 days'))],
                 ['is', 'cp.stockin_us', new Expression('null')]
             ])->count('cp.id'),
@@ -822,6 +834,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             'countStockin' => $countStockin,
             'countUS' => (new Query())->from(['cp' => $cloneQuery])->where([
                 'and',
+                ['IS NOT', 'cp.stockin_us', new Expression('null')],
                 ['<', 'cp.stockin_us', (int)Yii::$app->getFormatter()->asTimestamp('now - 10 days')],
                 ['is', 'cp.stockout_us', new Expression('null')],
             ])->count('cp.id'),
