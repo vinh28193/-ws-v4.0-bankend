@@ -67,7 +67,6 @@ class ShippingController extends CheckoutController
             return ['success' => true];
         }
         $model = new LoginForm();
-        $model->rememberMe = false; // Mặc định không ghi nhớ
         if ($model->load(Yii::$app->request->post()) && $model->login() ) {
             $key = CartSelection::getSelectedItems(CartSelection::TYPE_BUY_NOW);
             if($key){

@@ -13,7 +13,7 @@ use yii\web\View;
 /* @var array $walletInterview */
 /* @var string $redirectUri */
 
-
+var_dump($statusOtp);
 if (!$statusOtp) {
     if (!$isValid && $transactionDetail['type'] === 'PAY_ORDER' && $transactionDetail['status'] === 4) {
         echo Html::beginTag('div', ['class' => 'button_group']);

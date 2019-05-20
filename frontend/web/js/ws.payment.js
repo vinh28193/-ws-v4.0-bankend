@@ -134,7 +134,7 @@ ws.payment = (function ($) {
                     url = 'checkout/signup.html';
                 }else {
                     loginForm = {
-                        email: $('input[name=email]').val(),
+                        loginId: $('input[name=email]').val(),
                         password: $('input[name=password]').val(),
                         rememberMe: $('input[name=rememberMe]').val(),
                     };
