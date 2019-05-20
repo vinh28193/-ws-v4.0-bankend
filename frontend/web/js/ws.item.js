@@ -78,11 +78,11 @@
                 }
                 setUpDefaultOptions($item);
                 ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'a#addToCart', function (event) {
-                    paymentItem($(this), 'shopping');
+                    paymentItem($item, 'shopping');
                     return false;
                 });
                 ws.initEventHandler($item, 'buyNow', 'click.wsItem', 'button.btn-buy', function (event) {
-                    paymentItem($(this), 'buynow');
+                    paymentItem($item, 'buynow');
                     return false;
                 });
                 ws.initEventHandler($item, 'installment', 'click.wsItem', 'button#installmentBtn', function (event) {

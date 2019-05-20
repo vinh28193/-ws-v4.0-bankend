@@ -29,7 +29,6 @@ class ShippingController extends CheckoutController
         return ArrayHelper::merge(parent::actions(), [
             'sub-district' => [
                 'class' => 'common\actions\DepDropAction',
-                'defaultSelect' => true,
                 'useAction' => 'common\models\SystemDistrict::select2Data'
             ]
         ]);

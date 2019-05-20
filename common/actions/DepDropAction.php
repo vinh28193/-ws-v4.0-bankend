@@ -12,10 +12,6 @@ class DepDropAction extends \yii\base\Action
 {
 
     /**
-     * @var bool
-     */
-    public $defaultSelect = false;
-    /**
      * @var string
      */
     public $selectedParam = 'id';
@@ -30,7 +26,8 @@ class DepDropAction extends \yii\base\Action
     /**
      * @var string
      */
-    public $depdropParam = 'depdrop_parents';
+    public $depdropParents = 'depdrop_parents';
+    public $depdropParam = 'depdrop_params';
 
     /**
      * cache duration(s)
@@ -53,12 +50,16 @@ class DepDropAction extends \yii\base\Action
     public function run()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        if (($parents = ArrayHelper::getValue($_POST, $this->depdropParam)) !== null) {
+        if (($parents = ArrayHelper::getValue($_POST, $this->depdropParents)) !== null) {
             $parents = reset($parents);
             $parents = (integer)$parents;
             $out = call_user_func($this->useAction, $parents);
             if (!empty($out)) {
-                return ['output' => $out, 'selected' => ($this->defaultSelect && count($out) > 0) ? $out[0][$this->selectedParam] : ''];
+                $selected = '';
+                if (($params = ArrayHelper::getValue($_POST, $this->depdropParam)) !== null) {
+                    $selected = isset($params[0]) ? $params[0] : $selected;
+                }
+                return ['output' => $out, 'selected' => $selected];
             }
         }
 
