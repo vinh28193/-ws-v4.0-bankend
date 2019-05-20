@@ -2,8 +2,8 @@
 
 use frontend\modules\account\views\widgets\HeaderContentWidget;
 
-$this->title = 'Ví WeShop Của Bạn';
-echo HeaderContentWidget::widget(['title' => 'Ví của bạn','stepUrl' => 'my-weshop/wallet.html']);
+$this->title = 'Ví WeShop Của Tôi';
+echo HeaderContentWidget::widget(['title' => 'Ví của bạn','stepUrl' => [ 'Ví của tôi' => 'my-weshop/wallet.html']]);
 ?>
 
 
