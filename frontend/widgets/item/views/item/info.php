@@ -27,13 +27,13 @@ $current_provider = $item->getCurrentProvider();
             <i class="fas fa-star-half-alt"></i>
             <i class="far fa-star"></i>
         </div>
-        <span>87 người đánh giá</span>
+        <span><?php echo(rand(10,100)); ?> người đánh giá</span>
     </div>
     <div class="origin" style="display: none">
         <a target="_blank" href="<?= $item->item_origin_url ?>">Xem link gốc -></a>
     </div>
     <div class="price">
-        <strong class="text-orange"><?=  WeshopHelper::showMoney($item->getLocalizeTotalPrice(),1,'') ?><span class="currency">đ</span></strong>
+        <strong class="text-orange one-time-payment"><?=  WeshopHelper::showMoney($item->getLocalizeTotalPrice(),1,'') ?><span class="currency">đ</span></strong>
         <?php if ($item->start_price){ ?>
             <b class="old-price"><?=  WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(),1,'') ?><span class="currency">đ</span></b>
             <span class="save">(Tiết kiệm: <?=  WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(),1,'') ?>đ)</span>
