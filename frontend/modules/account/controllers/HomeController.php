@@ -3,7 +3,7 @@
 namespace frontend\modules\account\controllers;
 
 use common\components\cart\CartManager;
-use common\payment\providers\wallet\WalletService;
+use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
 use common\models\Order;
 use common\models\User;

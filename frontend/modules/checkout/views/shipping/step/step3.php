@@ -1,8 +1,8 @@
 <?php
 
 /* @var yii\web\View $this */
-/* @var \common\payment\models\ShippingForm $shippingForm */
-/* @var \common\payment\Payment $payment */
+/* @var \frontend\modules\payment\models\ShippingForm $shippingForm */
+/* @var \frontend\modules\payment\Payment $payment */
 ?>
 
 <div class="container checkout-content">

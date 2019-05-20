@@ -4,7 +4,7 @@
 /* @var $content string */
 
 use common\components\cart\CartManager;
-use common\payment\providers\wallet\WalletService;
+use frontend\modules\payment\providers\wallet\WalletService;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use frontend\modules\account\assets\UserBackendAsset;
