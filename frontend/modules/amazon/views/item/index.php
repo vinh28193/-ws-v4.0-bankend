@@ -11,7 +11,7 @@ use frontend\widgets\item\ItemDetailWidget;
 echo ItemDetailWidget::widget([
     'item' => $item,
     'options' => [
-        'id' => 'ebay-item-detail',
+        'id' => 'Amazon-item-detail',
         'class' => 'row'
     ]
 ]);
