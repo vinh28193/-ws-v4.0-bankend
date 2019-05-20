@@ -35,6 +35,7 @@ UserBackendAsset::register($this);
     <meta property="fb:admins" content="Facebook Admin ID page"/>
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <?php $this->head() ?>
 
 </head>
@@ -61,7 +62,7 @@ UserBackendAsset::register($this);
                             ArrayHelper::getValue(ArrayHelper::getValue((new WalletService())->detailWalletClient(),'data'),'current_balance',0)
                         ); ?></span></li>
                 <li>
-                    <a href="#">
+                    <a href="/my-cart.html">
                         <i class="icon cart"></i>
                         <i class="badge"><?= (new CartManager())->countItems() ?></i>
                     </a>
