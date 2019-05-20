@@ -77,8 +77,8 @@ class OrderController extends BaseAccountController
 
     public function actionView()
     {
-        $id = Yii::$app->request->get('id');
-        $model = Order::find()->with('products')->where(['id' => $id])->one();
+        $orderCode = Yii::$app->request->get('orderCode');
+        $model = Order::find()->with('products')->where(['ordercode' => $orderCode])->one();
         return $this->render('view', [
             'model' => $model,
         ]);
