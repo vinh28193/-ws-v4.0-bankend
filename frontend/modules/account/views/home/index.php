@@ -27,7 +27,7 @@ $chat = false;
             <span class="icon-box icon2"><i class="icon"></i></span>
             <div class="name">Đơn hàng</div>
             <div class="info"><?= $total ?></div>
-            <a href="#">Chi tiết >></a>
+            <?php echo Html::a('Chi tiết>>', ['/account/order'],['class' => 'active']); ?>
         </div>
     </div>
     <div class="col-md-3">
@@ -105,7 +105,7 @@ $chat = false;
                         ])->orderBy(['created_at' => SORT_DESC])->one();
                         ?>
                         <li>
-                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#" data-toggle="modal" data-url="/echo?ordercode=<?=$order->ordercode  ?>" data-target="#exampleModalCenter"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?> </p>
+                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#" data-toggle="modal" data-url="/echo?ordercode=<?=$order->ordercode  ?>" data-target="#exampleModalCenter"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at, "php:d-m-Y  H:i:s") ?> </p>
                             <?php if ($chat) {  ?>
                             <div class="mess-content mb-1">
                                 <i class="logo"><img src="../img/weshop_small_logo.png" alt=""/></i>
