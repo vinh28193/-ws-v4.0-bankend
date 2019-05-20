@@ -184,7 +184,7 @@ class PaymentController extends BasePaymentController
         if ($transaction['success']) {
             $data = $transaction['data'];
         }
-        var_dump($data);die;
+
         /**
          * Thông tin transaction
          *  - 'wallet_transaction_code' : transaction Code
@@ -252,17 +252,9 @@ class PaymentController extends BasePaymentController
             }
             $otpVerifyForm->otpReceive = $otpInfo['receive_type'];
             $msg[] = 'Mã xác thực otp đã gửi tới ' . ' ' . $otpInfo['receive_type_text'] . ': ' . $otpInfo['send_to'];
-            $msg[] = 'Hết hạn' . ': ' . Html::tag('span', $otpInfo['expired_at'], ['data-time-expired' => $otpInfo['expired_timestamp'], 'data-redirect-uri' => $redirectUri, 'class' => 'otp-expired-cooldown text-red']);
-            if (time() - $otpInfo['expired_timestamp'] <= 0) {
-                $msg[] = 'Nếu bạn không nhận được mã otp nào, hãy bấm ' . ' ' .
-                    Html::a('vào đây', '#', ['class' => 'text-red', 'onclick' => new JsExpression('wallet.refreshOtp()')]) . ' ' .
-                    'để gửi lại hoặc kích chọn vào ' . ': "' .
-                    'Gửi lại' . '"';
-            }
-
+            $msg[] = 'OTP có hiệu lực trong:' . Html::tag('span', $otpInfo['expired_at'], ['data-time-expired' => $otpInfo['expired_timestamp'], 'data-redirect-uri' => $redirectUri, 'class' => 'otp-expired-cooldown text-red']);
         }
         $msg = count($msg) > 0 ? implode('. ', $msg) : null;
-
         return Yii::$app->getView()->renderAjax('otp-verify', [
             'statusOtp' => $isValid,
             'isValid' => $isValid,
