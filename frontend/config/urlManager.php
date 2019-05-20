@@ -58,9 +58,13 @@ return [
         'login.html' => 'secure/login',
         'signup.html' => 'secure/register',
         'logout.html' => 'secure/logout',
+
+        //wallet
         'my-weshop/wallet.html' => 'account/wallet/index',
+        'my-weshop/order/<orderCode:[0-9A-Za-z_-]*>.html' => 'account/order/view',
+        'my-weshop/wallet/transaction/<transaction_code:[^/]+>/detail.html' => 'account/wallet/detail',
         'my-weshop/<controller>/<action>.html' => 'account/<controller>/<action>',
-        'my-weshop/api/<controller>/<action>.html' => 'account/api/<controller>/<action>'
-//        'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
+        'my-weshop/api/<controller>/<action>.html' => 'account/api/<controller>/<action>',
+
     ]
 ];

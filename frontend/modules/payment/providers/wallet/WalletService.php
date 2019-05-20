@@ -61,7 +61,7 @@ class WalletService extends BaseObject
         return $this->_walletClient;
     }
 
-    public function isGuest()
+    public static function isGuest()
     {
         return Yii::$app->getSession()->get('wallet_token') === null;
     }

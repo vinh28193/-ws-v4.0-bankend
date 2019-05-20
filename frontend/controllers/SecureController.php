@@ -77,7 +77,7 @@ class SecureController extends FrontendController
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             $redirectUrl = Yii::$app->getHomeUrl();
-            if (($url_rel = $this->request->get('rel', '/')) !== null) {
+            if (($url_rel = $this->request->get('rel')) !== null) {
                 $url_rel = urldecode($url_rel);
                 $redirectUrl = $url_rel && ($url_rel[0] == '/' || $url_rel[0] == '\\') ? '/' . $url_rel : $url_rel;
             }
