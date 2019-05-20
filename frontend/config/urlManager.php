@@ -65,6 +65,6 @@ return [
         'my-weshop/api/<controller>/<action>.html' => 'account/api/<controller>/<action>',
         'my-weshop/wallet/transaction/<transaction_code:[^/]+>/detail.html' => 'account/wallet/detail',
 
-//        'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
+        'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
     ]
 ];

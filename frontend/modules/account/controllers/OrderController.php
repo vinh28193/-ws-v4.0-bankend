@@ -75,14 +75,9 @@ class OrderController extends BaseAccountController
         ]);
     }
 
-    /**
-     * Displays a single Order model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
+    public function actionView()
     {
+        $id = Yii::$app->request->get('id');
         $model = Order::find()->with('products')->where(['id' => $id])->one();
         return $this->render('view', [
             'model' => $model,
