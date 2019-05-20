@@ -508,7 +508,7 @@ FrontendAsset::register($this);
             <div class="logo">
                 <span class="menu-toggle"></span>
                 <a href="/" class="logo-pc">
-                    <img src="../img/weshop-logo-vn.png" alt="" title=""/>
+                    <img src="/img/weshop-logo-vn.png" alt="" title=""/>
                 </a>
             </div>
             <div class="produce-box">
@@ -655,10 +655,10 @@ FrontendAsset::register($this);
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title"><img src="img/payment_qrpay.png"/></div>
+                <div class="modal-title"><img src="/img/payment_qrpay.png"/></div>
             </div>
             <div class="modal-body">
-                <div class="bank-logo"><img src="img/bank/vietcombank.png" alt=""/></div>
+                <div class="bank-logo"><img src="/img/bank/vietcombank.png" alt=""/></div>
                 <p>Vietcombank - Ngân hàng ngoại thương</p>
                 <div class="qr-box"><img
                             src="https://store-images.s-microsoft.com/image/apps.33967.13510798887182917.246b0a3d-c3cc-46fc-9cea-021069d15c09.392bf5f5-ade4-4b36-aa63-bb15d5c3817a"

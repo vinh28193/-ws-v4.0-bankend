@@ -6,8 +6,11 @@
  * @var $total int
  */
 
+use frontend\modules\account\views\widgets\HeaderContentWidget;
 use yii\helpers\Html;
 $chat = false;
+$this->title = 'My WeShop';
+echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
 ?>
 <div class="row">
     <div class="col-md-3">
@@ -17,9 +20,9 @@ $chat = false;
             <?php if($wallet){
                 echo '<div class="info">'.\common\helpers\WeshopHelper::showMoney($wallet['current_balance']).'</div>';
             }else{
-                echo "<div>Vui lòng xác thực lại mật khẩu để xem</div>";
+                echo "<div><a href='javascript: void(0);' onclick=\"$('#loginWallet').modal()\">Nhấp vào đây</a> <i class='fas fa-question-circle' data-toggle='tooltip' title='Vui lòng xác thực lại mật khẩu để xem thông tin.'></i></div>";
             }?>
-            <a href="#">Chi tiết >></a>
+            <a href="/my-weshop/wallet/history.html">Chi tiết >></a>
         </div>
     </div>
     <div class="col-md-3">
@@ -35,7 +38,7 @@ $chat = false;
             <span class="icon-box icon3"><i class="icon"></i></span>
             <div class="name">Giỏ hàng</div>
             <div class="info"><?= $totalCart ?></div>
-            <a href="#">Chi tiết >></a>
+            <a href="/my-cart.html">Chi tiết >></a>
         </div>
     </div>
     <div class="col-md-3">

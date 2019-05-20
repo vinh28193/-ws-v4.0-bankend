@@ -5,13 +5,13 @@ namespace frontend\modules\checkout\controllers;
 
 
 use common\components\cart\CartManager;
-use common\payment\providers\wallet\WalletService;
+use frontend\modules\payment\providers\wallet\WalletService;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
 use Yii;
 use common\components\cart\CartHelper;
-use common\payment\models\ShippingForm;
-use common\payment\Payment;
+use frontend\modules\payment\models\ShippingForm;
+use frontend\modules\payment\Payment;
 use common\models\SystemStateProvince;
 use common\components\cart\CartSelection;
 use yii\helpers\ArrayHelper;
@@ -67,7 +67,6 @@ class ShippingController extends CheckoutController
             return ['success' => true];
         }
         $model = new LoginForm();
-        $model->rememberMe = false; // Mặc định không ghi nhớ
         if ($model->load(Yii::$app->request->post()) && $model->login() ) {
             $key = CartSelection::getSelectedItems(CartSelection::TYPE_BUY_NOW);
             if($key){

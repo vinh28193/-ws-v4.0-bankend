@@ -371,4 +371,65 @@ class WeshopHelper
                 break;
         }
     }
+    public static function getTypeTransaction($type){
+        switch (strtoupper($type)){
+            case 'TOP_UP':
+                return 'Nạp Tiền';
+                break;
+            case 'PAY_ORDER':
+                return 'Thanh Toán';
+                break;
+            case 'WITH_DRAW':
+                return 'Rút Tiền';
+                break;
+            default:
+                return 'Không Rõ';
+                break;
+        }
+    }
+    public static function getStatusTransaction($status){
+        switch ($status){
+            case 0:
+                return 'Đang chờ';
+                break;
+            case 1:
+                return 'Đang thực hiện';
+                break;
+            case 2:
+                return 'Thành công';
+                break;
+            case 3:
+                return 'Huỷ bỏ';
+                break;
+            case 4:
+                return 'Thất bại';
+                break;
+            default:
+                return 'Không Rõ';
+                break;
+        }
+    }
+
+    public static function getStatusTransactionLabel($status){
+        switch ($status){
+            case 0:
+                return 'label-warning';
+                break;
+            case 1:
+                return 'label-info';
+                break;
+            case 2:
+                return 'label-success';
+                break;
+            case 3:
+                return 'label-primary';
+                break;
+            case 4:
+                return 'label-danger';
+                break;
+            default:
+                return 'label-secondary';
+                break;
+        }
+    }
 }

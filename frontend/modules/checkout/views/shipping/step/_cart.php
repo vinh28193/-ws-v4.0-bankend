@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var yii\web\View $this */
-/* @var common\payment\Payment $payment */
+/* @var frontend\modules\payment\Payment $payment */
 ?>
 
 <div class="title">Đơn hàng <span>(<?= count($payment->orders) ?> sản phẩm)</span> <a href="#" class="far fa-edit"></a>

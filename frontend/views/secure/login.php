@@ -40,7 +40,7 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 
     <?php $form = ActiveForm::begin(['id' => 'login-form', 'options' => [ 'class' => 'payment-form']]); ?>
     <div class="form-group">
-        <?= $form->field($model, 'email',['template' => " <i class=\"icon email\"></i>{input}\n{hint}\n{error}"])->textInput(['autofocus' => true])->input('text', ['placeholder' => " Nhập Email"])?>
+        <?= $form->field($model, 'loginId',['template' => " <i class=\"icon email\"></i>{input}\n{hint}\n{error}"])->textInput(['autofocus' => true])->input('text', ['placeholder' => "Tài khoàn, email hoặc số điện thoại"])?>
     </div>
     <div class="form-group">
         <?= $form->field($model, 'password', ['template' => "<i class=\"icon password\"></i>{input}\n{hint}\n{error}"])->passwordInput(['placeholder' => "Mật khẩu"]) ?>
