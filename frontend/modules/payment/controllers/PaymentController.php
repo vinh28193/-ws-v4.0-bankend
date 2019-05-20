@@ -184,6 +184,7 @@ class PaymentController extends BasePaymentController
         if ($transaction['success']) {
             $data = $transaction['data'];
         }
+        var_dump($data);die;
         /**
          * Thông tin transaction
          *  - 'wallet_transaction_code' : transaction Code
@@ -214,6 +215,7 @@ class PaymentController extends BasePaymentController
          * refresh_expired_at
          *
          */
+
         $otpInfo = isset($data['otpInfo']) ? $data['otpInfo'] : [];
         /**
          * Thông tin user dùng ví (cách giử otp)
