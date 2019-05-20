@@ -49,10 +49,12 @@ return [
         'checkout/login.html' => 'checkout/shipping/login',
         'checkout/signup.html' => 'checkout/shipping/signup',
         'checkout/office/<code:[^/]+>/success.html' => 'checkout/notify/office-success',
+
         // payment
-//        'payment/process' => 'payment/payment/process',
+        'payment/process' => 'payment/payment/process',
         'payment/<merchant:[^/]+>/return.html' => 'payment/payment/return',
-        'otp/<code:[^/]+>/verify.html' => 'payment/payment/otp-verify',
+        'otp/<code:[^/]+>/verify.html' => 'payment/wallet/otp-verify',
+        'otp/captcha' => 'payment/wallet/captcha',
         //account
         'my-weshop.html' => 'account/home',
         'login.html' => 'secure/login',

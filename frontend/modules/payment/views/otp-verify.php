@@ -1,5 +1,6 @@
 <?php
 
+use yii\captcha\Captcha;
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 use yii\web\View;
@@ -36,7 +37,15 @@ if (!$statusOtp) {
     echo Html::activeHiddenInput($otpVerifyForm, 'otpReceive');
     echo Html::activeHiddenInput($otpVerifyForm, 'transactionCode');
     echo $form->field($otpVerifyForm, 'optCode')->textInput();
-    echo $form->field($otpVerifyForm, 'password')->passwordInput();
+    echo $form->field($otpVerifyForm, 'captcha')->widget(Captcha::className(), [
+        'captchaAction' => '/otp/captcha',
+        'options' => ['class' => 'form-control'],
+        'template' => '<div class="input-group">{input}
+                            <div class="input-group-append">
+                                <span class="input-group-text">{image}</span>
+                            </div>
+                       </div>'
+    ]);
     echo Html::tag('p', 'Bạn chưa nhận được mã OTP? <a href="#">Gửi lại</a>');
     echo Html::button('Xác thực', ['class' => 'btn btn-submit btn-block']);
     ActiveForm::end();

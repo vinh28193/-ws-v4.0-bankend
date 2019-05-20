@@ -52,10 +52,11 @@ ws.payment = (function ($) {
             receiver_province_id: '',
             receiver_district_id: '',
             receiver_address: '',
-            other_receiver : 0,
-            note_by_customer : '',
-            save_my_address : '',
+            other_receiver: 0,
+            note_by_customer: '',
+            save_my_address: '',
             enable_buyer: '',
+            receiver_address_id: undefined,
 
         },
         init: function (options) {
@@ -74,12 +75,12 @@ ws.payment = (function ($) {
                 }
             });
             $('#other-receiver').click(function () {
-                if(!pub.shipping.other_receiver){
+                if (!pub.shipping.other_receiver) {
                     pub.shipping.other_receiver = 1;
                     $('#other-receiver i').addClass('text-info');
                     $('#other-receiver svg').addClass('text-info');
-                    $('#receiver-form').css('display','block');
-                }else {
+                    $('#receiver-form').css('display', 'block');
+                } else {
                     pub.shipping.other_receiver = 0;
                     $('#other-receiver i').removeClass('text-info');
                     $('#other-receiver svg').removeClass('text-info');
@@ -98,10 +99,10 @@ ws.payment = (function ($) {
                 }
             });
             $('#btn-next-step3').click(function () {
-                if(pub.getInfoFormShipping()){
+                if (pub.getInfoFormShipping()) {
                     $('.checkout-step li').removeClass('active');
-                    $('.checkout-step li').each(function (k,v) {
-                        if(k === 2){
+                    $('.checkout-step li').each(function (k, v) {
+                        if (k === 2) {
                             $(v).addClass('active');
                         }
                     });
@@ -211,6 +212,7 @@ ws.payment = (function ($) {
             pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
             pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
+            pub.shipping.receiver_address_id = $('#shippingform-receiver_address_id').val();
             if (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id) {
                 alert('Vui lòng nhập đầy đủ thông tin người mua');
                 return false;
@@ -312,12 +314,11 @@ ws.payment = (function ($) {
                 return;
             }
             ws.loading(true);
-            ws.ajax('/payment/payment/process', {
+            ws.ajax('/payment/process', {
                 dataType: 'json',
                 type: 'post',
                 data: {payment: pub.payment, shipping: pub.shipping},
                 success: function (response, textStatus, xhr) {
-                    console.log(response);
                     if (response.success) {
                         ws.loading(false);
                         var data = response.data;

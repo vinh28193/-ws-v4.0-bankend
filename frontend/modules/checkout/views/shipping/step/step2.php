@@ -27,6 +27,7 @@ use yii\helpers\Url;
                     ],
                 ]);
                 echo Html::activeHiddenInput($shippingForm, 'customer_id');
+                echo Html::activeHiddenInput($shippingForm, 'receiver_address_id');
 
                 echo $form->field($shippingForm, 'buyer_name', [
                     'template' => '<i class="icon user"></i>{input}{hint}{error}',

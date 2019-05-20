@@ -14,6 +14,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use Yii;
+use yii\helpers\Url;
 
 /**
  * Class OtpVerifyForm
@@ -37,10 +38,11 @@ class OtpVerifyForm extends Model
      * @var integer
      */
     public $otpReceive;
+
     /**
      * @var string
      */
-    public $password;
+    public $captcha;
 
     /**
      * @var string
@@ -67,7 +69,7 @@ class OtpVerifyForm extends Model
         return [
             [['optCode', 'captcha'], 'required'],
             ['otpReceive', 'integer'],
-            ['captcha', 'captcha', 'captchaAction' => '/account/wallet/captcha'],
+            ['captcha', 'captcha', 'captchaAction' => '/payment/wallet/captcha'],
             ['optCode', 'validateOtp']
         ];
     }
