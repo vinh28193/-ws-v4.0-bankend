@@ -26,7 +26,7 @@ class FrontendAsset extends AssetBundle
         'common\assets\FontawesomeAsset',
         'common\assets\OwlCarousel',
         'common\assets\SlickCarouselAsset',
-        'common\assets\WeshopAsset',
+        'frontend\assets\WeshopAsset',
         'frontend\assets\JQueryLazy',
         'frontend\assets\FancyboxPlusAsset'
     ];
