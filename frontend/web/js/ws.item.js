@@ -78,12 +78,15 @@
                 }
                 setUpDefaultOptions($item);
                 ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'a#addToCart', function (event) {
-                    // console.log(this);
-                    methods.addToCart.apply($item);
+                    paymentItem($(this), 'shopping');
                     return false;
                 });
                 ws.initEventHandler($item, 'buyNow', 'click.wsItem', 'button.btn-buy', function (event) {
-                    methods.buyNow.apply($item);
+                    paymentItem($(this), 'buynow');
+                    return false;
+                });
+                ws.initEventHandler($item, 'installment', 'click.wsItem', 'button#installmentBtn', function (event) {
+                    paymentItem($item, 'installment');
                     return false;
                 });
                 ws.initEventHandler($item, 'follow', 'click.wsItem', 'a#followItem', function (event) {
@@ -102,10 +105,6 @@
                 ws.initEventHandler($item, 'quantityChange', 'change.wsItem', 'input#quantity', function (event) {
                     defaultParams = params;
                     methods.changeQuantity.apply(this);
-                    return false;
-                });
-                ws.initEventHandler($item, 'installment', 'click.wsItem', 'button#installmentBtn', function (event) {
-                    paymentItem($item, 'installment');
                     return false;
                 });
                 $item.trigger($.Event(events.afterInit));
@@ -183,12 +182,6 @@
                     });
                 }
             }
-        },
-        addToCart: function () {
-            paymentItem($(this), 'shopping');
-        },
-        buyNow: function () {
-            paymentItem($(this), 'buynow');
         },
         follow: function () {
 

@@ -278,7 +278,7 @@ class Payment extends Model
                 $order->portal = isset($params['portal']) ? $params['portal'] : explode(':', $key)[0];
                 $order->customer_type = 'Retail';
                 $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
-                $order->payment_type = 'online_payment';
+                $order->payment_type = $this->payment_type;
                 $order->receiver_email = $receiverAddress->email;
                 $order->receiver_name = $receiverAddress->last_name . ' ' . $receiverAddress->last_name;
                 $order->receiver_phone = $receiverAddress->phone;

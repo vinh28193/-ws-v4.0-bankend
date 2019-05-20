@@ -77,7 +77,7 @@ class CartHelper
                 $product['parent_sku'] = $item->item_id;
                 $product['link_img'] = isset($request['image']) ? $request['image'] : ($item->current_image !== null ? $item->current_image : $item->primary_images[0]->main);
                 $product['link_origin'] = $item->item_origin_url;
-                $product['product_link'] = 'https://weshop.com.vn/link/sanpham.html';
+                $product['product_link'] = $item->ws_link,
                 $product['product_name'] = $item->item_name;
                 $product['quantity_customer'] = $item->getShippingQuantity();
                 $product['total_weight_temporary'] = $item->getShippingWeight();     //"cân nặng  trong lượng tạm tính"

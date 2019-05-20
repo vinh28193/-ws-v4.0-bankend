@@ -8,6 +8,7 @@
 
 namespace common\products;
 
+use common\helpers\WeshopHelper;
 use Yii;
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
@@ -59,6 +60,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     public $item_sku;
     public $item_name;
     public $item_origin_url;
+    public $ws_link;
     public $parent_item_id;
     public $retail_price;
     public $sell_price;
@@ -135,6 +137,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             $this->setProviders();
             $this->generateOriginLink();
             $this->isInitialized = true;
+            $this->ws_link = WeshopHelper::generateUrlDetail($this->type, $this->item_name, $this->item_id, null, null);
         }
         Yii::info($this->getAdditionalFees()->toArray(), __METHOD__);
     }
