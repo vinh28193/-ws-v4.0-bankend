@@ -175,7 +175,7 @@ ws.payment = (function ($) {
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
             pub.payment.payment_bank_code = bankCode;
-            if (providerId === 42 && methodId === 25) {
+            if (providerId === 42 && providerId === 46 && methodId === 25) {
                 bankCode = 'VCB';
                 pub.methodChange(true);
             } else if (providerId === 43 && methodId === 44) {
@@ -303,55 +303,87 @@ ws.payment = (function ($) {
 
         },
         process: function () {
-            if (!pub.getInfoFormShipping()) {
+            var typePay = $('input[name=type_pay]').val();
+            if(typePay.toLowerCase() === 'topup'){
+                ws.payment.topUp();
+            }else {
+                if (!pub.getInfoFormShipping()) {
+                    return;
+                }
+                var $termAgree = $('input#termCheckout').is(':checked');
+                if (!$termAgree) {
+                    alert('Bạn phải đồng ý với điều khoản weshop');
+                    return;
+                }
+                ws.loading(true);
+                ws.ajax('/payment/payment/process', {
+                    dataType: 'json',
+                    type: 'post',
+                    data: {payment: pub.payment, shipping: pub.shipping},
+                    success: function (response) {
+                        console.log(response);
+                        if (response.success) {
+                            ws.loading(false);
+                            var data = response.data;
+                            var code = data.code.toUpperCase() || '';
+                            var method = data.method.toUpperCase();
+                            if (method === 'POPUP') {
+                                var type = data.provider.toUpperCase() || null;
+                                if (type === 'WALLET') {
+                                    var $otp = $('#otp-confirm');
+                                    $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
+                                }
+                            } else {
+                                ws.loading(false);
+                                $('span#transactionCode').html(code);
+                                $('div#checkout-success').modal('show');
+                                ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
+                                    if (method === 'POST') {
+                                        $(data.checkoutUrl).appendTo('body').submit();
+                                    } else {
+                                        ws.redirect(data.checkoutUrl);
+                                    }
+                                });
+                                redirectPaymentGateway(data, 1000);
+                            }
+                        } else {
+                            alert(response.message);
+                        }
+
+                    }
+                })
+            }
+        },
+        topUp: function () {
+            pub.payment.total_amount = $('input[name=amount_topup]').val();
+            if (pub.payment.total_amount  < 100000) {
+                ws.sweetalert('Bạn cần phải nạp trên 100.000');
                 return;
             }
-            var $termAgree = $('input#termCheckout').is(':checked');
-            if (!$termAgree) {
-                alert('Bạn phải đồng ý với điều khoản weshop');
+            var checkArr = $('#termCheckout:checked').val();
+            if(!checkArr){
+                ws.sweetalert('Bạn chưa đồng ý với điều khoản và điều kiện giao dịch của weshop');
+                return;
+            }
+            if(!pub.payment.payment_method || !pub.payment.payment_provider || !pub.payment.payment_bank_code){
+                ws.sweetalert('Vui lòng chọn phương thức thanh toán!');
                 return;
             }
             ws.loading(true);
-            ws.ajax('/payment/payment/process', {
+            ws.ajax('/my-wallet/topup.html', {
                 dataType: 'json',
                 type: 'post',
-                data: {payment: pub.payment, shipping: pub.shipping},
-                success: function (response, textStatus, xhr) {
+                data: {payment: pub.payment},
+                success: function (response) {
                     console.log(response);
                     if (response.success) {
-                        ws.loading(false);
-                        var data = response.data;
-                        var code = data.code.toUpperCase() || '';
-                        var method = data.method.toUpperCase();
-                        if (method === 'POPUP') {
-                            var type = data.provider.toUpperCase() || null;
-                            if (type === 'WALLET') {
-                                var $otp = $('#otp-confirm');
-                                $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
-                            }
-                        } else {
-                            ws.loading(false);
-                            $('span#transactionCode').html(code);
-                            $('div#checkout-success').modal('show');
-                            ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
-                                if (method === 'POST') {
-                                    $(data.checkoutUrl).appendTo('body').submit();
-                                } else {
-                                    ws.redirect(data.checkoutUrl);
-                                }
-                            });
-                            redirectPaymentGateway(data, 1000);
-                        }
+                        ws.redirect(response.data.checkoutUrl);
                     } else {
                         alert(response.message);
                     }
 
                 }
             })
-
-        },
-        topUp: function () {
-
         },
         filterShippingAddress: function () {
             var $form = $('form.payment-form');

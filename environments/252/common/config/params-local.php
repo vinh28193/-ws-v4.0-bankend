@@ -41,4 +41,8 @@ return [
     'Url_User_Back_end' => 'http://weshop.v4.api.userbackend',
     'Url_FrontEnd' => 'http://weshop.v4.beta.vn',
     'Url_wallet_api' => 'http://wallet.weshop.v4.beta',
+    'redis_queue' => [
+        'host' => 'localhost',
+        'port' => 6379,
+    ],
 ];
