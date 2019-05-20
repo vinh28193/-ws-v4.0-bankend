@@ -42,6 +42,7 @@ class ShippingForm extends Model
 
     public $enable_buyer = false;
     public $save_my_address = false;
+    public $other_receiver = false;
     public $enable_receiver = false;
     public $save_my_shipping = false;
 
@@ -63,7 +64,7 @@ class ShippingForm extends Model
 
     public function ensureReceiver()
     {
-        if ($this->enable_buyer === true || $this->receiver_address_id === null) {
+        if ($this->other_receiver === false || $this->receiver_address_id === null) {
             $name = explode(' ',$this->receiver_name);
             $firstName = array_pop($name);
             $lastName = implode(' ',$name);
@@ -138,6 +139,7 @@ class ShippingForm extends Model
                 $this->receiver_province_id = $receiver->province_id;
                 $this->receiver_country_id = $receiver->country_id;
             }
+            $this->customer_id = $user->id;
         }
     }
 }

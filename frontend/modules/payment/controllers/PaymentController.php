@@ -13,6 +13,8 @@ use common\models\PaymentTransaction;
 use common\models\Product;
 use common\models\ProductFee;
 use common\models\Seller;
+use common\models\SystemDistrict;
+use common\models\SystemStateProvince;
 use frontend\modules\payment\models\OtpVerifyForm;
 use frontend\modules\payment\PaymentContextView;
 use frontend\modules\payment\providers\wallet\WalletHideProvider;
@@ -54,9 +56,36 @@ class PaymentController extends BasePaymentController
         }
         $payment = new Payment($bodyParams['payment']);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
-        $shippingForm->setDefaultValues(); // remove it get from POST pls
-        $shippingForm->ensureReceiver();
-
+//        $shippingForm->setDefaultValues(); // remove it get from POST pls
+//        $shippingForm->ensureReceiver();
+        if($shippingForm->save_my_address){
+            $my_address = new Address();
+            $my_address->first_name = $shippingForm->buyer_name;
+            $my_address->phone = $shippingForm->buyer_phone;
+            $my_address->email = $shippingForm->buyer_email;
+            $my_address->country_id = 1;
+            $my_address->country_name = 'Viet Nam';
+            $my_address->province_id = $shippingForm->buyer_province_id;
+            $my_address->province_name = ($province = SystemStateProvince::findOne($shippingForm->buyer_province_id)) ? $province->name : '';
+            $my_address->district_id = $shippingForm->buyer_district_id;
+            $my_address->district_name = ($district = SystemDistrict::findOne($shippingForm->buyer_district_id)) ? $district->name : '';
+            $my_address->address = $shippingForm->buyer_address;
+            $my_address->customer_id = $this->user->getId();
+            $my_address->type = Address::TYPE_PRIMARY;
+            $my_address->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_PRIMARY , 'is_default' => 1 ])->count() ? 0 : 1;
+            $my_address->save(false);
+            $shippingForm->receiver_address_id = $my_address->id;
+            if(!$shippingForm->other_receiver){
+                $my_shiping = new Address();
+                $addressShipping = $my_address->getAttributes();
+                unset($addressShipping['id']);
+                $my_shiping->setAttributes($addressShipping);
+                $my_shiping->type = Address::TYPE_SHIPPING;
+                $my_shiping->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_SHIPPING , 'is_default' => 1 ])->count() ? 0 : 1;
+                $my_shiping->save(false);
+                $shippingForm->receiver_address_id = $my_shiping->id;
+            }
+        }
         $payment->customer_name = $shippingForm->buyer_name;
         $payment->customer_email = $shippingForm->buyer_email;
         $payment->customer_phone = $shippingForm->buyer_phone;

@@ -45,12 +45,14 @@ ws.payment = (function ($) {
             buyer_name: '',
             buyer_province_id: '',
             buyer_district_id: '',
+            buyer_address: '',
             receiver_email: '',
             receiver_phone: '',
             receiver_name: '',
             receiver_province_id: '',
             receiver_district_id: '',
-            other_receiver : false,
+            receiver_address: '',
+            other_receiver : 0,
             note_by_customer : '',
             save_my_address : '',
             enable_buyer: '',
@@ -73,12 +75,12 @@ ws.payment = (function ($) {
             });
             $('#other-receiver').click(function () {
                 if(!pub.shipping.other_receiver){
-                    pub.shipping.other_receiver = true;
+                    pub.shipping.other_receiver = 1;
                     $('#other-receiver i').addClass('text-info');
                     $('#other-receiver svg').addClass('text-info');
                     $('#receiver-form').css('display','block');
                 }else {
-                    pub.shipping.other_receiver = false;
+                    pub.shipping.other_receiver = 0;
                     $('#other-receiver i').removeClass('text-info');
                     $('#other-receiver svg').removeClass('text-info');
                     $('#receiver-form').css('display','none');
@@ -97,6 +99,12 @@ ws.payment = (function ($) {
             });
             $('#btn-next-step3').click(function () {
                 if(pub.getInfoFormShipping()){
+                    $('.checkout-step li').removeClass('active');
+                    $('.checkout-step li').each(function (k,v) {
+                        if(k === 2){
+                            $(v).addClass('active');
+                        }
+                    });
                     console.log(pub.shipping);
                     $('#step_checkout_1').css('display','none');
                     $('#step_checkout_2').css('display','none');
@@ -192,11 +200,13 @@ ws.payment = (function ($) {
             pub.shipping.buyer_email = $('#shippingform-buyer_email').val();
             pub.shipping.buyer_province_id = $('#shippingform-buyer_province_id').val();
             pub.shipping.buyer_district_id = $('#shippingform-buyer_district_id').val();
+            pub.shipping.buyer_address = $('#shippingform-buyer_address').val();
             pub.shipping.receiver_name = $('#shippingform-receiver_name').val();
             pub.shipping.receiver_phone = $('#shippingform-receiver_phone').val();
             pub.shipping.receiver_email = $('#shippingform-receiver_email').val();
             pub.shipping.receiver_province_id = $('#shippingform-receiver_province_id').val();
             pub.shipping.receiver_district_id = $('#shippingform-receiver_district_id').val();
+            pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
             pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
             if(!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id){
@@ -299,7 +309,7 @@ ws.payment = (function ($) {
             ws.ajax('/payment/payment/process', {
                 dataType: 'json',
                 type: 'post',
-                data: {payment: pub.payment, shipping: {enable_buyer: false}},
+                data: {payment: pub.payment, shipping: pub.shipping},
                 success: function (response, textStatus, xhr) {
                     console.log(response);
                     if (response.success) {
