@@ -78,12 +78,15 @@
                 }
                 setUpDefaultOptions($item);
                 ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'a#addToCart', function (event) {
-                    // console.log(this);
-                    methods.addToCart.apply($item);
+                    paymentItem($item, 'shopping');
                     return false;
                 });
                 ws.initEventHandler($item, 'buyNow', 'click.wsItem', 'button.btn-buy', function (event) {
-                    methods.buyNow.apply($item);
+                    paymentItem($item, 'buynow');
+                    return false;
+                });
+                ws.initEventHandler($item, 'installment', 'click.wsItem', 'button#installmentBtn', function (event) {
+                    paymentItem($item, 'installment');
                     return false;
                 });
                 ws.initEventHandler($item, 'follow', 'click.wsItem', 'a#followItem', function (event) {
@@ -134,7 +137,7 @@
                         data.params.available_quantity = activeVariation.available_quantity;
                         data.params.quantity_sold = activeVariation.quantity_sold;
                         var quantityInstock = 0;
-                        if(data.params.available_quantity){
+                        if (data.params.available_quantity) {
                             quantityInstock = data.params.quantity_sold ? data.params.available_quantity - data.params.quantity_sold : data.params.available_quantity;
                         }
                         $('#instockQuantity').html(quantityInstock);
@@ -166,7 +169,7 @@
                                             }
                                         }
                                         $('#quantity').val(1);
-                                        $('#quantity').css('width','30px');
+                                        $('#quantity').css('width', '30px');
                                         window.history.pushState(url, url, url);
                                     }
                                     updatePrice($item, content, data.ajaxed)
@@ -179,12 +182,6 @@
                     });
                 }
             }
-        },
-        addToCart: function () {
-            paymentItem($(this), 'shopping');
-        },
-        buyNow: function () {
-            paymentItem($(this), 'buynow');
         },
         follow: function () {
 
@@ -206,23 +203,23 @@
             var type = $(this).attr('data-href');
             var value = Number($('#quantity').val());
             var valueOld = Number($('#quantity').val());
-            if(type === 'up'){
+            if (type === 'up') {
                 value += 1;
             }
-            if(type === 'down'){
+            if (type === 'down') {
                 value -= 1;
             }
             value = value < 1 ? 1 : value;
             var numberInstock = 50;
-            if(defaultParams.available_quantity){
+            if (defaultParams.available_quantity) {
                 numberInstock = Number(defaultParams.available_quantity) - Number(defaultParams.quantity_sold);
             }
-            if(value > numberInstock){
+            if (value > numberInstock) {
                 $('#quantity').val(valueOld === value ? 1 : valueOld);
-                return ws.sweetalert('Bạn không thể mua quá '+numberInstock+' sản phẩm.','Lỗi: ');
+                return ws.sweetalert('Bạn không thể mua quá ' + numberInstock + ' sản phẩm.', 'Lỗi: ');
             }
             $('#quantity').val(value);
-            $('#quantity').css('width',(value.toString().length * 10 + 20) + 'px');
+            $('#quantity').css('width', (value.toString().length * 10 + 20) + 'px');
         }
     };
     var deferredArray = function () {
@@ -457,7 +454,7 @@
     };
     var paymentItem = function ($item, type) {
         var quantity = $('#quantity').val();
-        if(quantity < 1){
+        if (quantity < 1) {
             return alert('Vui lòng nhập số lượng');
         }
         var data = $item.data('wsItem');
@@ -479,9 +476,8 @@
             dataType: 'json',
             data: {item: item, type: type},
             success: function (response) {
-                console.log(response);
                 if (response.success) {
-                    if (type === 'buynow') {
+                    if (type === 'buynow' || type === 'installment') {
                         var url = response.data || null;
                         if (url !== null && url !== undefined) {
                             ws.redirect(url);

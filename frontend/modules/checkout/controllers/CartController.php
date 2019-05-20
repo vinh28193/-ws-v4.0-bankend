@@ -57,10 +57,11 @@ class CartController extends BillingController
         if (($key = $this->module->cartManager->addItem($item, true)) === false) {
             return ['success' => false, 'message' => 'Can not add this item to cart'];
         };
-        if ($type === CartSelection::TYPE_BUY_NOW) {
-            CartSelection::setSelectedItems(CartSelection::TYPE_BUY_NOW, $key);
-            $checkOutAction = Url::toRoute(['/checkout/shipping', 'type' => CartSelection::TYPE_BUY_NOW]);
-            return ['success' => true, 'message' => 'You will be buy now with cart:' . $key, 'data' => $checkOutAction];
+
+        if ($type === CartSelection::TYPE_BUY_NOW || $type === CartSelection::TYPE_INSTALLMENT) {
+            CartSelection::setSelectedItems($type, $key);
+            $checkOutAction = Url::toRoute(['/checkout/shipping', 'type' => $type]);
+            return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key, 'data' => $checkOutAction];
         }
         return ['success' => true, 'message' => 'Can not Buy now this item', 'data' => $key];
     }

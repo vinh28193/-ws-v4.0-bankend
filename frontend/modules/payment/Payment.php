@@ -5,6 +5,7 @@ namespace frontend\modules\payment;
 
 
 use common\components\cart\CartHelper;
+use common\components\cart\CartSelection;
 use common\helpers\WeshopHelper;
 use common\models\Address;
 use common\models\Category;
@@ -30,8 +31,6 @@ use yii\helpers\Url;
 class Payment extends Model
 {
     const PAGE_CHECKOUT = 'CHECKOUT';
-    const PAGE_INSTALMENT = 'INSTALMENT';
-    const PAGE_BILLING = 'BILLING';
     const PAGE_TOP_UP = 'TOP_UP';
 
     const PAYMENT_GROUP_MASTER_VISA = 1;
@@ -293,7 +292,7 @@ class Payment extends Model
                 $order->portal = isset($params['portal']) ? $params['portal'] : explode(':', $key)[0];
                 $order->customer_type = 'Retail';
                 $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
-                $order->payment_type = 'online_payment';
+                $order->payment_type = $this->payment_type;
                 $order->receiver_email = $receiverAddress->email;
                 $order->receiver_name = $receiverAddress->last_name . ' ' . $receiverAddress->last_name;
                 $order->receiver_phone = $receiverAddress->phone;
@@ -576,10 +575,10 @@ class Payment extends Model
             $this->payment_method = 25;
             $this->payment_provider = 46;
             $this->payment_bank_code = 'VCB';
-        } elseif ($this->page === self::PAGE_INSTALMENT) {
+        } elseif ($this->payment_type === CartSelection::TYPE_INSTALLMENT) {
             return $this->view->render('installment', [
                 'payment' => $this
-            ]);
+            ], new PaymentContextView());
         }
         $providers = $this->loadPaymentProviderFromCache();
         $group = [];

@@ -144,11 +144,24 @@ class AdditionalFeeCollection extends ArrayCollection
     public function createItem(StoreAdditionalFee $config, AdditionalFeeInterface $additional, $amount = null, $discountAmount = 0, $currency = null)
     {
         if ($amount === null && $config->hasMethod('executeCondition') &&
-            ($result = $config->executeCondition( $additional)) !== false &&
+            ($result = $config->executeCondition($additional)) !== false &&
             is_array($result)
         ) {
             list($amount, $amountLocal) = $result;
-        }else{
+        } else if ($config->name === 'product_price_origin') {
+            $amountLocal = $this->getStoreManager()->roundMoney($amount * $additional->getExchangeRate());
+        } else if ($config->name === 'tax_fee_origin') {
+            if ($amount <= 0) {
+                $amount = 0;
+            } elseif ($amount < 1) {
+                $amount *= $this->getTotalAdditionFees(['product_price_origin', 'origin_shipping_fee'])[0];
+            } else if ($amount > 1 && $amount < 2) {
+                $amount = ($amount - 1) * $this->getTotalAdditionFees(['product_price_origin', 'origin_shipping_fee'])[0];
+            } else {
+                $amount = ($amount / 1001) * $this->getTotalAdditionFees(['product_price_origin', 'origin_shipping_fee'])[0];
+            }
+            $amountLocal = $this->getStoreManager()->roundMoney($amount * $additional->getExchangeRate());
+        } else {
             $amount *= $additional->getShippingQuantity();
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $additional->getExchangeRate());
         }

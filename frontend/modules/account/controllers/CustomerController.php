@@ -2,7 +2,7 @@
 
 namespace frontend\modules\account\controllers;
 
-use common\models\db\User;
+use common\models\User;
 use common\models\Address;
 use common\models\Order;
 use Yii;
@@ -36,7 +36,6 @@ class CustomerController extends BaseAccountController
         return ArrayHelper::merge(parent::actions(),[
             'subcat' => [
                 'class' => 'common\actions\DepDropAction',
-                'defaultSelect' => true,
                 'useAction' => 'common\models\SystemDistrict::select2Data'
             ]
         ]);
@@ -50,7 +49,19 @@ class CustomerController extends BaseAccountController
     {
         $id = Yii::$app->user->getIdentity()->getId();
         $model = User::find()->where(['id' =>  $id])->with('store')->one();
-        $address = Address::find()->where(['customer_id' => $id])->one();
+        $address = Address::find()->where([
+            'AND',
+            ['customer_id' => $id],
+            ['type' => Address::TYPE_PRIMARY],
+            ['is_default' => Address::IS_DEFAULT]
+
+        ])->one();
+        $addressShip = Address::find()->where([
+            'AND',
+            ['customer_id' => $id],
+            ['type' => Address::TYPE_SHIPPING],
+//            ['is_default' => Address::IS_DEFAULT]
+        ])->all();
         if(Yii::$app->request->isPost){
             if ($model->load(Yii::$app->request->post())) {
                 $model->save();
@@ -66,6 +77,7 @@ class CustomerController extends BaseAccountController
                 return $this->render('index', [
                     'model' => $model,
                     'address' => $add,
+                    'addressShip' => $addressShip,
                 ]);
             }
         }
@@ -73,6 +85,7 @@ class CustomerController extends BaseAccountController
         return $this->render('index', [
             'model' => $model,
             'address' => $address === null ? new Address() : $address,
+            'addressShip' => $addressShip,
         ]);
     }
 

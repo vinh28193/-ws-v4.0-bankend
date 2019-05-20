@@ -43,6 +43,19 @@ class ItemDetailWidget extends Widget
         if ($this->item === null || !$this->item instanceof BaseProduct) {
             throw new InvalidConfigException(get_class($this) . "::product must be instance of: " . BaseProduct::className());
         }
+        $css = <<< CSS
+        .detail-block-2,.product-viewed {
+            border-top: none;
+            border-bottom: solid 1px #ebebeb;
+        } 
+        .detail-block {
+          display: flex;
+          border-bottom: 1px solid #ebebeb;
+          padding-bottom: 12px;
+          min-height: 485px;
+        }
+CSS;
+        $this->getView()->registerCss($css);
         if (!isset($this->slideOptions['class'])) {
             Html::addCssClass($this->slideOptions, 'item-slider');
         }
@@ -145,11 +158,13 @@ class ItemDetailWidget extends Widget
     {
         return $this->render('payment', [
             'images' => $this->item->primary_images,
-                'item' => $this->item
-    ]);
+            'item' => $this->item
+        ]);
     }
-    public function renderFullInfo(){
-        return $this->render('item/info',[
+
+    public function renderFullInfo()
+    {
+        return $this->render('item/info', [
             'item' => $this->item
         ]);
     }
@@ -206,20 +221,21 @@ class ItemDetailWidget extends Widget
 
     protected function renderSlide()
     {
-        return $this->render('item/slide',[
+        return $this->render('item/slide', [
             'item' => $this->item
         ]);
     }
 
     protected function renderRelateProduct()
     {
-        return  $this->render('item/relate_product',['item' => $this->item]);
-
+        return $this->render('item/relate_product', [
+            'item' => $this->item
+        ]);
     }
 
     protected function renderDescription($type)
     {
-       return  $this->render('item/description',['item' => $this->item, 'type' => $type]);
+        return $this->render('item/description', ['item' => $this->item, 'type' => $type]);
 
     }
 
