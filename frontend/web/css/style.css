@@ -3403,8 +3403,12 @@ a {
 .detail-block {
   display: flex;
   border-bottom: 1px solid #ebebeb;
-  padding-bottom: 12px; }
-  .detail-block .thumb-slider {
+  padding-bottom: 12px;
+  min-height: 485px;
+
+}
+
+.detail-block .thumb-slider {
     display: flex;
     width: 450px; }
     .detail-block .thumb-slider .detail-slider {

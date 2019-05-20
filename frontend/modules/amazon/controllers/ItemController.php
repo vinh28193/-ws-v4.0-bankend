@@ -10,8 +10,6 @@ use Yii;
 
 class ItemController extends AmazonController
 {
-
-
     public function actionDetail($id)
     {
         $form = new ProductDetailFrom();

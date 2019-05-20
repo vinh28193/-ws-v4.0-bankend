@@ -11,10 +11,16 @@ namespace common\products;
 use Yii;
 use yii\httpclient\Client;
 
+/**
+ * Class BaseGate
+ * @package common\products
+ * Chỉ một mục tiêu là Call dữ liệu dang http client sang API cho Gate
+ */
+
 abstract class BaseGate extends \yii\base\BaseObject
 {
 
-    const MAX_CACHE_DURATION = 300;
+    const MAX_CACHE_DURATION = 300; // don vi la giay
 
     public $baseUrl = '';
 

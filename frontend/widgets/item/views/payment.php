@@ -79,6 +79,7 @@ if($item->available_quantity){
         Hotline: <b class="text-orange">1900.6755</b>
     </div>
 </div>
+
 <?php
 if(count($item->providers) > 1){?>
     <div class="border-block other-supplier">
@@ -108,8 +109,8 @@ if(count($item->providers) > 1){?>
             <li><a href="javascript:void (0)" onclick="viewMoreSeller(false)" style="display:none;" id="HideSellerBtn" class="see-all text-blue">Ẩn bớt<i class="fas fa-caret-up"></i></a></li>
         </ul>
     </div>
-<?php }
-?>
+<?php } ?>
+
 <!--<div class="border-block related-product">-->
 <!--    <div class="title">Sản phẩm tương tự</div>-->
 <!--    <ul>-->

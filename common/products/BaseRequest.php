@@ -11,6 +11,12 @@ namespace common\products;
 use Yii;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class BaseRequest
+ * @package common\products
+ * Chỉ một mục tiêu là Call Request dữ liệu dang http client sang API cho BaseGate
+ */
+
 abstract class BaseRequest extends \yii\base\Model
 {
 
