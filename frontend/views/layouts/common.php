@@ -661,7 +661,7 @@ FrontendAsset::register($this);
                 <div class="bank-logo"><img src="/img/bank/vietcombank.png" alt=""/></div>
                 <p>Vietcombank - Ngân hàng ngoại thương</p>
                 <div class="qr-box"><img
-                            src="https://store-images.s-microsoft.com/image/apps.33967.13510798887182917.246b0a3d-c3cc-46fc-9cea-021069d15c09.392bf5f5-ade4-4b36-aa63-bb15d5c3817a"
+                            src="/img/qr-code.png"
                             alt=""/></div>
                 <p><a href="#">Download ảnh QR - Code!</a></p>
             </div>

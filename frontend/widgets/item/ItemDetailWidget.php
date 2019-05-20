@@ -44,10 +44,16 @@ class ItemDetailWidget extends Widget
             throw new InvalidConfigException(get_class($this) . "::product must be instance of: " . BaseProduct::className());
         }
         $css = <<< CSS
-.detail-block-2,.product-viewed {
-    border-top: none;
-    border-bottom: solid 1px #ebebeb;
-}
+        .detail-block-2,.product-viewed {
+            border-top: none;
+            border-bottom: solid 1px #ebebeb;
+        } 
+        .detail-block {
+          display: flex;
+          border-bottom: 1px solid #ebebeb;
+          padding-bottom: 12px;
+          min-height: 485px;
+        }
 CSS;
         $this->getView()->registerCss($css);
         if (!isset($this->slideOptions['class'])) {

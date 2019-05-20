@@ -103,4 +103,7 @@ $current_provider = $item->getCurrentProvider();
         <span class="more">Xem thêm <i class="fas fa-caret-down"></i></span>
         <span class="less">Ẩn bớt <i class="fas fa-caret-up"></i></span>
     </div>
+    <a href="#" class="banner">
+        <img src="/img/detail-banner.jpg" alt="">
+    </a>
 </div>

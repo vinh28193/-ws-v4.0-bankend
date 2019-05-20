@@ -10,6 +10,7 @@ use frontend\widgets\search\SearchBoxWidget;
 
 $this->beginContent('@frontend/views/layouts/common.php');
 FancyboxPlusAsset::register($this);
+/*
 $js = <<<JS
 $(document).ready(function () {
         $('.slick-slider').slick({
@@ -32,6 +33,7 @@ $(document).ready(function () {
     });
 JS;
 $this->registerJs($js, \yii\web\View::POS_END);
+*/
 ?>
     <div class="keep-navbar <?= strtolower($portal) == 'amazon-jp' ? 'amazon' : strtolower($portal) ?> other-page">
         <div class="container">

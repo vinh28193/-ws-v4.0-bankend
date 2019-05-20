@@ -1,5 +1,3 @@
-// Created by nktquan@gmail.com
-
 $( document ).ready(function() {
 
     // Slider

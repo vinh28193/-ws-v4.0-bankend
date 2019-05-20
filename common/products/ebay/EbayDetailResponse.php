@@ -12,6 +12,11 @@ namespace common\products\ebay;
 use common\products\BaseGate;
 use common\products\BaseResponse;
 
+/**
+ * Class EbayDetailResponse
+ * @package common\products\ebay
+ * Chỉ một mục tiêu parser($response) dữ liệu trả về cho EbayProduct
+ */
 class EbayDetailResponse extends BaseResponse
 {
 
