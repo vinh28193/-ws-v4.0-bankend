@@ -73,12 +73,16 @@ class WalletService extends BaseObject
 
     public function callApiRequest($url, $params, $method = "POST")
     {
-        $client = $this->getWalletClient();
-        return $client->createApiRequest()
-            ->setMethod($method)
-            ->setFormat('json')
-            ->setUrl($url)
-            ->setData($params)->send()->getData();
+        try{
+            $client = $this->getWalletClient();
+            return $client->createApiRequest()
+                ->setMethod($method)
+                ->setFormat('json')
+                ->setUrl($url)
+                ->setData($params)->send()->getData();
+        }catch (Exception $exception){
+            return null;
+        }
     }
 
     public function login($password)

@@ -57,6 +57,12 @@ return [
         'wsLog' => [
             'class' => 'common\components\log\Logging'
         ],
+        'wsFcnApn' => [
+                  'class' => 'common\components\fcm\Notification',
+                   'param' => [
+                       // config param here
+                   ],
+        ],
         'productManager' => [
             'class' => 'common\products\ProductManager'
         ],

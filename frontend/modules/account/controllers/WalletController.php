@@ -18,4 +18,7 @@ class WalletController extends BaseAccountController
     public function actionWithdraw(){
         return $this->render('withdraw');
     }
+    public function actionHistory(){
+        return $this->render('history');
+    }
 }

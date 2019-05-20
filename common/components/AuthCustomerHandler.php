@@ -56,10 +56,9 @@ class AuthCustomerHandler
 
          if ($auth) {
                 // login
-
                 /* @var User $user */
                 $user = $auth->user;
-                $this->updateUserInfo($user);
+                // $this->updateUserInfo($user);  // Error Argument 1 passed to common\components\AuthCustomerHandler::updateUserInfo() must be an instance of common\models\User, instance of common\models\db\User given
                 Yii::$app->user->login($user, $duration);
          } else {
            // signup
@@ -132,7 +131,7 @@ class AuthCustomerHandler
               if ($auth->save()) {
                   /** @var User $user */
                   $user = $auth->user;
-                  $this->updateUserInfo($user);
+                  //$this->updateUserInfo($user);
                   Yii::$app->getSession()->setFlash('success', [
                       Yii::t('app', 'Linked {client} account.', [
                           'client' => $this->client->getTitle()

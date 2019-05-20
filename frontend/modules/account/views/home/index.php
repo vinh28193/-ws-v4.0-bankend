@@ -6,8 +6,11 @@
  * @var $total int
  */
 
+use frontend\modules\account\views\widgets\HeaderContentWidget;
 use yii\helpers\Html;
 $chat = false;
+$this->title = 'My WeShop';
+echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
 ?>
 <div class="row">
     <div class="col-md-3">
