@@ -174,7 +174,6 @@ UserBackendAsset::register($this);
                         }
                     }
                     ?>
-                    <?php var_dump($checkUrl) ?>
                     <li class="accordion">
                         <a href="#"><i class="icon icon6"></i> Tài khoản cá nhân</a>
                         <a class="dropdown-collapse <?php if (isset($checkUrl)){ if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') {?> <?=$collapsed1[0]?> <?php }} ?>" data-toggle="collapse" data-target="#sub-3" aria-expanded="<?php if (isset($checkUrl)){if ($checkUrl == '/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') {?> <?=$collapsed1[1]?> <?php } } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
