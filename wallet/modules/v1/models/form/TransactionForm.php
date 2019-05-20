@@ -69,7 +69,7 @@ class TransactionForm extends Model
     /**
      * @var integer
      */
-    public $otp_receive_type = WalletTransaction::VERIFY_RECEIVE_TYPE_PHONE;
+    public $otp_receive_type;
     /**
      * @var bool | \wallet\modules\v1\models\WalletClient
      */
@@ -201,7 +201,7 @@ class TransactionForm extends Model
         $transaction->payment_provider_name = $this->payment_provider;
         $transaction->payment_bank_code = $this->bank_code;
         $transaction->verify_receive_type = WalletTransaction::VERIFY_RECEIVE_TYPE_NONE;
-        if ($this->otp_receive_type) {
+        if ($this->otp_receive_type !== null) {
             $transaction->verify_receive_type = $this->otp_receive_type;
         }
         $transaction->totalAmount = $this->total_amount;

@@ -28,7 +28,7 @@ return [
                     'clientSecret' => '212b51f106650cd45b1dc77a5a4d4850',
                 ],
                 'wallet' => [
-                    'class' => 'common\payment\providers\wallet\WalletClient',
+                    'class' => 'frontend\modules\payment\providers\wallet\WalletClient',
                     'clientId' => 'testclient',
                     'clientSecret' => 'testpass',
                     'authUrl' => 'http://wallet.weshop-v4.local.vn/v1/rest/authorize',
@@ -43,21 +43,22 @@ return [
         ],
         'user' => [
             'identityClass' => 'common\models\User',
-            'enableAutoLogin' => false,
+            'enableAutoLogin' => true,
+            'loginUrl' => '/login.html',
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
         'redis' => [
-            'class'    => 'yii\redis\Connection',
+            'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
-            'port'     => 6379,
+            'port' => 6379,
             'database' => 0,
         ],
-//        'session' => [
-//            'name' => 'adv-frontend-ws-2019',
-//            'class' => 'yii\redis\Session',
-//            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
-//            'timeout' => 3600*4,
-//        ],
+        'session' => [
+            'name' => 'adv-frontend-ws-2019',
+            'class' => 'yii\redis\Session',
+            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
+            'timeout' => 3600 * 4,
+        ],
         'log' => [
             /*
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -104,7 +105,7 @@ return [
             'class' => 'frontend\modules\checkout\Module',
         ],
         'payment' => [
-            'class' => 'common\payment\Module',
+            'class' => 'frontend\modules\payment\Module',
         ],
         'account' => [
             'class' => 'frontend\modules\account\Module',

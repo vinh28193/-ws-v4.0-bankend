@@ -102,7 +102,7 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
      */
     public static function findByUsernameForEmployee($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE , 'employee' => 1 ]); //  1 Là Nhân viên , 0 là khách hàng
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE, 'employee' => 1]); //  1 Là Nhân viên , 0 là khách hàng
     }
 
     /**
@@ -137,7 +137,7 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     {
         $expire = \Yii::$app->params['user.passwordResetTokenExpire'];
         $parts = explode('_', $token);
-        $timestamp = (int) end($parts);
+        $timestamp = (int)end($parts);
         if ($timestamp + $expire < time()) {
             // token expired
             return null;
@@ -262,8 +262,13 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     {
         return static::find()->where([
             'and',
-            ['email' => $condition],
-            ['status' => 1]
+            [
+                'or',
+                ['username' => $condition],
+                ['email' => $condition],
+                ['phone' => $condition]
+            ],
+            ['status' => self::STATUS_ACTIVE]
         ])->one();
     }
 

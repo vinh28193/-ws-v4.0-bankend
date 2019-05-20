@@ -4,16 +4,14 @@
 /* @var $content string */
 
 use common\components\cart\CartManager;
-use common\payment\providers\wallet\WalletService;
+use frontend\modules\payment\providers\wallet\WalletService;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-//use forntend\modules\acout\assets\UserBackendAsset;
-use userbackend\assets\UserBackendAsset;
+use frontend\modules\account\assets\UserBackendAsset;
 
 use yii\bootstrap\Nav;
 
 use yii\bootstrap\NavBar;
-
 UserBackendAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -48,7 +46,7 @@ UserBackendAsset::register($this);
 ?>
 <div class="wrapper backend">
     <div class="navbar-2 be-header">
-        <a href="/" class="be-logo"><img src="../img/weshop-logo-vn.png" alt=""/></a>
+        <a href="/" class="be-logo"><img src="/img/weshop-logo-vn.png" alt=""/></a>
         <ul class="be-nav">
             <?php if (Yii::$app->user->isGuest) { ?>
                 <li>
@@ -330,6 +328,30 @@ UserBackendAsset::register($this);
 </div>
 
 
+<!-- Modal login waller -->
+<div class="modal" id="loginWallet" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Đăng nhập ví</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <i class="icon password"></i>
+                    <input type="password" name="passwordWallet" class="form-control" placeholder="Mật khẩu">
+                    <label style="color: red" id="ErrorPasswordWallet"></label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="loginWallet()">Đăng nhập</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?php $this->endBody() ?>
 </body>
 </html>
