@@ -46,7 +46,11 @@ use yii\helpers\Url;
                 echo $form->field($shippingForm, 'buyer_province_id', [
                     'template' => '<i class="icon globe"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->dropDownList(array_merge(['Chọn thành phố'],$provinces));
+                ])->dropDownList($provinces, [
+                    'prompt' => 'Chọn thành phố',
+                ]);
+
+                echo Html::hiddenInput('hiddenBuyerDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenBuyerDistrictId']);
 
                 echo $form->field($shippingForm, 'buyer_district_id', [
                     'template' => '<i class="icon city"></i>{input}{hint}{error}',
@@ -55,7 +59,10 @@ use yii\helpers\Url;
                     'pluginOptions' => [
                         'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
                         'placeholder' => 'Select District',
-                        'url' => Url::toRoute(['sub-district'])
+                        'url' => Url::toRoute(['sub-district']),
+                        'loadingText' => 'Loading District ...',
+                        'initialize' => true,
+                        'params' => ['hiddenBuyerDistrictId']
                     ]
                 ]);
                 echo $form->field($shippingForm, 'buyer_address', [
@@ -96,7 +103,7 @@ use yii\helpers\Url;
                 echo $form->field($shippingForm, 'receiver_province_id', [
                     'template' => '<i class="icon city"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->dropDownList(array_merge(['Chọn thành phố'],$provinces));
+                ])->dropDownList(array_merge(['Chọn thành phố'], $provinces));
 
                 echo $form->field($shippingForm, 'receiver_district_id', [
                     'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
@@ -113,7 +120,7 @@ use yii\helpers\Url;
                     'options' => ['class' => 'form-group']
                 ])->textInput(['placeholder' => 'Địa chỉ chi tiết']);
                 echo "</div>";
-                echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block' , 'id' => 'btn-next-step3']);
+                echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block', 'id' => 'btn-next-step3']);
                 ActiveForm::end();
                 ?>
             </div>
@@ -125,7 +132,7 @@ use yii\helpers\Url;
             </div>
         </div>
         <div class="col-md-4">
-            <?php echo $this->render('_cart',['payment' => $payment]) ?>
+            <?php echo $this->render('_cart', ['payment' => $payment]) ?>
         </div>
     </div>
 </div>
