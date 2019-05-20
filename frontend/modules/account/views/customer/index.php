@@ -94,30 +94,23 @@ use yii\helpers\Url;
             <a href="#" class="add-new">Thêm mới</a>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <div class="name-box">
-                    <b>LÊ NGỌC LINH</b>
-                    <a href="#"><i class="icon edit"></i></a>
-                    <a href="#"><i class="icon del"></i></a>
-                </div>
-                <ul>
-                    <li>18 Tam Trinh- Quận Hai Bà Trưng- Tp.Hà Nội- Việt Nam</li>
-                    <li>Email: linhktt@peacesoft.net</li>
-                    <li>Số điện thoại: 0967985456</li>
-                </ul>
-            </div>
-            <div class="col-md-6">
-                <div class="name-box">
-                    <b>LÊ NGỌC LINH</b>
-                    <a href="#"><i class="icon edit"></i></a>
-                    <a href="#"><i class="icon del"></i></a>
-                </div>
-                <ul>
-                    <li>18 Tam Trinh- Quận Hai Bà Trưng- Tp.Hà Nội- Việt Nam</li>
-                    <li>Email: linhktt@peacesoft.net</li>
-                    <li>Số điện thoại: 0967985456</li>
-                </ul>
-            </div>
+            <?php
+                foreach ($address as $add) {
+                    var_dump($add);
+            ?>
+<!--                <div class="col-md-6">-->
+<!--                    <div class="name-box">-->
+<!--                        <b>--><?//= $add->last_name ?><!--</b>-->
+<!--                        <a href="#"><i class="fa fa-edit"></i></a>-->
+<!--                        <a href="#"><i class="fa fa-remove"></i></a>-->
+<!--                    </div>-->
+<!--                    <ul>-->
+<!--                        <li>--><?//= $add->address ?><!--</li>-->
+<!--                        <li>Email: --><?//= $add->email ?><!--</li>-->
+<!--                        <li>Số điện thoại: --><?//= $add->phone ?><!--</li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+            <?php } ?>
         </div>
     </div>
 </div>
