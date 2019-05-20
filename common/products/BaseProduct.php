@@ -21,7 +21,7 @@ use common\components\StoreAdditionalFeeRegisterTrait;
  * @package common\products
  * Product EBAY / AMAZON API trả về + tính toán phí để hiên thị lên detail + search + card + checkout  cho khách hàng
  */
-class BaseProduct extends  BaseObject implements AdditionalFeeInterface
+class BaseProduct extends BaseObject implements AdditionalFeeInterface
 {
 
     use AdditionalFeeTrait;
@@ -110,12 +110,14 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
     public function init()
     {
         parent::init();
+
         $additionalFee = $this->getAdditionalFees();
         $additionalFee->removeAll(); // đảm bảo dữ liệu không bị đúp lên nhiều lần
-        $additionalFee->withConditions($this,[
+        $additionalFee->withConditions($this, [
             'product_price_origin' => $this->getSellPrice(),
-            'tax_fee_origin' => $this->us_tax_rate,
-            'origin_shipping_fee' => $this->shipping_fee
+            'origin_shipping_fee' => $this->shipping_fee * $this->quantity,
+            'tax_fee_origin' => $this->us_tax_rate
+
         ], true);
         /**
          * Todo function initDefaultProperty
@@ -134,6 +136,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
             $this->generateOriginLink();
             $this->isInitialized = true;
         }
+        Yii::info($this->getAdditionalFees()->toArray(), __METHOD__);
     }
 
     public $isInitialized = false;
@@ -141,8 +144,9 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
     /**
      * @return string
      */
-    protected function generateOriginLink(){
-        if($this->type == 'ebay'){
+    protected function generateOriginLink()
+    {
+        if ($this->type == 'ebay') {
             $this->item_origin_url = "http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=5575037825&toolid=10001&campid=5337238823&customid=&icep_item=" . $this->item_id . "&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg";
         }
         return $this->item_origin_url;
@@ -201,7 +205,7 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
                 $key = implode('_', $this->categories);
                 if (!($categories = Yii::$app->cache->get($key)) || $refresh) {
                     $categories = Category::find()->forSite($this->getSiteMapping())->alias($this->categories)->all();
-                    Yii::$app->cache->set($key,$categories,60 * 10);
+                    Yii::$app->cache->set($key, $categories, 60 * 10);
                 }
                 $this->_customCategory = null;
                 for ($i = count($this->categories) - 1; $i >= 0; $i--) {
@@ -212,11 +216,11 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
                             break;
                         }
                     }
-                    if ($this->_customCategory !== null){
+                    if ($this->_customCategory !== null) {
                         break;
                     };
                 }
-            }elseif ($this->category_id !== null){
+            } elseif ($this->category_id !== null) {
                 if (!($category = Yii::$app->cache->get($this->category_id))) {
                     $category = Category::find()->where(['alias' => $this->category_id])->one();
                     Yii::$app->cache->set($this->category_id, $category, 60 * 10);
@@ -289,7 +293,8 @@ class BaseProduct extends  BaseObject implements AdditionalFeeInterface
     /**
      * @return \common\components\StoreManager
      */
-    public function getStoreManager(){
+    public function getStoreManager()
+    {
         return Yii::$app->storeManager;
     }
 

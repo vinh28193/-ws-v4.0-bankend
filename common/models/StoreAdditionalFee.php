@@ -17,31 +17,23 @@ use common\models\db\StoreAdditionalFee as DbStoreAdditionalFee;
 class StoreAdditionalFee extends DbStoreAdditionalFee
 {
     /**
-     * @return array
+     * @return bool|array
      */
     public function getCondition()
     {
         $data = $this->condition_data;
         if ($data === null) {
-            return [];
+            return false;
         }
         return Json::decode($data, true);
     }
 
     public function executeCondition(AdditionalFeeInterface $additional)
     {
-
-        if ($this->name === 'custom_fee') {
-            if (($category = $additional->getCustomCategory()) !== null) {
-                $value = $category->getCustomFee($additional);
-            } else {
-                $value = 0.0;
-            }
-        } else {
-            $condition = $condition = $this->getCondition();
-            if (empty($condition)) {
-                return false;
-            }
+        $value = 0;
+        if ($this->name === 'custom_fee' && ($category = $additional->getCustomCategory()) !== null) {
+            $value = $category->getCustomFee($additional);
+        } else if (($condition = $this->getCondition()) !== false) {
             $value = CalculatorService::calculator($condition, $additional);
         }
 
