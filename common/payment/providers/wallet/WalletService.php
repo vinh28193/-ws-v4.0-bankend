@@ -93,7 +93,7 @@ class WalletService extends BaseObject
         $walletClient = $this->getWalletClient();
         try {
             $walletClient->authenticateUser($user->username, $password);
-            $this->response(true, 'Login success');
+           return $this->response(true, 'Login success');
         } catch (Exception $exception) {
             $client = new Client([
                 'baseUrl' => $walletClient->apiBaseUrl
@@ -108,14 +108,14 @@ class WalletService extends BaseObject
                 if ($response['success']) {
                     try {
                         $walletClient->authenticateUser($user->username, Yii::$app->request->post('password'));
-                        $this->response(true, 'Login success');
+                        return $this->response(true, 'Login success');
                     } catch (Exception $e) {
-                        $this->response(false, $e->getMessage());
+                        return $this->response(false, $e->getMessage());
                     }
 
                 }
             }
-            $this->response(false, 'can not login, cause unknown error');
+            return $this->response(false, 'can not login, cause unknown error');
         }
     }
 

@@ -20,7 +20,7 @@ echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
             <?php if($wallet){
                 echo '<div class="info">'.\common\helpers\WeshopHelper::showMoney($wallet['current_balance']).'</div>';
             }else{
-                echo "<div>Vui lòng xác thực lại mật khẩu để xem</div>";
+                echo "<div><a href='javascript: void(0);' onclick=\"$('#loginWallet').modal()\">Nhấp vào đây</a> <i class='fas fa-question-circle' data-toggle='tooltip' title='Vui lòng xác thực lại mật khẩu để xem thông tin.'></i></div>";
             }?>
             <a href="#">Chi tiết >></a>
         </div>

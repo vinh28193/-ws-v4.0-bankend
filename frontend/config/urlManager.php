@@ -59,7 +59,8 @@ return [
         'signup.html' => 'secure/register',
         'logout.html' => 'secure/logout',
         'my-weshop/wallet.html' => 'account/wallet/index',
-        'my-weshop/<controller>/<action>.html' => 'account/<controller>/<action>'
+        'my-weshop/<controller>/<action>.html' => 'account/<controller>/<action>',
+        'my-weshop/api/<controller>/<action>.html' => 'account/api/<controller>/<action>'
 //        'GET account/order/<id:[0-9A-Za-z_-]*>.html' => 'account/order/view',
     ]
 ];

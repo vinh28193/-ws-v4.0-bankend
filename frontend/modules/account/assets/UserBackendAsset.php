@@ -21,6 +21,7 @@ class UserBackendAsset extends AssetBundle
     ];
     public $js = [
         'js/style.js',
+        'js/account/user.js',
         'owlcarousel/owl.carousel.min.js',
     ];
     public $depends = [
