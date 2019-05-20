@@ -22,7 +22,7 @@ echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
             }else{
                 echo "<div><a href='javascript: void(0);' onclick=\"$('#loginWallet').modal()\">Nhấp vào đây</a> <i class='fas fa-question-circle' data-toggle='tooltip' title='Vui lòng xác thực lại mật khẩu để xem thông tin.'></i></div>";
             }?>
-            <a href="#">Chi tiết >></a>
+            <a href="/my-weshop/wallet/history.html">Chi tiết >></a>
         </div>
     </div>
     <div class="col-md-3">
@@ -30,7 +30,7 @@ echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
             <span class="icon-box icon2"><i class="icon"></i></span>
             <div class="name">Đơn hàng</div>
             <div class="info"><?= $total ?></div>
-            <a href="#">Chi tiết >></a>
+            <?php echo Html::a('Chi tiết>>', ['/account/order'],['class' => 'active']); ?>
         </div>
     </div>
     <div class="col-md-3">
@@ -38,7 +38,7 @@ echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
             <span class="icon-box icon3"><i class="icon"></i></span>
             <div class="name">Giỏ hàng</div>
             <div class="info"><?= $totalCart ?></div>
-            <a href="#">Chi tiết >></a>
+            <a href="/my-cart.html">Chi tiết >></a>
         </div>
     </div>
     <div class="col-md-3">
@@ -72,7 +72,7 @@ echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
                         <?php if ($orders) {
                             foreach ($orders as $order) { ?>
                                 <tr>
-                                    <td><a href="#"><?php echo Html::a($order->ordercode, ['/account/order/' . $order->id . '.html']); ?></a> </td>
+                                    <td><a href="<?= '/my-weshop/order/' . $order->ordercode . '.html' ?>"><?= $order->ordercode ?></a> </td>
                                     <td><?= $order->current_status ?></td>
                                     <td><?= Yii::$app->getFormatter()->asDatetime($order->updated_at) ?></td>
                                 </tr>
@@ -108,7 +108,7 @@ echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
                         ])->orderBy(['created_at' => SORT_DESC])->one();
                         ?>
                         <li>
-                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#" data-toggle="modal" data-url="/echo?ordercode=<?=$order->ordercode  ?>" data-target="#exampleModalCenter"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?> </p>
+                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="#" data-toggle="modal" data-url="/echo?ordercode=<?=$order->ordercode  ?>" data-target="#exampleModalCenter"><?= $order->ordercode ?></a> vào lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at, "php:d-m-Y  H:i:s") ?> </p>
                             <?php if ($chat) {  ?>
                             <div class="mess-content mb-1">
                                 <i class="logo"><img src="../img/weshop_small_logo.png" alt=""/></i>

@@ -12,7 +12,7 @@ class BaseAccountController extends Controller
     {
         $before = parent::beforeAction($action);
         if(\Yii::$app->user->isGuest){
-            return \Yii::$app->response->redirect('/login.html?rel=myWeShop.html');
+            return \Yii::$app->response->redirect('/login.html?rel=my-weshop.html');
         }
         return $before;
     }
