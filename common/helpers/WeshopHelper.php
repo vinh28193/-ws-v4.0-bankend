@@ -11,6 +11,7 @@ namespace common\helpers;
 use yii\base\InvalidArgumentException;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Inflector;
 use yii\helpers\Url;
 
 class WeshopHelper
@@ -202,6 +203,7 @@ class WeshopHelper
 
         return Html::tag($tag, $visibleContent, $options);
     }
+
     public static function alias($str = NULL)
     {
         $str = self::removeutf8($str);
@@ -281,15 +283,16 @@ class WeshopHelper
         return $str;
     }
 
-    public static function generateUrlDetail($portal,$name,$sku,$sid = null,$seller = null){
-        $url = Url::base(true).'/'.strtolower($portal).'/item/'.self::alias($name).'-'.$sku.'.html';
-        if($sid){
-            $url .= '?sku='.$sid;
+    public static function generateUrlDetail($portal, $name, $sku, $sid = null, $seller = null)
+    {
+        $url = '/' . strtolower($portal) . '/item/' . self::alias($name) . '-' . $sku . '.html';
+        if ($sid) {
+            $url .= '?sku=' . $sid;
         }
-        if($seller){
-            $url = $sid ? $url.'&seller='.$seller : $url.'?seller='.$seller;
+        if ($seller) {
+            $url = $sid ? $url . '&seller=' . $seller : $url . '?seller=' . $seller;
         }
-        return $url;
+        return Url::to($url, true);
     }
 
     /**
@@ -299,8 +302,9 @@ class WeshopHelper
      * @param int $round
      * @return string
      */
-    public static function showMoney($amount, $country = 1, $symbol = null,$round = 0){
-        switch ($country){
+    public static function showMoney($amount, $country = 1, $symbol = null, $round = 0)
+    {
+        switch ($country) {
             case 1:
                 $symbol = $symbol !== null ? $symbol : 'đ';
                 $floorNumber = $round ? $round : 1000;
@@ -315,7 +319,7 @@ class WeshopHelper
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);
                 $finalPrice = $floorNumber * $roundPrice;
-                return $symbol.number_format($finalPrice, 2, '.', ',');
+                return $symbol . number_format($finalPrice, 2, '.', ',');
                 break;
             case 7:
                 $symbol = $symbol !== null ? $symbol : 'RP';
@@ -323,7 +327,7 @@ class WeshopHelper
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);
                 $finalPrice = $floorNumber * $roundPrice;
-                return $symbol.number_format($finalPrice, 0, '.', ',');
+                return $symbol . number_format($finalPrice, 0, '.', ',');
                 break;
             default:
                 $symbol = $symbol !== null ? $symbol : 'đ';
@@ -335,10 +339,12 @@ class WeshopHelper
                 break;
         }
     }
-    public static function getArrayPage($totalPage, $pageCurrent = 1, $limitPage = 10){
+
+    public static function getArrayPage($totalPage, $pageCurrent = 1, $limitPage = 10)
+    {
         $arr = [];
         $tb = ceil($limitPage / 2);
-        for ($ind = 0;$ind < $totalPage;$ind ++){
+        for ($ind = 0; $ind < $totalPage; $ind++) {
             if ($totalPage > $limitPage) {
                 if ($pageCurrent <= $tb) {
                     if ($limitPage >= $ind + 1) {
@@ -355,8 +361,10 @@ class WeshopHelper
         }
         return $arr;
     }
-    public static function getLogoByPortal($portal){
-        switch (strtolower($portal)){
+
+    public static function getLogoByPortal($portal)
+    {
+        switch (strtolower($portal)) {
             case 'ebay':
                 return '/img/logo_ebay.png';
                 break;
@@ -371,8 +379,10 @@ class WeshopHelper
                 break;
         }
     }
-    public static function getTypeTransaction($type){
-        switch (strtoupper($type)){
+
+    public static function getTypeTransaction($type)
+    {
+        switch (strtoupper($type)) {
             case 'TOP_UP':
                 return 'Nạp Tiền';
                 break;
@@ -387,8 +397,10 @@ class WeshopHelper
                 break;
         }
     }
-    public static function getStatusTransaction($status){
-        switch ($status){
+
+    public static function getStatusTransaction($status)
+    {
+        switch ($status) {
             case 0:
                 return 'Đang chờ';
                 break;
@@ -410,8 +422,9 @@ class WeshopHelper
         }
     }
 
-    public static function getStatusTransactionLabel($status){
-        switch ($status){
+    public static function getStatusTransactionLabel($status)
+    {
+        switch ($status) {
             case 0:
                 return 'label-warning';
                 break;
