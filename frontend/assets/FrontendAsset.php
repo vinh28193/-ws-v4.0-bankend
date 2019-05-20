@@ -19,7 +19,8 @@ class FrontendAsset extends AssetBundle
 //        'css/mobile_style.css'
     ];
     public $js = [
-        'js/style.js'
+        'js/style.js',
+        'js/slick.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
@@ -31,6 +32,5 @@ class FrontendAsset extends AssetBundle
          'frontend\assets\WeshopAsset',
          'frontend\assets\JQueryLazy',
          'frontend\assets\FancyboxPlusAsset'
-
     ];
 }

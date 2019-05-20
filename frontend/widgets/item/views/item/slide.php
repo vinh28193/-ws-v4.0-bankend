@@ -10,7 +10,7 @@ use yii\helpers\Html;
     <div class="detail-slider">
         <i class="fas fa-chevron-up slider-prev"></i>
         <i class="fas fa-chevron-down slider-next"></i>
-        <div id="detail-slider">
+        <div id="detail-slider"  class="slick-slider">
             <?php
                 foreach ($item->primary_images as $image){ ?>
                     <div class="item">
