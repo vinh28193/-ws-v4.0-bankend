@@ -28,7 +28,7 @@ return [
                     'clientSecret' => '212b51f106650cd45b1dc77a5a4d4850',
                 ],
                 'wallet' => [
-                    'class' => 'common\payment\providers\wallet\WalletClient',
+                    'class' => 'frontend\modules\payment\providers\wallet\WalletClient',
                     'clientId' => 'testclient',
                     'clientSecret' => 'testpass',
                     'authUrl' => 'http://wallet.weshop-v4.local.vn/v1/rest/authorize',
