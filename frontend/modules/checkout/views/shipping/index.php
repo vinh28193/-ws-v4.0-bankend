@@ -2,8 +2,8 @@
 
 /* @var yii\web\View $this */
 /* @var integer $activeStep */
-/* @var common\payment\Payment $payment */
-/* @var common\payment\models\ShippingForm $shippingForm */
+/* @var frontend\modules\payment\Payment $payment */
+/* @var frontend\modules\payment\models\ShippingForm $shippingForm */
 /* @var array $provinces */
 
 $showStep = true;

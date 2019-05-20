@@ -104,7 +104,7 @@ return [
             'class' => 'frontend\modules\checkout\Module',
         ],
         'payment' => [
-            'class' => 'common\payment\Module',
+            'class' => 'frontend\modules\payment\Module',
         ],
         'account' => [
             'class' => 'frontend\modules\account\Module',
