@@ -136,7 +136,7 @@ class PaymentController extends BasePaymentController
         }
         $data = $res['data'];
         /** @var $paymentTransaction PaymentTransaction */
-        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction && $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
+        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction && ($paymentTransaction->payment_method  === 'TTVP' || $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS)) {
             $payment = new Payment([
                 'carts' => StringHelper::explode($paymentTransaction->carts, ','),
                 'transaction_code' => $paymentTransaction->transaction_code,

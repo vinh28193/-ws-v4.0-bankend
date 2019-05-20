@@ -72,7 +72,7 @@ echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
                         <?php if ($orders) {
                             foreach ($orders as $order) { ?>
                                 <tr>
-                                    <td><a href="#"><?php echo Html::a($order->ordercode, ['/account/order/' . $order->id . '.html']); ?></a> </td>
+                                    <td><a href="<?= '/my-weshop/order/' . $order->ordercode . '.html' ?>"><?= $order->ordercode ?></a> </td>
                                     <td><?= $order->current_status ?></td>
                                     <td>
                                         <?php

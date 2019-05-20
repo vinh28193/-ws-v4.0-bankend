@@ -44,12 +44,12 @@ use yii\helpers\Url;
                 ])->textInput(['placeholder' => 'Địa chỉ email']);
 
                 echo $form->field($shippingForm, 'buyer_province_id', [
-                    'template' => '<i class="icon city"></i>{input}{hint}{error}',
+                    'template' => '<i class="icon globe"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->dropDownList(array_merge(['Chọn thành phố'],$provinces));
 
                 echo $form->field($shippingForm, 'buyer_district_id', [
-                    'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
+                    'template' => '<i class="icon city"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->widget(DepDrop::classname(), [
                     'pluginOptions' => [
@@ -58,6 +58,10 @@ use yii\helpers\Url;
                         'url' => Url::toRoute(['sub-district'])
                     ]
                 ]);
+                echo $form->field($shippingForm, 'buyer_address', [
+                    'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->textInput(['placeholder' => 'Địa chỉ chi tiết']);
 
                 echo $form->field($shippingForm, 'note_by_customer', [
 //                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
@@ -104,6 +108,10 @@ use yii\helpers\Url;
                         'url' => Url::toRoute(['sub-district'])
                     ]
                 ]);
+                echo $form->field($shippingForm, 'receiver_address', [
+                    'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
+                    'options' => ['class' => 'form-group']
+                ])->textInput(['placeholder' => 'Địa chỉ chi tiết']);
                 echo "</div>";
                 echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block' , 'id' => 'btn-next-step3']);
                 ActiveForm::end();

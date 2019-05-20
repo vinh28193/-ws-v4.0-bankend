@@ -11,6 +11,7 @@ use common\models\Category;
 use common\models\Product;
 use common\models\ProductFee;
 use common\models\Seller;
+use frontend\modules\payment\providers\vietnam\WSVNOffice;
 use frontend\modules\payment\providers\wallet\WalletHideProvider;
 use frontend\modules\payment\providers\wallet\WalletProvider;
 use common\promotion\PromotionResponse;
@@ -197,6 +198,9 @@ class Payment extends Model
                 $wallet = new WalletProvider();
                 return $wallet->create($this);
 
+            case 45:
+                $office = new WSVNOffice();
+                return $office->create($this);
         }
     }
 
@@ -214,7 +218,9 @@ class Payment extends Model
             case 43:
                 $wallet = new WalletProvider();
                 return $wallet->handle($request->post());
-
+            case 45:
+                $office = new WSVNOffice();
+                return $office->handle($request->get());
         }
     }
 
@@ -240,10 +246,12 @@ class Payment extends Model
     }
 
     /**
-     * @param $receiverAddress Address
+     * @param null $receiverAddress Address
+     * @param bool $paymentSuccess bool
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    public function createOrder($receiverAddress = null)
+    public function createOrder($receiverAddress = null, $paymentSuccess = true)
     {
 
         $now = Yii::$app->getFormatter()->asDatetime('now');
@@ -534,6 +542,9 @@ class Payment extends Model
 
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
                 $updateOrderAttributes['total_final_amount_local'] = $updateOrderAttributes['total_amount_local'] - $updateOrderAttributes['total_promotion_amount_local'];
+                if ($paymentSuccess) {
+                    $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
+                }
                 $order->updateAttributes($updateOrderAttributes);
             }
             $transaction->commit();
