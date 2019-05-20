@@ -12,6 +12,6 @@ class PaymentContextView extends BaseObject implements ViewContextInterface
 
     public function getViewPath()
     {
-        return Yii::getAlias('@common/payment/views');
+        return Yii::getAlias('@frontend/modules/payment/views');
     }
 }

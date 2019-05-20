@@ -40,7 +40,7 @@ class OtpVerifyForm extends Model
     /**
      * @var string
      */
-    public $captcha;
+    public $password;
 
     /**
      * @var string

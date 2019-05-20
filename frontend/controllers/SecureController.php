@@ -13,6 +13,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 
 /****APP Call Back FaceBook Google etc *****/
+
 use common\components\AuthCustomerHandler;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -26,10 +27,10 @@ class SecureController extends FrontendController
     {
         $actions = parent::actions();
         $actions['auth'] = [
-                'class' => 'yii\authclient\AuthAction',
-                'successCallback' => [$this, 'onAuthSuccess'],
-            ];
-         return $actions;
+            'class' => 'yii\authclient\AuthAction',
+            'successCallback' => [$this, 'onAuthSuccess'],
+        ];
+        return $actions;
     }
 
     /**
@@ -40,7 +41,7 @@ class SecureController extends FrontendController
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup','index'],
+                'only' => ['logout', 'signup', 'index'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -48,7 +49,7 @@ class SecureController extends FrontendController
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout','index'],
+                        'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -57,7 +58,7 @@ class SecureController extends FrontendController
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post','get'],
+                    'logout' => ['post', 'get'],
                 ],
             ],
         ];
@@ -74,11 +75,13 @@ class SecureController extends FrontendController
             return $this->goHome();
         }
         $model = new LoginForm();
-        $model->rememberMe = false; // Mặc định không ghi nhớ
-        if ($model->load(Yii::$app->request->post()) && $model->login() ) {
-            $url_rel = urldecode(Yii::$app->request->get('rel','/'));
-            $url_rel = $url_rel && ($url_rel[0] == '/' || $url_rel[0] == '\\') ? '/'.$url_rel : $url_rel;
-             return Yii::$app->getResponse()->redirect($url_rel);
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            $redirectUrl = Yii::$app->getHomeUrl();
+            if (($url_rel = $this->request->get('rel', '/')) !== null) {
+                $url_rel = urldecode($url_rel);
+                $redirectUrl = $url_rel && ($url_rel[0] == '/' || $url_rel[0] == '\\') ? '/' . $url_rel : $url_rel;
+            }
+            return Yii::$app->getResponse()->redirect($redirectUrl);
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -104,7 +107,9 @@ class SecureController extends FrontendController
             if ($user = $model->signup()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
                 $model->sendEmail();
-                if(Yii::$app->getUser()->login($user)){ return $this->goHome(); }
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
             }
         }
 
@@ -130,7 +135,7 @@ class SecureController extends FrontendController
             Yii::info('success', 'Vui lòng kiểm tra email để lấy link reset mật khẩu tài khoản.');
             $model->sendEmail();
             Yii::$app->session->setFlash('success', 'Vui lòng kiểm tra email để lấy link reset mật khẩu tài khoản.');
-                //return $this->goHome();
+            //return $this->goHome();
             return Yii::$app->getResponse()->redirect('/secure/login');
         }
         return $this->render('requestPasswordReset', [
@@ -140,6 +145,7 @@ class SecureController extends FrontendController
     }
 
     // ToDo Làm tiếp sau nay khi có thời gian
+
     /** https://weshop-v4.front-end-ws.local.vn/secure/verify?token=ZIieKz6RnbB8Bp0MfQcWrX7xId_v5VhF
      * Verify Account Register New
      * @param $token

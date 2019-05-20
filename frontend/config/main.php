@@ -43,21 +43,22 @@ return [
         ],
         'user' => [
             'identityClass' => 'common\models\User',
-            'enableAutoLogin' => false,
+            'enableAutoLogin' => true,
+            'loginUrl' => '/login.html',
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
         'redis' => [
-            'class'    => 'yii\redis\Connection',
+            'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
-            'port'     => 6379,
+            'port' => 6379,
             'database' => 0,
         ],
-//        'session' => [
-//            'name' => 'adv-frontend-ws-2019',
-//            'class' => 'yii\redis\Session',
-//            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
-//            'timeout' => 3600*4,
-//        ],
+        'session' => [
+            'name' => 'adv-frontend-ws-2019',
+            'class' => 'yii\redis\Session',
+            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
+            'timeout' => 3600 * 4,
+        ],
         'log' => [
             /*
             'traceLevel' => YII_DEBUG ? 3 : 0,

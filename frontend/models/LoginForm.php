@@ -3,7 +3,7 @@
 
 namespace frontend\models;
 
-use common\payment\providers\wallet\WalletService;
+use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
 use yii\base\Model;
 use common\models\User;
@@ -13,7 +13,7 @@ class LoginForm extends Model
 {
 
 
-    public $email;
+    public $loginId;
     public $password;
     public $rememberMe = true;
 
@@ -26,10 +26,9 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['email', 'password'], 'required'],
-            ['email', 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
+            [['loginId', 'password'], 'required'],
+            ['loginId', 'trim'],
+            ['loginId', 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -66,7 +65,7 @@ class LoginForm extends Model
             $success = Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
             if ($success) {
                 $walletService = new WalletService();
-                $walletService->login($this->password);
+                $success = $walletService->login($this->password);
             }
             return $success;
         }
@@ -82,7 +81,7 @@ class LoginForm extends Model
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = User::findByEmail($this->email);
+            $this->_user = User::findAdvance($this->loginId);
         }
         return $this->_user;
     }
