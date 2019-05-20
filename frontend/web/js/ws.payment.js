@@ -83,18 +83,18 @@ ws.payment = (function ($) {
                     pub.shipping.other_receiver = 0;
                     $('#other-receiver i').removeClass('text-info');
                     $('#other-receiver svg').removeClass('text-info');
-                    $('#receiver-form').css('display','none');
+                    $('#receiver-form').css('display', 'none');
                 }
             });
             $('.checkout-step li').click(function () {
                 var step = $(this)[0].firstElementChild.innerHTML;
-                if($('#step_checkout_'+step).length === 1){
+                if ($('#step_checkout_' + step).length === 1) {
                     $('.checkout-step li').removeClass('active');
                     $(this).addClass('active');
-                    $('#step_checkout_1').css('display','none');
-                    $('#step_checkout_2').css('display','none');
-                    $('#step_checkout_3').css('display','none');
-                    $('#step_checkout_'+step).css('display','block');
+                    $('#step_checkout_1').css('display', 'none');
+                    $('#step_checkout_2').css('display', 'none');
+                    $('#step_checkout_3').css('display', 'none');
+                    $('#step_checkout_' + step).css('display', 'block');
                 }
             });
             $('#btn-next-step3').click(function () {
@@ -106,23 +106,23 @@ ws.payment = (function ($) {
                         }
                     });
                     console.log(pub.shipping);
-                    $('#step_checkout_1').css('display','none');
-                    $('#step_checkout_2').css('display','none');
-                    $('#step_checkout_3').css('display','block');
+                    $('#step_checkout_1').css('display', 'none');
+                    $('#step_checkout_2').css('display', 'none');
+                    $('#step_checkout_3').css('display', 'block');
                     window.scrollTo(0, 0);
                 }
             });
             $('input[name=check-member]').click(function () {
                 var value = $(this).val();
-                if(value === 'new-member'){
-                    $('div[data-merge=signup-form]').css('display','block');
-                }else {
-                    $('div[data-merge=signup-form]').css('display','none');
+                if (value === 'new-member') {
+                    $('div[data-merge=signup-form]').css('display', 'block');
+                } else {
+                    $('div[data-merge=signup-form]').css('display', 'none');
                 }
             });
             $('input').change(function () {
                 var name = $(this).attr('name');
-                $('#'+name+'-error').html('');
+                $('#' + name + '-error').html('');
             });
             $('#loginToCheckout').click(function () {
                 ws.loading(true);
@@ -130,7 +130,7 @@ ws.payment = (function ($) {
                 var loginForm = {};
                 var SignupForm = {};
                 var url = 'checkout.html';
-                if(typeLogin === 'new-member'){
+                if (typeLogin === 'new-member') {
                     SignupForm = {
                         email: $('input[name=email]').val(),
                         password: $('input[name=password]').val(),
@@ -140,7 +140,7 @@ ws.payment = (function ($) {
                         phone: $('input[name=phone]').val(),
                     };
                     url = 'checkout/signup.html';
-                }else {
+                } else {
                     loginForm = {
                         loginId: $('input[name=email]').val(),
                         password: $('input[name=password]').val(),
@@ -162,8 +162,8 @@ ws.payment = (function ($) {
                         } else {
                             ws.loading(false);
                             $('label[data-href]').html('');
-                            $.each(result.data, function (k,v) {
-                                $('#'+k+'-error').html(v[0]);
+                            $.each(result.data, function (k, v) {
+                                $('#' + k + '-error').html(v[0]);
                             })
                         }
                     }
@@ -175,9 +175,11 @@ ws.payment = (function ($) {
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
             pub.payment.payment_bank_code = bankCode;
-            if (methodId === 25) {
+            if (providerId === 42 && methodId === 25) {
                 bankCode = 'VCB';
                 pub.methodChange(true);
+            } else if (providerId === 43 && methodId === 44) {
+                pub.getWalletInfo(this);
             }
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
@@ -194,7 +196,7 @@ ws.payment = (function ($) {
             pub.methods = $methods;
             console.log('register ' + pub.methods.length + ' methods');
         },
-        getInfoFormShipping: function (){
+        getInfoFormShipping: function () {
             pub.shipping.buyer_name = $('#shippingform-buyer_name').val();
             pub.shipping.buyer_phone = $('#shippingform-buyer_phone').val();
             pub.shipping.buyer_email = $('#shippingform-buyer_email').val();
@@ -209,17 +211,21 @@ ws.payment = (function ($) {
             pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
             pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
-            if(!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id){
+            if (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id) {
                 alert('Vui lòng nhập đầy đủ thông tin người mua');
                 return false;
             }
-            if(pub.shipping.other_receiver){
-                if(!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id){
+            if (pub.shipping.other_receiver) {
+                if (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id) {
                     alert('Vui lòng nhập đầy đủ thông tin người nhận');
                     return false;
                 }
             }
             return true;
+        },
+        getWalletInfo: function ($element) {
+            $element = $element || undefined;
+            ws.wallet.getInfo($element);
         },
         methodChange: function (isNew) {
             isNew = isNew || false;
@@ -297,7 +303,7 @@ ws.payment = (function ($) {
 
         },
         process: function () {
-            if (!pub.getInfoFormShipping()){
+            if (!pub.getInfoFormShipping()) {
                 return;
             }
             var $termAgree = $('input#termCheckout').is(':checked');
@@ -336,7 +342,8 @@ ws.payment = (function ($) {
                             });
                             redirectPaymentGateway(data, 1000);
                         }
-
+                    } else {
+                        alert(response.message);
                     }
 
                 }
