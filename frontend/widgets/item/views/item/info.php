@@ -32,51 +32,64 @@ $current_provider = $item->getCurrentProvider();
     <div class="origin" style="display: none">
         <a target="_blank" href="<?= $item->item_origin_url ?>">Xem link gốc -></a>
     </div>
-    <div class="price">
-        <strong class="text-orange one-time-payment"><?=  WeshopHelper::showMoney($item->getLocalizeTotalPrice(),1,'') ?><span class="currency">đ</span></strong>
-        <?php if ($item->start_price){ ?>
-            <b class="old-price"><?=  WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(),1,'') ?><span class="currency">đ</span></b>
-            <span class="save">(Tiết kiệm: <?=  WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(),1,'') ?>đ)</span>
-        <?php } ?>
-    </div>
-    <div class="total-price">(Giá trọn gói về Việt Nam với trọng lượng ước tính <span><?= $item->getShippingWeight() ?> kg</span>)</div>
-    <div class="option-box form-inline">
-        <label>Tình trạng: <?= $item->condition ? $item->condition : 'Không xác định' ?></label>
-    </div>
-    <?php
-    if($item->variation_options){
-        $countVariation = count($item->variation_options);
-        $checkBoxImg = false;
-        foreach ($item->variation_options as $index => $variationOption) {
-            /* @var $variationOption \common\products\VariationOption */
-            if($variationOption->images_mapping && !$checkBoxImg){ $checkBoxImg = true;?>
-                    <div class="option-box">
-                        <label id="label_<?= $variationOption->id ?>"><?= $variationOption->name ?>: ---</label>
-                        <ul class="style-list" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
-                            <?php foreach ($variationOption->values as $k => $value) {
-                                foreach ($variationOption->images_mapping as $image){
-                                    if(strtolower($image->value) == strtolower($value)){?>
-                                <li><span type="spanList" tabindex="<?= $k ?>" ><img src="<?= $image->images ? $image->images[0]->thumb : '/img/no_image.png' ?>" alt="<?= $value ?>" title="<?= $value ?>"/></span></li>
-                            <?php break;
-                                    }
-                                }
-                            }?>
-                        </ul>
-                    </div>
-           <?php }else{?>
+
+    <?php if($item->getLocalizeTotalPrice() > 0 ) {    ?>
+            <div class="price">
+                    <strong class="text-orange one-time-payment"><?=  WeshopHelper::showMoney($item->getLocalizeTotalPrice(),1,'') ?><span class="currency">đ</span></strong>
+                    <?php if ($item->start_price){ ?>
+                        <b class="old-price"><?=  WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(),1,'') ?><span class="currency">đ</span></b>
+                        <span class="save">(Tiết kiệm: <?=  WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(),1,'') ?>đ)</span>
+                    <?php } // Start start_price ?>
+            </div> <!-- class="price" -->
+            <div class="total-price">(Giá trọn gói về Việt Nam với trọng lượng ước tính <span><?= $item->getShippingWeight() ?> kg</span>)</div>
             <div class="option-box form-inline">
-                <label><?= $variationOption->name ?>:</label>
-                <select class="form-control form-control-sm" type="dropDown" id="<?= ($variationOption->id) ?>" name="<?= ($variationOption->id) ?>" data-ref="<?= ($variationOption->id) ?>">
-                    <option value=""></option>
-                    <?php foreach ($variationOption->values as $k => $v) {?>
-                    <option value="<?= $k ?>"><?= $v ?></option>
-                <?php }?>
-                </select>
+                <label>Tình trạng: <?= $item->condition ? $item->condition : 'Không xác định' ?></label>
             </div>
-            <?php }
-        }
-    }
-    ?>
+            <?php
+            if($item->variation_options){
+                $countVariation = count($item->variation_options);
+                $checkBoxImg = false;
+                foreach ($item->variation_options as $index => $variationOption) {
+                    /* @var $variationOption \common\products\VariationOption */
+                    if($variationOption->images_mapping && !$checkBoxImg){ $checkBoxImg = true;?>
+                            <div class="option-box">
+                                <label id="label_<?= $variationOption->id ?>"><?= $variationOption->name ?>: ---</label>
+                                <ul class="style-list" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
+                                    <?php foreach ($variationOption->values as $k => $value) {
+                                        foreach ($variationOption->images_mapping as $image){
+                                            if(strtolower($image->value) == strtolower($value)){?>
+                                        <li><span type="spanList" tabindex="<?= $k ?>" ><img src="<?= $image->images ? $image->images[0]->thumb : '/img/no_image.png' ?>" alt="<?= $value ?>" title="<?= $value ?>"/></span></li>
+                                    <?php break;
+                                            }
+                                        }
+                                    }?>
+                                </ul>
+                            </div>
+                   <?php }else{?>
+                    <div class="option-box form-inline">
+                        <label><?= $variationOption->name ?>:</label>
+                        <select class="form-control form-control-sm" type="dropDown" id="<?= ($variationOption->id) ?>" name="<?= ($variationOption->id) ?>" data-ref="<?= ($variationOption->id) ?>">
+                            <option value=""></option>
+                            <?php foreach ($variationOption->values as $k => $v) {?>
+                            <option value="<?= $k ?>"><?= $v ?></option>
+                        <?php }?>
+                        </select>
+                    </div>
+                    <?php }
+                }
+            }
+            ?>
+    <?php  }else {  //ToDo 0 dong  ?>
+    <script>
+        $( document ).ready(function() {
+            $("#outOfStock").css('display', 'block');
+            $("#quantityGroup").css('display', 'none');
+            $("#quoteBtn").css('display', 'block');
+            $("#buyNowBtn").css('display', 'none');
+        });
+    </script>
+    <?php } //esle 0 Dong ?>
+
     <ul class="info-list">
         <li>Imported</li>
         <li>Due to a recent redesign by Bulova, recently manufactured Bulova watches,including all watches sold and shipped by Amazon, will not feature the Bulova tuning fork logo on the watch face.</li>

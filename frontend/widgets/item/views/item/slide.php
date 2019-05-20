@@ -23,7 +23,7 @@ use yii\helpers\Html;
         </div>
     </div>
     <div class="big-img">
-            <img id="detail-big-img" class="detail-big-img Ws-images-product-details"  style="max-width: 258px; max-height: 500px; width: 258px; height: 400px;"
+            <img id="detail-big-img" class="detail-big-img"
                  src="<?= $item->primary_images ? $item->primary_images[0]->main : '/img/no_image.png' ?>"
                  data-zoom-image="<?= $item->primary_images ? $item->primary_images[0]->main : '/img/no_image.png' ?>"
                  style="max-width: 400px;max-height: 400px;position: absolute;"/>
