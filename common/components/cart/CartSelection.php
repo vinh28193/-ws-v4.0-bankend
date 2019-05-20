@@ -9,6 +9,7 @@ class CartSelection
 {
     const SESSION_NAME = 'CartSelection';
 
+    const TYPE_INSTALLMENT = 'installment';
     const TYPE_BUY_NOW = 'buynow';
     const TYPE_SHOPPING = 'shopping';
 
