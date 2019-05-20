@@ -95,21 +95,20 @@ use yii\helpers\Url;
         </div>
         <div class="row">
             <?php
-                foreach ($address as $add) {
-                    var_dump($add);
+                foreach ($addressShip as $add) {
             ?>
-<!--                <div class="col-md-6">-->
-<!--                    <div class="name-box">-->
-<!--                        <b>--><?//= $add->last_name ?><!--</b>-->
-<!--                        <a href="#"><i class="fa fa-edit"></i></a>-->
-<!--                        <a href="#"><i class="fa fa-remove"></i></a>-->
-<!--                    </div>-->
-<!--                    <ul>-->
-<!--                        <li>--><?//= $add->address ?><!--</li>-->
-<!--                        <li>Email: --><?//= $add->email ?><!--</li>-->
-<!--                        <li>Số điện thoại: --><?//= $add->phone ?><!--</li>-->
-<!--                    </ul>-->
-<!--                </div>-->
+                <div class="col-md-6">
+                    <div class="name-box">
+                        <b><?= $add->last_name ?></b>
+                        <a href="#"><i class="fa fa-edit"></i></a>
+                        <a href="#"><i class="fa fa-remove"></i></a>
+                    </div>
+                    <ul>
+                        <li><?= $add->address ?></li>
+                        <li>Email: <?= $add->email ?></li>
+                        <li>Số điện thoại: <?= $add->phone ?></li>
+                    </ul>
+                </div>
             <?php } ?>
         </div>
     </div>
