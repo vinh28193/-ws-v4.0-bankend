@@ -39,7 +39,7 @@ class WSVNOffice extends BaseObject implements PaymentProviderInterface
         }
         return ReponseData::reponseArray(true, 'check payment success', [
             'transaction' => $transaction,
-            'redirectUrl' => "/",
+            'redirectUrl' => Url::to("/checkout/office/{$transaction->transaction_code}/success.html",true),
         ]);
     }
 }
