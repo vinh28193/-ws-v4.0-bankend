@@ -84,6 +84,23 @@ class PaymentController extends BasePaymentController
                 $my_shiping->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_SHIPPING , 'is_default' => 1 ])->count() ? 0 : 1;
                 $my_shiping->save(false);
                 $shippingForm->receiver_address_id = $my_shiping->id;
+            }else{
+                $my_shiping = new Address();
+                $my_address->first_name = $shippingForm->receiver_name;
+                $my_address->phone = $shippingForm->receiver_phone;
+                $my_address->email = $shippingForm->receiver_email;
+                $my_address->country_id = 1;
+                $my_address->country_name = 'Viet Nam';
+                $my_address->province_id = $shippingForm->receiver_province_id;
+                $my_address->province_name = ($province = SystemStateProvince::findOne($shippingForm->receiver_province_id)) ? $province->name : '';
+                $my_address->district_id = $shippingForm->receiver_district_id;
+                $my_address->district_name = ($district = SystemDistrict::findOne($shippingForm->receiver_district_id)) ? $district->name : '';
+                $my_address->address = $shippingForm->receiver_address;
+                $my_address->customer_id = $this->user->getId();
+                $my_address->type = Address::TYPE_SHIPPING;
+                $my_address->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_SHIPPING , 'is_default' => 1 ])->count() ? 0 : 1;
+                $my_address->save(false);
+                $shippingForm->receiver_address_id = $my_shiping->id;
             }
         }
         $payment->customer_name = $shippingForm->buyer_name;
