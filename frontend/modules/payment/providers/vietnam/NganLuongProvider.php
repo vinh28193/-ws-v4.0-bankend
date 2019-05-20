@@ -25,7 +25,6 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
 
     public function create(Payment $payment)
     {
-
         $logCallback = new PaymentGatewayLogs();
         $logCallback->response_time = date('Y-m-d H:i:s');
         $logCallback->create_time = date('Y-m-d H:i:s');
@@ -123,8 +122,6 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $logCallback->save(false);
             return ReponseData::reponseArray(false, 'thất bại');
         }
-
-
     }
 
     public function handle($data)

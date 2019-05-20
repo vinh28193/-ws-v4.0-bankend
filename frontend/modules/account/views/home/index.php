@@ -74,7 +74,15 @@ echo HeaderContentWidget::widget(['title' => 'Thống kê chung']);
                                 <tr>
                                     <td><a href="<?= '/my-weshop/order/' . $order->ordercode . '.html' ?>"><?= $order->ordercode ?></a> </td>
                                     <td><?= $order->current_status ?></td>
-                                    <td><?= Yii::$app->getFormatter()->asDatetime($order->updated_at) ?></td>
+                                    <td>
+                                        <?php
+                                            if ($order->current_status == 'NEW') {
+                                                echo Yii::$app->getFormatter()->asDatetime($order->created_at);
+                                            } else {
+                                                echo Yii::$app->getFormatter()->asDatetime($order->updated_at);
+                                            }
+                                        ?>
+                                    </td>
                                 </tr>
                             <?php }} else {?>
                             <tr>

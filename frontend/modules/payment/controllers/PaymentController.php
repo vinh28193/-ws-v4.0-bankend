@@ -134,9 +134,10 @@ class PaymentController extends BasePaymentController
         if (!isset($res) || $res['success'] === false || !isset($res['data'])) {
             return $this->redirect('failed');
         }
+
         $data = $res['data'];
         /** @var $paymentTransaction PaymentTransaction */
-        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction && $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
+        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction && ($paymentTransaction->payment_method === 'TTVP' || $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS)) {
             $payment = new Payment([
                 'carts' => StringHelper::explode($paymentTransaction->carts, ','),
                 'transaction_code' => $paymentTransaction->transaction_code,
@@ -159,15 +160,19 @@ class PaymentController extends BasePaymentController
                 'payment_type' => $paymentTransaction->payment_type,
 
             ]);
+            $redirectUrl = Yii::$app->homeUrl;
+            if (isset($data['redirectUrl'])) {
+                $redirectUrl = $data['redirectUrl'];
+            }
             $receiverAddress = Address::findOne($paymentTransaction->shipping);
             /* @var $results PromotionResponse */
             $createResponse = $payment->createOrder($receiverAddress);
             if ($createResponse['success']) {
-                return $this->goHome();
+                return $this->redirect($redirectUrl);
             }
 
         }
-        return $this->redirect('/checkout/cart');
+        return $this->redirect(Url::toRoute('/checkout/cart'));
 
     }
 

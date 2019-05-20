@@ -48,7 +48,7 @@ return [
         'GET checkout-<type:[0-9A-Za-z_-]*>.html' => 'checkout/shipping',
         'checkout/login.html' => 'checkout/shipping/login',
         'checkout/signup.html' => 'checkout/shipping/signup',
-
+        'checkout/office/<code:[^/]+>/success.html' => 'checkout/notify/office-success',
         // payment
 //        'payment/process' => 'payment/payment/process',
         'payment/<merchant:[^/]+>/return.html' => 'payment/payment/return',
