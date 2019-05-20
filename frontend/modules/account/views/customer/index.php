@@ -86,7 +86,7 @@ use yii\helpers\Url;
     </div>
     <div class="us-address">
         <div class="title">Địa chỉ tại Mỹ của bạn</div>
-        <div class="code">Mã khách hàng của bạn : <b><?= $model->verify_code_expired_at ?></b></div>
+        <div class="code">Mã khách hàng của bạn : <b><?= $model->verify_code ?></b></div>
     </div>
     <div class="ba-block2">
         <div class="title-box">
