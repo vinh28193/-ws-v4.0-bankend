@@ -20,7 +20,7 @@ class Favorite extends BaseFavorite
             [['obj_id', 'obj_type', 'ip'], 'required'],
             [['obj_id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['obj_type', 'ip'], 'string', 'max' => 255],
+            [['obj_type', 'ip',], 'string', 'max' => 255],
         ]);
     }
 
