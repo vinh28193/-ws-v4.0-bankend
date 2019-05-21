@@ -7,6 +7,7 @@ use yii\helpers\ArrayHelper;
 /**
  * @var $wallet array
  * @var $trans array
+ * @var $total int
  */
 $js = "
 $('#datepicker').datepicker({
@@ -24,6 +25,15 @@ $this->registerJs($js, \yii\web\View::POS_END);
 $this->title = 'Lịch sử giao dịch';
 echo HeaderContentWidget::widget(['title' => 'Lịch sử giao dịch','stepUrl' => ['Giao dịch' => 'my-weshop/wallet/history']]);
 $get = Yii::$app->request->get();
+$page = Yii::$app->request->get('page',1);
+$total_page = ceil($total/20);
+$url_page = function ($p){
+    $param = [explode('?',\yii\helpers\Url::current())[0]];
+    $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
+    $param['page'] = $p;
+//           $param['portal'] = $portal;
+    return Yii::$app->getUrlManager()->createUrl($param);
+};
 ?>
 <div class="be-box">
     <div class="be-top">
@@ -104,7 +114,48 @@ $get = Yii::$app->request->get();
 </div>
 <div class="be-box">
     <div class="be-top">
-        <div class="title">Số giao dịch: <?= count($trans) ?></div>
+        <div class="text-left">
+            <div class="title">Số giao dịch: <?= $total?></div>
+        </div>
+        <div class="text-right">
+            <ul class="pagination justify-content-center" style="margin: 0px">
+                <?php
+                $limitPage = 10;
+                $arr = WeshopHelper::getArrayPage($total_page,$page,$limitPage);
+                if($arr && count($arr) > 1){
+                    ?>
+                    <li class="page-item">
+                        <a class="page-link" href="<?= $page>1 ? $url_page($page-1) : 'javascript: void (0)' ?>" tabindex="-1" aria-disabled="true"></a>
+                    </li>
+                    <?php
+                    if($arr[0] != 1){
+                        echo "<li class='page-item'><a class='page-link' href='".$url_page(1)."'>1</a></li>";
+                        echo "<li class='page-item'><span class='more'>...</span></li>";
+                    }
+                    foreach ($arr as $p){
+                        if($p == $page){
+                            echo "<li class='page-item active' aria-current='page'>" .
+                                "<a class='page-link' href='".$url_page($p)."'>" .
+                                "".$p." <span class='sr-only'>(current)</span>".
+                                "</a>" .
+                                "</li>";
+                        }elseif ($p == $total_page){
+                            echo "<li class='page-item' aria-current='page'><a class='page-link last' href='".$url_page($p)."'>".$p."</a></li>";
+                        }else{
+                            echo "<li class='page-item'><a class='page-link' href='".$url_page($p)."'>".$p."</a></li>";
+                        }
+                    }
+                    if($arr[count($arr)-1] != $total_page){
+                        echo "<li class='page-item'><span class='more'>...</span></li>";
+                        echo "<li class='page-item'><a class='page-link last' href='".$url_page($total_page)."'>".$total_page."</a></li>";
+                    }
+                    ?>
+                    <li class="page-item">
+                        <a class="page-link" href="<?= $page<$total_page ? $url_page($page+1) : 'javascript: void (0)' ?>"></a>
+                    </li>
+                <?php } ?>
+            </ul>
+        </div>
     </div>
     <div class="be-body be-deal2">
         <div class="be-table">
@@ -135,7 +186,6 @@ $get = Yii::$app->request->get();
                         <td class="text-center"><span class="label <?= WeshopHelper::getStatusTransactionLabel(ArrayHelper::getValue($tran, 'status')) ?>"><?= WeshopHelper::getStatusTransaction(ArrayHelper::getValue($tran, 'status')) ?></span></td>
                     </tr>
                 <?php } ?>
-
                 </tbody>
             </table>
         </div>

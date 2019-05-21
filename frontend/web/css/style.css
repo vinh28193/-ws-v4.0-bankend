@@ -2138,6 +2138,7 @@ a {
       background: url("../img/control_white.png") no-repeat center;
       background-size: contain; }
     .pagination .page-item:first-child .page-link:hover {
+      transform: rotate(180deg);
       background: url("../img/control_active.png") no-repeat center;
       background-size: contain; }
     .pagination .page-item:last-child .page-link {

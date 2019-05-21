@@ -72,7 +72,7 @@ $url_page = function ($p){
         $arr = WeshopHelper::getArrayPage($total_page,$page,$limitPage);
         if($arr && count($arr) > 1){
         ?>
-            <li class="page-item disabled">
+            <li class="page-item">
                 <a class="page-link" href="<?= $page>1 ? $url_page($page-1) : 'javascript: void (0)' ?>" tabindex="-1" aria-disabled="true"></a>
             </li>
         <?php
