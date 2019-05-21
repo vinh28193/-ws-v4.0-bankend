@@ -14,13 +14,14 @@ use yii\helpers\Url;
 class PaymentService
 {
 
-    public static function loadPaymentByStoreFromDb($store)
+    public static function loadPaymentByStoreFromDb($store,$provider_id = 42)
     {
         $query = PaymentProvider::find();
         $query->with('paymentMethodProviders', 'paymentMethodProviders.paymentMethod', 'paymentMethodProviders.paymentMethod.paymentMethodBanks', 'paymentMethodProviders.paymentMethod.paymentMethodBanks.paymentBank');
         $query->where([
             'AND',
             ['store_id' => $store],
+            ['id' => $provider_id],
             ['status' => 1]
         ]);
         return $query->asArray()->all();

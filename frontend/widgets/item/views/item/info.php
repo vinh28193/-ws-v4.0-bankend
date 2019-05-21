@@ -53,17 +53,25 @@ $current_provider = $item->getCurrentProvider();
                     /* @var $variationOption \common\products\VariationOption */
                     if($variationOption->images_mapping && !$checkBoxImg){ $checkBoxImg = true;?>
                             <div class="option-box">
-                                <label id="label_<?= $variationOption->id ?>"><?= $variationOption->name ?>: ---</label>
-                                <ul class="style-list" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
-                                    <?php foreach ($variationOption->values as $k => $value) {
-                                        foreach ($variationOption->images_mapping as $image){
-                                            if(strtolower($image->value) == strtolower($value)){?>
-                                        <li><span type="spanList" tabindex="<?= $k ?>" ><img src="<?= $image->images ? $image->images[0]->thumb : '/img/no_image.png' ?>" alt="<?= $value ?>" title="<?= $value ?>"/></span></li>
-                                    <?php break;
+                                <label id="label_<?= $variationOption->id ?>"><?= $variationOption->name; ?>: ---</label>
+                                <div class="color-pick" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
+                                    <i class="fas fa-chevron-left slider-prev2"></i>
+                                    <i class="fas fa-chevron-right slider-next2"></i>
+                                    <ul class="style-list" >
+                                        <?php foreach ($variationOption->values as $k => $value) {
+                                            foreach ($variationOption->images_mapping as $image){
+                                                if(strtolower($image->value) == strtolower($value)){?>
+                                            <li  class="item" >
+                                                <span type="spanList" tabindex="<?= $k ?>" >
+                                                    <img src="<?= $image->images ? $image->images[0]->thumb : '/img/no_image.png' ?>" alt="<?= $value ?>" title="<?= $value ?>"/>
+                                                </span>
+                                            </li>
+                                        <?php break;
+                                                }
                                             }
-                                        }
-                                    }?>
-                                </ul>
+                                        }?>
+                                    </ul>
+                                </div>
                             </div>
                    <?php }else{?>
                     <div class="option-box form-inline">

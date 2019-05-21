@@ -14,9 +14,9 @@ return [
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=192.168.11.252;port=3306;dbname=weshop_cms',
-            'username' => 'dev',
-            'password' => 'Mwqs]Avk>q+8N2vs)zV36ia',
+            'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop_cms',
+            'username' => 'root',
+            'password' => '',
             'charset' => 'utf8',
             'enableSchemaCache' => true,
             'schemaCacheDuration' => 7200,
@@ -40,7 +40,7 @@ return [
         ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://192.168.11.252:27017/admin',
+            'dsn' => 'mongodb://localhost:27017/admin',
         ],
         'db_oauth'=>[
             'class' => 'yii\db\Connection',

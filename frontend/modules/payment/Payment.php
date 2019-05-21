@@ -12,6 +12,7 @@ use common\models\Category;
 use common\models\Product;
 use common\models\ProductFee;
 use common\models\Seller;
+use frontend\modules\payment\providers\vietnam\WalletClientProvider;
 use frontend\modules\payment\providers\vietnam\WSVNOffice;
 use frontend\modules\payment\providers\wallet\WalletHideProvider;
 use frontend\modules\payment\providers\wallet\WalletProvider;
@@ -122,7 +123,9 @@ class Payment extends Model
         parent::init();
         $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
         $this->view = Yii::$app->getView();
-        $this->loadOrdersFromCarts();
+        if ($this->page !== self::PAGE_TOP_UP){
+            $this->loadOrdersFromCarts();
+        }
         $this->currency = 'vnđ';
     }
 
@@ -136,6 +139,11 @@ class Payment extends Model
         $this->payment_method = 1;
         $this->payment_provider = 42;
         $this->payment_bank_code = 'VISA';
+        if ($this->page === self::PAGE_TOP_UP){
+            $this->payment_method = 25;
+            $this->payment_provider = 46;
+            $this->payment_bank_code = 'VCB';
+        }
         $this->registerClientScript();
     }
 
@@ -167,7 +175,7 @@ class Payment extends Model
 
     public function loadPaymentProviderFromCache()
     {
-        return PaymentService::loadPaymentByStoreFromDb(1);
+        return PaymentService::loadPaymentByStoreFromDb(1,$this->payment_provider);
     }
 
     public function createTransactionCode()
@@ -182,7 +190,7 @@ class Payment extends Model
         $code = PaymentService::generateTransactionCode('PM');
         $this->transaction_code = $code;
         $this->transaction_fee = 0;
-        $this->return_url = PaymentService::createReturnUrl($this->payment_provider);
+        $this->return_url = $this->page === self::PAGE_TOP_UP ? Url::to("/my-wallet/topup/{$this->payment_provider}/return.html", true) : PaymentService::createReturnUrl($this->payment_provider);
         $this->cancel_url = PaymentService::createCancelUrl();
     }
 
@@ -199,6 +207,9 @@ class Payment extends Model
 
             case 45:
                 $office = new WSVNOffice();
+                return $office->create($this);
+            case 46:
+                $office = new WalletClientProvider();
                 return $office->create($this);
         }
     }
@@ -219,6 +230,9 @@ class Payment extends Model
                 return $wallet->handle($request->post());
             case 45:
                 $office = new WSVNOffice();
+                return $office->handle($request->get());
+            case 46:
+                $office = new WalletClientProvider();
                 return $office->handle($request->get());
         }
     }
@@ -559,7 +573,7 @@ class Payment extends Model
     {
         if ($this->page === self::PAGE_TOP_UP) {
             $this->payment_method = 25;
-            $this->payment_provider = 43;
+            $this->payment_provider = 46;
             $this->payment_bank_code = 'VCB';
         } elseif ($this->payment_type === CartSelection::TYPE_INSTALLMENT) {
             return $this->view->render('installment', [

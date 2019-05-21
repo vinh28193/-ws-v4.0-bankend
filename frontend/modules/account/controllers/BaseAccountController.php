@@ -4,7 +4,7 @@
 namespace frontend\modules\account\controllers;
 
 
-use yii\base\Controller;
+use yii\web\Controller;
 
 class BaseAccountController extends Controller
 {

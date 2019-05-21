@@ -13,7 +13,7 @@ use common\components\ReponseData;
 use common\models\db\Order;
 use common\models\db\OrderPayment;
 use common\models\db\WalletClient;
-use common\payment\providers\vietnam\NganLuongProvider as NganLuong;
+use frontend\modules\payment\providers\vietnam\NganLuongProvider as NganLuong;
 use wallet\modules\v1\models\enu\ResponseCode;
 use wallet\modules\v1\models\WalletLog;
 use wallet\modules\v1\models\WalletMerchant;

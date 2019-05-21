@@ -45,8 +45,14 @@ use frontend\modules\payment\methods\UnknownWidget;
     }
     ?>
 </div>
+<?php if($payment->page === Payment::PAGE_TOP_UP) {?>
+<div class="form-group form-inline">
+    <label>Nhập số tiền cần nạp &nbsp;<i class="fas fa-question-circle" title="Tối thiểu phải là 100.000 VNĐ"></i>:</label>
+    <input type="number" class="form-control" name="amount_topup" placeholder="Ví dụ: 100.000 VNĐ">
+</div>
+<?php } ?>
 <div class="form-group form-check term">
-    <input type="checkbox" class="form-check-input" id="termCheckout">
+    <input type="checkbox" class="form-check-input" value="1" id="termCheckout">
     <label class="form-check-label" for="termCheckout">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và điều
             kiện</a> giao dịch của Weshop.</label>
 </div>

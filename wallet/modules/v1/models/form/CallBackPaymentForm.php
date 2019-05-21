@@ -12,7 +12,7 @@ use common\components\ThirdPartyLogs;
 use common\models\PaymentProvider;
 use common\modelsMongo\UtilLog;
 use common\modelsMongo\WalletLog as MongoWalletLog;
-use common\payment\providers\vietnam\NganLuongProvider as NganLuong;
+use frontend\modules\payment\providers\vietnam\NganLuongProvider as NganLuong;
 use wallet\modules\v1\models\enu\ResponseCode;
 use wallet\modules\v1\models\WalletClient;
 use wallet\modules\v1\models\WalletLog;
