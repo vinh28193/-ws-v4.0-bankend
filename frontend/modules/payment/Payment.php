@@ -182,8 +182,8 @@ class Payment extends Model
         $code = PaymentService::generateTransactionCode('PM');
         $this->transaction_code = $code;
         $this->transaction_fee = 0;
-        $this->return_url = Url::to("/payment/{$this->payment_provider}/return.html", true);
-        $this->cancel_url = Url::toRoute("/checkout/cart", true);
+        $this->return_url = PaymentService::createReturnUrl($this->payment_provider);
+        $this->cancel_url = PaymentService::createCancelUrl();
     }
 
     public function processPayment()

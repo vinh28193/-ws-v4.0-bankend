@@ -8,13 +8,9 @@
 
 namespace frontend\modules\payment\models;
 
-use common\components\RedisLanguage;
+use frontend\modules\payment\PaymentService;
 use frontend\modules\payment\providers\wallet\WalletService;
-use yii\base\InvalidConfigException;
 use yii\base\Model;
-use yii\helpers\ArrayHelper;
-use Yii;
-use yii\helpers\Url;
 
 /**
  * Class OtpVerifyForm
@@ -50,27 +46,41 @@ class OtpVerifyForm extends Model
     public $transactionCode;
 
     /**
+     * @var
+     */
+    public $cancelUrl;
+
+    /**
+     * @var
+     */
+    public $returnUrl;
+
+    /**
      * Initializes the object.
      * This method is invoked at the end of the constructor after the object is initialized with the
      * given configuration.
-     * @throws InvalidConfigException
      */
     public function init()
     {
         parent::init();
-        if (!$this->transactionCode) {
-            throw new InvalidConfigException(self::className() . '::$transactionCode must be set');
-        }
+        $this->returnUrl = $this->createReturnUrl();
+
 
     }
 
     public function rules()
     {
         return [
-            [['optCode', 'captcha'], 'required'],
+            [['optCode', 'captcha', 'transactionCode'], 'required'],
             ['otpReceive', 'integer'],
+            ['transactionCode', 'string'],
             ['captcha', 'captcha', 'captchaAction' => '/payment/wallet/captcha'],
-            ['optCode', 'validateOtp']
+            ['optCode', 'validateOtp'],
+            ['otpReceive', 'filter', 'filter' => function ($value) {
+                return (string)$value;
+            }],
+            [['cancelUrl', 'returnUrl'], 'url'],
+            [['returnUrl', 'cancelUrl'], 'safe']
         ];
     }
 
@@ -99,6 +109,16 @@ class OtpVerifyForm extends Model
         }
     }
 
+    public function detail()
+    {
+        $walletService = new WalletService(['transaction_code' => $this->transactionCode]);
+        $transaction = $walletService->transactionDetail();
+        if ($transaction['success']) {
+            return $transaction['data'];
+        }
+        return [];
+    }
+
     public function verify()
     {
         if (!$this->validate()) {
@@ -107,14 +127,22 @@ class OtpVerifyForm extends Model
         return true;
     }
 
-
     public function refreshOtp()
     {
         $walletClient = new WalletService([
             'transaction_code' => $this->transactionCode,
-            'otp_type' => $this->otpReceive ? '1' : '0',
+            'otp_type' => $this->otpReceive,
         ]);
         return $walletClient->refreshOtp();
+    }
 
+    protected function createReturnUrl()
+    {
+        $baseUrl = PaymentService::createReturnUrl(42);
+        $queryParams = [
+            'code' => $this->transactionCode,
+        ];
+        $params = http_build_query($queryParams);
+        return PaymentService::createReturnUrl(42);
     }
 }

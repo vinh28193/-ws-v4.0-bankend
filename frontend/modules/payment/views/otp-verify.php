@@ -14,7 +14,22 @@ use yii\web\View;
 /* @var array $walletInterview */
 /* @var string $redirectUri */
 
-var_dump($statusOtp);
+$js = <<<JS
+    ws.initEventHandler($('form#otpVerifyForm','submit','beforeSubmit','form#otpVerifyForm',function(e) {
+         e.preventDefault();
+        var form = $(this);
+        // return false if form still have some validation errors
+        if (form.find('.has-error').length) 
+        {
+            return false;
+        }
+        var data = form.serialize();
+        console.log(data);
+        // send data to actionSave by ajax request.
+        return false; // Cancel form submitting.
+    }));
+JS;
+$this->registerJs($js);
 if (!$statusOtp) {
     if (!$isValid && $transactionDetail['type'] === 'PAY_ORDER' && $transactionDetail['status'] === 4) {
         echo Html::beginTag('div', ['class' => 'button_group']);
@@ -32,10 +47,15 @@ if (!$statusOtp) {
     $form = ActiveForm::begin([
         'options' => [
             'id' => 'otpVerifyForm'
-        ]
+        ],
+        'enableClientValidation' => false,
+        'enableAjaxValidation' => true,
+        'validationUrl' => '/payment/wallet/otp-verify-form-validate',
     ]);
-    echo Html::activeHiddenInput($otpVerifyForm, 'otpReceive');
-    echo Html::activeHiddenInput($otpVerifyForm, 'transactionCode');
+    echo $form->field($otpVerifyForm, 'otpReceive')->hiddenInput()->label(false);
+    echo $form->field($otpVerifyForm, 'transactionCode')->hiddenInput()->label(false);
+    echo $form->field($otpVerifyForm, 'returnUrl')->hiddenInput()->label(false);
+    echo $form->field($otpVerifyForm, 'cancelUrl')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'optCode')->textInput();
     echo $form->field($otpVerifyForm, 'captcha')->widget(Captcha::className(), [
         'captchaAction' => '/otp/captcha',
@@ -47,7 +67,7 @@ if (!$statusOtp) {
                        </div>'
     ]);
     echo Html::tag('p', 'Bạn chưa nhận được mã OTP? <a href="#">Gửi lại</a>');
-    echo Html::button('Xác thực', ['class' => 'btn btn-submit btn-block']);
+    echo Html::submitButton('Xác thực', ['class' => 'btn btn-submit btn-block']);
     ActiveForm::end();
 }
 ?>

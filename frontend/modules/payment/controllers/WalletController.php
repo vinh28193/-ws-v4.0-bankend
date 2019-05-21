@@ -57,7 +57,7 @@ class WalletController extends BasePaymentController
         return ArrayHelper::merge(parent::actions(), [
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'fixedVerifyCode' => 'testme',
                 'foreColor' => 000000,
 //                'height' => 60,
 //                'minLength' => 1,
@@ -76,14 +76,10 @@ class WalletController extends BasePaymentController
         $cancelUrl = Yii::$app->homeUrl;
 
         $otpVerifyForm = new OtpVerifyForm(['transactionCode' => $code]);
-        $walletService = new WalletService(['transaction_code' => $code]);
-        $transaction = $walletService->transactionDetail();
-        $data = [];
+        $otpVerifyForm->transactionCode = $code;
+        $data = $otpVerifyForm->detail();
         $msg = [];
         $statusOtp = false;
-        if ($transaction['success']) {
-            $data = $transaction['data'];
-        }
 
         /**
          * Thông tin transaction
@@ -128,7 +124,6 @@ class WalletController extends BasePaymentController
         if (count($transactionDetail) === 0 || ($transactionCode = $transactionDetail['order_number']) === null || ($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $transactionCode])) === null) {
             return $this->redirect($redirectUri);
         }
-
         if ($transactionDetail['type'] === self::TYPE_TRANSACTION_WITHDRAW) {
             $redirectUri = Url::to("/account/wallet/" . $code . "/detail.html", true);
         } else {
@@ -163,5 +158,24 @@ class WalletController extends BasePaymentController
             'walletInterview' => $walletInterview,
             'redirectUri' => $redirectUri,
         ], new PaymentContextView());
+    }
+
+    public function actionOtpVerifyFormValidate()
+    {
+        $otpVerifyForm = new OtpVerifyForm();
+        $request = Yii::$app->getRequest();
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if ($request->isAjax && $request->isPost && $otpVerifyForm->load($request->post())) {
+            return \yii\bootstrap4\ActiveForm::validate($otpVerifyForm);
+        }
+        return [];
+    }
+
+    public function actionCreatePayment()
+    {
+        $otpVerifyForm = new OtpVerifyForm();
+        $request = Yii::$app->getRequest();
+        if ($request->isAjax && $request->isPost && $otpVerifyForm->load($request->post()) && $otpVerifyForm->verify()) {
+        }
     }
 }
