@@ -65,10 +65,10 @@ echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút t
                     <a class="nav-link <?= $k == 0 ? 'active' : '' ?>" data-toggle="tab" href="#withdraw-<?= $k ?>" onclick="changeMethod('<?= $method ?>')" role="tab"
                        aria-selected="true"><span><?php
                             switch ($method){
-                                case 'nl':
+                                case 'NL':
                                     echo 'Rút tiền về ví Ngân Lượng';
                                     break;
-                                case 'bank':
+                                case 'BANK':
                                     echo 'Rút tiền về tài khoản ngân hàng';
                                     break;
                             }
@@ -96,7 +96,7 @@ echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút t
                 </div>
                 <div class="form-group">
                     <div class="label">Tổng số tiền rút</div>
-                    <b class="text-orange" id="total_fee">0 đ</b>
+                    <b class="text-orange" id="total_amout">0 đ</b>
                 </div>
                 <div class="form-group">
                     <div class="label">Xác nhận bằng mất khẩu</div>

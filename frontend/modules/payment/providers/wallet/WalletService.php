@@ -42,6 +42,11 @@ class WalletService extends BaseObject
     public $payment_provider;
     public $bank_code;
     public $payment_transaction;
+    public $cardholderName;
+    public $cardnumber;
+    public $fee;
+    public $amount;
+
 
     public $otp_type;
     public $otp_code;
@@ -232,6 +237,26 @@ class WalletService extends BaseObject
         return $this->callApiRequest('transaction/refresh-otp', [
             'transaction_code' => $this->transaction_code,
             'otp_receive_type' => $this->otp_type,
+        ]);
+    }
+
+    public function createWithdraw(){
+        return $this->callApiRequest('withdraw/create', [
+            'amount_total' => $this->total_amount,
+            'method' => $this->payment_method,
+            'note' => '',
+            'merchant_id' => 1,
+            'transaction_code' => '',
+            'payment_provider' => $this->payment_method == 'NL' ? 'Rút tiền về ví Ngân Lượng' : 'Rút tiền về tài khoản ngân hàng',
+            'bank_code' => $this->bank_code,
+            'typeSendOtp' => 3,
+            'requestContent' => json_encode([
+                'numberCard' => $this->cardnumber,
+                'cardholderName' => $this->cardholderName,
+                'amount' => $this->amount,
+                'fee' => $this->fee,
+                'total_amount' => $this->total_amount,
+            ]),
         ]);
     }
 

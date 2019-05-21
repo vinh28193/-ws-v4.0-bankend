@@ -68,6 +68,8 @@ return [
         'my-wallet/topup.html' => 'account/api/wallet-service/topup',
         'my-wallet/topup/<merchant:[^/]+>/return.html' => 'account/api/wallet-service/return',
         'my-wallet/withdraw.html' => 'account/api/wallet-service/withdraw',
+        'my-wallet/sent-otp.html' => 'account/api/wallet-service/sent-otp',
+        'my-weshop/wallet/withdraw/<transaction_code:[^/]+>.html' => 'account/wallet/withdraw',
         'my-weshop/<controller>/<action>.html' => 'account/<controller>/<action>',
         'my-weshop/api/<controller>/<action>.html' => 'account/api/<controller>/<action>',
 
