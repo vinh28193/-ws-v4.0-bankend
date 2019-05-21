@@ -8,6 +8,7 @@
 
 namespace common\helpers;
 
+use wallet\modules\v1\models\WalletTransaction;
 use yii\base\InvalidArgumentException;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
