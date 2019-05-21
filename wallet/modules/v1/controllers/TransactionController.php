@@ -244,7 +244,10 @@ class TransactionController extends WalletServiceController
             'complete_at',
             'cancel_at',
             'fail_at',
-            'status'
+            'status',
+            'verified_at',
+            'verify_expired_at',
+            'verify_receive_type'
         ];
         $data = ['isValid' => $model->isValid];
 
