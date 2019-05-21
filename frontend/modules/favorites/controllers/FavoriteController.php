@@ -53,8 +53,7 @@ class FavoriteController extends FrontendController
 
         if ($this->create_favorite($obj_type, $obj_id)) {
             \Yii::info("app  create favorite Success");
-           return ['success' => true, 'message' => 'add done favorites'];
-           // return $this->goBack();
+             return $this->goBack();
         } else {
             \Yii::info(" app Can't create favorite");
             throw new ErrorException(\Yii::t('app', "Can't create favorite"));
@@ -125,7 +124,7 @@ class FavoriteController extends FrontendController
      */
     function create_favorite($obj_type, $obj_id)
     {
-        $getId =  \Yii::$app->user->getId() ? Yii::$app->user->getId() : 'anonymous';
+        $getId =  \Yii::$app->user->getId() ? \Yii::$app->user->getId() : '9999';
         $favorite = new Favorite([
             'obj_type' => $obj_type,
             'obj_id' => $obj_id,
@@ -137,13 +136,29 @@ class FavoriteController extends FrontendController
                 return true;
             } else {
                 $favorite->created_by = \Yii::$app->user->getId();
-                return $favorite->save();
+                try {
+                    $favorite->validate();
+                    \Yii::info($favorite->getErrors());
+                    $favorite->save();
+                    return true;
+                } catch (\Exception $exception) {
+                    \Yii::info($exception);
+                    return false;
+                }
             }
         } else {
             if ($this->is_user_created_favorite($obj_type, $obj_id)) {
                 return true;
             } else {
-                return $favorite->save();
+                try {
+                    $favorite->validate();
+                    \Yii::info($favorite->getErrors());
+                    $favorite->save();
+                    return true;
+                } catch (\Exception $exception) {
+                    \Yii::info($exception);
+                    return false;
+                }
             }
         }
     }
