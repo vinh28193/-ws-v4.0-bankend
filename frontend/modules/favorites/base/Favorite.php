@@ -1,9 +1,10 @@
 <?php
 
-namespace frontend\modules\favorites\FavoriteBase\base;
+namespace frontend\modules\favorites\base;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use frontend\modules\favorites\query\FavoriteQuery;
 
 /**
  * This is the base model class for table "{{%favorites}}".
@@ -19,7 +20,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class Favorite extends \yii\db\ActiveRecord
 {
-    use \mootensai\relation\RelationTrait;
+   // use \mootensai\relation\RelationTrait;
 
 
     /**
@@ -84,10 +85,10 @@ class Favorite extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \thienhungho\Favorites\modules\FavoriteBase\query\FavoriteQuery the active query used by this AR class.
+     * @return FavoriteQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \thienhungho\Favorites\modules\FavoriteBase\query\FavoriteQuery(get_called_class());
+        return new  FavoriteQuery(get_called_class());
     }
 }

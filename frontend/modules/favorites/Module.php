@@ -3,7 +3,7 @@
 namespace frontend\modules\favorites;
 
 /**
- * favorites module definition class
+ * FavoriteModule module definition class
  */
 class Module extends \yii\base\Module
 {

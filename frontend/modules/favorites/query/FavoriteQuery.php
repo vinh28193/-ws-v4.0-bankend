@@ -1,6 +1,7 @@
 <?php
 
-namespace frontend\modules\favorites\FavoriteBase\query;
+namespace frontend\modules\favorites\query;
+use frontend\modules\favorites\models\Favorite;
 
 /**
  * This is the ActiveQuery class for [[Favorite]].

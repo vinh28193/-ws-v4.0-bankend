@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\favorites\FavoriteBase;
+namespace frontend\modules\favorites;
 
 /**
  * FavoriteModule module definition class

@@ -1,9 +1,9 @@
 <?php
 
-namespace frontend\modules\favorites\FavoriteBase;
+namespace frontend\modules\favorites;
 
 use Yii;
-use frontend\modules\favorites\FavoriteBase\base\Favorite as BaseFavorite;
+use frontend\modules\favorites\base\Favorite as BaseFavorite;
 
 /**
  * This is the model class for table "favorites".
