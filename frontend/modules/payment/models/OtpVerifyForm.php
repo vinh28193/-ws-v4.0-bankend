@@ -45,6 +45,7 @@ class OtpVerifyForm extends Model
      */
     public $transactionCode;
 
+    public $orderCode;
     /**
      * @var
      */
@@ -71,9 +72,9 @@ class OtpVerifyForm extends Model
     public function rules()
     {
         return [
-            [['optCode', 'captcha', 'transactionCode'], 'required'],
+            [['optCode', 'captcha', 'transactionCode', 'orderCode'], 'required'],
             ['otpReceive', 'integer'],
-            ['transactionCode', 'string'],
+            [['transactionCode', 'orderCode'], 'string'],
             ['captcha', 'captcha', 'captchaAction' => '/payment/wallet/captcha'],
             ['optCode', 'validateOtp'],
             ['otpReceive', 'filter', 'filter' => function ($value) {
@@ -119,6 +120,12 @@ class OtpVerifyForm extends Model
         return [];
     }
 
+    public function success()
+    {
+        $walletService = new WalletService(['transaction_code' => $this->transactionCode]);
+        return $walletService->transactionSuccess();
+    }
+
     public function verify()
     {
         if (!$this->validate()) {
@@ -138,11 +145,6 @@ class OtpVerifyForm extends Model
 
     protected function createReturnUrl()
     {
-        $baseUrl = PaymentService::createReturnUrl(42);
-        $queryParams = [
-            'code' => $this->transactionCode,
-        ];
-        $params = http_build_query($queryParams);
-        return PaymentService::createReturnUrl(42);
+        return PaymentService::createReturnUrl(43);
     }
 }

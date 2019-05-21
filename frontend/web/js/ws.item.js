@@ -369,6 +369,7 @@
         var data = $item.data('wsItem');
     };
     var changeImage = function ($item, images) {
+        $item.data('wsItem').params.images = images;
         var html = '';
         $.each(images, function (index, value) {
             if (index == 0)

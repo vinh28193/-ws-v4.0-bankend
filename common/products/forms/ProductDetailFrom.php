@@ -59,7 +59,7 @@ class ProductDetailFrom extends BaseForm
             ['seller', 'filter', 'filter' => '\yii\helpers\Html::encode'],
             ['weight', 'integer'],
             ['sub_product_url', 'string'],
-            ['with_detail','safe'],
+            ['with_detail', 'safe'],
         ]);
     }
 
@@ -90,6 +90,7 @@ class ProductDetailFrom extends BaseForm
             $this->addError($this->isSku() ? 'sku' : 'id', $product);
             return false;
         }
+
         if ($this->isSku()) {
             $product->updateBySku($this->sku);
         }
@@ -103,9 +104,10 @@ class ProductDetailFrom extends BaseForm
             $product->updateBySeller($this->seller);
         }
         $product->init();
-        if ($this->with_detail === false) {
-            $product->description = null;
-        }
+
+//        if ($this->with_detail === false) {
+//            $product->description = null;
+//        }
         return $product;
     }
 

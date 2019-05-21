@@ -186,6 +186,7 @@ class TransactionForm extends Model
      */
     public function makeTransaction()
     {
+
         if (!$this->validate()) {
             return ['code' => ResponseCode::INVALID, 'message' => $this->getFirstErrors(), 'data' => []];
         }

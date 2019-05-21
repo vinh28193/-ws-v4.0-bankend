@@ -21,28 +21,78 @@ ws.wallet = (function ($) {
         getInfo: function () {
             var data = pub.data;
             if (data.is_guest) {
-                openConfirmPassword();
+                // openConfirmPassword();
             }
             return pub.data;
-        },
-        validateOTP: function () {
-
         },
         refreshCaptcha: function () {
             $("img[id$='-captcha-image']").trigger('click');
         },
-        refreshOtp: function () {
-
+        refreshOtp: function (form) {
+            var otpVerifyForm = $(form);
+            ws.ajax('/payment/wallet/refresh-otp', {
+                type: 'POST',
+                data: otpVerifyForm.serialize(),
+                success: function (res) {
+                    $msg = $('p.message-otp');
+                    var $oldText = $msg.html();
+                    $('p.message-otp').html(res.message);
+                    if (!res.success) {
+                        var timeOut = 5;
+                        var runTime = setInterval(function () {
+                            timeOut -= 1;
+                            if (timeOut === 0) {
+                                $msg.html($oldText);
+                                $oldText = '';
+                                pub.otpExpireCoolDown('span.otp-expired-cooldown');
+                                clearInterval(runTime);
+                            }
+                        }, 1000);
+                    }
+                    pub.otpExpireCoolDown('span.otp-expired-cooldown');
+                }
+            })
+        },
+        submitForm(form) {
+            if (form.find('.has-error').length) {
+                return false;
+            }
+            ws.ajax(form.attr('action'), {
+                type: 'POST',
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        var data = response.data;
+                        $('body').find('form.otp-submit-form').remove();
+                        var newForm = $('<form/>', {
+                            action: data.returnUrl,
+                            method: 'get',
+                            'class': 'otp-submit-form',
+                            style: 'display:none',
+                            'data-pjax': ''
+                        }).appendTo('body');
+                        newForm.append($('<input/>').attr({type: 'hidden', name: 'status', value: response.code}));
+                        newForm.append($('<input/>').attr({type: 'hidden', name: 'token', value: data.token}));
+                        newForm.append($('<input/>').attr({
+                            type: 'hidden',
+                            name: 'order_code',
+                            value: data.order_code
+                        }));
+                        newForm.append($('<input/>').attr({type: 'hidden', name: 'time', value: data.time}));
+                        newForm.submit();
+                    }
+                }
+            });
+            return false;
         },
         confirmPassword: function () {
 
         },
-
         otpExpireCoolDown: function (target) {
+            target = $(target);
             var interval = setInterval(function () {
-                var target = $(target);
-                var uri = target.attr('data-redirect-uri');
-                var time = parseInt(target.attr('data-time-expired'));
+                var uri = target.data('redirect-uri');
+                var time = parseInt(target.data('time-expired'));
                 var left = time - Math.floor((new Date()) / 1000);
                 if (left < 0) {
                     left = 0;
