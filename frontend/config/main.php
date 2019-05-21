@@ -19,9 +19,9 @@ return [
 //            'yii\web\JqueryAsset' => [
 //                'js'=>[]
 //            ],
-//            'yii\bootstrap\BootstrapPluginAsset' => [
-//                'js'=>[]
-//            ],
+            'yii\bootstrap\BootstrapPluginAsset' => [
+                'js'=>['/js/bootstrap.min.js']
+            ],
                 'yii\bootstrap\BootstrapAsset' => [
                     'css' => ['/css/bootstrap.css'],
                 ],
