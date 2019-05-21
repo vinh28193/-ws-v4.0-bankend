@@ -15,6 +15,9 @@ class TestController extends FrontendController
         die;
     }
 
+    public function actionTestRsa(){
+
+    }
     public function actionAlepay(){
         $alepay = new AlepayClient();
         echo "<pre>";

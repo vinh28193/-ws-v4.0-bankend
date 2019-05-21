@@ -4,12 +4,14 @@
 namespace frontend\modules\account\controllers\api;
 
 
-use common\models\db\User;
+use common\models\User;
 use common\models\PaymentTransaction;
 use common\models\WalletTransaction;
+use frontend\models\LoginForm;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\helpers\Url;
 use yii\web\Response;
@@ -100,5 +102,54 @@ class WalletServiceController extends Controller
             return Yii::$app->response->redirect(Url::toRoute("/account/wallet/index", true));
         }
         return Yii::$app->response->redirect(Url::toRoute("/account/wallet/index", true));
+    }
+    public function actionWithdraw(){
+        $request = Yii::$app->request->post();
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
+        if(!($pass = ArrayHelper::getValue($request,'password'))){
+            return $this->response(false,'vui lòng xác thực mật khẩu.');
+        }
+        if(!$user->validatePassword($pass)){
+            return $this->response(false,'Mật khẩu không đúng .Vui lòng kiểm tra lại.');
+        }
+        $walletS = new WalletService();
+        if(!($walletS->payment_method = ArrayHelper::getValue($request,'method'))){
+            return $this->response(false,'Vui lòng chọn phương thức nhận tiền');
+        }
+        if($walletS->payment_method == 'NL'){
+            if(!($walletS->cardnumber = ArrayHelper::getValue($request,'email'))){
+                return $this->response(false,'Vui lòng nhập email tài khoản Ngân Lượng');
+            }
+            $walletS->bank_code = 'NL';
+        }elseif ($walletS->payment_method == 'bank'){
+
+        }else{
+            return $this->response(false,'Vui lòng chọn phương thức thanh toán khác');
+        }
+        if(!($walletS->total_amount = ArrayHelper::getValue($request,'total_amount')) || $walletS->total_amount < 100000 ){
+            return $this->response(false,'Vui lòng nhập số tiền muốn rút lớn hơn 100.000');
+        }
+        $walletS->amount = ArrayHelper::getValue($request,'amount');
+        $walletS->fee = ArrayHelper::getValue($request,'fee');
+        try{
+            $rs = $walletS->createWithdraw();
+            $trancode = $rs['data']['wallet_transaction_code'];
+            return $this->response(true,$trancode['message'],$trancode['data']);
+        }catch (\Exception $exception){
+            return $this->response(false,'Có lỗi tạo yêu cầu rút tiền. Vui lòng thử lại.');
+        }
+
+    }
+    public function response($success = false,$mess = "Fail", $data = []){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return ['success' => $success,'message' => $mess, 'data' => $data];
+    }
+    public function actionSentOtp(){
+        $walletS = new WalletService();
+        $walletS->transaction_code = Yii::$app->request->post('transaction_code');
+        $walletS->otp_type = Yii::$app->request->post('type',1);
+        $walletS->refreshOtp();
+        return $this->response(true,'sent otp success!',['code' => $walletS->transaction_code]);
     }
 }

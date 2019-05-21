@@ -30,7 +30,7 @@ class AlepaySecurity extends BaseObject
     {
         if (!is_object($this->_provider)) {
             $this->_provider = new RSA();
-            $this->_provider->loadKey($this->publicKey);
+            $this->_provider->loadKey($this->publicKey, RSA::PRIVATE_FORMAT_PKCS1);
             $this->_provider->setEncryptionMode(RSA::ENCRYPTION_PKCS1);
         }
         return $this->_provider;

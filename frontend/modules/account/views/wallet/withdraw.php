@@ -1,9 +1,20 @@
 <?php
 /**
- *
+ * @var $wallet array
  */
 
+use common\helpers\WeshopHelper;
 use frontend\modules\account\views\widgets\HeaderContentWidget;
+use yii\helpers\ArrayHelper;
+
+$listMethod = ArrayHelper::getValue(Yii::$app->params, 'list_method_withdraw');
+$js = "
+$(document).ready(function () {
+//set default
+        withdraw_data.method = '" . (isset($listMethod[0]) ? $listMethod[0] : '') . "';
+    });";
+$this->registerJs($js, \yii\web\View::POS_END);
+
 
 $this->title = "Tạo yêu cầu rút tiền";
 echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút tiền' => '/my-weshop/wallet/withdraw.html']]);
@@ -25,19 +36,19 @@ echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút t
                 </thead>
                 <tbody>
                 <tr>
-                    <td>50.800.000đ</td>
-                    <td>20.000đ</td>
-                    <td>50.800.000đ</td>
+                    <td><?= WeshopHelper::showMoney(ArrayHelper::getValue($wallet, 'current_balance')) ?></td>
+                    <td><?= WeshopHelper::showMoney(ArrayHelper::getValue($wallet, 'freeze_balance')) ?></td>
+                    <td><?= WeshopHelper::showMoney(ArrayHelper::getValue($wallet, 'usable_balance')) ?></td>
                 </tr>
                 </tbody>
             </table>
         </div>
         <ul class="withdraw-step">
-            <li class="done">
+            <li class="active">
                 <div class="step">1</div>
                 <p>Tạo Yêu cầu rút</p>
             </li>
-            <li class="active">
+            <li class="step">
                 <div class="step">2</div>
                 <p>Xác nhận yêu cầu rút</p>
             </li>
@@ -49,87 +60,50 @@ echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút t
         <div class="title-2">Qúy khách vui lòng chọn phương thức rút tiền</div>
         <div class="withdraw-box">
             <ul class="nav nav-tabs" role="tablist">
+                <?php foreach ($listMethod as $k => $method) { ?>
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#withdraw-1" role="tab" aria-selected="true"><span>Rút tiền về ví Weshop</span></a>
+                    <a class="nav-link <?= $k == 0 ? 'active' : '' ?>" data-toggle="tab" href="#withdraw-<?= $k ?>" onclick="changeMethod('<?= $method ?>')" role="tab"
+                       aria-selected="true"><span><?php
+                            switch ($method){
+                                case 'NL':
+                                    echo 'Rút tiền về ví Ngân Lượng';
+                                    break;
+                                case 'BANK':
+                                    echo 'Rút tiền về tài khoản ngân hàng';
+                                    break;
+                            }
+                            ?></span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#withdraw-2" role="tab" aria-selected="false"><span>Rút tiền về tài khoản ngân hàng</span></a>
-                </li>
+                <?php } ?>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="withdraw-1" role="tabpanel">
-                    <div class="form-group">
-                        <div class="label">Email tài khoản Weshop</div>
-                        <input type="email" class="form-control" placeholder="Email tài khoản Weshop">
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Email tài khoản Weshop</div>
-                        <b>nhientt@gmail.com</b>
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Số tiền cần rút</div>
-                        <input type="text" class="form-control" placeholder="Nhập số tiền cần rút">
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Số tiền cần rút</div>
-                        <b>900.000 đ</b>
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Phí rút tiền</div>
-                        <b>10.000 đ</b>
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Tổng số tiền rút</div>
-                        <b class="text-orange">828.700 đ</b>
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Xác nhận bằng mất khẩu</div>
-                        <input type="password" class="form-control">
-                    </div>
-                    <div class="text-right">
-                        <button type="button" class="btn btn-submit">Xác nhận</button>
-                    </div>
+                <?php foreach ($listMethod as $k => $method) {?>
+                <div class="tab-pane fade <?= $k == 0 ? 'show active' : '' ?>" id="withdraw-<?= $k ?>" role="tabpanel">
+                    <?= \frontend\modules\account\views\widgets\TabWithdrawWidget::widget(['method' => $method]) ?>
                 </div>
-                <div class="tab-pane fade" id="withdraw-2" role="tabpanel">
-                    <div class="form-group">
-                        <div class="label">Tên ngân hàng</div>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="choose-bank" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Chọn ngân hàng</button>
-                            <div class="dropdown-menu" aria-labelledby="choose-bank">
-                                <input type="text" class="form-control" placeholder="Tìm tên ngân hàng">
-                                <a class="dropdown-item" href="#">Viettin Bank</a>
-                                <a class="dropdown-item" href="#">Techcombank</a>
-                                <a class="dropdown-item" href="#">Vietcombank</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Số tài khoản</div>
-                        <input type="email" class="form-control" placeholder="Nhập số tài khoản">
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Chủ tài khoản</div>
-                        <input type="text" class="form-control" placeholder="Nhập tên chủ tài khoản">
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Số tiền cần rút</div>
-                        <input type="text" class="form-control" placeholder="Nhập số tiền cần rút">
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Phí rút tiền</div>
-                        <b>10.000 đ</b>
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Tổng số tiền rút</div>
-                        <b class="text-orange">828.700 đ</b>
-                    </div>
-                    <div class="form-group">
-                        <div class="label">Xác nhận bằng mất khẩu</div>
-                        <input type="password" class="form-control">
-                    </div>
-                    <div class="text-right">
-                        <button type="button" class="btn btn-submit">Xác nhận</button>
-                    </div>
+                <?php } ?>
+                <div class="form-group">
+                    <div class="label">Số tiền cần rút</div>
+                    <input type="number" name="amount" class="form-control" placeholder="Nhập số tiền cần rút">
+                </div>
+                <div class="form-group">
+                    <div class="label">Số tiền cần rút</div>
+                    <b id="amount">0 đ</b>
+                </div>
+                <div class="form-group">
+                    <div class="label">Phí rút tiền</div>
+                    <b id="fee">0 đ</b>
+                </div>
+                <div class="form-group">
+                    <div class="label">Tổng số tiền rút</div>
+                    <b class="text-orange" id="total_amout">0 đ</b>
+                </div>
+                <div class="form-group">
+                    <div class="label">Xác nhận bằng mất khẩu</div>
+                    <input type="password" class="form-control" name="password" placeholder="Nhập mật khẩu">
+                </div>
+                <div class="text-right">
+                    <button type="button" name="submit_withdraw" class="btn btn-submit">Xác nhận</button>
                 </div>
             </div>
         </div>

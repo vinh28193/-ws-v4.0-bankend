@@ -15,14 +15,17 @@ class UserBackendAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/style.css',
+        'css/style.css',
         'css/slick.css',
         'owlcarousel/owl.carousel.min.css',
         'owlcarousel/owl.theme.default.min.css',
     ];
     public $js = [
+        'js/ws.js',
         'js/style.js',
         'js/account/user.js',
         'owlcarousel/owl.carousel.min.js',
+        'js/account/wallet.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

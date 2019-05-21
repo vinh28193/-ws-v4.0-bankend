@@ -124,5 +124,8 @@ return [
         'account' => [
             'class' => 'frontend\modules\account\Module',
         ],
+        'favorites' => [
+            'class' => 'frontend\modules\favorites\Module',
+        ],
     ],
 ];
