@@ -21,7 +21,11 @@ class WalletController extends BaseAccountController
     }
 
     public function actionIndex(){
-        return $this->render('index');
+        $walletS = new WalletService();
+        $wallet = ArrayHelper::getValue($walletS->detailWalletClient(),'data',[]);
+        return $this->render('index',[
+            'wallet' => $wallet,
+        ]);
     }
     public function actionTopUp(){
         $payment = new Payment([
@@ -39,9 +43,11 @@ class WalletController extends BaseAccountController
         return $this->render('withdraw');
     }
     public function actionHistory(){
+        $get = \Yii::$app->request->get();
         $walletS = new WalletService();
         $wallet = ArrayHelper::getValue($walletS->detailWalletClient(),'data',[]);
-        $listTransaction = ArrayHelper::getValue($walletS->listTransaction(),'data',[]);
+        $listTransaction = ArrayHelper::getValue($walletS->listTransaction($get,20,0),'data',[]);
+
         return $this->render('history',[
             'wallet' => $wallet,
             'trans' => $listTransaction

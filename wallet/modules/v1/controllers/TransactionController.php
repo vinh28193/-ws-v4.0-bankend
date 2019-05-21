@@ -69,6 +69,26 @@ class TransactionController extends WalletServiceController
                     '<=', $filter['range']['key'], $to
                 ]);
             }
+            if (($transaction_code = ArrayHelper::getValue($filter,'transaction_code'))){
+                $query->andWhere(['like' , 'wallet_transaction_code' , $transaction_code ]);
+            }
+            if (($order_code = ArrayHelper::getValue($filter,'order_code'))){
+                $query->andWhere(['like' , 'order_number' , $order_code ]);
+            }
+            if (($transaction_type = ArrayHelper::getValue($filter,'transaction_type'))){
+                $query->andWhere(['type' => strtoupper($transaction_type)]);
+            }
+            if (($from_date = ArrayHelper::getValue($filter,'from_date'))){
+                $from_date = date('Y-m-d H:i:s',strtotime(str_replace('/','-',$from_date).' 00:00:00'));
+                $query->andWhere(['>=' , 'create_at' , $from_date]);
+            }
+            if (($to_date = ArrayHelper::getValue($filter,'to_date'))){
+                $to_date = date('Y-m-d H:i:s',strtotime(str_replace('/','-',$to_date).' 23:59:59'));
+                $query->andWhere(['<=' , 'create_at' , $to_date]);
+            }
+            if (($transaction_status = ArrayHelper::getValue($filter,'transaction_status'))){
+                $query->andWhere(['status' => $transaction_status]);
+            }
         }
         if (isset($params['wallet_merchant_id'])) {
             $query->andWhere(['wallet_merchant_id' => $params['wallet_merchant_id']]);
