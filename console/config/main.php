@@ -25,7 +25,7 @@ return [
         ],
         'migrate' => [
             'class' => 'common\components\consoles\controllers\MigrateController',
-            'migrationPath' => ['@console/migrations']
+            'migrationPath' => ['@console/migrations'],
         ],
         'mongodb-migrate' => [
             'class' => 'yii\mongodb\console\controllers\MigrateController',

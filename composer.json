@@ -46,7 +46,8 @@
     "rdok/elasticemail-php": "dev-master",
     "geometria-lab/rediska": "^0.5.10",
     "ext-simplexml": "*",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "yii2mod/collection": "*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
