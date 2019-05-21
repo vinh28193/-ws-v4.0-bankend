@@ -124,6 +124,7 @@ class WalletController extends BasePaymentController
         if (count($transactionDetail) === 0 || ($transactionCode = $transactionDetail['order_number']) === null || ($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $transactionCode])) === null) {
             return $this->redirect($redirectUri);
         }
+        $otpVerifyForm->orderCode = $transactionDetail['order_number'];
         if ($transactionDetail['type'] === self::TYPE_TRANSACTION_WITHDRAW) {
             $redirectUri = Url::to("/account/wallet/" . $code . "/detail.html", true);
         } else {
@@ -173,9 +174,21 @@ class WalletController extends BasePaymentController
 
     public function actionCreatePayment()
     {
+
         $otpVerifyForm = new OtpVerifyForm();
         $request = Yii::$app->getRequest();
-        if ($request->isAjax && $request->isPost && $otpVerifyForm->load($request->post()) && $otpVerifyForm->verify()) {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if ($request->isAjax && $request->isPost && $otpVerifyForm->load($request->post()) && ($results = $otpVerifyForm->success())['success'] === true) {
+            $results['data'] = ArrayHelper::merge($results['data'], [
+                'returnUrl' => $otpVerifyForm->returnUrl,
+                'cancelUrl' => $otpVerifyForm->cancelUrl,
+                'token' => $otpVerifyForm->transactionCode,
+                'order_code' => $otpVerifyForm->orderCode,
+                'status' => $results['success']
+            ]);
+            return $results;
         }
+
+        return ['success' => false, 'message' => $otpVerifyForm->getFirstErrors()];
     }
 }

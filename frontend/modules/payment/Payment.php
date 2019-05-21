@@ -204,7 +204,6 @@ class Payment extends Model
             case 43:
                 $wallet = new WalletProvider();
                 return $wallet->create($this);
-
             case 45:
                 $office = new WSVNOffice();
                 return $office->create($this);
@@ -227,7 +226,7 @@ class Payment extends Model
                 return $wlHide->handle($request->get());
             case 43:
                 $wallet = new WalletProvider();
-                return $wallet->handle($request->post());
+                return $wallet->handle($request->get());
             case 45:
                 $office = new WSVNOffice();
                 return $office->handle($request->get());

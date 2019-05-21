@@ -305,10 +305,10 @@ ws.payment = (function ($) {
 
         },
         process: function () {
-            var typePay = $('input[name=type_pay]').val();
-            if(typePay.toLowerCase() === 'topup'){
+            var typePay = $('input[name=type_pay]').val() ;
+            if (typePay && typePay.toString().toLowerCase() === 'topup') {
                 ws.payment.topUp();
-            }else {
+            } else {
                 if (!pub.getInfoFormShipping()) {
                     return;
                 }
@@ -358,16 +358,16 @@ ws.payment = (function ($) {
         },
         topUp: function () {
             pub.payment.total_amount = $('input[name=amount_topup]').val();
-            if (pub.payment.total_amount  < 100000) {
+            if (pub.payment.total_amount < 100000) {
                 ws.sweetalert('Bạn cần phải nạp trên 100.000');
                 return;
             }
             var checkArr = $('#termCheckout:checked').val();
-            if(!checkArr){
+            if (!checkArr) {
                 ws.sweetalert('Bạn chưa đồng ý với điều khoản và điều kiện giao dịch của weshop');
                 return;
             }
-            if(!pub.payment.payment_method || !pub.payment.payment_provider || !pub.payment.payment_bank_code){
+            if (!pub.payment.payment_method || !pub.payment.payment_provider || !pub.payment.payment_bank_code) {
                 ws.sweetalert('Vui lòng chọn phương thức thanh toán!');
                 return;
             }

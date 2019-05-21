@@ -60,7 +60,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
      * on dev mode set it to make static otp code
      * @var string
      */
-    public $fixedOtpCode;
+    public $fixedOtpCode = '99999';
 
     /**
      * @var array
@@ -161,9 +161,9 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     {
         if (!$this->_wallet_client) {
             $identity = Yii::$app->user->identity;
-            if(!$this->isNewRecord && ($identity === null || ($identity && $identity->getId() !== $this->wallet_client_id))){
+            if (!$this->isNewRecord && ($identity === null || ($identity && $identity->getId() !== $this->wallet_client_id))) {
                 $this->_wallet_client = WalletClient::findIdentity($this->wallet_client_id);
-            }else{
+            } else {
                 $this->_wallet_client = $identity;
             }
 
@@ -218,13 +218,12 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
                     if ($this->type === self::TYPE_WITH_DRAW) {
                         $this->note = 'Withdraw amount requested greater than withdrawable balance';
                     }
-                } else if($this->verify_receive_type !== self::VERIFY_RECEIVE_TYPE_NONE) {
+                } else if ($this->verify_receive_type !== self::VERIFY_RECEIVE_TYPE_NONE) {
                     $this->getOtpCode();
-                    $this->sendOtpCode();
                 }
             }
-
             if ($this->save()) {
+                $this->sendOtpCode();
                 if ($this->status === self::STATUS_QUEUE && ArrayHelper::isIn($this->type, [self::TYPE_WITH_DRAW, self::TYPE_PAY_ORDER])) {
                     $pushTime = $this->_formatter->asDatetime('now');
                     $this->redis->push([$this->getWalletTransactionCode(), $pushTime, 1]);
@@ -285,7 +284,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
         }
         $code = $this->verify_code;
         if ($code === null || $regenerate) {
-            if($code === null){
+            if ($code === null) {
                 $resetCount = true;
             }
             $code = $this->generateOtpCode();
@@ -322,22 +321,22 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     public function generateDescription()
     {
         if ($this->type === self::TYPE_TOP_UP) {
-            $this->description = Yii::t('wallet','Top up amount: {totalAmount} , payment method: {paymentMethod}, payment provider: {paymentProvider}, bank code: {bankCode}', [
+            $this->description = Yii::t('wallet', 'Top up amount: {totalAmount} , payment method: {paymentMethod}, payment provider: {paymentProvider}, bank code: {bankCode}', [
                 'totalAmount' => $this->totalAmount,
                 'paymentMethod' => $this->payment_method,
                 'paymentProvider' => $this->payment_provider_name,
                 'bankCode' => $this->payment_bank_code
             ]);
         } elseif ($this->type === self::TYPE_PAY_ORDER) {
-            $this->description = Yii::t('wallet','Payment order: {orderNumber}', [
+            $this->description = Yii::t('wallet', 'Payment order: {orderNumber}', [
                 'orderNumber' => $this->order_number
             ]);
         } elseif ($this->type === self::TYPE_REFUND) {
-            $this->description = Yii::t('wallet','Refund order: {orderNumber}', [
+            $this->description = Yii::t('wallet', 'Refund order: {orderNumber}', [
                 'orderNumber' => $this->order_number
             ]);
         } elseif ($this->type === self::TYPE_WITH_DRAW) {
-            $this->description = Yii::t('wallet','Request Withdraw amount: {totalAmount} , request content: {request_content}, payment method: {paymentMethod},  bank code: {bankCode}', [
+            $this->description = Yii::t('wallet', 'Request Withdraw amount: {totalAmount} , request content: {request_content}, payment method: {paymentMethod},  bank code: {bankCode}', [
                 'totalAmount' => $this->totalAmount,
                 'request_content' => $this->request_content,
                 'paymentMethod' => $this->payment_method,
@@ -360,16 +359,16 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     public function validateOtpCode($code, $caseSensitive = false)
     {
         $otp = $this->getOtpCode(false);
-        $token = 'Validatting OTP:'.$otp;
+        $token = 'Validatting OTP:' . $otp;
         $valid = $caseSensitive ? ($otp === $code) : strcasecmp($otp, $code) === 0;
         $res = [
             'valid' => $valid,
-            'message' => Yii::t('wallet','Ok,your otp code valid'),
+            'message' => Yii::t('wallet', 'Ok,your otp code valid'),
             'data' => []
         ];
         if ($this->fixedOtpCode !== null) {
-            $token .= ', dev mode fixed opt:'. $this->fixedOtpCode;
-            $res['message'] = $valid ? $res['message'] : Yii::t('wallet','Your otp is: {fixCode}', ['fixCode' => $this->fixedOtpCode]);
+            $token .= ', dev mode fixed opt:' . $this->fixedOtpCode;
+            $res['message'] = $valid ? $res['message'] : Yii::t('wallet', 'Your otp is: {fixCode}', ['fixCode' => $this->fixedOtpCode]);
             return ArrayHelper::merge($res, [
                 'data' => [
                     'verified' => true,
@@ -381,21 +380,21 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
         if ($this->status === self::STATUS_CANCEL) {
             return ArrayHelper::merge($res, [
                 'valid' => false,
-                'message' => Yii::t('wallet','Your transaction not valid'),
+                'message' => Yii::t('wallet', 'Your transaction not valid'),
             ]);
         }
         $verifyCount = self::OTP_COUNT_LIMIT - ($this->verify_count !== null ? $this->verify_count : 0);
         if ((int)$verifyCount === 0) {
-            $message = Yii::t('wallet','Your otp verify failed too much, your transaction has been broken');
+            $message = Yii::t('wallet', 'Your otp verify failed too much, your transaction has been broken');
             $this->markTransactionAsCancel();
             //Todo save logs why update transaction cancel
             return ArrayHelper::merge($res, [
                 'valid' => false,
-                'message' =>  $message
+                'message' => $message
             ]);
         }
         if (time() > $this->verify_expired_at) {
-            $message = Yii::t('wallet','You OTP expired at: {expired}', ['expired' => $this->_formatter->asDatetime($this->verify_expired_at)]);
+            $message = Yii::t('wallet', 'You OTP expired at: {expired}', ['expired' => $this->_formatter->asDatetime($this->verify_expired_at)]);
             $this->markTransactionAsCancel();
             //Todo save logs why update transaction cancel
             return ArrayHelper::merge($res, [
@@ -407,7 +406,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
             $this->verify_count = $this->verify_count + 1;
             $this->update(false, ['verify_count']);
             $message = 'Invalid otp, available {count} remaining';
-            $res = ArrayHelper::merge($res,[
+            $res = ArrayHelper::merge($res, [
                 'message' => Yii::t('wallet', $message, ['count' => $verifyCount]),
             ]);
         }
@@ -423,7 +422,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
                 'expired' => $this->_formatter->asDatetime($this->verify_expired_at),
                 'expiredTimestamp' => $this->verify_expired_at
             ]
-    ]);;
+        ]);;
 
     }
 
@@ -463,8 +462,9 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     }
 
     /**
-     * @param bool $renew
      * @param null $receiveType
+     * @param bool $renew
+     * @param bool $keepCount
      * @return array
      * @throws \Throwable
      * @throws \yii\base\InvalidConfigException
@@ -483,18 +483,21 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
             $receiveType = WalletTransaction::VERIFY_RECEIVE_TYPE_EMAIL;
         }
         $this->refresh();
-        $otp = $this->getOtpCode($renew, $keepCount);
-        $this->setScenario(self::SCENARIO_DEFAULT);
-        $isSave = $this->save();
-        $receiveType = (int)$receiveType;
-        $sendTo = self::getOtpSendTo($receiveType);
-        $isSend =  $this->sendMessageAndEmail($receiveType, $sendTo);
+        if ($renew || (($otp = $this->getOtpCode($renew, $keepCount)) !== null && $otp !== $this->fixedOtpCode)) {
+            $this->setScenario(self::SCENARIO_DEFAULT);
+            $isSave = $this->save();
+            $receiveType = (int)$receiveType;
+            $sendTo = self::getOtpSendTo($receiveType);
+            $isSend = $this->sendMessageAndEmail($receiveType, $sendTo);
 
-        $message = Yii::t('wallet','send otp success');
-        if (($success = ($isSave && $isSend)) === false) {
-            $message = Yii::t('wallet','send otp failed');
+            $message = Yii::t('wallet', 'send otp success');
+            $success = $isSave && $isSend;
+            if ($success === false) {
+                $message = Yii::t('wallet', 'send otp failed');
+            }
+            return [$success, $message, ['receive_type' => $receiveType, 'send_to' => $sendTo], ResponseCode::SUCCESS];
         }
-        return [$success, $message, ['receive_type' => $receiveType, 'send_to' => $sendTo], ResponseCode::SUCCESS];
+        return [false, 'OTP NOT CREATE OR FIXED VALUE'];
     }
 
     public function sendMessageAndEmail($receiveType = null, $sendTo = null)
@@ -734,13 +737,13 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     public static function getStatusLabels($status = null)
     {
         $statusLists = [
-            self::STATUS_QUEUE => Yii::t('wallet','Transaction queue'),
+            self::STATUS_QUEUE => Yii::t('wallet', 'Transaction queue'),
             self::STATUS_PROCESSING => Yii::t('wallet', 'Transaction processing'),
-            self::STATUS_COMPLETE => Yii::t('wallet','Transaction complete'),
+            self::STATUS_COMPLETE => Yii::t('wallet', 'Transaction complete'),
             self::STATUS_CANCEL => Yii::t('wallet', 'Transaction cancel'),
-            self::STATUS_FAIL => Yii::t('wallet','Transaction fail'),
+            self::STATUS_FAIL => Yii::t('wallet', 'Transaction fail'),
         ];
-        return $status === null ? $statusLists : ArrayHelper::getValue($statusLists, $status,Yii::t('wallet', 'Transaction unknown'));
+        return $status === null ? $statusLists : ArrayHelper::getValue($statusLists, $status, Yii::t('wallet', 'Transaction unknown'));
     }
 
     /**
@@ -750,10 +753,10 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     public static function getVerifyReceiveTypeLabels($type = null)
     {
         $types = [
-            self::VERIFY_RECEIVE_TYPE_PHONE => Yii::t('wallet','Phone'),
-            self::VERIFY_RECEIVE_TYPE_EMAIL => Yii::t('wallet','Email')
+            self::VERIFY_RECEIVE_TYPE_PHONE => Yii::t('wallet', 'Phone'),
+            self::VERIFY_RECEIVE_TYPE_EMAIL => Yii::t('wallet', 'Email')
         ];
-        return $type === null ? $types : ArrayHelper::getValue($types, $type, Yii::t('wallet','Unknown'));
+        return $type === null ? $types : ArrayHelper::getValue($types, $type, Yii::t('wallet', 'Unknown'));
     }
 
     /**
@@ -762,7 +765,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
      */
     public function extract($target)
     {
-        $all = array_combine(['phone','mail'],self::getOtpSendTo());
-        return ArrayHelper::getValue($all,$target->id);
+        $all = array_combine(['phone', 'mail'], self::getOtpSendTo());
+        return ArrayHelper::getValue($all, $target->id);
     }
 }

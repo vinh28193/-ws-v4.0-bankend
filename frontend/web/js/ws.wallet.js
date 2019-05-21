@@ -21,7 +21,7 @@ ws.wallet = (function ($) {
         getInfo: function () {
             var data = pub.data;
             if (data.is_guest) {
-                openConfirmPassword();
+                // openConfirmPassword();
             }
             return pub.data;
         },

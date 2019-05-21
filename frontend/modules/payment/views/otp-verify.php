@@ -15,19 +15,41 @@ use yii\web\View;
 /* @var string $redirectUri */
 
 $js = <<<JS
-    ws.initEventHandler($('form#otpVerifyForm','submit','beforeSubmit','form#otpVerifyForm',function(e) {
-         e.preventDefault();
-        var form = $(this);
-        // return false if form still have some validation errors
-        if (form.find('.has-error').length) 
-        {
-            return false;
-        }
-        var data = form.serialize();
-        console.log(data);
-        // send data to actionSave by ajax request.
-        return false; // Cancel form submitting.
-    }));
+    
+$(document).on("beforeSubmit", "form#otpVerifyForm", function (e) {
+    e.preventDefault();
+    var form = $(this);
+    // return false if form still have some validation errors
+    if (form.find('.has-error').length) 
+    {
+        console.log('adasdas');
+        return false;
+    }
+    ws.ajax(form.attr('action'),{
+        type   : 'POST',
+        data   : form.serialize(),
+        success: function(response) {
+            if(response.success){
+                var data = response.data;
+               $('body').find('form.otp-submit-form').remove();
+                var newForm = $('<form/>', {
+                    action: data.returnUrl  ,
+                    method: 'get',
+                    'class': 'otp-submit-form',
+                    style: 'display:none',
+                    'data-pjax': ''
+                }).appendTo('body');
+                newForm.append($('<input/>').attr({type: 'hidden', name: 'status', value: response.code}));
+                newForm.append($('<input/>').attr({type: 'hidden', name: 'token', value: data.token}));
+                newForm.append($('<input/>').attr({type: 'hidden', name: 'order_code', value: data.order_code}));
+                newForm.append($('<input/>').attr({type: 'hidden', name: 'time', value: data.time}));
+                newForm.submit();
+            }
+        } 
+    });
+    // send data to actionSave by ajax request.
+    return false; // Cancel form submitting.
+});
 JS;
 $this->registerJs($js);
 if (!$statusOtp) {
@@ -48,12 +70,17 @@ if (!$statusOtp) {
         'options' => [
             'id' => 'otpVerifyForm'
         ],
-        'enableClientValidation' => false,
+        'action' => \yii\helpers\Url::toRoute('/payment/wallet/create-payment', true),
         'enableAjaxValidation' => true,
+        'enableClientValidation' => false,
+        'validateOnChange' => false,
+        'validateOnBlur' => false,
+        'validateOnType' => false,
         'validationUrl' => '/payment/wallet/otp-verify-form-validate',
     ]);
     echo $form->field($otpVerifyForm, 'otpReceive')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'transactionCode')->hiddenInput()->label(false);
+    echo $form->field($otpVerifyForm, 'orderCode')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'returnUrl')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'cancelUrl')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'optCode')->textInput();
