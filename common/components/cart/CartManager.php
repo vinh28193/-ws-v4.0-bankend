@@ -232,6 +232,7 @@ class CartManager extends Component
     public function addItem($params, $safeOnly = true)
     {
         $key = $this->createKeyFormParams($params);
+
         try {
             if ($this->hasItem($key, $safeOnly)) {
                 if (($value = $this->getItem($key, $safeOnly)) === false) {

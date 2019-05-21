@@ -5,9 +5,12 @@ namespace frontend\modules\payment\providers\wallet;
 
 use common\components\ReponseData;
 use common\models\logs\PaymentGatewayLogs;
+use common\models\PaymentTransaction;
+use Yii;
 use yii\base\BaseObject;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\PaymentProviderInterface;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 class WalletProvider extends BaseObject implements PaymentProviderInterface
@@ -30,7 +33,6 @@ class WalletProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway->transaction_code_ws = $payment->transaction_code;
             $logPaymentGateway->request_content = $params;
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CHECK_CREATED;
-
             $response = $walletService->createPaymentTransaction();
             if ($response['success'] === true && $response['code'] !== '0000') {
                 $success = false;
@@ -85,7 +87,35 @@ class WalletProvider extends BaseObject implements PaymentProviderInterface
 
     public function handle($data)
     {
-        // TODO: Implement verify() method.
+
+        $logCallback = new PaymentGatewayLogs();
+        $logCallback->response_time = date('Y-m-d H:i:s');
+        $logCallback->create_time = date('Y-m-d H:i:s');
+        $logCallback->request_content = $data;
+        $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK;
+        $logCallback->transaction_code_request = "Wallet CALLBACK";
+        $logCallback->store_id = 1;
+        try {
+            $orderCode = $data['order_code'];
+            if (($transaction = PaymentTransaction::findOne(['transaction_code' => $orderCode])) === null) {
+                $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
+                $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+                $logCallback->save(false);
+                return ReponseData::reponseMess(false, 'Transaction không tồn tại');
+            }
+            $transaction->third_party_transaction_status = 'Success';
+            $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+            $logCallback->response_content = "Success";
+            $logCallback->save();
+            return ReponseData::reponseArray(true, 'Thanh toan success', [
+                'transaction' => $transaction
+            ]);
+        } catch (\Exception $e) {
+            $logCallback->request_content = $e->getMessage() . " \n " . $e->getFile() . " \n " . $e->getTraceAsString();
+            $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+            $logCallback->save(false);
+            return ReponseData::reponseArray(false, 'Call back thất bại');
+        }
     }
 
     public function getCheckoutOtpUrl($code)

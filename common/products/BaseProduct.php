@@ -86,7 +86,6 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     public $for_whole_sale = false;
     public $rate_count;
     public $bid;
-    public $parent_item;
     public $us_tax_rate;
     /** @var RelateProduct $relate_products */
     public $relate_products;

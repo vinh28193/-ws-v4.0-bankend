@@ -1,7 +1,8 @@
 <?php
 
 use common\helpers\WeshopHelper;
-use frontend\modules\account\views\widgets\HeaderContentWidget;use frontend\modules\payment\providers\wallet\WalletService;
+use frontend\modules\account\views\widgets\HeaderContentWidget;
+use frontend\modules\payment\providers\wallet\WalletService;
 use yii\helpers\ArrayHelper;
 
 /**

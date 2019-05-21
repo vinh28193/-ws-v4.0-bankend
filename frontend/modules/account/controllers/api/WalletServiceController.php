@@ -10,6 +10,7 @@ use common\models\WalletTransaction;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\helpers\Url;
 use yii\web\Response;
@@ -100,5 +101,25 @@ class WalletServiceController extends Controller
             return Yii::$app->response->redirect(Url::toRoute("/account/wallet/index", true));
         }
         return Yii::$app->response->redirect(Url::toRoute("/account/wallet/index", true));
+    }
+    public function actionWithdraw(){
+        $request = Yii::$app->request->post();
+        if(!($method = ArrayHelper::getValue($request,'method'))){
+            return $this->response(false,'Vui lòng chọn phương thức nhận tiền');
+        }
+        if($method == 'nl'){
+            if(!($email = ArrayHelper::getValue($request,'email'))){
+                return $this->response(false,'Vui lòng nhập email tài khoản Ngân Lượng');
+            }
+
+        }elseif ($method == 'bank'){
+
+        }else{
+            return $this->response(false,'Vui lòng chọn phương thức thanh toán khác');
+        }
+    }
+    public function response($success = false,$mess = "Fail", $data = []){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return ['success' => $success,'message' => $mess, 'data' => $data];
     }
 }

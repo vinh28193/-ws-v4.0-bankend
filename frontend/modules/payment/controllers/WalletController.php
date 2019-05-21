@@ -124,6 +124,7 @@ class WalletController extends BasePaymentController
         if (count($transactionDetail) === 0 || ($transactionCode = $transactionDetail['order_number']) === null || ($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $transactionCode])) === null) {
             return $this->redirect($redirectUri);
         }
+        $otpVerifyForm->orderCode = $transactionDetail['order_number'];
         if ($transactionDetail['type'] === self::TYPE_TRANSACTION_WITHDRAW) {
             $redirectUri = Url::to("/account/wallet/" . $code . "/detail.html", true);
         } else {
@@ -134,6 +135,7 @@ class WalletController extends BasePaymentController
         } elseif ($transactionDetail['status'] === self::STATUS_FAIL) {
             $statusOtp = false;
         }
+        $otpVerifyForm->cancelUrl = $redirectUri;
         if (count($otpInfo) > 0) {
             if ($otpInfo['verified']) {
                 if ($transactionDetail['status'] === self::STATUS_PROCESSING && $transactionDetail['type'] === self::TYPE_TRANSACTION_WITHDRAW) {
@@ -145,7 +147,7 @@ class WalletController extends BasePaymentController
             }
             $otpVerifyForm->otpReceive = $otpInfo['receive_type'];
             $msg[] = 'Mã xác thực otp đã gửi tới ' . ' ' . $otpInfo['receive_type_text'] . ': ' . $otpInfo['send_to'];
-            $msg[] = 'OTP có hiệu lực trong:' . Html::tag('span', $otpInfo['expired_at'], ['data-time-expired' => $otpInfo['expired_timestamp'], 'data-redirect-uri' => $redirectUri, 'class' => 'otp-expired-cooldown text-red']);
+            $msg[] = 'OTP có hiệu lực trong:' . Html::tag('span', $otpInfo['expired_at'], ['data-time-expired' => $otpInfo['expired_timestamp'], 'data-redirect-uri' => $redirectUri, 'class' => 'otp-expired-cooldown text-danger']);
         }
         $msg = count($msg) > 0 ? implode('. ', $msg) : null;
         return Yii::$app->getView()->renderAjax('otp-verify', [
@@ -173,9 +175,46 @@ class WalletController extends BasePaymentController
 
     public function actionCreatePayment()
     {
+
         $otpVerifyForm = new OtpVerifyForm();
         $request = Yii::$app->getRequest();
-        if ($request->isAjax && $request->isPost && $otpVerifyForm->load($request->post()) && $otpVerifyForm->verify()) {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if ($request->isAjax && $request->isPost && $otpVerifyForm->load($request->post()) && ($results = $otpVerifyForm->success())['success'] === true) {
+            $results['data'] = ArrayHelper::merge($results['data'], [
+                'returnUrl' => $otpVerifyForm->returnUrl,
+                'cancelUrl' => $otpVerifyForm->cancelUrl,
+                'token' => $otpVerifyForm->transactionCode,
+                'order_code' => $otpVerifyForm->orderCode,
+                'status' => $results['success']
+            ]);
+            return $results;
         }
+
+        return ['success' => false, 'message' => $otpVerifyForm->getFirstErrors()];
+    }
+
+    public function actionRefreshOtp()
+    {
+        $otpVerifyForm = new OtpVerifyForm();
+        $request = Yii::$app->getRequest();
+        $out = ['success' => false, 'message' => 'can not refresh'];
+        if($otpVerifyForm->load($request->post())){
+            $response = $otpVerifyForm->refreshOtp();
+            $out['success'] = $response['success'];
+            $out['message'] = $response['message'];
+            if ($out['success'] && $response['code'] === '0000') {
+                $data = $response['data'];
+                $receiveType = $data['receive_type'] ? 'email' : 'phone';
+                $msg =  'Gửi lại otp thành công' . '. ' .
+                    'Mã xác thực otp đã gửi tới' . ' ' . $receiveType . ': ' . $data['send_to'] . '. ' .
+                    'OTP có hiệu lực trong' . ': ' .
+                    Html::tag('span', $data['expired'], ['data-time-expired' => $data['expired_timestamp'], 'data-redirect-uri' => $otpVerifyForm->cancelUrl, 'class' => 'otp-expired-cooldown text-danger']) . '. ' ;
+                $out['message'] = $msg;
+            }
+
+
+        }
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $out;
     }
 }

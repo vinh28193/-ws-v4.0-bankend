@@ -15,19 +15,14 @@ use yii\web\View;
 /* @var string $redirectUri */
 
 $js = <<<JS
-    ws.initEventHandler($('form#otpVerifyForm','submit','beforeSubmit','form#otpVerifyForm',function(e) {
-         e.preventDefault();
-        var form = $(this);
-        // return false if form still have some validation errors
-        if (form.find('.has-error').length) 
-        {
-            return false;
-        }
-        var data = form.serialize();
-        console.log(data);
-        // send data to actionSave by ajax request.
-        return false; // Cancel form submitting.
-    }));
+ws.wallet.otpExpireCoolDown('span.otp-expired-cooldown');
+$(document).on("beforeSubmit", "form#otpVerifyForm", function (e) {
+    e.preventDefault();
+    var form = $(this);
+    ws.wallet.submitForm(form);
+    return false; // Cancel form submitting.
+});
+ 
 JS;
 $this->registerJs($js);
 if (!$statusOtp) {
@@ -37,23 +32,28 @@ if (!$statusOtp) {
         echo Html::a('Go Back', $redirectUri, ['class' => 'btn btn-default']);
         echo Html::endTag('div');
     } else if ($msg !== null) {
-        echo Html::tag('p', $msg);
+        echo Html::tag('p', $msg,['class' => 'message-otp']);
     }
 } else {
     echo Html::tag('div', 'Xác thực OTP', ['class' => 'modal-title']);
     if ($msg !== null) {
-        echo Html::tag('p', $msg);
+        echo Html::tag('p', $msg,['class' => 'message-otp']);
     }
     $form = ActiveForm::begin([
         'options' => [
             'id' => 'otpVerifyForm'
         ],
-        'enableClientValidation' => false,
+        'action' => \yii\helpers\Url::toRoute('/payment/wallet/create-payment', true),
         'enableAjaxValidation' => true,
+        'enableClientValidation' => false,
+        'validateOnChange' => false,
+        'validateOnBlur' => false,
+        'validateOnType' => false,
         'validationUrl' => '/payment/wallet/otp-verify-form-validate',
     ]);
     echo $form->field($otpVerifyForm, 'otpReceive')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'transactionCode')->hiddenInput()->label(false);
+    echo $form->field($otpVerifyForm, 'orderCode')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'returnUrl')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'cancelUrl')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'optCode')->textInput();
@@ -66,7 +66,7 @@ if (!$statusOtp) {
                             </div>
                        </div>'
     ]);
-    echo Html::tag('p', 'Bạn chưa nhận được mã OTP? <a href="#">Gửi lại</a>');
+    echo Html::tag('p', 'Bạn chưa nhận được mã OTP? <a href="javascript:void(0);" onclick="ws.wallet.refreshOtp(\'form#otpVerifyForm\')">Gửi lại</a>');
     echo Html::submitButton('Xác thực', ['class' => 'btn btn-submit btn-block']);
     ActiveForm::end();
 }
