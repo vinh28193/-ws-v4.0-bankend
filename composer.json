@@ -55,7 +55,8 @@
     "codeception/specify": "~1.0.0",
     "codeception/codeception": "^2.4.0",
     "phpunit/phpunit": "~6.5.5",
-    "mpdf/mpdf": "~6.1.0"
+    "mpdf/mpdf": "~6.1.0",
+    "phpseclib/phpseclib": "~2.0"
   },
   "config": {
     "process-timeout": 1800
