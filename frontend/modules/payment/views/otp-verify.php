@@ -15,7 +15,7 @@ use yii\web\View;
 /* @var string $redirectUri */
 
 $js = <<<JS
-    
+ws.wallet.otpExpireCoolDown('span.otp-expired-cooldown');
 $(document).on("beforeSubmit", "form#otpVerifyForm", function (e) {
     e.preventDefault();
     var form = $(this);
@@ -50,6 +50,7 @@ $(document).on("beforeSubmit", "form#otpVerifyForm", function (e) {
     // send data to actionSave by ajax request.
     return false; // Cancel form submitting.
 });
+ 
 JS;
 $this->registerJs($js);
 if (!$statusOtp) {

@@ -25,9 +25,6 @@ ws.wallet = (function ($) {
             }
             return pub.data;
         },
-        validateOTP: function () {
-
-        },
         refreshCaptcha: function () {
             $("img[id$='-captcha-image']").trigger('click');
         },
@@ -37,13 +34,13 @@ ws.wallet = (function ($) {
         confirmPassword: function () {
 
         },
-
         otpExpireCoolDown: function (target) {
+             target = $(target);
             var interval = setInterval(function () {
-                var target = $(target);
-                var uri = target.attr('data-redirect-uri');
-                var time = parseInt(target.attr('data-time-expired'));
+                var uri = target.data('redirect-uri');
+                var time = parseInt(target.data('time-expired'));
                 var left = time - Math.floor((new Date()) / 1000);
+                console.log(left);
                 if (left < 0) {
                     left = 0;
                 }

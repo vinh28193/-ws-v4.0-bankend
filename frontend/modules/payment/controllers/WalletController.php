@@ -146,7 +146,7 @@ class WalletController extends BasePaymentController
             }
             $otpVerifyForm->otpReceive = $otpInfo['receive_type'];
             $msg[] = 'Mã xác thực otp đã gửi tới ' . ' ' . $otpInfo['receive_type_text'] . ': ' . $otpInfo['send_to'];
-            $msg[] = 'OTP có hiệu lực trong:' . Html::tag('span', $otpInfo['expired_at'], ['data-time-expired' => $otpInfo['expired_timestamp'], 'data-redirect-uri' => $redirectUri, 'class' => 'otp-expired-cooldown text-red']);
+            $msg[] = 'OTP có hiệu lực trong:' . Html::tag('span', $otpInfo['expired_at'], ['data-time-expired' => $otpInfo['expired_timestamp'], 'data-redirect-uri' => $redirectUri, 'class' => 'otp-expired-cooldown text-danger']);
         }
         $msg = count($msg) > 0 ? implode('. ', $msg) : null;
         return Yii::$app->getView()->renderAjax('otp-verify', [
