@@ -10,7 +10,7 @@ use common\models\WalletTransaction;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
-use yii\base\Controller;
+use yii\web\Controller;
 use yii\helpers\Url;
 use yii\web\Response;
 
@@ -90,10 +90,10 @@ class WalletServiceController extends Controller
         $paymentTransaction->third_party_transaction_status = $res['data']['code'];
         $paymentTransaction->third_party_transaction_link = $res['data']['checkoutUrl'];
         $paymentTransaction->save(false);
-        WalletTransaction::updateAll(['payment_transaction' => $res['data']['token'],['wallet_transaction_code' => $payment->transaction_code]]);
+        WalletTransaction::updateAll(['payment_transaction' => $res['data']['token']],['wallet_transaction_code' => $payment->transaction_code]);
         return ['success' => true, 'message' => 'Create TopUp success', 'data' => $res['data']];
     }
-    public function actionReturn($merchant=0){
+    public function actionReturn($merchant){
         Yii::$app->response->format = Response::FORMAT_JSON;
         $res = Payment::checkPayment((int)$merchant, Yii::$app->request);
         if (!isset($res) || $res['success'] === false || !isset($res['data'])) {

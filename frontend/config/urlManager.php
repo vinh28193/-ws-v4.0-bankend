@@ -52,7 +52,6 @@ return [
         // payment
 //        'payment/process' => 'payment/payment/process',
         'payment/<merchant:[^/]+>/return.html' => 'payment/payment/return',
-        'my-wallet/topup/<merchant:[^/]+>/return.html' => 'account/api/wallet-service/return',
         'otp/<code:[^/]+>/verify.html' => 'payment/payment/otp-verify',
         //account
         'my-weshop.html' => 'account/home',
@@ -65,6 +64,7 @@ return [
         'my-weshop/order/<orderCode:[0-9A-Za-z_-]*>.html' => 'account/order/view',
         'my-weshop/wallet/transaction/<transaction_code:[^/]+>/detail.html' => 'account/wallet/detail',
         'my-wallet/topup.html' => 'account/api/wallet-service/topup',
+        'my-wallet/topup/<merchant:[^/]+>/return.html' => 'account/api/wallet-service/return',
         'my-weshop/<controller>/<action>.html' => 'account/<controller>/<action>',
         'my-weshop/api/<controller>/<action>.html' => 'account/api/<controller>/<action>',
 

@@ -40,8 +40,8 @@ class WalletController extends BaseAccountController
     }
     public function actionHistory(){
         $walletS = new WalletService();
-        $wallet = ArrayHelper::getValue($walletS->detailWalletClient(),'data');
-        $listTransaction = ArrayHelper::getValue($walletS->listTransaction(),'data');
+        $wallet = ArrayHelper::getValue($walletS->detailWalletClient(),'data',[]);
+        $listTransaction = ArrayHelper::getValue($walletS->listTransaction(),'data',[]);
         return $this->render('history',[
             'wallet' => $wallet,
             'trans' => $listTransaction

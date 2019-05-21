@@ -29,6 +29,7 @@ class WalletClientProvider extends NganLuongProvider
         $walletS = new WalletService();
         $walletS->payment_transaction = ArrayHelper::getValue($data,'token');
         $walletS->transaction_code = ArrayHelper::getValue($data,'order_code');
-        $walletS->pushToTopUpNoAuth();
+        $rs = $walletS->pushToTopUpNoAuth();
+        return $rs;
     }
 }
