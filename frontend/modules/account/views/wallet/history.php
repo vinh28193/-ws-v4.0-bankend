@@ -23,6 +23,7 @@ $('#datepicker').datepicker({
 $this->registerJs($js, \yii\web\View::POS_END);
 $this->title = 'Lịch sử giao dịch';
 echo HeaderContentWidget::widget(['title' => 'Lịch sử giao dịch','stepUrl' => ['Giao dịch' => 'my-weshop/wallet/history']]);
+$get = Yii::$app->request->get();
 ?>
 <div class="be-box">
     <div class="be-top">
@@ -50,41 +51,55 @@ echo HeaderContentWidget::widget(['title' => 'Lịch sử giao dịch','stepUrl'
         <div class="title">Thông tin giao dịch</div>
     </div>
     <div class="be-body be-deal">
+        <form id="search_form" method="get">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Mã giao dịch">
+                    <input type="text" class="form-control" name="transaction_code" value="<?= ArrayHelper::getValue($get,'transaction_code') ?>" placeholder="Mã giao dịch">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Mã đơn hàng">
+                    <input type="text" class="form-control" name="order_code" value="<?= ArrayHelper::getValue($get,'order_code') ?>"  placeholder="Mã đơn hàng">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Loại giao dịch">
+                    <select name="transaction_type" class="form-control">
+                        <option value="">Loại giao dịch</option>
+                        <option value="top_up" <?= ArrayHelper::getValue($get,'transaction_type') === 'top_up' ? 'selected' : '' ?>>Nạp tiền</option>
+                        <option value="pay_order" <?= ArrayHelper::getValue($get,'transaction_type') === 'pay_order' ? 'selected' : '' ?>>Thanh toán</option>
+                        <option value="withdraw" <?= ArrayHelper::getValue($get,'transaction_type') === 'withdraw' ? 'selected' : '' ?>>Rút tiền</option>
+                    </select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <input type="text" class="form-control datepicker" id="datepicker" placeholder="Từ ngày">
+                    <input type="text" class="form-control datepicker" name="from_date"  value="<?= ArrayHelper::getValue($get,'from_date') ?>"  id="datepicker" placeholder="Từ ngày">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <input type="text" class="form-control datepicker" id="datepicker2" placeholder="Đến ngày">
+                    <input type="text" class="form-control datepicker" name="to_date"  value="<?= ArrayHelper::getValue($get,'to_date') ?>"  id="datepicker2" placeholder="Đến ngày">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Trạng thái">
+                    <select class="form-control" name="transaction_status">
+                        <option value="">Trạng thái</option>
+                        <option value="0" <?= ArrayHelper::getValue($get,'transaction_status') === '0' ? 'selected' : '' ?>>Đang chờ</option>
+                        <option value="1" <?= ArrayHelper::getValue($get,'transaction_status') === '1' ? 'selected' : '' ?>>Đang thực hiện</option>
+                        <option value="2" <?= ArrayHelper::getValue($get,'transaction_status') === '2' ? 'selected' : '' ?>>Thành công</option>
+                        <option value="3" <?= ArrayHelper::getValue($get,'transaction_status') === '3' ? 'selected' : '' ?>>Huỷ bỏ</option>
+                        <option value="4" <?= ArrayHelper::getValue($get,'transaction_status') === '4' ? 'selected' : '' ?>>Thất bại</option>
+                    </select>
                 </div>
             </div>
         </div>
         <div class="text-right">
-            <button type="button" class="btn btn-search">Tìm kiếm</button>
+            <button type="submit" class="btn btn-search">Tìm kiếm</button>
         </div>
+        </form>
     </div>
 </div>
 <div class="be-box">
