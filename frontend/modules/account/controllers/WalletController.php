@@ -47,7 +47,11 @@ class WalletController extends BaseAccountController
         ]);
     }
     public function actionWithdraw(){
-        return $this->render('withdraw');
+        $walletS = new WalletService();
+        $wallet = ArrayHelper::getValue($walletS->detailWalletClient(),'data',[]);
+        return $this->render('withdraw',[
+            'wallet' => $wallet
+        ]);
     }
     public function actionHistory(){
         $get = \Yii::$app->request->get();
