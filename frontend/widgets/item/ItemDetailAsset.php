@@ -17,7 +17,7 @@ class ItemDetailAsset extends AssetBundle
     ];
 
     public $css = [
-
+       'css/next.css',
     ];
 
     public $depends = [

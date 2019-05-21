@@ -415,7 +415,7 @@
         var id = variationOption.id;
         var selection = ' [data-ref=' + id + ']'.toLowerCase();
         var $input = $(selection);
-        if ($input.length && $input[0].tagName.toLowerCase() === 'ul') {
+        if ($input.length && $input[0].tagName.toLowerCase() === 'div') {
             return $input.find('span');
         } else {
             return $input;

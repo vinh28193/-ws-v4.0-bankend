@@ -190,8 +190,8 @@ class Payment extends Model
         $code = PaymentService::generateTransactionCode('PM');
         $this->transaction_code = $code;
         $this->transaction_fee = 0;
-        $this->return_url = $this->page === self::PAGE_TOP_UP ? Url::to("/my-wallet/topup/{$this->payment_provider}/return.html", true) : Url::to("/payment/{$this->payment_provider}/return.html", true);
-        $this->cancel_url = Url::toRoute("/account/wallet/index", true);
+        $this->return_url = $this->page === self::PAGE_TOP_UP ? Url::to("/my-wallet/topup/{$this->payment_provider}/return.html", true) : PaymentService::createReturnUrl($this->payment_provider);
+        $this->cancel_url = PaymentService::createCancelUrl();
     }
 
     public function processPayment()

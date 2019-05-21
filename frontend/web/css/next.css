@@ -1,0 +1,35 @@
+.detail-block .product-full-info .option-box .color-pick .slider-prev2 {
+    position: relative;
+    top: 36px;
+    left: -9px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+i.fas.fa-chevron-right.slider-next2.slick-arrow {
+    position: relative;
+    top: 36px;
+    right: -1px;
+    cursor: pointer;
+    float: right;
+    z-index: 3;
+}
+
+.detail-block .product-full-info .option-box .style-list li.active span, .detail-block .product-full-info .option-box .style-list li:hover span {
+    border-color: #e67425;
+}
+.detail-block .product-full-info .option-box .style-list li span {
+    display: block;
+    height: 50px;
+    border-radius: 3px;
+    border: solid 1px #ebebeb;
+    position: relative;
+    cursor: pointer;
+}
+div.color-pick {
+    top: 36px;
+    left: 13px;
+    cursor: pointer;
+    z-index: 4;
+    padding-left: 9px;
+}

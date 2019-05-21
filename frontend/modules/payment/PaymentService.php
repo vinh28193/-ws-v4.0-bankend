@@ -1,12 +1,15 @@
 <?php
 
 
-namespace frontend\modules\payment;;
+namespace frontend\modules\payment;
+;
 
 use common\helpers\WeshopHelper;
 use common\models\PaymentMethodProvider;
 use Yii;
 use common\models\PaymentProvider;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 class PaymentService
 {
@@ -139,4 +142,13 @@ class PaymentService
         return WeshopHelper::generateTag(time(), 'PM', 16);
     }
 
+    public static function createReturnUrl($provider)
+    {
+        return Url::toRoute(["/payment/payment/return", 'merchant' => $provider], true);
+    }
+
+    public static function createCancelUrl()
+    {
+        return Url::toRoute("/checkout/cart", true);
+    }
 }
