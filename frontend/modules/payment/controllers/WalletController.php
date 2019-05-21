@@ -135,6 +135,7 @@ class WalletController extends BasePaymentController
         } elseif ($transactionDetail['status'] === self::STATUS_FAIL) {
             $statusOtp = false;
         }
+        $otpVerifyForm->cancelUrl = $redirectUri;
         if (count($otpInfo) > 0) {
             if ($otpInfo['verified']) {
                 if ($transactionDetail['status'] === self::STATUS_PROCESSING && $transactionDetail['type'] === self::TYPE_TRANSACTION_WITHDRAW) {
@@ -190,5 +191,30 @@ class WalletController extends BasePaymentController
         }
 
         return ['success' => false, 'message' => $otpVerifyForm->getFirstErrors()];
+    }
+
+    public function actionRefreshOtp()
+    {
+        $otpVerifyForm = new OtpVerifyForm();
+        $request = Yii::$app->getRequest();
+        $out = ['success' => false, 'message' => 'can not refresh'];
+        if($otpVerifyForm->load($request->post())){
+            $response = $otpVerifyForm->refreshOtp();
+            $out['success'] = $response['success'];
+            $out['message'] = $response['message'];
+            if ($out['success'] && $response['code'] === '0000') {
+                $data = $response['data'];
+                $receiveType = $data['receive_type'] ? 'email' : 'phone';
+                $msg =  'Gửi lại otp thành công' . '. ' .
+                    'Mã xác thực otp đã gửi tới' . ' ' . $receiveType . ': ' . $data['send_to'] . '. ' .
+                    'OTP có hiệu lực trong' . ': ' .
+                    Html::tag('span', $data['expired'], ['data-time-expired' => $data['expired_timestamp'], 'data-redirect-uri' => $otpVerifyForm->cancelUrl, 'class' => 'otp-expired-cooldown text-danger']) . '. ' ;
+                $out['message'] = $msg;
+            }
+
+
+        }
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $out;
     }
 }

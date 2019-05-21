@@ -466,6 +466,6 @@ ws.payment = (function ($) {
                 }
             }
         }, $timeOut);
-    }
+    };
     return pub;
 })(jQuery);

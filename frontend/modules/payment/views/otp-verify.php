@@ -19,35 +19,7 @@ ws.wallet.otpExpireCoolDown('span.otp-expired-cooldown');
 $(document).on("beforeSubmit", "form#otpVerifyForm", function (e) {
     e.preventDefault();
     var form = $(this);
-    // return false if form still have some validation errors
-    if (form.find('.has-error').length) 
-    {
-        console.log('adasdas');
-        return false;
-    }
-    ws.ajax(form.attr('action'),{
-        type   : 'POST',
-        data   : form.serialize(),
-        success: function(response) {
-            if(response.success){
-                var data = response.data;
-               $('body').find('form.otp-submit-form').remove();
-                var newForm = $('<form/>', {
-                    action: data.returnUrl  ,
-                    method: 'get',
-                    'class': 'otp-submit-form',
-                    style: 'display:none',
-                    'data-pjax': ''
-                }).appendTo('body');
-                newForm.append($('<input/>').attr({type: 'hidden', name: 'status', value: response.code}));
-                newForm.append($('<input/>').attr({type: 'hidden', name: 'token', value: data.token}));
-                newForm.append($('<input/>').attr({type: 'hidden', name: 'order_code', value: data.order_code}));
-                newForm.append($('<input/>').attr({type: 'hidden', name: 'time', value: data.time}));
-                newForm.submit();
-            }
-        } 
-    });
-    // send data to actionSave by ajax request.
+    ws.wallet.submitForm(form);
     return false; // Cancel form submitting.
 });
  
@@ -60,12 +32,12 @@ if (!$statusOtp) {
         echo Html::a('Go Back', $redirectUri, ['class' => 'btn btn-default']);
         echo Html::endTag('div');
     } else if ($msg !== null) {
-        echo Html::tag('p', $msg);
+        echo Html::tag('p', $msg,['class' => 'message-otp']);
     }
 } else {
     echo Html::tag('div', 'Xác thực OTP', ['class' => 'modal-title']);
     if ($msg !== null) {
-        echo Html::tag('p', $msg);
+        echo Html::tag('p', $msg,['class' => 'message-otp']);
     }
     $form = ActiveForm::begin([
         'options' => [
@@ -94,7 +66,7 @@ if (!$statusOtp) {
                             </div>
                        </div>'
     ]);
-    echo Html::tag('p', 'Bạn chưa nhận được mã OTP? <a href="#">Gửi lại</a>');
+    echo Html::tag('p', 'Bạn chưa nhận được mã OTP? <a href="javascript:void(0);" onclick="ws.wallet.refreshOtp(\'form#otpVerifyForm\')">Gửi lại</a>');
     echo Html::submitButton('Xác thực', ['class' => 'btn btn-submit btn-block']);
     ActiveForm::end();
 }
