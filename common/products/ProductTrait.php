@@ -117,12 +117,12 @@ trait ProductTrait
             return true;
         }
 
-        $this->parent_item = $this;
         if ($this->type === self::TYPE_AMAZON_US) {
             $this->item_origin_url = str_replace($this->item_sku, $sku, $this->item_origin_url);
         }
 
         $this->item_sku = $sku;
+
         foreach ((array)$this->variation_mapping as $item) {
             if ($item->variation_sku === $sku) {
                 $this->start_price = $item->variation_start_price ? $item->variation_start_price : $this->start_price;

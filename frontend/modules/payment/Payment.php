@@ -123,7 +123,7 @@ class Payment extends Model
         parent::init();
         $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
         $this->view = Yii::$app->getView();
-        if ($this->page !== self::PAGE_TOP_UP){
+        if ($this->page !== self::PAGE_TOP_UP) {
             $this->loadOrdersFromCarts();
         }
         $this->currency = 'vnđ';
@@ -139,7 +139,7 @@ class Payment extends Model
         $this->payment_method = 1;
         $this->payment_provider = 42;
         $this->payment_bank_code = 'VISA';
-        if ($this->page === self::PAGE_TOP_UP){
+        if ($this->page === self::PAGE_TOP_UP) {
             $this->payment_method = 25;
             $this->payment_provider = 46;
             $this->payment_bank_code = 'VCB';
@@ -175,7 +175,7 @@ class Payment extends Model
 
     public function loadPaymentProviderFromCache()
     {
-        return PaymentService::loadPaymentByStoreFromDb(1,$this->payment_provider);
+        return PaymentService::loadPaymentByStoreFromDb(1, $this->page === self::PAGE_TOP_UP ? $this->payment_provider : null);
     }
 
     public function createTransactionCode()
