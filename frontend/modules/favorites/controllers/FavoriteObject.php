@@ -10,30 +10,17 @@ use yii\web\NotFoundHttpException;
 use frontend\controllers\FrontendController;
 use frontend\modules\favorites\models\Favorite;
 use common\modelsMongo\FavoritesMongoDB;
+use yii\base\BaseObject;
 
 
 /**
  * Default controller for the `CommentModule` module
  */
-class FavoriteObject
+class FavoriteObject extends BaseObject implements \yii\queue\JobInterface
 {
-    /**
-     * @return array
-     */
-//    public function behaviors()
-//    {
-//        return [
-//            'verbs' => [
-//                'class'   => VerbFilter::className(),
-//                'actions' => [
-//                    'delete'       => ['post'],
-//                    'create'       => ['post'],
-//                    'changeStatus' => ['post'],
-//                ],
-//            ],
-//        ];
-//    }
-
+    public $obj_type;
+    public $obj_id;
+    public $UUID;
 
     /**
      * @param $obj_type
@@ -42,13 +29,13 @@ class FavoriteObject
      * @return \yii\web\Response
      * @throws ErrorException
      */
-    public function create($obj_type, $obj_id, $UUID)
+    public function execute($queue)
     {
         $post = \Yii::$app->request->post();
         if (isset($post['obj_type'])) {  $obj_type = \serialize($post['obj_type']); }
         if (isset($post['obj_id'])) {  $obj_id = $post['obj_id']; }
 
-        if ($this->create_favorite($obj_type, $obj_id, $UUID)) {
+        if ($this->create_favorite($this->obj_type, $this->obj_id, $this->UUID)) {
             \Yii::info("app  create favorite Success");
            // return $this->goBack();
         } else {

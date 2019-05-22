@@ -711,3 +711,25 @@ READY_PURCHASE or PURCHASE_PART or ( PURCHASING and ( PURCHASE_ASSIGNEE_ID = use
 ###----------------- Event Component For Gate Ebay / Amazon --------------------------
 1. https://www.yiiframework.com/doc/guide/2.0/en/concept-events 
    https://www.yiiframework.com/doc/api/2.0/yii-web-userevent
+
+2. ERROR :  moontoast/math 1.1.2 requires ext-bcmath * -> the requested PHP extension bcmath is missing from your system
+   For any version in php Centos use
+   This solution worked for me
+   yum install php-bcmath
+   
+   yum search bcmath
+
+[root@Weshop weshop-v4.0-api]# yum search bcmath
+Loaded plugins: fastestmirror, replace
+Loading mirror speeds from cached hostfile
+ * base: centos-hn.viettelidc.com.vn
+ * epel: mirror.horizon.vn
+ * extras: centos-hn.viettelidc.com.vn
+ * remi-php72: remi.schlundtech.de
+ * updates: centos-hn.viettelidc.com.vn
+======================================================================================================== N/S Matched: bcmath =========================================================================================================
+php-bcmath.x86_64 : A module for PHP applications for using the bcmath library
+
+
+yum install php-bcmath.x86_64
+

@@ -66,7 +66,7 @@ class WalletController extends BaseAccountController
             if(!$transactionInfo){
                 return \Yii::$app->response->redirect('/my-weshop/wallet/withdraw.html');
             }
-            if((ArrayHelper::getValue($transactionInfo,'type')) != WalletService::TYPE_WITH_DRAW ){
+            if((ArrayHelper::getValue($transactionInfo,'type')) != WalletService::TYPE_WITH_DRAW || (ArrayHelper::getValue($transactionInfo,'status')) !== 0){
                 return \Yii::$app->response->redirect('/my-weshop/wallet/transaction/'.$transaction_code.'/detail.html');
             }
             if(!(ArrayHelper::getValue($transactionInfo,'verified_at'))){

@@ -8,6 +8,7 @@
 
 namespace wallet\modules\v1\controllers;
 
+use common\models\User;
 use wallet\modules\v1\models\form\ChangeBalanceForm;
 use wallet\modules\v1\models\WalletClient;
 use Yii;
@@ -168,6 +169,9 @@ class TransactionController extends WalletServiceController
             ]), null, ResponseCode::ERROR);
         }
         $model = $this->findModel($code);
+        if(!$model){
+            return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
+        }
         $wallet = WalletClient::findOne($model->wallet_client_id);
         if($model->getCurrentWalletClient() === null){
             $model->setCurrentWalletClient($wallet);
@@ -211,6 +215,54 @@ class TransactionController extends WalletServiceController
         return $this->response(false, Yii::t('wallet','Your otp do not verify, please verify otp send on email or phone'), null, ResponseCode::INVALID);
     }
 
+    public function actionCancelWithdraw()
+    {
+        if (($code = ArrayHelper::getValue($this->post, 'transaction_code', false)) === false) {
+            return $this->response(false, Yii::t('wallet', 'Missing parameter ${parameter}', [
+                'parameter' => 'transaction_code'
+            ]), null, ResponseCode::ERROR);
+        }
+        /** @var WalletTransaction $model */
+        $model = WalletTransaction::find()->where(['wallet_transaction_code' => $code, 'wallet_client_id' => Yii::$app->user->getId()])->one();
+        if(!$model){
+            return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
+        }
+        if($model->getCurrentWalletClient() === null){
+            return $this->response(false, 'Not Found client', null, ResponseCode::NOT_FOUND);
+        }
+        if ($model->status === WalletTransaction::STATUS_PROCESSING || $model->status === WalletTransaction::STATUS_QUEUE || $model->fixedOtpCode !== null) {
+            // Todo: nothing
+
+            $change = new ChangeBalanceForm();
+            $change->amount = $model->debit_amount ? $model->debit_amount : $model->credit_amount;
+            $change->walletTransactionId = $model->id;
+            $change->wallet_client = $model->_wallet_client;
+            $rs = $change->unFreezeAdd($model);
+            $sttChange = WalletTransaction::STATUS_CANCEL;
+            if ($rs['success']) {
+                if (!$model->updateTransaction($sttChange)) {
+                    return $this->response(false, Yii::t('wallet','Have error when update your transaction to complete. BUT Change Withdraw request success!'), null, ResponseCode::ERROR);
+                }
+//                if($sttChange === WalletTransaction::STATUS_CANCEL){
+//                    $model->refresh();
+//                    $wallet->refresh();
+//                    $model->setCurrentWalletClient($wallet);
+//                }
+//                $manager = new \common\mail\MailManager();
+//                $manager->setType($sttChange === WalletTransaction::STATUS_COMPLETE
+//                    ? \common\mail\Template::TYPE_TRANSACTION_TYPE_WITHDRAW_SUCCESS
+//                    : \common\mail\Template::TYPE_TRANSACTION_TYPE_WITHDRAW_FAILED);
+//                $manager->setActiveModel($model);
+//                $manager->setReceiver($model);
+//                $manager->send();
+                return $this->response(true, $rs['message'], ['status' => 'complete', 'time' => $model->complete_at], ResponseCode::SUCCESS);
+            }
+            return $this->response(false, $rs['message'], null, ResponseCode::ERROR);
+
+        }
+        return $this->response(false, Yii::t('wallet','Your otp do not verify, please verify otp send on email or phone'), null, ResponseCode::INVALID);
+    }
+
     /**
      * get detail of a transaction
      *  'otpInfo' available when transaction type is not credit
@@ -225,6 +277,9 @@ class TransactionController extends WalletServiceController
             ]), null, ResponseCode::ERROR);
         }
         $model = $this->findModel($code);
+        if(!$model){
+            return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
+        }
         $attributeNames = [
             'wallet_transaction_code',
             'type',
@@ -328,7 +383,9 @@ class TransactionController extends WalletServiceController
             ]), null, ResponseCode::ERROR);
         }
         $model = $this->findModel($code);
-
+        if(!$model){
+            return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
+        }
         $valid = $model->validateOtpCode($opt);
         $model->refresh();
         if ($valid['valid']) {
@@ -376,7 +433,9 @@ class TransactionController extends WalletServiceController
         }
 
         $model = $this->findModel($code);
-
+        if(!$model){
+            return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
+        }
         $name = self::REFRESH_OTP_SESSION_NAME . $model->getWalletTransactionCode();
         //Yii::$app->getSession()->destroy();
         $expiredAt = Yii::$app->formatter->asTimestamp("now 180 seconds");
@@ -448,6 +507,9 @@ class TransactionController extends WalletServiceController
             ]), null, ResponseCode::ERROR);
         }
         $model = $this->findModel($code);
+        if(!$model){
+            return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
+        }
         if ($model->status === WalletTransaction::STATUS_PROCESSING || $model->fixedOtpCode !== null) {
             // Todo: nothing
             if (!$model->updateTransaction(WalletTransaction::STATUS_COMPLETE)) {
@@ -478,9 +540,15 @@ class TransactionController extends WalletServiceController
      */
     public function findModel($code)
     {
+        /** @var WalletTransaction $model  */
         if (($model = WalletTransaction::find()->where(['wallet_transaction_code' => $code])->one()) != null) {
+            $wallet = Yii::$app->user->getIdentity();
+            $user = User::findOne($wallet->customer_id);
+            if($user->employee != 1 && $model->wallet_client_id != $wallet->id){
+                return null;//$this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
+            }
             return $model;
         }
-        return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
+        return null; //$this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
     }
 }
