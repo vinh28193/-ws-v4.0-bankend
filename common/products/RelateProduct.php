@@ -9,6 +9,8 @@
 namespace common\products;
 
 
+use yii\helpers\ArrayHelper;
+
 class RelateProduct extends \yii\base\BaseObject
 {
     public $item_id;
@@ -25,4 +27,20 @@ class RelateProduct extends \yii\base\BaseObject
     public $condition;
     public $start_time;
     public $end_time;
+
+    public static function setRelateProducts($arrayRelateEbay){
+        $re = [];
+        foreach ($arrayRelateEbay as $item){
+            $temp = new self();
+            $temp->item_id = ArrayHelper::getValue($item,'itemId');
+            $temp->title = ArrayHelper::getValue($item,'title');
+            $temp->category_id = ArrayHelper::getValue($item,'primaryCategoryId');
+            $temp->category_name = ArrayHelper::getValue($item,'primaryCategoryName');
+            $temp->image = ArrayHelper::getValue($item,'imageURL');
+            $temp->retail_price = ArrayHelper::getValue($item,'buyItNowPrice') ? ArrayHelper::getValue(ArrayHelper::getValue($item,'buyItNowPrice'),'value') : 0;
+            $temp->sell_price = $temp->retail_price;
+            $re[] = $temp;
+        }
+        return $re;
+    }
 }
