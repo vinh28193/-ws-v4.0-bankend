@@ -7,6 +7,7 @@ use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
 use Yii;
 use common\products\forms\ProductDetailFrom;
+use  frontend\modules\favorites\controllers\FavoriteObject as Favorite;
 
 class ItemController extends EbayController
 {
@@ -33,9 +34,24 @@ class ItemController extends EbayController
                 'errors' => $form->getErrors()
             ]);
         }
+
+        $favorite = null;
+        // Queue get call Favorite to
+        /*
+        if(sleep(30)) {
+            // Favorite
+            $_favorite = new Favorite();
+            $UUID = Yii::$app->user->getId();
+            $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
+            $_favorite->create($item, $id, $uuid);
+        }
+        */
+
         return $this->render('index', [
-            'item' => $item
+            'item' => $item,
+            'favorite'=>$favorite
         ]);
+
 
     }
 
