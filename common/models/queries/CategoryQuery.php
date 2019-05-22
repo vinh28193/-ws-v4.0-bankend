@@ -41,7 +41,7 @@ class CategoryQuery extends \common\components\db\ActiveQuery
         if($site === null){
             $this->allSite();
         }else{
-            $this->andWhere(['site' => $site]);
+            $this->andWhere(['siteId' => $site]);
         }
         return $this;
     }
@@ -50,7 +50,7 @@ class CategoryQuery extends \common\components\db\ActiveQuery
      * @return $this
      */
     public function allSite(){
-        $this->andWhere(['IN','site',[
+        $this->andWhere(['IN','siteId',[
             Category::SITE_EBAY,
             Category::SITE_AMAZON_US,
             Category::SITE_AMAZON_UK,

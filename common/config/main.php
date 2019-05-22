@@ -28,7 +28,8 @@ return [
             'class' => 'common\components\Api',
         ],
         'storeManager' => [
-            'class' => 'common\components\StoreManager'
+            'class' => 'common\components\StoreManager',
+            'storeId' => 1
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager'

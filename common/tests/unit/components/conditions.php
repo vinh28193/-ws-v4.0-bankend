@@ -192,11 +192,24 @@ return [
         [
             'conditions' => [
                 [
-                    'value' => 0,
-                    'key' => 'weight',
-                    'type' => 'int',
-                    'operator' => '>'
-                ],
+                    'value' => 'ebay',
+                    'key' => 'portal',
+                    'type' => 'string',
+                    'operator' => '=='
+                ]
+            ],
+            'type' => 'F',
+            'value' => 12,
+            'unit' => 'weight'
+        ],
+        [
+            'conditions' => [
+                [
+                    'value' => 'amazon',
+                    'key' => 'portal',
+                    'type' => 'string',
+                    'operator' => '=='
+                ]
             ],
             'type' => 'F',
             'value' => 10,
