@@ -6,6 +6,7 @@ use frontend\modules\account\views\widgets\HeaderContentWidget;
  * @var $payment \frontend\modules\payment\Payment
  */
 $this->title = 'Nạp tiền vào ví';
+$this->params = ['wallet','top_up'];
 echo HeaderContentWidget::widget(['title' => 'Nạp tiền', 'stepUrl' => ['Nạp tiền' => '/my-weshop/wallet/top-up.html']]);
 
 ?>

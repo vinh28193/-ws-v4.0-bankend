@@ -10,6 +10,7 @@ use wallet\modules\v1\models\WalletTransaction;
  */
 
 $this->title = 'Chi tiết giao dịch';
+$this->params = ['wallet','history'];
 echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao dịch' => '/my-weshop/wallet/history.html','Chi tiết' => '#']]);
 ?>
 
