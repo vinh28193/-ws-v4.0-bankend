@@ -423,26 +423,26 @@ class WeshopHelper
         }
     }
 
-    public static function getStatusTransactionLabel($status)
+    public static function getStatusTransactionColor($status)
     {
         switch ($status) {
             case 0:
-                return 'label-warning';
+                return 'warning';
                 break;
             case 1:
-                return 'label-info';
+                return 'info';
                 break;
             case 2:
-                return 'label-success';
+                return 'success';
                 break;
             case 3:
-                return 'label-primary';
+                return 'dark';
                 break;
             case 4:
-                return 'label-danger';
+                return 'danger';
                 break;
             default:
-                return 'label-secondary';
+                return 'secondary';
                 break;
         }
     }

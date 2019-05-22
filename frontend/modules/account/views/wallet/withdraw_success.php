@@ -11,11 +11,22 @@ use frontend\modules\account\views\widgets\HeaderContentWidget;
 use yii\helpers\ArrayHelper;
 
 $listMethod = ArrayHelper::getValue(Yii::$app->params, 'list_method_withdraw');
-$js = "
-$(document).ready(function () {
-//set default
-        withdraw_data.method = '" . (isset($listMethod[0]) ? $listMethod[0] : '') . "';
-    });";
+$js = <<< JS
+ $(document).ready(function () {
+    var countDown = Number($('#seconds').html());
+    var seconds = 0;
+    var x = setInterval(function() {
+        seconds ++;
+        $('#seconds').html((countDown - seconds).toString())
+  if (seconds >= countDown) {
+        clearInterval(x);
+         $('#message_loading').html('Đang chuyển hướng ...');
+         ws.loading(true);
+         location.assign('/my-weshop/wallet/history.html');
+  }
+}, 1000);
+    });
+JS;
 $this->registerJs($js, \yii\web\View::POS_END);
 
 
@@ -51,11 +62,11 @@ echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút t
                 <div class="step">1</div>
                 <p>Tạo Yêu cầu rút</p>
             </li>
-            <li class="active">
+            <li class="done">
                 <div class="step">2</div>
                 <p>Xác nhận yêu cầu rút</p>
             </li>
-            <li>
+            <li class="active">
                 <div class="step">3</div>
                 <p>Yêu cầu rút thành công</p>
             </li>
@@ -72,7 +83,7 @@ echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút t
                 <div class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-                Sau 15 giây sẽ tự động chuyển về trang <a href="#" class="text-blue">Lịch sử giao dịch</a>
+                <span id="message_loading">Sau <span id="seconds">15</span> giây sẽ tự động chuyển về trang <a href="/my-weshop/wallet/history.html" class="text-blue">Lịch sử giao dịch</a></span>
             </div>
         </div>
         <div class="be-notice">

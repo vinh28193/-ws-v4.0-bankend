@@ -372,6 +372,11 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
             'data' => []
         ];
         if ($this->fixedOtpCode !== null) {
+            if ($res['valid']) {
+                $this->verified_at = $this->_formatter->asDatetime('now');
+                $this->update(false, ['verified_at']);
+                $this->updateTransaction(self::STATUS_PROCESSING);
+            }
             $token .= ', dev mode fixed opt:' . $this->fixedOtpCode;
             $res['message'] = $valid ? $res['message'] : Yii::t('wallet', 'Your otp is: {fixCode}', ['fixCode' => $this->fixedOtpCode]);
             return ArrayHelper::merge($res, [
