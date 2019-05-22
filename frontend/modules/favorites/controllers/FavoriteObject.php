@@ -96,17 +96,26 @@ class FavoriteObject
         }
     }
 
+    /**
+     * @param $uuid
+     * @return bool
+     */
     function get_favorite($uuid)
     {
         if (\Yii::$app->user->getId()) {
-            return Favorite::find()
-                ->where(['created_by' => \Yii::$app->user->getId()]);
-                //->exists();
+            if( $count = Favorite::find()->where(['created_by' => \Yii::$app->user->getId()])->exists())
+            {
+                return  Favorite::find()
+                         ->where(['created_by' => \Yii::$app->user->getId()])
+                         ->all();
+            }else { return false;}
         } else {
+            /*
             return FavoritesMongoDB::find()
-                ->where(['created_by' => $uuid]);
+                ->where(['created_by' => $uuid])
                 //->where(['ip' => \Yii::$app->getRequest()->getUserIP()])
-                //->exists();
+                 ->asArray()->all();
+            */
         }
     }
 
@@ -146,7 +155,7 @@ class FavoriteObject
             // Login
             $getId =  \Yii::$app->user->getId() ? \Yii::$app->user->getId() : '9999';
             $favorite = new Favorite([
-                'obj_type' => $obj_type,
+                'obj_type' => \serialize($obj_type),
                 'obj_id' => $obj_id,
                 'ip' => \Yii::$app->getRequest()->getUserIP(),
                 'created_by' => $getId,
@@ -168,6 +177,8 @@ class FavoriteObject
             }
         } else {
             // anonymous --> All Over right uuid if null
+            // Todo Error UUID khoong la duy nhat
+            /*
             $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
             $favoriteMongodb = new FavoritesMongoDB([
                 'obj_type' => $obj_type,
@@ -195,8 +206,7 @@ class FavoriteObject
                 // not valid
                 echo $error;
             }
-
-
+            */
         }
     }
 
