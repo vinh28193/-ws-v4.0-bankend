@@ -195,7 +195,7 @@ class PaymentController extends BasePaymentController
                 'payment_type' => $paymentTransaction->payment_type,
 
             ]);
-            $redirectUrl = Yii::$app->homeUrl;
+            $redirectUrl = Url::toRoute('/account/order',true);
             if (isset($data['redirectUrl'])) {
                 $redirectUrl = $data['redirectUrl'];
             }
@@ -203,6 +203,9 @@ class PaymentController extends BasePaymentController
             /* @var $results PromotionResponse */
             $createResponse = $payment->createOrder($receiverAddress);
             if ($createResponse['success']) {
+                foreach ($payment->carts as $key){
+                    $this->cartManager->removeItem($key);
+                }
                 return $this->redirect($redirectUrl);
             }
 

@@ -3,6 +3,7 @@
 
 namespace frontend\modules\payment\controllers;
 
+use frontend\modules\payment\PaymentService;
 use Yii;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\providers\alepay\AlepayClient;
@@ -22,13 +23,13 @@ class InstallmentController extends BasePaymentController
         $message = 'no found';
         $data = [
             'promotion' => $promotion,
-            'content' => ''
+            'methods' => ''
         ];
         if ($provider === 44) {
             $success = true;
             $message = 'success';
             $data = ArrayHelper::merge($data, [
-                'content' => $this->getAlapayCalculator($payment)
+                'methods' => $this->getAlapayCalculator($payment)
             ]);
         }
         return $this->response($success, $message, $data);
@@ -36,17 +37,27 @@ class InstallmentController extends BasePaymentController
 
     /**
      * @param $payment
-     * @return string
+     * @return array
      */
     private function getAlapayCalculator($payment)
     {
         $alepay = new AlepayClient();
         $rs = $alepay->getInstallmentInfo($payment->total_amount_display, 'VND');
         if ($rs['success']) {
-            return $this->renderAjax('alepay', [
-                'results' => Json::decode($rs['data'], true)
-            ]);
+            $data = Json::decode($rs['data']);
+            $banks = [];
+            foreach ($data as $key => $item) {
+                $item['bankIcon'] = PaymentService::getInstallmentBankIcon($item['bankCode']);
+                $methods = [];
+                foreach ($item['paymentMethods'] as $i => $method) {
+                    $method['methodIcon'] = PaymentService::getInstallmentMethodIcon($method['paymentMethod']);
+                    $methods[] = $method;
+                }
+                $item['paymentMethods'] = $methods;
+                $banks[] = $item;
+            }
+            return $banks;
         }
-        return $this->renderAjax('bank');
+        return [];
     }
 }

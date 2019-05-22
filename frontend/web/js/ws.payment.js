@@ -59,6 +59,32 @@ ws.payment = (function ($) {
             receiver_address_id: undefined,
 
         },
+        installment: {
+            originAmount: 0,
+            banks: [],
+            currentBank: {
+                bankCode: undefined,
+                bankName: undefined,
+                bankIcon: undefined,
+                paymentMethods: []
+            },
+            currentMethod: {
+                paymentMethod: undefined,
+                methodIcon: undefined,
+                periods: []
+            },
+            currentPeriod: {
+                amountByMonth: 0,
+                amountFee: 0,
+                amountFinal: 0,
+                currency: undefined,
+                month: 0,
+                payerFlatFee: 0,
+                payerInstallmentFlatFee: 0,
+                payerInstallmentPercentFee: 0,
+                payerPercentFee: 0,
+            }
+        },
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
             pub.payment.currency = 'vnd';
@@ -230,19 +256,95 @@ ws.payment = (function ($) {
             ws.wallet.getInfo($element);
         },
         calculateInstallment: function () {
-
             ws.ajax('/payment/' + pub.payment.payment_provider + '/calc', {
                 dataType: 'json',
                 type: 'post',
                 data: pub.payment,
                 success: function (response) {
                     var data = response.data;
-                    if(data.promotion){
-                        updatePaymentByPromotion(data.promotion)
+                    var banks = data.methods || [];
+                    var promotion = data.promotion || undefined;
+                    initInstallmentBankView(banks);
+                    if (promotion !== undefined) {
+                        updatePaymentByPromotion(promotion)
                     }
-                    $('div#installmentContent').html(data.content);
                 }
             }, true);
+        },
+        installmentBankChange: function (code) {
+            console.log('selected bank :' + code);
+            pub.payment.installment_bank = code;
+            pub.installment.currentBank = $.grep(pub.installment.banks, function (x) {
+                return String(x.bankCode) === String(code);
+            })[0];
+            $.each($('li[data-ref=i_bankCode]'), function () {
+                $(this).find('span').removeClass('active');
+            });
+            var isActive = $('li[data-ref=i_bankCode][data-code=' + code + ']');
+            if (isActive.length > 0) {
+                isActive.find('span').addClass('active');
+            }
+            var htmlMethod = [];
+            $.each(pub.installment.currentBank.paymentMethods, function (index, method) {
+                var iActive = index === 0;
+                if (iActive) {
+                    pub.payment.installment_method = method.paymentMethod;
+                    pub.installmentMethodChange(method.paymentMethod);
+                }
+                var $ele = '<li data-ref="i_methodCode" data-code="' + method.paymentMethod + '"  onclick="ws.payment.installmentMethodChange(\'' + method.paymentMethod + '\')"><span class="' + (iActive ? "active" : "") + '"><img src="' + method.methodIcon + '" alt="' + method.paymentMethod + '" title="' + method.paymentMethod + '"/></span></li>';
+                htmlMethod.push($ele)
+            });
+            $('ul#installmentMethods').html(htmlMethod.join(''));
+        },
+        installmentMethodChange(code) {
+            console.log('selected method :' + code);
+            pub.payment.installment_method = code;
+            pub.installment.currentMethod = $.grep(pub.installment.currentBank.paymentMethods, function (x) {
+                return String(x.paymentMethod) === String(code);
+            })[0];
+            $.each($('li[data-ref=i_methodCode]'), function () {
+                $(this).find('span').removeClass('active');
+            });
+            var isActive = $('li[data-ref=i_methodCode][data-code=' + code + ']');
+            if (isActive.length > 0) {
+                isActive.find('span').addClass('active');
+            }
+            var row = {
+                rowHeader: ['<td>Thời hạn trả góp</td>'],
+                rowOriginAmount: ['<td>Giá Weshop</td>'],
+                rowAmountByMonth: ['<td>Tiền trả hàng tháng</td>'],
+                rowAmountFinal: ['<td>Giá sau trả góp</td>'],
+                rowAmountFee: ['<td>Giá chênh lệch</td>'],
+                rowOption: ['<td></td>']
+            };
+            $.each(pub.installment.currentMethod.periods, function (index, period) {
+                var iActive = index === 0;
+                if (iActive) {
+                    pub.payment.installment_month = period.month;
+                }
+                row.rowHeader.push('<td class="text-blue">' + period.month + ' tháng</td>');
+                row.rowOriginAmount.push('<td><b>' + pub.installment.originAmount + '</b></td>');
+                row.rowAmountByMonth.push('<td><b>' + period.amountByMonth + '</b></td>');
+                row.rowAmountFinal.push('<td><b>' + period.amountFinal + '</b></td>');
+                row.rowAmountFee.push('<td><b>' + period.amountFee + '</b></td>');
+                row.rowOption.push('<td>\n' +
+                    '<div class="form-check">\n' +
+                    '     <input class="form-check-input" type="radio" value="' + period.month + '"  ' + (iActive ? 'checked' : '') + '  id="installment' + period.month + '" name="installment" checked="">\n' +
+                    '     <label class="form-check-label" for="installment' + period.month + '">Chọn</label>\n' +
+                    '     </div>\n' +
+                    '</td>');
+            });
+
+            var table = '<table class="table table-bordered"><tbody>';
+            table += '<tr>' + row.rowHeader.join('') + '</tr>';
+            table += '<tr>' + row.rowOriginAmount.join('') + '</tr>';
+            table += '<tr>' + row.rowAmountByMonth.join('') + '</tr>';
+            table += '<tr>' + row.rowAmountFinal.join('') + '</tr>';
+            table += '<tr>' + row.rowAmountFee.join('') + '</tr>';
+            table += '<tr>' + row.rowOption.join('') + '</tr>';
+            table += '</tbody></table>';
+            $('div#installmentPeriods').html(table);
+
         },
         methodChange: function (isNew) {
             isNew = isNew || false;
@@ -289,9 +391,9 @@ ws.payment = (function ($) {
 
             if (pub.payment.carts.length === 0) {
                 return;
-            }else if(pub.payment.payment_type === 'installment') {
+            } else if (pub.payment.payment_type === 'installment') {
                 pub.calculateInstallment();
-            }else {
+            } else {
                 var data = pub.payment;
                 delete data.ga;
                 ws.ajax('/payment/discount/check-promotion', {
@@ -439,8 +541,8 @@ ws.payment = (function ($) {
             pub.payment.total_discount_amount = $response.discount;
             pub.payment.total_amount_display = pub.payment.total_amount - pub.payment.total_discount_amount;
             discountBox.css('display', 'flex');
-            discountBox.find('div.right').html('- ' + ws.numberFormat(pub.payment.total_discount_amount, -3) + ' ' + pub.payment.currency);
-            box.find('li#finalPrice').find('div.right').html(ws.numberFormat(pub.payment.total_amount_display, -3) + ' ' + pub.payment.currency);
+            discountBox.find('div.right').html('- ' + ws.numberFormat(pub.payment.total_discount_amount, -3) + ' <i class="currency">' + pub.payment.currency + '</i>');
+            box.find('li#finalPrice').find('div.right').html(ws.numberFormat(pub.payment.total_amount_display, -3) + ' <i class="currency">' + pub.payment.currency + '</i>');
             box.find('li[rel="detail"]').remove();
             box.prepend(initPromotionView(pub.payment.discount_detail));
 
@@ -460,13 +562,26 @@ ws.payment = (function ($) {
                 $('#discountInputCoupon').css('display', 'none');
             }
             text += item.code + '<i class="fas fa-question-circle code-info" data-toggle="tooltip" data-placement="top" title="' + item.message + '" data-original-title="' + item.message + '"></i></div></div>';
-            text += '<div class="right"> - ' + ws.numberFormat(item.value, -3) + ' ' + pub.payment.currency + '</div>';
+            text += '<div class="right"> - ' + ws.numberFormat(item.value, -3) + '<i class="currency">' + pub.payment.currency + '</i></div>';
             text += '</li>';
         });
         return text;
     };
-    var initInstallmentView = function ($data) {
-        console.log(type)
+    var initInstallmentBankView = function (banks) {
+        pub.installment.banks = banks;
+        console.log(banks);
+        var htmlBank = [];
+        $.each(banks, function (index, bank) {
+            var iActive = index === 0;
+            if (iActive) {
+                pub.payment.installment_bank = bank.bankCode;
+                pub.installmentBankChange(bank.bankCode);
+            }
+            var $ele = '<li data-ref="i_bankCode" data-code="' + bank.bankCode + '"  onclick="ws.payment.installmentBankChange(\'' + bank.bankCode + '\')"><span class="' + (iActive ? "active" : "") + '"><img src="' + bank.bankIcon + '" alt="' + bank.bankName + '" title="' + bank.bankName + '"/></span></li>';
+            htmlBank.push($ele)
+        });
+        $('ul#installmentBanks').html(htmlBank.join(''));
+        console.log(banks)
     };
     var redirectPaymentGateway = function (rs, $timeOut) {
         runTime = setInterval(function () {

@@ -12,6 +12,7 @@ use yii\mongodb\ActiveRecord;
  * @property mixed $key
  * @property mixed $identity
  * @property mixed $data
+ * @property mixed $remove
  * @property mixed $created_at
  */
 class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
@@ -34,6 +35,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
             'key',
             'identity',
             'data',
+            'remove',
             'created_at',
         ];
     }
@@ -58,6 +60,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
             'key' => 'Key',
             'identity' => 'Identity',
             'data' => 'Data',
+            'remove' => 'Remove',
             'created_at' => 'Created At',
         ];
     }
@@ -70,7 +73,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
     public function hasItem($key)
     {
         list($key, $id) = $key;
-        $query = self::find()->where(['AND', ['key' => $key], ['identity' => $id]]);
+        $query = self::find()->where(['AND', ['key' => $key], ['identity' => $id], ['remove' => 0]]);
         return $query->count() > 0;
     }
 
@@ -87,6 +90,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
         $model->key = $key;
         $model->identity = $id;
         $model->data = $value;
+        $model->remove = 0;
         $model->created_at = time();
         $model->save(false);
         return $key;
@@ -101,7 +105,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
     {
         list($key2, $id) = $key;
         /** @var $item $this */
-        $query = self::find()->where(['AND', ['key' => $key2], ['identity' => $id]]);
+        $query = self::find()->where(['AND', ['key' => $key2], ['identity' => $id], ['remove' => 0]]);
         /** @var $model $this */
         if (($model = $query->one()) === null) {
             return $this->addItem($key, $value);
@@ -120,7 +124,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
     public function getItem($key)
     {
         list($key, $id) = $key;
-        $query = self::find()->where(['AND', ['key' => $key], ['identity' => $id]]);
+        $query = self::find()->where(['AND', ['key' => $key], ['identity' => $id], ['remove' => 0]]);
         /** @var $model $this */
         if (($model = $query->one()) === null) {
             return false;
@@ -135,7 +139,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
     public function removeItem($key)
     {
         list($key, $id) = $key;
-        return self::deleteAll(['AND', ['key' => $key], ['identity' => $id]]);
+        return self::updateAll(['remove' => 1], ['AND', ['key' => $key], ['identity' => $id]]);
     }
 
     /**
@@ -144,7 +148,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
      */
     public function getItems($identity)
     {
-        $items = self::find()->where(['identity' => $identity])->all();
+        $items = self::find()->where(['AND', ['identity' => $identity], ['remove' => 0]])->all();
         return ArrayHelper::map($items, 'key', 'data');
 
     }
@@ -156,7 +160,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
      */
     public function countItems($identity)
     {
-        $query = self::find()->select(['key'])->where(['identity' => $identity]);
+        $query = self::find()->select(['key'])->where(['AND', ['identity' => $identity], ['remove' => 0]]);
         return $query->count('key');
     }
 
@@ -166,7 +170,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
      */
     public function removeItems($identity)
     {
-        return self::deleteAll(['identity' => $identity]);
+        return self::updateAll(['remove' => 1], ['identity' => $identity]);
     }
 
     /**
@@ -176,7 +180,7 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
     public function setMeOwnerItem($key)
     {
         list($key2, $id) = $key;
-        if (($item = self::find()->where(['key' => $key2])->one()) === null) {
+        if (($item = self::find()->where(['AND', ['key' => $key2], ['remove' => 0]])->one()) === null) {
             return false;
         }
         return $item->updateAttributes(['identity' => $id]) > 0;
