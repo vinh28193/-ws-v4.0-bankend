@@ -1,13 +1,13 @@
 <?php
 
-namespace common\models\queries;
+namespace common\models\queries\cms;
 
 use common\models\Category;
 
 /**
- * This is the ActiveQuery class for [[\common\models\db\Category]].
+ * This is the ActiveQuery class for [[\common\models\db_cms\Category]].
  *
- * @see \common\models\db\Category
+ * @see \common\models\db_cms\Category
  */
 class CategoryQuery extends \common\components\db\ActiveQuery
 {
@@ -18,7 +18,7 @@ class CategoryQuery extends \common\components\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \common\models\db\Category[]|array
+     * @return \common\models\db_cms\Category[]|array
      */
     public function all($db = null)
     {
@@ -27,7 +27,7 @@ class CategoryQuery extends \common\components\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \common\models\db\Category|array|null
+     * @return \common\models\db_cms\Category|array|null
      */
     public function one($db = null)
     {
@@ -41,7 +41,7 @@ class CategoryQuery extends \common\components\db\ActiveQuery
         if($site === null){
             $this->allSite();
         }else{
-            $this->andWhere(['site' => $site]);
+            $this->andWhere(['siteId' => $site]);
         }
         return $this;
     }
@@ -50,7 +50,7 @@ class CategoryQuery extends \common\components\db\ActiveQuery
      * @return $this
      */
     public function allSite(){
-        $this->andWhere(['IN','site',[
+        $this->andWhere(['IN','siteId',[
             Category::SITE_EBAY,
             Category::SITE_AMAZON_US,
             Category::SITE_AMAZON_UK,

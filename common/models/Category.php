@@ -10,14 +10,13 @@ namespace common\models;
 
 use Yii;
 use common\components\AdditionalFeeInterface;
-use common\models\db\Category as DbCategory;
-use common\models\queries\CategoryQuery;
+use common\models\db_cms\Category as DbCmsCategory;
 /**
  * Class Category
  * @package common\models
  * @property CategoryGroup $categoryGroup
  */
-class Category extends DbCategory
+class Category extends DbCmsCategory
 {
 
 
@@ -26,13 +25,6 @@ class Category extends DbCategory
     const SITE_AMAZON_UK = 27;
     const SITE_AMAZON_JP = 1014;
 
-    /**
-     * @return \yii\db\Connection the database connection used by this AR class.
-     */
-    public static function getDb()
-    {
-        return Yii::$app->get('db_cms');
-    }
 
     public function getCustomFee(AdditionalFeeInterface $additionalFee)
     {
@@ -51,16 +43,6 @@ class Category extends DbCategory
         }
 
     }
-
-    /**
-     * {@inheritdoc}
-     * @return CategoryQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new CategoryQuery(get_called_class());
-    }
-
 
     /**
      * @return \yii\db\ActiveQuery

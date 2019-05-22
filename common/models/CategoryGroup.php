@@ -11,11 +11,11 @@ namespace common\models;
 
 use Yii;
 use yii\helpers\Json;
-use common\models\db\CategoryGroup as DbCategoryGroup;
+use common\models\db_cms\CategoryGroup as DbCmsCategoryGroup;
 use common\calculators\CalculatorService;
 use common\components\AdditionalFeeInterface;
 
-class CategoryGroup extends DbCategoryGroup
+class CategoryGroup extends DbCmsCategoryGroup
 {
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
@@ -44,13 +44,6 @@ class CategoryGroup extends DbCategoryGroup
     const NAME_OFFICE_MACHINE = 'OFFICE_MACHINE';
     const NAME_OPTICAL_INSTRUMENT = 'OPTICAL_INSTRUMENT';
 
-    /**
-     * @return \yii\db\Connection the database connection used by this AR class.
-     */
-    public static function getDb()
-    {
-        return Yii::$app->get('db_cms');
-    }
 
     /**
      * @param  $target
