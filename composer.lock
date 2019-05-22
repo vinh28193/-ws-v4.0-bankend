@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "ac997ca7cb778d068f90470afb02769c",
-=======
-    "content-hash": "19ea4ecc8be5a60ab479a9e68089e1bf",
->>>>>>> 40099f112cac0eb3137bf72f7d8c4eee4b6bad00
+    "content-hash": "9e9787eb709dadaf9d5da46a11af66dd",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -85,13 +81,8 @@
             },
             "dist": {
                 "type": "zip",
-<<<<<<< HEAD
-                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/e05a1219784935ff5beb6bfb17cdc86bc848d0bb",
-                "reference": "e05a1219784935ff5beb6bfb17cdc86bc848d0bb"
-=======
                 "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/3c394ee89714b2e1635fb83e180f41413e3d7469",
                 "reference": "3c394ee89714b2e1635fb83e180f41413e3d7469"
->>>>>>> 40099f112cac0eb3137bf72f7d8c4eee4b6bad00
             },
             "type": "bower-asset",
             "time": "2019-05-17T19:30:44+00:00"
@@ -231,18 +222,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:sweetalert2/sweetalert2.git",
+                "url": "https://github.com/sweetalert2/sweetalert2.git",
                 "reference": "32faf74a467aac80a28f04a352eb26f5407ba813"
             },
             "dist": {
                 "type": "zip",
-<<<<<<< HEAD
-                "url": "https://api.github.com/repos/sweetalert2/sweetalert2/zipball/40bd865bd74da37fb4cac6fe95058d7b89d8994b",
-                "reference": "40bd865bd74da37fb4cac6fe95058d7b89d8994b"
-=======
                 "url": "https://api.github.com/repos/sweetalert2/sweetalert2/zipball/32faf74a467aac80a28f04a352eb26f5407ba813",
                 "reference": "32faf74a467aac80a28f04a352eb26f5407ba813"
->>>>>>> 40099f112cac0eb3137bf72f7d8c4eee4b6bad00
             },
             "type": "bower-asset",
             "time": "2019-05-16T18:58:58+00:00"
@@ -4160,7 +4146,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -4597,12 +4583,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "dc09c24c71470bdb4210a5ffba2a4c93b3422b0d"
+                "reference": "717d507d6a18fa4be8bf31fec33738d264c06920"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/dc09c24c71470bdb4210a5ffba2a4c93b3422b0d",
-                "reference": "dc09c24c71470bdb4210a5ffba2a4c93b3422b0d",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/717d507d6a18fa4be8bf31fec33738d264c06920",
+                "reference": "717d507d6a18fa4be8bf31fec33738d264c06920",
                 "shasum": ""
             },
             "require": {
@@ -4689,7 +4675,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2019-05-21T09:46:08+00:00"
+            "time": "2019-05-21T16:01:47+00:00"
         },
         {
             "name": "yiisoft/yii2-authclient",
@@ -7083,7 +7069,8 @@
         "php": ">=5.4.0",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "ext-dom": "*"
+        "ext-dom": "*",
+        "ext-soap": "*"
     },
     "platform-dev": []
 }
