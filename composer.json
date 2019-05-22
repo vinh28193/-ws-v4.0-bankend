@@ -49,7 +49,6 @@
     "ext-dom": "*",
     "yii2mod/collection": "*",
     "thamtech/yii2-uuid": "*",
-    "ext-soap": "*",
     "yiisoft/yii2-queue": "^2.0@dev"
   },
   "require-dev": {

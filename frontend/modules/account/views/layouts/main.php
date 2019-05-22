@@ -160,7 +160,7 @@ UserBackendAsset::register($this);
                         </div>
                     </li>
                     <li>
-                        <?php echo Html::a('<span class="icon icon4"></span>Ví voucher', ['/account/promotion-user']);?>
+                        <?php echo Html::a('<span class="icon icon4"></span>Ví voucher', ['/account/promotion-user?status=1']);?>
                     </li>
                     <li>
                         <a href="#"><i class="icon icon5"></i> Weshop xu</a>
