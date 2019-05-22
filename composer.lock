@@ -4,7 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "94310ce3a232e754a5cf5375f413f22c",
+=======
+<<<<<<< HEAD
+    "content-hash": "ac997ca7cb778d068f90470afb02769c",
+=======
+    "content-hash": "19ea4ecc8be5a60ab479a9e68089e1bf",
+>>>>>>> 40099f112cac0eb3137bf72f7d8c4eee4b6bad00
+>>>>>>> 2dae5627df1a5859956c647a9a7bf8d2b6607759
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -81,8 +89,13 @@
             },
             "dist": {
                 "type": "zip",
+<<<<<<< HEAD
+                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/e05a1219784935ff5beb6bfb17cdc86bc848d0bb",
+                "reference": "e05a1219784935ff5beb6bfb17cdc86bc848d0bb"
+=======
                 "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/3c394ee89714b2e1635fb83e180f41413e3d7469",
                 "reference": "3c394ee89714b2e1635fb83e180f41413e3d7469"
+>>>>>>> 40099f112cac0eb3137bf72f7d8c4eee4b6bad00
             },
             "type": "bower-asset",
             "time": "2019-05-17T19:30:44+00:00"
@@ -227,8 +240,13 @@
             },
             "dist": {
                 "type": "zip",
+<<<<<<< HEAD
+                "url": "https://api.github.com/repos/sweetalert2/sweetalert2/zipball/40bd865bd74da37fb4cac6fe95058d7b89d8994b",
+                "reference": "40bd865bd74da37fb4cac6fe95058d7b89d8994b"
+=======
                 "url": "https://api.github.com/repos/sweetalert2/sweetalert2/zipball/32faf74a467aac80a28f04a352eb26f5407ba813",
                 "reference": "32faf74a467aac80a28f04a352eb26f5407ba813"
+>>>>>>> 40099f112cac0eb3137bf72f7d8c4eee4b6bad00
             },
             "type": "bower-asset",
             "time": "2019-05-16T18:58:58+00:00"
@@ -6321,6 +6339,98 @@
                 "utf-8"
             ],
             "time": "2016-12-12T10:42:18+00:00"
+        },
+        {
+            "name": "phpseclib/phpseclib",
+            "version": "2.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpseclib/phpseclib.git",
+                "reference": "98cbccc81a785f23c825ee2974d03e58c9031ec3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/98cbccc81a785f23c825ee2974d03e58c9031ec3",
+                "reference": "98cbccc81a785f23c825ee2974d03e58c9031ec3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phing/phing": "~2.7",
+                "phpunit/phpunit": "^4.8.35|^5.7|^6.0",
+                "sami/sami": "~2.0",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "suggest": {
+                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
+                "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
+                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
+                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "phpseclib/bootstrap.php"
+                ],
+                "psr-4": {
+                    "phpseclib\\": "phpseclib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Wigginton",
+                    "email": "terrafrost@php.net",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Patrick Monnerat",
+                    "email": "pm@datasphere.ch",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Andreas Fischer",
+                    "email": "bantu@phpbb.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Hans-Jürgen Petrich",
+                    "email": "petrich@tronic-media.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Graham Campbell",
+                    "email": "graham@alt-three.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
+            "homepage": "http://phpseclib.sourceforge.net",
+            "keywords": [
+                "BigInteger",
+                "aes",
+                "asn.1",
+                "asn1",
+                "blowfish",
+                "crypto",
+                "cryptography",
+                "encryption",
+                "rsa",
+                "security",
+                "sftp",
+                "signature",
+                "signing",
+                "ssh",
+                "twofish",
+                "x.509",
+                "x509"
+            ],
+            "time": "2019-05-02T12:18:37+00:00"
         },
         {
             "name": "phpspec/php-diff",

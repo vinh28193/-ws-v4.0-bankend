@@ -336,13 +336,18 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
                 'orderNumber' => $this->order_number
             ]);
         } elseif ($this->type === self::TYPE_WITH_DRAW) {
-            $this->description = Yii::t('wallet', 'Request Withdraw amount: {totalAmount} , request content: {request_content}, payment method: {paymentMethod},  bank code: {bankCode}', [
+            $this->description = Yii::t('wallet', 'Request Withdraw amount: {totalAmount} ,payment method: {paymentMethod},  bank code: {bankCode}', [
                 'totalAmount' => $this->totalAmount,
-                'request_content' => $this->request_content,
                 'paymentMethod' => $this->payment_method,
                 'bankCode' => $this->payment_bank_code
-
             ]);
+//            $this->description = Yii::t('wallet', 'Request Withdraw amount: {totalAmount} , request content: {request_content}, payment method: {paymentMethod},  bank code: {bankCode}', [
+//                'totalAmount' => $this->totalAmount,
+//                'request_content' => $this->request_content,
+//                'paymentMethod' => $this->payment_method,
+//                'bankCode' => $this->payment_bank_code
+//
+//            ]);
         }
         return $this->description;
     }
@@ -367,6 +372,11 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
             'data' => []
         ];
         if ($this->fixedOtpCode !== null) {
+            if ($res['valid']) {
+                $this->verified_at = $this->_formatter->asDatetime('now');
+                $this->update(false, ['verified_at']);
+                $this->updateTransaction(self::STATUS_PROCESSING);
+            }
             $token .= ', dev mode fixed opt:' . $this->fixedOtpCode;
             $res['message'] = $valid ? $res['message'] : Yii::t('wallet', 'Your otp is: {fixCode}', ['fixCode' => $this->fixedOtpCode]);
             return ArrayHelper::merge($res, [
@@ -483,7 +493,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
             $receiveType = WalletTransaction::VERIFY_RECEIVE_TYPE_EMAIL;
         }
         $this->refresh();
-        if ($renew || (($otp = $this->getOtpCode($renew, $keepCount)) !== null && $otp !== $this->fixedOtpCode)) {
+        if ((($otp = $this->getOtpCode($renew, $keepCount)) !== null && $otp !== $this->fixedOtpCode) || $renew) {
             $this->setScenario(self::SCENARIO_DEFAULT);
             $isSave = $this->save();
             $receiveType = (int)$receiveType;

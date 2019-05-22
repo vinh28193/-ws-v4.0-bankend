@@ -48,10 +48,6 @@ return [
                 ],
             ],
         ],
-        'storeManager' => [
-            'class' => common\components\consoles\StoreManager::className(),
-            'defaultDomain' => 'weshop.v4.api.frontend'
-        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager'
         ],

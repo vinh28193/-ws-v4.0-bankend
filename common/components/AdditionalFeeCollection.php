@@ -158,7 +158,7 @@ class AdditionalFeeCollection extends ArrayCollection
             } else if ($amount > 1 && $amount < 2) {
                 $amount = ($amount - 1) * $this->getTotalAdditionFees(['product_price_origin', 'origin_shipping_fee'])[0];
             } else {
-                $amount = ($amount / 1001) * $this->getTotalAdditionFees(['product_price_origin', 'origin_shipping_fee'])[0];
+                $amount = ($amount / 100) * $this->getTotalAdditionFees(['product_price_origin', 'origin_shipping_fee'])[0];
             }
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $additional->getExchangeRate());
         } else {

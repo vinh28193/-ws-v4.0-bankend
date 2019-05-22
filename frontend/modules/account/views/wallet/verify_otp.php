@@ -14,16 +14,7 @@ use yii\captcha\Captcha;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
-/** @var \common\models\User $user */
-$user = Yii::$app->user->getIdentity();
 $listMethod = ArrayHelper::getValue(Yii::$app->params, 'list_method_withdraw');
-$js = "
-$(document).ready(function () {
-//set default
-        withdraw_data.method = '" . (isset($listMethod[0]) ? $listMethod[0] : '') . "';
-    });";
-$this->registerJs($js, \yii\web\View::POS_END);
-
 
 $this->title = "Xác thực yêu cầu rút tiền";
 echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút tiền' => '/my-weshop/wallet/withdraw.html']]);
@@ -71,6 +62,7 @@ $checkOTP = isset($transaction_info['verify_expired_at']) && $transaction_info['
         <div class="withdraw-done">
             <div class="done-notice">
                 <div class="w-25 m-auto">
+                    <div id='verifyOtp'>
                     <?php
                     if($checkOTP){
                         echo Html::tag('div', 'Xác thực OTP', ['class' => 'modal-title']);
@@ -81,7 +73,7 @@ $checkOTP = isset($transaction_info['verify_expired_at']) && $transaction_info['
                             'options' => [
                                 'id' => 'otpVerifyForm'
                             ],
-                            'action' => \yii\helpers\Url::toRoute('/payment/wallet/create-payment', true),
+                            'action' => \yii\helpers\Url::toRoute('/account/api/wallet-service/verify-otp', true),
                             'enableAjaxValidation' => true,
                             'enableClientValidation' => false,
                             'validateOnChange' => false,
@@ -94,7 +86,7 @@ $checkOTP = isset($transaction_info['verify_expired_at']) && $transaction_info['
                         echo $form->field($modal, 'orderCode')->hiddenInput()->label(false);
                         echo $form->field($modal, 'returnUrl')->hiddenInput()->label(false);
                         echo $form->field($modal, 'cancelUrl')->hiddenInput()->label(false);
-                        echo $form->field($modal, 'optCode')->textInput();
+                        echo $form->field($modal, 'otpCode')->textInput();
                         echo $form->field($modal, 'captcha')->widget(Captcha::className(), [
                             'captchaAction' => '/otp/captcha',
                             'options' => ['class' => 'form-control'],
@@ -104,27 +96,27 @@ $checkOTP = isset($transaction_info['verify_expired_at']) && $transaction_info['
                             </div>
                        </div>'
                         ]);
-                        echo Html::tag('p', 'Bạn chưa nhận được mã OTP? <a href="javascript:void(0);" onclick="ws.wallet.refreshOtp(\'form#otpVerifyForm\')">Gửi lại</a>');
+                        echo Html::tag('p', 'Bạn chưa nhận được mã OTP? <a href="javascript:void(0);" onclick="showSentOtp()">Gửi lại</a>');
                         echo Html::submitButton('Xác thực', ['class' => 'btn btn-submit btn-block']);
                         ActiveForm::end();
-                    }else{?>
-                        <div>
-                            <input type="hidden" value="<?= $transaction_code ?>" name="transaction_code">
-                            <label>Cách nhận OTP</label>
-                            <div class="form-check">
-                                <input class="form-check-input" id="email_type" type="radio" value="1" checked name="typeOtp">
-                                <label class="form-check-label" for="email_type"> Email (<?= $user->phone ?>)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" id="sms_type" value="0" name="typeOtp">
-                                <label class="form-check-label" for="sms_type"> SMS (<?= $user->phone ?>)</label>
-                            </div>
-                            <div class="form-group mt-3">
-                                <button class="btn btn-info" onclick="sendOtp()">Gửi OTP</button>
-                            </div>
-                        </div>
-                    <?php }
+                    }
                     ?>
+                    </div>
+                    <div id="resentotp" style="display: <?= $checkOTP ? 'none' : 'block' ?>">
+                        <input type="hidden" value="<?= $transaction_code ?>" name="transaction_code">
+                        <label>Cách nhận OTP</label>
+                        <div class="form-check">
+                            <input class="form-check-input" id="email_type" type="radio" <?= $transaction_info['verify_receive_type'] == 1 ? 'checked' : '' ?> value="1" checked name="typeOtp">
+                            <label class="form-check-label" for="email_type"> Email (<?= $wallet['email'] ?>)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="sms_type" <?= $transaction_info['verify_receive_type'] == 0 ? 'checked' : '' ?> value="0" name="typeOtp">
+                            <label class="form-check-label" for="sms_type"> SMS (<?= $wallet['customer_phone'] ?>)</label>
+                        </div>
+                        <div class="form-group mt-3">
+                            <button class="btn btn-info" onclick="sendOtp()">Gửi OTP</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <p>Nếu cần trợ giúp vui lòng liên hệ : Hotline: <b class="text-orange">1900.67.55</b>   |  Email: <a href="#" class="text-blue">support@weshop.com.vn</a></p>

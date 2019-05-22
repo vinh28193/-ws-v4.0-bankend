@@ -5,8 +5,9 @@ var loginWallet = function () {
       $('#ErrorPasswordWallet').html('Vui lòng nhập mật khẩu');
       return;
   }
+  ws.loading(true);
     $.ajax({
-        url: 'my-weshop/api/wallet-service/login-wallet.html',
+        url: '/my-weshop/api/wallet-service/login-wallet.html',
         method: 'POST',
         data: {
             password: password
@@ -15,6 +16,7 @@ var loginWallet = function () {
             if(res.success){
                 window.location.reload();
             }else {
+                ws.loading(false);
                 $('#ErrorPasswordWallet').html(res.message);
             }
         }

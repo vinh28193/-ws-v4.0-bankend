@@ -20,10 +20,19 @@ use common\models\queries\CategoryQuery;
 class Category extends DbCategory
 {
 
+
     const SITE_EBAY = 2;
     const SITE_AMAZON_US = 26;
     const SITE_AMAZON_UK = 27;
     const SITE_AMAZON_JP = 1014;
+
+    /**
+     * @return \yii\db\Connection the database connection used by this AR class.
+     */
+    public static function getDb()
+    {
+        return Yii::$app->get('db_cms');
+    }
 
     public function getCustomFee(AdditionalFeeInterface $additionalFee)
     {
@@ -34,9 +43,9 @@ class Category extends DbCategory
             ($customFee = $group->customFeeCalculator($additionalFee)) > 0
         ) {
             return $customFee;
-        } else if ($this->custom_fee !== null && $this->custom_fee > 0) {
-            Yii::info("Custom fee on Database of ID{$this->id} FEE {$this->custom_fee}", 'CUSTOM FEE INFORMATION');
-            return $this->custom_fee * $additionalFee->getShippingQuantity();
+        } else if ($this->customFee !== null && $this->customFee > 0) {
+            Yii::info("Custom fee on Database of ID{$this->id} FEE {$this->customFee}", 'CUSTOM FEE INFORMATION');
+            return $this->customFee * $additionalFee->getShippingQuantity();
         } else {
             return 0;
         }
@@ -58,6 +67,6 @@ class Category extends DbCategory
      */
     public function getCategoryGroup()
     {
-        return $this->hasOne(CategoryGroup::className(), ['id' => 'category_group_id'])->where(['active' => 1]);
+        return $this->hasOne(CategoryGroup::className(), ['id' => 'category_group_id']);
     }
 }

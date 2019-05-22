@@ -8,6 +8,7 @@ use common\models\User;
 use common\models\PaymentTransaction;
 use common\models\WalletTransaction;
 use frontend\models\LoginForm;
+use frontend\modules\payment\models\OtpVerifyForm;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
@@ -151,5 +152,17 @@ class WalletServiceController extends Controller
         $walletS->otp_type = Yii::$app->request->post('type',1);
         $walletS->refreshOtp();
         return $this->response(true,'sent otp success!',['code' => $walletS->transaction_code]);
+    }
+    public function actionVerifyOtp(){
+        $request = Yii::$app->request;
+        $otpForm = new OtpVerifyForm();
+        if($request->isPost && $otpForm->load($request->post()) && $otpForm->verify()){
+            $service = new WalletService();
+            $service->transaction_code = $otpForm->transactionCode;
+            $service->otp_code = $otpForm->otpCode;
+            $service->validateOtp();
+            return Yii::$app->response->redirect('/my-weshop/wallet/withdraw/'.$service->transaction_code.'.html');
+        }
+        return $this->response(false,'Verify fail');
     }
 }
