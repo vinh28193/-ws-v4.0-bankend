@@ -67,6 +67,7 @@ class WalletServiceController extends Controller
         $paymentTransaction->before_discount_amount_local = $payment->total_amount;
         $paymentTransaction->transaction_amount_local = $payment->total_amount - $payment->total_discount_amount;
         $paymentTransaction->payment_type = 'top_up';
+        $paymentTransaction->shipping = 0;
         if($paymentTransaction->save(false)){
             $wallet = new WalletService([
                 'transaction_code' => $paymentTransaction->transaction_code,
