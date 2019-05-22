@@ -203,6 +203,9 @@ class PaymentController extends BasePaymentController
             /* @var $results PromotionResponse */
             $createResponse = $payment->createOrder($receiverAddress);
             if ($createResponse['success']) {
+                foreach ($payment->carts as $key){
+                    $this->cartManager->removeItem($key);
+                }
                 return $this->redirect($redirectUrl);
             }
 
