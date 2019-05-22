@@ -315,9 +315,13 @@ a {
         color: #555555;
         background: transparent;
         height: inherit; }
+      .navbar-2 .navbar-header ul li .dropdown-menu ul li{
+        /*float: left;*/
+        width: 250px;}
         .navbar-2 .navbar-header ul li .dropdown-menu ul li a:hover {
           color: #2b96b6; }
       .navbar-2 .navbar-header ul li .dropdown-menu ul li.open a {
+        float: left;
         width: 250px;
         color: #0654BA;
         background: transparent;
@@ -5331,3 +5335,52 @@ a {
 /*.name{*/
 /*  white-space: nowrap;*/
 /*}*/
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-ebay ul li .sub-menu .item ul li a:hover {
+  color: #2b96b6; }
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-ebay ul li a:hover {
+  color: #2b96b6; }
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-ebay ul li.open a {
+  color: #0654BA;}
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-ebay ul li .sub-menu .item ul li a {
+  color: #555555;}
+.navbar-2 .navbar-header ul li .title2.active.tab-ebay{
+  background: #0063d1;
+  color: white;
+}
+.navbar-2 .navbar-header ul li .title2.active.tab-ebay:after{
+  border-color: #0063d1 transparent transparent transparent;
+}
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-amazon ul li .sub-menu .item ul li a:hover {
+  color: #e67525; }
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-amazon ul li a:hover {
+  color: #e67525; }
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-amazon ul li.open a {
+  color: #a7683b;}
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-amazon ul li .sub-menu .item ul li a {
+  color: #555555;}
+.navbar-2 .navbar-header ul li .title2.active.tab-amazon{
+  background: #232f3d;
+  color: white;
+}
+.navbar-2 .navbar-header ul li .title2.active.tab-amazon:after{
+  border-color: #232f3d transparent transparent transparent;
+}
+
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-top-us ul li .sub-menu .item ul li a:hover {
+  color: #2b96b6; }
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-top-us ul li a:hover {
+  color: #2b96b6; }
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-top-us ul li.open a {
+  color: #0654BA;}
+.navbar-2 .navbar-header ul li .dropdown-menu #tab-top-us ul li .sub-menu .item ul li a {
+  color: #555555;}
+.navbar-2 .navbar-header ul li .title2.active.tab-top-us{
+  background: #2b96b6;
+  color: white;
+}
+.navbar-2 .navbar-header ul li .title2.active.tab-top-us:after{
+  border-color: #2b96b6 transparent transparent transparent;
+}
+li.dropdown.show {
+  background: #ffffff;
+}

@@ -58,7 +58,7 @@ return [
         ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://192.168.11.252:27017/admin',
+            'dsn' => 'mongodb://localhost:27017/admin',
         ],
     ],
     'params' => $params,

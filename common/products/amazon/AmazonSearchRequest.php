@@ -18,7 +18,7 @@ class AmazonSearchRequest extends AmazonRequest
     {
         $rules = parent::rules();
         $rules = ArrayHelper::merge($rules, [
-            ['sort', 'default', 'value' => 'date-desc-rank'],
+//            ['sort', 'default', 'value' => 'date-desc-rank'],
 //            ['sort', function ($attribute, $params, $validator) {
 //                if (!$this->hasErrors()) {
 //                    $value = $this->$attribute;
@@ -53,7 +53,9 @@ class AmazonSearchRequest extends AmazonRequest
             if ($key === 'sort' && $value === 'relevancerank') {
                 $value = '';
             }
-            $params[$key] = $value;
+            if($value){
+                $params[$key] = $value;
+            }
         }
         return $params;
     }

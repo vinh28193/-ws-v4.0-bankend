@@ -18,9 +18,11 @@ class Favorite extends BaseFavorite
         return array_replace_recursive(parent::rules(),
 	    [
             [['obj_id', 'obj_type', 'ip'], 'required'],
-            [['obj_id', 'created_by', 'updated_by'], 'integer'],
+            [['created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['obj_type', 'ip',], 'string', 'max' => 255],
+            [['ip',], 'string', 'max' => 255],
+            [['obj_type'],'safe'],
+            [['obj_id'],'string']
         ]);
     }
 

@@ -35,12 +35,13 @@ class WsAlias extends \common\models\db_cms\WsAlias
         return $landingProduct;
     }
 
-    public function getCategoryList()
+    public function getCategoryList($array = true)
     {
         $key = 'ITEM_PRODUCT_AMAZONE_BY_' . '_ALIAS_' . $this->id . '-' . WsAliasItem::TYPE_CATEGORY;
         $categoryList = Yii::$app->request->post('noCache',false) == 1 ? null : Yii::$app->cache->get($key);
         if (!($categoryList)) {
-            $categoryList = $this->getWsAliasItems()->where(['type' => WsAliasItem::TYPE_CATEGORY, 'status' => 1, 'is_head' => 0])->with('wsCategoryGroups.wsParentCategories.wsCategories')->asArray()->all();
+            $categoryList = $this->getWsAliasItems()->where(['type' => WsAliasItem::TYPE_CATEGORY, 'status' => 1, 'is_head' => 0])->with('wsCategoryGroups.wsParentCategories.wsCategories');
+            $categoryList = $array ? $categoryList->asArray()->all() : $categoryList->all();
             Yii::$app->cache->set($key, $categoryList, 60 * 60 * 24);
         }
         return $categoryList;
