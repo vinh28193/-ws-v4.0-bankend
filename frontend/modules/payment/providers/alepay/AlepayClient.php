@@ -61,6 +61,7 @@ class AlepayClient extends Component
 
     public function createHttpRequest($url, $data)
     {
+        // Todo Alepay Log
         $dataJson = json_encode($data);
         $dataEncrypt = $this->security->encrypt($dataJson);
         $checksum = $this->security->md5Data($dataEncrypt . $this->checksumKey);
@@ -82,7 +83,7 @@ class AlepayClient extends Component
         $result = curl_exec($ch);
         $result = json_decode($result);
         $success = $result->errorCode === '000';
-        return ['success' => $result->errorCode === '000','message' => $result->errorDescription,'data' => $success ? $this->security->decrypt($result->data) : null];
+        return ['success' => $result->errorCode === '000', 'message' => $result->errorDescription, 'data' => $success ? $this->security->decrypt($result->data) : null];
     }
 
     protected function getUrl($url)
@@ -100,6 +101,11 @@ class AlepayClient extends Component
             'amount' => $amount,
             'currencyCode' => $currencyCode
         ]);
+    }
+
+    public function requestOrder($params)
+    {
+        return $this->createHttpRequest('request-order',$params);
     }
 
 }
