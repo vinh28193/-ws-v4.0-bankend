@@ -34,7 +34,7 @@ class WalletNoAuthController extends ServiceController
             $client->auth_key = 'wallet';
             $client->username = $checkCus->username;
             $client->email = $checkCus->email;
-            $client->customer_phone = $checkCus->phone;
+            $client->customer_phone = $checkCus->phone ? $checkCus->phone : 0;
             $client->customer_name = $checkCus->last_name . ' ' . $checkCus->first_name;
             $client->created_at = date('Y-m-d H:i:s');
             $client->status = 1;
