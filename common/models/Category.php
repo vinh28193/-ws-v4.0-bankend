@@ -10,20 +10,21 @@ namespace common\models;
 
 use Yii;
 use common\components\AdditionalFeeInterface;
-use common\models\db\Category as DbCategory;
-use common\models\queries\CategoryQuery;
+use common\models\db_cms\Category as DbCmsCategory;
 /**
  * Class Category
  * @package common\models
  * @property CategoryGroup $categoryGroup
  */
-class Category extends DbCategory
+class Category extends DbCmsCategory
 {
+
 
     const SITE_EBAY = 2;
     const SITE_AMAZON_US = 26;
     const SITE_AMAZON_UK = 27;
     const SITE_AMAZON_JP = 1014;
+
 
     public function getCustomFee(AdditionalFeeInterface $additionalFee)
     {
@@ -34,9 +35,9 @@ class Category extends DbCategory
             ($customFee = $group->customFeeCalculator($additionalFee)) > 0
         ) {
             return $customFee;
-        } else if ($this->custom_fee !== null && $this->custom_fee > 0) {
-            Yii::info("Custom fee on Database of ID{$this->id} FEE {$this->custom_fee}", 'CUSTOM FEE INFORMATION');
-            return $this->custom_fee * $additionalFee->getShippingQuantity();
+        } else if ($this->customFee !== null && $this->customFee > 0) {
+            Yii::info("Custom fee on Database of ID{$this->id} FEE {$this->customFee}", 'CUSTOM FEE INFORMATION');
+            return $this->customFee * $additionalFee->getShippingQuantity();
         } else {
             return 0;
         }
@@ -44,20 +45,10 @@ class Category extends DbCategory
     }
 
     /**
-     * {@inheritdoc}
-     * @return CategoryQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new CategoryQuery(get_called_class());
-    }
-
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getCategoryGroup()
     {
-        return $this->hasOne(CategoryGroup::className(), ['id' => 'category_group_id'])->where(['active' => 1]);
+        return $this->hasOne(CategoryGroup::className(), ['id' => 'category_group_id']);
     }
 }

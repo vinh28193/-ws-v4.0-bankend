@@ -17,10 +17,10 @@ class m181103_150101_favorites extends Migration
             'obj_id'     => $this->text()->notNull()->comment("id hoăc SKU Ebay / Amazon"),
             'obj_type'   => $this->text()->notNull()->comment("Thuộc tính của từng item Ebay hoặc Amazon lúc khách hàng xem sản phẩm. Dang Seriline"),
             'ip'         => $this->string(255)->notNull(),
-            'created_at' => $this->timestamp()->notNull()->defaultExpression('now()'),
-            'updated_at' => $this->timestamp()->notNull()->defaultExpression('now()'),
-            'created_by' => $this->integer(19),
-            'updated_by' => $this->integer(19),
+            'created_at' => $this->bigInteger()->comment("created_at"),
+            'updated_at' => $this->bigInteger()->comment("updated_at"),
+            'created_by' => $this->bigInteger()->comment("created_by"),
+            'updated_by' => $this->bigInteger()->comment("updated_by"),
         ], $tableOptions);
 
     }

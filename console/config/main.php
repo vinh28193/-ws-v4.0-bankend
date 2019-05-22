@@ -9,7 +9,7 @@ $params = array_merge(
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'queue'],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -40,6 +40,11 @@ return [
         ]
     ],
     'components' => [
+        'queue' => [
+            'class' => '\yii\queue\file\Queue',
+            'as log' => '\yii\queue\LogBehavior',
+            'path' => '@runtime/queue',
+        ],
         'log' => [
             'targets' => [
                 [
@@ -47,10 +52,6 @@ return [
                     'levels' => ['error', 'warning'],
                 ],
             ],
-        ],
-        'storeManager' => [
-            'class' => common\components\consoles\StoreManager::className(),
-            'defaultDomain' => 'weshop.v4.api.frontend'
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager'

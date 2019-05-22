@@ -7,6 +7,7 @@ use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
 use Yii;
 use common\products\forms\ProductDetailFrom;
+use  frontend\modules\favorites\controllers\FavoriteObject as Favorite;
 
 class ItemController extends EbayController
 {
@@ -33,9 +34,31 @@ class ItemController extends EbayController
                 'errors' => $form->getErrors()
             ]);
         }
+
+        $favorite = null;
+        // Queue get call Favorite to
+
+        // Queue Favorite Save
+        $UUID = Yii::$app->user->getId();
+        $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
+        $id = Yii::$app->queue->delay(30)->push(new Favorite([
+                'obj_type' => $item,
+                'obj_id' => $id,
+                'UUID' => $UUID
+            ]));
+        // Check whether the job is waiting for execution.
+        Yii::info(" Check whether the job is waiting for execution : ".Yii::$app->queue->isWaiting($id));
+        // Check whether a worker got the job from the queue and executes it.
+        Yii::info(" Check whether a worker got the job from the queue and executes it : ". Yii::$app->queue->isReserved($id));
+        // Check whether a worker has executed the job.
+        Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
+
+
         return $this->render('index', [
-            'item' => $item
+            'item' => $item,
+            'favorite'=>$favorite
         ]);
+
 
     }
 

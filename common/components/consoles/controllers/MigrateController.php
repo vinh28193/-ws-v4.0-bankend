@@ -131,19 +131,12 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
 
         }
-         // Add column storeReferenceKey to migrate
-        $storeManager = Yii::$app->storeManager;
-        $storeReferenceKey = $storeManager->storeReferenceKey;
-        /** @var  $class  \yii\db\ActiveRecord */
-        $class = $storeManager->storeClass;
-        $relatedTable = $class::tableName();
-        $relatedTable = str_replace(['{{','%','}}'],'',$relatedTable);
-        if(!isset($foreignKeys[$storeReferenceKey])){
-            $foreignKeys[$storeManager->storeReferenceKey] = [
-                'idx' => $this->generateTableName("idx-$table-$storeReferenceKey"),
-                'fk' => $this->generateTableName("fk-$table-$storeReferenceKey"),
-                'relatedTable' => $this->generateTableName($relatedTable),
-                'relatedColumn' => $storeReferenceKey,
+        if (!isset($foreignKeys['store_id'])) {
+            $foreignKeys['store_id'] = [
+                'idx' => $this->generateTableName("idx-$table-store_id"),
+                'fk' => $this->generateTableName("fk-$table-store_id"),
+                'relatedTable' => $this->generateTableName('store'),
+                'relatedColumn' => 'store_id',
             ];
         }
 
@@ -169,12 +162,13 @@ class MigrateController extends \yii\console\controllers\MigrateController
         }
         array_unshift($fields,
             ['property' => 'id', 'decorators' => 'primaryKey()->comment(\'ID\')'],
-            ['property' => Yii::$app->storeManager->storeReferenceKey, 'decorators' => 'integer(11)->notNull()->comment(\'Store ID reference\')']
+            ['property' => 'store_id', 'decorators' => 'integer(11)->notNull()->comment(\'Store ID reference\')']
 
         );
     }
 
-    protected function addGuestFields(&$fields){
+    protected function addGuestFields(&$fields)
+    {
         $guestFields = [
             'status' => 'smallInteger()->defaultValue(1)->comment(\'Status (1:Active;2:Inactive)\')',
             'created_by' => 'integer(11)->defaultValue(null)->comment(\'Created by\')',
@@ -183,15 +177,15 @@ class MigrateController extends \yii\console\controllers\MigrateController
             'updated_at' => 'integer(11)->defaultValue(null)->comment(\'Updated at (timestamp)\')',
         ];
         $checkFields = $fields;
-        $checkFields = array_keys(ArrayHelper::index($checkFields,'property'));
+        $checkFields = array_keys(ArrayHelper::index($checkFields, 'property'));
         $exist = [];
         $keys = array_keys($guestFields);
         foreach ($checkFields as $property) {
-           if(in_array($property,$keys)){
-               $exist[] = $property;
-           }
+            if (in_array($property, $keys)) {
+                $exist[] = $property;
+            }
         }
-        foreach ($guestFields as $property => $decorators){
+        foreach ($guestFields as $property => $decorators) {
             $fields[] = ['property' => $property, 'decorators' => $decorators];
         }
     }
