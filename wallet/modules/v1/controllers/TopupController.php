@@ -39,6 +39,7 @@ class TopupController extends WalletServiceController
 //        $topup->bank_code = $post['bank_code'];
         $topup->load(Yii::$app->request->post(),'');
         \Yii::info('$post Params:' . json_encode($post), __METHOD__);
+        $topup->transaction_code = Yii::$app->request->post('transaction_code');
         $rs =  $topup->topUpRequest();
         \Yii::info('topUpRequest:' . json_encode($rs), __METHOD__);
         if($rs != false){

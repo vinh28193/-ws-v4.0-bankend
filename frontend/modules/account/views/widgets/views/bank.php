@@ -19,5 +19,5 @@
 </div>
 <div class="form-group">
     <div class="label">Chủ tài khoản</div>
-    <input type="text" class="form-control" placeholder="Nhập tên chủ tài khoản" name="bank_account_number">
+    <input type="text" class="form-control" placeholder="Nhập tên chủ tài khoản" name="bank_account_name">
 </div>

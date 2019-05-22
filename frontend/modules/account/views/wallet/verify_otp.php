@@ -97,7 +97,7 @@ $checkOTP = isset($transaction_info['verify_expired_at']) && $transaction_info['
                        </div>'
                         ]);
                         echo Html::tag('p', 'Bạn chưa nhận được mã OTP? <a href="javascript:void(0);" onclick="showSentOtp()">Gửi lại</a>');
-                        echo Html::submitButton('Xác thực', ['class' => 'btn btn-submit btn-block']);
+                        echo Html::submitButton('Xác thực', ['class' => 'btn btn-success btn-block']);
                         ActiveForm::end();
                     }
                     ?>

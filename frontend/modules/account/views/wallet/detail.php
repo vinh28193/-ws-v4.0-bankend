@@ -3,7 +3,6 @@
 use common\helpers\WeshopHelper;
 use frontend\modules\account\views\widgets\HeaderContentWidget;
 use wallet\modules\v1\models\WalletTransaction;
-use yii\helpers\ArrayHelper;
 
 /**
  * @var $transaction_code string
@@ -27,7 +26,16 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                     Mã Giao Dịch:
                 </td>
                 <td>
-                    <b><span id="wallet-current"><?= $transactionDetail['wallet_transaction_code'] ?></span></b>
+                    <b><span id="wallet_transaction_code"><?= $transactionDetail['wallet_transaction_code'] ?></span></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <i class="fa fa-caret-right"></i>
+                    Loại Giao Dịch:
+                </td>
+                <td>
+                    <b><span id="type"><?= WeshopHelper::getTypeTransaction($transactionDetail['type']) ?></span></b>
                 </td>
             </tr>
             <tr>
@@ -36,7 +44,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                     Thời Gian Giao Dịch:
                 </td>
                 <td>
-                    <b><span id="wallet-current"><?= $transactionDetail['create_at'] ?></span></b>
+                    <b><span id="create_at"><?= $transactionDetail['create_at'] ?></span></b>
                 </td>
             </tr>
             <?php if ($transactionDetail['type'] === WalletTransaction::TYPE_PAY_ORDER) { ?>
@@ -46,7 +54,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                         Mã Đơn Hàng:
                     </td>
                     <td>
-                        <b><span id="wallet-current"><?= $transactionDetail['order_number'] ?></span></b>
+                        <b><span id="order_number"><?= $transactionDetail['order_number'] ?></span></b>
                     </td>
                 </tr>
             <?php }
@@ -57,7 +65,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                     Tổng số tiền:
                 </td>
                 <td style="/* padding-top: 20px */">
-                    <b><span id="wallet-current"
+                    <b><span id="totalAmount"
                              style="color: <?= $transactionDetail['type'] === WalletTransaction::TYPE_PAY_ORDER || $transactionDetail['type'] === WalletTransaction::TYPE_WITH_DRAW ? "red" : 'green' ?>">
                                                 <?= $transactionDetail['type'] === WalletTransaction::TYPE_PAY_ORDER || $transactionDetail['type'] === WalletTransaction::TYPE_WITH_DRAW ? "-" : '+' ?> <?php
                             $amount = $transactionDetail['totalAmount'] ? $transactionDetail['totalAmount'] : ($transactionDetail['debit_amount'] ? $transactionDetail['debit_amount'] : $transactionDetail['credit_amount']);
@@ -71,7 +79,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                     Phương Thức Thực Hiện:
                 </td>
                 <td>
-                    <b><span id="wallet-current"> <?= $transactionDetail['type'] === WalletTransaction::TYPE_TOP_UP || $transactionDetail['type'] === WalletTransaction::TYPE_REFUND ? $transactionDetail['payment_method'] : $transactionDetail['payment_provider_name'] ?></span></b>
+                    <b><span id="payment_method"> <?= $transactionDetail['type'] === WalletTransaction::TYPE_TOP_UP || $transactionDetail['type'] === WalletTransaction::TYPE_REFUND ? $transactionDetail['payment_method'] : $transactionDetail['payment_provider_name'] ?></span></b>
                 </td>
             </tr>
             <?php
@@ -85,7 +93,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                             Tài Khoản Nhận Tiền:
                         </td>
                         <td>
-                            <b><span id="wallet-current"><?= $jsonContent->numberCard ?></span></b>
+                            <b><span id="account_receiver"><?= $jsonContent->numberCard ?></span></b>
                         </td>
                     </tr>
                 <?php                                    }elseif($transactionDetail['payment_method'] === "NL"){
@@ -96,7 +104,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                             Mã Ngân Hàng:
                         </td>
                         <td>
-                            <b><span id="wallet-current"><?= $transactionDetail['payment_bank_code'] ?></span></b>
+                            <b><span id="payment_bank_code"><?= $transactionDetail['payment_bank_code'] ?></span></b>
                         </td>
                     </tr>
                     <tr>
@@ -105,7 +113,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                             Họ Và Tên Người Nhận:
                         </td>
                         <td>
-                            <b><span id="wallet-current"><?= $jsonContent->cardholderName ?></span></b>
+                            <b><span id="cardholderName"><?= $jsonContent->cardholderName ?></span></b>
                         </td>
                     </tr>
                     <tr>
@@ -114,7 +122,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                             Số Tài Khoản Ngân Hàng:
                         </td>
                         <td>
-                            <b><span id="wallet-current"><?= $jsonContent->numberCard ?></span></b>
+                            <b><span id="numberCard"><?= $jsonContent->numberCard ?></span></b>
                         </td>
                     </tr>
                 <?php }
@@ -126,7 +134,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
                     Trạng Thái:
                 </td>
                 <td style="/* padding-top: 20px */">
-                    <span class="label <?= WeshopHelper::getStatusTransactionLabel($transactionDetail['status']); ?>"><?= WeshopHelper::getStatusTransaction($transactionDetail['status']); ?></span>
+                    <span class="badge badge-<?= WeshopHelper::getStatusTransactionColor($transactionDetail['status']); ?>"><?= WeshopHelper::getStatusTransaction($transactionDetail['status']); ?></span>
                 </td>
             </tr>
             <tr>
@@ -158,6 +166,25 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao d�
             </tr>
             <tr>
                 <td colspan="2" class="text-center">
+                    <?php if ($transactionDetail['type'] === WalletTransaction::TYPE_TOP_UP && $transactionDetail['status'] === 0) {
+                        $payment = \common\models\PaymentTransaction::findOne(['transaction_code' => $transactionDetail['order_number']]);
+                        if ($payment && $payment->third_party_transaction_link) {
+                            ?>
+                            <a class="btn btn-outline-success" href="<?= $payment->third_party_transaction_link ?>">
+                                Tiếp tục thanh toán </a>
+                        <?php }
+                    } elseif ($transactionDetail['type'] === WalletTransaction::TYPE_WITH_DRAW) {
+                        if (in_array($transactionDetail['status'], [0])) {
+                            ?>
+                            <a class="btn btn-outline-success" href="/my-weshop/wallet/withdraw/<?= $transactionDetail['wallet_transaction_code'] ?>.html">
+                                Xác thực </a>
+                        <?php }
+                        if (in_array($transactionDetail['status'], [0, 1])) {
+                            ?>
+                            <a class="btn btn-outline-warning" href="javascript:void (0);" onclick="cancelWithdraw()">
+                                Huỷ bỏ </a>
+                        <?php }
+                    } ?>
                     <a class="btn btn-outline-info" href="/my-weshop/wallet/history.html"> Trở lại </a>
                 </td>
             </tr>
