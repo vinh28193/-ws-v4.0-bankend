@@ -6,7 +6,7 @@ var loginWallet = function () {
       return;
   }
     $.ajax({
-        url: 'my-weshop/api/wallet-service/login-wallet.html',
+        url: '/my-weshop/api/wallet-service/login-wallet.html',
         method: 'POST',
         data: {
             password: password
