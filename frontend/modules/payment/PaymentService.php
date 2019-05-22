@@ -14,7 +14,7 @@ use yii\helpers\Url;
 class PaymentService
 {
 
-    public static function loadPaymentByStoreFromDb($store,$provider_id = null)
+    public static function loadPaymentByStoreFromDb($store, $provider_id = null)
     {
         $query = PaymentProvider::find();
         $where = [
@@ -22,7 +22,7 @@ class PaymentService
             ['store_id' => $store],
             ['status' => 1]
         ];
-        if($provider_id !== null){
+        if ($provider_id !== null) {
             $where[] = ['id' => $provider_id];
         }
         $query->with('paymentMethodProviders', 'paymentMethodProviders.paymentMethod', 'paymentMethodProviders.paymentMethod.paymentMethodBanks', 'paymentMethodProviders.paymentMethod.paymentMethodBanks.paymentBank');
@@ -153,5 +153,12 @@ class PaymentService
     public static function createCancelUrl()
     {
         return Url::toRoute("/checkout/cart", true);
+    }
+
+    public static function getInstallmentMethodIcon($code)
+    {
+        $icons = [
+            'SACOMBANK' => ''
+        ];
     }
 }

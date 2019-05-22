@@ -7,7 +7,6 @@ namespace frontend\modules\payment;
 use common\components\cart\CartHelper;
 use common\components\cart\CartSelection;
 use common\helpers\WeshopHelper;
-use common\models\Address;
 use common\models\Category;
 use common\models\Product;
 use common\models\ProductFee;
@@ -30,8 +29,10 @@ use yii\helpers\Url;
 
 class Payment extends Model
 {
+
     const PAGE_CHECKOUT = 'CHECKOUT';
     const PAGE_TOP_UP = 'TOP_UP';
+
 
     const PAYMENT_GROUP_MASTER_VISA = 1;
     const PAYMENT_GROUP_BANK = 2;
@@ -126,7 +127,7 @@ class Payment extends Model
         if ($this->page !== self::PAGE_TOP_UP) {
             $this->loadOrdersFromCarts();
         }
-        $this->currency = 'vnđ';
+        $this->currency = $this->storeManager->store->currency;
     }
 
     public function rules()
@@ -142,6 +143,10 @@ class Payment extends Model
         if ($this->page === self::PAGE_TOP_UP) {
             $this->payment_method = 25;
             $this->payment_provider = 46;
+            $this->payment_bank_code = 'VCB';
+        } elseif ($this->page === self::PAGE_CHECKOUT || $this->payment_type === CartSelection::TYPE_INSTALLMENT) {
+            $this->payment_method = 57;
+            $this->payment_provider = 44;
             $this->payment_bank_code = 'VCB';
         }
         $this->registerClientScript();
@@ -171,6 +176,9 @@ class Payment extends Model
         $options = Json::htmlEncode($this->getClientOptions());
         $this->view->registerJs("ws.payment.init($options);");
         $this->view->registerJs("console.log(ws.payment.payment);");
+        if($this->payment_type === CartSelection::TYPE_INSTALLMENT){
+            $this->view->registerJs("ws.payment.calculateInstallment();");
+        }
     }
 
     public function loadPaymentProviderFromCache()

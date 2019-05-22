@@ -55,6 +55,8 @@ return [
         'payment/<merchant:[^/]+>/return.html' => 'payment/payment/return',
         'otp/<code:[^/]+>/verify.html' => 'payment/wallet/otp-verify',
         'otp/captcha' => 'payment/wallet/captcha',
+        'payment/<provider:[^/]+>/calc' => 'payment/installment/calculator',
+
         //account
         'my-weshop.html' => 'account/home',
         'login.html' => 'secure/login',

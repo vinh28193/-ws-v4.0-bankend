@@ -229,6 +229,21 @@ ws.payment = (function ($) {
             $element = $element || undefined;
             ws.wallet.getInfo($element);
         },
+        calculateInstallment: function () {
+
+            ws.ajax('/payment/' + pub.payment.payment_provider + '/calc', {
+                dataType: 'json',
+                type: 'post',
+                data: pub.payment,
+                success: function (response) {
+                    var data = response.data;
+                    if(data.promotion){
+                        updatePaymentByPromotion(data.promotion)
+                    }
+                    $('div#installmentContent').html(data.content);
+                }
+            }, true);
+        },
         methodChange: function (isNew) {
             isNew = isNew || false;
             var method = '';
@@ -274,17 +289,21 @@ ws.payment = (function ($) {
 
             if (pub.payment.carts.length === 0) {
                 return;
+            }else if(pub.payment.payment_type === 'installment') {
+                pub.calculateInstallment();
+            }else {
+                var data = pub.payment;
+                delete data.ga;
+                ws.ajax('/payment/discount/check-promotion', {
+                    dataType: 'json',
+                    type: 'post',
+                    data: data,
+                    success: function (response, textStatus, xhr) {
+                        updatePaymentByPromotion(response)
+                    }
+                })
             }
-            var data = pub.payment;
-            delete data.ga;
-            ws.ajax('/payment/discount/check-promotion', {
-                dataType: 'json',
-                type: 'post',
-                data: data,
-                success: function (response, textStatus, xhr) {
-                    updatePaymentByPromotion(response)
-                }
-            })
+
 
         },
         changeCouponCode: function (code) {
@@ -304,7 +323,7 @@ ws.payment = (function ($) {
 
         },
         process: function () {
-            var typePay = $('input[name=type_pay]').val() ;
+            var typePay = $('input[name=type_pay]').val();
             if (typePay && typePay.toString().toLowerCase() === 'topup') {
                 ws.payment.topUp();
             } else {
@@ -316,15 +335,12 @@ ws.payment = (function ($) {
                     alert('Bạn phải đồng ý với điều khoản weshop');
                     return;
                 }
-                ws.loading(true);
                 ws.ajax('/payment/payment/process', {
                     dataType: 'json',
                     type: 'post',
                     data: {payment: pub.payment, shipping: pub.shipping},
                     success: function (response) {
-                        console.log(response);
                         if (response.success) {
-                            ws.loading(false);
                             var data = response.data;
                             var code = data.code.toUpperCase() || '';
                             var method = data.method.toUpperCase();
@@ -335,7 +351,6 @@ ws.payment = (function ($) {
                                     $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
                                 }
                             } else {
-                                ws.loading(false);
                                 $('span#transactionCode').html(code);
                                 $('div#checkout-success').modal('show');
                                 ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
@@ -352,7 +367,7 @@ ws.payment = (function ($) {
                         }
 
                     }
-                })
+                }, true)
             }
         },
         topUp: function () {
@@ -449,6 +464,9 @@ ws.payment = (function ($) {
             text += '</li>';
         });
         return text;
+    };
+    var initInstallmentView = function ($data) {
+        console.log(type)
     };
     var redirectPaymentGateway = function (rs, $timeOut) {
         runTime = setInterval(function () {
