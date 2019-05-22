@@ -60,6 +60,7 @@ ws.payment = (function ($) {
 
         },
         installment: {
+            originAmount: 0,
             banks: [],
             currentBank: {
                 bankCode: undefined,
@@ -296,6 +297,53 @@ ws.payment = (function ($) {
             $('ul#installmentMethods').html(htmlMethod.join(''));
         },
         installmentMethodChange(code) {
+            console.log('selected method :' + code);
+            pub.payment.installment_method = code;
+            pub.installment.currentMethod = $.grep(pub.installment.currentBank.paymentMethods, function (x) {
+                return String(x.paymentMethod) === String(code);
+            })[0];
+            $.each($('li[data-ref=i_methodCode]'), function () {
+                $(this).find('span').removeClass('active');
+            });
+            var isActive = $('li[data-ref=i_methodCode][data-code=' + code + ']');
+            if (isActive.length > 0) {
+                isActive.find('span').addClass('active');
+            }
+            var row = {
+                rowHeader: ['<td>Thời hạn trả góp</td>'],
+                rowOriginAmount: ['<td>Giá Weshop</td>'],
+                rowAmountByMonth: ['<td>Tiền trả hàng tháng</td>'],
+                rowAmountFinal: ['<td>Giá sau trả góp</td>'],
+                rowAmountFee: ['<td>Giá chênh lệch</td>'],
+                rowOption: ['<td></td>']
+            };
+            $.each(pub.installment.currentMethod.periods, function (index, period) {
+                var iActive = index === 0;
+                if (iActive) {
+                    pub.payment.installment_month = period.month;
+                }
+                row.rowHeader.push('<td class="text-blue">' + period.month + ' tháng</td>');
+                row.rowOriginAmount.push('<td><b>' + pub.installment.originAmount + '</b></td>');
+                row.rowAmountByMonth.push('<td><b>' + period.amountByMonth + '</b></td>');
+                row.rowAmountFinal.push('<td><b>' + period.amountFinal + '</b></td>');
+                row.rowAmountFee.push('<td><b>' + period.amountFee + '</b></td>');
+                row.rowOption.push('<td>\n' +
+                    '<div class="form-check">\n' +
+                    '     <input class="form-check-input" type="radio" value="' + period.month + '"  ' + (iActive ? 'checked' : '') + '  id="installment' + period.month + '" name="installment" checked="">\n' +
+                    '     <label class="form-check-label" for="installment' + period.month + '">Chọn</label>\n' +
+                    '     </div>\n' +
+                    '</td>');
+            });
+
+            var table = '<table class="table table-bordered"><tbody>';
+            table += '<tr>' + row.rowHeader.join('') + '</tr>';
+            table += '<tr>' + row.rowOriginAmount.join('') + '</tr>';
+            table += '<tr>' + row.rowAmountByMonth.join('') + '</tr>';
+            table += '<tr>' + row.rowAmountFinal.join('') + '</tr>';
+            table += '<tr>' + row.rowAmountFee.join('') + '</tr>';
+            table += '<tr>' + row.rowOption.join('') + '</tr>';
+            table += '</tbody></table>';
+            $('div#installmentPeriods').html(table);
 
         },
         methodChange: function (isNew) {
@@ -493,8 +541,8 @@ ws.payment = (function ($) {
             pub.payment.total_discount_amount = $response.discount;
             pub.payment.total_amount_display = pub.payment.total_amount - pub.payment.total_discount_amount;
             discountBox.css('display', 'flex');
-            discountBox.find('div.right').html('- ' + ws.numberFormat(pub.payment.total_discount_amount, -3) + ' ' + pub.payment.currency);
-            box.find('li#finalPrice').find('div.right').html(ws.numberFormat(pub.payment.total_amount_display, -3) + ' ' + pub.payment.currency);
+            discountBox.find('div.right').html('- ' + ws.numberFormat(pub.payment.total_discount_amount, -3) + ' <i class="currency">' + pub.payment.currency + '</i>');
+            box.find('li#finalPrice').find('div.right').html(ws.numberFormat(pub.payment.total_amount_display, -3) + ' <i class="currency">' + pub.payment.currency + '</i>');
             box.find('li[rel="detail"]').remove();
             box.prepend(initPromotionView(pub.payment.discount_detail));
 
@@ -514,7 +562,7 @@ ws.payment = (function ($) {
                 $('#discountInputCoupon').css('display', 'none');
             }
             text += item.code + '<i class="fas fa-question-circle code-info" data-toggle="tooltip" data-placement="top" title="' + item.message + '" data-original-title="' + item.message + '"></i></div></div>';
-            text += '<div class="right"> - ' + ws.numberFormat(item.value, -3) + ' ' + pub.payment.currency + '</div>';
+            text += '<div class="right"> - ' + ws.numberFormat(item.value, -3) + '<i class="currency">' + pub.payment.currency + '</i></div>';
             text += '</li>';
         });
         return text;
