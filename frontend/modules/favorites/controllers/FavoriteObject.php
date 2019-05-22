@@ -17,8 +17,6 @@ use common\modelsMongo\FavoritesMongoDB;
  */
 class FavoriteObject
 {
-
-
     /**
      * @param $obj_type
      * @param $obj_id
@@ -55,6 +53,34 @@ class FavoriteObject
         }
     }
 
+    public function getfavorite($uuid)
+    {
+        if (\Yii::$app->user->getId() === $uuid) {
+            // Login
+                try {
+                    return $this->get_favorite($uuid);
+                } catch (\Exception $exception) {
+                    \Yii::info($exception);
+                    return false;
+                }
+        } else {
+            // anonymous
+            $validator = new \thamtech\uuid\validators\UuidValidator();
+            if ($validator->validate($uuid, $error)) {
+                // valid
+                try {
+                    return $this->get_favorite($uuid);
+                } catch (\Exception $exception) {
+                    \Yii::info($exception);
+                    return false;
+                }
+            } else {
+                // not valid
+                echo $error;
+            }
+        }
+    }
+
     /**
      * @param $id
      *
@@ -70,6 +96,19 @@ class FavoriteObject
         }
     }
 
+    function get_favorite($uuid)
+    {
+        if (\Yii::$app->user->getId()) {
+            return Favorite::find()
+                ->where(['created_by' => \Yii::$app->user->getId()]);
+                //->exists();
+        } else {
+            return FavoritesMongoDB::find()
+                ->where(['created_by' => $uuid]);
+                //->where(['ip' => \Yii::$app->getRequest()->getUserIP()])
+                //->exists();
+        }
+    }
 
     /**
      * @param $obj_type
@@ -81,8 +120,8 @@ class FavoriteObject
     {
         if (\Yii::$app->user->getId()) {
             return Favorite::find()
-                ->where(['obj_type' => $obj_type])
-                ->andWhere(['obj_id' => $obj_id])
+                //->where(['obj_type' => $obj_type])
+                ->where(['obj_id' => $obj_id])
                 ->andWhere(['created_by' => \Yii::$app->user->getId()])
                 ->exists();
         } else {
@@ -128,7 +167,7 @@ class FavoriteObject
                 }
             }
         } else {
-            // anonymous
+            // anonymous --> All Over right uuid if null
             $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
             $favoriteMongodb = new FavoritesMongoDB([
                 'obj_type' => $obj_type,

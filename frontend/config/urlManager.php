@@ -25,6 +25,7 @@ return [
         'ebay/category/<name:[0-9a-zA-Z_-]+>-<category:\d+>.html' => 'ebay/search/index',
         'GET ebay/categories.html' => 'ebay/ebay/categories',
 
+
         // amazon
         'amazon.html' => 'cms/amazon/index',
         'GET amazon/item/<name:[0-9A-Za-z_-]*>-<id:[0-9A-Za-z_-]+>.html' => 'amazon/item/detail',
