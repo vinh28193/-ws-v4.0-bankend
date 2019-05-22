@@ -5,11 +5,10 @@ use yii\helpers\Html;
 /* @var yii\web\View $this */
 /* @var array $results */
 
-$codes = array_map(function ($item) {
-    return $item['bankCode'];
-}, $results);
+echo "<pre>";
+print_r($results);
+echo "</pre>";
 
-var_dump($codes);
 ?>
 
 <div class="installment-title">Bước 1: Chọn hình thức trả góp</div>

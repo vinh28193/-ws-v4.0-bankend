@@ -155,10 +155,43 @@ class PaymentService
         return Url::toRoute("/checkout/cart", true);
     }
 
-    public static function getInstallmentMethodIcon($code)
+    public static function getInstallmentBankIcon($code)
     {
         $icons = [
-            'SACOMBANK' => ''
+            'VPBANK' => 'img/bank/techcombank.png',
+            'TECHCOMBANK' => 'img/bank/techcombank.png',
+            'ACB' => 'img/bank/techcombank.png',
+            'ANZ' => 'img/bank/techcombank.png',
+            'HSBC' => 'img/bank/techcombank.png',
+            'SHINHANBANK' => 'img/bank/techcombank.png',
+            'EXIMBANK' => 'img/bank/techcombank.png',
+            'MARITIMEBANK' => 'img/bank/techcombank.png',
+            'VIB' => 'img/bank/techcombank.png',
+            'SACOMBANK' => 'img/bank/techcombank.png',
+            'CTB' => 'img/bank/techcombank.png',
+            'SEABANK' => 'img/bank/techcombank.png',
+            'SC' => 'img/bank/techcombank.png',
+            'TPB' => 'img/bank/techcombank.png',
+            'SCB' => 'img/bank/techcombank.png',
+            'FE' => 'img/bank/techcombank.png',
+            'NAB' => 'img/bank/techcombank.png',
+            'OCB' => 'img/bank/techcombank.png',
+            'KLB' => 'img/bank/techcombank.png',
+            'SHB' => 'img/bank/techcombank.png',
+            'BIDV' => 'img/bank/techcombank.png',
+            'VCB' => 'img/bank/techcombank.png',
+            'MB' => 'img/bank/techcombank.png'
+        ];
+        $icon = isset($icons[$code]) ? $icons[$code] : 'img/bank/techcombank.png';
+        return Url::to($icon, true);
+    }
+
+    public static function getInstallmentMethodIcon($code){
+        $icons = [
+            'VISA' => '',
+            'MASTERCARD' => '',
+            'JCB' => '',
         ];
     }
+
 }
