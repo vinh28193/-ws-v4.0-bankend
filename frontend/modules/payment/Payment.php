@@ -399,11 +399,11 @@ class Payment extends Model
                         $transaction->rollBack();
                         return ['success' => false, 'message' => 'invalid param for an item'];
                     }
-                    if (($category = Category::findOne(['AND', ['alias' => $categoryParams['alias']], ['site' => isset($categoryParams['portal']) ? $categoryParams['portal'] : $product->portal]])) === null) {
+                    if (($category = Category::findOne(['AND', ['alias' => $categoryParams['alias']], ['siteId' => Category::getSiteIdByPortal(isset($categoryParams['portal']) ? $categoryParams['portal'] : $product->portal)]])) === null) {
                         $category = new Category();
                         $category->alias = $categoryParams['alias'];
-                        $category->site = isset($categoryParams['portal']) ? $categoryParams['portal'] : $product->portal;
-                        $category->origin_name = ArrayHelper::getValue($categoryParams, 'origin_name', null);
+                        $category->site = Category::getSiteIdByPortal(isset($categoryParams['portal']) ? $categoryParams['portal'] : $product->portal);
+                        $category->originName = ArrayHelper::getValue($categoryParams, 'origin_name', null);
                         $category->save(false);
                     }
                     // 7. set category id for product

@@ -19,10 +19,10 @@ class AlepayClient extends Component
     const ENV_PROD = 'PROD';
     const ENV_SANDBOX = 'SANDBOX';
     public $env = self::ENV_SANDBOX;
-    public $baseUrl = 'https://alepay.vn/checkout/v1';
+    public $baseUrl = 'https://alepay-sandbox.nganluong.vn/checkout/v1';
     public $apiKey = 'g84sF7yJ2cOrpQ88VbdZoZfiqX4Upx';
     public $checksumKey = 'lXntf6CIZbSgzMqTz1nQ11jPKhGfsF';
-    public $encryptKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCKWYg7jKrTqs83iIvYxlLgMqIy4MErNsoBKU2MHaG5ccntzGeNcDba436ds';
+    public $encryptKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCKWYg7jKrTqs83iIvYxlLgMqIy4MErNsoBKU2MHaG5ccntzGeNcDba436ds+VWB4E9kaL+D2wTuaiU+4Hx7DcyJ3leksXXM85koV/97f8Gn4nd3epxucaurcXmcEvU/VfqU7bKTdLdLwB7yPaZ45ilmBh/GqGJnmfq9csVuyZ0cwIDAQAB';
     public $callbackUrl = '';
 
 
@@ -61,35 +61,37 @@ class AlepayClient extends Component
 
     public function createHttpRequest($url, $data)
     {
-        $dataJson = $this->security->jsonEncode($data);
-
+        $dataJson = json_encode($data);
         $dataEncrypt = $this->security->encrypt($dataJson);
-        var_dump($dataEncrypt);die;
         $checksum = $this->security->md5Data($dataEncrypt . $this->checksumKey);
-        $request = $this->httpClient->createRequest();
-        $request->setData([
+        $items = [
             'token' => $this->apiKey,
             'data' => $dataEncrypt,
             'checksum' => $checksum
-        ]);
-        $request->setUrl($url);
-        $request->setMethod('POST');
-        $request->setFormat(Client::FORMAT_JSON);
-        $response = $this->httpClient->send($request);
-        if (!$response->isOk) {
-            return false;
-        }
-        $response = $response->getData();
-        return $this->security->decrypt($response);
+        ];
+        $data_string = json_encode($items);
+        $ch = curl_init($this->getUrl($url));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+        );
+        $result = curl_exec($ch);
+        $result = json_decode($result);
+        $success = $result->errorCode === '000';
+        return ['success' => $result->errorCode === '000','message' => $result->errorDescription,'data' => $success ? $this->security->decrypt($result->data) : null];
     }
 
-    protected function getBaseUrl()
+    protected function getUrl($url)
     {
         $baseUrl = $this->baseUrl;
         if ($this->env === self::ENV_SANDBOX) {
             $baseUrl = str_replace('https://alepay.vn', 'https://alepay-sandbox.nganluong.vn', $baseUrl);
         }
-        return $baseUrl;
+        return $baseUrl . '/' . $url;
     }
 
     public function getInstallmentInfo($amount, $currencyCode)
@@ -99,4 +101,5 @@ class AlepayClient extends Component
             'currencyCode' => $currencyCode
         ]);
     }
+
 }

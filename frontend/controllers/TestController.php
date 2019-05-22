@@ -21,6 +21,6 @@ class TestController extends FrontendController
     public function actionAlepay(){
         $alepay = new AlepayClient();
         echo "<pre>";
-        var_dump($alepay->getInstallmentInfo(10000000,'VND'));
+        var_dump($alepay->getInstallmentInfo(10000000.00,'VND'));
     }
 }

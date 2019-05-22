@@ -270,7 +270,6 @@ ws.payment = (function ($) {
                 $('#bank_code_' + pub.payment.payment_bank_code + '_' + pub.payment.payment_method).addClass('active');
             }
         },
-
         checkPromotion: function () {
 
             if (pub.payment.carts.length === 0) {

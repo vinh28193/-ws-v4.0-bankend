@@ -11,6 +11,7 @@ namespace common\models;
 use Yii;
 use common\components\AdditionalFeeInterface;
 use common\models\db_cms\Category as DbCmsCategory;
+
 /**
  * Class Category
  * @package common\models
@@ -42,6 +43,26 @@ class Category extends DbCmsCategory
             return 0;
         }
 
+    }
+
+    /**
+     * @param $portal
+     * @return int|null
+     */
+    public static function getSiteIdByPortal($portal)
+    {
+        $portal = strtolower($portal);
+        if ($portal === 'ebay') {
+            return self::SITE_EBAY;
+        } elseif ($portal === 'amazon') {
+            return self::SITE_AMAZON_US;
+        } elseif ($portal === 'amazon-jp') {
+            return self::SITE_AMAZON_JP;
+        } elseif ($portal === 'amazon-uk') {
+            return self::SITE_AMAZON_UK;
+        } else {
+            return null;
+        }
     }
 
     /**

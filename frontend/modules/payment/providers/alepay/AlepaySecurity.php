@@ -30,8 +30,8 @@ class AlepaySecurity extends BaseObject
     {
         if (!is_object($this->_provider)) {
             $this->_provider = new RSA();
-            $this->_provider->loadKey($this->publicKey, RSA::PRIVATE_FORMAT_PKCS1);
             $this->_provider->setEncryptionMode(RSA::ENCRYPTION_PKCS1);
+            $this->_provider->loadKey($this->publicKey, RSA::PUBLIC_FORMAT_PKCS1);
         }
         return $this->_provider;
     }
@@ -42,7 +42,8 @@ class AlepaySecurity extends BaseObject
      */
     public function encrypt($plaintext)
     {
-        return $this->getProvider()->encrypt($plaintext);
+        $ciphertext = $this->getProvider()->encrypt($plaintext);
+        return base64_encode($ciphertext);
     }
 
     /**
@@ -51,6 +52,7 @@ class AlepaySecurity extends BaseObject
      */
     public function decrypt($ciphertext)
     {
+        $ciphertext = base64_decode($ciphertext);
         return $this->getProvider()->decrypt($ciphertext);
     }
 

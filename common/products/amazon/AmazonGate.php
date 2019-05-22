@@ -259,12 +259,13 @@ class AmazonGate extends BaseGate
 
         $result['categories'] = array_unique($result['categories']);
 
+        $siteId = $request->store === AmazonProduct::STORE_US ? Category::SITE_AMAZON_US : ($request->store === AmazonProduct::STORE_JP ? Category::SITE_AMAZON_JP : null);
 
         $categories = Category::find()->where([
             'OR',
             ['alias' => $result['categories']],
             ['path' => $result['categories']]
-        ])->select(['alias as category_id', 'name as category_name', 'origin_name as origin_name'])->asArray()->all();
+        ])->forSite($siteId)->select(['alias as category_id', 'name as category_name', 'originName as origin_name'])->asArray()->all();
         $data['categories'] = $categories;
         $data['sorts'] = $result['sorts'];
         $data['filters'] = $this->getFilter($result['filters']);
