@@ -126,6 +126,24 @@ CSS;
         ItemDetailAsset::register($view);
         $view->registerJs("jQuery('#$id').wsItem($params,$options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
+        $js =<<<JS
+         var client = new ClientJS();
+	     var _fingerprint = client.getFingerprint(); 
+	     console.log("fingerprint: " + _fingerprint );
+	     setTimeout(function()
+            {
+                 ws.ajax('/ebay/item/detail', {
+                                    type: 'POST',
+                                    data: { fingerprint: _fingerprint, _csrf:9999 },
+                                    dataType: 'json', 
+                                    success: function (response) {
+                                         console.log("done");
+                                    } 
+                                }, false);
+            }, 3000);
+JS;
+        // $view->registerJs( $js,$view::POS_END);
+
     }
 
     protected function renderEntries()

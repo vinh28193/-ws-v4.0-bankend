@@ -27,6 +27,7 @@ class ItemController extends EbayController
         Yii::info("UUID : " .$this->uuid);
     }
 
+
     public function actionDetail($id)
     {
         $form = new ProductDetailFrom();
@@ -53,9 +54,21 @@ class ItemController extends EbayController
         $relate_product_rs = EbayProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
         $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];
         $item->relate_products = RelateProduct::setRelateProducts($relate_product);
-        $favorite = null;
-        // Queue get call Favorite to
 
+
+
+
+        // Favorite
+        $fingerprint = null;
+        $post = Yii::$app->request->post();
+        if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
+        if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
+        $UUID = Yii::$app->user->getId();
+        $uuid = isset($UUID) ? $UUID : $fingerprint;
+        if($uuid){
+            $_favorite = new FavoriteObject();
+            $_favorite->create($item, $id, $uuid);
+        }
 
         // Queue Favorite Save
         /*
@@ -74,18 +87,12 @@ class ItemController extends EbayController
         Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
         */
 
-        // Favorite
-        $_favorite = new FavoriteObject();
-        $UUID = Yii::$app->user->getId();
-        $uuid = isset($UUID) ? $UUID : $this->uuid;
-        $_favorite->create($item, $id, $uuid);
-
         return $this->render('index', [
-            'item' => $item,
-            'favorite'=>$favorite
+            'item' => $item
         ]);
 
     }
+
 
     public function actionViewedProducts()
     {
