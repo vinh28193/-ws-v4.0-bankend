@@ -4,10 +4,13 @@
 namespace frontend\modules\ebay\controllers;
 
 use common\helpers\WeshopHelper;
+use common\lib\EbayProductGate;
 use common\products\BaseProduct;
+use common\products\RelateProduct;
 use Yii;
 use common\products\forms\ProductDetailFrom;
 use  frontend\modules\favorites\controllers\FavoriteObject as Favorite;
+use yii\helpers\ArrayHelper;
 
 class ItemController extends EbayController
 {
@@ -34,7 +37,10 @@ class ItemController extends EbayController
                 'errors' => $form->getErrors()
             ]);
         }
-
+        $category = $item->getCustomCategory();
+        $relate_product_rs = EbayProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
+        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];
+        $item->relate_products = RelateProduct::setRelateProducts($relate_product);
         $favorite = null;
         // Queue get call Favorite to
 
