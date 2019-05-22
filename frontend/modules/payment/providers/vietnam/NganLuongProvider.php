@@ -64,7 +64,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 $param['bank_code'] = 'ICB';
             }
             $param['buyer_fullname'] = $payment->customer_name;
-            $param['buyer_email'] = $payment->customer_phone;
+            $param['buyer_email'] = $payment->customer_email;
             $param['buyer_mobile'] = str_replace(['+84', '+084'], '0', $payment->customer_phone);
             $param['buyer_address'] = $payment->customer_address;
 

@@ -259,5 +259,10 @@ class WalletService extends BaseObject
             ]),
         ]);
     }
+    public function cancelWithdraw(){
+        return $this->callApiRequest('transaction/cancel-withdraw', [
+            'transaction_code' => $this->transaction_code,
+        ]);
+    }
 
 }

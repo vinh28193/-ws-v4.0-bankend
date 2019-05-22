@@ -16,12 +16,30 @@ $('input[name=amount]').keyup(function () {
     getAmount();
 });
 var getAmount = function(){
+    var setting = {
+        name: "formatCurrency",
+        colorize: false,
+        region: 'vi-VN',
+        global: true,
+        roundToDecimalPlace: 0,
+        eventOnDecimalsEntered: false
+    };
     withdraw_data.amount = Number($('input[name=amount]').val());
     withdraw_data.fee = 3000+(withdraw_data.amount*0.01);
     withdraw_data.total_amount = withdraw_data.fee + withdraw_data.amount;
-    $('#amount').html(withdraw_data.amount + ' đ');
-    $('#fee').html(withdraw_data.fee + ' đ');
-    $('#total_amout').html(withdraw_data.total_amount + ' đ');
+    $('#amount').html(formatMoney(withdraw_data.amount ) + ' đ');
+    $('#fee').html(formatMoney(withdraw_data.fee) + ' đ');
+    $('#total_amout').html(formatMoney(withdraw_data.total_amount) + ' đ');
+};
+var formatMoney = function (n) {
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+        j = (j = i.length) > 3 ? j % 3 : 0;
+
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 $('button[name=submit_withdraw]').click(function () {
     getAmount();
@@ -32,9 +50,10 @@ $('button[name=submit_withdraw]').click(function () {
             return;
         }
     }else if(withdraw_data.method === 'BANK'){
-        withdraw_data.bank_id = $('input[name=bank_id]').val();
+        withdraw_data.bank_id = $('select[name=bank_id]').val();
         withdraw_data.bank_account_name = $('input[name=bank_account_name]').val();
         withdraw_data.bank_account_number = $('input[name=bank_account_number]').val();
+        console.log(withdraw_data);
         if(!withdraw_data.bank_id || !withdraw_data.bank_account_number || !withdraw_data.bank_account_name){
             ws.sweetalert("Vui lòng nhập đầy đủ thông tin tài khoản ngân hàng.");
             return;
@@ -81,6 +100,25 @@ var sendOtp = function () {
         success: function (res) {
             if(res.success){
                 location.assign('/my-weshop/wallet/withdraw/'+res.data.code+'.html')
+            }else {
+                ws.loading(false);
+                ws.sweetalert(res.message);
+            }
+        }
+    });
+};
+var cancelWithdraw = function () {
+  var transaction_code = $('#wallet_transaction_code').html();
+    ws.loading(true);
+    $.ajax({
+        url: '/my-wallet/cancel-withdraw.html',
+        method: 'POST',
+        data: {
+            transaction_code: transaction_code,
+        },
+        success: function (res) {
+            if(res.success){
+                location.reload();
             }else {
                 ws.loading(false);
                 ws.sweetalert(res.message);

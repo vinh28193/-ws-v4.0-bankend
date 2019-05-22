@@ -4,6 +4,8 @@
 namespace frontend\modules\account\controllers\api;
 
 
+use common\helpers\WeshopHelper;
+use common\models\db\WalletClient;
 use common\models\User;
 use common\models\PaymentTransaction;
 use common\models\WalletTransaction;
@@ -133,6 +135,11 @@ class WalletServiceController extends Controller
         }
         $walletS->amount = ArrayHelper::getValue($request,'amount');
         $walletS->fee = ArrayHelper::getValue($request,'fee');
+        /** @var WalletClient $wallet */
+        $wallet = WalletClient::find()->where(['customer_id' => $user->id,'status' => 1])->one();
+        if(!$wallet || $wallet->withdrawable_balance < $walletS->total_amount){
+            return $this->response(false,'Tổng số tiền rút của bạn chỉ được phép tối đa '.WeshopHelper::showMoney($wallet->withdrawable_balance));
+        }
         try{
             $rs = $walletS->createWithdraw();
             $trancode = $rs['data']['wallet_transaction_code'];
@@ -164,5 +171,14 @@ class WalletServiceController extends Controller
             return Yii::$app->response->redirect('/my-weshop/wallet/withdraw/'.$service->transaction_code.'.html');
         }
         return $this->response(false,'Verify fail');
+    }
+    public function actionCancelWithdraw(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $walletS = new WalletService();
+        $walletS->transaction_code = Yii::$app->request->post('transaction_code');
+        if(!$walletS->transaction_code){
+            return $this->response(false,'Not found');
+        }
+        return $walletS->cancelWithdraw();
     }
 }
