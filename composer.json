@@ -48,6 +48,7 @@
     "ext-simplexml": "*",
     "ext-dom": "*",
     "yii2mod/collection": "*",
+    "thamtech/yii2-uuid": "*",
     "ext-soap": "*"
   },
   "require-dev": {

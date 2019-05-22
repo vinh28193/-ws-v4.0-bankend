@@ -41,7 +41,8 @@ class Favorite extends \yii\db\ActiveRecord
             [['obj_id', 'obj_type', 'ip'], 'required'],
             [['obj_id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['obj_type', 'ip'], 'string', 'max' => 255]
+            [['ip'], 'string', 'max' => 255],
+            [['obj_type'],'safe']
         ];
     }
 
@@ -70,6 +71,7 @@ class Favorite extends \yii\db\ActiveRecord
      * @inheritdoc
      * @return array mixed
      */
+    /*
     public function behaviors()
     {
         return [
@@ -79,6 +81,21 @@ class Favorite extends \yii\db\ActiveRecord
                 'updatedAtAttribute' => 'updated_at',
                 'value' => new \yii\db\Expression('NOW()'),
             ],
+        ];
+    }
+    */
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at'
+            ]
         ];
     }
 

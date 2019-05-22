@@ -15,11 +15,8 @@ use common\modelsMongo\FavoritesMongoDB;
 /**
  * Default controller for the `CommentModule` module
  */
-class FavoriteController extends FrontendController
+class FavoriteObject
 {
-    public function actionIndex(){
-        die("hello");
-    }
     /**
      * @return array
      */
@@ -37,30 +34,6 @@ class FavoriteController extends FrontendController
 //        ];
 //    }
 
-    /**
-     * @param $obj_type
-     * @param $obj_id
-     *
-     * @return \yii\web\Response
-     * @throws ErrorException
-     */
-    public function actionCreate()
-    {
-        $post = \Yii::$app->request->post();
-        if (isset($post['obj_type'])) {  $obj_type = \serialize($post['obj_type']); }
-        if (isset($post['obj_id'])) {  $obj_id = $post['obj_id']; }
-
-        $obj_type = "Wanonymous";
-        $obj_id = "9999";
-
-        if ($this->create_favorite($obj_type, $obj_id)) {
-            \Yii::info("app  create favorite Success");
-             return $this->goBack();
-        } else {
-            \Yii::info(" app Can't create favorite");
-            throw new ErrorException(\Yii::t('app', "Can't create favorite"));
-        }
-    }
 
     /**
      * @param $obj_type
@@ -69,13 +42,13 @@ class FavoriteController extends FrontendController
      * @return \yii\web\Response
      * @throws ErrorException
      */
-    public function create($obj_type,$obj_id)
+    public function create($obj_type, $obj_id, $UUID)
     {
         $post = \Yii::$app->request->post();
         if (isset($post['obj_type'])) {  $obj_type = \serialize($post['obj_type']); }
         if (isset($post['obj_id'])) {  $obj_id = $post['obj_id']; }
 
-        if ($this->create_favorite($obj_type, $obj_id)) {
+        if ($this->create_favorite($obj_type, $obj_id, $UUID)) {
             \Yii::info("app  create favorite Success");
            // return $this->goBack();
         } else {
@@ -91,10 +64,11 @@ class FavoriteController extends FrontendController
      * @return \yii\web\Response
      * @throws ErrorException
      */
-    public function actionDelete($obj_type, $obj_id)
+    public function Delete($obj_type, $obj_id)
     {
         if ($this->delete_favorite($obj_type, $obj_id)) {
-            return $this->goBack();
+            \Yii::info("app  Delete favorite Success");
+            //return $this->goBack();
         } else {
             throw new ErrorException(\Yii::t('app', "Can't delete favorite"));
         }
@@ -131,7 +105,7 @@ class FavoriteController extends FrontendController
                 ->andWhere(['created_by' => \Yii::$app->user->getId()])
                 ->exists();
         } else {
-            /** ToDo @Phuc Save Cookies Web , APP ---> Mongodb **/
+            /** ToDo Done 22/5/2019 @Phuc Save UUID Web , APP ---> Mongodb **/
             return FavoritesMongoDB::find()
                 ->where(['obj_type' => $obj_type])
                 ->andWhere(['obj_id' => $obj_id])
@@ -146,9 +120,9 @@ class FavoriteController extends FrontendController
      *
      * @return bool
      */
-    function create_favorite($obj_type, $obj_id)
+    function create_favorite($obj_type, $obj_id, $UUID)
     {
-         if (\Yii::$app->user->getId()) {
+         if (\Yii::$app->user->getId() === $UUID) {
             // Login
              $getId =  \Yii::$app->user->getId() ? \Yii::$app->user->getId() : '9999';
              $favorite = new Favorite([
@@ -174,7 +148,7 @@ class FavoriteController extends FrontendController
             }
         } else {
              // anonymous
-             $uuid = \thamtech\uuid\helpers\UuidHelper::uuid();
+             $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
              $favoriteMongodb = new FavoritesMongoDB([
                  'obj_type' => $obj_type,
                  'obj_id' => $obj_id,
