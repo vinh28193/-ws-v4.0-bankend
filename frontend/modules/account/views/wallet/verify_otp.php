@@ -17,6 +17,7 @@ use yii\helpers\Html;
 $listMethod = ArrayHelper::getValue(Yii::$app->params, 'list_method_withdraw');
 
 $this->title = "Xác thực yêu cầu rút tiền";
+$this->params = ['wallet','withdraw'];
 echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút tiền' => '/my-weshop/wallet/withdraw.html']]);
 $checkOTP = isset($transaction_info['verify_expired_at']) && $transaction_info['verify_expired_at'] && $transaction_info['verify_expired_at'] > time();
 ?>

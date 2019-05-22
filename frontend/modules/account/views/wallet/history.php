@@ -22,6 +22,7 @@ $('#datepicker').datepicker({
     });
 ";
 $this->registerJs($js, \yii\web\View::POS_END);
+$this->params = ['wallet','history'];
 $this->title = 'Lịch sử giao dịch';
 echo HeaderContentWidget::widget(['title' => 'Lịch sử giao dịch','stepUrl' => ['Giao dịch' => 'my-weshop/wallet/history']]);
 $get = Yii::$app->request->get();

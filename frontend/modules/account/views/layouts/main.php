@@ -102,12 +102,12 @@ UserBackendAsset::register($this);
                     <li class="accordion">
                         <a href="/my-weshop/wallet.html"><i class="icon icon2"></i> Quản lí tiền</a>
                         <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-1" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
-                        <div id="sub-1" class="sub-collapse collapse" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
+                        <div id="sub-1" class="sub-collapse collapse <?= in_array('wallet',$this->params) ? ' show' : '' ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul>
-                                <li><a href="/my-weshop/wallet/top-up.html">Nạp tiền</a></li>
-                                <li><a href="/my-weshop/wallet/history.html">Giao dịch</a></li>
-                                <li><a href="#">Tài khoản ngân hàng</a></li>
-                                <li><a href="/my-weshop/wallet/withdraw.html">Rút tiền</a></li>
+                                <li class="<?= in_array('top_up',$this->params) ? 'active' : '' ?>"><a href="/my-weshop/wallet/top-up.html">Nạp tiền</a></li>
+                                <li class="<?= in_array('history',$this->params) ? 'active' : '' ?>"><a href="/my-weshop/wallet/history.html">Giao dịch</a></li>
+                                <li class="<?= in_array('bank',$this->params) ? 'active' : '' ?>"><a href="#">Tài khoản ngân hàng</a></li>
+                                <li class="<?= in_array('withdraw',$this->params) ? 'active' : '' ?>"><a href="/my-weshop/wallet/withdraw.html">Rút tiền</a></li>
                             </ul>
                         </div>
                     </li>
