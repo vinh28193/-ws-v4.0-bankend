@@ -10,7 +10,7 @@ namespace common\mail;
 
 use yii\helpers\ArrayHelper;
 use common\components\MessageClient;
-use common\components\Store;
+use common\components\StoreManager as Store;
 
 class PhoneTarget extends BaseTarget
 {
@@ -28,21 +28,15 @@ class PhoneTarget extends BaseTarget
      */
     public function prepare($template)
     {
-        if ($template->store === Store::STORE_WESHOP_VN) {
+        if ($template->store === Store::STORE_VN) {
             $this->provider = MessageClient::PROVIDER_VN;
             $this->logProvider = MessageClient::LOG_PROVIDER_WALLET_SMS;
         } else {
             $this->provider = MessageClient::PROVIDER_NEXMO;
             $this->logProvider = MessageClient::LOG_PROVIDER_WALLET_NEXMO;
             $this->from = 'Weshop Global';
-            if ($template->store === Store::STORE_WESHOP_MY) {
-                $this->from = 'WeshopMy';
-            } elseif ($template->store === Store::STORE_WESHOP_ID) {
+            if ($template->store === Store::STORE_ID) {
                 $this->from = 'WeshopID';
-            } elseif ($template->store === Store::STORE_WESHOP_PH) {
-                $this->from = 'WeshopPH';
-            } elseif ($template->store === Store::STORE_WESHOP_SG) {
-                $this->from = 'WeshopSG';
             }
         }
         $this->content = $template->getTextContentReplace();

@@ -183,7 +183,7 @@ $url_page = function ($p){
                         <td class="text-center"><b><?= WeshopHelper::showMoney(ArrayHelper::getValue($tran, 'amount')) ?></b></td>
                         <td class="text-center"><?= WeshopHelper::getTypeTransaction(ArrayHelper::getValue($tran, 'type')) ?></td>
                         <td><?= ArrayHelper::getValue($tran, 'description') ?></td>
-                        <td class="text-center"><span class="label <?= WeshopHelper::getStatusTransactionLabel(ArrayHelper::getValue($tran, 'status')) ?>"><?= WeshopHelper::getStatusTransaction(ArrayHelper::getValue($tran, 'status')) ?></span></td>
+                        <td class="text-center"><span class="badge badge-<?= WeshopHelper::getStatusTransactionColor(ArrayHelper::getValue($tran, 'status')) ?>"><?= WeshopHelper::getStatusTransaction(ArrayHelper::getValue($tran, 'status')) ?></span></td>
                     </tr>
                 <?php } ?>
                 </tbody>

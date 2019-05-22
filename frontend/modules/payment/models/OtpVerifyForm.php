@@ -28,7 +28,7 @@ class OtpVerifyForm extends Model
     /**
      * @var string
      */
-    public $optCode;
+    public $otpCode;
 
     /**
      * @var integer
@@ -72,11 +72,11 @@ class OtpVerifyForm extends Model
     public function rules()
     {
         return [
-            [['optCode', 'captcha', 'transactionCode', 'orderCode'], 'required'],
+            [['otpCode', 'captcha', 'transactionCode', 'orderCode'], 'required'],
             ['otpReceive', 'integer'],
             [['transactionCode', 'orderCode'], 'string'],
             ['captcha', 'captcha', 'captchaAction' => '/payment/wallet/captcha'],
-            ['optCode', 'validateOtp'],
+            ['otpCode', 'validateOtp'],
             ['otpReceive', 'filter', 'filter' => function ($value) {
                 return (string)$value;
             }],
@@ -89,7 +89,7 @@ class OtpVerifyForm extends Model
     {
         return [
             'captcha' => 'Mã xác nhận',
-            'optCode' => 'Mã OTP',
+            'otpCode' => 'Mã OTP',
             'otpReceive' => 'OPT Receive Type'
         ];
     }

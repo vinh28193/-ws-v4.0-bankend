@@ -56,7 +56,7 @@ if (!$statusOtp) {
     echo $form->field($otpVerifyForm, 'orderCode')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'returnUrl')->hiddenInput()->label(false);
     echo $form->field($otpVerifyForm, 'cancelUrl')->hiddenInput()->label(false);
-    echo $form->field($otpVerifyForm, 'optCode')->textInput();
+    echo $form->field($otpVerifyForm, 'otpCode')->textInput();
     echo $form->field($otpVerifyForm, 'captcha')->widget(Captcha::className(), [
         'captchaAction' => '/otp/captcha',
         'options' => ['class' => 'form-control'],

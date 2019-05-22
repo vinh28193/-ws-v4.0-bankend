@@ -52,6 +52,7 @@ $('button[name=submit_withdraw]').click(function () {
         ws.sweetalert("Vui lòng nhập mật khẩu.");
         return;
     }
+    ws.loading(true);
     $.ajax({
         url: '/my-wallet/withdraw.html',
         method: 'POST',
@@ -60,6 +61,7 @@ $('button[name=submit_withdraw]').click(function () {
             if(res.success){
                 location.assign('/my-weshop/wallet/withdraw/'+res.data.code+'.html')
             }else {
+                ws.loading(false);
                 ws.sweetalert(res.message);
             }
         }
@@ -68,6 +70,7 @@ $('button[name=submit_withdraw]').click(function () {
 var sendOtp = function () {
   var type = $('input[name=typeOtp]:checked').val();
   var transaction_code = $('input[name=transaction_code]').val();
+    ws.loading(true);
     $.ajax({
         url: '/my-wallet/sent-otp.html',
         method: 'POST',
@@ -79,8 +82,13 @@ var sendOtp = function () {
             if(res.success){
                 location.assign('/my-weshop/wallet/withdraw/'+res.data.code+'.html')
             }else {
+                ws.loading(false);
                 ws.sweetalert(res.message);
             }
         }
     });
+};
+var showSentOtp = function () {
+    $('#resentotp').css('display','block');
+    $('#verifyOtp').css('display','none');
 };
