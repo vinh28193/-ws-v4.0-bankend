@@ -45,170 +45,24 @@ FrontendAsset::register($this);
                             <span>Từ Mỹ</span>
                         </a>
                         <div class="dropdown-menu animated fadeIn">
-                            <div class="title2 active">Mua hời nhất tại eBay</div>
-                            <ul>
-                                <li class="sub-2 open">
-                                    <a href="#">Thời trang</a>
-                                    <div class="sub-menu">
-                                        <div class="ebay-sub-menu">
-                                            <div class="left">
-                                                <div class="title-box">
-                                                    <div class="title">Shop eBay</div>
-                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="item">
-                                                            <div class="title">Collectibles & art</div>
-                                                            <ul>
-                                                                <li><a href="#">Collectibles</a></li>
-                                                                <li><a href="#">Antiques</a></li>
-                                                                <li><a href="#">Sports memorabilia</a></li>
-                                                                <li><a href="#">Art</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="item">
-                                                            <div class="title">Collectibles & art</div>
-                                                            <ul>
-                                                                <li><a href="#">Collectibles</a></li>
-                                                                <li><a href="#">Antiques</a></li>
-                                                                <li><a href="#">Sports memorabilia</a></li>
-                                                                <li><a href="#">Art</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="item">
-                                                            <div class="title">Collectibles & art</div>
-                                                            <ul>
-                                                                <li><a href="#">Collectibles</a></li>
-                                                                <li><a href="#">Antiques</a></li>
-                                                                <li><a href="#">Sports memorabilia</a></li>
-                                                                <li><a href="#">Art</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="item">
-                                                            <div class="title">Collectibles & art</div>
-                                                            <ul>
-                                                                <li><a href="#">Collectibles</a></li>
-                                                                <li><a href="#">Antiques</a></li>
-                                                                <li><a href="#">Sports memorabilia</a></li>
-                                                                <li><a href="#">Art</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="right">
-                                                <div class="banner-sub">
-                                                    <a href="#"><img src="https://static-v3.weshop.com.vn/uploadImages/ea2dff/ea2dff8f1ef1dc3082523658afa31530.png" alt="" title=""/></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Đồng hồ - Trang sức</a>
-                                    <div class="sub-menu">
-                                        <div class="ebay-sub-menu">
-                                            <div class="left">
-                                                <div class="title-box">
-                                                    <div class="title">Shop Test</div>
-                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="item">
-                                                            <div class="title">Collectibles & art</div>
-                                                            <ul>
-                                                                <li><a href="#">Collectibles</a></li>
-                                                                <li><a href="#">Antiques</a></li>
-                                                                <li><a href="#">Sports memorabilia</a></li>
-                                                                <li><a href="#">Art</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="item">
-                                                            <div class="title">Collectibles & art</div>
-                                                            <ul>
-                                                                <li><a href="#">Collectibles</a></li>
-                                                                <li><a href="#">Antiques</a></li>
-                                                                <li><a href="#">Sports memorabilia</a></li>
-                                                                <li><a href="#">Art</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="item">
-                                                            <div class="title">Collectibles & art</div>
-                                                            <ul>
-                                                                <li><a href="#">Collectibles</a></li>
-                                                                <li><a href="#">Antiques</a></li>
-                                                                <li><a href="#">Sports memorabilia</a></li>
-                                                                <li><a href="#">Art</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="item">
-                                                            <div class="title">Collectibles & art</div>
-                                                            <ul>
-                                                                <li><a href="#">Collectibles</a></li>
-                                                                <li><a href="#">Antiques</a></li>
-                                                                <li><a href="#">Sports memorabilia</a></li>
-                                                                <li><a href="#">Art</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="right">
-                                                <div class="banner-sub">
-                                                    <a href="#"><img src="https://static-v3.weshop.com.vn/uploadImages/ea2dff/ea2dff8f1ef1dc3082523658afa31530.png" alt="" title=""/></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Đồ điện tử</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Sức khỏe & làm đẹp</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Máy tính & ĐTDĐ</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Giải trí - Sở thích</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Đồ cổ & Đồ sưu tập</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Công nghiệp</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Ô tô - Xe máy</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                            </ul>
-                            <div class="see-all">
-                                <a href="#">Xem toàn bộ danh mục <i class="fas fa-arrow-right"></i></a>
+                            <div class="title2 active tab-ebay" data-toggle="tab-ebay">Mua hời nhất tại eBay</div>
+                            <div class="content-tab" id="tab-ebay">
+                                <ul>
+                                    <?= \frontend\widgets\alias\TopMenuAliasWidget::widget(['type' => 'NAV_TOP_E']) ?>
+                                </ul>
                             </div>
-                            <div class="title2">Mua hời nhất tại Amazon</div>
-                            <div class="title2">Top US store</div>
+                            <div class="title2" data-toggle="tab-amazon">Mua hời nhất tại Amazon</div>
+                            <div class="content-tab" style="display: none;"  id="tab-amazon">
+                                <ul>
+                                    <?= \frontend\widgets\alias\TopMenuAliasWidget::widget(['type' => 'NAV_TOP_A']) ?>
+                                </ul>
+                            </div>
+                            <div class="title2" data-toggle="tab-top-us">Top US store</div>
+                            <div  class="content-tab" style="display: none;" id="tab-top-us">
+                                <ul>
+                                    <?= \frontend\widgets\alias\TopMenuAliasWidget::widget(['type' => 'NAV_TOP_US']) ?>
+                                </ul>
+                            </div>
                         </div>
                     </li>
                     <li class="dropdown">

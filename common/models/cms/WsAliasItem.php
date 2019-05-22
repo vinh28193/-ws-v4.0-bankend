@@ -4,6 +4,11 @@
 namespace common\models\cms;
 
 
+/**
+ * Class WsAliasItem
+ * @package common\models\cms
+ * @property WsCategoryGroup[] $wsCategoryGroups
+ */
 class WsAliasItem extends \common\models\db_cms\WsAliasItem
 {
 
