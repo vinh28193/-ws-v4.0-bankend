@@ -1,18 +1,24 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 /* @var yii\web\View $this */
+/* @var frontend\modules\payment\Payment $payment */
 /* @var array $results */
-
-echo "<pre>";
-print_r($results);
-echo "</pre>";
-
+$items = $results;
+$items = Json::htmlEncode($items);
+$this->registerJs("ws.payment.registerMethods($items);");
+if ($payment->installment_bank === null) {
+    $this->registerJs("ws.payment.instalmentBankChange(true);");
+} else {
+    $this->registerJs("ws.payment.instalmentBankChange(false);");
+}
 ?>
 
 <div class="installment-title">Bước 1: Chọn hình thức trả góp</div>
 <ul class="method-list">
+
     <li><span class="active"><img src="./img/bank/vietcombank.png" alt="" title=""/></span></li>
     <li><span><img src="./img/bank/techcombank.png" alt="" title=""/></span></li>
     <li><span><img src="./img/bank/donga.png" alt="" title=""/></span></li>
