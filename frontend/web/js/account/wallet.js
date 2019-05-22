@@ -16,14 +16,6 @@ $('input[name=amount]').keyup(function () {
     getAmount();
 });
 var getAmount = function(){
-    var setting = {
-        name: "formatCurrency",
-        colorize: false,
-        region: 'vi-VN',
-        global: true,
-        roundToDecimalPlace: 0,
-        eventOnDecimalsEntered: false
-    };
     withdraw_data.amount = Number($('input[name=amount]').val());
     withdraw_data.fee = 3000+(withdraw_data.amount*0.01);
     withdraw_data.total_amount = withdraw_data.fee + withdraw_data.amount;

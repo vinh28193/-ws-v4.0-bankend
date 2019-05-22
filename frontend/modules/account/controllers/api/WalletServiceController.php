@@ -102,10 +102,11 @@ class WalletServiceController extends Controller
     public function actionReturn($merchant){
         Yii::$app->response->format = Response::FORMAT_JSON;
         $res = Payment::checkPayment((int)$merchant, Yii::$app->request);
-        if (!isset($res) || $res['success'] === false || !isset($res['data'])) {
-            return Yii::$app->response->redirect(Url::toRoute("/account/wallet/index", true));
+        $order = Yii::$app->request->post('order_code');
+        if($order){
+            return Yii::$app->response->redirect('/my-weshop/wallet/transaction/'.$order.'/detail.html');
         }
-        return Yii::$app->response->redirect(Url::toRoute("/account/wallet/index", true));
+        return Yii::$app->response->redirect(Url::toRoute("/account/wallet/history", true));
     }
     public function actionWithdraw(){
         $request = Yii::$app->request->post();

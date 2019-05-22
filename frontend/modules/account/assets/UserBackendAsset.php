@@ -21,7 +21,6 @@ class UserBackendAsset extends AssetBundle
         'owlcarousel/owl.theme.default.min.css',
     ];
     public $js = [
-        'js/jquery.formatCurrency.js',
         'js/ws.js',
         'js/style.js',
         'js/account/user.js',
