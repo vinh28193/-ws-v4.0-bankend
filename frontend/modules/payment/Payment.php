@@ -410,7 +410,7 @@ class Payment extends Model
                     if (($category = Category::findOne(['AND', ['alias' => $categoryParams['alias']], ['siteId' => Category::getSiteIdByPortal(isset($categoryParams['portal']) ? $categoryParams['portal'] : $product->portal)]])) === null) {
                         $category = new Category();
                         $category->alias = $categoryParams['alias'];
-                        $category->site = Category::getSiteIdByPortal(isset($categoryParams['portal']) ? $categoryParams['portal'] : $product->portal);
+                        $category->siteId = Category::getSiteIdByPortal(isset($categoryParams['portal']) ? $categoryParams['portal'] : $product->portal);
                         $category->originName = ArrayHelper::getValue($categoryParams, 'origin_name', null);
                         $category->save(false);
                     }
