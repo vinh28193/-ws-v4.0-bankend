@@ -195,7 +195,7 @@ class PaymentController extends BasePaymentController
                 'payment_type' => $paymentTransaction->payment_type,
 
             ]);
-            $redirectUrl = Url::toRoute('/account/order');
+            $redirectUrl = Url::toRoute('/account/order',true);
             if (isset($data['redirectUrl'])) {
                 $redirectUrl = $data['redirectUrl'];
             }
