@@ -59,6 +59,31 @@ ws.payment = (function ($) {
             receiver_address_id: undefined,
 
         },
+        installment: {
+            banks: [],
+            currentBank: {
+                bankCode: undefined,
+                bankName: undefined,
+                bankIcon: undefined,
+                paymentMethods: []
+            },
+            currentMethod: {
+                paymentMethod: undefined,
+                methodIcon: undefined,
+                periods: []
+            },
+            currentPeriod: {
+                amountByMonth: 0,
+                amountFee: 0,
+                amountFinal: 0,
+                currency: undefined,
+                month: 0,
+                payerFlatFee: 0,
+                payerInstallmentFlatFee: 0,
+                payerInstallmentPercentFee: 0,
+                payerPercentFee: 0,
+            }
+        },
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
             pub.payment.currency = 'vnd';
@@ -230,19 +255,48 @@ ws.payment = (function ($) {
             ws.wallet.getInfo($element);
         },
         calculateInstallment: function () {
-
             ws.ajax('/payment/' + pub.payment.payment_provider + '/calc', {
                 dataType: 'json',
                 type: 'post',
                 data: pub.payment,
                 success: function (response) {
                     var data = response.data;
-                    if(data.promotion){
-                        updatePaymentByPromotion(data.promotion)
+                    var banks = data.methods || [];
+                    var promotion = data.promotion || undefined;
+                    initInstallmentBankView(banks);
+                    if (promotion !== undefined) {
+                        updatePaymentByPromotion(promotion)
                     }
-                    $('div#installmentContent').html(data.content);
                 }
             }, true);
+        },
+        installmentBankChange: function (code) {
+            console.log('selected bank :' + code);
+            pub.payment.installment_bank = code;
+            pub.installment.currentBank = $.grep(pub.installment.banks, function (x) {
+                return String(x.bankCode) === String(code);
+            })[0];
+            $.each($('li[data-ref=i_bankCode]'), function () {
+                $(this).find('span').removeClass('active');
+            });
+            var isActive = $('li[data-ref=i_bankCode][data-code=' + code + ']');
+            if (isActive.length > 0) {
+                isActive.find('span').addClass('active');
+            }
+            var htmlMethod = [];
+            $.each(pub.installment.currentBank.paymentMethods, function (index, method) {
+                var iActive = index === 0;
+                if (iActive) {
+                    pub.payment.installment_method = method.paymentMethod;
+                    pub.installmentMethodChange(method.paymentMethod);
+                }
+                var $ele = '<li data-ref="i_methodCode" data-code="' + method.paymentMethod + '"  onclick="ws.payment.installmentMethodChange(\'' + method.paymentMethod + '\')"><span class="' + (iActive ? "active" : "") + '"><img src="' + method.methodIcon + '" alt="' + method.paymentMethod + '" title="' + method.paymentMethod + '"/></span></li>';
+                htmlMethod.push($ele)
+            });
+            $('ul#installmentMethods').html(htmlMethod.join(''));
+        },
+        installmentMethodChange(code) {
+
         },
         methodChange: function (isNew) {
             isNew = isNew || false;
@@ -289,9 +343,9 @@ ws.payment = (function ($) {
 
             if (pub.payment.carts.length === 0) {
                 return;
-            }else if(pub.payment.payment_type === 'installment') {
+            } else if (pub.payment.payment_type === 'installment') {
                 pub.calculateInstallment();
-            }else {
+            } else {
                 var data = pub.payment;
                 delete data.ga;
                 ws.ajax('/payment/discount/check-promotion', {
@@ -465,8 +519,21 @@ ws.payment = (function ($) {
         });
         return text;
     };
-    var initInstallmentView = function ($data) {
-        console.log(type)
+    var initInstallmentBankView = function (banks) {
+        pub.installment.banks = banks;
+        console.log(banks);
+        var htmlBank = [];
+        $.each(banks, function (index, bank) {
+            var iActive = index === 0;
+            if (iActive) {
+                pub.payment.installment_bank = bank.bankCode;
+                pub.installmentBankChange(bank.bankCode);
+            }
+            var $ele = '<li data-ref="i_bankCode" data-code="' + bank.bankCode + '"  onclick="ws.payment.installmentBankChange(\'' + bank.bankCode + '\')"><span class="' + (iActive ? "active" : "") + '"><img src="' + bank.bankIcon + '" alt="' + bank.bankName + '" title="' + bank.bankName + '"/></span></li>';
+            htmlBank.push($ele)
+        });
+        $('ul#installmentBanks').html(htmlBank.join(''));
+        console.log(banks)
     };
     var redirectPaymentGateway = function (rs, $timeOut) {
         runTime = setInterval(function () {

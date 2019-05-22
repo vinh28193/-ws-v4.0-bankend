@@ -186,12 +186,15 @@ class PaymentService
         return Url::to($icon, true);
     }
 
-    public static function getInstallmentMethodIcon($code){
+    public static function getInstallmentMethodIcon($code)
+    {
         $icons = [
-            'VISA' => '',
-            'MASTERCARD' => '',
-            'JCB' => '',
+            'VISA' => 'img/bank/techcombank.png',
+            'MASTERCARD' => 'img/bank/techcombank.png',
+            'JCB' => 'img/bank/techcombank.png',
         ];
+        $icon = isset($icons[$code]) ? $icons[$code] : 'img/bank/techcombank.png';
+        return Url::to($icon, true);
     }
 
 }
