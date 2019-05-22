@@ -38,6 +38,7 @@ class ItemController extends EbayController
         $favorite = null;
         // Queue get call Favorite to
 
+        /*
         // Queue Favorite Save
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
@@ -52,7 +53,7 @@ class ItemController extends EbayController
         Yii::info(" Check whether a worker got the job from the queue and executes it : ". Yii::$app->queue->isReserved($id));
         // Check whether a worker has executed the job.
         Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
-
+        */
 
         return $this->render('index', [
             'item' => $item,
