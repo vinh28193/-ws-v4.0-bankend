@@ -195,7 +195,7 @@ class PaymentController extends BasePaymentController
                 'payment_type' => $paymentTransaction->payment_type,
 
             ]);
-            $redirectUrl = Yii::$app->homeUrl;
+            $redirectUrl = Url::toRoute('/account/order');
             if (isset($data['redirectUrl'])) {
                 $redirectUrl = $data['redirectUrl'];
             }
