@@ -45,4 +45,5 @@ return [
         'host' => 'localhost',
         'port' => 6379,
     ],
+    'list_method_withdraw' => ['NL','BANK']
 ];

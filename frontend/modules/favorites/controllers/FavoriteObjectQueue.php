@@ -10,14 +10,17 @@ use yii\web\NotFoundHttpException;
 use frontend\controllers\FrontendController;
 use frontend\modules\favorites\models\Favorite;
 use common\modelsMongo\FavoritesMongoDB;
+use yii\base\BaseObject;
 
 
 /**
  * Default controller for the `CommentModule` module
  */
-class FavoriteObject
+class FavoriteObjectQueue extends BaseObject implements \yii\queue\JobInterface
 {
-
+    public $obj_type;
+    public $obj_id;
+    public $UUID;
 
     /**
      * @param $obj_type
@@ -26,12 +29,14 @@ class FavoriteObject
      * @return \yii\web\Response
      * @throws ErrorException
      */
-    public function Create($obj_type, $obj_id , $UUID)
+    public function execute($queue)
     {
-        //$obj_type = \serialize($obj_type);
-        if ($this->create_favorite($obj_type, $obj_id, $UUID)) {
+        \Yii::info("Start execute app  create favorite ");
+        \Yii::info(" obj_type : " . $this->obj_type);
+        \Yii::info(" obj_id : ". $this->obj_id);
+        if ($this->create_favorite($this->obj_type, $this->obj_id, $this->UUID)) {
             \Yii::info("app  create favorite Success");
-            // return $this->goBack();
+           // return $this->goBack();
         } else {
             \Yii::info(" app Can't create favorite");
             throw new ErrorException(\Yii::t('app', "Can't create favorite"));
@@ -103,10 +108,10 @@ class FavoriteObject
      */
     function create_favorite($obj_type, $obj_id, $UUID)
     {
-        if (\Yii::$app->user->getId() === $UUID) {
+         if (\Yii::$app->user->getId() === $UUID) {
             // Login
-            $getId =  \Yii::$app->user->getId() ? \Yii::$app->user->getId() : '9999';
-            $favorite = new Favorite([
+             $getId =  \Yii::$app->user->getId() ? \Yii::$app->user->getId() : '9999';
+             $favorite = new Favorite([
                 'obj_type' => $obj_type,
                 'obj_id' => $obj_id,
                 'ip' => \Yii::$app->getRequest()->getUserIP(),
@@ -128,34 +133,34 @@ class FavoriteObject
                 }
             }
         } else {
-            // anonymous
-            $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
-            $favoriteMongodb = new FavoritesMongoDB([
-                'obj_type' => $obj_type,
-                'obj_id' => $obj_id,
-                'ip' => \Yii::$app->getRequest()->getUserIP(),
-                'created_by' => $uuid,
-            ]);
-            $validator = new \thamtech\uuid\validators\UuidValidator();
-            if ($validator->validate($uuid, $error)) {
-                // valid
-                if ($this->is_user_created_favorite($obj_type, $obj_id)) {
-                    return true;
-                } else {
-                    try {
-                        $favoriteMongodb->validate();
-                        \Yii::info($favoriteMongodb->getErrors());
-                        $favoriteMongodb->save();
-                        return true;
-                    } catch (\Exception $exception) {
-                        \Yii::info($exception);
-                        return false;
-                    }
-                }
-            } else {
-                // not valid
-                echo $error;
-            }
+             // anonymous
+             $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
+             $favoriteMongodb = new FavoritesMongoDB([
+                 'obj_type' => $obj_type,
+                 'obj_id' => $obj_id,
+                 'ip' => \Yii::$app->getRequest()->getUserIP(),
+                 'created_by' => $uuid,
+             ]);
+             $validator = new \thamtech\uuid\validators\UuidValidator();
+             if ($validator->validate($uuid, $error)) {
+                 // valid
+                 if ($this->is_user_created_favorite($obj_type, $obj_id)) {
+                     return true;
+                 } else {
+                     try {
+                         $favoriteMongodb->validate();
+                         \Yii::info($favoriteMongodb->getErrors());
+                         $favoriteMongodb->save();
+                         return true;
+                     } catch (\Exception $exception) {
+                         \Yii::info($exception);
+                         return false;
+                     }
+                 }
+             } else {
+                 // not valid
+                 echo $error;
+             }
 
 
         }

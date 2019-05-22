@@ -7,7 +7,7 @@ return [
             'username' => 'root',
             'password' => '',
             'charset' => 'utf8',
-            'enableSchemaCache' => true,
+            'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache'
 
@@ -18,7 +18,7 @@ return [
             'username' => 'root',
             'password' => '',
             'charset' => 'utf8',
-            'enableSchemaCache' => true,
+            'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache'
         ],
@@ -48,7 +48,7 @@ return [
             'username' => 'root',
             'password' => '',
             'charset' => 'utf8',
-            'enableSchemaCache' => true,
+            'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache'
         ],

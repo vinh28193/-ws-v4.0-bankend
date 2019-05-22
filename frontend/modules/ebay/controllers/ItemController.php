@@ -9,7 +9,8 @@ use common\products\BaseProduct;
 use common\products\RelateProduct;
 use Yii;
 use common\products\forms\ProductDetailFrom;
-use  frontend\modules\favorites\controllers\FavoriteObject as Favorite;
+use  frontend\modules\favorites\controllers\FavoriteObject as FavoriteObject;
+use  frontend\modules\favorites\controllers\FavoriteObjectQueue as Favorite;
 use yii\helpers\ArrayHelper;
 
 class ItemController extends EbayController
@@ -44,8 +45,9 @@ class ItemController extends EbayController
         $favorite = null;
         // Queue get call Favorite to
 
-        /*
+
         // Queue Favorite Save
+        /*
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
         $id = Yii::$app->queue->delay(30)->push(new Favorite([
@@ -60,6 +62,12 @@ class ItemController extends EbayController
         // Check whether a worker has executed the job.
         Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
         */
+
+        // Favorite
+        $_favorite = new FavoriteObject();
+        $UUID = Yii::$app->user->getId();
+        $uuid = isset($UUID) ? $UUID : \thamtech\uuid\helpers\UuidHelper::uuid();
+        $_favorite->create($item, $id, $uuid);
 
         return $this->render('index', [
             'item' => $item,

@@ -18,6 +18,7 @@ $this->registerJs($js, \yii\web\View::POS_END);
 
 $this->title = "Tạo yêu cầu rút tiền";
 echo HeaderContentWidget::widget(['title' => $this->title, 'stepUrl' => ['Rút tiền' => '/my-weshop/wallet/withdraw.html']]);
+$this->params = ['wallet','withdraw'];
 ?>
 
 <div class="be-box">

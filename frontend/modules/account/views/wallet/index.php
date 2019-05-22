@@ -9,9 +9,10 @@ use yii\helpers\ArrayHelper;
  * @var $wallet array
  */
 $this->title = 'Ví WeShop Của Tôi';
+$this->params = ['wallet'];
 echo HeaderContentWidget::widget(['title' => 'Ví của bạn','stepUrl' => [ 'Ví của tôi' => 'my-weshop/wallet.html']]);
 if(WalletService::isGuest()){
-    echo "Vui lòng <a href='javascript:void(0);' onclick=''>đăng nhập</a> lại để xem thông tin ví.";
+    echo "Vui lòng <a href='javascript:void(0);' onclick='$(\"#loginWallet\").modal()'>đăng nhập</a> lại để xem thông tin ví.";
 }else{?>
     <div class="be-box">
         <div class="be-top">

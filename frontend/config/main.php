@@ -132,5 +132,11 @@ return [
         'favorites' => [
             'class' => 'frontend\modules\favorites\Module',
         ],
+        'debug' => [
+            'class' => '\yii\debug\Module',
+            'panels' => [
+                'queue' => '\yii\queue\debug\Panel',
+            ],
+        ],
     ],
 ];
