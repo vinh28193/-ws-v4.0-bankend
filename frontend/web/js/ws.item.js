@@ -471,12 +471,13 @@
             item.parentSku = item.sku;
             item.sku = params.sku;
         }
-
+        ws.loading(true);
         var $ajaxOptions = {
             type: 'POST',
             dataType: 'json',
             data: {item: item, type: type},
             success: function (response) {
+                ws.loading(false);
                 if (response.success) {
                     if (type === 'buynow' || type === 'installment') {
                         var url = response.data || null;
