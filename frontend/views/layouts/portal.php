@@ -13,12 +13,18 @@ FancyboxPlusAsset::register($this);
 
 $js = <<<JS
 $(document).ready(function() {
-  setTimeout(function () {
-      console.log('123');
+    var client = new ClientJS();
+            var _fingerprint = client.getFingerprint();
+            var data = {
+                fingerprint: _fingerprint,
+                _csrf : 9999
+            };
+  setTimeout(function () { 
         $.ajax({
         url: '/portal/viewed-products',
-        type: 'GET',
+        type: 'POST',
         dataType: 'json',
+        data: data,
         loading: true,
         success: function (result) {
             console.log(result);

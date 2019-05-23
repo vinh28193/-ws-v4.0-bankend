@@ -26,10 +26,17 @@ class PortalController extends FrontendController
     {
         //Get All Favorite
         $_favorite = new FavoriteObject();
+
+        $fingerprint = null;
+        $post = $this->request->post();
+        if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
+        if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
         $UUID = Yii::$app->user->getId();
-        $uuid = isset($UUID) ? $UUID : $this->uuid;
+        $uuid = isset($UUID) ? $UUID : $fingerprint;
+
         $_All_favorite = $_favorite->getfavorite($uuid);
         Yii::$app->response->format = Response::FORMAT_JSON;
+
         if(count($_All_favorite)){
             $view = $this->renderPartial('viewed_product', [
                 'items' => $_All_favorite,
