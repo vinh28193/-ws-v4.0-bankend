@@ -24,8 +24,7 @@ $(document).ready(function() {
         data: data,
         loading: true,
         success: function (result) {
-            console.log(result);
-            console.log(result.success);
+            // console.log(result);  console.log(result.success);
             if(result.success){
                 $('.viewed-product').html(result.data.content);
                 $(".owl-carousel").owlCarousel();

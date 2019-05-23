@@ -20,7 +20,11 @@ $name = Html::encode($name);
 ?>
 
 
-<li data-key="<?= $key; ?>" class="item <?= $type; ?>">
+<li data-key="<?= $key; ?>" data-type="<?= $type; ?>">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="cartItems" value="<?= $key; ?>" id="cartItem<?= $key; ?>">
+        <label class="form-check-label" for="cartItem<?= $key; ?>"></label>
+    </div>
     <?php echo Html::hiddenInput('items', $key) ?>
     <div class="thumb">
         <img src="<?= $imageSrc ?>" alt="<?= $name; ?>">
@@ -38,16 +42,16 @@ $name = Html::encode($name);
             <ol>
                 <?php
                 if (is_string($provider)) {
-                    echo '<li>Bán bởi:' . $provider . '</li>';
+                    echo '<li>Bán bởi :' . $provider . '</li>';
                 } else if ($provider instanceof \common\products\Provider) {
-                    echo '<li>Bán bởi: <a href="' . ($provider->website !== null ? $provider->website : "#") . '">' . $provider->name . '</a></li>';
+                    echo '<li>Bán bởi : <a href="' . ($provider->website !== null ? $provider->website : "#") . '">' . $provider->name . '</a></li>';
                 }
                 if ($variation !== null) {
                     echo '<li>' . $variation . '</li>';
                 }
                 ?>
 
-                <li>Tạm tính: <span class="weight-option"><?= $weight ?></span> Gram</li>
+                <li>Tạm tính : <span class="weight-option"><?= $weight ?></span> kg </li>
             </ol>
         </div>
         <div class="right">

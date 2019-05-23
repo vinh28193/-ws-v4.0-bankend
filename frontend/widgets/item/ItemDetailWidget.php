@@ -71,6 +71,8 @@ CSS;
         parent::run();
         echo $this->renderEntries();
         Pjax::end();
+        echo $this->renderDescription('mini');
+        echo $this->renderDescription('extra');
     }
 
     protected function prepareItem()
@@ -128,20 +130,16 @@ CSS;
         $sku = $this->item->item_id;
         // cách gọi 1 hàm cùng với param truyền vào
         // JqueryElement.TênThưViện('Tên hàm','param 1', param 2, ..., param n);
-        $view->registerJs("jQuery('#$id').wsItem('favorite','".$sku."',$item);", $view::POS_END);
+        $view->registerJs("jQuery('#$id').wsItem('favorite','" . $sku . "',$item);", $view::POS_END);
     }
 
     protected function renderEntries()
     {
-
         $entries = Html::tag('div', $this->renderDetailBlock(), [
             'class' => 'col-md-9'
         ]);
         $entries .= Html::tag('div', $this->renderPaymentOption(), [
             'class' => 'col-md-3'
-        ]);
-        $entries .= Html::tag('div', $this->renderDescription('extra'), [
-            'class' => 'col-md-12'
         ]);
         return $entries;
     }
@@ -153,7 +151,6 @@ CSS;
         $detailBlock .= $this->renderFullInfo();
         $detailBlock .= Html::endTag('div');
         $detailBlock .= $this->renderRelateProduct();
-        $detailBlock .= $this->renderDescription('mini');
         return $detailBlock;
     }
 

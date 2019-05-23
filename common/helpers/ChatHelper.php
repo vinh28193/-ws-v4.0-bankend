@@ -60,7 +60,7 @@ class ChatHelper
     private static function getPublicIdentity()
     {
         $user = Yii::$app->getUser()->getIdentity();
-        if($user instanceof \common\components\UserPublicIdentityInterface){
+        if ($user instanceof \common\components\UserPublicIdentityInterface) {
             return $user->getPublicIdentity();
         }
         return null;
@@ -76,7 +76,7 @@ class ChatHelper
     public static function push($message, $path, $type, $source)
     {
         $model = new ChatMongoWs;
-        $model->load(self::createParam($message,$path,$type,$source),'');
+        $model->load(self::createParam($message, $path, $type, $source), '');
         return $model->save();
 
     }
@@ -88,7 +88,7 @@ class ChatHelper
      */
     public static function pull($path, $type, $sources)
     {
-
+        return ChatMongoWs::find()->where(['and', ['Order_path' => $path], ['type_chat' => $type], ['user_request_suorce' => $sources]])->all();
     }
 
     /**
