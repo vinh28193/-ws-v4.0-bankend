@@ -4,7 +4,7 @@
  */
 
 use common\helpers\WeshopHelper;
-
+if(!empty($items)){
 ?>
 <div class="title">Sản phẩm đã xem:</div>
 <div id="product-viewed-2" class="owl-carousel owl-theme">
@@ -13,7 +13,12 @@ use common\helpers\WeshopHelper;
         try {
             /** @var \common\products\BaseProduct $product */
             $product = unserialize($item->obj_type);
-            $salePercent = $product->getSalePercent();
+            try{
+                $salePercent = $product->getSalePercent();
+            }catch (Exception $e){
+                print_r($product);
+                die;
+            }
             ?>
             <div class="item-box">
                 <a href="<?= \common\helpers\WeshopHelper::generateUrlDetail($product->type, $product->item_name, $product->item_id) ?>"
@@ -53,3 +58,4 @@ use common\helpers\WeshopHelper;
     }
     ?>
 </div>
+<?php } // $items ?>

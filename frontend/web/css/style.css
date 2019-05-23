@@ -2180,6 +2180,12 @@ a {
     @media (max-width: 768px) {
       .product-viewed .owl-carousel {
         margin: 0; } }
+
+.product-viewed .owl-carousel .item-box {
+  border: 1px solid transparent;
+  border-top: none;
+}
+
     .product-viewed .owl-carousel .item-box {
       padding: 0 15px; }
       .product-viewed .owl-carousel .item-box .item .info .name {
