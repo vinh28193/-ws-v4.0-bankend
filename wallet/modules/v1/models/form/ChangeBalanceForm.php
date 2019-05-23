@@ -385,7 +385,7 @@ class ChangeBalanceForm extends Model
 
             return ReponseData::reponseArray(true, $decription, $wallet->toArray());
         }
-        return ReponseData::reponseArray(false, 'SỐ tiền amount <= 0 hoặc nhỏ hơn tổng số tiền có thể sử dụng trong ví', []);
+        return ReponseData::reponseArray(false, 'Số tiền amount <= 0 hoặc lớn hơn tổng số tiền có thể sử dụng trong ví', [],ResponseCode::WALLET_TRANSACTION_INVALID_TOTAL_AMOUNT_GTE);
     }
 
     /**
