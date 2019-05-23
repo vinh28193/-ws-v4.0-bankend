@@ -222,7 +222,7 @@ class AmazonGate extends BaseGate
     }
 
     /**
-     * @param $request
+     * @param $request AmazonSearchRequest
      * @return array
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\httpclient\Exception

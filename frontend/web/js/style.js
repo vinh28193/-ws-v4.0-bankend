@@ -155,8 +155,16 @@ $( document ).ready(function() {
         });
     };
 
-    $('.navbar-2 .navbar-header ul li .dropdown-menu ul li').mouseenter(function () {
-        $('.navbar-2 .navbar-header ul li .dropdown-menu ul li').removeClass('open');
-        $(this).addClass('open');
+    $('.navbar-2 .navbar-header ul li .dropdown-menu ul>li.sub-2>a').mouseenter(function () {
+        $('.navbar-2 .navbar-header ul li .dropdown-menu ul li.sub-2').removeClass('open');
+        $(this).parent().addClass('open');
+    });
+    $('.dropdown-menu .title2').click(function () {
+        var id = $(this).attr('data-toggle');
+        $('.dropdown-menu .title2').removeClass('active');
+        $('.dropdown-menu .content-tab').css('display','none');
+        $(this).addClass('active');
+        $(this).addClass(id);
+        $('#'+id).css('display','block');
     });
 });
