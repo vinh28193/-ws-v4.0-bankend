@@ -22,8 +22,9 @@ class InstallmentController extends BasePaymentController
         $success = false;
         $message = 'no found';
         $data = [
+            'origin' => $this->storeManager->showMoney($payment->total_amount_display),
             'promotion' => $promotion,
-            'methods' => ''
+            'methods' => []
         ];
         if ($provider === 44) {
             $success = true;
@@ -42,6 +43,7 @@ class InstallmentController extends BasePaymentController
     private function getAlapayCalculator($payment)
     {
         $alepay = new AlepayClient();
+        $storeManager = $this->storeManager;
         $rs = $alepay->getInstallmentInfo($payment->total_amount_display, 'VND');
         if ($rs['success']) {
             $data = Json::decode($rs['data']);
@@ -51,6 +53,14 @@ class InstallmentController extends BasePaymentController
                 $methods = [];
                 foreach ($item['paymentMethods'] as $i => $method) {
                     $method['methodIcon'] = PaymentService::getInstallmentMethodIcon($method['paymentMethod']);
+                    $periods = [];
+                    foreach ($method['periods'] as $period) {
+                        $period['amountByMonth'] = $storeManager->showMoney($period['amountByMonth'], $period['currency']);
+                        $period['amountFee'] = $storeManager->showMoney($period['amountFee'], $period['currency']);
+                        $period['amountFinal'] = $storeManager->showMoney($period['amountFinal'], $period['currency']);
+                        $periods[] = $period;
+                    }
+                    $method['periods'] = $periods;
                     $methods[] = $method;
                 }
                 $item['paymentMethods'] = $methods;

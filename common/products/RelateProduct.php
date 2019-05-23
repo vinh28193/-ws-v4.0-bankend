@@ -30,7 +30,7 @@ class RelateProduct extends \yii\base\BaseObject
 
     public static function setRelateProducts($arrayRelateEbay){
         $re = [];
-        foreach ($arrayRelateEbay as $item){
+        foreach ((array)$arrayRelateEbay as $item){
             $temp = new self();
             $temp->item_id = ArrayHelper::getValue($item,'itemId');
             $temp->title = ArrayHelper::getValue($item,'title');

@@ -139,7 +139,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             $this->isInitialized = true;
             $this->ws_link = WeshopHelper::generateUrlDetail($this->type, $this->item_name, $this->item_id, null, null);
         }
-        Yii::info($this->getAdditionalFees()->toArray(), __METHOD__);
+        $this->createYiiInfoToken();
     }
 
     public $isInitialized = false;
@@ -336,5 +336,24 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     public function isEmpty($value)
     {
         return \common\helpers\WeshopHelper::isEmpty($value);
+    }
+
+    public function createYiiInfoToken()
+    {
+        $fees = [];
+        foreach ($this->getAdditionalFees()->keys() as $key) {
+            $fees[$key] = array_combine(['amount', 'amount_local'], $this->getAdditionalFees()->getTotalAdditionFees($key));
+        }
+        Yii::info([
+            'id' => $this->item_id,
+            'sku' => $this->item_sku,
+            'exRate' => $this->getExchangeRate(),
+            'IsNew' => $this->getIsNew(),
+            'weight' => $this->getShippingWeight(),
+            'quantity' => $this->getShippingQuantity(),
+            'totalUsPrice' => $this->getTotalOriginPrice(),
+            'totalLocalPrice' => $this->getLocalizeTotalPrice(),
+            'fees' => $fees
+        ], __CLASS__);
     }
 }

@@ -11,6 +11,7 @@ use common\models\Category;
 use common\models\Product;
 use common\models\ProductFee;
 use common\models\Seller;
+use frontend\modules\payment\providers\alepay\AlepayProvider;
 use frontend\modules\payment\providers\vietnam\WalletClientProvider;
 use frontend\modules\payment\providers\vietnam\WSVNOffice;
 use frontend\modules\payment\providers\wallet\WalletHideProvider;
@@ -147,7 +148,6 @@ class Payment extends Model
         } elseif ($this->page === self::PAGE_CHECKOUT || $this->payment_type === CartSelection::TYPE_INSTALLMENT) {
             $this->payment_method = 57;
             $this->payment_provider = 44;
-            $this->payment_bank_code = 'VCB';
         }
         $this->registerClientScript();
     }
@@ -176,7 +176,7 @@ class Payment extends Model
         $options = Json::htmlEncode($this->getClientOptions());
         $this->view->registerJs("ws.payment.init($options);");
         $this->view->registerJs("console.log(ws.payment.payment);");
-        if($this->payment_type === CartSelection::TYPE_INSTALLMENT){
+        if ($this->payment_type === CartSelection::TYPE_INSTALLMENT) {
             $this->view->registerJs("ws.payment.calculateInstallment();");
         }
     }
@@ -218,6 +218,9 @@ class Payment extends Model
             case 46:
                 $office = new WalletClientProvider();
                 return $office->create($this);
+            case 44:
+                return (new AlepayProvider())->create($this);
+
         }
     }
 
@@ -241,6 +244,8 @@ class Payment extends Model
             case 46:
                 $office = new WalletClientProvider();
                 return $office->handle($request->get());
+            case 44:
+                return (new AlepayProvider())->handle($request->get());
         }
     }
 

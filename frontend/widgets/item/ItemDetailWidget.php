@@ -3,17 +3,15 @@
 
 namespace frontend\widgets\item;
 
-use Yii;
-use yii\bootstrap\Widget;
 use common\products\BaseProduct;
+use Yii;
 use yii\base\InvalidConfigException;
-use yii\bootstrap4\Dropdown;
+use yii\bootstrap\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
-use yii\web\JsExpression;
 use yii\web\Request;
 use yii\widgets\Pjax;
 
@@ -126,26 +124,11 @@ CSS;
         ItemDetailAsset::register($view);
         $view->registerJs("jQuery('#$id').wsItem($params,$options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
-        $js =<<<JS
-         var client = new ClientJS();
-	     var _fingerprint = client.getFingerprint(); 
-	     console.log("fingerprint: " + _fingerprint );
-	     var SendInfo = { fingerprint: _fingerprint, _csrf:9999 };
-	     setTimeout(function()
-            {
-                 ws.ajax('/ebay/item/detail', {
-                                    type: 'POST',
-                                    data: JSON.stringify(SendInfo),
-                                    dataType: 'json', 
-                                    contentType: "application/json; charset=utf-8",
-                                    success: function (response) {
-                                         console.log("done");
-                                    } 
-                                }, false);
-            }, 3000);
-JS;
-        // $view->registerJs( $js,$view::POS_END);
-
+        $item = Json::htmlEncode($this->item);
+        $sku = $this->item->item_id;
+        // cách gọi 1 hàm cùng với param truyền vào
+        // JqueryElement.TênThưViện('Tên hàm','param 1', param 2, ..., param n);
+        $view->registerJs("jQuery('#$id').wsItem('favorite',$sku,$item);", $view::POS_END);
     }
 
     protected function renderEntries()
