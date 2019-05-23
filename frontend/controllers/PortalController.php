@@ -34,12 +34,7 @@ class PortalController extends FrontendController
         $fingerprint = null;
         $post = $this->request->post();
         if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
-        if (isset($post[Yii::$app->request->csrfParam])) {
-            Yii::info("csrfTokenName : " .Yii::$app->request->csrfParam);
-            Yii::info("csrfToken : " .Yii::$app->request->csrfToken);
-           if( $post[Yii::$app->request->csrfParam] != Yii::$app->request->csrfToken)
-            {  return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ]; }
-        }else {
+        if (!Yii::$app->getRequest()->validateCsrfToken()) {
             return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
         }
 
@@ -64,10 +59,13 @@ class PortalController extends FrontendController
         $fingerprint = null;
         $post = $this->request->post();
         if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
-        if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
         $item = ArrayHelper::getValue($post,'item');
         $id = ArrayHelper::getValue($post,'sku');
         $portal =  ArrayHelper::getValue($post,'portal');
+
+        if (!Yii::$app->getRequest()->validateCsrfToken()) {
+            return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
+        }
 
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : $fingerprint;

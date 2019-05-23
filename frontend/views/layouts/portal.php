@@ -10,20 +10,15 @@ use frontend\widgets\search\SearchBoxWidget;
 
 $this->beginContent('@frontend/views/layouts/common.php');
 FancyboxPlusAsset::register($this);
-$csrfTokenName = Yii::$app->request->csrfParam;
-$csrfToken = Yii::$app->request->csrfToken;
-
 $js = <<<JS
 $(document).ready(function() {
     var client = new ClientJS();
             var _fingerprint = client.getFingerprint();
             var data = {
-                fingerprint: _fingerprint,
-                $csrfTokenName: '$csrfToken'
+                fingerprint: _fingerprint
             };
   setTimeout(function () { 
-        $.ajax({
-        url: '/portal/viewed-products',
+        ws.ajax('/portal/viewed-products',{
         type: 'POST',
         dataType: 'json',
         data: data,
