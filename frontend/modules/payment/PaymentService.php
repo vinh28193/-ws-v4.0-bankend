@@ -158,43 +158,43 @@ class PaymentService
     public static function getInstallmentBankIcon($code)
     {
         $icons = [
-            'VPBANK' => 'img/bank/vp.png',
-            'TECHCOMBANK' => 'img/bank/techcombank.png',
-            'ACB' => 'img/bank/acb.png',
-            'ANZ' => 'img/bank/techcombank.png',
-            'HSBC' => 'img/bank/techcombank.png',
-            'SHINHANBANK' => 'img/bank/techcombank.png',
-            'EXIMBANK' => 'img/bank/eximbank.png',
-            'MARITIMEBANK' => 'img/bank/maritime.png',
-            'VIB' => 'img/bank/vib.png',
-            'SACOMBANK' => 'img/bank/sacombank.png',
-            'CTB' => 'img/bank/techcombank.png',
-            'SEABANK' => 'img/bank/techcombank.png',
-            'SC' => 'img/bank/techcombank.png',
-            'TPB' => 'img/bank/techcombank.png',
-            'SCB' => 'img/bank/techcombank.png',
-            'FE' => 'img/bank/techcombank.png',
-            'NAB' => 'img/bank/techcombank.png',
-            'OCB' => 'img/bank/techcombank.png',
-            'KLB' => 'img/bank/techcombank.png',
-            'SHB' => 'img/bank/techcombank.png',
-            'BIDV' => 'img/bank/techcombank.png',
-            'VCB' => 'img/bank/techcombank.png',
-            'MB' => 'img/bank/techcombank.png'
+            'VPBANK' => 'img/bank/vpbank.png', //NH TMCP Việt Nam Thịnh Vượng (VPBANK)
+            'TECHCOMBANK' => 'img/bank/techcombank.png', //NH TMCP Kỹ Thương Việt Nam (TECHCOMBANK)
+            'ACB' => 'img/bank/acb.png', //NH TMCP Á Châu (ACB)
+            'ANZ' => 'img/bank/ANZ.png', //NH TNHH MTV ANZ Việt Nam (ANZ)
+            'HSBC' => 'img/bank/hsbc.png', //NH TNHH MTV HSBC (Việt Nam) (HSBC)
+            'SHINHANBANK' => 'img/bank/techcombank.png', // NH TNHH MTV Shinhan Việt Nam (SHINHANBANK)
+            'EXIMBANK' => 'img/bank/eximbank.png',  //NH TMCP Xuất Nhập Khẩu (EXIMBANK)
+            'MARITIMEBANK' => 'img/bank/maritime.png', //NH TMCP Hàng Hải (MARITIMEBANK)
+            'VIB' => 'img/bank/vp.png', //NH Quốc tế (VIB)
+            'SACOMBANK' => 'img/bank/sacombank.png', //NH TMCP Sài Gòn Thương Tín (SACOMBANK)
+            'CTB' => 'img/bank/techcombank.png', //NH CitiBank Việt Nam (CTB)
+            'SEABANK' => 'img/bank/seabank.png', //NH TMCP Đông Nam Á (SEABANK)
+            'SC' => 'img/bank/techcombank.png', //NH TNHH MTV Standard Chartered (Việt Nam) (SC)
+            'TPB' => 'img/bank/tpb.png', //NH TMCP Tiên Phong (TPB)
+            'SCB' => 'img/bank/techcombank.png', //NH TMCP Sài Gòn (SCB)
+            'FE' => 'img/bank/techcombank.png', //FE CREDIT (FE)
+            'NAB' => 'img/bank/techcombank.png', //NH TMCP Nam Á (NAB)
+            'OCB' => 'img/bank/techcombank.png', //NH Phương Đông (OCB)
+            'KLB' => 'img/bank/techcombank.png', //NH TMCP Kiên Long (KLB)
+            'SHB' => 'img/bank/shb.png', //NH TMCP Sài Gòn Hà Nội (SHB)
+            'BIDV' => 'img/bank/bidv.png', //NH TMCP Đầu Tư và Phát Triển Việt Nam (BIDV)
+            'VCB' => 'img/bank/vietcombank.png', //NH TMCP Ngoại Thương Việt Nam (VCB)
+            'MB' => 'img/bank/mb.png' //NH TMCP Quân Đội (MB)
         ];
-        $icon = isset($icons[$code]) ? $icons[$code] : 'img/bank/techcombank.png';
-        return Url::to($icon, true);
+        $icon = isset($icons[$code]) ? Url::to($icons[$code], true) : ArrayHelper::getValue(Yii::$app->params,'unknownBankCode','#');
+        return $icon;
     }
 
     public static function getInstallmentMethodIcon($code)
     {
         $icons = [
-            'VISA' => 'img/bank/techcombank.png',
-            'MASTERCARD' => 'img/bank/techcombank.png',
-            'JCB' => 'img/bank/techcombank.png',
+            'VISA' => 'img/bank/visa.png',
+            'MASTERCARD' => 'img/bank/master.png',
+            'JCB' => 'img/bank/jcb.png',
         ];
-        $icon = isset($icons[$code]) ? $icons[$code] : 'img/bank/techcombank.png';
-        return Url::to($icon, true);
+        $icon = isset($icons[$code]) ? Url::to($icons[$code], true) : ArrayHelper::getValue(Yii::$app->params,'unknownMethodCode','#');
+        return $icon;
     }
 
 }

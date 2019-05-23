@@ -1,5 +1,10 @@
 var ws = ws || (function ($) {
 
+    var events = {
+        ajaxBeforeSend: 'ajaxBeforeSend',
+        ajaxComplete: 'ajaxComplete',
+    };
+
     var pub = {
         i18nMessages: [],
         eventHandlers: {},
@@ -23,6 +28,16 @@ var ws = ws || (function ($) {
             if ($.isFunction($options)) {
                 $options = {'success': $options};
             }
+
+            var beforeSendHandler = $options.beforeSend;
+            var beforeSend = function (jqXHR, settings){
+                if (!$options.crossDomain && yii.getCsrfParam()) {
+                    jqXHR.setRequestHeader('X-CSRF-Token', yii.getCsrfToken());
+                }
+                if (beforeSendHandler && $.isFunction(beforeSendHandler)) {
+                    beforeSendHandler(jqXHR, settings);
+                }
+            };
             var successHandler = $options.success;
             var success = function (response, textStatus, xhr) {
                 if (successHandler && $.isFunction(successHandler)) {
@@ -44,6 +59,7 @@ var ws = ws || (function ($) {
                 return false;
             };
             //Overwriting the handler with our wrapper handler
+            $options.beforeSend = beforeSend;
             $options.success = success;
             $options.error = error;
             $options.url = url;

@@ -210,7 +210,7 @@ class TransactionForm extends Model
         if ($result['code'] == ResponseCode::SUCCESS) {
             list($queue, $code) = array_values($result['data']);
             $result['data'] = $code;
-            if ($queue === true) {
+            if ($queue === false) {
                 $changeBalanceForm = new ChangeBalanceForm;
                 $changeBalanceForm->amount = $transaction->getTotalAmount();
                 $changeBalanceForm->walletTransactionId = $transaction->getPrimaryKey();
@@ -222,5 +222,35 @@ class TransactionForm extends Model
         }
         return $result;
 
+    }
+
+    public function makeSafeTransaction()
+    {
+        if (!$this->validate()) {
+            return ['code' => ResponseCode::INVALID, 'message' => $this->getFirstErrors(), 'data' => []];
+        }
+        if (ArrayHelper::isIn($this->getWalletClient()->getId(), [1, 3])) {
+            $this->merchant_id = 4;
+        }
+        $transaction = new WalletTransaction();
+        $transaction->scenario = WalletTransaction::SCENARIO_PAY_ORDER;
+        $transaction->wallet_merchant_id = $this->merchant_id;
+        $transaction->order_number = $this->transaction_code;
+        $transaction->type = $this->type;
+        $transaction->payment_method = $this->payment_method;
+        $transaction->payment_provider_name = $this->payment_provider;
+        $transaction->payment_bank_code = $this->bank_code;
+        $transaction->verify_receive_type = WalletTransaction::VERIFY_RECEIVE_TYPE_NONE;
+        $transaction->totalAmount = $this->total_amount;
+        $result = $transaction->createWalletTransaction(false);
+        if ($result['code'] == ResponseCode::SUCCESS) {
+            $changeBalanceForm = new ChangeBalanceForm;
+            $changeBalanceForm->amount = $transaction->getTotalAmount();
+            $changeBalanceForm->walletTransactionId = $transaction->getPrimaryKey();
+            if ($changeBalanceForm->freeze()['success']) {
+                $result = $changeBalanceForm->payment();
+            }
+        }
+        return $result;
     }
 }

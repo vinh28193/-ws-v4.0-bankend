@@ -3,7 +3,9 @@
 
 namespace frontend\controllers;
 
+use Yii;
 use yii\di\Instance;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Request;
 use yii\helpers\ArrayHelper;
@@ -52,6 +54,7 @@ class FrontendController extends Controller
         ];
     }
 
+
     /**
      * default params will be pass to current layout
      * @return array
@@ -78,8 +81,6 @@ class FrontendController extends Controller
             ],
         ]);
     }
-
-
 
     /**
      * @inheritDoc

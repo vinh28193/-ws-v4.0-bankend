@@ -195,6 +195,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 $dataRs['request_content'] = $request_content;
                 $dataRs['response_content'] = $resp;
                 $dataRs['transaction'] = $transaction;
+                $dataRs['token'] = $data['token'];
             } catch (\Exception $exception) {
                 $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;

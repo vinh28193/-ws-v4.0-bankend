@@ -186,16 +186,18 @@
         follow: function () {
 
         },
-        favorite: function (sku, item) {
+        favorite: function () {
+            var $item = $(this);
+            var params = $item.data('wsItem').params;
             var client = new ClientJS();
             var _fingerprint = client.getFingerprint();
             var data = {
                 fingerprint: _fingerprint,
-                sku: sku
+                sku: params.sku,
+                portal : params.type
             };
-            // ,item: item
             setTimeout(function () {
-                ws.ajax('/ebay/item/favorite', {
+                ws.ajax('/portal/favorite', {
                     type: 'POST',
                     data: data,
                     dataType: 'json',

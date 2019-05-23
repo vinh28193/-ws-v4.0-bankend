@@ -36,7 +36,7 @@ class FavoriteObject
      */
     public function Create($obj_type, $obj_id , $UUID)
     {
-        //$obj_type = \serialize($obj_type);
+        $obj_type = \serialize($obj_type);
         if ($this->create_favorite($obj_type, $obj_id, $UUID)) {
             Yii::info("app  create favorite Success");
             // return $this->goBack();
