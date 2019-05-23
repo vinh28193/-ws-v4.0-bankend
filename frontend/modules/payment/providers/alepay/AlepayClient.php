@@ -83,7 +83,7 @@ class AlepayClient extends Component
         $result = curl_exec($ch);
         $result = json_decode($result);
         $success = $result->errorCode === '000';
-        return ['success' => $result->errorCode === '000', 'message' => $result->errorDescription, 'data' => $success ? $this->security->decrypt($result->data) : null];
+        return ['success' => $result->errorCode === '000', 'message' => $result->errorDescription, 'data' => $success ? $this->security->decrypt($result->data) : null,'code' => $result->errorCode];
     }
 
     protected function getUrl($url)
@@ -108,4 +108,7 @@ class AlepayClient extends Component
         return $this->createHttpRequest('request-order',$params);
     }
 
+    public function getTransactionInfo($transactionCode){
+        return $this->createHttpRequest('get-transaction-info',['transactionCode' => $transactionCode]);
+    }
 }

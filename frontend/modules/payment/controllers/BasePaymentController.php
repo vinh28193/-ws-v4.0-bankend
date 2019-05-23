@@ -4,6 +4,7 @@
 namespace frontend\modules\payment\controllers;
 
 use common\components\cart\CartManager;
+use common\models\Customer;
 use Yii;
 use common\components\StoreManager;
 use yii\di\Instance;
@@ -31,7 +32,7 @@ class BasePaymentController extends Controller
     public $cartManager = 'cart';
 
     /**
-     * @var IdentityInterface
+     * @var Customer
      */
     public $user;
 
