@@ -186,6 +186,26 @@
         follow: function () {
 
         },
+        favorite: function (sku, item) {
+
+            var client = new ClientJS();
+            var _fingerprint = client.getFingerprint();
+            var data = {
+                fingerprint: _fingerprint,
+                sku: sku,
+                item: item
+            };
+            setTimeout(function () {
+                ws.ajax('/ebay/item/favorite', {
+                    type: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log("done");
+                    }
+                }, false);
+            }, 3000);
+        },
         quote: function () {
 
         },
