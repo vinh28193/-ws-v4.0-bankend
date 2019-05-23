@@ -82,24 +82,6 @@ class ItemController extends EbayController
 
     }
 
-    public function actionViewedProducts()
-    {
-        //Get All Favorite
-        $_favorite = new FavoriteObject();
-        $UUID = Yii::$app->user->getId();
-        $uuid = isset($UUID) ? $UUID : $this->uuid;
-        $_All_favorite = $_favorite->getfavorite($uuid);
-
-        echo "<pre>";
-        print_r($_All_favorite);
-        echo "</pre>";
-        die("545345435345");
-
-        return $this->render('index', [
-            'item' => $_All_favorite,
-        ]);
-    }
-
     public function actionVariation()
     {
         $response = ['success' => false, 'message' => 'can not call', 'content' => []];
