@@ -49,7 +49,8 @@
     "ext-dom": "*",
     "yii2mod/collection": "*",
     "ext-soap": "*",
-    "yiisoft/yii2-queue": "^2.0@dev"
+    "yiisoft/yii2-queue": "^2.0@dev",
+    "baibaratsky/yii2-ga-measurement-protocol": "2.0.*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

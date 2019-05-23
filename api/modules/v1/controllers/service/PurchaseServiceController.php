@@ -12,6 +12,7 @@ use common\models\User;
 use common\models\weshop\FormPurchaseItem;
 use common\modelsMongo\ChatMongoWs;
 use frontend\modules\payment\PaymentService;
+use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
 
 class PurchaseServiceController extends BaseApiController
@@ -102,7 +103,6 @@ class PurchaseServiceController extends BaseApiController
                         $amount = $amount + $amountChange;
                     }
                     if ($messageProduct != "" && $amount > 0) {
-                        $messageOrder = ". Mã đơn hàng <b>" . $order['ordercode'] . "</b>" . $messageProduct . ".<br>Quý khách có muốn tiếp tục đặt đơn này không ạ.<br>Nếu có vui lòng xác nhận với WeShop sớm nhất để tránh sự cố hết hàng hoặc tăng giá tiếp tục sảy ra.<br>Xin cảm ơn.";
                         $orderDb = Order::findOne(['ordercode' => $order['ordercode']]);
                         /** @var PaymentTransaction[] $paymentTransactions */
                         $paymentTransactions = PaymentTransaction::find()
@@ -119,6 +119,8 @@ class PurchaseServiceController extends BaseApiController
                             $listIdChange[] = $item->id;
                             $amount += $item->transaction_amount_local;
                         }
+                        /** @var  $exRate  \common\components\ExchangeRate */
+                        $exRate = \Yii::$app->exRate;
                         $paymentTransaction = new PaymentTransaction();
                         $paymentTransaction->store_id = $orderDb->store_id;
                         $paymentTransaction->customer_id = $orderDb->customer_id;
@@ -128,23 +130,30 @@ class PurchaseServiceController extends BaseApiController
                         $paymentTransaction->transaction_customer_email = $orderDb->receiver_email;
                         $paymentTransaction->transaction_customer_phone = $orderDb->receiver_phone;
                         $paymentTransaction->transaction_customer_address = $orderDb->receiver_address;
-                        $paymentTransaction->transaction_customer_city = $orderDb->receiver_province_id;
+                        $paymentTransaction->transaction_customer_city = $orderDb->receiver_province_name;
                         $paymentTransaction->transaction_customer_postcode = $orderDb->receiver_post_code;
-                        $paymentTransaction->transaction_customer_district = $orderDb->receiver_district_id;
-                        $paymentTransaction->transaction_customer_country = $orderDb->receiver_country_id;
+                        $paymentTransaction->transaction_customer_district = $orderDb->receiver_district_name;
+                        $paymentTransaction->transaction_customer_country = $orderDb->receiver_country_name;
                         $paymentTransaction->transaction_reference_code = $orderDb->ordercode;
                         $paymentTransaction->payment_type = PaymentTransaction::PAYMENT_TYPE_ADDFEE;
                         $paymentTransaction->carts = '';
+                        $paymentTransaction->note = $messageProduct;
                         $paymentTransaction->total_discount_amount = 0;
-                        $paymentTransaction->before_discount_amount_local = $amount;
-                        $paymentTransaction->transaction_amount_local = $amount;
+                        $paymentTransaction->before_discount_amount_local = $exRate->usdToVnd($amount,23500);
+                        $paymentTransaction->transaction_amount_local = $exRate->usdToVnd($amount,23500);;
+                        $paymentTransaction->payment_provider = 'WS WALLET';
+                        $paymentTransaction->payment_method = 'WALLET_WESHOP';
+                        $paymentTransaction->payment_bank_code = 'WALLET_WESHOP';
                         $paymentTransaction->created_at = time();
                         $paymentTransaction->save(0);
                         $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                         $paymentTransaction->save(0);
                         PaymentTransaction::updateAll(
-                            ['transaction_status' => PaymentTransaction::TRANSACTION_STATUS_REPLACED,'note' => 'dồn tiền thanh toán cho transaction '.$paymentTransaction->transaction_code],
+                            ['transaction_status' => PaymentTransaction::TRANSACTION_STATUS_REPLACED,'transaction_reference_code' => $paymentTransaction->transaction_code],
                             ['id' => $listIdChange]);
+                        $messageOrder = ". Mã đơn hàng <b>" . $orderDb->ordercode . "</b>" . $messageProduct . ".<br>Quý khách có muốn tiếp tục đặt đơn này không ạ.<br>Nếu có vui lòng xác nhận với WeShop sớm nhất để tránh sự cố hết hàng hoặc tăng giá tiếp tục sảy ra.";
+                        $messageOrder .= "<br>Bạn có thể thực hiện thanh toán ngay <a href='/my-weshop/addfee-$paymentTransaction->transaction_code.html'>tại đây</a>.";
+                        $messageOrder .= "<br>Xin cảm ơn.";
                         if ($emailPrice) {
                             //#ToDo Gửi mail thông báo thay đổi về giá
                         }
@@ -168,7 +177,9 @@ class PurchaseServiceController extends BaseApiController
                             "is_employee_vew" => null
                         ]];
                         if (!$model->load($_rest_data) || !$model->save()) {
-                            $messageOrder = "";
+                            $tran->rollBack();
+                            Yii::error($model->errors);
+                            return $this->response(false, "Gửi thông báo thất bại");
                         }
                     }
                 }
@@ -177,6 +188,7 @@ class PurchaseServiceController extends BaseApiController
                     $tran->commit();
                     return $this->response(true, "Đã gửi thông báo tới khách hàng!", $message);
                 } else {
+                    $tran->rollBack();
                     return $this->response(false, "Không có thay đổi gì về số tiền, vui lòng kiểm tra lại.");
                 }
             } else {
@@ -184,6 +196,7 @@ class PurchaseServiceController extends BaseApiController
             }
         }catch (\Exception $exception){
             $tran->rollBack();
+            Yii::error($exception);
             return $this->response(false, "Tạo thông báo thất bại");
         }
     }
@@ -196,91 +209,142 @@ class PurchaseServiceController extends BaseApiController
         /** @var User $user */
         $user = Yii::$app->user->getIdentity();
         if ($user) {
-            foreach ($orders as $order) {
-                foreach ($order['products'] as $product) {
-                    $model = Product::findOne($product['id']);
-                    if ($model){
-                        $check = false;
-                        if($model->price_purchase){
-                            $check = true;
-                            $fee = $model->unitPrice;
-                            $old_local_amount = $fee->local_amount;
-                            $old_amount = $fee->amount;
-                            $fee->amount = $model->price_purchase;
-                            $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
-                            $fee->save(false);
-                            $order = $model->order;
+            $tran = Yii::$app->db->beginTransaction();
+            try{
+                foreach ($orders as $order) {
+                    foreach ($order['products'] as $product) {
+                        $model = Product::findOne($product['id']);
+                        if ($model){
+                            $check = false;
+                            if($model->price_purchase){
+                                $check = true;
+                                $fee = $model->unitPrice;
+                                $old_local_amount = $fee->local_amount;
+                                $old_amount = $fee->amount;
+                                $fee->amount = $model->price_purchase;
+                                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+                                $fee->save(false);
+                                $order = $model->order;
 
-                            $model->total_price_amount_local += $fee->local_amount - $old_local_amount ;
-                            $model->updated_at = time();
-                            $model->price_purchase = null;
-                            $model->save();
-                            $order->updated_at = time();
+                                $model->total_price_amount_local += $fee->local_amount - $old_local_amount ;
+                                $model->updated_at = time();
+                                $model->price_purchase = null;
+                                $model->save();
+                                $order->updated_at = time();
 
-                            $order->total_price_amount_origin += $fee->amount - $old_amount;
+                                $order->total_price_amount_origin += $fee->amount - $old_amount;
 //                            $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
-                            $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
-                            $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_amount_local += $fee->local_amount - $old_local_amount;
 
-                            $order->save(0);
-                        }
-                        if($model->shipping_fee_purchase){
-                            $check = true;
-                            $fee = $model->usShippingFee;
-                            $old_local_amount = $fee->local_amount;
-                            $old_amount = $fee->amount;
-                            $fee->amount = $model->shipping_fee_purchase;
-                            $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
-                            $fee->save(false);
-                            $order = $model->order;
+                                $order->save(0);
+                            }
+                            if($model->shipping_fee_purchase){
+                                $check = true;
+                                $fee = $model->usShippingFee;
+                                $old_local_amount = $fee->local_amount;
+                                $old_amount = $fee->amount;
+                                $fee->amount = $model->shipping_fee_purchase;
+                                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+                                $fee->save(false);
+                                $order = $model->order;
 
-                            $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
-                            $model->updated_at = time();
-                            $model->shipping_fee_purchase = null;
-                            $model->save();
-                            $order->updated_at = time();
+                                $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
+                                $model->updated_at = time();
+                                $model->shipping_fee_purchase = null;
+                                $model->save();
+                                $order->updated_at = time();
 
-                            $order->total_origin_shipping_fee_local += $fee->amount - $old_amount;
-                            $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
-                            $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
-                            $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_origin_shipping_fee_local += $fee->amount - $old_amount;
+                                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_amount_local += $fee->local_amount - $old_local_amount;
 
-                            $order->save(0);
-                        }
-                        if($model->tax_fee_purchase){
-                            $check = true;
-                            $fee = $model->usTax;
-                            $old_local_amount = $fee->local_amount;
-                            $old_amount = $fee->amount;
-                            $fee->amount = $model->tax_fee_purchase;
-                            $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
-                            $fee->save(false);
-                            $order = $model->order;
+                                $order->save(0);
+                            }
+                            if($model->tax_fee_purchase){
+                                $check = true;
+                                $fee = $model->usTax;
+                                $old_local_amount = $fee->local_amount;
+                                $old_amount = $fee->amount;
+                                $fee->amount = $model->tax_fee_purchase;
+                                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+                                $fee->save(false);
+                                $order = $model->order;
 
-                            $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
-                            $model->updated_at = time();
-                            $model->tax_fee_purchase = null;
-                            $model->save();
-                            $order->updated_at = time();
+                                $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
+                                $model->updated_at = time();
+                                $model->tax_fee_purchase = null;
+                                $model->save();
+                                $order->updated_at = time();
 
-                            $order->total_origin_tax_fee_local += $fee->amount - $old_amount;
-                            $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
-                            $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
-                            $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_origin_tax_fee_local += $fee->amount - $old_amount;
+                                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_amount_local += $fee->local_amount - $old_local_amount;
 
-                            $order->save(0);
-                        }
-                        if($check){
-                            Yii::$app->wsLog->push('order','updateFee', null, [
-                                'id' => $model->id,
-                                'request' => "Customer confirm changing price",
-                                'response' => "Customer confirm changing price success"
-                            ]);
+                                $order->save(0);
+                            }
+                            if($check){
+                                Yii::$app->wsLog->push('order','updateFee', null, [
+                                    'id' => $model->id,
+                                    'request' => "Customer confirm changing price",
+                                    'response' => "Customer confirm changing price success"
+                                ]);
+                            }
                         }
                     }
+                    /** @var PaymentTransaction[] $transactionPayments */
+                    $transactionPayments = PaymentTransaction::find()->where([
+                        'transaction_reference_code' => $order['ordercode'],
+                        'transaction_status' => [
+                            PaymentTransaction::TRANSACTION_STATUS_CREATED,
+                            PaymentTransaction::TRANSACTION_STATUS_QUEUED
+                        ],
+                        'transaction_type' => PaymentTransaction::TRANSACTION_ADDFEE
+                    ])->all();
+                    foreach ($transactionPayments as $payment){
+                        $WalletS = new WalletService();
+                        $WalletS->transaction_code = $payment->transaction_code;
+                        $WalletS->payment_method = $payment->payment_method;
+                        $WalletS->payment_provider = $payment->payment_provider;
+                        $WalletS->bank_code = $payment->payment_bank_code;
+                        $WalletS->otp_type = 3;
+                        $WalletS->amount = $payment->transaction_amount_local * 20000;
+                        $result = $WalletS->createSafePaymentTransaction();
+                        var_dump($result);
+                        $tran->rollBack();
+                        die("123");
+                        //#ToDo thông báo chat thay đổi về giá
+                        $model = new ChatMongoWs();
+                        $_rest_data = ["ChatMongoWs" => [
+                            "success" => true,
+                            "message" => 'Đã tự động thanh toán thu thêm giao dịch '.$payment->transaction_code,
+                            "date" => Yii::$app->getFormatter()->asDatetime('now'),
+                            "user_id" => $user->id,
+                            "user_email" => $user->email,
+                            "user_name" => $user->username,
+                            "user_app" => null,
+                            "user_request_suorce" => 'BACK_END',  // "APP/FRONTEND/BACK_END"
+                            "request_ip" => Yii::$app->getRequest()->getUserIP(), // Todo : set
+                            "user_avatars" => null,
+                            "Order_path" => $order['ordercode'],
+                            "is_send_email_to_customer" => null,
+                            "type_chat" => 'WS_CUSTOMER', // 'TYPE_CHAT : GROUP_WS/WS_CUSTOMER // Todo : set
+                            "is_customer_vew" => null,
+                            "is_employee_vew" => null
+                        ]];
+                        $model->load($_rest_data);
+                        $model->save();
+                    }
                 }
+                $tran->commit();
+                return $this->response(true, "Đã xác nhận thành công.");
+            }catch (\Exception $exception){
+                $tran->rollBack();
+                Yii::error($exception);
+                return $this->response(false, "Xác nhận thất bại");
             }
-            return $this->response(true, "Đã xác nhận thành công.");
         }
         return $this->response(false, "Vui lòng đăng nhập.");
 

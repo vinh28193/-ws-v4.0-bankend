@@ -87,7 +87,7 @@ class TransactionController extends WalletServiceController
                 $to_date = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $to_date) . ' 23:59:59'));
                 $query->andWhere(['<=', 'create_at', $to_date]);
             }
-            if (($transaction_status = ArrayHelper::getValue($filter, 'transaction_status'))) {
+            if (($transaction_status = ArrayHelper::getValue($filter, 'transaction_status')) != null && $transaction_status != "" ) {
                 $query->andWhere(['status' => $transaction_status]);
             }
         }
@@ -328,7 +328,7 @@ class TransactionController extends WalletServiceController
                     'verified' => $model->verified_at === null ? false : true,
                     'receive_type' => $model->verify_receive_type,
                     'receive_type_text' => WalletTransaction::getVerifyReceiveTypeLabels($model->verify_receive_type),
-                    'send_to' => $model->getOtpSendTo($model->verify_receive_type),
+                    'send_to' => $model->verify_receive_type == 3 ? 3 : $model->getOtpSendTo($model->verify_receive_type),
                     'count' => (WalletTransaction::OTP_COUNT_LIMIT - $model->verify_count) > 0 ? WalletTransaction::OTP_COUNT_LIMIT - $model->verify_count : 0,
                     'expired_at' => Yii::$app->formatter->asRelativeTime($model->verify_expired_at),
                     'expired_timestamp' => $model->verify_expired_at,
@@ -358,7 +358,8 @@ class TransactionController extends WalletServiceController
         $form = new TransactionForm();
         if ($form->load($this->post)) {
             $result = $form->makeTransaction();
-            return $this->response(true, $result['message'], $result['data'], $result['code']);
+            $success = isset($result['success']) ? $result['success'] : isset($result['code']) && $result['code'] == ResponseCode::SUCCESS;
+            return $this->response($success, $result['message'], $result['data'], $result['code']);
         }
         $this->response(false, Yii::t('wallet', 'Transaction not found'), null, ResponseCode::NOT_FOUND);
     }
@@ -368,7 +369,8 @@ class TransactionController extends WalletServiceController
         $form = new TransactionForm();
         if ($form->load($this->post)) {
             $result = $form->makeSafeTransaction();
-            return $this->response(true, $result['message'], $result['data'], $result['code']);
+            $success = isset($result['success']) ? $result['success'] : isset($result['code']) && $result['code'] == ResponseCode::SUCCESS;
+            return $this->response($success, $result['message'], $result['data'], $result['code']);
         }
         $this->response(false, Yii::t('wallet', 'Transaction not found'), null, ResponseCode::NOT_FOUND);
     }

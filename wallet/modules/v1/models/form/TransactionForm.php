@@ -217,6 +217,9 @@ class TransactionForm extends Model
                 if (($rs = $changeBalanceForm->freeze())['success'] === false) {
                     $result['message'] = $rs['message'];
                     $result['data'] = $rs['data'];
+                }else{
+                    $transaction->status = WalletTransaction::STATUS_FAIL;
+                    $transaction->save();
                 }
             }
         }
@@ -242,13 +245,23 @@ class TransactionForm extends Model
         $transaction->payment_bank_code = $this->bank_code;
         $transaction->verify_receive_type = WalletTransaction::VERIFY_RECEIVE_TYPE_NONE;
         $transaction->totalAmount = $this->total_amount;
-        $result = $transaction->createWalletTransaction(false);
+        $result = $transaction->createWalletTransaction();
         if ($result['code'] == ResponseCode::SUCCESS) {
             $changeBalanceForm = new ChangeBalanceForm;
             $changeBalanceForm->amount = $transaction->getTotalAmount();
             $changeBalanceForm->walletTransactionId = $transaction->getPrimaryKey();
-            if ($changeBalanceForm->freeze()['success']) {
+            if (($result = $changeBalanceForm->freeze()) && $result['success']) {
                 $result = $changeBalanceForm->payment();
+                if($result['success']){
+                    $transaction->status = WalletTransaction::STATUS_COMPLETE;
+                    $transaction->save();
+                }else{
+                    $transaction->status = WalletTransaction::STATUS_FAIL;
+                    $transaction->save();
+                }
+            }else{
+                $transaction->status = WalletTransaction::STATUS_FAIL;
+                $transaction->save();
             }
         }
         return $result;
