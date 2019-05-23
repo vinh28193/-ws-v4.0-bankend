@@ -24,12 +24,12 @@ $(document).ready(function() {
             console.log(result);
             console.log(result.success);
             if(result.success){
-                $('#viewed-product').html(result.data.content);
+                $('.viewed-product').html(result.data.content);
                 $(".owl-carousel").owlCarousel();
             }
         }
         });
-    }, 1000 * 1);
+    }, 1000 * 2);
 });
 JS;
 $this->registerJs($js, \yii\web\View::POS_END);
@@ -58,8 +58,8 @@ $this->registerJs($js, \yii\web\View::POS_END);
         <?= $content; ?>
 
 
-        <div class="product-viewed product-list" id="viewed-product">
-            <div style="display:block;">
+        <div class="product-viewed product-list viewed-product">
+            <div class="center" style="display:block; margin: auto; width: 7%;padding: 10px;">
                 <div>
                     <img src="/img/gif/loading.gif">
                 </div>

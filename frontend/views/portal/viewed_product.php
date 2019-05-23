@@ -7,11 +7,9 @@ use common\helpers\WeshopHelper;
 
 ?>
 <div class="title">Sản phẩm đã xem:</div>
-<div id="product-viewed" class="owl-carousel owl-theme">
+<div id="product-viewed-2" class="owl-carousel owl-theme">
     <?php
-    foreach ($items
-
-             as $item) {
+    foreach ($items  as $item) {
         try {
             /** @var \common\products\BaseProduct $product */
             $product = unserialize($item->obj_type);
