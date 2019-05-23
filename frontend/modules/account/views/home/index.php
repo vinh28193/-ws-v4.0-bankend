@@ -128,10 +128,14 @@ $this->registerJs($js);
                         ])->orderBy(['created_at' => SORT_DESC])->one();
                         ?>
                         <li>
-                            <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="javascript:void(0);"
-                                                                            data-popup="modal"
-                                                                            data-url="<?=  '/account/chat?ordercode='.$order->ordercode ?>"
-                                                                            data-target="#exampleModalCenter"><?= $order->ordercode ?></a>
+                            <p><b>Weshop</b> trao đổi mới trong đơn hàng
+                                <?php
+                                    echo Html::a($order->ordercode,new \yii\web\JsExpression('javascript:void(0);'),[
+                                            'data-url' => \yii\helpers\Url::toRoute(['/account/chat/order-chat','code' => $order->ordercode],true),
+                                            'data-target' => '#exampleModalCenter',
+                                            'data-popup' => 'modal'
+                                    ])
+                                ?>
                                 vào
                                 lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at, "php:d-m-Y  H:i:s") ?>
                             </p>
