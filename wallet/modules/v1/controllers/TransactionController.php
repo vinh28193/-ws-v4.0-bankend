@@ -70,24 +70,24 @@ class TransactionController extends WalletServiceController
                     '<=', $filter['range']['key'], $to
                 ]);
             }
-            if (($transaction_code = ArrayHelper::getValue($filter,'transaction_code'))){
-                $query->andWhere(['like' , 'wallet_transaction_code' , $transaction_code ]);
+            if (($transaction_code = ArrayHelper::getValue($filter, 'transaction_code'))) {
+                $query->andWhere(['like', 'wallet_transaction_code', $transaction_code]);
             }
-            if (($order_code = ArrayHelper::getValue($filter,'order_code'))){
-                $query->andWhere(['like' , 'order_number' , $order_code ]);
+            if (($order_code = ArrayHelper::getValue($filter, 'order_code'))) {
+                $query->andWhere(['like', 'order_number', $order_code]);
             }
-            if (($transaction_type = ArrayHelper::getValue($filter,'transaction_type'))){
+            if (($transaction_type = ArrayHelper::getValue($filter, 'transaction_type'))) {
                 $query->andWhere(['type' => strtoupper($transaction_type)]);
             }
-            if (($from_date = ArrayHelper::getValue($filter,'from_date'))){
-                $from_date = date('Y-m-d H:i:s',strtotime(str_replace('/','-',$from_date).' 00:00:00'));
-                $query->andWhere(['>=' , 'create_at' , $from_date]);
+            if (($from_date = ArrayHelper::getValue($filter, 'from_date'))) {
+                $from_date = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $from_date) . ' 00:00:00'));
+                $query->andWhere(['>=', 'create_at', $from_date]);
             }
-            if (($to_date = ArrayHelper::getValue($filter,'to_date'))){
-                $to_date = date('Y-m-d H:i:s',strtotime(str_replace('/','-',$to_date).' 23:59:59'));
-                $query->andWhere(['<=' , 'create_at' , $to_date]);
+            if (($to_date = ArrayHelper::getValue($filter, 'to_date'))) {
+                $to_date = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $to_date) . ' 23:59:59'));
+                $query->andWhere(['<=', 'create_at', $to_date]);
             }
-            if (($transaction_status = ArrayHelper::getValue($filter,'transaction_status'))){
+            if (($transaction_status = ArrayHelper::getValue($filter, 'transaction_status'))) {
                 $query->andWhere(['status' => $transaction_status]);
             }
         }
@@ -105,7 +105,7 @@ class TransactionController extends WalletServiceController
             $query->limit($params['limit'])->offset($params['offset']);
         }
         $data = $query->orderBy('id DESC')->all();
-        return $this->response(true, Yii::t('wallet','Get all data success'), $data, 200, $total);
+        return $this->response(true, Yii::t('wallet', 'Get all data success'), $data, 200, $total);
     }
 
     public function actionGetWithdraw()
@@ -119,9 +119,9 @@ class TransactionController extends WalletServiceController
             }
             if (isset($filter['extract'])) {
                 if ($filter['extract']['key'] != '' && $filter['extract']['value'] != '') {
-                    switch ($filter['extract']['key']){
+                    switch ($filter['extract']['key']) {
                         case 'transactionCode':
-                            $query->andWhere([ 'wallet_transaction_code' => $filter['extract']['value']]);
+                            $query->andWhere(['wallet_transaction_code' => $filter['extract']['value']]);
                             break;
                         case 'clientId':
                             $query->andWhere(['wallet_client_id' => $filter['extract']['value']]);
@@ -132,7 +132,7 @@ class TransactionController extends WalletServiceController
                 }
             }
             if (isset($filter['range']) && $filter['range']['key'] != '' && count($filter['range']['value']) > 1) {
-                $from =$filter['range']['value']['start'];
+                $from = $filter['range']['value']['start'];
                 $to = $filter['range']['value']['end'];
                 $query->andWhere(['>=', $filter['range']['key'], $from])->andWhere([
                     '<=', $filter['range']['key'], $to
@@ -153,7 +153,7 @@ class TransactionController extends WalletServiceController
             $query->limit($params['limit'])->offset($params['offset']);
         }
         $data = $query->orderBy('id DESC')->all();
-        return $this->response(true, Yii::t('wallet','Get all data success'), $data, 200, $total);
+        return $this->response(true, Yii::t('wallet', 'Get all data success'), $data, 200, $total);
     }
 
     public function actionUpdateTransactionWithdraw()
@@ -164,16 +164,16 @@ class TransactionController extends WalletServiceController
             ]), null, ResponseCode::ERROR);
         }
         if (($status = ArrayHelper::getValue($this->post, 'status', false)) === false) {
-            return $this->response(false,Yii::t('wallet','Missing parameter ${parameter}', [
+            return $this->response(false, Yii::t('wallet', 'Missing parameter ${parameter}', [
                 'parameter' => 'Status'
             ]), null, ResponseCode::ERROR);
         }
         $model = $this->findModel($code);
-        if(!$model){
+        if (!$model) {
             return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
         }
         $wallet = WalletClient::findOne($model->wallet_client_id);
-        if($model->getCurrentWalletClient() === null){
+        if ($model->getCurrentWalletClient() === null) {
             $model->setCurrentWalletClient($wallet);
         }
         if ($model->status === WalletTransaction::STATUS_PROCESSING || $model->fixedOtpCode !== null) {
@@ -193,9 +193,9 @@ class TransactionController extends WalletServiceController
             if ($rs['success']) {
                 if (!$model->updateTransaction($sttChange)) {
 
-                    return $this->response(false, Yii::t('wallet','Have error when update your transaction to complete. BUT Change Withdraw request success!'), null, ResponseCode::ERROR);
+                    return $this->response(false, Yii::t('wallet', 'Have error when update your transaction to complete. BUT Change Withdraw request success!'), null, ResponseCode::ERROR);
                 }
-                if($sttChange === WalletTransaction::STATUS_CANCEL){
+                if ($sttChange === WalletTransaction::STATUS_CANCEL) {
                     $model->refresh();
                     $wallet->refresh();
                     $model->setCurrentWalletClient($wallet);
@@ -212,7 +212,7 @@ class TransactionController extends WalletServiceController
             return $this->response(false, $rs['message'], null, ResponseCode::ERROR);
 
         }
-        return $this->response(false, Yii::t('wallet','Your otp do not verify, please verify otp send on email or phone'), null, ResponseCode::INVALID);
+        return $this->response(false, Yii::t('wallet', 'Your otp do not verify, please verify otp send on email or phone'), null, ResponseCode::INVALID);
     }
 
     public function actionCancelWithdraw()
@@ -224,10 +224,10 @@ class TransactionController extends WalletServiceController
         }
         /** @var WalletTransaction $model */
         $model = WalletTransaction::find()->where(['wallet_transaction_code' => $code, 'wallet_client_id' => Yii::$app->user->getId()])->one();
-        if(!$model){
+        if (!$model) {
             return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
         }
-        if($model->getCurrentWalletClient() === null){
+        if ($model->getCurrentWalletClient() === null) {
             return $this->response(false, 'Not Found client', null, ResponseCode::NOT_FOUND);
         }
         if ($model->status === WalletTransaction::STATUS_PROCESSING || $model->status === WalletTransaction::STATUS_QUEUE || $model->fixedOtpCode !== null) {
@@ -241,7 +241,7 @@ class TransactionController extends WalletServiceController
             $sttChange = WalletTransaction::STATUS_CANCEL;
             if ($rs['success']) {
                 if (!$model->updateTransaction($sttChange)) {
-                    return $this->response(false, Yii::t('wallet','Have error when update your transaction to complete. BUT Change Withdraw request success!'), null, ResponseCode::ERROR);
+                    return $this->response(false, Yii::t('wallet', 'Have error when update your transaction to complete. BUT Change Withdraw request success!'), null, ResponseCode::ERROR);
                 }
 //                if($sttChange === WalletTransaction::STATUS_CANCEL){
 //                    $model->refresh();
@@ -260,7 +260,7 @@ class TransactionController extends WalletServiceController
             return $this->response(false, $rs['message'], null, ResponseCode::ERROR);
 
         }
-        return $this->response(false, Yii::t('wallet','Your otp do not verify, please verify otp send on email or phone'), null, ResponseCode::INVALID);
+        return $this->response(false, Yii::t('wallet', 'Your otp do not verify, please verify otp send on email or phone'), null, ResponseCode::INVALID);
     }
 
     /**
@@ -277,7 +277,7 @@ class TransactionController extends WalletServiceController
             ]), null, ResponseCode::ERROR);
         }
         $model = $this->findModel($code);
-        if(!$model){
+        if (!$model) {
             return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
         }
         $attributeNames = [
@@ -347,11 +347,11 @@ class TransactionController extends WalletServiceController
      * create a transaction
      * if action run with scenario 'default' meaning nothing requited.
      * @return array
-     * @see \wallet\modules\v1\models\form\TransactionForm::makeTransaction()
-     * @see \wallet\modules\v1\models\WalletTransaction::createWalletTransaction()
      * @throws \Throwable
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
+     * @see \wallet\modules\v1\models\WalletTransaction::createWalletTransaction()
+     * @see \wallet\modules\v1\models\form\TransactionForm::makeTransaction()
      */
     public function actionCreate()
     {
@@ -360,7 +360,17 @@ class TransactionController extends WalletServiceController
             $result = $form->makeTransaction();
             return $this->response(true, $result['message'], $result['data'], $result['code']);
         }
-        $this->response(false, Yii::t('wallet','Transaction not found'), null, ResponseCode::NOT_FOUND);
+        $this->response(false, Yii::t('wallet', 'Transaction not found'), null, ResponseCode::NOT_FOUND);
+    }
+
+    public function actionCreateSafe()
+    {
+        $form = new TransactionForm();
+        if ($form->load($this->post)) {
+            $result = $form->makeSafeTransaction();
+            return $this->response(true, $result['message'], $result['data'], $result['code']);
+        }
+        $this->response(false, Yii::t('wallet', 'Transaction not found'), null, ResponseCode::NOT_FOUND);
     }
 
     /**
@@ -373,17 +383,17 @@ class TransactionController extends WalletServiceController
     public function actionVerifyOpt()
     {
         if (($code = ArrayHelper::getValue($this->post, 'transaction_code', false)) === false) {
-            return $this->response(false, Yii::t('wallet','Missing parameter ${parameter}', [
+            return $this->response(false, Yii::t('wallet', 'Missing parameter ${parameter}', [
                 'parameter' => 'transaction_code'
             ]), null, ResponseCode::ERROR);
         }
         if (($opt = ArrayHelper::getValue($this->post, 'otp_code', false)) === false) {
-            return $this->response(false, Yii::t('wallet','Missing parameter ${parameter}', [
+            return $this->response(false, Yii::t('wallet', 'Missing parameter ${parameter}', [
                 'parameter' => 'otp_code'
             ]), null, ResponseCode::ERROR);
         }
         $model = $this->findModel($code);
-        if(!$model){
+        if (!$model) {
             return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
         }
         $valid = $model->validateOtpCode($opt);
@@ -422,18 +432,18 @@ class TransactionController extends WalletServiceController
     {
         $session = Yii::$app->session;
         if (($code = ArrayHelper::getValue($this->post, 'transaction_code', false)) === false) {
-            return $this->response(false, Yii::t('wallet','Missing parameter ${parameter}', [
+            return $this->response(false, Yii::t('wallet', 'Missing parameter ${parameter}', [
                 'parameter' => 'transaction_code'
             ]), null, ResponseCode::ERROR);
         }
         if (($receiveType = ArrayHelper::getValue($this->post, 'otp_receive_type', false)) === false) {
-            return $this->response(false, Yii::t('wallet','Missing parameter ${parameter}', [
+            return $this->response(false, Yii::t('wallet', 'Missing parameter ${parameter}', [
                 'parameter' => 'otp_receive_type'
             ]), null, ResponseCode::ERROR);
         }
 
         $model = $this->findModel($code);
-        if(!$model){
+        if (!$model) {
             return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
         }
         $name = self::REFRESH_OTP_SESSION_NAME . $model->getWalletTransactionCode();
@@ -502,18 +512,18 @@ class TransactionController extends WalletServiceController
     public function actionSuccess()
     {
         if (($code = ArrayHelper::getValue($this->post, 'transaction_code', false)) === false) {
-            return $this->response(false, Yii::t('wallet','Missing parameter ${transaction_code}', [
+            return $this->response(false, Yii::t('wallet', 'Missing parameter ${transaction_code}', [
                 'parameter' => 'transaction_code'
             ]), null, ResponseCode::ERROR);
         }
         $model = $this->findModel($code);
-        if(!$model){
+        if (!$model) {
             return $this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
         }
         if ($model->status === WalletTransaction::STATUS_PROCESSING || $model->fixedOtpCode !== null) {
             // Todo: nothing
             if (!$model->updateTransaction(WalletTransaction::STATUS_COMPLETE)) {
-                return $this->response(false, Yii::t('wallet','Have error when update your transaction to complete'), null, ResponseCode::ERROR);
+                return $this->response(false, Yii::t('wallet', 'Have error when update your transaction to complete'), null, ResponseCode::ERROR);
             }
             $manager = new \common\mail\MailManager();
             $manager->setType(\common\mail\Template::TYPE_TRANSACTION_TYPE_PAY_ORDER_SUCCESS);
@@ -521,9 +531,9 @@ class TransactionController extends WalletServiceController
             $manager->setReceiver(['mail' => $model->getOtpSendTo(WalletTransaction::VERIFY_RECEIVE_TYPE_EMAIL)]);
             $manager->setStore(1);
             $manager->send();
-            return $this->response(true,Yii::t('wallet','Thank you for use wallet'), ['status' => 'complete', 'time' => $model->complete_at], ResponseCode::SUCCESS);
+            return $this->response(true, Yii::t('wallet', 'Thank you for use wallet'), ['status' => 'complete', 'time' => $model->complete_at], ResponseCode::SUCCESS);
         }
-        return $this->response(false, Yii::t('wallet','Your otp do not verify, please verify otp send on email or phone'), null, ResponseCode::INVALID);
+        return $this->response(false, Yii::t('wallet', 'Your otp do not verify, please verify otp send on email or phone'), null, ResponseCode::INVALID);
     }
 
     public function actionTestUpdateTransaction($id)
@@ -540,11 +550,11 @@ class TransactionController extends WalletServiceController
      */
     public function findModel($code)
     {
-        /** @var WalletTransaction $model  */
+        /** @var WalletTransaction $model */
         if (($model = WalletTransaction::find()->where(['wallet_transaction_code' => $code])->one()) != null) {
             $wallet = Yii::$app->user->getIdentity();
             $user = User::findOne($wallet->customer_id);
-            if($user->employee != 1 && $model->wallet_client_id != $wallet->id){
+            if ($user->employee != 1 && $model->wallet_client_id != $wallet->id) {
                 return null;//$this->response(false, 'Not Found', null, ResponseCode::NOT_FOUND);
             }
             return $model;

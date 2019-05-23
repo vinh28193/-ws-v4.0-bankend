@@ -318,6 +318,7 @@ class Payment extends Model
                 $order->receiver_post_code = $receiverAddress->post_code;
                 $order->receiver_address_id = $receiverAddress->id;
                 $order->total_paid_amount_local = 0;
+                $order->transaction_code = $this->transaction_code;
 
                 if (($sellerParams = ArrayHelper::getValue($params, 'seller')) === null || !isset($sellerParams['seller_name']) || $sellerParams['seller_name'] === null || $sellerParams['seller_name'] === '') {
                     $transaction->rollBack();
