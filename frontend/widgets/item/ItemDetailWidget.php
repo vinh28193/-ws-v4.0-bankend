@@ -129,7 +129,6 @@ CSS;
         // cách gọi 1 hàm cùng với param truyền vào
         // JqueryElement.TênThưViện('Tên hàm','param 1', param 2, ..., param n);
         $view->registerJs("jQuery('#$id').wsItem('favorite',$sku,$item);", $view::POS_END);
-
     }
 
     protected function renderEntries()
