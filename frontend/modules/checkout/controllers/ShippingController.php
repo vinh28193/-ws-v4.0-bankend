@@ -125,9 +125,11 @@ class ShippingController extends CheckoutController
         $shippingForm->setDefaultValues();
         $provinces = SystemStateProvince::select2Data(1);
 
-        // ga checkour Order Tracking with Enhanced E-commerce
-        $this->gaCheckoutPages();
-        $this->gaCheckout();
+        if(YII_ENV == 'dev' and YII_DEBUG == true) {
+            // ga checkour Order Tracking with Enhanced E-commerce
+            $this->gaCheckoutPages();
+            $this->gaCheckout();
+        }
 
         return $this->render('index', [
             'activeStep' => $activeStep,

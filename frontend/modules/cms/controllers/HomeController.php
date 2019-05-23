@@ -22,7 +22,8 @@ class HomeController extends CmsController
 
     public function actionIndex()
     {
-        $this->gaHomeWs();
+        if(YII_ENV == 'dev' and YII_DEBUG == true){$this->gaHomeWs(); }
+
         if (($data = $this->renderBlock(1,6)) === false) {
             return $this->redirect('@frontend/views/common/404');
         }
