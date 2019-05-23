@@ -14,7 +14,7 @@ use yii\helpers\Html;
 <div class="installment-table" id="installmentPeriods"></div>
 <div class="form-group form-check term">
     <input type="checkbox" class="form-check-input" value="1" id="termInstallment">
-    <label class="form-check-label" for="termCheckout">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và điều
+    <label class="form-check-label" for="termInstallment">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và điều
             kiện</a> giao dịch trả góp của Weshop.</label>
 </div>
 <button type="button" class="btn btn-payment btn-block" id="btnInstallment" onclick="ws.payment.installment()">Thanh toán trả góp ngay

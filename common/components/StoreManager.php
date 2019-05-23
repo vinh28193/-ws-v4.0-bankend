@@ -160,6 +160,7 @@ class StoreManager extends Component
 
     public function showMoney($money, $currency = null)
     {
+        $money = $this->roundMoney($money);
         if ($currency === null) {
             $currency = $this->store->currency;
         }

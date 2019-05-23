@@ -92,14 +92,15 @@ class PaymentController extends BasePaymentController
                 $shippingForm->receiver_address_id = $my_shiping->id;
             }
         }
-        $payment->customer_name = $shippingForm->buyer_name;
-        $payment->customer_email = $shippingForm->buyer_email;
-        $payment->customer_phone = $shippingForm->buyer_phone;
-        $payment->customer_address = $shippingForm->buyer_address;
-        $payment->customer_city = $shippingForm->buyer_province_id;
-        $payment->customer_postcode = $shippingForm->buyer_post_code;
-        $payment->customer_district = $shippingForm->buyer_district_id;
-        $payment->customer_country = $shippingForm->buyer_country_id;
+        $address = isset($my_address) && $my_address instanceof Address ? $my_address : $this->user->primaryAddress;
+        $payment->customer_name = implode(' ', [$address->first_name, $address->last_name]);
+        $payment->customer_email = $address->email;
+        $payment->customer_phone = $address->phone;
+        $payment->customer_address = $address->address;
+        $payment->customer_city = $address->province_name;
+        $payment->customer_postcode = $address->post_code;
+        $payment->customer_district = $address->district_name;
+        $payment->customer_country = $address->country_name;
         $payment->createTransactionCode();
         /* @var $results PromotionResponse */
         $payment->checkPromotion();
@@ -129,7 +130,7 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->before_discount_amount_local = $payment->total_amount;
         $paymentTransaction->transaction_amount_local = $payment->total_amount - $payment->total_discount_amount;
         $paymentTransaction->payment_type = $payment->payment_type;
-        $paymentTransaction->shipping =$shippingForm->receiver_address_id;
+        $paymentTransaction->shipping = isset($my_shiping) && $my_shiping instanceof Address ? $my_shiping->id : $this->user->defaultShippingAddress->id;
         $paymentTransaction->save(false);
         if ($payment->payment_provider === 42) {
             $wallet = new WalletService([
@@ -195,7 +196,7 @@ class PaymentController extends BasePaymentController
                 'payment_type' => $paymentTransaction->payment_type,
 
             ]);
-            $redirectUrl = Url::toRoute('/account/order',true);
+            $redirectUrl = Url::toRoute('/account/order', true);
             if (isset($data['redirectUrl'])) {
                 $redirectUrl = $data['redirectUrl'];
             }
@@ -203,7 +204,7 @@ class PaymentController extends BasePaymentController
             /* @var $results PromotionResponse */
             $createResponse = $payment->createOrder($receiverAddress);
             if ($createResponse['success']) {
-                foreach ($payment->carts as $key){
+                foreach ($payment->carts as $key) {
                     $this->cartManager->removeItem($key);
                 }
                 return $this->redirect($redirectUrl);

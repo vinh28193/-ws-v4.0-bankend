@@ -118,7 +118,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             return ReponseData::reponseArray($success, $mess, $data);
         } catch (\Exception $exception) {
             $logCallback->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
-            $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+            $logCallback->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logCallback->save(false);
             return ReponseData::reponseArray(false, 'thất bại');
         }

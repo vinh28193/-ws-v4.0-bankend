@@ -264,7 +264,11 @@ ws.payment = (function ($) {
                     var data = response.data;
                     var banks = data.methods || [];
                     var promotion = data.promotion || undefined;
+                    pub.installment.originAmount = data.origin || (0 + pub.payment.currency);
                     initInstallmentBankView(banks);
+                    ws.initEventHandler('calculateInstallment', 'periodChange', 'change', 'input[name=installmentPeriod]', function (e) {
+                        pub.payment.installment_month = $(this).val();
+                    });
                     if (promotion !== undefined) {
                         updatePaymentByPromotion(promotion)
                     }
@@ -310,31 +314,36 @@ ws.payment = (function ($) {
                 isActive.find('span').addClass('active');
             }
             var row = {
-                rowHeader: ['<td>Thời hạn trả góp</td>'],
-                rowOriginAmount: ['<td>Giá Weshop</td>'],
-                rowAmountByMonth: ['<td>Tiền trả hàng tháng</td>'],
-                rowAmountFinal: ['<td>Giá sau trả góp</td>'],
-                rowAmountFee: ['<td>Giá chênh lệch</td>'],
-                rowOption: ['<td></td>']
+                rowHeader: [],
+                rowOriginAmount: [],
+                rowAmountByMonth: [],
+                rowAmountFinal: [],
+                rowAmountFee: [],
+                rowOption: []
             };
             $.each(pub.installment.currentMethod.periods, function (index, period) {
                 var iActive = index === 0;
                 if (iActive) {
                     pub.payment.installment_month = period.month;
                 }
-                row.rowHeader.push('<td class="text-blue">' + period.month + ' tháng</td>');
-                row.rowOriginAmount.push('<td><b>' + pub.installment.originAmount + '</b></td>');
-                row.rowAmountByMonth.push('<td><b>' + period.amountByMonth + '</b></td>');
-                row.rowAmountFinal.push('<td><b>' + period.amountFinal + '</b></td>');
-                row.rowAmountFee.push('<td><b>' + period.amountFee + '</b></td>');
-                row.rowOption.push('<td>\n' +
+                row.rowHeader.unshift('<td class="text-blue">' + period.month + ' tháng</td>');
+                row.rowOriginAmount.unshift('<td><b>' + pub.installment.originAmount + '</b></td>');
+                row.rowAmountByMonth.unshift('<td><b>' + period.amountByMonth + '</b></td>');
+                row.rowAmountFinal.unshift('<td><b>' + period.amountFinal + '</b></td>');
+                row.rowAmountFee.unshift('<td><b>' + period.amountFee + '</b></td>');
+                row.rowOption.unshift('<td>\n' +
                     '<div class="form-check">\n' +
-                    '     <input class="form-check-input" type="radio" value="' + period.month + '"  ' + (iActive ? 'checked' : '') + '  id="installment' + period.month + '" name="installment" checked="">\n' +
+                    '     <input class="form-check-input" type="radio" value="' + period.month + '"  ' + (iActive ? 'checked' : '') + '  id="installment' + period.month + '" name="installmentPeriod" checked="">\n' +
                     '     <label class="form-check-label" for="installment' + period.month + '">Chọn</label>\n' +
                     '     </div>\n' +
                     '</td>');
             });
-
+            row.rowHeader.unshift('<td>Thời hạn trả góp</td>');
+            row.rowOriginAmount.unshift('<td>Giá Weshop</td>');
+            row.rowAmountByMonth.unshift('<td>Tiền trả hàng tháng</td>');
+            row.rowAmountFinal.unshift('<td>Giá sau trả góp</td>');
+            row.rowAmountFee.unshift('<td>Giá chênh lệch</td>');
+            row.rowOption.unshift('<td></td>');
             var table = '<table class="table table-bordered"><tbody>';
             table += '<tr>' + row.rowHeader.join('') + '</tr>';
             table += '<tr>' + row.rowOriginAmount.join('') + '</tr>';
@@ -429,47 +438,12 @@ ws.payment = (function ($) {
             if (typePay && typePay.toString().toLowerCase() === 'topup') {
                 ws.payment.topUp();
             } else {
-                if (!pub.getInfoFormShipping()) {
-                    return;
-                }
                 var $termAgree = $('input#termCheckout').is(':checked');
                 if (!$termAgree) {
                     alert('Bạn phải đồng ý với điều khoản weshop');
                     return;
                 }
-                ws.ajax('/payment/payment/process', {
-                    dataType: 'json',
-                    type: 'post',
-                    data: {payment: pub.payment, shipping: pub.shipping},
-                    success: function (response) {
-                        if (response.success) {
-                            var data = response.data;
-                            var code = data.code.toUpperCase() || '';
-                            var method = data.method.toUpperCase();
-                            if (method === 'POPUP') {
-                                var type = data.provider.toUpperCase() || null;
-                                if (type === 'WALLET') {
-                                    var $otp = $('#otp-confirm');
-                                    $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
-                                }
-                            } else {
-                                $('span#transactionCode').html(code);
-                                $('div#checkout-success').modal('show');
-                                ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
-                                    if (method === 'POST') {
-                                        $(data.checkoutUrl).appendTo('body').submit();
-                                    } else {
-                                        ws.redirect(data.checkoutUrl);
-                                    }
-                                });
-                                redirectPaymentGateway(data, 1000);
-                            }
-                        } else {
-                            alert(response.message);
-                        }
-
-                    }
-                }, true)
+                processPaymment();
             }
         },
         topUp: function () {
@@ -501,7 +475,15 @@ ws.payment = (function ($) {
                     }
 
                 }
-            })
+            }, true);
+        },
+        installment: function () {
+            var $termInstallment = $('input#termInstallment').is(':checked');
+            if (!$termInstallment) {
+                alert('Bạn phải đồng ý với điều khoản trả góp weshop');
+                return;
+            }
+            processPaymment();
         },
         filterShippingAddress: function () {
             var $form = $('form.payment-form');
@@ -522,6 +504,44 @@ ws.payment = (function ($) {
             pub.shipping = formDataArray;
             return formDataArray;
         },
+    };
+    var processPaymment = function () {
+        if (!pub.getInfoFormShipping()) {
+            return;
+        }
+        ws.ajax('/payment/payment/process', {
+            dataType: 'json',
+            type: 'post',
+            data: {payment: pub.payment, shipping: pub.shipping},
+            success: function (response) {
+                if (response.success) {
+                    var data = response.data;
+                    var code = data.code.toUpperCase() || '';
+                    var method = data.method.toUpperCase();
+                    if (method === 'POPUP') {
+                        var type = data.provider.toUpperCase() || null;
+                        if (type === 'WALLET') {
+                            var $otp = $('#otp-confirm');
+                            $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
+                        }
+                    } else {
+                        $('span#transactionCode').html(code);
+                        $('div#checkout-success').modal('show');
+                        ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
+                            if (method === 'POST') {
+                                $(data.checkoutUrl).appendTo('body').submit();
+                            } else {
+                                ws.redirect(data.checkoutUrl);
+                            }
+                        });
+                        redirectPaymentGateway(data, 1000);
+                    }
+                } else {
+                    alert(response.message);
+                }
+
+            }
+        }, true)
     };
     var updatePaymentByPromotion = function ($response) {
         var input = $('input[name=couponCode]');

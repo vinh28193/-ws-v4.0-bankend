@@ -54,17 +54,22 @@ class ItemController extends EbayController
     public function actionFavorite()
     {
         // Favorite
-
         $fingerprint = null;
-        $post = Yii::$app->request->post();
+        $post = $this->request->post();
+
+
         if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
         if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
+        $item = ArrayHelper::getValue($post,'item');
+        $id = ArrayHelper::getValue($post,'sku');
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : $fingerprint;
         if($uuid){
             $_favorite = new FavoriteObject();
-            //$_favorite->create($item, $id, $uuid);
+            $_favorite->create($item, $id, $uuid);
         }
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return 'Ok';
 
         /*
         // Queue Favorite Save
@@ -83,7 +88,7 @@ class ItemController extends EbayController
         // Check whether a worker has executed the job.
         Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
         */
-
+/*
         $response = ['success' => false, 'message' => 'can not call', 'content' => []];
         $form = new ProductDetailFrom();
         $post = Yii::$app->getRequest()->post();
@@ -95,7 +100,7 @@ class ItemController extends EbayController
             $response['message'] = 'failed';
             $response['content'] = $form->getErrors();
         } else {
-            /** @var $item BaseProduct */
+            // @var $item BaseProduct
             $fees = [];
             foreach ($item->getAdditionalFees()->keys() as $key) {
                 $fees[$key] = $item->getAdditionalFees()->getTotalAdditionFees($key)[1];
@@ -119,6 +124,7 @@ class ItemController extends EbayController
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $response;
+        */
     }
 
     public function actionVariation()
