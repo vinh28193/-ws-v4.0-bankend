@@ -37,9 +37,16 @@ class PromotionUserController extends BaseAccountController
     public function actionIndex()
     {
         $userId = Yii::$app->user->getIdentity()->getId();
-        $models = Promotion::find()->with('promotion')->where(['customer_id' => $userId])->all();
+        $get = Yii::$app->request->get();
+        $models = PromotionUser::find()->with('promotion')->andWhere(['customer_id' => $userId]);
+        if (isset($get['status']) && !empty($get['status'])) {
+            $models->andWhere(['status' => (int)($get['status'])]);
+        } if (isset($get['is_used']) && !empty($get['is_used'])) {
+            $models->andWhere(['is_used' => (int)($get['is_used'])]);
+        }
+        $query = $models->all();
         return $this->render('index', [
-           'models' => $models,
+            'models' => $query,
         ]);
     }
 
