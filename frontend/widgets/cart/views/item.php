@@ -20,7 +20,11 @@ $name = Html::encode($name);
 ?>
 
 
-<li data-key="<?= $key; ?>" class="item <?= $type; ?>">
+<li data-key="<?= $key; ?>" data-type="<?= $type; ?>">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="cartItems" value="<?= $key; ?>" id="cartItem<?= $key; ?>">
+        <label class="form-check-label" for="cartItem<?= $key; ?>"></label>
+    </div>
     <?php echo Html::hiddenInput('items', $key) ?>
     <div class="thumb">
         <img src="<?= $imageSrc ?>" alt="<?= $name; ?>">

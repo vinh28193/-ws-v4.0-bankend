@@ -71,6 +71,7 @@ CSS;
         parent::run();
         echo $this->renderEntries();
         Pjax::end();
+        echo $this->renderDescription('mini');
         echo $this->renderDescription('extra');
     }
 
@@ -150,7 +151,6 @@ CSS;
         $detailBlock .= $this->renderFullInfo();
         $detailBlock .= Html::endTag('div');
         $detailBlock .= $this->renderRelateProduct();
-        $detailBlock .= $this->renderDescription('mini');
         return $detailBlock;
     }
 
