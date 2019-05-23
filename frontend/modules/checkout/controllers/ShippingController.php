@@ -24,6 +24,77 @@ class ShippingController extends CheckoutController
         return parent::beforeAction($action);
     }
 
+    public function gaCheckoutPages()
+    {
+        Yii::info("GA CheckoutPages");
+        \Yii::$app->ga->request()
+            //->setClientId(Yii::$app->user->identity->getId().Yii::$app->user->identity->email)
+            ->setClientId("8898809989")
+            ->setDocumentPath('/CheckoutWs')
+            ->setAsyncRequest(true)
+            ->sendPageview();
+    }
+
+    public function gaCheckout()
+    {
+        Yii::info("GA CHECKOUT");
+        $request = Yii::$app->ga->request();
+
+       // Build the order data programmatically, each product of the order included in the payload
+       // First, general and required hit data
+        //$request->setClientId(Yii::$app->user->identity->getId().Yii::$app->user->identity->email);
+        //$request->setUserId(Yii::$app->user->identity->getId());
+        $request->setClientId(@uniqid());
+        $request->setUserId(Yii::$app->user->identity->getId());
+
+        // Then, include the transaction data
+        $request->setTransactionId('7778922')
+            ->setAffiliation('THE ICONIC')
+            ->setRevenue(250.0)
+            ->setTax(25.0)
+            ->setShipping(15.0)
+            ->setCouponCode('MY_COUPON');
+
+        // Include a product, the only required fields are SKU and Name
+        $productData1 = [
+            'sku' => 'AAAA-6666',
+            'name' => 'Test Product 2',
+            'brand' => 'Test Brand 2',
+            'category' => 'Test Category 3/Test Category 4',
+            'variant' => 'yellow',
+            'price' => 50.00,
+            'quantity' => 1,
+            'coupon_code' => 'TEST 2',
+            'position' => 2
+        ];
+
+        $request->addProduct($productData1);
+
+        // You can include as many products as you need, this way
+        $productData2 = [
+            'sku' => 'AAAA-5555',
+            'name' => 'Test Product',
+            'brand' => 'Test Brand',
+            'category' => 'Test Category 1/Test Category 2',
+            'variant' => 'blue',
+            'price' => 85.00,
+            'quantity' => 2,
+            'coupon_code' => 'TEST',
+            'position' => 4
+        ];
+
+        $request->addProduct($productData2);
+
+        // Don't forget to set the product action, which is PURCHASE in the example below
+        $request->setProductActionToPurchase();
+
+        // Finally, you need to send a hit; in this example, we are sending an Event
+        $request->setEventCategory('Checkout')
+            ->setEventAction('Purchase')
+            ->sendEvent();
+
+    }
+
     public function actions()
     {
         return ArrayHelper::merge(parent::actions(), [
@@ -53,6 +124,11 @@ class ShippingController extends CheckoutController
         $shippingForm = new ShippingForm();
         $shippingForm->setDefaultValues();
         $provinces = SystemStateProvince::select2Data(1);
+
+        // ga checkour Order Tracking with Enhanced E-commerce
+        $this->gaCheckoutPages();
+        $this->gaCheckout();
+
         return $this->render('index', [
             'activeStep' => $activeStep,
             'shippingForm' => $shippingForm,
@@ -61,7 +137,7 @@ class ShippingController extends CheckoutController
         ]);
     }
     public function actionLogin(){
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = Yii\web\Response::FORMAT_JSON;
         if (!Yii::$app->user->isGuest) {
             return ['success' => true];
         }
@@ -79,7 +155,7 @@ class ShippingController extends CheckoutController
         }
     }
     public function actionSignup(){
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = Yii\web\Response::FORMAT_JSON;
         Yii::info('register new');
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
