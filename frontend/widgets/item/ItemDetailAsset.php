@@ -12,8 +12,8 @@ class ItemDetailAsset extends AssetBundle
 
     public $js = [
         'js/ws.item.js',
-        'js/details-ebay-slider.js'
-
+        'js/details-ebay-slider.js',
+        'js/client.min.js'
     ];
 
     public $css = [
