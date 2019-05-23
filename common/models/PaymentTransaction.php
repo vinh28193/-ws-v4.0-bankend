@@ -9,6 +9,7 @@ class PaymentTransaction extends DbPaymentTransaction
 {
 
     const TRANSACTION_TYPE_PAYMENT = 'PAYMENT';
+    const TRANSACTION_ADDFEE = 'ADDFEE';
     const TRANSACTION_TYPE_TOP_UP = 'TOP_UP';
 
     const TRANSACTION_STATUS_CREATED = 'CREATED';
