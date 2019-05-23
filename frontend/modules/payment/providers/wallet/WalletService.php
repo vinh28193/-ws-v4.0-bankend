@@ -25,6 +25,7 @@ class WalletService extends BaseObject
     const TYPE_FREEZE = 'FREEZE';
     const TYPE_UN_FREEZE = 'UN_FREEZE';
     const TYPE_PAY_ORDER = 'PAY_ORDER';
+    const TYPE_PAY_ADDFEE = 'PAY_ADDFEE';
     const TYPE_REFUND = 'REFUND';
     const TYPE_WITH_DRAW = 'WITH_DRAW';
 
