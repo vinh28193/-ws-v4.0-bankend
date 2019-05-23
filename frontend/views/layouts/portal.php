@@ -1,8 +1,8 @@
 <?php
-
 use frontend\widgets\alias\AliasWidget;
 use frontend\assets\FancyboxPlusAsset;
 use frontend\widgets\search\SearchBoxWidget;
+
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -10,6 +10,8 @@ use frontend\widgets\search\SearchBoxWidget;
 
 $this->beginContent('@frontend/views/layouts/common.php');
 FancyboxPlusAsset::register($this);
+$csrfTokenName = Yii::$app->request->csrfParam;
+$csrfToken = Yii::$app->request->csrfToken;
 
 $js = <<<JS
 $(document).ready(function() {
@@ -17,7 +19,7 @@ $(document).ready(function() {
             var _fingerprint = client.getFingerprint();
             var data = {
                 fingerprint: _fingerprint,
-                _csrf : 9999
+                $csrfTokenName: '$csrfToken'
             };
   setTimeout(function () { 
         $.ajax({

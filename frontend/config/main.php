@@ -58,7 +58,7 @@ return [
             ],
         ],
         'request' => [
-            'csrfParam' => '_csrf-frontend',
+            'csrfParam' => 'csrf_frontend_ws2019',
         ],
         'user' => [
             'identityClass' => 'common\models\User',

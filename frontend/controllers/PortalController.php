@@ -34,10 +34,17 @@ class PortalController extends FrontendController
         $fingerprint = null;
         $post = $this->request->post();
         if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
-        if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
+        if (isset($post[Yii::$app->request->csrfParam])) {
+            Yii::info("csrfTokenName : " .Yii::$app->request->csrfParam);
+            Yii::info("csrfToken : " .Yii::$app->request->csrfToken);
+           if( $post[Yii::$app->request->csrfParam] != Yii::$app->request->csrfToken)
+            {  return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ]; }
+        }else {
+            return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
+        }
+
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : $fingerprint;
-
         $_All_favorite = $_favorite->getfavorite($uuid);
         Yii::$app->response->format = Response::FORMAT_JSON;
 
