@@ -27,6 +27,7 @@ FrontendAsset::register($this);
     <meta property="og:description" content="website description"/>
     <meta property="og:site_name" content="website name"/>
     <meta property="fb:admins" content="Facebook Admin ID page"/>
+    <meta name="google-site-verification" content="OPjEOpXY16mDyr7UmkxKP-GjNEhe0xKZPOAY2mzjD58" />
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
@@ -432,6 +433,9 @@ FrontendAsset::register($this);
         </div>
     </div>
 </div>
+<script>
+    dataLayer = [];
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>
