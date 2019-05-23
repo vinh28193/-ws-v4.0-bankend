@@ -339,7 +339,15 @@ class CartManager extends Component
 
     }
 
-    public function getItems($safeOnly = true)
+    public function getAllKeys($safeOnly = true)
+    {
+        if (($user = $this->getUser()) === null && $safeOnly) {
+            $safeOnly = false;
+        }
+        return $this->getStorage()->keys($safeOnly ? $user->getId() : null);
+    }
+
+    public function getItems($keys = null, $safeOnly = true)
     {
         if (($user = $this->getUser()) === null && $safeOnly) {
             $safeOnly = false;

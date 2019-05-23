@@ -11,6 +11,8 @@ namespace common\components\cart\storage;
 interface CartStorageInterface
 {
 
+
+
     /**
      * check item is exist
      * @param $key
@@ -45,10 +47,11 @@ interface CartStorageInterface
     public function removeItem($key);
 
     /**
+     * @param $keys
      * @param $identity
-     * @return array
+     * @return mixed
      */
-    public function getItems($identity);
+    public function getItems($identity, $keys = null);
 
     /**
      * @param $identity
@@ -57,9 +60,12 @@ interface CartStorageInterface
     public function countItems($identity);
 
     /**
+     * @param $keys
      * @param $identity
-     * @return boolean
+     * @return int
      */
-    public function removeItems($identity);
+    public function removeItems($identity, $keys = null);
+
+    public function keys($identity);
 
 }
