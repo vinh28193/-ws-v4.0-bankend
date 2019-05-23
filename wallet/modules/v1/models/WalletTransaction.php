@@ -38,6 +38,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     const SCENARIO_PAY_ORDER = 'payOrder';
     const SCENARIO_TOPUP = 'topUp';
     const SCENARIO_REFUND = 'refund';
+    const SCENARIO_ADDFEE = 'addfee';
 
     const TYPE_TOP_UP = 'TOP_UP';
     const TYPE_FREEZE = 'FREEZE';
@@ -45,6 +46,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     const TYPE_PAY_ORDER = 'PAY_ORDER';
     const TYPE_REFUND = 'REFUND';
     const TYPE_WITH_DRAW = 'WITH_DRAW';
+    const TYPE_ADDFEE = 'ADDFEE';
 
     const STATUS_QUEUE = 0;
     const STATUS_PROCESSING = 1;
