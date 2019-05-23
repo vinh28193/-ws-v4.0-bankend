@@ -5338,6 +5338,28 @@ a {
   width: 100%;
   font-weight: 500;
 }
+.msg_cotainer_send {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 10px;
+  border-radius: 25px;
+  background-color: #78e08f;
+  padding: 10px;
+  position: relative;
+}
+.owner-chat {
+  background: #00aced;
+  color: #fff;
+  float: right !important;
+  border-bottom-right-radius: 0px;
+}
+.text-gray {
+  color: darkgrey;
+  font-size: 11px;
+}
+.style-sb {
+  border: 1px solid #ced4da;
+}
 /*.name{*/
 /*  white-space: nowrap;*/
 /*}*/
@@ -5352,6 +5374,9 @@ a {
 .navbar-2 .navbar-header ul li .title2.active.tab-ebay{
   background: #0063d1;
   color: white;
+}
+.msg_card_body{
+  overflow-y: auto;
 }
 .navbar-2 .navbar-header ul li .title2.active.tab-ebay:after{
   border-color: #0063d1 transparent transparent transparent;

@@ -4,16 +4,14 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
-use common\components\ExchangeRate;
 use common\models\db\ListAccountPurchase;
+use common\models\Order;
 use common\models\PaymentTransaction;
 use common\models\Product;
-use common\models\Order;
 use common\models\User;
 use common\models\weshop\FormPurchaseItem;
 use common\modelsMongo\ChatMongoWs;
-use frontend\modules\payment\Payment;
-use frontend\modules\payment\providers\wallet\WalletService;
+use frontend\modules\payment\PaymentService;
 use Yii;
 
 class PurchaseServiceController extends BaseApiController
@@ -70,6 +68,7 @@ class PurchaseServiceController extends BaseApiController
             if ($user) {
                 foreach ($orders as $order) {
                     $messageProduct = "";
+                    $amount = 0;
                     foreach ($order['products'] as $product) {
                         $form = new FormPurchaseItem();
                         $form->setAttributes($product, false);
@@ -100,10 +99,26 @@ class PurchaseServiceController extends BaseApiController
                                 $messageProduct .= $messageProduct ? '. Và' . $mss : $mss;
                             }
                         }
+                        $amount = $amount + $amountChange;
                     }
-                    if ($messageProduct != "") {
+                    if ($messageProduct != "" && $amount > 0) {
                         $messageOrder = ". Mã đơn hàng <b>" . $order['ordercode'] . "</b>" . $messageProduct . ".<br>Quý khách có muốn tiếp tục đặt đơn này không ạ.<br>Nếu có vui lòng xác nhận với WeShop sớm nhất để tránh sự cố hết hàng hoặc tăng giá tiếp tục sảy ra.<br>Xin cảm ơn.";
                         $orderDb = Order::findOne(['ordercode' => $order['ordercode']]);
+                        /** @var PaymentTransaction[] $paymentTransactions */
+                        $paymentTransactions = PaymentTransaction::find()
+                            ->where([
+                                'transaction_reference_code' => $orderDb->ordercode,
+                                'transaction_status' => [
+                                    PaymentTransaction::TRANSACTION_STATUS_CREATED,
+                                    PaymentTransaction::TRANSACTION_STATUS_QUEUED
+                                ],
+                                'transaction_type' => PaymentTransaction::TRANSACTION_ADDFEE
+                            ])->all();
+                        $listIdChange = [];
+                        foreach ($paymentTransactions as $item){
+                            $listIdChange[] = $item->id;
+                            $amount += $item->transaction_amount_local;
+                        }
                         $paymentTransaction = new PaymentTransaction();
                         $paymentTransaction->store_id = $orderDb->store_id;
                         $paymentTransaction->customer_id = $orderDb->customer_id;
@@ -113,7 +128,23 @@ class PurchaseServiceController extends BaseApiController
                         $paymentTransaction->transaction_customer_email = $orderDb->receiver_email;
                         $paymentTransaction->transaction_customer_phone = $orderDb->receiver_phone;
                         $paymentTransaction->transaction_customer_address = $orderDb->receiver_address;
-                        $paymentTransaction->transaction_customer_city = $orderDb->receiver_address;
+                        $paymentTransaction->transaction_customer_city = $orderDb->receiver_province_id;
+                        $paymentTransaction->transaction_customer_postcode = $orderDb->receiver_post_code;
+                        $paymentTransaction->transaction_customer_district = $orderDb->receiver_district_id;
+                        $paymentTransaction->transaction_customer_country = $orderDb->receiver_country_id;
+                        $paymentTransaction->transaction_reference_code = $orderDb->ordercode;
+                        $paymentTransaction->payment_type = PaymentTransaction::PAYMENT_TYPE_ADDFEE;
+                        $paymentTransaction->carts = '';
+                        $paymentTransaction->total_discount_amount = 0;
+                        $paymentTransaction->before_discount_amount_local = $amount;
+                        $paymentTransaction->transaction_amount_local = $amount;
+                        $paymentTransaction->created_at = time();
+                        $paymentTransaction->save(0);
+                        $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
+                        $paymentTransaction->save(0);
+                        PaymentTransaction::updateAll(
+                            ['transaction_status' => PaymentTransaction::TRANSACTION_STATUS_REPLACED,'note' => 'dồn tiền thanh toán cho transaction '.$paymentTransaction->transaction_code],
+                            ['id' => $listIdChange]);
                         if ($emailPrice) {
                             //#ToDo Gửi mail thông báo thay đổi về giá
                         }
