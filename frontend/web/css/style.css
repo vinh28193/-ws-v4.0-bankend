@@ -5375,6 +5375,9 @@ a {
   background: #0063d1;
   color: white;
 }
+.msg_card_body{
+  overflow-y: auto;
+}
 .navbar-2 .navbar-header ul li .title2.active.tab-ebay:after{
   border-color: #0063d1 transparent transparent transparent;
 }

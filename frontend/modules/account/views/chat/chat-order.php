@@ -47,7 +47,7 @@ $this->registerJs($js);
                                 <h3 class="text-white">Trao đổi với nhân viên (12345)</h3>
                             </div>
                         </div>
-                        <div class="card-body msg_card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+                        <div class="card-body msg_card_body" style="max-height: 300px" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                             <div>
                                 <div>
                                     <?php foreach ($formChat->getMessages() as $chat) { ?>
