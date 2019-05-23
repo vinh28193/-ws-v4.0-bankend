@@ -38,16 +38,16 @@ $name = Html::encode($name);
             <ol>
                 <?php
                 if (is_string($provider)) {
-                    echo '<li>Bán bởi:' . $provider . '</li>';
+                    echo '<li>Bán bởi :' . $provider . '</li>';
                 } else if ($provider instanceof \common\products\Provider) {
-                    echo '<li>Bán bởi: <a href="' . ($provider->website !== null ? $provider->website : "#") . '">' . $provider->name . '</a></li>';
+                    echo '<li>Bán bởi : <a href="' . ($provider->website !== null ? $provider->website : "#") . '">' . $provider->name . '</a></li>';
                 }
                 if ($variation !== null) {
                     echo '<li>' . $variation . '</li>';
                 }
                 ?>
 
-                <li>Tạm tính: <span class="weight-option"><?= $weight ?></span> Gram</li>
+                <li>Tạm tính : <span class="weight-option"><?= $weight ?></span> kg </li>
             </ol>
         </div>
         <div class="right">
