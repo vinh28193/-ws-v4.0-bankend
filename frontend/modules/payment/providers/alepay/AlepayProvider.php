@@ -122,8 +122,8 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
 
             $transactionInfo = $this->getAlepayClient()->getTransactionInfo($resp['data'])['data'];
             $transactionInfo = Json::decode($transactionInfo,true);
-            var_dump($data);die;
-            $orderCode = $data['orderCode'];
+
+            $orderCode = $transactionInfo['orderCode'];
             if (($transaction = PaymentTransaction::findOne(['transaction_code' => $orderCode])) === null) {
                 $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
@@ -132,15 +132,18 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             }
             $success = false;
             $mess = "Giao dịch thanh toán không thành công!";
-            if ($data['status'] === 155) {
+            if ($transactionInfo['status'] === '155') {
                 $success = true;
                 $mess = "Giao dịch đang được cho duyệt";
-            } elseif ($data['status'] === '000') {
+            } elseif ($transactionInfo['status'] === '000') {
                 $success = true;
                 $mess = "Giao dịch đã được thanh toán thành công!";
             }
-
-            $logCallback->response_content = $data;
+            if($success){
+                $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                $transaction->save();
+            }
+            $logCallback->response_content = $transactionInfo;
             $logCallback->save();
             return ReponseData::reponseArray($success, $mess, ['transaction' => $transaction]);
         } catch (\Exception $e) {
