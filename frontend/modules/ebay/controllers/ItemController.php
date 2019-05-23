@@ -45,35 +45,6 @@ class ItemController extends EbayController
         $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];
         $item->relate_products = RelateProduct::setRelateProducts($relate_product);
 
-        // Favorite
-        $fingerprint = null;
-        $post = Yii::$app->request->post();
-        if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
-        if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
-        $UUID = Yii::$app->user->getId();
-        $uuid = isset($UUID) ? $UUID : $fingerprint;
-        if($uuid){
-            $_favorite = new FavoriteObject();
-            $_favorite->create($item, $id, $uuid);
-        }
-
-        // Queue Favorite Save
-        /*
-        $UUID = Yii::$app->user->getId();
-        $uuid = isset($UUID) ? $UUID : $this->uuid;
-        $id = Yii::$app->queue->delay(30)->push(new Favorite([
-                'obj_type' => $item,
-                'obj_id' => $id,
-                'UUID' => $UUID
-            ]));
-        // Check whether the job is waiting for execution.
-        Yii::info(" Check whether the job is waiting for execution : ".Yii::$app->queue->isWaiting($id));
-        // Check whether a worker got the job from the queue and executes it.
-        Yii::info(" Check whether a worker got the job from the queue and executes it : ". Yii::$app->queue->isReserved($id));
-        // Check whether a worker has executed the job.
-        Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
-        */
-
         return $this->render('index', [
             'item' => $item
         ]);
@@ -101,6 +72,37 @@ class ItemController extends EbayController
 
     public function actionFavorite()
     {
+        // Favorite
+
+        $fingerprint = null;
+        $post = Yii::$app->request->post();
+        if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
+        if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
+        $UUID = Yii::$app->user->getId();
+        $uuid = isset($UUID) ? $UUID : $fingerprint;
+        if($uuid){
+            $_favorite = new FavoriteObject();
+            //$_favorite->create($item, $id, $uuid);
+        }
+
+        /*
+        // Queue Favorite Save
+        /*
+        $UUID = Yii::$app->user->getId();
+        $uuid = isset($UUID) ? $UUID : $this->uuid;
+        $id = Yii::$app->queue->delay(30)->push(new Favorite([
+                'obj_type' => $item,
+                'obj_id' => $id,
+                'UUID' => $UUID
+            ]));
+        // Check whether the job is waiting for execution.
+        Yii::info(" Check whether the job is waiting for execution : ".Yii::$app->queue->isWaiting($id));
+        // Check whether a worker got the job from the queue and executes it.
+        Yii::info(" Check whether a worker got the job from the queue and executes it : ". Yii::$app->queue->isReserved($id));
+        // Check whether a worker has executed the job.
+        Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
+        */
+
         $response = ['success' => false, 'message' => 'can not call', 'content' => []];
         $form = new ProductDetailFrom();
         $post = Yii::$app->getRequest()->post();

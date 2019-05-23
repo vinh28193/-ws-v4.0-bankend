@@ -133,7 +133,7 @@ CSS;
 	     var SendInfo = { fingerprint: _fingerprint, _csrf:9999 };
 	     setTimeout(function()
             {
-                 ws.ajax('/ebay/item/detail', {
+                 ws.ajax('/ebay/item/favorite', {
                                     type: 'POST',
                                     data: JSON.stringify(SendInfo),
                                     dataType: 'json', 
