@@ -2,12 +2,12 @@
 
 namespace frontend\modules\account\controllers;
 
-use Yii;
 use common\modelsMongo\ChatMongoWs;
-use frontend\models\ChatSearch;
+use frontend\modules\account\models\ChatFrom;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * ChatController implements the CRUD actions for ChatMongoWs model.
@@ -49,8 +49,8 @@ class ChatController extends Controller
             $query->user_email = Yii::$app->user->identity->email;
             $query->user_name = Yii::$app->user->identity->username;
             $query->date = $now;
-            $query->type_chat = 'CUSTOMER_WS';
-            $query->user_app  = 'Weshop2019';
+            $query->type_chat = 'WS_CUSTOMER';
+            $query->user_app = 'Weshop2019';
             $query->save();
         }
         return $this->renderAjax('index', [
@@ -144,5 +144,24 @@ class ChatController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionOrderChat($code)
+    {
+        $formChat = new ChatFrom();
+        $formChat->orderCode = $code;
+        $formChat->getMessages();
+        return $this->renderAjax('chat-order', [
+            'formChat' => $formChat,
+            'code' => $code
+        ]);
+
+    }
+
+    public function actionCreateChat() {
+        $post = Yii::$app->request->post();
+        $form = new ChatFrom();
+        $form->load($post);
+        return $form->chat();
     }
 }
