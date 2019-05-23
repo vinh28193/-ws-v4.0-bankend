@@ -257,8 +257,10 @@ class WeshopHelper
             if ($str[strlen($str) - 1] == '-') {
                 $str = substr($str, 0, -1);
             }
-            if ($str[0] == '-') {
-                $str = substr($str, 1);
+            if(!empty($str)){
+                if ($str[0] == '-') {
+                    $str = substr($str, 1);
+                }
             }
         }
         return strtolower($str);
