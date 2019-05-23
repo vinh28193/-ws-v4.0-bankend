@@ -187,14 +187,13 @@
 
         },
         favorite: function (sku, item) {
-
             var client = new ClientJS();
             var _fingerprint = client.getFingerprint();
             var data = {
                 fingerprint: _fingerprint,
-                sku: sku,
-                item: item
+                sku: sku
             };
+            // ,item: item
             setTimeout(function () {
                 ws.ajax('/ebay/item/favorite', {
                     type: 'POST',

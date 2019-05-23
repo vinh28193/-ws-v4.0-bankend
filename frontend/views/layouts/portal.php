@@ -29,7 +29,7 @@ $(document).ready(function() {
             }
         }
         });
-    }, 1000 * 2);
+    }, 1000 * 1);
 });
 JS;
 $this->registerJs($js, \yii\web\View::POS_END);
