@@ -25,18 +25,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="card-body msg_card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                             <div>
                                 <div>
-                                    <div class="d-flex justify-content-start mb-4">
-                                        <div class="img_cont_msg">
-                                            <img src="../img/weshop_small_logo.png"
-                                                 class="rounded-circle user_img_msg"  width="54px" height="15px">
-                                        </div>
-                                        <div>
-                                            <div class="">
-                                                <span class="mr-2">weshop</span>
-                                                <p  class="text-darkgray">12345</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                   <?php foreach ($model as $chat) {?>
+                                       <div class="d-flex <?php if (Yii::$app->user->identity->email == $chat->user_email) {echo 'justify-content-end';} else {echo 'justify-content-start';} ?> mb-4">
+                                           <?php if (Yii::$app->user->identity->email != $chat->user_email) { ?>
+                                               <div class="img_cont_msg float-right">
+                                                   <img src="../img/weshop_small_logo.png"
+                                                        class="rounded-circle user_img_msg"  width="54px" height="15px">
+                                               </div>
+                                           <?php } ?>
+                                           <div>
+                                               <span class=" msg_cotainer_send <?php if (Yii::$app->user->identity->email == $chat->user_email) {echo 'float-right';} else {echo 'float-left ml-2';} ?>"><?= $chat->message ?></span><br>
+                                               <div class="<?php if (Yii::$app->user->identity->email == $chat->user_email) {echo 'float-right';} else {echo 'float-left';} ?> mr-2 text-gray">
+                                                   <p class="text-darkgray"><span class="mr-3"><?= $chat->user_name ?></span><span><?= $chat->date ?></span></p>
+                                               </div>
+                                           </div>
+                                       </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>

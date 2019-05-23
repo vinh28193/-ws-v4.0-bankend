@@ -40,11 +40,7 @@ class ChatController extends Controller
         $get = Yii::$app->request->get();
         $post = Yii::$app->request->post();
         $_request_ip = Yii::$app->getRequest()->getUserIP();
-        $model = ChatMongoWs::find()->where([
-            'and',
-            ['Order_path' => $get['ordercode']],
-            ['user_id' => $userId]
-        ])->all();
+        $model = ChatMongoWs::find()->where(['Order_path' => $get['ordercode']])->all();
         if ($post) {
             $query = new ChatMongoWs();
             $query->message = $post['message'];
