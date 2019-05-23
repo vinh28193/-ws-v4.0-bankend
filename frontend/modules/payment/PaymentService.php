@@ -158,16 +158,16 @@ class PaymentService
     public static function getInstallmentBankIcon($code)
     {
         $icons = [
-            'VPBANK' => 'img/bank/techcombank.png',
+            'VPBANK' => 'img/bank/vp.png',
             'TECHCOMBANK' => 'img/bank/techcombank.png',
-            'ACB' => 'img/bank/techcombank.png',
+            'ACB' => 'img/bank/acb.png',
             'ANZ' => 'img/bank/techcombank.png',
             'HSBC' => 'img/bank/techcombank.png',
             'SHINHANBANK' => 'img/bank/techcombank.png',
-            'EXIMBANK' => 'img/bank/techcombank.png',
-            'MARITIMEBANK' => 'img/bank/techcombank.png',
-            'VIB' => 'img/bank/techcombank.png',
-            'SACOMBANK' => 'img/bank/techcombank.png',
+            'EXIMBANK' => 'img/bank/eximbank.png',
+            'MARITIMEBANK' => 'img/bank/maritime.png',
+            'VIB' => 'img/bank/vib.png',
+            'SACOMBANK' => 'img/bank/sacombank.png',
             'CTB' => 'img/bank/techcombank.png',
             'SEABANK' => 'img/bank/techcombank.png',
             'SC' => 'img/bank/techcombank.png',

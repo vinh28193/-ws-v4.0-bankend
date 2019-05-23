@@ -128,6 +128,13 @@ UserBackendAsset::register($this);
                                 $collapsed = ['a1', 'a2', 'a3'];
                             }
                         }
+                        if (isset($check['purchase'])) {
+                            if ($check['purchase'] === 'paid' || $check['purchase'] === 'unpaid') {
+                                $collapsed = array('collapsed', 'true', 'show');
+                            } else {
+                                $collapsed = ['a1', 'a2', 'a3'];
+                            }
+                        }
                         ?>
                         <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($checkUrl)){?> <?=$collapsed[1]?> <?php } ?><?php if (isset($check['status'])){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
                         <div id="sub-2" class="sub-collapse collapse <?php if (isset($check['status'])){?> <?=$collapsed[2]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[2]?> <?php } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
@@ -135,11 +142,11 @@ UserBackendAsset::register($this);
                                 <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/account/order') { ?> active <?php }}?><?php if (isset($checkUrl)) { if ($checkUrl == '/order') { ?> active <?php }}?>">
                                     <?php echo Html::a('Tất cả các đơn', ['/account/order'],['class' => 'active']); ?>
                                 </li>
-                                <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'SUPPORTING') { ?> active <?php }}?>">
-                                    <?php echo Html::a('Chưa Thanh Toán', ['/account/order?status=SUPPORTING']);?>
+                                <li class="<?php if (isset($check['purchase'])) { if ($check['purchase'] == 'unpaid') { ?> active <?php }}?>">
+                                    <?php echo Html::a('Chưa Thanh Toán', ['/account/order?purchase=unpaid']);?>
                                 </li>
-                                <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'READY2PURCHASE') { ?> active <?php }}?>">
-                                    <?php echo Html::a('Đã thanh toán', ['/account/order?status=READY2PURCHASE']);?>
+                                <li class="<?php if (isset($check['purchase'])) { if ($check['purchase'] == 'paid') { ?> active <?php }}?>">
+                                    <?php echo Html::a('Đã thanh toán', ['/account/order?purchase=paid']);?>
                                 </li>
                                 <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'PURCHASED') { ?> active <?php }}?>">
                                     <?php echo Html::a('Đã mua hàng', ['/account/order?status=PURCHASED']);?>

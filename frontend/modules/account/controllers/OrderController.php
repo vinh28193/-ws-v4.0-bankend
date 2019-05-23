@@ -58,17 +58,30 @@ class OrderController extends BaseAccountController
      */
     public function actionIndex()
     {
-
         $userId = Yii::$app->user->getId();
-        $post = Yii::$app->request->get('status');
+        $get = Yii::$app->request->get();
         $dataProvider = Order::find()
             ->with('products')
             ->where(['=', 'customer_id', $userId]);
-        if (isset($post) && !empty($post)) {
-            $dataProvider ->andWhere(['=','current_status', $post]);
+        if (isset($get['status']) && !empty($get['status'])) {
+            $dataProvider ->andWhere(['=','current_status', $get['status']]);
+        }
+        if (isset($get['purchase']) && !empty($get['purchase'])) {
+            if ($get['purchase'] == 'paid') {
+                $dataProvider ->andWhere([
+                    'and',
+                    ['>','total_paid_amount_local', 0],
+                    ['IS NOT', 'total_paid_amount_local', null]
+                ]);
+            } if ($get['purchase'] == 'unpaid') {
+                $dataProvider ->andWhere([
+                    'or',
+                    ['=','total_paid_amount_local', 0],
+                    ['IS', 'total_paid_amount_local', null]
+                ]);
+            }
         }
         $models = $dataProvider->all();
-
         return $this->render('index', [
             'models' => $models,
 //            'pages' => $pages

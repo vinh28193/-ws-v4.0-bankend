@@ -130,7 +130,7 @@ $this->registerJs($js);
                         <li>
                             <p><b>Weshop</b> trao đổi mới trong đơn hàng <a href="javascript:void(0);"
                                                                             data-popup="modal"
-                                                                            data-url="<?=  'account/order/view?orderCode='.$order->ordercode ?>"
+                                                                            data-url="<?=  '/account/chat?ordercode='.$order->ordercode ?>"
                                                                             data-target="#exampleModalCenter"><?= $order->ordercode ?></a>
                                 vào
                                 lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at, "php:d-m-Y  H:i:s") ?>
