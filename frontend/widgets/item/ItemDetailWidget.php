@@ -130,12 +130,14 @@ CSS;
          var client = new ClientJS();
 	     var _fingerprint = client.getFingerprint(); 
 	     console.log("fingerprint: " + _fingerprint );
+	     var SendInfo = { fingerprint: _fingerprint, _csrf:9999 };
 	     setTimeout(function()
             {
                  ws.ajax('/ebay/item/detail', {
                                     type: 'POST',
-                                    data: { fingerprint: _fingerprint, _csrf:9999 },
+                                    data: JSON.stringify(SendInfo),
                                     dataType: 'json', 
+                                    contentType: "application/json; charset=utf-8",
                                     success: function (response) {
                                          console.log("done");
                                     } 
