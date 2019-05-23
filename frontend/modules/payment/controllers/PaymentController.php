@@ -167,13 +167,19 @@ class PaymentController extends BasePaymentController
         $start = microtime(true);
         Yii::$app->response->format = Response::FORMAT_JSON;
         $res = Payment::checkPayment((int)$merchant, $this->request);
+        $cartUrl = Url::toRoute('/checkout/cart');
+        $redirectUrl = Url::toRoute('/account/order', true);
         if (!isset($res) || $res['success'] === false || !isset($res['data'])) {
-            return $this->redirect('failed');
+            return $this->redirect($cartUrl);
         }
 
         $data = $res['data'];
+
+        if (isset($data['redirectUrl'])) {
+            $redirectUrl = $data['redirectUrl'];
+        }
         /** @var $paymentTransaction PaymentTransaction */
-        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction && ($paymentTransaction->payment_method === 'TTVP' || $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS)) {
+        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction) {
             $payment = new Payment([
                 'carts' => StringHelper::explode($paymentTransaction->carts, ','),
                 'transaction_code' => $paymentTransaction->transaction_code,
@@ -196,22 +202,21 @@ class PaymentController extends BasePaymentController
                 'payment_type' => $paymentTransaction->payment_type,
 
             ]);
-            $redirectUrl = Url::toRoute('/account/order', true);
-            if (isset($data['redirectUrl'])) {
-                $redirectUrl = $data['redirectUrl'];
-            }
+
             $receiverAddress = Address::findOne($paymentTransaction->shipping);
-            /* @var $results PromotionResponse */
-            $createResponse = $payment->createOrder($receiverAddress);
-            if ($createResponse['success']) {
-                foreach ($payment->carts as $key) {
-                    $this->cartManager->removeItem($key);
+            if (($paymentTransaction->payment_method === 'TTVP' || $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS)) {
+                $createResponse = $payment->createOrder($receiverAddress);
+                if ($createResponse['success']) {
+//                foreach ($payment->carts as $key) {
+//                    $this->cartManager->removeItem($key);
+//                }
+
                 }
-                return $this->redirect($redirectUrl);
             }
+            return $this->redirect($redirectUrl);
 
         }
-        return $this->redirect(Url::toRoute('/checkout/cart'));
+        return $this->redirect($cartUrl);
 
     }
 

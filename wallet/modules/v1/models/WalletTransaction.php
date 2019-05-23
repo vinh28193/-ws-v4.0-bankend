@@ -186,12 +186,12 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
     }
 
     /**
-     * @return mixed
+     * @param bool $isSafe
+     * @return array
      * @throws \Throwable
      * @throws \yii\base\InvalidConfigException
-     * @throws \yii\db\Exception
      */
-    public function createWalletTransaction()
+    public function createWalletTransaction($isSafe = true)
     {
         if (!$this->validate()) {
             return ['code' => ResponseCode::INVALID, 'message' => $this->getFirstErrors(), 'data' => null];
@@ -205,23 +205,26 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
             Yii::info($token, __METHOD__);
             $this->generateWalletTransactionCode();
             $this->generateDescription();
-            $this->status = self::STATUS_QUEUE;
-
+            $this->status = $isSafe ? self::STATUS_QUEUE : self::STATUS_COMPLETE;
+            if (!$isSafe) {
+                $this->note = 'Wallet with unsafe transaction';
+            }
             if ($this->type === self::TYPE_PAY_ORDER || $this->type === self::TYPE_WITH_DRAW) {
                 $valid = $this->type === self::TYPE_PAY_ORDER
                     ? $this->currentWalletClient->crossCheckBalance($this->totalAmount)
                     : $this->totalAmount <= $this->currentWalletClient->withdrawable_balance;
-                if (!$valid) {
+                if (!$valid && $isSafe) {
                     $this->status = self::STATUS_FAIL;
                     $this->fail_at = $this->_formatter->asDatetime('now');
                     $this->note = 'Wallet transfer amount failed';
                     if ($this->type === self::TYPE_WITH_DRAW) {
                         $this->note = 'Withdraw amount requested greater than withdrawable balance';
                     }
-                } else if ($this->verify_receive_type !== self::VERIFY_RECEIVE_TYPE_NONE) {
+                } else if ($isSafe) {
                     $this->getOtpCode();
                 }
             }
+
             if ($this->save()) {
                 $this->sendOtpCode();
                 if ($this->status === self::STATUS_QUEUE && ArrayHelper::isIn($this->type, [self::TYPE_WITH_DRAW, self::TYPE_PAY_ORDER])) {

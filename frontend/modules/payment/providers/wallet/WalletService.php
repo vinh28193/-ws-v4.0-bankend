@@ -34,7 +34,7 @@ class WalletService extends BaseObject
     const STATUS_CANCEL = 3;
     const STATUS_FAIL = 4;
 
-    public $merchant_id;
+    public $merchant_id = self::MERCHANT_IP_PRO;
     public $type;
     public $transaction_code;
     public $total_amount;
@@ -204,13 +204,25 @@ class WalletService extends BaseObject
     public function createPaymentTransaction()
     {
         $data['merchant_id'] = $this->merchant_id;
-        $data['transaction_code'] = $this->transaction_code;
+        $data['transaction_code'] = $this->payment_transaction;
         $data['total_amount'] = $this->total_amount;
         $data['payment_method'] = $this->payment_provider;
         $data['payment_provider'] = $this->payment_provider;
         $data['bank_code'] = $this->bank_code;
         $data['otp_receive_type'] = $this->otp_type;
         return $this->callApiRequest('transaction/create', $data);
+    }
+
+    public function createSafePaymentTransaction()
+    {
+        $data['merchant_id'] = $this->merchant_id;
+        $data['transaction_code'] = $this->payment_transaction;
+        $data['total_amount'] = $this->total_amount;
+        $data['payment_method'] = $this->payment_provider;
+        $data['payment_provider'] = $this->payment_provider;
+        $data['bank_code'] = $this->bank_code;
+        $data['otp_receive_type'] = $this->otp_type;
+        return $this->callApiRequest('transaction/create-safe', $data);
     }
 
     public function transactionDetail()
@@ -240,7 +252,8 @@ class WalletService extends BaseObject
         ]);
     }
 
-    public function createWithdraw(){
+    public function createWithdraw()
+    {
         return $this->callApiRequest('withdraw/create', [
             'amount_total' => $this->total_amount,
             'method' => $this->payment_method,
@@ -259,7 +272,9 @@ class WalletService extends BaseObject
             ]),
         ]);
     }
-    public function cancelWithdraw(){
+
+    public function cancelWithdraw()
+    {
         return $this->callApiRequest('transaction/cancel-withdraw', [
             'transaction_code' => $this->transaction_code,
         ]);

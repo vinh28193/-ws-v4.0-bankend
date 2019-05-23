@@ -76,7 +76,7 @@ class WalletProvider extends BaseObject implements PaymentProviderInterface
     {
         return [
             'merchant_id' => WalletService::MERCHANT_IP_PRO,
-            'transaction_code' => $payment->transaction_code,
+            'payment_transaction' => $payment->transaction_code,
             'payment_method' => $payment->payment_method_name,
             'payment_provider' => $payment->payment_provider_name,
             'bank_code' => $payment->payment_bank_code,

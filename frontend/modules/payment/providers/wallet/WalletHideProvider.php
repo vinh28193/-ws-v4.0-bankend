@@ -22,15 +22,17 @@ class WalletHideProvider extends NganLuongProvider
         if ($res['success'] === true && ($paymentTransaction = $res['data']['transaction']) instanceof PaymentTransaction) {
             /** @var  $paymentTransaction PaymentTransaction */
             $wallet = new WalletService([
-                'merchant_id' => WalletService::MERCHANT_IP_DEV,
-                'transaction_code' => $paymentTransaction->transaction_code,
-                'total_amount' => $paymentTransaction->transaction_amount_local,
+                'transaction_code' => $paymentTransaction->topup_transaction_code,
+                'payment_transaction' => $paymentTransaction->transaction_code,
+                'total_amount' => round((int)$paymentTransaction->transaction_amount_local),
                 'payment_method' => $paymentTransaction->payment_method,
                 'payment_provider' => $paymentTransaction->payment_provider,
                 'bank_code' => $paymentTransaction->payment_bank_code,
-                'otp_type' => 3,
             ]);
-            $wallet->createPaymentTransaction();
+            if (($rs = $wallet->pushToTopUpNoAuth())['success'] === true) {
+                $wallet->payment_transaction = $paymentTransaction->transaction_code;
+                $wallet->createSafePaymentTransaction();
+            }
         }
         return $res;
     }
