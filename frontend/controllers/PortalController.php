@@ -34,10 +34,12 @@ class PortalController extends FrontendController
         $fingerprint = null;
         $post = $this->request->post();
         if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
-        if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
+        if (!Yii::$app->getRequest()->validateCsrfToken()) {
+            return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
+        }
+
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : $fingerprint;
-
         $_All_favorite = $_favorite->getfavorite($uuid);
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -57,10 +59,13 @@ class PortalController extends FrontendController
         $fingerprint = null;
         $post = $this->request->post();
         if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
-        if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
         $item = ArrayHelper::getValue($post,'item');
         $id = ArrayHelper::getValue($post,'sku');
         $portal =  ArrayHelper::getValue($post,'portal');
+
+        if (!Yii::$app->getRequest()->validateCsrfToken()) {
+            return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
+        }
 
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : $fingerprint;
@@ -90,7 +95,7 @@ class PortalController extends FrontendController
             $relate_product_rs = EbayProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
         }
         if($portal == 'amazon'){
-            $relate_product_rs = AmazonProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
+           // $relate_product_rs = AmazonProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
         }
 
         $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];

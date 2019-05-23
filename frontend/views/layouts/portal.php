@@ -1,8 +1,8 @@
 <?php
-
 use frontend\widgets\alias\AliasWidget;
 use frontend\assets\FancyboxPlusAsset;
 use frontend\widgets\search\SearchBoxWidget;
+
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -10,18 +10,15 @@ use frontend\widgets\search\SearchBoxWidget;
 
 $this->beginContent('@frontend/views/layouts/common.php');
 FancyboxPlusAsset::register($this);
-
 $js = <<<JS
 $(document).ready(function() {
     var client = new ClientJS();
             var _fingerprint = client.getFingerprint();
             var data = {
-                fingerprint: _fingerprint,
-                _csrf : 9999
+                fingerprint: _fingerprint
             };
   setTimeout(function () { 
-        $.ajax({
-        url: '/portal/viewed-products',
+        ws.ajax('/portal/viewed-products',{
         type: 'POST',
         dataType: 'json',
         data: data,
