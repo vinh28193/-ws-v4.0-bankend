@@ -101,7 +101,7 @@ class PaymentService
             $item['itemType'] = strtolower($order['portal']);
             $item['shippingWeight'] = self::toNumber($order['total_weight_temporary']);
             $item['shippingQuantity'] = self::toNumber($order['total_quantity']);
-            $item['totalAmount'] = self::toNumber($order['totalAmount']);
+            $item['totalAmount'] = self::toNumber($order['total_amount_local']);
             if (count($order['products']) === 0) {
                 continue;
             }
