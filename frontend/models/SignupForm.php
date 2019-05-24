@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\models;
 
 use common\models\Customer;
@@ -32,7 +33,8 @@ class SignupForm extends Model
             ['last_name', 'string', 'min' => 2, 'max' => 255],
             ['phone', 'string', 'min' => 10, 'max' => 15],
             ['phone', 'required'],
-            // ['phone', 'countryValue' => 'US'],
+            ['phone', 'common\validators\PhoneValidator'],
+            ['phone', 'unique', 'targetClass' => '\common\models\User'],
 
             ['email', 'trim'],
             ['email', 'required'],
@@ -40,10 +42,9 @@ class SignupForm extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
-            ['phone', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
-            ['password', 'string', 'min' => 8,'max'=>72],
+            ['password', 'string', 'min' => 8, 'max' => 72],
             ['password', 'match', 'pattern' => '/[0-9a-zA-Z]/', 'message' => 'Password does not enter special characters'],
 
             ['replacePassword', 'compare', 'compareAttribute' => 'password'],
@@ -83,26 +84,26 @@ class SignupForm extends Model
         }
         @date_default_timezone_set('Asia/Ho_Chi_Minh');
         $user = new User([
-            'phone'=> $this->phone,
+            'phone' => $this->phone,
             'last_name' => $this->last_name,
             'first_name' => $this->first_name,
             'username' => $this->email,
             'email' => $this->email,
             'password' => $this->password,
-            'updated_at'=> time(),
+            'updated_at' => time(),
             'store_id' => 1, // Domain Weshop Viet Nam
             'active_shipping' => 0,
             'total_xu' => 0,
-            'usable_xu' => 0 ,
-            'last_revenue_xu' => 0 ,
-            'email_verified' => 1 ,  // Nếu là Google Email lấy được rồi nên coi như là dã xác nhận
+            'usable_xu' => 0,
+            'last_revenue_xu' => 0,
+            'email_verified' => 1,  // Nếu là Google Email lấy được rồi nên coi như là dã xác nhận
             'phone_verified' => 1, // đăng kí trực tiếp nên xác nhận phone là đúng luôn chỉ còn vấn đề @ToDo Phone đúng đinh dạng Việt Nam
-            'gender' => 0 ,
-            'type_customer' => 1 , // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
-            'avatar' => null ,
+            'gender' => 0,
+            'type_customer' => 1, // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
+            'avatar' => null,
             'note_by_employee' => 'Khách hàng tạo tài khoản qua theo cách bình thường qua link Weshop',
-            'employee' => 0 , //  1 Là Nhân viên , 0 là khách hàng
-            'vip' => 0 , //  Mức độ Vip Của Khách Hàng không ap dụng cho nhân viên , theo thang điểm 0-5 số
+            'employee' => 0, //  1 Là Nhân viên , 0 là khách hàng
+            'vip' => 0, //  Mức độ Vip Của Khách Hàng không ap dụng cho nhân viên , theo thang điểm 0-5 số
         ]);
 
         $user->setPassword($this->password);
