@@ -135,30 +135,34 @@ class FrontendController extends Controller
      * @var string
      * Set Path GA
      */
-    public $setDocumentPath = '';
+    public $setDocumentPath;
     public function gaWs()
     {
-        Yii::info("HOME Pages GA WS");
-        Yii::$app->ga->request()
-            ->setClientId($this->_uuid)
-            ->setDocumentPath($this->setDocumentPath)
-            ->setAsyncRequest(true)
-            ->sendPageview();
+        Yii::info("set Path : ".$this->setDocumentPath);
+        Yii::info("this->_uuid : ".$this->_uuid);
+        if($this->setDocumentPath){
+            Yii::info("FrondEnd Pages GA WS");
+           return Yii::$app->ga->request()
+                ->setClientId($this->_uuid)
+                ->setDocumentPath($this->setDocumentPath)
+                ->setAsyncRequest(true)
+                ->sendPageview();
+        }
     }
 
     public $_uuid ;
     public function actionU()
     {
-        $fingerprint = null;
         $post = $this->request->post();
-        if (isset($post['fingerprint'])) {
-            $fingerprint = $post['fingerprint'];
-            Yii::info("fingerprint : ".$fingerprint);
+        if (isset($post['fingerprint']) and isset($post['path'])) {
+            $this->_uuid = $post['fingerprint'];
+            $this->setDocumentPath = $post['path'];
+            Yii::info("fingerprint : ".$this->_uuid);
+            Yii::info("fingerprint : ".$this->setDocumentPath);
         }
-        if (!Yii::$app->getRequest()->validateCsrfToken() || $fingerprint === null ) {
+        if (!Yii::$app->getRequest()->validateCsrfToken() || $this->_uuid === null ) {
             return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
         }
-        $this->_uuid = $fingerprint;
         Yii::info("_uuid : ".$this->_uuid);
 
         if (!Yii::$app->user->isGuest) {
@@ -178,7 +182,7 @@ class FrontendController extends Controller
             return ['success' => false,'message' => 'fingerprint null', 'data' => ['content' => ''] ];
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return 'Ok ! '.$fingerprint;
+        return 'Ok ! '.$this->_uuid. ' pages '. $this->setDocumentPath;
     }
 
 

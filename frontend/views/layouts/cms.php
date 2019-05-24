@@ -15,7 +15,8 @@ $(document).ready(function() {
     var client = new ClientJS();
             var _fingerprint = client.getFingerprint();
             var data = {
-                fingerprint: _fingerprint
+                fingerprint: _fingerprint,
+                path : window.location.pathname
             };
             // /cms/home/u
   setTimeout(function () { 
