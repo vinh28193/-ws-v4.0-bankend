@@ -107,19 +107,6 @@ class CartManager extends Component
         }
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws \Throwable
-     */
-    public function init()
-    {
-        parent::init();
-        if (get_class($this->getStorage()) === 'common\components\cart\storage\MongodbCartStorage') {
-            if (get_class($this->getSerializer()) !== 'common\components\cart\serialize\NoneSerialize') {
-                throw new InvalidConfigException("common\components\cart\storage\MongodbCartStorage only use common\components\cart\serialize\NoneSerialize");
-            }
-        }
-    }
 
     /**
      * @param $key
@@ -262,7 +249,9 @@ class CartManager extends Component
                 if (!$ok) {
                     return false;
                 }
+                $value['key'] =$key;
                 $key = $this->normalPrimaryKey($key, $safeOnly);
+
                 $value = $this->getSerializer()->serializer($value);
                 return $this->getStorage()->addItem($key, $value);
             }

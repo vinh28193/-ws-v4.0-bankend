@@ -85,7 +85,6 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
     public function addItem($key, $value)
     {
         list($key, $id) = $key;
-        $value['key'] = $key;
         $model = new self();
         $model->key = $key;
         $model->identity = $id;

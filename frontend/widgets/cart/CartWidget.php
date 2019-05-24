@@ -47,6 +47,7 @@ class CartWidget extends Widget
 //        if ($this->isGroup) {
 //            $this->items = CartHelper::group($this->items);
 //        }
+
         $this->items = array_map([$this, 'preItem'], $this->items);
         $this->removeAction = Url::toRoute($this->removeAction);
         $this->updateAction = Url::toRoute($this->updateAction);
@@ -67,43 +68,26 @@ class CartWidget extends Widget
      */
     protected function preItem($item)
     {
-        $sellerId = isset($item['request']['seller']) ? $item['request']['seller'] : null;
-        if ($sellerId === null || ($product = $this->isValidItem($item)) === false) {
-            return false;
-        }
-        $provider = $sellerId;
-        foreach ($product->providers as $p) {
-            if (
-                (strtoupper($product->type) === BaseProduct::TYPE_EBAY && $p->name === $provider) ||
-                (strtoupper($product->type) !== BaseProduct::TYPE_EBAY && $p->prov_id === $provider)
-            ) {
-                $provider = $p;
-                break;
-            }
-        }
-        $imageSrc = isset($item['request']['image']) ? $item['request']['image'] : $product->current_image;
-
-        list($amount, $localAmount) = $product->getAdditionalFees()->getTotalAdditionFees();
-
+        $order = ArrayHelper::getValue($item,'order');
         $key = ArrayHelper::getValue($item, 'key', '');
         return [
             'key' => $key,
             'selected' => true,
-            'name' => $product->item_name,
-            'type' => $product->type,
-            'originLink' => $product->item_origin_url,
-            'link' => WeshopHelper::generateUrlDetail($product->type, $product->item_name, $product->item_id, $product->item_sku, $sellerId),
-            'imageSrc' => $imageSrc,
-            'provider' => $provider,
-            'variation' => $product->current_variation,
-            'condition' => $product->condition,
-            'quantity' => $product->getShippingQuantity(),
-            'availableQuantity' => $product->available_quantity,
-            'soldQuantity' => $product->quantity_sold,
-            'weight' => $product->getShippingWeight(),
-            'amount' => $amount,
-            'localAmount' => $localAmount,
-            'localDisplayAmount' => $this->showMoney($localAmount),
+            'name' => $order['products'][0]['product_name'],
+            'type' => $order['products'][0]['portal'],
+            'originLink' => $order['products'][0]['link_origin'],
+            'link' => $order['products'][0]['product_link'],
+            'imageSrc' => $order['products'][0]['link_img'],
+            'provider' => $order['seller'],
+            'variation' => $order['products'][0]['variations'],
+            'condition' => $order['products'][0]['condition'],
+            'quantity' => $order['products'][0]['condition'],
+            'availableQuantity' => $order['products'][0]['condition'],
+            'soldQuantity' => $order['products'][0]['condition'],
+            'weight' => $order['total_weight_temporary'],
+            'amount' => $order['total_price_amount_origin'],
+            'localAmount' => $order['total_amount_local'],
+            'localDisplayAmount' => $this->showMoney($order['total_amount_local']),
         ];
     }
 
