@@ -9,5 +9,5 @@ use frontend\controllers\CmsController;
 
 class LandingController extends CmsController
 {
-
+  // ToDo Langing Chưa Chuyển sang 24/05/2019
 }
