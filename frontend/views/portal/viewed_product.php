@@ -7,14 +7,14 @@ use common\helpers\WeshopHelper;
 if(!empty($items)){
 ?>
 <div class="title">Sản phẩm đã xem:</div>
-<div id="product-viewed-2" class="owl-carousel owl-theme">
+<div id="product-viewed-2" class="owl-carousel owl-theme owl-loaded owl-drag">
     <?php
     foreach ($items  as $item) {
         try {
             /** @var \common\products\BaseProduct $product */
             $product = unserialize($item->obj_type);
             try{
-                $salePercent = $product->getSalePercent();
+                //$salePercent = $product->getSalePercent();
             }catch (Exception $e){
                 print_r($product);
                 die;

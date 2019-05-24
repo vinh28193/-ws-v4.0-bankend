@@ -45,17 +45,20 @@ $(document).ready(function() {
                 path : window.location.pathname
             };
             // /cms/home/u
-  setTimeout(function () { 
-        ws.ajax('/frontend/u',{
-        type: 'POST',
-        dataType: 'json',
-        data: data,
-        loading: true,
-        success: function (result) {
-            //console.log(result);  console.log(result.success); 
-        }
-        });
-    }, 1000 * 1);
+            var ruler_path = window.location.pathname;
+            //if(ruler_path.match(/^"/ebay\/item/"/i) == null || ruler_path.match(/^"/amazon\/item/"/i) == null){
+                setTimeout(function () { 
+                    ws.ajax('/frontend/u',{
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                    loading: true,
+                    success: function (result) {
+                        //console.log(result);  console.log(result.success); 
+                    }
+                    });
+                }, 1000 * 1);
+            //}      
 });
 JS;
 $this->registerJs($jsga, \yii\web\View::POS_END);

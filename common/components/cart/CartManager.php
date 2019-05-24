@@ -8,6 +8,7 @@
 
 namespace common\components\cart;
 
+use common\components\cart\storage\MongodbCartStorage;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -351,12 +352,9 @@ class CartManager extends Component
 
     public function getCartItems($safeOnly = true)
     {
-        $items = $this->getStorage()->getItems(15);
-        $results = [];
-        foreach ($items as $key => $item) {
-            $results[$key] = $this->getSerializer()->unserialize($item);
-        }
-        return $results;
+        $model = new MongodbCartStorage();
+        $items = $model->GetAllShopingCarts();
+        return $items;
     }
 
     /**

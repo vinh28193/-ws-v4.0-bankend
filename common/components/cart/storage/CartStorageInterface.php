@@ -68,4 +68,6 @@ interface CartStorageInterface
 
     public function keys($identity);
 
+    public function GetAllShopingCarts();
+
 }

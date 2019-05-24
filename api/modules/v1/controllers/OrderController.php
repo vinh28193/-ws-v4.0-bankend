@@ -228,7 +228,8 @@ class OrderController extends BaseApiController
 //            $model->current_status =  Order::STATUS_READY2PURCHASE;
 //            $model->ready_purchase = $now;
 //        }
-        if (!$model->save()) {
+        $model->validate();
+        if (!$model->save(false)) {
             Yii::$app->wsLog->push('order', $model->getScenario(), null, [
                 'id' => $model->ordercode,
                 'request' => $this->post,

@@ -2,6 +2,7 @@
 
 namespace common\components\cart\storage;
 
+use common\models\User;
 use yii\helpers\ArrayHelper;
 use yii\mongodb\ActiveRecord;
 
@@ -201,4 +202,19 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
         $query->from(self::collectionName())->select(['key'])->where(['AND', ['identity' => $identity], ['remove' => 0]]);
         return $query->column();
     }
+
+    public function GetAllShopingCarts()
+    {
+        $query = self::find()->with('user')
+            ->where(['AND', ['remove' => 0]]); // 'remove' => 0 : Cart can thanh toan
+//        echo "<pre>";
+//        print_r($query->all());
+//        echo "</pre>";
+        return $query->all();
+    }
+
+    public function getUser(){
+        return $this->hasMany(User::className(),['id' => 'identity']);
+    }
+
 }

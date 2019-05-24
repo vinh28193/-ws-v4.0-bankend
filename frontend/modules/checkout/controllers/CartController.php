@@ -6,6 +6,7 @@ namespace frontend\modules\checkout\controllers;
 
 use common\components\cart\CartSelection;
 use common\products\BaseProduct;
+use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
@@ -62,7 +63,7 @@ class CartController extends BillingController
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $params = Yii::$app->request->bodyParams;
         $type = ArrayHelper::getValue($params, 'type', CartSelection::TYPE_SHOPPING);
-        if ($type !== CartSelection::TYPE_BUY_NOW && Yii::$app->user->getIsGuest()) {
+        if ($type !== CartSelection::TYPE_BUY_NOW && Yii::$app->user->getIsGuest() || WalletService::isGuest()) {
             return ['success' => false, 'message' => 'Please login to used this action'];
         }
         if (($item = ArrayHelper::getValue($params, 'item')) === null) {
@@ -107,10 +108,10 @@ class CartController extends BillingController
         $selected = (boolean)ArrayHelper::getValue($params, 'selected');
         if ($selected) {
             CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, $key);
-        }else {
+        } else {
             CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, $key);
         }
-        return ['success' => $selected, 'message' => "update selected item `$key`",'data' => CartSelection::getSelectedItems(CartSelection::TYPE_SHOPPING)];
+        return ['success' => $selected, 'message' => "update selected item `$key`", 'data' => CartSelection::getSelectedItems(CartSelection::TYPE_SHOPPING)];
     }
 
     public function actionRemove()

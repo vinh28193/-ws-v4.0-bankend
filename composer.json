@@ -42,13 +42,11 @@
     "yiisoft/yii2-redis": "~2.0.0",
     "bower-asset/sweetalert2": "dev-master",
     "drsdre/yii2-wizardwidget": "*",
-    "ext-json": "*",
+
     "rdok/elasticemail-php": "dev-master",
     "geometria-lab/rediska": "^0.5.10",
     "ext-simplexml": "*",
-    "ext-dom": "*",
     "yii2mod/collection": "*",
-    "ext-soap": "*",
     "yiisoft/yii2-queue": "^2.0@dev",
     "baibaratsky/yii2-ga-measurement-protocol": "2.0.*"
   },
