@@ -139,14 +139,19 @@ class FrontendController extends Controller
         return $this->Uuid;
     }
 
-//    public $setDocumentPath = '';
-//    public function gaWs()
-//    {
-//        Yii::info("HOME GA WS");
-//        Yii::$app->ga->request()
-//            ->setClientId($this->Uuid)
-//            ->setDocumentPath($this->setDocumentPath)
-//            ->setAsyncRequest(true)
-//            ->sendPageview();
-//    }
+    /**
+     * @var string
+     * Set Path GA
+     */
+    public $setDocumentPath = '';
+    public function gaWs()
+    {
+        Yii::info("Front Pages Set GA WS");
+        Yii::$app->ga->request()
+            ->setClientId($this->Uuid)
+            ->setDocumentPath($this->setDocumentPath)
+            ->setAsyncRequest(true)
+            ->sendPageview();
+    }
+
 }

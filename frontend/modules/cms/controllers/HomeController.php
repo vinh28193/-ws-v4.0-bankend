@@ -24,10 +24,17 @@ class HomeController extends CmsController
         }
         $this->_uuid = $fingerprint;
         Yii::info("_uuid : ".$this->_uuid);
+
+        if (!Yii::$app->user->isGuest) {
+            $this->_uuid = Yii::$app->user->identity->getId().'WS'.Yii::$app->user->identity->email;
+        }else {
+            $this->_uuid = isset($this->_uuid) ? $this->_uuid : 99999;
+        }
+
         if($this->_uuid){
             if(YII_ENV == 'dev' and YII_DEBUG == true){
                 // ENV DEV /  TEST
-                $this->gaWs($this->Uuid());
+                $this->gaWs();
             }else {
                 // ENV PROD
             }
@@ -38,29 +45,20 @@ class HomeController extends CmsController
         return 'Ok ! '.$fingerprint;
     }
 
-    public function Uuid()
-    {
-        $uid = 0;
-        if (!Yii::$app->user->isGuest) {
-            $uid = Yii::$app->user->identity->getId().'WS'.Yii::$app->user->identity->email;
-        }else {
-            $uid = isset($this->_uuid) ? $this->_uuid : 99999;
-        }
-        return $uid;
-    }
-
+    /**
+     * @var string
+     * Set Path GA
+     */
     public $setDocumentPath = '/HomeWs';
-    public function gaWs($UUID)
+    public function gaWs()
     {
-        Yii::info("HOME GA WS");
+        Yii::info("HOME Pages GA WS");
         Yii::$app->ga->request()
-            ->setClientId($UUID)
+            ->setClientId($this->_uuid)
             ->setDocumentPath($this->setDocumentPath)
             ->setAsyncRequest(true)
             ->sendPageview();
     }
-
-
 
     public function actionIndex()
     {
