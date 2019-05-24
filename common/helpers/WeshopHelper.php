@@ -386,14 +386,17 @@ class WeshopHelper
     public static function getTypeTransaction($type)
     {
         switch (strtoupper($type)) {
-            case 'TOP_UP':
+            case WalletTransaction::TYPE_TOP_UP:
                 return 'Nạp Tiền';
                 break;
-            case 'PAY_ORDER':
+            case WalletTransaction::TYPE_PAY_ORDER:
                 return 'Thanh Toán';
                 break;
-            case 'WITH_DRAW':
+            case WalletTransaction::TYPE_WITH_DRAW:
                 return 'Rút Tiền';
+                break;
+            case WalletTransaction::TYPE_ADDFEE:
+                return 'Thu Thêm';
                 break;
             default:
                 return 'Không Rõ';

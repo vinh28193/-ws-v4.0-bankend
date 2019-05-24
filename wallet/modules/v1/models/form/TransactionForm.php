@@ -9,6 +9,7 @@
 namespace wallet\modules\v1\models\form;
 
 
+use wallet\modules\v1\models\WalletClient;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -70,6 +71,11 @@ class TransactionForm extends Model
      * @var integer
      */
     public $otp_receive_type;
+
+    /**
+     * @var string
+     */
+    public $description;
     /**
      * @var bool | \wallet\modules\v1\models\WalletClient
      */
@@ -78,20 +84,31 @@ class TransactionForm extends Model
     public function init()
     {
         parent::init();
-        if (ArrayHelper::isIn($this->getWalletClient()->getId(), [1, 3])) {
-            $this->merchant_id = 4;
+        if($this->getWalletClient()){
+            if (ArrayHelper::isIn($this->getWalletClient()->getId(), [1, 3])) {
+                $this->merchant_id = 4;
+            }
         }
     }
 
     /**
      * @return bool|\wallet\modules\v1\models\WalletClient|null|\yii\web\IdentityInterface
      */
-    protected function getWalletClient()
+    public function getWalletClient()
     {
         if (!$this->_wallet_client) {
             $this->_wallet_client = Yii::$app->user->identity;
         }
         return $this->_wallet_client;
+    }
+
+    /**
+     * @param $walletC WalletClient
+     */
+    public function setWalletClient($walletC)
+    {
+        $this->walletClient = $walletC;
+        $this->_wallet_client = $walletC;
     }
 
     public function formName()
@@ -146,7 +163,7 @@ class TransactionForm extends Model
     public function validateType($attribute, $params, $validator)
     {
         if (!$params) {
-            $params = [WalletTransaction::TYPE_PAY_ORDER];
+            $params = [WalletTransaction::TYPE_PAY_ORDER, WalletTransaction::TYPE_ADDFEE];
         }
         if (!$this->hasErrors()) {
             if (!ArrayHelper::isIn($this->$attribute, $params)) {
@@ -245,13 +262,18 @@ class TransactionForm extends Model
         $transaction->payment_bank_code = $this->bank_code;
         $transaction->verify_receive_type = WalletTransaction::VERIFY_RECEIVE_TYPE_NONE;
         $transaction->totalAmount = $this->total_amount;
+        $transaction->currentWalletClient = $this->walletClient ? $this->walletClient : $this->getWalletClient();
         $result = $transaction->createWalletTransaction();
         if ($result['code'] == ResponseCode::SUCCESS) {
             $changeBalanceForm = new ChangeBalanceForm;
+            $changeBalanceForm->wallet_client = $this->walletClient ? $this->walletClient : $this->getWalletClient();
             $changeBalanceForm->amount = $transaction->getTotalAmount();
             $changeBalanceForm->walletTransactionId = $transaction->getPrimaryKey();
             if (($result = $changeBalanceForm->freeze()) && $result['success']) {
-                $result = $changeBalanceForm->payment();
+                $result = $this->type == WalletTransaction::TYPE_ADDFEE ? $changeBalanceForm->addfee() : $changeBalanceForm->payment();
+                if($this->type == WalletTransaction::TYPE_ADDFEE){
+                    $transaction->description = $this->description ? $this->description : $transaction->description ;
+                }
                 if($result['success']){
                     $transaction->status = WalletTransaction::STATUS_COMPLETE;
                     $transaction->save();

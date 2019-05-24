@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
+use common\lib\WalletBackendService;
 use common\models\db\ListAccountPurchase;
 use common\models\Order;
 use common\models\PaymentTransaction;
@@ -115,17 +116,21 @@ class PurchaseServiceController extends BaseApiController
                                 'transaction_type' => PaymentTransaction::TRANSACTION_ADDFEE
                             ])->all();
                         $listIdChange = [];
+                        $transaction_description = '';
+                        /** @var  $exRate  \common\components\ExchangeRate */
+                        $exRate = \Yii::$app->exRate;
+                        $amount = $exRate->usdToVnd($amount,23500);
                         foreach ($paymentTransactions as $item){
                             $listIdChange[] = $item->id;
                             $amount += $item->transaction_amount_local;
+                            $transaction_description = $transaction_description ? $transaction_description.'<br>'.$item->transaction_description : $item->transaction_description;
                         }
-                        /** @var  $exRate  \common\components\ExchangeRate */
-                        $exRate = \Yii::$app->exRate;
+                        Yii::debug($amount,'amount_change');
                         $paymentTransaction = new PaymentTransaction();
                         $paymentTransaction->store_id = $orderDb->store_id;
                         $paymentTransaction->customer_id = $orderDb->customer_id;
                         $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_ADDFEE;
-                        $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
+                        $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_QUEUED;
                         $paymentTransaction->transaction_customer_name = $orderDb->receiver_name;
                         $paymentTransaction->transaction_customer_email = $orderDb->receiver_email;
                         $paymentTransaction->transaction_customer_phone = $orderDb->receiver_phone;
@@ -137,10 +142,10 @@ class PurchaseServiceController extends BaseApiController
                         $paymentTransaction->transaction_reference_code = $orderDb->ordercode;
                         $paymentTransaction->payment_type = PaymentTransaction::PAYMENT_TYPE_ADDFEE;
                         $paymentTransaction->carts = '';
-                        $paymentTransaction->note = $messageProduct;
+                        $paymentTransaction->transaction_description = $transaction_description ? $transaction_description.'<br>'.$messageProduct : $messageProduct;
                         $paymentTransaction->total_discount_amount = 0;
-                        $paymentTransaction->before_discount_amount_local = $exRate->usdToVnd($amount,23500);
-                        $paymentTransaction->transaction_amount_local = $exRate->usdToVnd($amount,23500);;
+                        $paymentTransaction->before_discount_amount_local = $amount;
+                        $paymentTransaction->transaction_amount_local = $amount;
                         $paymentTransaction->payment_provider = 'WS WALLET';
                         $paymentTransaction->payment_method = 'WALLET_WESHOP';
                         $paymentTransaction->payment_bank_code = 'WALLET_WESHOP';
@@ -304,17 +309,23 @@ class PurchaseServiceController extends BaseApiController
                         'transaction_type' => PaymentTransaction::TRANSACTION_ADDFEE
                     ])->all();
                     foreach ($transactionPayments as $payment){
-                        $WalletS = new WalletService();
-                        $WalletS->transaction_code = $payment->transaction_code;
+                        $payment->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                        $payment->save(false);
+                        Yii::info($payment->transaction_status,'payment_status');
+                        $WalletS = new WalletBackendService();
+                        $WalletS->payment_transaction = $payment->transaction_code;
                         $WalletS->payment_method = $payment->payment_method;
                         $WalletS->payment_provider = $payment->payment_provider;
                         $WalletS->bank_code = $payment->payment_bank_code;
-                        $WalletS->otp_type = 3;
-                        $WalletS->amount = $payment->transaction_amount_local * 20000;
+                        $WalletS->total_amount = intval($payment->transaction_amount_local);
+                        $WalletS->type = WalletBackendService::TYPE_PAY_ADDFEE;
+                        $WalletS->customer_id = $payment->customer_id;
+                        $WalletS->description = $payment->transaction_description;
                         $result = $WalletS->createSafePaymentTransaction();
-                        var_dump($result);
-                        $tran->rollBack();
-                        die("123");
+                        if(!$result['success']){
+                            $tran->rollBack();
+                            return $this->response(false, "Thất bại.",$result);
+                        }
                         //#ToDo thông báo chat thay đổi về giá
                         $model = new ChatMongoWs();
                         $_rest_data = ["ChatMongoWs" => [

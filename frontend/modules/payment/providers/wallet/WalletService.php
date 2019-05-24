@@ -87,6 +87,7 @@ class WalletService extends BaseObject
                 ->setUrl($url)
                 ->setData($params)->send()->getData();
         } catch (Exception $exception) {
+            Yii::error($exception);
             return null;
         }
     }

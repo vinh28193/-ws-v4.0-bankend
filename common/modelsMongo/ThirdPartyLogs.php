@@ -24,7 +24,7 @@ class ThirdPartyLogs extends \yii\mongodb\ActiveRecord
      */
     public static function collectionName()
     {
-        return ['weshop_logs', 'third_party_logs'];
+        return ['Weshop_log_40', 'third_party_logs'];
     }
 
     /**
