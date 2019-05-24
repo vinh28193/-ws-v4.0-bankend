@@ -20,7 +20,8 @@ class FrontendAsset extends AssetBundle
     ];
     public $js = [
         'js/style.js',
-        'js/slick.min.js'
+        'js/slick.min.js',
+        'js/client.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -11,6 +11,7 @@ use yii\web\Request;
 use yii\helpers\ArrayHelper;
 use yii\base\InvalidArgumentException;
 use common\components\StoreManager;
+use common\request\UUID;
 
 
 /**
@@ -31,6 +32,11 @@ class FrontendController extends Controller
      * @var string|Request
      */
     public $request = 'request';
+
+    /**
+     * @var string | UUID
+     */
+    public $Uuid = '';
 
     /**
      * @inheritDoc
@@ -123,5 +129,13 @@ class FrontendController extends Controller
      */
     public function registerLinkTag($options, $key = null){
         $this->getView()->registerLinkTag($options, $key);
+    }
+
+    /**
+     * @return string
+     */
+    public function Uuid()
+    {
+        return $this->Uuid;
     }
 }

@@ -42,9 +42,7 @@ class ShippingController extends CheckoutController
 
        // Build the order data programmatically, each product of the order included in the payload
        // First, general and required hit data
-        //$request->setClientId(Yii::$app->user->identity->getId().Yii::$app->user->identity->email);
-        //$request->setUserId(Yii::$app->user->identity->getId());
-        $request->setClientId(@uniqid());
+        $request->setClientId(Yii::$app->user->identity->getId().'WS'.Yii::$app->user->identity->email);
         $request->setUserId(Yii::$app->user->identity->getId());
 
         // Then, include the transaction data
