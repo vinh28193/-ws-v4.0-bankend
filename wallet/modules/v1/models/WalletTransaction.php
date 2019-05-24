@@ -529,7 +529,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
         }
         $targetId = $receiveType === self::VERIFY_RECEIVE_TYPE_EMAIL ? 'mail' : 'phone';
         $sendTo = [$targetId => $sendTo];
-        if ($this->type === self::TYPE_PAY_ORDER || $this->type === self::TYPE_WITH_DRAW) {
+        if ($this->type === self::TYPE_PAY_ORDER || $this->type === self::TYPE_WITH_DRAW || $this->type === self::TYPE_ADDFEE) {
             $sendType = \common\mail\Template::TYPE_TRANSACTION_VERIFY_CODE;
         } else if ($this->type === self::TYPE_TOP_UP) {
             $sendType = \common\mail\Template::TYPE_TRANSACTION_TYPE_TOP_UP;

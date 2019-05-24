@@ -100,7 +100,7 @@ class WalletController extends BaseAccountController
         $offset = $page * $limit - $limit;
         $rs = $walletS->listTransaction($get,$limit,$offset);
         $listTransaction = ArrayHelper::getValue($rs,'data',[]);
-        $total = ArrayHelper::getValue($rs,'total',[]);
+        $total = ArrayHelper::getValue($rs,'total',0);
 
         return $this->render('history',[
             'wallet' => $wallet,
