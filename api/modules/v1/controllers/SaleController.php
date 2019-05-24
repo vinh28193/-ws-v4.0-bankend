@@ -82,6 +82,8 @@ class SaleController extends BaseApiController
         /** @var  $sale \common\models\User */
         $model->sale_support_id = $sale->id;
         $model->support_email = $sale->email;
+        $model->validate();
+//       Yii::info($model->getActiveValidators('customer_id'),'customer_id');
         if (!$model->save()) {
             return $this->response(false, $model->getFirstErrors());
         }

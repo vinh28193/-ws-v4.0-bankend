@@ -103,46 +103,46 @@ $this->params['breadcrumbs'][] = $this->title;
                 </table>
             </div>
         </div>
-        <div class="package form-inline">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="package" id="package1" checked>
-                <label class="form-check-label" for="package1">Yêu cầu đóng thùng tại Mỹ</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="package" id="package2">
-                <label class="form-check-label" for="package2">Yêu cầu đóng thùng tại Việt Nam</label>
-            </div>
-        </div>
-        <div class="title-2">Thông tin kiện hàng</div>
-        <div class="package-table">
-            <div class="be-table">
-                <table class="table text-center">
-                    <thead>
-                    <tr>
-                        <th scope="col">Kiện hàng</th>
-                        <th scope="col">Trạng thái kiện</th>
-                        <th scope="col">Mã Boxme</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1 kiện</td>
-                        <td>abc ...</td>
-                        <td><a href="#" class="text-blue">Chi tiết >></a></td>
-                    </tr>
-                    <tr>
-                        <td>1 kiện</td>
-                        <td>abc ...</td>
-                        <td><a href="#" class="text-blue">Chi tiết >></a></td>
-                    </tr>
-                    <tr>
-                        <td>1 kiện</td>
-                        <td>abc ...</td>
-                        <td><a href="#" class="text-blue">Chi tiết >></a></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!--        <div class="package form-inline">-->
+<!--            <div class="form-check">-->
+<!--                <input class="form-check-input" type="radio" name="package" id="package1" checked>-->
+<!--                <label class="form-check-label" for="package1">Yêu cầu đóng thùng tại Mỹ</label>-->
+<!--            </div>-->
+<!--            <div class="form-check">-->
+<!--                <input class="form-check-input" type="radio" name="package" id="package2">-->
+<!--                <label class="form-check-label" for="package2">Yêu cầu đóng thùng tại Việt Nam</label>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="title-2">Thông tin kiện hàng</div>-->
+<!--        <div class="package-table">-->
+<!--            <div class="be-table">-->
+<!--                <table class="table text-center">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th scope="col">Kiện hàng</th>-->
+<!--                        <th scope="col">Trạng thái kiện</th>-->
+<!--                        <th scope="col">Mã Boxme</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr>-->
+<!--                        <td>1 kiện</td>-->
+<!--                        <td>abc ...</td>-->
+<!--                        <td><a href="#" class="text-blue">Chi tiết >></a></td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td>1 kiện</td>-->
+<!--                        <td>abc ...</td>-->
+<!--                        <td><a href="#" class="text-blue">Chi tiết >></a></td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td>1 kiện</td>-->
+<!--                        <td>abc ...</td>-->
+<!--                        <td><a href="#" class="text-blue">Chi tiết >></a></td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </div>

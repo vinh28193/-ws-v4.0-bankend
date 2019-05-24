@@ -8,6 +8,7 @@
 
 namespace api\modules\v1\controllers;
 
+use common\components\cart\storage\MongodbCartStorage;
 use common\models\User;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -38,10 +39,12 @@ class CartController extends BaseApiController
 
     public function actionIndex()
     {
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $this->getCart()->getCartItems(),
-        ]);
-        return $this->response(true, 'get cart success', $dataProvider);
+//        $dataProvider = new ArrayDataProvider([
+//            'allModels' => $this->getCart()->getCartItems(),
+//        ]);
+//        return $this->response(true, 'get cart success', $dataProvider);
+        $model = new MongodbCartStorage();
+        var_dump($model->GetAllShopingCarts());die;
 
     }
 
