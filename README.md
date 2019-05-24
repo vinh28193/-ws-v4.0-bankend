@@ -733,3 +733,15 @@ php-bcmath.x86_64 : A module for PHP applications for using the bcmath library
 
 yum install php-bcmath.x86_64
 
+
+
+#Google Analytich Dev
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-140658371-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-140658371-1');
+</script>

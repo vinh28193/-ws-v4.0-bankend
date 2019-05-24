@@ -15,18 +15,42 @@
         updateUrl: undefined,
         removeUrl: undefined,
         paymentUrl: undefined,
+        items: []
     };
 
+    var defaultItem = {
+        key: undefined,
+        selected: undefined,
+        name: undefined,
+        type: undefined,
+        originLink: undefined,
+        link: undefined,
+        imageSrc: undefined,
+        provider: undefined,
+        variation: undefined,
+        condition: undefined,
+        quantity: 0,
+        availableQuantity: 0,
+        soldQuantity: 0,
+        weight: undefined,
+        amount: 0,
+        localAmount: 0,
+        localDisplayAmount: undefined,
+    };
 
     var methods = {
-        init: function (options) {
+        init: function (items, options) {
             return this.each(function () {
                 var $cart = $(this);
                 if ($cart.data('wsCart')) {
                     return;
                 }
+                items = items.map(i => $.extend({}, defaultItem, i || {}));
                 var settings = $.extend({}, defaults, options || {});
-                $cart.data('wsCart', {settings: settings});
+                $cart.data('wsCart', {
+                    items: items,
+                    settings: settings
+                });
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
                     methods.update.call($cart, $(this));
                 });
@@ -44,12 +68,19 @@
                 ws.initEventHandler($cart, 'payment', 'click.wsCart', 'button.btn-payment', function (event) {
                     methods.payment.apply($cart);
                 });
+                ws.initEventHandler($cart, 'selected', 'change.wsCart', 'input[name=cartItems]', function (event) {
+                    console.log($(this));
+                    console.log(filterCartItems($cart));
+                });
             });
         },
         refresh: function () {
 
         },
         add: function ($type) {
+        },
+        watch: function (key) {
+            var $cart = $(this);
         },
         update: function ($item) {
             var $cart = $(this);
@@ -146,6 +177,9 @@
             return this.data('wsCart');
         },
     };
+    var updateTotalPrice = function ($cart) {
+
+    };
     var getQuantityInputOptions = function ($input) {
         return {
             id: $input.attr('id'),
@@ -155,7 +189,7 @@
         }
     };
     var filterCartItems = function ($cart) {
-        return $cart.find('input[name="items"]');
+        return $cart.find('input[name="cartItems"]:checked');
     };
     var updateItem = function ($data) {
         console.log($data)

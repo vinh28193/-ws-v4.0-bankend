@@ -3,11 +3,8 @@
 
 namespace frontend\widgets\cart;
 
-use common\components\cart\CartSelection;
-use common\helpers\WeshopHelper;
-use common\products\BaseProduct;
 
-
+use common\components\cart\CartHelper;
 use Yii;
 use yii\web\View;
 use yii\helpers\Html;
@@ -16,6 +13,9 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap4\Widget;
 use yii\widgets\Pjax;
+use common\helpers\WeshopHelper;
+use common\products\BaseProduct;
+use common\components\cart\CartSelection;
 
 class CartWidget extends Widget
 {
@@ -44,12 +44,9 @@ class CartWidget extends Widget
     public function init()
     {
         parent::init();
-        if ($this->isGroup) {
-//            $this->items = ArrayHelper::index($this->items, 'key', function ($item) {
-//                $request = $item['request'];
-//                return $request['type'] . ':' . $request['seller'];
-//            });
-        }
+//        if ($this->isGroup) {
+//            $this->items = CartHelper::group($this->items);
+//        }
         $this->items = array_map([$this, 'preItem'], $this->items);
         $this->removeAction = Url::toRoute($this->removeAction);
         $this->updateAction = Url::toRoute($this->updateAction);
@@ -85,22 +82,27 @@ class CartWidget extends Widget
             }
         }
         $imageSrc = isset($item['request']['image']) ? $item['request']['image'] : $product->current_image;
+
         list($amount, $localAmount) = $product->getAdditionalFees()->getTotalAdditionFees();
-        $this->_totalAmount += $localAmount;
+
         return [
             'key' => ArrayHelper::getValue($item, 'key', ''),
+            'selected' => true,
             'name' => $product->item_name,
             'type' => $product->type,
             'originLink' => $product->item_origin_url,
-            'link' => WeshopHelper::generateUrlDetail($product->type,$product->item_name,$product->item_id, $product->item_sku,$sellerId),
+            'link' => WeshopHelper::generateUrlDetail($product->type, $product->item_name, $product->item_id, $product->item_sku, $sellerId),
             'imageSrc' => $imageSrc,
             'provider' => $provider,
             'variation' => $product->current_variation,
+            'condition' => $product->condition,
             'quantity' => $product->getShippingQuantity(),
             'availableQuantity' => $product->available_quantity,
             'soldQuantity' => $product->quantity_sold,
             'weight' => $product->getShippingWeight(),
-            'price' => $this->showMoney($localAmount),
+            'amount' => $amount,
+            'localAmount' => $localAmount,
+            'localDisplayAmount' => $this->showMoney($localAmount),
         ];
     }
 
@@ -130,8 +132,9 @@ class CartWidget extends Widget
         $id = $this->options['id'];
         $options = Json::htmlEncode($this->getClientOptions());
         $view = $this->getView();
+        $items = Json::htmlEncode(array_values($this->items));
         CartAsset::register($view);
-        $view->registerJs("jQuery('#$id').wsCart($options);", $view::POS_END);
+        $view->registerJs("jQuery('#$id').wsCart($items,$options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsCart('data'));", $view::POS_END);
     }
 
@@ -159,8 +162,6 @@ class CartWidget extends Widget
     {
 
         $content = Html::beginTag('ul', ['class' => 'billing']);
-        $content .= '<li><div class="left">Giá trị đơn hàng:</div><div class="right">' . $this->showMoney($this->_totalAmount) . ' <i class="currency">đ</i></div></li>';
-        $content .= '<li><div class="left">Đã thanh toán::</div><div class="right">0<i class="currency">đ</i></div></li>';
         $content .= '<li><div class="left">Giá trị đơn hàng:</div><div class="right">' . $this->showMoney($this->_totalAmount) . ' <i class="currency">đ</i></div></li>';
         $content .= Html::endTag('ul');
         return $content;

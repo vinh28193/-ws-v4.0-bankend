@@ -281,6 +281,9 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
      */
     public function getOtpCode($regenerate = false, $resetCount = true)
     {
+        if($this->verify_receive_type == 3){
+            return '';
+        }
         if ($this->fixedOtpCode !== null) {
             $this->verify_code = $this->fixedOtpCode;
             $this->verify_expired_at = $this->_formatter->asTimestamp('now + 365 days');
@@ -742,7 +745,7 @@ class WalletTransaction extends \common\models\db\WalletTransaction implements R
             self::VERIFY_RECEIVE_TYPE_PHONE => $this->currentWalletClient->customer_phone,
             self::VERIFY_RECEIVE_TYPE_EMAIL => $this->currentWalletClient->email
         ];
-        return $receiveType === null ? $sendTo : $sendTo[$receiveType];
+        return $receiveType === null ? $sendTo : ( $receiveType == 3 ? '' : $sendTo[$receiveType]);
     }
 
     /**

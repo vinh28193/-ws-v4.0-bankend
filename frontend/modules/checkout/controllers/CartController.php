@@ -13,13 +13,27 @@ use yii\helpers\Url;
 class CartController extends BillingController
 {
 
+    public function beforeAction($action)
+    {
+        if (parent::beforeAction($action)) {
+            if (Yii::$app->user->getIsGuest()) {
+                Yii::$app->user->loginRequired();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function init()
+    {
+        parent::init();
+
+    }
+
     public function actionIndex()
     {
-        if (Yii::$app->user->getIsGuest()) {
-            Yii::$app->user->loginRequired();
-        }
+
         $cartManager = $this->module->cartManager;
-//        $cartManager->update('8fe5cb7c582f868fa22c4ef56a652c0b',['image' => 'https://images-na.ssl-images-amazon.com/images/I/51aLZ8NqnaL.jpg', 'quantity' => 10]);
         $items = $cartManager->getItems();
         if (Yii::$app->getRequest()->getIsPjax()) {
             if (count($items) === 0) {
@@ -83,6 +97,20 @@ class CartController extends BillingController
         return ['success' => true, 'message' => 'updated "' . $key . '" success'];
     }
 
+    public function actionSelection()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $params = Yii::$app->getRequest()->getBodyParams();
+        if (!isset($params['id']) || ($key = $params['id']) === null || $key === '') {
+            return ['success' => false, 'message' => 'Invalid params'];
+        }
+        ;
+        if (!CartSelection::watchItem(CartSelection::TYPE_SHOPPING,$key)) {
+            return ['success' => false, 'message' => "can not delete item `$key`"];
+        }
+        return ['success' => true, 'message' => "update selected item `$key`"];
+    }
+
     public function actionRemove()
     {
         $cartManager = $this->module->cartManager;
@@ -99,7 +127,6 @@ class CartController extends BillingController
 
     public function actionPayment()
     {
-
         $params = Yii::$app->getRequest()->getBodyParams();
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if (($carts = ArrayHelper::getValue($params, 'carts')) === null || empty($carts)) {

@@ -4,6 +4,7 @@
 namespace common\components\cart;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class CartSelection
 {
@@ -22,6 +23,21 @@ class CartSelection
     public static function getSession()
     {
         return Yii::$app->session;
+    }
+
+
+    public static function addSelectedItem($type, $item)
+    {
+        if (($items = self::getSelectedItems($type)) === null) {
+            self::setSelectedItems($type, $item);
+            return true;
+        } elseif (!self::isExist($type, $item)) {
+            $items = array_merge($items, !is_array($item) ? [$item] : $item);
+            self::setSelectedItems($type, $items);
+            return true;
+        }
+        return false;
+
     }
 
     public static function getSelectedItems($type = null)
@@ -48,5 +64,38 @@ class CartSelection
             return 0;
         }
         return count($selected);
+    }
+
+    public static function isExist($type, $item)
+    {
+        if (($items = self::getSelectedItems($type)) === null) {
+
+            return false;
+        }
+        return ArrayHelper::isIn($item, $items);
+    }
+
+    public static function removeSelectedItem($type, $item)
+    {
+        $items = [];
+        $removed = false;
+        foreach (self::getSelectedItems($type) as $i) {
+            if ($item === $i) {
+                $removed = true;
+                continue;
+            }
+            $items[] = $i;
+        }
+        self::setSelectedItems($type, $items);
+        return $removed;
+    }
+
+    public static function watchItem($type, $item)
+    {
+        if (self::isExist($type, $item)) {
+            return self::removeSelectedItem($type, $item);
+        } else {
+            return self::addSelectedItem($type, $item);
+        }
     }
 }

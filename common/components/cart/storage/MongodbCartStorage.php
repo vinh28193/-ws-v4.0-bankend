@@ -144,13 +144,16 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
 
     /**
      * @param $identity
-     * @return array
+     * @param |null $keys
+     * @return array|mixed
      */
-    public function getItems($identity)
+    public function getItems($identity, $keys = null)
     {
-        $items = self::find()->where(['AND', ['identity' => $identity], ['remove' => 0]])->all();
-        return ArrayHelper::map($items, 'key', 'data');
-
+        $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
+        if ($keys !== null) {
+            $conditions[] = ['IN', 'key', !is_array($keys) ? [$keys] : $keys];
+        }
+        return ArrayHelper::map(self::find()->where($conditions)->all(), 'key', 'data');
     }
 
     /**
@@ -166,11 +169,18 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
 
     /**
      * @param $identity
-     * @return boolean
+     * @param null $keys
+     * @return int
      */
-    public function removeItems($identity)
+    public function removeItems($identity, $keys = null)
     {
-        return self::updateAll(['remove' => 1], ['identity' => $identity]);
+
+        if ($keys !== null) {
+            $conditions = ['AND', ['IN', 'key', !is_array($keys) ? [$keys] : $keys], ['identity' => $identity]];
+        } else {
+            $conditions = ['identity' => $identity];
+        }
+        return self::updateAll(['remove' => 1], $conditions);
     }
 
     /**
@@ -184,5 +194,12 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
             return false;
         }
         return $item->updateAttributes(['identity' => $id]) > 0;
+    }
+
+    public function keys($identity)
+    {
+        $query = new \yii\mongodb\Query();
+        $query->from(self::collectionName())->select(['key'])->where(['AND', ['identity' => $identity], ['remove' => 0]]);
+        return $query->column();
     }
 }

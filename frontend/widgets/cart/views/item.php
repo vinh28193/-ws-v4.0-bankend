@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 
 /* @var string $key */
+/* @var boolean $selected */
 /* @var string $name */
 /* @var string $type */
 /* @var string $imageSrc */
@@ -10,11 +11,14 @@ use yii\helpers\Html;
 /* @var string $link */
 /* @var string|common\products\Provider $provider */
 /* @var string|null $variation */
+/* @var string $condition */
 /* @var int $quantity */
 /* @var int $availableQuantity */
 /* @var int $soldQuantity */
 /* @var int $weight */
-/* @var int|string|float $price */
+/* @var string|float $amount */
+/* @var string|float $localAmount */
+/* @var string $localDisplayAmount */
 
 $name = Html::encode($name);
 ?>
@@ -22,10 +26,9 @@ $name = Html::encode($name);
 
 <li data-key="<?= $key; ?>" data-type="<?= $type; ?>">
     <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="cartItems" value="<?= $key; ?>" id="cartItem<?= $key; ?>">
+        <input class="form-check-input" <?=$selected?'checked':''?> type="checkbox" name="cartItems" data-amount="<?=$amount;?>" data-price="<?=$localAmount;?>" value="<?= $key; ?>" id="cartItem<?= $key; ?>">
         <label class="form-check-label" for="cartItem<?= $key; ?>"></label>
     </div>
-    <?php echo Html::hiddenInput('items', $key) ?>
     <div class="thumb">
         <img src="<?= $imageSrc ?>" alt="<?= $name; ?>">
     </div>
@@ -42,7 +45,7 @@ $name = Html::encode($name);
             <ol>
                 <?php
                 if (is_string($provider)) {
-                    echo '<li>Bán bởi :' . $provider . '</li>';
+                    echo '<li>Bán bởi :' . $provider .'</li>';
                 } else if ($provider instanceof \common\products\Provider) {
                     echo '<li>Bán bởi : <a href="' . ($provider->website !== null ? $provider->website : "#") . '">' . $provider->name . '</a></li>';
                 }
@@ -51,7 +54,7 @@ $name = Html::encode($name);
                 }
                 ?>
 
-                <li>Tạm tính : <span class="weight-option"><?= $weight ?></span> kg </li>
+                <li>Tạm tính : <span class="weight-option"><?= $weight ?></span> kg</li>
             </ol>
         </div>
         <div class="right">
@@ -74,7 +77,7 @@ $name = Html::encode($name);
                     </div>
                 </div>
             </div>
-            <div class="price price-option"><?= $price; ?></div>
+            <div class="price price-option" data-original="<?= $amount; ?>" data-local="<?=$localAmount;?>"><?= $localDisplayAmount; ?></div>
             <a href="#" class="del delete-item" data-key="<?= $key; ?>"><i class="far fa-trash-alt"></i> Xóa</a>
         </div>
     </div>
