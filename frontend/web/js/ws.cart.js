@@ -47,10 +47,13 @@
                 }
                 items = items.map(i => $.extend({}, defaultItem, i || {}));
                 var settings = $.extend({}, defaults, options || {});
+                updateTotalPrice($cart);
+
                 $cart.data('wsCart', {
                     items: items,
                     settings: settings
                 });
+
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
                     methods.update.call($cart, $(this));
                 });
@@ -69,18 +72,36 @@
                     methods.payment.apply($cart);
                 });
                 ws.initEventHandler($cart, 'selected', 'change.wsCart', 'input[name=cartItems]', function (event) {
-                    console.log($(this));
-                    console.log(filterCartItems($cart));
+                    var $input = $(this);
+                    var data = {id: $input.val(), selected: $input.is(':checked')};
+                    updateTotalPrice($cart);
+                    console.log(data);
+                    //methods.watch.call($cart, $input);
+                    return false;
                 });
             });
+        },
+        items: function () {
+
         },
         refresh: function () {
 
         },
         add: function ($type) {
         },
-        watch: function (key) {
+        watch: function ($input) {
             var $cart = $(this);
+            var container = '#' + $cart.attr('id');
+            ws.ajax('/checkout/cart/selection', {
+                dataType: 'json',
+                method: 'post',
+                data: {id: $input.val(), selected: $input.is(':checked')},
+                success: function (response, textStatus, xhr) {
+                    // updateItem(response);
+                    $.pjax.reload({container: container});
+                }
+            });
+
         },
         update: function ($item) {
             var $cart = $(this);
@@ -178,7 +199,12 @@
         },
     };
     var updateTotalPrice = function ($cart) {
-
+        totalAmount = 0;
+        $.each(filterCartItems($cart), function (i, input) {
+            console.log(input);
+            totalAmount += $(input).data('price');
+        });
+        $('span#totalCartPrice').html(ws.numberFormat(totalAmount));
     };
     var getQuantityInputOptions = function ($input) {
         return {
@@ -189,7 +215,7 @@
         }
     };
     var filterCartItems = function ($cart) {
-        return $cart.find('input[name="cartItems"]:checked');
+        return $cart.find('input[name=cartItems]:checked');
     };
     var updateItem = function ($data) {
         console.log($data)

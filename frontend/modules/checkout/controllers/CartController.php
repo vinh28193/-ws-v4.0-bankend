@@ -104,11 +104,14 @@ class CartController extends BillingController
         if (!isset($params['id']) || ($key = $params['id']) === null || $key === '') {
             return ['success' => false, 'message' => 'Invalid params'];
         }
-        ;
-        if (!CartSelection::watchItem(CartSelection::TYPE_SHOPPING,$key)) {
-            return ['success' => false, 'message' => "can not delete item `$key`"];
+        $selected = (boolean)ArrayHelper::getValue($params, 'selected');
+        var_dump($selected);die;
+        if ($selected) {
+            CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, $key);
+        }else {
+            CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, $key);
         }
-        return ['success' => true, 'message' => "update selected item `$key`"];
+        return ['success' => $selected, 'message' => "update selected item `$key`",'data' => CartSelection::getSelectedItems(CartSelection::TYPE_SHOPPING)];
     }
 
     public function actionRemove()

@@ -17,6 +17,7 @@ use common\models\SystemDistrict;
 use common\models\SystemStateProvince;
 use frontend\modules\payment\models\OtpVerifyForm;
 use frontend\modules\payment\PaymentContextView;
+use frontend\modules\payment\PaymentService;
 use frontend\modules\payment\providers\wallet\WalletHideProvider;
 use frontend\modules\payment\providers\wallet\WalletService;
 use common\products\BaseProduct;
@@ -132,7 +133,7 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->payment_type = $payment->payment_type;
         $paymentTransaction->shipping = isset($my_shiping) && $my_shiping instanceof Address ? $my_shiping->id : $this->user->defaultShippingAddress->id;
         $paymentTransaction->save(false);
-        if ($payment->payment_provider === 42) {
+        if ($payment->payment_provider === 42 || $payment->payment_provider === 45) {
             $wallet = new WalletService([
                 'transaction_code' => $payment->transaction_code,
                 'total_amount' => $payment->total_amount - $payment->total_discount_amount,
@@ -204,12 +205,29 @@ class PaymentController extends BasePaymentController
             ]);
 
             $receiverAddress = Address::findOne($paymentTransaction->shipping);
-            if (($paymentTransaction->payment_method === 'TTVP' || $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS)) {
+            if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
                 $createResponse = $payment->createOrder($receiverAddress);
-                if ($createResponse['success']) {
-//                foreach ($payment->carts as $key) {
-//                    $this->cartManager->removeItem($key);
-//                }
+                if ($createResponse['success'] && isset($createResponse['data']['orderCodes'])) {
+                    Yii::info($createResponse['data']);
+                    foreach ($createResponse['data']['orderCodes'] as $orderCode => $info) {
+                        $coupon_codes = ArrayHelper::getValue($info, 'promotion');
+                        if ($coupon_codes !== null && is_array($coupon_codes)) {
+                            $coupon_codes = implode(',', $coupon_codes);
+                        }
+                        $childTransaction = clone $paymentTransaction;
+                        $childTransaction->id = null;
+                        $childTransaction->isNewRecord = true;
+                        $childTransaction->coupon_code = $coupon_codes;
+                        $childTransaction->transaction_amount_local = ArrayHelper::getValue($info, 'totalPaid', 0);
+                        $childTransaction->total_discount_amount = ArrayHelper::getValue($info, 'discountAmount', 0);
+                        $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
+                        $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
+                        $childTransaction->order_code = $orderCode;
+                        $childTransaction->save(false);
+                    }
+                    foreach ($payment->carts as $key) {
+                        $this->cartManager->removeItem($key);
+                    }
 
                 }
             }

@@ -85,8 +85,9 @@ class CartWidget extends Widget
 
         list($amount, $localAmount) = $product->getAdditionalFees()->getTotalAdditionFees();
 
+        $key = ArrayHelper::getValue($item, 'key', '');
         return [
-            'key' => ArrayHelper::getValue($item, 'key', ''),
+            'key' => $key,
             'selected' => true,
             'name' => $product->item_name,
             'type' => $product->type,
@@ -162,7 +163,7 @@ class CartWidget extends Widget
     {
 
         $content = Html::beginTag('ul', ['class' => 'billing']);
-        $content .= '<li><div class="left">Giá trị đơn hàng:</div><div class="right">' . $this->showMoney($this->_totalAmount) . ' <i class="currency">đ</i></div></li>';
+        $content .= '<li><div class="left">Giá trị đơn hàng:</div><div class="right"><span id="totalCartPrice">' . $this->showMoney($this->_totalAmount) . '</span><i class="currency">đ</i></div></li>';
         $content .= Html::endTag('ul');
         return $content;
     }
@@ -197,6 +198,6 @@ HTML;
 
     private function showMoney($money)
     {
-        return Yii::$app->storeManager->showMoney($money);
+        return Yii::$app->storeManager->roundMoney($money);
     }
 }

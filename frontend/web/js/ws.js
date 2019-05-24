@@ -5,12 +5,18 @@ var ws = ws || (function ($) {
         ajaxComplete: 'ajaxComplete',
     };
 
+    var defaultOption = {
+        currency: undefined,
+        priceDecimal: 0,
+        pricePrecision: 0
+    };
+
+    var eventHandlers = [];
+    var i18nMessages = [];
     var pub = {
-        i18nMessages: [],
-        eventHandlers: {},
+        options: {},
         init: function () {
-            // console.log('js ws init completed');
-            console.log(pub.numberFormat(12345.67788,-3));
+
         },
         // Todo loading
         loading: function (show) {
@@ -30,7 +36,7 @@ var ws = ws || (function ($) {
             }
 
             var beforeSendHandler = $options.beforeSend;
-            var beforeSend = function (jqXHR, settings){
+            var beforeSend = function (jqXHR, settings) {
                 if (!$options.crossDomain && yii.getCsrfParam()) {
                     jqXHR.setRequestHeader('X-CSRF-Token', yii.getCsrfToken());
                 }
@@ -80,26 +86,30 @@ var ws = ws || (function ($) {
         },
         i18nLoadMessages: function ($messages) {
             // clear up data pls
-            pub.i18nMessages = $messages;
+            i18nMessages = $messages;
         },
         roundNumber: function (number, precision) {
-            precision = precision || 0;
+            precision = precision || pub.options.pricePrecision;
             const $factor = Math.pow(10, precision);
             return Math.round(number * $factor) / $factor;
         },
         numberFormat: function (number, decimal = 2, dec_point = '.', thousands_sep = ',') {
             number = number || 0;
-            decimal = decimal || 0;
+            decimal = decimal || pub.options.priceDecimal;
             dec_point = dec_point || '.';
             thousands_sep = thousands_sep || ',';
-            number = pub.roundNumber(number, decimal);
             decimal = decimal < 0 ? 0 : decimal;
             decimal = Math.abs(decimal);
             let i = parseInt(number = Math.abs(Number(number) || 0).toFixed(decimal)).toString();
             let j = (i.length > 3) ? i.length % 3 : 0;
             return (j ? i.substr(0, j) + thousands_sep : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands_sep) + (decimal ? dec_point + Math.abs(number - i).toFixed(decimal).slice(2) : '');
         },
-
+        showMoney: function (money, currency, precision) {
+            precision = precision || pub.options.pricePrecision;
+            money = pub.roundNumber(money, precision)
+            currency = currency || pub.options.currency;
+            return pub.numberFormat(money) + ' ' + currency;
+        },
         showFilter: function (id) {
             if ($("#" + id).css('display') === 'none') {
                 $("#" + id).css('display', 'block');
@@ -121,27 +131,24 @@ var ws = ws || (function ($) {
                 id = id.attr('id');
             }
 
-            var prevHandler = pub.eventHandlers[id];
+            var prevHandler = eventHandlers[id];
             if (prevHandler !== undefined && prevHandler[type] !== undefined) {
                 var data = prevHandler[type];
 
                 $(document).off(data.event, data.selector);
             }
             if (prevHandler === undefined) {
-                pub.eventHandlers[id] = {};
+                eventHandlers[id] = {};
             }
-            // console.log('event: "' + event + '" will be trigger with selector: "' + selector + '"');
+            console.log('event: "' + event + '" will be trigger with selector: "' + selector + '"');
             $(document).on(event, selector, callback);
-            pub.eventHandlers[id][type] = {event: event, selector: selector};
+            eventHandlers[id][type] = {event: event, selector: selector};
         }
     };
 
     return pub;
 })(jQuery);
 
-$(function () {
-    ws.init();
-});
 ws.initEventHandler('searchNew', 'searchBoxButton', 'click', 'button#searchBoxButton', function (event) {
     ws.browse.searchNew('input#searchBoxInput', '$url');
 });
