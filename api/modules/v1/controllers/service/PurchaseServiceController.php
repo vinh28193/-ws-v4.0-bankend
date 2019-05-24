@@ -58,6 +58,8 @@ class PurchaseServiceController extends BaseApiController
 
     public function actionSendNotifyChanging()
     {
+        /** @var  $exRate  \common\components\ExchangeRate */
+        $exRate = \Yii::$app->exRate;
         $tran = Yii::$app->db->beginTransaction();
         try{
             $emailPrice = Yii::$app->request->post('emailPrice', false);
@@ -97,6 +99,67 @@ class PurchaseServiceController extends BaseApiController
                                 $modelProduct->price_purchase = $form->price_purchase;
                                 $modelProduct->shipping_fee_purchase = $form->us_ship_purchase;
                                 $modelProduct->tax_fee_purchase = $form->us_tax_purchase;
+                                $fee = $modelProduct->unitPrice;
+                                $order = $modelProduct->order;
+                                if($modelProduct->price_purchase){
+                                    $check = true;
+                                    $old_local_amount = $fee->local_amount;
+                                    $old_amount = $fee->amount;
+                                    $fee->amount = $modelProduct->price_purchase;
+                                    $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+
+                                    $modelProduct->total_price_amount_local += $fee->local_amount - $old_local_amount ;
+                                    $modelProduct->updated_at = time();
+                                    $modelProduct->price_purchase = null;
+                                    $order->updated_at = time();
+
+                                    $order->total_price_amount_origin += $fee->amount - $old_amount;
+//                            $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                                    $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                                    $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                }
+                                if($modelProduct->shipping_fee_purchase){
+                                    $check = true;
+                                    $fee = $modelProduct->usShippingFee;
+                                    $old_local_amount = $fee->local_amount;
+                                    $old_amount = $fee->amount;
+                                    $fee->amount = $modelProduct->shipping_fee_purchase;
+                                    $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+                                    $order = $modelProduct->order;
+
+                                    $modelProduct->total_fee_product_local += $fee->local_amount - $old_local_amount ;
+                                    $modelProduct->updated_at = time();
+                                    $modelProduct->shipping_fee_purchase = null;
+                                    $order->updated_at = time();
+
+                                    $order->total_origin_shipping_fee_local += $fee->amount - $old_amount;
+                                    $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                                    $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                                    $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                }
+                                if($modelProduct->tax_fee_purchase){
+                                    $check = true;
+                                    $fee = $modelProduct->usTax;
+                                    $old_local_amount = $fee->local_amount;
+                                    $old_amount = $fee->amount;
+                                    $fee->amount = $modelProduct->tax_fee_purchase;
+                                    $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+                                    $order = $modelProduct->order;
+
+                                    $modelProduct->total_fee_product_local += $fee->local_amount - $old_local_amount ;
+                                    $modelProduct->updated_at = time();
+                                    $modelProduct->tax_fee_purchase = null;
+                                    $order->updated_at = time();
+
+                                    $order->total_origin_tax_fee_local += $fee->amount - $old_amount;
+                                    $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                                    $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                                    $order->total_amount_local += $fee->local_amount - $old_local_amount;
+
+                                }
+                                $fee->save(false);
+                                $order->save(0);
+                                $modelProduct->save();
                                 $modelProduct->save();
                                 $messageProduct .= $messageProduct ? '. Và' . $mss : $mss;
                             }
@@ -108,7 +171,7 @@ class PurchaseServiceController extends BaseApiController
                         /** @var PaymentTransaction[] $paymentTransactions */
                         $paymentTransactions = PaymentTransaction::find()
                             ->where([
-                                'transaction_reference_code' => $orderDb->ordercode,
+                                'order_code' => $orderDb->ordercode,
                                 'transaction_status' => [
                                     PaymentTransaction::TRANSACTION_STATUS_CREATED,
                                     PaymentTransaction::TRANSACTION_STATUS_QUEUED
@@ -117,13 +180,11 @@ class PurchaseServiceController extends BaseApiController
                             ])->all();
                         $listIdChange = [];
                         $transaction_description = '';
-                        /** @var  $exRate  \common\components\ExchangeRate */
-                        $exRate = \Yii::$app->exRate;
                         $amount = $exRate->usdToVnd($amount,23500);
                         foreach ($paymentTransactions as $item){
                             $listIdChange[] = $item->id;
                             $amount += $item->transaction_amount_local;
-                            $transaction_description = $transaction_description ? $transaction_description.'<br>'.$item->transaction_description : $item->transaction_description;
+                            $transaction_description = $transaction_description ? $transaction_description.'<br><b>*</b> '.$item->transaction_description : $item->transaction_description;
                         }
                         Yii::debug($amount,'amount_change');
                         $paymentTransaction = new PaymentTransaction();
@@ -139,7 +200,8 @@ class PurchaseServiceController extends BaseApiController
                         $paymentTransaction->transaction_customer_postcode = $orderDb->receiver_post_code;
                         $paymentTransaction->transaction_customer_district = $orderDb->receiver_district_name;
                         $paymentTransaction->transaction_customer_country = $orderDb->receiver_country_name;
-                        $paymentTransaction->transaction_reference_code = $orderDb->ordercode;
+                        $paymentTransaction->order_code = $orderDb->ordercode;
+                        $paymentTransaction->shipping = 0;
                         $paymentTransaction->payment_type = PaymentTransaction::PAYMENT_TYPE_ADDFEE;
                         $paymentTransaction->carts = '';
                         $paymentTransaction->transaction_description = $transaction_description ? $transaction_description.'<br>'.$messageProduct : $messageProduct;
@@ -223,73 +285,17 @@ class PurchaseServiceController extends BaseApiController
                             $check = false;
                             if($model->price_purchase){
                                 $check = true;
-                                $fee = $model->unitPrice;
-                                $old_local_amount = $fee->local_amount;
-                                $old_amount = $fee->amount;
-                                $fee->amount = $model->price_purchase;
-                                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
-                                $fee->save(false);
-                                $order = $model->order;
-
-                                $model->total_price_amount_local += $fee->local_amount - $old_local_amount ;
-                                $model->updated_at = time();
                                 $model->price_purchase = null;
-                                $model->save();
-                                $order->updated_at = time();
-
-                                $order->total_price_amount_origin += $fee->amount - $old_amount;
-//                            $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
-                                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
-                                $order->total_amount_local += $fee->local_amount - $old_local_amount;
-
-                                $order->save(0);
                             }
                             if($model->shipping_fee_purchase){
                                 $check = true;
-                                $fee = $model->usShippingFee;
-                                $old_local_amount = $fee->local_amount;
-                                $old_amount = $fee->amount;
-                                $fee->amount = $model->shipping_fee_purchase;
-                                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
-                                $fee->save(false);
-                                $order = $model->order;
-
-                                $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
-                                $model->updated_at = time();
                                 $model->shipping_fee_purchase = null;
-                                $model->save();
-                                $order->updated_at = time();
-
-                                $order->total_origin_shipping_fee_local += $fee->amount - $old_amount;
-                                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
-                                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
-                                $order->total_amount_local += $fee->local_amount - $old_local_amount;
-
-                                $order->save(0);
                             }
                             if($model->tax_fee_purchase){
                                 $check = true;
-                                $fee = $model->usTax;
-                                $old_local_amount = $fee->local_amount;
-                                $old_amount = $fee->amount;
-                                $fee->amount = $model->tax_fee_purchase;
-                                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
-                                $fee->save(false);
-                                $order = $model->order;
-
-                                $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
-                                $model->updated_at = time();
                                 $model->tax_fee_purchase = null;
-                                $model->save();
-                                $order->updated_at = time();
-
-                                $order->total_origin_tax_fee_local += $fee->amount - $old_amount;
-                                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
-                                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
-                                $order->total_amount_local += $fee->local_amount - $old_local_amount;
-
-                                $order->save(0);
                             }
+                            $model->save();
                             if($check){
                                 Yii::$app->wsLog->push('order','updateFee', null, [
                                     'id' => $model->id,
@@ -301,7 +307,7 @@ class PurchaseServiceController extends BaseApiController
                     }
                     /** @var PaymentTransaction[] $transactionPayments */
                     $transactionPayments = PaymentTransaction::find()->where([
-                        'transaction_reference_code' => $order['ordercode'],
+                        'order_code' => $order['ordercode'],
                         'transaction_status' => [
                             PaymentTransaction::TRANSACTION_STATUS_CREATED,
                             PaymentTransaction::TRANSACTION_STATUS_QUEUED
@@ -325,6 +331,11 @@ class PurchaseServiceController extends BaseApiController
                         if(!$result['success']){
                             $tran->rollBack();
                             return $this->response(false, "Thất bại.",$result);
+                        }
+                        $orderDb = Order::findOne(['ordercode' => $payment->order_code]);
+                        if($orderDb){
+                            $orderDb->total_paid_amount_local = $orderDb->total_paid_amount_local + $payment->transaction_amount_local;
+                            $orderDb->save(false);
                         }
                         //#ToDo thông báo chat thay đổi về giá
                         $model = new ChatMongoWs();

@@ -67,7 +67,7 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao dá
                 </td>
                 <td style="/* padding-top: 20px */">
                     <b><span id="totalAmount"
-                             style="color: <?= in_array($transactionDetail['type'],[WalletTransaction::TYPE_PAY_ORDER, WalletTransaction::TYPE_WITH_DRAW, WalletTransaction::TYPE_ADDFEE]) ? "red" : 'green' ?>">
+                             style="color: <?= in_array($transactionDetail['type'],[WalletTransaction::TYPE_REFUND,WalletTransaction::TYPE_PAY_ORDER, WalletTransaction::TYPE_WITH_DRAW, WalletTransaction::TYPE_ADDFEE]) ? "red" : 'green' ?>">
                                                 <?= in_array($transactionDetail['type'],[WalletTransaction::TYPE_PAY_ORDER, WalletTransaction::TYPE_WITH_DRAW, WalletTransaction::TYPE_ADDFEE])? "-" : '+' ?> <?php
                             $amount = $transactionDetail['totalAmount'] ? $transactionDetail['totalAmount'] : ($transactionDetail['debit_amount'] ? $transactionDetail['debit_amount'] : $transactionDetail['credit_amount']);
                             echo number_format($amount);

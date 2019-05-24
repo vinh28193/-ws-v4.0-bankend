@@ -713,9 +713,13 @@ return [
             'PUT,PATCH {id}' => 'update',
             'DELETE {id}' => 'delete',
             'GET,HEAD {id}' => 'view',
-            'POST' => 'create',
+            'POST' => 'create,update-arrears',
             'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [
+            'POST update-arrears'=> 'update-arrears',
+            'OPTIONS update-arrears'=> 'options',
         ]
     ],
     [

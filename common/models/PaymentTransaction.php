@@ -11,6 +11,7 @@ class PaymentTransaction extends DbPaymentTransaction
     const TRANSACTION_TYPE_PAYMENT = 'PAYMENT';
     const TRANSACTION_ADDFEE = 'ADDFEE';
     const TRANSACTION_TYPE_TOP_UP = 'TOP_UP';
+    const TRANSACTION_TYPE_REFUND = 'REFUND';
 
     const TRANSACTION_STATUS_CREATED = 'CREATED';
     const TRANSACTION_STATUS_QUEUED = 'QUEUED';
@@ -22,4 +23,5 @@ class PaymentTransaction extends DbPaymentTransaction
     const PAYMENT_TYPE_SHOPPING = 'shopping';
     const PAYMENT_TYPE_TOP_UP = 'top_up';
     const PAYMENT_TYPE_ADDFEE = 'addfee';
+    const PAYMENT_TYPE_REFUND = 'refund';
 }
