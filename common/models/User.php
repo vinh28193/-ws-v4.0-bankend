@@ -33,6 +33,8 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     const RETAIL_CUSTOMER = 1;
     const WHOLESALE_CUSTOMER = 2;
 
+    protected $UUID;
+
     /**
      * @inheritdoc
      */

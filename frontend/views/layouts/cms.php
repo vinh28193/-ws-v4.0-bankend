@@ -10,6 +10,29 @@ use frontend\widgets\cms\SlideWidget;
 /* @var $page WsPage */
 /* @var $isShow bool */
 
+$js = <<<JS
+$(document).ready(function() {
+    var client = new ClientJS();
+            var _fingerprint = client.getFingerprint();
+            var data = {
+                fingerprint: _fingerprint
+            };
+            // /cms/home/u
+  setTimeout(function () { 
+        ws.ajax('/frontend/u',{
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        loading: true,
+        success: function (result) {
+            console.log(result);  console.log(result.success); 
+        }
+        });
+    }, 1000 * 1);
+});
+JS;
+$this->registerJs($js, \yii\web\View::POS_END);
+
 $this->beginContent('@frontend/views/layouts/common.php')
 ?>
 
