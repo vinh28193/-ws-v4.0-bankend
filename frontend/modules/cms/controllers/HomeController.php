@@ -27,7 +27,7 @@ class HomeController extends CmsController
         if($this->_uuid){
             if(YII_ENV == 'dev' and YII_DEBUG == true){
                 // ENV DEV /  TEST
-                $this->gaHomeWs($this->Uuid());
+                $this->gaWs($this->Uuid());
             }else {
                 // ENV PROD
             }
@@ -49,17 +49,18 @@ class HomeController extends CmsController
         return $uid;
     }
 
-    public function gaHomeWs($UUID)
+    public $setDocumentPath = '/HomeWs';
+    public function gaWs($UUID)
     {
         Yii::info("HOME GA WS");
         Yii::$app->ga->request()
             ->setClientId($UUID)
-            ->setDocumentPath($this->Dopath)
+            ->setDocumentPath($this->setDocumentPath)
             ->setAsyncRequest(true)
             ->sendPageview();
     }
 
-    public $setDocumentPath = '/HomeWs';
+
 
     public function actionIndex()
     {
