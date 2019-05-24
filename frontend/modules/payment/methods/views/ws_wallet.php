@@ -12,6 +12,7 @@ use yii\web\JsExpression;
 
 /** @var  $storeManager  common\components\StoreManager */
 $storeManager = Yii::$app->get('storeManager');
+$amountChange = $payment->total_amount > $wallet['usable_balance'] ? $payment->total_amount - $wallet['usable_balance'] : 0;
 ?>
 
 <div class="method-item">
@@ -26,7 +27,7 @@ $storeManager = Yii::$app->get('storeManager');
     <div id="method<?= $group; ?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne"
          data-parent="#payment-method">
         <div class="method-content wallet">
-            <?= Html::a('<img src="/img/payment_wallet.png"/><span>Nạp tiền</span>', new JsExpression('javascript:void(0);'), ['class' => 'btn btn-add-credit']) ?>
+            <?= Html::a('<img src="/img/payment_wallet.png"/><span>Nạp tiền</span>', new JsExpression('/my-weshop/wallet/top-up.html?amount='.$amountChange), ['href' => '/my-weshop/wallet/top-up.html?amount='.$amountChange,'target' => '_blank','class' => 'btn btn-add-credit']) ?>
             <div class="row">
                 <div class="col-md-6">
                     <label>Tổng số tiền chính trong tài khoản:</label>
@@ -53,7 +54,7 @@ $storeManager = Yii::$app->get('storeManager');
                             <?php echo Html::input('text', 'usable_balance', $storeManager->showMoney($wallet['usable_balance']), ['class' => 'form-control', 'disabled' => true]); ?>
                         </div>
                     </div>
-                    <?php if ($payment->total_amount > $wallet['usable_balance']): ?>
+                    <?php if ($amountChange > 0): ?>
                         <div class="col-md-12">
                             <small class="warning text-orange">Tài khoản của bạn không đủ tiền. Vui lòng nạp tiền để
                                 tiến

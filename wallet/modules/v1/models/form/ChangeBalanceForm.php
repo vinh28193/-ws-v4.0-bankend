@@ -470,6 +470,9 @@ class ChangeBalanceForm extends Model
         if($this->amount != $transaction->debit_amount){
             return ReponseData::reponseArray(false, 'Tham số amount truyền sang sai so với debit_amount trong transaction', []);
         }
+        if($this->amount > $wallet->freeze_balance){
+            return ReponseData::reponseArray(false, 'Số tiền đóng băng nhỏ hơn số tiền cần giải phóng', []);
+        }
         $befor_amount = $wallet->current_balance;
         $conn = \Yii::$app->db;
         $trans = $conn->beginTransaction();
@@ -530,6 +533,9 @@ class ChangeBalanceForm extends Model
         }
         if($this->amount != $transaction->debit_amount){
             return ReponseData::reponseArray(false, 'Tham số amount truyền sang sai so với debit_amount trong transaction', []);
+        }
+        if($this->amount > $wallet->freeze_balance){
+            return ReponseData::reponseArray(false, 'Số tiền đóng băng nhỏ hơn số tiền cần giải phóng', []);
         }
         $befor_amount = $wallet->current_balance;
         $conn = \Yii::$app->db;

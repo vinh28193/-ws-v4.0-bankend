@@ -80,21 +80,6 @@ class OrderController extends BaseApiController
                 try{
                     $payment->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
                     $payment->save(false);
-                    Yii::info($payment->transaction_status,'payment_status');
-                    $WalletS = new WalletBackendService();
-                    $WalletS->payment_transaction = $payment->transaction_code;
-                    $WalletS->payment_method = $payment->payment_method;
-                    $WalletS->payment_provider = $payment->payment_provider;
-                    $WalletS->bank_code = $payment->payment_bank_code;
-                    $WalletS->total_amount = intval($payment->transaction_amount_local);
-                    $WalletS->type = WalletBackendService::TYPE_PAY_ADDFEE;
-                    $WalletS->customer_id = $payment->customer_id;
-                    $WalletS->description = $payment->transaction_description;
-                    $result = $WalletS->createSafePaymentTransaction();
-                    if(!$result['success']){
-                        $tran->rollBack();
-                        continue;
-                    }
                     $order->total_paid_amount_local = $order->total_paid_amount_local + $payment->transaction_amount_local;
                     $order->save(false);
                     //#ToDo thông báo chat thay đổi về giá
@@ -118,6 +103,21 @@ class OrderController extends BaseApiController
                     ]];
                     $model->load($_rest_data);
                     $model->save();
+                    Yii::info($payment->transaction_status,'payment_status');
+                    $WalletS = new WalletBackendService();
+                    $WalletS->payment_transaction = $payment->transaction_code;
+                    $WalletS->payment_method = $payment->payment_method;
+                    $WalletS->payment_provider = $payment->payment_provider;
+                    $WalletS->bank_code = $payment->payment_bank_code;
+                    $WalletS->total_amount = intval($payment->transaction_amount_local);
+                    $WalletS->type = WalletBackendService::TYPE_PAY_ADDFEE;
+                    $WalletS->customer_id = $payment->customer_id;
+                    $WalletS->description = $payment->transaction_description;
+                    $result = $WalletS->createSafePaymentTransaction();
+                    if(!$result['success']){
+                        $tran->rollBack();
+                        continue;
+                    }
                     $tran->commit();
                 }catch (\Exception $exception){
                     $tran->rollBack();
