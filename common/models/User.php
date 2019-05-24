@@ -3,6 +3,7 @@
 namespace common\models;
 
 
+use common\models\db\AuthAssignment;
 use Yii;
 use yii\web\IdentityInterface;
 use common\components\UserApiGlobalIdentityInterface;
@@ -21,12 +22,16 @@ use common\components\UserPublicIdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ * @property AuthAssignment[] $authAssigments
  */
 class User extends \common\models\db\User implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
-
+    const EMPLOYEE = 1;
+    const CUSTOMER = 0;
+    const RETAIL_CUSTOMER = 1;
+    const WHOLESALE_CUSTOMER = 2;
 
     /**
      * @inheritdoc
@@ -295,6 +300,14 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
             ['type' => Address::TYPE_SHIPPING],
             ['is_default' => Address::IS_DEFAULT]
         ]);
+    }
+
+    /**
+     * @return null
+     */
+    public function getAuthAssigments()
+    {
+        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
     }
 
 }

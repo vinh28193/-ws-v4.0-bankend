@@ -504,6 +504,66 @@ class ChangeBalanceForm extends Model
         }
     }
 
+    /**
+     * *Giam tien do khach thanh toán addfee
+     * step 1: gọi đến hàm đóng băng số tiền cần thanh toán
+     * step 2: xác thực otp
+     * step 3:
+     *          3. (true) : gọi tới hàm payment()để giải phóng đóng băng + thực tiện trừ tiền
+     *          3. (false) : gọi đến hàm giải phóng đóng băng trả tiền cho khách; -- unFreezeAdd()
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function addfee()
+    {
+        if (!$this->checkValidate()) {
+            return ReponseData::reponseArray(false, 'Validate false. amount hoặc walletTransactionId sai', []);
+        }
+        $wallet = $this->getWallet();
+        $transaction = $this->getTransaction();
+        if (!$transaction || $transaction->type != WalletTransaction::TYPE_ADDFEE) {
+            return ReponseData::reponseArray(false, 'Không có transaction id :' . $this->walletTransactionId . ' Cho phương thức ADDFEE', []);
+        }
+        if ($this->checkWalletLog($wallet->id, WalletLog::TYPE_WALLET_CLIENT, WalletLog::TYPE_TRANSACTION_ADDFEE)) {
+            return ReponseData::reponseArray(false, 'Đã có log ghi thanh toán thành công cho transaction: ' . $this->walletTransactionId . '  - Wallet ' . WalletLog::TYPE_WALLET_CLIENT . ': ' . $wallet->id, []);
+        }
+        if($this->amount != $transaction->debit_amount){
+            return ReponseData::reponseArray(false, 'Tham số amount truyền sang sai so với debit_amount trong transaction', []);
+        }
+        $befor_amount = $wallet->current_balance;
+        $conn = \Yii::$app->db;
+        $trans = $conn->beginTransaction();
+        try {
+            $conn->createCommand()->update(
+                'wallet_client',
+                [
+                    'freeze_balance' => $wallet->freeze_balance - $this->amount,
+                    'current_balance' => $wallet->current_balance - $this->amount,
+                    'total_using_amount' => $wallet->total_using_amount + $this->amount,
+                    'last_using_amount' => $this->amount,
+                    'last_using_at' => date('Y-m-d H:i:s'),
+                ],
+                "id = " . $wallet->id
+            )->execute();
+            $wallet = $this->getWallet(true, $wallet->id);
+            $decription = 'Thanh toán thành công - trừ ' . $this->amount . ' về tài khoản';
+            $this->saveWalletLog($befor_amount, $wallet, WalletLog::TYPE_TRANSACTION_ADDFEE, $decription, 1);
+            $res = $this->changeMerchant(self::TYPE_REDUCE);
+            if (!$res['success']) {
+                $trans->rollBack();
+                return $res;
+            }
+            $trans->commit();
+            return ReponseData::reponseArray(true, $decription, $this->getWallet(true, $wallet->id)->toArray());
+        } catch (Exception $exception) {
+            $trans->rollBack();
+            $decription = 'Thanh toán thất bại - trả ' . $this->amount . ' về tài khoản';
+            $this->saveWalletLog($befor_amount, $wallet, WalletLog::TYPE_TRANSACTION_ADDFEE, $decription, 2);
+
+            return ReponseData::reponseArray(false, $decription, []);
+        }
+    }
 
     /**
      *  Thay đổi thông số tài khoản merchant

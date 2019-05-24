@@ -310,7 +310,7 @@ class PurchaseServiceController extends BaseApiController
                         $WalletS->payment_provider = $payment->payment_provider;
                         $WalletS->bank_code = $payment->payment_bank_code;
                         $WalletS->otp_type = 3;
-                        $WalletS->amount = $payment->transaction_amount_local * 20000;
+                        $WalletS->amount = $payment->transaction_amount_local;
                         $result = $WalletS->createSafePaymentTransaction();
                         var_dump($result);
                         $tran->rollBack();
