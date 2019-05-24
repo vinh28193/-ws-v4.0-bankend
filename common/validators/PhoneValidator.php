@@ -34,7 +34,7 @@ class PhoneValidator extends RegularExpressionValidator
             $patterns[] = $pattern;
         }
         if (!empty($pattern)) {
-            $this->pattern = "~(" . implode(")|(", $pattern) . ")~";
+            $this->pattern = "~(" . implode(")|(", $patterns) . ")~";
         } else {
             throw new InvalidConfigException('Your networks setup is not valid!');
         }
