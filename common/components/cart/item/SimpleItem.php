@@ -8,6 +8,7 @@
 
 namespace common\components\cart\item;
 
+use common\components\cart\CartHelper;
 use Yii;
 use common\products\BaseProduct;
 use common\products\forms\ProductDetailFrom;
@@ -47,7 +48,7 @@ class SimpleItem extends BaseCartItem
         }
         $product->current_image = $this->image;
         $params['image'] = $this->image;
-        return [true, ['request' => $params, 'response' => $product]];
+        return [true, ['params' => $params, 'order' => CartHelper::createItem($product, $this->seller, $this->image)]];
     }
 
 }

@@ -39,7 +39,7 @@ use yii\helpers\Html;
                                 <ol class="price">
                                     <li><?= $product['portal']; ?></li>
                                     <li>x<?= $product['quantity_customer']; ?></li>
-                                    <li><?= $product['total_price_amount_local']; ?><i class="currency">đ</i></li>
+                                    <li><?= \common\helpers\WeshopHelper::showMoney($product['total_price_amount_local']); ?><i class="currency">đ</i></li>
                                 </ol>
                             </div>
                         </div>

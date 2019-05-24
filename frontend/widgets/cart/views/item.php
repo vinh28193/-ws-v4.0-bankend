@@ -26,7 +26,9 @@ $name = Html::encode($name);
 
 <li data-key="<?= $key; ?>" data-type="<?= $type; ?>">
     <div class="form-check">
-        <input class="form-check-input" <?=$selected?'checked':''?> type="checkbox" name="cartItems" data-amount="<?=$amount;?>" data-price="<?=$localAmount;?>" value="<?= $key; ?>" id="cartItem<?= $key; ?>">
+        <input class="form-check-input" <?= $selected ? 'checked' : '' ?> type="checkbox" name="cartItems"
+               data-amount="<?= $amount; ?>" data-price="<?= $localAmount; ?>" value="<?= $key; ?>"
+               id="cartItem<?= $key; ?>">
         <label class="form-check-label" for="cartItem<?= $key; ?>"></label>
     </div>
     <div class="thumb">
@@ -44,16 +46,16 @@ $name = Html::encode($name);
             </div>
             <ol>
                 <?php
-                if (is_string($provider)) {
-                    echo '<li>Bán bởi :' . $provider .'</li>';
-                } else if ($provider instanceof \common\products\Provider) {
-                    echo '<li>Bán bởi : <a href="' . ($provider->website !== null ? $provider->website : "#") . '">' . $provider->name . '</a></li>';
-                }
-                if ($variation !== null) {
-                    echo '<li>' . $variation . '</li>';
+                echo '<li>Bán bởi : <a href="' . (isset($provider['seller_link_store']) && $provider['seller_link_store'] !== null ? $provider['seller_link_store'] : "#") . '">' . $provider['seller_name'] . '</a></li>';
+                if ($variation !== null && isset($variation['options_group'])) {
+                    $var = [];
+                    foreach ($variation['options_group'] as $options) {
+                        $var[] = "{$options['name']}:{$options['value']}";
+                    }
+                    echo '<li> Thuộc tính:' . implode(' và ', $var) . '</li>';
                 }
                 ?>
-
+                <li>Tình trạng :<?= $condition ?></li>
                 <li>Tạm tính : <span class="weight-option"><?= $weight ?></span> kg</li>
             </ol>
         </div>
@@ -77,7 +79,9 @@ $name = Html::encode($name);
                     </div>
                 </div>
             </div>
-            <div class="price price-option" data-original="<?= $amount; ?>" data-local="<?=$localAmount;?>"><?= number_format($localDisplayAmount); ?><i class="currency">đ</i></div>
+            <div class="price price-option" data-original="<?= $amount; ?>"
+                 data-local="<?= $localAmount; ?>"><?= number_format($localDisplayAmount); ?><i class="currency">đ</i>
+            </div>
             <a href="#" class="del delete-item" data-key="<?= $key; ?>"><i class="far fa-trash-alt"></i> Xóa</a>
         </div>
     </div>

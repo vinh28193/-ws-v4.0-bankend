@@ -60,6 +60,7 @@ class WalletProvider extends BaseObject implements PaymentProviderInterface
             $logCallback->save(false);
             return ReponseData::reponseArray(true, "Giao dịch thanh toán thành công!", $data);
         } catch (\Exception $exception) {
+            Yii::error($exception);
             $logCallback->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logCallback->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logCallback->save(false);
