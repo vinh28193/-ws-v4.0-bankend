@@ -5,7 +5,12 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
+use common\lib\WalletBackendService;
 use common\models\Order;
+use common\models\PaymentTransaction;
+use common\modelsMongo\ChatMongoWs;
+use frontend\modules\payment\PaymentService;
+use Yii;
 
 class OrderController extends BaseApiController
 {
@@ -14,7 +19,7 @@ class OrderController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index','update'],
+                'actions' => ['index','update','update-arrears'],
                 'roles' => $this->getAllRoles(true),
             ],
         ];
@@ -26,6 +31,7 @@ class OrderController extends BaseApiController
             'index' => ['GET'],
             'update' => ['PUT'],
             'create' => ['POST'],
+            'update-arrears' => ['POST'],
         ];
     }
 
@@ -55,5 +61,144 @@ class OrderController extends BaseApiController
         }
         $model->save();
         return $this->response(true, 'Update Success');
+    }
+    public function actionUpdateArrears(){
+        $order = Order::findOne(['ordercode' => \Yii::$app->request->post('order_code')]);
+        $user = Yii::$app->user->getIdentity();
+        if($order){
+            /** @var PaymentTransaction[] $transactionPayments */
+            $transactionPayments = PaymentTransaction::find()->where([
+                'order_code' => $order->ordercode,
+                'transaction_status' => [
+                    PaymentTransaction::TRANSACTION_STATUS_CREATED,
+                    PaymentTransaction::TRANSACTION_STATUS_QUEUED
+                ],
+                'transaction_type' => PaymentTransaction::TRANSACTION_ADDFEE
+            ])->all();
+            foreach ($transactionPayments as $payment){
+                $tran = Yii::$app->db->beginTransaction();
+                try{
+                    $payment->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                    $payment->save(false);
+                    Yii::info($payment->transaction_status,'payment_status');
+                    $WalletS = new WalletBackendService();
+                    $WalletS->payment_transaction = $payment->transaction_code;
+                    $WalletS->payment_method = $payment->payment_method;
+                    $WalletS->payment_provider = $payment->payment_provider;
+                    $WalletS->bank_code = $payment->payment_bank_code;
+                    $WalletS->total_amount = intval($payment->transaction_amount_local);
+                    $WalletS->type = WalletBackendService::TYPE_PAY_ADDFEE;
+                    $WalletS->customer_id = $payment->customer_id;
+                    $WalletS->description = $payment->transaction_description;
+                    $result = $WalletS->createSafePaymentTransaction();
+                    if(!$result['success']){
+                        $tran->rollBack();
+                        continue;
+                    }
+                    $order->total_paid_amount_local = $order->total_paid_amount_local + $payment->transaction_amount_local;
+                    $order->save(false);
+                    //#ToDo thông báo chat thay đổi về giá
+                    $model = new ChatMongoWs();
+                    $_rest_data = ["ChatMongoWs" => [
+                        "success" => true,
+                        "message" => 'Đã tự động thanh toán thu thêm giao dịch '.$payment->transaction_code. ' của order '.$order->ordercode,
+                        "date" => Yii::$app->getFormatter()->asDatetime('now'),
+                        "user_id" => $user->id,
+                        "user_email" => $user->email,
+                        "user_name" => $user->username,
+                        "user_app" => null,
+                        "user_request_suorce" => 'BACK_END',  // "APP/FRONTEND/BACK_END"
+                        "request_ip" => Yii::$app->getRequest()->getUserIP(), // Todo : set
+                        "user_avatars" => null,
+                        "Order_path" => $order['ordercode'],
+                        "is_send_email_to_customer" => null,
+                        "type_chat" => 'WS_CUSTOMER', // 'TYPE_CHAT : GROUP_WS/WS_CUSTOMER // Todo : set
+                        "is_customer_vew" => null,
+                        "is_employee_vew" => null
+                    ]];
+                    $model->load($_rest_data);
+                    $model->save();
+                    $tran->commit();
+                }catch (\Exception $exception){
+                    $tran->rollBack();
+                }
+            }
+            if(($amountAddfee = $order->total_final_amount_local - $order->total_paid_amount_local) > 0){
+                $paymentTransaction = new PaymentTransaction();
+                $paymentTransaction->store_id = $order->store_id;
+                $paymentTransaction->customer_id = $order->customer_id;
+                $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_ADDFEE;
+                $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_QUEUED;
+                $paymentTransaction->transaction_customer_name = $order->receiver_name;
+                $paymentTransaction->transaction_customer_email = $order->receiver_email;
+                $paymentTransaction->transaction_customer_phone = $order->receiver_phone;
+                $paymentTransaction->transaction_customer_address = $order->receiver_address;
+                $paymentTransaction->transaction_customer_city = $order->receiver_province_name;
+                $paymentTransaction->transaction_customer_postcode = $order->receiver_post_code;
+                $paymentTransaction->transaction_customer_district = $order->receiver_district_name;
+                $paymentTransaction->transaction_customer_country = $order->receiver_country_name;
+                $paymentTransaction->order_code = $order->ordercode;
+                $paymentTransaction->payment_type = PaymentTransaction::PAYMENT_TYPE_ADDFEE;
+                $paymentTransaction->carts = '';
+                $paymentTransaction->transaction_description = "Thu thêm lệnh tiền thanh toán order";
+                $paymentTransaction->total_discount_amount = 0;
+                $paymentTransaction->before_discount_amount_local = $amountAddfee;
+                $paymentTransaction->transaction_amount_local = $amountAddfee;
+                $paymentTransaction->payment_provider = 'WS WALLET';
+                $paymentTransaction->payment_method = 'WALLET_WESHOP';
+                $paymentTransaction->payment_bank_code = 'WALLET_WESHOP';
+                $paymentTransaction->created_at = time();
+                $paymentTransaction->save(0);
+                $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
+                $paymentTransaction->save(0);
+                $tran = Yii::$app->db->beginTransaction();
+                try{
+                    $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                    $paymentTransaction->save(false);
+                    Yii::info($paymentTransaction->transaction_status,'payment_status');
+                    $WalletS = new WalletBackendService();
+                    $WalletS->payment_transaction = $paymentTransaction->transaction_code;
+                    $WalletS->payment_method = $paymentTransaction->payment_method;
+                    $WalletS->payment_provider = $paymentTransaction->payment_provider;
+                    $WalletS->bank_code = $paymentTransaction->payment_bank_code;
+                    $WalletS->total_amount = intval($paymentTransaction->transaction_amount_local);
+                    $WalletS->type = WalletBackendService::TYPE_PAY_ADDFEE;
+                    $WalletS->customer_id = $paymentTransaction->customer_id;
+                    $WalletS->description = $paymentTransaction->transaction_description;
+                    $result = $WalletS->createSafePaymentTransaction();
+                    if(!$result['success']){
+                        $tran->rollBack();
+                    }
+                    $order->total_paid_amount_local = $order->total_paid_amount_local + $paymentTransaction->transaction_amount_local;
+                    $order->save(false);
+                    //#ToDo thông báo chat thay đổi về giá
+                    $model = new ChatMongoWs();
+                    $_rest_data = ["ChatMongoWs" => [
+                        "success" => true,
+                        "message" => 'Đã tự động thanh toán thu thêm giao dịch '.$paymentTransaction->transaction_code. ' của order '.$order->ordercode,
+                        "date" => Yii::$app->getFormatter()->asDatetime('now'),
+                        "user_id" => $user->id,
+                        "user_email" => $user->email,
+                        "user_name" => $user->username,
+                        "user_app" => null,
+                        "user_request_suorce" => 'BACK_END',  // "APP/FRONTEND/BACK_END"
+                        "request_ip" => Yii::$app->getRequest()->getUserIP(), // Todo : set
+                        "user_avatars" => null,
+                        "Order_path" => $order['ordercode'],
+                        "is_send_email_to_customer" => null,
+                        "type_chat" => 'WS_CUSTOMER', // 'TYPE_CHAT : GROUP_WS/WS_CUSTOMER // Todo : set
+                        "is_customer_vew" => null,
+                        "is_employee_vew" => null
+                    ]];
+                    $model->load($_rest_data);
+                    $model->save();
+                    $tran->commit();
+                }catch (\Exception $exception){
+                    $tran->rollBack();
+                }
+            }
+            return $this->response(true, 'Update Success');
+        }
+        return $this->response(false, 'Cannot find product.');
     }
 }
