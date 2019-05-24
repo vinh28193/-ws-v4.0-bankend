@@ -26,7 +26,6 @@ use Yii;
  * @property int $updated_by
  *
  * @property PurchaseProduct[] $purchaseProducts
- * @property PurchaseProduct[] $purchaseProducts0
  */
 class PurchaseOrder extends \common\components\db\ActiveRecord
 {
@@ -44,10 +43,10 @@ class PurchaseOrder extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['total_item', 'total_quantity', 'total_paid_seller', 'total_changing_price', 'total_type_changing', 'purchase_amount_buck', 'transaction_payment'], 'number'],
+            [['total_item', 'total_quantity', 'total_paid_seller', 'total_changing_price', 'purchase_amount_buck'], 'number'],
             [['receive_warehouse_id', 'purchase_account_id', 'purchase_card_id', 'created_at', 'updated_at', 'updated_by'], 'integer'],
             [['updated_by'], 'required'],
-            [['note', 'purchase_order_number', 'purchase_card_number'], 'string', 'max' => 255],
+            [['note', 'purchase_order_number', 'total_type_changing', 'purchase_card_number', 'transaction_payment'], 'string', 'max' => 255],
         ];
     }
 
@@ -81,14 +80,6 @@ class PurchaseOrder extends \common\components\db\ActiveRecord
      * @return \yii\db\ActiveQuery
      */
     public function getPurchaseProducts()
-    {
-        return $this->hasMany(PurchaseProduct::className(), ['purchase_order_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPurchaseProducts0()
     {
         return $this->hasMany(PurchaseProduct::className(), ['purchase_order_id' => 'id']);
     }
