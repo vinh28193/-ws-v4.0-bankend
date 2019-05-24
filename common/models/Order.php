@@ -246,6 +246,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 ], 'number'
             ],
             [
+
                 [
                     'note_by_customer', 'note',
                     'seller_store',
@@ -301,7 +302,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 //                    'purchase_order_id', 'purchase_transaction_id', 'purchase_amount', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'total_weight',
 //                ], 'filter', 'filter' => '\yii\helpers\Html::encode'
 //            ],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
         ];
