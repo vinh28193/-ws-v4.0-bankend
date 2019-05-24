@@ -30,22 +30,6 @@ class NoneSerialize extends BaseCartSerialize
      */
     public function unserialize($value)
     {
-        $type = isset($value['response']['type']) ? $value['response']['type'] : (isset($value['request']['type']) ? strtoupper($value['request']['type']) : false);
-        switch ($type){
-            case BaseProduct::TYPE_EBAY:
-                $params = $value['response'];
-                unset($params['additionalFees']);
-                $params['isInitialized'] = false;
-                $value['response'] = new EbayProduct($params);
-                return $value;
-            case BaseProduct::TYPE_AMAZON_US:
-                $params = $value['response'];
-                unset($params['additionalFees']);
-                $params['isInitialized'] = false;
-                $value['response'] = new AmazonProduct($params);
-                return $value;
-            default:
-                return false;
-        }
+        return $value;
     }
 }

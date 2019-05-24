@@ -257,7 +257,7 @@ class WeshopHelper
             if ($str[strlen($str) - 1] == '-') {
                 $str = substr($str, 0, -1);
             }
-            if(!empty($str)){
+            if (!empty($str)) {
                 if ($str[0] == '-') {
                     $str = substr($str, 1);
                 }
@@ -341,6 +341,30 @@ class WeshopHelper
                 return number_format($finalPrice, 0, ',', '.') . $symbol;
                 break;
         }
+    }
+
+    /**
+     *  $array = [
+     *      [
+     *          'a' => 1,
+     *          'b' => 2,
+     *      ],
+     *      [
+     *          'a' => 4,
+     *          'b' => 2,
+     *      ]
+     *  ]
+     * @param $items
+     * @param $field
+     * @return mixed
+     */
+    public static function sumArray($items, $field)
+    {
+        $array = ArrayHelper::getColumn($items, $field, false);
+        if (count($array) === 0) {
+            return 0;
+        }
+        return array_sum($array);
     }
 
     public static function getArrayPage($totalPage, $pageCurrent = 1, $limitPage = 10)

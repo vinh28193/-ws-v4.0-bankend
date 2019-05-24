@@ -105,7 +105,6 @@ class CartController extends BillingController
             return ['success' => false, 'message' => 'Invalid params'];
         }
         $selected = (boolean)ArrayHelper::getValue($params, 'selected');
-        var_dump($selected);die;
         if ($selected) {
             CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, $key);
         }else {

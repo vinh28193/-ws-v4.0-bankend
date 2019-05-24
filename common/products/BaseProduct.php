@@ -40,6 +40,11 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
 
     /**
+     * @var Provider
+     */
+    public $provider;
+
+    /**
      * @var Provider[]
      */
     public $providers;
@@ -57,7 +62,6 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     public $parent_category_id;
     public $parent_category_name;
     public $item_id;
-    public $parent_item;
     public $item_sku;
     public $item_name;
     public $item_origin_url;

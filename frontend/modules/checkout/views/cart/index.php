@@ -21,5 +21,30 @@ $js = <<< JS
    }) ;
 JS;
 //$this->registerJs($js);
+
+$jsga = <<<JS
+$(document).ready(function() {
+    var client = new ClientJS();
+            var _fingerprint = client.getFingerprint();
+            var data = {
+                fingerprint: _fingerprint,
+                path : window.location.pathname
+            };
+            // /cms/home/u
+  setTimeout(function () { 
+        ws.ajax('/frontend/u',{
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        loading: true,
+        success: function (result) {
+            console.log(result);  console.log(result.success); 
+        }
+        });
+    }, 1000 * 1);
+});
+JS;
+$this->registerJs($jsga, \yii\web\View::POS_END);
+
 ?>
 
