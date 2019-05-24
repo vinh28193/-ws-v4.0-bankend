@@ -116,21 +116,21 @@ class PurchaseServiceController extends BaseApiController
                                 'transaction_type' => PaymentTransaction::TRANSACTION_ADDFEE
                             ])->all();
                         $listIdChange = [];
-                        $note = '';
+                        $transaction_description = '';
                         /** @var  $exRate  \common\components\ExchangeRate */
                         $exRate = \Yii::$app->exRate;
                         $amount = $exRate->usdToVnd($amount,23500);
                         foreach ($paymentTransactions as $item){
                             $listIdChange[] = $item->id;
                             $amount += $item->transaction_amount_local;
-                            $note = $note ? $note.'<br>'.$item->note : $item->note;
+                            $transaction_description = $transaction_description ? $transaction_description.'<br>'.$item->transaction_description : $item->transaction_description;
                         }
                         Yii::debug($amount,'amount_change');
                         $paymentTransaction = new PaymentTransaction();
                         $paymentTransaction->store_id = $orderDb->store_id;
                         $paymentTransaction->customer_id = $orderDb->customer_id;
                         $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_ADDFEE;
-                        $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
+                        $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_QUEUED;
                         $paymentTransaction->transaction_customer_name = $orderDb->receiver_name;
                         $paymentTransaction->transaction_customer_email = $orderDb->receiver_email;
                         $paymentTransaction->transaction_customer_phone = $orderDb->receiver_phone;
@@ -142,7 +142,7 @@ class PurchaseServiceController extends BaseApiController
                         $paymentTransaction->transaction_reference_code = $orderDb->ordercode;
                         $paymentTransaction->payment_type = PaymentTransaction::PAYMENT_TYPE_ADDFEE;
                         $paymentTransaction->carts = '';
-                        $paymentTransaction->note = $note ? $note.'<br>'.$messageProduct : $messageProduct;
+                        $paymentTransaction->transaction_description = $transaction_description ? $transaction_description.'<br>'.$messageProduct : $messageProduct;
                         $paymentTransaction->total_discount_amount = 0;
                         $paymentTransaction->before_discount_amount_local = $amount;
                         $paymentTransaction->transaction_amount_local = $amount;
@@ -320,7 +320,7 @@ class PurchaseServiceController extends BaseApiController
                         $WalletS->total_amount = intval($payment->transaction_amount_local);
                         $WalletS->type = WalletBackendService::TYPE_PAY_ADDFEE;
                         $WalletS->customer_id = $payment->customer_id;
-                        $WalletS->description = $payment->note;
+                        $WalletS->description = $payment->transaction_description;
                         $result = $WalletS->createSafePaymentTransaction();
                         if(!$result['success']){
                             $tran->rollBack();
