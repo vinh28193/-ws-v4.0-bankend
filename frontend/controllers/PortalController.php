@@ -56,6 +56,8 @@ class PortalController extends FrontendController
     public function actionFavorite()
     {
         // Favorite
+        Yii::info(" Favorite : app  create favorite Success");
+
         $fingerprint = null;
         $post = $this->request->post();
         if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
@@ -63,10 +65,13 @@ class PortalController extends FrontendController
         $id = ArrayHelper::getValue($post,'sku');
         $portal =  ArrayHelper::getValue($post,'portal');
 
+        Yii::info(" Favorite : app  create favorite Success 02 ");
         if (!Yii::$app->getRequest()->validateCsrfToken()) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
         }
 
+        Yii::info(" Favorite : app  create favorite Success 03 ");
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : $fingerprint;
 
@@ -75,21 +80,19 @@ class PortalController extends FrontendController
         $form->id = $id;
         $form->type = $portal ; //'ebay' , 'amazon'
         $item = $form->detail();
-        if(Yii::$app->request->isPjax){
-            if ($item === false) {
-                return $this->renderAjax('@frontend/views/common/item_error', [
-                    'errors' => $form->getErrors()
-                ]);
-            }
-            return $this->renderAjax('index', [
-                'item' => $item
-            ]);
-        }
+
+        Yii::info(" Favorite : app  create favorite Success 04");
+
+        /**
         if ($item  === false) {
-            return $this->render('@frontend/views/common/item_error', [
-                'errors' => $form->getErrors()
-            ]);
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            return ['success' => false,'message' => 'Error Get Ebay Gate', 'data' => ['content' => ''] ];
         }
+         **/
+
+        Yii::info(" Favorite : app  create favorite Success 05");
+
+        /**
         $category = $item->getCustomCategory();
         if($portal == 'ebay'){
             $relate_product_rs = EbayProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
@@ -100,8 +103,9 @@ class PortalController extends FrontendController
 
         $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];
         $item->relate_products = RelateProduct::setRelateProducts($relate_product);
+        **/
 
-
+        Yii::info(" Favorite : app  create favorite Success");
         if($uuid){
             $_favorite = new FavoriteObject();
             $_favorite->create($item, $id, $uuid);
@@ -109,7 +113,7 @@ class PortalController extends FrontendController
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return 'Ok';
 
-        /*
+        /**
         // Queue Favorite Save
         /*
         $UUID = Yii::$app->user->getId();
@@ -125,7 +129,7 @@ class PortalController extends FrontendController
         Yii::info(" Check whether a worker got the job from the queue and executes it : ". Yii::$app->queue->isReserved($id));
         // Check whether a worker has executed the job.
         Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
-        */
+        **/
     }
 
 

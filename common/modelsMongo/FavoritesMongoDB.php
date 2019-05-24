@@ -21,7 +21,7 @@ class FavoritesMongoDB extends ActiveRecord
 {
     public static function collectionName()
     {
-        return ['Weshop_log_40', 'favorites'];
+        return ['weshop_global_40', 'favorites'];
     }
 
     public function behaviors()

@@ -64,7 +64,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const STATUS_PURCHASED = 'PURCHASED'; // Lv7; đơn đã mua, next status REFUNDING
     const STATUS_REFUNDING = 'REFUNDING'; //Lv8; đơn đang chuyển hoàn, next status REFUNDED
     const STATUS_REFUNDED = 'REFUNDED'; //Lv8; đơn đã chuyển hoàn, end of status
-    const STATUS_CANCEL = 'CANCEL';
+    const STATUS_CANCEL = 'CANCELLED';
 
     const STATUS_RE_APPRAISE = 'RE_APPRAISE';  //  re-appraise : Đơn đang càn thậm định lái về giá + log + những vấn đề khác  --> Màu vàng và dừng lại ko cho gửi shipment
 

@@ -4,12 +4,12 @@ class m190422_040619_push_notifications extends \yii\mongodb\Migration
 {
     public function up()
     {
-        $this->createCollection(['Weshop_log_40', 'push_notifications']);
+        $this->createCollection(['weshop_global_40', 'push_notifications']);
     }
 
     public function down()
     {
-        $this->dropCollection(['Weshop_log_40', 'push_notifications']);
+        $this->dropCollection(['weshop_global_40', 'push_notifications']);
     }
     /**
      * db.createCollection(['Weshop_log_40','push_notifications'],

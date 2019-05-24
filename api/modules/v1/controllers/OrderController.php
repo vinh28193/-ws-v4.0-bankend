@@ -217,6 +217,10 @@ class OrderController extends BaseApiController
             $model->ready_purchase = $now;
             $model->current_status = Order::STATUS_READY2PURCHASE;
         }
+        if ($model->getScenario() == 'updateStatus') {
+            $model->cancelled = $now;
+            $model->current_status = Order::STATUS_CANCEL;
+        }
         if ($model->getScenario() == 'updateTimeNull') {
             $model->{$post['Order']['column']} = null;
         }
