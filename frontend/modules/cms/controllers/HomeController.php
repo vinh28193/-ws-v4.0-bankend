@@ -10,6 +10,7 @@ use frontend\controllers\CmsController;
 
 class HomeController extends CmsController
 {
+    /*
     public $_uuid ;
     public function actionU()
     {
@@ -45,10 +46,7 @@ class HomeController extends CmsController
         return 'Ok ! '.$fingerprint;
     }
 
-    /**
-     * @var string
-     * Set Path GA
-     */
+
     public $setDocumentPath = '/HomeWs';
     public function gaWs()
     {
@@ -59,6 +57,7 @@ class HomeController extends CmsController
             ->setAsyncRequest(true)
             ->sendPageview();
     }
+    */
 
     public function actionIndex()
     {

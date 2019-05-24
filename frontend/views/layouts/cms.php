@@ -17,8 +17,9 @@ $(document).ready(function() {
             var data = {
                 fingerprint: _fingerprint
             };
+            // /cms/home/u
   setTimeout(function () { 
-        ws.ajax('/cms/home/u',{
+        ws.ajax('/frontend/u',{
         type: 'POST',
         dataType: 'json',
         data: data,
