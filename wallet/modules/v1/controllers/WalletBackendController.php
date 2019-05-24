@@ -18,7 +18,7 @@ class WalletBackendController extends BackendController
 
     /**
      * Param gồm
-     * type , transaction_code , total_amount , payment_method , payment_provider , bank_code , customer_id
+     * type , transaction_code , total_amount , payment_method , payment_provider , bank_code , customer_id , description
      * @return mixed
      */
     public function actionCreateTransactionAddFee(){
@@ -27,6 +27,7 @@ class WalletBackendController extends BackendController
             $form = new TransactionForm();
             if ($form->load($this->post)) {
                 $form->setWalletClient($wallet_C);
+                $form->description = Yii::$app->request->post('description');
                 $result = $form->makeSafeTransaction();
                 $success = isset($result['success']) ? $result['success'] : isset($result['code']) && $result['code'] == ResponseCode::SUCCESS;
                 return $this->response($success, $result['message'], $result['data'], $result['code']);
