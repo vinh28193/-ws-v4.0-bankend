@@ -227,18 +227,18 @@ class TransactionForm extends Model
         if ($result['code'] == ResponseCode::SUCCESS) {
             list($queue, $code) = array_values($result['data']);
             $result['data'] = $code;
-            if ($queue === false) {
+//            if ($queue === false) {
                 $changeBalanceForm = new ChangeBalanceForm;
                 $changeBalanceForm->amount = $transaction->getTotalAmount();
                 $changeBalanceForm->walletTransactionId = $transaction->getPrimaryKey();
-                if (($rs = $changeBalanceForm->freeze())['success'] === false) {
-                    $result['message'] = $rs['message'];
-                    $result['data'] = $rs['data'];
+                if (($rs = $changeBalanceForm->freeze())['success']) {
+//                    $result['message'] = $rs['message'];
+//                    $result['data'] = $rs['data'];
                 }else{
                     $transaction->status = WalletTransaction::STATUS_FAIL;
                     $transaction->save();
                 }
-            }
+//            }
         }
         return $result;
 

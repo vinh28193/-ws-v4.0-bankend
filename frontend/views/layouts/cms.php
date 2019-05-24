@@ -26,7 +26,7 @@ $(document).ready(function() {
         data: data,
         loading: true,
         success: function (result) {
-            console.log(result);  console.log(result.success); 
+            //console.log(result);  console.log(result.success); 
         }
         });
     }, 1000 * 1);
