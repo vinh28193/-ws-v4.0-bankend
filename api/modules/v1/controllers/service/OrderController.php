@@ -138,6 +138,7 @@ class OrderController extends BaseApiController
                 $paymentTransaction->transaction_customer_district = $order->receiver_district_name;
                 $paymentTransaction->transaction_customer_country = $order->receiver_country_name;
                 $paymentTransaction->order_code = $order->ordercode;
+                $paymentTransaction->shipping = 0;
                 $paymentTransaction->payment_type = PaymentTransaction::PAYMENT_TYPE_ADDFEE;
                 $paymentTransaction->carts = '';
                 $paymentTransaction->transaction_description = "Thu thêm lệnh tiền thanh toán order";

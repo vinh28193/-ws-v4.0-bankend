@@ -201,6 +201,7 @@ class PurchaseServiceController extends BaseApiController
                         $paymentTransaction->transaction_customer_district = $orderDb->receiver_district_name;
                         $paymentTransaction->transaction_customer_country = $orderDb->receiver_country_name;
                         $paymentTransaction->order_code = $orderDb->ordercode;
+                        $paymentTransaction->shipping = 0;
                         $paymentTransaction->payment_type = PaymentTransaction::PAYMENT_TYPE_ADDFEE;
                         $paymentTransaction->carts = '';
                         $paymentTransaction->transaction_description = $transaction_description ? $transaction_description.'<br>'.$messageProduct : $messageProduct;
