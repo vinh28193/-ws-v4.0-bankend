@@ -12,7 +12,7 @@ class m190523_042810_drop_forerikey_product extends Migration
      */
     public function safeUp()
     {
-        $this->dropForeignKey('fk-product-category_id','product');
+//        $this->dropForeignKey('fk-product-category_id','product');
     }
 
     /**
@@ -20,7 +20,7 @@ class m190523_042810_drop_forerikey_product extends Migration
      */
     public function safeDown()
     {
-        $this->addForeignKey('fk-product-category_id','product','category_id','category','id');
+//        $this->addForeignKey('fk-product-category_id','product','category_id','category','id');
     }
 
     /*
