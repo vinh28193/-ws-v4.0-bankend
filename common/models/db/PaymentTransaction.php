@@ -44,6 +44,8 @@ use Yii;
  * @property string $after_transaction_amount_local Số tiền sau giao dịch
  * @property int $created_at Created at (timestamp)
  * @property string $topup_transaction_code
+ * @property string $parent_transaction_code
+ * @property string $order_code
  */
 class PaymentTransaction extends \common\components\db\ActiveRecord
 {
@@ -65,7 +67,7 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
             [['store_id', 'customer_id', 'used_xu', 'bulk_point', 'shipping', 'third_party_transaction_time', 'created_at'], 'integer'],
             [['carts', 'transaction_description', 'note', 'third_party_transaction_link'], 'string'],
             [['total_discount_amount', 'before_discount_amount_local', 'transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
-            [['transaction_code', 'payment_bank_code', 'coupon_code', 'topup_transaction_code'], 'string', 'max' => 32],
+            [['transaction_code', 'payment_bank_code', 'coupon_code', 'topup_transaction_code', 'parent_transaction_code', 'order_code'], 'string', 'max' => 32],
             [['transaction_type', 'transaction_status', 'payment_type'], 'string', 'max' => 10],
             [['transaction_customer_name', 'transaction_customer_email', 'transaction_customer_phone', 'transaction_customer_address', 'transaction_customer_city', 'transaction_customer_postcode', 'transaction_customer_district', 'transaction_customer_country', 'transaction_reference_code', 'third_party_transaction_code'], 'string', 'max' => 255],
             [['payment_provider', 'payment_method'], 'string', 'max' => 50],
@@ -116,6 +118,8 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
             'after_transaction_amount_local' => 'After Transaction Amount Local',
             'created_at' => 'Created At',
             'topup_transaction_code' => 'Topup Transaction Code',
+            'parent_transaction_code' => 'Parent Transaction Code',
+            'order_code' => 'Order Code',
         ];
     }
 }

@@ -71,6 +71,11 @@ class TransactionForm extends Model
      * @var integer
      */
     public $otp_receive_type;
+
+    /**
+     * @var string
+     */
+    public $description;
     /**
      * @var bool | \wallet\modules\v1\models\WalletClient
      */
@@ -79,8 +84,10 @@ class TransactionForm extends Model
     public function init()
     {
         parent::init();
-        if (ArrayHelper::isIn($this->getWalletClient()->getId(), [1, 3])) {
-            $this->merchant_id = 4;
+        if($this->getWalletClient()){
+            if (ArrayHelper::isIn($this->getWalletClient()->getId(), [1, 3])) {
+                $this->merchant_id = 4;
+            }
         }
     }
 
@@ -255,6 +262,7 @@ class TransactionForm extends Model
         $transaction->payment_bank_code = $this->bank_code;
         $transaction->verify_receive_type = WalletTransaction::VERIFY_RECEIVE_TYPE_NONE;
         $transaction->totalAmount = $this->total_amount;
+        $transaction->currentWalletClient = $this->walletClient ? $this->walletClient : $this->getWalletClient();
         $result = $transaction->createWalletTransaction();
         if ($result['code'] == ResponseCode::SUCCESS) {
             $changeBalanceForm = new ChangeBalanceForm;
@@ -263,6 +271,9 @@ class TransactionForm extends Model
             $changeBalanceForm->walletTransactionId = $transaction->getPrimaryKey();
             if (($result = $changeBalanceForm->freeze()) && $result['success']) {
                 $result = $this->type == WalletTransaction::TYPE_ADDFEE ? $changeBalanceForm->addfee() : $changeBalanceForm->payment();
+                if($this->type == WalletTransaction::TYPE_ADDFEE){
+                    $transaction->description = $this->description ? $this->description : $transaction->description ;
+                }
                 if($result['success']){
                     $transaction->status = WalletTransaction::STATUS_COMPLETE;
                     $transaction->save();

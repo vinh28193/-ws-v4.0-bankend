@@ -7,7 +7,9 @@ namespace frontend\modules\payment;
 use common\components\cart\CartHelper;
 use common\components\cart\CartSelection;
 use common\helpers\WeshopHelper;
+use common\models\Address;
 use common\models\Category;
+use common\models\PaymentTransaction;
 use common\models\Product;
 use common\models\ProductFee;
 use common\models\Seller;
@@ -271,14 +273,13 @@ class Payment extends Model
     }
 
     /**
-     * @param null $receiverAddress Address
-     * @param bool $paymentSuccess bool
+     * @param null|Address $receiverAddress
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function createOrder($receiverAddress = null, $paymentSuccess = true)
+    public function createOrder($receiverAddress = null)
     {
-
+        $orderCodes = [];
         $now = Yii::$app->getFormatter()->asDatetime('now');
         $promotionDebug = [];
         if ($receiverAddress === null) {
@@ -318,7 +319,6 @@ class Payment extends Model
                 $order->receiver_post_code = $receiverAddress->post_code;
                 $order->receiver_address_id = $receiverAddress->id;
                 $order->total_paid_amount_local = 0;
-                $order->transaction_code = $this->transaction_code;
 
                 if (($sellerParams = ArrayHelper::getValue($params, 'seller')) === null || !isset($sellerParams['seller_name']) || $sellerParams['seller_name'] === null || $sellerParams['seller_name'] === '') {
                     $transaction->rollBack();
@@ -568,13 +568,17 @@ class Payment extends Model
 
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
                 $updateOrderAttributes['total_final_amount_local'] = $updateOrderAttributes['total_amount_local'] - $updateOrderAttributes['total_promotion_amount_local'];
-                if ($paymentSuccess) {
-                    $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
-                }
+                $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
                 $order->updateAttributes($updateOrderAttributes);
+                $orderCodes[$order->ordercode] = [
+                    'totalPaid' => $order->total_paid_amount_local,
+                    'discountAmount' => $order->total_promotion_amount_local,
+                    'promotion' => !empty($orderPromotions) ? array_keys($orderPromotions) : null,
+                ];
             }
+            Yii::info($promotionDebug, 'promotionDebug');
             $transaction->commit();
-            return ['success' => true, 'message' => 'create order success'];
+            return ['success' => true, 'message' => 'create order success', 'data' => ['orderCodes' => $orderCodes, 'promotionInfo' => $promotionDebug]];
         } catch (Exception $exception) {
             $transaction->rollBack();
             Yii::error($exception, __METHOD__);

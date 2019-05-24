@@ -86,6 +86,7 @@ class CartSelection
             }
             $items[] = $i;
         }
+        var_dump($items);
         self::setSelectedItems($type, $items);
         return $removed;
     }
