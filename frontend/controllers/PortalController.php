@@ -47,9 +47,9 @@ class PortalController extends FrontendController
             $view = $this->renderPartial('viewed_product', [
                 'items' => $_All_favorite,
             ]);
-            return ['success' => true,'message' => 'lấy thành công', 'data' => ['content' => $view] ];
+            return ['success' => true,'message' => 'get data success', 'data' => ['content' => $view] ];
         }else{
-            return ['success' => false,'message' => 'Không có dữ liệu', 'data' => ['content' => ''] ];
+            return ['success' => false,'message' => 'no data', 'data' => ['content' => ''] ];
         }
     }
 
@@ -61,9 +61,9 @@ class PortalController extends FrontendController
         $fingerprint = null;
         $post = $this->request->post();
         if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
-        $item = ArrayHelper::getValue($post,'item');
-        $id = ArrayHelper::getValue($post,'sku');
-        $portal =  ArrayHelper::getValue($post,'portal');
+        //$item = ArrayHelper::getValue($post,'item');
+        $id = ArrayHelper::getValue($post,'sku');   Yii::info(" id : ".$id);
+        $portal =  ArrayHelper::getValue($post,'portal'); Yii::info(" portal: ".$portal);
 
         Yii::info(" Favorite : app  create favorite Success 02 ");
         if (!Yii::$app->getRequest()->validateCsrfToken()) {
@@ -81,14 +81,14 @@ class PortalController extends FrontendController
         $form->type = $portal ; //'ebay' , 'amazon'
         $item = $form->detail();
 
+
         Yii::info(" Favorite : app  create favorite Success 04");
 
-        /**
-        if ($item  === false) {
+        if ($item == false ) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return ['success' => false,'message' => 'Error Get Ebay Gate', 'data' => ['content' => ''] ];
         }
-         **/
+
 
         Yii::info(" Favorite : app  create favorite Success 05");
 

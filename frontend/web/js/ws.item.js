@@ -193,7 +193,7 @@
             var _fingerprint = client.getFingerprint();
             var data = {
                 fingerprint: _fingerprint,
-                sku: params.sku,
+                sku: params.id,
                 portal : params.type
             };
             setTimeout(function () {
