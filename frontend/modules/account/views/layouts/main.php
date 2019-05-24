@@ -189,13 +189,13 @@ UserBackendAsset::register($this);
                                 <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/account/customer') { $active = 'active'?> active <?php }}?>">
                                     <?php echo Html::a('Tài khoản cá nhân', ['/account/customer']);?>
                                 </li>
-                                <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/saved.html') {?> active <?php }}?>">
-                                    <?php echo Html::a('Sản phẩm đã lưu', ['/account/customer/saved']);?>
-                                </li>
-                                <li>
-                                <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/vip.html') {?> active <?php }}?>">
-                                    <?php echo Html::a('Cấp độ Vip', ['/account/customer/vip']);?>
-                                </li>
+<!--                                <li class="--><?php //if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/saved.html') {?><!-- active --><?php //}}?><!--">-->
+<!--                                    --><?php //echo Html::a('Sản phẩm đã lưu', ['/account/customer/saved']);?>
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                <li class="--><?php //if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/vip.html') {?><!-- active --><?php //}}?><!--">-->
+<!--                                    --><?php //echo Html::a('Cấp độ Vip', ['/account/customer/vip']);?>
+<!--                                </li>-->
                                 </li>
                             </ul>
                         </div>
