@@ -10,7 +10,7 @@ use frontend\controllers\CmsController;
 
 class HomeController extends CmsController
 {
-    /*
+   /*
     public $_uuid ;
     public function actionU()
     {
@@ -45,7 +45,6 @@ class HomeController extends CmsController
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return 'Ok ! '.$fingerprint;
     }
-
 
     public $setDocumentPath = '/HomeWs';
     public function gaWs()
