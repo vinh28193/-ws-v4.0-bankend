@@ -160,7 +160,7 @@ UserBackendAsset::register($this);
                                 <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'AT_CUSTOMER') { $active = 'active'?> active <?php }}?>">
                                     <?php echo Html::a('Đã giao', ['/account/order?status=AT_CUSTOMER']);?>
                                 </li>
-                                <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'CANCEL') { $active = 'active'?> active <?php }}?>">
+                                <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'CANCELLED') { $active = 'active'?> active <?php }}?>">
                                     <?php echo Html::a('Đã hủy', ['/account/order?status=CANCEL']);?>
                                 </li>
                             </ul>

@@ -352,6 +352,16 @@ class CartManager extends Component
         return $results;
     }
 
+    public function getCartItems($safeOnly = true)
+    {
+        $items = $this->getStorage()->getItems(15);
+        $results = [];
+        foreach ($items as $key => $item) {
+            $results[$key] = $this->getSerializer()->unserialize($item);
+        }
+        return $results;
+    }
+
     /**
      * @param bool $safeOnly
      * @return int
