@@ -42,7 +42,7 @@ use frontend\widgets\imagelazy\ImageLazyLoadWidget;
                         echo '<span class="sale-tag">' . $saleTag . '% OFF</span>';
                     } ?>
                 </div>
-                <div class="total-price">* Xem giá trọn gói về Việt Nam</div>
+<!--                <div class="total-price">* Xem giá trọn gói về Việt Nam</div>-->
             </div>
         </div>
     </div>
