@@ -4,7 +4,6 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use Yii;
-use yii\httpclient\Client;
 use linslin\yii2\curl;
 use yii\helpers\ArrayHelper;
 
