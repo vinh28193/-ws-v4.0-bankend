@@ -60,9 +60,7 @@ return [
         ],
         'wsFcnApn' => [
                   'class' => 'common\components\fcm\Notification',
-                   'param' => [
-                       // config param here
-                   ],
+                   //'param' => [  ],
         ],
         'productManager' => [
             'class' => 'common\products\ProductManager'

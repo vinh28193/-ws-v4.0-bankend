@@ -9,8 +9,6 @@ if($typeDes == 'extra'){
 }else{
     if(isset($item->sort_desc) && $item->sort_desc){
         echo $item->sort_desc;
-    }else{
-        echo $item->description;
     }
 }
 ?>

@@ -189,8 +189,9 @@ class ServiceUsSendingController extends BaseApiController
         foreach ($this->post['info'] as $info){
             $order_id = ArrayHelper::getValue($info,'order_id');
             $product_id = ArrayHelper::getValue($info,'product_id');
+            $quantity = ArrayHelper::getValue($info,'quantity');
             $purchase_number_invoice = ArrayHelper::getValue($info,'purchase_number_invoice');
-            if($product_id && $purchase_number_invoice){
+            if($product_id && $purchase_number_invoice && $quantity){
                 $product = Product::findOne($product_id);
                 $order = $product->order;
                 if($product && (!$order_id || $order_id == $product->order_id) && $order){
@@ -202,6 +203,7 @@ class ServiceUsSendingController extends BaseApiController
                     $model->tracking_code = $this->post['tracking_code'];
                     $model->order_id = $product->order_id;
                     $model->product_id = $product->id;
+                    $model->quantity = $quantity;
                     $model->purchase_invoice_number = $purchase_number_invoice;
                     $model->status = DraftExtensionTrackingMap::STATUST_NEW;
                     $model->created_by = Yii::$app->user->getId();

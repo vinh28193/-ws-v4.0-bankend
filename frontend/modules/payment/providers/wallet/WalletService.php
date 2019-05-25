@@ -70,9 +70,9 @@ class WalletService extends BaseObject
     public static function isGuest()
     {
         try {
-            return (new static())->walletInformation()['success'];
+            return !(new static())->walletInformation()['success'];
         }catch (\Exception $exception){
-            return false;
+            return true;
         }
     }
 
