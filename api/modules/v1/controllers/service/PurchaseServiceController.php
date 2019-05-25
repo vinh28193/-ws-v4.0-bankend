@@ -99,9 +99,9 @@ class PurchaseServiceController extends BaseApiController
                                 $modelProduct->price_purchase = $form->price_purchase;
                                 $modelProduct->shipping_fee_purchase = $form->us_ship_purchase;
                                 $modelProduct->tax_fee_purchase = $form->us_tax_purchase;
-                                $fee = $modelProduct->unitPrice;
                                 $order = $modelProduct->order;
                                 if($modelProduct->price_purchase){
+                                    $fee = $modelProduct->unitPrice;
                                     $check = true;
                                     $old_local_amount = $fee->local_amount;
                                     $old_amount = $fee->amount;
@@ -117,6 +117,7 @@ class PurchaseServiceController extends BaseApiController
 //                            $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
                                     $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
                                     $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                    $fee->save(0);
                                 }
                                 if($modelProduct->shipping_fee_purchase){
                                     $check = true;
@@ -136,6 +137,7 @@ class PurchaseServiceController extends BaseApiController
                                     $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
                                     $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
                                     $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                    $fee->save(0);
                                 }
                                 if($modelProduct->tax_fee_purchase){
                                     $check = true;
@@ -156,8 +158,8 @@ class PurchaseServiceController extends BaseApiController
                                     $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
                                     $order->total_amount_local += $fee->local_amount - $old_local_amount;
 
+                                    $fee->save(0);
                                 }
-                                $fee->save(false);
                                 $order->save(0);
                                 $modelProduct->save();
                                 $modelProduct->save();

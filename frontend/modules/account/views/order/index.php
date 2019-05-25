@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td>
                         <b><?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?></b>
                     </td>
-                    <td><b class="total text-orange"><?= number_format($order->total_paid_amount_local, 2, ',', '.').'đ'; ?></b></td>
+                    <td><b class="total text-orange"><?= number_format($order->total_paid_amount_local, 0, ',', '.').'đ'; ?></b></td>
                     <td><b><?= $order->current_status ?></b></td>
                 </tr>
             <?php } ?>
