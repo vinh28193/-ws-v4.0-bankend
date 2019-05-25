@@ -39,12 +39,10 @@ class CartController extends BaseApiController
 
     public function actionIndex()
     {
-//        $dataProvider = new ArrayDataProvider([
-//            'allModels' => $this->getCart()->getCartItems(),
-//        ]);
-//        return $this->response(true, 'get cart success', $dataProvider);
-        $model = new MongodbCartStorage();
-        var_dump($model->GetAllShopingCarts());die;
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $this->getCart()->getCartItems(),
+        ]);
+        return $this->response(true, 'get cart success', $dataProvider);
 
     }
 

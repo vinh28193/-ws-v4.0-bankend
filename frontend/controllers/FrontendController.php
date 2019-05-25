@@ -3,11 +3,13 @@
 
 namespace frontend\controllers;
 
+use common\components\EcomobiComponent;
 use Yii;
 use yii\di\Instance;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Request;
+use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\base\InvalidArgumentException;
 use common\components\StoreManager;
@@ -24,6 +26,7 @@ use common\models\User;
  */
 class FrontendController extends Controller
 {
+
     /**
      * @var string|StoreManager
      */
@@ -39,6 +42,45 @@ class FrontendController extends Controller
      */
     public $Uuid = '';
 
+
+    /**
+     * @var EcomobiComponent
+     */
+    private $_ecomobi;
+
+    /**
+     * @return EcomobiComponent|mixed
+     */
+    public function getEcomobi()
+    {
+        if (!is_object($this->_ecomobi)) {
+            $this->_ecomobi = Yii::$app->ecomobi;
+        }
+        return $this->_ecomobi;
+    }
+
+    public function ogMetaTag()
+    {
+        return [
+            'title' => 'Weshop Global',
+            'site_name' => Yii::$app->requestedRoute,
+            'url' => $this->request->url,
+            'image' => Url::to('/img/weshop-logo-vn.png'),
+            'description' => '',
+        ];
+    }
+
+    public function metaTag()
+    {
+        return [];
+
+    }
+
+    public function linkTag()
+    {
+        return [];
+    }
+
     /**
      * @inheritDoc
      */
@@ -47,6 +89,8 @@ class FrontendController extends Controller
         parent::init();
         $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
         $this->request = Instance::ensure($this->request, Request::className());
+        $this->registerAllMetaTagLinkTag();
+        $this->getEcomobi()->register();
     }
 
     /**
@@ -61,7 +105,6 @@ class FrontendController extends Controller
         ];
     }
 
-
     /**
      * default params will be pass to current layout
      * @return array
@@ -72,6 +115,47 @@ class FrontendController extends Controller
     {
         return [];
     }
+
+    protected function registerAllMetaTagLinkTag()
+    {
+        $metaTags = ArrayHelper::merge([
+            'author' => 'Weshop Global',
+            'COPYRIGHT' => '&copy; Weshop Global',
+            'robots' => 'noodp,index,follow',
+            'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505'
+        ], $this->metaTag(), ArrayHelper::getValue(Yii::$app->params, 'metaTagParam', []));
+        foreach ($metaTags as $name => $content) {
+            $this->registerMetaTag([
+                'name' => $name,
+                'content' => $content !== null ? $content : '',
+            ]);
+        }
+        $ogMetaTags = ArrayHelper::merge([
+            'type' => 'website',
+            'locale' => 'vi_VN',
+            'image:height' => 200,
+            'image:width' => 150,
+
+        ], $this->ogMetaTag(), ArrayHelper::getValue(Yii::$app->params, 'ogMetaTagParam', []));
+        foreach ($ogMetaTags as $name => $content) {
+            $this->registerMetaTag([
+                'property' => "og:$name",
+                'name' => $name,
+                'content' => $content !== null ? $content : '',
+            ]);
+        }
+        $links = ArrayHelper::merge([
+            'shortcut icon' => Url::to('/img/icons/favicon.ico', true),
+        ], $this->linkTag(), ArrayHelper::getValue(Yii::$app->params, 'linkTagParam', []));
+        foreach ($links as $rel => $href) {
+            $this->registerLinkTag([
+                'rel' => $rel,
+                'href' => $href !== null ? $href : '#'
+            ]);
+        }
+
+    }
+
 
     /**
      * @inheritdoc
@@ -128,7 +212,8 @@ class FrontendController extends Controller
      * @param $options
      * @param null $key
      */
-    public function registerLinkTag($options, $key = null){
+    public function registerLinkTag($options, $key = null)
+    {
         $this->getView()->registerLinkTag($options, $key);
     }
 
@@ -137,13 +222,14 @@ class FrontendController extends Controller
      * Set Path GA
      */
     public $setDocumentPath;
+
     public function gaWs()
     {
-        Yii::info("set Path : ".$this->setDocumentPath);
-        Yii::info("this->_uuid : ".$this->_uuid);
-        if($this->setDocumentPath){
+        Yii::info("set Path : " . $this->setDocumentPath);
+        Yii::info("this->_uuid : " . $this->_uuid);
+        if ($this->setDocumentPath) {
             Yii::info("FrondEnd Pages GA WS");
-           return Yii::$app->ga->request()
+            return Yii::$app->ga->request()
                 ->setClientId($this->_uuid)
                 ->setDocumentPath($this->setDocumentPath)
                 ->setAsyncRequest(true)
@@ -151,22 +237,23 @@ class FrontendController extends Controller
         }
     }
 
-    public $_uuid ;
+    public $_uuid;
+
     public function actionU()
     {
         $post = $this->request->post();
         if (isset($post['fingerprint']) and isset($post['path'])) {
             $this->_uuid = $post['fingerprint'];
             $this->setDocumentPath = $post['path'];
-            Yii::info("fingerprint : ".$this->_uuid);
-            Yii::info("fingerprint : ".$this->setDocumentPath);
+            Yii::info("fingerprint : " . $this->_uuid);
+            Yii::info("fingerprint : " . $this->setDocumentPath);
         }
-        if (!Yii::$app->getRequest()->validateCsrfToken() || $this->_uuid === null ) {
-            return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
+        if (!Yii::$app->getRequest()->validateCsrfToken() || $this->_uuid === null) {
+            return ['success' => false, 'message' => 'Form Security Alert', 'data' => ['content' => '']];
         }
-        Yii::info("_uuid : ".$this->_uuid);
-
+        Yii::info("_uuid : " . $this->_uuid);
         if (!Yii::$app->user->isGuest) {
+
             // User Create / register Weshop
             $id = Yii::$app->user->identity->getId();
             $email = Yii::$app->user->identity->email;
@@ -209,13 +296,14 @@ class FrontendController extends Controller
                 // ENV DEV /  TEST
                 $this->gaWs();
             }else if((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false) ) {
+
                 // ENV PROD
             }
-        }else {
-            return ['success' => false,'message' => 'fingerprint null', 'data' => ['content' => ''] ];
+        } else {
+            return ['success' => false, 'message' => 'fingerprint null', 'data' => ['content' => '']];
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return 'Ok ! '.$this->_uuid. ' pages '. $this->setDocumentPath;
+        return 'Ok ! ' . $this->_uuid . ' pages ' . $this->setDocumentPath;
     }
 
 

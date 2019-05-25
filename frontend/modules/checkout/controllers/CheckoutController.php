@@ -21,4 +21,12 @@ class CheckoutController extends FrontendController
      */
     public $module;
 
+    /**
+     * @return array
+     */
+    public function ogMetaTag()
+    {
+        return parent::ogMetaTag();
+    }
+
 }

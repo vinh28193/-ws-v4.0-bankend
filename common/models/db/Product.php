@@ -39,7 +39,20 @@ use Yii;
  * @property string $version version 4.0
  * @property string $condition Tình trạng đơn hàng
  * @property string $seller_refund_amount Số tiền người bán hoàn chả
- * @property string $note_boxme note Boxme
+ * @property string $note_boxme
+ * @property string $current_status
+ * @property int $purchase_start
+ * @property int $purchased
+ * @property int $seller_shipped
+ * @property int $stockin_us
+ * @property int $stockout_us
+ * @property int $stockin_local
+ * @property int $stockout_local
+ * @property int $at_customer
+ * @property int $returned
+ * @property int $cancel
+ * @property int $lost
+ * @property int $refunded
  *
  * @property PurchaseProduct[] $purchaseProducts
  */
@@ -60,10 +73,10 @@ class Product extends \common\components\db\ActiveRecord
     {
         return [
             [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'created_at', 'product_name'], 'required'],
-            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove'], 'integer'],
-            [['link_img', 'link_origin', 'variations', 'note_by_customer', 'note_boxme', 'product_name'], 'string'],
+            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancel', 'lost', 'refunded'], 'integer'],
+            [['link_img', 'link_origin', 'variations', 'note_by_customer', 'product_name'], 'string'],
             [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_fee_product_local', 'price_purchase', 'shipping_fee_purchase', 'tax_fee_purchase', 'total_weight_temporary', 'seller_refund_amount'], 'number'],
-            [['portal', 'sku', 'parent_sku', 'version', 'condition'], 'string', 'max' => 255],
+            [['portal', 'sku', 'parent_sku', 'version', 'condition', 'note_boxme', 'current_status'], 'string', 'max' => 255],
             [['product_link'], 'string', 'max' => 500],
         ];
     }
@@ -97,7 +110,6 @@ class Product extends \common\components\db\ActiveRecord
             'variations' => 'Variations',
             'variation_id' => 'Variation ID',
             'note_by_customer' => 'Note By Customer',
-            'note_boxme' => 'Note Boxme',
             'total_weight_temporary' => 'Total Weight Temporary',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -107,6 +119,20 @@ class Product extends \common\components\db\ActiveRecord
             'version' => 'Version',
             'condition' => 'Condition',
             'seller_refund_amount' => 'Seller Refund Amount',
+            'note_boxme' => 'Note Boxme',
+            'current_status' => 'Current Status',
+            'purchase_start' => 'Purchase Start',
+            'purchased' => 'Purchased',
+            'seller_shipped' => 'Seller Shipped',
+            'stockin_us' => 'Stockin Us',
+            'stockout_us' => 'Stockout Us',
+            'stockin_local' => 'Stockin Local',
+            'stockout_local' => 'Stockout Local',
+            'at_customer' => 'At Customer',
+            'returned' => 'Returned',
+            'cancel' => 'Cancel',
+            'lost' => 'Lost',
+            'refunded' => 'Refunded',
         ];
     }
 
