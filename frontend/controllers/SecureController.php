@@ -118,6 +118,16 @@ class SecureController extends FrontendController
         ]);
     }
 
+    public function actionRegisterValidate()
+    {
+        $model = new SignupForm();
+        $request = Yii::$app->getRequest();
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if ($request->isAjax && $request->isPost && $model->load($request->post())) {
+            return \yii\bootstrap4\ActiveForm::validate($model);
+        }
+        return [];
+    }
 
     /**
      * @param $client
