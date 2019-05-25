@@ -203,10 +203,25 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
         return $query->column();
     }
 
-    public function GetAllShopingCarts()
+    public function GetAllShopingCarts($get)
     {
         $query = self::find()->with('user')
-            ->where(['AND', ['remove' => 0]]); // 'remove' => 0 : Cart can thanh toan
+            ->andWhere(['AND', ['remove' => 0]]);// 'remove' => 0 : Cart can thanh toan
+        if (isset($get['value'])) {
+            $query->andWhere([
+                'or',
+                ['like', 'data.order.customer.email', $get['value']],
+                ['like', 'data.order.customer.phone', $get['value']],
+            ]);
+        } if (isset($get['value']) && isset($get['keyword'])) {
+        $query->andWhere([
+            'or',
+            ['like', $get['keyword'], $get['value']],
+            ['like', $get['keyword'], $get['value']],
+        ]);
+    }
+//        $offset = ($page - 1) * $limit;
+//        $model = $query->limit($limit)->offset($offset);
 //        echo "<pre>";
 //        print_r($query->all());
 //        echo "</pre>";

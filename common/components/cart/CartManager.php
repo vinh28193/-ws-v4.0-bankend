@@ -358,10 +358,10 @@ class CartManager extends Component
         return $results;
     }
 
-    public function getCartItems($safeOnly = true)
+    public function getCartItems($get)
     {
         $model = new MongodbCartStorage();
-        $items = $model->GetAllShopingCarts();
+        $items = $model->GetAllShopingCarts($get);
         return $items;
     }
 
