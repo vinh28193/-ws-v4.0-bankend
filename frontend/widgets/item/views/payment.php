@@ -49,7 +49,9 @@ if($item->available_quantity){
     <div class="action-box" style="display: <?=$instockQuanty > 0 ? 'block' : 'none';?>">
         <button type="button" id="buyNowBtn" class="btn btn-block btn-buy" style="display: <?= $sellerCurrent ? 'block' : 'none' ?>">Mua ngay</button>
         <button type="button" id="quoteBtn" class="btn btn-block btn-buy" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>">Yêu cầu báo giá</button>
+        <?php if ($item->getLocalizeTotalPrice() > 3500000):?>
         <button type="button" id="installmentBtn" class="btn btn-block btn-installment">Thanh toán trả góp</button>
+        <?php endif;?>
         <div class="text-center more">
             <a href="#" id="followItem" ><i class="icon fav"></i></a>
             <a href="#" id="addToCart"><i class="icon cart"></i></a>

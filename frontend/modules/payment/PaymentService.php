@@ -92,12 +92,14 @@ class PaymentService
     public static function createCheckPromotionParam(Payment $payment)
     {
         $items = $payment->getOrders();
+
         if (empty($items)) {
             return [];
         }
         $orders = [];
         foreach ($items as $idx => $order) {
             $item = [];
+
             $item['itemType'] = strtolower($order['portal']);
             $item['shippingWeight'] = self::toNumber($order['total_weight_temporary']);
             $item['shippingQuantity'] = self::toNumber($order['total_quantity']);
