@@ -27,47 +27,47 @@ $amountChange = $wallet && $payment->total_amount > $wallet['usable_balance'] ? 
     <div id="method<?= $group; ?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne"
          data-parent="#payment-method">
         <div class="method-content wallet">
-            <?php if ($wallet) {?>
-            <?= Html::a('<img src="/img/payment_wallet.png"/><span>Nạp tiền</span>', new JsExpression('/my-weshop/wallet/top-up.html?amount='.$amountChange), ['href' => '/my-weshop/wallet/top-up.html?amount='.$amountChange,'target' => '_blank','class' => 'btn btn-add-credit']) ?>
-            <div class="row">
-                <div class="col-md-6">
-                    <label>Tổng số tiền chính trong tài khoản:</label>
-                </div>
-                <?php if ($wallet !== null): ?>
+            <?php if ($wallet) { ?>
+                <?= Html::a('<img src="/img/payment_wallet.png"/><span>Nạp tiền</span>', '/my-weshop/wallet/top-up.html?amount=' . $amountChange, ['target' => '_blank', 'class' => 'btn btn-add-credit']) ?>
+                <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <?php echo Html::input('text', 'current_balance', $storeManager->showMoney($wallet['current_balance']), ['class' => 'form-control', 'disabled' => true]); ?>
+                        <label>Tổng số tiền chính trong tài khoản:</label>
+                    </div>
+                    <?php if ($wallet !== null): ?>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <?php echo Html::input('text', 'current_balance', $storeManager->showMoney($wallet['current_balance']), ['class' => 'form-control', 'disabled' => true]); ?>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Số tiền đóng băng: </label>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <?php echo Html::input('text', 'freeze_balance', $storeManager->showMoney($wallet['freeze_balance']), ['class' => 'form-control', 'disabled' => true]); ?>
+                        <div class="col-md-6">
+                            <label>Số tiền đóng băng: </label>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Số tiền có thể mua sắm:</label>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <?php echo Html::input('text', 'usable_balance', $storeManager->showMoney($wallet['usable_balance']), ['class' => 'form-control', 'disabled' => true]); ?>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <?php echo Html::input('text', 'freeze_balance', $storeManager->showMoney($wallet['freeze_balance']), ['class' => 'form-control', 'disabled' => true]); ?>
+                            </div>
                         </div>
-                    </div>
-                    <?php if ($amountChange > 0): ?>
-                        <div class="col-md-12">
-                            <small class="warning text-orange">Tài khoản của bạn không đủ tiền. Vui lòng nạp tiền để
-                                tiến
-                                hành sử dụng
-                            </small>
+                        <div class="col-md-6">
+                            <label>Số tiền có thể mua sắm:</label>
                         </div>
-                    <?php endif; ?>
-                    <div class="col-md-6">
-                        <b>Chọn hình thức nhận OTP:</b>
-                    </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <?php echo Html::input('text', 'usable_balance', $storeManager->showMoney($wallet['usable_balance']), ['class' => 'form-control', 'disabled' => true]); ?>
+                            </div>
+                        </div>
+                        <?php if ($amountChange > 0): ?>
+                            <div class="col-md-12">
+                                <small class="warning text-orange">Tài khoản của bạn không đủ tiền. Vui lòng nạp tiền để
+                                    tiến
+                                    hành sử dụng
+                                </small>
+                            </div>
+                        <?php endif; ?>
+                        <div class="col-md-6">
+                            <b>Chọn hình thức nhận OTP:</b>
+                        </div>
 
-                    <?php
+                        <?php
                         echo Html::radioList('otpVerifyMethod', $payment->otp_verify_method, [
                             0 => 'Phone number' . ' (' . $wallet['customer_phone'] . ')',
                             1 => 'Email' . ' (' . $wallet['email'] . ')'
@@ -78,11 +78,12 @@ $amountChange = $wallet && $payment->total_amount > $wallet['usable_balance'] ? 
                             },
                             'class' => 'col-md-6'
                         ]);
-                    ?>
-                <?php endif; ?>
-            </div>
-            <?php }else{?>
-                <a href="javascript:void(0);" onclick="ws.showLoginWallet()" class='btn btn-add-credit' ><img src="/img/payment_wallet.png"/><span>Đăng nhập vào ví</span></a>
+                        ?>
+                    <?php endif; ?>
+                </div>
+            <?php } else { ?>
+                <a href="javascript:void(0);" onclick="ws.showLoginWallet()" class='btn btn-add-credit'><img
+                            src="/img/payment_wallet.png"/><span>Đăng nhập vào ví</span></a>
             <?php } ?>
         </div>
     </div>

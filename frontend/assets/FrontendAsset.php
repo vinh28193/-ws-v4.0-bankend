@@ -14,13 +14,13 @@ class FrontendAsset extends AssetBundle
     public $css = [
         'css/style.css',
         'css/variables.css',
-        'css/slick.css',
+        //'css/slick.css',
         'css/all.css'
 //        'css/mobile_style.css'
     ];
     public $js = [
         'js/style.js',
-        'js/slick.min.js',
+        //'js/slick.min.js',
         'js/client.min.js',
     ];
     public $depends = [
@@ -29,9 +29,9 @@ class FrontendAsset extends AssetBundle
          'common\assets\JQueryEzPlus',
          //'common\assets\FontawesomeAsset',
          'common\assets\OwlCarousel',
-         'common\assets\SlickCarouselAsset',
+         //'common\assets\SlickCarouselAsset',
          'frontend\assets\WeshopAsset',
          'frontend\assets\JQueryLazy',
-         'frontend\assets\FancyboxPlusAsset'
+         //'frontend\assets\FancyboxPlusAsset'
     ];
 }

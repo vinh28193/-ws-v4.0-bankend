@@ -131,6 +131,9 @@ CSS;
         // cách gọi 1 hàm cùng với param truyền vào
         // JqueryElement.TênThưViện('Tên hàm','param 1', param 2, ..., param n);
         $view->registerJs("jQuery('#$id').wsItem('favorite');", $view::POS_END);
+        if ($this->item->type === BaseProduct::TYPE_EBAY) {
+            $view->registerJs("setInterval(function () {ws.countdownTime();}, 1000);");
+        }
     }
 
     protected function renderEntries()

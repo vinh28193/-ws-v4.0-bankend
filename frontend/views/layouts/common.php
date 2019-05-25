@@ -415,7 +415,7 @@ FrontendAsset::register($this);
             <div class="modal-body">
                 <i class="fas fa-check"></i>
                 <div class="modal-title">Cám ơn bạn!</div>
-                <div class="order-code">Mã đơn hàng: <span class="text-blue" id="transactionCode"></span></div>
+                <div class="order-code">Mã giao dịch: <span class="text-blue" id="transactionCode"></span></div>
                 <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành toán
                 </p>
                 <button type="button" class="btn btn-submit btn-block" id="next-payment">Chuyển ngay <span

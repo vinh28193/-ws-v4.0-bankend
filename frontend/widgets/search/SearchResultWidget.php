@@ -46,6 +46,7 @@ class SearchResultWidget extends Widget
             $this->portal = $this->form->type;
         }
         Html::addCssClass($options, "{$this->portal}-search");
+
     }
 
     public function run()
@@ -57,6 +58,9 @@ class SearchResultWidget extends Widget
         $options = Json::htmlEncode($this->getClientOptions());
         $view->registerJs("jQuery('#$id').wsSearch($options);");
         $view->registerJs("console.log($('#$id').wsSearch('data'))");
+        if(strtolower($this->portal) ==='ebay'){
+            $view->registerJs("setInterval(function () {ws.countdownTime();}, 1000);");
+        }
         return Html::tag('div', $this->renderResults(), $this->options);
     }
 
