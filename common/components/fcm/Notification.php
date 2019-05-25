@@ -18,7 +18,6 @@ use common\helpers\WeshopHelper;
  *
  *   ]
  * Class Notification
- * @property $param array
  * @package common\components\fcm
  */
 class Notification extends \yii\base\Component

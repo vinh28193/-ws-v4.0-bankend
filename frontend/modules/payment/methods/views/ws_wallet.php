@@ -12,7 +12,7 @@ use yii\web\JsExpression;
 
 /** @var  $storeManager  common\components\StoreManager */
 $storeManager = Yii::$app->get('storeManager');
-$amountChange = $payment->total_amount > $wallet['usable_balance'] ? $payment->total_amount - $wallet['usable_balance'] : 0;
+$amountChange = $wallet && $payment->total_amount > $wallet['usable_balance'] ? $payment->total_amount - $wallet['usable_balance'] : 0;
 ?>
 
 <div class="method-item">
@@ -27,6 +27,7 @@ $amountChange = $payment->total_amount > $wallet['usable_balance'] ? $payment->t
     <div id="method<?= $group; ?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne"
          data-parent="#payment-method">
         <div class="method-content wallet">
+            <?php if ($wallet) {?>
             <?= Html::a('<img src="/img/payment_wallet.png"/><span>Nạp tiền</span>', new JsExpression('/my-weshop/wallet/top-up.html?amount='.$amountChange), ['href' => '/my-weshop/wallet/top-up.html?amount='.$amountChange,'target' => '_blank','class' => 'btn btn-add-credit']) ?>
             <div class="row">
                 <div class="col-md-6">
@@ -80,6 +81,9 @@ $amountChange = $payment->total_amount > $wallet['usable_balance'] ? $payment->t
                     ?>
                 <?php endif; ?>
             </div>
+            <?php }else{?>
+                <a href="javascript:void(0);" onclick="ws.showLoginWallet()" class='btn btn-add-credit' ><img src="/img/payment_wallet.png"/><span>Đăng nhập vào ví</span></a>
+            <?php } ?>
         </div>
     </div>
 </div>
