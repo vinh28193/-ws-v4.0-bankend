@@ -69,7 +69,7 @@ $name = Html::encode($name);
                                 data-update="#<?= $key ?>" data-operator="down" type="button">-
                         </button>
                     </div>
-                    <input type="text" class="form-control" value="<?= $quantity; ?>" data-min="1" id="<?= $key; ?>"
+                    <input type="text" name="cartItemQuantity" class="form-control" value="<?= $quantity; ?>" data-min="1" id="<?= $key; ?>"
                            data-max="<?= $availableQuantity; ?>" aria-label="" aria-describedby="basic-addon1">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary button-quantity-up" data-pjax="1"
