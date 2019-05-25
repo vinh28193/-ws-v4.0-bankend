@@ -12,6 +12,7 @@ use yii\helpers\ArrayHelper;
 use yii\base\InvalidArgumentException;
 use common\components\StoreManager;
 use common\request\UUID;
+use common\models\User;
 
 
 /**
@@ -166,16 +167,48 @@ class FrontendController extends Controller
         Yii::info("_uuid : ".$this->_uuid);
 
         if (!Yii::$app->user->isGuest) {
-            $this->_uuid = Yii::$app->user->identity->getId().'WS'.Yii::$app->user->identity->email;
+            // User Create / register Weshop
+            $id = Yii::$app->user->identity->getId();
+            $email = Yii::$app->user->identity->email;
+            $this->_uuid = $id.'WS'.$email;
+            /** Update UUID == fingerprint **/
+            $User = new User();
+            if( ($User = $User->findByUuid($id)) != null && !$User->uuid){
+                Yii::info("Insert uuid : Ok ! ".$this->_uuid. " pages ". $this->setDocumentPath);
+                $User->uuid = $this->_uuid;
+                $User->id = $id;
+                $User->last_update_uuid_time = Yii::$app->formatter->asDateTime('now');
+                $User->last_update_uuid_time_by = 99999;
+                if($User->update())
+                {
+                    Yii::info("Insert uuid : Ok ! ");
+                }else {
+                    Yii::info("Insert uuid : Error ! ");
+                    Yii::info([
+                        'Error' => $User->errors,
+                    ], __CLASS__);
+                }
+            }
+            Yii::info("Update : ".$this->_uuid);
         }else {
+            // anynomus
+            /*
             $this->_uuid = isset($this->_uuid) ? $this->_uuid : 99999;
+            // Update fingerprint = $this->_uuid
+            $User = new User();
+            if( $User->findClientidga($this->_uuid) != null) {
+                $User->client_id_ga = $this->_uuid;
+                $User->last_update_client_id_ga_time_by = 99999;
+                $User->save(false);
+            }
+            */
         }
 
         if($this->_uuid){
-            if(YII_ENV == 'dev' and YII_DEBUG == true){
+            if((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true) ){
                 // ENV DEV /  TEST
                 $this->gaWs();
-            }else {
+            }else if((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false) ) {
                 // ENV PROD
             }
         }else {

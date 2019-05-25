@@ -101,6 +101,26 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
 
+    /** Finds UUID by username id
+     * @param $condition
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public static function findBy_Uuid_Fcm_Apn($condition)
+    {
+        return static::find()->where([
+            'and',
+            [
+                'or',
+                ['username' => $condition],
+                ['email' => $condition],
+                ['id' => $condition],
+                ['uuid' => $condition]
+            ],
+            ['status' => self::STATUS_ACTIVE]
+        ])->one();
+    }
+
+
     /**
      * Finds user by username
      *
@@ -121,6 +141,49 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     public static function findByPhone($phone)
     {
         return static::findOne(['phone' => $phone]);
+    }
+
+    /**
+     * @param $id
+     * @return User|null
+     */
+    public static function findByUuid($id)
+    {
+        return static::findOne(['id' => $id , 'status' => self::STATUS_ACTIVE] );
+    }
+
+    /**
+     * @param $client_id_ga
+     * @return User|null
+     */
+    public static function findClientidga($client_id_ga)
+    {
+        return static::findOne(['client_id_ga' => $client_id_ga,'status' => self::STATUS_ACTIVE] );
+    }
+
+    /**
+     * @param $id
+     * @param $token_fcm
+     * @return User|null
+     */
+    public static function findByTokenFcm($id,$token_fcm)
+    {
+        return static::findOne(
+            [
+                'id' => $id,
+                //'token_fcm'=> $token_fcm,
+                'status' => self::STATUS_ACTIVE
+            ] );
+    }
+
+    /**
+     * @param $id
+     * @param $token_apn
+     * @return User|null
+     */
+    public static function findByTokenApn($id,$token_apn)
+    {
+        return static::findOne(['id' => $id,'token_apn'=> $token_apn,'status' => self::STATUS_ACTIVE] );
     }
 
     /**
