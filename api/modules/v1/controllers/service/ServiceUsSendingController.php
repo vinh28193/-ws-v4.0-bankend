@@ -53,6 +53,12 @@ class ServiceUsSendingController extends BaseApiController
         $model->product_id = $product->id;
         $model->order_id = $product->order_id;
         $model->save();
+        $product->updateStockinUs($model->stock_in_us);
+        $product->updateStockoutUs($model->stock_out_us);
+        $product->save(false);
+        $product->order->updateStockinUs($model->stock_in_us);
+        $product->order->updateStockoutUs($model->stock_out_us);
+        $product->order->save(false);
         if($count > 1){
             DraftDataTracking::updateAll(
                 ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
@@ -152,6 +158,16 @@ class ServiceUsSendingController extends BaseApiController
         $ext->status = DraftExtensionTrackingMap::MAPPED;
         $ext->draft_data_tracking_id = $data->id;
         $ext->save(0);
+        if($ext->product){
+            $ext->product->updateStockinUs($data->stock_in_us);
+            $ext->product->updateStockoutUs($data->stock_out_us);
+            $ext->product->save(false);
+        }
+        if($ext->order){
+            $ext->order->updateStockinUs($data->stock_in_us);
+            $ext->order->updateStockoutUs($data->stock_out_us);
+            $ext->order->save(false);
+        }
         $count = DraftDataTracking::find()->where(['tracking_code' => $data->tracking_code])->count();
         if($count > 1){
             DraftDataTracking::updateAll(
@@ -179,8 +195,9 @@ class ServiceUsSendingController extends BaseApiController
                 $order = $product->order;
                 if($product && (!$order_id || $order_id == $product->order_id) && $order){
                     $order->updateSellerShipped();
-                    $order->current_status = Order::STATUS_SELLER_SHIPPED;
-                    $order->save(0);
+                    $order->save(false);
+                    $product->updateSellerShipped();
+                    $product->save(false);
                     $model = new DraftExtensionTrackingMap();
                     $model->tracking_code = $this->post['tracking_code'];
                     $model->order_id = $product->order_id;
