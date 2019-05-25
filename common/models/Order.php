@@ -65,6 +65,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const STATUS_REFUNDING = 'REFUNDING'; //Lv8; đơn đang chuyển hoàn, next status REFUNDED
     const STATUS_REFUNDED = 'REFUNDED'; //Lv8; đơn đã chuyển hoàn, end of status
     const STATUS_CANCEL = 'CANCELLED';
+    const STATUS_SELLER_SHIPPED = 'SELLER_SHIPPED';
 
     const STATUS_RE_APPRAISE = 'RE_APPRAISE';  //  re-appraise : Đơn đang càn thậm định lái về giá + log + những vấn đề khác  --> Màu vàng và dừng lại ko cho gửi shipment
 
@@ -861,4 +862,33 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         return $data;
 
     }
+    public function updateSellerShipped($time = null , $updateNew = false){
+        if ($updateNew || !$this->seller_shipped){
+            $this->seller_shipped = $time ? $time : time();
+        }
+    }
+    public function updateStockinUs($time = null , $updateNew = false)
+    {
+        if ($updateNew || !$this->stockin_us) {
+            $this->stockin_us = $time ? $time : time();
+        }
+    }
+    public function updateStockoutUs($time = null , $updateNew = false){
+        if ($updateNew || !$this->stockout_us){
+            $this->stockout_us = $time ? $time : time();
+        }
+    }
+    public function updateStockinLocal($time = null , $updateNew = false)
+    {
+        if ($updateNew || !$this->stockin_local) {
+            $this->stockin_local = $time ? $time : time();
+        }
+    }
+    public function updateStockoutLocal($time = null , $updateNew = false){
+        if ($updateNew || !$this->stockout_local){
+            $this->stockout_local = $time ? $time : time();
+        }
+    }
+
+
 }
