@@ -6,7 +6,6 @@ use frontend\widgets\cart\CartWidget;
 /* @var yii\web\View $this */
 /* @var array $items */
 
-
 echo CartWidget::widget([
     'items' => $items,
     'options' => [
@@ -16,11 +15,9 @@ echo CartWidget::widget([
 ]);
 
 $js = <<< JS
-   $(document).on('click','button.button-quantity-up,button.button-quantity-down', function(event) {
-        alert('clicked');
-   }) ;
+   $('#cartContent').wsCart('refresh');
 JS;
-//$this->registerJs($js);
+$this->registerJs($js);
 
 $jsga = <<<JS
 $(document).ready(function() {

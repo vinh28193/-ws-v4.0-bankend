@@ -236,6 +236,7 @@ class CartManager extends Component
                 if (!$ok) {
                     return false;
                 }
+                $value['key'] = $key;
                 $key = $this->normalPrimaryKey($key, $safeOnly);
                 $value = $this->getSerializer()->serializer($value);
                 return $this->getStorage()->setItem($key, $value);
@@ -250,7 +251,7 @@ class CartManager extends Component
                 if (!$ok) {
                     return false;
                 }
-                $value['key'] =$key;
+                $value['key'] = $key;
                 $key = $this->normalPrimaryKey($key, $safeOnly);
 
                 $value = $this->getSerializer()->serializer($value);
@@ -281,7 +282,7 @@ class CartManager extends Component
                 return false;
             }
             $item = new SimpleItem();
-            $oldParams = $value['request'];
+            $oldParams = $value['params'];
             foreach ((array)$oldParams as $name => $val) {
                 if ($name === 'with_detail') {
                     continue;
@@ -308,10 +309,11 @@ class CartManager extends Component
             if (!$ok) {
                 return false;
             }
+            $value['key'] = $key;
             $value = $this->getSerializer()->serializer($raw);
             $key = $this->normalPrimaryKey($key, $safeOnly);
             $this->getStorage()->setItem($key, $value);
-            return $raw['response'];
+            return $raw['order'];
 
         } catch (\Exception $exception) {
             Yii::info($exception);
