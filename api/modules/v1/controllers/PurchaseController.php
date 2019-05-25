@@ -145,8 +145,11 @@ class PurchaseController extends BaseApiController
             $data[$key]['total_amount'] = $order->total_final_amount_local;
             $data[$key]['portal'] = $order->portal;
             foreach ($order->products as $item){
-                if($item->quantity_customer > $item->quantity_purchase || $order->current_status == Order::STATUS_PURCHASING) {
+                if($item->quantity_customer > $item->quantity_purchase) {
                     $addfee_amount = 0;
+                    $item->purchase_start = $item->purchase_start ? $item->purchase_start : time();
+                    $item->current_status = Product::STATUS_PURCHASING;
+                    $item->save(0);
 //                /** @var OrderPaymentRequest[] $order_request_change */
 //                $order_request_change = OrderPaymentRequest::find()
 //                    ->where([
@@ -337,7 +340,9 @@ class PurchaseController extends BaseApiController
                 $purchaseProd->updated_at = time();
                 $purchaseProd->save(0);
                 $item->updated_at = time();
-                $item->quantity_purchase += $item->quantity_purchase ? $item->quantity_purchase + $product->quantityPurchase : $product->quantityPurchase;
+                $item->quantity_purchase = $item->quantity_purchase ? $item->quantity_purchase + $product->quantityPurchase : $product->quantityPurchase;
+                $item->purchased = $item->purchased ? $item->purchased : time();
+                $item->current_status = $item->quantity_purchase < $item->quantity_customer ? Product::STATUS_PURCHASE_PART : Product::STATUS_PURCHASED;
                 $item->save(0);
                 $item->order->updated_at = time();
                 $item->order->purchase_order_id = $item->order->purchase_order_id ? $item->order->purchase_order_id .",".$PurchaseOrder->id : $PurchaseOrder->id ;

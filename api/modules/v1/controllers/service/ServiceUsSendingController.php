@@ -7,6 +7,7 @@ namespace api\modules\v1\controllers\service;
 use api\controllers\BaseApiController;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
+use common\models\Order;
 use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
@@ -175,7 +176,11 @@ class ServiceUsSendingController extends BaseApiController
             $purchase_number_invoice = ArrayHelper::getValue($info,'purchase_number_invoice');
             if($product_id && $purchase_number_invoice){
                 $product = Product::findOne($product_id);
-                if($product && (!$order_id || $order_id == $product->order_id)){
+                $order = $product->order;
+                if($product && (!$order_id || $order_id == $product->order_id) && $order){
+                    $order->updateSellerShipped();
+                    $order->current_status = Order::STATUS_SELLER_SHIPPED;
+                    $order->save(0);
                     $model = new DraftExtensionTrackingMap();
                     $model->tracking_code = $this->post['tracking_code'];
                     $model->order_id = $product->order_id;
