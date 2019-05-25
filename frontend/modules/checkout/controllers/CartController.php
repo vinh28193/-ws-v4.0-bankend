@@ -72,15 +72,15 @@ class CartController extends BillingController
             return ['success' => false, 'message' => 'add cart from empty data'];
         }
 
-        if (($key = $this->module->cartManager->addItem($item, true)) === false) {
-            return ['success' => false, 'message' => 'Can not add this item to cart'];
+        if (($key = $this->module->cartManager->addItem($item, true))[0] === false) {
+            return ['success' => false, 'message' => $key[1]];
         };
 
         if ($type === CartSelection::TYPE_BUY_NOW || $type === CartSelection::TYPE_INSTALLMENT) {
             CartSelection::setSelectedItems($type, $key);
             $checkOutAction = Url::toRoute(['/checkout/shipping', 'type' => $type]);
             return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key, 'data' => $checkOutAction];
-        }else{
+        } else {
             return ['success' => true, 'message' => 'Buy now this item', 'data' => [
                 'key' => $key,
                 'countItems' => $this->module->cartManager->countItems(),
@@ -131,8 +131,8 @@ class CartController extends BillingController
         if (!isset($params['id']) || ($key = $params['id']) === null || $key === '') {
             return ['success' => false, 'message' => 'Invalid params'];
         }
-        if (!$cartManager->removeItem($key)) {
-            return ['success' => false, 'message' => "can not delete item `$key`"];
+        if (($rs = $cartManager->removeItem($key))[0] === false) {
+            return ['success' => false, 'message' => $rs[1]];
         }
         return ['success' => true, 'message' => "item `$key` had been deleted", 'countItems' => $cartManager->countItems()];
     }

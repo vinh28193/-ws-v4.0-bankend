@@ -214,7 +214,7 @@ class CartManager extends Component
     /**
      * @param $params
      * @param bool $safeOnly
-     * @return bool
+     * @return array
      * @throws \Throwable
      */
     public function addItem($params, $safeOnly = true)
@@ -223,7 +223,7 @@ class CartManager extends Component
 
         try {
             if ($this->hasItem($key, $safeOnly)) {
-                return false;
+                return [false, 'sản phẩm đã trong giỏ hàng'];
             } else {
                 /** Todo : Thiếu link Gốc sản phẩm **/
                 $item = new SimpleItem();
@@ -233,24 +233,24 @@ class CartManager extends Component
                 // Todo Validate data before call
                 list($ok, $value) = $item->process();
                 if (!$ok) {
-                    return false;
+                    return [false, 'không thể lấy thông tin sản phẩm'];
                 }
                 $value['key'] = $key;
                 $key = $this->normalPrimaryKey($key, $safeOnly);
 
                 $value = $this->getSerializer()->serializer($value);
-                return $this->getStorage()->addItem($key, $value);
+                return [$this->getStorage()->addItem($key, $value), 'Thêm sản phẩm thành công'];
             }
         } catch (\Exception $exception) {
             Yii::info($exception);
-            return false;
+            return [false, $exception->getMessage()];
         }
     }
 
     public function setItem($key, $params, $safeOnly = false)
     {
         if (!$this->hasItem($key, $safeOnly)) {
-            return false;
+            return [false, 'sản phẩm không có trong giỏ hàng'];
         }
         $item = new SimpleItem();
         foreach ($params as $name => $val) {
@@ -284,7 +284,7 @@ class CartManager extends Component
     {
         try {
             if (($value = $this->getItem($key, $safeOnly)) === false) {
-                return false;
+                return [false, 'sản phẩm không có trong giỏ hàng'];
             }
             $item = new SimpleItem();
             $oldParams = $value['params'];
@@ -312,17 +312,18 @@ class CartManager extends Component
 
             list($ok, $raw) = $item->process();
             if (!$ok) {
-                return false;
+                return [false, 'không thể lấy thông tin sản phẩm'];
             }
             $value['key'] = $key;
             $value = $this->getSerializer()->serializer($raw);
             $key = $this->normalPrimaryKey($key, $safeOnly);
             $this->getStorage()->setItem($key, $value);
-            return $raw['order'];
+            return [false, 'sản phẩm không có trong giỏ hàng', $raw['order']];
+
 
         } catch (\Exception $exception) {
             Yii::info($exception);
-            return false;
+            return [false, $exception->getMessage()];
         }
     }
 
