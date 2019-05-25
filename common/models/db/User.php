@@ -49,6 +49,18 @@ use Yii;
  * @property string $verify_code_type
  * @property int $remove  0 là chưa xóa , tức là ẩn , 1 là đánh dấu đã xóa
  * @property int $vip  Mức độ Vip Của Khách Hàng không ap dụng cho nhân viên , theo thang điểm 0-5 số
+ * @property string $uuid  uuid tương đương fingerprint là  số đinh danh của user trên toàn hệ thống WS + hệ thống quảng cáo + hệ thống tracking 
+ * @property string $token_fcm  Google FCM notification
+ * @property string $token_apn  Apple APN number notification
+ * @property string $last_update_uuid_time Thời gian update là 
+ * @property string $last_update_uuid_time_by update bởi ai . 99999 : mac dinh la Weshop admin
+ * @property string $client_id_ga  dánh dau khách hàng ẩn danh không phải là khách hàng đăng kí --> đến khi chuyển đổi thành khách hàng user đăng kí
+ * @property string $last_update_client_id_ga_time  Thời gian sinh ra mã client_id_ga
+ * @property string $last_update_client_id_ga_time_by update bởi ai . 99999 : mac dinh la Weshop admin
+ * @property string $last_token_fcm_time Thời gian update là 
+ * @property string $last_token_fcm_by update bởi ai . 99999 : mac dinh la Weshop admin
+ * @property string $last_token_apn_time Thời gian update là 
+ * @property string $last_token_apn_time_by update bởi ai . 99999 : mac dinh la Weshop admin
  *
  * @property Auth[] $auths
  * @property Order[] $orders
@@ -70,11 +82,11 @@ class User extends \common\components\db\ActiveRecord
     {
         return [
             [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
-            [['status', 'created_at', 'updated_at', 'store_id', 'gender', 'email_verified', 'phone_verified', 'type_customer', 'employee', 'active_shipping', 'total_xu_start_date', 'total_xu_expired_date', 'usable_xu_start_date', 'usable_xu_expired_date', 'last_use_time', 'last_revenue_time', 'verify_code_expired_at', 'verify_code_count', 'remove', 'vip'], 'integer'],
-            [['birthday', 'last_order_time'], 'safe'],
+            [['status', 'created_at', 'updated_at', 'store_id', 'gender', 'email_verified', 'phone_verified', 'type_customer', 'employee', 'active_shipping', 'total_xu_start_date', 'total_xu_expired_date', 'usable_xu_start_date', 'usable_xu_expired_date', 'last_use_time', 'last_revenue_time', 'verify_code_expired_at', 'verify_code_count', 'remove', 'vip', 'last_update_uuid_time_by', 'last_update_client_id_ga_time_by', 'last_token_fcm_by', 'last_token_apn_time_by'], 'integer'],
+            [['birthday', 'last_order_time', 'last_update_uuid_time', 'last_update_client_id_ga_time', 'last_token_fcm_time', 'last_token_apn_time'], 'safe'],
             [['note_by_employee'], 'string'],
             [['total_xu', 'usable_xu', 'last_use_xu', 'last_revenue_xu'], 'number'],
-            [['username', 'password_hash', 'password_reset_token', 'email', 'first_name', 'last_name', 'phone', 'avatar', 'link_verify', 'verify_code_type'], 'string', 'max' => 255],
+            [['username', 'password_hash', 'password_reset_token', 'email', 'first_name', 'last_name', 'phone', 'avatar', 'link_verify', 'verify_code_type', 'uuid', 'token_fcm', 'token_apn', 'client_id_ga'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['scopes', 'github'], 'string', 'max' => 500],
             [['verify_code'], 'string', 'max' => 10],
@@ -132,6 +144,18 @@ class User extends \common\components\db\ActiveRecord
             'verify_code_type' => 'Verify Code Type',
             'remove' => 'Remove',
             'vip' => 'Vip',
+            'uuid' => 'Uuid',
+            'token_fcm' => 'Token Fcm',
+            'token_apn' => 'Token Apn',
+            'last_update_uuid_time' => 'Last Update Uuid Time',
+            'last_update_uuid_time_by' => 'Last Update Uuid Time By',
+            'client_id_ga' => 'Client Id Ga',
+            'last_update_client_id_ga_time' => 'Last Update Client Id Ga Time',
+            'last_update_client_id_ga_time_by' => 'Last Update Client Id Ga Time By',
+            'last_token_fcm_time' => 'Last Token Fcm Time',
+            'last_token_fcm_by' => 'Last Token Fcm By',
+            'last_token_apn_time' => 'Last Token Apn Time',
+            'last_token_apn_time_by' => 'Last Token Apn Time By',
         ];
     }
 
@@ -141,16 +165,6 @@ class User extends \common\components\db\ActiveRecord
     public function getAuths()
     {
         return $this->hasMany(Auth::className(), ['user_id' => 'id']);
-    }
-
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'store_id']);
-    }
-
-    public function getAddress()
-    {
-        return $this->hasOne(Address::className(), ['customer_id' => 'id']);
     }
 
     /**

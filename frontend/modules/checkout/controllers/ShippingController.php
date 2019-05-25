@@ -108,11 +108,11 @@ class ShippingController extends CheckoutController
         }
 
         if($this->_uuid){
-            if(YII_ENV == 'dev' and YII_DEBUG == true){
+            if((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true) ){
                 // ENV DEV /  TEST
                 Yii::info("ga checkour Order Tracking with Enhanced E-commerce ");
                 $this->gaCheckout();
-            }else {
+            }else if((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false) ) {
                 // ENV PROD
             }
         }else {

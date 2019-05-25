@@ -28,7 +28,7 @@ class AmazonProduct extends BaseProduct
     protected function generateOriginLink()
     {
         $source = self::STORE_US;
-        if($this->type === self::TYPE_AMAZON_JP){
+        if ($this->type === self::TYPE_AMAZON_JP) {
             $source = self::STORE_JP;
         }
         $id = strtoupper($this->item_id);
@@ -38,7 +38,7 @@ class AmazonProduct extends BaseProduct
 
     public function getSellPriceSpecial()
     {
-        if(is_array(($price_specials = $this->sell_price_special)) && count($price_specials) > 0) {
+        if (is_array(($price_specials = $this->sell_price_special)) && count($price_specials) > 0) {
             $money = [];
             foreach ($price_specials as $price_special) {
                 $money[] = $this->getStoreManager()->showMoney($price_special * $this->getExchangeRate());
@@ -46,5 +46,12 @@ class AmazonProduct extends BaseProduct
             return implode(' - ', $money);
         }
         return false;
+    }
+
+    public function init()
+    {
+        parent::init();
+        $this->quantity_sold = 0;
+        $this->available_quantity = 50;
     }
 }

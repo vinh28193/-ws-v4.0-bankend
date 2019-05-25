@@ -76,7 +76,9 @@
                 if (images.length > 0) {
                     changeImage($item, images);
                 }
+                console.log(currentVariations);
                 setUpDefaultOptions($item);
+                console.log(currentVariations);
                 ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'a#addToCart', function (event) {
                     paymentItem($item, 'shopping');
                     return false;
@@ -115,7 +117,8 @@
             var data = $item.data('wsItem');
             const value = variationOption.values[selectedValue];
             const name = variationOption.name;
-            if (value === undefined) {
+            console.log(value);
+            if (!value) {
                 return;
             }
             if (variationOption.images_mapping.length > 0) {
@@ -421,7 +424,12 @@
             });
         } else {
             $input.on('change.wsItem', function (e) {
-                methods.changeVariation.call($item, variationOption, Number($(this).val()));
+                var value = $(this).val();
+                if (!value) {
+                    currentVariations = currentVariations.filter(c => c.name !== variationOption.name);
+                    return;
+                }
+                methods.changeVariation.call($item, variationOption, value);
             });
         }
     };
@@ -475,12 +483,19 @@
 
     };
     var paymentItem = function ($item, type) {
+        var $data = $item.data('wsItem');
         var quantity = $('#quantity').val();
         if (quantity < 1) {
             return alert('Vui lòng nhập số lượng');
         }
+
+        if ($data.params.variation_options.length > 0 && currentVariations.length !== $data.params.variation_options.length) {
+            return alert('Vui lòng chọn thộc tính');
+        }
+
         var data = $item.data('wsItem');
-        var params = data.params;
+        if (currentVariations.length)
+            var params = data.params;
         var item = {
             quantity: quantity,
             source: params.type,

@@ -33,10 +33,10 @@ class HomeController extends CmsController
         }
 
         if($this->_uuid){
-            if(YII_ENV == 'dev' and YII_DEBUG == true){
+            if((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true) ){
                 // ENV DEV /  TEST
                 $this->gaWs();
-            }else {
+            }else if((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false) ) {
                 // ENV PROD
             }
         }else {
