@@ -3,9 +3,9 @@ namespace common\components\fcm;
 
 use Yii;
 use yii\base\InvalidConfigException;
-use yii\helpers\ArrayHelper;
-use yii\httpclient\Client;
 use common\helpers\WeshopHelper;
+use linslin\yii2\curl;
+use yii\helpers\ArrayHelper;
 /**
  *  3. config as application component:
  *      components => [
@@ -30,38 +30,43 @@ class Notification extends \yii\base\Component
         parent::init();
     }
 
-    public function Create()
+    public function Create($_to_token_fingerprint, $_title , $_body , $_click_action)
     {
-        $_post = (array)$this->post;
-        if (isset($_post) !== null) {
-            $_to_token_fingerprint = "eFbHagcSYD8:APA91bH2bcY4fpKwMezwGJUOWJLyYb7vnmg5NbycLJftuRGxgFH4DYAOCHcjq2xUiMwCr4LRnUbKmYV1PukYkPnFNutJTLuJ_EK-uIzVPPYmo9tq8XP1xq2savPE0gjbjsWs-0snI6or"; // Mã UIDI thiết bị
-            $_title = "Message Title Weshop 2019";
-            $_body = "Message body Weshop 2019";
-            $_click_action = "https://weshop.com.vn";
-            $body = '{
-            "notification": {
-                "title": '. $_title . ',
-                 "body": '. $_body .',
-                 "click_action" : '. $_click_action .'
-             },
-             "to" : '. $_to_token_fingerprint .'}';
+        Yii::info("Send Start FCM");
 
-            $client = new Client();
-            $response = $client->createRequest()
-                ->setMethod('POST')
-                ->setFormat('json')
-                ->addHeaders(['Authorization'=> $this->key])
-                ->setUrl($this->fcm_google)
-                ->setData($body)
-                ->setOptions([
-                    'timeout' => 90, // set timeout to 5 seconds for the case server is not responding
-                ])
-                ->send();
+            $fcm_json = new \stdClass();
+            $json_text = new \stdClass();
+            $json_text->title = $_title;
+            $json_text->body = $_body;
+            $json_text->click_action = $_click_action;
+            $fcm_json->notification = $json_text;
+            $fcm_json->to = $_to_token_fingerprint;
+            $now_body_send = $fcm_json;
 
-            return WeshopHelper::response($success = true, 'Success', $response);
-        } else {
-            return WeshopHelper::response($success = false, "Invalid FCM Record requested", []);
-        }
+            Yii::info([
+                'to_token_fingerprint' => $_to_token_fingerprint ,
+                'title ' => $_title ,
+                '_body' => $_body ,
+                'click_action' => $_click_action ,
+                //'body' => $body,
+                'now_body_send' => $now_body_send,
+                'fcm_google' => $this->fcm_google,
+                'key' => $this->key
+            ], __CLASS__);
+
+            $client = new curl\Curl();
+            $response = $client->setHeaders([
+                'Content-Type' => 'application/json',
+                'Content-Length' => strlen(json_encode($now_body_send)),
+                'Authorization'=> $this->key
+            ])
+                ->setRawPostData(json_encode($now_body_send))
+                ->post($this->fcm_google);
+
+            Yii::info("ket qua send : ".$response);
+
+        return ['success' => true, 'message' => 'success', 'data' =>$response ];
+
     }
 
 }
