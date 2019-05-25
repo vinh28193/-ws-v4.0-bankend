@@ -20,12 +20,29 @@ class PortalController extends FrontendController
 
     public $portal = BaseProduct::TYPE_EBAY;
 
+    public $portalTitle = 'Mua Hàng Amazon, eBay và Amazon';
+    public $portalImage = '';
+    public $portalDescription = 'Mua Hàng Amazon, eBay & Top Stores US Tại Việt Nam. Đảm Bảo Chất Lượng. Đặt Mua Dễ Dàng & Thanh Toán Online. Freeship Nội Địa Việt Nam.'
+;
+
+    public function ogMetaTag()
+    {
+        return ArrayHelper::merge(parent::ogMetaTag(),[
+            'title' => $this->portalTitle,
+            'image' => $this->portalImage,
+            'description' => $this->portalDescription,
+            'portal' => strtolower($this->portal),
+            'keyword' => 'weshop, ebay, amazon, ebay vn, amazon vn, mua hàng ebay, mua hàng amazon, mua hàng mỹ, ship hàng mỹ, đồng hồ, đồ công nghệ, electronics, high-tech, clothing, gadgets, accessories, jewelry, watches, beauty, cosmetic, health product, sport'
+        ]);
+    }
+
     public function defaultLayoutParams()
     {
-        return ArrayHelper::merge(parent::defaultLayoutParams(),[
+        return ArrayHelper::merge(parent::defaultLayoutParams(), [
             'portal' => $this->portal,
         ]);
     }
+
     public function actionViewedProducts()
     {
         //Get All Favorite
@@ -33,9 +50,11 @@ class PortalController extends FrontendController
 
         $fingerprint = null;
         $post = $this->request->post();
-        if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
+        if (isset($post['fingerprint'])) {
+            $fingerprint = $post['fingerprint'];
+        }
         if (!Yii::$app->getRequest()->validateCsrfToken()) {
-            return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
+            return ['success' => false, 'message' => 'Form Security Alert', 'data' => ['content' => '']];
         }
 
         $UUID = Yii::$app->user->getId();
@@ -43,13 +62,13 @@ class PortalController extends FrontendController
         $_All_favorite = $_favorite->getfavorite($uuid);
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if(count($_All_favorite)){
+        if (count($_All_favorite)) {
             $view = $this->renderPartial('viewed_product', [
                 'items' => $_All_favorite,
             ]);
-            return ['success' => true,'message' => 'get data success', 'data' => ['content' => $view] ];
-        }else{
-            return ['success' => false,'message' => 'no data', 'data' => ['content' => ''] ];
+            return ['success' => true, 'message' => 'get data success', 'data' => ['content' => $view]];
+        } else {
+            return ['success' => false, 'message' => 'no data', 'data' => ['content' => '']];
         }
     }
 
@@ -60,15 +79,19 @@ class PortalController extends FrontendController
 
         $fingerprint = null;
         $post = $this->request->post();
-        if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
+        if (isset($post['fingerprint'])) {
+            $fingerprint = $post['fingerprint'];
+        }
         //$item = ArrayHelper::getValue($post,'item');
-        $id = ArrayHelper::getValue($post,'sku');   Yii::info(" id : ".$id);
-        $portal =  ArrayHelper::getValue($post,'portal'); Yii::info(" portal: ".$portal);
+        $id = ArrayHelper::getValue($post, 'sku');
+        Yii::info(" id : " . $id);
+        $portal = ArrayHelper::getValue($post, 'portal');
+        Yii::info(" portal: " . $portal);
 
         Yii::info(" Favorite : app  create favorite Success 02 ");
         if (!Yii::$app->getRequest()->validateCsrfToken()) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
+            return ['success' => false, 'message' => 'Form Security Alert', 'data' => ['content' => '']];
         }
 
         Yii::info(" Favorite : app  create favorite Success 03 ");
@@ -76,37 +99,37 @@ class PortalController extends FrontendController
         $uuid = isset($UUID) ? $UUID : $fingerprint;
 
         $form = new ProductDetailFrom();
-        $form->load($this->request->getQueryParams(),'');
+        $form->load($this->request->getQueryParams(), '');
         $form->id = $id;
-        $form->type = $portal ; //'ebay' , 'amazon'
+        $form->type = $portal; //'ebay' , 'amazon'
         $item = $form->detail();
 
 
         Yii::info(" Favorite : app  create favorite Success 04");
 
-        if ($item == false ) {
+        if ($item == false) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return ['success' => false,'message' => 'Error Get Ebay Gate', 'data' => ['content' => ''] ];
+            return ['success' => false, 'message' => 'Error Get Ebay Gate', 'data' => ['content' => '']];
         }
 
 
         Yii::info(" Favorite : app  create favorite Success 05");
 
         /**
-        $category = $item->getCustomCategory();
-        if($portal == 'ebay'){
-            $relate_product_rs = EbayProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
-        }
-        if($portal == 'amazon'){
-           // $relate_product_rs = AmazonProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
-        }
-
-        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];
-        $item->relate_products = RelateProduct::setRelateProducts($relate_product);
-        **/
+         * $category = $item->getCustomCategory();
+         * if($portal == 'ebay'){
+         * $relate_product_rs = EbayProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
+         * }
+         * if($portal == 'amazon'){
+         * // $relate_product_rs = AmazonProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
+         * }
+         *
+         * $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];
+         * $item->relate_products = RelateProduct::setRelateProducts($relate_product);
+         **/
 
         Yii::info(" Favorite : app  create favorite Success");
-        if($uuid){
+        if ($uuid) {
             $_favorite = new FavoriteObject();
             $_favorite->create($item, $id, $uuid);
         }
@@ -114,22 +137,22 @@ class PortalController extends FrontendController
         return 'Ok';
 
         /**
-        // Queue Favorite Save
-        /*
-        $UUID = Yii::$app->user->getId();
-        $uuid = isset($UUID) ? $UUID : $this->uuid;
-        $id = Yii::$app->queue->delay(30)->push(new Favorite([
-                'obj_type' => $item,
-                'obj_id' => $id,
-                'UUID' => $UUID
-            ]));
-        // Check whether the job is waiting for execution.
-        Yii::info(" Check whether the job is waiting for execution : ".Yii::$app->queue->isWaiting($id));
-        // Check whether a worker got the job from the queue and executes it.
-        Yii::info(" Check whether a worker got the job from the queue and executes it : ". Yii::$app->queue->isReserved($id));
-        // Check whether a worker has executed the job.
-        Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
-        **/
+         * // Queue Favorite Save
+         * /*
+         * $UUID = Yii::$app->user->getId();
+         * $uuid = isset($UUID) ? $UUID : $this->uuid;
+         * $id = Yii::$app->queue->delay(30)->push(new Favorite([
+         * 'obj_type' => $item,
+         * 'obj_id' => $id,
+         * 'UUID' => $UUID
+         * ]));
+         * // Check whether the job is waiting for execution.
+         * Yii::info(" Check whether the job is waiting for execution : ".Yii::$app->queue->isWaiting($id));
+         * // Check whether a worker got the job from the queue and executes it.
+         * Yii::info(" Check whether a worker got the job from the queue and executes it : ". Yii::$app->queue->isReserved($id));
+         * // Check whether a worker has executed the job.
+         * Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
+         **/
     }
 
 

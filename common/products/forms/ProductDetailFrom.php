@@ -105,6 +105,10 @@ class ProductDetailFrom extends BaseForm
         }
         $product->init();
 
+//        if ($product->checkOutOfStock() < 1) {
+//            $this->addError($this->isSku() ? 'sku' : 'id', 'OutOfStock');
+//            return false;
+//        }
 //        if ($this->with_detail === false) {
 //            $product->description = null;
 //        }

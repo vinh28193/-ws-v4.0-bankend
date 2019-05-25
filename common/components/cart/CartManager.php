@@ -233,7 +233,7 @@ class CartManager extends Component
                 // Todo Validate data before call
                 list($ok, $value) = $item->process();
                 if (!$ok) {
-                    return [false, 'không thể lấy thông tin sản phẩm'];
+                    return [false, $value];
                 }
                 $value['key'] = $key;
                 $key = $this->normalPrimaryKey($key, $safeOnly);
