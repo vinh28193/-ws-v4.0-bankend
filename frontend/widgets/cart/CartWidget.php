@@ -71,20 +71,22 @@ class CartWidget extends Widget
     {
         $order = ArrayHelper::getValue($item, 'order');
         $variations = $order['products'][0]['variations'];
-        $availableQuantity = 50;
-        $soldQuantity = 0;
+        $availableQuantity = $order['products'][0]['available_quantity'];
+        $soldQuantity = $order['products'][0]['quantity_sold'];
         if ($variations !== null) {
-            if (($variationSoldQuantity = ArrayHelper::getValue($variations, 'quantity_sold', $soldQuantity)) !== null) {
+            if (($variationSoldQuantity = ArrayHelper::getValue($variations, 'quantity_sold', $soldQuantity)) !== null && $variationSoldQuantity !== $soldQuantity) {
                 $soldQuantity = $variationSoldQuantity;
             }
-            if (($variationAvailableQuantity = ArrayHelper::getValue($variations, 'available_quantity', $availableQuantity)) !== null) {
+            if (($variationAvailableQuantity = ArrayHelper::getValue($variations, 'available_quantity', $availableQuantity)) !== null && $variationAvailableQuantity !== $availableQuantity) {
                 $availableQuantity = $variationAvailableQuantity;
             }
         }
+        $availableQuantity = !($availableQuantity === null || (int)$availableQuantity < 0) ? $availableQuantity : 50;
+        $soldQuantity = !($soldQuantity === null || (int)$soldQuantity < 0) ? $soldQuantity : 0;
         $localAmount = $order['total_amount_local'];
         $key = ArrayHelper::getValue($item, 'key', '');
         $selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key);
-        if($selected){
+        if ($selected) {
             $this->_totalAmount += $localAmount;
         }
         return [

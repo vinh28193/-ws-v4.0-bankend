@@ -46,7 +46,7 @@ if($item->available_quantity){
     <div class="qty form-inline" id="outOfStock" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>;">
         <label style="color: red">Sản phẩm hết hàng</label>
     </div>
-    <div class="action-box">
+    <div class="action-box" style="display: <?=$instockQuanty > 0 ? 'block' : 'none';?>">
         <button type="button" id="buyNowBtn" class="btn btn-block btn-buy" style="display: <?= $sellerCurrent ? 'block' : 'none' ?>">Mua ngay</button>
         <button type="button" id="quoteBtn" class="btn btn-block btn-buy" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>">Yêu cầu báo giá</button>
         <button type="button" id="installmentBtn" class="btn btn-block btn-installment">Thanh toán trả góp</button>
