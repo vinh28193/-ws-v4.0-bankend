@@ -14,6 +14,8 @@ use yii\caching\DbDependency;
 //use yii\web\ServerErrorHttpException;
 //use common\modelsMongo\RestApiCall;
 
+use yii\helpers\ArrayHelper;
+
 
 class NotificationsController extends BaseApiController
 {
@@ -89,24 +91,30 @@ class NotificationsController extends BaseApiController
         return $this->response(true, 'Success', $response);
     }
 
+    /**
+     * @return array
+     * @throws \Throwable
+     * @throws \yii\base\InvalidConfigException
+     * Tables push_notifications Lưu toàn bộ thông tin User + Thiết Bị( token) Nhận Notification --> nhận theo dõi đơn nào
+     *
+     */
     public function actionSubscribe()
     {
-        $_post = (array)$this->post;
+        $post = (array)$this->post;
         $_user_Identity = Yii::$app->user->getIdentity();
         $user_id = $_user_Identity->getId();
         $_user_email = $_user_Identity['email'];
-        $_user_AuthKey = $_user_Identity->getAuthKey();
         $_user_name = $_user_Identity['username'];
-        $token = isset($_post['token']) ? $_post['token'] : '';
-        $fingerprint = isset($_post['fingerprint'])? $_post['fingerprint'] : '';
-        $details = isset($_post['details']) ? $_post['details'] : '';
-        $ordercode = isset($_post['ordercode']) ? $_post['ordercode'] : '';
-        $nv = isset($_post['nv']) ? $_post['nv'] : '';
+        $token = ArrayHelper::getValue($post,'token');
+        $fingerprint = ArrayHelper::getValue($post,'fingerprint');
+        $details = ArrayHelper::getValue($post,'details');
+        $ordercode = ArrayHelper::getValue($post,'ordercode');
+        $nv = ArrayHelper::getValue($post,'nv');
+
         $date_now = Yii::$app->formatter->asDateTime('now');
 
-
-        if($token== ''){
-            Yii::$app->api->sendFailedResponse("Invalid Record requested");
+        if($token== '' || empty($token)){
+            return $this->response(false, 'Invalid token Record requested');
         }
 
         $order_item = [
@@ -125,34 +133,54 @@ class NotificationsController extends BaseApiController
             'details' => $details
         ]];
 
+        Yii::info("Data Notification Push");
+        Yii::info([
+            'user_id' => $user_id,
+            'user_email' => $_user_email,
+            'user_name' => $_user_name,
+            'order_list' => array($ordercode => $order_item),
+            'token' => $token,  // Infor Field Notification Token ma dinh danh thiet bị để nhận Notification
+            'fingerprint' => $fingerprint,
+            'nv' => $nv,
+            'details' => $details
+        ], __CLASS__);
+
         $query = PushNotifications::find()
             ->where(['fingerprint' => $fingerprint])
             ->one();
         $order_list = [];
 
         if (!empty($query)) {
-
-            $order_list = $query->order_list;
-            if (!array_key_exists($ordercode, $order_list)) {
-
+            Yii::info("Update Next Token + User exits --> order ");
+            $order_list = $query->order_list;   // Check Order Bin Code Exits
+            if (!array_key_exists($ordercode, $order_list) and !empty($order_list)) {
+                Yii::info("Check Order Bin Code No Exits");
                 $order_list[$ordercode] = array(
                     'code' => $ordercode,
                     'subscribed_on' => $date_now
                 );
                 $query->order_list = $order_list;
-                if ($query->save()) ;
-                {
-                    return $this->response(true, 'Success', $query);
+                if ($query->save()){
+                    return $this->response(true, 'Success save add date', $query);
+                }else {
+                    return $this->response(false, 'Error Save add data', []);
                 }
-                return $this->response(false, 'Error delete ordercode');
-
+            }else {
+                Yii::info([
+                    'order_list' => $order_list
+                ], __CLASS__);
+                Yii::info("Check OrderBinCode + Token Exits");
+                return $this->response(true, 'Success', $order_list);
             }
         } else {
+            Yii::info("Devices + User + BinCode New --> Save");
             $model = new PushNotifications();
             if ($model->load($_rest_data) and $model->save()) {
                 return $this->response(true, 'Success', $_rest_data);
+            } else {
+                Yii::info("Devices + User + BinCode New --> Save : Fail Save New");
+                return $this->response(false, 'Fail Save New');
             }
-
         }
 
     }

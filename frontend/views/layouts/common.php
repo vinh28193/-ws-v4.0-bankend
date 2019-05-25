@@ -18,16 +18,7 @@ FrontendAsset::register($this);
     <meta name="author" content="Weshop Global - Homepage"/>
     <meta name='COPYRIGHT' content='&copy; Weshop Global'/>
     <meta name="robots" content="noodp,index,follow"/>
-    <meta name="keywords" content=""/>
-    <meta name="description" content=""/>
-    <meta property="og:title" content="website title"/>
-    <meta property="og:locale" content="vi_VN"/>
-    <meta property="og:url" content="website link"/>
-    <meta property="og:image" content="image description"/>
-    <meta property="og:description" content="website description"/>
-    <meta property="og:site_name" content="website name"/>
-    <meta property="fb:admins" content="Facebook Admin ID page"/>
-    <meta name="google-site-verification" content="OPjEOpXY16mDyr7UmkxKP-GjNEhe0xKZPOAY2mzjD58" />
+    <meta name="cystack-verification" content="f63c2e531bc93b353c0dbd93f8ce0505" />
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
@@ -349,7 +340,7 @@ FrontendAsset::register($this);
                 <li class="active">
                     <a href="/my-cart.html">
                         <i class="nav-ico cart"></i>
-                        <span class="badge"><?php
+                        <span class="badge" id="cartBadge"><?php
                             $cartManager = new \common\components\cart\CartManager();
                             echo Yii::$app->user->isGuest ? 0 : $cartManager->countItems();
                             ?></span>
