@@ -110,3 +110,27 @@
         <img src="/img/gif/loading.gif">
     </div>
 </div>
+<!-- Modal login waller -->
+<div class="modal" id="loginWallet" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Đăng nhập ví</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <i class="icon password"></i>
+                    <input type="password" name="passwordWallet" class="form-control" placeholder="Mật khẩu">
+                    <label style="color: red" id="ErrorPasswordWallet"></label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="ws.loginWallet()">Đăng nhập</button>
+            </div>
+        </div>
+    </div>
+</div>

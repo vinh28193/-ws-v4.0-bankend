@@ -18,7 +18,8 @@ class CartController extends BillingController
     {
         if (parent::beforeAction($action)) {
             if (Yii::$app->user->getIsGuest()) {
-                Yii::$app->user->loginRequired();
+
+//                Yii::$app->user->loginRequired();
             }
             return true;
         }
@@ -47,6 +48,7 @@ class CartController extends BillingController
         if (count($items) === 0) {
             return $this->render('empty');
         }
+        CartSelection::setSelectedItems(CartSelection::TYPE_SHOPPING, array_keys($items));
         return $this->render('index', [
             'items' => $items
         ]);
@@ -63,7 +65,7 @@ class CartController extends BillingController
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $params = Yii::$app->request->bodyParams;
         $type = ArrayHelper::getValue($params, 'type', CartSelection::TYPE_SHOPPING);
-        if ($type !== CartSelection::TYPE_BUY_NOW && Yii::$app->user->getIsGuest() || WalletService::isGuest()) {
+        if ($type !== CartSelection::TYPE_BUY_NOW && Yii::$app->user->getIsGuest()) {
             return ['success' => false, 'message' => 'Please login to used this action'];
         }
         if (($item = ArrayHelper::getValue($params, 'item')) === null) {
@@ -78,8 +80,9 @@ class CartController extends BillingController
             CartSelection::setSelectedItems($type, $key);
             $checkOutAction = Url::toRoute(['/checkout/shipping', 'type' => $type]);
             return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key, 'data' => $checkOutAction];
+        }else{
+            return ['success' => true, 'message' => 'Can not Buy now this item', 'data' => $key];
         }
-        return ['success' => true, 'message' => 'Can not Buy now this item', 'data' => $key];
     }
 
     public function actionUpdate()
@@ -105,13 +108,16 @@ class CartController extends BillingController
         if (!isset($params['id']) || ($key = $params['id']) === null || $key === '') {
             return ['success' => false, 'message' => 'Invalid params'];
         }
-        $selected = (boolean)ArrayHelper::getValue($params, 'selected');
-        if ($selected) {
+        $selected = ArrayHelper::getValue($params, 'selected');
+        $message = "item `$key`";
+        if ($selected === 'true') {
             CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, $key);
+            $message .= ' added';
         } else {
             CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, $key);
+            $message .= ' removed';
         }
-        return ['success' => $selected, 'message' => "update selected item `$key`", 'data' => CartSelection::getSelectedItems(CartSelection::TYPE_SHOPPING)];
+        return ['success' => $selected, 'message' => $message, 'data' => CartSelection::getSelectedItems(CartSelection::TYPE_SHOPPING)];
     }
 
     public function actionRemove()

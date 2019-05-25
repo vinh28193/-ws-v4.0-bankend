@@ -57,7 +57,7 @@ class WSWalletWidget extends MethodWidget
     {
         if ($this->_info === null && $this->getIsGuest() === false) {
             $client = new WalletService();
-            if (($responseApi = $client->walletInformation())['success']) {
+            if (($responseApi = $client->walletInformation()) && ArrayHelper::getValue( $responseApi,'success')) {
                 $this->_info = $responseApi['data'];
             }
         }

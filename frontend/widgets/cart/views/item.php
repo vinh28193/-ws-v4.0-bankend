@@ -80,7 +80,7 @@ $name = Html::encode($name);
                 </div>
             </div>
             <div class="price price-option" data-original="<?= $amount; ?>"
-                 data-local="<?= $localAmount; ?>"><?= number_format($localDisplayAmount); ?><i class="currency">đ</i>
+                 data-local="<?= $localAmount; ?>"><?=$localDisplayAmount; ?>
             </div>
             <a href="#" class="del delete-item" data-key="<?= $key; ?>"><i class="far fa-trash-alt"></i> Xóa</a>
         </div>
