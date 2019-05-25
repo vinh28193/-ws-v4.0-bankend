@@ -77,9 +77,9 @@ class CartController extends BillingController
         };
 
         if ($type === CartSelection::TYPE_BUY_NOW || $type === CartSelection::TYPE_INSTALLMENT) {
-            CartSelection::setSelectedItems($type, $key);
+            CartSelection::setSelectedItems($type, $key[0]);
             $checkOutAction = Url::toRoute(['/checkout/shipping', 'type' => $type]);
-            return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key, 'data' => $checkOutAction];
+            return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key[0], 'data' => $checkOutAction];
         } else {
             return ['success' => true, 'message' => $key[1], 'data' => [
                 'key' => $key[0],

@@ -372,7 +372,7 @@ class PurchaseController extends BaseApiController
             ]);
 
             // ToDo : @Phuchc Notication "Mua Hàng Thành Công" 17/05/2019 Call API
-//            Yii::$app->wsFcnApn->Create();
+            Yii::$app->wsFcnApn->Create();
 
             $tran->commit();
             return $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id);

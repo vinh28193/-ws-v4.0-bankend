@@ -15,6 +15,7 @@ use yii\caching\DbDependency;
 //use common\modelsMongo\RestApiCall;
 
 use yii\helpers\ArrayHelper;
+use common\models\User;
 
 
 class NotificationsController extends BaseApiController
@@ -132,6 +133,28 @@ class NotificationsController extends BaseApiController
             'nv' => $nv,
             'details' => $details
         ]];
+
+        if($token){
+            Yii::info("Update Token FCM ");
+            $User = new User();
+            if( ($User = $User->findByTokenFcm($user_id,$token)) != null && !$User->token_fcm){
+                Yii::info("Insert Token FCM : start ! ". $token);
+                $User->token_fcm = $token;
+                $User->id = $user_id;
+                $User->last_token_fcm_time = Yii::$app->formatter->asDateTime('now');
+                $User->last_token_fcm_by = 99999;
+                if($User->update())
+                {
+                    Yii::info("Insert token_fcm : Ok ! ");
+                }else {
+                    Yii::info("Insert token_fcm : Error ! ");
+                    Yii::info([
+                        'Error' => $User->errors,
+                    ], __CLASS__);
+                }
+            }
+        }
+
 
         Yii::info("Data Notification Push");
         Yii::info([

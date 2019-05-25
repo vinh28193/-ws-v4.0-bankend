@@ -53,6 +53,12 @@ class ServiceUsSendingController extends BaseApiController
         $model->product_id = $product->id;
         $model->order_id = $product->order_id;
         $model->save();
+        $product->updateStockinUs($model->stock_in_us);
+        $product->updateStockoutUs($model->stock_out_us);
+        $product->save(false);
+        $product->order->updateStockinUs($model->stock_in_us);
+        $product->order->updateStockoutUs($model->stock_out_us);
+        $product->order->save(false);
         if($count > 1){
             DraftDataTracking::updateAll(
                 ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
@@ -152,6 +158,16 @@ class ServiceUsSendingController extends BaseApiController
         $ext->status = DraftExtensionTrackingMap::MAPPED;
         $ext->draft_data_tracking_id = $data->id;
         $ext->save(0);
+        if($ext->product){
+            $ext->product->updateStockinUs($data->stock_in_us);
+            $ext->product->updateStockoutUs($data->stock_out_us);
+            $ext->product->save(false);
+        }
+        if($ext->order){
+            $ext->order->updateStockinUs($data->stock_in_us);
+            $ext->order->updateStockoutUs($data->stock_out_us);
+            $ext->order->save(false);
+        }
         $count = DraftDataTracking::find()->where(['tracking_code' => $data->tracking_code])->count();
         if($count > 1){
             DraftDataTracking::updateAll(
@@ -173,18 +189,21 @@ class ServiceUsSendingController extends BaseApiController
         foreach ($this->post['info'] as $info){
             $order_id = ArrayHelper::getValue($info,'order_id');
             $product_id = ArrayHelper::getValue($info,'product_id');
+            $quantity = ArrayHelper::getValue($info,'quantity');
             $purchase_number_invoice = ArrayHelper::getValue($info,'purchase_number_invoice');
-            if($product_id && $purchase_number_invoice){
+            if($product_id && $purchase_number_invoice && $quantity){
                 $product = Product::findOne($product_id);
                 $order = $product->order;
                 if($product && (!$order_id || $order_id == $product->order_id) && $order){
                     $order->updateSellerShipped();
-                    $order->current_status = Order::STATUS_SELLER_SHIPPED;
-                    $order->save(0);
+                    $order->save(false);
+                    $product->updateSellerShipped();
+                    $product->save(false);
                     $model = new DraftExtensionTrackingMap();
                     $model->tracking_code = $this->post['tracking_code'];
                     $model->order_id = $product->order_id;
                     $model->product_id = $product->id;
+                    $model->quantity = $quantity;
                     $model->purchase_invoice_number = $purchase_number_invoice;
                     $model->status = DraftExtensionTrackingMap::STATUST_NEW;
                     $model->created_by = Yii::$app->user->getId();
