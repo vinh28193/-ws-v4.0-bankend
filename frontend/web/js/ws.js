@@ -72,6 +72,37 @@ var ws = ws || (function ($) {
 
             $.ajax($options);
         },
+        countdownTime: function () {
+            $('*[data-toggle=countdown-time]').each(function () {
+                var days = 24 * 60 * 60, hours = 60 * 60, minutes = 60;
+                var now = (new Date().getTime() / 1000);
+                var timestamp = $(this).data('timestamp') || now;
+                var prefixText = $(this).data('prefix') || '';
+                var dayText = $(this).data('day') || 'd';
+                var hourText = $(this).data('hour') || 'h';
+                var minuteText = $(this).data('minute') || 'm';
+                var secondText = $(this).data('second') || 's';
+                var finishText = $(this).data('finish') || 'Out of time';
+                timestamp = parseInt(timestamp);
+                var left = Math.floor(timestamp - now);
+                if (left < 0) {
+                    left = 0;
+                }
+                if (left === 0) {
+                    $(this).html(finishText);
+                }else {
+                    var d = Math.floor(left / days);
+                    left -= d * days;
+                    var h = Math.floor(left / hours);
+                    left -= h * hours;
+                    var m = Math.floor(left / minutes);
+                    left -= m * minutes;
+                    var s = left;
+
+                    $(this).html(prefixText + ' ' + d + ' ' + dayText + ' ' + h + ' ' + hourText + ' ' + m + ' ' + minuteText + ' ' + s + ' ' + secondText);
+                }
+            });
+        },
         goback: function () {
             history.back()
         },
@@ -144,13 +175,13 @@ var ws = ws || (function ($) {
             $(document).on(event, selector, callback);
             eventHandlers[id][type] = {event: event, selector: selector};
         },
-        showLoginWallet: function() {
-          $('#loginWallet').modal('show');
+        showLoginWallet: function () {
+            $('#loginWallet').modal('show');
         },
-        loginWallet : function () {
+        loginWallet: function () {
             var password = $('input[name=passwordWallet]').val();
             $('#ErrorPasswordWallet').html('');
-            if(!password){
+            if (!password) {
                 $('#ErrorPasswordWallet').html('Vui lòng nhập mật khẩu');
                 return;
             }
@@ -162,9 +193,9 @@ var ws = ws || (function ($) {
                     password: password
                 },
                 success: function (res) {
-                    if(res.success){
+                    if (res.success) {
                         window.location.reload();
-                    }else {
+                    } else {
                         ws.loading(false);
                         $('#ErrorPasswordWallet').html(res.message);
                     }
