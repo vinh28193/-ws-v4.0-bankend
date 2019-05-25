@@ -223,23 +223,7 @@ class CartManager extends Component
 
         try {
             if ($this->hasItem($key, $safeOnly)) {
-                if (($value = $this->getItem($key, $safeOnly)) === false) {
-                    return false;
-                }
-                $item = new SimpleItem();
-                foreach ($params as $name => $val) {
-                    $item->$name = $val;
-                }
-                // Todo Validate data before call
-                // pass new param for CartItem
-                list($ok, $value) = $item->process();
-                if (!$ok) {
-                    return false;
-                }
-                $value['key'] = $key;
-                $key = $this->normalPrimaryKey($key, $safeOnly);
-                $value = $this->getSerializer()->serializer($value);
-                return $this->getStorage()->setItem($key, $value);
+                return false;
             } else {
                 /** Todo : Thiếu link Gốc sản phẩm **/
                 $item = new SimpleItem();
@@ -261,6 +245,27 @@ class CartManager extends Component
             Yii::info($exception);
             return false;
         }
+    }
+
+    public function setItem($key, $params, $safeOnly = false)
+    {
+        if (!$this->hasItem($key, $safeOnly)) {
+            return false;
+        }
+        $item = new SimpleItem();
+        foreach ($params as $name => $val) {
+            $item->$name = $val;
+        }
+        // Todo Validate data before call
+        // pass new param for CartItem
+        list($ok, $value) = $item->process();
+        if (!$ok) {
+            return false;
+        }
+        $value['key'] = $key;
+        $key = $this->normalPrimaryKey($key, $safeOnly);
+        $value = $this->getSerializer()->serializer($value);
+        return $this->getStorage()->setItem($key, $value);
     }
 
     private function createKeyFormParams($params)
