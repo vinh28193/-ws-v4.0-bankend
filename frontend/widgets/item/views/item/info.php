@@ -66,7 +66,7 @@ foreach ($item->variation_options as $index => $variationOption) {
                                 <div class="color-pick" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
                                     <i class="fas fa-chevron-left slider-prev2"></i>
                                     <i class="fas fa-chevron-right slider-next2"></i>
-                                    <ul class="style-list" >
+                                    <ul class="style-list" data-slick='{"slidesToShow": <?= count($variationOption->values) < 6 ? count($variationOption->values) : 6 ?>}' >
                                         <?php foreach ($variationOption->values as $k => $value) {
                                             foreach ($variationOption->images_mapping as $image){
                                                 if(strtolower($image->value) == strtolower($value)){?>
@@ -106,20 +106,26 @@ foreach ($item->variation_options as $index => $variationOption) {
         });
     </script>
     <?php } //esle 0 Dong ?>
+<?php
+try{
+if($item->description){
+    if(is_array($item->description)) { ?>
+        <ul class="info-list">
+            <?php foreach ($item->description as $ds) {?>
+            <li><?= $ds ?></li>
+            <?php } ?>
+        </ul>
+        <div class="see-more text-blue">
+<!--            <a class="more" href="#description_extra">Xem thêm <i class="fas fa-caret-down"></i></a>-->
+            <span class="more">Xem thêm <i class="fas fa-caret-down"></i></span>
+            <span class="less">Ẩn bớt <i class="fas fa-caret-up"></i></span>
+        </div>
+        <?php
+    }
+    }
+}catch (Exception $exception){
 
-    <ul class="info-list">
-        <li>Imported</li>
-        <li>Due to a recent redesign by Bulova, recently manufactured Bulova watches,including all watches sold and shipped by Amazon, will not feature the Bulova tuning fork logo on the watch face.</li>
-        <li>Brown patterned and rose gold dial</li>
-        <li>Leather strap,</li>
-        <li>Slightly domed mineral crystal</li>
-        <li>Water resistant to 99 feet (30 M): withstands rain and splashes of water, but not showering or submersion</li>
-        <li>Case Diameter: 42 mm ; Case Thickness: 11.2 mm ; 3-year Limited Warranty</li>
-    </ul>
-    <div class="see-more text-blue">
-        <span class="more">Xem thêm <i class="fas fa-caret-down"></i></span>
-        <span class="less">Ẩn bớt <i class="fas fa-caret-up"></i></span>
-    </div>
+} ?>
     <a href="#" class="banner">
         <img src="/img/detail-banner.jpg" alt="">
     </a>
