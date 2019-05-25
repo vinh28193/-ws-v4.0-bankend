@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 $this->title = 'Ví WeShop Của Tôi';
 $this->params = ['wallet'];
 echo HeaderContentWidget::widget(['title' => 'Ví của bạn','stepUrl' => [ 'Ví của tôi' => 'my-weshop/wallet.html']]);
-if(WalletService::isGuest()){
+if(!$wallet || WalletService::isGuest()){
     echo "Vui lòng <a href='javascript:void(0);' onclick='ws.showLoginWallet()'>đăng nhập</a> lại để xem thông tin ví.";
 }else{?>
     <div class="be-box">
