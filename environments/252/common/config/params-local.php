@@ -40,7 +40,7 @@ return [
     'url_api' => 'http://weshop-v4.back-end.local.vn',
     'Url_User_Back_end' => 'http://weshop.v4.api.userbackend',
     'Url_FrontEnd' => 'http://weshop.v4.beta.vn',
-    'Url_wallet_api' => 'http://wallet.weshop.v4.beta',
+    'Url_wallet_api' => 'http://weshop-4.0.wallet.vn',
     'redis_queue' => [
         'host' => 'localhost',
         'port' => 6379,
