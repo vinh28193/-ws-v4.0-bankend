@@ -23,14 +23,15 @@ class ShippingController extends CheckoutController
     {
         return parent::beforeAction($action);
     }
+
     public function gaCheckout()
     {
         Yii::info("GA CHECKOUT");
         $request = Yii::$app->ga->request();
 
-       // Build the order data programmatically, each product of the order included in the payload
-       // First, general and required hit data
-        $request->setClientId(Yii::$app->user->identity->getId().'WS'.Yii::$app->user->identity->email);
+        // Build the order data programmatically, each product of the order included in the payload
+        // First, general and required hit data
+        $request->setClientId(Yii::$app->user->identity->getId() . 'WS' . Yii::$app->user->identity->email);
         $request->setUserId(Yii::$app->user->identity->getId());
 
         // Then, include the transaction data
@@ -83,8 +84,8 @@ class ShippingController extends CheckoutController
 
     /**
      * GA Param Checkout
-    **/
-    public $_uuid ;
+     **/
+    public $_uuid;
     public $setDocumentPath;
 
     public function actionU()
@@ -93,33 +94,33 @@ class ShippingController extends CheckoutController
         if (isset($post['fingerprint']) and isset($post['path'])) {
             $this->_uuid = $post['fingerprint'];
             $this->setDocumentPath = $post['path'];
-            Yii::info("fingerprint : ".$this->_uuid);
-            Yii::info("fingerprint : ".$this->setDocumentPath);
+            Yii::info("fingerprint : " . $this->_uuid);
+            Yii::info("fingerprint : " . $this->setDocumentPath);
         }
-        if (!Yii::$app->getRequest()->validateCsrfToken() || $this->_uuid === null ) {
-            return ['success' => false,'message' => 'Form Security Alert', 'data' => ['content' => ''] ];
+        if (!Yii::$app->getRequest()->validateCsrfToken() || $this->_uuid === null) {
+            return ['success' => false, 'message' => 'Form Security Alert', 'data' => ['content' => '']];
         }
-        Yii::info("_uuid : ".$this->_uuid);
+        Yii::info("_uuid : " . $this->_uuid);
 
         if (!Yii::$app->user->isGuest) {
-            $this->_uuid = Yii::$app->user->identity->getId().'WS'.Yii::$app->user->identity->email;
-        }else {
+            $this->_uuid = Yii::$app->user->identity->getId() . 'WS' . Yii::$app->user->identity->email;
+        } else {
             $this->_uuid = isset($this->_uuid) ? $this->_uuid : 99999;
         }
 
-        if($this->_uuid){
-            if((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true) ){
+        if ($this->_uuid) {
+            if ((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true)) {
                 // ENV DEV /  TEST
                 Yii::info("ga checkour Order Tracking with Enhanced E-commerce ");
                 $this->gaCheckout();
-            }else if((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false) ) {
+            } else if ((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false)) {
                 // ENV PROD
             }
-        }else {
-            return ['success' => false,'message' => 'fingerprint null', 'data' => ['content' => ''] ];
+        } else {
+            return ['success' => false, 'message' => 'fingerprint null', 'data' => ['content' => '']];
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return 'Ok ! '.$this->_uuid. ' pages '. $this->setDocumentPath;
+        return 'Ok ! ' . $this->_uuid . ' pages ' . $this->setDocumentPath;
     }
 
     public function actions()
@@ -159,25 +160,29 @@ class ShippingController extends CheckoutController
             'provinces' => $provinces
         ]);
     }
-    public function actionLogin(){
+
+    public function actionLogin()
+    {
         Yii::$app->response->format = Yii\web\Response::FORMAT_JSON;
         if (!Yii::$app->user->isGuest) {
             return ['success' => true];
         }
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login() ) {
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
             $key = CartSelection::getSelectedItems(CartSelection::TYPE_BUY_NOW);
-            if($key){
+            if ($key) {
                 $this->module->cartManager->setMeOwnerItem($key[0]);
             }
             $wallet = new WalletService();
             $wallet->login($model->password);
             return ['success' => true, 'message' => 'đăng nhập thành công'];
         } else {
-            return ['success' => false, 'message' => 'đăng nhập thất bại' , 'data' => $model->errors];
+            return ['success' => false, 'message' => 'đăng nhập thất bại', 'data' => $model->errors];
         }
     }
-    public function actionSignup(){
+
+    public function actionSignup()
+    {
         Yii::$app->response->format = Yii\web\Response::FORMAT_JSON;
         Yii::info('register new');
         $model = new SignupForm();
@@ -187,9 +192,9 @@ class ShippingController extends CheckoutController
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
                 $model->sendEmail();
                 Yii::info('register new 003');
-                if(Yii::$app->getUser()->login($user)){
+                if (Yii::$app->getUser()->login($user)) {
                     $key = CartSelection::getSelectedItems(CartSelection::TYPE_BUY_NOW);
-                    if($key){
+                    if ($key) {
                         $this->module->cartManager->setMeOwnerItem($key[0]);
                     }
                     $wallet = new WalletService();
@@ -198,7 +203,7 @@ class ShippingController extends CheckoutController
                 }
             }
         }
-        return ['success' => false, 'message' => 'đăng ký thất bại' , 'data' => $model->errors];
+        return ['success' => false, 'message' => 'đăng ký thất bại', 'data' => $model->errors];
     }
 
 }

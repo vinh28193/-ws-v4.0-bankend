@@ -493,9 +493,7 @@
             return alert('Vui lòng chọn thộc tính');
         }
 
-        var data = $item.data('wsItem');
-        if (currentVariations.length)
-            var params = data.params;
+        var params = $data.params;
         var item = {
             quantity: quantity,
             source: params.type,
@@ -532,7 +530,7 @@
                 }
             }
         };
-        ws.ajax(data.options.paymentUrl, $ajaxOptions);
+        ws.ajax($data.options.paymentUrl, $ajaxOptions);
     }
 })(jQuery);
 var changeBigImage = function (e) {

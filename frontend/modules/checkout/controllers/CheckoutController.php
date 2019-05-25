@@ -29,4 +29,5 @@ class CheckoutController extends FrontendController
         return parent::ogMetaTag();
     }
 
+
 }

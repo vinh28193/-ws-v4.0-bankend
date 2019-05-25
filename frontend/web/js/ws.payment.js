@@ -205,7 +205,7 @@ ws.payment = (function ($) {
             if (providerId === 42 && providerId === 46 && methodId === 25) {
                 bankCode = 'VCB';
                 pub.methodChange(true);
-            } else if (providerId === 43 && methodId === 44) {
+            } else if (providerId === 42 || (providerId === 43 && methodId === 44)) {
                 pub.getWalletInfo(this);
             }
             pub.payment.payment_provider = providerId;
@@ -253,7 +253,11 @@ ws.payment = (function ($) {
         },
         getWalletInfo: function ($element) {
             $element = $element || undefined;
-            ws.wallet.getInfo($element);
+            ws.ajax('/payment/wallet/check-guest', function ($res) {
+                if (!$res) {
+                    ws.showLoginWallet();
+                }
+            }, true);
         },
         calculateInstallment: function () {
             ws.ajax('/payment/' + pub.payment.payment_provider + '/calc', {
