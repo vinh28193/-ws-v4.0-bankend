@@ -268,7 +268,7 @@ class CartManager extends Component
         return $this->getStorage()->setItem($key, $value);
     }
 
-    private function createKeyFormParams($params)
+    public function createKeyFormParams($params)
     {
         $keys = [];
         foreach (['seller', 'source', 'sku', 'parentSku'] as $k) {
