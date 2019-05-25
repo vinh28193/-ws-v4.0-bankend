@@ -21,6 +21,8 @@ class ItemController extends AmazonController
                 'errors' => $form->getErrors()
             ]);
         }
+        $this->portalTitle = $item->item_name;
+        $this->portalImage = $item->primary_images[0]->main;
         return $this->render('index', [
             'item' => $item
         ]);

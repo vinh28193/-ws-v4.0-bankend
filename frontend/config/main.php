@@ -9,7 +9,7 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'queue' ],
+    'bootstrap' => ['log', 'queue'],
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'frontend\controllers',
     'defaultRoute' => 'cms/home',
@@ -24,9 +24,9 @@ return [
 //            'yii\web\JqueryAsset' => [
 //                'js'=>[]
 //            ],
-            'yii\bootstrap\BootstrapPluginAsset' => [
-                'js'=>['/js/bootstrap.min.js']
-            ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js' => ['/js/bootstrap.min.js']
+                ],
                 'yii\bootstrap\BootstrapAsset' => [
                     'css' => ['/css/bootstrap.css'],
                 ],
@@ -101,6 +101,17 @@ return [
             'errorAction' => 'error',
         ],
         'urlManager' => require(__DIR__ . '/urlManager.php'),
+        'ecomobi' => [
+            'class' => 'common\components\EcomobiComponent',
+            'baseApiUrl' => 'http://cps.mtrackings.mobi',
+//            'baseApiUrl' => 'http://dev-cps.mtrackings.mobi', // DEV MODE
+            'token' => '7c6298ea7156237e67e0c8c3146ac446', // VN
+//            'token' => '21c4633328519d0802a0f3d5f4de8647', // ID
+//            'token' => '62b5c2a506ccfa164d05f4987e810b6e', //MY
+            'offerId' => 'weshop',
+            'cookieName' => '_____ecomobiCookiePrefix'
+
+        ]
 
     ],
     'params' => $params,
