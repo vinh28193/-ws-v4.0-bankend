@@ -82,7 +82,7 @@ class TrackingCodeServiceController extends BaseApiController
         $model->note_boxme = $wasting->note_boxme;
         $model->image = $wasting->image;
         $model->save();
-        $missing->status = DraftDataTracking::STATUS_LOCAL_INSPECTED;
+        $missing->status = DraftWastingTracking::MERGE_MANUAL;
         $missing->save();
         $wasting->status = DraftWastingTracking::MERGE_MANUAL;
         $wasting->save();
@@ -140,11 +140,11 @@ class TrackingCodeServiceController extends BaseApiController
                 /** @var DraftWastingTracking $class */
                 $class = DraftWastingTracking::className();
             }else{
-                /** @var DraftMissingTracking $class */
-                $class = DraftMissingTracking::className();
+                /** @var DraftDataTracking $class */
+                $class = DraftDataTracking::className();
             }
             $tmp =  $class::find()->where([
-                'status' => $class::MERGE_MANUAL,
+                'status' => DraftWastingTracking::MERGE_MANUAL,
                 'tracking_code' => $v
             ])->one();
             if(!$tmp){
@@ -153,7 +153,7 @@ class TrackingCodeServiceController extends BaseApiController
             $data = $model->getAttributes();
             unset($data['id']);
             $tmp->setAttributes($data,false);
-            $tmp->status = $class::SPILT_MANUAL;
+            $tmp->status = DraftWastingTracking::SPILT_MANUAL;
             $tmp->tracking_code = $v;
             if($k == 1){
                 $tmp->product_id = '';

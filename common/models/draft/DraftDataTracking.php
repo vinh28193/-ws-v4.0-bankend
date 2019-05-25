@@ -27,6 +27,7 @@ class DraftDataTracking extends \common\models\db\DraftDataTracking
     const STATUS_US_SENDING = "US_SENDING";
     const STATUS_LOCAL_RECEIVED = "LOCAL_RECEIVED";
     const STATUS_LOCAL_INSPECTED = "LOCAL_INSPECTED";
+    const MERGE_MANUAL = "MERGE_MANUAL";
     const TYPE_NORMAL = "NORMAL";
     const TYPE_SPLIT = "SPLIT";
     const TYPE_UNKNOWN = "UNKNOWN";

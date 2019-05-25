@@ -93,12 +93,12 @@ class CartHelper
         foreach ((array)$item->variation_mapping as $v) {
             /** @var $v VariationMapping */
             if ($v->variation_sku === $item->item_sku) {
-                $product['available_quantity'] = $v->available_quantity;
-                $product['quantity_sold'] = $v->quantity_sold;
                 $variations = $v;
                 break;
             }
         }
+        $product['available_quantity'] = $item->available_quantity;
+        $product['quantity_sold'] = $item->quantity_sold;
         $product['variations'] = $variations;
         $product['product_link'] = $item->ws_link;
         $product['product_name'] = $item->item_name;
