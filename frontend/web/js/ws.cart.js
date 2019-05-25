@@ -32,7 +32,52 @@
                 });
 
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
-                    methods.update.call($cart, $(this));
+                    var $item = $(this);
+                    var $tagget = $($item.data('update'));
+                    var options = getQuantityInputOptions($tagget);
+                    var operator = $item.data('operator');
+                    if (options.max === '' || options.max < options.value) {
+                        alert('can not update cart');
+                    }
+                    var param = {};
+                    param.id = options.id;
+                    param.quantity = options.value;
+                    if (operator === 'up') {
+                        param.quantity += 1;
+                        if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
+                            param.quantity = options.max;
+                            $tagget.val(param.quantity);
+                            alert('you can buy greater than ' + options.max)
+                        }
+                    } else {
+                        param.quantity -= 1;
+                        if (param.quantity < 1) {
+                            param.quantity = 1;
+                            $tagget.val(1);
+                            alert('you can buy less than 1')
+                        }
+                    }
+                    methods.update.call($cart, param);
+                    return false;
+                });
+                ws.initEventHandler($cart, 'type', 'keyup.wsCart', 'input[name=cartItemQuantity]', function (event) {
+                    var $item = $(this);
+                    var options = getQuantityInputOptions($item);
+                    var param = {};
+                    param.id = options.id;
+                    param.quantity = Number($item.val());
+                    if (param.quantity < 1) {
+                        param.quantity = 1;
+                        $item.val(1);
+                        alert('you can buy less than 1')
+                    } else if (options.max !== '' && param.quantity >= options.max) {
+                        param.quantity = options.max;
+                        $item.val(options.max);
+                        alert(('you can buy greater than ' + options.max));
+
+                    }
+                    console.log(param);
+                    methods.update.call($cart, param);
                     return false;
                 });
                 ws.initEventHandler($cart, 'remove', 'click.wsCart', 'a.delete-item', function (event) {
@@ -46,6 +91,7 @@
                 ws.initEventHandler($cart, 'continue', 'click.wsCart', 'button.btn-continue', function (event) {
                     methods.continue.apply($cart);
                 });
+
                 ws.initEventHandler($cart, 'payment', 'click.wsCart', 'button.btn-payment', function (event) {
                     methods.payment.apply($cart);
                 });
@@ -85,30 +131,9 @@
             });
 
         },
-        update: function ($item) {
+        update: function (param) {
             var $cart = $(this);
             var data = $cart.data('wsCart');
-            var options = getQuantityInputOptions($($item.data('update')));
-            var operator = $item.data('operator');
-            if (options.max === '' || options.max < options.value) {
-                alert('can not update cart');
-            }
-            var param = {};
-            param.id = options.id;
-            param.quantity = options.value;
-            if (operator === 'up') {
-                param.quantity += 1;
-                if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
-                    param.quantity = options.max;
-                    alert('you can buy greater than ' + options.max)
-                }
-            } else {
-                param.quantity -= 1;
-                if (param.quantity < 1) {
-                    param.quantity = 1;
-                    alert('you can buy less than 1')
-                }
-            }
             var container = '#' + $cart.attr('id');
             var $ajaxOptions = {
                 dataType: 'json',
