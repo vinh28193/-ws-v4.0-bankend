@@ -136,6 +136,10 @@
                 success: function (response, textStatus, xhr) {
                     // updateItem(response);
                     $.pjax.reload({container: container});
+                    var countItems = response.countItems || false;
+                    if (countItems) {
+                        $('#cartBadge').html(countItems);
+                    }
                 }
             };
             ws.ajax(data.settings.removeUrl, $ajaxOptions, true);

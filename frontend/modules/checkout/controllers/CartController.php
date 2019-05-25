@@ -134,7 +134,7 @@ class CartController extends BillingController
         if (!$cartManager->removeItem($key)) {
             return ['success' => false, 'message' => "can not delete item `$key`"];
         }
-        return ['success' => false, 'message' => "item `$key` had been deleted"];
+        return ['success' => true, 'message' => "item `$key` had been deleted", 'countItems' => $cartManager->countItems()];
     }
 
     public function actionPayment()
