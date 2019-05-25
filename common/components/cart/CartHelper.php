@@ -12,6 +12,7 @@ use common\models\Seller;
 use common\models\User;
 use common\products\BaseProduct;
 use common\products\Provider;
+use common\products\VariationMapping;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -90,7 +91,10 @@ class CartHelper
         $product['condition'] = $item->condition;
         $variations = null;
         foreach ((array)$item->variation_mapping as $v) {
+            /** @var $v VariationMapping */
             if ($v->variation_sku === $item->item_sku) {
+                $product['available_quantity'] = $v->available_quantity;
+                $product['quantity_sold'] = $v->quantity_sold;
                 $variations = $v;
                 break;
             }

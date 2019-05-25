@@ -214,7 +214,7 @@ class CartManager extends Component
     /**
      * @param $params
      * @param bool $safeOnly
-     * @return bool
+     * @return array
      * @throws \Throwable
      */
     public function addItem($params, $safeOnly = true)
@@ -223,22 +223,7 @@ class CartManager extends Component
 
         try {
             if ($this->hasItem($key, $safeOnly)) {
-                if (($value = $this->getItem($key, $safeOnly)) === false) {
-                    return false;
-                }
-                $item = new SimpleItem();
-                foreach ($params as $name => $val) {
-                    $item->$name = $val;
-                }
-                // Todo Validate data before call
-                // pass new param for CartItem
-                list($ok, $value) = $item->process();
-                if (!$ok) {
-                    return false;
-                }
-                $key = $this->normalPrimaryKey($key, $safeOnly);
-                $value = $this->getSerializer()->serializer($value);
-                return $this->getStorage()->setItem($key, $value);
+                return [false, 'sản phẩm đã trong giỏ hàng'];
             } else {
                 /** Todo : Thiếu link Gốc sản phẩm **/
                 $item = new SimpleItem();
@@ -248,21 +233,42 @@ class CartManager extends Component
                 // Todo Validate data before call
                 list($ok, $value) = $item->process();
                 if (!$ok) {
-                    return false;
+                    return [false, 'không thể lấy thông tin sản phẩm'];
                 }
-                $value['key'] =$key;
+                $value['key'] = $key;
                 $key = $this->normalPrimaryKey($key, $safeOnly);
 
                 $value = $this->getSerializer()->serializer($value);
-                return $this->getStorage()->addItem($key, $value);
+                return [$this->getStorage()->addItem($key, $value), 'Thêm sản phẩm thành công'];
             }
         } catch (\Exception $exception) {
             Yii::info($exception);
-            return false;
+            return [false, $exception->getMessage()];
         }
     }
 
-    private function createKeyFormParams($params)
+    public function setItem($key, $params, $safeOnly = false)
+    {
+        if (!$this->hasItem($key, $safeOnly)) {
+            return [false, 'sản phẩm không có trong giỏ hàng'];
+        }
+        $item = new SimpleItem();
+        foreach ($params as $name => $val) {
+            $item->$name = $val;
+        }
+        // Todo Validate data before call
+        // pass new param for CartItem
+        list($ok, $value) = $item->process();
+        if (!$ok) {
+            return false;
+        }
+        $value['key'] = $key;
+        $key = $this->normalPrimaryKey($key, $safeOnly);
+        $value = $this->getSerializer()->serializer($value);
+        return $this->getStorage()->setItem($key, $value);
+    }
+
+    public function createKeyFormParams($params)
     {
         $keys = [];
         foreach (['seller', 'source', 'sku', 'parentSku'] as $k) {
@@ -278,10 +284,10 @@ class CartManager extends Component
     {
         try {
             if (($value = $this->getItem($key, $safeOnly)) === false) {
-                return false;
+                return [false, 'sản phẩm không có trong giỏ hàng'];
             }
             $item = new SimpleItem();
-            $oldParams = $value['request'];
+            $oldParams = $value['params'];
             foreach ((array)$oldParams as $name => $val) {
                 if ($name === 'with_detail') {
                     continue;
@@ -306,16 +312,18 @@ class CartManager extends Component
 
             list($ok, $raw) = $item->process();
             if (!$ok) {
-                return false;
+                return [false, 'không thể lấy thông tin sản phẩm'];
             }
+            $value['key'] = $key;
             $value = $this->getSerializer()->serializer($raw);
             $key = $this->normalPrimaryKey($key, $safeOnly);
             $this->getStorage()->setItem($key, $value);
-            return $raw['response'];
+            return [false, 'sản phẩm không có trong giỏ hàng', $raw['order']];
+
 
         } catch (\Exception $exception) {
             Yii::info($exception);
-            return false;
+            return [false, $exception->getMessage()];
         }
     }
 

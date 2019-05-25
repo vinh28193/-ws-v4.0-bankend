@@ -222,7 +222,23 @@ class OrderController extends BaseApiController
             $model->current_status = Order::STATUS_CANCEL;
         }
         if ($model->getScenario() == 'updateTimeNull') {
-            $model->{$post['Order']['column']} = null;
+            $i = 0;
+            for ($i; $i<15; $i++) {
+                if ($StatusOrder[$i] == $post['Order']['column']) {
+                    break;
+                }
+            }
+            $j = $i;
+//            for ($j; $j<15; $j++) {
+//                var_dump($StatusOrder[$j]);
+//                $model->$StatusOrder[$j] = null;
+//                die();
+//            }
+            if ($post['Order']['column'] == 'purchase_start') {
+                $model->current_status = 'READY2PURCHASE';
+            } else {
+                $model->current_status = strtoupper(str_replace('_', ' ', $StatusOrder[$i-1]));
+            }
         }
 //        if (($model->current_status == Order::STATUS_NEW || $model->current_status == Order::STATUS_SUPPORTING || $model->current_status == Order::STATUS_SUPPORTED) && $model->total_paid_amount_local > 0) {
 //            $model->current_status =  Order::STATUS_READY2PURCHASE;

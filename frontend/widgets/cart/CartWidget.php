@@ -6,6 +6,7 @@ namespace frontend\widgets\cart;
 
 use common\components\cart\CartHelper;
 use Yii;
+use yii\helpers\StringHelper;
 use yii\web\View;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -68,11 +69,27 @@ class CartWidget extends Widget
      */
     protected function preItem($item)
     {
-        $order = ArrayHelper::getValue($item,'order');
+        $order = ArrayHelper::getValue($item, 'order');
+        $variations = $order['products'][0]['variations'];
+        $availableQuantity = 50;
+        $soldQuantity = 0;
+        if ($variations !== null) {
+            if (($variationSoldQuantity = ArrayHelper::getValue($variations, 'quantity_sold', $soldQuantity)) !== null) {
+                $soldQuantity = $variationSoldQuantity;
+            }
+            if (($variationAvailableQuantity = ArrayHelper::getValue($variations, 'available_quantity', $availableQuantity)) !== null) {
+                $availableQuantity = $variationAvailableQuantity;
+            }
+        }
+        $localAmount = $order['total_amount_local'];
         $key = ArrayHelper::getValue($item, 'key', '');
+        $selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key);
+        if($selected){
+            $this->_totalAmount += $localAmount;
+        }
         return [
             'key' => $key,
-            'selected' => true,
+            'selected' => $selected,
             'name' => $order['products'][0]['product_name'],
             'type' => $order['products'][0]['portal'],
             'originLink' => $order['products'][0]['link_origin'],
@@ -81,13 +98,13 @@ class CartWidget extends Widget
             'provider' => $order['seller'],
             'variation' => $order['products'][0]['variations'],
             'condition' => $order['products'][0]['condition'],
-            'quantity' => $order['products'][0]['condition'],
-            'availableQuantity' => $order['products'][0]['condition'],
-            'soldQuantity' => $order['products'][0]['condition'],
+            'quantity' => $order['products'][0]['quantity_customer'],
+            'availableQuantity' => $availableQuantity,
+            'soldQuantity' => $soldQuantity,
             'weight' => $order['total_weight_temporary'],
             'amount' => $order['total_price_amount_origin'],
-            'localAmount' => $order['total_amount_local'],
-            'localDisplayAmount' => $this->showMoney($order['total_amount_local']),
+            'localAmount' => $localAmount,
+            'localDisplayAmount' => $this->showMoney($localAmount),
         ];
     }
 
@@ -119,7 +136,7 @@ class CartWidget extends Widget
         $view = $this->getView();
         $items = Json::htmlEncode(array_values($this->items));
         CartAsset::register($view);
-        $view->registerJs("jQuery('#$id').wsCart($items,$options);", $view::POS_END);
+        $view->registerJs("jQuery('#$id').wsCart($options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsCart('data'));", $view::POS_END);
     }
 
@@ -147,7 +164,7 @@ class CartWidget extends Widget
     {
 
         $content = Html::beginTag('ul', ['class' => 'billing']);
-        $content .= '<li><div class="left">Giá trị đơn hàng:</div><div class="right"><span id="totalCartPrice">' . $this->showMoney($this->_totalAmount) . '</span><i class="currency">đ</i></div></li>';
+        $content .= '<li><div class="left">Giá trị đơn hàng:</div><div class="right">' . $this->showMoney($this->_totalAmount) . '</div></li>';
         $content .= Html::endTag('ul');
         return $content;
     }
@@ -182,6 +199,6 @@ HTML;
 
     private function showMoney($money)
     {
-        return Yii::$app->storeManager->roundMoney($money);
+        return Yii::$app->storeManager->showMoney($money);
     }
 }

@@ -54,6 +54,7 @@ class CartSelection
 
     public static function setSelectedItems($type, $items)
     {
+        Yii::info($items, $type);
         $selected = !is_array($items) ? [$items] : $items;
         self::getSession()->set(self::SESSION_NAME, [$type => $selected]);
     }
@@ -69,7 +70,6 @@ class CartSelection
     public static function isExist($type, $item)
     {
         if (($items = self::getSelectedItems($type)) === null) {
-
             return false;
         }
         return ArrayHelper::isIn($item, $items);
@@ -86,7 +86,6 @@ class CartSelection
             }
             $items[] = $i;
         }
-        var_dump($items);
         self::setSelectedItems($type, $items);
         return $removed;
     }

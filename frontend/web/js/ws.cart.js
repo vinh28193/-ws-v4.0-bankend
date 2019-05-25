@@ -15,55 +15,33 @@
         updateUrl: undefined,
         removeUrl: undefined,
         paymentUrl: undefined,
-        items: []
-    };
-
-    var defaultItem = {
-        key: undefined,
-        selected: undefined,
-        name: undefined,
-        type: undefined,
-        originLink: undefined,
-        link: undefined,
-        imageSrc: undefined,
-        provider: undefined,
-        variation: undefined,
-        condition: undefined,
-        quantity: 0,
-        availableQuantity: 0,
-        soldQuantity: 0,
-        weight: undefined,
-        amount: 0,
-        localAmount: 0,
-        localDisplayAmount: undefined,
     };
 
     var methods = {
-        init: function (items, options) {
+        init: function (options) {
             return this.each(function () {
                 var $cart = $(this);
                 if ($cart.data('wsCart')) {
                     return;
                 }
-                items = items.map(i => $.extend({}, defaultItem, i || {}));
                 var settings = $.extend({}, defaults, options || {});
-                updateTotalPrice($cart);
+
 
                 $cart.data('wsCart', {
-                    items: items,
                     settings: settings
                 });
 
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
                     methods.update.call($cart, $(this));
+                    return false;
                 });
                 ws.initEventHandler($cart, 'remove', 'click.wsCart', 'a.delete-item', function (event) {
                     var key = $(this).data('key');
                     if (key === undefined) {
                         return false;
                     }
-                    methods.remove.call($cart, key)
-
+                    methods.remove.call($cart, key);
+                    updateTotalPrice($cart);
                 });
                 ws.initEventHandler($cart, 'continue', 'click.wsCart', 'button.btn-continue', function (event) {
                     methods.continue.apply($cart);
@@ -74,9 +52,13 @@
                 ws.initEventHandler($cart, 'selected', 'change.wsCart', 'input[name=cartItems]', function (event) {
                     var $input = $(this);
                     var data = {id: $input.val(), selected: $input.is(':checked')};
-                    updateTotalPrice($cart);
-                    console.log(data);
-                    //methods.watch.call($cart, $input);
+                    // if (data.selected === false) {
+                    //     selected = selected.filter(s => s !== data.key);
+                    // } else {
+                    //     selected.push(data.key);
+                    // }
+                    // console.log(selected);
+                    methods.watch.call($cart, data);
                     return false;
                 });
             });
@@ -89,13 +71,13 @@
         },
         add: function ($type) {
         },
-        watch: function ($input) {
+        watch: function ($param) {
             var $cart = $(this);
             var container = '#' + $cart.attr('id');
             ws.ajax('/checkout/cart/selection', {
                 dataType: 'json',
                 method: 'post',
-                data: {id: $input.val(), selected: $input.is(':checked')},
+                data: $param,
                 success: function (response, textStatus, xhr) {
                     // updateItem(response);
                     $.pjax.reload({container: container});
@@ -154,6 +136,10 @@
                 success: function (response, textStatus, xhr) {
                     // updateItem(response);
                     $.pjax.reload({container: container});
+                    var countItems = response.countItems || false;
+                    if (countItems) {
+                        $('#cartBadge').html(countItems);
+                    }
                 }
             };
             ws.ajax(data.settings.removeUrl, $ajaxOptions, true);
@@ -201,10 +187,13 @@
     var updateTotalPrice = function ($cart) {
         totalAmount = 0;
         $.each(filterCartItems($cart), function (i, input) {
-            console.log(input);
+            console.log($(input).data('price'));
             totalAmount += $(input).data('price');
         });
         $('span#totalCartPrice').html(ws.numberFormat(totalAmount));
+    };
+    var updateNavBage = function ($count) {
+        $('contentCart').html($count);
     };
     var getQuantityInputOptions = function ($input) {
         return {
