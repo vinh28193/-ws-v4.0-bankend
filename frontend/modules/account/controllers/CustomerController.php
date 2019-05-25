@@ -48,7 +48,9 @@ class CustomerController extends BaseAccountController
     public function actionIndex()
     {
         $id = Yii::$app->user->getIdentity()->getId();
+        /** @var User $model */
         $model = User::find()->where(['id' =>  $id])->with('store')->one();
+        /** @var Address $address */
         $address = Address::find()->where([
             'AND',
             ['customer_id' => $id],
@@ -63,22 +65,39 @@ class CustomerController extends BaseAccountController
 //            ['is_default' => Address::IS_DEFAULT]
         ])->all();
         if(Yii::$app->request->isPost){
-            if ($model->load(Yii::$app->request->post())) {
+            $userPost = Yii::$app->request->post('User');
+            $addressPost = Yii::$app->request->post('Address');
+            if ($model && $userPost) {
+                $model->first_name = ArrayHelper::getValue($userPost,'first_name',$model->first_name);
+                $model->last_name = ArrayHelper::getValue($userPost,'last_name',$model->last_name);
+                $model->email = $model->email ? $model->email : ArrayHelper::getValue($userPost,'email');
+                $model->phone = $model->phone ? $model->phone : ArrayHelper::getValue($userPost,'phone');
                 $model->save();
-            } if ($address) {
-                $address->load(Yii::$app->request->post());
-                $address->save();
-
-            } if (!$address) {
-                $add = new Address();
-                $add->load(Yii::$app->request->post());
-                $add->customer_id = $id;
-                $add->save();
-                return $this->render('index', [
-                    'model' => $model,
-                    'address' => $add,
-                    'addressShip' => $addressShip,
-                ]);
+                if ($address) {
+                    $address->first_name = ArrayHelper::getValue($userPost,'first_name',$model->first_name);
+                    $address->last_name = ArrayHelper::getValue($userPost,'last_name',$model->last_name);
+                    $address->email = ArrayHelper::getValue($userPost,'email');
+                    $address->phone = ArrayHelper::getValue($userPost,'phone');
+                    $address->province_id = ArrayHelper::getValue($addressPost,'province_id');
+                    $address->district_id = ArrayHelper::getValue($addressPost,'district_id');
+                    $address->address = ArrayHelper::getValue($addressPost,'address');
+                    $address->save();
+                } else{
+                    $add = new Address();
+                    $add->first_name = ArrayHelper::getValue($userPost,'first_name',$model->first_name);
+                    $add->last_name = ArrayHelper::getValue($userPost,'last_name',$model->last_name);
+                    $add->email = ArrayHelper::getValue($userPost,'email');
+                    $add->phone = ArrayHelper::getValue($userPost,'phone');
+                    $add->province_id = ArrayHelper::getValue($addressPost,'province_id');
+                    $add->district_id = ArrayHelper::getValue($addressPost,'district_id');
+                    $add->address = ArrayHelper::getValue($addressPost,'address');
+                    $add->save();
+                    return $this->render('index', [
+                        'model' => $model,
+                        'address' => $add,
+                        'addressShip' => $addressShip,
+                    ]);
+                }
             }
         }
 
