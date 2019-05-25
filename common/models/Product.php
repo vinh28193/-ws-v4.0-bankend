@@ -42,6 +42,12 @@ class Product extends DbProduct
     const STATUS_REFUNDED = 'REFUNDED'; //Lv8; đơn đã chuyển hoàn, end of status
     const STATUS_CANCEL = 'CANCELLED';
     const STATUS_SELLER_SHIPPED = 'SELLER_SHIPPED';
+    const STATUS_STOCK_IN_US = 'STOCK_IN_US';
+    const STATUS_STOCK_OUT_US = 'STOCK_OUT_US';
+    const STATUS_STOCK_IN_LOCAL = 'STOCK_IN_LOCAL';
+    const STATUS_STOCK_OUT_LOCAL = 'STOCK_OUT_LOCAL';
+    const STATUS_AT_CUSTOMER = 'AT_CUSTOMER';
+    const STATUS_RETURNED = 'RETURNED';
 
     /**
      * @inheritdoc
@@ -175,5 +181,37 @@ class Product extends DbProduct
     public function getPackages()
     {
         return $this->hasMany(Package::className(), ['order_id' => 'id']);
+    }
+    public function updateSellerShipped($time = null , $updateNew = false){
+        $this->current_status = $this->seller_shipped ? $this->current_status : self::STATUS_SELLER_SHIPPED;
+        if ($updateNew || !$this->seller_shipped){
+            $this->seller_shipped = $time ? $time : time();
+        }
+    }
+    public function updateStockinUs($time = null , $updateNew = false)
+    {
+        $this->current_status = $this->stockin_us ? $this->current_status : self::STATUS_STOCK_IN_US;
+        if ($updateNew || !$this->stockin_us) {
+            $this->stockin_us = $time ? $time : time();
+        }
+    }
+    public function updateStockoutUs($time = null , $updateNew = false){
+        $this->current_status = $this->stockout_us ? $this->current_status : self::STATUS_STOCK_OUT_US;
+        if ($updateNew || !$this->stockout_us){
+            $this->stockout_us = $time ? $time : time();
+        }
+    }
+    public function updateStockinLocal($time = null , $updateNew = false)
+    {
+        $this->current_status = $this->stockin_local ? $this->current_status : self::STATUS_STOCK_IN_LOCAL;
+        if ($updateNew || !$this->stockin_local) {
+            $this->stockin_local = $time ? $time : time();
+        }
+    }
+    public function updateStockoutLocal($time = null , $updateNew = false){
+        $this->current_status = $this->stockout_local ? $this->current_status : self::STATUS_STOCK_OUT_LOCAL;
+        if ($updateNew || !$this->stockout_local){
+            $this->stockout_local = $time ? $time : time();
+        }
     }
 }

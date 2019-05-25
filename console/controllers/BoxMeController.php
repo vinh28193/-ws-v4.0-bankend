@@ -160,6 +160,16 @@ class BoxMeController extends Controller
                         $draft_data->save(0);
                         $draft_data->ws_tracking_code = WeshopHelper::generateTag($draft_data->id,'WSVNTK');
                         $draft_data->save(0);
+                        if($ext->product){
+                            $ext->product->updateStockinUs($draft_data->stock_in_us);
+                            $ext->product->updateStockoutUs($draft_data->stock_out_us);
+                            $ext->product->save(false);
+                        }
+                        if($ext->order){
+                            $ext->order->updateStockinUs($draft_data->stock_in_us);
+                            $ext->order->updateStockoutUs($draft_data->stock_out_us);
+                            $ext->order->save(false);
+                        }
                     }
                     $ext->draft_data_tracking_id = $draft_data->id;
                     $ext->status = DraftExtensionTrackingMap::JOB_CHECKED;
