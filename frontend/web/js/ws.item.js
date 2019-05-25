@@ -511,6 +511,7 @@
                     if (countItems) {
                         $('#cartBadge').html(countItems);
                     }
+                    alert(response.message);
                 } else {
                     alert(response.message);
                 }

@@ -81,8 +81,8 @@ class CartController extends BillingController
             $checkOutAction = Url::toRoute(['/checkout/shipping', 'type' => $type]);
             return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key, 'data' => $checkOutAction];
         } else {
-            return ['success' => true, 'message' => 'Buy now this item', 'data' => [
-                'key' => $key,
+            return ['success' => true, 'message' => $key[1], 'data' => [
+                'key' => $key[0],
                 'countItems' => $this->module->cartManager->countItems(),
             ]];
         }
