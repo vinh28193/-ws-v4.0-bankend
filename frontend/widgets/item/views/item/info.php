@@ -2,15 +2,25 @@
 
 use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
-use yii\helpers\Inflector;
 
 /**
  * @var $item BaseProduct
  */
 $salePercent = $item->getSalePercent();
 $current_provider = $item->getCurrentProvider();
+$variationUseImage = null;
+foreach ($item->variation_options as $index => $variationOption) {
+    if ($variationOption->images_mapping) {
+        foreach ($variationOption->values as $k => $value) {
+            foreach ($variationOption->images_mapping as $image) {
+                if (strtolower($image->value) == strtolower($value)) {
+                    $variationUseImage = $index;
+                    break;
+                }
+            }
+        }
+    }
+}
 ?>
 <div id="checkcate" style="display: none"><?= $item->category_id ?></div>
 <div class="product-full-info">
@@ -48,10 +58,9 @@ $current_provider = $item->getCurrentProvider();
             <?php
             if($item->variation_options){
                 $countVariation = count($item->variation_options);
-                $checkBoxImg = false;
                 foreach ($item->variation_options as $index => $variationOption) {
                     /* @var $variationOption \common\products\VariationOption */
-                    if($variationOption->images_mapping && !$checkBoxImg){ $checkBoxImg = true;?>
+                    if($variationOption->images_mapping && $variationUseImage === $index){?>
                             <div class="option-box">
                                 <label id="label_<?= $variationOption->id ?>"><?= $variationOption->name; ?>: ---</label>
                                 <div class="color-pick" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
