@@ -194,7 +194,7 @@
             var data = {
                 fingerprint: _fingerprint,
                 sku: params.id,
-                portal : params.type
+                portal: params.type
             };
             setTimeout(function () {
                 ws.ajax('/portal/favorite', {
@@ -506,6 +506,10 @@
                             ws.redirect(url);
                             return false
                         }
+                    }
+                    var countItems = response.data.countItems || false;
+                    if (countItems) {
+                        $('#cartBadge').html(countItems);
                     }
                 } else {
                     alert(response.message);

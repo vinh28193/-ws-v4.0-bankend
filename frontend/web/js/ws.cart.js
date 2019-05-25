@@ -18,7 +18,7 @@
     };
 
     var methods = {
-        init: function ( options) {
+        init: function (options) {
             return this.each(function () {
                 var $cart = $(this);
                 if ($cart.data('wsCart')) {
@@ -187,6 +187,9 @@
             totalAmount += $(input).data('price');
         });
         $('span#totalCartPrice').html(ws.numberFormat(totalAmount));
+    };
+    var updateNavBage = function ($count) {
+        $('contentCart').html($count);
     };
     var getQuantityInputOptions = function ($input) {
         return {
