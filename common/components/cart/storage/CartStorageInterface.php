@@ -8,66 +8,87 @@
 
 namespace common\components\cart\storage;
 
+use common\components\cart\CartManager;
+
 interface CartStorageInterface
 {
 
 
-
     /**
-     * check item is exist
-     * @param $key
-     * @return boolean
+     * @param $id
+     * @return mixed
      */
-    public function hasItem($key);
+    public function hasItem($id);
 
     /**
      * @param $key
+     * @param $param
      * @param $value
-     * @return boolean
-     */
-    public function addItem($key, $value);
-
-    /**
-     * @param $key
-     * @param $value
-     * @return boolean
-     */
-    public function setItem($key, $value);
-
-    /**
-     * @param $key
-     * @return boolean|mixed
-     */
-    public function getItem($key);
-
-    /**
-     * @param $key
-     * @return boolean|mixed
-     */
-    public function removeItem($key);
-
-    /**
-     * @param $keys
      * @param $identity
      * @return mixed
      */
-    public function getItems($identity, $keys = null);
+    public function addItem($key, $param, $value, $identity);
 
     /**
-     * @param $identity
-     * @return integer
+     * @param $id
+     * @param $value
+     * @return mixed
      */
-    public function countItems($identity);
+    public function setItem($id, $value);
 
     /**
-     * @param $keys
+     * @param $filter
      * @param $identity
-     * @return int
+     * @return mixed
      */
-    public function removeItems($identity, $keys = null);
+    public function filterItem($filter, $identity);
 
-    public function keys($identity);
+    /**
+     * @param $id
+     * @return boolean|mixed
+     */
+    public function getItem($id);
 
-    public function GetAllShopingCarts($get);
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function removeItem($id);
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function setMeOwnerItem($id);
+
+    /**
+     * @param $type
+     * @param $identity
+     * @param null $ids
+     * @return mixed
+     */
+    public function getItems($type, $identity, $ids = null);
+
+    /**
+     * @param $type
+     * @param $identity
+     * @return mixed
+     */
+    public function countItems($type, $identity);
+
+    /**
+     * @param $type
+     * @param $identity
+     * @param null $keys
+     * @return mixed
+     */
+    public function removeItems($type, $identity, $keys = null);
+
+
+    /**
+     * @param $params
+     * @return mixed
+     */
+    public function getAllItems($params);
 
 }

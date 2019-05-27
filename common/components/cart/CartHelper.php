@@ -51,9 +51,14 @@ class CartHelper
         $order['portal'] = $item->type;
         $order['current_status'] = Order::STATUS_NEW;
         $order['new'] = Yii::$app->getFormatter()->asTimestamp('now');
+        $order['mark_supporting'];
+        $order['supporting'] = null;
+        $order['supported'] = null;
         $order['customer_type'] = 'Retail';
         $order['store_id'] = $storeManager->getId();
         $order['exchange_rate_fee'] = $storeManager->getExchangeRate();
+        $order['sale_support_id'] = null;
+        $order['saleSupport'] = null;
         $order['customer_id'] = $user ? $user->id : null;
         $order['customer'] = $user ? [
             'username' => $user->username,
@@ -103,7 +108,7 @@ class CartHelper
         $product['product_link'] = $item->ws_link;
         $product['product_name'] = $item->item_name;
         $product['quantity_customer'] = $item->getShippingQuantity();
-        $product['total_weight_temporary'] = $item->getShippingWeight();     //"cân nặng  trong lượng tạm tính"
+        $product['total_weight_temporary'] = $item->getShippingWeight();
         $product['category'] = [
             'alias' => $item->category_id,
             'site' => $item->type,
@@ -165,6 +170,40 @@ class CartHelper
         $order['products'] = [$product];
         return $order;
     }
+
+
+    public static function mergeItem($source, $target)
+    {
+        $start = microtime(true);
+        $noUpdateAttribute = [
+            'products', 'type_order', 'portal', 'current_status', 'new', 'customer_type', 'store_id', 'exchange_rate_fee', 'customer_id', 'customer', 'seller', 'sale_support_id', 'saleSupport'
+        ];
+
+        $orders = func_get_args();
+        $order = array_shift($args);
+        while (!empty($orders)) {
+            foreach (array_shift($orders) as $key => $value) {
+                foreach (array_keys($order) as $attribute) {
+                    if (ArrayHelper::isIn($attribute, $noUpdateAttribute)) {
+                        continue;
+                    }
+                    if (strpos($attribute, 'total_') !== false) {
+                        $oldValue = (int)$order[$attribute];
+                        $newValue = (int)$value[$attribute];
+                        $oldValue += $newValue;
+                        $order[$attribute] = $oldValue;
+                    }
+                }
+                $products = $order['products'];
+                $products[] = $value['products'][0];
+                $order['products'] = $products;
+            }
+        }
+        $time = sprintf('%.3f', microtime(true) - $start);
+        Yii::info("time: $time s", __METHOD__);
+        return $order;
+    }
+
 
     public static function createOrderParams($keys, $safeOnly = true)
     {

@@ -2,144 +2,131 @@
 
 namespace common\components\cart\storage;
 
+use Yii;
 use common\models\User;
+use yii\base\BaseObject;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
-use yii\mongodb\ActiveRecord;
+use yii\mongodb\Connection;
+use yii\mongodb\Query;
 
-/**
- * This is the model class for collection "shopping_cart".
- *
- * @property \MongoDB\BSON\ObjectID|string $_id
- * @property mixed $key
- * @property mixed $identity
- * @property mixed $data
- * @property mixed $remove
- * @property mixed $created_at
- */
-class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
+class MongodbCartStorage extends BaseObject
 {
+
     /**
-     * {@inheritdoc}
+     * @var string|Connection
      */
-    public static function collectionName()
+    public $mongodb = 'mongodb';
+
+    /**
+     * @var array|string
+     */
+    public $collection = ['weshop_global_40', 'shopping_cart'];
+
+
+    public function init()
     {
-        return ['weshop_global_40', 'shopping_cart'];
+        parent::init();
+        if (!$this->mongodb instanceof Connection) {
+            $this->mongodb = Yii::$app->get($this->mongodb);
+        }
+
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function attributes()
-    {
-        return [
-            '_id',
-            'key',
-            'identity',
-            'data',
-            'remove',
-            'created_at',
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['key', 'identity', 'data', 'created_at'], 'safe']
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            '_id' => 'ID',
-            'key' => 'Key',
-            'identity' => 'Identity',
-            'data' => 'Data',
-            'remove' => 'Remove',
-            'created_at' => 'Created At',
-        ];
-    }
-
-    /**
-     * @param $key
+     * @param $id
      * @return bool
      * @throws \yii\mongodb\Exception
      */
-    public function hasItem($key)
+    public function hasItem($id)
     {
-        list($key, $id) = $key;
-        $query = self::find()->where(['AND', ['key' => $key], ['identity' => $id], ['remove' => 0]]);
-        return $query->count() > 0;
+        $query = new Query();
+        $where = [
+            'AND',
+            ['_id' => $id],
+            ['remove' => 0],
+        ];
+        $query->from($this->collection);
+        $query->where($where);
+        return $query->count($this->mongodb) > 0;
     }
 
     /**
      * @param $key
      * @param $value
-     * @return boolean
+     * @param $identity
+     * @return \MongoDB\BSON\ObjectID
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\mongodb\Exception
      */
-    public function addItem($key, $value)
+    public function addItem($key, $value, $identity)
     {
-        list($key, $id) = $key;
-        $model = new self();
-        $model->key = $key;
-        $model->identity = $id;
-        $model->data = $value;
-        $model->remove = 0;
-        $model->created_at = time();
-        $model->save(false);
-        return $key;
+        return $this->mongodb->getCollection($this->collection)->insert([
+            'remove' => 0,
+            'key' => $key,
+            'value' => $value,
+            'identity' => $identity,
+            'create_at' => Yii::$app->getFormatter()->asDatetime('now'),
+        ]);
     }
 
     /**
-     * @param $key
+     * @param $id
      * @param $value
-     * @return boolean
+     * @return bool|int
+     * @throws \yii\mongodb\Exception
      */
-    public function setItem($key, $value)
+    public function setItem($id, $value)
     {
-        list($key2, $id) = $key;
-        /** @var $item $this */
-        $query = self::find()->where(['AND', ['key' => $key2], ['identity' => $id], ['remove' => 0]]);
-        /** @var $model $this */
-        if (($model = $query->one()) === null) {
-            return $this->addItem($key, $value);
-        }
-        $value['key'] = $key2;
-        $model->data = $value;
-        $model->save(false);
-        return $key2;
-
+        return $this->mongodb->getCollection($this->collection)->update([
+            'AND', ['_id' => $id], ['remove' => 0]
+        ], $value);
     }
 
     /**
+     * @param $id
      * @param $key
-     * @return boolean|mixed
+     * @param null $identity
+     * @return array
      */
-    public function getItem($key)
+    public function getItem($id, $key, $identity = null)
     {
-        list($key, $id) = $key;
-        $query = self::find()->where(['AND', ['key' => $key], ['identity' => $id], ['remove' => 0]]);
-        /** @var $model $this */
-        if (($model = $query->one()) === null) {
-            return false;
+        $conditions = ['AND', ['_id' => $id], ['remove' => 0], ['key' => ['$elemMatch' => $key]]];
+        if ($identity !== null) {
+            $conditions[] = ['identity' => $identity];
         }
-        return $model->data;
+        $query = new Query();
+        $query->from($this->collection);
+        $query->where($conditions);
+        return $query->all($this->mongodb);
+    }
+
+    public function filterItem($filter, $identity = null)
+    {
+        $conditions = ['AND', ['remove' => 0], ['key' => ['$elemMatch' => $filter]]];
+        if ($identity !== null) {
+            $conditions[] = ['identity' => $identity];
+        }
+        $query = new Query();
+        $query->from($this->collection);
+        $query->where($conditions);
+        return $query->one($this->mongodb);
     }
 
     /**
+     * @param $id
      * @param $key
-     * @return boolean|mixed
+     * @param null $identity
+     * @return bool|int
+     * @throws \yii\mongodb\Exception
      */
-    public function removeItem($key)
+    public function removeItem($id, $key, $identity = null)
     {
-        list($key, $id) = $key;
-        return self::updateAll(['remove' => 1], ['AND', ['key' => $key], ['identity' => $id]]);
+        $conditions = ['AND', ['_id' => $id], ['remove' => 0], ['key' => ['$elemMatch' => $key]]];
+        if ($identity !== null) {
+            $conditions[] = ['identity' => $identity];
+        }
+        return $this->mongodb->getCollection($this->collection)->update($conditions, ['remove' => 1]);
     }
 
     /**
@@ -147,13 +134,17 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
      * @param |null $keys
      * @return array|mixed
      */
-    public function getItems($identity, $keys = null)
+    public function getItems($identity, $ids = null)
     {
         $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
-        if ($keys !== null) {
-            $conditions[] = ['IN', 'key', !is_array($keys) ? [$keys] : $keys];
+        if ($ids !== null) {
+            $conditions[] = ['IN', '_id', !is_array($ids) ? [$ids] : $ids];
         }
-        return ArrayHelper::map(self::find()->where($conditions)->all(), 'key', 'data');
+
+        $query = new Query();
+        $query->from($this->collection);
+        $query->where($conditions);
+        return $query->all($this->mongodb);
     }
 
     /**
@@ -163,73 +154,64 @@ class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
      */
     public function countItems($identity)
     {
-        $query = self::find()->select(['key'])->where(['AND', ['identity' => $identity], ['remove' => 0]]);
-        return $query->count('key');
+        $query = new Query();
+        $query->from($this->collection);
+        $query->where(['AND', ['identity' => $identity], ['remove' => 0]]);
+        return $query->count($this->mongodb);
+
     }
 
     /**
      * @param $identity
-     * @param null $keys
-     * @return int
+     * @param null $ids
+     * @return bool|int
+     * @throws \yii\mongodb\Exception
      */
-    public function removeItems($identity, $keys = null)
+    public function removeItems($identity, $ids = null)
     {
-
-        if ($keys !== null) {
-            $conditions = ['AND', ['IN', 'key', !is_array($keys) ? [$keys] : $keys], ['identity' => $identity]];
-        } else {
-            $conditions = ['identity' => $identity];
+        $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
+        if ($ids !== null) {
+            $conditions[] = ['IN', '_id', !is_array($ids) ? [$ids] : $ids];
         }
-        return self::updateAll(['remove' => 1], $conditions);
+
+        return $this->mongodb->getCollection($this->collection)->update($conditions, ['remove' => 1]);
     }
 
     /**
-     * @param $key
-     * @return bool
+     * @param $id
+     * @return bool|int
+     * @throws \yii\mongodb\Exception
      */
-    public function setMeOwnerItem($key)
+    public function setMeOwnerItem($id)
     {
-        list($key2, $id) = $key;
-        if (($item = self::find()->where(['AND', ['key' => $key2], ['remove' => 0]])->one()) === null) {
+        if (($item = self::find()->where()->one()) === null) {
             return false;
         }
-        return $item->updateAttributes(['identity' => $id]) > 0;
+        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0], ['identity' => null]], ['remove' => 1]);
     }
 
-    public function keys($identity)
+
+    public function filterShoppingCarts($params)
     {
-        $query = new \yii\mongodb\Query();
-        $query->from(self::collectionName())->select(['key'])->where(['AND', ['identity' => $identity], ['remove' => 0]]);
-        return $query->column();
-    }
+        $query = new Query();
+        $query->from($this->collection);
 
-    public function GetAllShopingCarts($get)
-    {
-        $query = self::find()->with('user')
-            ->andWhere(['AND', ['remove' => 0]]);// 'remove' => 0 : Cart can thanh toan
-        if (isset($get['value'])) {
-            $query->andWhere([
-                'or',
-                ['like', 'data.order.customer.email', $get['value']],
-                ['like', 'data.order.customer.phone', $get['value']],
-            ]);
-        } if (isset($get['value']) && isset($get['keyword'])) {
-        $query->andWhere([
-            'or',
-            ['like', $get['keyword'], $get['value']],
-            ['like', $get['keyword'], $get['value']],
-        ]);
+        $conditions = [
+            'AND',
+            ['remove' => 0],
+            ['is not', 'identity', new Expression('null')],
+        ];
+        if (isset($params['value'])) {
+            $conditions = ['OR', [
+                'value' => [
+                    '$elemMatch' => [
+                        'customer.email' => $params['value'],
+                        'customer.phone' => $params['value'],
+                    ]
+                ]
+            ]];
+        }
+        $query->where($conditions);
+        return $query->all($this->mongodb);
     }
-//        $offset = ($page - 1) * $limit;
-//        $model = $query->limit($limit)->offset($offset);
-//        echo "<pre>";
-//        print_r($query->all());
-//        echo "</pre>";
-        return $query->all();
-    }
-
-    public function getUser(){
-        return $this->hasMany(User::className(),['id' => 'identity']);
-    }
-
 }

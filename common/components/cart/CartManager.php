@@ -8,7 +8,9 @@
 
 namespace common\components\cart;
 
+use common\components\cart\item\OrderCartItem;
 use common\components\cart\storage\MongodbCartStorage;
+use phpDocumentor\Reflection\Type;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -39,6 +41,11 @@ use common\components\cart\storage\CartStorageInterface;
 class CartManager extends Component
 {
 
+    const TYPE_SHOPPING = 'shopping';
+    const TYPE_BUY_NOW = 'buynow';
+    const TYPE_SHIPPING = 'shipping';
+    const TYPE_REQUEST = 'request';
+
     /**
      * @var string | \common\components\cart\storage\CartStorageInterface
      */
@@ -59,26 +66,6 @@ class CartManager extends Component
         return $this->storage;
     }
 
-    /**
-     * @var BaseCartSerialize
-     */
-    private $_serializer = 'common\components\cart\serialize\NoneSerialize';
-
-    /**
-     * get Serialize
-     * @return BaseCartSerialize
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function getSerializer()
-    {
-        if (!is_object($this->_serializer)) {
-            $this->_serializer = Yii::createObject($this->_serializer);
-            if (!$this->_serializer instanceof BaseCartSerialize) {
-                throw new InvalidConfigException(get_class($this->_serializer) . " not instanceof common\components\cart\serialize\BaseCartSerialize");
-            }
-        }
-        return $this->_serializer;
-    }
 
     /**
      * @var \yii\web\IdentityInterface
@@ -110,136 +97,107 @@ class CartManager extends Component
 
 
     /**
-     * @param $key
-     * @param bool $safeOnly
+     *  $key = [
+     *      'type' => 'type',
+     *      'primary' => 'asdasdad',
+     *      'child' => [
+     *          'asdasdasda'
+     *      ]
+     *  ]
+     * @param $type
+     * @param $primary
+     * @param $child
      * @return array
-     * @throws \Throwable
      */
-    private function buildPrimaryKey($key, $safeOnly = true)
+    private function buildKey($type, $primary, $child = null)
     {
-        if (($user = $this->getUser()) === null && $safeOnly) {
-            $safeOnly = false;
-        }
-        return [$key, $safeOnly ? $user->getId() : null];
+        return [
+            'type' => $type,
+            'primary' => $primary,
+            'child' => $child
+        ];
     }
 
     /**
+     * @param $type
      * @param $key
      * @param bool $safeOnly
-     * @return bool
+     * @return mixed
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function hasItem($key, $safeOnly = true)
+    public function hasItem($type, $key, $safeOnly = true)
     {
-        $key = $this->normalPrimaryKey($key, $safeOnly);
-        return $this->getStorage()->hasItem($key);
+        return $this->getStorage()->hasItem($type, $key, $this->getIsSafe($safeOnly));
     }
 
     /**
+     * @param $id
      * @param $key
      * @param bool $safeOnly
      * @return bool|mixed
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function getItem($key, $safeOnly = true)
+    public function getItem($id)
     {
-        $key = $this->normalPrimaryKey($key, $safeOnly);
-        if (($value = $this->getStorage()->getItem($key)) !== false) {
-            return $this->getSerializer()->unserialize($value);
-        }
-        return false;
+        return $this->getStorage()->getItem($id);
+    }
+
+
+    public function setMeOwnerItem($id)
+    {
+        return $this->getStorage()->setMeOwnerItem($id);
+
+    }
+
+    public function filterItem($key, $safeOnly = true)
+    {
+        return $this->storage->filterItem($key, $this->getIsSafe($safeOnly));
     }
 
     /**
-     * @param $key
-     * @return bool
-     * @throws \Throwable
-     */
-    public function refreshItem($key)
-    {
-        try {
-            if (($value = $this->getItem($key)) === false) {
-                return false;
-            }
-
-            $item = new SimpleItem();
-            $params = $value['request'];
-            foreach ((array)$params as $name => $val) {
-                if ($name === 'with_detail') {
-                    continue;
-                } elseif ($name === 'type') {
-                    $name = 'source';
-                } elseif ($name === 'id') {
-                    $name = 'parentSku';
-                }
-                $item->$name = $val;
-            }
-            // Todo Validate data before call
-            // pass new param for CartItem
-            list($ok, $value) = $item->process();
-            if (!$ok) {
-                return false;
-            }
-            $value = $this->getSerializer()->serializer($value);
-            $key = $this->normalPrimaryKey($key);
-            return $this->getStorage()->setItem($key, $value);
-        } catch (\Exception $exception) {
-            Yii::info($exception);
-            return false;
-        }
-    }
-
-    /**
-     *
-     */
-    public function refreshItems()
-    {
-        foreach (array_keys($this->getItems()) as $key) {
-            $this->refreshItem($key);
-        }
-    }
-
-    public function setMeOwnerItem($key)
-    {
-        if ($this->hasItem($key, false)) {
-            $key = $this->normalPrimaryKey($key, true);
-            return $this->storage->setMeOwnerItem($key);
-        }
-        return false;
-
-    }
-
-    /**
+     * @param $type :shopping buynow ...
      * @param $params
+     *      -type: ebay/amazon
+     *      -seller: seller name
+     *      -id: primary id of item
+     *      -sku: sku of item (default null)
+     *      -quantity: quantity
+     *      -image: image
      * @param bool $safeOnly
      * @return array
      * @throws \Throwable
      */
-    public function addItem($params, $safeOnly = true)
+    public function addItem($type, $params, $safeOnly = true)
     {
-        $key = $this->createKeyFormParams($params);
-
+        $key = $this->createKeyFormParams($type, $params);
         try {
-            if ($this->hasItem($key, $safeOnly)) {
+            if ($this->filterItem($key, $safeOnly)) {
                 return [false, 'sản phẩm đã trong giỏ hàng'];
             } else {
-                /** Todo : Thiếu link Gốc sản phẩm **/
-                $item = new SimpleItem();
+                $item = new OrderCartItem();
                 foreach ($params as $name => $val) {
                     $item->$name = $val;
                 }
-                // Todo Validate data before call
-                list($ok, $value) = $item->process();
-                if (!$ok) {
-                    return [false, $value];
+                $filter = $key;
+                unset($filter['child']);
+                if (($parent = $this->filterItem($filter, $this->getIsSafe())) === null) {
+                    // Todo Validate data before call
+                    list($ok, $order) = $item->process();
+                    if (!$ok) {
+                        return [false, $order];
+                    }
+                    return [$this->getStorage()->addItem($type, $params, $order, $this->getIsSafe($safeOnly));
                 }
-                $value['key'] = $key;
-                $key = $this->normalPrimaryKey($key, $safeOnly);
 
-                $value = $this->getSerializer()->serializer($value);
-                return [$this->getStorage()->addItem($key, $value), 'Thêm sản phẩm thành công'];
+
+                // Todo Validate data before call
+                list($ok, $order) = $item->process();
+                if (!$ok) {
+                    return [false, $order];
+                }
+                return [$this->getStorage()->addItem($type, $params, $order, $this->getIsSafe($safeOnly)), 'Thêm sản phẩm thành công'];
             }
         } catch (\Exception $exception) {
             Yii::info($exception);
@@ -268,17 +226,6 @@ class CartManager extends Component
         return $this->getStorage()->setItem($key, $value);
     }
 
-    public function createKeyFormParams($params)
-    {
-        $keys = [];
-        foreach (['seller', 'source', 'sku', 'parentSku'] as $k) {
-            if (!isset($params[$k]) || (isset($params[$k]) && ($params[$k] === null || $params[$k] === ''))) {
-                continue;
-            }
-            $keys[$k] = $params[$k];
-        }
-        return md5(json_encode($keys));
-    }
 
     public function update($key, $params = [], $safeOnly = true)
     {
@@ -325,6 +272,25 @@ class CartManager extends Component
             Yii::info($exception);
             return [false, $exception->getMessage()];
         }
+    }
+
+    public function createKeyFormParams($type, $params = [])
+    {
+        $p = [];
+        foreach (['source', 'seller'] as $k) {
+            if (!isset($params[$k]) || (isset($params[$k]) && ($params[$k] === null || $params[$k] === ''))) {
+                continue;
+            }
+            $p[$k] = "$k:{$params[$k]}";
+        }
+        $c = [];
+        foreach (['id', 'sku'] as $g) {
+            if (!isset($params[$g]) || (isset($params[$g]) && ($params[$g] === null || $params[$g] === ''))) {
+                continue;
+            }
+            $c[$g] = "$g:{$params[$g]}";
+        }
+        return $this->buildKey($type, implode('|', $p), implode('|', $c));
     }
 
     public function removeItem($key)
@@ -399,9 +365,22 @@ class CartManager extends Component
      * @return array
      * @throws \Throwable
      */
-    public function normalPrimaryKey($key, $safeOnly = true)
+    public function normalKey($key, $safeOnly = true)
     {
         return $this->buildPrimaryKey($key, $safeOnly);
+    }
+
+    /**
+     * @param bool $force
+     * @return int|string|null
+     * @throws \Throwable
+     */
+    public function getIsSafe($force = false)
+    {
+        if (($user = $this->getUser()) !== null && $force) {
+            return $user->getId();
+        }
+        return null;
     }
 
     /**
