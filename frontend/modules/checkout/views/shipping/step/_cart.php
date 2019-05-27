@@ -39,7 +39,7 @@ use yii\helpers\Html;
                                 <ol class="price">
                                     <li><?= $product['portal']; ?></li>
                                     <li>x<?= $product['quantity_customer']; ?></li>
-                                    <li><?= \common\helpers\WeshopHelper::showMoney($product['total_price_amount_local']); ?><i class="currency">đ</i></li>
+                                    <li><?= \common\helpers\WeshopHelper::showMoney($product['total_price_amount_local'],1,''); ?><i class="currency">đ</i></li>
                                 </ol>
                             </div>
                         </div>
@@ -61,11 +61,11 @@ use yii\helpers\Html;
     <ul class="billing" id="billingBox">
         <li id="discountPrice" style="display: <?= $payment->total_discount_amount > 0 ? 'block' : 'none' ?>">
             <div class="left">Khuyến mãi giảm giá:</div>
-            <div class="right"><span><?= $payment->total_discount_amount; ?></span></div>
+            <div class="right"><span><?= \common\helpers\WeshopHelper::showMoney($payment->total_discount_amount,1,''); ?></span></div>
         </li>
         <li id="finalPrice">
             <div class="left">Tổng tiền thanh toán:</div>
-            <div class="right"><span><?= $payment->total_amount_display; ?></span></div>
+            <div class="right"><span><?= \common\helpers\WeshopHelper::showMoney($payment->total_amount_display,1,''); ?></span><i class="currency">đ</i></div>
         </li>
     </ul>
 </div>

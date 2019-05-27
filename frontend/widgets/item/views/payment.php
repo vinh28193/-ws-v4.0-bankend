@@ -84,7 +84,7 @@ if($item->available_quantity){
     <div class="guaranteed">
         <div class="title">Đảm bảo khách hàng</div>
         <ul>
-            <li><img src="/img/guaranteed_1.png"/> Yên tâm mua sắm</li>
+            <li><mg src="/img/guaranteed_1.png"/> Yên tâm mua sắm</li>
             <li><img src="/img/guaranteed_2.png"/> Free ship toàn quốc</li>
             <li><img src="/img/guaranteed_3.png"/> Hỗ trợ đổi trả, khiếu nại</li>
             <li><img src="/img/guaranteed_4.png"/> Thủ tục trọn gói</li>
