@@ -19,7 +19,8 @@ use yii\helpers\Html; ?>
                 <i>Bạn đến nộp tiền tại văn phòng của Weshop tại Hà Nội và TP. Hồ Chí Minh;  <span class="text-danger"><strong>buổi sáng từ 8h to 12h, buổi chiều: 13h30 to 17h30</strong></span> các ngày trong tuần (Thứ Bảy nghỉ buổi chiều), trừ ngày Lễ và Chủ nhật.</i>
             </div>
             <div class="panel-footer text-center">
-                <?=Html::a("Tôi đã hiểu","/",["class" => "btn btn-default ws-btn"]);?>
+                <?=Html::a("Tôi đã hiểu","/",["class" => "btn btn-default",'style' => 'color: #fff;
+    background-image: linear-gradient(3deg, #fc701b, #f58e01);']);?>
             </div>
         </div>
     </div>

@@ -65,78 +65,7 @@ FrontendAsset::register($this);
                         <div class="dropdown-menu animated fadeIn">
                             <div class="title2 active">Amazon Japan</div>
                             <ul>
-                                <li class="sub-2">
-                                    <a href="#">Book</a>
-                                    <div class="sub-menu">
-                                        <div class="amazon-sub-content">
-                                            <div class="title-box">
-                                                <div class="title">Amazon Kinder & Fire</div>
-                                                <div class="sub-title">Chỉ có tại Amazon</div>
-                                            </div>
-                                            <div class="sub-bg"><img src="https://static-v3.weshop.com.vn/uploadImages/ea2dff/ea2dff8f1ef1dc3082523658afa31530.png" alt="" title=""/></div>
-                                            <div class="left">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="title-2">Amazon Video</div>
-                                                        <ol>
-                                                            <li><a href="#">All Videos</a></li>
-                                                            <li><a href="#">Included with Prime</a></li>
-                                                            <li><a href="#">Add-on Subscriptions</a></li>
-                                                            <li><a href="#">Rent or Buy</a></li>
-                                                            <li><a href="#">Free to watch</a></li>
-                                                        </ol>
-                                                        <div class="title-2">More to Explore</div>
-                                                        <ol>
-                                                            <li><a href="#">Video Shorts</a></li>
-                                                            <li><a href="#">Style Code Live</a></li>
-                                                        </ol>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="title-2">More to Explore</div>
-                                                        <ol>
-                                                            <li><a href="#">Video Shorts</a></li>
-                                                            <li><a href="#">Style Code Live</a></li>
-                                                        </ol>
-                                                        <div class="title-2">Amazon Video</div>
-                                                        <ol>
-                                                            <li><a href="#">All Videos</a></li>
-                                                            <li><a href="#">Included with Prime</a></li>
-                                                            <li><a href="#">Add-on Subscriptions</a></li>
-                                                            <li><a href="#">Rent or Buy</a></li>
-                                                            <li><a href="#">Free to watch</a></li>
-                                                        </ol>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="right">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Digital & Prime Music</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Amazon Photo & Drive</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Kindle E-readers & Books</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Fire Tablets</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Fire TV</a>
-                                    <div class="sub-menu"></div>
-                                </li>
-                                <li class="sub-2">
-                                    <a href="#">Echo & Alexa</a>
-                                    <div class="sub-menu"></div>
-                                </li>
+                                <?= \frontend\widgets\alias\TopMenuAliasWidget::widget(['type' => 'NAV_TOP_JP']) ?>
                             </ul>
                             <div class="see-all">
                                 <a href="#">Xem toàn bộ danh mục <i class="fa fa-long-arrow-right pull-right"></i></a>
