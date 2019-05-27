@@ -55,19 +55,19 @@ class CmsController extends FrontendController
 
     public function ogMetaTag()
     {
-        return ArrayHelper::merge(parent::ogMetaTag(), [
+        return ArrayHelper::merge(parent::ogMetaTag(), $this->page !== null ? [
             'site_name' => $this->page->title,
             'url' => $this->page->url,
             'image' => $this->page->image,
             'description' => $this->page->description,
-        ]);
+        ] : []);
     }
 
     public function linkTag()
     {
-        return ArrayHelper::merge(parent::ogMetaTag(), [
+        return ArrayHelper::merge(parent::ogMetaTag(), $this->page !== null ? [
             'canonical' => $this->page->url,
-        ]);
+        ] : []);
     }
 
     /**

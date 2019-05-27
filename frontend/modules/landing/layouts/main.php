@@ -1,11 +1,16 @@
 <?php
 
+use frontend\widgets\layout\FooterWidget;
+use yii\helpers\Html;
+use yii\helpers\Url;
+
+use frontend\modules\landing\LandingAsset;
+
 /* @var $this yii\web\View */
 /* @var $content string */
-
+LandingAsset::register($this);
 $this->beginPage();
-use frontend\widgets\layout\FooterWidget;
-use yii\helpers\Html;use yii\helpers\Url; ?>
+?>
 
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -24,7 +29,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
         <div class="container top-nav">
             <div class="row">
                 <nav class="navbar navbar-default">
-                    <div class="ws-fixed-nav">
+                    <div class="ws-fixed-nav" style="top: -150px;">
                         <div class="container">
                             <div class="row">
                                 <nav class="navbar navbar-default">
@@ -32,37 +37,31 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                         <!-- Brand and toggle get grouped for better mobile display -->
                                         <div class="navbar-header">
                                             <a class="navbar-brand" href="/">
-                                                <img src="<?= \yii\helpers\Url::base(true); ?>/images/weshop-logo.png"
-                                                     alt="Weshop Logo"
-                                                     title="Weshop Logo"/>
+                                                <img src="https://weshop.com.vn/images/weshop-logo.png" alt="Weshop Logo" title="Weshop Logo">
                                             </a>
                                         </div>
                                         <div class="header-search">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" aria-describedby="basic-addon2"
-                                                       name="searchTop">
-                                                <a href="javascript::void(0);"
-                                                   class="input-group-addon">
+                                                <input type="text" class="form-control" aria-describedby="basic-addon2" name="searchTop">
+                                                <a href="javascript::void(0);" onclick="crawl.searchTop();" class="input-group-addon">
                                                     <i class="fa fa-search ws-header-search"></i>
                                                     <i class="fa fa-usd ws-header-checkout" style="display: none;"></i>
                                                     <div class="search-loader ws-header-loading" style="display: none;">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="20" width="20"
-                                                             viewBox="0 0 75 75">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="20" width="20" viewBox="0 0 75 75">
                                                             <circle cx="37.5" cy="37.5" r="33.5" stroke-width="6"></circle>
                                                         </svg>
                                                     </div>
                                                 </a>
                                                 <span class="search-brand ws-header-brand" style="display: none;">
-								<img src="/img/ebay-2.png" alt="" title="">
+								<img src="https://weshop.com.vn/images/ebay-2.png" alt="" title="">
 							</span>
                                                 <i class="fa fa-check-circle ws-header-success" style="display: none;"></i>
 
                                                 <div class="search-placeholder" id="aboutPlaceholder">
-                                                    <strong>What do you want to buy</strong><br/>
-                                                    <span>Input keyword or paste detail URL of product</span>
+                                                    <strong>Bạn muốn mua sản phẩm nào?</strong><br>
+                                                    <span>Nhập từ khoá hoặc dán link chi tiết của sản phẩm</span>
                                                 </div>
-                                                <a class="search-cancel ws-header-close" href="javascript::void(0);"
-                                                   style="display: none;">
+                                                <a class="search-cancel ws-header-close" href="javascript::void(0);" style="display: none;">
                                                     <i class="fa fa-times-circle"></i>
                                                 </a>
                                             </div>
@@ -70,98 +69,143 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                         <!-- Collect the nav links, forms, and other content for toggling -->
                                         <div class="icon-navbar">
                                             <ul class="nav navbar-nav navbar-right">
+                                                <!--                                                <li class="dropdown user-box user-in">-->
+                                                <!--                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"-->
+                                                <!--                                                       aria-haspopup="true" aria-expanded="false">-->
+                                                <!--                                                        <i class="user-avatar">-->
+                                                <!--                                                            <img-->
+                                                <!--                                                                    src="https://static.weshop.com.vn/upload/8/s/e/h/e/q/q/9/2/1/20031813_1884928861756823_3343446603467193132_n.jpg"-->
+                                                <!--                                                                    alt="Weshop"-->
+                                                <!--                                                                    title="Weshop"/>-->
+                                                <!--                                                        </i>-->
+                                                <!--                                                    </a>-->
+                                                <!--                                                    <div class="dropdown-menu animated ws-animated fadeInUpShort">-->
+                                                <!--                                                        <div class="user-address">-->
+                                                <!--                                                            <div class="top">-->
+                                                <!--                                                                <strong>Địa chỉ tại Mỹ của bạn</strong>-->
+                                                <!--                                                            </div>-->
+                                                <!--                                                            <div class="user-info">-->
+                                                <!--                                                                <span class="title">Họ và tên:</span>-->
+                                                <!--                                                                <span class="content">-->
+                                                <!--												                                                  Weshop Testt (3645912)-->
+                                                <!--                                                  											</span>-->
+                                                <!--                                                            </div>-->
+                                                <!--                                                            <div class="user-info">-->
+                                                <!--                                                                <span class="title">Địa chỉ</span>-->
+                                                <!--                                                                <span class="content">-->
+                                                <!--												2268 Senter Rd Ste 198											</span>-->
+                                                <!--                                                            </div>-->
+                                                <!--                                                            <div class="user-info">-->
+                                                <!--                                                                <span class="title">Thành phố</span>-->
+                                                <!--                                                                <span class="content">San Jose, California</span>-->
+                                                <!--                                                            </div>-->
+                                                <!--                                                            <div class="user-info">-->
+                                                <!--                                                                <span class="title">Mã bưu điện</span>-->
+                                                <!--                                                                <span class="content">95112-2623</span>-->
+                                                <!--                                                            </div>-->
+                                                <!--                                                            <div class="user-info">-->
+                                                <!--                                                                <span class="title">Quốc gia</span>-->
+                                                <!--                                                                <span class="content">United State</span>-->
+                                                <!--                                                            </div>-->
+                                                <!--                                                        </div>-->
+                                                <!--                                                        <div class="acc-setting">-->
+                                                <!--                                                            <a href="--><!--/account/profile/">-->
+                                                <!--                                                                <i class="icon-nav icon-gear"></i>-->
+                                                <!--                                                                <span>Cài đặt tài khoản</span>-->
+                                                <!--                                                            </a>-->
+                                                <!--                                                        </div>-->
+                                                <!--                                                        <div class="sign-out text-right">-->
+                                                <!--                                                            <i class="fa fa-power-off"></i> không phải Weshop ? <a-->
+                                                <!--                                                                    href="javascript:void(0);"-->
+                                                <!--                                                                    onclick="user.logout();">Đăng xuất</a>-->
+                                                <!--                                                        </div>-->
+                                                <!--                                                    </div>-->
+                                                <!--                                                </li>-->
+
                                                 <li class="dropdown mail-box">
-                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                                       aria-haspopup="true" aria-expanded="false">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                                         <i class="icon-nav icon-mail"></i>
                                                     </a>
                                                     <ul class="dropdown-menu animated ws-animated fadeInUpShort">
                                                         <li>
-                                                            <div class="alert alert-info"
-                                                                 role="alert">Bạn chưa có tin nhắn mới
+                                                            <div class="alert alert-info" role="alert">Bạn chưa có tin nhắn mới
                                                             </div>
                                                         </li>
                                                     </ul>
                                                 </li>
                                                 <li class="dropdown" id="load_nottifi">
-                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                                       aria-haspopup="true" aria-expanded="false">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                                         <i class="nav-ico noti"></i>
                                                     </a>
                                                     <div class="dropdown-menu animated fadeIn">
                                                         <ul>
                                                             <li>
-                                                                <div class="alert alert-info"
-                                                                     role="alert">Bạn chưa có tin nhắn mới
+                                                                <div class="alert alert-info" role="alert">Bạn chưa có tin nhắn mới
                                                                 </div>
                                                             </li>
                                                         </ul>
                                                     </div>
                                                 </li>
                                                 <li class="dropdown question-box">
-                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                                       aria-haspopup="true" aria-expanded="false">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                                         <i class="icon-nav icon-question"></i>
                                                     </a>
                                                     <ul class="dropdown-menu animated ws-animated fadeInUpShort">
                                                         <li>
-                                                            <a href="#">
+                                                            <a href="/faq.html?name=hoi-ve-cach-thuc-thanh-toan&amp;id=57&amp;page=2&amp;per-page=10">
                                                                 <span><i class="fa fa-caret-right"></i> Thanh toán như thế nào</span>
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="">
-                                                                <span><i class="fa fa-caret-right"></i>Chính sách hoàn trả</span>
+                                                            <a href="/helps/detail/hoan-hang-cho-nguoi-ban-777.html">
+                                                                <span><i class="fa fa-caret-right"></i> Chính sách bảo hành, hỗ trợ bảo hành</span>
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="">
+                                                            <a href="/helps/detail/hang-han-che-nhap-hoac-cam-782.html">
                                                                 <span><i class="fa fa-caret-right"></i> Các mặt hàng cấm</span>
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="">
+                                                            <a href="/helps/detail/thue-phi-nhap-khau-765.html">
                                                                 <span><i class="fa fa-caret-right"></i> Thuế nhập khẩu</span>
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="">
-                                                                <span><i class="fa fa-caret-right"></i>Chính sách bảo mật</span>
+                                                            <a href="/helps/detail/chinh-sach-bao-mat-thong-tin-783.html">
+                                                                <span><i class="fa fa-caret-right"></i> Chính sách bảo mật</span>
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="">
+                                                            <a href="/helps/detail/dieu-khoan-su-dung-dich-vu-752.html">
                                                                 <span><i class="fa fa-caret-right"></i> Các điều khoản và điều kiện</span>
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="">
+                                                            <a href="/helps/detail/tong-quan-ve-weshop-757.html">
                                                                 <span><i class="fa fa-caret-right"></i> Liên hệ</span>
                                                             </a>
                                                         </li>
                                                         <li>
                                                             <div class="contact">
-                                                                <div class="contact-icon"><img
-                                                                        src="/img/support-icon.png"
-                                                                        alt="" title=""/></div>
+                                                                <div class="contact-icon"><img src="https://weshop.com.vn/images/support-icon.png" alt="" title=""></div>
                                                                 <div class="item">
-                                                                    <a href="mailto:support@weshop.com.vn" rel="nofollow"
-                                                                           target="_top">support@weshop.com.vn</a>
-                                                                        <span>1900.6755</span>
+                                                                    <a href="mailto:support@weshop.com.vn" rel="nofollow" target="_top">support@weshop.com.vn</a>
+                                                                    <span>1900.6755</span>
                                                                 </div>
                                                                 <div class="clearfix"></div>
                                                             </div>
                                                         </li>
                                                         <li class="see-more text-center">
                                                             <a href="/faq/category/cau-hoi-tong-quan-33.html">
-                                                                Đến trung tâm hỗ trợ<i class="fa fa-long-arrow-right"></i>
+                                                                Đến trung tâm hỗ trợ <i class="fa fa-long-arrow-right"></i>
                                                             </a>
                                                         </li>
                                                     </ul>
                                                 </li>
 
                                                 <li class="dropdown cart-box">
-                                                    <a href="">
+                                                    <a href="https://weshop.com.vn/shoppingcarts.html?ref=https://weshop.com.vn/landing-page/lp-deal-ebay-178.html">
                                                         <i class="icon-nav icon-cart"></i>
                                                         <span class="badge countCart" style="display:none;">0</span>
                                                     </a>
@@ -176,11 +220,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                     <div>
                         <ul class="nav navbar-nav navbar-right">
                             <li class="dropdown buy-for-me">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">Mua hộ
-                                    <i
-                                        class="fa fa-angle-down"></i></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mua hộ                                    <i class="fa fa-angle-down"></i></a>
                                 <div class="dropdown-menu buyforme-content animated ws-animated fadeInUpShort">
                                     <span class="arrow"></span>
                                     <div class="col-70 left">
@@ -202,7 +242,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                                     <div class="img"><span class="shop-icon step-2"></span></div>
                                                     <div class="text">
                                                         <div class="text-step">Bước 2</div>
-                                                        <p>Thanh toán cho Weshop</p>
+                                                        <p>Thanh toán đơn hàng</p>
                                                     </div>
                                                 </li>
                                                 <li class="next" id="next2">
@@ -214,7 +254,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                                     <div class="img"><span class="shop-icon step-3"></span></div>
                                                     <div class="text">
                                                         <div class="text-step">Bước 3</div>
-                                                        <p>Weshop mua hàng, kiểm tra hàng và vận chuyển</p>
+                                                        <p>Weshop hỗ trợ mua hàng, kiểm tra hàng</p>
                                                     </div>
                                                 </li>
                                                 <li class="next" id="next3">
@@ -226,7 +266,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                                     <div class="img"><span class="shop-icon step-4"></span></div>
                                                     <div class="text">
                                                         <div class="text-step">Bước 4</div>
-                                                        <p>Weshop thông quan và giao hàng tận tay bạn</p>
+                                                        <p>Weshop hỗ trợ chuyển hàng về tận tay bạn</p>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -269,11 +309,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                 </div>
                             </li>
                             <li class="dropdown ship-for-me">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">Ship hộ
-                                    <i
-                                        class="fa fa-angle-down"></i></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ship hộ                                    <i class="fa fa-angle-down"></i></a>
                                 <div class="dropdown-menu shipforme-content animated ws-animated fadeInUpShort">
                                     <span class="arrow"></span>
                                     <div class="col-70 left">
@@ -283,8 +319,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                                     <div class="img"><span class="ship-icon step-1"></span></div>
                                                     <div class="text">
                                                         <div class="text-step">Bước 1</div>
-                                                        <p>Đăng ký tài khoản Weshop Có ngay địa chỉ riêng tại Mỹ!
-                                                        </p></div>
+                                                        <p>Đăng ký tài khoản Weshop Có ngay địa chỉ riêng tại Mỹ!                                                        </p></div>
                                                 </li>
                                                 <li class="next" id="next1">
                                                     <i class="fa fa-circle text-active"></i>
@@ -295,7 +330,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                                     <div class="img"><span class="ship-icon step-2"></span></div>
                                                     <div class="text">
                                                         <div class="text-step">Bước 2</div>
-                                                        <p><Tự mua tại bất kỳ website nào và chuyển hàng tới địa chỉ Mỹ của bạn.'</p>
+                                                        <p>Tự mua tại bất kỳ website nào và chuyển hàng tới địa chỉ Mỹ của bạn.</p>
                                                     </div>
                                                 </li>
                                                 <li class="next" id="next2">
@@ -307,8 +342,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                                     <div class="img"><span class="ship-icon step-3"></span></div>
                                                     <div class="text">
                                                         <div class="text-step">Bước 3</div>
-                                                        <p>Weshop nhận hàng, kiểm hàng và chuyển quốc tế
-                                                        </p>
+                                                        <p>Weshop hỗ trợ nhận hàng, kiểm hàng và chuyển quốc tế</p>
                                                     </div>
                                                 </li>
                                                 <li class="next" id="next3">
@@ -320,7 +354,7 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                                     <div class="img"><span class="ship-icon step-4"></span></div>
                                                     <div class="text">
                                                         <div class="text-step">Bước 4</div>
-                                                        <p>Weshop thông quan, giao hàng tận tay và thu tiền dịch vụ</p>
+                                                        <p>Weshop hỗ trợ chuyển hàng tới tận tay bạn và thu tiền dịch vụ</p>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -328,32 +362,24 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                     </div>
                                     <div class="col-30 right">
                                         <ul>
-                                            <li class="active"><a
-                                                    href="/faq/detail/lam-the-nao-de-toi-co-duoc-dia-chi-kho-hang-weshop-786.html"><i
-                                                        class="fa fa-angle-double-right"></i> Cung cấp địa chỉ của
+                                            <li class="active"><a href="/faq/detail/lam-the-nao-de-toi-co-duoc-dia-chi-kho-hang-weshop-786.html"><i class="fa fa-angle-double-right"></i> Cung cấp địa chỉ của
                                                     bạn
                                                 </a></li>
-                                            <li><a href="/helps/detail/mien-phi-kiem-dem-hang-co-ban-775.html"><i
-                                                        class="fa fa-angle-double-right"></i> Kiểm tra </a></li>
+                                            <li><a href="/helps/detail/mien-phi-kiem-dem-hang-co-ban-775.html"><i class="fa fa-angle-double-right"></i> Kiểm tra </a></li>
                                             <li>
-                                                <a href="/helps/detail/cac-dich-vu-khac-chup-hinh-kiem-tra-chi-tiet-hang-yeu-cau-dac-biet-778.html"><i
-                                                        class="fa fa-angle-double-right"></i> Dịch vụ chụp ảnh </a>
+                                                <a href="/helps/detail/cac-dich-vu-khac-chup-hinh-kiem-tra-chi-tiet-hang-yeu-cau-dac-biet-778.html"><i class="fa fa-angle-double-right"></i> Dịch vụ chụp ảnh </a>
                                             </li>
-                                            <li><a href="/helps/detail/mien-phi-gom-hang-772.html"><i
-                                                        class="fa fa-angle-double-right"></i> Hợp nhất lô hàng </a>
+                                            <li><a href="/helps/detail/mien-phi-gom-hang-772.html"><i class="fa fa-angle-double-right"></i> Hợp nhất lô hàng </a>
                                             </li>
-                                            <li><a href="/helps/detail/mien-phi-goi-lai-hang-773.html"><i
-                                                        class="fa fa-angle-double-right"></i> Dịch vụ đóng gói lại
+                                            <li><a href="/helps/detail/mien-phi-goi-lai-hang-773.html"><i class="fa fa-angle-double-right"></i> Dịch vụ đóng gói lại
                                                 </a>
                                             </li>
                                             <!--<li><a href="#"><i class="fa fa-angle-double-right"></i> Dịch vụ Đến nhận hàng</a></li>-->
-                                            <li><a href="/helps/detail/bao-hiem-hang-hoa-776.html"><i
-                                                        class="fa fa-angle-double-right"></i> Bảo hiểm vận chuyển
+                                            <li><a href="/helps/detail/bao-hiem-hang-hoa-776.html"><i class="fa fa-angle-double-right"></i> Bảo hiểm vận chuyển
                                                 </a>
                                             </li>
                                             <!--<li><a href="#"><i class="fa fa-angle-double-right"></i> Dịch vụ kê khai Hải quan</a></li>-->
-                                            <li><a href="/helps/detail/mien-phi-luu-kho-toi-60-ngay-774.html"><i
-                                                        class="fa fa-angle-double-right"></i> Miễn phí 60 ngày lưu
+                                            <li><a href="/helps/detail/mien-phi-luu-kho-toi-60-ngay-774.html"><i class="fa fa-angle-double-right"></i> Miễn phí 60 ngày lưu
                                                     trữ
                                                 </a></li>
                                         </ul>
@@ -361,136 +387,134 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                 </div>
                             </li>
                             <li class="dropdown order-tracking">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">Search Tracking Order
-                                    <i class="fa fa-angle-down"></i></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kiểm tra hành trình đơn hàng                                    <i class="fa fa-angle-down"></i></a>
                                 <div class="dropdown-menu animated ws-animated fadeInUpShort">
                                     <div class="form-group">
-                                        <input type="text" class="form-control"
-                                               placeholder="Bincode Order"
-                                               name="checkMainOrderId">
+                                        <input type="text" class="form-control" placeholder="BIN CODE" name="checkMainOrderId">
                                     </div>
                                     <div class="text-right">
-                                        <button type="button" class="btn btn-default ws-btn"
-                                                onclick="order.checkOrderMain();">Check
-                                        </button>
+                                        <button type="button" class="btn btn-default ws-btn" onclick="order.checkOrderMain();">Kiểm tra                                        </button>
                                     </div>
                                 </div>
                             </li>
-                            <li class="calculature"><a
-                                    href="/helps/detail/cac-dich-vu-khac-chup-hinh-kiem-tra-chi-tiet-hang-yeu-cau-dac-biet-778.html">Shipping calculature</a>
+                            <li class="calculature"><a href="/helps/detail/cac-dich-vu-khac-chup-hinh-kiem-tra-chi-tiet-hang-yeu-cau-dac-biet-778.html">Phí dịch vụ</a>
                             </li>
-                            <li class="pricing"><a
-                                    href="/size-chart.html">Pricing</a>
+                            <li class="pricing"><a href="/size-chart.html">Bảng tra cỡ</a>
                             </li>
-                            <?php if (empty($custormer)) { ?>
-                                <li class="dropdown user-box active">
-                                    <a href="#" data-toggle="modal" data-target="#sign-in">
-                                        <i class="icon-nav icon-user"></i>
-                                    </a>
-                                </li>
-                            <?php } else { ?>
-                                <li class="dropdown user-in ">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                       aria-haspopup="true" aria-expanded="false">
-                                        <i class="user-avatar">
-                                            <img src="/account_images/logo/no-photo.png"
-                                                 alt="" title=""/>
-                                        </i>
-                                    </a>
-                                    <div class="dropdown-menu animated ws-animated fadeInUpShort">
-                                        <div class="acc-setting">
-                                            <a href="/account/profile">
-                                                <i class="icon-nav icon-gear"></i>
-                                                <span>Account setting</span>
-                                            </a>
-                                        </div>
-                                        <div class="sign-out text-right">
-                                            <i class="fa fa-power-off"></i>
-                                        </div>
+                            <li class="dropdown user-in ">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="user-avatar">
+                                        <img src="https://weshop.com.vn/account_images/logo/no-photo.png" alt="" title="">
+                                    </i>
+                                </a>
+                                <div class="dropdown-menu animated ws-animated fadeInUpShort">
+                                    <!--                                    <div class="user-address">-->
+                                    <!--                                        <div class="top">-->
+                                    <!--                                            <strong>Địa chỉ tại Mỹ của bạn</strong>-->
+                                    <!--                                        </div>-->
+                                    <!--                                        <div class="user-info">-->
+                                    <!--                                            <span class="title">Họ và tên:</span>-->
+                                    <!--                                            <span class="content">-->
+                                    <!--												                                                  Weshop Testt (3645912)-->
+                                    <!--                                                  											</span>-->
+                                    <!--                                        </div>-->
+                                    <!--                                        <div class="user-info">-->
+                                    <!--                                            <span class="title">Địa chỉ</span>-->
+                                    <!--                                            <span class="content">-->
+                                    <!--										2268 Senter Rd Ste 198									</span>-->
+                                    <!--                                        </div>-->
+                                    <!--                                        <div class="user-info">-->
+                                    <!--                                            <span class="title">Thành phố</span>-->
+                                    <!--                                            <span class="content">San Jose, California</span>-->
+                                    <!--                                        </div>-->
+                                    <!--                                        <div class="user-info">-->
+                                    <!--                                            <span class="title">Mã bưu điện</span>-->
+                                    <!--                                            <span class="content">95112-2623</span>-->
+                                    <!--                                        </div>-->
+                                    <!--                                        <div class="user-info">-->
+                                    <!--                                            <span class="title">Quốc gia</span>-->
+                                    <!--                                            <span class="content">United State</span>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </div>-->
+                                    <div class="acc-setting">
+                                        <a href="https://weshop.com.vn/account/profile">
+                                            <i class="icon-nav icon-gear"></i>
+                                            <span>Cài đặt tài khoản</span>
+                                        </a>
                                     </div>
+                                    <div class="sign-out text-right">
+                                        <i class="fa fa-power-off"></i> không phải                                             ? <a href="javascript:void(0);" onclick="user.logout();">Đăng xuất</a>
+                                    </div>
+                                </div>
 
-                                </li>
-                            <?php } ?>
+                            </li>
                             <li class="dropdown mail-box">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-haspopup="true" aria-expanded="false">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="icon-nav icon-mail"></i>
                                 </a>
                                 <ul class="dropdown-menu animated ws-animated fadeInUpShort">
                                     <li>
-                                        <div class="alert alert-info"
-                                             role="alert">You have no message
-                                        </div>
+                                        <div class="alert alert-info" role="alert">Bạn chưa có tin nhắn mới                                        </div>
                                     </li>
                                 </ul>
                             </li>
                             <li class="dropdown" id="load_nottifi">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-haspopup="true" aria-expanded="false">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="nav-ico noti"></i>
                                 </a>
                                 <div class="dropdown-menu animated fadeIn">
                                     <ul>
                                         <li>
-                                            <div class="alert alert-info"
-                                                 role="alert">You have no message
-                                            </div>
+                                            <div class="alert alert-info" role="alert">Bạn chưa có tin nhắn mới                                            </div>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
                             <li class="dropdown question-box">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="icon-nav icon-question"></i>
                                 </a>
                                 <ul class="dropdown-menu animated ws-animated fadeInUpShort">
                                     <li>
-                                        <a href="">
+                                        <a href="/faq.html?name=hoi-ve-cach-thuc-thanh-toan&amp;id=57&amp;page=2&amp;per-page=10">
                                             <span><i class="fa fa-caret-right"></i> Thanh toán như thế nào</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="">
-                                            <span><i class="fa fa-caret-right"></i> Chính sách hoàn trả</span>
+                                        <a href="/helps/detail/hoan-hang-cho-nguoi-ban-777.html">
+                                            <span><i class="fa fa-caret-right"></i> Chính sách bảo hành, hỗ trợ bảo hành</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="">
+                                        <a href="/helps/detail/hang-han-che-nhap-hoac-cam-782.html">
                                             <span><i class="fa fa-caret-right"></i> Các mặt hàng cấm</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="">
+                                        <a href="/helps/detail/thue-phi-nhap-khau-765.html">
                                             <span><i class="fa fa-caret-right"></i> Thuế nhập khẩu</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="">
+                                        <a href="/helps/detail/chinh-sach-bao-mat-thong-tin-783.html">
                                             <span><i class="fa fa-caret-right"></i> Chính sách bảo mật</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="">
+                                        <a href="/helps/detail/dieu-khoan-su-dung-dich-vu-752.html">
                                             <span><i class="fa fa-caret-right"></i> Các điều khoản và điều kiện</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="">
+                                        <a href="/helps/detail/tong-quan-ve-weshop-757.html">
                                             <span><i class="fa fa-caret-right"></i> Liên hệ</span>
                                         </a>
                                     </li>
                                     <li>
                                         <div class="contact">
-                                            <div class="contact-icon"><img
-                                                    src="<?= \yii\helpers\Url::base(true); ?>/images/support-icon.png"
-                                                    alt="" title=""/></div>
+                                            <div class="contact-icon"><img src="https://weshop.com.vn/images/support-icon.png" alt="" title=""></div>
                                             <div class="item">
-                                                <a href="mailto:support@weshop.com.vn" rel="nofollow"
-                                                   target="_top">support@weshop.com.vn</a>
+                                                <a href="mailto:support@weshop.com.vn" rel="nofollow" target="_top">support@weshop.com.vn</a>
                                                 <span>1900.6755</span>
                                             </div>
                                             <div class="clearfix"></div>
@@ -498,14 +522,13 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                                     </li>
                                     <li class="see-more text-center">
                                         <a href="/faq/category/cau-hoi-tong-quan-33.html">
-                                           Đến trung tâm hỗ trợ
-                                            <i class="fa fa-long-arrow-right"></i>
+                                            Đến trung tâm hỗ trợ                                            <i class="fa fa-long-arrow-right"></i>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="dropdown cart-box">
-                                <a href="/shoppingcarts.html?ref=#">
+                                <a href="https://weshop.com.vn/shoppingcarts.html?ref=https://weshop.com.vn/landing-page/lp-deal-ebay-178.html">
                                     <i class="icon-nav icon-cart"></i>
                                     <span class="badge" style="display:none;">0</span>
                                 </a>
@@ -519,32 +542,28 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
             <div class="container">
                 <div class="row">
                     <div class="col-md-3 header-logo">
-                        <a href="/"><img src="<?= Url::base(true); ?>/img/weshop-logo-vn.png" alt=""/></a>
+                        <a href="/"><img src="https://weshop.com.vn/images/logo/weshop/weshop-logo-vn.png" alt=""></a>
                     </div>
                     <div class="col-md-6 header-search">
                         <div class="input-group">
                             <input type="text" class="form-control" aria-describedby="basic-addon2" id="LDSearch" name="LDSearch">
-                            <a href="javascript:void(0);" class="input-group-addon" onclick="ws.searchNew('#LDSearch',null)"
-                               data-toggle="tooltip" data-placement="top"
-                               title="Tìm kiếm"
-                               style="text-decoration: none;">
+                            <a href="javascript:void(0);" class="input-group-addon" onclick="app.searchNew('#LDSearch',null)" data-toggle="tooltip" data-placement="top" title="" style="text-decoration: none;" data-original-title="Tìm kiếm">
                                 <i class="fa fa-search ws-header-search"></i>
                                 <i class="fa fa-usd ws-header-checkout" style="display: none;"></i>
                                 <div class="search-loader ws-header-loading" style="display: none;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="20" width="20"
-                                         viewBox="0 0 75 75">
+                                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="20" width="20" viewBox="0 0 75 75">
                                         <circle cx="37.5" cy="37.5" r="33.5" stroke-width="6"></circle>
                                     </svg>
                                 </div>
                             </a>
                             <span class="search-brand ws-header-brand" style="display: none;">
-						<img src="<?= \yii\helpers\Url::base(true); ?>/images/ebay-2.png" alt="" title="">
+						<img src="https://weshop.com.vn/images/ebay-2.png" alt="" title="">
 					</span>
                             <i class="fa fa-check-circle ws-header-success" style="display: none;"></i>
 
                             <div class="search-placeholder" id="textsearch">
-                                <strong>What do you want to buy</strong><br/>
-                                <span>Input keyword or paste detail URL of product</span>
+                                <strong>Bạn muốn mua sản phẩm nào?</strong><br>
+                                <span>Nhập từ khoá hoặc dán link chi tiết của sản phẩm</span>
                             </div>
                             <a class="search-cancel ws-header-close" href="javascript::void(0);" style="display: none;">
                                 <i class="fa fa-times-circle"></i>
@@ -562,15 +581,11 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
                     </div>
                     <div class="col-md-3">
                         <div class="header-cart">
-                            <a href="<?= \yii\helpers\Url::base(true); ?>/shoppingcarts.html?ref=<?= \yii\helpers\Url::base(true); ?>/landing-page/lp-deal-ebay-178.html"
-                               class="cart">
+                            <a href="https://weshop.com.vn/shoppingcarts.html?ref=https://weshop.com.vn/landing-page/lp-deal-ebay-178.html" class="cart">
                                 <div class="cart-text">
                                     <span class="cart-title">View shopping cart</span>
 
-                                    <span class="text"
-
-                                          id="cart-header"
-                                          style="display:none;">0 Product(s)</span>
+                                    <span class="text" id="cart-header" style="display:none;">0 Product(s)</span>
                                 </div>
                                 <div class="cart-img"></div>
                             </a>
@@ -589,6 +604,59 @@ use yii\helpers\Html;use yii\helpers\Url; ?>
 </div>
 
 <?php $this->endBody() ?>
+<script>
+    $(document).ready(function () {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > $('#header').height()) {
+                $('#header .ws-fixed-nav').css('top', 0);
+            } else {
+                $('#header .ws-fixed-nav').css('top', '-150px');
+            }
+        });
+
+        $('#lsp-table-full').hide();
+        $("#lsp-cal").click(function () {
+            $("#lsp-table-full").slideToggle();
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $('.price-request2').click(function () {
+        $(this).addClass('close');
+        $('.price-now').css('right', '0')
+    })
+    $(document).mouseup(function (e) {
+        var container = $(".price-now");
+
+        if (!container.is(e.target) // if the target of the click isn't the container...
+            && container.has(e.target).length === 0) // ... nor a descendant of the container
+        {
+            $('.price-request2').removeClass('close');
+            $('.price-now').css('right', '-300px')
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#LDSearch').on('keyup', function (e) {
+            e.preventDefault();
+            var $input = $(this);
+            var helpText = $('#textsearch');
+            if($input.val() !== ''){
+                helpText.css('display','none');
+            }else{
+                helpText.css('display','block');
+            }
+            if(e.keyCode === 13){
+                ws.searchNew($input[0],null);
+            }
+            return false;
+        })
+    })
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>
+
