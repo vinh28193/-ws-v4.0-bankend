@@ -67,7 +67,7 @@ if ($product['sell_price'] && $product['retail_price'] && $product['retail_price
                 }
                 ?>
             </div>
-            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>
+<!--            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>-->
         </div>
     </a>
 </div>
