@@ -37,7 +37,7 @@ if($type == 'extra'){
             <div class="col-md-12">
                 <?php
                 if($checkShow){?>
-                    <iframe height="1000px" style="border: 0px; width: inherit"
+                    <iframe style="border: 0px; width: inherit; height: inherit; max-height: 500px"
                             src="/description/<?= strtolower($item->type) ?>-<?= ($item->item_id) ?>.html?description=<?= $type ?>"
                             frameborder="0"  sandbox="allow-forms allow-scripts" scrolling="yes"
                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
