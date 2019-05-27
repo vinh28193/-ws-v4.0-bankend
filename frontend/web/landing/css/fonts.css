@@ -1,0 +1,48 @@
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    src: url("../fonts/roboto/roboto-bold-webfont.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/roboto/roboto-regular-webfont.woff") format("woff"),
+    url("../fonts/roboto/roboto-regular-webfont.ttf") format("truetype"),
+    url("../fonts/roboto/roboto-regular-webfont.svg#Roboto") format("svg");
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: italic;
+    font-weight: 400;
+    src: url("../fonts/roboto/roboto-italic-webfont.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/roboto/roboto-italic-webfont.woff") format("woff"),
+    url("../fonts/roboto/roboto-italic-webfont.ttf") format("truetype"),
+    url("../fonts/roboto/roboto-italic-webfont.svg#Roboto") format("svg");
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 700;
+    src: url("../fonts/roboto/roboto-bold-webfont.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/roboto/roboto-bold-webfont.woff") format("woff"),
+    url("../fonts/roboto/roboto-bold-webfont.ttf") format("truetype"),
+    url("../fonts/roboto/roboto-bold-webfont.svg#Roboto") format("svg");
+}
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 300;
+    src: url("../fonts/roboto/roboto-bold-webfont.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/roboto/roboto-bold-webfont.woff") format("woff"),
+    url("../fonts/roboto/roboto-bold-webfont.ttf") format("truetype"),
+    url("../fonts/roboto/roboto-bold-webfont.svg#Roboto") format("svg");
+}
+
+@font-face {
+    font-family: "Magictoolbox";
+    font-style: normal;
+    font-weight: 300;
+    src: url("../fonts/magictoolbox/magictoolbox-thin.eot") format("embedded-opentype"),
+    url("../fonts/magictoolbox/magictoolbox-thin.woff") format("woff"),
+    url("../fonts/magictoolbox/magictoolbox-thin.ttf") format("truetype"),
+    url("../fonts/magictoolbox/magictoolbox-thin.svg") format("svg");
+}

@@ -1,0 +1,8878 @@
+.owl-item li {
+    list-style: none
+}
+
+.bcg {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100%;
+    width: 100%
+}
+
+.homeSlide {
+    position: relative
+}
+
+.homeSlide .homeSlide .scrolldown {
+    width: 20px;
+    display: block;
+    position: absolute;
+    bottom: 18vh;
+    left: 49%;
+    cursor: pointer
+}
+
+.homeSlide .scrolldown img {
+    width: 100%
+}
+
+.choose-shop {
+    margin-top: 20px;
+    border: 1px solid #efefef
+}
+
+.choose-shop .nav-tabs > li.active > a, .choose-shop .nav-tabs > li.active > a:hover, .choose-shop .nav-tabs > li.active > a:focus, .choose-shop .nav > li > a:hover, .choose-shop .nav > li > a:focus {
+    border: none;
+    color: #fff;
+    background: #2796b6
+}
+
+.choose-shop .nav-tabs > li > a {
+    border-radius: 0;
+    border: none;
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+    font-size: 16px;
+    background: #fff;
+    position: relative
+}
+
+.choose-shop .nav-tabs > li {
+    float: none;
+    display: inline-block;
+    width: 33.45%;
+    text-align: center;
+    margin-right: -5px;
+    margin-bottom: 0
+}
+
+.choose-shop .nav-tabs {
+    border-bottom: 3px solid #2796b6
+}
+
+.choose-shop .choose-flag {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 40px;
+    width: 40px
+}
+
+.choose-shop .choose-flag img {
+    height: 100%
+}
+
+.choose-shop .choose-flag.us {
+    background: url(/img/base.png) no-repeat -1382px -137px
+}
+
+.choose-shop .choose-flag.cn {
+    background: url(/img/base.png) no-repeat -1435px -137px
+}
+
+.choose-shop .choose-flag.kor {
+    background: url(/img/base.png) no-repeat -1488px -137px
+}
+
+.choose-shop .nav-tabs > li > a > i {
+    position: absolute;
+    color: #2796b6;
+    bottom: -16px;
+    font-size: 24px;
+    left: 0;
+    right: 0;
+    display: none
+}
+
+.choose-shop .nav-tabs > li.active > a > i, .choose-shop .nav-tabs > li.active > a:hover > i, .choose-shop .nav-tabs > li.active > a:focus > i {
+    display: block
+}
+
+.choose-shop .choose-content {
+    background: #fff;
+    padding: 20px 10px 10px
+}
+
+.choose-shop .choose-content .banner-left {
+    border: 5px solid #EFEFEF;
+    width: 345px;
+    height: 485px;
+    float: left
+}
+
+.choose-shop .choose-content .banner-left .brand-col {
+    margin: 20px 0
+}
+
+.choose-shop .choose-content .banner-left a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 70px;
+    height: 42px
+}
+
+.choose-shop .choose-content .banner-left a img {
+    max-width: 70px;
+    max-height: 42px;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+.choose-shop .choose-content .banner-left a:hover img {
+    margin-left: -10px
+}
+
+.choose-shop .choose-content .banner-right {
+    border: 1px solid #EFEFEF;
+    width: 763px;
+    height: 485px;
+    float: left;
+    margin-left: 10px;
+    position: relative
+}
+
+.choose-shop .choose-content .banner-right a {
+    display: block;
+    overflow: hidden
+}
+
+.choose-shop .choose-content .banner-right a img {
+    width: 100%;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+.choose-shop .choose-content .banner-right a:hover img {
+    margin-left: -15px
+}
+
+.choose-shop .choose-content .banner-right .banner-1 {
+    width: 508px;
+    height: 322px;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-bottom: 1px solid #EFEFEF;
+    overflow: hidden
+}
+
+.choose-shop .choose-content .banner-right .banner-1 a {
+    width: 507px;
+    height: 321px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.choose-shop .choose-content .banner-right .banner-1 img {
+    max-width: 507px;
+    max-height: 321px
+}
+
+.choose-shop .choose-content .banner-right .banner-2 {
+    width: 253px;
+    height: 161px;
+    border-bottom: 1px solid #EFEFEF;
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: hidden
+}
+
+.choose-shop .choose-content .banner-right .banner-2 a {
+    width: 252px;
+    height: 160px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.choose-shop .choose-content .banner-right .banner-2 img {
+    max-width: 252px;
+    max-height: 160px
+}
+
+.choose-shop .choose-content .banner-right .banner-3 {
+    width: 253px;
+    height: 161px;
+    position: absolute;
+    top: 161px;
+    right: 0;
+    border-bottom: 1px solid #EFEFEF;
+    overflow: hidden
+}
+
+.choose-shop .choose-content .banner-right .banner-3 a {
+    width: 252px;
+    height: 160px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.choose-shop .choose-content .banner-right .banner-3 img {
+    max-width: 252px;
+    max-height: 160px
+}
+
+.choose-shop .choose-content .banner-right .banner-4 {
+    height: 161px;
+    width: 254px;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    overflow: hidden
+}
+
+.choose-shop .choose-content .banner-right .banner-4 a {
+    width: 253px;
+    height: 160px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.choose-shop .choose-content .banner-right .banner-4 img {
+    max-width: 253px;
+    max-height: 160px
+}
+
+.choose-shop .choose-content .banner-right .banner-5 {
+    height: 161px;
+    width: 254px;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    bottom: 0;
+    left: 254px;
+    overflow: hidden
+}
+
+.choose-shop .choose-content .banner-right .banner-5 a {
+    width: 253px;
+    height: 160px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.choose-shop .choose-content .banner-right .banner-5 img {
+    max-width: 253px;
+    max-height: 160px
+}
+
+.choose-shop .choose-content .banner-right .banner-6 {
+    height: 161px;
+    width: 253px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    overflow: hidden
+}
+
+.choose-shop .choose-content .banner-right .banner-6 a {
+    width: 252px;
+    height: 160px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.choose-shop .choose-content .banner-right .banner-6 img {
+    max-width: 252px;
+    max-height: 160px
+}
+
+.buy-amazone {
+    margin-top: 50px;
+    border: 1px solid #EFEFEF;
+    border-top: 2px solid #fb9a2f;
+    height: 451px
+}
+
+.buy-amazone .left {
+    background: #232f3d;
+    width: 196px;
+    float: left;
+    text-align: center;
+    padding-top: 10px;
+    height: 448px;
+    position: relative
+}
+
+.buy-amazone .left .title span {
+    color: #fff;
+    vertical-align: top;
+    text-transform: uppercase;
+    font-weight: 700;
+    display: inline-block
+}
+
+.buy-amazone .left .title img {
+    height: 24px;
+    width: 96px;
+    vertical-align: top;
+    display: inline-block;
+    padding-top: 5px
+}
+
+.buy-amazone .left .list {
+    text-align: left;
+    margin-top: 20px;
+    font-weight: 700
+}
+
+.buy-amazone .left .list .sale {
+    color: #e67425
+}
+
+.buy-amazone .left .list .hot-tag {
+    color: #e67425;
+    display: inline-block;
+    font-size: 8px;
+    border: 1px solid #e67425;
+    border-radius: 3px;
+    width: 30px;
+    text-align: center;
+    margin-left: 5px
+}
+
+.buy-amazone .left .list ul {
+    padding-left: 20px;
+    position: relative
+}
+
+.buy-amazone .left .list ul:after {
+    top: 197px;
+    left: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
+    content: '';
+    border-style: solid;
+    border-width: 25px 98px 0;
+    border-color: #232f3d transparent transparent;
+    z-index: 99
+}
+
+.buy-amazone .left .list ul li {
+    color: #fff;
+    margin: 15px 0
+}
+
+.buy-amazone .left .list ul li:hover {
+    color: #e67425
+}
+
+.buy-amazone .left .list ul li a {
+    color: #fff;
+    display: block
+}
+
+.buy-amazone .left .list ul li a:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.buy-amazone .left .banner-deal {
+    position: absolute;
+    bottom: 0
+}
+
+.buy-amazone .left .banner-deal img {
+    width: 100%
+}
+
+.buy-amazone .right {
+    float: left
+}
+
+.buy-ebay .right {
+    float: left
+}
+
+.buy-amazone .right .top {
+    text-align: center;
+    padding: 5px 0;
+    height: 52px
+}
+
+.buy-amazone .right .top ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.buy-amazone .right .top ul li {
+    list-style: none;
+    display: inline-block;
+    margin: 0 20px
+}
+
+.buy-amazone .right .top ul li a {
+    display: block;
+    width: 70px;
+    height: 42px;
+    overflow: hidden
+}
+
+.buy-amazone .right .top ul li a img {
+    width: 70px;
+    height: 42px;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+.buy-amazone .right .top ul li a:hover img {
+    width: 70px;
+    height: 42px;
+    margin-left: -15px
+}
+
+.buy-amazone .right a {
+    display: block;
+    overflow: hidden
+}
+
+.buy-amazone .right a img {
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+.buy-amazone .right a:hover img {
+    margin-left: -15px
+}
+
+.buy-amazone .right .middle {
+    height: 198px;
+    background: #fff;
+    border-top: 1px solid #EFEFEF;
+    border-bottom: 1px solid #EFEFEF;
+    padding: 15px 0;
+    position: relative
+}
+
+.buy-amazone .right .middle .banner-1 {
+    padding: 15px 0;
+    width: 50%;
+    height: 100%;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden
+}
+
+.buy-amazone .right .middle .banner-1 a {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 470px;
+    height: 168px
+}
+
+.buy-amazone .right .middle .banner-2 {
+    padding: 15px 0;
+    width: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: hidden
+}
+
+.buy-amazone .right .middle .banner-2 a {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 470px;
+    height: 168px
+}
+
+.buy-amazone .right .middle .banner-2 img {
+    max-width: 470px;
+    max-height: 168px
+}
+
+.buy-amazone .right .bottom {
+    height: 198px;
+    background: #fff;
+    position: relative
+}
+
+.buy-amazone .right .bottom .banner-3 {
+    width: 20%;
+    height: 198px;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden
+}
+.buy-amazone .right .bottom .banner-4 {
+    border-right: 1px solid #EFEFEF;
+    width: 20%;
+    height: 198px;
+    position: absolute;
+    left: 20%;
+    top: 0;
+    overflow: hidden
+}
+.buy-amazone .right .bottom .banner-6 {
+    width: 20%;
+    height: 198px;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    right: 20%;
+    top: 0;
+    overflow: hidden
+}
+
+.buy-amazone .right .bottom .banner-6 a {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 187px;
+    height: 198px
+}
+.buy-amazone .right .bottom .banner-7 {
+    width: 20%;
+    height: 198px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    overflow: hidden
+}
+
+.buy-amazone .right .bottom .banner-7 a {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 188px;
+    height: 198px
+}
+.buy-amazone .right .top h1 {
+    display: none
+}
+
+.buy-amazone.buy-ebay {
+    border-top-color: #0063d1
+}
+.buy-amazone.buy-ebay.portal-amazon {
+    border-top-color: #fb9a2f
+}
+
+.buy-amazone.buy-ebay .left {
+    background: #0063d1;
+    position: relative
+}
+.buy-amazone.buy-ebay.portal-amazon .left {
+    background: #232f3d;
+    position: relative
+}
+
+.buy-amazone.buy-ebay .left .ebay-line {
+    display: block;
+    height: 3px;
+    position: absolute;
+    top: -12px;
+    left: 0
+}
+
+.buy-amazone.buy-ebay .left .ebay-line img {
+    height: 3px;
+    width: 153px
+}
+
+.buy-amazone.buy-ebay .left .title img {
+    height: 20px;
+    width: 96px;
+    vertical-align: top;
+    display: inline-block;
+    padding-top: 0
+}
+
+.buy-amazone.buy-ebay .left .list {
+    text-align: left;
+    margin-top: 24px;
+    font-weight: 700
+}
+
+.buy-amazone.buy-ebay .left .list ul:after {
+    border-color: #0063D1 transparent transparent
+}
+
+.buy-amazone.buy-ebay.portal-amazon .left .list ul:after {
+    border-color: #232f3d transparent transparent
+}
+
+.buy-ebay .right {
+    float: left
+}
+
+.buy-amazone.buy-ebay .right .bottom {
+    height: 396px;
+    border-top: 1px solid #EFEFEF;
+    position: relative
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-1 {
+    width: 40%;
+    height: 395px;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-1 a {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 377px;
+    height: 395px
+}
+.buy-amazone.buy-ebay .right .bottom .banner-2 a {
+    text-align: center;
+    vertical-align: middle
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-2 img {
+    width: 187px;
+    height: 196px
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-3 {
+    max-width: 40%;
+    height: 198.5px;
+    border-right: none;
+    border-left: 1px solid #efefef;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-3 a {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    right: -120px;
+    width: 376px;
+    height: 196px
+}
+.buy-amazone.buy-ebay .right .bottom .banner-4 {
+    border-top: 1px solid #EFEFEF;
+    border-right: none
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-4 a {
+    text-align: center;
+    vertical-align: middle
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-4 img {
+    max-width: 187px;
+    height: 196px
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-5 {
+    bottom: 1px;
+    height: 197.5px;
+    border-right: none;
+    border-top: 1px solid #EFEFEF;
+    border-left: 1px solid #EFEFEF;
+    position: absolute;
+    right: 0;
+    top: inherit;
+    left: inherit;
+    overflow: hidden
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-5 a {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    right: -120px;
+    width: 376px;
+    height: 196px
+}
+
+.buy-amazone.buy-ebay .right .bottom .banner-5 img {
+}
+
+.buy-amazone.buy-dhgate {
+    border-top-color: #000
+}
+
+.buy-amazone.buy-dhgate .left {
+    background: #fecb2f
+}
+
+.buy-amazone.buy-dhgate .left .title span {
+    color: #000
+}
+
+.buy-amazone.buy-dhgate .left .list ul li a {
+    color: #000
+}
+
+.buy-amazone.buy-dhgate .left .list ul li a:hover {
+    color: #e67425
+}
+
+.buy-amazone.buy-dhgate .left .list ul:after {
+    border-color: #fecb2f transparent transparent
+}
+
+.buy-amazone.buy-dhgate .right .bottom {
+    height: 396px;
+    border-top: 1px solid #EFEFEF;
+    background: transparent;
+    position: relative;
+    background: #fff
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-1 {
+    width: 188.3px;
+    height: 197.5px;
+    border-bottom: 1px solid #EFEFEF;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-1 a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 187px;
+    height: 196px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-1 img {
+    max-width: 187px;
+    max-height: 196px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-2 {
+    width: 188.3px;
+    height: 197.5px;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    overflow: hidden
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-2 a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 187px;
+    height: 196px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-2 img {
+    max-width: 187px;
+    max-height: 196px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-3 {
+    width: 188.3px;
+    height: 395px;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    top: 0;
+    left: 188.3px;
+    overflow: hidden
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-3 a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 187px;
+    height: 395px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-3 img {
+    max-width: 187px;
+    max-height: 395px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-4 {
+    width: 188.3px;
+    height: 395px;
+    border-right: 1px solid #EFEFEF;
+    position: absolute;
+    top: 0;
+    left: 376.6px;
+    overflow: hidden
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-4 a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 187px;
+    height: 395px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-4 img {
+    max-width: 187px;
+    max-height: 395px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-5 {
+    width: 188.3px;
+    border-right: 1px solid #EFEFEF;
+    height: 395px;
+    position: absolute;
+    top: 0;
+    left: inherit;
+    right: 188.3px;
+    overflow: hidden
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-5 a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 187px;
+    height: 395px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-5 img {
+    max-width: 187px;
+    max-height: 395px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-6 {
+    width: 188.3px;
+    height: 197.5px;
+    border-bottom: 1px solid #EFEFEF;
+    border-right: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: hidden
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-6 a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 188px;
+    height: 196px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-6 img {
+    max-width: 187px;
+    max-height: 196px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-7 {
+    width: 188.3px;
+    height: 197.5px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: inherit;
+    overflow: hidden
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-7 a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 188px;
+    height: 197px
+}
+
+.buy-amazone.buy-dhgate .right .bottom .banner-7 img {
+    max-width: 188px;
+    max-height: 197px
+}
+
+.buy-amazone.buy-dhgate .left .list .hot-tag {
+    color: #fff;
+    border-color: #fff
+}
+
+.to-top {
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    bottom: 80px;
+    right: -100px;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s;
+    z-index: 90;
+    background: url(/img/base.png) no-repeat -1439px -71px;
+    background-size: 2000px;
+    cursor: pointer
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: baseline
+}
+
+.video-wrap {
+    height: 85vh !important;
+    width: 100%;
+    position: relative
+}
+
+.blur-bg {
+    height: 100%;
+    width: 100%;
+    background: #29425F;
+    opacity: .5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99
+}
+
+.video-content {
+    height: 100%;
+    width: 100%;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99;
+    display: table-cell;
+    text-align: center;
+    padding-top: 20%
+}
+
+.video-content h1 {
+    margin: 0
+}
+
+.video-wrap .scrolldown {
+    width: 20px;
+    height: 60px;
+    display: block;
+    position: absolute;
+    bottom: 100px;
+    left: calc((100% - 20px) / 2);
+    z-index: 99;
+    cursor: pointer;
+    background: url(/img/base.png) no-repeat -438px -124px;
+    background-size: 1500px
+}
+
+.video-wrap .scrolldown img {
+    width: 100%
+}
+
+.help-me {
+    padding-bottom: 15px;
+    margin-top: -54px;
+    z-index: 10;
+    position: relative;
+    padding-top: 15px
+}
+
+.tabbed {
+    width: 100%;
+    min-width: 400px;
+    margin: 0 auto;
+    border-bottom: 4px solid #2796b6;
+    overflow: hidden;
+    transition: border 250ms ease
+}
+
+.tabbed ul {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    float: left;
+    padding-left: 35px;
+    list-style-type: none
+}
+
+.tabbed ul * {
+    margin: 0;
+    padding: 0
+}
+
+.tabbed ul li {
+    display: block;
+    float: left;
+    padding: 10px 24px 8px;
+    background-color: #fff;
+    margin-right: 37px;
+    z-index: 2;
+    position: relative;
+    cursor: pointer;
+    color: #000;
+    text-transform: uppercase;
+    transition: all 250ms ease;
+    width: 515px;
+    text-align: center;
+    font-weight: 700
+}
+
+.tabbed ul li:before, .tabbed ul li:after {
+    display: block;
+    content: " ";
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 44px;
+    background-color: #fff;
+    transition: all 250ms ease
+}
+
+.tabbed ul li:before {
+    right: -24px;
+    transform: skew(30deg, 0deg);
+    box-shadow: rgba(0, 0, 0, .1) 3px 2px 5px, inset rgba(255, 255, 255, .09) -1px 0
+}
+
+.tabbed ul li:after {
+    left: -24px;
+    transform: skew(-30deg, 0deg);
+    box-shadow: rgba(0, 0, 0, .1) -3px 2px 5px, inset rgba(255, 255, 255, .09) 1px 0
+}
+
+.tabbed ul li:hover, .tabbed ul li:hover:before, .tabbed ul li:hover:after {
+    background-color: #efefef
+}
+
+.tabbed ul li.active {
+    z-index: 3
+}
+
+.tabbed ul li.active, .tabbed ul li.active:before, .tabbed ul li.active:after {
+    background-color: #2796b6;
+    color: #fff
+}
+
+.tabbed.round ul li {
+    border-radius: 8px 8px 0 0
+}
+
+.tabbed.round ul li:before {
+    border-radius: 0 8px 0 0
+}
+
+.tabbed.round ul li:after {
+    border-radius: 8px 0 0 0
+}
+
+.help-tab-content {
+    background: #fff;
+    box-shadow: 3px 3px 3px #ccc
+}
+
+.help-tab-content .tab-hide {
+    display: block;
+    cursor: pointer;
+    width: 50px;
+    margin: auto;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+.help-tab-content .tab-hide:hover {
+    color: #2796b6
+}
+
+.help-tab-content .help-buy {
+    display: block;
+    padding: 20px 0 0;
+    text-align: center;
+    font-size: 12px
+}
+
+.help-tab-content .help-ship {
+    display: none;
+    padding: 20px 0 0;
+    text-align: center;
+    font-size: 12px
+}
+
+.help-tab-content .help-ship .step, .help-tab-content .help-buy .step {
+    margin: 30px 0;
+    position: relative
+}
+
+.help-tab-content .help-ship .step ul, .help-tab-content .help-buy .step ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.help-tab-content .help-ship .step ul li, .help-tab-content .help-buy .step ul li {
+    display: inline-block;
+    vertical-align: top;
+    width: 24%
+}
+
+.help-tab-content .help-ship .step ul li.icon .img .ship-icon, .help-tab-content .help-buy .step ul li.icon .img .shop-icon {
+    width: 86px;
+    height: 86px;
+    display: block;
+    margin: auto
+}
+
+.help-tab-content .help-buy .step ul li.icon .img .shop-icon.step-1 {
+    background: url(/img/base.png) no-repeat -21px -21px
+}
+
+.help-tab-content .help-ship .step ul li.icon .img .ship-icon.step-1 {
+    background: url(/img/base.png) no-repeat -1839px -113px
+}
+
+.help-tab-content .help-buy .step ul li.icon .img .shop-icon.step-2 {
+    background: url(/img/base.png) no-repeat -150px -14px
+}
+
+.help-tab-content .help-ship .step ul li.icon .img .ship-icon.step-2 {
+    background: url(/img/base.png) no-repeat -1913px -114px
+}
+
+.help-tab-content .help-ship .step ul li.icon .img .ship-icon.step-3, .help-tab-content .help-buy .step ul li.icon .img .shop-icon.step-3 {
+    background: url(/img/base.png) no-repeat -272px -15px
+}
+
+.help-tab-content .help-ship .step ul li.icon .img .ship-icon.step-4, .help-tab-content .help-buy .step ul li.icon .img .shop-icon.step-4 {
+    background: url(/img/base.png) no-repeat -398px -15px
+}
+
+.help-tab-content .help-ship .step ul li.icon .img img, .help-tab-content .help-buy .step ul li.icon .img img {
+    width: 86px
+}
+
+.help-tab-content .help-ship .step ul li.icon .text, .help-tab-content .help-buy .step ul li.icon .text {
+    margin-top: 15px;
+    font-size: 12px
+}
+
+.help-tab-content .help-ship .step ul li.icon .text-step, .help-tab-content .help-buy .step ul li.icon .text-step {
+    text-transform: uppercase;
+    color: #2796b6
+}
+
+.help-tab-content .help-ship .step ul li.next, .help-tab-content .help-buy .step ul li.next {
+    font-size: 5px;
+    padding: 50px 40px 0;
+    color: #c4c4c4
+}
+
+.help-tab-content .help-ship .step ul li#next1, .help-tab-content .help-buy .step ul li#next1 {
+    position: absolute;
+    left: 14%
+}
+
+.help-tab-content .help-ship .step ul li#next2, .help-tab-content .help-buy .step ul li#next2 {
+    position: absolute;
+    left: 38%
+}
+
+.help-tab-content .help-ship .step ul li#next3, .help-tab-content .help-buy .step ul li#next3 {
+    position: absolute;
+    left: 63%
+}
+
+.help-tab-content .help-buy .step ul li.next .fa, .help-tab-content .help-ship .step ul li.next .fa {
+    margin: 0 2px
+}
+
+.help-tab-content .help-ship .step ul li.next .fa.text-active, .help-tab-content .help-buy .step ul li.next .fa.text-active {
+    color: #53a7a0
+}
+
+.buyforme-content .step, .shipforme-content .step {
+    margin: 30px 0;
+    position: relative
+}
+
+.buyforme-content .step ul, .shipforme-content .step ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.buyforme-content .step ul li, .shipforme-content .step ul li {
+    display: inline-block;
+    vertical-align: top;
+    width: 24%
+}
+
+.buyforme-content .step ul li.icon .img .shop-icon, .shipforme-content .step ul li.icon .img .ship-icon {
+    width: 86px;
+    height: 86px;
+    display: block;
+    margin: auto
+}
+
+.buyforme-content .step ul li.icon .img .shop-icon.step-1 {
+    background: url(/img/base.png) no-repeat -21px -21px
+}
+
+.shipforme-content .step ul li.icon .img .ship-icon.step-1 {
+    background: url(/img/base.png) no-repeat -1839px -113px
+}
+
+.buyforme-content .step ul li.icon .img .shop-icon.step-2 {
+    background: url(/img/base.png) no-repeat -150px -14px
+}
+
+.shipforme-content .step ul li.icon .img .ship-icon.step-2 {
+    background: url(/img/base.png) no-repeat -1913px -114px
+}
+
+.buyforme-content .step ul li.icon .img .shop-icon.step-3, .shipforme-content .step ul li.icon .img .ship-icon.step-3 {
+    background: url(/img/base.png) no-repeat -272px -15px
+}
+
+.buyforme-content .step ul li.icon .img .shop-icon.step-4, .shipforme-content .step ul li.icon .img .ship-icon.step-4 {
+    background: url(/img/base.png) no-repeat -398px -15px
+}
+
+.buyforme-content .step ul li.icon .text-step, .shipforme-content .step ul li.icon .text-step {
+    text-transform: uppercase;
+    color: #2796b6
+}
+
+.buyforme-content .step ul li.icon .text, .shipforme-content .step ul li.icon .text {
+    margin-top: 15px
+}
+
+.buyforme-content .step ul li.icon .text p, .shipforme-content .step ul li.icon .text p {
+    padding: 0 5px
+}
+
+.buyforme-content .step ul li.next, .shipforme-content .step ul li.next {
+    font-size: 5px;
+    padding: 40px 0 0;
+    color: #c4c4c4
+}
+
+.buyforme-content .step ul li#next1, .shipforme-content .step ul li#next1 {
+    position: absolute;
+    left: 14%
+}
+
+.buyforme-content .step ul li#next2, .shipforme-content .step ul li#next2 {
+    position: absolute;
+    left: 37%
+}
+
+.buyforme-content .step ul li#next3, .shipforme-content .step ul li#next3 {
+    position: absolute;
+    left: 63%
+}
+
+.buyforme-content .step ul li.next .fa, .shipforme-content .step ul li.next .fa {
+    margin: 0 2px
+}
+
+.buyforme-content .step ul li.next .fa.text-active, .shipforme-content .step ul li.next .fa.text-active {
+    color: #53a7a0
+}
+
+.buyforme-content .right ul, .shipforme-content .right ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.buyforme-content .right ul li, .shipforme-content .right ul li {
+    list-style: none;
+    margin: 15px 0
+}
+
+.buyforme-content .right ul li a, .shipforme-content .right ul li a {
+    color: #000;
+    display: block;
+    margin-bottom: 5px
+}
+
+.buyforme-content .right ul li a:hover, .shipforme-content .right ul li a:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.mail-box, .user-box, .noti-box, .question-box, .cart-box {
+    border-right: 1px solid #e8e8e8
+}
+
+.navbar-nav > li.cart-box {
+    display: none
+}
+
+.ws-fixed-nav .navbar-nav > li.cart-box {
+    display: inline-block
+}
+
+.noti-box, .mail-box {
+    border-left: 1px solid #fff
+}
+
+.noti-box .dropdown-menu, .mail-box .dropdown-menu {
+    width: 250px;
+    padding: 10px
+}
+
+.noti-box .dropdown-menu li a, .mail-box .dropdown-menu li a {
+    white-space: normal;
+    padding: 7px 5px;
+    background: #f3f3f3;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    border: 1px solid #f3f3f3
+}
+
+.noti-box .dropdown-menu li a img {
+    width: 35px;
+    height: 35px;
+    border-radius: 2px;
+    display: block;
+    float: left
+}
+
+.mail-box .dropdown-menu li a img {
+    width: 32px;
+    height: 32px;
+    border-radius: 2px;
+    display: block;
+    float: left
+}
+
+.noti-box .dropdown-menu li a .right, .mail-box .dropdown-menu li a .right {
+    margin-left: 40px
+}
+
+.noti-box .dropdown-menu li a .right i, .mail-box .dropdown-menu li a .right i {
+    font-size: 10px;
+    font-style: normal;
+    color: #666
+}
+
+.noti-box .dropdown-menu li a .right em, .mail-box .dropdown-menu li a .right em {
+    color: #0654ba;
+    font-style: normal
+}
+
+.mail-box .dropdown-menu li a .right span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.noti-box .dropdown-menu li a .right span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.noti-box .dropdown-menu li a .right i, .noti-box .dropdown-menu li a .right span, .mail-box .dropdown-menu li a .right i, .mail-box .dropdown-menu li a .right span {
+    display: block
+}
+
+.noti-box .dropdown-menu li a .right i, .mail-box .dropdown-menu li a .right i {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.noti-box .dropdown-menu li a:hover, .mail-box .dropdown-menu li a:hover {
+    border-color: #2796b6;
+    background: #fff
+}
+
+.noti-box .dropdown-menu li.see-more, .mail-box .dropdown-menu li.see-more {
+    margin-bottom: 0
+}
+
+.noti-box .dropdown-menu li.see-more a, .mail-box .dropdown-menu li.see-more a {
+    border: none;
+    margin: 10px 0 0;
+    color: #0654ba;
+    background: transparent;
+    padding: 0
+}
+
+.noti-box .dropdown-menu li .alert, .mail-box .dropdown-menu li .alert {
+    margin-top: 10px;
+    margin-bottom: 0;
+    padding: 10px 15px
+}
+
+.noti-box .dropdown-menu li.title, .mail-box .dropdown-menu li.title {
+    margin-bottom: 5px
+}
+
+.noti-box, .question-box {
+    border-left: 1px solid #fff
+}
+
+.ws-fixed-nav .user-box {
+    border-left: 1px solid #e8e8e8
+}
+
+.ws-fixed-nav .mail-box, .ws-fixed-nav .noti-box, .ws-fixed-nav .question-box, .ws-fixed-nav .cart-box {
+    border-left: 1px solid #fff
+}
+
+.mail-box i, .user-box i, .noti-box i, .question-box i, .cart-box i {
+    font-size: 12px
+}
+
+.question-box .dropdown-menu {
+    width: 250px
+}
+
+.question-box .dropdown-menu li a {
+    padding: 0 20px
+}
+
+.question-box .dropdown-menu li a span {
+    border-bottom: 1px solid #f3f3f3;
+    display: block;
+    padding: 7px 0
+}
+
+.question-box .dropdown-menu li a i {
+    margin-right: 5px
+}
+
+.question-box .dropdown-menu li .contact {
+    padding: 10px;
+    margin: 10px 10px 0;
+    border-radius: 3px;
+    background: #f3f3f3
+}
+
+.question-box .dropdown-menu li .contact .fa {
+    width: 20px
+}
+
+.question-box .dropdown-menu li .contact i {
+    font-style: normal
+}
+
+.question-box .dropdown-menu li .contact .contact-icon {
+    width: 40px;
+    height: 40px;
+    float: left
+}
+
+.question-box .dropdown-menu li .contact .contact-icon img {
+    width: 100%
+}
+
+.question-box .dropdown-menu li .contact .item {
+    margin-left: 45px;
+    padding-top: 5px
+}
+
+.question-box .dropdown-menu li .contact .item a {
+    padding: 0
+}
+
+.question-box .dropdown-menu li .contact .item a:hover {
+    text-decoration: none;
+    color: #e67425
+}
+
+.question-box .dropdown-menu li .contact .item a, .question-box .dropdown-menu li .contact .item span {
+    display: block
+}
+
+.question-box .dropdown-menu li.see-more {
+    margin-bottom: 5px
+}
+
+.question-box .dropdown-menu li.see-more a {
+    border: none;
+    margin: 10px 0 0;
+    color: #0654ba;
+    background: transparent;
+    padding: 0
+}
+
+.navbar-default .navbar-nav > li.mail-box > a, .navbar-default .navbar-nav > li.user-box > a, .navbar-default .navbar-nav > li.noti-box > a, .navbar-default .navbar-nav > li.question-box > a, .navbar-default .navbar-nav > li.cart-box > a {
+    position: relative;
+    padding: 10px 15px
+}
+
+.ws-fixed-nav .navbar-default .navbar-nav > li.mail-box > a, .ws-fixed-nav .navbar-default .navbar-nav > li.user-box > a, .ws-fixed-nav .navbar-default .navbar-nav > li.noti-box > a, .ws-fixed-nav .navbar-default .navbar-nav > li.question-box > a, .ws-fixed-nav .navbar-default .navbar-nav > li.cart-box > a {
+    position: relative;
+    padding: 17px 15px
+}
+
+.navbar-default .navbar-nav > li.user-in.user-box > a {
+    padding: 11px 15px
+}
+
+.navbar-default .navbar-nav > li.user-in.user-box.no-avatar > a {
+    padding: 10px 15px
+}
+
+.ws-fixed-nav .navbar-default .navbar-nav > li.user-in.user-box > a {
+    padding: 13px 15px
+}
+
+.ws-fixed-nav .navbar-default .navbar-nav > li.user-in.user-box.no-avatar > a {
+    padding: 17px 15px
+}
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {
+    background: transparent
+}
+
+.navbar-default .navbar-nav > li.user-box .badge, .navbar-default .navbar-nav > li.mail-box .badge, .navbar-default .navbar-nav > li.noti-box .badge, .navbar-default .navbar-nav > li.question-box .badge, .navbar-default .navbar-nav > li.cart-box .badge {
+    background: red;
+    border-radius: 3px;
+    padding: 2px 3px;
+    color: #fff;
+    font-size: 9px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    box-shadow: 1px 0 1px #999
+}
+
+.ws-fixed-nav .navbar-default .navbar-nav > li.user-box .badge, .ws-fixed-nav .navbar-default .navbar-nav > li.mail-box .badge, .ws-fixed-nav .navbar-default .navbar-nav > li.noti-box .badge, .ws-fixed-nav .navbar-default .navbar-nav > li.question-box .badge, .ws-fixed-nav .navbar-default .navbar-nav > li.cart-box .badge {
+    top: 13px
+}
+
+.navbar-default .navbar-nav > li.mail-box > a img, .navbar-default .navbar-nav > li.user-box > a img, .navbar-default .navbar-nav > li.noti-box > a img, .navbar-default .navbar-nav > li.question-box > a img, .navbar-default .navbar-nav > li.cart-box > a img {
+    width: 14px
+}
+
+.navbar-default .navbar-nav > li.user-box > a .user-avatar img {
+    width: 100%
+}
+
+.icon-nav {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle
+}
+
+.user-avatar {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 1px 0 1px #999
+}
+
+.user-avatar img {
+    width: 100%
+}
+
+.icon-nav.icon-user {
+    background: url(/img/base.png) no-repeat -574px 0;
+    background-size: 700px
+}
+
+.icon-nav.icon-mail {
+    background: url(/img/base.png) no-repeat -407px 2px;
+    background-size: 700px
+}
+
+.icon-nav.icon-noti {
+    background: url(/img/base.png) no-repeat -554px 0;
+    background-size: 700px
+}
+
+.icon-nav.icon-question {
+    background: url(/img/base.png) no-repeat -514px 0;
+    background-size: 700px
+}
+
+.icon-nav.icon-cart {
+    background: url(/img/base.png) no-repeat -294px 0;
+    background-size: 700px
+}
+
+.icon-nav.icon-wallet {
+    background: url(/img/base.png) no-repeat -613px 0;
+    background-size: 700px
+}
+
+.icon-nav.icon-gear {
+    background: url(/img/base.png) no-repeat -388px 0;
+    background-size: 700px
+}
+
+.ico {
+    width: 16px;
+    height: 16px;
+    display: block
+}
+
+.ico.ico-fullname {
+    background: url(/img/base.png) no-repeat -464px 0;
+    background-size: 700px
+}
+
+.ico.ico-mobile {
+    background: url(/img/base.png) no-repeat -478px 0;
+    background-size: 700px
+}
+
+.ico.ico-email {
+    background: url(/img/base.png) no-repeat -427px 2px;
+    background-size: 700px
+}
+
+.ico.ico-address {
+    background: url(/img/base.png) no-repeat -685px 0;
+    background-size: 700px
+}
+
+.ico img {
+    width: 100%
+}
+
+.navbar-default .navbar-nav > li.mail-box:hover > a .icon-nav.icon-mail, .navbar-default .navbar-nav > li.mail-box.open > a .icon-nav.icon-mail {
+    background: url(/img/base.png) no-repeat -447px 2px;
+    background-size: 700px
+}
+
+.navbar-default .navbar-nav > li.user-box:hover > a .icon-nav.icon-user, .navbar-default .navbar-nav > li.user-box.open > a .icon-nav.icon-user {
+    background: url(/img/base.png) no-repeat -594px 0;
+    background-size: 700px
+}
+
+.navbar-default .navbar-nav > li.noti-box:hover > a .icon-nav.icon-noti, .navbar-default .navbar-nav > li.noti-box.open > a .icon-nav.icon-noti {
+    background: url(/img/base.png) no-repeat -534px 0;
+    background-size: 700px
+}
+
+.navbar-default .navbar-nav > li.question-box:hover > a .icon-nav.icon-question, .navbar-default .navbar-nav > li.question-box.open > a .icon-nav.icon-question {
+    background: url(/img/base.png) no-repeat -494px 0;
+    background-size: 700px
+}
+
+.navbar-default .navbar-nav > li.cart-box:hover > a .icon-nav.icon-cart, .navbar-default .navbar-nav > li.cart-box.open > a .icon-nav.icon-cart {
+    background: url(/img/base.png) no-repeat -276px 0;
+    background-size: 700px
+}
+
+.navbar-default .navbar-nav > .active > a {
+    background-color: transparent
+}
+
+@media (max-width: 991px) {
+    .choose-shop .choose-content .banner-left {
+        display: none
+    }
+
+    .choose-shop .choose-content .banner-right {
+        width: 698px;
+        margin-left: 0;
+        height: 446px
+    }
+
+    .choose-shop .nav-tabs > li > a {
+        height: 42px;
+        font-size: 12px
+    }
+
+    .choose-shop .nav-tabs > li {
+        width: 33.53%
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 {
+        width: 464px;
+        height: 296px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 a {
+        width: 465px;
+        height: 295px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 img {
+        max-width: 465px;
+        max-height: 295px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-2 {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-2 a {
+        width: 232px;
+        height: 147px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-2 img {
+        max-width: 232px;
+        max-height: 147px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-3 {
+        width: 232px;
+        height: 148px;
+        top: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-3 a {
+        width: 232px;
+        height: 147px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-3 img {
+        max-width: 232px;
+        max-height: 147px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-4 {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-4 a {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-4 img {
+        max-width: 232px;
+        max-height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-5 {
+        width: 232px;
+        height: 148px;
+        left: 232px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-5 a {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-5 img {
+        max-width: 232px;
+        max-height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-6 {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-6 a {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-6 img {
+        max-width: 232px;
+        max-height: 148px
+    }
+
+    .buy-amazone {
+        height: 364px;
+        display: block
+    }
+
+    .buy-amazone .left {
+        display: none
+    }
+
+    .buy-amazone .right .top ul {
+        display: none
+    }
+
+    .buy-amazone .right {
+        width: 718px
+    }
+
+    .buy-amazone .right .top h1 {
+        margin: 10px 0;
+        font-size: 20px;
+        display: block
+    }
+
+    .buy-amazone .right .middle {
+        height: 158px
+    }
+
+    .buy-amazone .right .middle .banner-1 {
+        width: 359px;
+        height: 156px
+    }
+
+    .buy-amazone .right .middle .banner-1 a {
+        width: 358px;
+        height: 128px
+    }
+    .buy-amazone .right .middle .banner-2 {
+        width: 359px;
+        height: 157px
+    }
+
+    .buy-amazone .right .middle .banner-2 a {
+        width: 359px;
+        height: 128px
+    }
+
+    .buy-amazone .right .middle .banner-2 img {
+        width: 359px;
+        height: 128px
+    }
+
+    .buy-amazone .right .bottom .banner-3 {
+        width: 143px;
+        height: 151px
+    }
+
+    .buy-amazone .right .bottom .banner-3 a {
+        width: 142px;
+        height: 151px;
+        text-align: center;
+        vertical-align: middle
+    }
+
+    .buy-amazone .right .bottom .banner-3 img {
+        width: 236px;
+        height: 151px;
+        text-align: center;
+        vertical-align: middle
+    }
+
+    .buy-amazone .right .bottom .banner-4 {
+        width: 143px;
+        height: 151px;
+        left: 143px
+    }
+
+    .buy-amazone .right .bottom .banner-4 a {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .buy-amazone .right .bottom .banner-5 {
+        width: 143px;
+        height: 151px;
+        left: 286px
+    }
+
+    .buy-amazone .right .bottom .banner-5 a {
+        width: 142px;
+        height: 151px
+    }
+    .buy-amazone .right .bottom .banner-6 {
+        width: 143px;
+        height: 151px;
+        right: 143px
+    }
+
+    .buy-amazone .right .bottom .banner-6 a {
+        width: 142px;
+        height: 151px
+    }
+    .buy-amazone .right .bottom .banner-7 {
+        width: 143px;
+        height: 151px
+    }
+
+    .buy-amazone .right .bottom .banner-7 a {
+        width: 143px;
+        height: 151px
+    }
+    .buy-amazone .right .bottom {
+        height: 151px
+    }
+
+    .buy-amazone.buy-ebay {
+        height: 354px;
+        display: block
+    }
+
+    .buy-amazone.buy-ebay .right .bottom {
+        height: 299px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-1 {
+        width: 286px;
+        height: 299px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-1 a {
+        width: 285px;
+        height: 299px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-1 img {
+        width: 377px;
+        /*height: 395px*/
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-2 {
+        width: 145px;
+        height: 150px;
+        left: 286px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-2 img {
+        max-width: 142px;
+        max-height: 148px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-3 {
+        width: 289px;
+        height: 150px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-3 a {
+        width: 289px;
+        height: 149px
+    }
+    .buy-amazone.buy-ebay .right .bottom .banner-4 img {
+        max-width: 142px;
+        max-height: 149px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-5 {
+        width: 40%;
+        height: 148px;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-5 a {
+        width: 289px;
+        height: 148px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-5 img {
+    }
+
+    .buy-amazone.buy-dhgate {
+        height: 358px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom {
+        height: 303px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-1 {
+        width: 143.5px;
+        height: 151px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-1 a {
+        width: 142px;
+        height: 150px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-1 img {
+        max-width: 142px;
+        max-height: 150px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-2 {
+        width: 143.5px;
+        height: 151px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-2 a {
+        width: 142px;
+        height: 151px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-2 img {
+        max-width: 142px;
+        max-height: 151px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-3 {
+        width: 143.5px;
+        height: 303px;
+        left: 143.5px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-3 a {
+        width: 143px;
+        height: 302px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-3 img {
+        max-width: 143px;
+        max-height: 302px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-4 {
+        width: 143.5px;
+        height: 303px;
+        left: 287px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-4 a {
+        width: 143px;
+        height: 302px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-4 img {
+        max-width: 143px;
+        max-height: 302px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-5 {
+        width: 143.5px;
+        height: 303px;
+        right: 143.5px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-5 a {
+        width: 143px;
+        height: 302px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-5 img {
+        max-width: 143px;
+        max-height: 302px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-6 {
+        width: 143.5px;
+        height: 151px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-6 a {
+        width: 143px;
+        height: 150px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-6 img {
+        max-width: 143px;
+        max-height: 150px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-7 {
+        width: 143.5px;
+        height: 151px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-7 a {
+        width: 143px;
+        height: 150px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-7 img {
+        max-width: 143px;
+        max-height: 150px
+    }
+
+    .tabbed ul li {
+        width: 305px
+    }
+
+    .help-tab-content .help-buy img {
+        width: 550px
+    }
+}
+
+@media (max-width: 767px) {
+    .choose-shop .choose-content .banner-right {
+        width: 100%;
+        height: auto;
+        border: none
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF
+    }
+
+    .choose-shop .choose-content .banner-right .banner-2 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-3 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-4 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-5 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-6 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone {
+        height: auto
+    }
+
+    .buy-amazone .right {
+        width: 100%
+    }
+
+    .buy-amazone .right .middle {
+        width: 100%;
+        padding: 0 10px;
+        border: none;
+        height: auto;
+        background: transparent
+    }
+
+    .buy-amazone .right .middle .banner-1 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone .right .middle .banner-2 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone .right .bottom {
+        width: 100%;
+        padding: 10px;
+        height: auto;
+        background: transparent
+    }
+
+    .buy-amazone .right .bottom .banner-3 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF
+    }
+
+    .buy-amazone .right .bottom .banner-4 {
+        border-right: 1px solid #EFEFEF;
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone .right .bottom .banner-5 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone .right .bottom .banner-6 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone .right .bottom .banner-7 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone.buy-dhgate {
+        height: auto
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom {
+        width: 100%;
+        padding: 10px;
+        height: auto;
+        background: transparent
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-1 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-2 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-3 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-4 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-5 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-6 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-7 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .navbar-nav {
+        margin: 0
+    }
+
+    .top-nav .navbar-default .navbar-nav > li > a > i {
+        float: right
+    }
+
+    .navbar-nav {
+        width: 100%
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 a, .choose-shop .choose-content .banner-right .banner-2 a, .choose-shop .choose-content .banner-right .banner-3 a, .choose-shop .choose-content .banner-right .banner-4 a, .choose-shop .choose-content .banner-right .banner-5 a, .choose-shop .choose-content .banner-right .banner-6 a {
+        width: 100%;
+        height: auto;
+        display: block
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 img, .choose-shop .choose-content .banner-right .banner-2 img, .choose-shop .choose-content .banner-right .banner-3 img, .choose-shop .choose-content .banner-right .banner-4 img, .choose-shop .choose-content .banner-right .banner-5 img, .choose-shop .choose-content .banner-right .banner-6 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .buy-amazone .right .middle .banner-1 a, .buy-amazone .right .middle .banner-2 a, .buy-amazone .right .bottom .banner-3 a, .buy-amazone .right .bottom .banner-4 a, .buy-amazone .right .bottom .banner-5 a, .buy-amazone .right .bottom .banner-6 a, .buy-amazone .right .bottom .banner-7 a {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: #fff
+    }
+
+    .buy-amazone .right .middle .banner-1 img, .buy-amazone .right .middle .banner-2 img, .buy-amazone .right .bottom .banner-3 img, .buy-amazone .right .bottom .banner-4 img, .buy-amazone .right .bottom .banner-5 img, .buy-amazone .right .bottom .banner-6 img, .buy-amazone .right .bottom .banner-7 img {
+        width: auto
+    }
+
+    .buy-amazone.buy-ebay {
+        height: auto
+    }
+
+    .buy-amazone.buy-ebay .right .bottom {
+        height: auto
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-1 {
+        width: 100%;
+        height: auto;
+        position: static;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-1 a {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: #fff
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-1 img {
+        max-width: inherit;
+        /*max-height: inherit;*/
+        width: auto
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-2, .buy-amazone.buy-ebay .right .bottom .banner-3, .buy-amazone.buy-ebay .right .bottom .banner-4, .buy-amazone.buy-ebay .right .bottom .banner-5 {
+        min-width: 100%;
+        height: auto;
+        position: static;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px;
+        float: none
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-2 a, .buy-amazone.buy-ebay .right .bottom .banner-3 a, .buy-amazone.buy-ebay .right .bottom .banner-4 a, .buy-amazone.buy-ebay .right .bottom .banner-5 a {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: #fff
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-2 img, .buy-amazone.buy-ebay .right .bottom .banner-3 img, .buy-amazone.buy-ebay .right .bottom .banner-4 img, .buy-amazone.buy-ebay .right .bottom .banner-5 img {
+        width: auto
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-1 a, .buy-amazone.buy-dhgate .right .bottom .banner-2 a, .buy-amazone.buy-dhgate .right .bottom .banner-3 a, .buy-amazone.buy-dhgate .right .bottom .banner-4 a, .buy-amazone.buy-dhgate .right .bottom .banner-5 a, .buy-amazone.buy-dhgate .right .bottom .banner-6 a, .buy-amazone.buy-dhgate .right .bottom .banner-7 a {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: #fff
+    }
+
+    .buy-amazone.buy-dhgate .right .bottom .banner-1 img, .buy-amazone.buy-dhgate .right .bottom .banner-2 img, .buy-amazone.buy-dhgate .right .bottom .banner-3 img, .buy-amazone.buy-dhgate .right .bottom .banner-4 img, .buy-amazone.buy-dhgate .right .bottom .banner-5 img, .buy-amazone.buy-dhgate .right .bottom .banner-6 img, .buy-amazone.buy-dhgate .right .bottom .banner-7 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: auto
+    }
+
+    .national a span {
+        display: none
+    }
+
+    .help-me {
+        display: none
+    }
+
+    .navbar-default .navbar-nav > li.mail-box > a, .navbar-default .navbar-nav > li.user-box > a, .navbar-default .navbar-nav > li.noti-box > a, .navbar-default .navbar-nav > li.question-box > a, .navbar-default .navbar-nav > li.cart-box > a {
+        position: relative;
+        padding: 12px 15px
+    }
+
+    .navbar-nav > li.cart-box {
+        display: inline-block
+    }
+}
+
+@media (max-width: 676px) {
+    .national ul {
+        display: inline-block
+    }
+
+    .national a {
+        margin-right: 0;
+        margin-left: 15px
+    }
+}
+
+@media (max-width: 533px) {
+    .choose-shop .nav-tabs > li {
+        width: 33.6%
+    }
+
+    .choose-shop .nav-tabs > li > a {
+        height: 34px;
+        font-size: 10px
+    }
+
+    .choose-shop .choose-flag {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 30px
+    }
+}
+
+@media (max-width: 480px) {
+    .choose-shop .nav-tabs > li > a {
+        height: 34px;
+        font-size: 9px
+    }
+}
+
+@media (max-width: 414px) {
+    .national ul {
+        display: block
+    }
+
+    .national a {
+        margin-left: 0;
+        margin-right: 15px
+    }
+
+    .nav > li > a {
+        padding: 5px 15px
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-1 img {
+        width: 100%
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-2 img, .buy-amazone.buy-ebay .right .bottom .banner-3 img, .buy-amazone.buy-ebay .right .bottom .banner-4 img, .buy-amazone.buy-ebay .right .bottom .banner-5 img {
+        width: 100%
+    }
+
+    .buy-amazone .right .middle .banner-1 img, .buy-amazone .right .middle .banner-2 img {
+        width: 100%
+    }
+}
+
+@media (max-width: 375px) {
+    .footer-info .payment li {
+        margin-bottom: 10px
+    }
+}
+
+@media (max-width: 360px) {
+    .choose-shop .nav-tabs > li {
+        width: 100%;
+        margin-bottom: 10px
+    }
+
+    .choose-shop .nav-tabs > li > a {
+        padding: 10px 15px;
+        font-size: 12px
+    }
+
+    .choose-shop .nav-tabs > li.active > a > i, .choose-shop .nav-tabs > li.active > a:hover > i, .choose-shop .nav-tabs > li.active > a:focus > i {
+        display: none
+    }
+}
+
+.home-amazone {
+    background: #fff;
+    position: relative
+}
+
+.home-amazone .bg-opacity {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #000;
+    z-index: 90;
+    opacity: .5;
+    display: none;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+#amazone-menu {
+    max-width: 300px
+}
+
+.amazone-header {
+    position: relative;
+    z-index: 99
+}
+
+.amazone-header .ws-fixed-nav {
+    top: 0
+}
+
+.amazone-header .ws-fixed-nav .navbar-brand {
+    height: 40px
+}
+
+.amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.user-in.user-box > a {
+    padding: 6px 15px
+}
+
+.amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.mail-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.user-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.noti-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.question-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.cart-box > a {
+    padding: 10px 15px
+}
+
+.amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.user-box .badge, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.mail-box .badge, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.noti-box .badge, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.question-box .badge, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.cart-box .badge {
+    top: 5px
+}
+
+.amazone-menu-btn {
+    position: absolute;
+    display: block;
+    left: 5px;
+    top: 3px;
+    font-size: 16px;
+    color: #000;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    text-align: center
+}
+
+.ws-menu-btn {
+    position: absolute;
+    display: block;
+    left: 5px;
+    top: 0;
+    font-size: 16px;
+    color: #000;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    text-align: center
+}
+
+.amazone-fixed-nav {
+    position: fixed;
+    background: #fff;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    box-shadow: 0 0 3px #ccc;
+    transition: all .3s;
+    moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+.amazone-navbar {
+    margin-top: 41px;
+    padding: 10px 0;
+    background: #232f3d
+}
+
+.amazone-navbar .amazone-brand {
+    height: 45px;
+    padding: 10px 0;
+    display: block
+}
+
+.ws-fixed-nav {
+    position: fixed;
+    background: #f6f7f9;
+    top: -200px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    box-shadow: 0 3px 3px #ccc;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+.ws-fixed-nav .navbar-brand {
+    padding: 5px 30px;
+    height: 55px
+}
+
+.ws-fixed-nav .navbar-brand img {
+    height: 100%
+}
+
+.ws-fixed-nav .navbar {
+    margin-bottom: 0;
+    min-height: inherit;
+    background: transparent;
+    border: none
+}
+
+.ws-fixed-nav .navbar-default .navbar-nav > .active > a, .ws-fixed-nav .navbar-default .navbar-nav > .active > a:hover {
+    background: transparent
+}
+
+.amazone-navbar .amazone-brand img {
+    height: 100%
+}
+
+.amazone-navbar .form-control {
+    height: 40px;
+    border: none;
+    border-left: 1px solid #EFEFEF
+}
+
+.amazone-navbar .input-group-btn:first-child > .btn, .amazone-navbar .input-group-btn:first-child > .btn-group {
+    height: 40px;
+    border: none
+}
+
+.amazone-navbar .input-group-btn:last-child > .btn, .amazone-navbar .input-group-btn:last-child > .btn-group {
+    height: 40px;
+    padding: 5px 15px;
+    font-size: 20px;
+    background-color: #fcbc70;
+    border: none
+}
+
+.amazone-navbar .cart-box-2 {
+    text-align: right
+}
+
+.amazone-navbar .cart {
+    color: #fff
+}
+
+.amazone-navbar .cart:hover, .amazone-navbar .cart:focus {
+    text-decoration: none
+}
+
+.amazone-navbar .cart .cart-title {
+    color: #fabb76;
+    text-transform: uppercase
+}
+
+.amazone-navbar .cart-text {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.amazone-navbar .cart-img {
+    margin-left: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 25px;
+    height: 25px;
+    background: url(/img/base.png) no-repeat -491px 2px;
+    background-size: 1100px
+}
+
+.amazone-navbar .cart-img img {
+    height: 25px
+}
+
+.amazone-navbar .shop-by {
+    position: relative
+}
+
+.amazone-navbar .shop-by .dropdown-btn {
+    color: #fff;
+    display: block;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    width: 130px;
+    padding: 0 15px;
+    margin-left: -15px
+}
+
+.amazone-navbar .shop-by .dropdown-btn:hover {
+    text-decoration: none;
+    border-color: #666
+}
+
+.amazone-navbar .shop-by a i {
+    float: right;
+    color: #ccc;
+    font-size: 10px;
+    display: none
+}
+
+.amazone-navbar .shop-by a:hover i {
+    float: right;
+    color: #333
+}
+
+.amazone-navbar .shop-by .shopby-drop {
+    display: none;
+    position: absolute;
+    top: 43px;
+    left: -15px;
+    background: #fff;
+    z-index: 99;
+    width: 250px;
+    height: 359px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    box-shadow: 0 2px 3px #ccc;
+    padding: 15px 0
+}
+
+.amazone-navbar .shop-by .shopby-drop:before {
+    width: 20px;
+    height: 10px;
+    content: "";
+    background: url(/img/icons/dropdown-arrow.png) no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: -7px;
+    left: 90px;
+    display: block
+}
+
+.amazone-navbar .shop-by .shopby-drop .line {
+    border-top: 1px solid #EFEFEF;
+    margin: 5px 0
+}
+
+.amazone-navbar .shop-by .shopby-drop ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.amazone-navbar .shop-by .shopby-drop a {
+    color: #000;
+    display: block;
+    font-size: 13px;
+    padding: 5px 15px
+}
+
+.amazone-navbar .shop-by .shopby-drop a:hover {
+    text-decoration: none;
+    font-weight: 700;
+    color: #E47911
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li {
+    list-style: none
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias {
+    position: absolute;
+    width: 615px;
+    right: -612px;
+    top: 0;
+    background: #fff;
+    height: 359px;
+    display: none;
+    padding: 15px 0;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    opacity: 0
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias.open, .amazone-navbar .shop-by .shopby-drop ul li:hover .sub-alias {
+    display: block;
+    box-shadow: 0 2px 3px #ccc;
+    opacity: 1
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: 700
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias .content {
+    position: relative;
+    z-index: 1
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias .background {
+    position: absolute;
+    right: -10px;
+    bottom: 0;
+    width: 0;
+    height: 0
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li:hover .sub-alias .background {
+    width: auto;
+    height: auto
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias .background img {
+    max-height: 300px
+}
+
+.amazone-navbar .shop-by a span {
+    font-size: 10px
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias p {
+    margin-bottom: 5px
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias ul {
+    margin-top: 10px
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias a {
+    font-weight: 400;
+    padding: 3px 0
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias ul li span {
+    display: block
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias ul li span.title {
+    font-size: 12px
+}
+
+.amazone-navbar .shop-by .shopby-drop ul li .sub-alias ul li span.desc {
+    color: #999;
+    margin-top: -3px
+}
+
+.amazone-user-nav {
+    padding-left: 0;
+    margin-top: 10px
+}
+
+.amazone-user-nav li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 15px
+}
+
+.amazone-user-nav li a {
+    color: #ccc
+}
+
+.amazone-user-nav li a:focus, .amazone-user-nav li a:hover {
+    text-decoration: none
+}
+
+.amazone-user-nav .dropdown-menu {
+    margin-top: 15px;
+    left: -50%;
+    box-shadow: 0 1px 3px #ccc;
+    border: none
+}
+
+.amazone-user-nav .dropdown-menu:before {
+    width: 20px;
+    height: 10px;
+    content: "";
+    background: url(/img/icons/dropdown-arrow.png) no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: -7px;
+    left: 45%
+}
+
+.amazone-user-nav .dropdown-menu li a {
+    color: #000
+}
+
+.amazone-user-nav .dropdown-menu li a:hover {
+    color: #fabb76;
+    background: transparent
+}
+
+#slider {
+    width: 100%
+}
+
+#slider .item img {
+    display: block;
+    width: 100%;
+    height: auto
+}
+
+.slider {
+    position: relative
+}
+
+.slider .arrow {
+    width: 25px;
+    height: 25px;
+    display: block;
+    position: absolute;
+    opacity: .5;
+    cursor: pointer;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s;
+    top: 45%;
+    z-index: 9;
+    background: url(/img/base.png) no-repeat -710px -88px;
+    background-size: 1500px
+}
+
+.slider-prev {
+    left: 25px;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.slider-prev img {
+    width: 100%
+}
+
+.slider-next {
+    right: 25px
+}
+
+.slider-next img {
+    width: 100%
+}
+
+.slider-prev:hover, .slider-next:hover {
+    opacity: 1
+}
+
+.amazone-content .content-title {
+    margin-top: 30px;
+    color: #232f3d
+}
+
+.amazone-content .content-title .deals {
+    font-size: 20px;
+    display: inline-block
+}
+
+.amazone-content .content-title a {
+    display: inline-block;
+    margin-left: 15px;
+    color: #ff9200
+}
+
+.amazone-content .content-title a:hover {
+    text-decoration: none;
+    color: #E67425
+}
+
+.amazone-content .cate-box {
+    border-bottom: 1px solid #EFEFEF;
+    padding: 40px 0
+}
+
+.amazone-content .cate-box #deal-slider, .amazone-content .cate-box #selling-slider, .amazone-content .cate-box #camera-slider, .amazone-content .cate-box #gift-slider {
+    width: 90%;
+    margin: auto
+}
+
+.amazone-content .cate-box .item {
+    padding: 5px 10px
+}
+
+.amazone-content .cate-box.slider-box .item .thumb {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 170px;
+    height: 170px
+}
+
+.amazone-content .cate-box.slider-box .item .thumb img {
+    max-width: 170px;
+    max-height: 170px
+}
+
+.amazone-content .cate-box .item .info .name {
+    text-align: center;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000;
+    margin: 5px 0
+}
+
+.amazone-content .cate-box .item .info .price-box {
+    font-size: 12px
+}
+
+.amazone-content .cate-box .item .info .price-box:after {
+    content: '';
+    display: block;
+    clear: both
+}
+
+.amazone-content .cate-box .item .info .price-box .price {
+    display: block;
+    width: 50%;
+    float: left;
+    color: #ff9200;
+    font-weight: 700
+}
+
+.amazone-content .cate-box .item .info .price-box .old-price {
+    display: block;
+    width: 50%;
+    float: left;
+    text-align: right;
+    color: #666;
+    text-decoration: line-through
+}
+
+.cate-box.slider-box {
+    position: relative
+}
+
+.cate-box.slider-box .arrow-2 {
+    width: 40px;
+    height: 40px;
+    display: block;
+    position: absolute;
+    cursor: pointer;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s;
+    top: 45%;
+    z-index: 9;
+    background: url(/img/base.png) no-repeat -1101px -136px
+}
+
+.deal-slider-prev {
+    left: 0;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.deal-slider-prev img {
+    width: 100%
+}
+
+.deal-slider-next {
+    right: 0
+}
+
+.deal-slider-next img {
+    width: 100%
+}
+
+.deal-slider-prev:hover, .deal-slider-next:hover {
+    opacity: 1
+}
+
+.cate-box .deal-banner-1 {
+    display: inline-block;
+    width: 50%;
+    border-right: 1px solid #EFEFEF;
+    overflow: hidden
+}
+
+.cate-box .deal-banner-1 a {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 422px;
+    height: 192px
+}
+
+.cate-box .deal-banner-1 img {
+    max-width: 422px;
+    max-height: 192px
+}
+
+.cate-box .deal-banner-2 {
+    display: inline-block;
+    width: 50%;
+    margin-left: -4px
+}
+
+.cate-box .deal-banner-2 a {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 423px;
+    height: 192px
+}
+
+.cate-box .deal-banner-2 img {
+    max-width: 423px;
+    max-height: 192px
+}
+
+.selling-slider-prev {
+    left: 0;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.selling-slider-prev img {
+    width: 100%
+}
+
+.selling-slider-next {
+    right: 0
+}
+
+.selling-slider-next img {
+    width: 100%
+}
+
+.selling-slider-prev:hover, .selling-slider-next:hover {
+    opacity: 1
+}
+
+.amz-bought-prev, .amz-related-prev {
+    left: 0;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.amz-bought-prev img, .amz-related-prev img, .amz-bought-next img, .amz-related-next img {
+    width: 100%
+}
+
+.amz-bought-next, .amz-related-next {
+    right: 0
+}
+
+.amz-bought-prev:hover, .amz-bought-next:hover, .amz-related-prev:hover, .amz-related-next:hover {
+    opacity: 1
+}
+
+.camera-slider-prev {
+    left: 0;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.camera-slider-prev img {
+    width: 100%
+}
+
+.camera-slider-next {
+    right: 0
+}
+
+.camera-slider-next img {
+    width: 100%
+}
+
+.camera-slider-prev:hover, .camera-slider-next:hover {
+    opacity: 1
+}
+
+.gift-slider-prev {
+    left: 0;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.gift-slider-prev img {
+    width: 100%
+}
+
+.gift-slider-next {
+    right: 0
+}
+
+.gift-slider-next img {
+    width: 100%
+}
+
+.gift-slider-prev:hover, .gift-slider-next:hover {
+    opacity: 1
+}
+
+.recommend {
+    margin-top: 20px
+}
+
+.recommend h3 {
+    margin: 20px;
+    font-size: 20px
+}
+
+.recommend .btn {
+    border-color: #83692f;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background: #f2cd7a;
+    background: -webkit-linear-gradient(#f4da9e, #efc157);
+    background: -o-linear-gradient(#f4da9e, #efc157);
+    background: -moz-linear-gradient(#f4da9e, #efc157);
+    background: linear-gradient(#f4da9e, #efc157)
+}
+
+.recommend .recommend-notice {
+    background: #efefef;
+    padding: 5px 0;
+    margin-top: 20px
+}
+
+.amazone-content .content-right {
+    background: #f9f9f9;
+    padding: 10px;
+    min-height: 1754px
+}
+
+.amazone-content .content-right .right-item {
+    border-bottom: 1px solid #d9d9d9;
+    padding: 20px 10px;
+    text-align: center
+}
+
+.amazone-content .content-right .right-item img {
+    width: 100%
+}
+
+.amazone-content .content-right .right-item h1 {
+    font-size: 14px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.amazone-content .content-right .right-item h1 a {
+    color: #000
+}
+
+.amazone-content .content-right .right-item h1 a:hover {
+    text-decoration: none;
+    color: #E67425
+}
+
+.weshop-nav {
+    display: none !important
+}
+
+.amazone-fixed-nav .navbar-nav > li > .dropdown-menu {
+    margin-top: -7px;
+    box-shadow: 0 0 3px #eee;
+    border: none
+}
+
+.amazone-fixed-nav .navbar-nav > li > .dropdown-menu:before {
+    width: 20px;
+    height: 10px;
+    content: "";
+    background: transparent url(/img/icons/dropdown-arrow2.png) no-repeat scroll 0 0 / contain;
+    position: absolute;
+    top: -7px;
+    left: 45%
+}
+
+@media (max-width: 991px) {
+    .weshop-nav {
+        display: block !important
+    }
+
+    .amazone-user-nav {
+        display: none
+    }
+
+    .amazone-navbar .amazone-brand {
+        text-align: center
+    }
+
+    .amazone-navbar .cart-box {
+        text-align: center;
+        margin-top: 15px
+    }
+
+    .amazone-navbar .shop-by {
+        display: none
+    }
+
+    .amazone-header .navbar-right {
+        float: right !important
+    }
+
+    .cate-box .deal-banner-1 a {
+        width: 360px;
+        height: 192px
+    }
+
+    .cate-box .deal-banner-1 img {
+        max-width: 360px;
+        max-height: 192px
+    }
+
+    .cate-box .deal-banner-2 a {
+        width: 360px;
+        height: 192px
+    }
+
+    .cate-box .deal-banner-2 img {
+        max-width: 360px;
+        max-height: 192px
+    }
+
+    .amazone-content .cate-box .item a {
+        width: 206px;
+        height: 206px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 206px;
+        max-height: 206px
+    }
+
+    .amazone-navbar .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        float: left;
+        min-width: 160px;
+        background-color: #FFF;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176)
+    }
+
+    .amazone-navbar .cart-box-2 {
+        display: none
+    }
+
+    .amazone-navbar {
+        padding-top: 15px
+    }
+
+    .amazone-navbar .col-md-2 {
+        width: 130px;
+        float: left
+    }
+
+    .amazone-navbar .col-md-7 {
+        margin-left: 140px
+    }
+}
+
+@media (max-width: 767px) {
+    .amazone-header .navbar-brand {
+        margin-left: 60px
+    }
+
+    .amazone-header .navbar-brand img {
+        height: 100%
+    }
+
+    .amazone-header .amazone-menu-btn {
+        z-index: 99
+    }
+
+    .amazone-header .navbar-default .navbar-toggle {
+        margin-right: 30px
+    }
+
+    .cate-box .deal-banner-1 {
+        width: 100%;
+        border: 1px solid #EFEFEF
+    }
+
+    .cate-box .deal-banner-2 {
+        width: 100%;
+        border: 1px solid #EFEFEF;
+        margin-left: 0;
+        margin-top: 10px
+    }
+
+    .amazone-header .navbar-default .navbar-nav > li > a > i {
+        float: right
+    }
+
+    .cate-box .deal-banner-1 a {
+        width: 100%;
+        height: auto;
+        display: block
+    }
+
+    .cate-box .deal-banner-1 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .cate-box .deal-banner-2 a {
+        width: 100%;
+        height: auto;
+        display: block
+    }
+
+    .cate-box .deal-banner-2 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .amazone-content .cate-box .item a {
+        width: 211px;
+        height: 211px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 211px;
+        max-height: 211px
+    }
+
+    .ws-fixed-nav .navbar-brand {
+        margin-left: 70px;
+        padding: 5px 10px
+    }
+}
+
+@media (max-width: 736px) {
+    .amazone-content .cate-box .item a {
+        width: 201px;
+        height: 201px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 201px;
+        max-height: 201px
+    }
+}
+
+@media (max-width: 676px) {
+    .amazone-content .cate-box .item a {
+        width: 183px;
+        height: 183px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 183px;
+        max-height: 183px
+    }
+}
+
+@media (max-width: 640px) {
+    .amazone-content .cate-box .item a {
+        width: 173px;
+        height: 173px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 173px;
+        max-height: 173px
+    }
+}
+
+@media (max-width: 533px) {
+    .amazone-content .cate-box .item a {
+        width: 216px;
+        height: 216px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 216px;
+        max-height: 216px
+    }
+}
+
+@media (max-width: 480px) {
+    .amazone-content .cate-box .item a {
+        width: 192px;
+        height: 192px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 192px;
+        max-height: 192px
+    }
+}
+
+@media (max-width: 414px) {
+    .amazone-content .cate-box .item a {
+        width: 163px;
+        height: 163px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 163px;
+        max-height: 163px
+    }
+}
+
+@media (max-width: 375px) {
+    .amazone-content .cate-box .item a {
+        width: 301px;
+        height: 301px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 301px;
+        max-height: 301px
+    }
+}
+
+@media (max-width: 360px) {
+    .amazone-content .cate-box .item a {
+        width: 287px;
+        height: 287px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 287px;
+        max-height: 287px
+    }
+
+    .amazone-header .navbar-brand {
+        padding: 10px
+    }
+}
+
+@media (max-width: 320px) {
+    .amazone-content .cate-box .item a {
+        width: 251px;
+        height: 251px
+    }
+
+    .amazone-content .cate-box .item img {
+        max-width: 251px;
+        max-height: 251px
+    }
+}
+
+.col-10 {
+    width: 10%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-15 {
+    width: 15%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-20 {
+    width: 20%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-25 {
+    width: 25%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-30 {
+    width: 30%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-35 {
+    width: 35%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-40 {
+    width: 40%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-45 {
+    width: 45%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-50 {
+    width: 50%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-55 {
+    width: 55%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-60 {
+    width: 60%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-65 {
+    width: 65%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-70 {
+    width: 70%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-75 {
+    width: 75%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-80 {
+    width: 80%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-85 {
+    width: 85%;
+    float: left;
+    padding: 0 15px
+}
+
+.col-90 {
+    width: 90%;
+    float: left;
+    padding: 0 15px
+}
+
+.home-dhgate {
+    background: #f2f2f2;
+    position: relative
+}
+
+.dhg-navbar {
+    margin-top: 40px;
+    padding: 20px;
+    background: #fff
+}
+
+.dhgate-brand {
+    display: block;
+    width: 150px
+}
+
+.dhgate-brand img {
+    width: 100%
+}
+
+.dhg-navbar .cart-box {
+    text-align: right;
+    border: none
+}
+
+.dhg-navbar .cart {
+    color: #000
+}
+
+.dhg-navbar .cart:hover, .dhg-navbar .cart:focus {
+    text-decoration: none
+}
+
+.dhg-navbar .cart-text {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.dhg-navbar .cart-img {
+    margin-left: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 25px;
+    height: 25px;
+    background: url(/img/base.png) no-repeat -522px 3px;
+    background-size: 1100px
+}
+
+.dhg-navbar .cart .cart-title {
+    text-transform: uppercase
+}
+
+.dhg-search {
+    position: relative;
+    width: 100%
+}
+
+.dhg-search.input-group .form-control {
+    border-color: #ffcc01;
+    border-radius: 0;
+    height: 40px;
+    padding-right: 225px
+}
+
+.dhg-search.input-group .form-control:focus {
+    box-shadow: 0 0 3px #ffcc01
+}
+
+.dhg-search.input-group .dhg-search-btn {
+    position: absolute;
+    right: 56px;
+    top: 1px
+}
+
+.dhg-search.input-group .dhg-search-btn .btn {
+    background: #ffcc01;
+    border: none;
+    border-radius: 0;
+    height: 38px;
+    padding: 0 25px
+}
+
+.dhg-search.input-group .dhg-search-dropdown {
+    position: absolute;
+    width: 150px;
+    right: 65px;
+    top: 4px;
+    box-shadow: none;
+    height: 32px;
+    z-index: 2
+}
+
+.dhg-search.input-group .dhg-search-dropdown .btn {
+    width: 150px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border: none;
+    border-left: 1px solid #EFEFEF;
+    text-align: left;
+    color: #999;
+    position: relative;
+    padding-right: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+
+.dhg-search.input-group .dhg-search-dropdown .btn:focus, .dhg-search.input-group .dhg-search-dropdown .btn:hover {
+    background: transparent;
+    box-shadow: none
+}
+
+.dhg-search.input-group .dhg-search-dropdown .btn i {
+    position: absolute;
+    right: 10px;
+    top: 10px
+}
+
+.dhg-search.input-group .dhg-search-dropdown .dropdown-menu {
+    max-height: 200px;
+    width: 200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background: #fff;
+    border: 1px solid #efefef;
+    left: inherit;
+    right: 0
+}
+
+.dhg-search.input-group .dhg-search-dropdown .dropdown-menu > li > a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.dhg-all-cate {
+    height: 50px;
+    background: #666
+}
+
+.dhg-all-cate .cate-title {
+    color: #fff;
+    text-transform: uppercase;
+    background: #3e3e3e;
+    padding: 15px;
+    height: 50px
+}
+
+.dhg-all-cate .amazone-user-nav {
+    margin: 0 -25px
+}
+
+.dhg-all-cate .amazone-user-nav li {
+    margin-right: 0
+}
+
+.dhg-all-cate .amazone-user-nav li a {
+    color: #fff;
+    display: block;
+    padding: 15px 15px 14px
+}
+
+.dhg-all-cate .amazone-user-nav li a:hover {
+    background: #3E3E3E
+}
+
+.dhg-all-cate .amazone-user-nav .dropdown-menu li a {
+    color: #000
+}
+
+.dhg-all-cate .amazone-user-nav .dropdown-menu li a:hover {
+    color: #ffcc01
+}
+
+.dhg-cate-list {
+    background: #fff;
+    border-top: 2px solid #ffcc01;
+    padding: 0;
+    font-size: 12px;
+    box-shadow: 0 3px 3px #ccc;
+    margin-top: -1px
+}
+
+.dhg-cate-list ul {
+    padding-left: 0;
+    margin-bottom: 0;
+    position: relative;
+    padding-bottom: 4px
+}
+
+.dhg-cate-list ul li {
+    list-style: none;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-left: 1px solid transparent
+}
+
+.dhg-cate-list ul li a {
+    padding: 3px 10px 2px 15px;
+    display: block;
+    color: #000;
+    position: relative
+}
+
+.dhg-cate-list ul li:hover {
+    border-color: #000
+}
+
+.dhg-cate-list ul li a:hover {
+    color: #E71;
+    text-decoration: none
+}
+
+.dhg-cate-list ul li a:after {
+    width: 10px;
+    height: 23px;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    content: "";
+    right: -5px;
+    z-index: 99;
+    display: none
+}
+
+.dhg-cate-list ul li:last-child a:after {
+    height: 23.5px
+}
+
+.dhg-cate-list ul li:hover a:after {
+    display: block
+}
+
+.dhg-cate-list ul li a i {
+    float: right;
+    font-size: 14px
+}
+
+.dhg-cate-list ul li .sub-alias {
+    width: 500px;
+    height: 385px;
+    background: #fff;
+    position: absolute;
+    left: 204px;
+    top: -5px;
+    z-index: 9;
+    border: 1px solid #000;
+    display: none
+}
+
+.dhg-cate-list ul li .sub-alias .left {
+    padding: 10px 20px
+}
+
+.dhg-cate-list ul li .sub-alias .right {
+    height: 383px;
+    position: absolute;
+    top: 0;
+    right: 0
+}
+
+.dhg-cate-list ul li .sub-alias .right img {
+    height: 100%
+}
+
+.dhg-cate-list ul li .sub-alias h4 {
+    font-size: 16px;
+    margin: 0;
+    margin-bottom: 10px
+}
+
+.dhg-cate-list ul li .sub-alias ul {
+    padding-left: 0
+}
+
+.dhg-cate-list ul li .sub-alias ul li {
+    border: none
+}
+
+.dhg-cate-list ul li .sub-alias a {
+    display: inherit;
+    padding-left: 0
+}
+
+.dhg-cate-list ul li .sub-alias a:after {
+    display: none
+}
+
+.dhg-cate-list ul li:hover .sub-alias {
+    display: block
+}
+
+.dhg-main-slider {
+    padding: 0;
+    margin-top: 6px;
+    position: relative
+}
+
+.dhg-main-slider .owl-dots {
+    text-align: center;
+    margin-top: -30px;
+    position: relative;
+    z-index: 99
+}
+
+.dhg-main-slider .owl-dot {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background: #666;
+    margin: 0 5px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%
+}
+
+.dhg-main-slider .owl-dot.active {
+    background: #ffcc01
+}
+
+.dhg-main-slider .dhg-arrow {
+    display: block;
+    width: 40px;
+    height: 60px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 20px 10px;
+    cursor: pointer;
+    position: absolute;
+    top: 40%;
+    z-index: 2;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s;
+    opacity: .3
+}
+
+.dhg-main-slider:hover .dhg-arrow {
+    opacity: 1
+}
+
+.dhg-main-slider .dhg-arrow img {
+    width: 100%
+}
+
+.dhg-main-slider .dhg-arrow.dhg-prev {
+    left: 10px;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.dhg-main-slider .dhg-arrow.dhg-next {
+    right: 10px
+}
+
+.dhg-main-slider .dhg-arrow .arrow {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url(/img/base.png) no-repeat -567px -70px;
+    background-size: 1200px
+}
+
+.dhg-banner-header {
+    margin-top: 5px
+}
+
+.dhg-banner-header img {
+    width: 100%
+}
+
+.dhg-banner-header .banner {
+    border: 1px solid #EFEFEF;
+    overflow: hidden;
+    margin-bottom: 10px
+}
+
+.dhg-content-box h3 {
+    font-size: 22px;
+    margin: 30px 0 20px
+}
+
+.dhg-content-box h3 i {
+    margin-left: 15px
+}
+
+.dhg-content-box .col-80 {
+    padding-right: 0
+}
+
+.dhg-content-box .hdg-slider-box {
+    border: 1px solid #EFEFEF;
+    background: #fff;
+    margin-top: 15px;
+    position: relative;
+    padding: 10px
+}
+
+.dhg-content-box .hdg-slider-box .item-box {
+    width: 90%;
+    margin: auto;
+    padding: 15px
+}
+
+.dhg-content-box .hdg-slider-box .item-box h2 {
+    font-size: 14px
+}
+
+.dhg-content-box .hdg-slider-box .item-box h2 a {
+    color: #999;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.dhg-content-box .hdg-slider-box .item-box h2 a:hover {
+    color: #E71;
+    text-decoration: none
+}
+
+.dhg-content-box .hdg-slider-box .item-box .thumb {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 172px;
+    height: 172px
+}
+
+.dhg-content-box .hdg-slider-box .item-box .thumb img {
+    max-width: 172px;
+    max-height: 172px
+}
+
+.dhg-content-box .dhg-arrow {
+    display: block;
+    width: 40px;
+    height: 60px;
+    border-radius: 5px;
+    background: rgba(247, 247, 247, 0.7) none repeat scroll 0 0;
+    padding: 20px 10px;
+    cursor: pointer;
+    position: absolute;
+    top: 40%;
+    z-index: 2;
+    transition: all .3s ease 0
+}
+
+.dhg-content-box .dhg-arrow img {
+    width: 100%
+}
+
+.dhg-content-box .dhg-arrow.dhg-view-prev {
+    left: 10px;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.dhg-content-box .dhg-arrow.dhg-view-next {
+    right: 10px
+}
+
+.dhg-content-box .dhg-arrow .arrow {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url(/img/base.png) no-repeat -567px -70px;
+    background-size: 1200px
+}
+
+.hdg-arrival .big-banner {
+    border: 5px solid #f2f2f2;
+    width: 30%;
+    float: left
+}
+
+.hdg-arrival .big-banner img {
+    width: 100%
+}
+
+.hdg-arrival .banner-list {
+    width: 68%;
+    float: left;
+    margin-left: 2%
+}
+
+.hdg-arrival .banner-list .item {
+    display: inline-block;
+    width: 24.5%;
+    text-align: center;
+    padding: 10px;
+    margin-top: 10px
+}
+
+.hdg-arrival .banner-list .item .thumb {
+    width: 129px;
+    height: 129px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.hdg-arrival .banner-list .item img {
+    max-width: 129px;
+    max-height: 129px
+}
+
+.hdg-arrival .banner-list .item .title {
+    margin-top: 15px;
+    color: #000;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+
+.hdg-arrival .banner-list .item .title:hover {
+    color: #E71;
+    text-decoration: none
+}
+
+.hdg-arrival .banner-list .item a {
+    display: block
+}
+
+.dhg-right-list.list-1 {
+    height: 738px
+}
+
+.dhg-right-list .item {
+    border-bottom: 1px solid #EFEFEF;
+    padding: 21px 0
+}
+
+.dhg-right-list .item .thumb {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.dhg-right-list .item .info {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 12px
+}
+
+.dhg-right-list .item .thumb a {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    text-align: center
+}
+
+.dhg-right-list .item .thumb img {
+    max-width: 50px;
+    max-height: 50px
+}
+
+.dhg-right-list .item .info span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 115px
+}
+
+.dhg-right-list .item .info a {
+    color: #000;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 115px
+}
+
+.dhg-right-list .item .info a:hover {
+    color: #E71;
+    text-decoration: none
+}
+
+.dhg-right-paginator {
+    padding: 20px 0
+}
+
+.dhg-right-paginator span {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.dhg-right-paginator a {
+    color: #000;
+    font-size: 20px
+}
+
+.dhg-right-paginator a:hover {
+    color: #E71;
+    text-decoration: none
+}
+
+.dhg-featured-cate {
+    border: 1px solid #EFEFEF;
+    background: #fff
+}
+
+.dhg-featured-cate ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.dhg-featured-cate ul li {
+    width: 20.2%;
+    display: inline-block;
+    border-left: 1px solid #EFEFEF;
+    margin-left: -5px;
+    text-align: center;
+    font-size: 12px
+}
+
+.dhg-featured-cate ul li:first-child {
+    border-left: none
+}
+
+.dhg-featured-cate ul li a {
+    display: block;
+    padding: 10px;
+    color: #000
+}
+
+.dhg-featured-cate ul li a:hover {
+    text-decoration: none;
+    color: #E71
+}
+
+.dhg-featured-cate ul li a span {
+    display: block;
+    margin-bottom: 20px
+}
+
+.dhg-featured-cate ul li a .featured-icon {
+    display: block;
+    height: 82px;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px
+}
+
+.dhg-featured-cate ul li a .featured-icon.fashion {
+    background: url(/img/base.png) no-repeat -687px 8px;
+    width: 82px
+}
+
+.dhg-featured-cate ul li a .featured-icon.phone {
+    background: url(/img/base.png) no-repeat -855px 2px;
+    width: 62px
+}
+
+.dhg-featured-cate ul li a .featured-icon.pc {
+    background: url(/img/base.png) no-repeat -600px 12px;
+    width: 82px
+}
+
+.dhg-featured-cate ul li a .featured-icon.furniture {
+    background: url(/img/base.png) no-repeat -773px 19px;
+    width: 82px
+}
+
+.dhg-featured-cate ul li a .featured-icon.baby {
+    background: url(/img/base.png) no-repeat -513px 3px;
+    width: 82px
+}
+
+.dhg-featured-cate ul li img {
+    width: 50%;
+    margin: 20px 0
+}
+
+.dhg-featured-seller .item {
+    border: 1px solid #EFEFEF;
+    background: #fff;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    margin-bottom: 13px
+}
+
+.dhg-featured-seller .item .thumb a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 265px;
+    height: 155px
+}
+
+.dhg-featured-seller .item .thumb img {
+    max-width: 265px;
+    max-height: 155px
+}
+
+.dhg-featured-seller .item .info {
+    margin-top: 15px
+}
+
+.dhg-featured-seller .item .info a {
+    display: block;
+    color: #000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.dhg-featured-seller .item .info a.dhg-seller {
+    width: 140px;
+    margin: auto
+}
+
+.dhg-featured-seller .item .info a:hover {
+    color: #E71;
+    text-decoration: none
+}
+
+.dhg-featured-seller .item .info span {
+    display: block
+}
+
+.dhg-featured-brand {
+    display: block;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #f3f3f3;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    position: absolute;
+    left: 20px;
+    bottom: 35px
+}
+
+.dhg-featured-brand img {
+    width: 100%
+}
+
+.dhg-viewed {
+    border: 1px solid #EFEFEF;
+    background: #fff;
+    padding: 10px 10px 0;
+    margin-top: 20px
+}
+
+.dhg-viewed p {
+    margin-bottom: 0
+}
+
+.dhg-viewed ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.dhg-viewed ul li {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px
+}
+
+.dhg-viewed ul li a {
+    display: table-cell;
+    width: 70px;
+    height: 70px;
+    vertical-align: middle;
+    text-align: center
+}
+
+.dhg-viewed ul li img {
+    max-width: 70px;
+    max-height: 70px
+}
+
+@media (max-width: 991px) {
+    .col-20 {
+        width: 100%
+    }
+
+    .col-60 {
+        width: 100%
+    }
+
+    .col-65 {
+        width: 100%
+    }
+
+    .col-80 {
+        width: 100%
+    }
+
+    .col-35 {
+        width: 100%
+    }
+
+    .col-45 {
+        width: 100%
+    }
+
+    .dhgate-brand {
+        margin: auto;
+        margin-bottom: 10px
+    }
+
+    .dhg-navbar .cart {
+        display: block;
+        text-align: center;
+        margin-top: 10px
+    }
+
+    .dhg-cate-list ul li:hover .sub-alias {
+        display: none
+    }
+
+    .dhg-cate-list ul li {
+        border-right: 1px solid transparent
+    }
+
+    .dhg-cate-list ul li:hover a:after {
+        display: none
+    }
+
+    .dhg-main-slider {
+        padding: 0 15px
+    }
+
+    .hdg-arrival .big-banner {
+        width: 100%
+    }
+
+    .hdg-arrival .banner-list {
+        width: 100%;
+        margin-left: 0
+    }
+
+    .hdg-arrival .banner-list .item {
+        width: 49.5%
+    }
+
+    .dhg-right-list.list-1 {
+        height: auto
+    }
+
+    .dhg-featured-cate ul li a span {
+        display: none
+    }
+
+    .dhg-featured-cate ul li {
+        width: 20.25%
+    }
+
+    .dhg-content-box .col-80 {
+        padding-right: 15px
+    }
+
+    .hdg-arrival .banner-list .item .thumb {
+        width: 325px;
+        height: 325px
+    }
+
+    .hdg-arrival .banner-list .item img {
+        max-width: 325px;
+        max-height: 325px
+    }
+
+    .dhg-featured-seller .item .thumb a {
+        width: 100%;
+        height: auto;
+        display: block
+    }
+
+    .dhg-featured-seller .item .thumb img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .dhg-main-slider .dhg-arrow.dhg-prev {
+        left: 25px
+    }
+
+    .dhg-main-slider .dhg-arrow.dhg-next {
+        right: 25px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 199px;
+        height: 199px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 199px;
+        max-height: 199px
+    }
+
+    .dhg-banner-header {
+        margin-top: 20px
+    }
+}
+
+@media (max-width: 767px) {
+    .hdg-arrival .banner-list .item .thumb {
+        width: 324px;
+        height: 324px
+    }
+
+    .hdg-arrival .banner-list .item img {
+        max-width: 324px;
+        max-height: 324px
+    }
+
+    .content-box .hdg-slider-box .item-box .thumb {
+        width: 169px;
+        height: 169px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 169px;
+        max-height: 169px
+    }
+
+    .content-box .hdg-slider-box .item-box .thumb {
+        width: 188px;
+        height: 188px
+    }
+}
+
+@media (max-width: 736px) {
+    .content-box .hdg-slider-box .item-box .thumb {
+        width: 169px;
+        height: 169px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 169px;
+        max-height: 169px
+    }
+}
+
+@media (max-width: 676px) {
+    .dhg-featured-cate ul li {
+        width: 20.29%
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 151px;
+        height: 151px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 151px;
+        max-height: 151px
+    }
+
+    .hdg-arrival .banner-list .item .thumb {
+        width: 278px;
+        height: 278px
+    }
+
+    .hdg-arrival .banner-list .item img {
+        max-width: 278px;
+        max-height: 278px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 151px;
+        height: 151px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 151px;
+        max-height: 151px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon {
+        height: 62px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.baby {
+        background: url(/img/base.png) no-repeat -396px 1px;
+        width: 62px;
+        background-size: 1800px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.furniture {
+        background: url(/img/base.png) no-repeat -597px 14px;
+        width: 62px;
+        background-size: 1800px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.pc {
+        background: url(/img/base.png) no-repeat -463px 8px;
+        width: 62px;
+        background-size: 1800px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.phone {
+        background: url(/img/base.png) no-repeat -659px 0;
+        width: 50px;
+        background-size: 1800px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.fashion {
+        background: url(/img/base.png) no-repeat -530px 4px;
+        width: 62px;
+        background-size: 1800px
+    }
+
+    .dhg-featured-cate ul {
+        margin-bottom: -5px
+    }
+
+    .ebay-slider .ebay-arrow {
+        display: none !important
+    }
+}
+
+@media (max-width: 640px) {
+    .hdg-arrival .banner-list .item .thumb {
+        width: 261px;
+        height: 261px
+    }
+
+    .hdg-arrival .banner-list .item img {
+        max-width: 261px;
+        max-height: 261px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 140px;
+        height: 140px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 140px;
+        max-height: 140px
+    }
+}
+
+@media (max-width: 533px) {
+    .dhg-featured-cate ul li {
+        width: 20.37%
+    }
+
+    .hdg-arrival .banner-list .item .thumb {
+        width: 208px;
+        height: 208px
+    }
+
+    .hdg-arrival .banner-list .item img {
+        max-width: 198px;
+        max-height: 198px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 196px;
+        height: 196px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 196px;
+        max-height: 196px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 180px;
+        height: 180px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 180px;
+        max-height: 180px
+    }
+
+    .cate-box.slider-box .arrow-2 {
+        display: none
+    }
+
+    .dhg-featured-cate ul li a .featured-icon {
+        height: 39px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.baby {
+        background: url(/img/base.png) no-repeat -241px 1px;
+        width: 39px;
+        background-size: 1100px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.furniture {
+        background: url(/img/base.png) no-repeat -364px 10px;
+        width: 39px;
+        background-size: 1100px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.pc {
+        background: url(/img/base.png) no-repeat -282px 6px;
+        width: 39px;
+        background-size: 1100px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.phone {
+        background: url(/img/base.png) no-repeat -404px 1px;
+        width: 27px;
+        background-size: 1100px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon.fashion {
+        background: url(/img/base.png) no-repeat -324px 4px;
+        width: 39px;
+        background-size: 1100px
+    }
+
+    .dhg-featured-cate ul {
+        margin-bottom: -5px
+    }
+}
+
+@media (max-width: 480px) {
+    .dhg-featured-cate ul li {
+        width: 20.42%
+    }
+}
+
+@media (max-width: 414px) {
+    .dhg-search.input-group .dhg-search-select {
+        width: 100px
+    }
+
+    .dhg-featured-cate ul li {
+        width: 20.49%
+    }
+
+    .hdg-arrival .banner-list .item {
+        width: 49.4%
+    }
+
+    .hdg-arrival .banner-list .item .thumb {
+        width: 148px;
+        height: 148px
+    }
+
+    .hdg-arrival .banner-list .item img {
+        max-width: 148px;
+        max-height: 148px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 153px;
+        height: 153px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 153px;
+        max-height: 153px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon {
+        margin-top: 10px;
+        margin-bottom: 10px
+    }
+}
+
+@media (max-width: 375px) {
+    .hdg-arrival .banner-list .item {
+        width: 49%
+    }
+
+    .dhg-featured-cate ul li {
+        width: 20.55%
+    }
+
+    .dhg-search.input-group .dhg-search-dropdown {
+        width: 100px
+    }
+
+    .dhg-search.input-group .dhg-search-dropdown .btn {
+        width: 100px
+    }
+
+    .dhg-search.input-group .form-control {
+        padding-right: 170px
+    }
+
+    .hdg-arrival .banner-list .item .thumb {
+        width: 128px;
+        height: 128px
+    }
+
+    .hdg-arrival .banner-list .item img {
+        max-width: 128px;
+        max-height: 128px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 242px;
+        height: 242px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 242px;
+        max-height: 242px
+    }
+
+    .dhg-main-slider .dhg-arrow {
+        display: none
+    }
+}
+
+@media (max-width: 360px) {
+    .hdg-arrival .banner-list .item {
+        width: 100%
+    }
+
+    .hdg-arrival .banner-list .item .thumb {
+        display: block;
+        width: 100%;
+        height: auto
+    }
+
+    .hdg-arrival .banner-list .item img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 229px;
+        height: 229px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 229px;
+        max-height: 229px
+    }
+}
+
+@media (max-width: 320px) {
+    .dhg-featured-cate ul li {
+        width: 20.66%
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb {
+        width: 193px;
+        height: 193px
+    }
+
+    .dhg-content-box .hdg-slider-box .item-box .thumb img {
+        max-width: 193px;
+        max-height: 193px
+    }
+
+    .dhg-featured-cate ul li a .featured-icon {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+
+    .dhg-featured-cate ul li {
+        width: 20.91%
+    }
+}
+
+.ebay-brand {
+    display: inline-block;
+    width: 120px;
+    vertical-align: middle
+}
+
+.ebay-shop-by {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 30px;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid transparent;
+    border-top: 2px solid transparent;
+    padding: 3px 10px;
+    font-size: 12px;
+    margin-top: -2px;
+    border-radius: 3px;
+    border-bottom-right-radius: 0;
+    z-index: 9
+}
+
+.ebay-shop-by.active {
+    background: #fff;
+    border-color: #e8e8e8;
+    border-top-color: #0654BA;
+    box-shadow: 2px 2px 3px #ddd
+}
+
+.ebay-shop-by:hover {
+    color: #0654BA
+}
+
+.ebay-shop-by .shopby-dropdown {
+    position: absolute;
+    left: -1px;
+    top: 41px;
+    width: 700px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    cursor: default;
+    padding: 15px;
+    color: #000;
+    box-shadow: 2px 2px 3px #ddd;
+    display: none
+}
+
+.ebay-shop-by.active .shopby-dropdown {
+    display: block
+}
+
+.ebay-shop-by::before {
+    display: none;
+    content: '';
+    width: 100%;
+    height: 3px;
+    background: #fff;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 9999
+}
+
+.ebay-shop-by.active::before {
+    display: block
+}
+
+.ebay-shop-by .shopby-dropdown h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.ebay-shop-by .shopby-dropdown a {
+    color: #000
+}
+
+.ebay-shop-by .shopby-dropdown a:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.ebay-shop-by .shopby-dropdown ul {
+    padding-left: 10px;
+    margin-bottom: 20px
+}
+
+.ebay-shop-by .shopby-dropdown ul li {
+    list-style: none;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.ebay-shop-by .shopby-dropdown .see-all {
+    border-top: 1px solid #e8e8e8;
+    padding-top: 10px;
+    margin-top: 20px
+}
+
+.ebay-shop-by .shopby-dropdown .see-all .all-cate {
+    font-weight: 700;
+    font-size: 14px;
+    color: #0063D1
+}
+
+.ebay-shop-by .shopby-dropdown .see-all .trending {
+    font-weight: 700;
+    color: #0063D1
+}
+
+.ebay-shop-by .shopby-dropdown .see-all .all-cate:hover, .ebay-shop-by .shopby-dropdown .see-all .trending:hover {
+    color: #e67425
+}
+
+.ebay-navbar {
+    margin-top: 40px;
+    padding: 15px 0 0;
+    background: #f2f2f2
+}
+
+.ebay-navbar .cart {
+    color: #000
+}
+
+.ebay-navbar .cart:hover, .ebay-navbar .cart:focus {
+    text-decoration: none
+}
+
+.ebay-navbar .cart-text {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.ebay-navbar .cart .cart-title {
+    text-transform: uppercase
+}
+
+.ebay-navbar .cart-img {
+    margin-left: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 25px;
+    height: 25px;
+    background: url(/img/base.png) no-repeat -522px 3px;
+    background-size: 1100px
+}
+
+.ebay-content {
+    margin-top: 20px
+}
+
+.ebay-brand img {
+    width: 100%
+}
+
+.ebay-advance {
+    border: none;
+    text-align: left;
+    background: transparent;
+    padding: 6px 10px;
+    font-size: 12px
+}
+
+.ebay-search {
+    position: relative
+}
+
+.ebay-search input {
+    height: 40px;
+    padding-right: 140px;
+    border-radius: 3px
+}
+
+.input-group .ebay-search-form .form-control:first-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px
+}
+
+.ebay-search-form {
+    position: relative;
+    margin-right: 5px
+}
+
+.ebay-search-form .ebay-search-select {
+    border: none;
+    width: 135px;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    box-shadow: none;
+    border-left: 1px solid #e8e8e8;
+    height: 36px;
+    padding: 6px 2px;
+    font-size: 12px
+}
+
+.ebay-advance:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.ebay-search-btn .btn {
+    height: 40px;
+    font-weight: 700;
+    padding: 6px 20px
+}
+
+.ebay-navbar .cart-box {
+    text-align: right;
+    border: none
+}
+
+.ebay-navbar-2 {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin-top: 15px;
+    position: relative;
+    font-size: 13px
+}
+
+.ebay-navbar-2 ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.ebay-navbar-2 ul li {
+    list-style: none;
+    display: inline-block;
+    vertical-align: middle
+}
+
+.ebay-navbar-2 ul li a {
+    display: block;
+    padding: 10px 15px;
+    color: #666;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent
+}
+
+.ebay-navbar-2 ul li a:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.ebay-sale-nav {
+    display: inline-block;
+    vertical-align: middle;
+    border-right: 1px solid #ddd;
+    padding-right: 15px
+}
+
+.ebay-nav {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 15px
+}
+
+.ebay-nav ul li a {
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    position: relative
+}
+
+.ebay-navbar-2 ul li a:hover {
+    border-left: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
+    background: #fff
+}
+
+.ebay-nav ul li a:after {
+    content: '';
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 3px;
+    background: #fff;
+    z-index: 2
+}
+
+.ebay-nav ul li a:hover::after {
+    display: block
+}
+
+.ebay-navbar-2 ul li .ebay-nav-drop {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    box-shadow: 2px 2px 3px #ddd;
+    display: none
+}
+
+.ebay-navbar-2 ul li:hover .ebay-nav-drop {
+    display: block
+}
+
+.ebay-navbar-2 ul li a.ebay-deal {
+    color: #e43137
+}
+
+.ebay-navbar-2 ul li .ebay-nav-drop .banner {
+    margin-right: -15px
+}
+
+.ebay-navbar-2 ul li:hover .ebay-nav-drop .banner a {
+    border: none;
+    background: transparent
+}
+
+.ebay-navbar-2 ul li .ebay-nav-drop .banner a:hover::after {
+    display: none
+}
+
+.ebay-navbar-2 ul li .ebay-nav-drop .banner img {
+    width: 100%
+}
+
+.ebay-navbar-2 ul li .ebay-nav-drop ul li {
+    margin-bottom: 10px;
+    display: block
+}
+
+.ebay-navbar-2 ul li .ebay-nav-drop ul li a {
+    padding: 0;
+    border: none
+}
+
+.ebay-navbar-2 ul li .ebay-nav-drop .title {
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    margin-top: 15px
+}
+
+.ebay-slider {
+    position: relative;
+    margin-top: 15px;
+    border: 1px solid #ddd
+}
+
+.ebay-slider .ebay-arrow {
+    position: absolute;
+    top: 40%;
+    width: 50px;
+    height: 80px;
+    z-index: 9;
+    background: rgba(0, 0, 0, 0.3);
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+    cursor: pointer;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+.ebay-slider:hover .ebay-arrow {
+    display: block
+}
+
+.ebay-slider .ebay-arrow:hover {
+    background: rgba(0, 0, 0, 0.5)
+}
+
+.ebay-slider .ebay-arrow .arrow {
+    width: 35px;
+    height: 35px;
+    display: block;
+    background: url(/img/base.png) no-repeat -811px -101px;
+    background-size: 1800px;
+    margin: auto
+}
+
+.ebay-slider .ebay-arrow.ebay-slider-prev {
+    left: 0
+}
+
+.ebay-slider .ebay-arrow.ebay-slider-next {
+    right: 0;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.ebay-banner-1 {
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    width: 321px;
+    height: 228px;
+    overflow: hidden
+}
+
+.ebay-banner-1 a {
+    display: table-cell;
+    width: 319px;
+    height: 226px;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-banner-1 img {
+    max-width: 319px;
+    max-height: 226px
+}
+
+.ebay-banner-2 {
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    width: 321px;
+    height: 121px;
+    overflow: hidden
+}
+
+.ebay-banner-2 a {
+    display: table-cell;
+    width: 319px;
+    height: 119px;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-banner-2 img {
+    max-width: 319px;
+    max-height: 119px
+}
+
+.ebay-recent-search {
+    background: #fff;
+    border: 1px solid #ddd;
+    margin-top: 50px;
+    padding: 20px 0
+}
+
+.ebay-recent-search h4 {
+    margin: 0 0 15px
+}
+
+.ebay-recent-search h4 strong {
+    display: inline-block
+}
+
+.ebay-recent-search h4 a {
+    display: inline-block;
+    font-size: 14px;
+    margin-left: 15px
+}
+
+.ebay-recent-search h4 a:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.ebay-recent-search ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.ebay-recent-search ul li {
+    list-style: none;
+    margin: 5px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.ebay-pd-item .thumb {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden
+}
+
+.ebay-pd-item .thumb a {
+    display: table-cell;
+    width: 195.6px;
+    height: 195.6px;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-pd-item .thumb img {
+    max-width: 195.6px;
+    max-height: 195.6px
+}
+
+.ebay-pd-item .info {
+    margin-top: 10px
+}
+
+.ebay-pd-item .info h3 {
+    margin: 0;
+    font-size: 14px;
+    max-height: 31px;
+    overflow: hidden
+}
+
+.ebay-pd-item .info h3 a:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.ebay-featured {
+    margin-top: 50px
+}
+
+.ebay-featured h3 {
+    font-size: 22px;
+    margin: 0 0 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px
+}
+
+.ebay-featured .item {
+    margin-bottom: 50px
+}
+
+.ebay-featured .item .pd-box {
+    border: 1px solid #ddd;
+    height: 410px;
+    position: relative
+}
+
+.ebay-featured .item .pd-box .pd-img-1 {
+    width: 408px;
+    height: 408px;
+    border-right: 1px solid #ddd;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden
+}
+
+.ebay-featured .item .pd-box .pd-img-1 a {
+    display: table-cell;
+    width: 406px;
+    height: 406px;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-featured .item .pd-box .pd-img-1 img {
+    max-width: 406px;
+    max-height: 406px
+}
+
+.ebay-featured .item .pd-box .pd-img-2 {
+    width: 145px;
+    height: 136px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    position: absolute;
+    right: 0;
+    top: 0;
+    overflow: hidden
+}
+
+.ebay-featured .item .pd-box .pd-img-2 a {
+    display: table-cell;
+    width: 143px;
+    height: 134px;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-featured .item .pd-box .pd-img-2 img {
+    max-width: 143px;
+    max-height: 134px
+}
+
+.ebay-featured .item .pd-box .pd-img-3 {
+    width: 145px;
+    height: 136px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    position: absolute;
+    right: 0;
+    top: 136px;
+    overflow: hidden
+}
+
+.ebay-featured .item .pd-box .pd-img-3 a {
+    display: table-cell;
+    width: 143px;
+    height: 134px;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-featured .item .pd-box .pd-img-3 img {
+    max-width: 143px;
+    max-height: 134px
+}
+
+.ebay-featured .item .pd-box .pd-img-4 {
+    width: 145px;
+    height: 136px;
+    background: #fff;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    overflow: hidden
+}
+
+.ebay-featured .item .pd-box .pd-img-4 a {
+    display: table-cell;
+    width: 143px;
+    height: 134px;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-featured .item .pd-box .pd-img-4 img {
+    max-width: 143px;
+    max-height: 134px
+}
+
+.ebay-featured .item .pd-info {
+    margin-top: 15px
+}
+
+.ebay-featured .item .pd-info .left {
+    display: inline-block;
+    width: 73%;
+    vertical-align: top;
+    padding-right: 20px
+}
+
+.ebay-featured .item .pd-info .right {
+    display: inline-block;
+    width: 26%;
+    vertical-align: top
+}
+
+.ebay-featured .item .pd-info .right span {
+    display: block;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    padding: 10px 0;
+    font-weight: 700
+}
+
+.ebay-featured .item .pd-info .right span a:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.ebay-featured .item .pd-info .left h2 {
+    margin: 0;
+    font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.ebay-featured .item .pd-info .left p {
+    margin-top: 20px;
+    max-height: 80px;
+    overflow: hidden
+}
+
+.ebay-featured .item .pd-info .left h2 a {
+    color: #000
+}
+
+.ebay-featured .item .pd-info .left h2 a:hover {
+    color: #F4AE01;
+    text-decoration: none
+}
+
+.ebay-dailydeal .title {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 15px
+}
+
+.ebay-dailydeal .title .right {
+    text-align: right;
+    margin-top: 3px
+}
+
+.ebay-dailydeal h3 {
+    font-size: 22px;
+    margin: 0
+}
+
+.ebay-dailydeal .daily-box {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    padding: 20px 0
+}
+
+.ebay-dailydeal .daily-box .arrow-2 {
+    top: 35%
+}
+
+.ebay-dailydeal .daily-box .ebay-daily-prev {
+    left: -30px;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg)
+}
+
+.ebay-dailydeal .daily-box .ebay-daily-prev img {
+    width: 100%
+}
+
+.ebay-dailydeal .daily-box .ebay-daily-next {
+    right: -30px
+}
+
+.ebay-dailydeal .daily-box .ebay-daily-next img {
+    width: 100%
+}
+
+.ebay-dailydeal .daily-box .ebay-daily-prev:hover, .ebay-dailydeal .daily-box .ebay-daily-next:hover {
+    opacity: 1
+}
+
+.ebay-dailydeal .slider-box {
+    width: 95%;
+    margin: auto
+}
+
+.ebay-dailydeal .slider-box .item {
+    padding: 0 20px
+}
+
+.ebay-dailydeal .slider-box .item .thumb {
+    border: 1px solid #ddd;
+    position: relative;
+    margin-top: 5px
+}
+
+.ebay-dailydeal .slider-box .item .thumb:hover {
+    border-color: #666
+}
+
+.ebay-dailydeal .slider-box .item .thumb a {
+    width: 174px;
+    height: 174px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-dailydeal .slider-box .item .thumb a img {
+    max-width: 174px;
+    max-height: 174px
+}
+
+.ebay-dailydeal .slider-box .item .thumb .sale-tag {
+    display: block;
+    width: 106px;
+    height: 94px;
+    background: url(/img/base.png) no-repeat -2148px -84px;
+    position: absolute;
+    top: -5px;
+    left: -5px
+}
+
+.ebay-dailydeal .slider-box .item .thumb .sale-tag i {
+    font-weight: 700;
+    font-style: normal;
+    color: #fff;
+    position: absolute;
+    top: 24px;
+    left: 29px;
+    transform: rotate(-45deg);
+    display: block;
+    text-align: center
+}
+
+.ebay-dailydeal .slider-box .item .info h4 {
+    font-size: 14px;
+    margin: 10px 0 0;
+    max-height: 32px;
+    overflow: hidden
+}
+
+.ebay-dailydeal .slider-box .item .info h4 a {
+    color: #000
+}
+
+.ebay-dailydeal .slider-box .item .info h4 a:hover {
+    color: #0063D1;
+    text-decoration: none
+}
+
+.ebay-dailydeal .slider-box .item .info strong {
+    display: block;
+    font-size: 16px
+}
+
+.ebay-trending {
+    margin-top: 50px
+}
+
+.ebay-trending .title {
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 15px;
+    margin-bottom: 15px
+}
+
+.ebay-trending h3 {
+    font-size: 22px;
+    margin: 0
+}
+
+.ebay-trending .title .right {
+    text-align: right;
+    margin-top: 3px
+}
+
+.ebay-seller-list .item {
+    background: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 30px
+}
+
+.ebay-seller-list .item .info {
+    padding: 10px
+}
+
+.ebay-seller-list .item .info .avatar {
+    display: block;
+    width: 40px;
+    height: 40px;
+    float: left
+}
+
+.ebay-seller-list .item .info .avatar img {
+    width: 100%
+}
+
+.ebay-seller-list .item .info .shop {
+    margin-left: 50px
+}
+
+.ebay-seller-list .item .info .shop .name {
+    font-weight: 700;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.ebay-seller-list .item .info .shop .created {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.ebay-seller-list .item .info .shop a:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.ebay-seller-list .item .info .shop span {
+    font-size: 13px
+}
+
+.ebay-seller-list .item .thumb {
+    border-top: 1px solid #e8e8e8;
+    height: 394px;
+    position: relative
+}
+
+.ebay-seller-list .item .thumb .thumb-1 {
+    border-bottom: 1px solid #e8e8e8
+}
+
+.ebay-seller-list .item .thumb .thumb-1 a {
+    width: 260px;
+    height: 260px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-seller-list .item .thumb .thumb-1 img {
+    max-width: 260px;
+    max-height: 260px
+}
+
+.ebay-seller-list .item .thumb .thumb-2 {
+    width: 129px;
+    height: 129px;
+    border-top: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
+    position: absolute;
+    left: 0;
+    bottom: 0
+}
+
+.ebay-seller-list .item .thumb .thumb-3 {
+    width: 129px;
+    height: 129px;
+    border-top: 1px solid #e8e8e8;
+    border-left: 1px solid #e8e8e8;
+    position: absolute;
+    right: 0;
+    bottom: 0
+}
+
+.ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+    width: 128px;
+    height: 128px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle
+}
+
+.ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+    max-width: 128px;
+    max-height: 128px
+}
+
+@media (max-width: 991px) {
+    .col-25 {
+        width: 100%
+    }
+
+    .col-30 {
+        width: 100%
+    }
+
+    .col-40 {
+        width: 100%
+    }
+
+    .col-55 {
+        width: 100%
+    }
+
+    .col-70 {
+        width: 100%
+    }
+
+    .col-75 {
+        width: 100%
+    }
+
+    .ebay-logo {
+        text-align: center;
+        margin-bottom: 15px
+    }
+
+    .ebay-navbar .cart-box {
+        text-align: center;
+        margin-top: 15px
+    }
+
+    .ebay-navbar-2 {
+        display: none
+    }
+
+    .ebay-banner-2 {
+        width: 100%;
+        height: auto
+    }
+
+    .ebay-pd-item {
+        margin-bottom: 15px
+    }
+
+    .ebay-featured .item .pd-box {
+        height: 542px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-1 {
+        width: 540px;
+        height: 540px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-2 {
+        height: 180px;
+        width: 178px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-3 {
+        width: 178px;
+        height: 180px;
+        top: 180px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-4 {
+        width: 178px;
+        height: 180px
+    }
+
+    .ebay-banner-1 {
+        height: auto;
+        width: 100%
+    }
+
+    .ebay-banner-1 a {
+        display: block;
+        width: 100%;
+        height: auto
+    }
+
+    .ebay-banner-1 img {
+        max-height: inherit;
+        max-width: inherit;
+        width: 100%
+    }
+
+    .ebay-banner-2 a {
+        display: block;
+        width: 100%;
+        height: auto
+    }
+
+    .ebay-banner-2 img {
+        max-height: inherit;
+        max-width: inherit;
+        width: 100%
+    }
+
+    .ebay-pd-item .thumb a {
+        width: 327px;
+        height: 327px
+    }
+
+    .ebay-pd-item .thumb img {
+        max-width: 327px;
+        max-height: 327px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-1 a {
+        width: 539px;
+        height: 539px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-1 img {
+        max-width: 539px;
+        max-height: 539px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-2 a {
+        height: 179px;
+        width: 177px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-2 img {
+        max-width: 179px;
+        max-height: 177px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-3 a {
+        height: 179px;
+        width: 177px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-3 img {
+        max-width: 179px;
+        max-height: 177px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-4 a {
+        height: 179px;
+        width: 177px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-4 img {
+        max-width: 179px;
+        max-height: 177px
+    }
+}
+
+@media (max-width: 767px) {
+    .ebay-featured .item .pd-box {
+        height: auto
+    }
+
+    .ebay-featured .item .pd-box .pd-img-1 {
+        position: inherit;
+        width: 90%;
+        height: auto;
+        border: 1px solid #ddd;
+        margin: auto;
+        margin-top: 10px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-2 {
+        position: inherit;
+        width: 90%;
+        height: auto;
+        border: 1px solid #ddd;
+        margin: auto;
+        margin-top: 10px
+    }
+
+    .ebay-featured .item .pd-box .pd-img-3 {
+        position: inherit;
+        width: 90%;
+        height: auto;
+        border: 1px solid #ddd;
+        margin: auto;
+        margin-top: 10px;
+        top: auto
+    }
+
+    .ebay-featured .item .pd-box .pd-img-4 {
+        position: inherit;
+        width: 90%;
+        height: auto;
+        border: 1px solid #ddd;
+        margin: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        bottom: auto
+    }
+
+    .ebay-pd-item .thumb a {
+        width: 100%;
+        display: block;
+        height: auto
+    }
+
+    .ebay-pd-item .thumb img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .ebay-featured .item .pd-box .pd-img-1 a {
+        width: 100%;
+        display: block;
+        height: auto
+    }
+
+    .ebay-featured .item .pd-box .pd-img-1 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .ebay-featured .item .pd-box .pd-img-2 a {
+        width: 100%;
+        display: block;
+        height: auto
+    }
+
+    .ebay-featured .item .pd-box .pd-img-2 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .ebay-featured .item .pd-box .pd-img-3 a {
+        width: 100%;
+        display: block;
+        height: auto
+    }
+
+    .ebay-featured .item .pd-box .pd-img-3 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .ebay-featured .item .pd-box .pd-img-4 a {
+        width: 100%;
+        display: block;
+        height: auto
+    }
+
+    .ebay-featured .item .pd-box .pd-img-4 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+}
+
+@media (max-width: 533px) {
+    .ebay-featured .item .pd-info .left {
+        width: 100%;
+        padding-right: 0
+    }
+
+    .ebay-featured .item .pd-info .right {
+        width: 100%
+    }
+}
+
+@media (max-width: 414px) {
+    .ebay-search-dropdown .btn {
+        display: none
+    }
+
+    .ebay-search input {
+        padding-right: 10px
+    }
+}
+
+.sign-in .social .left {
+    text-align: right
+}
+
+.btn-social-signin {
+    border-radius: 30px;
+    width: 210px;
+    background: #fff;
+    color: #000;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+
+.btn-social-signin i {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.btn-social-signin span {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 700;
+    display: inline-block;
+    vertical-align: middle
+}
+
+.sign-in .left .btn-social-signin {
+    border-color: #365187
+}
+
+.sign-in .right .btn-social-signin {
+    border-color: #d9453d
+}
+
+.sign-in-modal .or {
+    padding: 15px 0;
+    position: relative;
+    margin-bottom: 15px
+}
+
+.sign-in-modal .or span {
+    display: block
+}
+
+.sign-in-modal .or span.line {
+    border-top: 1px solid #ccc;
+    margin: 0;
+    border-bottom: none
+}
+
+.sign-in-modal .or span.text {
+    background: #fff;
+    width: 40px;
+    text-align: center;
+    font-weight: 700;
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    margin: auto
+}
+
+.sign-in-modal .checkbox {
+    margin: 0
+}
+
+.sign-in-modal .remember .right {
+    text-align: right
+}
+
+.sign-in-modal .signin-btn {
+    border-radius: 30px;
+    width: 100%;
+    color: #fff;
+    background: #2b96b6;
+    border-color: #2b96b6;
+    text-transform: uppercase;
+    padding: 10px 0
+}
+
+.sign-in-modal .no-account {
+    border-top: 1px solid #ccc;
+    padding-top: 15px
+}
+
+.sign-in-modal .no-account a {
+    font-weight: 700
+}
+
+.sign-in-modal .modal-dialog {
+    width: 500px
+}
+
+.sign-in-modal .forgot-text {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    font-size: 13px
+}
+
+.buy-more-service h3 {
+    font-size: 20px;
+    margin: 0 0 20px
+}
+
+.buy-more-service table thead {
+    background: #f6f7f9
+}
+
+.buy-more-service .checkbox {
+    margin: 0;
+    height: 20px
+}
+
+.buy-more-service .checkbox input[type="checkbox"] {
+    margin-left: -17px
+}
+
+.buy-more-service .price {
+    margin-left: 160px;
+    text-align: right
+}
+
+.buy-more-service .btn {
+    color: #fff;
+    background: #2b96b6;
+    border-color: #2b96b6;
+    padding: 10px 30px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    margin-top: 20px
+}
+
+.register .facebook {
+    font-weight: 700;
+    color: #365187
+}
+
+.register .google {
+    font-weight: 700;
+    color: #d9453d
+}
+
+.sign-in-modal .form-group.error .form-control {
+    border-color: red;
+    box-shadow: none
+}
+
+.sign-in-modal .form-group.error {
+    position: relative
+}
+
+.sign-in-modal .form-group i {
+    position: absolute;
+    color: red;
+    right: 10px;
+    top: 10px;
+    display: none
+}
+
+.sign-in-modal .form-group.error i {
+    display: block
+}
+
+.cart-choose-img .btn {
+    color: #fff;
+    background: #2b96b6;
+    border-color: #2b96b6;
+    padding: 10px 30px;
+    border-radius: 30px;
+    text-transform: uppercase
+}
+
+.cart-choose-img h3 {
+    margin: 0 0 20px;
+    font-size: 20px;
+    font-weight: 700;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8e8e8
+}
+
+.cart-choose-img .item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px
+}
+
+.cart-choose-img .item.active, .cart-choose-img .item:hover {
+    border: 2px solid #2b96b6
+}
+
+.cart-choose-img .item a img {
+    width: 100%
+}
+
+.cart-choose-img .tab-content {
+    margin-top: 15px
+}
+
+.cart-choose-img .nav-tabs {
+    border-bottom: none
+}
+
+.cart-choose-img .nav-tabs > li {
+    margin-bottom: 0
+}
+
+.cart-choose-img .nav-tabs > li > a {
+    border: none;
+    padding: 0;
+    margin-right: 30px
+}
+
+.cart-choose-img .nav-tabs > li > a > i.dot {
+    margin-right: 5px
+}
+
+.cart-choose-img .nav-tabs > li.active > a, .cart-choose-img .nav-tabs > li.active > a:hover, .cart-choose-img .nav-tabs > li.active > a:focus {
+    border: none
+}
+
+.cart-choose-img .nav-tabs > li > a:hover {
+    background: transparent;
+    border: none
+}
+
+.cart-choose-img .input-group {
+    margin-bottom: 15px
+}
+
+.cart-choose-img .input-group-btn:last-child > .btn, .cart-choose-img .input-group-btn:last-child > .btn-group {
+    color: #000;
+    background: #f3f3f3;
+    border-color: #ccc;
+    padding: 6px 30px;
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0
+}
+
+@media (max-width: 767px) {
+    .sign-in .social .left {
+        text-align: center
+    }
+
+    .sign-in .social .right {
+        text-align: center;
+        margin-top: 15px
+    }
+
+    .sign-in-modal .modal-dialog {
+        width: auto
+    }
+}
+
+.your-cart table tbody {
+    background: #fff
+}
+
+.your-cart table tr td, .your-cart table tr th {
+    vertical-align: top
+}
+
+.your-cart table tr td:first-child {
+    width: 60px
+}
+
+.your-cart .fa-question-circle {
+    cursor: pointer
+}
+
+.your-cart .table-responsive table {
+    box-shadow: 2px 2px 3px #ccc
+}
+
+.cart-thumb {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    position: relative
+}
+
+.cart-thumb a {
+    display: table-cell;
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1;
+    color: #666
+}
+
+.cart-thumb a img {
+    max-width: 40px;
+    max-height: 40px
+}
+
+.cart-thumb .tag {
+    position: absolute;
+    display: block;
+    background: #fff;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    font-size: 6px;
+    color: #000;
+    text-align: center;
+    padding-top: 1px;
+    cursor: pointer
+}
+
+.cart-thumb:hover {
+    border-color: #0063D1
+}
+
+.cart-thumb:hover a.upload {
+    color: #0063D1;
+    text-decoration: none
+}
+
+.cart-shop {
+    max-height: 10px;
+    max-width: 40px;
+    display: block;
+    margin: auto;
+    margin-top: 5px
+}
+
+.your-cart .table-respon .form-group {
+    margin-bottom: 0
+}
+
+.your-cart .form-inline .form-group {
+    margin-bottom: 15px
+}
+
+.your-cart .form-control {
+    height: 42px
+}
+
+.your-cart h2 {
+    font-size: 22px;
+    margin: 30px 0 20px
+}
+
+.your-cart h2 span {
+    color: #999
+}
+
+.cart-quantum {
+    margin: auto
+}
+
+.cart-quantum .form-control {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    text-align: center
+}
+
+.cart-text .form-control {
+    display: none
+}
+
+.cart-text .ck-text {
+    margin-top: 6px
+}
+
+.cart-text .ck-text span {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.cart-text .ck-text .small {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px
+}
+
+.cart-text .ck-text .ck-link {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.cart-text .ck-text .text {
+    max-width: 180px;
+    /*white-space: nowrap;*/
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.cart-text .ck-text .ck-input {
+    cursor: pointer;
+    color: #0063D1
+}
+
+.cart-text .ck-text .ck-input:hover {
+    color: #e67425
+}
+
+.cart-text .form-control:focus, .cart-quantum .form-control:focus {
+    box-shadow: none;
+    border-color: #ccc
+}
+
+.cart-ship {
+    text-align: right
+}
+
+.your-cart table tr td .cart-ship {
+    display: block;
+    text-align: right
+}
+
+.cart-unit {
+    position: relative
+}
+
+.cart-unit .input-group-addon {
+    border: none;
+    background: transparent;
+    padding: 10px 0;
+    color: #000;
+    display: inline-block;
+    vertical-align: middle;
+    width: 15px;
+    text-align: left
+}
+
+.cart-unit .form-control {
+    box-shadow: none;
+    padding-left: 4px;
+    width: 75px;
+    background: #fff;
+    border-top-left-radius: 3px !important;
+    border-bottom-left-radius: 3px !important;
+    vertical-align: middle;
+    display: none
+}
+
+.cart-unit .money {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.cart-unit .money .text {
+    max-width: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 10px 0
+}
+
+.cart-unit .money .ck-input {
+    cursor: pointer;
+    color: #0063D1
+}
+
+.cart-unit .form-control:focus {
+    border-color: #CCC
+}
+
+.cart-unit .input-group-btn {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    width: 40px
+}
+
+.cart-unit .input-group-btn .btn {
+    height: 42px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #2b96b6;
+    border: none;
+    background: transparent;
+    padding: 6px 0
+}
+
+.cart-unit .input-group-btn .btn:hover, .cart-unit .input-group-btn .btn:focus {
+    box-shadow: none;
+    background: transparent
+}
+
+.cart-unit.disabled .disable-bg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #ddd;
+    z-index: 2;
+    border-radius: 3px;
+    opacity: .5;
+    cursor: not-allowed
+}
+
+.cart-unit .dropdown-menu {
+    min-width: inherit;
+    left: inherit;
+    right: 0;
+    top: 30px
+}
+
+.cart-sale-tax .input-group-addon, .cart-ship .input-group-addon {
+    border: none;
+    background: transparent;
+    padding: 10px 0;
+    display: inline-block;
+    vertical-align: middle;
+    width: 15px;
+    text-align: center;
+    color: #000
+}
+
+.cart-sale-tax .form-control, .cart-ship .form-control {
+    box-shadow: none;
+    padding-left: 5px;
+    display: none;
+    vertical-align: middle
+}
+
+.cart-sale-tax .ck-text, .cart-ship .ck-text {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.cart-sale-tax .ck-text span, .cart-ship .ck-text span {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.cart-ship .ck-text .text {
+    max-width: 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 10px 0
+}
+
+.cart-sale-tax .ck-text .ck-input, .cart-ship .ck-text .ck-input {
+    cursor: pointer;
+    color: #0063D1
+}
+
+.cart-sale-tax .ck-text .ck-input:hover, .cart-ship .ck-text .ck-input:hover {
+    color: #e67425
+}
+
+.cart-ship .form-control {
+    width: 100px
+}
+
+.cart-sale-tax .form-control {
+    width: 55px
+}
+
+.cart-sale-tax .form-control:focus, .cart-ship .form-control:focus {
+    border-color: #CCC
+}
+
+.cart-ship .freeship {
+    padding-top: 12px
+}
+
+.cart-sale-tax .ck-text .text {
+    max-width: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 10px 0
+}
+
+.cart-amount span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 152px
+}
+
+.cart-amount span.vnd {
+    color: #ccc
+}
+
+.cart-amount span.not-avalible {
+    font-size: 14px;
+    color: #f1453d;
+    font-weight: 700;
+    margin-top: 10px
+}
+
+.your-cart .ck-text .ck-link, .your-cart .money .ck-input, .your-cart .add-note-icon .ck-input, .your-cart .ck-text .ck-input {
+    display: none
+}
+
+.your-cart > .table-respon > .table > tbody > tr:hover .ck-text .ck-link, .your-cart > .table-respon > .table > tbody > tr:hover .money .ck-input, .your-cart > .table-respon > .table > tbody > tr:hover .add-note-icon .ck-input, .your-cart > .table-respon > .table > tbody > tr:hover .ck-text .ck-input {
+    display: inline-block
+}
+
+.cart-action {
+    font-size: 20px
+}
+
+.cart-action .fa-minus-circle {
+    color: #f1453d
+}
+
+.cart-action .fa-plus-circle {
+    color: #62b664
+}
+
+.cart-link {
+    font-size: 11px;
+    max-width: 230px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.cart-link a:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.checkout-right-box {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    margin-top: 74px;
+    border-radius: 3px;
+    box-shadow: 2px 2px 3px #DDD;
+    padding: 15px 10px;
+    font-size: 13px
+}
+
+.checkout-right-box .title {
+    font-size: 16px;
+    font-weight: 700;
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 7px;
+    margin-bottom: 15px
+}
+
+.checkout-right-box .form-group label {
+    font-weight: 400
+}
+
+.checkout-right-box .weight .form-inline .form-group select {
+    width: 70px
+}
+
+.checkout-right-box .weight .form-inline .form-group input[type="text"] {
+    width: 174px
+}
+
+.checkout-right-box .dimension .form-inline .form-group select, .checkout-right-box .dimension .form-inline .form-group input[type="text"] {
+    width: 59px;
+    padding: 6px 5px
+}
+
+.checkout-right-box .info {
+    margin-top: 20px
+}
+
+.checkout-right-box .info ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.checkout-right-box .info ul li {
+    margin-bottom: 10px;
+    list-style: none
+}
+
+.checkout-right-box .info ul li i {
+    display: block;
+    float: left;
+    margin-top: 4px;
+    color: #2796b6
+}
+
+.checkout-right-box .info ul li span {
+    display: block;
+    margin-left: 20px
+}
+
+.checkout-review .row {
+    margin: 0 -10px
+}
+
+.checkout-review .col-75, .checkout-review .col-25 {
+    padding: 0 10px
+}
+
+.checkout-converter {
+    margin: 15px 0 0;
+    color: #000;
+    text-align: right;
+    font-size: 10px
+}
+
+.checkout-notice {
+    margin-top: 20px;
+    border-top: 1px solid #e8e8e8;
+    padding-top: 15px;
+    font-size: 10px;
+    color: #000
+}
+
+.checkout-attention {
+    margin-top: 50px;
+    font-size: 11px
+}
+
+.checkout-attention .fa-exclamation-triangle {
+    font-size: 20px;
+    color: #e67425;
+    display: block;
+    float: left;
+    margin-top: 4px
+}
+
+.checkout-attention .attention-box {
+    margin-left: 27px
+}
+
+.checkout-attention .attention-box .title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e67425
+}
+
+.checkout-attention .attention-box ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.checkout-attention .attention-box ul li {
+    list-style: none
+}
+
+.checkout-attention .attention-box ul li i {
+    display: block;
+    float: left;
+    color: #e67425;
+    margin-top: 4px
+}
+
+.checkout-attention .attention-box ul li span {
+    display: block;
+    margin-left: 15px
+}
+
+.cart-total {
+    background: #fff;
+    width: 460px;
+    float: right;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 1px 1px 3px #ddd;
+    margin-top: 20px
+}
+
+.cart-total h4 {
+    font-weight: 700
+}
+
+.cart-total .cart-btn {
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+    margin-top: 20px
+}
+
+.cart-total .cart-btn .btn.checkout {
+    padding: 10px 30px;
+    border-radius: 50px;
+    border-color: #2b96b6;
+    background: #2b96b6;
+    color: #fff
+}
+
+.cart-total .cart-btn .left {
+    width: 40%;
+    float: left
+}
+
+.cart-total .cart-btn .right {
+    width: 60%;
+    float: left;
+    text-align: right
+}
+
+.cart-total .cart-btn .left .back {
+    margin-top: 10px;
+    display: inline-block
+}
+
+.cart-total .cart-btn .left .back:hover {
+    color: #e67425;
+    text-decoration: none
+}
+
+.ship-info {
+    margin-bottom: 20px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 3px;
+    box-shadow: 2px 2px 3px #DDD
+}
+
+.ship-info .title {
+    margin: 0 0 15px;
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 10px
+}
+.ship-info .receiver {
+    float: left;
+    display: none;
+}
+.switch-btn .text{
+    float: left;
+}
+.ship-info .title .deli-method {
+    text-align: right;
+    height: 17px;
+}
+
+.ship-info .title .deli-method .form-inline {
+    margin-top: -6px;
+    padding-top: 4px
+}
+
+.ship-info .title .deli-method .form-group {
+    margin-bottom: 0
+}
+
+.ship-info .title .deli-method label {
+    font-size: 10px;
+    font-weight: 400;
+    color: #999;
+    vertical-align: middle
+}
+
+.ship-info .title .deli-method .btn {
+    padding: 0;
+    border: none;
+    font-size: 10px;
+    margin-top: -5px
+}
+
+.ship-info .title .deli-method .btn:hover, .ship-info .title .deli-method .btn:focus {
+    background: transparent;
+    color: #e67425;
+    box-shadow: none
+}
+
+.ship-info .title .deli-method .btn-group.open .dropdown-toggle {
+    box-shadow: none;
+    background: transparent
+}
+
+.ship-info .title .deli-method .btn-group .dropdown-menu {
+    left: inherit;
+    right: 0;
+    top: 160%;
+    border-color: #f6f7f9;
+    min-width: inherit;
+    text-align: right;
+    font-size: 12px
+}
+
+.ship-info .title .deli-method .btn-group .dropdown-menu::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 12px;
+    background: url(/img/icons/dropdown-arrow2.png) no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: -12px;
+    right: 4px
+}
+
+.ship-info .left {
+    width: 50%;
+    float: left;
+    padding: 15px
+}
+
+.ship-info .right {
+    width: 50%;
+    float: left;
+    padding: 15px;
+    border-left: 1px solid #e8e8e8
+}
+
+.ship-info .checkout-buyer .form-inline .form-group {
+    width: 48.2%;
+    margin-right: 10px
+}
+
+.ship-info .checkout-buyer .form-inline .form-group:last-child {
+    margin-right: 0
+}
+
+.ship-info .checkout-buyer .form-inline .form-group select {
+    width: 100%
+}
+
+.ship-info .checkout-buyer .input-group {
+    width: 100%
+}
+
+.ship-info .checkout-buyer .input-group-addon:first-child {
+    width: 40px;
+    color: #2796b6;
+    background: transparent;
+    border-right: none
+}
+
+.ship-info .checkout-buyer .input-group .form-control {
+    border-left: none;
+    box-shadow: none;
+    padding-left: 0
+}
+
+.ship-info .checkout-buyer .input-group .form-control:focus {
+    border-color: #ccc
+}
+
+.order-text {
+    display: block
+}
+
+.order-text.name {
+    max-width: 250px;
+    /*white-space: nowrap;*/
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.your-cart table tr td .pd-text {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 390px
+}
+
+.order-text.note {
+    max-width: 135px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.order-text.qlt {
+    max-width: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: auto
+}
+
+.order-text.price {
+    max-width: 84px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block
+}
+
+.order-text.total-amount {
+    max-width: 125px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block
+}
+
+.cart-note .add-note-icon {
+    margin-top: 6px
+}
+
+.cart-note .add-note-icon span {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.cart-note .add-note-icon .text {
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 1px
+}
+
+.cart-note .add-note-icon .ck-input {
+    color: #0063D1;
+    cursor: pointer
+}
+
+.cart-note .add-note-icon .ck-input:hover {
+    color: #e67425
+}
+
+.cart-note .add-note-icon .addnote-icon {
+    display: inline-block;
+    width: 18px;
+    vertical-align: middle
+}
+
+.cart-note .add-note-icon .addnote-icon img {
+    width: 100%
+}
+
+.cart-note .form-control {
+    display: none
+}
+
+.cart-action a {
+    display: block;
+    margin-top: 6px
+}
+
+.table-respon .table {
+    margin-bottom: 0
+}
+
+.table-respon .table thead tr td {
+    font-weight: 700;
+    background: #f6f7f9;
+    white-space: nowrap
+}
+
+.your-cart table tr td.cart-text {
+    /*min-width: 240px*/
+}
+
+.your-cart table tr td.cart-note {
+    min-width: 150px
+}
+
+.your-cart table tr td.cart-unit {
+    min-width: 150px
+}
+
+.your-cart table tr td.cart-sale-tax {
+    min-width: 120px;
+    text-align: right
+}
+
+.order-btn {
+    padding: 10px 15px;
+    background: #fff;
+    text-align: right;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px
+}
+
+.order-btn .tooltip-inner {
+    max-width: 500px
+}
+
+.order-btn .left {
+    width: 81%;
+    float: left
+}
+
+.order-btn > .right {
+    margin-left: 81%;
+    position: relative
+}
+
+.order-btn .right .dropdown-menu {
+    width: 700px;
+    right: 0;
+    left: auto
+}
+
+.order-btn .right .dropdown-menu li a {
+    padding: 10px 15px;
+    border-bottom: 1px solid #e5eaee;
+    white-space: normal
+}
+
+.order-btn .right .dropdown-menu li a .left {
+    width: 55%;
+    float: left
+}
+
+.order-btn .right .dropdown-menu li a .left b {
+    color: #2796b6
+}
+
+.order-btn > .right > .dropdown-menu > li > a > .right {
+    width: 40%;
+    float: left;
+    text-align: right
+}
+
+.photo-content ul {
+    padding: 0
+}
+
+.photo-content ul li {
+    list-style: none
+}
+
+.text-red {
+    color: #E9453C
+}
+
+.order-btn .right .dropdown-menu li a::after {
+    content: '';
+    display: block;
+    clear: both
+}
+
+.photo-content .request-list li .thumb {
+    width: 15%;
+    float: left
+}
+
+.photo-content .request-list li .thumb span {
+    width: 70px;
+    height: 70px;
+    display: block
+}
+
+.photo-content .request-list li .thumb span img {
+    width: 100%
+}
+
+.photo-content .request-list li .info {
+    margin-left: 15%
+}
+
+.order-btn .right .dropdown-menu li a .quest {
+    margin-left: 95%;
+    text-align: right;
+    font-size: 14px
+}
+
+.order-btn .right .text-oranges {
+    color: #FD9927
+}
+
+.order-btn .left .label {
+    background: transparent;
+    border: 1px solid #ccc;
+    color: #000;
+    border-radius: 20px;
+    padding: 2px 10px;
+    display: inline-block
+}
+
+.order-btn .left .label i:hover {
+    cursor: pointer;
+    color: #e67425
+}
+
+.order-btn .btn {
+    padding: 5px 15px;
+    border-radius: 50px;
+    border-color: #2796b6;
+    background: transparent linear-gradient(to bottom, #fff, #efefef);
+    font-size: 13px
+}
+
+.order-btn .btn i {
+    color: #E67425;
+    margin-left: 10px
+}
+
+.review-order {
+    box-shadow: 2px 2px 3px #ddd
+}
+
+.review-order .tb-minus {
+    color: #000
+}
+
+.review-order .tb-minus:hover {
+    color: #e67425
+}
+
+.select-payment {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 2px 2px 3px #ddd
+}
+
+.select-payment .payment-option {
+    float: left;
+    width: 33%
+}
+
+.select-payment .payment-box {
+    float: left;
+    width: 67%;
+    background: #fff;
+    padding: 0 15px 15px;
+    border-left: 1px solid #ddd
+}
+
+.select-payment .payment-option .title {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: 700
+}
+
+.payment-option .nav-tabs {
+    border-bottom: none
+}
+
+.payment-option .nav-tabs > li {
+    float: none;
+    margin-bottom: 0;
+    position: relative
+}
+
+.payment-option .nav-tabs > li.active > a:hover, .payment-option .nav-tabs > li.active > a:focus {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    border-left: 5px solid #e5eaee;
+    border-radius: 0
+}
+
+.payment-option .nav-tabs > li > a {
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #ddd;
+    border-left: 5px solid transparent;
+    margin-right: 0;
+    padding: 15px;
+    height: 53px
+}
+
+.payment-option .nav-tabs > li.active > a {
+    border-left: 5px solid #e5eaee
+}
+
+.payment-option .nav-tabs > li > a:hover {
+    background: #fff;
+    border-left: 5px solid #e5eaee
+}
+
+.payment-option .nav-tabs > li.cc-tab.active > a {
+    background-color: #fff
+}
+
+.payment-option .nav-tabs > li.cc-tab > a {
+    position: relative
+}
+
+.payment-option .nav-tabs > li.cc-tab > a:hover {
+    background: #fff
+}
+
+.payment-option .nav-tabs > li.cc-tab > a .cc-logo {
+    display: block;
+    width: 83px;
+    height: 20px;
+    position: absolute;
+    top: 16px;
+    right: 15px;
+    background: url(/img/base.png) no-repeat -844px -49px;
+    background-size: 1500px
+}
+
+.payment-option .nav-tabs > li.pp-tab.active > a {
+    background-color: #fff
+}
+
+.payment-option .nav-tabs > li.pp-tab > a {
+    position: relative
+}
+
+.payment-option .nav-tabs > li.pp-tab > a:hover {
+    background: #fff
+}
+
+.payment-option .nav-tabs > li.pp-tab > a .pp-logo {
+    display: block;
+    width: 61px;
+    height: 20px;
+    position: absolute;
+    top: 16px;
+    right: 15px;
+    background: url(/img/base.png) no-repeat -1136px -48px;
+    background-size: 1400px
+}
+
+i.dot {
+    display: inline-block;
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle
+}
+
+.payment-option .nav-tabs > li > a > span {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.dot-unactive {
+    background: url(/img/base.png) no-repeat -759px -101px;
+    background-size: 2800px
+}
+
+.dot-active {
+    background: url(/img/base.png) no-repeat -788px -101px;
+    background-size: 2800px
+}
+
+.select-payment .payment-box .title {
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    font-weight: 700
+}
+
+.select-payment .payment-box .checkout-attention {
+    margin-top: 15px
+}
+
+.select-payment .payment-box .attention-box .title {
+    font-size: 18px;
+    font-weight: 700;
+    border-bottom: none;
+    padding: 0;
+    margin-bottom: 0
+}
+
+.payment-alert {
+    border-radius: 0;
+    padding: 7px 10px;
+    color: #000;
+    margin-bottom: 20px
+}
+
+.payment-alert i {
+    display: block;
+    float: left;
+    color: #3d96b0;
+    margin-top: 2px;
+    font-size: 18px
+}
+
+.payment-alert p {
+    margin-left: 25px;
+    font-size: 11px
+}
+
+.payment-box .ws-order {
+    padding-top: 15px;
+    margin-top: 20px
+}
+
+.payment-box .credit-card .pay-method span {
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 3px;
+    width: 75px;
+    cursor: pointer;
+    position: relative;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s;
+    filter: grayscale(1);
+    -moz-filter: grayscale(1);
+    -o-filter: grayscale(1);
+    -webkit-filter: grayscale(1)
+}
+
+.payment-box .credit-card .pay-method .check {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    color: #fff;
+    font-size: 12px;
+    display: none;
+    border: none;
+    width: 33px;
+    height: 23px;
+    background: url(/img/check-bg.png) no-repeat;
+    background-size: contain
+}
+
+.payment-box .credit-card .pay-method span i {
+    position: absolute;
+    bottom: 2px;
+    right: 2px
+}
+
+.payment-box .credit-card .pay-method .card {
+    display: block;
+    height: 35px;
+    margin: auto
+}
+
+.payment-box .credit-card .pay-method img {
+    height: 35px
+}
+
+.payment-box .credit-card .pay-method .card.visa {
+    background: url(/img/base.png) no-repeat -1314px -75px;
+    width: 60px
+}
+
+.payment-box .credit-card .pay-method .card.master {
+    background: url(/img/base.png) no-repeat -1373px -75px;
+    width: 35px
+}
+
+.payment-box .credit-card .pay-method span.active, .payment-box .credit-card .pay-method span:hover {
+    border-color: #2b96b6;
+    filter: grayscale(0);
+    -moz-filter: grayscale(0);
+    -o-filter: grayscale(0);
+    -webkit-filter: grayscale(0)
+}
+
+.payment-box .credit-card .pay-method span.active .check, .payment-box .credit-card .pay-method span:hover .check {
+    display: block;
+    filter: grayscale(0);
+    -moz-filter: grayscale(0);
+    -o-filter: grayscale(0);
+    -webkit-filter: grayscale(0)
+}
+
+.payment-box .bank-method .bank-list .item img {
+    width: 95px
+}
+
+.payment-box .card-box {
+    font-size: 13px
+}
+
+.payment-box .card-form {
+    margin: 0 -10px 15px
+}
+
+.payment-box .card-form .form-left {
+    float: left;
+    width: 33%;
+    text-align: right;
+    padding: 10px 10px 0
+}
+
+.payment-box .card-form .form-mid {
+    float: left;
+    width: 42%;
+    padding: 0 10px
+}
+
+.payment-box .card-form .form-right {
+    float: left;
+    width: 25%;
+    padding: 10px 10px 0
+}
+
+.payment-box .card-form .form-right img {
+    height: 20px
+}
+
+.payment-box .card-form .form-mid .expiration .form-control {
+    width: 79px
+}
+
+.order-total {
+    width: 400px;
+    float: right;
+    font-size: 13px
+}
+
+.order-total .left {
+    width: 55%;
+    float: left;
+    text-align: right
+}
+
+.order-total .right {
+    width: 45%;
+    float: left;
+    text-align: right;
+    padding-left: 20px
+}
+
+.order-total .left .fa-question-circle {
+    cursor: pointer
+}
+
+.order-total .right .del-coupon {
+    color: #333
+}
+
+.order-total .right .del-coupon:hover {
+    color: #e67425
+}
+
+.order-total .total {
+    border-top: 1px solid #000;
+    margin-top: 15px;
+    padding-top: 15px;
+    font-size: 20px
+}
+
+.order-total .right .form-control {
+    height: 24px
+}
+
+.order-total .right .btn {
+    height: 24px;
+    padding: 2px 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    background: #3d96b0;
+    border-color: #3d96b0
+}
+
+.cart-pay {
+    font-size: 13px;
+    margin: 20px 0
+}
+
+.choose-ship {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5eaee;
+    padding-bottom: 10px
+}
+
+.choose-ship .form-control {
+    height: auto
+}
+
+.cart-pay a:hover {
+    color: #E67425;
+    text-decoration: none
+}
+
+.cart-pay .vat-invoice {
+    display: none;
+    font-size: 12px
+}
+
+.cart-pay .vat-invoice .form-group {
+    margin-bottom: 5px
+}
+
+.cart-pay .left .checkbox {
+    margin-bottom: 0
+}
+
+.cart-pay .left span {
+    font-size: 11px;
+    margin-top: -6px;
+    margin-left: 20px;
+    display: block
+}
+
+.cart-pay .right {
+    text-align: right
+}
+
+.cart-pay .right .btn {
+    padding: 10px 35px;
+    border-radius: 50px;
+    border-color: #2B96B6;
+    background: #2B96B6;
+    color: #FFF;
+    text-transform: uppercase
+}
+
+.your-cart p.think {
+    margin-top: 31px;
+    text-align: right
+}
+
+.payment-option .nav-tabs > li:after {
+    content: '';
+    display: none;
+    height: 52px;
+    width: 3px;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    right: -2px
+}
+
+.payment-option .nav-tabs > li.active:after, .payment-option .nav-tabs > li:hover::after {
+    display: block
+}
+
+.payment-box .bank-method .bank-list .item {
+    display: inline-block;
+    border: 1px dashed #ccc;
+    border-radius: 3px;
+    padding: 5px 15px;
+    margin-right: 5px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    -webkit-transition: all .3s;
+}
+
+.payment-box .bank-method .bank-list .item .bank {
+    width: 40px;
+    height: 40px;
+    display: block
+}
+
+.payment-box .bank-method .bank-list .item img {
+    width: 95px;
+}
+
+.payment-box .bank-method .bank-list .item:hover, .payment-box .bank-method .bank-list .item.active {
+    border-color: #2B96B6
+}
+
+.payment-box .bank-method .bank-list .item:hover img, .payment-box .bank-method .bank-list .item.active img {
+    filter: grayscale(0);
+    -webkit-filter: grayscale(0);
+    -moz-filter: grayscale(0);
+    -o-filter: grayscale(0)
+}
+
+.payment-box .bank-method .bank-list .item .check {
+    position: absolute;
+    right: -2px;
+    bottom: -1px;
+    color: #fff;
+    font-size: 12px;
+    display: none;
+    background: url(/img/check-bg.png) no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 20px
+}
+
+.payment-box .bank-method .bank-list .item i {
+    position: absolute;
+    right: 2px;
+    bottom: 2px
+}
+
+.payment-box .bank-method .bank-list .item:hover .check, .payment-box .bank-method .bank-list .item.active .check {
+    display: block;
+    filter: grayscale(0);
+    -moz-filter: grayscale(0);
+    -o-filter: grayscale(0);
+    -webkit-filter: grayscale(0)
+}
+
+.payment-box .bank-method select {
+    width: 250px
+}
+
+.payment-box .office-pay {
+    font-size: 12px
+}
+
+i.flag {
+    display: inline-block;
+    width: 16px
+}
+
+i.flag img {
+    width: 100%
+}
+
+.payment-box .weshop-wallet .add-cash {
+    font-size: 13px;
+    font-weight: 400
+}
+
+.payment-box .weshop-wallet .add-cash:hover {
+    text-decoration: none;
+    color: #e67425
+}
+
+.payment-box .weshop-wallet ul.info {
+    padding-left: 0;
+    margin-bottom: 15px
+}
+
+.payment-box .weshop-wallet ul.info li {
+    list-style: none;
+    margin-bottom: 5px
+}
+
+.payment-box .weshop-wallet ul.info li a:hover {
+    text-decoration: none;
+    color: #e67425
+}
+
+@media (max-width: 991px) {
+    .cart-total {
+        float: none;
+        width: 100%
+    }
+
+    .checkout-right-box {
+        margin-top: 20px
+    }
+
+    .your-cart .table-respon {
+        width: 100%;
+        overflow-x: scroll
+    }
+
+    .your-cart p {
+        margin-top: 0
+    }
+
+    .ship-info .ship-form {
+        margin-bottom: 20px
+    }
+
+    .select-payment .payment-option {
+        width: 100%;
+        float: none;
+        border-right: none
+    }
+
+    .select-payment .payment-box {
+        width: 100%;
+        float: none
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 87.3px
+    }
+
+    .cart-pay .left {
+        text-align: right
+    }
+
+    .cart-pay .right {
+        margin-top: 15px
+    }
+
+    .ship-info .checkout-buyer .form-inline .form-group {
+        width: 100%
+    }
+
+    .top-nav .nav > li {
+        float: none;
+        position: relative;
+        display: inline-block;
+        margin-left: -4px
+    }
+
+    .navbar-nav > li.change-lang, .navbar-nav > li.buy-for-me, .navbar-nav > li.ship-for-me, .navbar-nav > li.order-tracking, .navbar-nav > li.calculature, .navbar-nav > li.pricing {
+        display: none
+    }
+
+    .navbar-nav {
+        width: 100%;
+        text-align: center
+    }
+
+    .ws-fixed-nav .nav > li {
+        float: none;
+        position: relative;
+        display: inline-block;
+        margin-left: -4px
+    }
+
+    .ws-fixed-nav .header-search {
+        padding-top: 0
+    }
+
+    .ws-fixed-nav .navbar-right {
+        float: right !important;
+        margin-top: -54px;
+        text-align: right
+    }
+
+    .ws-fixed-nav .header-search {
+        display: none
+    }
+
+    .help-me {
+        display: none
+    }
+
+    .cart-quantum .form-control {
+        width: 55px
+    }
+
+    .checkout-right-box .weight .form-inline .form-group input[type="text"] {
+        width: 624px
+    }
+
+    .checkout-right-box .dimension .form-inline .form-group input[type="text"] {
+        width: 205px
+    }
+
+    .checkout-right-box .dimension .form-inline .form-group select {
+        width: 72px
+    }
+
+    .ebay-shop-by {
+        display: none
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a {
+        width: 343px;
+        height: 343px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img {
+        max-width: 343px;
+        max-height: 343px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 170px;
+        height: 170px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 169px;
+        height: 169px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 169px;
+        max-height: 169px
+    }
+
+    .ebay-seller-list .item .thumb {
+        height: 518px
+    }
+
+    .ws-fixed-nav .nav > li.buy-for-me, .ws-fixed-nav .nav > li.ship-for-me, .ws-fixed-nav .nav > li.order-tracking, .ws-fixed-nav .nav > li.calculature, .ws-fixed-nav .nav > li.pricing {
+        display: none
+    }
+
+    .ebay-dailydeal .daily-box .arrow-2 {
+        display: none
+    }
+
+    .amazone-header .ws-fixed-nav {
+        height: 40px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 128.5px;
+        height: 128.5px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb img {
+        max-width: 128.5px;
+        max-height: 128.5px
+    }
+
+    .amazone-navbar .cart-box-2 {
+        text-align: center;
+        margin-top: 10px
+    }
+
+    .amazone-content .content-right {
+        min-height: inherit
+    }
+
+    .checkout-right-box {
+        display: none
+    }
+
+    .order-btn .right .dropdown-menu {
+        width: 100%;
+        z-index: 1
+    }
+}
+
+@media (max-width: 767px) {
+    .payment-box .card-form .expiration .form-group, .payment-box .card-form .expiration .form-group .form-control {
+        display: inline-block
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 89.7px
+    }
+
+    .navbar-nav.navbar-right {
+        height: 40px
+    }
+
+    .ws-fixed-nav .navbar-right {
+        height: auto;
+        margin-top: 0
+    }
+
+    .icon-navbar {
+        float: right;
+        margin-right: 15px
+    }
+
+    .ws-fixed-nav .navbar-nav .open .dropdown-menu > li > a, .top-nav .navbar-nav .open .dropdown-menu > li > a {
+        padding: 5px
+    }
+
+    .ws-fixed-nav .navbar-nav .question-box .dropdown-menu li a, .top-nav .navbar-nav .question-box .dropdown-menu li a {
+        padding: 0 20px;
+        display: block
+    }
+
+    .ws-fixed-nav .navbar-nav .question-box .dropdown-menu li a span, .top-nav .navbar-nav .question-box .dropdown-menu li a span {
+        border-bottom: 1px solid #f3f3f3;
+        display: block;
+        padding: 7px 0
+    }
+
+    .checkout-right-box .weight .form-inline .form-group input[type="text"] {
+        width: 100%
+    }
+
+    .checkout-right-box .dimension .form-inline .form-group input[type="text"] {
+        width: 100%
+    }
+
+    .checkout-right-box .dimension .form-inline .form-group select {
+        width: 100%
+    }
+
+    .checkout-right-box .weight .form-inline .form-group select {
+        width: 100%
+    }
+
+    .ship-info .left {
+        width: 100%;
+        float: none
+    }
+
+    .ship-info .right {
+        width: 100%;
+        float: none;
+        border-left: 0;
+        border-top: 1px solid #e8e8e8
+    }
+
+    .your-cart p.think {
+        text-align: left;
+        margin-top: 0
+    }
+
+    .your-cart h2 {
+        margin: 20px 0 10px
+    }
+
+    .ebay-seller-list .item .thumb {
+        height: auto
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 {
+        border: none
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a {
+        width: 735px;
+        height: 735px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img {
+        max-width: 735px;
+        max-height: 735px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 735px;
+        height: 735px;
+        position: static;
+        border: none;
+        border-top: 1px solid #e8e8e8
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 735px;
+        height: 735px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 735px;
+        max-height: 735px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 127px;
+        height: 127px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb img {
+        max-width: 127px;
+        max-height: 127px
+    }
+
+    .ebay-dailydeal .title .right, .ebay-trending .title .right {
+        text-align: left;
+        margin-top: 5px
+    }
+
+    .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.mail-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.user-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.noti-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.question-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.cart-box > a {
+        padding: 13px 15px
+    }
+
+    .ship-info .title {
+        padding-bottom: 25px
+    }
+
+    .order-btn .left {
+        width: 78%
+    }
+
+    .order-btn .right {
+        margin-left: 78%
+    }
+
+    .footer-info, .introduce {
+        display: none
+    }
+}
+
+@media (max-width: 736px) {
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 85.4px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 127px;
+        height: 127px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb img {
+        max-width: 127px;
+        max-height: 127px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 704px;
+        height: 704px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 704px;
+        height: 704px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 704px;
+        max-height: 704px
+    }
+}
+
+@media (max-width: 676px) {
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 77px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 111px;
+        height: 111px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 111px;
+        max-height: 111px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb .sale-tag {
+        width: 70px;
+        height: 61px;
+        background: url(/img/base.png) no-repeat -1380px -53px;
+        background-size: 1500px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb .sale-tag i {
+        top: 12px;
+        left: 14px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 644px;
+        height: 644px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 644px;
+        height: 644px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 644px;
+        max-height: 644px
+    }
+
+    .order-btn .left {
+        width: auto;
+        float: none
+    }
+
+    .order-btn .right {
+        margin-left: 0;
+        margin-top: 15px
+    }
+}
+
+@media (max-width: 640px) {
+    .payment-box .card-form .form-left {
+        float: none;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px
+    }
+
+    .payment-box .card-form .form-mid {
+        width: 70%
+    }
+
+    .payment-box .card-form .form-right {
+        width: 30%
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 127.8px
+    }
+
+    .order-total {
+        width: 100%
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 608px;
+        height: 608px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 608px;
+        height: 608px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 608px;
+        max-height: 608px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 102px;
+        height: 102px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 102px;
+        max-height: 102px
+    }
+}
+
+@media (max-width: 533px) {
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 102.8px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 501px;
+        height: 501px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 501px;
+        height: 501px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 501px;
+        max-height: 501px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 198px;
+        height: 198px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 198px;
+        max-height: 198px
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-total .cart-btn .btn {
+        width: 100%;
+        margin-top: 15px
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 90.4px
+    }
+
+    .ws-fixed-nav .navbar-right {
+        display: none
+    }
+
+    .cart-total .cart-btn .left {
+        width: 100%;
+        float: none;
+        text-align: center
+    }
+
+    .cart-total .cart-btn .right {
+        width: 100%;
+        float: none
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 448px;
+        height: 448px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 448px;
+        height: 448px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 448px;
+        max-height: 448px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 173px;
+        height: 173px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 173px;
+        max-height: 173px
+    }
+}
+
+@media (max-width: 414px) {
+    .payment-box .card-form .form-mid {
+        width: 100%;
+        float: none
+    }
+
+    .payment-box .card-form .form-right {
+        width: 100%;
+        float: none
+    }
+
+    .order-total .left {
+        width: 100%;
+        float: none;
+        text-align: left;
+        margin-bottom: 5px
+    }
+
+    .order-total .right {
+        width: 100%;
+        float: none;
+        text-align: left;
+        padding-left: 0
+    }
+
+    .order-total .form-group {
+        margin-bottom: 15px
+    }
+
+    .cart-pay .left, .cart-pay .right {
+        text-align: right
+    }
+
+    .your-cart h2 {
+        font-size: 20px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 382px;
+        height: 382px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 382px;
+        height: 382px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 382px;
+        max-height: 382px
+    }
+
+    .ebay-search-form .ebay-search-select {
+        display: none
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 141px;
+        height: 141px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 141px;
+        max-height: 141px
+    }
+}
+
+@media (max-width: 375px) {
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 343px;
+        height: 343px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 343px;
+        height: 343px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 343px;
+        max-height: 343px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 286px;
+        height: 286px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 286px;
+        max-height: 286px
+    }
+}
+
+@media (max-width: 360px) {
+    .ship-info .ship-to .address .info {
+        max-width: 220px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 328px;
+        height: 328px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 328px;
+        height: 328px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 328px;
+        max-height: 328px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 272px;
+        height: 272px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 272px;
+        max-height: 272px
+    }
+}
+
+@media (max-width: 320px) {
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 80.9px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 288px;
+        height: 288px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 288px;
+        height: 288px
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 288px;
+        max-height: 288px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 234px;
+        height: 234px
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 234px;
+        max-height: 234px
+    }
+
+    .recommend {
+        text-align: center
+    }
+
+    .recommend .btn {
+        font-size: 12px
+    }
+}
+
+.alert-modal .icon {
+    font-size: 100px
+}
+
+.alert-modal .text {
+    margin-bottom: 20px
+}
+
+.alert-modal .btn.confirm {
+    background: transparent linear-gradient(#0079BC, #00509D);
+    color: #fff;
+    border: none;
+    box-shadow: 2px 2px 3px #999
+}
+
+.notice-content {
+    padding: 40px 0 50px;
+    border: 1px solid #e5eaee;
+    background: #fff;
+    box-shadow: 2px 2px 3px #ccc;
+    margin-top: 50px
+}
+
+.notice-content .title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    margin-top: 20px
+}
+
+.notice-content .notice-ico {
+    font-size: 100px
+}
+
+.notice-content .text {
+    margin-bottom: 30px
+}
+
+.notice-content .empty-cart img {
+    width: 320px;
+    margin: auto;
+}
+
+.notice-content .empty-text {
+    font-size: 16px;
+    margin-bottom: 20px
+}
+
+.notice-content .empty-link a {
+    color: #e67425;
+    text-transform: uppercase
+}
+
+.notice-content .empty-link a:hover {
+    text-decoration: none;
+    color: #2796b6
+}
+
+.deli-method .switch-btn {
+    text-align: right;
+    line-height: 23px;
+}
+
+.deli-method .switch-btn span {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 24px;
+    margin-right: 3px;
+    margin-top: -20px;
+}
+
+.deli-method .switch-btn span.text {
+    font-size: 13px;
+    float: left;
+    font-weight: bold;
+}
+.switch-btn .rec_left.clearfix{
+    width: 90%;
+}
+.deli-method .switch-btn .switch {
+    cursor: pointer;
+    float: right;
+    width: 10%;
+    text-align: right;
+}
+
+.deli-method .switch-btn .switch .fa-toggle-off {
+    color: #999;
+    display: none
+}
+
+.deli-method .switch-btn .switch .fa-toggle-on {
+    color: #00AB10
+}
+
+.deli-method .switch-btn .switch.on .fa-toggle-off {
+    display: inline-block
+}
+
+.deli-method .switch-btn .switch.on .fa-toggle-on {
+    display: none
+}
+.item-name,
+.item-qlt,
+.item-price,
+.item-amount{
+    display: block;
+}
+.item-sm b{
+    font-size: 13px;
+    float: left;
+    width: 45%;
+    display: inline-block;
+}
+.item-sm-inf{
+    float: right;
+    width: 53%;
+    text-align: left;
+    display: block;
+}
+.isScroll {
+    position: fixed;
+    top: -46px;
+    z-index: 555;
+    width : 100%;
+}
+[class*='ebay-branch-logo']{
+   transition: all .5s ease;
+}
+/*CSS for optimize*/
+/*background: url(/assets/b2f3c852/css//img/base/base-new.png) no-repeat 0 -869px;*/
+.ebay-branch-logo-1{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -80px -5px;
+}
+.ebay-branch-logo-2{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -178px -5px;
+}
+.ebay-branch-logo-3{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -277px -5px;
+}
+.ebay-branch-logo-4{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -375px -5px;
+}
+.ebay-branch-logo-5{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -475px -5px;
+}
+.ebay-branch-logo-6{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -575px -5px;
+}
+.ebay-branch-logo-7{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -675px -5px;
+}
+.ebay-branch-logo-8{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -770px -5px;
+}
+
+.ebay-branch-logo-1:hover,
+.ebay-branch-logo-1:focus{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -95px -5px;
+}
+.ebay-branch-logo-2:hover,
+.ebay-branch-logo-2:focus{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -193px -5px;
+}
+.ebay-branch-logo-3:hover,
+.ebay-branch-logo-3:focus{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -292px -5px;
+}
+.ebay-branch-logo-4:hover,
+.ebay-branch-logo-4:focus{
+    background: url(/img/ebay/group-icon-new.png)  no-repeat -390px -5px;
+}
+.ebay-branch-logo-5:hover,
+.ebay-branch-logo-5:focus{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -490px -5px;
+}
+.ebay-branch-logo-6:hover,
+.ebay-branch-logo-6:focus{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -590px -5px;
+}
+.ebay-branch-logo-7:hover,
+.ebay-branch-logo-7:focus{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -690px -5px;
+}
+.ebay-branch-logo-8:hover,
+.ebay-branch-logo-8:focus{
+    background: url(/img/ebay/group-icon-new.png) no-repeat -785px -5px;
+}
+/*New css for indo*/
+.deal-shock-mb .ws-indo-hotdeal li{
+    list-style: none;
+}
+.deal-shock-mb .ws-indo-hotdeal .item .info .name a{
+    color: #000000;
+}
+.ws-indo-hotdeal li .item .thumb .sale-tag{
+    display: block;
+    background: #e67425;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 3px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+    padding: 3px 6px;
+    z-index: 2;
+}
+.deal-shock-mb .ws-indo-hotdeal .item .info .name{
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 414px){
+    .deal-shock-mb .ws-indo-hotdeal .item .thumb img{
+    max-width: 205px;
+    max-height: 318px;
+    }
+}
+@media (max-width: 480px) {
+    .deal-shock-mb .ws-indo-hotdeal .item .thumb a{
+        width: 238px;
+        height: 238px;
+    }
+}
+@media (max-width: 640px) {
+    .deal-shock-mb .ws-indo-hotdeal .item .thumb img{
+        max-width: 100%;
+        max-height: 155px;
+    }
+    .deal-shock-mb .ws-indo-hotdeal li {
+        display: inline-block;
+        list-style: none;
+        width: calc(50% - 7.5px );
+        padding: 5px;
+    }
+    .deal-shock-mb .ws-indo-hotdeal li:nth-child(odd){
+        margin-right: 7.5px;
+    }
+    .deal-shock-mb .ws-indo-hotdeal .item .info .price-box span{
+        float: none !important;
+        display: block;
+        margin-left: 0px !important;
+    }
+}
+@media (max-width: 991px) {
+    .deal-shock-mb .ws-indo-hotdeal .item .thumb{
+        position: relative;
+        text-align: center;
+    }
+    .deal-shock-mb .ws-indo-hotdeal li {
+        display: inline-block;
+        list-style: none;
+        width: calc(50% - 7.5px );
+        padding: 5px;
+    }
+    .deal-shock-mb .ws-indo-hotdeal .item .thumb img{
+        max-width: 100%;
+        max-height: 190px;
+    }
+    .deal-shock-mb .ws-indo-hotdeal .item .info .price-box strong{
+        color: #b12704
+    }
+    .deal-shock-mb .ws-indo-hotdeal .item .info .price-box span{
+        color: #434343;
+        font-size: 13px;
+        text-decoration: line-through;
+        margin-left: 15px;
+        float: right;
+    }
+}
