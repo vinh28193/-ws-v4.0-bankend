@@ -80,7 +80,8 @@ $url_page = function ($p){
                         <option value="">Loại giao dịch</option>
                         <option value="top_up" <?= ArrayHelper::getValue($get,'transaction_type') === 'top_up' ? 'selected' : '' ?>>Nạp tiền</option>
                         <option value="pay_order" <?= ArrayHelper::getValue($get,'transaction_type') === 'pay_order' ? 'selected' : '' ?>>Thanh toán</option>
-                        <option value="withdraw" <?= ArrayHelper::getValue($get,'transaction_type') === 'withdraw' ? 'selected' : '' ?>>Rút tiền</option>
+                        <option value="with_draw" <?= ArrayHelper::getValue($get,'transaction_type') === 'with_draw' ? 'selected' : '' ?>>Rút tiền</option>
+                        <option value="addfee" <?= ArrayHelper::getValue($get,'transaction_type') === 'addfee' ? 'selected' : '' ?>>Thu thêm</option>
                     </select>
                 </div>
             </div>

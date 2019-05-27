@@ -6,6 +6,7 @@ namespace frontend\modules\account\controllers\api;
 
 use common\helpers\WeshopHelper;
 use common\models\db\WalletClient;
+use common\models\PaymentBank;
 use common\models\User;
 use common\models\PaymentTransaction;
 use common\models\WalletTransaction;
@@ -115,26 +116,40 @@ class WalletServiceController extends Controller
         if(!($pass = ArrayHelper::getValue($request,'password'))){
             return $this->response(false,'vui lòng xác thực mật khẩu.');
         }
+
         if(!$user->validatePassword($pass)){
             return $this->response(false,'Mật khẩu không đúng .Vui lòng kiểm tra lại.');
         }
+
         $walletS = new WalletService();
+
         if(!($walletS->payment_method = ArrayHelper::getValue($request,'method'))){
             return $this->response(false,'Vui lòng chọn phương thức nhận tiền');
         }
+
         if($walletS->payment_method == 'NL'){
             if(!($walletS->cardnumber = ArrayHelper::getValue($request,'email'))){
                 return $this->response(false,'Vui lòng nhập email tài khoản Ngân Lượng');
             }
             $walletS->bank_code = 'NL';
-        }elseif ($walletS->payment_method == 'bank'){
+        }elseif ($walletS->payment_method == 'BANK'){
+            $bank = PaymentBank::findOne(ArrayHelper::getValue($request,'bank_id'));
+            if(!$bank){
+                return $this->response(false,'Vui lòng chọn ngân hàng khác');
+            }
 
+            if(!($walletS->cardholderName = Yii::$app->request->post('bank_account_name')) || !($walletS->cardnumber = Yii::$app->request->post('bank_account_number'))){
+                return $this->response(false,'Vui lòng điền đầy đủ thông tin chủ tài khoản nhận tiền');
+            }
+            $walletS->bank_code = $bank->code;
         }else{
-            return $this->response(false,'Vui lòng chọn phương thức thanh toán khác');
+            return $this->response(false,'Vui lòng chọn phương thức rút tiền khác');
         }
+
         if(!($walletS->total_amount = ArrayHelper::getValue($request,'total_amount')) || $walletS->total_amount < 100000 ){
             return $this->response(false,'Vui lòng nhập số tiền muốn rút lớn hơn 100.000');
         }
+
         $walletS->amount = ArrayHelper::getValue($request,'amount');
         $walletS->fee = ArrayHelper::getValue($request,'fee');
         /** @var WalletClient $wallet */
@@ -147,6 +162,7 @@ class WalletServiceController extends Controller
             $trancode = $rs['data']['wallet_transaction_code'];
             return $this->response(true,$trancode['message'],$trancode['data']);
         }catch (\Exception $exception){
+            Yii::debug($exception);
             return $this->response(false,'Có lỗi tạo yêu cầu rút tiền. Vui lòng thử lại.');
         }
 

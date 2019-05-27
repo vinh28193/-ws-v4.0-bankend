@@ -26,10 +26,16 @@ if($item->available_quantity){
 ?>
 
 <div class="border-block payment-info">
-    <?php if(strtolower($item->type) == 'ebay') {?>
-    <div class="qty form-inline" id="" style="display: block; font-size: 10px">
-        <b id="instockQuantity" ><?= $instockQuanty ?></b><i> sản phẩm có thể mua</i>
-    </div>
+    <?php
+    if(isset($item->bid) && isset($item->bid['bid_minimum']) && ($item->bid['bid_minimum'])) {?>
+        <div class="qty form-inline" id="" style="display: block; font-size: 12px;color: red">
+            <i class="fa fa-exclamation-triangle"></i><b >Xin lỗi quý khách, hiện tại hệ thống đấu giá trên WESHOP đang tạm dừng hoạt động. <br>Mong quý khách thông cảm!</b>
+        </div>
+   <?php }else{
+    if (strtolower($item->type) == 'ebay') { ?>
+        <div class="qty form-inline" id="" style="display: block; font-size: 10px">
+            <b id="instockQuantity"><?= $instockQuanty ?></b><i> sản phẩm có thể mua</i>
+        </div>
     <?php } ?>
     <div class="qty form-inline" id="quantityGroup" style="display: <?= $sellerCurrent ? 'block' : 'none' ?>;">
         <label>Số lượng:</label>
@@ -46,28 +52,35 @@ if($item->available_quantity){
     <div class="qty form-inline" id="outOfStock" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>;">
         <label style="color: red">Sản phẩm hết hàng</label>
     </div>
-    <div class="action-box" style="display: <?=$instockQuanty > 0 ? 'block' : 'none';?>">
-        <button type="button" id="buyNowBtn" class="btn btn-block btn-buy" style="display: <?= $sellerCurrent ? 'block' : 'none' ?>">Mua ngay</button>
-        <button type="button" id="quoteBtn" class="btn btn-block btn-buy" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>">Yêu cầu báo giá</button>
-        <?php if ($item->getLocalizeTotalPrice() > 3500000):?>
-        <button type="button" id="installmentBtn" class="btn btn-block btn-installment">Thanh toán trả góp</button>
-        <?php endif;?>
+    <div class="action-box" style="display: <?= $instockQuanty > 0 ? 'block' : 'none'; ?>">
+        <button type="button" id="buyNowBtn" class="btn btn-block btn-buy"
+                style="display: <?= $sellerCurrent ? 'block' : 'none' ?>">Mua ngay
+        </button>
+        <button type="button" id="quoteBtn" class="btn btn-block btn-buy"
+                style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>">Yêu cầu báo giá
+        </button>
+        <?php if ($item->getLocalizeTotalPrice() > 3500000): ?>
+            <button type="button" id="installmentBtn" class="btn btn-block btn-installment">Thanh toán trả góp</button>
+        <?php endif; ?>
         <div class="text-center more">
-            <a href="#" id="followItem" ><i class="icon fav"></i></a>
+            <a href="#" id="followItem"><i class="icon fav"></i></a>
             <a href="#" id="addToCart"><i class="icon cart"></i></a>
         </div>
     </div>
-<!--    <div class="payment-method-2">-->
-<!--        <div class="title">Hình thức thanh toán</div>-->
-<!--        <ul>-->
-<!--            <li><img src="/img/detail_payment_1.png"></li>-->
-<!--            <li><img src="/img/detail_payment_2.png"></li>-->
-<!--            <li><img src="/img/detail_payment_3.png"></li>-->
-<!--            <li><img src="/img/detail_payment_4.png"></li>-->
-<!--            <li><img src="/img/detail_payment_5.png"></li>-->
-<!--        </ul>-->
-<!--    </div>-->
-    <p>Sản phẩm dự kiến giao khoảng ngày <span class="text-orange"><?= date('d/m/Y',time()+(60*60*24*15)) ?></span> tới <span class="text-orange"><?= date('d/m/Y',time()+(60*60*24*30)) ?></span> nếu quý khách thanh toán trong hôm nay.</p>
+    <!--    <div class="payment-method-2">-->
+    <!--        <div class="title">Hình thức thanh toán</div>-->
+    <!--        <ul>-->
+    <!--            <li><img src="/img/detail_payment_1.png"></li>-->
+    <!--            <li><img src="/img/detail_payment_2.png"></li>-->
+    <!--            <li><img src="/img/detail_payment_3.png"></li>-->
+    <!--            <li><img src="/img/detail_payment_4.png"></li>-->
+    <!--            <li><img src="/img/detail_payment_5.png"></li>-->
+    <!--        </ul>-->
+    <!--    </div>-->
+    <p>Sản phẩm dự kiến giao khoảng ngày <span
+                class="text-orange"><?= date('d/m/Y', time() + (60 * 60 * 24 * 15)) ?></span> tới <span
+                class="text-orange"><?= date('d/m/Y', time() + (60 * 60 * 24 * 30)) ?></span> nếu quý khách thanh toán
+        trong hôm nay.</p>
     <div class="guaranteed">
         <div class="title">Đảm bảo khách hàng</div>
         <ul>
@@ -83,6 +96,7 @@ if($item->available_quantity){
 </div>
 
 <?php
+}
 if(count($item->providers) > 1){?>
     <div class="border-block other-supplier">
         <div class="title">Nhà cung cấp khác</div>

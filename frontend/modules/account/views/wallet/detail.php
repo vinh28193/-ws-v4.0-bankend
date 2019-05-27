@@ -97,7 +97,8 @@ echo HeaderContentWidget::widget(['title' => $this->title,'stepUrl' => ['Giao dá
                             <b><span id="account_receiver"><?= $jsonContent->numberCard ?></span></b>
                         </td>
                     </tr>
-                <?php                                    }elseif($transactionDetail['payment_method'] === "NL"){
+                <?php                                    }
+                elseif($transactionDetail['payment_method'] === "BANK"){
                     ?>
                     <tr>
                         <td>
