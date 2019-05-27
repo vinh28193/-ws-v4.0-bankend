@@ -45,8 +45,7 @@ return [
 
         // landing
         'GET landing-page/<name:[0-9a-zA-Z_-]+>-<id:\d+>.html' => 'landing/page/index',
-        'GET landing-request/<name:[0-9a-zA-Z_-]+>-<id:\d+>.html' => 'landing/page/index',
-        'landing-request/<txt>' => 'landing/page/index',
+        'GET landing-request/<name:[0-9a-zA-Z_-]+>-<id:\d+>.html' => 'landing/request/index',
 
         // cart
         'GET my-cart.html' => 'checkout/cart',
