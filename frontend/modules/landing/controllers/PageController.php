@@ -1,10 +1,8 @@
 <?php
 
 
-namespace frontend\modules\landing\controllers;
+namespace landing\controllers;
 
-
-use common\models\cms\PageService;
 
 class PageController extends LandingController
 {

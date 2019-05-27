@@ -9,7 +9,7 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'queue'],
+    'bootstrap' => ['log', 'queue', 'landing'],
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'frontend\controllers',
     'defaultRoute' => 'cms/home',
@@ -144,7 +144,7 @@ return [
             'class' => 'frontend\modules\favorites\Module',
         ],
         'landing' => [
-            'class' => 'frontend\modules\landing\LandingModule',
+            'class' => 'landing\LandingModule',
         ],
         'debug' => [
             'class' => '\yii\debug\Module',

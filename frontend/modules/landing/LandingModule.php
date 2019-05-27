@@ -1,20 +1,22 @@
 <?php
 
-namespace frontend\modules\landing;
+namespace landing;
 
 use Yii;
 
 use yii\base\Module;
+use yii\web\Application;
+use yii\base\BootstrapInterface;
 
 /**
  * landing module definition class
  */
-class LandingModule extends Module
+class LandingModule extends Module implements BootstrapInterface
 {
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'frontend\modules\landing\controllers';
+    public $controllerNamespace = 'landing\controllers';
 
     /**
      * {@inheritdoc}
@@ -22,9 +24,15 @@ class LandingModule extends Module
     public function init()
     {
         parent::init();
-        Yii::setAlias('@landing', __DIR__);
         $this->layoutPath = Yii::getAlias('@landing/layouts');
         // custom initialization code goes here
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function bootstrap($app)
+    {
+
+    }
 }

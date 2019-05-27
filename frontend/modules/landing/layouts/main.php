@@ -4,7 +4,7 @@ use frontend\widgets\layout\FooterWidget;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-use frontend\modules\landing\LandingAsset;
+use landing\LandingAsset;
 
 /* @var $this yii\web\View */
 /* @var $content string */
@@ -22,14 +22,14 @@ $this->beginPage();
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body>
+<body class="drawer drawer--left" style="background:#fff;">
 <?php $this->beginBody() ?>
 <div class="container-fluid">
     <header id="header">
         <div class="container top-nav">
             <div class="row">
                 <nav class="navbar navbar-default">
-                    <div class="ws-fixed-nav" style="top: -150px;">
+                    <div class="ws-fixed-nav">
                         <div class="container">
                             <div class="row">
                                 <nav class="navbar navbar-default">
@@ -596,7 +596,7 @@ $this->beginPage();
         </div>
     </header>
 
-    <?php echo $content; ?>
+    <?= $content; ?>
 
     <?= FooterWidget::widget(); ?>
 
@@ -604,7 +604,7 @@ $this->beginPage();
 </div>
 
 <?php $this->endBody() ?>
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $(window).scroll(function () {
             if ($(this).scrollTop() > $('#header').height()) {

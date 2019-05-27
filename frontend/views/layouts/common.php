@@ -348,7 +348,7 @@ FrontendAsset::register($this);
                 <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành toán
                 </p>
                 <button type="button" class="btn btn-submit btn-block" id="next-payment">Chuyển ngay <span
-                            id="countdown_payment">10</span></button>
+                            id="countdown_payment">5</span></button>
             </div>
         </div>
     </div>

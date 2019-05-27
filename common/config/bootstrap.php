@@ -7,7 +7,7 @@ Yii::setAlias('@wallet', dirname(dirname(__DIR__)) . '/wallet');
 Yii::setAlias('@userbackend', dirname(dirname(__DIR__)) . '/userbackend');
 Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
 Yii::setAlias('@i18nCache', dirname(dirname(__DIR__)) . '/i18n-cache');
-
+Yii::setAlias('@landing', '@frontend/modules/landing');
 
 Yii::setAlias('@weshop','@backend/modules/weshop');
 Yii::setAlias('@weshop/payment','@weshop/weshop-payment/src');
