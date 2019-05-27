@@ -101,6 +101,11 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
 
+    public function getStore()
+    {
+        return $this->hasOne(Store::className(), ['id' => 'store_id']);
+    }
+
     /** Finds UUID by username id
      * @param $condition
      * @return array|\yii\db\ActiveRecord|null
