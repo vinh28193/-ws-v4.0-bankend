@@ -127,8 +127,10 @@ class NotificationsController extends BaseApiController
             'user_id' => $user_id,
             'user_email' => $_user_email,
             'user_name' => $_user_name,
-            'order_list' => array($ordercode => $order_item),
-            'token' => $token,  // Infor Field Notification Token ma dinh danh thiet bị để nhận Notification
+            'order_code' => $ordercode,
+            'subscribed_on' => $date_now,
+            'order_list' => $order_item ,  // array($ordercode => $order_item),
+            'token_fcm' => $token,  // Infor Field Notification Token ma dinh danh thiet bị để nhận Notification  token_fcm
             'fingerprint' => $fingerprint,
             'nv' => $nv,
             'details' => $details
@@ -162,6 +164,8 @@ class NotificationsController extends BaseApiController
             'user_email' => $_user_email,
             'user_name' => $_user_name,
             'order_list' => array($ordercode => $order_item),
+            'order_code' => $ordercode,
+            'subscribed_on' => $date_now,
             'token' => $token,  // Infor Field Notification Token ma dinh danh thiet bị để nhận Notification
             'fingerprint' => $fingerprint,
             'nv' => $nv,
@@ -176,6 +180,13 @@ class NotificationsController extends BaseApiController
         if (!empty($query)) {
             Yii::info("Update Next Token + User exits --> order ");
             $order_list = $query->order_list;   // Check Order Bin Code Exits
+
+            Yii::info("Update Next Token + User exits . Get All order_list ");
+            Yii::info([
+                'order_list' => $order_list
+            ], __CLASS__);
+
+            /*
             if (!array_key_exists($ordercode, $order_list) and !empty($order_list)) {
                 Yii::info("Check Order Bin Code No Exits");
                 $order_list[$ordercode] = array(
@@ -195,10 +206,20 @@ class NotificationsController extends BaseApiController
                 Yii::info("Check OrderBinCode + Token Exits");
                 return $this->response(true, 'Success', $order_list);
             }
-        } else {
-            Yii::info("Devices + User + BinCode New --> Save");
+            */
+
             $model = new PushNotifications();
             if ($model->load($_rest_data) and $model->save()) {
+                Yii::info("Save Update : Devices + User + BinCode New --> Save");
+                return $this->response(true, 'Success', $_rest_data);
+            } else {
+                Yii::info("Devices + User + BinCode New --> Save : Fail Save New");
+                return $this->response(false, 'Fail Save New');
+            }
+        } else {
+            $model = new PushNotifications();
+            if ($model->load($_rest_data) and $model->save()) {
+                Yii::info("Save New : Devices + User + BinCode New --> Save");
                 return $this->response(true, 'Success', $_rest_data);
             } else {
                 Yii::info("Devices + User + BinCode New --> Save : Fail Save New");
@@ -239,44 +260,47 @@ class NotificationsController extends BaseApiController
         }
     }
 
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $_post = (array)$this->get;
+        $post = (array)$this->get;
+        $fingerprint = (integer)ArrayHelper::getValue($post,'id');
+        $ordercode = ArrayHelper::getValue($post,'ordercode');
 
-        $fingerprint = (int)$_post['id'];
-        $ordercode = $_post['ordercode'];
+        Yii::info("Post Param DELETE ");
+        Yii::info([
+            'fingerprint' => $fingerprint,
+            'ordercode'=>$ordercode
+        ], __CLASS__);
 
-        $model = PushNotifications::find()
-            ->where(['fingerprint' => $fingerprint])
-            ->one();
+        /** @var $model $this */
+        $query = PushNotifications::find()
+            ->where(['fingerprint' => $fingerprint], ['order_code' => $ordercode]);
+
+        if (($model = $query->one()) === null) {
+            return $this->response(false, "query null", $model);
+        }
+
+        Yii::info("Model");
+        Yii::info([
+            'model' => $model,
+        ], __CLASS__);
 
         if (empty($model)) {
+            Yii::info("Fingerprint not exists");
             return $this->response(false, "Fingerprint not exists", $model);
         }
 
-        $order_list = $model->order_list;
-        $count = count($order_list);
-        if ($count > 1) {
-
-            // update notification
-            if (array_key_exists($ordercode, $order_list)) {
-                unset($order_list[$ordercode]);
-                $model->order_list = $order_list;
-                $model->save();
-                return $this->response(true, "Delete success", $model);
-
-            } else {
-                return $this->response(false, "Ordercode not exists");
-
-            }
-        } else {
-            // delete notification
-            $model->delete();
-            $model = ['order_list'=>0];
-            return $this->response(true, "Delete success", $model);
-
-
+        if($model->delete() != null){
+            Yii::info("UPDATE DELETE");
+            return $this->response(true, "Delete success", []);
+        }else {
+            Yii::info("DELETE Error ");
+            Yii::info([
+                'error' => $model->getErrors(),
+            ], __CLASS__);
+            return $this->response(true, "Delete success", $model->getErrors());
         }
+
 
     }
 
