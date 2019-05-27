@@ -1,9 +1,9 @@
 <?php
-namespace weshop\modules\landing\views\widgets\LandingSlider;
-use weshop\views\weshop\widgets\BaseWidget;
+namespace landing\widgets\LandingSlider;
+use landing\LandingWidget;
 use common\models\cms\WsImageGroup;
 
-class LandingSliderWidget extends BaseWidget{
+class LandingSliderWidget extends LandingWidget{
     public $block = [];
 
     public function run(){
@@ -12,7 +12,7 @@ class LandingSliderWidget extends BaseWidget{
             $categories = $this->block['categories'];
         }
 
-        $images = $this->block['Brand'];
+        $images = $this->block['images'];
 
         return $this->render("LandingSliderView", [
             'block'=>$this->block,

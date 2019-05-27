@@ -1,10 +1,10 @@
 <?php
-namespace weshop\modules\landing\views\widgets\LandingSliderFluid;
+namespace landing\widgets\LandingSliderFluid;
 
-use weshop\views\weshop\widgets\BaseWidget;
+use landing\LandingWidget;
 use common\models\cms\WsImageGroup;
 
-class LandingSliderFluidWidget extends BaseWidget{
+class LandingSliderFluidWidget extends LandingWidget{
     public $block = [];
 
     public function run(){
@@ -13,7 +13,7 @@ class LandingSliderFluidWidget extends BaseWidget{
             $categories = $this->block['categories'];
         }
 
-        $images = $this->block['Brand'];
+        $images = $this->block['images'];
 
         return $this->render("LandingSliderFluidView", [
             'categories'=>$categories,

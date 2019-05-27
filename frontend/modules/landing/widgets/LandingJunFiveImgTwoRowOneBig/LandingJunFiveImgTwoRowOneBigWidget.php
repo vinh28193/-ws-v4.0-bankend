@@ -1,10 +1,10 @@
 <?php
 
-namespace weshop\modules\landing\views\widgets\LandingJunFiveImgTwoRowOneBig;
+namespace landing\widgets\LandingJunFiveImgTwoRowOneBig;
 
-use weshop\views\weshop\widgets\BaseWidget;
+use landing\LandingWidget;
 
-class LandingJunFiveImgTwoRowOneBigWidget extends BaseWidget
+class LandingJunFiveImgTwoRowOneBigWidget extends LandingWidget
 {
     public $block = [];
 
@@ -12,8 +12,8 @@ class LandingJunFiveImgTwoRowOneBigWidget extends BaseWidget
     {
 
         $images = [];
-        if (isset($this->block['Brand'])) {
-            $images = $this->block['Brand'];
+        if (isset($this->block['images'])) {
+            $images = $this->block['images'];
         }
         return $this->render("LandingJunFiveImgTwoRowOneBigView", [
             'images' => $images

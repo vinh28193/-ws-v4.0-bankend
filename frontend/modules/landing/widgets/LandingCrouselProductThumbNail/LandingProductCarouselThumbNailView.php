@@ -1,7 +1,7 @@
 <div class="deal-box fashion">
     <div class="title">
         <div class="left">
-            <span><?php $block->name ?></span>
+            <span><?php $block['name']; ?></span>
         </div>
         <div class="right">
             <span class="btn prev"><i
@@ -30,7 +30,7 @@
                                     <a href="/amazon/item/playskool-heroes-transformers-rescue-bots-medix-the-doc-bot-action-figure-B00P2SNIUE.html" class="pd-2">
                                         <div class="thumb">
                                             <span>
-                                                <img src="<?= $value->image ?>"
+                                                <img src="<?= $value['image'] ?>"
                                                      alt="Playskool Heroes Transformers Rescue Bots Medix The Doc-Bot Action Figure"
                                                      title="Playskool Heroes Transformers Rescue Bots Medix The Doc-Bot Action Figure"/>
                                             </span>

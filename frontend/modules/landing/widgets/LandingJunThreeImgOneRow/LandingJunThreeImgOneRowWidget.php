@@ -1,8 +1,8 @@
 <?php
 
-namespace weshop\modules\landing\views\widgets\LandingJunThreeImgOneRow;
+namespace landing\widgets\LandingJunThreeImgOneRow;
 
-use weshop\views\weshop\widgets\BaseWidget;
+use landing\LandingWidget;
 
 /**
  * Created by PhpStorm.
@@ -10,7 +10,7 @@ use weshop\views\weshop\widgets\BaseWidget;
  * Date: 07/06/2018
  * Time: 09:42
  */
-class LandingJunThreeImgOneRowWidget extends BaseWidget
+class LandingJunThreeImgOneRowWidget extends LandingWidget
 {
     public $block = [];
 
@@ -18,8 +18,8 @@ class LandingJunThreeImgOneRowWidget extends BaseWidget
     {
 
         $images = [];
-        if (isset($this->block['Brand'])) {
-            $images = $this->block['Brand'];
+        if (isset($this->block['images'])) {
+            $images = $this->block['images'];
         }
         return $this->render("LandingJunThreeImgOneRowView", [
             'images' => $images

@@ -41,6 +41,6 @@ class WeshopOldAsset extends AssetBundle
 
     public $depends = [
 //        'yii\web\JqueryAsset',
-        'yii\bootstrap\BootstrapAsset',
+        'landing\BootstrapOldAsset',
     ];
 }

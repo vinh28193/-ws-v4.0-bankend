@@ -1,8 +1,8 @@
 <?php
-namespace weshop\modules\landing\views\widgets\ListProduct;
-use weshop\views\weshop\widgets\BaseWidget;
+namespace landing\widgets\ListProduct;
+use landing\LandingWidget;
 
-class ListProductWidget extends BaseWidget
+class ListProductWidget extends LandingWidget
 {
     public $block = [];
 
@@ -19,12 +19,12 @@ class ListProductWidget extends BaseWidget
 
         if(!empty($products)){
             foreach ($products as $key=>$val){
-                $products[$key]->calculated_sell_price = $website->showMoney($val->calculated_sell_price * $exchangeRate);
-                if(isset($val->start_price)){
-                    $products[$key]->calculated_start_price = $website->showMoney($val->calculated_start_price * $exchangeRate);
+                $products[$key]['calculated_sell_price'] = $website->showMoney($val['calculated_sell_price'] * $exchangeRate);
+                if(isset($val['start_price'])){
+                    $products[$key]['calculated_start_price'] = $website->showMoney($val['calculated_start_price'] * $exchangeRate);
                 }
-                if($val->start_price!=null && $val->start_price >0 ){
-                    $products[$key]->rate_count   = 100-($val->sell_price/$val->start_price)*100;
+                if($val['start_price']!=null && $val['start_price'] >0 ){
+                    $products[$key]['rate_count']   = 100-($val['sell_price']/$val['start_price'])*100;
                 }
 
             }

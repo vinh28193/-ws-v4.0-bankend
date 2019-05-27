@@ -6,4 +6,4 @@
  * Time: 09:55
  */
 use yii\helpers\Url;
-$this->registerJsFile('@web/v3/checkout/components/Addtionfee.js', ['position' => \yii\web\View::POS_END]);
+//$this->registerJsFile('@web/v3/checkout/components/Addtionfee.js', ['position' => \yii\web\View::POS_END]);

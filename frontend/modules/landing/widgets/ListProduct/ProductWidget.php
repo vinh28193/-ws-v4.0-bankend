@@ -6,12 +6,12 @@
  * Time: 09:42 AM
  */
 
-namespace weshop\modules\landing\views\widgets\ListProduct;
+namespace landing\widgets\ListProduct;
 
 
-use weshop\views\weshop\widgets\BaseWidget;
+use landing\LandingWidget;
 
-class ProductWidget extends BaseWidget
+class ProductWidget extends LandingWidget
 {
     public $product;
     public $oldPhone = false;

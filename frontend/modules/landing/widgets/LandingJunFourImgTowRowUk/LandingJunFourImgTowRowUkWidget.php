@@ -1,18 +1,24 @@
 <?php
-namespace weshop\modules\landing\views\widgets\LandingJunFourImgTowRowUk;
-use weshop\views\weshop\widgets\BaseWidget;
-class LandingJunFourImgTowRowUkWidget extends BaseWidget{
+
+namespace landing\widgets\LandingJunFourImgTowRowUk;
+
+use landing\LandingWidget;
+
+class LandingJunFourImgTowRowUkWidget extends LandingWidget
+{
     public $block = [];
 
-    public function run(){
+    public function run()
+    {
 
         $images = [];
-        if(isset($this->block['Brand'])){
-            $images = $this->block['Brand'];
+        if (isset($this->block['images'])) {
+            $images = $this->block['images'];
         }
         return $this->render("LandingJunFourImgTowRowUkView", [
-            'images'=>$images
+            'images' => $images
         ]);
     }
 }
+
 ?>

@@ -6,7 +6,7 @@
         <ul class="list-inline">
             <?php if (isset($categories)) {
                 foreach ($categories as $key => $cat) { ?>
-                    <li class=""><a href="<?= $cat->url ?>"><?= $cat->name ?></a>
+                    <li class=""><a href="<?= $cat['url'] ?>"><?= $cat['name'] ?></a>
                     </li>
                 <?php }
             } ?>
@@ -20,8 +20,8 @@
     <?php if (isset($images)) {
         foreach ($images as $key => $value) { ?>
             <div class="item">
-                <a href="<?=$value->link;?>" class="image">
-                    <img src="<?= $value->domain . $value->origin_src ?>" alt=""
+                <a href="<?=$value['link'];?>" class="image">
+                    <img src="<?= $value['domain'] . $value['origin_src'] ?>" alt=""
                          title="">
                 </a>
             </div>

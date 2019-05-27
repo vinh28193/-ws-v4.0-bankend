@@ -1,24 +1,30 @@
 <?php
-namespace weshop\modules\landing\views\widgets\LandingJunFiveImgTwoRowOneBannerUk;
-use weshop\views\weshop\widgets\BaseWidget;
-class LandingJunFiveImgTwoRowOneBannerUkWidget extends BaseWidget{
+
+namespace landing\widgets\LandingJunFiveImgTwoRowOneBannerUk;
+
+use landing\LandingWidget;
+
+class LandingJunFiveImgTwoRowOneBannerUkWidget extends LandingWidget
+{
     public $block = [];
 
-    public function run(){
+    public function run()
+    {
 
         $images = [];
-        if(isset($this->block['Brand'])){
-            $images = $this->block['Brand'];
+        if (isset($this->block['images'])) {
+            $images = $this->block['images'];
         }
 //        echo '<pre>';
-//        print_r($this->block['Brand']);
+//        print_r($this->block['images']);
 //        echo '</pre>';
 //        die();
 
 
         return $this->render("LandingJunFiveImgTwoRowOneBannerUkView", [
-            'images'=>$images
+            'images' => $images
         ]);
     }
 }
+
 ?>

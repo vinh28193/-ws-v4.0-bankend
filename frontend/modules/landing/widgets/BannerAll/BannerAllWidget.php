@@ -1,13 +1,19 @@
 <?php
-namespace landing\views\widgets\BannerAll;
 
-class BannerAllWidget extends BaseWidget{
+namespace landing\widgets\BannerAll;
+
+use landing\LandingWidget;
+
+class BannerAllWidget extends LandingWidget
+{
     public $images = [];
 
-    public function run(){
+    public function run()
+    {
         return $this->render("BannerAllView", [
-            'images'=>$this->images
+            'images' => $this->images
         ]);
     }
 }
+
 ?>

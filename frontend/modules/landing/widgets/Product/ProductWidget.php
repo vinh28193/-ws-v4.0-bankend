@@ -1,8 +1,8 @@
 <?php
-namespace weshop\modules\landing\views\widgets\Product;
-use weshop\views\weshop\widgets\BaseWidget;
+namespace landing\widgets\Product;
+use landing\LandingWidget;
 
-class ProductWidget extends BaseWidget{
+class ProductWidget extends LandingWidget{
     public $images = [];
 
     public function run(){

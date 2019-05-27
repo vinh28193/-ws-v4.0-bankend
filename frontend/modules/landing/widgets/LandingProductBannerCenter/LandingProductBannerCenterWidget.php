@@ -1,8 +1,8 @@
 <?php
-namespace weshop\modules\landing\views\widgets\LandingProductBannerCenter;
-use weshop\views\weshop\widgets\BaseWidget;
+namespace landing\widgets\LandingProductBannerCenter;
+use landing\LandingWidget;
 
-class LandingProductBannerCenterWidget extends BaseWidget{
+class LandingProductBannerCenterWidget extends LandingWidget{
     public $block = [];
 
     public function run(){

@@ -21,14 +21,15 @@ return [
         ],
         'assetManager' => [
             'bundles' => [
-//            'yii\web\JqueryAsset' => [
-//                'js'=>[]
-//            ],
                 'yii\bootstrap\BootstrapPluginAsset' => [
-                    'js' => ['/js/bootstrap.min.js']
+                    'sourcePath' => null,
+                    'basePath' => '@webroot',
+                    'baseUrl' => '@web',
                 ],
                 'yii\bootstrap\BootstrapAsset' => [
-                    'css' => ['/css/bootstrap.css'],
+                    'sourcePath' => null,
+                    'basePath' => '@webroot',
+                    'baseUrl' => '@web',
                 ],
 
             ],

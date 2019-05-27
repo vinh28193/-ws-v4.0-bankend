@@ -1,21 +1,26 @@
 <?php
-namespace weshop\modules\landing\views\widgets\LandingBrandSlider;
-use weshop\views\weshop\widgets\BaseWidget;
 
-class LandingBrandSliderWidget extends BaseWidget{
+namespace landing\widgets\LandingBrandSlider;
+
+use landing\LandingWidget;
+
+class LandingBrandSliderWidget extends LandingWidget
+{
     public $block = [];
 
-    public function run(){
+    public function run()
+    {
 
         $images = [];
-        if(isset($this->block['Brand'])){
-            $images = $this->block['Brand'];
+        if (isset($this->block['images'])) {
+            $images = $this->block['images'];
         }
 
 
         return $this->render("LandingBrandSliderView", [
-            'images'=>$images
+            'images' => $images
         ]);
     }
 }
+
 ?>

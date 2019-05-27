@@ -1,14 +1,14 @@
 <?php
-namespace weshop\modules\landing\views\widgets\LandingUkRequestCalculate;
+namespace landing\widgets\LandingUkRequestCalculate;
 
-use weshop\views\weshop\widgets\BaseWidget;
+use landing\LandingWidget;
 /**
  * Created by PhpStorm.
  * User: quangquyet
  * Date: 04/09/2018
  * Time: 09:53
  */
-class LandingUkRequestCalculateWidget extends BaseWidget
+class LandingUkRequestCalculateWidget extends LandingWidget
 {
     public $block = [];
     public function run(){

@@ -1,10 +1,5 @@
 <?php
 
-use common\components\RedisLanguage;
-use common\components\UrlComponent;
-use common\models\enu\SiteConfig;
-use yii\helpers\Url;
-use common\models\cms\WsImageGroup;
 
 ?>
 <div class="main-tabs text-right">
@@ -12,7 +7,7 @@ use common\models\cms\WsImageGroup;
         <ul class="list-inline">
             <?php if (isset($categories)) {
                 foreach ($categories as $key => $cat) { ?>
-                    <li class=""><a href="<?=$cat->url?>"><?= $cat->name?></a>
+                    <li class=""><a href="<?=$cat['url']?>"><?= $cat['name']?></a>
                     </li>
                 <?php }
             } ?>
@@ -26,8 +21,8 @@ use common\models\cms\WsImageGroup;
         <?php if (isset($images)) {
             foreach ($images as $key => $value) { ?>
                 <div class="item">
-                    <a href="<?= $value->link ?>">
-                        <img src="<?= $value->domain . '/' . $value->origin_src ?>" alt="<?= $value->name ?>" title="<?= $value->name ?>">
+                    <a href="<?= $value['link'] ?>">
+                        <img src="<?= $value['domain'] . '/' . $value['origin_src'] ?>" alt="<?= $value['name'] ?>" title="<?= $value['name'] ?>">
                     </a>
                 </div>
 

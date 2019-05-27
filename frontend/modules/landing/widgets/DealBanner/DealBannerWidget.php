@@ -1,14 +1,19 @@
 <?php
-namespace weshop\modules\landing\views\widgets\DealBanner;
-use weshop\views\weshop\widgets\BaseWidget;
 
-class DealBannerWidget extends BaseWidget{
+namespace landing\widgets\DealBanner;
+
+use landing\LandingWidget;
+
+class DealBannerWidget extends LandingWidget
+{
     public $images = [];
 
-    public function run(){
+    public function run()
+    {
         return $this->render("DealBannerView", [
-            'images'=>$this->images
+            'images' => $this->images
         ]);
     }
 }
+
 ?>

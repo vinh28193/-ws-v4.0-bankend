@@ -1,4 +1,5 @@
 <?php
+
 use common\components\RedisLanguage;
 use common\components\UrlComponent;
 use common\models\enu\SiteConfig;
@@ -18,9 +19,9 @@ use yii\helpers\Url;
                         foreach ($images as $key => $value) {
                             ?>
                             <div class="item">
-                                <a href="<?php echo $value->link?>" target="_blank"><img
-                                        src="<?php echo $value->domain.$value->origin_src?>"
-                                        alt="<?php echo $value->name?>" title="<?php echo $value->name?>"/>
+                                <a href="<?php echo $value['link']; ?>" target="_blank"><img
+                                            src="<?php echo $value['domain'] . $value['origin_src']; ?>"
+                                            alt="<?php echo $value['name']; ?>" title="<?php echo $value['name']; ?>"/>
                                 </a>
                             </div>
                             <?php

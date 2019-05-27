@@ -15,14 +15,14 @@ use yii\helpers\Url;
                 <?php if (!empty($images)) {
                     foreach ($images as $key => $val) { ?>
                         <li>
-                            <a href="<?= $val->link ?>" class="item" target="_blank">
+                            <a href="<?= $val['link'] ?>" class="item" target="_blank">
                                 <div class="banner">
-                                    <img src="<?php echo $val->domain . $val->origin_src; ?>"
-                                         alt="<?= $val->name ?>"
-                                         title="<?= $val->name ?>">
+                                    <img src="<?php echo $val['domain'] . $val['origin_src']; ?>"
+                                         alt="<?= $val['name'] ?>"
+                                         title="<?= $val['name'] ?>">
                                 </div>
                                 <div class="text-box">
-                                    <span><?= $val->name ?></span>
+                                    <span><?= $val['name'] ?></span>
                                     <i class="arrow-ico"></i>
                                 </div>
                             </a>
