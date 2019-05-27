@@ -143,6 +143,9 @@ return [
         'favorites' => [
             'class' => 'frontend\modules\favorites\Module',
         ],
+        'landing' => [
+            'class' => 'frontend\modules\landing\LandingModule',
+        ],
         'debug' => [
             'class' => '\yii\debug\Module',
             'panels' => [
