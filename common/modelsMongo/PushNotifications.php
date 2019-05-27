@@ -45,7 +45,7 @@ class PushNotifications extends ActiveRecord
         /**
         {
             "_id": ObjectId,
-            "token": String,
+            "token_fcm": String,
             "subscribed_on": Date,
             "user_id": Integer,
             "fingerprint": String,
@@ -63,8 +63,10 @@ class PushNotifications extends ActiveRecord
 
         return [
             '_id',
-            'token',
+            'token_fcm',
             'subscribed_on',
+            'order_code',
+
             'fingerprint',
 
             'user_id',
@@ -83,8 +85,10 @@ class PushNotifications extends ActiveRecord
             [[
                 'created_at',
                 'updated_at',
-                'token',
+                'token_fcm',
                 'subscribed_on',
+                'order_code',
+
                 'fingerprint',
 
                 'user_id',
@@ -95,7 +99,7 @@ class PushNotifications extends ActiveRecord
                 'nv'
 
             ], 'safe'],
-            [[ 'token','fingerprint','user_id','user_email', 'user_name','details','order_list','nv'], 'required'],
+            [[ 'token_fcm','fingerprint','user_id','user_email', 'user_name','details','order_list','nv'], 'required'],
         ];
     }
 
@@ -114,12 +118,13 @@ class PushNotifications extends ActiveRecord
             'updated_at' => 'updated_at',
 
             // Infor Field Notification
-            'token' => 'Token FCM nhân Notification',
+            'token_fcm' => 'Token FCM nhân Notification',
+            'order_code' => 'Mãn đơn hàng nhận Notification',
             'subscribed_on' =>' Ngày User click vào button nhận Thống báo  ',
             'fingerprint' => 'UUID devices : đinh danh cua mỗi thiết bị nhận thông báo , Mỗi một người dùng có N thiết bị nhận thông báo',
             'details' => ' Thông tin Về Thiết bị ',
             'order_list' => 'Danh sách đơn hàng',
-            'nv'=> 'Ung dung'
+            'nv'=> 'môi trường bắn Notification  WEB/ APP:'
             /*
                  "details": [
                     "browser" : String,

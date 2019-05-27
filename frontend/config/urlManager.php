@@ -43,6 +43,10 @@ return [
         'amazon-jp/category/<name:[0-9a-zA-Z_-]+>-<category:\d+>.html' => 'amazon-jp/search/index',
         'GET amazon-jp/categories.html' => 'amazon-jp/amazon-jp/categories',
 
+        // landing
+        'GET landing-page/<name:[0-9a-zA-Z_-]+>-<id:\d+>.html' => 'landing/page/index',
+        'GET landing-request/<name:[0-9a-zA-Z_-]+>-<id:\d+>.html' => 'landing/request/index',
+
         // cart
         'GET my-cart.html' => 'checkout/cart',
 

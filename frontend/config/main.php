@@ -9,7 +9,7 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'queue'],
+    'bootstrap' => ['log', 'queue', 'landing'],
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'frontend\controllers',
     'defaultRoute' => 'cms/home',
@@ -21,14 +21,15 @@ return [
         ],
         'assetManager' => [
             'bundles' => [
-//            'yii\web\JqueryAsset' => [
-//                'js'=>[]
-//            ],
                 'yii\bootstrap\BootstrapPluginAsset' => [
-                    'js' => ['/js/bootstrap.min.js']
+                    'sourcePath' => null,
+                    'basePath' => '@webroot',
+                    'baseUrl' => '@web',
                 ],
                 'yii\bootstrap\BootstrapAsset' => [
-                    'css' => ['/css/bootstrap.css'],
+                    'sourcePath' => null,
+                    'basePath' => '@webroot',
+                    'baseUrl' => '@web',
                 ],
 
             ],
@@ -142,6 +143,9 @@ return [
         ],
         'favorites' => [
             'class' => 'frontend\modules\favorites\Module',
+        ],
+        'landing' => [
+            'class' => 'landing\LandingModule',
         ],
         'debug' => [
             'class' => '\yii\debug\Module',

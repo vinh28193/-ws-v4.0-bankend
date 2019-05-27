@@ -22,7 +22,7 @@ class WalletLog extends \yii\mongodb\ActiveRecord
      */
     public static function collectionName()
     {
-        return ['weshop_logs', 'Wallet_log'];
+        return ['Weshop_log_40', 'Wallet_log'];
     }
 
     /**
