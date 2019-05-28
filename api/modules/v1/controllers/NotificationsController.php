@@ -157,7 +157,6 @@ class NotificationsController extends BaseApiController
             }
         }
 
-
         Yii::info("Data Notification Push");
         Yii::info([
             'user_id' => $user_id,
@@ -189,7 +188,7 @@ class NotificationsController extends BaseApiController
             $model = new PushNotifications();
             if ($model->load($_rest_data) and $model->save()) {
                 Yii::info("Save Update : Devices + User + BinCode New --> Save");
-                Yii::$app->wsLog->push('order','purchased', null, [
+                Yii::$app->wsLog->push('order','PushNotifications', null, [
                     'id' => array($ordercode => $order_item),
                     'request' => serialize($_rest_data),
                     'response' => $this->response(true,'PushNotifications Success : ' . serialize($_rest_data))
@@ -204,7 +203,7 @@ class NotificationsController extends BaseApiController
             if ($model->load($_rest_data) and $model->save()) {
                 Yii::info("Save New : Devices + User + BinCode New --> Save");
 
-                Yii::$app->wsLog->push('order','purchased', null, [
+                Yii::$app->wsLog->push('order','PushNotifications', null, [
                     'id' => array($ordercode => $order_item),
                     'request' => serialize($_rest_data),
                     'response' => $this->response(true,'PushNotifications Success : ' . serialize($_rest_data))
