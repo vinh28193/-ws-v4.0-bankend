@@ -374,7 +374,7 @@ class PurchaseController extends BaseApiController
             ]);
 
             // ToDo : @Phuchc Notication "Mua Hàng Thành Công" 17/05/2019 Call API
-            // Yii::$app->wsFcnApn->Create($_to_token_fingerprint, $_title , $_body , $_click_action)
+            Yii::$app->wsFcnApn->Create($_to_token_fingerprint = 'f42w7MQMVIU:APA91bFSWXH6PLBNgvZTXIS2gm4_QM3Lc-El46dokbqJXXtY8zv8oMaNd4B8LYOTgILSl38COdPQRY_ajdUJoecy6jSxy7O6CUOATTHMt9NqGZRu-W1018mvLzJaf4Cj1z2lSt38o5gG', $_title = 'Purchase success! PO-'.$PurchaseOrder->id , $_body = 'Purchase success! PO-'.$PurchaseOrder->id, $_click_action='https://admin.weshop.asia');
 
             $tran->commit();
             return $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id);
