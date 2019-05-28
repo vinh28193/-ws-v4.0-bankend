@@ -99,69 +99,7 @@ class PurchaseServiceController extends BaseApiController
                                 $modelProduct->price_purchase = $form->price_purchase;
                                 $modelProduct->shipping_fee_purchase = $form->us_ship_purchase;
                                 $modelProduct->tax_fee_purchase = $form->us_tax_purchase;
-                                $order = $modelProduct->order;
-                                if($modelProduct->price_purchase){
-                                    $fee = $modelProduct->unitPrice;
-                                    $check = true;
-                                    $old_local_amount = $fee->local_amount;
-                                    $old_amount = $fee->amount;
-                                    $fee->amount = $modelProduct->price_purchase;
-                                    $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
-
-                                    $modelProduct->total_price_amount_local += $fee->local_amount - $old_local_amount ;
-                                    $modelProduct->updated_at = time();
-                                    $modelProduct->price_purchase = null;
-                                    $order->updated_at = time();
-
-                                    $order->total_price_amount_origin += $fee->amount - $old_amount;
-//                            $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
-                                    $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
-                                    $order->total_amount_local += $fee->local_amount - $old_local_amount;
-                                    $fee->save(0);
-                                }
-                                if($modelProduct->shipping_fee_purchase){
-                                    $check = true;
-                                    $fee = $modelProduct->usShippingFee;
-                                    $old_local_amount = $fee->local_amount;
-                                    $old_amount = $fee->amount;
-                                    $fee->amount = $modelProduct->shipping_fee_purchase;
-                                    $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
-                                    $order = $modelProduct->order;
-
-                                    $modelProduct->total_fee_product_local += $fee->local_amount - $old_local_amount ;
-                                    $modelProduct->updated_at = time();
-                                    $modelProduct->shipping_fee_purchase = null;
-                                    $order->updated_at = time();
-
-                                    $order->total_origin_shipping_fee_local += $fee->amount - $old_amount;
-                                    $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
-                                    $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
-                                    $order->total_amount_local += $fee->local_amount - $old_local_amount;
-                                    $fee->save(0);
-                                }
-                                if($modelProduct->tax_fee_purchase){
-                                    $check = true;
-                                    $fee = $modelProduct->usTax;
-                                    $old_local_amount = $fee->local_amount;
-                                    $old_amount = $fee->amount;
-                                    $fee->amount = $modelProduct->tax_fee_purchase;
-                                    $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
-                                    $order = $modelProduct->order;
-
-                                    $modelProduct->total_fee_product_local += $fee->local_amount - $old_local_amount ;
-                                    $modelProduct->updated_at = time();
-                                    $modelProduct->tax_fee_purchase = null;
-                                    $order->updated_at = time();
-
-                                    $order->total_origin_tax_fee_local += $fee->amount - $old_amount;
-                                    $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
-                                    $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
-                                    $order->total_amount_local += $fee->local_amount - $old_local_amount;
-
-                                    $fee->save(0);
-                                }
-                                $order->save(0);
-                                $modelProduct->save();
+                                $modelProduct->confirm_change_price = Product::STATUS_NEED_CONFIRM_CHANGE_PRICE;
                                 $modelProduct->save();
                                 $messageProduct .= $messageProduct ? '. Và' . $mss : $mss;
                             }
@@ -170,6 +108,8 @@ class PurchaseServiceController extends BaseApiController
                     }
                     if ($messageProduct != "" && $amount > 0) {
                         $orderDb = Order::findOne(['ordercode' => $order['ordercode']]);
+                        $orderDb->confirm_change_price = Order::STATUS_NEED_CONFIRM_CHANGE_PRICE;
+                        $orderDb->save(false);
                         /** @var PaymentTransaction[] $paymentTransactions */
                         $paymentTransactions = PaymentTransaction::find()
                             ->where([
@@ -226,28 +166,8 @@ class PurchaseServiceController extends BaseApiController
                         if ($emailPrice) {
                             //#ToDo Gửi mail thông báo thay đổi về giá
                         }
-                        //#ToDo thông báo chat thay đổi về giá
-                        $model = new ChatMongoWs();
-                        $_rest_data = ["ChatMongoWs" => [
-                            "success" => true,
-                            "message" => $message . $messageOrder,
-                            "date" => Yii::$app->getFormatter()->asDatetime('now'),
-                            "user_id" => $user->id,
-                            "user_email" => $user->email,
-                            "user_name" => $user->username,
-                            "user_app" => null,
-                            "user_request_suorce" => 'BACK_END',  // "APP/FRONTEND/BACK_END"
-                            "request_ip" => Yii::$app->getRequest()->getUserIP(), // Todo : set
-                            "user_avatars" => null,
-                            "Order_path" => $order['ordercode'],
-                            "is_send_email_to_customer" => null,
-                            "type_chat" => 'WS_CUSTOMER', // 'TYPE_CHAT : GROUP_WS/WS_CUSTOMER // Todo : set
-                            "is_customer_vew" => null,
-                            "is_employee_vew" => null
-                        ]];
-                        if (!$model->load($_rest_data) || !$model->save()) {
+                        if (!ChatMongoWs::SendMessage($message . $messageOrder, $order['ordercode'])) {
                             $tran->rollBack();
-                            Yii::error($model->errors);
                             return $this->response(false, "Gửi thông báo thất bại");
                         }
                     }
@@ -285,18 +205,66 @@ class PurchaseServiceController extends BaseApiController
                         $model = Product::findOne($product['id']);
                         if ($model){
                             $check = false;
-                            if($model->price_purchase){
+                            $order = $model->order;
+                            if($model->price_purchase && $model->price_purchase > $model->unitPrice->amount){
+                                $fee = $model->unitPrice;
                                 $check = true;
+                                $old_local_amount = $fee->local_amount;
+                                $old_amount = $fee->amount;
+                                $fee->amount = $model->price_purchase;
+                                $fee->local_amount = $exRate->usdToVnd($model->price_purchase,23500);
+                                $model->total_price_amount_local += $fee->local_amount - $old_local_amount ;
+                                $model->price_amount_local += $fee->local_amount - $old_local_amount ;
+                                $model->price_amount_origin += $fee->amount - $old_amount;
+                                $model->updated_at = time();
+                                $order->updated_at = time();
+                                $order->total_price_amount_origin += $fee->amount - $old_amount;
+                                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                $fee->save(0);
                                 $model->price_purchase = null;
                             }
-                            if($model->shipping_fee_purchase){
+                            if($model->shipping_fee_purchase && $model->shipping_fee_purchase > $model->usShippingFee->amount){
                                 $check = true;
+                                $fee = $model->usShippingFee;
+                                $old_local_amount = $fee->local_amount;
+                                $old_amount = $fee->amount;
+                                $fee->amount = $model->shipping_fee_purchase;
+                                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+                                $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
+                                $model->updated_at = time();
+
+                                $order->updated_at = time();
+                                $order->total_origin_shipping_fee_local += $fee->amount - $old_amount;
+                                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                $fee->save(0);
                                 $model->shipping_fee_purchase = null;
                             }
-                            if($model->tax_fee_purchase){
+                            if($model->tax_fee_purchase && $model->tax_fee_purchase > $model->usTax->amount){
                                 $check = true;
+                                $fee = $model->usTax;
+                                $old_local_amount = $fee->local_amount;
+                                $old_amount = $fee->amount;
+                                $fee->amount = $model->tax_fee_purchase;
+                                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+
+                                $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
+                                $model->updated_at = time();
+
+                                $order->updated_at = time();
+                                $order->total_origin_tax_fee_local += $fee->amount - $old_amount;
+                                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                                $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                                $fee->save(0);
                                 $model->tax_fee_purchase = null;
                             }
+                            $model->confirm_change_price = Product::STATUS_CONFIRMED_CHANGE_PRICE;
+                            $order->confirm_change_price = Order::STATUS_CONFIRMED_CHANGE_PRICE;
+                            $order->save(false);
                             $model->save();
                             if($check){
                                 Yii::$app->wsLog->push('order','updateFee', null, [
@@ -307,60 +275,7 @@ class PurchaseServiceController extends BaseApiController
                             }
                         }
                     }
-                    /** @var PaymentTransaction[] $transactionPayments */
-                    $transactionPayments = PaymentTransaction::find()->where([
-                        'order_code' => $order['ordercode'],
-                        'transaction_status' => [
-                            PaymentTransaction::TRANSACTION_STATUS_CREATED,
-                            PaymentTransaction::TRANSACTION_STATUS_QUEUED
-                        ],
-                        'transaction_type' => PaymentTransaction::TRANSACTION_ADDFEE
-                    ])->all();
-                    foreach ($transactionPayments as $payment){
-                        $payment->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-                        $payment->save(false);
-                        Yii::info($payment->transaction_status,'payment_status');
-                        $WalletS = new WalletBackendService();
-                        $WalletS->payment_transaction = $payment->transaction_code;
-                        $WalletS->payment_method = $payment->payment_method;
-                        $WalletS->payment_provider = $payment->payment_provider;
-                        $WalletS->bank_code = $payment->payment_bank_code;
-                        $WalletS->total_amount = intval($payment->transaction_amount_local);
-                        $WalletS->type = WalletBackendService::TYPE_PAY_ADDFEE;
-                        $WalletS->customer_id = $payment->customer_id;
-                        $WalletS->description = $payment->transaction_description;
-                        $result = $WalletS->createSafePaymentTransaction();
-                        if(!$result['success']){
-                            $tran->rollBack();
-                            return $this->response(false, "Thất bại.",$result);
-                        }
-                        $orderDb = Order::findOne(['ordercode' => $payment->order_code]);
-                        if($orderDb){
-                            $orderDb->total_paid_amount_local = $orderDb->total_paid_amount_local + $payment->transaction_amount_local;
-                            $orderDb->save(false);
-                        }
-                        //#ToDo thông báo chat thay đổi về giá
-                        $model = new ChatMongoWs();
-                        $_rest_data = ["ChatMongoWs" => [
-                            "success" => true,
-                            "message" => 'Đã tự động thanh toán thu thêm giao dịch '.$payment->transaction_code,
-                            "date" => Yii::$app->getFormatter()->asDatetime('now'),
-                            "user_id" => $user->id,
-                            "user_email" => $user->email,
-                            "user_name" => $user->username,
-                            "user_app" => null,
-                            "user_request_suorce" => 'BACK_END',  // "APP/FRONTEND/BACK_END"
-                            "request_ip" => Yii::$app->getRequest()->getUserIP(), // Todo : set
-                            "user_avatars" => null,
-                            "Order_path" => $order['ordercode'],
-                            "is_send_email_to_customer" => null,
-                            "type_chat" => 'WS_CUSTOMER', // 'TYPE_CHAT : GROUP_WS/WS_CUSTOMER // Todo : set
-                            "is_customer_vew" => null,
-                            "is_employee_vew" => null
-                        ]];
-                        $model->load($_rest_data);
-                        $model->save();
-                    }
+                    ChatMongoWs::SendMessage('Xác nhận tăng giá từ khách hàng.', $order['ordercode']);
                 }
                 $tran->commit();
                 return $this->response(true, "Đã xác nhận thành công.");
@@ -371,7 +286,6 @@ class PurchaseServiceController extends BaseApiController
             }
         }
         return $this->response(false, "Vui lòng đăng nhập.");
-
     }
 
 }

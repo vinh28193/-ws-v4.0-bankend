@@ -49,6 +49,9 @@ class Product extends DbProduct
     const STATUS_AT_CUSTOMER = 'AT_CUSTOMER';
     const STATUS_RETURNED = 'RETURNED';
 
+    const STATUS_NEED_CONFIRM_CHANGE_PRICE = 1;
+    const STATUS_CONFIRMED_CHANGE_PRICE = 0;
+
     /**
      * @inheritdoc
      * @return ProductQuery the active query used by this AR class.
