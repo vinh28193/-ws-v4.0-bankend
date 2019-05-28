@@ -21,20 +21,21 @@ interface CartStorageInterface
     public function hasItem($id);
 
     /**
+     * @param $type
      * @param $key
-     * @param $param
      * @param $value
      * @param $identity
      * @return mixed
      */
-    public function addItem($key, $param, $value, $identity);
+    public function addItem($type, $key, $value, $identity);
 
     /**
      * @param $id
+     * @param $key
      * @param $value
      * @return mixed
      */
-    public function setItem($id, $value);
+    public function setItem($id, $key, $value);
 
     /**
      * @param $filter
@@ -84,11 +85,5 @@ interface CartStorageInterface
      */
     public function removeItems($type, $identity, $keys = null);
 
-
-    /**
-     * @param $params
-     * @return mixed
-     */
-    public function getAllItems($params);
 
 }

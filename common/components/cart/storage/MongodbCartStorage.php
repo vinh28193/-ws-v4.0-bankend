@@ -2,6 +2,7 @@
 
 namespace common\components\cart\storage;
 
+use phpDocumentor\Reflection\Type;
 use Yii;
 use common\models\User;
 use yii\base\BaseObject;
@@ -52,6 +53,7 @@ class MongodbCartStorage extends BaseObject
     }
 
     /**
+     * @param $type
      * @param $key
      * @param $value
      * @param $identity
@@ -59,10 +61,11 @@ class MongodbCartStorage extends BaseObject
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\mongodb\Exception
      */
-    public function addItem($key, $value, $identity)
+    public function addItem($type, $key, $value, $identity)
     {
         return $this->mongodb->getCollection($this->collection)->insert([
             'remove' => 0,
+            'type' => $type,
             'key' => $key,
             'value' => $value,
             'identity' => $identity,
@@ -72,38 +75,27 @@ class MongodbCartStorage extends BaseObject
 
     /**
      * @param $id
+     * @param $key
      * @param $value
      * @return bool|int
      * @throws \yii\mongodb\Exception
      */
-    public function setItem($id, $value)
+    public function setItem($id, $key, $value)
     {
         return $this->mongodb->getCollection($this->collection)->update([
             'AND', ['_id' => $id], ['remove' => 0]
-        ], $value);
+        ], ['key' => $key, 'value' => $value]);
     }
 
     /**
+     * @param $type
      * @param $id
-     * @param $key
      * @param null $identity
-     * @return array
+     * @return array|false
      */
-    public function getItem($id, $key, $identity = null)
+    public function getItem($type, $id, $identity = null)
     {
-        $conditions = ['AND', ['_id' => $id], ['remove' => 0], ['key' => ['$elemMatch' => $key]]];
-        if ($identity !== null) {
-            $conditions[] = ['identity' => $identity];
-        }
-        $query = new Query();
-        $query->from($this->collection);
-        $query->where($conditions);
-        return $query->all($this->mongodb);
-    }
-
-    public function filterItem($filter, $identity = null)
-    {
-        $conditions = ['AND', ['remove' => 0], ['key' => ['$elemMatch' => $filter]]];
+        $conditions = ['AND', ['type' => $type], ['_id' => $id], ['remove' => 0]];
         if ($identity !== null) {
             $conditions[] = ['identity' => $identity];
         }
@@ -113,63 +105,92 @@ class MongodbCartStorage extends BaseObject
         return $query->one($this->mongodb);
     }
 
+    public function filterItem($type, $filter, $identity = null)
+    {
+        $conditions = ['type' => $type, 'remove' => 0];
+        if ($identity !== null) {
+            $conditions['identity'] = $identity;
+        }
+        return $this->aggregate(ArrayHelper::merge($conditions, $this->buildFilterAggregationPipeline('key', $filter)));
+    }
+
     /**
      * @param $id
-     * @param $key
      * @param null $identity
      * @return bool|int
      * @throws \yii\mongodb\Exception
      */
-    public function removeItem($id, $key, $identity = null)
+    public function removeItem($id)
     {
-        $conditions = ['AND', ['_id' => $id], ['remove' => 0], ['key' => ['$elemMatch' => $key]]];
-        if ($identity !== null) {
-            $conditions[] = ['identity' => $identity];
-        }
-        return $this->mongodb->getCollection($this->collection)->update($conditions, ['remove' => 1]);
+        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0]], ['remove' => 1]);
     }
 
     /**
+     * @param $type
      * @param $identity
-     * @param |null $keys
-     * @return array|mixed
+     * @param null $ids
+     * @return array
      */
-    public function getItems($identity, $ids = null)
+    public function getItems($identity, $type = null, $ids = null)
     {
         $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
+        if ($type !== null) {
+            $conditions[] = ['type' => $type];
+        }
         if ($ids !== null) {
             $conditions[] = ['IN', '_id', !is_array($ids) ? [$ids] : $ids];
         }
 
-        $query = new Query();
-        $query->from($this->collection);
-        $query->where($conditions);
-        return $query->all($this->mongodb);
+        return $this->aggregate($conditions);
+    }
+
+    protected function aggregate($conditions)
+    {
+        return $this->mongodb->getCollection($this->collection)->aggregate([
+            [
+                '$match' => $conditions
+            ],
+            [
+                '$project' => [
+                    '_id' => ['$toString' => '$_id'],
+                    'type' => '$type',
+                    'key' => '$key',
+                    'value' => '$value',
+                    'identity' => '$identity'
+                ]
+            ]
+        ]);
     }
 
     /**
+     * @param $type
      * @param $identity
      * @return int
      * @throws \yii\mongodb\Exception
      */
-    public function countItems($identity)
+    public function countItems($identity, $type = null)
     {
         $query = new Query();
+        $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
+        if ($type !== null) {
+            $conditions[] = ['type' => $type];
+        }
         $query->from($this->collection);
-        $query->where(['AND', ['identity' => $identity], ['remove' => 0]]);
+        $query->where($conditions);
         return $query->count($this->mongodb);
 
     }
 
     /**
+     * @param $type
      * @param $identity
      * @param null $ids
      * @return bool|int
      * @throws \yii\mongodb\Exception
      */
-    public function removeItems($identity, $ids = null)
+    public function removeItems($type, $identity, $ids = null)
     {
-        $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
+        $conditions = ['AND', ['type' => $type], ['identity' => $identity], ['remove' => 0]];
         if ($ids !== null) {
             $conditions[] = ['IN', '_id', !is_array($ids) ? [$ids] : $ids];
         }
@@ -213,5 +234,42 @@ class MongodbCartStorage extends BaseObject
         }
         $query->where($conditions);
         return $query->all($this->mongodb);
+    }
+
+    private function buildKeyFilter($key)
+    {
+        $filter = [];
+        foreach ($key as $name => $value) {
+            if ($name === 'products' && is_array($value)) {
+                $match = [];
+                foreach ($value as $array) {
+                    foreach ($array as $k => $v) {
+                        if ($k === 'id' || $k === 'sku') {
+                            $match[$k] = $v;;
+                        }
+                    }
+
+                }
+                $value = ['$elemMatch' => $match];
+            }
+            $filter["key.{$name}"] = $value;
+        }
+        return $filter;
+    }
+
+    public function buildFilterAggregationPipeline($attribute, $params)
+    {
+        $lines = [];
+        foreach ($params as $name => $value) {
+            $key = "$attribute.$name";
+            if (is_array($value)) {
+                $lines = ArrayHelper::merge($lines, $this->buildFilterAggregationPipeline($key, $value));
+            } else {
+                $lines[$key] = $value;
+            }
+
+
+        }
+        return $lines;
     }
 }

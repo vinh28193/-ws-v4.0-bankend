@@ -27,13 +27,6 @@ class CartHelper
         return Yii::$app->cart;
     }
 
-    public static function group($items)
-    {
-        return ArrayHelper::index($items, null, function ($item) {
-            $item = $item['order'];
-            return $item['portal'] . ':' . $item['seller']['seller_name'];
-        });
-    }
 
     /**
      * @param $item BaseProduct
@@ -51,7 +44,7 @@ class CartHelper
         $order['portal'] = $item->type;
         $order['current_status'] = Order::STATUS_NEW;
         $order['new'] = Yii::$app->getFormatter()->asTimestamp('now');
-        $order['mark_supporting'];
+        $order['mark_supporting'] = null;
         $order['supporting'] = null;
         $order['supported'] = null;
         $order['customer_type'] = 'Retail';
@@ -175,28 +168,20 @@ class CartHelper
     public static function mergeItem($source, $target)
     {
         $start = microtime(true);
-        $noUpdateAttribute = [
-            'products', 'type_order', 'portal', 'current_status', 'new', 'customer_type', 'store_id', 'exchange_rate_fee', 'customer_id', 'customer', 'seller', 'sale_support_id', 'saleSupport'
-        ];
-
         $orders = func_get_args();
-        $order = array_shift($args);
+        $order = array_shift($orders);
         while (!empty($orders)) {
             foreach (array_shift($orders) as $key => $value) {
-                foreach (array_keys($order) as $attribute) {
-                    if (ArrayHelper::isIn($attribute, $noUpdateAttribute)) {
-                        continue;
-                    }
-                    if (strpos($attribute, 'total_') !== false) {
-                        $oldValue = (int)$order[$attribute];
-                        $newValue = (int)$value[$attribute];
-                        $oldValue += $newValue;
-                        $order[$attribute] = $oldValue;
-                    }
+                if (strpos($key, 'total_') !== false) {
+                    $oldValue = (int)$order[$key];
+                    $newValue = (int)$value;
+                    $oldValue += $newValue;
+                    $order[$key] = $oldValue;
+                }elseif ($key === 'products'){
+                    $products = $order['products'];
+                    $products[] = reset($value);
+                    $order['products'] = $products;
                 }
-                $products = $order['products'];
-                $products[] = $value['products'][0];
-                $order['products'] = $products;
             }
         }
         $time = sprintf('%.3f', microtime(true) - $start);

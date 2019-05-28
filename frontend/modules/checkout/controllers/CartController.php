@@ -3,13 +3,11 @@
 
 namespace frontend\modules\checkout\controllers;
 
-
-use common\components\cart\CartSelection;
-use common\products\BaseProduct;
-use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
+use common\products\BaseProduct;
+use common\components\cart\CartSelection;
 
 class CartController extends BillingController
 {
@@ -48,7 +46,7 @@ class CartController extends BillingController
         if (count($items) === 0) {
             return $this->render('empty');
         }
-        CartSelection::setSelectedItems(CartSelection::TYPE_SHOPPING, array_keys($items));
+        CartSelection::setSelectedItems(CartSelection::TYPE_SHOPPING, ArrayHelper::getColumn($items, '_id', false));
         return $this->render('index', [
             'items' => $items
         ]);
