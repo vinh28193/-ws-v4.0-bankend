@@ -7,7 +7,7 @@ use yii\web\NotFoundHttpException;
 use frontend\modules\favorites\models\Favorite;
 use common\modelsMongo\FavoritesMongoDB;
 use yii\base\BaseObject;
-use yii\queue\JobInterface
+use yii\queue\JobInterface;
 
 
 /**
