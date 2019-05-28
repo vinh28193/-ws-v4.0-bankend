@@ -254,7 +254,10 @@ class NotificationsController extends BaseApiController
 
         /** @var $model $this */
         $query = PushNotifications::find()
-            ->where(['fingerprint' => $fingerprint], ['order_code' => $ordercode]);
+            ->where([
+                'AND',
+                ['fingerprint' => $fingerprint], ['order_code' => $ordercode]
+            ]);
 
         if (($model = $query->one()) === null) {
             return $this->response(false, "query null", $model);
@@ -262,7 +265,7 @@ class NotificationsController extends BaseApiController
 
         Yii::info("Model");
         Yii::info([
-            'model' => $model,
+            'model' => $model,true,
         ], __CLASS__);
 
         if (empty($model)) {
