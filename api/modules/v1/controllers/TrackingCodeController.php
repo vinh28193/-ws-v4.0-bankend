@@ -15,6 +15,7 @@ use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
 use common\helpers\ExcelHelper;
 use common\models\draft\DraftDataTracking;
+use common\models\draft\DraftExtensionTrackingMap;
 use common\models\draft\DraftMissingTracking;
 use common\models\Package;
 use common\models\draft\DraftWastingTracking;
@@ -114,6 +115,8 @@ class TrackingCodeController extends BaseApiController
             $unknown->andWhere(['like','tracking_code',$trackingU]);
         }
 
+        $ext = DraftExtensionTrackingMap::find()->with(['order','product'])
+            ->where(['or',['status' => DraftExtensionTrackingMap::STATUST_NEW],['draft_data_tracking_id' => null],['draft_data_tracking_id' => '']]);
         $data['_items']['draftWastingTrackings_total'] = $wast->count();
         $data['_items']['draftMissingTrackings_total'] = $miss->count();
         $data['_items']['draftPackageItems_total'] = $complete->count();
@@ -123,6 +126,7 @@ class TrackingCodeController extends BaseApiController
         $data['_items']['draftMissingTrackings'] = $miss->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_ms)->offset($page_ms*$limit_ms - $limit_ms)->asArray()->all();
         $data['_items']['draftPackageItems'] = $complete->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_c)->offset($page_c*$limit_c - $limit_c)->asArray()->all();
         $data['_items']['unknownTrackings'] = $unknown->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_u)->offset($page_u*$limit_u - $limit_u)->asArray()->all();
+        $data['_ext'] = $ext->orderBy('id desc')->asArray()->all();
         return $this->response(true, "Success", $data);
     }
 

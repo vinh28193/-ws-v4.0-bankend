@@ -134,13 +134,20 @@ class ServiceUsSendingController extends BaseApiController
         return $this->response(true,'Update seller refund '.$this->post['type'].' success!');
     }
     public function actionMerge(){
+        $type = Yii::$app->request->post('type','tracking');
         if(!isset($this->post['data_id']) || !isset($this->post['data_tracking_code']) || !$this->post['data_id'] || !($this->post['data_tracking_code'])){
             return $this->response(false,'data merge empty');
         }
         if(!isset($this->post['ext_id']) || !isset($this->post['ext_tracking_code']) || !$this->post['ext_id'] || !($this->post['ext_tracking_code'])){
             return $this->response(false,'data merge empty');
         }
-        $data = DraftDataTracking::findOne($this->post['data_id']);
+        if($type == 'tracking'){
+            $data = DraftDataTracking::findOne($this->post['data_id']);
+        }elseif ($type == 'package'){
+            $data = Package::findOne($this->post['data_id']);
+        }else{
+            return $this->response(false,'Cannot found type '.$type.' !');
+        }
         $ext = DraftExtensionTrackingMap::findOne($this->post['ext_id']);
         if(!$data || $data->type_tracking != DraftDataTracking::TYPE_UNKNOWN || $data->product_id || $data->order_id
             || !$ext
@@ -156,7 +163,7 @@ class ServiceUsSendingController extends BaseApiController
         $data->tracking_merge = $data->tracking_merge . ','.strtoupper($ext->tracking_code);
         $data->save(0);
         $ext->status = DraftExtensionTrackingMap::MAPPED;
-        $ext->draft_data_tracking_id = $data->id;
+        $ext->draft_data_tracking_id = $type == 'tracking' ? $data->id : $data->draft_data_tracking_id;
         $ext->save(0);
         if($ext->product){
             $ext->product->updateStockinUs($data->stock_in_us);
