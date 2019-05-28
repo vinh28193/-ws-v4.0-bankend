@@ -14,11 +14,13 @@ return [
     'controllerNamespace' => 'frontend\controllers',
     'defaultRoute' => 'cms/home',
     'components' => [
+        /*
         'queue' => [
             'class' => '\yii\queue\file\Queue',
             'as log' => '\yii\queue\LogBehavior',
             'path' => '@runtime/queue',
         ],
+        */
         'assetManager' => [
             'bundles' => [
                 'yii\bootstrap\BootstrapPluginAsset' => [

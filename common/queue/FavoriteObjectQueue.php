@@ -1,17 +1,14 @@
 <?php
 
-namespace frontend\modules\favorites\controllers;
+namespace common\queue;
 
-//use frontend\modules\favorites\Favorite;
 use yii\base\ErrorException;
-use yii\filters\VerbFilter;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use frontend\controllers\FrontendController;
 use frontend\modules\favorites\models\Favorite;
 use common\modelsMongo\FavoritesMongoDB;
 use yii\base\BaseObject;
 use yii\queue\JobInterface;
+
 
 /**
  * Default controller for the `CommentModule` module
