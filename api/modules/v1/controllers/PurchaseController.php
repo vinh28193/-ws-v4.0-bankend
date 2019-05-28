@@ -183,6 +183,7 @@ class PurchaseController extends BaseApiController
                     $tmp->sellerId = $order->seller_name;
                     $tmp->ItemType = $order->portal;
                     $tmp->image = $item->link_img;
+                    $tmp->origin_link = $item->link_origin;
                     $tmp->Name = $item->product_name;
                     $tmp->typeCustomer = $cus && $cus->type_customer ? $cus->type_customer : 1;
                     $tmp->price = $item->unitPrice ? $item->unitPrice->amount : 0;
@@ -196,8 +197,9 @@ class PurchaseController extends BaseApiController
                     $tmp->quantity = $item->quantity_customer - $quantity_purchased;
                     $tmp->quantityPurchase = $item->quantity_customer - $quantity_purchased;
                     $tmp->variation = $item->variations;
-                    $tmp->paidTotal = $tmp->paidToSeller = ($tmp->price + $tmp->us_ship + $tmp->us_tax) * $tmp->quantity ;
-                    $tmp->isChange = $item->tax_fee_purchase || $item->shipping_fee_purchase || $item->price_purchase;
+                    $tmp->paidToSeller = ($tmp->price_purchase + $tmp->us_ship_purchase + $tmp->us_tax_purchase) * $tmp->quantity ;
+                    $tmp->paidTotal = ($tmp->price + $tmp->us_ship + $tmp->us_tax) * $tmp->quantity ;
+                    $tmp->isChange = $tmp->paidToSeller > $tmp->paidTotal;
                     $data[$key]['products'][] = $tmp->toArray();
                     if ($type == 'addtocart') {
 //                    $mess = "Add soi ".$item->id." to cart. Total ".count($order)." items!";

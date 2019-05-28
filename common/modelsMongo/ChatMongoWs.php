@@ -2,6 +2,7 @@
 
 namespace common\modelsMongo;
 
+use common\models\User;
 use Yii;
 use yii\mongodb\ActiveRecord;
 
@@ -9,13 +10,33 @@ use yii\mongodb\ActiveRecord;
  * This is the model class for collection "chat_mongo_ws".
  *
  * @property \MongoId|string $_id
- * @property mixed $name
- * @property mixed $email
- * @property mixed $address
- * @property mixed $status
+ * @property mixed $success
+ * @property mixed $created_at
+ * @property mixed $updated_at
+ * @property mixed $date
+ * @property mixed $user_id
+ * @property mixed $user_email
+ * @property mixed $user_name
+ * @property mixed $user_app
+ * @property mixed $user_request_suorce
+ * @property mixed $request_ip
+ * @property mixed $message
+ * @property mixed $user_avatars
+ * @property mixed $Order_path
+ * @property mixed $is_send_email_to_customer
+ * @property mixed $type_chat
+ * @property mixed $is_customer_vew
+ * @property mixed $is_employee_vew
  */
 class ChatMongoWs extends ActiveRecord
 {
+    const TYPE_WS_CUSTOMER = 'WS_CUSTOMER';
+    const TYPE_GROUP_WS = 'GROUP_WS';
+
+    const REQUEST_SOURCE_BACK_END = 'BACK_END';
+    const REQUEST_SOURCE_FRONTEND = 'FRONTEND';
+    const REQUEST_SOURCE_APP = 'APP';
+
     public static function collectionName()
     {
         return ['weshop_global_40','chat_mongo_ws'];
@@ -160,5 +181,29 @@ class ChatMongoWs extends ActiveRecord
         $data->_meta = $additional_info;
         return $data;
 
+    }
+    public static function SendMessage($message,$order_code,$type_chat = self::TYPE_WS_CUSTOMER,$source = self::REQUEST_SOURCE_BACK_END,$isSendmail = false){
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
+        if ($user){
+            $chat = new self();
+            $chat->success = true;
+            $chat->message = $message;
+            $chat->date = Yii::$app->getFormatter()->asDatetime('now');
+            $chat->user_id = $user->id;
+            $chat->user_email = $user->email;
+            $chat->user_name = $user->username;
+            $chat->user_app = null;
+            $chat->user_request_suorce = $source;
+            $chat->request_ip = Yii::$app->getRequest()->getUserIP();
+            $chat->user_avatars = $user->avatar ? $user->avatar : null;
+            $chat->Order_path = $order_code;
+            $chat->is_send_email_to_customer = $isSendmail;
+            $chat->type_chat = $type_chat;
+            $chat->is_customer_vew = $type_chat;
+            $chat->is_employee_vew = $type_chat;
+            return $chat->save();
+        }
+        return false;
     }
 }

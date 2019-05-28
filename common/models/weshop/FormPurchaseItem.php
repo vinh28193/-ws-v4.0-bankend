@@ -18,6 +18,9 @@ class FormPurchaseItem extends Model
     public $ItemType;
     public $Name;
     public $image;
+    public $origin_link;
+    public $price_make_offer;
+    public $note_make_offer;
     public $price;
     public $us_ship;
     public $us_tax;
