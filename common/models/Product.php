@@ -8,6 +8,7 @@
 
 namespace common\models;
 
+use common\models\draft\DraftExtensionTrackingMap;
 use Yii;
 use yii\helpers\ArrayHelper;
 use common\models\db\Product as DbProduct;
@@ -23,6 +24,7 @@ use common\components\AdditionalFeeTrait;
  * @property ProductFee $usTax
  * @property Order $order
  * @property  Package[] $packages
+ * @property  DraftExtensionTrackingMap[] $trackingCodes
  *
  *
  */
@@ -216,5 +218,8 @@ class Product extends DbProduct
         if ($updateNew || !$this->stockout_local){
             $this->stockout_local = $time ? $time : time();
         }
+    }
+    public function getTrackingCodes(){
+        return $this->hasMany(DraftExtensionTrackingMap::className(), ['product_id' => 'id']);
     }
 }
