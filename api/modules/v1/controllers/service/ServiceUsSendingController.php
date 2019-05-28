@@ -191,7 +191,7 @@ class ServiceUsSendingController extends BaseApiController
             $product_id = ArrayHelper::getValue($info,'product_id');
             $quantity = ArrayHelper::getValue($info,'quantity');
             $purchase_number_invoice = ArrayHelper::getValue($info,'purchase_number_invoice');
-            if($product_id && $purchase_number_invoice && $quantity){
+            if($product_id && $quantity){
                 $product = Product::findOne($product_id);
                 $order = $product->order;
                 if($product && (!$order_id || $order_id == $product->order_id) && $order){
