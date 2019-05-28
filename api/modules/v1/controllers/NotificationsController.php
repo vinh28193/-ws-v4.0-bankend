@@ -189,6 +189,11 @@ class NotificationsController extends BaseApiController
             $model = new PushNotifications();
             if ($model->load($_rest_data) and $model->save()) {
                 Yii::info("Save Update : Devices + User + BinCode New --> Save");
+                Yii::$app->wsLog->push('order','purchased', null, [
+                    'id' => array($ordercode => $order_item),
+                    'request' => serialize($_rest_data),
+                    'response' => $this->response(true,'PushNotifications Success : ' . serialize($_rest_data))
+                ]);
                 return $this->response(true, 'Success', $_rest_data);
             } else {
                 Yii::info("Devices + User + BinCode New --> Save : Fail Save New");
@@ -198,6 +203,13 @@ class NotificationsController extends BaseApiController
             $model = new PushNotifications();
             if ($model->load($_rest_data) and $model->save()) {
                 Yii::info("Save New : Devices + User + BinCode New --> Save");
+
+                Yii::$app->wsLog->push('order','purchased', null, [
+                    'id' => array($ordercode => $order_item),
+                    'request' => serialize($_rest_data),
+                    'response' => $this->response(true,'PushNotifications Success : ' . serialize($_rest_data))
+                ]);
+
                 return $this->response(true, 'Success', $_rest_data);
             } else {
                 Yii::info("Devices + User + BinCode New --> Save : Fail Save New");
@@ -275,6 +287,13 @@ class NotificationsController extends BaseApiController
 
         if($model->delete() != null){
             Yii::info("UPDATE DELETE");
+
+            Yii::$app->wsLog->push('order','purchased', null, [
+                'id' => 'fingerprint : '. $fingerprint .'_'. 'ordercode :' . $ordercode,
+                'request' => $model,
+                'response' => $this->response(true,'UN Push Notifications  SUCCESS '.'fingerprint : '. $fingerprint .'_'. 'ordercode :' . $ordercode)
+            ]);
+
             return $this->response(true, "Delete success", []);
         }else {
             Yii::info("DELETE Error ");
