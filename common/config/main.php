@@ -76,5 +76,13 @@ return [
             ],
         ],
         */
+
+        'queue' => [
+            'class' => '\yii\queue\file\Queue',
+            'as log' => '\yii\queue\LogBehavior',
+            'path' => '@runtime/queue',
+            'strictJobType' => false,
+            'serializer' => '\yii\queue\serializers\JsonSerializer',
+        ],
     ],
 ];
