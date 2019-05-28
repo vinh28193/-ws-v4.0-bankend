@@ -186,28 +186,6 @@ class NotificationsController extends BaseApiController
                 'order_list' => $order_list
             ], __CLASS__);
 
-            /*
-            if (!array_key_exists($ordercode, $order_list) and !empty($order_list)) {
-                Yii::info("Check Order Bin Code No Exits");
-                $order_list[$ordercode] = array(
-                    'code' => $ordercode,
-                    'subscribed_on' => $date_now
-                );
-                $query->order_list = $order_list;
-                if ($query->save()){
-                    return $this->response(true, 'Success save add date', $query);
-                }else {
-                    return $this->response(false, 'Error Save add data', []);
-                }
-            }else {
-                Yii::info([
-                    'order_list' => $order_list
-                ], __CLASS__);
-                Yii::info("Check OrderBinCode + Token Exits");
-                return $this->response(true, 'Success', $order_list);
-            }
-            */
-
             $model = new PushNotifications();
             if ($model->load($_rest_data) and $model->save()) {
                 Yii::info("Save Update : Devices + User + BinCode New --> Save");
@@ -247,17 +225,19 @@ class NotificationsController extends BaseApiController
 
     public function actionView($id)
     {
-
         $_post = (array)$this->get;
         $fingerprint = (int)$_post['id'];
-        $model = PushNotifications::find()
-            ->where(['fingerprint' => $fingerprint])
-            ->one();
-        if (!empty($model)) {
-            return $this->response(true, "Success", $model);
-        } else {
-            return $this->response(false, "Fingerprint not exists", $model);
+        /** @var $model $this */
+        $query = PushNotifications::find()
+            ->where(['user_id' => $fingerprint]);
+        if (($model = $query->asArray()->all()) === null) {
+            return $this->response(false, "query null", $model);
         }
+        Yii::info("Get Data");
+        Yii::info([
+            'data' => $model,
+        ], __CLASS__);
+        return $this->response(true, "data noti", $model);
     }
 
     public function actionDelete()
