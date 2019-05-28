@@ -7,12 +7,13 @@ use yii\web\NotFoundHttpException;
 use frontend\modules\favorites\models\Favorite;
 use common\modelsMongo\FavoritesMongoDB;
 use yii\base\BaseObject;
+use yii\queue\JobInterface
 
 
 /**
  * Default controller for the `CommentModule` module
  */
-class FavoriteObjectQueue extends BaseObject implements \yii\queue\JobInterface
+class FavoriteObjectQueue extends BaseObject implements JobInterface
 {
     public $obj_type;
     public $obj_id;
