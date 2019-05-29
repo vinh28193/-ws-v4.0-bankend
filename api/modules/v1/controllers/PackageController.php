@@ -48,14 +48,19 @@ class PackageController extends BaseApiController
     {
         $limit = Yii::$app->request->get('limit',20);
         $page = Yii::$app->request->get('page',1);
+        $manifest_id = Yii::$app->request->get('manifest_id');
+        $customer_id = Yii::$app->request->get('customer_id');
+        $name = Yii::$app->request->get('name');
+        $email = Yii::$app->request->get('phone');
+        $phone = Yii::$app->request->get('email');
         $tracking_code = Yii::$app->request->get('tracking_code');
         $package_code = Yii::$app->request->get('package_code');
-        $sku = Yii::$app->request->get('sku');
+        $product_id = Yii::$app->request->get('product_id');
         $order_code = Yii::$app->request->get('order_code');
         $type_tracking = Yii::$app->request->get('type_tracking');
         $status = Yii::$app->request->get('status');
         $query = Package::find()
-            ->with(['order','manifest.receiveWarehouse'])
+            ->with(['order','product','manifest.receiveWarehouse'])
             ->leftJoin('product','product.id = package.product_id')
             ->leftJoin('order','order.id = package.order_id')
             ->active();
@@ -65,14 +70,29 @@ class PackageController extends BaseApiController
         if($package_code){
             $query->whereLikeMore('package.package_code' , $package_code);
         }
-        if($sku){
-            $query->whereLikeMoreMultiColumn(['product.sku','product.parent_sku'] , $sku);
+        if($product_id){
+            $query->andWhere(['product.id' => $product_id]);
+        }
+        if($manifest_id){
+            $query->andWhere(['package.manifest_id' => $manifest_id]);
         }
         if($order_code){
             $query->whereLikeMore('order.ordercode' , $order_code);
         }
         if($type_tracking){
             $query->andWhere(['package.type_tracking' => $type_tracking]);
+        }
+        if($customer_id){
+            $query->andWhere(['package.order.customer_id' => $customer_id]);
+        }
+        if($phone){
+            $query->andWhere(['like', 'package.order.receiver_phone' , $phone]);
+        }
+        if($name){
+            $query->andWhere(['like', 'package.order.receiver_name' , $name]);
+        }
+        if($email){
+            $query->andWhere(['like', 'package.order.receiver_email' , $email]);
         }
         if($status){
             if($status == 'created'){
