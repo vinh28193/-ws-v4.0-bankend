@@ -22,7 +22,7 @@ class MongodbCartStorage extends BaseObject
     /**
      * @var array|string
      */
-    public $collection = ['weshop_global_40', 'shopping_cart'];
+    public $collection = ['weshop_global_40', 'shopping_cart_upgrade'];
 
 
     public function init()
