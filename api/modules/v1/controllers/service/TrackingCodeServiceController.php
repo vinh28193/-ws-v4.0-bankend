@@ -6,6 +6,7 @@ namespace api\modules\v1\controllers\service;
 
 use api\controllers\BaseApiController;
 use common\helpers\WeshopHelper;
+use common\logs\TrackingLogs;
 use common\models\DeliveryNote;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftMissingTracking;
@@ -101,7 +102,19 @@ class TrackingCodeServiceController extends BaseApiController
         $model->order_id = $product->order_id;
         $model->item_name = $model->item_name && strtoupper($model->item_name) != 'none' ? $model->item_name : $product->product_name;
         $model->save();
+        $product->updateStockinUs($model->stock_in_us);
+        $product->updateStockoutUs($model->stock_out_us);
+        $product->save(false);
+        $product->order->updateStockinUs($model->stock_in_us);
+        $product->order->updateStockoutUs($model->stock_out_us);
+        $product->order->save(false);
         $count = DraftDataTracking::find()->where(['tracking_code' => $model->tracking_code])->count();
+        $logTracking = new TrackingLogs();
+        $logTracking->current_status = TrackingLogs::STATUS_STOCK_OUT_US;
+        $logTracking->type_log = TrackingLogs::TRACKING_MAP_PRODUCT;
+        $logTracking->tracking_code = $model->tracking_code;
+        $logTracking->message_log = 'Map tracking '.$model->tracking_code.' với product: ' .$product->id . ', order: '.$product->order->ordercode;
+        $logTracking->message_log .= '<br>Loại tracking chuyển từ '.$model->type_tracking.' sang ';
         if($count > 1){
             DraftDataTracking::updateAll(
                 ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
@@ -119,6 +132,10 @@ class TrackingCodeServiceController extends BaseApiController
             $model->type_tracking = DraftDataTracking::TYPE_NORMAL;
             $model->save(0);
         }
+        $model->refresh();
+        $logTracking->message_log .= $model->type_tracking;
+        $logTracking->more_data = $model->getAttributes();
+        $logTracking->save();
         return $this->response(true,'Map tracking success!');
     }
     public function actionSplitTracking($id){

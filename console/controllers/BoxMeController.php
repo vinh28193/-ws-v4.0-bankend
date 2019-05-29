@@ -8,6 +8,7 @@ use common\components\boxme\BoxMeClient;
 use common\components\lib\TextUtility;
 use common\components\TrackingCode;
 use common\helpers\WeshopHelper;
+use common\logs\TrackingLogs;
 use \common\models\draft\DraftExtensionTrackingMap;
 use common\models\db\PurchaseOrder;
 use common\models\db\PurchaseProduct;
@@ -174,6 +175,17 @@ class BoxMeController extends Controller
                     $ext->draft_data_tracking_id = $draft_data->id;
                     $ext->status = DraftExtensionTrackingMap::JOB_CHECKED;
                     $ext->save(0);
+                    $logTracking = new TrackingLogs();
+                    $logTracking->current_status = TrackingLogs::STATUS_STOCK_OUT_US;
+                    $logTracking->type_log = TrackingLogs::TRACKING_MERGE_TRACKING_SELLER;
+                    $logTracking->tracking_code = $draft_data->tracking_code;
+                    $logTracking->tracking_code_ws = $draft_data->ws_tracking_code;
+                    $logTracking->tracking_code_reference = $ext->tracking_code;
+                    $logTracking->message_log = 'Gộp tracking '.$draft_data->tracking_code.'' .
+                        ' và tracking seller '.$ext->tracking_code.' thành tracking '.$draft_data->tracking_code.'.' .
+                        ' Và sinh ra tracking code WeShop: '.$draft_data->ws_tracking_code;
+                    $logTracking->more_data = $draft_data->getAttributes();
+                    $logTracking->save(false);
                 }
             }else{
                 $draft_data_one = new DraftDataTracking();

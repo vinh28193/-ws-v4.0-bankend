@@ -34,9 +34,8 @@ class TrackingCode extends DbTrackingCode
     public function CreateOrUpdate($validate = true){
         $model = TrackingCode::find()->where(['tracking_code' => $this->tracking_code,'remove' => 0])->one();
         if ($model){
-            return true;
+            return false;
         }
-        $this->save($validate);
         return $this->save($validate);
     }
     public function getDraftDataTrackings(){

@@ -101,7 +101,7 @@ class RestApiTrackingLogController extends BaseApiController
           $note->text = $text;       
           if((int)$this->findModel($_post['trackingcode']) != 1)
          	     {    
-	                 $manifestobj = Manifest::createSafe($manifest, 1, 1);
+	                 $manifestobj = Manifest::createSafe($manifest, 1,1, 1);
 	                 // print_r($manifestobj);die();
 	                 $object = new \stdClass; 
 	                 $object->tracking_code = $_post['trackingcode'];
