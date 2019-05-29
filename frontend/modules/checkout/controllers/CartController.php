@@ -93,7 +93,7 @@ class CartController extends BillingController
         } else {
             return ['success' => true, 'message' => $key[1], 'data' => [
                 'key' => $key[0],
-                'countItems' => $this->module->cartManager->countItems(),
+                'countItems' => $this->module->cartManager->countItems(CartSelection::TYPE_SHOPPING),
             ]];
         }
     }
@@ -160,7 +160,7 @@ class CartController extends BillingController
 
         list($success, $message) = $cartManager->removeItem($type, $id, $key);
 
-        return ['success' => $success, 'message' => $message, 'countItems' => $cartManager->countItems()];
+        return ['success' => $success, 'message' => $message, 'countItems' => $cartManager->countItems(CartSelection::TYPE_SHOPPING)];
     }
 
     public function actionPayment()
