@@ -258,10 +258,9 @@ class OrderController extends BaseApiController
                 }
             }
             $j = $i;
-//            for ($j; $j<15; $j++) {
-//                $model->$StatusOrder[$j] = null;
-//            }
-//            $model->$post['Order']['column'] = null;
+            for ($j; $j<15; $j++) {
+                $model->{$StatusOrder[$j]} = null;
+            }
             if ($post['Order']['column'] == 'ready_purchase') {
                 $model->current_status = 'READY2PURCHASE';
             } else {
