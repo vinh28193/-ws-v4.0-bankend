@@ -90,6 +90,7 @@ class KeyChatList extends \yii\base\Component
 
     protected function getFileName()
     {
+        Yii::info("Domain Get send key chat supported : ". $this->storeManager->getDomain());
         $Ip_domain_FileChat = $this->storeManager->getDomain();
         $file_chat = '';
         switch ($Ip_domain_FileChat) {
@@ -98,6 +99,7 @@ class KeyChatList extends \yii\base\Component
                 $file_chat = 'wsvn-local';
                 break;
             case '192.168.11.252':
+            case '192.168.11.252:8231':
                 $file_chat = 'wsvn-local';
                 break;
 
