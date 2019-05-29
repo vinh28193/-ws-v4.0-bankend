@@ -36,6 +36,7 @@ class CartController extends BillingController
 
         $cartManager = $this->module->cartManager;
         $items = $cartManager->getItems();
+
         if (Yii::$app->getRequest()->getIsPjax()) {
             if (count($items) === 0) {
                 return $this->renderAjax('empty');
@@ -47,7 +48,7 @@ class CartController extends BillingController
         if (count($items) === 0) {
             return $this->render('empty');
         }
-        $this->setDefaultSelected($items);
+        CartSelection::setSelectedItems(CartSelection::TYPE_SHOPPING, ArrayHelper::getColumn($items, '_id', false));
         return $this->render('index', [
             'items' => $items
         ]);
@@ -106,23 +107,20 @@ class CartController extends BillingController
     public function actionSelection()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $bodyParams = Yii::$app->getRequest()->getBodyParams();
-        if (($param = ArrayHelper::getValue($bodyParams, 'param')) === null) {
+        $params = Yii::$app->getRequest()->getBodyParams();
+        if (!isset($params['id']) || ($key = $params['id']) === null || $key === '') {
             return ['success' => false, 'message' => 'Invalid params'];
         }
-        $selected = ArrayHelper::getValue($bodyParams, 'selected');
-        $message = ['item on selection'];
-        foreach ($param as $k => $v) {
-            $message[] = "$k : $v";
-        }
+        $selected = ArrayHelper::getValue($params, 'selected');
+        $message = "item `$key`";
         if ($selected === 'true') {
-            CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, $param);
-            $message[] = ' added';
+            CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, $key);
+            $message .= ' added';
         } else {
-            CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, $param);
-            $message[] = ' removed';
+            CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, $key);
+            $message .= ' removed';
         }
-        return ['success' => $selected, 'message' => implode(', ', $message), 'data' => CartSelection::getSelectedItems(CartSelection::TYPE_SHOPPING)];
+        return ['success' => $selected, 'message' => $message, 'data' => CartSelection::getSelectedItems(CartSelection::TYPE_SHOPPING)];
     }
 
     public function actionRemove()

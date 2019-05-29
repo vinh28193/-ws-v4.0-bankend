@@ -17,13 +17,18 @@ $totalAmount = 0;
     <?php foreach ($items as $item):
         $key = $item['_id'];
         if (($order = ArrayHelper::getValue($item, 'value')) !== null):?>
-            <?php $products = ArrayHelper::getValue($order, 'products', []); ?>
+            <?php
+            $products = ArrayHelper::getValue($order, 'products', []);
+            if ($selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key)) {
+                $totalAmount += (int)$order['total_final_amount_local'];
+            }
+            ?>
             <ul class="cart-item" data-key="<?= $key ?>" style="border: 1px solid #e3e3e3;margin-bottom:10px">
                 <li>
                     <?php $seller = ArrayHelper::getValue($order, 'seller', []); ?>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox"
-                               name="cartOrder" <?= CartSelection::isExist(CartSelection::TYPE_SHOPPING, ['key' => $key]) ? 'checked' : ''; ?>
+                               name="cartOrder" <?= $selected ? 'checked' : ''; ?>
                                value="<?= $key; ?>" id="cartOrder<?= $key; ?>">
                         <label class="form-check-label" for="cartOrder<?= $key; ?>">
                             Bán <?= isset($seller['portal']) ? ('trên ' . Html::tag('span', strtolower($seller['portal']), ['style' => 'font-weight: 500;color: #393939'])) : ''; ?>
@@ -49,25 +54,24 @@ $totalAmount = 0;
                     }
                     $availableQuantity = !($availableQuantity === null || (int)$availableQuantity < 0) ? $availableQuantity : 50;
                     $soldQuantity = !($soldQuantity === null || (int)$soldQuantity < 0) ? $soldQuantity : 0;
-                    if (($selected = CartWidgetHepper::getIsChecked($key, $product['parent_sku'], $product['sku']))) {
-                        $totalAmount += (int)$product['total_price_amount_local'];
-                    }
                     ?>
                     <li>
-                        <div class="form-check">
-                            <input class="form-check-input"
-                                   type="checkbox"
-                                   name="cartProduct"
-                                   data-parent="<?= $key ?>"
-                                   data-id="<?= $product['parent_sku'] ?>"
-                                   data-sku="<?= $product['sku']; ?>"
-                                   id="<?= CartWidgetHepper::getCartProductId($product['parent_sku'], $product['sku']); ?>"
-                                <?= CartWidgetHepper::getIsChecked($key, $product['parent_sku'], $product['sku']) ? 'checked' : ''; ?>
-                            >
-
-                            <label class="form-check-label"
-                                   for="<?= CartWidgetHepper::getCartProductId($product['parent_sku'], $product['sku']); ?>"></label>
-                        </div>
+                        <!--                        <div class="form-check">-->
+                        <!--                            <input class="form-check-input"-->
+                        <!--                                   type="checkbox"-->
+                        <!--                                   name="cartProduct"-->
+                        <!--                                   data-parent="--><? //= $key ?><!--"-->
+                        <!--                                   data-id="--><? //= $product['parent_sku'] ?><!--"-->
+                        <!--                                   data-sku="--><? //= $product['sku']; ?><!--"-->
+                        <!--                                   id="-->
+                        <? //= CartWidgetHepper::getCartProductId($product['parent_sku'], $product['sku']); ?><!--"-->
+                        <!--                                --><? //= CartWidgetHepper::getIsChecked($key, $product['parent_sku'], $product['sku']) ? 'checked' : ''; ?>
+                        <!--                            >-->
+                        <!---->
+                        <!--                            <label class="form-check-label"-->
+                        <!--                                   for="-->
+                        <? //= CartWidgetHepper::getCartProductId($product['parent_sku'], $product['sku']); ?><!--"></label>-->
+                        <!--                        </div>-->
                         <div class="thumb" style="height: auto;">
                             <img src="<?= $product['link_img']; ?>"
                                  alt="<?= $product['product_name']; ?>" title="<?= $product['product_name']; ?>">

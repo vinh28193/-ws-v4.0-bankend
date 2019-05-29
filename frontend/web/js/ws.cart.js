@@ -34,16 +34,9 @@
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
                     event.preventDefault();
                     var $item = $(this);
-                    var key = {key: $item.data('parent'), id: $item.data('id'), sku: $item.data('sku')};
-                    var $taggetSelecetion = 'input[name=cartItemQuantity][data-parent=' + key.key + '][data-id=' + key.id + '][data-sku=' + key.sku + ']';
-                    var $tagget = $($taggetSelecetion);
-
+                    var $tagget = $($item.data('update'));
                     var options = getQuantityInputOptions($tagget);
-
                     var operator = $item.data('operator');
-                    console.log(options);
-                    console.log(operator);
-                    return;
                     if (options.max === '' || options.max < options.value) {
                         alert('can not update cart');
                     }
@@ -113,10 +106,13 @@
                 ws.initEventHandler($cart, 'cartProduct', 'change.wsCart', 'input[name=cartProduct]', function (event) {
                     event.preventDefault();
                     var $input = $(this);
-                    var data = {
-                        param: {key: $input.data('parent'), id: $input.data('id'), sku: $input.data('sku')},
-                        selected: $input.is(':checked')
-                    };
+                    var data = {id: $input.val(), selected: $input.is(':checked')};
+                    // if (data.selected === false) {
+                    //     selected = selected.filter(s => s !== data.key);
+                    // } else {
+                    //     selected.push(data.key);
+                    // }
+                    // console.log(selected);
                     methods.watch.call($cart, data);
                     return false;
                 });
@@ -188,6 +184,7 @@
             var $cart = $(this);
             var data = $cart.data('wsCart');
             var keys = [];
+
             $.each(filterCartItems($cart), function (i, $input) {
                 keys.push($($input).val());
             });
@@ -243,7 +240,21 @@
         }
     };
     var filterCartItems = function ($cart) {
-        return $cart.find('input[name=cartItems]:checked');
+        var $selected = [];
+        $.each($cart.find('input[name=cartOrder]:checked'), function (i, cartOrder) {
+            var $cartOrder = $(cartOrder);
+            var item = {
+                key: $cartOrder.val(),
+                products: []
+            };
+            var $parent = $('ul[data-key=' + item.key + ']');
+            $.each($parent.find('input[name=cartProduct][data-parent=' + item.key + ']:checked'), function (i, cartProduct) {
+                var $product = $(cartProduct);
+                item.products.push({id: $product.data('id'), sku: $product.data('sku')})
+            });
+            console.log(item);
+        });
+        return false;
     };
     var getParamFromElement = function ($element) {
         return {

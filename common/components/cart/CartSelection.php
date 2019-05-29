@@ -41,23 +41,24 @@ class CartSelection
             self::setSelectedItems($type, $param);
             return true;
         } elseif (!self::isExist($type, $param)) {
-            if (!isset($param['id'])) {
-                if (($item = self::getCartManager()->getItem($type, $param['key'])) === null || $item === false) {
-                    return false;
-                }
-                $param = CartHelper::mapCartKeys([$item]);
-                $items = array_merge($items, $param);
-            } else {
-                $child = ArrayHelper::getValue($items, $param['key'], []);
-                $newChild = ['id' => $param['id']];
-                if (isset($param['sku'])) {
-                    $newChild['sku'] = $param['sku'];
-                }
-                $child[] = $newChild;
-                $items = array_merge($items, [
-                    $param['key'] => $child
-                ]);
-            }
+            $items = array_merge($items, !is_array($param) ? [$param] : $param);
+//            if (!isset($param['id'])) {
+//                if (($item = self::getCartManager()->getItem($type, $param['key'])) === null || $item === false) {
+//                    return false;
+//                }
+//                $param = CartHelper::mapCartKeys([$item]);
+//                $items = array_merge($items, $param);
+//            } else {
+//                $child = ArrayHelper::getValue($items, $param['key'], []);
+//                $newChild = ['id' => $param['id']];
+//                if (isset($param['sku'])) {
+//                    $newChild['sku'] = $param['sku'];
+//                }
+//                $child[] = $newChild;
+//                $items = array_merge($items, [
+//                    $param['key'] => $child
+//                ]);
+//            }
 
             self::setSelectedItems($type, $items);
             return true;
@@ -104,48 +105,55 @@ class CartSelection
         if (($items = self::getSelectedItems($type)) === null) {
             return false;
         }
-        $isChild = isset($param['id']);
-        if (!isset($items[$param['key']])) {
-            return false;
-        } elseif (!$isChild) {
-            return true;
-        } elseif (($childs = $items[$param['key']]) !== null && !empty($childs)) {
-            foreach ($childs as $child) {
-                if (self::getCartManager()->isDetectedProduct($child, $param)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+//        $isChild = isset($param['id']);
+//        if (!isset($items[$param['key']])) {
+//            return false;
+//        } elseif (!$isChild) {
+//            return true;
+//        } elseif (($childs = $items[$param['key']]) !== null && !empty($childs)) {
+//            foreach ($childs as $child) {
+//                if (self::getCartManager()->isDetectedProduct($child, $param)) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+        return ArrayHelper::isIn($param, $items);
 
     }
 
     public static function removeSelectedItem($type, $param)
     {
         $items = [];
-        $removedAll = !isset($param['id']) || (isset($param['id']) && $param['id'] === null);
+//        $removedAll = !isset($param['id']) || (isset($param['id']) && $param['id'] === null);
         $removed = false;
         foreach (self::getSelectedItems($type) as $key => $childs) {
-            if ($key === $param['key']) {
-                if ($removedAll) {
-                    $removed = true;
-                    continue;
-                } else {
-                    $newChild = [];
-                    foreach ($childs as $child) {
-                        if (self::getCartManager()->isDetectedProduct($child, $param)) {
-                            $removed = true;
-                            continue;
-                        }
-                        $newChild[] = $child;
-                    }
-                    $childs = $newChild;
-                    if (empty($childs) && $removed) {
-                        continue;
-                    }
-                }
+//            if ($key === $param['key']) {
+//                if ($removedAll) {
+//                    $removed = true;
+//                    continue;
+//                } else {
+//                    $newChild = [];
+//                    foreach ($childs as $child) {
+//                        if (self::getCartManager()->isDetectedProduct($child, $param)) {
+//                            $removed = true;
+//                            continue;
+//                        }
+//                        $newChild[] = $child;
+//                    }
+//                    $childs = $newChild;
+//                    if (empty($childs) && $removed) {
+//                        continue;
+//                    }
+//                }
+//            }
+//            $items[$key] = $childs;
+
+            if ($param === $childs) {
+                $removed = true;
+                continue;
             }
-            $items[$key] = $childs;
+            $items[] = $childs;
         }
         self::setSelectedItems($type, $items);
         return $removed;
