@@ -29,7 +29,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 {
 
     const SCENARIO_UPDATE_RECEIVER = 'updateReceiver';
-    const SCENARIO_UPDATE_STATUS = 'updateStatus';
+    const SCENARIO_UPDATE_STATUS = 'cancelOrder';
     const SCENARIO_SALE_ASSIGN = 'saleAssign';
     const SCENARIO_REQUEST = 'request';
     const SCENARIO_CONFIRM_PURCHASE = 'confirmPurchase';
