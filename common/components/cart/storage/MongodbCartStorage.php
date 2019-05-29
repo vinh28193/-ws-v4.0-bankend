@@ -2,234 +2,279 @@
 
 namespace common\components\cart\storage;
 
+use phpDocumentor\Reflection\Type;
+use Yii;
 use common\models\User;
+use yii\base\BaseObject;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
-use yii\mongodb\ActiveRecord;
+use yii\mongodb\Connection;
+use yii\mongodb\Query;
 
-/**
- * This is the model class for collection "shopping_cart".
- *
- * @property \MongoDB\BSON\ObjectID|string $_id
- * @property mixed $key
- * @property mixed $identity
- * @property mixed $data
- * @property mixed $remove
- * @property mixed $created_at
- */
-class MongodbCartStorage extends ActiveRecord implements CartStorageInterface
+class MongodbCartStorage extends BaseObject
 {
+
     /**
-     * {@inheritdoc}
+     * @var string|Connection
      */
-    public static function collectionName()
+    public $mongodb = 'mongodb';
+
+    /**
+     * @var array|string
+     */
+    public $collection = ['weshop_global_40', 'shopping_cart_upgrade'];
+
+
+    public function init()
     {
-        return ['weshop_global_40', 'shopping_cart'];
+        parent::init();
+        if (!$this->mongodb instanceof Connection) {
+            $this->mongodb = Yii::$app->get($this->mongodb);
+        }
+
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function attributes()
-    {
-        return [
-            '_id',
-            'key',
-            'identity',
-            'data',
-            'remove',
-            'created_at',
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['key', 'identity', 'data', 'created_at'], 'safe']
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            '_id' => 'ID',
-            'key' => 'Key',
-            'identity' => 'Identity',
-            'data' => 'Data',
-            'remove' => 'Remove',
-            'created_at' => 'Created At',
-        ];
-    }
-
-    /**
-     * @param $key
+     * @param $id
      * @return bool
      * @throws \yii\mongodb\Exception
      */
-    public function hasItem($key)
+    public function hasItem($id)
     {
-        list($key, $id) = $key;
-        $query = self::find()->where(['AND', ['key' => $key], ['identity' => $id], ['remove' => 0]]);
-        return $query->count() > 0;
+        $query = new Query();
+        $where = [
+            'AND',
+            ['_id' => $id],
+            ['remove' => 0],
+        ];
+        $query->from($this->collection);
+        $query->where($where);
+        return $query->count($this->mongodb) > 0;
     }
 
     /**
+     * @param $type
      * @param $key
      * @param $value
-     * @return boolean
-     */
-    public function addItem($key, $value)
-    {
-        list($key, $id) = $key;
-        $model = new self();
-        $model->key = $key;
-        $model->identity = $id;
-        $model->data = $value;
-        $model->remove = 0;
-        $model->created_at = time();
-        $model->save(false);
-        return $key;
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     * @return boolean
-     */
-    public function setItem($key, $value)
-    {
-        list($key2, $id) = $key;
-        /** @var $item $this */
-        $query = self::find()->where(['AND', ['key' => $key2], ['identity' => $id], ['remove' => 0]]);
-        /** @var $model $this */
-        if (($model = $query->one()) === null) {
-            return $this->addItem($key, $value);
-        }
-        $value['key'] = $key2;
-        $model->data = $value;
-        $model->save(false);
-        return $key2;
-
-    }
-
-    /**
-     * @param $key
-     * @return boolean|mixed
-     */
-    public function getItem($key)
-    {
-        list($key, $id) = $key;
-        $query = self::find()->where(['AND', ['key' => $key], ['identity' => $id], ['remove' => 0]]);
-        /** @var $model $this */
-        if (($model = $query->one()) === null) {
-            return false;
-        }
-        return $model->data;
-    }
-
-    /**
-     * @param $key
-     * @return boolean|mixed
-     */
-    public function removeItem($key)
-    {
-        list($key, $id) = $key;
-        return self::updateAll(['remove' => 1], ['AND', ['key' => $key], ['identity' => $id]]);
-    }
-
-    /**
      * @param $identity
-     * @param |null $keys
-     * @return array|mixed
-     */
-    public function getItems($identity, $keys = null)
-    {
-        $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
-        if ($keys !== null) {
-            $conditions[] = ['IN', 'key', !is_array($keys) ? [$keys] : $keys];
-        }
-        return ArrayHelper::map(self::find()->where($conditions)->all(), 'key', 'data');
-    }
-
-    /**
-     * @param $identity
-     * @return int
+     * @return \MongoDB\BSON\ObjectID
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\mongodb\Exception
      */
-    public function countItems($identity)
+    public function addItem($type, $key, $value, $identity)
     {
-        $query = self::find()->select(['key'])->where(['AND', ['identity' => $identity], ['remove' => 0]]);
-        return $query->count('key');
-    }
-
-    /**
-     * @param $identity
-     * @param null $keys
-     * @return int
-     */
-    public function removeItems($identity, $keys = null)
-    {
-
-        if ($keys !== null) {
-            $conditions = ['AND', ['IN', 'key', !is_array($keys) ? [$keys] : $keys], ['identity' => $identity]];
-        } else {
-            $conditions = ['identity' => $identity];
-        }
-        return self::updateAll(['remove' => 1], $conditions);
-    }
-
-    /**
-     * @param $key
-     * @return bool
-     */
-    public function setMeOwnerItem($key)
-    {
-        list($key2, $id) = $key;
-        if (($item = self::find()->where(['AND', ['key' => $key2], ['remove' => 0]])->one()) === null) {
-            return false;
-        }
-        return $item->updateAttributes(['identity' => $id]) > 0;
-    }
-
-    public function keys($identity)
-    {
-        $query = new \yii\mongodb\Query();
-        $query->from(self::collectionName())->select(['key'])->where(['AND', ['identity' => $identity], ['remove' => 0]]);
-        return $query->column();
-    }
-
-    public function GetAllShopingCarts($get)
-    {
-        $query = self::find()->with('user')
-            ->andWhere(['AND', ['remove' => 0]]);// 'remove' => 0 : Cart can thanh toan
-        if (isset($get['value'])) {
-            $query->andWhere([
-                'or',
-                ['like', 'data.order.customer.email', $get['value']],
-                ['like', 'data.order.customer.phone', $get['value']],
-            ]);
-        } if (isset($get['value']) && isset($get['keyword'])) {
-        $query->andWhere([
-            'or',
-            ['like', $get['keyword'], $get['value']],
-            ['like', $get['keyword'], $get['value']],
+        return $this->mongodb->getCollection($this->collection)->insert([
+            'remove' => 0,
+            'type' => $type,
+            'key' => $key,
+            'value' => $value,
+            'identity' => $identity,
+            'create_at' => Yii::$app->getFormatter()->asDatetime('now'),
         ]);
     }
-//        $offset = ($page - 1) * $limit;
-//        $model = $query->limit($limit)->offset($offset);
-//        echo "<pre>";
-//        print_r($query->all());
-//        echo "</pre>";
-        return $query->all();
+
+    /**
+     * @param $id
+     * @param $key
+     * @param $value
+     * @return bool|int
+     * @throws \yii\mongodb\Exception
+     */
+    public function setItem($id, $key, $value)
+    {
+        return $this->mongodb->getCollection($this->collection)->update([
+            'AND', ['_id' => $id], ['remove' => 0]
+        ], ['key' => $key, 'value' => $value]);
     }
 
-    public function getUser(){
-        return $this->hasMany(User::className(),['id' => 'identity']);
+    /**
+     * @param $type
+     * @param $id
+     * @param null $identity
+     * @return array|false
+     */
+    public function getItem($type, $id, $identity = null)
+    {
+        $conditions = ['AND', ['type' => $type], ['_id' => $id], ['remove' => 0]];
+        if ($identity !== null) {
+            $conditions[] = ['identity' => $identity];
+        }
+        $query = new Query();
+        $query->from($this->collection);
+        $query->where($conditions);
+        return $query->one($this->mongodb);
     }
 
+    public function filterItem($filters, $type = null, $identity = null)
+    {
+        $conditions = ['remove' => 0];
+        if ($type !== null) {
+            $conditions = ['type' => $type];
+        }
+        if ($identity !== null) {
+            $conditions['identity'] = $identity;
+        }
+        foreach ($filters as $attr => $value) {
+            $conditions = ArrayHelper::merge($conditions, $this->buildFilterAggregationPipeline($attr, $value));
+        }
+        return $this->aggregate($conditions);
+    }
+
+    /**
+     * @param $id
+     * @param null $identity
+     * @return bool|int
+     * @throws \yii\mongodb\Exception
+     */
+    public function removeItem($id)
+    {
+        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0]], ['remove' => 1]);
+    }
+
+    /**
+     * @param $type
+     * @param $identity
+     * @param null $ids
+     * @return array
+     */
+    public function getItems($identity, $type = null, $ids = null)
+    {
+        $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
+        if ($type !== null) {
+            $conditions[] = ['type' => $type];
+        }
+        if ($ids !== null) {
+            $conditions[] = ['IN', '_id', !is_array($ids) ? [$ids] : $ids];
+        }
+
+        return $this->aggregate($conditions);
+    }
+
+    protected function aggregate($conditions)
+    {
+        return $this->mongodb->getCollection($this->collection)->aggregate([
+            [
+                '$match' => $conditions
+            ],
+            [
+                '$project' => [
+                    '_id' => ['$toString' => '$_id'],
+                    'type' => '$type',
+                    'key' => '$key',
+                    'value' => '$value',
+                    'identity' => '$identity'
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * @param $type
+     * @param $identity
+     * @return int
+     * @throws \yii\mongodb\Exception
+     */
+    public function countItems($identity, $type = null)
+    {
+        $query = new Query();
+        $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
+        if ($type !== null) {
+            $conditions[] = ['type' => $type];
+        }
+        $query->from($this->collection);
+        $query->where($conditions);
+        return $query->count($this->mongodb);
+
+    }
+
+    /**
+     * @param $type
+     * @param $identity
+     * @param null $ids
+     * @return bool|int
+     * @throws \yii\mongodb\Exception
+     */
+    public function removeItems($type, $identity, $ids = null)
+    {
+        $conditions = ['AND', ['type' => $type], ['identity' => $identity], ['remove' => 0]];
+        if ($ids !== null) {
+            $conditions[] = ['IN', '_id', !is_array($ids) ? [$ids] : $ids];
+        }
+
+        return $this->mongodb->getCollection($this->collection)->update($conditions, ['remove' => 1]);
+    }
+
+    /**
+     * @param $id
+     * @return bool|int
+     * @throws \yii\mongodb\Exception
+     */
+    public function setMeOwnerItem($id)
+    {
+        if (($item = self::find()->where()->one()) === null) {
+            return false;
+        }
+        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0], ['identity' => null]], ['remove' => 1]);
+    }
+
+
+    public function filterShoppingCarts($params)
+    {
+        $limit = (int)ArrayHelper::remove($params, 'limit', 10);
+        $page = ArrayHelper::remove($params, 'p', 1);
+        $skip = ($page - 1) * $limit;
+
+        $conditions = [
+            'AND',
+            ['remove' => 0],
+            ['NOT', 'identity', new Expression('null')],
+        ];
+        if (isset($params['q']) && ($keyword = $params['q']) && $keyword !== null && $keyword !== '')
+            $conditions[] = ['OR', [
+                $this->buildFilterAggregationPipeline('value', [
+                    'customer' => [
+                        'email' => $keyword,
+                        'phone' => $keyword,
+                    ]
+                ])
+            ]];
+
+        return $this->mongodb->getCollection($this->collection)->aggregate([
+            [
+                '$match' => $conditions
+            ],
+            [
+                '$project' => [
+                    '_id' => ['$toString' => '$_id'],
+                    'type' => '$type',
+                    'key' => '$key',
+                    'order' => '$value',
+                    'identity' => '$identity'
+                ]
+            ],
+            [
+                '$skip' => $skip
+            ],
+            [
+                '$limit' => $limit
+            ]
+        ]);
+    }
+
+
+    public function buildFilterAggregationPipeline($attribute, $params)
+    {
+        $lines = [];
+        foreach ($params as $name => $value) {
+            $key = "$attribute.$name";
+            if (is_array($value)) {
+                $lines = ArrayHelper::merge($lines, $this->buildFilterAggregationPipeline($key, $value));
+            } else {
+                $lines[$key] = $value;
+            }
+
+
+        }
+        return $lines;
+    }
 }

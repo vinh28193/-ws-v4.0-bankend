@@ -271,7 +271,7 @@ FrontendAsset::register($this);
                         <i class="nav-ico cart"></i>
                         <span class="badge" id="cartBadge"><?php
                             $cartManager = new \common\components\cart\CartManager();
-                            echo Yii::$app->user->isGuest ? 0 : $cartManager->countItems();
+                            echo Yii::$app->user->isGuest ? 0 : $cartManager->countItems('shopping');
                             ?></span>
                     </a>
                 </li>

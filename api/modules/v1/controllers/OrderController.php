@@ -182,11 +182,6 @@ class OrderController extends BaseApiController
         //$this->can('canUpdate', $model);
         $check = $model->loadWithScenario($this->post);
         $dirtyAttributes = $model->getDirtyAttributes();
-
-        $action = Inflector::camel2words($model->getScenario());
-        Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());
-
-        $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if ($model->getScenario() == 'confirmPurchase') {
             $product_id = Yii::$app->request->post('product_id');
             $tran = Yii::$app->db->beginTransaction();
@@ -251,7 +246,7 @@ class OrderController extends BaseApiController
             $model->ready_purchase = $now;
             $model->current_status = Order::STATUS_READY2PURCHASE;
         }
-        if ($model->getScenario() == 'updateStatus') {
+        if ($model->getScenario() == 'cancelOrder') {
             $model->cancelled = $now;
             $model->current_status = Order::STATUS_CANCEL;
         }
@@ -263,10 +258,9 @@ class OrderController extends BaseApiController
                 }
             }
             $j = $i;
-//            for ($j; $j<15; $j++) {
-//                $model->$StatusOrder[$j] = null;
-//            }
-//            $model->$post['Order']['column'] = null;
+            for ($j; $j<15; $j++) {
+                $model->{$StatusOrder[$j]} = null;
+            }
             if ($post['Order']['column'] == 'ready_purchase') {
                 $model->current_status = 'READY2PURCHASE';
             } else {
@@ -277,6 +271,10 @@ class OrderController extends BaseApiController
 //            $model->current_status =  Order::STATUS_READY2PURCHASE;
 //            $model->ready_purchase = $now;
 //        }
+        $action = Inflector::camel2words($model->getScenario());
+        Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());
+
+        $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
         $model->validate();
         if (!$model->save(false)) {
             Yii::$app->wsLog->push('order', $model->getScenario(), null, [

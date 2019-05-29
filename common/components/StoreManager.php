@@ -10,9 +10,12 @@ namespace common\components;
 
 
 use common\models\Store;
+use frontend\assets\WeshopAsset;
 use Yii;
+use yii\base\BootstrapInterface;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
+use yii\helpers\Json;
 use yii\helpers\StringHelper;
 use yii\web\NotFoundHttpException;
 use common\helpers\WeshopHelper;
@@ -25,7 +28,7 @@ use common\helpers\WeshopHelper;
  * @property-read  string $domain
  * @property-read  integer $id
  */
-class StoreManager extends Component
+class StoreManager extends Component implements BootstrapInterface
 {
 
     const STORE_VN = 1;
@@ -55,6 +58,26 @@ class StoreManager extends Component
         if ($this->storeId === null) {
             throw new InvalidConfigException(get_class($this) . ":storeId can not be null");
         }
+    }
+
+    /**
+     * @param yii\web\Application $app
+     */
+    public function bootstrap($app)
+    {
+        $app->getView();
+        WeshopAsset::register($app->view);
+        $options = Json::htmlEncode($this->getClientOptions());
+        $app->view->registerJs("ws.init($options);");
+    }
+
+    protected function getClientOptions()
+    {
+        return [
+            'currency' => $this->store->currency,
+            'priceDecimal' => 0,
+            'pricePrecision' => -3,
+        ];
     }
 
     /**

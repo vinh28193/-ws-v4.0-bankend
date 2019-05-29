@@ -26,11 +26,6 @@ class CartWidget extends Widget
      */
     public $items;
 
-    /**
-     * @var bool
-     */
-    public $isGroup = false;
-
     public $updateAction = 'update';
 
     public $removeAction = 'remove';
@@ -45,11 +40,6 @@ class CartWidget extends Widget
     public function init()
     {
         parent::init();
-//        if ($this->isGroup) {
-//            $this->items = CartHelper::group($this->items);
-//        }
-
-        $this->items = array_map([$this, 'preItem'], $this->items);
         $this->removeAction = Url::toRoute($this->removeAction);
         $this->updateAction = Url::toRoute($this->updateAction);
         $this->registerClientScript();
@@ -69,55 +59,22 @@ class CartWidget extends Widget
      */
     protected function preItem($item)
     {
-        $order = ArrayHelper::getValue($item, 'order');
-        $variations = $order['products'][0]['variations'];
-        $availableQuantity = $order['products'][0]['available_quantity'];
-        $soldQuantity = $order['products'][0]['quantity_sold'];
-        if ($variations !== null) {
-            if (($variationSoldQuantity = ArrayHelper::getValue($variations, 'quantity_sold', $soldQuantity)) !== null && $variationSoldQuantity !== $soldQuantity) {
-                $soldQuantity = $variationSoldQuantity;
-            }
-            if (($variationAvailableQuantity = ArrayHelper::getValue($variations, 'available_quantity', $availableQuantity)) !== null && $variationAvailableQuantity !== $availableQuantity) {
-                $availableQuantity = $variationAvailableQuantity;
-            }
-        }
-        $availableQuantity = !($availableQuantity === null || (int)$availableQuantity < 0) ? $availableQuantity : 50;
-        $soldQuantity = !($soldQuantity === null || (int)$soldQuantity < 0) ? $soldQuantity : 0;
-        $localAmount = $order['total_amount_local'];
-        $key = ArrayHelper::getValue($item, 'key', '');
+        $key = ArrayHelper::getValue($item, '_id', '');
+        $order = ArrayHelper::getValue($item, 'value');
         $selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key);
         if ($selected) {
-            $this->_totalAmount += $localAmount;
+            $this->_totalAmount += ArrayHelper::getValue($order, 'total_final_amount_local', 0);
         }
         return [
             'key' => $key,
-            'selected' => $selected,
-            'name' => $order['products'][0]['product_name'],
-            'type' => $order['products'][0]['portal'],
-            'originLink' => $order['products'][0]['link_origin'],
-            'link' => $order['products'][0]['product_link'],
-            'imageSrc' => $order['products'][0]['link_img'],
-            'provider' => $order['seller'],
-            'variation' => $order['products'][0]['variations'],
-            'condition' => $order['products'][0]['condition'],
-            'quantity' => $order['products'][0]['quantity_customer'],
-            'availableQuantity' => $availableQuantity,
-            'soldQuantity' => $soldQuantity,
-            'weight' => $order['total_weight_temporary'],
-            'amount' => $order['total_price_amount_origin'],
-            'localAmount' => $localAmount,
-            'localDisplayAmount' => $this->showMoney($localAmount),
+            'order' => $order,
         ];
     }
 
     public function run()
     {
         parent::run();
-        $html = $this->renderSummary();
-        $html .= Html::tag('div', $this->renderItems() . $this->renderBilling(), ['class' => 'cart-box']);
-        $html .= '<p class="text-right note">* Quý khách nên thanh toán ngay để tránh sản phẩm bị tăng giá</p>';
-        $html .= $this->renderButtonBox();
-        echo $html;
+        echo $this->renderCartBox();
         Pjax::end();
     }
 
@@ -136,7 +93,6 @@ class CartWidget extends Widget
         $id = $this->options['id'];
         $options = Json::htmlEncode($this->getClientOptions());
         $view = $this->getView();
-        $items = Json::htmlEncode(array_values($this->items));
         CartAsset::register($view);
         $view->registerJs("jQuery('#$id').wsCart($options);", $view::POS_END);
         $view->registerJs("console.log($('#$id').wsCart('data'));", $view::POS_END);
@@ -148,35 +104,23 @@ class CartWidget extends Widget
         return '<div class="title">Giỏ hàng của bạn <span>(' . $summary . ' sản phẩm)</span></div>';
     }
 
-    protected function renderGroupItems()
+    protected function renderCartBox()
     {
-
-    }
-
-    protected function renderItems()
-    {
-        $items = [];
-        foreach ($this->items as $item) {
-            $items[] = $this->renderItem($item);
-        }
-        return Html::tag('ul', implode("\n", $items), ['class' => 'cart-item']);
+        return $this->render('item', ['items' => $this->items]);
     }
 
     protected function renderBilling()
     {
 
-        $content = Html::beginTag('ul', ['class' => 'billing']);
-        $content .= '<li><div class="left">Giá trị đơn hàng:</div><div class="right">' . $this->showMoney($this->_totalAmount) . '</div></li>';
+        $content = Html::beginTag('ul', ['class' => 'billing', 'style' => 'margin-top:-10px']);
+        $content .= '<li><div class="left">Giá trị đơn hàng:</div><div class="right">' . $this->getStoreManager()->showMoney($this->_totalAmount) . '</div></li>';
         $content .= Html::endTag('ul');
         return $content;
     }
 
     protected function renderItem($item)
     {
-        if ($item === false) {
-            return Html::tag('li', 'Invalid Item');
-        }
-        return $this->render('item', $item);
+
     }
 
     public function renderButtonBox()
@@ -187,20 +131,17 @@ class CartWidget extends Widget
     <button type="button" class="btn btn-payment">Tiến hành thanh toán</button>
 </div>
 HTML;
-
     }
 
-    /**
-     * @param $item
-     * @return bool|BaseProduct
-     */
-    private function isValidItem($item)
-    {
-        return !(($product = ArrayHelper::getValue($item, 'response')) === null || !$product instanceof BaseProduct) ? $product : false;
-    }
 
-    private function showMoney($money)
+    private $_storeManager;
+
+    private function getStoreManager()
     {
-        return Yii::$app->storeManager->showMoney($money);
+        if (!is_object($this->_storeManager)) {
+            $this->_storeManager = Yii::$app->storeManager;
+        }
+
+        return $this->_storeManager;
     }
 }

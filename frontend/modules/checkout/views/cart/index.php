@@ -17,7 +17,7 @@ echo CartWidget::widget([
 $js = <<< JS
    $('#cartContent').wsCart('refresh');
 JS;
-$this->registerJs($js);
+//$this->registerJs($js);
 
 $jsga = <<<JS
 $(document).ready(function() {

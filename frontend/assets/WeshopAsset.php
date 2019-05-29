@@ -28,19 +28,4 @@ class WeshopAsset extends AssetBundle
 
     }
 
-    protected function getClientOptions()
-    {
-        return [
-            'currency' => 'VND',
-            'priceDecimal' => 0,
-            'pricePrecision' => -3,
-        ];
-    }
-
-    public function registerAssetFiles($view)
-    {
-        parent::registerAssetFiles($view);
-        $options = Json::htmlEncode($this->getClientOptions());
-        $view->registerJs("console.log($options);");
-    }
 }
