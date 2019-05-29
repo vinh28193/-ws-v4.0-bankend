@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\modelsMongo\ActionLogWS as ActionLog;
+use common\modelsMongo\ActionLogWS;
 use Yii;
 
 class RestActionLogController extends BaseApiController
@@ -61,8 +62,35 @@ class RestActionLogController extends BaseApiController
 
     public function actionIndex()
     {
-        $response = ActionLog::search($params = '');
-        return $this->response(true, 'Success', $response);
+        $get = Yii::$app->request->get();
+        $query = ActionLog::find();
+        if (isset($get['ordercode'])) {
+            $query->andWhere(['id' => $get['ordercode']]);
+        } if (isset($get['content'])) {
+            $query->andWhere(['like','data_input', $get['content']]);
+        }if (isset($get['ip'])) {
+            $query->andWhere(['request_ip' => $get['ip']]);
+        } if (isset($get['user_name'])) {
+            $query->andWhere(['user_name' => $get['user_name']]);
+        } if ((isset($get['startTime']) && isset($get['endTime']))) {
+            $query->andWhere(['between', 'created_at', (int)Yii::$app->formatter->asTimestamp($get['startTime']), (int)Yii::$app->formatter->asTimestamp($get['endTime'])]);
+        }
+        if ($get['valueCreate'] == 0) {
+            $model = $query->orderBy(['created_at' => SORT_DESC]);
+        } if ($get['valueCreate'] == 1) {
+            $model = $query->orderBy(['created_at' => SORT_ASC]);
+        }
+        $total = $model->count();
+        $limit = isset($get['limit']) ? $get['limit'] : 10;
+        $page = isset($get['page']) ? $get['page'] : 1;
+        $offset = ($page - 1) * $limit;
+        $model->limit($limit)->offset($offset);
+        $query = $model->asArray()->all();
+        $data = [
+            'model' => $query,
+            'totalCount' => $total
+        ];
+        return $this->response(true, "success", $data);
     }
 
     public function actionCreate()

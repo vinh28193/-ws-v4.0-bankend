@@ -63,6 +63,7 @@ return [
         'my-weshop.html' => 'account/home',
         'chat/<code:[^/]+>/order.html' => 'account/chat/order-chat',
         'login.html' => 'secure/login',
+        'change-password.html' => 'secure/change-password',
         'signup.html' => 'secure/register',
         'logout.html' => 'secure/logout',
 

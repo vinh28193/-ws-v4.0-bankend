@@ -59,7 +59,7 @@ use yii\helpers\Url;
             </div>
             <div class="form-group">
                 <?= Html::submitButton('Cập Nhập', ['class' => 'btn btn-payment']) ?>
-                <?php echo Html::a('Thay đổi mật khẩu', ['/site/change-password'], ['class' => 'text-blue float-right pt-4 mt-3']);?>
+                <?php echo Html::a('Thay đổi mật khẩu', ['/secure/change-password'], ['class' => 'text-blue float-right pt-4 mt-3']);?>
             </div>
             <?php ActiveForm::end(); ?>
             <div class="config-acc">
@@ -85,7 +85,7 @@ use yii\helpers\Url;
             </div>
     </div>
     <div class="us-address">
-        <div class="title">Địa chỉ tại Mỹ của bạn</div>
+        <div class="title">Địa chỉ nhận hàng của bạn</div>
         <div class="code">Mã khách hàng của bạn : <b><?= $model->verify_code ?></b></div>
     </div>
     <div class="ba-block2">

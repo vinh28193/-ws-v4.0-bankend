@@ -600,7 +600,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['notifications' => 'notifications','downloadexcel' => 'download-file-excel','trackinglogs'=>'rest-api-tracking-log'],
+        'controller' => ['downloadexcel' => 'download-file-excel','trackinglogs'=>'rest-api-tracking-log'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -612,6 +612,28 @@ return [
             'GET,HEAD {id}' => 'view',
             'POST' => 'subscribe',
             'OPTIONS {id}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['notifications' => 'notifications'],
+        'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
+            '{token}' => '<token:\\d[\\d,]*>',
+            '{code}' =>  '<code:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {code}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'subscribe',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS {code}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => []

@@ -239,13 +239,12 @@ class NotificationsController extends BaseApiController
         }
     }
 
-    public function actionDelete($id)
+    public function actionDelete($code)
     {
         $_post = (array)$this->get;
 
-        $fingerprint = (int)$_post['id'];
+        $fingerprint = (int)$_post['code'];
         $ordercode = $_post['ordercode'];
-
         $model = PushNotifications::find()
             ->where(['fingerprint' => $fingerprint])
             ->one();

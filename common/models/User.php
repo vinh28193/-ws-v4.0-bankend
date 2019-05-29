@@ -17,6 +17,7 @@ use common\components\UserPublicIdentityInterface;
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
+ * @property string $token_fcm
  * @property string $auth_key
  * @property integer $status
  * @property integer $created_at
