@@ -339,7 +339,7 @@ class CartManager extends Component
      * @param string $convertType
      * @return bool|mixed
      */
-    private function isDetectedProduct($target, $source)
+    public function isDetectedProduct($target, $source)
     {
         $lv1 = trim($target['id']) === ($source['id']);
         $lv2 = isset($source['sku']);

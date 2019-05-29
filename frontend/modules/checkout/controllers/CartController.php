@@ -3,6 +3,7 @@
 
 namespace frontend\modules\checkout\controllers;
 
+use common\components\cart\CartHelper;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
@@ -46,7 +47,11 @@ class CartController extends BillingController
         if (count($items) === 0) {
             return $this->render('empty');
         }
-        CartSelection::setSelectedItems(CartSelection::TYPE_SHOPPING, ArrayHelper::getColumn($items, '_id', false));
+        $this->setDefaultSelected($items);
+        CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, ['key' => '5ced2c32e419ac1fb80057bb', 'id' => '163189059666']);
+//        CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, ['key' => '5ced2c32e419ac1fb80057bb', 'id' => '163586118957']);
+//        CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, ['key' => '5ced2c32e419ac1fb80057bb', 'id' => '163655512954']);
+        CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, ['key' => '5ced2c32e419ac1fb80057bb', 'id' => '163189059666','sku' => '100-99000000-02']);
         return $this->render('index', [
             'items' => $items
         ]);
@@ -148,5 +153,13 @@ class CartController extends BillingController
         CartSelection::setSelectedItems($type, $carts);
         $count = CartSelection::countSelectedItems($type);
         return ['success' => true, 'message' => "you will be $type with $count items", 'data' => Url::toRoute(['/checkout/shipping', 'type' => CartSelection::TYPE_SHOPPING])];
+    }
+
+    private function setDefaultSelected($items)
+    {
+        $selected = CartHelper::mapCartKeys($items);
+        if (!empty($selected)) {
+            CartSelection::setSelectedItems(CartSelection::TYPE_SHOPPING, $selected);
+        }
     }
 }

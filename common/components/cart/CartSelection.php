@@ -15,9 +15,17 @@ class CartSelection
     const TYPE_SHOPPING = 'shopping';
 
 
+    private static $cart;
+
+    /**
+     * @return CartManager
+     */
     public static function getCartManager()
     {
-        return Yii::$app->cart;
+        if (!is_object(self::$cart)) {
+            self::$cart = Yii::$app->cart;
+        }
+        return self::$cart;
     }
 
     public static function getSession()
@@ -32,7 +40,13 @@ class CartSelection
             self::setSelectedItems($type, $item);
             return true;
         } elseif (!self::isExist($type, $item)) {
-            $items = array_merge($items, !is_array($item) ? [$item] : $item);
+            $child = ['id' => $item['id']];
+            if (isset($item['sku'])) {
+                $child['sku'] = $item['sku'];
+            }
+            $items = array_merge($items, [
+                $item['key'] => [$child]
+            ]);
             self::setSelectedItems($type, $items);
             return true;
         }
@@ -67,24 +81,59 @@ class CartSelection
         return count($selected);
     }
 
-    public static function isExist($type, $item)
+
+    /**
+     * @param $type
+     * @param $param
+     * @return bool
+     */
+    public static function isExist($type, $param)
     {
         if (($items = self::getSelectedItems($type)) === null) {
             return false;
         }
-        return ArrayHelper::isIn($item, $items);
+        $isChild = isset($param['id']);
+        if (!isset($items[$param['key']])) {
+            return false;
+        } elseif (!$isChild) {
+            return true;
+        } elseif (($childs = $items[$param['key']]) !== null && !empty($childs)) {
+            foreach ($childs as $child) {
+                if (self::getCartManager()->isDetectedProduct($child, $param)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
     }
 
-    public static function removeSelectedItem($type, $item)
+    public static function removeSelectedItem($type, $param)
     {
         $items = [];
+        $removedAll = !isset($param['id']) || (isset($param['id']) && $param['id'] === null);
         $removed = false;
-        foreach (self::getSelectedItems($type) as $i) {
-            if ($item === $i) {
-                $removed = true;
-                continue;
+        foreach (self::getSelectedItems($type) as $key => $childs) {
+            if ($key === $param['key']) {
+                if ($removedAll) {
+                    $removed = true;
+                    continue;
+                } else {
+                    $newChild = [];
+                    foreach ($childs as $child) {
+                        if (self::getCartManager()->isDetectedProduct($child, $param)) {
+                            $removed = true;
+                            continue;
+                        }
+                        $newChild[] = $child;
+                    }
+                    $childs = $newChild;
+                    if (empty($childs) && $removed) {
+                        continue;
+                    }
+                }
             }
-            $items[] = $i;
+            $items[$key] = $childs;
         }
         self::setSelectedItems($type, $items);
         return $removed;

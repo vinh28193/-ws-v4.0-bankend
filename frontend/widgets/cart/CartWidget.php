@@ -40,7 +40,6 @@ class CartWidget extends Widget
     public function init()
     {
         parent::init();
-        $this->items = array_map([$this, 'preItem'], $this->items);
         $this->removeAction = Url::toRoute($this->removeAction);
         $this->updateAction = Url::toRoute($this->updateAction);
         $this->registerClientScript();
@@ -68,7 +67,6 @@ class CartWidget extends Widget
         }
         return [
             'key' => $key,
-            'selected' => $selected,
             'order' => $order,
         ];
     }
@@ -76,11 +74,7 @@ class CartWidget extends Widget
     public function run()
     {
         parent::run();
-        $html = $this->renderSummary();
-        $html .= $this->renderItems();
-        $html .= '<p class="text-right note">* Quý khách nên thanh toán ngay để tránh sản phẩm bị tăng giá</p>';
-        $html .= $this->renderButtonBox();
-        echo $html;
+        echo $this->renderCartBox();
         Pjax::end();
     }
 
@@ -110,14 +104,9 @@ class CartWidget extends Widget
         return '<div class="title">Giỏ hàng của bạn <span>(' . $summary . ' sản phẩm)</span></div>';
     }
 
-    protected function renderItems()
+    protected function renderCartBox()
     {
-        $items = [];
-        foreach ($this->items as $item) {
-            $items[] = $this->renderItem($item);
-        }
-        $items[] = $this->renderBilling();
-        return Html::tag('div', implode("\n", $items), ['class' => 'cart-box', 'style' => 'margin-top: 7px;border: none;']);
+        return $this->render('item', ['items' => $this->items]);
     }
 
     protected function renderBilling()
@@ -131,7 +120,7 @@ class CartWidget extends Widget
 
     protected function renderItem($item)
     {
-        return $this->render('item', $item);
+
     }
 
     public function renderButtonBox()

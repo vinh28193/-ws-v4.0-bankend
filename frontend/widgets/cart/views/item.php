@@ -1,99 +1,169 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
+use common\components\cart\CartSelection;
+use frontend\widgets\cart\CartWidgetHepper;
 
-/* @var string $key */
-/* @var boolean $selected */
-/* @var array $order */
+/* @var yii\web\View $this */
+/* @var $items $order */
 
+/** @var  $storeManager common\components\StoreManager */
+$storeManager = Yii::$app->storeManager;
+$totalAmount = 0;
 ?>
+<div class="cart-box" style="border: none">
+    <div class="title">Giỏ hàng của bạn <span>(<?= count($items); ?> items)</span></div>
+    <?php foreach ($items as $item):
+        $key = $item['_id'];
+        if (($order = ArrayHelper::getValue($item, 'value')) !== null):?>
+            <?php $products = ArrayHelper::getValue($order, 'products', []); ?>
+            <ul class="cart-item" data-key="<?= $key ?>" style="border: 1px solid #e3e3e3;margin-bottom:10px">
+                <li>
+                    <?php $seller = ArrayHelper::getValue($order, 'seller', []); ?>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                               name="cartOrder" <?= CartSelection::isExist(CartSelection::TYPE_SHOPPING, ['key' => $key]) ? 'checked' : ''; ?>
+                               value="<?= $key; ?>" id="cartOrder<?= $key; ?>">
+                        <label class="form-check-label" for="cartOrder<?= $key; ?>">
+                            Bán <?= isset($seller['portal']) ? ('trên ' . Html::tag('span', strtolower($seller['portal']), ['style' => 'font-weight: 500;color: #393939'])) : ''; ?>
+                            bởi:
+                            <a style="color: #2b96b6;"
+                               href="<?= isset($seller['seller_link_store']) ? $seller['seller_link_store'] : '#' ?>"><?= isset($seller['seller_name']) ? $seller['seller_name'] : 'Unknown'; ?></a>
+                        </label>
+                    </div>
+                    <span style="margin-left: 0.5rem" class="orderSummary">(<?= count($products); ?> sản phẩm)</span>
+                </li>
+                <?php foreach ($products as $product): ?>
+                    <?php
+                    $availableQuantity = $product['available_quantity'];
+                    $soldQuantity = $product['quantity_sold'];
+                    $variations = ArrayHelper::getValue($product, 'variations');
+                    if ($variations !== null) {
+                        if (($variationSoldQuantity = ArrayHelper::getValue($variations, 'quantity_sold', $soldQuantity)) !== null && $variationSoldQuantity !== $soldQuantity) {
+                            $soldQuantity = $variationSoldQuantity;
+                        }
+                        if (($variationAvailableQuantity = ArrayHelper::getValue($variations, 'available_quantity', $availableQuantity)) !== null && $variationAvailableQuantity !== $availableQuantity) {
+                            $availableQuantity = $variationAvailableQuantity;
+                        }
+                    }
+                    $availableQuantity = !($availableQuantity === null || (int)$availableQuantity < 0) ? $availableQuantity : 50;
+                    $soldQuantity = !($soldQuantity === null || (int)$soldQuantity < 0) ? $soldQuantity : 0;
+                    if (($selected = CartWidgetHepper::getIsChecked($key, $product['parent_sku'], $product['sku']))) {
+                        $totalAmount += (int)$product['total_price_amount_local'];
+                    }
+                    ?>
+                    <li>
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="cartProduct"
+                                   data-parent="<?= $key ?>"
+                                   data-id="<?= $product['parent_sku'] ?>"
+                                   data-sku="<?= $product['sku']; ?>"
+                                   id="<?= CartWidgetHepper::getCartProductId($product['parent_sku'], $product['sku']); ?>"
+                                <?= CartWidgetHepper::getIsChecked($key, $product['parent_sku'], $product['sku']) ? 'checked' : ''; ?>
+                            >
 
-<ul class="cart-item" style="border: 1px solid #e3e3e3;margin-bottom:10px">
-    <li>Amazon.com</li>
-    <li>
-        <div class="form-check">
-            <input class="form-check-input" checked="" type="checkbox" name="cartItems" data-amount="39.99" data-price="1346000" value="1c24c90670ac080e5a7b3ffb0696abe2" id="cartItem1c24c90670ac080e5a7b3ffb0696abe2">
-            <label class="form-check-label" for="cartItem1c24c90670ac080e5a7b3ffb0696abe2"></label>
-        </div>
-        <div class="thumb" style="height: auto;">
-            <img src="https://i.ebayimg.com/00/s/MTQwMFgxNDAw/z/fCkAAOSwuN9cgrz3/$_1.JPG" alt="Jabra Talk 45 Black Bluetooth Mono Headset (Manufacturer Refurbished)">
-        </div>
-        <div class="info">
-            <div class="left">
-                <a href="http://192.168.11.252:8383/ebay/item/jabra-talk-45-black-bluetooth-mono-headset-manufacturer-refurbished-163586118957.html" target="_blank" class="name">Jabra Talk 45 Black Bluetooth Mono Headset (Manufacturer Refurbished)</a>
-                <div class="rate">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <i class="far fa-star"></i>
-                </div>
-                <ol>
-                    <li>Bán bởi : <a href="https://stores.ebay.com/id=1421568237">jabra-company-store</a></li>                <li>Tình trạng :Manufacturer refurbished</li>
-                    <li>Tạm tính : <span class="weight-option">0.5</span> kg</li>
-                </ol>
-            </div>
-            <div class="right">
-                <div class="qty form-inline quantity-option">
-                    <label>Số lượng:</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary button-quantity-down" data-pjax="1" data-for="1c24c90670ac080e5a7b3ffb0696abe2" data-update="#1c24c90670ac080e5a7b3ffb0696abe2" data-operator="down" type="button">-
-                            </button>
+                            <label class="form-check-label"
+                                   for="<?= CartWidgetHepper::getCartProductId($product['parent_sku'], $product['sku']); ?>"></label>
                         </div>
-                        <input type="text" name="cartItemQuantity" class="form-control" value="1" data-min="1" id="1c24c90670ac080e5a7b3ffb0696abe2" data-max="891" aria-label="" aria-describedby="basic-addon1">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary button-quantity-up" data-pjax="1" data-for="1c24c90670ac080e5a7b3ffb0696abe2" data-update="#1c24c90670ac080e5a7b3ffb0696abe2" data-operator="up" type="button">+
-                            </button>
+                        <div class="thumb" style="height: auto;">
+                            <img src="<?= $product['link_img']; ?>"
+                                 alt="<?= $product['product_name']; ?>" title="<?= $product['product_name']; ?>">
                         </div>
-                    </div>
-                </div>
-                <div class="price price-option" data-original="39.99" data-local="1346000">1,346,000 VND            </div>
-                <a href="#" class="del delete-item" data-key="1c24c90670ac080e5a7b3ffb0696abe2"><i class="far fa-trash-alt"></i> Xóa</a>
-            </div>
-        </div>
-    </li>
-    <li>
-        <div class="form-check">
-            <input class="form-check-input" checked="" type="checkbox" name="cartItems" data-amount="39.99" data-price="1346000" value="1c24c90670ac080e5a7b3ffb0696abe2" id="cartItem1c24c90670ac080e5a7b3ffb0696abe2">
-            <label class="form-check-label" for="cartItem1c24c90670ac080e5a7b3ffb0696abe2"></label>
-        </div>
-        <div class="thumb" style="height: auto;">
-            <img src="https://i.ebayimg.com/00/s/MTQwMFgxNDAw/z/fCkAAOSwuN9cgrz3/$_1.JPG" alt="Jabra Talk 45 Black Bluetooth Mono Headset (Manufacturer Refurbished)">
-        </div>
-        <div class="info">
-            <div class="left">
-                <a href="http://192.168.11.252:8383/ebay/item/jabra-talk-45-black-bluetooth-mono-headset-manufacturer-refurbished-163586118957.html" target="_blank" class="name">Jabra Talk 45 Black Bluetooth Mono Headset (Manufacturer Refurbished)</a>
-                <div class="rate">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <i class="far fa-star"></i>
-                </div>
-                <ol>
-                    <li>Bán bởi : <a href="https://stores.ebay.com/id=1421568237">jabra-company-store</a></li>                <li>Tình trạng :Manufacturer refurbished</li>
-                    <li>Tạm tính : <span class="weight-option">0.5</span> kg</li>
-                </ol>
-            </div>
-            <div class="right">
-                <div class="qty form-inline quantity-option">
-                    <label>Số lượng:</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary button-quantity-down" data-pjax="1" data-for="1c24c90670ac080e5a7b3ffb0696abe2" data-update="#1c24c90670ac080e5a7b3ffb0696abe2" data-operator="down" type="button">-
-                            </button>
+                        <div class="info">
+                            <div class="left">
+                                <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
+                                    <?= $product['product_name']; ?></a>
+                                <div class="rate" style="text-align: left">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <ol>
+                                    <?php
+                                    if ($variations !== null && isset($variations['options_group'])) {
+                                        $var = [];
+                                        foreach ($variations['options_group'] as $options) {
+                                            $var[] = "{$options['name']} : {$options['value']}";
+                                        }
+                                        echo '<li> Thuộc tính: ' . implode(' và ', $var) . '</li>';
+                                    }
+                                    ?>
+                                    <li>
+                                        Tình trạng:
+                                        <span style="margin-left: 0.25rem;"
+                                              class="condition-option"><?= isset($product['condition']) && $product['condition'] !== null ? $product['condition'] : ''; ?></span>
+                                    </li>
+                                    <li>
+                                        Tạm tính:
+                                        <span style="margin-left: 0.25rem;"
+                                              class="weight-option"><?= $product['total_weight_temporary']; ?></span> kg
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="right">
+                                <div class="qty form-inline quantity-option">
+                                    <label>Số lượng:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary button-quantity-down"
+                                                    data-pjax="1"
+                                                    data-parent="<?= $key ?>"
+                                                    data-id="<?= $product['parent_sku'] ?>"
+                                                    data-sku="<?= $product['sku']; ?>"
+                                                    data-update="#<?= $key; ?>"
+                                                    data-operator="down"
+                                                    type="button">-
+                                            </button>
+                                        </div>
+                                        <input type="text"
+                                               name="cartItemQuantity" class="form-control"
+                                               value="1"
+                                               data-min="1"
+                                               data-max="<?= (int)(($max = $availableQuantity - $soldQuantity) <= 0 ? 0 : $max); ?>"
+                                               data-parent="<?= $key ?>"
+                                               data-id="<?= $product['parent_sku'] ?>"
+                                               data-sku="<?= $product['sku']; ?>"
+                                        >
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary button-quantity-up"
+                                                    data-pjax="1"
+                                                    data-parent="<?= $key ?>"
+                                                    data-id="<?= $product['parent_sku'] ?>"
+                                                    data-sku="<?= $product['sku']; ?>"
+                                                    data-operator="up"
+                                                    type="button">+
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="price price-option">
+                                    <?= $storeManager->showMoney($product['total_price_amount_local']); ?>
+                                </div>
+                                <a href="#" class="del delete-item"
+                                   data-parent="<?= $key ?>"
+                                   data-id="<?= $product['parent_sku'] ?>"
+                                   data-sku="<?= $product['sku']; ?>"
+                                <i class="far fa-trash-alt"></i> Xóa</a>
+                            </div>
                         </div>
-                        <input type="text" name="cartItemQuantity" class="form-control" value="1" data-min="1" id="1c24c90670ac080e5a7b3ffb0696abe2" data-max="891" aria-label="" aria-describedby="basic-addon1">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary button-quantity-up" data-pjax="1" data-for="1c24c90670ac080e5a7b3ffb0696abe2" data-update="#1c24c90670ac080e5a7b3ffb0696abe2" data-operator="up" type="button">+
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="price price-option" data-original="39.99" data-local="1346000">1,346,000 VND            </div>
-                <a href="#" class="del delete-item" data-key="1c24c90670ac080e5a7b3ffb0696abe2"><i class="far fa-trash-alt"></i> Xóa</a>
-            </div>
-        </div>
-    </li>
-</ul>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; endforeach; ?>
+    <ul class="billing" style="margin-top:-10px">
+        <li>
+            <div class="left">Giá trị đơn hàng:</div>
+            <div class="right"><?= $storeManager->showMoney($totalAmount); ?></div>
+        </li>
+    </ul>
+</div>
+<p class="text-right note">* Quý khách nên thanh toán ngay để tránh sản phẩm bị tăng giá</p>
+<div class="btn-box">
+    <button type="button" class="btn btn-continue">Tiếp tục mua hàng</button>
+    <button type="button" class="btn btn-payment">Tiến hành thanh toán</button>
+</div>

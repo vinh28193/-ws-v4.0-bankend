@@ -27,6 +27,19 @@ class CartHelper
         return Yii::$app->cart;
     }
 
+    public static function mapCartKeys($items)
+    {
+        $keys = ArrayHelper::map($items, '_id', 'key.products');
+        return array_map(function ($key) {
+            return array_map(function ($e) {
+                return [
+                    'id' => $e['id'],
+                    'sku' => $e['sku']
+                ];
+            }, $key);
+        }, $keys);
+
+    }
 
     /**
      * @param $item BaseProduct
@@ -177,7 +190,7 @@ class CartHelper
                     $newValue = (int)$value;
                     $oldValue += $newValue;
                     $order[$key] = $oldValue;
-                }elseif ($key === 'products'){
+                } elseif ($key === 'products') {
                     $products = $order['products'];
                     $products[] = reset($value);
                     $order['products'] = $products;
