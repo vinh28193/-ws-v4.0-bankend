@@ -600,10 +600,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['notifications' => 'notifications',
-            'downloadexcel' => 'download-file-excel',
-            'trackinglogs'=>'rest-api-tracking-log'
-        ],
+        'controller' => ['notifications' => 'notifications', 'downloadexcel' => 'download-file-excel','trackinglogs'=>'rest-api-tracking-log'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -716,15 +713,13 @@ return [
             'PUT,PATCH {id}' => 'update',
             'DELETE {id}' => 'delete',
             'GET,HEAD {id}' => 'view',
-            'POST' => 'create,update-arrears,confirm-change-price',
+            'POST' => 'create,update-arrears',
             'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
             'POST update-arrears'=> 'update-arrears',
             'OPTIONS update-arrears'=> 'options',
-            'POST confirm-change-price'=> 'confirm-change-price',
-            'OPTIONS confirm-change-price'=> 'options',
         ]
     ],
     [

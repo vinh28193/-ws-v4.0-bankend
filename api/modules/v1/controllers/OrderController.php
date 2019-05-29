@@ -264,11 +264,9 @@ class OrderController extends BaseApiController
             }
             $j = $i;
 //            for ($j; $j<15; $j++) {
-//                var_dump($StatusOrder[$j]);
-//                $model->$StatusOrder[$j] = null;
-//                die();
+//                $model->$StatusOrder[2] = null;
 //            }
-            if ($post['Order']['column'] == 'purchase_start') {
+            if ($post['Order']['column'] == 'ready_purchase') {
                 $model->current_status = 'READY2PURCHASE';
             } else {
                 $model->current_status = strtoupper(str_replace('_', ' ', $StatusOrder[$i-1]));
@@ -288,6 +286,14 @@ class OrderController extends BaseApiController
             return $this->response(false, $model->getFirstErrors());
         }
         ChatHelper::push($messages, $model->ordercode, 'GROUP_WS', 'SYSTEM');
+        Yii::info("Order Log ".$model->getScenario());
+        Yii::info([
+            'id' => $model->ordercode,
+            'request' => $this->post,
+            'response' => $dirtyAttributes,
+            'Order_log_type' => $model->getScenario()
+
+        ], __CLASS__);
         Yii::$app->wsLog->push('order', $model->getScenario(), null, [
             'id' => $model->ordercode,
             'request' => $this->post,

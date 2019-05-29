@@ -82,15 +82,44 @@ class KeyChatList extends \yii\base\Component
         return false;
     }
 
-    public function clear(){
+    public function clear()
+    {
         $this->_collections = [];
         return $this->save();
     }
 
-
     protected function getFileName()
     {
-        $fileName = "{$this->storeManager->getDomain()}.json";
+        $Ip_domain_FileChat = $this->storeManager->getDomain();
+        $file_chat = '';
+        switch ($Ip_domain_FileChat) {
+               // Viet Nam
+            case 'weshop-v4.back-end.local.vn':
+                $file_chat = 'wsvn-local';
+                break;
+            case '192.168.11.252':
+                $file_chat = 'wsvn-local';
+                break;
+
+            case 'weshop.com.vn':
+                $file_chat = 'wsvn';
+                break;
+
+                // Indo
+            case 'weshop-v4.back-end.local.id':
+                $file_chat = 'wsid-local';
+                break;
+            case 'uat-in.weshop.asia':
+                $file_chat = 'wsvn-local';
+                break;
+            case 'weshop.co.id':
+                $file_chat = 'wsid';
+                break;
+
+            default:
+                $file_chat = 'WeshopGlobal';
+        }
+        $fileName = "{$file_chat}.json";
         $fileName = Yii::getAlias('@webroot/listchats/') . $fileName;
         $filePath = dirname($fileName);
         FileHelper::createDirectory($filePath, 0777, true);

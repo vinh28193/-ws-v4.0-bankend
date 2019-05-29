@@ -2,6 +2,7 @@
 
 namespace api\modules\v1\controllers;
 
+use Yii;
 use api\controllers\BaseApiController;
 use common\components\KeyChatList;
 use yii\helpers\ArrayHelper;
@@ -67,7 +68,15 @@ class RestApiChatlistsController extends BaseApiController
         if (($content = ArrayHelper::getValue($this->post, 'content')) === null) {
             return $this->response(false, 'can not resolver request');
         }
-        if (!$this->keyChatManger->write($content)) {
+
+        $dataChat = [
+            'id' => @uniqid(),
+            'content' => $content,
+            'active' => 1,
+            'date_set' => Yii::$app->formatter->asDateTime('now'),
+        ];
+
+        if (!$this->keyChatManger->write($dataChat)) {
             return $this->response(false, 'can not save chat key: ' . $content);
         }
         return $this->response(true, 'Success', $this->keyChatManger->read());
@@ -77,6 +86,16 @@ class RestApiChatlistsController extends BaseApiController
 
     public function actionDelete($id)
     {
+        $post = (array)$this->get;
+        $id = (integer)ArrayHelper::getValue($post,'index');
+        $content = ArrayHelper::getValue($post,'content');
+
+        Yii::info("Post Param DELETE ");
+        Yii::info([
+            'id' => $id,
+            'content'=> $content
+        ], __CLASS__);
+
         if (!$this->keyChatManger->remove($id)) {
             return $this->response(false, 'can not remove chat key: ' . $id);
         }
