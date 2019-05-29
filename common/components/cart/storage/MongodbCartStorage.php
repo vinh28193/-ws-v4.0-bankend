@@ -214,26 +214,45 @@ class MongodbCartStorage extends BaseObject
 
     public function filterShoppingCarts($params)
     {
-        $query = new Query();
-        $query->from($this->collection);
+        $limit = (int)ArrayHelper::remove($params, 'limit', 10);
+        $page = ArrayHelper::remove($params, 'p', 1);
+        $skip = ($page - 1) * $limit;
 
         $conditions = [
             'AND',
             ['remove' => 0],
-            ['is not', 'identity', new Expression('null')],
+            ['NOT', 'identity', new Expression('null')],
         ];
-        if (isset($params['value'])) {
-            $conditions = ['OR', [
-                'value' => [
-                    '$elemMatch' => [
-                        'customer.email' => $params['value'],
-                        'customer.phone' => $params['value'],
+        if (isset($params['q']) && ($keyword = $params['q']) && $keyword !== null && $keyword !== '')
+            $conditions[] = ['OR', [
+                $this->buildFilterAggregationPipeline('value', [
+                    'customer' => [
+                        'email' => $keyword,
+                        'phone' => $keyword,
                     ]
-                ]
+                ])
             ]];
-        }
-        $query->where($conditions);
-        return $query->all($this->mongodb);
+
+        return $this->mongodb->getCollection($this->collection)->aggregate([
+            [
+                '$match' => $conditions
+            ],
+            [
+                '$project' => [
+                    '_id' => ['$toString' => '$_id'],
+                    'type' => '$type',
+                    'key' => '$key',
+                    'order' => '$value',
+                    'identity' => '$identity'
+                ]
+            ],
+            [
+                '$skip' => $skip
+            ],
+            [
+                '$limit' => $limit
+            ]
+        ]);
     }
 
     private function buildKeyFilter($key)

@@ -39,19 +39,10 @@ class CartController extends BaseApiController
 
     public function actionIndex()
     {
-        $get = Yii::$app->request->get();
-//        var_dump($get);
-//        die();
-        if (isset($get)) {
-            $dataProvider = new ArrayDataProvider([
-                'allModels' => $this->getCart()->getCartItems($get),
-            ]);
-        } else {
-            $dataProvider = new ArrayDataProvider([
-                'allModels' => $this->getCart()->getCartItems($get['limit'], $get['page'], null),
-            ]);
-        }
-        return $this->response(true, 'get cart success', $dataProvider);
+        $queryParam = Yii::$app->request->queryParams;
+        return $this->response(true, 'get cart success', new ArrayDataProvider([
+            'allModels' => $this->getCart()->filterShoppingCarts($queryParam),
+        ]));
 
     }
 
