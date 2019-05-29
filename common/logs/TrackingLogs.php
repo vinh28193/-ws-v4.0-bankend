@@ -45,4 +45,70 @@ class TrackingLogs extends \common\modelsMongo\TrackingLogs
             return false;
         }
     }
+    public static function GetLogTracking($code){
+        $rs = [];
+        if($code){
+            /** @var self[] $data */
+            $data = self::find()->where(['like','tracking_code',$code])->orderBy('created_at desc')->all();
+            \Yii::debug($data);
+            foreach ($data as $datum){
+                \Yii::debug($datum->created_at);
+                $tmp = new LogViewForm();
+                $tmp->create_time = $datum->created_at;
+                $tmp->type_log = $datum->getTypeLogText();
+                $tmp->user_email = $datum->user_email;
+                $tmp->user_name = $datum->user_name;
+                $tmp->message = $datum->message_log;
+                $tmp->code_reference = $datum->getCodeReferent();
+                $rs[] = $tmp->getAttributes();
+            }
+        }
+        return $rs;
+    }
+    public function getCodeReferent(){
+        switch ($this->type_log){
+            case self::TRACKING_MERGE_TRACKING_WAST:
+            case self::TRACKING_MERGE_TRACKING_SELLER:
+            case self::TRACKING_REMOVE:
+                return 'Tracking: '. $this->tracking_code_reference;
+                break;
+            case self::TRACKING_MERGE_PACKAGE:
+                return 'Package: '.$this->package_code;
+                break;
+            case self::TRACKING_MAP_PRODUCT:
+                return 'Product: '.$this->product_id;
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
+    public function getTypeLogText(){
+        switch ($this->type_log){
+            case self::TRACKING_MERGE_TRACKING_WAST:
+                return 'Gộp hàng thừa';
+                break;
+            case self::TRACKING_MERGE_TRACKING_SELLER:
+                return 'Gộp tracking seller';
+                break;
+            case self::TRACKING_REMOVE:
+                return 'Xoá';
+                break;
+            case self::TRACKING_MERGE_PACKAGE:
+                return 'Đưa vào kiện';
+                break;
+            case self::TRACKING_MAP_PRODUCT:
+                return 'Map product';
+                break;
+            case self::TRACKING_CREATE:
+                return 'Tạo mới';
+                break;
+            case self::TRACKING_UPDATE:
+                return 'Cập nhật';
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
 }

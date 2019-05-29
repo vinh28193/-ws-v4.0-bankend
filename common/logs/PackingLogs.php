@@ -11,6 +11,8 @@ class PackingLogs extends \common\modelsMongo\PackingLogs
     const PACKING_MAP_PRODUCT = 'MAP_PRODUCT';
     const PACKING_MERGE_TRACKING_SELLER = 'MERGE_TRACKING_SELLER';
     const PACKING_MERGE_PACKING = 'MERGE_PACKAGE';
+    const PACKING_PUT_INTO_DELIVERY_NOTE = 'PUT_INTO_DELIVERY_NOTE';
+    const PACKING_TAKE_OUT_DELIVERY_NOTE = 'TAKE_OUT_DELIVERY_NOTE';
     const PACKING_REMOVE = 'REMOVE';
 
     const STATUS_SELLER_SHIPPED = 'SELLER_SHIPPED';
@@ -42,6 +44,79 @@ class PackingLogs extends \common\modelsMongo\PackingLogs
 //            $writer = new Xlsx($spreadsheet);
 //            $writer->save($fileName);
             return false;
+        }
+    }
+
+    public static function GetLogTracking($code){
+        $rs = [];
+        if($code){
+            /** @var self[] $data */
+            $data = self::find()->where(['like','tracking_code',$code])->orderBy('created_at desc')->all();
+            \Yii::debug($data);
+            foreach ($data as $datum){
+                \Yii::debug($datum->created_at);
+                $tmp = new LogViewForm();
+                $tmp->create_time = $datum->created_at;
+                $tmp->type_log = $datum->getTypeLogText();
+                $tmp->user_email = $datum->user_email;
+                $tmp->user_name = $datum->user_name;
+                $tmp->message = $datum->message_log;
+                $tmp->code_reference = $datum->getCodeReferent();
+                $rs[] = $tmp->getAttributes();
+            }
+        }
+        return $rs;
+    }
+    public function getCodeReferent(){
+        switch ($this->type_log){
+            case self::PACKING_MERGE_TRACKING_SELLER:
+            case self::PACKING_REMOVE:
+                return 'Tracking: '. $this->tracking_code_reference;
+                break;
+            case self::PACKING_MERGE_PACKING:
+                return 'Package: '.$this->package_code_reference;
+                break;
+            case self::PACKING_MAP_PRODUCT:
+                return 'Product: '.$this->product_id;
+                break;
+            case self::PACKING_PUT_INTO_DELIVERY_NOTE:
+            case self::PACKING_TAKE_OUT_DELIVERY_NOTE:
+                return 'Delivery note: '.$this->delivery_note_code;
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
+    public function getTypeLogText(){
+        switch ($this->type_log){
+            case self::PACKING_MERGE_PACKING:
+                return 'Gộp kiện';
+                break;
+            case self::PACKING_MERGE_TRACKING_SELLER:
+                return 'Gộp tracking seller';
+                break;
+            case self::PACKING_REMOVE:
+                return 'Xoá';
+                break;
+            case self::PACKING_MAP_PRODUCT:
+                return 'Map product';
+                break;
+            case self::PACKING_CREATE:
+                return 'Tạo mới';
+                break;
+            case self::PACKING_UPDATE:
+                return 'Cập nhật';
+                break;
+            case self::PACKING_PUT_INTO_DELIVERY_NOTE:
+                return 'Đưa vào phiếu giao';
+                break;
+            case self::PACKING_TAKE_OUT_DELIVERY_NOTE:
+                return 'Bỏ ra khỏi phiếu giao';
+                break;
+            default:
+                return '';
+                break;
         }
     }
 }

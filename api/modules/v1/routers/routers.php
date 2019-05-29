@@ -756,4 +756,23 @@ return [
         ],
         'extraPatterns' => []
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['log-tracking'=>'service/log-tracking'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{code}' =>  '<code:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'POST' => 'view-log',
+            'OPTIONS' => 'options',
+
+        ],
+        'extraPatterns' => [
+            'POST view-log'=> 'view-log',
+            'OPTIONS view-log'=> 'options',
+        ]
+    ],
 ];
