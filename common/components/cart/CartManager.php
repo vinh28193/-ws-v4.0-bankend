@@ -158,19 +158,22 @@ class CartManager extends Component
                 $filter = $key;
                 unset($filter['products']);
 
-                $parent = $this->filterItem($type, $this->normalKeyFilter($filter), $this->getIsSafe());
+                $parents = $this->filterItem($type, $this->normalKeyFilter($filter), $this->getIsSafe());
                 $cartItem = new OrderCartItem();
-                if (count($parent) > 0) {
-                    $parent = $parent[0];
-                    $parentProducts = $parent['key']['products'];
-                    $parentProducts[] = $key['products'][0];
-                    $parent['key']['products'] = $parentProducts;
+                if (count($parents) > 0) {
 
-                    list($ok, $value) = $cartItem->createOrderFormKey($parent['key'], true);
-                    if (!$ok) {
-                        return [false, $value];
+                    foreach ($parents as $parent) {
+                        $parentProducts = $parent['key']['products'];
+                        if (count($parentProducts) < 3) {
+                            $parentProducts[] = $key['products'][0];
+                            $parent['key']['products'] = $parentProducts;
+                            list($ok, $value) = $cartItem->createOrderFormKey($parent['key'], true);
+                            if (!$ok) {
+                                return [false, $value];
+                            }
+                            return [$this->getStorage()->setItem($parent['_id'], $parent['key'], $value, $this->getIsSafe($safeOnly)), 'Thêm sản phẩm thành công'];
+                        }
                     }
-                    return [$this->getStorage()->setItem($parent['_id'], $parent['key'], $value, $this->getIsSafe($safeOnly)), 'Thêm sản phẩm thành công'];
                 }
                 list($ok, $value) = $cartItem->createOrderFormKey($key, false);
                 if (!$ok) {
