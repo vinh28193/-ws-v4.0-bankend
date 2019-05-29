@@ -264,11 +264,9 @@ class OrderController extends BaseApiController
             }
             $j = $i;
 //            for ($j; $j<15; $j++) {
-//                var_dump($StatusOrder[$j]);
-//                $model->$StatusOrder[$j] = null;
-//                die();
+//                $model->$StatusOrder[2] = null;
 //            }
-            if ($post['Order']['column'] == 'purchase_start') {
+            if ($post['Order']['column'] == 'ready_purchase') {
                 $model->current_status = 'READY2PURCHASE';
             } else {
                 $model->current_status = strtoupper(str_replace('_', ' ', $StatusOrder[$i-1]));

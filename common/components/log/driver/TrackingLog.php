@@ -12,6 +12,7 @@ use common\components\log\LoggingDriverInterface;
 use common\modelsMongo\TrackingLogWs;
 use common\models\Manifest;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class TrackingLog extends TrackingLogWs implements LoggingDriverInterface
 {
@@ -51,6 +52,7 @@ class TrackingLog extends TrackingLogWs implements LoggingDriverInterface
          $manifest = $params['manifest'];
          $_request_ip = Yii::$app->getRequest()->getUserIP();
          $boxme_warehosue = $params['boxme_warehosue'];
+         $us_warehouse = ArrayHelper::getValue($params,'us_warehouse');
          $text     = $params['text'];
          $store = $params['store'];
          $log_type = $params['log_type'];
@@ -59,6 +61,7 @@ class TrackingLog extends TrackingLogWs implements LoggingDriverInterface
           $note = new \stdClass; 
           $note->store = $store;
           $note->boxme = $boxme_warehosue;
+          $note->us_warehouse = $us_warehouse;
           $note->manifest = $manifest;
           $note->time_warehosue = $time_warehosue;  
           $note->text = $text;    
@@ -70,7 +73,7 @@ class TrackingLog extends TrackingLogWs implements LoggingDriverInterface
  	     if(empty($query))
  	     {    
 
-	         $manifestobj = Manifest::createSafe($manifest, 1, 1);
+	         $manifestobj = Manifest::createSafe($manifest, $note->boxme, $note->us_warehouse,1);
 	         $object = new \stdClass; 
 	         $object->tracking_code = $params['trackingcode'];
 	         $object->store_id = $manifestobj->store_id;

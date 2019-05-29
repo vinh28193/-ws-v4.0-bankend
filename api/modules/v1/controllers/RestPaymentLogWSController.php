@@ -3,23 +3,20 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
-use common\modelsMongo\PaymentLogWS ;
-use common\models\Order;
+use common\modelsMongo\PaymentLogWS;
 use Yii;
-use yii\web\NotFoundHttpException;
-use yii\web\ServerErrorHttpException;
 
 class RestPaymentLogWSController extends BaseApiController
 {
     /** Role :
-        case 'cms':
-        case 'warehouse':
-        case 'operation':
-        case 'sale':
-        case 'master_sale':
-        case 'master_operation':
-        case 'superAdmin' :
-    **/
+     * case 'cms':
+     * case 'warehouse':
+     * case 'operation':
+     * case 'sale':
+     * case 'master_sale':
+     * case 'master_operation':
+     * case 'superAdmin' :
+     **/
     public function rules()
     {
         return [
@@ -44,7 +41,7 @@ class RestPaymentLogWSController extends BaseApiController
             [
                 'allow' => true,
                 'actions' => ['update', 'delete'],
-                'roles' => $this->getAllRoles(true, ['user','cms', 'warehouse' ,'operation','master_sale','master_operation']),
+                'roles' => $this->getAllRoles(true, ['user', 'cms', 'warehouse', 'operation', 'master_sale', 'master_operation']),
             ],
         ];
     }
@@ -64,8 +61,40 @@ class RestPaymentLogWSController extends BaseApiController
 
     public function actionIndex()
     {
-        $response = PaymentLogWS::search($params = '');
-        return $this->response(true, 'Success', $response);
+        $get = Yii::$app->request->get();
+        $query = PaymentLogWS::find();
+        if (isset($get['ordercode'])) {
+            $query->andWhere(['id' => $get['ordercode']]);
+        }
+        if (isset($get['content'])) {
+            $query->andWhere(['like', 'data_input', $get['content']]);
+        }
+        if (isset($get['ip'])) {
+            $query->andWhere(['request_ip' => $get['ip']]);
+        }
+        if (isset($get['user_name'])) {
+            $query->andWhere(['user_name' => $get['user_name']]);
+        }
+        if ((isset($get['startTime']) && isset($get['endTime']))) {
+            $query->andWhere(['between', 'created_at', (int)Yii::$app->formatter->asTimestamp($get['startTime']), (int)Yii::$app->formatter->asTimestamp($get['endTime'])]);
+        }
+        if ($get['valueCreate'] == 0) {
+            $model = $query->orderBy(['created_at' => SORT_DESC]);
+        }
+        if ($get['valueCreate'] == 1) {
+            $model = $query->orderBy(['created_at' => SORT_ASC]);
+        }
+        $total = $model->count();
+        $limit = isset($get['limit']) ? $get['limit'] : 10;
+        $page = isset($get['page']) ? $get['page'] : 1;
+        $offset = ($page - 1) * $limit;
+        $model->limit($limit)->offset($offset);
+        $query = $model->asArray()->all();
+        $data = [
+            'model' => $query,
+            'totalCount' => $total
+        ];
+        return $this->response(true, "success", $data);
     }
 
     public function actionCreate()
@@ -90,18 +119,18 @@ class RestPaymentLogWSController extends BaseApiController
                 "user_email" => $_user_email,
                 "user_name" => $_user_name,
                 "user_avatar" => null,
-                "Role" =>  $_post['role'],
+                "Role" => $_post['role'],
 
                 //Action thao tác là gì ?
                 "action_path" => $_post['action_path'],
-                "LogTypPaymentWs" =>  $_post['LogTypPaymentWs'], // "Order hoăc Product", // LogType : Order | Product : and Id để join
+                "LogTypPaymentWs" => $_post['LogTypPaymentWs'], // "Order hoăc Product", // LogType : Order | Product : and Id để join
                 "OrderId" => $_post['OrderId'], //"Id để join với Logtype nêu là Order hoặc nếu là Product",
 
                 'status' => $_post['status'],   //  'Trạng thái Thanh Toans',
 
                 // data
-                "data_input" => is_array($_post['data_input']) ? @json_encode($_post['data_input']) : $_post['data_input'] ,   // dữ liệu ban đầu trước khi ghi log
-                "data_output" => is_array($_post['data_output']) ? @json_encode($_post['data_output']) : $_post['data_output'] , // dữ liệu sau khi xử lý
+                "data_input" => is_array($_post['data_input']) ? @json_encode($_post['data_input']) : $_post['data_input'],   // dữ liệu ban đầu trước khi ghi log
+                "data_output" => is_array($_post['data_output']) ? @json_encode($_post['data_output']) : $_post['data_output'], // dữ liệu sau khi xử lý
 
                 // time
                 //"created_at" => "created_at", "updated_at" => "updated_at",

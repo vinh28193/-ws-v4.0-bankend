@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
+use common\logs\TrackingLogs;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
 use common\models\Order;
@@ -59,15 +60,26 @@ class ServiceUsSendingController extends BaseApiController
         $product->order->updateStockinUs($model->stock_in_us);
         $product->order->updateStockoutUs($model->stock_out_us);
         $product->order->save(false);
+        $logTracking = new TrackingLogs();
+        $logTracking->current_status = TrackingLogs::STATUS_STOCK_OUT_US;
+        $logTracking->type_log = TrackingLogs::TRACKING_MAP_PRODUCT;
+        $logTracking->tracking_code = $model->tracking_code;
+        $logTracking->message_log = 'Map tracking '.$model->tracking_code.' với product: ' .$product->id . ', order: '.$product->order->ordercode;
+        $logTracking->message_log .= '<br>Loại tracking chuyển từ '.$model->type_tracking.' sang ';
         if($count > 1){
             DraftDataTracking::updateAll(
                 ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
                 ['tracking_code' => $model->tracking_code]
             );
+            $logTracking->message_log .= DraftDataTracking::TYPE_SPLIT;
         }else{
             $model->type_tracking = DraftDataTracking::TYPE_NORMAL;
             $model->save(0);
+            $logTracking->message_log .= DraftDataTracking::TYPE_NORMAL;
         }
+        $model->refresh();
+        $logTracking->more_data = $model->getAttributes();
+        $logTracking->save();
         return $this->response(true,'Map tracking success!');
     }
     public function actionGetType($id){
@@ -176,7 +188,17 @@ class ServiceUsSendingController extends BaseApiController
             $ext->order->save(false);
         }
         $count = DraftDataTracking::find()->where(['tracking_code' => $data->tracking_code])->count();
+        $logTracking = new TrackingLogs();
+        $logTracking->current_status = TrackingLogs::STATUS_STOCK_OUT_US;
+        $logTracking->type_log = TrackingLogs::TRACKING_MERGE_TRACKING_SELLER;
+        $logTracking->tracking_code_ws = $data->ws_tracking_code;
+        $logTracking->tracking_code = $data->tracking_code;
+        $logTracking->tracking_code_reference = $ext->tracking_code;
+        $logTracking->message_log = 'Gộp tracking '.$data->tracking_code.'' .
+            ' và tracking seller '.$ext->tracking_code.' thành tracking '.$data->tracking_code.'.' .
+            'Và chuyển loại tracking từ : '.$data->type_tracking.' thành: ' ;
         if($count > 1){
+            $data->type_tracking = DraftDataTracking::TYPE_SPLIT;
             DraftDataTracking::updateAll(
                 ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
                 ['tracking_code' => $data->tracking_code]
@@ -185,6 +207,9 @@ class ServiceUsSendingController extends BaseApiController
             $data->type_tracking = DraftDataTracking::TYPE_NORMAL;
             $data->save(0);
         }
+        $logTracking->message_log .= $data->type_tracking;
+        $logTracking->more_data = $data->getAttributes();
+        $logTracking->save();
         return $this->response(true,'Merge success!');
     }
 
@@ -218,6 +243,25 @@ class ServiceUsSendingController extends BaseApiController
                     $model->created_at = time();
                     $model->updated_by = time();
                     $model->save(0);
+                    $logTracking = new TrackingLogs();
+                    $logTracking->tracking_code = $model->tracking_code;
+                    $logTracking->message_log = 'Tạo Tracking Seller '.$model->tracking_code.' cho product '.$product->id.' của order '.$product->order->ordercode;
+                    $logTracking->type_log = TrackingLogs::TRACKING_CREATE;
+                    $logTracking->current_status = TrackingLogs::STATUS_SELLER_SHIPPED;
+                    $logTracking->product_id = $product->id;
+                    $logTracking->order_id = $product->order_id;
+                    $logTracking->more_data = $model->getAttributes();
+                    $logTracking->save();
+                    $params = array(
+                        'manifest'=>null,
+                        'trackingcode' => $model->tracking_code,
+                        'text' => 'Người bán gửi',
+                        'log_type' => 'Seller Shipped',
+                        'store' => null,
+                        'boxme_warehosue' => null
+                    );
+
+                    Yii::$app->wsLog->push('TrackingLog','Seller Shipped','Người bán gửi hàng',$params);
                     $count ++;
                 }
             }

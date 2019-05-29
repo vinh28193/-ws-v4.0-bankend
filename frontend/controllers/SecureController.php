@@ -194,4 +194,29 @@ class SecureController extends FrontendController
             'model' => $model,
         ]);
     }
+
+    public function actionChangePassword()
+    {
+        $userId = Yii::$app->user->getId();
+        $model = User::find()->where(['id' => $userId])->one();
+
+
+        if(isset($_POST['User'])){
+
+            $model->attributes = $_POST['User'];
+            $valid = $model->validate();
+
+            if($valid){
+
+                $model->password_hash = md5($model->passwordNew);
+
+                if($model->save())
+                    $this->redirect(array('change-password','msg'=>'successfully changed password'));
+                else
+                    $this->redirect(array('change-password','msg'=>'password not changed'));
+            }
+        }
+
+        $this->render('changePassword',array('model'=>$model));
+    }
 }

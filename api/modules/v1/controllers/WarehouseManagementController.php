@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers;
 
 
 use api\controllers\BaseApiController;
+use common\logs\TrackingLogs;
 use common\models\TrackingCode;
 use common\models\Warehouse;
 use yii\helpers\ArrayHelper;
@@ -48,7 +49,13 @@ class WarehouseManagementController extends BaseApiController
         if(!$warehouse){
             return $this->response(false, 'Cannot find warehouse '.$this->post['warehouse_received'].'!');
         }
-        $trackingS = explode(',',str_replace(' ','',$this->post['tracking_codes']));
+        if(strpos("1".$this->post['tracking_codes'],",") > 0){
+            $trackingS = explode(",",str_replace(' ','',$this->post['tracking_codes']));
+        }else if(strpos("1".$this->post['tracking_codes'],"\n") > 0){
+            $trackingS = explode("\n",str_replace(' ','',$this->post['tracking_codes']));
+        }else{
+            $trackingS = explode(",",str_replace(' ','',$this->post['tracking_codes']));
+        }
 
         foreach ($trackingS as $tracking){
             if($tracking){
@@ -60,7 +67,17 @@ class WarehouseManagementController extends BaseApiController
                 $trackingNew->warehouse_us_name = $warehouse->name;
                 $trackingNew->store_id = ArrayHelper::getValue($this->post,'store_1',1);
                 $trackingNew->status = TrackingCode::STATUS_US_RECEIVED;
-                $trackingNew->CreateOrUpdate(false);
+                if($trackingNew->CreateOrUpdate(false)){
+                    $logTracking = new TrackingLogs();
+                    $logTracking->current_status = TrackingLogs::STATUS_STOCK_IN_US;
+                    $logTracking->type_log = TrackingLogs::TRACKING_CREATE;
+                    $logTracking->tracking_code = $trackingNew->tracking_code;
+                    $logTracking->message_log = 'Đánh dấu Tracking Kho mỹ nhận '.$trackingNew->tracking_code.'' .
+                        ' tại kho '.$trackingNew->warehouse_us_name;
+                    $logTracking->more_data = $trackingNew->getAttributes();
+                    $logTracking->save();
+                }
+
             }
         }
         return $this->response(true, 'Mark us received success!');
