@@ -59,6 +59,8 @@ class OrderQuery extends \common\components\db\ActiveQuery
     public function withFullRelations(){
         $this->with([
             'products.productFees',
+            'products.packages',
+            'products.trackingCodes',
             'walletTransactions',
             'seller',
             'purchaseAssignee',

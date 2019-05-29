@@ -16,6 +16,7 @@ use common\models\weshop\FormPurchaseItem;
 use common\models\weshop\FormRequestPurchase;
 use Yii;
 use yii\db\ActiveQuery;
+use common\queue\PurcachseQueue;
 
 class PurchaseController extends BaseApiController
 {
@@ -182,6 +183,7 @@ class PurchaseController extends BaseApiController
                     $tmp->sellerId = $order->seller_name;
                     $tmp->ItemType = $order->portal;
                     $tmp->image = $item->link_img;
+                    $tmp->origin_link = $item->link_origin;
                     $tmp->Name = $item->product_name;
                     $tmp->typeCustomer = $cus && $cus->type_customer ? $cus->type_customer : 1;
                     $tmp->price = $item->unitPrice ? $item->unitPrice->amount : 0;
@@ -195,8 +197,9 @@ class PurchaseController extends BaseApiController
                     $tmp->quantity = $item->quantity_customer - $quantity_purchased;
                     $tmp->quantityPurchase = $item->quantity_customer - $quantity_purchased;
                     $tmp->variation = $item->variations;
-                    $tmp->paidTotal = $tmp->paidToSeller = ($tmp->price + $tmp->us_ship + $tmp->us_tax) * $tmp->quantity ;
-                    $tmp->isChange = $item->tax_fee_purchase || $item->shipping_fee_purchase || $item->price_purchase;
+                    $tmp->paidToSeller = ($tmp->price_purchase + $tmp->us_ship_purchase + $tmp->us_tax_purchase) * $tmp->quantity ;
+                    $tmp->paidTotal = ($tmp->price + $tmp->us_ship + $tmp->us_tax) * $tmp->quantity ;
+                    $tmp->isChange = $tmp->paidToSeller > $tmp->paidTotal;
                     $data[$key]['products'][] = $tmp->toArray();
                     if ($type == 'addtocart') {
 //                    $mess = "Add soi ".$item->id." to cart. Total ".count($order)." items!";
@@ -371,8 +374,8 @@ class PurchaseController extends BaseApiController
                 'response' => $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id)
             ]);
 
-            // ToDo : @Phuchc Notication "Mua Hàng Thành Công" 17/05/2019 Call API
-            // Yii::$app->wsFcnApn->Create($_to_token_fingerprint, $_title , $_body , $_click_action)
+            // Send Notification
+            $this->PushNotifications($PurchaseOrder);
 
             $tran->commit();
             return $this->response(true,'Purchase success! PO-'.$PurchaseOrder->id);
@@ -382,6 +385,41 @@ class PurchaseController extends BaseApiController
             return $this->response(false,'something error');
         }
     }
+
+    public function PushNotifications($PurchaseOrder)
+    {
+        // ToDo : @Phuchc Notication "Mua Hàng Thành Công" 17/05/2019 Call API
+        // ToDo : Get Request token FCM list User then send notification
+//        Yii::$app->wsFcnApn->Create($_to_token_fingerprint = 'f42w7MQMVIU:APA91bFSWXH6PLBNgvZTXIS2gm4_QM3Lc-El46dokbqJXXtY8zv8oMaNd4B8LYOTgILSl38COdPQRY_ajdUJoecy6jSxy7O6CUOATTHMt9NqGZRu-W1018mvLzJaf4Cj1z2lSt38o5gG',
+//             $_title = 'Purchase success! PO-'.$PurchaseOrder->id ,
+//            $_body = 'Purchase success! PO-'.$PurchaseOrder->id,
+//            $_click_action='https://admin.weshop.asia');
+
+        $_Token_fcm_ar = [
+            'f42w7MQMVIU:APA91bFSWXH6PLBNgvZTXIS2gm4_QM3Lc-El46dokbqJXXtY8zv8oMaNd4B8LYOTgILSl38COdPQRY_ajdUJoecy6jSxy7O6CUOATTHMt9NqGZRu-W1018mvLzJaf4Cj1z2lSt38o5gG',
+            'f42w7MQMVIU:APA91bFSWXH6PLBNgvZTXIS2gm4_QM3Lc-El46dokbqJXXtY8zv8oMaNd4B8LYOTgILSl38COdPQRY_ajdUJoecy6jSxy7O6CUOATTHMt9NqGZRu-W1018mvLzJaf4Cj1z2lSt38o5gG',
+        ];
+        $_to_token_fingerprint = 'f42w7MQMVIU:APA91bFSWXH6PLBNgvZTXIS2gm4_QM3Lc-El46dokbqJXXtY8zv8oMaNd4B8LYOTgILSl38COdPQRY_ajdUJoecy6jSxy7O6CUOATTHMt9NqGZRu-W1018mvLzJaf4Cj1z2lSt38o5gG';
+        $_title = 'Purchase success! PO-'.$PurchaseOrder->id;
+        $_body = 'Purchase success! PO-'.$PurchaseOrder->id;
+        $_click_action='https://admin.weshop.asia';
+
+        // To push a job into the queue that should run after 1 minutes:
+        $id = Yii::$app->queue->delay(1*60)->push(new PurcachseQueue([
+            '_title' => $_title,
+            '_body' => $_body,
+            '_to_token_fingerprint' => $_to_token_fingerprint,
+            '_click_action' => $_click_action
+        ]));
+        // Check whether the job is waiting for execution.
+        Yii::info(" Check whether the job is waiting for execution : ".Yii::$app->queue->isWaiting($id));
+        // Check whether a worker got the job from the queue and executes it.
+        Yii::info(" Check whether a worker got the job from the queue and executes it : ". Yii::$app->queue->isReserved($id));
+        // Check whether a worker has executed the job.
+        Yii::info(" Check whether a worker has executed the job : ". Yii::$app->queue->isDone($id));
+
+    }
+
     public function actionView($id){
         $purchase = PurchaseProduct::find()->where(['order_id' => $id])
             ->with([

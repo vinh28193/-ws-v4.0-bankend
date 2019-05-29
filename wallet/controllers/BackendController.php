@@ -45,6 +45,7 @@ class BackendController extends Controller
     }
     public function GetResponseCodeAuth(){
         $authorToken = Yii::$app->request->headers->get('Authorization');
+        $authorToken = str_replace('bearer ','',strtolower($authorToken));
         if(!empty($authorToken)){
             /** @var AccessTokens $token */
             $token = AccessTokens::find()->where(['token' => $authorToken])->one();

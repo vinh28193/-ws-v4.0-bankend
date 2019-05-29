@@ -14,7 +14,9 @@ use common\components\db\ActiveQuery;
 use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
 use common\helpers\ExcelHelper;
+use common\logs\TrackingLogs;
 use common\models\draft\DraftDataTracking;
+use common\models\draft\DraftExtensionTrackingMap;
 use common\models\draft\DraftMissingTracking;
 use common\models\Package;
 use common\models\draft\DraftWastingTracking;
@@ -114,6 +116,8 @@ class TrackingCodeController extends BaseApiController
             $unknown->andWhere(['like','tracking_code',$trackingU]);
         }
 
+        $ext = DraftExtensionTrackingMap::find()->with(['order','product'])
+            ->where(['or',['status' => DraftExtensionTrackingMap::STATUST_NEW],['draft_data_tracking_id' => null],['draft_data_tracking_id' => '']]);
         $data['_items']['draftWastingTrackings_total'] = $wast->count();
         $data['_items']['draftMissingTrackings_total'] = $miss->count();
         $data['_items']['draftPackageItems_total'] = $complete->count();
@@ -123,6 +127,7 @@ class TrackingCodeController extends BaseApiController
         $data['_items']['draftMissingTrackings'] = $miss->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_ms)->offset($page_ms*$limit_ms - $limit_ms)->asArray()->all();
         $data['_items']['draftPackageItems'] = $complete->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_c)->offset($page_c*$limit_c - $limit_c)->asArray()->all();
         $data['_items']['unknownTrackings'] = $unknown->with(['order','product','purchaseOrder'])->orderBy('id desc')->limit($limit_u)->offset($page_u*$limit_u - $limit_u)->asArray()->all();
+        $data['_ext'] = $ext->orderBy('id desc')->asArray()->all();
         return $this->response(true, "Success", $data);
     }
 
@@ -151,7 +156,7 @@ class TrackingCodeController extends BaseApiController
             return $this->response(false, "create form undefined store !.");
         }
         if (($warehouse_id = ArrayHelper::getValue($post, 'warehouse')) === null) {
-            return $this->response(false, "create form undefined warehouse !.");
+            return $this->response(false, "create to undefined warehouse !.");
         }
         if (($warehouse_us_id = ArrayHelper::getValue($post, 'warehouse_us')) === null) {
             return $this->response(false, "create form undefined warehouse !.");
@@ -170,7 +175,7 @@ class TrackingCodeController extends BaseApiController
         $transaction = Yii::$app->getDb()->beginTransaction();
 
         try {
-            $manifest = Manifest::createSafe($manifest, $warehouse->id, 1);
+            $manifest = Manifest::createSafe($manifest, $warehouse->id, $warehouse_us->id ,1);
 
             foreach (ExcelHelper::readFromFile('file') as $name => $sheet) {
                 $count = 0;
@@ -180,6 +185,12 @@ class TrackingCodeController extends BaseApiController
                         $tokens[$name]['error'][] = $row;
                         continue;
                     }
+                    $logTracking = new TrackingLogs();
+                    $logTracking->type_log = TrackingLogs::TRACKING_UPDATE;
+                    $logTracking->message_log = 'Cập nhật tracking code: '.$trackingCode.' sang trạng thái '.TrackingLogs::STATUS_STOCK_OUT_US;
+                    $logTracking->message_log = TrackingLogs::STATUS_STOCK_OUT_US;
+                    $logTracking->manifest_code = $manifest->manifest_code;
+                    $logTracking->manifest_id = $manifest->id;
                     $model = TrackingCode::find()
                         ->where([
                             'tracking_code' => $trackingCode,
@@ -193,7 +204,10 @@ class TrackingCodeController extends BaseApiController
                         ])->limit(1)->one();
                     if(!$model){
                         $model = new TrackingCode();
+                        $logTracking->type_log = TrackingLogs::TRACKING_CREATE;
+                        $logTracking->message_log = 'Tạo tracking code: '.$trackingCode.' với trạng thái '.TrackingLogs::STATUS_STOCK_OUT_US;
                     }
+                    $logTracking->message_log .= '<br>Và được đưa vào lô '.$manifest->manifest_code.'-'.$manifest->id;
                     $model->tracking_code = $trackingCode;
                     $model->store_id = $manifest->store_id;
                     $model->manifest_id = $manifest->id;
@@ -207,6 +221,10 @@ class TrackingCodeController extends BaseApiController
                     $model->status = TrackingCode::STATUS_US_SENDING;
                     if (!$model->save(false)) {
                         $tokens[$name]['error'][] = $row;
+                    }else{
+                        $logTracking->tracking_code = $model->tracking_code;
+                        $logTracking->more_data = $model->getAttributes();
+                        $logTracking->save();
                     }
                      //save tracking log
                     $params = array(
@@ -215,10 +233,11 @@ class TrackingCodeController extends BaseApiController
                         'text' => 'Chuyển từ kho mỹ',
                         'log_type' => 'US Sending',
                         'store' => $store,
-                        'boxme_warehosue' => $warehouse
+                        'boxme_warehosue' => $warehouse->id,
+                        'us_warehosue' => $warehouse_us->id
                     );
                    
-                    Yii::$app->wsLog->push('TrackingLog',null,null,$params);
+                    Yii::$app->wsLog->push('TrackingLog','US Sending','Đánh dấu hàng đang dời kho mỹ',$params);
                     $count++;
                 }
                 $tokens[$name]['success'] = $count;

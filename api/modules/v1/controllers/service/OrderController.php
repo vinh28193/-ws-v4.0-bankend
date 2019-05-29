@@ -8,6 +8,7 @@ use api\controllers\BaseApiController;
 use common\lib\WalletBackendService;
 use common\models\Order;
 use common\models\PaymentTransaction;
+use common\models\Product;
 use common\modelsMongo\ChatMongoWs;
 use frontend\modules\payment\PaymentService;
 use Yii;
@@ -19,7 +20,7 @@ class OrderController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index','update','update-arrears'],
+                'actions' => ['index','update','update-arrears','confirm-change-price'],
                 'roles' => $this->getAllRoles(true),
             ],
         ];
@@ -32,6 +33,7 @@ class OrderController extends BaseApiController
             'update' => ['PUT'],
             'create' => ['POST'],
             'update-arrears' => ['POST'],
+            'confirm-change-price' => ['POST'],
         ];
     }
 
@@ -201,5 +203,98 @@ class OrderController extends BaseApiController
             return $this->response(true, 'Update Success');
         }
         return $this->response(false, 'Cannot find product.');
+    }
+
+    public function actionConfirmChangePrice() {
+        $order_id = Yii::$app->request->post('order_id');
+        $product_id = Yii::$app->request->post('product_id');
+        $order = Order::findOne($order_id);
+        if(!$order_id || !$order){
+            return $this->response(false, 'Order not found.');
+        }
+        /** @var  $exRate  \common\components\ExchangeRate */
+        $exRate = \Yii::$app->exRate;
+        $confirm_change_price = Order::STATUS_CONFIRMED_CHANGE_PRICE;
+        foreach ($order->products as $model) {
+            if($product_id && $product_id != $model->id){
+                $confirm_change_price = Order::STATUS_NEED_CONFIRM_CHANGE_PRICE;
+                continue;
+            }
+            $check = false;
+            if($model->price_purchase && $model->price_purchase > $model->unitPrice->amount){
+                $fee = $model->unitPrice;
+                $check = true;
+                $old_local_amount = $fee->local_amount;
+                $old_amount = $fee->amount;
+                $fee->amount = $model->price_purchase;
+                $fee->local_amount = $exRate->usdToVnd($model->price_purchase,23500);
+                $model->total_price_amount_local += $fee->local_amount - $old_local_amount ;
+                $model->price_amount_local += $fee->local_amount - $old_local_amount ;
+                $model->price_amount_origin += $fee->amount - $old_amount;
+                $model->updated_at = time();
+                $order->updated_at = time();
+                $order->total_price_amount_origin += $fee->amount - $old_amount;
+                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                $order->total_origin_fee_local += $fee->local_amount - $old_local_amount;
+                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                $fee->save(0);
+                $model->price_purchase = null;
+            }
+            if($model->shipping_fee_purchase && $model->shipping_fee_purchase > $model->usShippingFee->amount){
+                $check = true;
+                $fee = $model->usShippingFee;
+                $old_local_amount = $fee->local_amount;
+                $old_amount = $fee->amount;
+                $fee->amount = $model->shipping_fee_purchase;
+                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+                $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
+                $model->updated_at = time();
+
+                $order->updated_at = time();
+                $order->total_origin_shipping_fee_local += $fee->amount - $old_amount;
+                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                $order->total_origin_fee_local += $fee->local_amount - $old_local_amount;
+                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                $fee->save(0);
+                $model->shipping_fee_purchase = null;
+            }
+            if($model->tax_fee_purchase && $model->tax_fee_purchase > $model->usTax->amount){
+                $check = true;
+                $fee = $model->usTax;
+                $old_local_amount = $fee->local_amount;
+                $old_amount = $fee->amount;
+                $fee->amount = $model->tax_fee_purchase;
+                $fee->local_amount = $exRate->usdToVnd($fee->amount,23500);
+
+                $model->total_fee_product_local += $fee->local_amount - $old_local_amount ;
+                $model->updated_at = time();
+
+                $order->updated_at = time();
+                $order->total_origin_tax_fee_local += $fee->amount - $old_amount;
+                $order->total_fee_amount_local += $fee->local_amount - $old_local_amount;
+                $order->total_final_amount_local += $fee->local_amount - $old_local_amount;
+                $order->total_origin_fee_local += $fee->local_amount - $old_local_amount;
+                $order->total_amount_local += $fee->local_amount - $old_local_amount;
+                $fee->save(0);
+                $model->tax_fee_purchase = null;
+            }
+            $model->confirm_change_price = Product::STATUS_CONFIRMED_CHANGE_PRICE;
+            $order->confirm_change_price = Order::STATUS_CONFIRMED_CHANGE_PRICE;
+            $order->save(false);
+            $model->save();
+            if($check){
+                ChatMongoWs::SendMessage('Xác nhận tăng giá từ khách hàng cho sản phẩm : '.$model->sku, $order['ordercode']);
+                Yii::$app->wsLog->push('order','updateFee', null, [
+                    'id' => $model->id,
+                    'request' => "Customer confirm changing price",
+                    'response' => "Customer confirm changing price success"
+                ]);
+            }
+        }
+        $order->confirm_change_price = $confirm_change_price;
+        $order->save();
+        return $this->response(true, 'Confirm success.');
     }
 }

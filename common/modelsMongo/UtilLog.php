@@ -20,7 +20,7 @@ class UtilLog extends \yii\mongodb\ActiveRecord
      */
     public static function collectionName()
     {
-        return ['weshop_logs', 'util_log'];
+        return ['Weshop_log_40', 'util_log'];
     }
 
     /**

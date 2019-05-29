@@ -57,7 +57,8 @@ class PackageController extends BaseApiController
         $query = Package::find()
             ->with(['order','manifest.receiveWarehouse'])
             ->leftJoin('product','product.id = package.product_id')
-            ->leftJoin('order','order.id = package.order_id')->where(['<>','remove' , 0]);
+            ->leftJoin('order','order.id = package.order_id')
+            ->active();
         if($tracking_code){
             $query->whereLikeMore('package.tracking_code' , $tracking_code);
         }

@@ -1,0 +1,293 @@
+.navbar-ws .produce-box.amazon ul li .produce-ico.product {
+    background: url(/img/base/base-new.png) no-repeat -236px -141px;
+}
+
+.navbar-ws .produce-box.amazon ul li .produce-ico.plane {
+    background: url(/img/base/base-new.png) no-repeat -282px -141px;
+}
+
+.navbar-ws .produce-box.amazon ul li .produce-ico.ship {
+    background: url(/img/base/base-new.png) no-repeat -327px -141px;
+}
+
+.navbar-ws .produce-box.amazon ul li .produce-ico.insurance {
+    background: url(/img/base/base-new.png) no-repeat -368px -142px;
+}
+
+.keep-navbar.amazon {
+    background: #232f3d;
+}
+
+.keep-navbar.amazon .search-box .search-icon {
+    background: url(/img/base/base-new.png) no-repeat -143px -108px;
+}
+
+.keep-navbar.amazon .search-box .form-group .form-control {
+    border-color: #fff;
+}
+
+.keep-navbar.amazon .search-box .form-group .input-group-btn:last-child > .btn {
+    background: #fcbc70;
+    border-color: #fcbc70;
+    border-left-color: #cdcdcd;
+}
+
+.keep-navbar.amazon .search-box .form-group .input-group-btn:last-child > .btn:hover {
+    background: #ecb16b;
+    border-color: #ecb16b;
+    border-left-color: #cdcdcd;
+}
+
+.keep-navbar.amazon .cate-nav ul li.globe-sub a {
+    background: #fcbc70;
+    color: #000;
+}
+
+.keep-navbar.amazon .cate-nav ul li .sub-menu:before {
+    border-color: #fcbc70 transparent transparent transparent;
+}
+
+.keep-navbar.amazon .cate-nav ul li .sub-menu {
+    border: 1px solid #000000;
+    border-top: none;
+    left: 14px;
+}
+
+.keep-navbar.amazon .cate-nav ul li.globe-sub .sub-menu li a {
+    width: 250px;
+    background: transparent;
+}
+
+.keep-navbar.amazon .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 {
+    width: 893px;
+    height: 451px;
+    border: 1px solid #000000;
+    border-left: 1px solid #EDEDED;
+}
+
+.keep-navbar.amazon .cate-nav ul li.globe-sub .text-title {
+    text-transform: uppercase;
+}
+
+.keep-navbar.amazon .cate-nav ul li .globe-icon {
+    background: url(/img/base/base-new.png) no-repeat 0px -246px;
+}
+
+.keep-navbar.amazon .cate-nav ul li .amz-logo {
+    display: inline-block;
+    vertical-align: top;
+    width: 62px;
+    height: 28px;
+    background: url("/images/home-new/amz-sub-logo.svg") no-repeat 0px 6px;
+}
+
+.keep-navbar.amazon .search-box .search-tag .search-icon {
+    background: url(/img/base/base-new.png) no-repeat -120px -108px;
+}
+
+.keep-navbar.amazon .search-box .search-tag {
+    background: #232f3d;
+}
+
+.keep-navbar.amazon.open .search-box .search-tag .search-icon {
+    background: url("/images/home-new/close-amz.svg") no-repeat;
+}
+
+.keep-navbar.amazon .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-menu .right {
+    width: 402px;
+    float: left;
+    height: 449px;
+    margin-top: -15px;
+    margin-right: -15px;
+}
+
+.keep-navbar.amazon .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-menu .right .banner-sub a {
+    width: 402px;
+    height: 449px;
+    display: block;
+    padding: 0;
+    margin-right: 0;
+    overflow: hidden;
+}
+
+.keep-navbar.amazon .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-menu .right .banner-sub img {
+    width: 402px;
+    height: 449px;
+}
+
+.deal-shock.amazon .deal-title-box .title {
+    background: #232f3d;
+    color: #FCBC70;
+}
+
+.deal-shock.amazon .deal-title-box .title::after {
+    border-color: transparent transparent transparent #232f3d;
+}
+
+.deal-shock.amazon .deal-title-box .see-all {
+    color: #FF9900;
+}
+
+.deal-shock.amazon .deal-title-box .see-all .see-ico {
+    background: url("/images/home-new/see-all-amz.svg") no-repeat;
+}
+
+.deal-shock.amazon .deal-content ul li .item .thumb .sale-tag {
+    background: #fcbc70;
+    color: #232f3d;
+}
+
+.deal-shock.amazon .deal-content ul li .item .bg-hover .btn {
+    color: #232F3D;
+    border-color: #232F3D;
+    background: #e8eaec;
+    background: -webkit-linear-gradient(#fafbfc, #e8eaec);
+    background: -o-linear-gradient(#fafbfc, #e8eaec);
+    background: -moz-linear-gradient(#fafbfc, #e8eaec);
+    background: linear-gradient(#fafbfc, #e8eaec);
+    transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+}
+
+.deal-shock.amazon .deal-content ul li .item .bg-hover .btn:hover {
+    color: #fff;
+    background: #232F3D;
+}
+
+.mz-inner span {
+    display: none !important;
+}
+
+.keep-navbar.ebay .search-box .form-group .form-control, .keep-navbar.amazon .search-box .form-group .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.amz-pd-list .tag-filter {
+    margin: 15px 20px 0;
+}
+
+.header-detail-scroll {
+    margin-top: 0;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: -100px;
+    min-height: 35px;
+    border-bottom: 1px solid #D9D9D9;
+    background: #F1F1F2;
+    z-index: 9999;
+    transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+
+.header-detail-scroll .ht-left {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.header-detail-scroll .ht-right {
+    float: right;
+    margin-top: 10px;
+}
+
+.header-detail-scroll .df-nav-thumb {
+    width: 50px;
+    height: 50px;
+    margin: 2px 7px 2px 0;
+    float: left;
+}
+
+.header-detail-scroll .df-nav-info {
+    float: left;
+    margin-left: 10px;
+}
+
+.header-detail-scroll .df-nav-info h1 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 7px 0;
+}
+
+.header-detail-scroll .df-nav-info h1 a {
+    color: #000000;
+}
+
+.header-detail-scroll .df-nav-info h2 {
+    font-size: 12px;
+    color: #FF0000;
+    margin: 0;
+    font-weight: bold;
+}
+
+.header-detail-scroll .df-nav-info span {
+    font-weight: lighter;
+    color: #000000;
+}
+
+.header-detail-scroll .df-nav-info span a {
+    color: #0066d7;
+}
+
+.header-detail-scroll .btn {
+    text-transform: uppercase;
+    width: 100%;
+    border-color: #83692f;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #333333;
+    background: #efc25a;
+    background: -webkit-linear-gradient(#f4da9f, #efc25a);
+    background: -o-linear-gradient(#f4da9f, #efc25a);
+    background: -moz-linear-gradient(#f4da9f, #efc25a);
+    background: linear-gradient(#f4da9f, #efc25a);
+    transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+}
+
+.header-detail-scroll .btn:hover {
+    background: #fff;
+    color: #efc25a;
+    border-color: #efc25a;
+}
+
+.amz-sale-box {
+    padding: 0 0 20px;
+}
+
+.amz-sale-box .sale-box {
+    display: inline-block;
+    position: relative;
+    background: #fd9927;
+    padding: 6px 12px;
+    color: #fff;
+}
+
+.amz-sale-box .sale-box:after {
+    content: '';
+    display: block;
+    left: 100%;
+    top: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 18px 0 18px 10px;
+    border-color: transparent transparent transparent #fd9927;
+}
+
+.amz-sale-box .sale-box strong {
+    text-transform: uppercase;
+}
+
+.amz-sale-box .sale-box .numb {
+    font-size: 16px;
+}

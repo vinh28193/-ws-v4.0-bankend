@@ -58,14 +58,15 @@ class Manifest extends DbManifest
         return array_merge($paren, $child);
     }
 
-    public static function createSafe($code, $receiveWarehouse, $store)
+    public static function createSafe($code, $receiveWarehouse,$pickupWarehouse, $store)
     {
         $build = [
             'manifest_code' => $code,
             'receive_warehouse_id' => $receiveWarehouse,
+            'send_warehouse_id' => $pickupWarehouse,
             'store_id' => $store
         ];
-        $query = self::find()->andWhere($build)->andWhere(['active' => 1]);
+        $query = self::find()->andWhere(['manifest_code' => $code])->andWhere(['active' => 1]);
         if (($manifest = $query->one()) === null) {
             $manifest = new Manifest($build);
             $manifest->status = self::STATUS_NEW;

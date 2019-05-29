@@ -1,0 +1,2935 @@
+@media (min-width: 1200px) {
+    .buy-ebay .right {
+        width: 942px;
+    }
+
+    .buy-amazone .right {
+        width: 942px;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-1 {
+        width: 40%;
+        height: 395px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+    }
+    .buy-amazone.buy-ebay .right .bottom .banner-1 img {
+        width: 377px;
+        /*height: 395px;*/
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-2 {
+        height: 197.5px;
+        width: 20%;
+        position: absolute;
+        top: 0;
+        left: 377px;
+        overflow: hidden;
+    }
+    .buy-amazone.buy-ebay .right .bottom .banner-4 {
+        width: 256px;
+        height: 198px;
+        left: 376px;
+        border-top: 1px solid #EFEFEF;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-5 {
+        width: 376px;
+        max-width: 40%;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-5 img {
+        /*width: 310px;*/
+    }
+
+    .order-content .filter-top {
+        padding: 10px 55px 10px 0;
+    }
+
+    .page-content {
+        width: 82%;
+        padding: 0px 65px 60px 15px;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-4 {
+        left: 376px;
+        width: 21%;
+    }
+    .buy-ebay .right .bottom .banner-3 img{
+        /*width: 318px;*/
+        height: 198px;
+    }
+
+    .buy-amazone .right .middle .banner-1 img {
+        width: 470px;
+        height: 168px
+    }
+    .buy-amazone .right .bottom .banner-4 img{
+        width: 100%;
+    }
+    .buy-amazone .right .bottom .banner-5 img{
+        height: 198px;
+        /*width: 187px;*/
+    }
+    .buy-amazone .right .bottom .banner-6 img {
+        width: 187px;
+        height: 198px;
+    }
+    .buy-amazone .right .bottom .banner-7 img {
+        width: 188px;
+        height: 198px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .login-form .top .btn {
+
+    }
+
+    .product-block .pd-content .right .right-1 {
+        width: 100%;
+    }
+
+    .product-block .pd-content .right .right-2 {
+        width: 100%;
+    }
+
+    .product-block .pd-content .right .right-2 ul li {
+        width: 50%;
+        float: left;
+    }
+
+    .product-block.block-column .pd-content .right .right-1 {
+        width: 100%;
+    }
+
+    .product-block.block-column .pd-content .right .right-2 {
+        width: 100%;
+    }
+
+    .product-block .pd-content .right .right-1 ul li {
+        width: 50%;
+        float: left;
+    }
+
+    .buy-amazone .right {
+        width: 742px;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-1 {
+        width: 40%;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-2 {
+        border-right: none;
+        position: absolute;
+        top: 0;
+        right: 30%;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-3 {
+        right: 0px;
+        width: 30%;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-4 {
+        left: 40%;
+        width: 30%;
+    }
+
+    .buy-amazone.buy-ebay .right .bottom .banner-5 {
+        right: 0px;
+        width: 30%;
+    }
+    .buy-amazone.buy-ebay .right .bottom .banner-1 img {
+        width: 100%;
+    }
+    .buy-amazone.buy-ebay .right .bottom .banner-5 img {
+        width: 100%;
+    }
+
+    .product-info-box .thumbnail-slider {
+        width: 370px;
+        float: left;
+    }
+
+    .product-info-box .thumbnail-slider .main-example {
+        width: 370px;
+        height: 370px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 370px;
+        height: 370px;
+    }
+
+    .product-info-box .product-info {
+        width: 568px;
+        float: left;
+        padding: 20px;
+    }
+
+    .product-info-box .slider-info .right a {
+        margin-left: 0;
+    }
+
+    .product-info-box .thumbnail-slider .list-slide {
+        padding: 0 70px;
+    }
+
+    .product-info-box .thumbnail-slider .list-slide .owl-carousel .owl-controls .owl-nav .owl-next {
+        right: -70px;
+    }
+
+    .detail-box .product-box ul li {
+        float: left;
+        width: 25%;
+        list-style: none;
+        border-left: 1px solid #EDEDED;
+        border-top: 1px solid #EDEDED;
+    }
+
+    .slider-2 .owl-carousel .owl-controls .owl-nav {
+        display: none;
+    }
+
+    .page-content { /*padding: 0px 15px 60px 15px;*/
+    }
+}
+
+@media (max-width: 1024px) {
+    .deal-shock .deal-content ul li {
+        width: 20%;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 178px;
+        height: 178px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 178px;
+        max-height: 178px;
+    }
+
+    /*.buy-amazone{*/
+    /*display: none;*/
+    /*}*/
+    .portal-mb {
+        display: none;
+    }
+
+    .deal-shock {
+        margin-bottom: 0;
+    }
+
+    .deal-shock .deal-content ul li {
+        width: 33.33%;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 231px;
+        height: 231px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 231px;
+        max-height: 231px;
+    }
+
+    .deal-shock .deal-content ul li .item:hover .bg-hover {
+        display: none;
+    }
+
+    .navbar-default.navbar-2 .navbar-nav > li:nth-child(1) > .dropdown-menu ul li.open .sub-menu, .navbar-default.navbar-2 .navbar-nav > li:nth-child(2) > .dropdown-menu ul li.open .sub-menu, .navbar-default.navbar-2 .navbar-header .navbar-nav > ul li > .dropdown-menu div.TopStore-alias ul li.open .sub-menu {
+        display: none;
+    }
+
+    .price-request-box .price-request .content .form-inline .cloud-man {
+        display: none;
+    }
+
+    .navbar-2 .navbar-nav > li > .dropdown-menu {
+        right: inherit;
+    }
+
+    .navbar-default.navbar-2 .navbar-header .navbar-nav > li:nth-child(2) > .dropdown-menu ul li.open a {
+        margin-right: 0;
+    }
+
+    .navbar-2 .navbar-header .navbar-nav > li.dropdown:nth-child(3) {
+        position: relative;
+    }
+
+    .navbar-default.navbar-2 .navbar-header .navbar-nav > ul li > .dropdown-menu div.TopStore-alias {
+        left: inherit;
+        right: -1px;
+    }
+
+    .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(1) > .dropdown-menu {
+        right: 15px;
+    }
+
+    .slider-2 {
+        margin-bottom: 15px;
+    }
+
+    .top-nav .navbar-default .navbar-nav > li.user-in a .username {
+        display: none;
+    }
+
+    .pricing {
+        margin-right: 0;
+    }
+
+    .sign-in span {
+        display: none;
+    }
+
+    .top-nav .navbar-default .navbar-nav > li > a {
+        padding: 10px 15px;
+    }
+
+    .navbar-nav > li.change-lang {
+        display: none;
+    }
+    .buy-ebay .right .bottom .banner-3 img {
+        width: 100%;
+    }
+    .buy-amazone.buy-ebay .right .bottom .banner-5 img {
+        width: 100%;
+    }
+    .buy-amazone .right .middle .banner-1 img{
+        width: 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    .page-site {
+        padding-top: 60px;
+    }
+
+    .page-content {
+        padding: 0px 30px 60px 15px;
+        margin-left: 260px;
+    }
+
+    .submenu-bg {
+        background: none;
+        z-index: -999;
+    }
+    .tbl-config{
+        display: none !important;
+    }
+}
+
+@media (max-width: 991px) {
+    body {
+        padding-top: 75px;
+    }
+
+    .arrow-right {
+        margin-bottom: -30px;
+    }
+
+    .page-content {
+        padding-right: 25px;
+        margin-left: 275px;
+    }
+
+    #arrows-down {
+        top: 150px;
+        left: 150px;
+    }
+
+    .navbar-2 {
+        display: none;
+    }
+    .menu-toggle {
+        display: block;
+        width: 38px;
+        height: 31px;
+        background: url("/img/base/base-new.png") no-repeat -204px -279px;
+        cursor: pointer;
+        position: absolute;
+        top: 5px;
+        left: 0;
+    }
+    .mb-nav {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .mb-nav ul {
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+    .mb-nav ul li {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 10px;
+    }
+
+    .mb-nav ul li i {
+        display: block;
+    }
+
+    .mb-nav ul li .mb-cart {
+        width: 36px;
+        height: 36px;
+        background: url("/images/home-new/cart-white.svg") no-repeat center;
+        color: #fff;
+        fill: currentColor;
+    }
+
+    .mb-nav ul li .mb-user {
+        width: 36px;
+        height: 36px;
+        background: url("/images/home-new/user-white.svg") no-repeat center;
+    }
+
+    .mb-nav .badge {
+        color: #fff;
+        position: absolute;
+        top: -5px;
+        right: -6px;
+        background: #e67425;
+    }
+
+    .deal-shock {
+        display: none;
+    }
+
+    .buy-amazone, .buy-ebay {
+        display: block;
+    }
+
+    .buy-amazone .right .top {
+        background: #232f3d;
+        color: #fff;
+    }
+
+    .buy-ebay .right .top {
+        background: #0063d1;
+        color: #fff;
+    }
+
+    .slider-2 .owl-carousel .owl-controls {
+        display: none;
+    }
+
+    .deal-shock-mb {
+        display: block;
+        background: #fff;
+        border: 1px solid #ededed;
+        box-shadow: 2px 2px 3px #ddd;
+    }
+
+    .deal-shock-mb .title-box {
+        padding: 15px;
+        border-bottom: 1px solid #ededed;
+    }
+
+    .deal-shock-mb .title-box:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+
+    .deal-shock-mb .title-box .left { /*-: 60%;*/
+        float: left;
+    }
+
+    .deal-shock-mb .title-box .left .title {
+        font-weight: bold;
+        text-transform: uppercase;
+        display: inline-block;
+        position: relative;
+    }
+
+    .deal-shock-mb .title-box .left .title:after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 2px;
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        background: url("/images/home-new/ws-line.png");
+        background-size: cover;
+    }
+
+    .deal-shock-mb .title-box .right {
+        width: 30%;
+        float: right;
+        text-align: right;
+        display: inline-block;
+    }
+
+    .deal-shock-mb .title-box .right a {
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #2b96b6;
+        font-size: 12px;
+    }
+
+    .deal-shock-mb .title-box .right a span {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .deal-shock-mb .title-box .see-all-ico {
+        display: inline-block;
+        vertical-align: middle;
+        width: 16px;
+        height: 16px;
+        background: url("/images/home-new/see-all.svg") no-repeat;
+        transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        -o-transition: all 0.5s;
+        -webkit-transition: all 0.5s;
+        -ms-transition: all 0.5s;
+    }
+
+    .deal-shock-mb .title-box .right a:hover .see-all-ico {
+        transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+    }
+
+    .deal-shock-mb .deal-cate {
+        border-bottom: 1px solid #EDEDED;
+    }
+
+    .deal-shock-mb .deal-cate ul {
+        padding-left: 0;
+        margin-bottom: 0;
+        white-space: nowrap;
+        overflow-x: auto;
+    }
+
+    .deal-shock-mb .deal-cate ul li {
+        list-style: none;
+        display: inline-block;
+        vertical-align: middle;
+        min-width: 20%;
+    }
+
+    .deal-shock-mb .deal-cate ul li a {
+        display: block;
+        padding: 10px 20px;
+        text-align: center;
+        color: #000;
+    }
+
+    .deal-shock-mb .pd-slider {
+    }
+
+    .deal-shock-mb .pd-slider .item {
+        border-left: 0.5px solid #EDEDED;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb {
+        position: relative;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        width: 358px;
+        height: 358px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb img {
+        max-width: 100%;
+        max-height: 358px;
+        width: auto;
+        display: inline;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb .sale-tag {
+        display: block;
+        background: #e67425;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 3px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 12px;
+        padding: 3px 6px;
+        z-index: 2;
+    }
+
+    .deal-shock-mb .pd-slider .item .info {
+        padding: 15px;
+    }
+
+    .deal-shock-mb .pd-slider .item .info .name {
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .deal-shock-mb .pd-slider .item .info .name a {
+        color: #000;
+    }
+
+    .deal-shock-mb .pd-slider .item .info .price-box {
+        margin-top: 10px;
+    }
+
+    .deal-shock-mb .pd-slider .item .info .price-box strong {
+        color: #B12704;
+    }
+
+    .deal-shock-mb .pd-slider .item .info .price-box span {
+        color: #434343;
+        font-size: 13px;
+        text-decoration: line-through;
+        margin-left: 15px;
+    }
+
+    .slider-2 {
+        margin-bottom: 15px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 381.5px;
+        height: 381.5px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb img {
+        max-width: 100%;
+        max-height: 381.5px;
+    }
+    footer .info ul {
+        margin-bottom: 20px;
+    }
+
+    footer .info .connect {
+        margin-top: 20px;
+    }
+
+    footer .top .item-box {
+        width: 100%;
+        border: none;
+    }
+
+    .product-block .title-box .title-breadcrumb, .product-block .title-box .see-all {
+        display: none;
+    }
+
+    .product-block .pd-content .left {
+        display: none;
+    }
+
+    .product-block .pd-content .right {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .product-block .pd-content .right .right-1 {
+        width: 100%;
+        float: none;
+    }
+
+    .product-block .pd-content .right .right-1 ul li {
+        width: 50%;
+    }
+
+    .product-block .pd-content .right .right-2 {
+        width: 100%;
+        float: none;
+    }
+
+    .product-block .pd-content .right .right-1 ul li:nth-child(3) .item {
+        border-bottom-left-radius: 0;
+    }
+
+    .product-block .pd-content .right .right-2 ul li:first-child .item {
+        border-top: none;
+        border-top-right-radius: 0;
+    }
+
+    .product-block .pd-content .right .right-2 ul li:last-child .item {
+        border-bottom-left-radius: 5px;
+    }
+
+    .product-block .pd-content .right .right-1 ul li:nth-child(2) .item {
+        border-top-right-radius: 5px;
+    }
+
+    .deal-shock .deal-content ul li .item:hover .bg-hover, .product-block .pd-content .right .right-1 ul li .item:hover .item-bg, .product-block .pd-content .right .right-2 ul li .item:hover .item-bg {
+        display: none;
+    }
+
+    .product-block .pd-tag-box {
+        display: none;
+    }
+
+    .product-block.block-column .pd-content .right .right-1 {
+        width: 100%;
+    }
+
+    .product-block.block-column .pd-content .right .right-1 ul li {
+        width: 50%;
+        float: left;
+    }
+
+    .product-block.block-column .pd-content .right .right-2 {
+        width: 100%;
+    }
+
+    .product-block.block-column .pd-content .right .right-1 ul li .item {
+        border-bottom-left-radius: 0;
+    }
+
+    .product-block.block-column .column-2 {
+        margin-top: 20px;
+    }
+
+    .amz-browser-content .left, .amz-browser-content .right {
+        width: 100%;
+        float: none;
+        padding-right: 0;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 238px;
+        height: 238px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 238px;
+        max-height: 238px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .info .price-box .price, .amz-browser-content .right .amz-pd-list .content ul li .item .info .price-box .old-price {
+        display: block;
+    }
+
+    .breadcrumb-new {
+        display: none;
+    }
+
+    .amz-browser-content {
+        margin-top: 20px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item {
+        height: inherit;
+    }
+
+    .product-info-box .thumbnail-slider {
+        width: 100%;
+        float: none;
+    }
+
+    .product-info-box .thumbnail-slider .big-image {
+        border-right: none;
+        width: inherit;
+        height: inherit;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 718px;
+        height: 718px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 718px !important;
+        max-height: 718px !important;
+    }
+
+    .product-info-box {
+        /*margin-top: 30px;*/
+    }
+
+    .product-info-box .slider-info, .product-info-box .view-link {
+        padding: 0 20px;
+    }
+
+    .product-info-box .product-info {
+        width: 100%;
+        float: none;
+    }
+
+    .product-info-box .thumbnail-slider .main-example {
+        width: inherit;
+        height: inherit;
+        border-right: none;
+    }
+
+    .product-info-box .thumbnail-slider .list-slide .item {
+        padding-left: calc((100% - 50px) / 2);
+    }
+
+    .product-info-box .thumbnail-slider .upload-image {
+        width: 100%;
+    }
+
+    .detail-box .product-box {
+        border-top: none;
+    }
+
+    .detail-box .product-box ul li {
+        width: 25%;
+        border-top: 1px solid #EDEDED;
+    }
+
+    .detail-box .brand-box2 ul li {
+        width: 25%;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 178px;
+        height: 178px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 158px;
+        max-height: 158px;
+    }
+
+    .mb-search-box {
+        display: block; /*margin-top: 45px;*/ /*padding: 10px 0;*/
+    }
+
+    .mb-search-box .input-group {
+    }
+
+    .mb-search-box .input-group .form-control {
+        height: 40px;
+        border-right: none;
+        box-shadow: none;
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        -o-appearance: none;
+    }
+
+    .mb-search-box .input-group .btn {
+        height: 40px;
+        border-left: none;
+    }
+
+    .mb-search-box .input-group .btn .search-ico {
+        display: block;
+        width: 20px;
+        height: 20px;
+        background: url("/images/home-new/search-amz.svg");
+    }
+
+    .navbar-ws .logo .logo-mb {
+        display: inline-block;
+        padding: 5px 0;
+    }
+
+    .navbar-ws .logo .logo-mb img {
+        height: 30px;
+        width: 105px
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item {
+        height: 470px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 358px;
+        height: 358px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 358px;
+        max-height: 358px;
+    }
+
+    .amz-browser-content.weshop .right .amz-pd-list .top .info-box .result {
+        display: block;
+        margin-top: 10px;
+    }
+
+    .cart-total {
+        float: none;
+        width: 100%;
+    }
+
+    .checkout-right-box {
+        margin-top: 20px;
+    }
+
+    .your-cart .table-respon {
+        width: 100%;
+        overflow-x: scroll;
+    }
+
+    .your-cart p {
+        margin-top: 0;
+    }
+
+    .ship-info .ship-form {
+        margin-bottom: 20px;
+    }
+
+    .select-payment .payment-option {
+        width: 100%;
+        float: none;
+        border-right: none;
+    }
+
+    .select-payment .payment-box {
+        width: 100%;
+        float: none;
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 87.3px;
+    }
+
+    .cart-pay .left {
+        text-align: right;
+    }
+
+    .cart-pay .right {
+        margin-top: 15px;
+    }
+
+    .ship-info .checkout-buyer .form-inline .form-group {
+        width: 100%;
+    }
+
+    .top-nav .nav > li {
+        float: none;
+        position: relative;
+        display: inline-block;
+        margin-left: -4px;
+    }
+
+    .navbar-nav > li.change-lang, .navbar-nav > li.buy-for-me, .navbar-nav > li.ship-for-me, .navbar-nav > li.order-tracking, .navbar-nav > li.calculature, .navbar-nav > li.pricing {
+        display: none;
+    }
+
+    .navbar-nav {
+        width: 100%;
+        text-align: center;
+    }
+
+    .ws-fixed-nav .nav > li {
+        float: none;
+        position: relative;
+        display: inline-block;
+        margin-left: -4px;
+    }
+
+    .ws-fixed-nav .header-search {
+        padding-top: 0;
+    }
+
+    .ws-fixed-nav .navbar-right {
+        float: right !important;
+        margin-top: -54px;
+        text-align: right;
+    }
+
+    .ws-fixed-nav .header-search {
+        display: none;
+    }
+
+    .help-me {
+        display: none;
+    }
+
+    .cart-quantum .form-control {
+        width: 55px;
+    }
+
+    .checkout-right-box .weight .form-inline .form-group input[type="text"] {
+        width: 624px;
+    }
+
+    .checkout-right-box .dimension .form-inline .form-group input[type="text"] {
+        width: 205px;
+    }
+
+    .checkout-right-box .dimension .form-inline .form-group select {
+        width: 72px;
+    }
+
+    .ebay-shop-by {
+        display: none;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a {
+        width: 343px;
+        height: 343px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img {
+        max-width: 343px;
+        max-height: 343px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 170px;
+        height: 170px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 169px;
+        height: 169px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 169px;
+        max-height: 169px;
+    }
+
+    .ebay-seller-list .item .thumb {
+        height: 518px;
+    }
+
+    .ws-fixed-nav .nav > li.buy-for-me, .ws-fixed-nav .nav > li.ship-for-me, .ws-fixed-nav .nav > li.order-tracking, .ws-fixed-nav .nav > li.calculature, .ws-fixed-nav .nav > li.pricing {
+        display: none;
+    }
+
+    .ebay-dailydeal .daily-box .arrow-2 {
+        display: none;
+    }
+
+    .amazone-header .ws-fixed-nav {
+        height: 40px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 128.5px;
+        height: 128.5px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb img {
+        max-width: 128.5px;
+        max-height: 128.5px;
+    }
+
+    .amazone-navbar .cart-box-2 {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .amazone-content .content-right {
+        min-height: inherit;
+    }
+
+    .checkout-right-box {
+        display: none;
+    }
+
+    .order-btn .right .dropdown-menu {
+        width: 100%;
+        z-index: 1;
+    }
+
+    .amz-browser-content.ebay .right .amz-pd-list .top .sort-box .box {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .amz-browser-content.ebay .right .amz-pd-list .top .sort-box .box:last-child {
+        margin-bottom: 0;
+    }
+
+    .amz-browser-content.ebay .right .amz-pd-list .top .info-box span {
+        display: block;
+        margin-top: 17px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .info {
+        height: 126px;
+    }
+
+    .paste-link-box label {
+        text-align: left;
+    }
+
+    .mz-zoom-window.mz-inner a {
+        display: none !important;
+    }
+
+    .slider-2, .slider-2 .owl-carousel img {
+        height: inherit;
+    }
+
+    .slider-2 .owl-carousel .owl-controls {
+        display: none;
+    }
+
+    .slider-2 {
+        margin-bottom: 15px;
+    }
+
+    .navbar-right {
+        float: right !important;
+    }
+
+    .header-navbar {
+        height: auto;
+    }
+
+    .header-logo {
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    .header-navbar .header-cart {
+        text-align: center;
+    }
+
+    .national ul {
+        padding-left: 0;
+        display: block;
+        margin-top: 10px;
+    }
+
+    .national a {
+        margin-left: 0;
+        margin-right: 15px;
+    }
+
+    .cart-bottom #cart-slider .thumb a {
+        width: 150px;
+        height: 150px;
+    }
+
+    .cart-bottom #cart-slider .thumb img {
+        max-width: 150px;
+        max-height: 150px;
+    }
+
+    .navbar-default .navbar-nav .mail-box.open .dropdown-menu, .navbar-default .navbar-nav .question-box.open .dropdown-menu {
+        left: inherit;
+        right: 0;
+    }
+
+    .detail-box .detail-content iframe {
+        display: none;
+    }
+
+    /*Backend user ver 1*/
+    .page-site {
+        padding-top: 0px;
+    }
+    .buy-amazone.buy-ebay .right .bottom .banner-4{
+        left: 40%;
+        width: 20%;
+    }
+}
+
+@media (min-width: 768px) {
+    .drop-header.drop-avatar a .img .fa-ellipsis-v {
+        display: none;
+    }
+
+    .mb-user {
+        display: none;
+    }
+
+    .order-content .nav-tabs > li .badge {
+        font-size: 9px;
+        background: #f23030;
+    }
+
+    .order-content .list-filter .filter-items {
+        width: 12%;
+    }
+
+    .user.submenu-bg {
+        z-index: -999;
+        background: none;
+    }
+
+    .left-menu-beuser.open {
+        display: none;
+    }
+
+    .btn-sideleft {
+        display: none;
+    }
+
+    .logo {
+        margin-top: 5px;
+    }
+
+}
+
+@media (max-width: 767px) {
+    .tbl-config {
+        display: block !important;
+    }
+    .detail-box .detail-content.description .iframe-content {
+        display: none;
+    }
+    .logo {
+        margin: 5px 0 0 10px;
+    }
+
+    .login-form .top .btn {
+
+    }
+
+    .header-search {
+        display: none;
+    }
+
+    .drop-header.drop-avatar .img img {
+        display: none;
+    }
+
+    .drop-header.drop-avatar .img .fa-ellipsis-v {
+        display: block;
+        font-size: 30px;
+        text-align: center;
+        line-height: 40px;
+        color: #989da5;
+        margin-left: 15px;
+    }
+
+    .header-portal .img {
+        border: none;
+    }
+
+    .header-portal > ul > li {
+        border-left: none;
+    }
+
+    .page-content .breadcrumb {
+        display: none;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 236px;
+        height: 236px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 236px;
+        max-height: 236px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 243px;
+        height: 243px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 243px;
+        max-height: 243px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .top .sort-box, .amz-browser-content .right .amz-pd-list .top .info-box {
+        width: 100%;
+        float: none;
+        text-align: left;
+    }
+
+    .amz-browser-content .right .amz-pd-list .top .info-box {
+        margin-bottom: 10px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 735px;
+        height: 735px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 735px !important;
+        max-height: 735px !important;
+    }
+
+    .product-info-box .product-info .content .row-cl .row-left {
+        display: inline-block;
+        width: 40%;
+        text-align: left;
+
+    }
+
+    .product-info-box .product-info .content .row-cl .row-right {
+        padding-left: 0;
+        display: inline-block;
+        width: 60%;
+        float: right;
+    }
+
+    .product-info-box .product-info .content .payment-box .pm-1 .detail {
+        display: none;
+    }
+
+    .product-info-box .product-info .content .payment-box .pm-1:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+
+    .product-info-box .product-info .content .payment-box .pm-col.col-1, .product-info-box .product-info .content .payment-box .pm-col.col-2 {
+        display: block;
+        width: 50%;
+        float: left;
+    }
+
+    .product-info-box .product-info .content .payment-box .pm-col.col-3, .product-info-box .product-info .content .payment-box .pm-col.col-4 {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 0;
+        margin-right: 15px;
+    }
+
+    .product-info-box .product-info .content .payment-box .pm-col.col-3 .btn {
+        width: auto;
+        padding: 6px 20px;
+        margin: 10px 0;
+    }
+
+    .product-info-box .product-info .content .payment-box.paste-link .pm-col.col-1, .product-info-box .product-info .content .payment-box.paste-link .pm-col.col-2, .product-info-box .product-info .content .payment-box.auction .pm-col.col-1, .product-info-box .product-info .content .payment-box.auction .pm-col.col-2, .product-info-box .product-info .content .payment-box.auction-buy .pm-col.col-1, .product-info-box .product-info .content .payment-box.auction-buy .pm-col.col-2 {
+        text-align: center;
+        width: 100%;
+        float: none;
+    }
+
+    .product-info-box .product-info .content .payment-box.paste-link .pm-col.col-2, .product-info-box .product-info .content .payment-box.auction .pm-col.col-2, .product-info-box .product-info .content .payment-box.auction-buy .pm-col.col-2 {
+        width: 60%;
+        margin: auto;
+    }
+
+    .product-info-box .product-info .content .payment-box.auction .col-1 strong {
+        margin-bottom: 5px;
+    }
+
+    .product-info-box .product-info .content .payment-box.paste-link .pm-col.col-2 .approximate {
+        position: relative;
+        bottom: inherit;
+        left: inherit;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 183px;
+        height: 183px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 163px;
+        max-height: 163px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item {
+        height: inherit;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 366px;
+        height: 366px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 366px;
+        max-height: 366px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .info .price-box .old-price {
+        display: block;
+    }
+
+    .amz-browser-content.weshop .right .amz-pd-list .top .info-box, .amz-browser-content.weshop .right .amz-pd-list .top .sort-box {
+        width: 100%;
+    }
+
+    .payment-box .card-form .expiration .form-group, .payment-box .card-form .expiration .form-group .form-control {
+        display: inline-block;
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 89.7px;
+    }
+
+    .navbar-nav.navbar-right {
+        height: 40px;
+    }
+
+    .ws-fixed-nav .navbar-right {
+        height: auto;
+        margin-top: 0;
+    }
+
+    .icon-navbar {
+        float: right;
+        margin-right: 15px;
+    }
+
+    .ws-fixed-nav .navbar-nav .open .dropdown-menu > li > a, .top-nav .navbar-nav .open .dropdown-menu > li > a {
+        padding: 5px;
+    }
+
+    .ws-fixed-nav .navbar-nav .question-box .dropdown-menu li a, .top-nav .navbar-nav .question-box .dropdown-menu li a {
+        padding: 0 20px;
+        display: block;
+    }
+
+    .ws-fixed-nav .navbar-nav .question-box .dropdown-menu li a span, .top-nav .navbar-nav .question-box .dropdown-menu li a span {
+        border-bottom: 1px solid #f3f3f3;
+        display: block;
+        padding: 7px 0;
+    }
+
+    .checkout-right-box .weight .form-inline .form-group input[type="text"] {
+        width: 100%;
+    }
+
+    .checkout-right-box .dimension .form-inline .form-group input[type="text"] {
+        width: 100%;
+    }
+
+    .checkout-right-box .dimension .form-inline .form-group select {
+        width: 100%;
+    }
+
+    .checkout-right-box .weight .form-inline .form-group select {
+        width: 100%;
+    }
+
+    .ship-info .left {
+        width: 100%;
+        float: none;
+    }
+
+    .ship-info .right {
+        width: 100%;
+        float: none;
+        border-left: 0;
+        border-top: 1px solid #e8e8e8;
+    }
+
+    .your-cart p.think {
+        text-align: left;
+        margin-top: 0;
+    }
+
+    .your-cart h2 {
+        margin: 20px 0 10px 0;
+    }
+
+    .ebay-seller-list .item .thumb {
+        height: auto;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 {
+        border: none;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a {
+        width: 735px;
+        height: 735px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img {
+        max-width: 735px;
+        max-height: 735px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 735px;
+        height: 735px;
+        position: static;
+        border: none;
+        border-top: 1px solid #e8e8e8;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 735px;
+        height: 735px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 735px;
+        max-height: 735px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 127px;
+        height: 127px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb img {
+        max-width: 127px;
+        max-height: 127px;
+    }
+
+    .ebay-dailydeal .title .right, .ebay-trending .title .right {
+        text-align: left;
+        margin-top: 5px;
+    }
+
+    .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.mail-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.user-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.noti-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.question-box > a, .amazone-header .ws-fixed-nav .navbar-default .navbar-nav > li.cart-box > a {
+        padding: 13px 15px;
+    }
+
+    .ship-info .title {
+        padding-bottom: 25px;
+    }
+
+    .order-btn .left {
+        width: 78%;
+    }
+
+    .order-btn .right {
+        margin-left: 78%;
+    }
+
+    .footer-info, .introduce {
+        display: none;
+    }
+
+    .product-info-box .product-info .top2 .seller .location {
+        display: block;
+        margin-left: 0;
+    }
+
+    .navbar-default .navbar-nav .noti-box.open .dropdown-menu {
+        position: absolute;
+        float: left;
+        width: auto;
+        background-color: #fff;
+        border: 1px solid #e8e8e8;
+        box-shadow: 2px 2px 3px #ccc;
+        left: -150px;
+    }
+
+    .navbar-default .navbar-nav .noti-box.open .dropdown-menu::before {
+        right: 145px;
+    }
+
+    .ws-fixed-nav .navbar-default .navbar-nav .noti-box.open .dropdown-menu {
+        left: -190px;
+    }
+
+    .ws-fixed-nav .navbar-default .navbar-nav .noti-box.open .dropdown-menu::before {
+        right: 105px;
+    }
+
+    .navbar-default .navbar-nav .mail-box.open .dropdown-menu {
+        position: absolute;
+        float: left;
+        width: 250px;
+        background-color: #fff;
+        border: 1px solid #e8e8e8;
+        box-shadow: 2px 2px 3px #ccc;
+        left: -55px;
+        right: inherit;
+    }
+
+    .navbar-default .navbar-nav .mail-box.open .dropdown-menu::before {
+        right: 152px;
+    }
+
+    .navbar-default .navbar-nav .question-box.open .dropdown-menu {
+        position: absolute;
+        float: left;
+        width: 250px;
+        background-color: #fff;
+        border: 1px solid #e8e8e8;
+        box-shadow: 2px 2px 3px #ccc;
+        left: -150px;
+        right: inherit;
+    }
+
+    .navbar-default .navbar-nav .question-box.open .dropdown-menu::before {
+        right: 57px;
+    }
+
+    .navbar-default .navbar-nav .user-in.open .dropdown-menu {
+        position: absolute;
+        float: left;
+        width: 250px;
+        background-color: #fff;
+        border: 1px solid #e8e8e8;
+        box-shadow: 2px 2px 3px #ccc;
+        left: -1px;
+        right: inherit;
+    }
+
+    .navbar-default .navbar-nav .user-in.open .dropdown-menu::before {
+        right: inherit;
+        left: 13px;
+    }
+
+    .top-nav .navbar-default .navbar-nav > li.sign-in a {
+        padding: 10px 15px;
+    }
+
+    .navbar-header {
+        float: left;
+    }
+
+    .icon-navbar {
+        float: left;
+    }
+
+    .top-nav .navbar-default .navbar-nav > li.user-in.no-avatar a {
+        padding: 12px 15px;
+    }
+
+    .header-navbar .header-cart {
+        display: none;
+    }
+
+    .payment-offline .po-box {
+        width: 100%;
+    }
+
+    .amz-sale-box .sale-box:after {
+        display: none;
+    }
+
+    .ship-info {
+        background: transparent;
+    }
+
+    .ship-info .left {
+        margin-bottom: 20px;
+    }
+
+    .ship-info .left, .ship-info .right {
+        background: #fff;
+    }
+
+    .ship-info .title {
+        padding-bottom: 15px;
+    }
+
+    .home-new .order-text.name {
+        max-width: 200px;
+    }
+
+    .support-btn {
+        display: none;
+    }
+
+    .price-request2 {
+        /*display: none;*/
+    }
+
+    .your-cart .ship-info .right .title {
+        padding: 0;
+        margin: 0;
+        border-bottom: none;
+    }
+
+    .your-cart .ship-info .right .showbuyer {
+        display: none;
+    }
+
+    /*User backend*/
+    .page-content {
+        padding: 0px 15px 60px;
+        margin-left: 15px;
+    }
+
+    .order-content .nav-tabs > li > a {
+        font-size: 20px;
+    }
+
+    .order-content .nav-tabs > li .badge {
+        font-size: 13px;
+        background: #f23030;
+    }
+
+    .order-content .list-filter .filter-items {
+        width: 15%;
+    }
+
+    .info-content .order-content ul {
+        text-align: center;
+    }
+
+    .default-page-content .top-page-content .title-left {
+        float: none !important;
+        text-align: center;
+    }
+
+    .navigator-inner .btn-sideleft {
+        top: 10px;
+    }
+
+    .navigator-inner .logo {
+        float: none !important;
+    }
+
+    .navigator-inner .logo .info-logo {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .navigator-inner .header-portal {
+        margin-top: -51px;
+    }
+    .toggle-navbar.open .arrow .fa{
+        top: 0;
+        right: 0;
+        position: absolute;
+    }
+    .item-block .item .arrow .fa-chevron-right{
+        display: inline-block;
+    }
+    .item-block .item.open .arrow .fa-chevron-right{
+        display: none;
+    }
+    .item-block .item .arrow .fa-chevron-down{
+        display: none;
+    }
+    .item-block .item.open .arrow .fa-chevron-down{
+        display: inline-block;
+    }
+}
+
+@media (max-width: 736px) {
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 226px;
+        height: 226px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 226px;
+        max-height: 226px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 366px;
+        height: 366px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb img {
+        max-width: 100%;
+        max-height: 366px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 233px;
+        height: 233px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 233px;
+        max-height: 233px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 704px;
+        height: 704px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 704px !important;
+        max-height: 704px !important;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 175px;
+        height: 175px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 155px;
+        max-height: 155px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 351px;
+        height: 351px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 351px;
+        max-height: 351px;
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 85.4px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 127px;
+        height: 127px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb img {
+        max-width: 127px;
+        max-height: 127px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 704px;
+        height: 704px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 704px;
+        height: 704px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 704px;
+        max-height: 704px;
+    }
+
+    .box_table_new .visible-xs .box-row {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 676px) {
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 206px;
+        height: 206px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 206px;
+        max-height: 206px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 336px;
+        height: 336px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb img {
+        max-width: 100%;
+        max-height: 336px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 213px;
+        height: 213px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 213px;
+        max-height: 213px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 644px;
+        height: 644px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 644px !important;
+        max-height: 644px !important;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 160px;
+        height: 160px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 140px;
+        max-height: 140px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 321px;
+        height: 321px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 321px;
+        max-height: 321px;
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 77px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 111px;
+        height: 111px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 111px;
+        max-height: 111px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb .sale-tag {
+        width: 70px;
+        height: 61px;
+        background: url("/img/base/base.png") no-repeat -1380px -53px;
+        background-size: 1500px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb .sale-tag i {
+        top: 12px;
+        left: 14px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 644px;
+        height: 644px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 644px;
+        height: 644px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 644px;
+        max-height: 644px;
+    }
+
+    .order-btn .left {
+        width: auto;
+        float: none;
+    }
+
+    .order-btn .right {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+
+    .cart-bottom #cart-slider .thumb a {
+        width: 125px;
+        height: 125px;
+    }
+
+    .cart-bottom #cart-slider .thumb img {
+        max-width: 125px;
+        max-height: 125px;
+    }
+}
+
+@media (max-width: 640px) {
+    /*.aplus-v2 .module-12 .apm-hero-image, .aplus-v2 .module-11 .apm-hero-image {*/
+        /*display: none;*/
+    /*}*/
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 194px;
+        height: 194px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 194px;
+        max-height: 194px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 318px;
+        height: 318px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb img {
+        max-width: 100%;
+        max-height: 318px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 201px;
+        height: 201px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 201px;
+        max-height: 201px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 608px;
+        height: 608px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 608px !important;
+        max-height: 608px !important;
+    }
+
+    .product-info-box .product-info .content .payment-box .pm-2 .row-cl-2 {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 151px;
+        height: 151px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 131px;
+        max-height: 131px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 303px;
+        height: 303px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 303px;
+        max-height: 303px;
+    }
+
+    .payment-box .card-form .form-left {
+        float: none;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+    }
+
+    .payment-box .card-form .form-mid {
+        width: 70%;
+    }
+
+    .payment-box .card-form .form-right {
+        width: 30%;
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 127.8px;
+    }
+
+    .order-total {
+        width: 100%;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 608px;
+        height: 608px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 608px;
+        height: 608px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 608px;
+        max-height: 608px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 102px;
+        height: 102px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 102px;
+        max-height: 102px;
+    }
+}
+
+@media (max-width: 533px) {
+    .deal-shock .deal-content ul li {
+        width: 50%;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 244px;
+        height: 244px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 244px;
+        max-height: 244px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 264.5px;
+        height: 264.5px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb img {
+
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li {
+        width: 50%;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li:nth-child(3n) {
+        border-right-color: #ededed;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li:nth-child(2n) {
+        border-right-color: transparent;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 249px;
+        height: 249px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 249px;
+        max-height: 249px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 501px;
+        height: 501px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 501px !important;
+        max-height: 501px !important;
+    }
+
+    .product-info-box .product-info .content .row-cl select.form-select {
+        display: block;
+        width:100%;
+    }
+
+    .detail-box .product-box ul li {
+        width: 50%;
+    }
+
+    .detail-box .detail-content.description .row-cl-3 .row-left {
+        width: 100%;
+        float: none;
+    }
+
+    .detail-box .detail-content.description .row-cl-3 .row-right {
+        margin-left: 0;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 250px;
+        height: 250px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 230px;
+        max-height: 230px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 249px;
+        height: 249px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 249px;
+        max-height: 249px;
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 102.8px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 501px;
+        height: 501px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 501px;
+        height: 501px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 501px;
+        max-height: 501px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 198px;
+        height: 198px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 198px;
+        max-height: 198px;
+    }
+
+    .cart-bottom #cart-slider .thumb img {
+        max-width: 200px;
+        max-height: 200px;
+    }
+
+    .video-wrap {
+        display: none;
+    }
+
+    .payment-offline .po-box .po-row .po-left {
+        width: 100%;
+        float: none;
+        padding: 0;
+        text-align: center;
+    }
+
+    .payment-offline .po-box .po-row .po-right {
+        width: 100%;
+        float: none;
+        padding: 0;
+        text-align: center;
+    }
+    .product-block .pd-content .right .right-2 ul li{
+        width: 100%;
+    }
+    .loading_new{
+
+    }
+    /*Checkout ! */
+    .tbl-config {
+        display: block !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .mb-nav {
+        top: 0px;
+    }
+    .aplus-v2 .aplus-module{
+        min-width: 100%;
+    }
+    .menu-toggle {
+        width: 30px;
+        height: 30px;
+        background: url("/img/base/base-new.png") no-repeat -170px -327px;
+    }
+
+    .mb-nav ul li.avatar-mb {
+        max-width: 35px;
+        max-height: 35px;
+    }
+
+    .mb-nav ul li .mb-cart {
+        width: 30px;
+        height: 30px;
+        margin-top: 5px;
+    }
+
+    .mb-nav ul li .mb-user {
+        width: 30px;
+        height: 30px;
+        background: url("../home/base-new.png") no-repeat -113px -330px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 218px;
+        height: 218px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 218px;
+        max-height: 218px;
+    }
+
+    .deal-shock .deal-content ul li .item .info .price-box strong, .deal-shock .deal-content ul li .item .info .price-box span {
+        display: block;
+        margin-left: 0;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 238px;
+        height: 238px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb img {
+
+
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 223px;
+        height: 223px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 223px;
+        max-height: 223px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 448px;
+        height: 448px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 448px !important;
+        max-height: 448px !important;
+    }
+
+    .product-info-box .slider-info .left {
+        float: none;
+        width: 100%;
+    }
+
+    .product-info-box .slider-info .right {
+        float: none;
+        width: 100%;
+        text-align: left;
+    }
+
+    .product-info-box .slider-info .right a {
+        margin-left: 0;
+        margin-right: 10px;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 223px;
+        height: 223px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 203px;
+        max-height: 203px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 223px;
+        height: 223px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 223px;
+        max-height: 223px;
+    }
+
+    .cart-total .cart-btn .btn {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 90.4px;
+    }
+
+    .ws-fixed-nav .navbar-right {
+        display: none;
+    }
+
+    .cart-total .cart-btn .left {
+        width: 100%;
+        float: none;
+        text-align: center;
+    }
+
+    .cart-total .cart-btn .right {
+        width: 100%;
+        float: none;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 448px;
+        height: 448px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 448px;
+        height: 448px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 448px;
+        max-height: 448px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 173px;
+        height: 173px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 173px;
+        max-height: 173px;
+    }
+
+    .cart-bottom #cart-slider .thumb a {
+        width: 150px;
+        height: 150px;
+    }
+
+    .cart-bottom #cart-slider .thumb img {
+        max-width: 150px;
+        max-height: 150px;
+    }
+
+    .ws-fixed-nav .navbar-default .navbar-nav .noti-box.open .dropdown-menu {
+        width: 360px;
+        left: -180px;
+    }
+}
+
+@media (max-width: 414px) {
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 185px;
+        height: 185px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 185px;
+        max-height: 185px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 205px;
+        height: 205px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb img {
+        max-width: 205px;
+
+    }
+
+    .product-block .pd-content .right .right-1 ul li {
+        width: 100%;
+    }
+
+    .product-block .pd-content .right .right-1 ul li:first-child .item {
+        border-top-right-radius: 5px;
+    }
+
+    .product-block .pd-content .right .right-2 ul li .item {
+        border-left: 1px solid #EDEDED;
+    }
+
+    .product-block .pd-content .right .right-1 ul li .item {
+        margin-left: 0;
+    }
+
+    .product-block.block-column .pd-content .right .right-1 ul li {
+        width: 100%;
+    }
+
+    .product-block .pd-content .right .right-1 ul li:nth-child(2) .item {
+        border-top-right-radius: 0;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 190px;
+        height: 190px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 190px;
+        max-height: 190px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 382px;
+        height: 382px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 382px !important;
+        max-height: 382px !important;
+    }
+
+    .product-info-box .product-info .content .row-cl .payment-method li {
+        margin-bottom: 10px;
+    }
+
+    .product-info-box .product-info .content .payment-box .pm-col.col-1, .product-info-box .product-info .content .payment-box .pm-col.col-2 {
+        width: 100%;
+        float: left;
+        text-align: center;
+        padding: 0;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 190px;
+        height: 190px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 170px;
+        max-height: 170px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 381px;
+        height: 381px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 381px;
+        max-height: 381px;
+    }
+
+    .payment-box .card-form .form-mid {
+        width: 100%;
+        float: none;
+    }
+
+    .payment-box .card-form .form-right {
+        width: 100%;
+        float: none;
+    }
+
+    .order-total .left {
+        width: 100%;
+        float: none;
+        text-align: left;
+        margin-bottom: 5px;
+    }
+
+    .order-total .right {
+        width: 100%;
+        float: none;
+        text-align: left;
+        padding-left: 0;
+    }
+
+    .order-total .form-group {
+        margin-bottom: 15px;
+    }
+
+    .cart-pay .left, .cart-pay .right {
+        text-align: right;
+    }
+
+    .your-cart h2 {
+        font-size: 20px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 382px;
+        height: 382px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 382px;
+        height: 382px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 382px;
+        max-height: 382px;
+    }
+
+    .ebay-search-form .ebay-search-select {
+        display: none;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 141px;
+        height: 141px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 141px;
+        max-height: 141px;
+    }
+
+    .header-detail-scroll .ht-right {
+        margin-bottom: 15px;
+    }
+
+    .navbar-default .navbar-nav .noti-box.open .dropdown-menu {
+        width: 360px;
+        left: -157px;
+    }
+
+    .navbar-default .navbar-nav .noti-box.open .dropdown-menu::before {
+        right: 160px;
+    }
+
+    .ws-fixed-nav .navbar-default .navbar-nav .noti-box.open .dropdown-menu {
+        width: 360px;
+        left: -160px;
+    }
+
+    .navbar-header {
+        float: none;
+    }
+
+    .icon-navbar {
+        float: none;
+        border-top: 1px solid #e8e8e8;
+    }
+
+    .navbar-default .navbar-nav .user-in.open .dropdown-menu {
+        left: -7px;
+    }
+
+    .navbar-default .navbar-nav .user-in.open .dropdown-menu::before {
+        left: 12px;
+        right: inherit;
+    }
+
+    .ship-info .title .rec_left, .ship-info .title .deli-method {
+        width: 100%;
+    }
+
+    .ship-info .title .rec_left {
+        margin-bottom: 10px;
+    }
+
+    .deli-method .switch-btn {
+        text-align: left !important;
+    }
+    .deli-method .switch-btn span {
+        margin-top: -30px !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 165px;
+        height: 165px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 165px;
+        max-height: 165px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 372px;
+        height: 372px;
+    }
+
+    footer .top .item-box .accept-payment li {
+        margin: 2px 0;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li {
+        width: 100%;
+        border-right-color: transparent;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 342px;
+        height: 342px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 342px;
+        max-height: 342px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 343px;
+        height: 343px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 343px !important;
+        max-height: 343px !important;
+    }
+
+    .product-info-box .product-info .content .payment-box .pm-2 .row-cl-2 .row-left {
+        width: 50%;
+        display: inline-block;
+        float: none;
+    }
+
+    .product-info-box .product-info .content .payment-box .pm-2 .row-cl-2 .row-right {
+        width: 50%;
+        float: right;
+        text-align: left;
+        padding-left: 10px;
+    }
+
+    .detail-box .brand-box2 ul li {
+        width: 50%;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 171px;
+        height: 171px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 151px;
+        max-height: 151px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 342px;
+        height: 342px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 342px;
+        max-height: 342px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 343px;
+        height: 343px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 343px;
+        height: 343px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 343px;
+        max-height: 343px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 286px;
+        height: 286px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 286px;
+        max-height: 286px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .info {
+        height: inherit;
+    }
+
+    .cart-bottom #cart-slider .thumb a {
+        width: 250px;
+        height: 250px;
+    }
+
+    .cart-bottom #cart-slider .thumb img {
+        max-width: 250px;
+        max-height: 250px;
+    }
+
+    .navbar-default .navbar-nav .noti-box.open .dropdown-menu {
+        left: -135px;
+        width: 320px;
+    }
+
+    .navbar-default .navbar-nav .noti-box.open .dropdown-menu::before {
+        right: 142px;
+    }
+
+    .ws-fixed-nav .navbar-default .navbar-nav .noti-box.open .dropdown-menu {
+        left: -155px;
+        width: 360px;
+    }
+}
+
+@media (max-width: 360px) {
+    .deal-shock .deal-content ul li {
+        width: 100%;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 328px;
+        height: 328px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 328px;
+        max-height: 328px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 357px;
+        height: 357px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 327px;
+        height: 327px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 327px;
+        max-height: 327px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 328px;
+        height: 328px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 328px !important;
+        max-height: 328px !important;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 163px;
+        height: 163px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 143px;
+        max-height: 143px;
+    }
+
+    .amz-browser-content.weshop .nav-tabs > li > a > span {
+        display: none;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 351px;
+        height: 351px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 351px;
+        max-height: 351px;
+    }
+
+    .ship-info .ship-to .address .info {
+        max-width: 220px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 328px;
+        height: 328px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 328px;
+        height: 328px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 328px;
+        max-height: 328px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 272px;
+        height: 272px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 272px;
+        max-height: 272px;
+    }
+
+    .ws-fixed-nav .navbar-default .navbar-nav .noti-box.open .dropdown-menu {
+        left: -126px;
+        width: 300px;
+    }
+
+    .navbar-default .navbar-nav .noti-box.open .dropdown-menu {
+        left: -130px;
+        width: 300px;
+    }
+
+    .navbar-default .navbar-nav .mail-box.open .dropdown-menu {
+        left: -55px;
+    }
+
+    .navbar-default .navbar-nav .question-box.open .dropdown-menu {
+        left: -150px;
+    }
+
+    .navbar-default .navbar-nav .noti-box.open .dropdown-menu::before {
+        right: 127px;
+    }
+}
+
+@media (max-width: 320px) {
+    .aplus-v2 .module-12 .apm-hero-image img, .aplus-v2 .module-11 .apm-hero-image img {
+        max-width: 240px;
+    }
+    .deal-shock .deal-content ul li .item .thumb a {
+        width: 288px;
+        height: 288px;
+    }
+
+    .deal-shock .deal-content ul li .item .thumb img {
+        max-width: 288px;
+        max-height: 288px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb a {
+        width: 317px;
+        height: 317px;
+    }
+
+    .deal-shock-mb .pd-slider .item .thumb img {
+
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb a {
+        width: 287px;
+        height: 287px;
+    }
+
+    .amz-browser-content .right .amz-pd-list .content ul li .item .thumb img {
+        max-width: 287px;
+        max-height: 287px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example a {
+        width: 288px;
+        height: 288px;
+    }
+
+    .product-info-box .thumbnail-slider .main-example img {
+        max-width: 288px !important;
+        max-height: 288px !important;
+    }
+
+    .detail-box .product-box ul li .thumb a {
+        width: 143px;
+        height: 143px;
+    }
+
+    .detail-box .product-box ul li .thumb img {
+        max-width: 123px;
+        max-height: 123px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb a {
+        width: 287px;
+        height: 287px;
+    }
+
+    .amz-browser-content.weshop .search-result-slider .item .thumb img {
+        max-width: 287px;
+        max-height: 287px;
+    }
+
+    .payment-box .card-form .form-mid .expiration .form-control {
+        width: 80.9px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1, .ebay-seller-list .item .thumb .thumb-2, .ebay-seller-list .item .thumb .thumb-3 {
+        width: 288px;
+        height: 288px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 a, .ebay-seller-list .item .thumb .thumb-2 a, .ebay-seller-list .item .thumb .thumb-3 a {
+        width: 288px;
+        height: 288px;
+    }
+
+    .ebay-seller-list .item .thumb .thumb-1 img, .ebay-seller-list .item .thumb .thumb-2 img, .ebay-seller-list .item .thumb .thumb-3 img {
+        max-width: 288px;
+        max-height: 288px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a {
+        width: 234px;
+        height: 234px;
+    }
+
+    .ebay-dailydeal .slider-box .item .thumb a img {
+        max-width: 234px;
+        max-height: 234px;
+    }
+
+    .recommend {
+        text-align: center;
+    }
+
+    .recommend .btn {
+        font-size: 12px;
+    }
+}

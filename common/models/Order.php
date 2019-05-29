@@ -91,6 +91,8 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const DIFF_MONEY_LECH = 1;
     const DIFF_MONEY_HIDE = 2;
 
+    const STATUS_NEED_CONFIRM_CHANGE_PRICE = 1;
+    const STATUS_CONFIRMED_CHANGE_PRICE = 0;
     /**
      * @inheritdoc
      */

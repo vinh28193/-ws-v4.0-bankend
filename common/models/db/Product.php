@@ -53,6 +53,7 @@ use Yii;
  * @property int $cancel
  * @property int $lost
  * @property int $refunded
+ * @property int $confirm_change_price 0: là không có thay đổi giá hoặc có thay đổi nhưng đã confirm. 1: là có thay đổi cần xác nhận
  *
  * @property PurchaseProduct[] $purchaseProducts
  */
@@ -73,7 +74,7 @@ class Product extends \common\components\db\ActiveRecord
     {
         return [
             [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'created_at', 'product_name'], 'required'],
-            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancel', 'lost', 'refunded'], 'integer'],
+            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancel', 'lost', 'refunded', 'confirm_change_price'], 'integer'],
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'product_name'], 'string'],
             [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_fee_product_local', 'price_purchase', 'shipping_fee_purchase', 'tax_fee_purchase', 'total_weight_temporary', 'seller_refund_amount'], 'number'],
             [['portal', 'sku', 'parent_sku', 'version', 'condition', 'note_boxme', 'current_status'], 'string', 'max' => 255],
@@ -133,6 +134,7 @@ class Product extends \common\components\db\ActiveRecord
             'cancel' => 'Cancel',
             'lost' => 'Lost',
             'refunded' => 'Refunded',
+            'confirm_change_price' => 'Confirm Change Price',
         ];
     }
 
