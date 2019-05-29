@@ -565,8 +565,8 @@ ws.payment = (function ($) {
             pub.payment.total_discount_amount = $response.discount;
             pub.payment.total_amount_display = pub.payment.total_amount - pub.payment.total_discount_amount;
             discountBox.css('display', 'flex');
-            discountBox.find('div.right').html('- ' + ws.numberFormat(pub.payment.total_discount_amount, -3) + ' <i class="currency">' + pub.payment.currency + '</i>');
-            box.find('li#finalPrice').find('div.right').html(ws.numberFormat(pub.payment.total_amount_display, -3) + ' <i class="currency">' + pub.payment.currency + '</i>');
+            discountBox.find('div.right').html('- ' + ws.showMoney(pub.payment.total_discount_amount) + '</i>');
+            box.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.total_amount_display));
             box.find('li[rel="detail"]').remove();
             box.prepend(initPromotionView(pub.payment.discount_detail));
 
@@ -586,7 +586,7 @@ ws.payment = (function ($) {
                 $('#discountInputCoupon').css('display', 'none');
             }
             text += item.code + '<i class="fas fa-question-circle code-info" data-toggle="tooltip" data-placement="top" title="' + item.message + '" data-original-title="' + item.message + '"></i></div></div>';
-            text += '<div class="right"> - ' + ws.numberFormat(item.value, -3) + '<i class="currency">' + pub.payment.currency + '</i></div>';
+            text += '<div class="right"> - ' + ws.showMoney(item.value) + '</div>';
             text += '</li>';
         });
         return text;
