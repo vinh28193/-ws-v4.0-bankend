@@ -133,17 +133,14 @@
         watch: function ($param) {
             var $cart = $(this);
             var container = '#' + $cart.attr('id');
-            console.log($param);
-            console.log(container);
-            // ws.ajax('/checkout/cart/selection', {
-            //     dataType: 'json',
-            //     method: 'post',
-            //     data: $param,
-            //     success: function (response, textStatus, xhr) {
-            //         // updateItem(response);
-            //         $.pjax.reload({container: container});
-            //     }
-            // });
+            ws.ajax('/checkout/cart/selection', {
+                dataType: 'json',
+                method: 'post',
+                data: $param,
+                success: function () {
+                    $.pjax.reload({container: container});
+                }
+            });
 
         },
         update: function (param) {

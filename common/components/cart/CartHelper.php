@@ -29,7 +29,9 @@ class CartHelper
 
     public static function mapCartKeys($items)
     {
-        $keys = ArrayHelper::map($items, '_id', 'key.products');
+        $keys = ArrayHelper::map($items, function ($item) {
+            return (string)$item['_id'];
+        }, 'key.products');
         return array_map(function ($key) {
             return array_map(function ($e) {
                 return [

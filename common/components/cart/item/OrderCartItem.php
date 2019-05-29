@@ -14,18 +14,21 @@ class OrderCartItem extends BaseObject
 
     public $id;
     public $source;
-    public $seller;
+    public $sellerId;
     public $quantity = 1;
     public $image;
     public $sku = null;
 
-    public function createOrderFormKey($key)
+    public function createOrderFormKey(&$key, $refresh = false)
     {
         $tempKey = $key;
         $products = ArrayHelper::remove($tempKey, 'products', []);
         $orders = [];
         foreach ($products as $index => $param) {
-            $param = ArrayHelper::merge($param, $tempKey);
+            $param = ArrayHelper::merge($param, [
+                'source' => $tempKey['source'],
+                'sellerId' => $tempKey['sellerId']
+            ]);
             $new = new self($param);
             list($ok, $newOrder) = $new->filterProduct();
             if (!$ok) {
@@ -38,9 +41,23 @@ class OrderCartItem extends BaseObject
             return [false, 'Can not add an invalid item into cart'];
         }
         $order = array_shift($orders);
+
         while (!empty($orders)) {
             $order = CartHelper::mergeItem($order, array_shift($orders));
         }
+
+        if (empty($key['seller']) && !$refresh) {
+            $key['seller'] = $order['seller'];
+        } else if ($refresh) {
+            $order['current_status'] = $key['current_status'];
+            $order['sale_support_id'] = $key['supportId'];
+            if (!empty($key['times'])) {
+                foreach ($key['times'] as $k => $time) {
+                    $order[$k] = $time;
+                }
+            }
+        }
+
         return [true, $order];
     }
 
@@ -49,7 +66,7 @@ class OrderCartItem extends BaseObject
         $params = [
             'type' => $this->source,
             'id' => $this->id,
-            'seller' => $this->seller,
+            'seller' => $this->sellerId,
             'quantity' => $this->quantity,
             'sku' => $this->sku,
         ];
@@ -66,8 +83,19 @@ class OrderCartItem extends BaseObject
         return [true, $order];
     }
 
-    public function mergeProduct($parent)
+    public static function defaultKey()
     {
-
+        return [
+            'source' => '',
+            'sellerId' => '',
+            'seller' => [],
+            'current_status' => 'NEW',
+            'times' => [
+                'new' => Yii::$app->getFormatter()->asTimestamp('now')
+            ],
+            'supportId' => '',
+            'supportAssign' => [],
+            'products' => []
+        ];
     }
 }

@@ -48,10 +48,6 @@ class CartController extends BillingController
             return $this->render('empty');
         }
         $this->setDefaultSelected($items);
-        CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, ['key' => '5ced2c32e419ac1fb80057bb', 'id' => '163189059666']);
-//        CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, ['key' => '5ced2c32e419ac1fb80057bb', 'id' => '163586118957']);
-//        CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, ['key' => '5ced2c32e419ac1fb80057bb', 'id' => '163655512954']);
-        CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, ['key' => '5ced2c32e419ac1fb80057bb', 'id' => '163189059666','sku' => '100-99000000-02']);
         return $this->render('index', [
             'items' => $items
         ]);
@@ -110,20 +106,23 @@ class CartController extends BillingController
     public function actionSelection()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $params = Yii::$app->getRequest()->getBodyParams();
-        if (!isset($params['id']) || ($key = $params['id']) === null || $key === '') {
+        $bodyParams = Yii::$app->getRequest()->getBodyParams();
+        if (($param = ArrayHelper::getValue($bodyParams, 'param')) === null) {
             return ['success' => false, 'message' => 'Invalid params'];
         }
-        $selected = ArrayHelper::getValue($params, 'selected');
-        $message = "item `$key`";
-        if ($selected === 'true') {
-            CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, $key);
-            $message .= ' added';
-        } else {
-            CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, $key);
-            $message .= ' removed';
+        $selected = ArrayHelper::getValue($bodyParams, 'selected');
+        $message = ['item on selection'];
+        foreach ($param as $k => $v) {
+            $message[] = "$k : $v";
         }
-        return ['success' => $selected, 'message' => $message, 'data' => CartSelection::getSelectedItems(CartSelection::TYPE_SHOPPING)];
+        if ($selected === 'true') {
+            CartSelection::addSelectedItem(CartSelection::TYPE_SHOPPING, $param);
+            $message[] = ' added';
+        } else {
+            CartSelection::removeSelectedItem(CartSelection::TYPE_SHOPPING, $param);
+            $message[] = ' removed';
+        }
+        return ['success' => $selected, 'message' => implode(', ', $message), 'data' => CartSelection::getSelectedItems(CartSelection::TYPE_SHOPPING)];
     }
 
     public function actionRemove()

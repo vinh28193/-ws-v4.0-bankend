@@ -149,7 +149,6 @@ class CartManager extends Component
     public function addItem($type, $params, $safeOnly = true)
     {
         $key = $this->createKeyFormParams($params);
-
         try {
             $item = $this->filterItem($type, $this->normalKeyFilter($key), $safeOnly);
             if (!empty($item)) {
@@ -165,14 +164,15 @@ class CartManager extends Component
                     $parent = $parent[0];
                     $parentProducts = $parent['key']['products'];
                     $parentProducts[] = $key['products'][0];
-                    $key['products'] = $parentProducts;
-                    list($ok, $value) = $cartItem->createOrderFormKey($key);
+                    $parent['key']['products'] = $parentProducts;
+
+                    list($ok, $value) = $cartItem->createOrderFormKey($parent['key'], true);
                     if (!$ok) {
                         return [false, $value];
                     }
-                    return [$this->getStorage()->setItem($parent['_id'], $key, $value, $this->getIsSafe($safeOnly)), 'Thêm sản phẩm thành công'];
+                    return [$this->getStorage()->setItem($parent['_id'], $parent['key'], $value, $this->getIsSafe($safeOnly)), 'Thêm sản phẩm thành công'];
                 }
-                list($ok, $value) = $cartItem->createOrderFormKey($key);
+                list($ok, $value) = $cartItem->createOrderFormKey($key, false);
                 if (!$ok) {
                     return [false, $value];
                 }
@@ -200,7 +200,7 @@ class CartManager extends Component
             }
             $activeKey['products'] = $products;
             $cartItem = new OrderCartItem();
-            list($ok, $value) = $cartItem->createOrderFormKey($activeKey);
+            list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
             if (!$ok) {
                 return [false, $value];
             }
@@ -230,7 +230,7 @@ class CartManager extends Component
         }
         $activeKey['products'] = $products;
         $cartItem = new OrderCartItem();
-        list($ok, $value) = $cartItem->createOrderFormKey($activeKey);
+        list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
         if (!$ok) {
             return [false, $value];
         }
@@ -239,13 +239,13 @@ class CartManager extends Component
 
     public function createKeyFormParams($params = [])
     {
-        $pKeys = ['source', 'seller'];
+        $pKeys = ['source', 'sellerId'];
         $p = [];
         foreach ($pKeys as $k) {
-            if (!isset($params[$k]) || (isset($params[$k]) && ($params[$k] === null || $params[$k] === ''))) {
+            if (($v = ArrayHelper::getValue($params, $k)) === null || $v === '') {
                 continue;
             }
-            $p[$k] = $params[$k];
+            $p[$k] = $v;
         }
         $c = [];
         foreach ($params as $g => $v) {
@@ -254,13 +254,19 @@ class CartManager extends Component
             }
             $c[$g] = $v;
         }
-        return ArrayHelper::merge($p, ['products' => [$c]]);
+        return ArrayHelper::merge(OrderCartItem::defaultKey(), $p, ['products' => [$c]]);
     }
 
     public function normalKeyFilter($key)
     {
+        $useKey = [
+            'sellerId', 'source', 'products'
+        ];
         $n = [];
         foreach ($key as $k => $v) {
+            if (!ArrayHelper::isIn($k, $useKey)) {
+                continue;
+            }
             if ($k === 'products') {
                 $v = array_shift($v);
                 $nv = [];

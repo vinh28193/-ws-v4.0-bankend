@@ -34,19 +34,31 @@ class CartSelection
     }
 
 
-    public static function addSelectedItem($type, $item)
+    public static function addSelectedItem($type, $param)
     {
+
         if (($items = self::getSelectedItems($type)) === null) {
-            self::setSelectedItems($type, $item);
+            self::setSelectedItems($type, $param);
             return true;
-        } elseif (!self::isExist($type, $item)) {
-            $child = ['id' => $item['id']];
-            if (isset($item['sku'])) {
-                $child['sku'] = $item['sku'];
+        } elseif (!self::isExist($type, $param)) {
+            if (!isset($param['id'])) {
+                if (($item = self::getCartManager()->getItem($type, $param['key'])) === null || $item === false) {
+                    return false;
+                }
+                $param = CartHelper::mapCartKeys([$item]);
+                $items = array_merge($items, $param);
+            } else {
+                $child = ArrayHelper::getValue($items, $param['key'], []);
+                $newChild = ['id' => $param['id']];
+                if (isset($param['sku'])) {
+                    $newChild['sku'] = $param['sku'];
+                }
+                $child[] = $newChild;
+                $items = array_merge($items, [
+                    $param['key'] => $child
+                ]);
             }
-            $items = array_merge($items, [
-                $item['key'] => [$child]
-            ]);
+
             self::setSelectedItems($type, $items);
             return true;
         }
