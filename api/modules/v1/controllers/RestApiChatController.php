@@ -144,11 +144,14 @@ class RestApiChatController extends BaseApiController
                             'current_status' => Order::STATUS_SUPPORTED
                         ],['ordercode' => $_post['Order_path']]);
                 }
-                //chat group customer from new to supporting
-                if($isNew === true && $_post['type_chat'] == 'WS_CUSTOMER')
+                /**
+                 *  Sales Chat vào group nội bộ các từ khóa cho trước
+                 *  nếu có các từ khóa đó và Tràn thái đơn NEW , SUPPORTING thì hệ thống tự hỗ trợ chuyển về SUPPORTED
+                 */
+                // $_post['type_chat'] == 'WS_CUSTOMER'
+                if($isNew === true && $_post['type_chat'] == 'GROUP_WS' )
                 {
                     $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}, Status Order ". $current_status ." to ".Order::STATUS_SUPPORTED;
-
                         Order::updateAll([
                             'current_status' => Order::STATUS_SUPPORTED
                         ],['ordercode' => $_post['Order_path']]);
