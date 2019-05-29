@@ -6,7 +6,7 @@ use common\components\cart\CartSelection;
 use frontend\widgets\cart\CartWidgetHepper;
 
 /* @var yii\web\View $this */
-/* @var $items $order */
+/* @var array $items */
 
 /** @var  $storeManager common\components\StoreManager */
 $storeManager = Yii::$app->storeManager;
@@ -16,6 +16,7 @@ $totalAmount = 0;
     <div class="title">Giỏ hàng của bạn <span>(<?= count($items); ?> items)</span></div>
     <?php foreach ($items as $item):
         $key = $item['_id'];
+        $type = $item['type'];
         if (($order = ArrayHelper::getValue($item, 'value')) !== null):?>
             <?php
             $products = ArrayHelper::getValue($order, 'products', []);
@@ -23,7 +24,8 @@ $totalAmount = 0;
                 $totalAmount += (int)$order['total_final_amount_local'];
             }
             ?>
-            <ul class="cart-item" data-key="<?= $key ?>" style="border: 1px solid #e3e3e3;margin-bottom:10px">
+            <ul class="cart-item" data-key="<?= $key ?>" data-type="<?= $type; ?>"
+                style="border: 1px solid #e3e3e3;margin-bottom:10px">
                 <li>
                     <?php $seller = ArrayHelper::getValue($order, 'seller', []); ?>
                     <div class="form-check">
@@ -116,6 +118,7 @@ $totalAmount = 0;
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary button-quantity-down"
                                                     data-pjax="1"
+                                                    data-type="<?= $type; ?>"
                                                     data-parent="<?= $key ?>"
                                                     data-id="<?= $product['parent_sku'] ?>"
                                                     data-sku="<?= $product['sku']; ?>"
@@ -126,8 +129,9 @@ $totalAmount = 0;
                                         </div>
                                         <input type="text"
                                                name="cartItemQuantity" class="form-control"
-                                               value="1"
+                                               value="<?= $product['quantity_customer']; ?>"
                                                data-min="1"
+                                               data-type="<?= $type; ?>"
                                                data-max="<?= (int)(($max = $availableQuantity - $soldQuantity) <= 0 ? 0 : $max); ?>"
                                                data-parent="<?= $key ?>"
                                                data-id="<?= $product['parent_sku'] ?>"
@@ -137,6 +141,7 @@ $totalAmount = 0;
                                             <button class="btn btn-outline-secondary button-quantity-up"
                                                     data-pjax="1"
                                                     data-parent="<?= $key ?>"
+                                                    data-type="<?= $type; ?>"
                                                     data-id="<?= $product['parent_sku'] ?>"
                                                     data-sku="<?= $product['sku']; ?>"
                                                     data-operator="up"
@@ -149,6 +154,7 @@ $totalAmount = 0;
                                     <?= $storeManager->showMoney($product['total_price_amount_local']); ?>
                                 </div>
                                 <a href="#" class="del delete-item"
+                                   data-type="<?= $type; ?>"
                                    data-parent="<?= $key ?>"
                                    data-id="<?= $product['parent_sku'] ?>"
                                    data-sku="<?= $product['sku']; ?>"

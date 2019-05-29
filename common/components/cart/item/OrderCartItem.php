@@ -22,7 +22,7 @@ class OrderCartItem extends BaseObject
     public function createOrderFormKey(&$key, $refresh = false)
     {
         $tempKey = $key;
-        $products = ArrayHelper::remove($tempKey, 'products', []);
+        $products = ArrayHelper::getValue($tempKey, 'products', []);
         $orders = [];
         foreach ($products as $index => $param) {
             $param = ArrayHelper::merge($param, [
@@ -40,6 +40,7 @@ class OrderCartItem extends BaseObject
         if (count($orders) === 0) {
             return [false, 'Can not add an invalid item into cart'];
         }
+
         $order = array_shift($orders);
 
         while (!empty($orders)) {
@@ -49,10 +50,10 @@ class OrderCartItem extends BaseObject
         if (empty($key['seller']) && !$refresh) {
             $key['seller'] = $order['seller'];
         } else if ($refresh) {
-            $order['current_status'] = $key['current_status'];
-            $order['sale_support_id'] = $key['supportId'];
-            if (!empty($key['times'])) {
-                foreach ($key['times'] as $k => $time) {
+            $order['current_status'] = $tempKey['current_status'];
+            $order['sale_support_id'] = $tempKey['supportId'];
+            if (!empty($tempKey['times'])) {
+                foreach ($tempKey['times'] as $k => $time) {
                     $order[$k] = $time;
                 }
             }
@@ -67,7 +68,7 @@ class OrderCartItem extends BaseObject
             'type' => $this->source,
             'id' => $this->id,
             'seller' => $this->sellerId,
-            'quantity' => $this->quantity,
+            'quantity' => (int)$this->quantity,
             'sku' => $this->sku,
         ];
         $form = new ProductDetailFrom($params);

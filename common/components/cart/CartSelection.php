@@ -28,6 +28,11 @@ class CartSelection
         return self::$cart;
     }
 
+    public static function getAllTypes()
+    {
+        return [self::TYPE_SHOPPING, self::TYPE_BUY_NOW, self::TYPE_INSTALLMENT];
+    }
+
     public static function getSession()
     {
         return Yii::$app->session;

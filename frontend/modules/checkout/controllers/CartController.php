@@ -33,9 +33,19 @@ class CartController extends BillingController
 
     public function actionIndex()
     {
-
+        $queryParams = $this->request->queryParams;
+        $type = CartSelection::TYPE_SHOPPING;
+        if (isset($queryParams['type'])) {
+            if (ArrayHelper::isIn($queryParams['type'], CartSelection::getAllTypes())) {
+                $type = $queryParams['type'];
+            }
+        }
+        $ids = null;
+        if (isset($queryParams['ref'])) {
+            $ids = $queryParams['ref'];
+        }
         $cartManager = $this->module->cartManager;
-        $items = $cartManager->getItems();
+        $items = $cartManager->getItems($type, $ids);
 
         if (Yii::$app->getRequest()->getIsPjax()) {
             if (count($items) === 0) {
@@ -72,7 +82,7 @@ class CartController extends BillingController
             return ['success' => false, 'message' => 'add cart from empty data'];
         }
 
-        if (($key = $this->module->cartManager->addItem($item, true))[0] === false) {
+        if (($key = $this->module->cartManager->addItem($type, $item, true))[0] === false) {
             return ['success' => false, 'message' => $key[1]];
         };
 
@@ -92,16 +102,25 @@ class CartController extends BillingController
     {
         $cartManager = $this->module->cartManager;
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $params = Yii::$app->getRequest()->getBodyParams();
-        if (!isset($params['id']) || ($key = $params['id']) === null || $key === '') {
-            return ['success' => false, 'message' => 'Invalid params'];
+        $bodyParams = Yii::$app->getRequest()->getBodyParams();
+        if (!isset($bodyParams['type']) || ($type = $bodyParams['type']) === null || $type === '') {
+            return ['success' => false, 'message' => 'Invalid parameter, can not update with unknown cart type'];
         }
-        unset($params['id']);
-        /** @var $product BaseProduct|false */
-        if (($product = $cartManager->update($key, $params)) === false) {
-            return ['success' => false, 'message' => 'Can not update now'];
+        if (!isset($bodyParams['id']) || ($id = $bodyParams['id']) === null || $id === '') {
+            return ['success' => false, 'message' => 'Invalid parameter, can not update with unknown cart id'];
         }
-        return ['success' => true, 'message' => 'updated "' . $key . '" success'];
+        if (!isset($bodyParams['key']) || ($key = $bodyParams['key']) === null || !is_array($key) || empty($key)) {
+            return ['success' => false, 'message' => 'Invalid parameter, can not update with unknown product id'];
+        }
+        if (!isset($bodyParams['param']) || ($param = $bodyParams['param']) === null || !is_array($param) || empty($param)) {
+            return ['success' => false, 'message' => 'Invalid parameter, required parameter not pass form request'];
+        }
+
+        list($success, $message) = $cartManager->updateItem($type, $id, $key, $param);
+        if (!$success) {
+            return ['success' => false, 'message' => $message];
+        }
+        return ['success' => true, 'message' => 'updated "' . $id . '" success'];
     }
 
     public function actionSelection()
@@ -127,14 +146,21 @@ class CartController extends BillingController
     {
         $cartManager = $this->module->cartManager;
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $params = Yii::$app->getRequest()->getBodyParams();
-        if (!isset($params['id']) || ($key = $params['id']) === null || $key === '') {
-            return ['success' => false, 'message' => 'Invalid params'];
+        $bodyParams = Yii::$app->getRequest()->getBodyParams();
+
+        if (!isset($bodyParams['type']) || ($type = $bodyParams['type']) === null || $type === '') {
+            return ['success' => false, 'message' => 'Sai tham số, không thể xóa sản phẩm của một loại không rõ'];
         }
-        if (($rs = $cartManager->removeItem($key))[0] === false) {
-            return ['success' => false, 'message' => $rs[1]];
+        if (!isset($bodyParams['id']) || ($id = $bodyParams['id']) === null || $id === '') {
+            return ['success' => false, 'message' => 'Sai tham số, không thể xóa sản phẩm không tồn tại'];
         }
-        return ['success' => true, 'message' => "item `$key` had been deleted", 'countItems' => $cartManager->countItems()];
+        if (!isset($bodyParams['key']) || ($key = $bodyParams['key']) === null || !is_array($key) || empty($key)) {
+            return ['success' => false, 'message' => 'Sai tham số, không thể xóa sản phẩm này'];
+        }
+
+        list($success, $message) = $cartManager->removeItem($type, $id, $key);
+
+        return ['success' => $success, 'message' => $message, 'countItems' => $cartManager->countItems()];
     }
 
     public function actionPayment()

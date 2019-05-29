@@ -34,60 +34,70 @@
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
                     event.preventDefault();
                     var $item = $(this);
-                    var $tagget = $($item.data('update'));
-                    var options = getQuantityInputOptions($tagget);
+                    var id = $item.data('parent');
+                    var key = {
+                        id: $item.data('id'),
+                        sku: $item.data('sku')
+                    };
+                    var targetSelection = 'input[name=cartItemQuantity][data-parent="' + id + '"][data-id="' + key.id + '"][data-sku="' + key.sku + '"]';
+                    var $target = $(targetSelection);
+                    var options = getQuantityInputOptions($target);
                     var operator = $item.data('operator');
                     if (options.max === '' || options.max < options.value) {
-                        alert('can not update cart');
+                        alert('Không thể thay đổi số lượng');
                     }
-                    var param = {};
-                    param.id = options.id;
-                    param.quantity = options.value;
+                    var data = {type: $item.data('type'), id: id, key: key};
+                    var param = {quantity: options.value};
                     if (operator === 'up') {
                         param.quantity += 1;
                         if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
                             param.quantity = options.max;
-                            $tagget.val(param.quantity);
-                            alert('you can buy greater than ' + options.max)
+                            $target.val(param.quantity);
+                            alert('Bạn không thể mua quá: ' + options.max);
+                            return;
                         }
                     } else {
                         param.quantity -= 1;
                         if (param.quantity < 1) {
                             param.quantity = 1;
-                            $tagget.val(1);
-                            alert('you can buy less than 1')
+                            $target.val(1);
+                            alert('Bạn không thể mua dưới 1');
+                            return;
                         }
                     }
-                    methods.update.call($cart, param);
+                    data.param = param;
+                    methods.update.call($cart, data);
                     return false;
                 });
                 ws.initEventHandler($cart, 'type', 'keyup.wsCart', 'input[name=cartItemQuantity]', function (event) {
                     var $item = $(this);
                     var options = getQuantityInputOptions($item);
-                    var param = {};
-                    param.id = options.id;
-                    param.quantity = Number($item.val());
+                    var data = {
+                        id: options.key,
+                        key: {id: options.id, sku: options.sku}
+                    };
+                    var param = {quantity: Number($item.val())};
                     if (param.quantity < 1) {
                         param.quantity = 1;
                         $item.val(1);
-                        alert('you can buy less than 1')
+                        alert('Bạn không thể mua dưới 1')
                     } else if (options.max !== '' && param.quantity >= options.max) {
                         param.quantity = options.max;
                         $item.val(options.max);
-                        alert(('you can buy greater than ' + options.max));
-
+                        alert(('Bạn không thể mua quá ' + options.max));
                     }
-                    console.log(param);
-                    methods.update.call($cart, param);
+                    data.param = param;
+                    methods.update.call($cart, data);
                     return false;
                 });
                 ws.initEventHandler($cart, 'remove', 'click.wsCart', 'a.delete-item', function (event) {
-                    var key = $(this).data('key');
-                    if (key === undefined) {
-                        return false;
-                    }
-                    methods.remove.call($cart, key);
-                    updateTotalPrice($cart);
+                    var $elem = $(this);
+                    var param = {
+                        type: $elem.data('type'),
+                        id: $elem.data('parent'),
+                        key: {id: $elem.data('id'), sku: $elem.data('sku')},
+                    };
+                    methods.remove.call($cart, param);
                 });
                 ws.initEventHandler($cart, 'continue', 'click.wsCart', 'button.btn-continue', function (event) {
                     methods.continue.apply($cart);
@@ -149,8 +159,11 @@
                 method: 'post',
                 data: param,
                 success: function (response, textStatus, xhr) {
-                    // updateItem(response);
-                    $.pjax.reload({container: container});
+                    if (response.success) {
+                        $.pjax.reload({container: container});
+                    } else {
+                        ws.sweetalert(response.message, 'error');
+                    }
                 }
             };
             ws.ajax(data.settings.updateUrl, $ajaxOptions, true);
@@ -159,21 +172,26 @@
         hiden: function ($key) {
 
         },
-        remove: function ($key) {
+        remove: function (param) {
             var $cart = $(this);
             var data = $cart.data('wsCart');
             var container = '#' + $cart.attr('id');
             var $ajaxOptions = {
                 dataType: 'json',
                 method: 'post',
-                data: {id: $key},
+                data: param,
                 success: function (response, textStatus, xhr) {
-                    // updateItem(response);
-                    $.pjax.reload({container: container});
-                    var countItems = response.countItems || false;
-                    if (countItems) {
-                        $('#cartBadge').html(countItems);
+                    if (response.success) {
+                        // updateItem(response);
+                        $.pjax.reload({container: container});
+                        var countItems = response.countItems || false;
+                        if (countItems) {
+                            $('#cartBadge').html(countItems);
+                        }
+                    } else {
+                        ws.sweetalert(response.message, 'error');
                     }
+
                 }
             };
             ws.ajax(data.settings.removeUrl, $ajaxOptions, true);
@@ -233,6 +251,7 @@
     var getQuantityInputOptions = function ($input) {
         return {
             key: $input.data('parent'),
+            type: $input.data('type'),
             id: $input.data('id'),
             sku: $input.data('sku'),
             value: Number($input.attr('value')),
