@@ -8,13 +8,14 @@
 
 namespace common\components\cart;
 
-use common\components\cart\storage\MongodbCartStorage;
+
 use Yii;
+use Exception;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
-use common\components\cart\item\SimpleItem;
-use common\components\cart\serialize\BaseCartSerialize;
 use common\components\cart\storage\CartStorageInterface;
+use common\components\cart\item\OrderCartItem;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class CartManager
@@ -39,6 +40,11 @@ use common\components\cart\storage\CartStorageInterface;
 class CartManager extends Component
 {
 
+    const TYPE_SHOPPING = 'shopping';
+    const TYPE_BUY_NOW = 'buynow';
+    const TYPE_SHIPPING = 'shipping';
+    const TYPE_REQUEST = 'request';
+
     /**
      * @var string | \common\components\cart\storage\CartStorageInterface
      */
@@ -52,33 +58,13 @@ class CartManager extends Component
     {
         if (!is_object($this->storage)) {
             $this->storage = Yii::createObject($this->storage);
-            if (!$this->storage instanceof CartStorageInterface) {
-                throw new InvalidConfigException(get_class($this->storage) . " not instanceof common\components\cart\CartStorageInterface");
-            }
+//            if (!$this->storage instanceof CartStorageInterface) {
+//                throw new InvalidConfigException(get_class($this->storage) . " not instanceof common\components\cart\CartStorageInterface");
+//            }
         }
         return $this->storage;
     }
 
-    /**
-     * @var BaseCartSerialize
-     */
-    private $_serializer = 'common\components\cart\serialize\NoneSerialize';
-
-    /**
-     * get Serialize
-     * @return BaseCartSerialize
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function getSerializer()
-    {
-        if (!is_object($this->_serializer)) {
-            $this->_serializer = Yii::createObject($this->_serializer);
-            if (!$this->_serializer instanceof BaseCartSerialize) {
-                throw new InvalidConfigException(get_class($this->_serializer) . " not instanceof common\components\cart\serialize\BaseCartSerialize");
-            }
-        }
-        return $this->_serializer;
-    }
 
     /**
      * @var \yii\web\IdentityInterface
@@ -110,273 +96,226 @@ class CartManager extends Component
 
 
     /**
+     * @param $type
      * @param $key
      * @param bool $safeOnly
-     * @return array
-     * @throws \Throwable
-     */
-    private function buildPrimaryKey($key, $safeOnly = true)
-    {
-        if (($user = $this->getUser()) === null && $safeOnly) {
-            $safeOnly = false;
-        }
-        return [$key, $safeOnly ? $user->getId() : null];
-    }
-
-    /**
-     * @param $key
-     * @param bool $safeOnly
-     * @return bool
+     * @return mixed
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function hasItem($key, $safeOnly = true)
+    public function hasItem($type, $key, $safeOnly = true)
     {
-        $key = $this->normalPrimaryKey($key, $safeOnly);
-        return $this->getStorage()->hasItem($key);
+        return $this->getStorage()->hasItem($type, $key, $this->getIsSafe($safeOnly));
     }
 
     /**
-     * @param $key
+     * @param $type
+     * @param $id
      * @param bool $safeOnly
      * @return bool|mixed
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function getItem($key, $safeOnly = true)
+    public function getItem($type, $id, $safeOnly = true)
     {
-        $key = $this->normalPrimaryKey($key, $safeOnly);
-        if (($value = $this->getStorage()->getItem($key)) !== false) {
-            return $this->getSerializer()->unserialize($value);
-        }
-        return false;
+        return $this->getStorage()->getItem($type, $id, $this->getIsSafe($safeOnly));
+    }
+
+
+    public function setMeOwnerItem($id)
+    {
+        return $this->getStorage()->setMeOwnerItem($id);
+
+    }
+
+    public function filterItem($type, $key, $safeOnly = true)
+    {
+        return $this->getStorage()->filterItem($type, $key, $this->getIsSafe($safeOnly));
     }
 
     /**
-     * @param $key
-     * @return bool
-     * @throws \Throwable
-     */
-    public function refreshItem($key)
-    {
-        try {
-            if (($value = $this->getItem($key)) === false) {
-                return false;
-            }
-
-            $item = new SimpleItem();
-            $params = $value['request'];
-            foreach ((array)$params as $name => $val) {
-                if ($name === 'with_detail') {
-                    continue;
-                } elseif ($name === 'type') {
-                    $name = 'source';
-                } elseif ($name === 'id') {
-                    $name = 'parentSku';
-                }
-                $item->$name = $val;
-            }
-            // Todo Validate data before call
-            // pass new param for CartItem
-            list($ok, $value) = $item->process();
-            if (!$ok) {
-                return false;
-            }
-            $value = $this->getSerializer()->serializer($value);
-            $key = $this->normalPrimaryKey($key);
-            return $this->getStorage()->setItem($key, $value);
-        } catch (\Exception $exception) {
-            Yii::info($exception);
-            return false;
-        }
-    }
-
-    /**
-     *
-     */
-    public function refreshItems()
-    {
-        foreach (array_keys($this->getItems()) as $key) {
-            $this->refreshItem($key);
-        }
-    }
-
-    public function setMeOwnerItem($key)
-    {
-        if ($this->hasItem($key, false)) {
-            $key = $this->normalPrimaryKey($key, true);
-            return $this->storage->setMeOwnerItem($key);
-        }
-        return false;
-
-    }
-
-    /**
+     * @param $type :shopping buynow ...
      * @param $params
+     *      -type: ebay/amazon
+     *      -seller: seller name
+     *      -id: primary id of item
+     *      -sku: sku of item (default null)
+     *      -quantity: quantity
+     *      -image: image
      * @param bool $safeOnly
      * @return array
      * @throws \Throwable
      */
-    public function addItem($params, $safeOnly = true)
+    public function addItem($type, $params, $safeOnly = true)
     {
         $key = $this->createKeyFormParams($params);
-
         try {
-            if ($this->hasItem($key, $safeOnly)) {
-                return [false, 'sản phẩm đã trong giỏ hàng'];
+            $item = $this->filterItem($type, $this->normalKeyFilter($key), $safeOnly);
+            if (!empty($item)) {
+                return [false, 'Sản phẩm  này đã có trong giỏ hàng'];
             } else {
-                /** Todo : Thiếu link Gốc sản phẩm **/
-                $item = new SimpleItem();
-                foreach ($params as $name => $val) {
-                    $item->$name = $val;
+
+                $filter = $key;
+                unset($filter['products']);
+
+                $parents = $this->filterItem($type, $this->normalKeyFilter($filter), $this->getIsSafe());
+                $cartItem = new OrderCartItem();
+                if (count($parents) > 0) {
+
+                    foreach ($parents as $parent) {
+                        $parentProducts = $parent['key']['products'];
+                        if (count($parentProducts) < 3) {
+                            $parentProducts[] = $key['products'][0];
+                            $parent['key']['products'] = $parentProducts;
+                            list($ok, $value) = $cartItem->createOrderFormKey($parent['key'], true);
+                            if (!$ok) {
+                                return [false, $value];
+                            }
+                            $success = $this->getStorage()->setItem($parent['_id'], $parent['key'], $value, $this->getIsSafe($safeOnly));
+                            return [$success, $success ? 'Thêm sản phẩm thành công' : 'Thêm thất bại'];
+                        }
+                    }
                 }
-                // Todo Validate data before call
-                list($ok, $value) = $item->process();
+                list($ok, $value) = $cartItem->createOrderFormKey($key, false);
                 if (!$ok) {
                     return [false, $value];
                 }
-                $value['key'] = $key;
-                $key = $this->normalPrimaryKey($key, $safeOnly);
-
-                $value = $this->getSerializer()->serializer($value);
-                return [$this->getStorage()->addItem($key, $value), 'Thêm sản phẩm thành công'];
+                $success = $this->getStorage()->addItem($type, $key, $value, $this->getIsSafe($safeOnly));
+                return [$success, $success ? 'Thêm sản phẩm thành công' : 'Thêm thất bại'];
             }
+        } catch (Exception $exception) {
+            Yii::info($exception);
+            return [false, $exception->getMessage()];
+        }
+    }
+
+    public function updateItem($type, $id, $key, $params = [], $safeOnly = true)
+    {
+
+        try {
+            if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
+                return [false, 'Sản phẩm này không có trong giỏ hàng'];
+            }
+            $activeKey = $item['key'];
+            $products = [];
+            foreach (ArrayHelper::remove($activeKey, 'products', []) as $value) {
+                if ($this->isDetectedProduct($value, $key)) {
+                    $value = ArrayHelper::merge($value, $params);
+                }
+                $products[] = $value;
+            }
+            $activeKey['products'] = $products;
+            $cartItem = new OrderCartItem();
+            list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
+            if (!$ok) {
+                return [false, $value];
+            }
+            $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value, $this->getIsSafe($safeOnly));
+            return [$success, $success ? 'sản phẩm đã được update' : 'không thể update sản phầm này lúc này'];
         } catch (\Exception $exception) {
             Yii::info($exception);
             return [false, $exception->getMessage()];
         }
     }
 
-    public function setItem($key, $params, $safeOnly = false)
+    public function removeItem($type, $id, $key, $safeOnly = true)
     {
-        if (!$this->hasItem($key, $safeOnly)) {
-            return [false, 'sản phẩm không có trong giỏ hàng'];
+        if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
+            return [false, 'Sản phẩm không có trong giỏ hàng'];
         }
-        $item = new SimpleItem();
-        foreach ($params as $name => $val) {
-            $item->$name = $val;
-        }
-        // Todo Validate data before call
-        // pass new param for CartItem
-        list($ok, $value) = $item->process();
-        if (!$ok) {
-            return false;
-        }
-        $value['key'] = $key;
-        $key = $this->normalPrimaryKey($key, $safeOnly);
-        $value = $this->getSerializer()->serializer($value);
-        return $this->getStorage()->setItem($key, $value);
-    }
-
-    public function createKeyFormParams($params)
-    {
-        $keys = [];
-        foreach (['seller', 'source', 'sku', 'parentSku'] as $k) {
-            if (!isset($params[$k]) || (isset($params[$k]) && ($params[$k] === null || $params[$k] === ''))) {
+        $activeKey = $item['key'];
+        $products = [];
+        foreach (ArrayHelper::remove($activeKey, 'products', []) as $value) {
+            if ($this->isDetectedProduct($value, $key)) {
                 continue;
             }
-            $keys[$k] = $params[$k];
+            $products[] = $value;
         }
-        return md5(json_encode($keys));
+        if (empty($products)) {
+            $success = $this->getStorage()->removeItem($id);
+            return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
+        }
+        $activeKey['products'] = $products;
+        $cartItem = new OrderCartItem();
+        list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
+        if (!$ok) {
+            return [false, $value];
+        }
+        $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value);
+        return [$success, $success ? "Giỏ hàng của bạn đã được thay đổi" : "Giỏ hàng thay đổi không thành công"];
     }
 
-    public function update($key, $params = [], $safeOnly = true)
+    public function createKeyFormParams($params = [])
     {
-        try {
-            if (($value = $this->getItem($key, $safeOnly)) === false) {
-                return [false, 'sản phẩm không có trong giỏ hàng'];
+        $pKeys = ['source', 'sellerId'];
+        $p = [];
+        foreach ($pKeys as $k) {
+            if (($v = ArrayHelper::getValue($params, $k)) === null || $v === '') {
+                continue;
             }
-            $item = new SimpleItem();
-            $oldParams = $value['params'];
-            foreach ((array)$oldParams as $name => $val) {
-                if ($name === 'with_detail') {
-                    continue;
-                } elseif ($name === 'type') {
-                    $name = 'source';
-                } elseif ($name === 'id') {
-                    $name = 'parentSku';
+            $p[$k] = $v;
+        }
+        $c = [];
+        foreach ($params as $g => $v) {
+            if (ArrayHelper::isIn($g, $pKeys) || ($v === null || $v === '')) {
+                continue;
+            }
+            $c[$g] = $v;
+        }
+        return ArrayHelper::merge(OrderCartItem::defaultKey(), $p, ['products' => [$c]]);
+    }
+
+    public function normalKeyFilter($key)
+    {
+        $useKey = [
+            'sellerId', 'source', 'products'
+        ];
+        $n = [];
+        foreach ($key as $k => $v) {
+            if (!ArrayHelper::isIn($k, $useKey)) {
+                continue;
+            }
+            if ($k === 'products') {
+                $v = array_shift($v);
+                $nv = [];
+                foreach ($v as $i => $j) {
+                    if ($i === 'id' || $i === 'sku') {
+                        $nv[$i] = $j;
+                    };
                 }
-                $item->$name = $val;
+                $v = $nv;
             }
-
-            if (isset($params['seller']) && ($seller = $params['seller']) !== null && !$this->compareValue($item->seller, $seller, 'string')) {
-                $item->seller = $seller;
-            }
-
-            if (isset($params['quantity']) && ($quantity = $params['quantity']) !== null && !$this->compareValue($item->quantity, $quantity, 'int')) {
-                $item->quantity = $quantity;
-            }
-            if (isset($params['image']) && ($image = $params['image']) !== null && !$this->compareValue($item->image, $image, 'string')) {
-                $item->image = $image;
-            }
-
-            list($ok, $raw) = $item->process();
-            if (!$ok) {
-                return [false, 'không thể lấy thông tin sản phẩm'];
-            }
-            $value['key'] = $key;
-            $value = $this->getSerializer()->serializer($raw);
-            $key = $this->normalPrimaryKey($key, $safeOnly);
-            $this->getStorage()->setItem($key, $value);
-            return [false, 'sản phẩm không có trong giỏ hàng', $raw['order']];
-
-
-        } catch (\Exception $exception) {
-            Yii::info($exception);
-            return [false, $exception->getMessage()];
+            $n[$k] = $v;
         }
-    }
-
-    public function removeItem($key)
-    {
-        $key = $this->normalPrimaryKey($key);
-        if ($this->hasItem($key)) {
-            return $this->getStorage()->removeItem($key);
-        }
-        return false;
-
-    }
-
-    public function getAllKeys($safeOnly = true)
-    {
-        if (($user = $this->getUser()) === null && $safeOnly) {
-            $safeOnly = false;
-        }
-        return $this->getStorage()->keys($safeOnly ? $user->getId() : null);
-    }
-
-    public function getItems($keys = null, $safeOnly = true)
-    {
-        if (($user = $this->getUser()) === null && $safeOnly) {
-            $safeOnly = false;
-        }
-        $items = $this->getStorage()->getItems($safeOnly ? $user->getId() : null);
-        $results = [];
-        foreach ($items as $key => $item) {
-            $results[$key] = $this->getSerializer()->unserialize($item);
-        }
-        return $results;
-    }
-
-    public function getCartItems($get)
-    {
-        $model = new MongodbCartStorage();
-        $items = $model->GetAllShopingCarts($get);
-        return $items;
+        return $n;
     }
 
     /**
+     * @param null $type
+     * @param null $ids
      * @param bool $safeOnly
-     * @return int
+     * @return mixed
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function countItems($safeOnly = true)
+    public function getItems($type = null, $ids = null, $safeOnly = true)
     {
-        if (($user = $this->getUser()) === null && $safeOnly) {
-            $safeOnly = false;
-        }
-        return $this->getStorage()->countItems($safeOnly ? $user->getId() : null);
+
+        return $this->getStorage()->getItems($this->getIsSafe($safeOnly), $type, $ids);
+
+    }
+
+
+    /**
+     * @param null $type
+     * @param bool $safeOnly
+     * @return mixed
+     * @throws InvalidConfigException
+     * @throws \Throwable
+     */
+    public function countItems($type = null, $safeOnly = true)
+    {
+        return $this->getStorage()->countItems($this->getIsSafe($safeOnly), $type);
     }
 
     /**
@@ -394,14 +333,26 @@ class CartManager extends Component
     }
 
     /**
-     * @param $key
-     * @param bool $safeOnly
-     * @return array
+     * @param $params
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function filterShoppingCarts($params)
+    {
+        return $this->getStorage()->filterShoppingCarts($params);
+    }
+
+    /**
+     * @param bool $force
+     * @return int|string|null
      * @throws \Throwable
      */
-    public function normalPrimaryKey($key, $safeOnly = true)
+    public function getIsSafe($force = false)
     {
-        return $this->buildPrimaryKey($key, $safeOnly);
+        if (($user = $this->getUser()) !== null && $force) {
+            return $user->getId();
+        }
+        return null;
     }
 
     /**
@@ -410,9 +361,11 @@ class CartManager extends Component
      * @param string $convertType
      * @return bool|mixed
      */
-    private function compareValue($target, $source = null, $convertType = 'string')
+    public function isDetectedProduct($target, $source)
     {
-        return \common\helpers\WeshopHelper::compareValue($target, $source, $convertType, '===');
+        $lv1 = trim($target['id']) === ($source['id']);
+        $lv2 = isset($source['sku']);
+        $lv2 = $lv2 ? (!isset($target['sku']) ? false : $source['sku'] === $target['sku']) : true;
+        return $lv1 && $lv2;
     }
-
 }

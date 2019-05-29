@@ -27,12 +27,20 @@ class CartHelper
         return Yii::$app->cart;
     }
 
-    public static function group($items)
+    public static function mapCartKeys($items)
     {
-        return ArrayHelper::index($items, null, function ($item) {
-            $item = $item['order'];
-            return $item['portal'] . ':' . $item['seller']['seller_name'];
-        });
+        $keys = ArrayHelper::map($items, function ($item) {
+            return (string)$item['_id'];
+        }, 'key.products');
+        return array_map(function ($key) {
+            return array_map(function ($e) {
+                return [
+                    'id' => $e['id'],
+                    'sku' => $e['sku']
+                ];
+            }, $key);
+        }, $keys);
+
     }
 
     /**
@@ -51,9 +59,14 @@ class CartHelper
         $order['portal'] = $item->type;
         $order['current_status'] = Order::STATUS_NEW;
         $order['new'] = Yii::$app->getFormatter()->asTimestamp('now');
+        $order['mark_supporting'] = null;
+        $order['supporting'] = null;
+        $order['supported'] = null;
         $order['customer_type'] = 'Retail';
         $order['store_id'] = $storeManager->getId();
         $order['exchange_rate_fee'] = $storeManager->getExchangeRate();
+        $order['sale_support_id'] = null;
+        $order['saleSupport'] = null;
         $order['customer_id'] = $user ? $user->id : null;
         $order['customer'] = $user ? [
             'username' => $user->username,
@@ -103,7 +116,7 @@ class CartHelper
         $product['product_link'] = $item->ws_link;
         $product['product_name'] = $item->item_name;
         $product['quantity_customer'] = $item->getShippingQuantity();
-        $product['total_weight_temporary'] = $item->getShippingWeight();     //"cân nặng  trong lượng tạm tính"
+        $product['total_weight_temporary'] = $item->getShippingWeight();
         $product['category'] = [
             'alias' => $item->category_id,
             'site' => $item->type,
@@ -166,55 +179,45 @@ class CartHelper
         return $order;
     }
 
-    public static function createOrderParams($keys, $safeOnly = true)
+
+    public static function mergeItem($source, $target)
     {
         $start = microtime(true);
-        $noUpdateAttribute = [
-            'products', 'type_order', 'portal', 'current_status', 'new', 'customer_type', 'store_id', 'exchange_rate_fee', 'customer_id', 'customer', 'seller',
-        ];
-        if (!is_array($keys)) {
-            $keys = [$keys];
-        }
-
-        $items = [];
-        foreach ($keys as $key) {
-            $items[] = self::getCartManager()->getItem($key, $safeOnly);
-        }
-        $orders = [];
-        $totalFinalAmount = 0;
-        foreach (self::group($items) as $key => $arrays) {
-            $first = array_shift($arrays);
-            $order = $first['order'];
-            $totalFinalAmount += (int)$order['total_amount_local'];
-            $products = $order['products'][0];
-            $order['products'] = [];
-            $order['products'][$first['key']] = $products;
-            if (count($arrays) > 0) {
-                foreach ($arrays as $cartId => $params) {
-                    if (($item = ArrayHelper::getValue($params, ['order'])) === null) {
-                        continue;
-                    }
-                    foreach (array_keys($order) as $attribute) {
-                        if (ArrayHelper::isIn($attribute, $noUpdateAttribute)) {
-                            continue;
-                        }
-                        if (strpos($attribute, 'total_') !== false) {
-                            $oldValue = (int)$order[$attribute];
-                            $newValue = (int)$item[$attribute];
-                            if ($attribute === 'total_amount_local') {
-                                $totalFinalAmount += $newValue;
-                            }
-                            $oldValue += $newValue;
-                            $order[$attribute] = $oldValue;
-
-                        }
-                    }
+        $orders = func_get_args();
+        $order = array_shift($orders);
+        while (!empty($orders)) {
+            foreach (array_shift($orders) as $key => $value) {
+                if (strpos($key, 'total_') !== false) {
+                    $oldValue = (int)$order[$key];
+                    $newValue = (int)$value;
+                    $oldValue += $newValue;
+                    $order[$key] = $oldValue;
+                } elseif ($key === 'products') {
                     $products = $order['products'];
-                    $products[$params['key']] = $item['products'][0];
+                    $products[] = reset($value);
                     $order['products'] = $products;
                 }
             }
-            $orders[$key] = $order;
+        }
+        $time = sprintf('%.3f', microtime(true) - $start);
+        Yii::info("time: $time s", __METHOD__);
+        return $order;
+    }
+
+
+    public static function createOrderParams($type, $keys, $safeOnly = true)
+    {
+        $start = microtime(true);
+        if (!is_array($keys)) {
+            $keys = [$keys];
+        }
+        $orders = [];
+        $totalFinalAmount = 0;
+        $items = self::getCartManager()->getItems($type, $keys);
+        foreach ($items as $item) {
+            $order = $item['value'];
+            $totalFinalAmount += (int)$order['total_amount_local'];
+            $orders[] = $order;
         }
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("time: $time s", __METHOD__);

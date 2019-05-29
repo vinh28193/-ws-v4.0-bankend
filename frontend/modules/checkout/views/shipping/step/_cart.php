@@ -1,19 +1,34 @@
 <?php
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /* @var yii\web\View $this */
 /* @var frontend\modules\payment\Payment $payment */
+$storeManager = Yii::$app->storeManager;
 ?>
 
-<div class="title">Đơn hàng <span>(<?= count($payment->orders) ?> sản phẩm)</span> <a href="#" class="far fa-edit"></a>
+<div class="title">Đơn hàng <span>(<?= count($payment->orders) ?> item)</span> <a href="#" class="far fa-edit"></a>
 </div>
 <div class="payment-box order">
     <div class="top">
-        <ul class="order-list">
-            <?php foreach ($payment->orders as $order): ?>
-                <?php foreach ($order['products'] as $product): ?>
+
+        <?php foreach ($payment->orders as $order): ?>
+            <?php
+            $seller = ArrayHelper::getValue($order, 'seller', []);
+            $products = ArrayHelper::getValue($order, 'products', []);
+            ?>
+
+            <ul class="order-list" style="margin-bottom: 10px;border-bottom: 1px dashed #ebebeb">
+                <?php if (!empty($seller)): ?>
                     <li>
+                        Bán bởi:&nbsp;<a style="color: #2b96b6;"
+                                         href="<?= isset($seller['seller_link_store']) ? $seller['seller_link_store'] : '#' ?>"><?= isset($seller['seller_name']) ? $seller['seller_name'] : 'Unknown'; ?></a>
+                        &nbsp;(<?= count($products); ?> sản phẩm)
+                    </li>
+                <?php endif; ?>
+                <?php foreach ($products as $product): ?>
+                    <li style="margin-top: 0px;margin-bottom: 16px">
                         <div class="thumb">
                             <img src="<?= $product['link_img']; ?>" alt="<?= $product['product_name']; ?>"/>
                         </div>
@@ -21,12 +36,6 @@ use yii\helpers\Html;
                             <div class="left">
                                 <a href="<?= $product['product_link']; ?>"
                                    class="name"><?= $product['product_name']; ?></a>
-                                <?php
-                                if(isset($order['seller']) && ($seller = $order['seller']) !== null && is_array($seller)){
-                                    echo '<p>Bán bởi: <a href="' . ($seller['seller_link_store'] !== null ? $seller['seller_link_store'] : "#") . '">' . $seller['seller_name'] . '</a></p>';
-                                }
-
-                                ?>
                                 <div class="rate">
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -37,17 +46,19 @@ use yii\helpers\Html;
                             </div>
                             <div class="right">
                                 <ol class="price">
-                                    <li><?= $product['portal']; ?></li>
+                                    <li>&nbsp;</li>
                                     <li>x<?= $product['quantity_customer']; ?></li>
-                                    <li><?= \common\helpers\WeshopHelper::showMoney($product['total_price_amount_local'],1,''); ?><i class="currency">đ</i></li>
+                                    <li><?= $storeManager->showMoney($product['total_price_amount_local']); ?>
+                                    </li>
                                 </ol>
                             </div>
                         </div>
                     </li>
                 <?php endforeach; ?>
-            <?php endforeach; ?>
-        </ul>
-        <div class="coupon" id="discountInputCoupon">
+            </ul>
+        <?php endforeach; ?>
+
+        <div class="coupon" id="discountInputCoupon" style="border-top: none; padding:  0;margin-top: 16px;">
             <label>Mã giảm giá:</label>
             <div class="input-group discount-input">
                 <input type="text" class="form-control" name="couponCode">
@@ -61,11 +72,14 @@ use yii\helpers\Html;
     <ul class="billing" id="billingBox">
         <li id="discountPrice" style="display: <?= $payment->total_discount_amount > 0 ? 'block' : 'none' ?>">
             <div class="left">Khuyến mãi giảm giá:</div>
-            <div class="right"><span><?= \common\helpers\WeshopHelper::showMoney($payment->total_discount_amount,1,''); ?></span></div>
+            <div class="right">
+                <span><?= $storeManager->showMoney($payment->total_discount_amount); ?></span>
+            </div>
         </li>
         <li id="finalPrice">
             <div class="left">Tổng tiền thanh toán:</div>
-            <div class="right"><span><?= \common\helpers\WeshopHelper::showMoney($payment->total_amount_display,1,''); ?></span><i class="currency">đ</i></div>
+            <div class="right">
+                <span><?= $storeManager->showMoney($payment->total_amount_display); ?></span></div>
         </li>
     </ul>
 </div>

@@ -495,16 +495,13 @@
 
         var params = $data.params;
         var item = {
-            quantity: quantity,
             source: params.type,
-            seller: params.seller,
-            sku: params.id,
+            id: params.id,
+            sku: params.sku,
+            sellerId: params.seller,
+            quantity: quantity,
             image: params.images[0].main
         };
-        if (params.sku !== null && params.sku !== item.id) {
-            item.parentSku = item.sku;
-            item.sku = params.sku;
-        }
         ws.loading(true);
         var $ajaxOptions = {
             type: 'POST',

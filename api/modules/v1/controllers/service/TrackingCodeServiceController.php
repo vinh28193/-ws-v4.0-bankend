@@ -109,6 +109,9 @@ class TrackingCodeServiceController extends BaseApiController
         if(!$product){
             return $this->response(false,'Cannot find your product id!');
         }
+        $model->draftDataTracking->product_id = $product->id;
+        $model->draftDataTracking->order_id = $product->order_id;
+        $model->draftDataTracking->save();
         $model->product_id = $product->id;
         $model->order_id = $product->order_id;
         $model->item_name = $model->item_name && strtoupper($model->item_name) != 'none' ? $model->item_name : $product->product_name;
@@ -122,12 +125,14 @@ class TrackingCodeServiceController extends BaseApiController
         $logTracking = new TrackingLogs();
         $logTracking->current_status = TrackingLogs::STATUS_STOCK_OUT_US;
         $logTracking->type_log = TrackingLogs::TRACKING_MAP_PRODUCT;
+        $logTracking->product_id = $product->id;
         $logTracking->tracking_code = $model->tracking_code;
         $logTracking->message_log = 'Map tracking '.$model->tracking_code.' với product: ' .$product->id . ', order: '.$product->order->ordercode;
         $logTracking->message_log .= '<br>Loại tracking chuyển từ '.$model->type_tracking.' sang ';
 
         $logPacking = new PackingLogs();
         $logPacking->type_log = PackingLogs::PACKING_MAP_PRODUCT;
+        $logPacking->product_id = $product->id;
         $logPacking->message_log = 'Map Package '.$model->package_code.' với product: ' .$product->id . ', order: '.$product->order->ordercode;
         $logPacking->message_log .= '<br>Loại tracking chuyển từ '.$model->type_tracking.' sang ';
         if($count > 1){
