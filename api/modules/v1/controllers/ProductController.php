@@ -70,7 +70,7 @@ class ProductController extends BaseApiController
     public function actionUpdate($id) {
         $post = Yii::$app->request->post();
         if ($id) {
-            $product = Product::findOne($id);
+            $product = Product::find()->where(['id' => $id])->one();
             if (isset($post['quantityI'])) {
                 $product->quantity_inspect =  $post['quantityI'];
             }
