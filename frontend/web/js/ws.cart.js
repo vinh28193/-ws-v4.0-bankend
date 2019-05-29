@@ -99,23 +99,24 @@
                 ws.initEventHandler($cart, 'cartOrder', 'change.wsCart', 'input[name=cartOrder]', function (event) {
                     event.preventDefault();
                     var $input = $(this);
-                    var data = {param: {key: $input.val()}, selected: $input.is(':checked')};
-                    methods.watch.call($cart, data);
-                    return false;
-                });
-                ws.initEventHandler($cart, 'cartProduct', 'change.wsCart', 'input[name=cartProduct]', function (event) {
-                    event.preventDefault();
-                    var $input = $(this);
+                    // var data = {param: {key: $input.val()}, selected: $input.is(':checked')};
                     var data = {id: $input.val(), selected: $input.is(':checked')};
-                    // if (data.selected === false) {
-                    //     selected = selected.filter(s => s !== data.key);
-                    // } else {
-                    //     selected.push(data.key);
-                    // }
-                    // console.log(selected);
                     methods.watch.call($cart, data);
                     return false;
                 });
+                // ws.initEventHandler($cart, 'cartProduct', 'change.wsCart', 'input[name=cartProduct]', function (event) {
+                //     event.preventDefault();
+                //     var $input = $(this);
+                //     var data = {id: $input.val(), selected: $input.is(':checked')};
+                //     // if (data.selected === false) {
+                //     //     selected = selected.filter(s => s !== data.key);
+                //     // } else {
+                //     //     selected.push(data.key);
+                //     // }
+                //     // console.log(selected);
+                //     methods.watch.call($cart, data);
+                //     return false;
+                // });
             });
         },
         items: function () {
@@ -240,21 +241,22 @@
         }
     };
     var filterCartItems = function ($cart) {
-        var $selected = [];
-        $.each($cart.find('input[name=cartOrder]:checked'), function (i, cartOrder) {
-            var $cartOrder = $(cartOrder);
-            var item = {
-                key: $cartOrder.val(),
-                products: []
-            };
-            var $parent = $('ul[data-key=' + item.key + ']');
-            $.each($parent.find('input[name=cartProduct][data-parent=' + item.key + ']:checked'), function (i, cartProduct) {
-                var $product = $(cartProduct);
-                item.products.push({id: $product.data('id'), sku: $product.data('sku')})
-            });
-            console.log(item);
-        });
-        return false;
+        return $cart.find('input[name=cartOrder]:checked');
+        // var $selected = [];
+        // $.each($cart.find('input[name=cartOrder]:checked'), function (i, cartOrder) {
+        //     var $cartOrder = $(cartOrder);
+        //     var item = {
+        //         key: $cartOrder.val(),
+        //         products: []
+        //     };
+        //     var $parent = $('ul[data-key=' + item.key + ']');
+        //     $.each($parent.find('input[name=cartProduct][data-parent=' + item.key + ']:checked'), function (i, cartProduct) {
+        //         var $product = $(cartProduct);
+        //         item.products.push({id: $product.data('id'), sku: $product.data('sku')})
+        //     });
+        //     console.log(item);
+        // });
+        // return false;
     };
     var getParamFromElement = function ($element) {
         return {

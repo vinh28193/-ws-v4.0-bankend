@@ -205,55 +205,19 @@ class CartHelper
     }
 
 
-    public static function createOrderParams($keys, $safeOnly = true)
+    public static function createOrderParams($type, $keys, $safeOnly = true)
     {
         $start = microtime(true);
-        $noUpdateAttribute = [
-            'products', 'type_order', 'portal', 'current_status', 'new', 'customer_type', 'store_id', 'exchange_rate_fee', 'customer_id', 'customer', 'seller',
-        ];
         if (!is_array($keys)) {
             $keys = [$keys];
         }
-
-        $items = [];
-        foreach ($keys as $key) {
-            $items[] = self::getCartManager()->getItem($key, $safeOnly);
-        }
         $orders = [];
         $totalFinalAmount = 0;
-        foreach (self::group($items) as $key => $arrays) {
-            $first = array_shift($arrays);
-            $order = $first['order'];
+        $items = self::getCartManager()->getItems($type, $keys);
+        foreach ($items as $item) {
+            $order = $item['value'];
             $totalFinalAmount += (int)$order['total_amount_local'];
-            $products = $order['products'][0];
-            $order['products'] = [];
-            $order['products'][$first['key']] = $products;
-            if (count($arrays) > 0) {
-                foreach ($arrays as $cartId => $params) {
-                    if (($item = ArrayHelper::getValue($params, ['order'])) === null) {
-                        continue;
-                    }
-                    foreach (array_keys($order) as $attribute) {
-                        if (ArrayHelper::isIn($attribute, $noUpdateAttribute)) {
-                            continue;
-                        }
-                        if (strpos($attribute, 'total_') !== false) {
-                            $oldValue = (int)$order[$attribute];
-                            $newValue = (int)$item[$attribute];
-                            if ($attribute === 'total_amount_local') {
-                                $totalFinalAmount += $newValue;
-                            }
-                            $oldValue += $newValue;
-                            $order[$attribute] = $oldValue;
-
-                        }
-                    }
-                    $products = $order['products'];
-                    $products[$params['key']] = $item['products'][0];
-                    $order['products'] = $products;
-                }
-            }
-            $orders[$key] = $order;
+            $orders[] = $order;
         }
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("time: $time s", __METHOD__);

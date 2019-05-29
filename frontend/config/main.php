@@ -9,7 +9,7 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'queue', 'landing'],
+    'bootstrap' => ['storeManager', 'log', 'queue'],
     'timeZone' => 'Asia/Ho_Chi_Minh',
     'controllerNamespace' => 'frontend\controllers',
     'defaultRoute' => 'cms/home',

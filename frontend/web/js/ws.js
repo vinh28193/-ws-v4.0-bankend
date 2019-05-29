@@ -5,7 +5,7 @@ var ws = ws || (function ($) {
         ajaxComplete: 'ajaxComplete',
     };
 
-    var defaultOption = {
+    var defaultOptions = {
         currency: undefined,
         priceDecimal: 0,
         pricePrecision: 0
@@ -15,8 +15,9 @@ var ws = ws || (function ($) {
     var i18nMessages = [];
     var pub = {
         options: {},
-        init: function () {
-
+        init: function (options) {
+            pub.options = $.extend({}, defaultOptions, options || {});
+            console.log(options);
         },
         // Todo loading
         loading: function (show) {
@@ -90,7 +91,7 @@ var ws = ws || (function ($) {
                 }
                 if (left === 0) {
                     $(this).html(finishText);
-                }else {
+                } else {
                     var d = Math.floor(left / days);
                     left -= d * days;
                     var h = Math.floor(left / hours);
@@ -124,7 +125,7 @@ var ws = ws || (function ($) {
             const $factor = Math.pow(10, precision);
             return Math.round(number * $factor) / $factor;
         },
-        numberFormat: function (number, decimal = 2, dec_point = '.', thousands_sep = ',') {
+        numberFormat: function (number, decimal, dec_point = '.', thousands_sep = ',') {
             number = number || 0;
             decimal = decimal || pub.options.priceDecimal;
             dec_point = dec_point || '.';
@@ -137,8 +138,8 @@ var ws = ws || (function ($) {
         },
         showMoney: function (money, currency, precision) {
             precision = precision || pub.options.pricePrecision;
-            money = pub.roundNumber(money, precision)
             currency = currency || pub.options.currency;
+            money = pub.roundNumber(money, precision);
             return pub.numberFormat(money) + ' ' + currency;
         },
         showFilter: function (id) {

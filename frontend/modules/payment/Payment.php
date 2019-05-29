@@ -166,7 +166,7 @@ class Payment extends Model
 
     public function loadOrdersFromCarts()
     {
-        $data = CartHelper::createOrderParams($this->carts);
+        $data = CartHelper::createOrderParams($this->payment_type,$this->carts);
         $this->_orders = $data['orders'];
         $this->total_amount = $data['totalAmount'];
         $this->total_amount_display = $data['totalAmount'];
