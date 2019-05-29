@@ -6,6 +6,7 @@ namespace api\modules\v1\controllers\service;
 
 use api\controllers\BaseApiController;
 use common\helpers\WeshopHelper;
+use common\logs\PackingLogs;
 use common\logs\TrackingLogs;
 use common\models\DeliveryNote;
 use common\models\draft\DraftDataTracking;
@@ -59,7 +60,6 @@ class TrackingCodeServiceController extends BaseApiController
         ){
             return $this->response(false,'data merge not incorrect!');
         }
-
         $model = new Package();
         $model->tracking_code = $missing->tracking_code;
         $model->tracking_merge = $missing->tracking_code . ',' . $wasting->tracking_code;
@@ -82,11 +82,22 @@ class TrackingCodeServiceController extends BaseApiController
         $model->warehouse_tag_boxme = $wasting->warehouse_tag_boxme;
         $model->note_boxme = $wasting->note_boxme;
         $model->image = $wasting->image;
-        $model->save();
+        $model->createOrUpdate();
         $missing->status = DraftWastingTracking::MERGE_MANUAL;
         $missing->save();
         $wasting->status = DraftWastingTracking::MERGE_MANUAL;
         $wasting->save();
+        $logTracking = new TrackingLogs();
+        $logTracking->tracking_code = $missing->tracking_code;
+        $logTracking->tracking_code_ws = $missing->ws_tracking_code;
+        $logTracking->manifest_code = $missing->manifest_code;
+        $logTracking->manifest_id = $missing->manifest_id;
+        $logTracking->type_log = TrackingLogs::TRACKING_MERGE_TRACKING_WAST;
+        $logTracking->tracking_code_reference = $wasting->tracking_code;
+        $logTracking->message_log = "Gộp tracking thiếu: ".$missing->tracking_code.' vào tracking thừa: '.$wasting->tracking_code.'' .
+            '<br> Và tạo thành Packge: '.$model->package_code.' có tracking code là '.$model->tracking_code;
+        $logTracking->more_data = $model->getAttributes();
+        $logTracking->save();
         return $this->response(true,'Merge success!');
     }
     public function actionMapUnknown($id){
@@ -101,7 +112,6 @@ class TrackingCodeServiceController extends BaseApiController
         $model->product_id = $product->id;
         $model->order_id = $product->order_id;
         $model->item_name = $model->item_name && strtoupper($model->item_name) != 'none' ? $model->item_name : $product->product_name;
-        $model->save();
         $product->updateStockinUs($model->stock_in_us);
         $product->updateStockoutUs($model->stock_out_us);
         $product->save(false);
@@ -115,6 +125,11 @@ class TrackingCodeServiceController extends BaseApiController
         $logTracking->tracking_code = $model->tracking_code;
         $logTracking->message_log = 'Map tracking '.$model->tracking_code.' với product: ' .$product->id . ', order: '.$product->order->ordercode;
         $logTracking->message_log .= '<br>Loại tracking chuyển từ '.$model->type_tracking.' sang ';
+
+        $logPacking = new PackingLogs();
+        $logPacking->type_log = PackingLogs::PACKING_MAP_PRODUCT;
+        $logPacking->message_log = 'Map Package '.$model->package_code.' với product: ' .$product->id . ', order: '.$product->order->ordercode;
+        $logPacking->message_log .= '<br>Loại tracking chuyển từ '.$model->type_tracking.' sang ';
         if($count > 1){
             DraftDataTracking::updateAll(
                 ['type_tracking' => DraftDataTracking::TYPE_SPLIT],
@@ -130,12 +145,15 @@ class TrackingCodeServiceController extends BaseApiController
                 ['tracking_code' => $model->tracking_code]
             );
             $model->type_tracking = DraftDataTracking::TYPE_NORMAL;
-            $model->save(0);
         }
+        $model->save();
         $model->refresh();
         $logTracking->message_log .= $model->type_tracking;
         $logTracking->more_data = $model->getAttributes();
         $logTracking->save();
+        $logPacking->message_log .= $model->type_tracking;
+        $logPacking->more_data = $model->getAttributes();
+        $logPacking->save();
         return $this->response(true,'Map tracking success!');
     }
     public function actionSplitTracking($id){
