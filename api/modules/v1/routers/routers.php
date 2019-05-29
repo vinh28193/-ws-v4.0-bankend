@@ -148,12 +148,14 @@ return [
         'prefix' => 'v1',
         'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
         'tokens' => [
+            '{id}' => '<id:\\w[\\w,]*>',
             '{content}' => '<content:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
             'DELETE {content}' => 'delete',
             'POST' => 'create',
+            'PUT,PATCH {id}' => 'update',
             'OPTIONS {content}' => 'options',
             'OPTIONS' => 'options',
         ],

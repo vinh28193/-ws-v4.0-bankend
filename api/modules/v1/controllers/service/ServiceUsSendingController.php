@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
+use common\logs\PackingLogs;
 use common\logs\TrackingLogs;
 use common\models\draft\DraftDataTracking;
 use common\models\draft\DraftExtensionTrackingMap;
@@ -173,7 +174,6 @@ class ServiceUsSendingController extends BaseApiController
         $data->quantity = $ext->quantity;
         $data->purchase_invoice_number = $ext->purchase_invoice_number;
         $data->tracking_merge = $data->tracking_merge . ','.strtoupper($ext->tracking_code);
-        $data->save(0);
         $ext->status = DraftExtensionTrackingMap::MAPPED;
         $ext->draft_data_tracking_id = $type == 'tracking' ? $data->id : $data->draft_data_tracking_id;
         $ext->save(0);
@@ -197,6 +197,9 @@ class ServiceUsSendingController extends BaseApiController
         $logTracking->message_log = 'Gộp tracking '.$data->tracking_code.'' .
             ' và tracking seller '.$ext->tracking_code.' thành tracking '.$data->tracking_code.'.' .
             'Và chuyển loại tracking từ : '.$data->type_tracking.' thành: ' ;
+        $messagePackage = 'Map Package '.$data->package_code.'' .
+            ' và tracking seller '.$ext->tracking_code.'.' .
+            'Và chuyển loại tracking từ : '.$data->type_tracking.' thành: ';
         if($count > 1){
             $data->type_tracking = DraftDataTracking::TYPE_SPLIT;
             DraftDataTracking::updateAll(
@@ -205,11 +208,20 @@ class ServiceUsSendingController extends BaseApiController
             );
         }else{
             $data->type_tracking = DraftDataTracking::TYPE_NORMAL;
-            $data->save(0);
         }
+        $data->save(0);
         $logTracking->message_log .= $data->type_tracking;
         $logTracking->more_data = $data->getAttributes();
         $logTracking->save();
+        if($type == 'package'){
+            $logPacking = new PackingLogs();
+            $logPacking->package_code = $data->package_code;
+            $logPacking->type_log = PackingLogs::PACKING_MERGE_TRACKING_SELLER;
+            $logPacking->tracking_code_reference = $ext->tracking_code;
+            $logPacking->message_log =  $messagePackage.$data->type_tracking;
+            $logPacking->more_data = $data->getAttributes();
+            $logPacking->save();
+        }
         return $this->response(true,'Merge success!');
     }
 
