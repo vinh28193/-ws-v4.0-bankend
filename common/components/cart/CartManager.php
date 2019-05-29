@@ -9,6 +9,7 @@
 namespace common\components\cart;
 
 
+use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use Yii;
 use Exception;
 use yii\base\Component;
@@ -128,9 +129,9 @@ class CartManager extends Component
 
     }
 
-    public function filterItem($type, $key, $safeOnly = true)
+    public function filterItem($filter, $type = null, $safeOnly = true)
     {
-        return $this->getStorage()->filterItem($type, $key, $this->getIsSafe($safeOnly));
+        return $this->getStorage()->filterItem($filter, $type, $this->getIsSafe($safeOnly));
     }
 
     /**
@@ -150,7 +151,7 @@ class CartManager extends Component
     {
         $key = $this->createKeyFormParams($params);
         try {
-            $item = $this->filterItem($type, $this->normalKeyFilter($key), $safeOnly);
+            $item = $this->filterItem($this->normalKeyFilter($key), $type, $safeOnly);
             if (!empty($item)) {
                 return [false, 'Sản phẩm  này đã có trong giỏ hàng'];
             } else {
@@ -158,7 +159,7 @@ class CartManager extends Component
                 $filter = $key;
                 unset($filter['products']);
 
-                $parents = $this->filterItem($type, $this->normalKeyFilter($filter), $this->getIsSafe());
+                $parents = $this->filterItem($this->normalKeyFilter($filter), $type, $this->getIsSafe());
                 $cartItem = new OrderCartItem();
                 if (count($parents) > 0) {
 
@@ -287,7 +288,7 @@ class CartManager extends Component
             }
             $n[$k] = $v;
         }
-        return $n;
+        return ['key' => $n];
     }
 
     /**
@@ -353,6 +354,21 @@ class CartManager extends Component
             return $user->getId();
         }
         return null;
+    }
+
+    /**
+     * @param $id
+     * @param $param
+     */
+    public function updateSafeItem($id, $param)
+    {
+        try {
+            if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
+                return [false, 'Sản phẩm này không có trong giỏ hàng'];
+            }
+        } catch (Exception $exception) {
+            return [false, $exception->getMessage()];
+        }
     }
 
     /**

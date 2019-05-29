@@ -105,13 +105,19 @@ class MongodbCartStorage extends BaseObject
         return $query->one($this->mongodb);
     }
 
-    public function filterItem($type, $filter, $identity = null)
+    public function filterItem($filters, $type = null, $identity = null)
     {
-        $conditions = ['type' => $type, 'remove' => 0];
+        $conditions = ['remove' => 0];
+        if ($type !== null) {
+            $conditions = ['type' => $type];
+        }
         if ($identity !== null) {
             $conditions['identity'] = $identity;
         }
-        return $this->aggregate(ArrayHelper::merge($conditions, $this->buildFilterAggregationPipeline('key', $filter)));
+        foreach ($filters as $attr => $value) {
+            $conditions = ArrayHelper::merge($conditions, $this->buildFilterAggregationPipeline($attr, $value));
+        }
+        return $this->aggregate($conditions);
     }
 
     /**
@@ -255,26 +261,6 @@ class MongodbCartStorage extends BaseObject
         ]);
     }
 
-    private function buildKeyFilter($key)
-    {
-        $filter = [];
-        foreach ($key as $name => $value) {
-            if ($name === 'products' && is_array($value)) {
-                $match = [];
-                foreach ($value as $array) {
-                    foreach ($array as $k => $v) {
-                        if ($k === 'id' || $k === 'sku') {
-                            $match[$k] = $v;;
-                        }
-                    }
-
-                }
-                $value = ['$elemMatch' => $match];
-            }
-            $filter["key.{$name}"] = $value;
-        }
-        return $filter;
-    }
 
     public function buildFilterAggregationPipeline($attribute, $params)
     {

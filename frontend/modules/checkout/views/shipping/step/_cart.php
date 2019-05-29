@@ -8,7 +8,7 @@ use yii\helpers\Html;
 $storeManager = Yii::$app->storeManager;
 ?>
 
-<div class="title">Đơn hàng <span>(<?= count($payment->orders) ?> item)</span> <a href="#" class="far fa-edit"></a>
+<div class="title">Đơn hàng <span>(<?= count($payment->orders) ?> đơn)</span> <a href="#" class="far fa-edit"></a>
 </div>
 <div class="payment-box order">
     <div class="top">
