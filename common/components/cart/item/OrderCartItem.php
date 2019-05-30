@@ -60,7 +60,7 @@ class OrderCartItem extends BaseObject
                 'source' => $tempKey['source'],
                 'sellerId' => $tempKey['sellerId']
             ]);
-            $new = new self($this->_cartManager, $param);
+            $new = new self($this->cartManager, $param);
             list($ok, $newOrder) = $new->filterProduct();
             if (!$ok) {
                 return [false, "item {$param['id']} is invalid please remove this form cart list"];
@@ -86,7 +86,7 @@ class OrderCartItem extends BaseObject
                 $order['ordercode'] = $tempKey['orderCode'];
             }
 
-            if (($supporters = $this->_cartManager->getStorage()->calculateSupported()) > 0) {
+            if (($supporters = $this->cartManager->getStorage()->calculateSupported()) > 0) {
                 /** @var  $supporter null|User */
                 $supporter = User::find()->select(['id', 'mail'])->where(['id' => $supporters[0]['_id']])->one();
                 $key['supportAssign'] = [
