@@ -14,6 +14,8 @@ use common\products\BaseProduct;
 use common\products\Provider;
 use common\products\VariationMapping;
 use Yii;
+use DateTime;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 class CartHelper
@@ -230,5 +232,41 @@ class CartHelper
             'orders' => $orders,
             'totalAmount' => $totalFinalAmount
         ];
+    }
+
+    public static function getTimeEndOfDay($value = 'now')
+    {
+        $dateTime = new DateTime($value);
+        $dateTime->setTime(23, 59, 59);
+        return Yii::$app->formatter->asDatetime($dateTime);
+    }
+
+    public static function beginSupportDay()
+    {
+        return self::getTimeEndOfDay('now - 1 days');
+    }
+
+    public static function endSupportDay()
+    {
+        return self::getTimeEndOfDay('now');
+    }
+
+    public static function getSupportAssign()
+    {
+        $userManager = Yii::$app->getAuthManager();
+        $idSale = $userManager->getUserIdsByRole('sale');
+        $idMasterSale = $userManager->getUserIdsByRole('master_sale');
+        $query = new Query();
+        $query->from(['u' => User::tableName()]);
+        $query->select(['id', 'mail']);
+        $query->where([
+            'AND',
+            ['remove' => 0],
+            ['OR',
+                ['id' => $idSale],
+                ['id' => $idMasterSale]
+            ]
+        ]);
+        $sales = $query->all(User::getDb());
     }
 }

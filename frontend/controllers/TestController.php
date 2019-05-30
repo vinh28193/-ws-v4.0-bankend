@@ -97,4 +97,11 @@ class TestController extends FrontendController
         var_dump($formater->asDatetime($dateTime));
         die;
     }
+
+    public function actionTestCount()
+    {
+        $storage = new MongodbCartStorage();
+        var_dump($storage->calculateSupported());
+        die;
+    }
 }
