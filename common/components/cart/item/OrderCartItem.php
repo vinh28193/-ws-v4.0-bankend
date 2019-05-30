@@ -86,15 +86,15 @@ class OrderCartItem extends BaseObject
                 $order['ordercode'] = $tempKey['orderCode'];
             }
 
-            if (($supporters = $this->cartManager->getStorage()->calculateSupported()) > 0) {
-                /** @var  $supporter null|User */
-                $supporter = User::find()->select(['id', 'mail'])->where(['id' => $supporters[0]['_id']])->one();
-                $key['supportAssign'] = [
-                    'id' => $supporter->id,
-                    'email' => $supporter->email
-                ];
-
-            }
+//            if (($supporters = $this->cartManager->getStorage()->calculateSupported()) > 0) {
+//                /** @var  $supporter null|User */
+//                $supporter = User::find()->select(['id', 'mail'])->where(['id' => $supporters[0]['_id']])->one();
+//                $key['supportAssign'] = [
+//                    'id' => $supporter->id,
+//                    'email' => $supporter->email
+//                ];
+//
+//            }
         } else {
             $order['ordercode'] = $tempKey['orderCode'];
             $order['current_status'] = $tempKey['current_status'];
