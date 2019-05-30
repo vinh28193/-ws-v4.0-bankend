@@ -228,31 +228,36 @@ class CartManager extends Component
         }
     }
 
-    public function removeItem($type, $id, $key, $safeOnly = true)
+    public function removeItem($type, $id, $key = null, $safeOnly = true)
     {
-        if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
-            return [false, 'Sản phẩm không có trong giỏ hàng'];
-        }
-        $activeKey = $item['key'];
-        $products = [];
-        foreach (ArrayHelper::remove($activeKey, 'products', []) as $value) {
-            if ($this->isDetectedProduct($value, $key)) {
-                continue;
-            }
-            $products[] = $value;
-        }
-        if (empty($products)) {
+        if ($key === null) {
             $success = $this->getStorage()->removeItem($id);
             return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
+        } else {
+            if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
+                return [false, 'Sản phẩm không có trong giỏ hàng'];
+            }
+            $activeKey = $item['key'];
+            $products = [];
+            foreach (ArrayHelper::remove($activeKey, 'products', []) as $value) {
+                if ($this->isDetectedProduct($value, $key)) {
+                    continue;
+                }
+                $products[] = $value;
+            }
+            if (empty($products)) {
+                $success = $this->getStorage()->removeItem($id);
+                return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
+            }
+            $activeKey['products'] = $products;
+            $cartItem = new OrderCartItem();
+            list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
+            if (!$ok) {
+                return [false, $value];
+            }
+            $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value);
+            return [$success, $success ? "Giỏ hàng của bạn đã được thay đổi" : "Giỏ hàng thay đổi không thành công"];
         }
-        $activeKey['products'] = $products;
-        $cartItem = new OrderCartItem();
-        list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
-        if (!$ok) {
-            return [false, $value];
-        }
-        $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value);
-        return [$success, $success ? "Giỏ hàng của bạn đã được thay đổi" : "Giỏ hàng thay đổi không thành công"];
     }
 
     public function createKeyFormParams($params = [])

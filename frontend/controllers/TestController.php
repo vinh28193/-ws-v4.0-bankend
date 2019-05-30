@@ -88,4 +88,13 @@ class TestController extends FrontendController
         var_dump($item2);
         die;
     }
+
+    public function actionTime()
+    {
+        $formater = Yii::$app->formatter;
+        $dateTime = new \DateTime('now');
+        $dateTime->setTime(23, 59, 59, 59);
+        var_dump($formater->asDatetime($dateTime));
+        die;
+    }
 }
