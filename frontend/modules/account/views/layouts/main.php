@@ -12,6 +12,7 @@ use frontend\modules\account\assets\UserBackendAsset;
 use yii\bootstrap\Nav;
 
 use yii\bootstrap\NavBar;
+
 UserBackendAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -35,15 +36,16 @@ UserBackendAsset::register($this);
     <meta property="fb:admins" content="Facebook Admin ID page"/>
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <?php $this->head() ?>
 
 </head>
 <body>
 <?php $this->beginBody() ?>
 <?php
-    $check = Yii::$app->getRequest()->getQueryParams();
-    $checkUrl = Yii::$app->getRequest()->url;
+$check = Yii::$app->getRequest()->getQueryParams();
+$checkUrl = Yii::$app->getRequest()->url;
 ?>
 <div class="wrapper backend">
     <div class="navbar-2 be-header">
@@ -51,20 +53,20 @@ UserBackendAsset::register($this);
         <ul class="be-nav">
             <?php if (Yii::$app->user->isGuest) { ?>
                 <li>
-                    <?php echo Html::a('Signup', ['/secure/signup']);?>
+                    <?php echo Html::a('Signup', ['/secure/signup']); ?>
                 </li>
                 <li>
-                    <?php echo Html::a('Login', ['/secure/login']);?>
+                    <?php echo Html::a('Login', ['/secure/login']); ?>
                 </li>
             <?php } else { ?>
                 <li><span class="text-orange"><?=
                         \common\helpers\WeshopHelper::showMoney(
-                            ArrayHelper::getValue(ArrayHelper::getValue((new WalletService())->detailWalletClient(),'data'),'current_balance',0)
+                            ArrayHelper::getValue(ArrayHelper::getValue((new WalletService())->detailWalletClient(), 'data'), 'current_balance', 0)
                         ); ?></span></li>
                 <li>
                     <a href="/my-cart.html">
                         <i class="icon cart"></i>
-                        <i class="badge"><?= (new CartManager())->countItems() ?></i>
+                        <i class="badge"><?= (new CartManager())->countItems(\common\components\cart\CartSelection::TYPE_SHOPPING) ?></i>
                     </a>
                 </li>
                 <li>
@@ -96,18 +98,28 @@ UserBackendAsset::register($this);
                     <span class="status online">Online</span>
                 </div>
                 <ul id="be-menu-collapse" class="be-menu-collapse" style="margin-bottom: 0">
-                    <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/account/home') { $active = 'active'?> active <?php }}?>">
-                        <?php echo Html::a('<span class="icon icon1"></span>Thống kê Chung', ['/account/home']);?>
+                    <li class="<?php if (isset($checkUrl)) {
+                        if ($checkUrl == '/account/home') {
+                            $active = 'active' ?> active <?php }
+                    } ?>">
+                        <?php echo Html::a('<span class="icon icon1"></span>Thống kê Chung', ['/account/home']); ?>
                     </li>
                     <li class="accordion">
                         <a href="/my-weshop/wallet.html"><i class="icon icon2"></i> Quản lí tiền</a>
-                        <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-1" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
-                        <div id="sub-1" class="sub-collapse collapse <?= in_array('wallet',$this->params) ? ' show' : '' ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
+                        <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-1"
+                           aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                        <div id="sub-1"
+                             class="sub-collapse collapse <?= in_array('wallet', $this->params) ? ' show' : '' ?>"
+                             aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul>
-                                <li class="<?= in_array('top_up',$this->params) ? 'active' : '' ?>"><a href="/my-weshop/wallet/top-up.html">Nạp tiền</a></li>
-                                <li class="<?= in_array('history',$this->params) ? 'active' : '' ?>"><a href="/my-weshop/wallet/history.html">Giao dịch</a></li>
-                                <li class="<?= in_array('bank',$this->params) ? 'active' : '' ?>"><a href="#">Tài khoản ngân hàng</a></li>
-                                <li class="<?= in_array('withdraw',$this->params) ? 'active' : '' ?>"><a href="/my-weshop/wallet/withdraw.html">Rút tiền</a></li>
+                                <li class="<?= in_array('top_up', $this->params) ? 'active' : '' ?>"><a
+                                            href="/my-weshop/wallet/top-up.html">Nạp tiền</a></li>
+                                <li class="<?= in_array('history', $this->params) ? 'active' : '' ?>"><a
+                                            href="/my-weshop/wallet/history.html">Giao dịch</a></li>
+                                <li class="<?= in_array('bank', $this->params) ? 'active' : '' ?>"><a href="#">Tài khoản
+                                        ngân hàng</a></li>
+                                <li class="<?= in_array('withdraw', $this->params) ? 'active' : '' ?>"><a
+                                            href="/my-weshop/wallet/withdraw.html">Rút tiền</a></li>
                             </ul>
                         </div>
                     </li>
@@ -136,38 +148,64 @@ UserBackendAsset::register($this);
                             }
                         }
                         ?>
-                        <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($checkUrl)){?> <?=$collapsed[1]?> <?php } ?><?php if (isset($check['status'])){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
-                        <div id="sub-2" class="sub-collapse collapse <?php if (isset($check['status'])){?> <?=$collapsed[2]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[2]?> <?php } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
+                        <a class="dropdown-collapse <?php if (isset($check['status'])) { ?> <?= $collapsed[0] ?> <?php } ?><?php if (isset($checkUrl)) { ?> <?= $collapsed[0] ?> <?php } ?>"
+                           data-toggle="collapse" data-target="#sub-2"
+                           aria-expanded="<?php if (isset($checkUrl)) { ?> <?= $collapsed[1] ?> <?php } ?><?php if (isset($check['status'])) { ?> <?= $collapsed[1] ?> <?php } ?>"
+                           aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                        <div id="sub-2"
+                             class="sub-collapse collapse <?php if (isset($check['status'])) { ?> <?= $collapsed[2] ?> <?php } ?><?php if (isset($checkUrl)) { ?> <?= $collapsed[2] ?> <?php } ?>"
+                             aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul class="style-nav">
-                                <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/account/order') { ?> active <?php }}?><?php if (isset($checkUrl)) { if ($checkUrl == '/order') { ?> active <?php }}?>">
-                                    <?php echo Html::a('Tất cả các đơn', ['/account/order'],['class' => 'active']); ?>
+                                <li class="<?php if (isset($checkUrl)) {
+                                    if ($checkUrl == '/account/order') { ?> active <?php }
+                                } ?><?php if (isset($checkUrl)) {
+                                    if ($checkUrl == '/order') { ?> active <?php }
+                                } ?>">
+                                    <?php echo Html::a('Tất cả các đơn', ['/account/order'], ['class' => 'active']); ?>
                                 </li>
-                                <li class="<?php if (isset($check['purchase'])) { if ($check['purchase'] == 'unpaid') { ?> active <?php }}?>">
-                                    <?php echo Html::a('Chưa Thanh Toán', ['/account/order?purchase=unpaid']);?>
+                                <li class="<?php if (isset($check['purchase'])) {
+                                    if ($check['purchase'] == 'unpaid') { ?> active <?php }
+                                } ?>">
+                                    <?php echo Html::a('Chưa Thanh Toán', ['/account/order?purchase=unpaid']); ?>
                                 </li>
-                                <li class="<?php if (isset($check['purchase'])) { if ($check['purchase'] == 'paid') { ?> active <?php }}?>">
-                                    <?php echo Html::a('Đã thanh toán', ['/account/order?purchase=paid']);?>
+                                <li class="<?php if (isset($check['purchase'])) {
+                                    if ($check['purchase'] == 'paid') { ?> active <?php }
+                                } ?>">
+                                    <?php echo Html::a('Đã thanh toán', ['/account/order?purchase=paid']); ?>
                                 </li>
-                                <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'PURCHASED') { ?> active <?php }}?>">
-                                    <?php echo Html::a('Đã mua hàng', ['/account/order?status=PURCHASED']);?>
+                                <li class="<?php if (isset($check['status'])) {
+                                    if ($check['status'] == 'PURCHASED') { ?> active <?php }
+                                } ?>">
+                                    <?php echo Html::a('Đã mua hàng', ['/account/order?status=PURCHASED']); ?>
                                 </li>
-                                <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'STOCKIN_US') { ?> active <?php }}?>">
-                                    <?php echo Html::a('Đã về kho US', ['/account/order?status=STOCKIN_US']);?>
+                                <li class="<?php if (isset($check['status'])) {
+                                    if ($check['status'] == 'STOCKIN_US') { ?> active <?php }
+                                } ?>">
+                                    <?php echo Html::a('Đã về kho US', ['/account/order?status=STOCKIN_US']); ?>
                                 </li>
-                                <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'STOCKIN_LOCAL') { $active = 'active'?> active <?php }}?>">
-                                    <?php echo Html::a('Đã về kho Việt Nam', ['/account/order?status=STOCKIN_LOCAL']);?>
+                                <li class="<?php if (isset($check['status'])) {
+                                    if ($check['status'] == 'STOCKIN_LOCAL') {
+                                        $active = 'active' ?> active <?php }
+                                } ?>">
+                                    <?php echo Html::a('Đã về kho Việt Nam', ['/account/order?status=STOCKIN_LOCAL']); ?>
                                 </li>
-                                <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'AT_CUSTOMER') { $active = 'active'?> active <?php }}?>">
-                                    <?php echo Html::a('Đã giao', ['/account/order?status=AT_CUSTOMER']);?>
+                                <li class="<?php if (isset($check['status'])) {
+                                    if ($check['status'] == 'AT_CUSTOMER') {
+                                        $active = 'active' ?> active <?php }
+                                } ?>">
+                                    <?php echo Html::a('Đã giao', ['/account/order?status=AT_CUSTOMER']); ?>
                                 </li>
-                                <li class="<?php if (isset($check['status'])) { if ($check['status'] == 'CANCELLED') { $active = 'active'?> active <?php }}?>">
-                                    <?php echo Html::a('Đã hủy', ['/account/order?status=CANCELLED']);?>
+                                <li class="<?php if (isset($check['status'])) {
+                                    if ($check['status'] == 'CANCELLED') {
+                                        $active = 'active' ?> active <?php }
+                                } ?>">
+                                    <?php echo Html::a('Đã hủy', ['/account/order?status=CANCELLED']); ?>
                                 </li>
                             </ul>
                         </div>
                     </li>
                     <li>
-                        <?php echo Html::a('<span class="icon icon4"></span>Ví voucher', ['/account/promotion-user?status=1']);?>
+                        <?php echo Html::a('<span class="icon icon4"></span>Ví voucher', ['/account/promotion-user?status=1']); ?>
                     </li>
                     <li>
                         <a href="#"><i class="icon icon5"></i> Weshop xu</a>
@@ -183,19 +221,32 @@ UserBackendAsset::register($this);
                     ?>
                     <li class="accordion">
                         <a href="#"><i class="icon icon6"></i> Tài khoản cá nhân</a>
-                        <a class="dropdown-collapse <?php if (isset($checkUrl)){ if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') {?> <?=$collapsed1[0]?> <?php }} ?>" data-toggle="collapse" data-target="#sub-3" aria-expanded="<?php if (isset($checkUrl)){if ($checkUrl == '/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') {?> <?=$collapsed1[1]?> <?php } } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
-                        <div id="sub-3" class="sub-collapse collapse <?php if (isset($checkUrl)) { if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') {?> <?=$collapsed1[2]?> <?php } } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
+                        <a class="dropdown-collapse <?php if (isset($checkUrl)) {
+                            if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') { ?> <?= $collapsed1[0] ?> <?php }
+                        } ?>" data-toggle="collapse" data-target="#sub-3" aria-expanded="<?php if (isset($checkUrl)) {
+                            if ($checkUrl == '/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') { ?> <?= $collapsed1[1] ?> <?php }
+                        } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                        <div id="sub-3" class="sub-collapse collapse <?php if (isset($checkUrl)) {
+                            if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') { ?> <?= $collapsed1[2] ?> <?php }
+                        } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul>
-                                <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/account/customer') { $active = 'active'?> active <?php }}?>">
-                                    <?php echo Html::a('Tài khoản cá nhân', ['/account/customer']);?>
+                                <li class="<?php if (isset($checkUrl)) {
+                                    if ($checkUrl == '/account/customer') {
+                                        $active = 'active' ?> active <?php }
+                                } ?>">
+                                    <?php echo Html::a('Tài khoản cá nhân', ['/account/customer']); ?>
                                 </li>
-<!--                                <li class="--><?php //if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/saved.html') {?><!-- active --><?php //}}?><!--">-->
-<!--                                    --><?php //echo Html::a('Sản phẩm đã lưu', ['/account/customer/saved']);?>
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                <li class="--><?php //if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/vip.html') {?><!-- active --><?php //}}?><!--">-->
-<!--                                    --><?php //echo Html::a('Cấp độ Vip', ['/account/customer/vip']);?>
-<!--                                </li>-->
+                                <!--                                <li class="-->
+                                <?php //if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/saved.html') {?><!-- active -->
+                                <?php //}}?><!--">-->
+                                <!--                                    --><?php //echo Html::a('Sản phẩm đã lưu', ['/account/customer/saved']);?>
+                                <!--                                </li>-->
+                                <!--                                <li>-->
+                                <!--                                <li class="-->
+                                <?php //if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/vip.html') {?><!-- active -->
+                                <?php //}}?><!--">-->
+                                <!--                                    --><?php //echo Html::a('Cấp độ Vip', ['/account/customer/vip']);?>
+                                <!--                                </li>-->
                                 </li>
                             </ul>
                         </div>
