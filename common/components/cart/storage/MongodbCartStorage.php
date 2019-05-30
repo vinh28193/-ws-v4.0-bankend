@@ -229,6 +229,7 @@ class MongodbCartStorage extends BaseObject
             'AND',
             ['$gt', 'create_at', CartHelper::beginSupportDay()],
             ['$lt', 'create_at', CartHelper::endSupportDay()],
+            []
         ];
         if ($supportId !== null) {
             $match[] = is_array($supportId) ? ['$in', 'key.supportId', $supportId] : ['key.supportId' => (string)$supportId];

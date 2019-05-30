@@ -10,6 +10,7 @@ namespace common\components\cart;
 
 
 use common\components\cart\storage\MongodbCartStorage;
+use common\models\User;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use Yii;
 use Exception;
@@ -151,7 +152,7 @@ class CartManager extends Component
     public function addItem($type, $params, $safeOnly = true)
     {
         $key = $this->createKeyFormParams($params);
-        $cartItem = new OrderCartItem();
+        $cartItem = new OrderCartItem($this);
         try {
             if ($type !== CartSelection::TYPE_SHOPPING) {
                 list($ok, $value) = $cartItem->createOrderFormKey($key, false);
@@ -169,7 +170,6 @@ class CartManager extends Component
                 $filter = $key;
                 unset($filter['products']);
                 $parents = $this->filterItem($this->normalKeyFilter($filter), $type, $this->getIsSafe());
-                $cartItem = new OrderCartItem();
                 if (count($parents) > 0) {
 
                     foreach ($parents as $parent) {
@@ -201,7 +201,7 @@ class CartManager extends Component
 
     public function updateItem($type, $id, $key, $params = [], $safeOnly = true)
     {
-
+        $cartItem = new OrderCartItem($this);
         try {
             if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
                 return [false, 'Sản phẩm này không có trong giỏ hàng'];
@@ -215,7 +215,6 @@ class CartManager extends Component
                 $products[] = $value;
             }
             $activeKey['products'] = $products;
-            $cartItem = new OrderCartItem();
             list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
             if (!$ok) {
                 return [false, $value];
@@ -230,6 +229,7 @@ class CartManager extends Component
 
     public function removeItem($type, $id, $key = null, $safeOnly = true)
     {
+        $cartItem = new OrderCartItem($this);
         if ($key === null) {
             $success = $this->getStorage()->removeItem($id);
             return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
@@ -250,7 +250,6 @@ class CartManager extends Component
                 return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
             }
             $activeKey['products'] = $products;
-            $cartItem = new OrderCartItem();
             list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
             if (!$ok) {
                 return [false, $value];
@@ -277,7 +276,12 @@ class CartManager extends Component
             }
             $c[$g] = $v;
         }
-        return ArrayHelper::merge(OrderCartItem::defaultKey(), $p, ['products' => [$c]]);
+        $supporter = null;
+//        if (($supportId = $this->getStorage()->calculateSupported()) > 0) {
+//            $supporter = User::find()->select(['id', 'mail'])->where(['id' => $supportId[0]['_id']])->one();
+//        }
+
+        return ArrayHelper::merge(OrderCartItem::defaultKey(), $supporter !== null ? ['supportAssign' => ['id' => $supporter->id, 'email' => $supporter->email], 'supportId' => $supporter->id] : [], $p, ['products' => [$c]]);
     }
 
     public function normalKeyFilter($key)
@@ -403,5 +407,16 @@ class CartManager extends Component
         $lv2 = isset($source['sku']);
         $lv2 = $lv2 ? (!isset($target['sku']) ? false : $source['sku'] === $target['sku']) : true;
         return $lv1 && $lv2;
+    }
+
+    public function getSupportAssign()
+    {
+        $authManager = Yii::$app->authManager;
+        $saleIds = $authManager->getUserIdsByRole('sale');
+        $masterSaleIds = $authManager->getUserIdsByRole('master_sale');
+        $supporters = User::find()->select(['id', 'email'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
+        if(($calculateToday = $this->getStorage()->calculateSupported()) > 0){
+
+        }
     }
 }
