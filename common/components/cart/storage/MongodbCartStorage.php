@@ -158,7 +158,7 @@ class MongodbCartStorage extends BaseObject
             ],
             [
                 '$project' => [
-                    '_id' => ['$toString' => '$_id'],
+                    '_id' => ['$toString' => '$oid'],
                     'type' => '$type',
                     'key' => '$key',
                     'value' => '$value',
