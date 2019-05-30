@@ -73,6 +73,7 @@ class RestApiChatlistsController extends BaseApiController
             'id' => @uniqid(),
             'content' => $content,
             'active' => 1,
+            'type'=>'Supported',
             'date_set' => Yii::$app->formatter->asDateTime('now'),
         ];
 
