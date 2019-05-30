@@ -150,7 +150,16 @@ class CartManager extends Component
     public function addItem($type, $params, $safeOnly = true)
     {
         $key = $this->createKeyFormParams($params);
+        $cartItem = new OrderCartItem();
         try {
+            if ($type !== CartSelection::TYPE_SHOPPING) {
+                list($ok, $value) = $cartItem->createOrderFormKey($key, false);
+                if (!$ok) {
+                    return [false, $value];
+                }
+                $success = $this->getStorage()->addItem($type, $key, $value, $this->getIsSafe($safeOnly));
+                return [$success, $success ? "Thêm sản phẩm vào $type thành công" : "Thêm vào $type thất bại"];
+            }
             $item = $this->filterItem($this->normalKeyFilter($key), $type, $safeOnly);
             if (!empty($item)) {
                 return [false, 'Sản phẩm  này đã có trong giỏ hàng'];
@@ -158,7 +167,6 @@ class CartManager extends Component
 
                 $filter = $key;
                 unset($filter['products']);
-
                 $parents = $this->filterItem($this->normalKeyFilter($filter), $type, $this->getIsSafe());
                 $cartItem = new OrderCartItem();
                 if (count($parents) > 0) {
@@ -173,7 +181,7 @@ class CartManager extends Component
                                 return [false, $value];
                             }
                             $success = $this->getStorage()->setItem($parent['_id'], $parent['key'], $value, $this->getIsSafe($safeOnly));
-                            return [$success, $success ? 'Thêm sản phẩm thành công' : 'Thêm thất bại'];
+                            return [$success, $success ? "Thêm sản phẩm vào shopping thành công" : "Thêm vào shopping thất bại"];
                         }
                     }
                 }
@@ -182,7 +190,7 @@ class CartManager extends Component
                     return [false, $value];
                 }
                 $success = $this->getStorage()->addItem($type, $key, $value, $this->getIsSafe($safeOnly));
-                return [$success, $success ? 'Thêm sản phẩm thành công' : 'Thêm thất bại'];
+                return [$success, $success ? "Thêm sản phẩm vào shopping thành công" : "Thêm vào shopping thất bại"];
             }
         } catch (Exception $exception) {
             Yii::info($exception);

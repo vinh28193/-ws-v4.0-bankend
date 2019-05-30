@@ -46,7 +46,6 @@ class CartController extends BillingController
         }
         $cartManager = $this->module->cartManager;
         $items = $cartManager->getItems($type, $ids);
-
         if (Yii::$app->getRequest()->getIsPjax()) {
             if (count($items) === 0) {
                 return $this->renderAjax('empty');
@@ -87,7 +86,7 @@ class CartController extends BillingController
         };
 
         if ($type === CartSelection::TYPE_BUY_NOW || $type === CartSelection::TYPE_INSTALLMENT) {
-            CartSelection::setSelectedItems($type, $key[0]);
+            CartSelection::setSelectedItems($type, (string)$key[0]);
             $checkOutAction = Url::toRoute(['/checkout/shipping', 'type' => $type]);
             return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key[0], 'data' => $checkOutAction];
         } else {
@@ -173,6 +172,7 @@ class CartController extends BillingController
         if (($type = ArrayHelper::getValue($params, 'type')) === null) {
             $type = CartSelection::TYPE_SHOPPING;
         }
+
         CartSelection::setSelectedItems($type, $carts);
         $count = CartSelection::countSelectedItems($type);
         return ['success' => true, 'message' => "you will be $type with $count items", 'data' => Url::toRoute(['/checkout/shipping', 'type' => CartSelection::TYPE_SHOPPING])];

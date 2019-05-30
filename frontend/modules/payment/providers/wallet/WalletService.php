@@ -70,8 +70,8 @@ class WalletService extends BaseObject
     public static function isGuest()
     {
         try {
-            return !(new static())->walletInformation()['success'];
-        }catch (\Exception $exception){
+            return !(new static())->testConnection()['success'];
+        } catch (\Exception $exception) {
             return true;
         }
     }
@@ -94,6 +94,12 @@ class WalletService extends BaseObject
             Yii::error($exception);
             return null;
         }
+    }
+
+    public function testConnection()
+    {
+        return $this->callApiRequest('wallet/test-connection', []);
+
     }
 
     public function login($password)

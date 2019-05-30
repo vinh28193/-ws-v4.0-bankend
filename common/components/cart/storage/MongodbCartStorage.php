@@ -144,7 +144,7 @@ class MongodbCartStorage extends BaseObject
             $conditions[] = ['type' => $type];
         }
         if ($ids !== null) {
-            $conditions[] = ['IN', '_id', !is_array($ids) ? [$ids] : $ids];
+            $conditions[] = !is_array($ids) ? ['_id' => $ids] : ['IN', '_id', $ids];
         }
 
         return $this->aggregate($conditions);
@@ -158,7 +158,7 @@ class MongodbCartStorage extends BaseObject
             ],
             [
                 '$project' => [
-                    '_id' => ['$toString' => '$oid'],
+                    '_id' => ['$toString' => '$_id'],
                     'type' => '$type',
                     'key' => '$key',
                     'value' => '$value',
