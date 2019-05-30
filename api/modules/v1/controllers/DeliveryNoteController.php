@@ -6,6 +6,8 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\helpers\WeshopHelper;
+use common\logs\DeliveryNoteLogs;
+use common\logs\PackingLogs;
 use common\models\DeliveryNote;
 use common\models\Package;
 use Yii;
@@ -96,6 +98,7 @@ class DeliveryNoteController extends BaseApiController
     }
     public function actionCreate(){
         $listPackage = \Yii::$app->request->post('listPackage');
+        $manifest_id = \Yii::$app->request->post('manifest_id');
         $infoDeliveryNote = \Yii::$app->request->post('infoDeliveryNote');
         $create1vs1 = \Yii::$app->request->post('create1vs1');
 
@@ -106,13 +109,19 @@ class DeliveryNoteController extends BaseApiController
            return $this->create($listPackage,$infoDeliveryNote);
         }
         if($create1vs1){
-            return $this->createMulti($listPackage);
+            return $this->createMulti($listPackage,$manifest_id);
         }
         return $this->response(false, 'Some thing error!');
     }
-    function createMulti($listIds){
+    function createMulti($listIds,$manifest_id){
         /** @var Package[] $packages */
-        $packages = Package::find()->with(['order','manifest'])->where(['id' => $listIds])->all();
+        if($listIds){
+            $packages = Package::find()->with(['order','manifest'])->where(['id' => $listIds])->all();
+        }else if($manifest_id){
+            $packages = Package::find()->with(['order','manifest'])->where(['manifest_id' => $manifest_id])->all();
+        }else{
+            $packages = null;
+        }
         if(!$packages){
             return $this->response(false, 'Cannot find package !');
         }
@@ -154,11 +163,26 @@ class DeliveryNoteController extends BaseApiController
             $deliveryNote->stock_in_local = $package->stock_in_local;
             $deliveryNote->current_status = DeliveryNote::STATUS_REQUEST_SHIP_OUT;
             $deliveryNote->save(false);
-            $deliveryNote->delivery_note_code = WeshopHelper::generateTag($deliveryNote->id,'WSVNDN');
+            $deliveryNote->delivery_note_code = WeshopHelper::generateTag($deliveryNote->id,'DN_');
             $deliveryNote->save(false);
+            $dnLog = new DeliveryNoteLogs();
+            $dnLog->delivery_note_code = $deliveryNote->delivery_note_code;
+            $dnLog->delivery_note_id = $deliveryNote->id;
+            $dnLog->type_log = DeliveryNoteLogs::DELIVERY_NOTE_CREATE;
+            $dnLog->message_log = "Tạo phiếu giao ".$deliveryNote->delivery_note_code;
+            $dnLog->more_data = $deliveryNote->getAttributes();
+            $dnLog->save(false);
             $package->delivery_note_code = $deliveryNote->delivery_note_code;
             $package->delivery_note_id = $deliveryNote->id;
             $package->save(0);
+            $pLog = new PackingLogs();
+            $pLog->more_data = $package->getAttributes();
+            $pLog->type_log = PackingLogs::PACKING_PUT_INTO_DELIVERY_NOTE;
+            $pLog->message_log = 'Gói được đưa vào phiếu giao '.$deliveryNote->delivery_note_code;
+            $pLog->package_code = $package->package_code;
+            $pLog->delivery_note_code = $package->delivery_note_code;
+            $pLog->save();
+
             $count ++;
         }
         return $this->response(true,'Create '.$count.'/'.count($listIds).' Delivery note success!');
@@ -250,7 +274,7 @@ class DeliveryNoteController extends BaseApiController
         $deliveryNote->stock_in_local = $packages[0]->stock_in_local;
         $deliveryNote->current_status = DeliveryNote::STATUS_REQUEST_SHIP_OUT;
         $deliveryNote->save(false);
-        $deliveryNote->delivery_note_code = WeshopHelper::generateTag($deliveryNote->id,'WSVNDN');
+        $deliveryNote->delivery_note_code = WeshopHelper::generateTag($deliveryNote->id,'DN_');
         $deliveryNote->save(false);
         Package::updateAll(
             ['delivery_note_code' => $deliveryNote->delivery_note_code , 'delivery_note_id' => $deliveryNote->id],

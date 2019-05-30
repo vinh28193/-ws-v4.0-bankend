@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
+use common\logs\DeliveryNoteLogs;
 use common\logs\PackingLogs;
 use common\logs\TrackingLogs;
 use yii\helpers\ArrayHelper;
@@ -38,6 +39,9 @@ class LogTrackingController extends BaseApiController
                 break;
             case 'package':
                 $data = PackingLogs::GetLogTracking($code);
+                break;
+            case 'delivery note':
+                $data = DeliveryNoteLogs::GetLogTracking($code);
                 break;
         }
         return $this->response(true,'Get Log Success', $data);

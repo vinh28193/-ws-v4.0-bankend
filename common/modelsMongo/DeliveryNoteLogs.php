@@ -13,6 +13,7 @@ use Yii;
  * @property mixed $type_log
  * @property mixed $message_log
  * @property mixed $delivery_note_code_reference
+ * @property mixed $package_code_reference
  * @property mixed $shipment_id
  * @property mixed $shipment_code
  * @property mixed $created_at
@@ -50,6 +51,7 @@ class DeliveryNoteLogs extends \yii\mongodb\ActiveRecord
             'user_id',
             'user_email',
             'user_name',
+            'package_code_reference',
         ];
     }
 
@@ -59,7 +61,7 @@ class DeliveryNoteLogs extends \yii\mongodb\ActiveRecord
     public function rules()
     {
         return [
-            [['delivery_note_id', 'delivery_note_code', 'type_log', 'message_log', 'delivery_note_code_reference', 'shipment_id', 'shipment_code', 'created_at', 'more_data', 'user_id', 'user_email', 'user_name'], 'safe']
+            [['delivery_note_id','package_code_reference', 'delivery_note_code', 'type_log', 'message_log', 'delivery_note_code_reference', 'shipment_id', 'shipment_code', 'created_at', 'more_data', 'user_id', 'user_email', 'user_name'], 'safe']
         ];
     }
 
@@ -82,6 +84,7 @@ class DeliveryNoteLogs extends \yii\mongodb\ActiveRecord
             'user_id' => 'User Id',
             'user_email' => 'User Email',
             'user_name' => 'User Name',
+            'package_code_reference' => 'Package Code Reference',
         ];
     }
 }
