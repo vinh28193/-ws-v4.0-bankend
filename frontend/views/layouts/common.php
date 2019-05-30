@@ -1,11 +1,16 @@
 <?php
 
 /* @var $this \yii\web\View */
-/* @var $content string */
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use frontend\assets\FrontendAsset;
 
+/* @var $content string */
+
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\bootstrap4\ActiveForm;
+use frontend\assets\FrontendAsset;
+use frontend\models\PasswordRequiredForm;
+
+$passwordRequiredForm = new PasswordRequiredForm();
 FrontendAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -18,7 +23,7 @@ FrontendAsset::register($this);
     <meta name="author" content="Weshop Global - Homepage"/>
     <meta name='COPYRIGHT' content='&copy; Weshop Global'/>
     <meta name="robots" content="noodp,index,follow"/>
-    <meta name="cystack-verification" content="f63c2e531bc93b353c0dbd93f8ce0505" />
+    <meta name="cystack-verification" content="f63c2e531bc93b353c0dbd93f8ce0505"/>
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
@@ -32,7 +37,8 @@ FrontendAsset::register($this);
             <div class="navbar-header">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">
                             <i class="flag us"></i>
                             <span>Từ Mỹ</span>
                         </a>
@@ -44,13 +50,13 @@ FrontendAsset::register($this);
                                 </ul>
                             </div>
                             <div class="title2" data-toggle="tab-amazon">Mua hời nhất tại Amazon</div>
-                            <div class="content-tab" style="display: none;"  id="tab-amazon">
+                            <div class="content-tab" style="display: none;" id="tab-amazon">
                                 <ul>
                                     <?= \frontend\widgets\alias\TopMenuAliasWidget::widget(['type' => 'NAV_TOP_A']) ?>
                                 </ul>
                             </div>
                             <div class="title2" data-toggle="tab-top-us">Top US store</div>
-                            <div  class="content-tab" style="display: none;" id="tab-top-us">
+                            <div class="content-tab" style="display: none;" id="tab-top-us">
                                 <ul>
                                     <?= \frontend\widgets\alias\TopMenuAliasWidget::widget(['type' => 'NAV_TOP_US']) ?>
                                 </ul>
@@ -58,7 +64,8 @@ FrontendAsset::register($this);
                         </div>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">
                             <i class="flag jp"></i>
                             <span>Từ Nhật</span>
                         </a>
@@ -74,7 +81,8 @@ FrontendAsset::register($this);
                         </div>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">
                             <i class="flag uk"></i>
                             <span>Từ Anh</span>
                         </a>
@@ -87,7 +95,8 @@ FrontendAsset::register($this);
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown"><a href="#">Blog</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
                         Mua hộ
                     </a>
                     <div class="dropdown-menu animated fadeIn">
@@ -126,7 +135,9 @@ FrontendAsset::register($this);
                                     <li><span>Vận chuyển rẻ, chỉ 14 ngày</span></li>
                                     <li><span>Miễn thủ tục hải quan</span></li>
                                     <li><span>Bảo hiểm rủi ro hàng hóa</span></li>
-                                    <li><span>Mua bất cứ site nào và Không cần dùng tới tài khoản Paypal, thẻ tín dụng</span></li>
+                                    <li>
+                                        <span>Mua bất cứ site nào và Không cần dùng tới tài khoản Paypal, thẻ tín dụng</span>
+                                    </li>
                                 </ol>
                                 <a href="#" class="btn btn-block">Xem các địa chỉ mua sắm</a>
                             </div>
@@ -134,7 +145,8 @@ FrontendAsset::register($this);
                     </div>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
                         Ship hộ
                     </a>
                     <div class="dropdown-menu animated fadeIn">
@@ -173,7 +185,9 @@ FrontendAsset::register($this);
                                     <li><span>Miễn phí lưu kho 14 ngày</span></li>
                                     <li><span>Và nhiều dịch vụ khác</span></li>
                                 </ol>
-                                <button type="button" class="btn ws-btn btn-block" data-toggle="modal" data-target="#wood-alert">Yêu cầu ship hàng</button>
+                                <button type="button" class="btn ws-btn btn-block" data-toggle="modal"
+                                        data-target="#wood-alert">Yêu cầu ship hàng
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -181,12 +195,13 @@ FrontendAsset::register($this);
                 <li>
                     <?php if (Yii::$app->user->isGuest) {
                         echo Html::a('<i class="nav-ico user"></i>', ['/secure/login']);
-                    }else { ?>
+                    } else { ?>
                         <a href="/account/home"><?= Yii::$app->user->identity->username ? Yii::$app->user->identity->username : Yii::$app->user->identity->email ?></a>
-                    <?php }?>
+                    <?php } ?>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
                         <i class="nav-ico map"></i>
                     </a>
                     <div class="dropdown-menu animated fadeIn">
@@ -202,7 +217,8 @@ FrontendAsset::register($this);
                     </div>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
                         <i class="nav-ico question"></i>
                     </a>
                     <div class="dropdown-menu animated fadeIn">
@@ -251,7 +267,8 @@ FrontendAsset::register($this);
                             </li>
                         </ul>
                         <div class="contact">
-                            <div class="contact-icon"><img src="https://weshop.com.vn/images/support-icon.png" alt="" title=""></div>
+                            <div class="contact-icon"><img src="https://weshop.com.vn/images/support-icon.png" alt=""
+                                                           title=""></div>
                             <div class="item">
                                 <a href="mailto:support@weshop.com.vn" target="_top">support@weshop.com.vn</a>
                                 <span>19006755</span>
@@ -310,10 +327,11 @@ FrontendAsset::register($this);
     </div>
     <?= $content; ?>
 
-<?= \frontend\widgets\layout\FooterWidget::widget() ?>
+    <?= \frontend\widgets\layout\FooterWidget::widget() ?>
 </div>
 
 <?php $this->endBody() ?>
+
 <div class="modal otp-modal" id="otp-confirm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -321,6 +339,23 @@ FrontendAsset::register($this);
         </div>
     </div>
 </div>
+
+<div class="modal password-required-modal" id="passwordRequired" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <?php
+                $form = ActiveForm::begin([
+                    'id' => 'passwordRequiredForm',
+                    'action' => Url::toRoute('/secure/password-required', true)
+                ]);
+                ActiveForm::end();
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal qr-modal" id="qr-pay" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

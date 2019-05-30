@@ -204,6 +204,11 @@ class MongodbCartStorage extends BaseObject
         return $this->mongodb->getCollection($this->collection)->update($conditions, ['remove' => 1]);
     }
 
+    public function updateSafeItem($type, $id, $key, $value, $identity = null)
+    {
+
+    }
+
     /**
      * @param $id
      * @return bool|int

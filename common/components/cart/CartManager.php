@@ -9,6 +9,7 @@
 namespace common\components\cart;
 
 
+use common\components\cart\storage\MongodbCartStorage;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use Yii;
 use Exception;
@@ -52,7 +53,7 @@ class CartManager extends Component
     public $storage = 'common\components\cart\storage\MongodbCartStorage';
 
     /**
-     * @return CartStorageInterface|string
+     * @return MongodbCartStorage|string
      * @throws InvalidConfigException
      */
     public function getStorage()
@@ -221,7 +222,7 @@ class CartManager extends Component
             }
             $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value, $this->getIsSafe($safeOnly));
             return [$success, $success ? 'sản phẩm đã được update' : 'không thể update sản phầm này lúc này'];
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Yii::info($exception);
             return [false, $exception->getMessage()];
         }
@@ -365,15 +366,21 @@ class CartManager extends Component
     }
 
     /**
+     * @param $type
      * @param $id
      * @param $param
+     * @return array
+     * @throws \Throwable
      */
-    public function updateSafeItem($id, $param)
+    public function updateSafeItem($type, $id, $param)
     {
         try {
-            if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
+            if (($item = $this->getItem($type, $type, false)) === false) {
                 return [false, 'Sản phẩm này không có trong giỏ hàng'];
             }
+            // todo : thay đổi giá trị của $item['key']
+            $value = (new OrderCartItem())->updateItemBuyKey($item['key']);
+            $success = $this->getStorage()->updateSafeItem($type, $id, $item['key'], $value, false);
         } catch (Exception $exception) {
             return [false, $exception->getMessage()];
         }

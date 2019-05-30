@@ -4,6 +4,9 @@
 namespace common\components\cart\item;
 
 use common\components\cart\CartHelper;
+use common\components\StoreManager;
+use common\helpers\WeshopHelper;
+use common\models\User;
 use Yii;
 use yii\base\BaseObject;
 use common\products\forms\ProductDetailFrom;
@@ -18,6 +21,22 @@ class OrderCartItem extends BaseObject
     public $quantity = 1;
     public $image;
     public $sku = null;
+
+    /**
+     * @var StoreManager
+     */
+    private $_storeManager;
+
+    /**
+     * @return StoreManager
+     */
+    public function getStoreManager()
+    {
+        if (!is_object($this->_storeManager)) {
+            $this->_storeManager = Yii::$app->storeManager;
+        }
+        return $this->_storeManager;
+    }
 
     public function createOrderFormKey(&$key, $refresh = false)
     {
@@ -47,11 +66,19 @@ class OrderCartItem extends BaseObject
             $order = CartHelper::mergeItem($order, array_shift($orders));
         }
 
-        if (empty($key['seller']) && !$refresh) {
-            $key['seller'] = $order['seller'];
-        } else if ($refresh) {
+        if (!$refresh) {
+            if (empty($key['seller'])) {
+                $key['seller'] = $order['seller'];
+            }
+            if ($order['ordercode'] === null) {
+                $order['ordercode'] = $tempKey['orderCode'];
+            }
+
+        } else {
+            $order['ordercode'] = $tempKey['orderCode'];
             $order['current_status'] = $tempKey['current_status'];
             $order['sale_support_id'] = $tempKey['supportId'];
+            $order['saleSupport'] = $order['sale_support_id'] !== null ? User::find()->select(['id', 'email'])->where(['id' => $order['sale_support_id']])->asArray()->one() : null;
             if (!empty($tempKey['times'])) {
                 foreach ($tempKey['times'] as $k => $time) {
                     $order[$k] = $time;
@@ -60,6 +87,12 @@ class OrderCartItem extends BaseObject
         }
 
         return [true, $order];
+    }
+
+    public function updateItemBuyKey($key)
+    {
+        // Todo update gía trị của key vào trường value
+
     }
 
     public function filterProduct()
@@ -86,6 +119,8 @@ class OrderCartItem extends BaseObject
 
     public static function defaultKey()
     {
+
+        $store = (new static())->getStoreManager();
         return [
             'source' => '',
             'sellerId' => '',
@@ -96,6 +131,9 @@ class OrderCartItem extends BaseObject
             ],
             'supportId' => '',
             'supportAssign' => [],
+            'store_id' => $store->id,
+            'currency' => $store->store->currency,
+            'orderCode' => WeshopHelper::generateTag(Yii::$app->formatter->asTimestamp('now'), 'WSC'),
             'products' => []
         ];
     }

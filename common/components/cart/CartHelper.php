@@ -56,6 +56,7 @@ class CartHelper
         $storeManager = Yii::$app->storeManager;
         $order = [];
         $order['type_order'] = Order::TYPE_SHOP;
+        $order['ordercode'] = null;
         $order['portal'] = $item->type;
         $order['current_status'] = Order::STATUS_NEW;
         $order['new'] = Yii::$app->getFormatter()->asTimestamp('now');
@@ -66,6 +67,7 @@ class CartHelper
         $order['store_id'] = $storeManager->getId();
         $order['exchange_rate_fee'] = $storeManager->getExchangeRate();
         $order['sale_support_id'] = null;
+        $order['support_email'] = null;
         $order['saleSupport'] = null;
         $order['customer_id'] = $user ? $user->id : null;
         $order['customer'] = $user ? [
