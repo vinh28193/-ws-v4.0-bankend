@@ -18,7 +18,7 @@ use yii\web\NotFoundHttpException;
 class WalletController extends WalletServiceController
 {
 
-    public function actionTest()
+    public function actionTestConnection()
     {
         return $this->response(true, 'You are connected', Yii::$app->user->identity, ResponseCode::SUCCESS, 1);
     }

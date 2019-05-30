@@ -4,6 +4,7 @@
 namespace frontend\controllers;
 
 use common\models\User;
+use frontend\models\PasswordRequiredForm;
 use Yii;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
@@ -87,6 +88,18 @@ class SecureController extends FrontendController
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionPasswordRequired()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('login');
+        }
+        $model = new PasswordRequiredForm();
+        if ($model->load(Yii::$app->request->post()) && $model->reLogin()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -201,22 +214,22 @@ class SecureController extends FrontendController
         $model = User::find()->where(['id' => $userId])->one();
 
 
-        if(isset($_POST['User'])){
+        if (isset($_POST['User'])) {
 
             $model->attributes = $_POST['User'];
             $valid = $model->validate();
 
-            if($valid){
+            if ($valid) {
 
                 $model->password_hash = md5($model->passwordNew);
 
-                if($model->save())
-                    $this->redirect(array('change-password','msg'=>'successfully changed password'));
+                if ($model->save())
+                    $this->redirect(array('change-password', 'msg' => 'successfully changed password'));
                 else
-                    $this->redirect(array('change-password','msg'=>'password not changed'));
+                    $this->redirect(array('change-password', 'msg' => 'password not changed'));
             }
         }
 
-        $this->render('changePassword',array('model'=>$model));
+        $this->render('changePassword', array('model' => $model));
     }
 }

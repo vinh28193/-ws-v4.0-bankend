@@ -37,14 +37,14 @@ class TestController extends FrontendController
 
         $cartManager = Yii::$app->cart;
 
-//        $cartManager->addItem('shopping', [
-//            'source' => 'ebay',
-//            'sku' => '100-99800902-NRC',
-//            'id' => '163586118957',
-//            'sellerId' => 'amFicmEtY29tcGFueS1zdG9yZS0t',
-//            'quantity' => 2,
-//            'image' => 'https://i.ebayimg.com/00/s/MTQwMFgxNDAw/z/fCkAAOSwuN9cgrz3/$_1.JPG'
-//        ]);
+        $cartManager->addItem('shopping', [
+            'source' => 'ebay',
+            'sku' => '100-99800902-NRC',
+            'id' => '163586118957',
+            'sellerId' => 'amFicmEtY29tcGFueS1zdG9yZS0t',
+            'quantity' => 2,
+            'image' => 'https://i.ebayimg.com/00/s/MTQwMFgxNDAw/z/fCkAAOSwuN9cgrz3/$_1.JPG'
+        ]);
 //
 //        $cartManager->addItem('shopping', [
 //            'source' => 'ebay',
@@ -63,14 +63,14 @@ class TestController extends FrontendController
 //            'quantity' => 1,
 //            'image' => 'https://i.ebayimg.com/00/s/MTQwMFgxNDAw/z/Qr0AAOSwuCVcuKWl/$_1.JPG'
 //        ]);
-        $cartManager->addItem('shopping', [
-            'source' => 'ebay',
-            'sku' => '100-99600900-02',
-            'id' => '163314595720',
-            'sellerId' => 'amFicmEtY29tcGFueS1zdG9yZS0t',
-            'quantity' => 1,
-            'image' => 'https://i.ebayimg.com/00/s/MTQwMFgxNDAw/z/kGwAAOSwnFpbwy9H/$_1.JPG'
-        ]);
+//        $cartManager->addItem('shopping', [
+//            'source' => 'ebay',
+//            'sku' => '100-99600900-02',
+//            'id' => '163314595720',
+//            'sellerId' => 'amFicmEtY29tcGFueS1zdG9yZS0t',
+//            'quantity' => 1,
+//            'image' => 'https://i.ebayimg.com/00/s/MTQwMFgxNDAw/z/kGwAAOSwnFpbwy9H/$_1.JPG'
+//        ]);
 //        $cartManager->addItem('shopping', [
 //            'source' => 'ebay',
 //            'sku' => 'YC1060-I;0',
@@ -83,9 +83,18 @@ class TestController extends FrontendController
 
 //        $item1 = $cartManager->updateItem('shopping', '5ced1365e419ac1fb80057b9', ['id' => '163586118957', 'sku' => '100-99800902-NRC'], ['quantity' => 1]);
 //        $cartManager->removeItem('shopping', '5cee2e6ce419ac05a00007eb', ['id' => '163655512954', 'sku' => '204151']);
-        $item2 = $cartManager->getItem('shopping', '5cee4fdde419ac05a00007f4');
+        $item2 = $cartManager->getItem('shopping', '5cef4645e419ac46000075a0');
 
         var_dump($item2);
+        die;
+    }
+
+    public function actionTime()
+    {
+        $formater = Yii::$app->formatter;
+        $dateTime = new \DateTime('now');
+        $dateTime->setTime(23, 59, 59, 59);
+        var_dump($formater->asDatetime($dateTime));
         die;
     }
 }

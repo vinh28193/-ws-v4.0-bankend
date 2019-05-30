@@ -144,7 +144,7 @@ class MongodbCartStorage extends BaseObject
             $conditions[] = ['type' => $type];
         }
         if ($ids !== null) {
-            $conditions[] = ['IN', '_id', !is_array($ids) ? [$ids] : $ids];
+            $conditions[] = !is_array($ids) ? ['_id' => $ids] : ['IN', '_id', $ids];
         }
 
         return $this->aggregate($conditions);
@@ -202,6 +202,11 @@ class MongodbCartStorage extends BaseObject
         }
 
         return $this->mongodb->getCollection($this->collection)->update($conditions, ['remove' => 1]);
+    }
+
+    public function updateSafeItem($type, $id, $key, $value, $identity = null)
+    {
+
     }
 
     /**

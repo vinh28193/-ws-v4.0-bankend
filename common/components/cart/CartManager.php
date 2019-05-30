@@ -9,6 +9,7 @@
 namespace common\components\cart;
 
 
+use common\components\cart\storage\MongodbCartStorage;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use Yii;
 use Exception;
@@ -52,7 +53,7 @@ class CartManager extends Component
     public $storage = 'common\components\cart\storage\MongodbCartStorage';
 
     /**
-     * @return CartStorageInterface|string
+     * @return MongodbCartStorage|string
      * @throws InvalidConfigException
      */
     public function getStorage()
@@ -150,7 +151,16 @@ class CartManager extends Component
     public function addItem($type, $params, $safeOnly = true)
     {
         $key = $this->createKeyFormParams($params);
+        $cartItem = new OrderCartItem();
         try {
+            if ($type !== CartSelection::TYPE_SHOPPING) {
+                list($ok, $value) = $cartItem->createOrderFormKey($key, false);
+                if (!$ok) {
+                    return [false, $value];
+                }
+                $success = $this->getStorage()->addItem($type, $key, $value, $this->getIsSafe($safeOnly));
+                return [$success, $success ? "Thêm sản phẩm vào $type thành công" : "Thêm vào $type thất bại"];
+            }
             $item = $this->filterItem($this->normalKeyFilter($key), $type, $safeOnly);
             if (!empty($item)) {
                 return [false, 'Sản phẩm  này đã có trong giỏ hàng'];
@@ -158,7 +168,6 @@ class CartManager extends Component
 
                 $filter = $key;
                 unset($filter['products']);
-
                 $parents = $this->filterItem($this->normalKeyFilter($filter), $type, $this->getIsSafe());
                 $cartItem = new OrderCartItem();
                 if (count($parents) > 0) {
@@ -173,7 +182,7 @@ class CartManager extends Component
                                 return [false, $value];
                             }
                             $success = $this->getStorage()->setItem($parent['_id'], $parent['key'], $value, $this->getIsSafe($safeOnly));
-                            return [$success, $success ? 'Thêm sản phẩm thành công' : 'Thêm thất bại'];
+                            return [$success, $success ? "Thêm sản phẩm vào shopping thành công" : "Thêm vào shopping thất bại"];
                         }
                     }
                 }
@@ -182,7 +191,7 @@ class CartManager extends Component
                     return [false, $value];
                 }
                 $success = $this->getStorage()->addItem($type, $key, $value, $this->getIsSafe($safeOnly));
-                return [$success, $success ? 'Thêm sản phẩm thành công' : 'Thêm thất bại'];
+                return [$success, $success ? "Thêm sản phẩm vào shopping thành công" : "Thêm vào shopping thất bại"];
             }
         } catch (Exception $exception) {
             Yii::info($exception);
@@ -213,37 +222,42 @@ class CartManager extends Component
             }
             $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value, $this->getIsSafe($safeOnly));
             return [$success, $success ? 'sản phẩm đã được update' : 'không thể update sản phầm này lúc này'];
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Yii::info($exception);
             return [false, $exception->getMessage()];
         }
     }
 
-    public function removeItem($type, $id, $key, $safeOnly = true)
+    public function removeItem($type, $id, $key = null, $safeOnly = true)
     {
-        if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
-            return [false, 'Sản phẩm không có trong giỏ hàng'];
-        }
-        $activeKey = $item['key'];
-        $products = [];
-        foreach (ArrayHelper::remove($activeKey, 'products', []) as $value) {
-            if ($this->isDetectedProduct($value, $key)) {
-                continue;
-            }
-            $products[] = $value;
-        }
-        if (empty($products)) {
+        if ($key === null) {
             $success = $this->getStorage()->removeItem($id);
             return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
+        } else {
+            if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
+                return [false, 'Sản phẩm không có trong giỏ hàng'];
+            }
+            $activeKey = $item['key'];
+            $products = [];
+            foreach (ArrayHelper::remove($activeKey, 'products', []) as $value) {
+                if ($this->isDetectedProduct($value, $key)) {
+                    continue;
+                }
+                $products[] = $value;
+            }
+            if (empty($products)) {
+                $success = $this->getStorage()->removeItem($id);
+                return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
+            }
+            $activeKey['products'] = $products;
+            $cartItem = new OrderCartItem();
+            list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
+            if (!$ok) {
+                return [false, $value];
+            }
+            $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value);
+            return [$success, $success ? "Giỏ hàng của bạn đã được thay đổi" : "Giỏ hàng thay đổi không thành công"];
         }
-        $activeKey['products'] = $products;
-        $cartItem = new OrderCartItem();
-        list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
-        if (!$ok) {
-            return [false, $value];
-        }
-        $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value);
-        return [$success, $success ? "Giỏ hàng của bạn đã được thay đổi" : "Giỏ hàng thay đổi không thành công"];
     }
 
     public function createKeyFormParams($params = [])
@@ -357,15 +371,21 @@ class CartManager extends Component
     }
 
     /**
+     * @param $type
      * @param $id
      * @param $param
+     * @return array
+     * @throws \Throwable
      */
-    public function updateSafeItem($id, $param)
+    public function updateSafeItem($type, $id, $param)
     {
         try {
-            if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
+            if (($item = $this->getItem($type, $type, false)) === false) {
                 return [false, 'Sản phẩm này không có trong giỏ hàng'];
             }
+            // todo : thay đổi giá trị của $item['key']
+            $value = (new OrderCartItem())->updateItemBuyKey($item['key']);
+            $success = $this->getStorage()->updateSafeItem($type, $id, $item['key'], $value, false);
         } catch (Exception $exception) {
             return [false, $exception->getMessage()];
         }

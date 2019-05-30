@@ -224,8 +224,6 @@
                     }
                 }
             });
-            console.log(keys);
-
         },
         destroy: function () {
             return this.each(function () {

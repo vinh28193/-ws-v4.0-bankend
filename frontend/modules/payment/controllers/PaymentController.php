@@ -158,7 +158,7 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->third_party_transaction_status = $res['data']['code'];
         $paymentTransaction->third_party_transaction_link = $res['data']['checkoutUrl'];
         $paymentTransaction->save(false);
-        $time  = sprintf('%.3f', microtime(true) - $start);
+        $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res['data']);
     }
@@ -226,7 +226,7 @@ class PaymentController extends BasePaymentController
                         $childTransaction->save(false);
                     }
                     foreach ($payment->carts as $key) {
-                        $this->cartManager->removeItem($key);
+                        $this->cartManager->removeItem($payment->payment_type, $key);
                     }
 
                 }
