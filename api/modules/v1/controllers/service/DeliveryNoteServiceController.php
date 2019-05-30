@@ -90,7 +90,7 @@ class DeliveryNoteServiceController extends BaseApiController
         $deliveryNoteNew->current_status = DeliveryNote::STATUS_REQUEST_SHIP_OUT;
         $deliveryNoteNew->remove = 0;
         $deliveryNoteNew->save(false);
-        $deliveryNoteNew->delivery_note_code = WeshopHelper::generateTag($deliveryNoteNew->id,'WSVNDN');
+        $deliveryNoteNew->delivery_note_code = WeshopHelper::generateTag($deliveryNoteNew->id,'DN_');
         $deliveryNoteNew->save(false);
         Package::updateAll(
             ['delivery_note_code' => $deliveryNoteNew->delivery_note_code , 'delivery_note_id' => $deliveryNoteNew->id],
