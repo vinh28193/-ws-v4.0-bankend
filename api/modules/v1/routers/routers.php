@@ -22,10 +22,15 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'controller' => ['check-out','cart'],
+        'tokens' => [
+            '{code}' =>  '<code:\\w[\\w,]*>',
+        ],
         'patterns' => [
             'GET' => 'index',
             'POST' => 'create',
+            'PUT,PATCH {code}' => 'update',
             'OPTIONS' => 'options',
+            'OPTIONS {code}' => 'options',
         ],
     ],
     [

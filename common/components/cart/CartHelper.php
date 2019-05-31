@@ -65,6 +65,7 @@ class CartHelper
         $order['mark_supporting'] = null;
         $order['supporting'] = null;
         $order['supported'] = null;
+        $order['cancelled'] = null;
         $order['customer_type'] = 'Retail';
         $order['store_id'] = $storeManager->getId();
         $order['exchange_rate_fee'] = $storeManager->getExchangeRate();

@@ -8,6 +8,7 @@
 
 namespace api\modules\v1\controllers;
 
+use backend\models\CartAddForm;
 use common\components\cart\storage\MongodbCartStorage;
 use common\models\User;
 use Yii;
@@ -55,6 +56,13 @@ class CartController extends BaseApiController
         return $this->response(true, "ok", $this->getCart()->getItem($key));
     }
 
+    public function actionUpdate($code) {
+        $post = Yii::$app->request->post();
+        if (($key = $this->getCart()->updateSafeItem(($post['type']), $code, $post)) === false) {
+            $this->response(false, 'can not update item');
+        }
+        return $this->response(true, "ok", $this->getCart()->updateSafeItem(($post['type']), $code, $post));
+    }
     /**
      * @return \common\components\cart\CartManager
      */
