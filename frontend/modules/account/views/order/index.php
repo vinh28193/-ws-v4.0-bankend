@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel userbackend\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Orders';
+$this->title = Yii::t('frontend', 'Orders');
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -24,13 +24,14 @@ $this->params['breadcrumbs'][] = $this->title;
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($models  as $order) { ?>
+            <?php foreach ($models as $order) { ?>
                 <tr style="border-bottom: 1px solid #ebebeb">
                     <td>
-                        <?php foreach ($order->products as $product) {?>
+                        <?php foreach ($order->products as $product) { ?>
                             <div class="product-info">
                                 <div class="thumb">
-                                    <img src="<?= !is_null($product->link_img) ? $product->link_img : 'no-image' ?>" alt=""/>
+                                    <img src="<?= !is_null($product->link_img) ? $product->link_img : 'no-image' ?>"
+                                         alt=""/>
                                 </div>
                                 <div class="info">
                                     <b><?= $product->product_name ?></b>
@@ -45,7 +46,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td>
                         <b><?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?></b>
                     </td>
-                    <td><b class="total text-orange"><?= number_format($order->total_paid_amount_local, 0, ',', '.').'đ'; ?></b></td>
+                    <td>
+                        <b class="total text-orange"><?= number_format($order->total_paid_amount_local, 0, ',', '.') . 'đ'; ?></b>
+                    </td>
                     <td><b><?= $order->current_status ?></b></td>
                 </tr>
             <?php } ?>
