@@ -85,16 +85,12 @@ class OrderCartItem extends BaseObject
             if ($order['ordercode'] === null) {
                 $order['ordercode'] = $tempKey['orderCode'];
             }
-
-//            if (($supporters = $this->cartManager->getStorage()->calculateSupported()) > 0) {
-//                /** @var  $supporter null|User */
-//                $supporter = User::find()->select(['id', 'mail'])->where(['id' => $supporters[0]['_id']])->one();
-//                $key['supportAssign'] = [
-//                    'id' => $supporter->id,
-//                    'email' => $supporter->email
-//                ];
-//
-//            }
+            $supportAssign = $this->cartManager->getSupportAssign();
+            $key['supportAssign'] = $supportAssign;
+            $key['supportId'] = $supportAssign['id'];
+            $order['sale_support_id'] = $supportAssign['id'];
+            $order['support_email'] = $supportAssign['email'];
+            $order['saleSupport'] = $supportAssign;
         } else {
             $order['ordercode'] = $tempKey['orderCode'];
             $order['current_status'] = $tempKey['current_status'];
@@ -104,6 +100,12 @@ class OrderCartItem extends BaseObject
                 foreach ($tempKey['times'] as $k => $time) {
                     $order[$k] = $time;
                 }
+            }
+            if (isset($key['supportAssign']) && !empty($key['supportAssign'])) {
+                $supportAssign = $key['supportAssign'];
+                $order['sale_support_id'] = $supportAssign['id'];
+                $order['support_email'] = $supportAssign['email'];
+                $order['saleSupport'] = $supportAssign;
             }
         }
 

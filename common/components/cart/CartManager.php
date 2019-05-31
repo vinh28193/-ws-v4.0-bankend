@@ -10,6 +10,7 @@ namespace common\components\cart;
 
 
 use common\components\cart\storage\MongodbCartStorage;
+use common\helpers\WeshopHelper;
 use common\models\User;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use Yii;
@@ -414,9 +415,39 @@ class CartManager extends Component
         $authManager = Yii::$app->authManager;
         $saleIds = $authManager->getUserIdsByRole('sale');
         $masterSaleIds = $authManager->getUserIdsByRole('master_sale');
-        $supporters = User::find()->select(['id', 'email'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
-        if(($calculateToday = $this->getStorage()->calculateSupported()) > 0){
+        $supporters = User::find()->indexBy('id')->select(['id', 'email'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
 
+        $ids = array_keys($supporters);
+        $calculateToday = ArrayHelper::map($this->getStorage()->calculateSupported($ids), '_id', function ($elem) {
+            return ['count' => $elem['count'], 'price' => $elem['price']];
+        });
+
+        $countData = [];
+        foreach ($ids as $id) {
+            $c = 0;
+            if (isset($calculateToday[$id]) && ($forSupport = $calculateToday[$id]) !== null && !empty($forSupport) && isset($forSupport['count'])) {
+                $c = $forSupport['count'];
+            }
+            $countData[$id] = $c;
         }
+        asort($countData);
+
+        $sQMin = WeshopHelper::sortMinValueArray($countData);
+
+        $priceResult = [];
+
+        foreach ($sQMin as $id => $val) {
+            $p = 0;
+            if (isset($calculateToday[$id]) && ($forSupport = $calculateToday[$id]) !== null && !empty($forSupport) && isset($forSupport['price'])) {
+                $p = $forSupport['price'];
+            }
+            $priceResult[$id] = $p;
+        }
+        $priceResult = array_keys($priceResult);
+        $id = array_shift($priceResult);
+        if (($assigner = ArrayHelper::getValue($supporters, $id)) === null) {
+            $assigner = array_shift($supporters);
+        }
+        return ['id' => $assigner->id, 'email' => $assigner->email];
     }
 }

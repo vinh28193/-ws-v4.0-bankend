@@ -5,10 +5,13 @@ namespace frontend\controllers;
 
 use common\components\cart\CartHelper;
 use common\components\cart\CartManager;
+use common\helpers\WeshopHelper;
+use common\models\User;
 use Yii;
 use common\components\cart\storage\MongodbCartStorage;
 use frontend\modules\payment\PaymentService;
 use frontend\modules\payment\providers\alepay\AlepayClient;
+use yii\helpers\ArrayHelper;
 
 class TestController extends FrontendController
 {
@@ -101,7 +104,58 @@ class TestController extends FrontendController
     public function actionTestCount()
     {
         $storage = new MongodbCartStorage();
-        var_dump($storage->calculateSupported());
+        $authManager = Yii::$app->authManager;
+        $saleIds = $authManager->getUserIdsByRole('sale');
+        $masterSaleIds = $authManager->getUserIdsByRole('master_sale');
+        $supporters = User::find()->indexBy('id')->select(['id', 'email'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
+
+        $ids = array_keys($supporters);
+        $calculateToday = ArrayHelper::map($storage->calculateSupported($ids), '_id', function ($elem) {
+            return ['count' => $elem['count'], 'price' => $elem['price']];
+        });
+
+        $countData = [];
+        foreach ($ids as $id) {
+            $c = 0;
+            if (isset($calculateToday[$id]) && ($forSupport = $calculateToday[$id]) !== null && !empty($forSupport) && isset($forSupport['count'])) {
+                $c = $forSupport['count'];
+            }
+            $countData[$id] = $c;
+        }
+        asort($countData);
+
+        $sQMin = WeshopHelper::sortMinValueArray($countData);
+
+        $priceResult = [];
+
+        foreach ($sQMin as $id => $val) {
+            $p = 0;
+            if (isset($calculateToday[$id]) && ($forSupport = $calculateToday[$id]) !== null && !empty($forSupport) && isset($forSupport['price'])) {
+                $p = $forSupport['price'];
+            }
+            $priceResult[$id] = $p;
+        }
+        $priceResult = array_keys($priceResult);
+        $id = array_shift($priceResult);
+        if (($assigner = ArrayHelper::getValue($supporters, $id)) === null) {
+            $assigner = array_shift($supporters);
+        }
+        var_dump($assigner);die;
+        return ['id' => $assigner->id];
+        die;
+        if (count($calculateToday) > 0) {
+            $calculateToday = ArrayHelper::map($calculateToday, '_id', function ($elem) {
+                return ['count' => $elem['count'], 'price' => $elem['price']];
+            });
+            var_dump($calculateToday);
+            die;
+            $first = array_shift($calculateToday);
+            $assigner = isset($supporters[$first['_id']]) ? $supporters[$first['_id']] : $assigner;
+        }
+
+        $assigner = $supporters;
+        $assigner = array_shift($assigner);
+        var_dump($supporters);
         die;
     }
 }
