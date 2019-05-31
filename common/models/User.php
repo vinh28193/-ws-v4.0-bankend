@@ -6,26 +6,15 @@ namespace common\models;
 use common\models\db\AuthAssignment;
 use Yii;
 use yii\web\IdentityInterface;
+use common\models\db\User as DbUser;
 use common\components\UserApiGlobalIdentityInterface;
 use common\components\UserPublicIdentityInterface;
 
 /**
- * User model
- *
- * @property integer $id
- * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $email
- * @property string $token_fcm
- * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
- * @property string $password write-only password
- * @property AuthAssignment[] $authAssigments
+ * Class User
+ * @package common\models
  */
-class User extends \common\models\db\User implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
+class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
@@ -66,13 +55,6 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
     /**
      * @inheritdoc
      */
-    /*
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
-    }
-    */
-
     public static function findIdentityByAccessToken($token, $type = null)
     {
         $access_token = AccessTokens::findOne(['token' => $token]);
@@ -88,7 +70,6 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
         } else {
             return (false);
         }
-        //throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
     /**
@@ -155,7 +136,7 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
      */
     public static function findByUuid($id)
     {
-        return static::findOne(['id' => $id , 'status' => self::STATUS_ACTIVE] );
+        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -164,7 +145,7 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
      */
     public static function findClientidga($client_id_ga)
     {
-        return static::findOne(['client_id_ga' => $client_id_ga,'status' => self::STATUS_ACTIVE] );
+        return static::findOne(['client_id_ga' => $client_id_ga, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -172,14 +153,14 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
      * @param $token_fcm
      * @return User|null
      */
-    public static function findByTokenFcm($id,$token_fcm)
+    public static function findByTokenFcm($id, $token_fcm)
     {
         return static::findOne(
             [
                 'id' => $id,
                 //'token_fcm'=> $token_fcm,
                 'status' => self::STATUS_ACTIVE
-            ] );
+            ]);
     }
 
     /**
@@ -187,9 +168,9 @@ class User extends \common\models\db\User implements IdentityInterface, UserApiG
      * @param $token_apn
      * @return User|null
      */
-    public static function findByTokenApn($id,$token_apn)
+    public static function findByTokenApn($id, $token_apn)
     {
-        return static::findOne(['id' => $id,'token_apn'=> $token_apn,'status' => self::STATUS_ACTIVE] );
+        return static::findOne(['id' => $id, 'token_apn' => $token_apn, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**

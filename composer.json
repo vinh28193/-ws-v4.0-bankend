@@ -49,7 +49,8 @@
     "yii2mod/collection": "*",
     "yiisoft/yii2-queue": "^2.0@dev",
     "baibaratsky/yii2-ga-measurement-protocol": "2.0.*",
-    "linslin/yii2-curl":"*"
+    "linslin/yii2-curl":"*",
+    "lajax/yii2-translate-manager": "dev-master"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

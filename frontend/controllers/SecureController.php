@@ -118,7 +118,7 @@ class SecureController extends FrontendController
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+                Yii::$app->session->setFlash('success', Yii::t('frontend', 'Check your email for further instructions.'));
                 $model->sendEmail();
                 if (Yii::$app->getUser()->login($user)) {
                     return $this->goHome();
@@ -157,7 +157,9 @@ class SecureController extends FrontendController
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             Yii::info('success', 'Vui lòng kiểm tra email để lấy link reset mật khẩu tài khoản.');
             $model->sendEmail();
-            Yii::$app->session->setFlash('success', 'Vui lòng kiểm tra email để lấy link reset mật khẩu tài khoản.');
+            Yii::$app->session->setFlash('success', Yii::t('frontend', 'A link to reset password sent to your e-mail `{email}`, please check', [
+                'email' => $model->email,
+            ]));
             //return $this->goHome();
             return Yii::$app->getResponse()->redirect('/secure/login');
         }
@@ -198,7 +200,7 @@ class SecureController extends FrontendController
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
+            Yii::$app->session->setFlash('success', Yii::t('frontend', 'New password saved'));
             Yii::info('success', 'ResetPassword.');
             return $this->goHome();
         }

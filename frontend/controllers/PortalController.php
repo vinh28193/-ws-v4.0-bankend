@@ -20,19 +20,26 @@ class PortalController extends FrontendController
 
     public $portal = BaseProduct::TYPE_EBAY;
 
-    public $portalTitle = 'Mua Hàng Amazon, eBay và Amazon';
-    public $portalImage = '';
-    public $portalDescription = 'Mua Hàng Amazon, eBay & Top Stores US Tại Việt Nam. Đảm Bảo Chất Lượng. Đặt Mua Dễ Dàng & Thanh Toán Online. Freeship Nội Địa Việt Nam.'
-;
+    public $portalTitle;
+    public $portalImage;
+    public $portalDescription;
+
+    public function init()
+    {
+        parent::init();
+        $this->portalTitle = Yii::t('frontend', 'Buy in Amazon, eBay');
+        $this->portalImage = '';
+        $this->portalDescription = Yii::t('frontend', 'Buy in Amazon, eBay & Top Stores US Viet Nam. Quality assurance. Order easy & online payment. free ship local.');
+    }
 
     public function ogMetaTag()
     {
-        return ArrayHelper::merge(parent::ogMetaTag(),[
+        return ArrayHelper::merge(parent::ogMetaTag(), [
             'title' => $this->portalTitle,
             'image' => $this->portalImage,
             'description' => $this->portalDescription,
             'portal' => strtolower($this->portal),
-            'keyword' => 'weshop, ebay, amazon, ebay vn, amazon vn, mua hàng ebay, mua hàng amazon, mua hàng mỹ, ship hàng mỹ, đồng hồ, đồ công nghệ, electronics, high-tech, clothing, gadgets, accessories, jewelry, watches, beauty, cosmetic, health product, sport'
+            'keyword' => Yii::t('frontend', 'weshop, ebay, amazon, ebay vn, amazon vn, buy ebay, buy amazon, buy usa, us shipping, watch, technological, electronics, high-tech, clothing, gadgets, accessories, jewelry, watches, beauty, cosmetic, health product, sport')
         ]);
     }
 
@@ -54,7 +61,7 @@ class PortalController extends FrontendController
             $fingerprint = $post['fingerprint'];
         }
         if (!Yii::$app->getRequest()->validateCsrfToken()) {
-            return ['success' => false, 'message' => 'Form Security Alert', 'data' => ['content' => '']];
+            return ['success' => false, 'message' => Yii::t('frontend', 'Form Security Alert'), 'data' => ['content' => '']];
         }
 
         $UUID = Yii::$app->user->getId();
@@ -91,7 +98,7 @@ class PortalController extends FrontendController
         Yii::info(" Favorite : app  create favorite Success 02 ");
         if (!Yii::$app->getRequest()->validateCsrfToken()) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return ['success' => false, 'message' => 'Form Security Alert', 'data' => ['content' => '']];
+            return ['success' => false, 'message' => Yii::t('frontend', 'Form Security Alert'), 'data' => ['content' => '']];
         }
 
         Yii::info(" Favorite : app  create favorite Success 03 ");
@@ -109,7 +116,7 @@ class PortalController extends FrontendController
 
         if ($item == false) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return ['success' => false, 'message' => 'Error Get Ebay Gate', 'data' => ['content' => '']];
+            return ['success' => false, 'message' => Yii::t('frontend', 'Error Get Ebay Gate'), 'data' => ['content' => '']];
         }
 
 

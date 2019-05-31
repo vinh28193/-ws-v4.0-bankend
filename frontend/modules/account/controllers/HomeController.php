@@ -136,6 +136,6 @@ class HomeController extends BaseAccountController
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException(Yii::t('frontend','The requested page does not exist.'));
     }
 }

@@ -44,7 +44,7 @@ class PasswordRequiredForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect email or password.');
+                $this->addError($attribute, Yii::t('frontend', 'Incorrect email or password.'));
             }
         }
     }

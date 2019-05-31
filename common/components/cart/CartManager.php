@@ -161,11 +161,13 @@ class CartManager extends Component
                     return [false, $value];
                 }
                 $success = $this->getStorage()->addItem($type, $key, $value, $this->getIsSafe($safeOnly));
-                return [$success, $success ? "Thêm sản phẩm vào $type thành công" : "Thêm vào $type thất bại"];
+                return [$success, Yii::t('common', $success ? 'Add to {type} cart success' : 'Add to {type} cart failed', [
+                    'type' => $type
+                ])];
             }
             $item = $this->filterItem($this->normalKeyFilter($key), $type, $safeOnly);
             if (!empty($item)) {
-                return [false, 'Sản phẩm  này đã có trong giỏ hàng'];
+                return [false, Yii::t('common', 'This item already exist')];
             } else {
 
                 $filter = $key;
@@ -183,7 +185,9 @@ class CartManager extends Component
                                 return [false, $value];
                             }
                             $success = $this->getStorage()->setItem($parent['_id'], $parent['key'], $value, $this->getIsSafe($safeOnly));
-                            return [$success, $success ? "Thêm sản phẩm vào shopping thành công" : "Thêm vào shopping thất bại"];
+                            return [$success, Yii::t('common', $success ? 'Add to {type} cart success' : 'Add to {type} cart failed', [
+                                'type' => $type
+                            ])];
                         }
                     }
                 }
@@ -192,7 +196,9 @@ class CartManager extends Component
                     return [false, $value];
                 }
                 $success = $this->getStorage()->addItem($type, $key, $value, $this->getIsSafe($safeOnly));
-                return [$success, $success ? "Thêm sản phẩm vào shopping thành công" : "Thêm vào shopping thất bại"];
+                return [$success, Yii::t('common', $success ? 'Add to {type} cart success' : 'Add to {type} cart failed', [
+                    'type' => $type
+                ])];
             }
         } catch (Exception $exception) {
             Yii::info($exception);
@@ -205,7 +211,9 @@ class CartManager extends Component
         $cartItem = new OrderCartItem($this);
         try {
             if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
-                return [false, 'Sản phẩm này không có trong giỏ hàng'];
+                return [false, Yii::t('common', 'This item not exist in {type} cart', [
+                    'type' => $type
+                ])];
             }
             $activeKey = $item['key'];
             $products = [];
@@ -221,7 +229,7 @@ class CartManager extends Component
                 return [false, $value];
             }
             $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value, $this->getIsSafe($safeOnly));
-            return [$success, $success ? 'sản phẩm đã được update' : 'không thể update sản phầm này lúc này'];
+            return [$success, $success ? Yii::t('common', 'This item already up to date') : Yii::t('common', 'Can not update this item')];
         } catch (Exception $exception) {
             Yii::info($exception);
             return [false, $exception->getMessage()];
@@ -233,10 +241,12 @@ class CartManager extends Component
         $cartItem = new OrderCartItem($this);
         if ($key === null) {
             $success = $this->getStorage()->removeItem($id);
-            return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
+            return [$success, $success ? Yii::t('common', 'Item has been deleted') : 'Item can not deleted'];
         } else {
             if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
-                return [false, 'Sản phẩm không có trong giỏ hàng'];
+                return [false, ii::t('common', 'This item not exist in {type} cart', [
+                    'type' => $type
+                ])];
             }
             $activeKey = $item['key'];
             $products = [];
@@ -248,7 +258,7 @@ class CartManager extends Component
             }
             if (empty($products)) {
                 $success = $this->getStorage()->removeItem($id);
-                return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
+                return [$success, $success ? Yii::t('common', 'Item has been deleted') : 'Item can not deleted'];
             }
             $activeKey['products'] = $products;
             list($ok, $value) = $cartItem->createOrderFormKey($activeKey, true);
@@ -256,7 +266,9 @@ class CartManager extends Component
                 return [false, $value];
             }
             $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value);
-            return [$success, $success ? "Giỏ hàng của bạn đã được thay đổi" : "Giỏ hàng thay đổi không thành công"];
+            return [$success, Yii::t('common', $success ? 'Your {type} cart already up to date' : 'Can not update {type} now, try again', [
+                'type' => $type
+            ])];
         }
     }
 
@@ -386,7 +398,9 @@ class CartManager extends Component
     {
         try {
             if (($item = $this->getItem($type, $type, false)) === false) {
-                return [false, 'Sản phẩm này không có trong giỏ hàng'];
+                return [false, Yii::t('common', 'This item not exist in {type} cart', [
+                    'type' => $type
+                ])];
             }
             // todo : thay đổi giá trị của $item['key']
             $value = (new OrderCartItem())->updateItemBuyKey($item['key']);

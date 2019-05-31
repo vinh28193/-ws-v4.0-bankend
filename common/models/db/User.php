@@ -18,6 +18,7 @@ use Yii;
  * @property int $updated_at
  * @property string $scopes nhiều scope cách nhau bằng dấu ,. scope chính đặt tại đầu
  * @property int $store_id
+ * @property string $locale
  * @property string $github  user co link github
  * @property string $first_name
  * @property string $last_name
@@ -63,7 +64,9 @@ use Yii;
  * @property string $last_token_apn_time_by update bởi ai . 99999 : mac dinh la Weshop admin
  *
  * @property Auth[] $auths
+ * @property Coupon[] $coupons
  * @property Order[] $orders
+ * @property Order[] $orders0
  */
 class User extends \common\components\db\ActiveRecord
 {
@@ -89,7 +92,7 @@ class User extends \common\components\db\ActiveRecord
             [['username', 'password_hash', 'password_reset_token', 'email', 'first_name', 'last_name', 'phone', 'avatar', 'link_verify', 'verify_code_type', 'uuid', 'token_fcm', 'token_apn', 'client_id_ga'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['scopes', 'github'], 'string', 'max' => 500],
-            [['verify_code'], 'string', 'max' => 10],
+            [['locale', 'verify_code'], 'string', 'max' => 10],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
@@ -113,6 +116,7 @@ class User extends \common\components\db\ActiveRecord
             'updated_at' => 'Updated At',
             'scopes' => 'Scopes',
             'store_id' => 'Store ID',
+            'locale' => 'Locale',
             'github' => 'Github',
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
@@ -170,7 +174,23 @@ class User extends \common\components\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getCoupons()
+    {
+        return $this->hasMany(Coupon::className(), ['created_by' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getOrders()
+    {
+        return $this->hasMany(Order::className(), ['sale_support_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrders0()
     {
         return $this->hasMany(Order::className(), ['purchase_assignee_id' => 'id']);
     }

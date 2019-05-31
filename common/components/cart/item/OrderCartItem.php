@@ -63,13 +63,15 @@ class OrderCartItem extends BaseObject
             $new = new self($this->cartManager, $param);
             list($ok, $newOrder) = $new->filterProduct();
             if (!$ok) {
-                return [false, "item {$param['id']} is invalid please remove this form cart list"];
+                return [false, Yii::t('common', '"item {id} is invalid please remove this form cart list', [
+                    'id' => $param['id']
+                ])];
             }
             $orders[] = $newOrder;
         }
 
         if (count($orders) === 0) {
-            return [false, 'Can not add an invalid item into cart'];
+            return [false, Yii::t('common', 'Can not add an invalid item into cart')];
         }
 
         $order = array_shift($orders);
@@ -94,8 +96,6 @@ class OrderCartItem extends BaseObject
         } else {
             $order['ordercode'] = $tempKey['orderCode'];
             $order['current_status'] = $tempKey['current_status'];
-            $order['sale_support_id'] = $tempKey['supportId'];
-            $order['saleSupport'] = $order['sale_support_id'] !== null ? User::find()->select(['id', 'email'])->where(['id' => $order['sale_support_id']])->asArray()->one() : null;
             if (!empty($tempKey['times'])) {
                 foreach ($tempKey['times'] as $k => $time) {
                     $order[$k] = $time;
