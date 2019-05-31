@@ -775,4 +775,22 @@ return [
             'OPTIONS view-log'=> 'options',
         ]
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['s-package'=>'service/package'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{code}' =>  '<code:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'POST' => 'merge',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => [
+            'POST merge'=> 'merge',
+            'OPTIONS merge'=> 'options',
+        ]
+    ],
 ];
