@@ -12,6 +12,7 @@ use api\controllers\BaseApiController;
 use common\helpers\ChatHelper;
 use common\models\Order;
 use common\models\User;
+use userbackend\cart\ShoppingCart;
 use Yii;
 use yii\caching\DbDependency;
 

@@ -402,6 +402,9 @@ class CartManager extends Component
                     'type' => $type
                 ])];
             }
+            if ($param['typeUpdate'] == 'assignSaleCart') {
+                $value['sale_support_id'] = $param['idSale'];
+            }
             // todo : thay đổi giá trị của $item['key']
             $value = (new OrderCartItem())->updateItemBuyKey($item['key']);
             $success = $this->getStorage()->updateSafeItem($type, $id, $item['key'], $value, false);
