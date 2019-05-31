@@ -113,8 +113,18 @@ var ws = ws || (function ($) {
         sweetalert: function (smg, type, options) {
             alert(type + ':' + smg);
         },
-        i18n: function (category, message, params = [], language = null) {
+        t: function (message, params = []) {
 
+            if (i18nMessages.length) {
+
+            }
+            if (typeof (params) !== 'undefined') {
+                for (var search in params) {
+                    message = message.replace('{' + search + '}', params[search]);
+                }
+            }
+
+            return message;
         },
         i18nLoadMessages: function ($messages) {
             // clear up data pls

@@ -5,9 +5,10 @@ $i18n = require dirname(dirname(__DIR__)) . '/common/i18n/i18n.php';
 return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+    'sourceLanguage' => 'en-US',
     'components' => [
         /*
         'cache' => [
@@ -59,8 +60,8 @@ return [
             'class' => 'common\components\log\Logging'
         ],
         'wsFcnApn' => [
-                  'class' => 'common\components\fcm\Notification',
-                   //'param' => [  ],
+            'class' => 'common\components\fcm\Notification',
+            //'param' => [  ],
         ],
         'productManager' => [
             'class' => 'common\products\ProductManager'

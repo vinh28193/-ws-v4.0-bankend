@@ -62,7 +62,7 @@ class FrontendController extends Controller
     public function ogMetaTag()
     {
         return [
-            'title' => 'Weshop Global',
+            'title' => Yii::t('frontend','Weshop Global'),
             'site_name' => Yii::$app->requestedRoute,
             'url' => $this->request->url,
             'image' => Url::to('/img/weshop-logo-vn.png'),
@@ -119,8 +119,8 @@ class FrontendController extends Controller
     protected function registerAllMetaTagLinkTag()
     {
         $metaTags = ArrayHelper::merge([
-            'author' => 'Weshop Global',
-            'COPYRIGHT' => '&copy; Weshop Global',
+            'author' => Yii::t('frontend','Weshop Global'),
+            'COPYRIGHT' => Yii::t('frontend','&copy; Weshop Global'),
             'robots' => 'noodp,index,follow',
             'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505'
         ], $this->metaTag(), ArrayHelper::getValue(Yii::$app->params, 'metaTagParam', []));
@@ -182,7 +182,9 @@ class FrontendController extends Controller
         if ($layoutFile !== false) {
             $params = $this->defaultLayoutParams();
             if (isset($params['content'])) {
-                throw new InvalidArgumentException("parameter name: `content` can not pass to layout: `$layoutFile`, please try another name");
+                throw new InvalidArgumentException(Yii::t('frontend', 'parameter name: `content` can not pass to layout: `{layoutFile}`, please try another name', [
+                    'layoutFile' => $layoutFile
+                ]));
             }
             $params['content'] = $content;
             return $this->getView()->renderFile($layoutFile, $params, $this);
@@ -249,7 +251,7 @@ class FrontendController extends Controller
             Yii::info("fingerprint : " . $this->setDocumentPath);
         }
         if (!Yii::$app->getRequest()->validateCsrfToken() || $this->_uuid === null) {
-            return ['success' => false, 'message' => 'Form Security Alert', 'data' => ['content' => '']];
+            return ['success' => false, 'message' => Yii::t('frontend', 'Form Security Alert'), 'data' => ['content' => '']];
         }
         Yii::info("_uuid : " . $this->_uuid);
         if (!Yii::$app->user->isGuest) {
@@ -257,27 +259,26 @@ class FrontendController extends Controller
             // User Create / register Weshop
             $id = Yii::$app->user->identity->getId();
             $email = Yii::$app->user->identity->email;
-            $this->_uuid = $id.'WS'.$email;
+            $this->_uuid = $id . 'WS' . $email;
             /** Update UUID == fingerprint **/
             $User = new User();
-            if( ($User = $User->findByUuid($id)) != null && !$User->uuid){
-                Yii::info("Insert uuid : Ok ! ".$this->_uuid. " pages ". $this->setDocumentPath);
+            if (($User = $User->findByUuid($id)) != null && !$User->uuid) {
+                Yii::info("Insert uuid : Ok ! " . $this->_uuid . " pages " . $this->setDocumentPath);
                 $User->uuid = $this->_uuid;
                 $User->id = $id;
                 $User->last_update_uuid_time = Yii::$app->formatter->asDateTime('now');
                 $User->last_update_uuid_time_by = 99999;
-                if($User->update())
-                {
+                if ($User->update()) {
                     Yii::info("Insert uuid : Ok ! ");
-                }else {
+                } else {
                     Yii::info("Insert uuid : Error ! ");
                     Yii::info([
                         'Error' => $User->errors,
                     ], __CLASS__);
                 }
             }
-            Yii::info("Update : ".$this->_uuid);
-        }else {
+            Yii::info("Update : " . $this->_uuid);
+        } else {
             // anynomus
             /*
             $this->_uuid = isset($this->_uuid) ? $this->_uuid : 99999;
@@ -291,16 +292,16 @@ class FrontendController extends Controller
             */
         }
 
-        if($this->_uuid){
-            if((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true) ){
+        if ($this->_uuid) {
+            if ((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true)) {
                 // ENV DEV /  TEST
                 $this->gaWs();
-            }else if((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false) ) {
+            } else if ((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false)) {
 
                 // ENV PROD
             }
         } else {
-            return ['success' => false, 'message' => 'fingerprint null', 'data' => ['content' => '']];
+            return ['success' => false, 'message' => Yii::t('frontend', 'fingerprint is null'), 'data' => ['content' => '']];
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return 'Ok ! ' . $this->_uuid . ' pages ' . $this->setDocumentPath;

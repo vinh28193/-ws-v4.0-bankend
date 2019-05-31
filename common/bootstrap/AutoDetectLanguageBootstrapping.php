@@ -42,12 +42,12 @@ class AutoDetectLanguageBootstrapping implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-        $this->storeManager = Instance::ensure($this->storeManager, 'common\components\StoreManage');
+        $this->storeManager = Instance::ensure($this->storeManager, 'common\components\StoreManager');
         if ($app instanceof \yii\web\Application) {
-            if($app->getUser()->getIsGuest()){
+            if ($app->getUser()->getIsGuest()) {
                 $languageChooser = new ChooseLanguage();
                 if ($languageChooser->load($app->request->post()) && $languageChooser->saveLanguage()) {
-                    I18nHelper::setLocale($languageChooser->language,$app);
+                    I18nHelper::setLocale($languageChooser->language, $app);
                 } else {
                     $language = $languageChooser->getSavedLanguage();
                     if ($language === null) {
@@ -57,18 +57,18 @@ class AutoDetectLanguageBootstrapping implements BootstrapInterface
                             $language = $this->storeManager->getLanguageId();
                         }
                     }
-                    I18nHelper::setLocale($language,$app);
+                    I18nHelper::setLocale($language, $app);
                 }
-            }else{
+            } else {
                 $user = $app->getUser()->getIdentity();
-                if($user->locale !== null && ArrayHelper::isIn($user->locale,I18nHelper::getSupportedLanguages())){
-                    I18nHelper::setLocale($user->locale,$app);
-                }else{
-                    I18nHelper::setLocale($this->storeManager->getLanguageId(),$app);
+                if ($user->locale !== null && ArrayHelper::isIn($user->locale, I18nHelper::getSupportedLanguages())) {
+                    I18nHelper::setLocale($user->locale, $app);
+                } else {
+                    I18nHelper::setLocale($this->storeManager->getLanguageId(), $app);
                 }
             }
 
-        }elseif ($app instanceof \yii\console\Application){
+        } elseif ($app instanceof \yii\console\Application) {
             $app->language = 'en-US';
         }
     }

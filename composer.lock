@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc0d6796711281aabe293d6ae02442e7",
+    "content-hash": "10b3723058f1bd55fd060669216f51b6",
     "packages": [
         {
             "name": "baibaratsky/yii2-ga-measurement-protocol",
@@ -166,6 +166,27 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/15bc73803f76bc53b654b9fdbbbc096f56d7c03d",
                 "reference": "15bc73803f76bc53b654b9fdbbbc096f56d7c03d"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery-ui",
+            "version": "1.12.1",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:components/jqueryui.git",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/44ecf3794cc56b65954cc19737234a3119d036cc",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6"
             },
             "type": "bower-asset",
             "license": [
@@ -2196,6 +2217,54 @@
                 "yii2"
             ],
             "time": "2018-11-05T12:31:44+00:00"
+        },
+        {
+            "name": "lajax/yii2-translate-manager",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lajax/yii2-translate-manager.git",
+                "reference": "a30dd362108cd6f336268e5d72eee6c4e7f65849"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lajax/yii2-translate-manager/zipball/a30dd362108cd6f336268e5d72eee6c4e7f65849",
+                "reference": "a30dd362108cd6f336268e5d72eee6c4e7f65849",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0.0",
+                "yiisoft/yii2-bootstrap": "~2.0.0",
+                "yiisoft/yii2-jui": "~2.0.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.1"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "lajax\\translatemanager\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lajos Molnár",
+                    "email": "lajax.m@gmail.com"
+                }
+            ],
+            "description": "Translation management extension for Yii 2",
+            "keywords": [
+                "extension",
+                "language",
+                "module",
+                "translate",
+                "yii2"
+            ],
+            "time": "2018-06-13T13:27:14+00:00"
         },
         {
             "name": "linslin/yii2-curl",
@@ -4244,7 +4313,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -5203,6 +5272,67 @@
                 "yii2"
             ],
             "time": "2019-05-23T15:56:02+00:00"
+        },
+        {
+            "name": "yiisoft/yii2-jui",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-jui.git",
+                "reference": "11263809ff5b7df1deb0e3b42e2488d3e2388f29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-jui/zipball/11263809ff5b7df1deb0e3b42e2488d3e2388f29",
+                "reference": "11263809ff5b7df1deb0e3b42e2488d3e2388f29",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-ui": "~1.12.1",
+                "yiisoft/yii2": "~2.0.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "<7"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\jui\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Kochetov",
+                    "email": "creocoder@gmail.com"
+                },
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com"
+                },
+                {
+                    "name": "Carsten Brandt",
+                    "email": "mail@cebe.cc"
+                },
+                {
+                    "name": "Alexander Makarov",
+                    "email": "sam@rmcreative.ru"
+                }
+            ],
+            "description": "The Jquery UI extension for the Yii framework",
+            "keywords": [
+                "jQuery UI",
+                "yii2"
+            ],
+            "time": "2019-05-28T08:10:51+00:00"
         },
         {
             "name": "yiisoft/yii2-mongodb",
@@ -7285,7 +7415,8 @@
         "kartik-v/yii2-widget-depdrop": 20,
         "bower-asset/sweetalert2": 20,
         "rdok/elasticemail-php": 20,
-        "yiisoft/yii2-queue": 20
+        "yiisoft/yii2-queue": 20,
+        "lajax/yii2-translate-manager": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

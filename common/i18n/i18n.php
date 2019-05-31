@@ -4,17 +4,11 @@ return [
     'class' => 'yii\i18n\I18N',
     'translations' => [
         '*' => [
-            'class' => 'yii\i18n\PhpMessageSource',
-//            'enableCaching' => true,
-//            'db' => 'db',
-//            'cache' => [
-//                'class' => 'common\components\FileCache',
-//                'keyPrefix' => 'i18n',
-//                'directoryLevel' => 0,
-//                'cachePath' => '@i18nCache'
-//            ],
+            'class' => 'yii\i18n\DbMessageSource',
+            'enableCaching' => true,
+            'db' => 'db',
             'forceTranslation' => true,
-//            'on missingTranslation' => ['common\i18n\TranslationEventHandler', 'handleMissingTranslation']
+            'on missingTranslation' => ['common\i18n\TranslationEventHandler', 'handleMissingTranslation']
         ],
         'yii' => [
             'class' => 'yii\i18n\PhpMessageSource',

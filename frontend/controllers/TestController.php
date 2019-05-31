@@ -140,22 +140,13 @@ class TestController extends FrontendController
         if (($assigner = ArrayHelper::getValue($supporters, $id)) === null) {
             $assigner = array_shift($supporters);
         }
-        var_dump($assigner);die;
-        return ['id' => $assigner->id];
+        var_dump($assigner);
         die;
-        if (count($calculateToday) > 0) {
-            $calculateToday = ArrayHelper::map($calculateToday, '_id', function ($elem) {
-                return ['count' => $elem['count'], 'price' => $elem['price']];
-            });
-            var_dump($calculateToday);
-            die;
-            $first = array_shift($calculateToday);
-            $assigner = isset($supporters[$first['_id']]) ? $supporters[$first['_id']] : $assigner;
-        }
+    }
 
-        $assigner = $supporters;
-        $assigner = array_shift($assigner);
-        var_dump($supporters);
+    public function actionI18n()
+    {
+        echo Yii::t('test', 'Hello World');
         die;
     }
 }
