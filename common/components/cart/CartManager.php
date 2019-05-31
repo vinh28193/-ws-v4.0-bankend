@@ -396,18 +396,27 @@ class CartManager extends Component
      */
     public function updateSafeItem($type, $id, $param)
     {
+        $now = Yii::$app->getFormatter()->asTimestamp('now');
         try {
-            if (($item = $this->getItem($type, $type, false)) === false) {
-                return [false, Yii::t('common', 'This item not exist in {type} cart', [
-                    'type' => $type
-                ])];
+            if (($item = $this->getItem($type, $id, false)) === false) {
+                return [false, 'Sản phẩm này không có trong giỏ hàng'];
+            }
+            $value = $item['value'];
+            $key = $item['key'];
+            if ($param['typeUpdate'] == 'cancelCart') {
+                $key['current_status'] = 'CANCELLED';
+                $value['cancelled']['new'] = $now;
+            }
+            if ($param['typeUpdate'] == 'confirmOrderCart') {
+                $key['current_status'] = 'PURCHASED';
+                $value['purchased']['new'] = $now;
             }
             if ($param['typeUpdate'] == 'assignSaleCart') {
                 $value['sale_support_id'] = $param['idSale'];
             }
             // todo : thay đổi giá trị của $item['key']
-            $value = (new OrderCartItem())->updateItemBuyKey($item['key']);
-            $success = $this->getStorage()->updateSafeItem($type, $id, $item['key'], $value, false);
+
+            $success = $this->getStorage()->setItem($id, $key, $value);
         } catch (Exception $exception) {
             return [false, $exception->getMessage()];
         }
