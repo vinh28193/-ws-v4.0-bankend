@@ -397,6 +397,9 @@ class CartManager extends Component
                 $key['current_status'] = 'PURCHASED';
                 $value['purchased']['new'] = $now;
             }
+            if ($param['typeUpdate'] == 'assignSaleCart') {
+                $value['sale_support_id'] = $param['idSale'];
+            }
             // todo : thay đổi giá trị của $item['key']
 
             $success = $this->getStorage()->setItem($id, $key, $value);
