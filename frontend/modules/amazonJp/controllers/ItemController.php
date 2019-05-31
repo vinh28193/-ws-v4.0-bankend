@@ -31,15 +31,15 @@ class ItemController extends AmazonJpController
 
     public function actionVariation()
     {
-        $response = ['success' => false, 'message' => 'can not call', 'content' => []];
+        $response = ['success' => false, 'message' => Yii::t('frontend', 'Failed'), 'content' => []];
         $form = new ProductDetailFrom();
         $post = Yii::$app->getRequest()->post();
         if ($form->load(Yii::$app->getRequest()->post(), '')) {
-            $response['message'] = 'can not resolve request';
+            $response['message'] = Yii::t('frontend', 'Can not resolve request');
         }
         $form->type = 'amazon-jp';
         if (($item = $form->detail()) === false) {
-            $response['message'] = 'failed';
+            $response['message'] = Yii::t('frontend', 'Failed');
             $response['content'] = $form->getErrors();
         } else {
             /** @var $item BaseProduct */
@@ -48,7 +48,7 @@ class ItemController extends AmazonJpController
                 $fees[$key] = $item->getAdditionalFees()->getTotalAdditionFees($key)[1];
             }
             $response['success'] = true;
-            $response['message'] = 'success';
+            $response['message'] = Yii::t('frontend', 'Success');
             $contentPrice = '<strong class="text-orange">' . WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, '') . '<span class="currency">đ</span></strong>';
             if ($item->start_price) {
                 $contentPrice .= '<b class="old-price">' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(), 1, '') . '<span class="currency">đ</span></b>';

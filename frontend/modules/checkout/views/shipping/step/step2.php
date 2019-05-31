@@ -12,9 +12,9 @@ use yii\helpers\Url;
 ?>
 <div class="container checkout-content">
     <ul class="checkout-step">
-        <li><i>1</i><span>Đăng nhập</span></li>
-        <li class="active"><i>2</i><span>Địa chỉ nhận hàng</span></li>
-        <li><i>3</i><span>Thanh toán</span></li>
+        <li><i>1</i><span><?= Yii::t('frontend', 'Login'); ?></span></li>
+        <li class="active"><i>2</i><span><?= Yii::t('frontend', 'Shipping address'); ?></span></li>
+        <li><i>3</i><span><?= Yii::t('frontend', 'Payment'); ?></span></li>
     </ul>
     <div class="step-2-content row">
         <div id="step_checkout_2" class="col-md-8">

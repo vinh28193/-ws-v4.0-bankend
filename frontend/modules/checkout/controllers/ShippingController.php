@@ -175,9 +175,9 @@ class ShippingController extends CheckoutController
             }
             $wallet = new WalletService();
             $wallet->login($model->password);
-            return ['success' => true, 'message' => 'đăng nhập thành công'];
+            return ['success' => true, 'message' => Yii::t('frontend', 'Login success')];
         } else {
-            return ['success' => false, 'message' => 'đăng nhập thất bại', 'data' => $model->errors];
+            return ['success' => false, 'message' => Yii::t('frontend', 'Login fail'), 'data' => $model->errors];
         }
     }
 
@@ -189,7 +189,7 @@ class ShippingController extends CheckoutController
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 Yii::info('register new 002');
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+                Yii::$app->session->setFlash('success', Yii::t('frontend', 'Check your email for further instructions.'));
                 $model->sendEmail();
                 Yii::info('register new 003');
                 if (Yii::$app->getUser()->login($user)) {
@@ -199,11 +199,11 @@ class ShippingController extends CheckoutController
                     }
                     $wallet = new WalletService();
                     $wallet->login($model->password);
-                    return ['success' => true, 'message' => 'đăng ký thành công'];
+                    return ['success' => true, 'message' => Yii::t('frontend', 'Sign up success')];
                 }
             }
         }
-        return ['success' => false, 'message' => 'đăng ký thất bại', 'data' => $model->errors];
+        return ['success' => false, 'message' => 'Sign up fail', 'data' => $model->errors];
     }
 
 }

@@ -1,11 +1,19 @@
 <?php
+
+$homeUrl = Yii::$app->homeUrl;
 ?>
 
 <div class="cart-content">
-    <div class="title">Giỏ hàng của bạn <span>(0 sản phẩm)</span></div>
+    <div class="title">
+        <?= Yii::t('frontend', 'Your shopping cart <span>({count} items)</span>', [
+            'count' => 0
+        ]); ?>
+    </div>
     <div class="empty-box">
         <img src="/img/cart_empty.png" alt="" title=""/>
-        <p>Giỏ hàng của bạn chưa có sản phẩm nào</p>
-        <a href="#" class="btn btn-continue" onclick="window.location.href = '/'">Tiếp tục mua hàng</a>
+
+        <p><?= Yii::t('frontend', 'Your shopping cart is empty'); ?></p>
+        <a href="#" class="btn btn-continue"
+           onclick="window.location.href = '/'"><?= Yii::t('frontend', 'Continue to buy'); ?></a>
     </div>
 </div>

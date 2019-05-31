@@ -14,7 +14,6 @@ use  frontend\modules\favorites\controllers\FavoriteObjectQueue as Favorite;
 use yii\helpers\ArrayHelper;
 
 
-
 class ItemController extends EbayController
 {
 
@@ -22,11 +21,11 @@ class ItemController extends EbayController
     public function actionDetail($id)
     {
         $form = new ProductDetailFrom();
-        $form->load($this->request->getQueryParams(),'');
+        $form->load($this->request->getQueryParams(), '');
         $form->id = $id;
         $form->type = 'ebay';
         $item = $form->detail();
-        if(Yii::$app->request->isPjax){
+        if (Yii::$app->request->isPjax) {
             if ($item === false) {
                 return $this->renderAjax('@frontend/views/common/item_error', [
                     'errors' => $form->getErrors()
@@ -36,7 +35,7 @@ class ItemController extends EbayController
                 'item' => $item
             ]);
         }
-        if ($item  === false) {
+        if ($item === false) {
             return $this->render('@frontend/views/common/item_error', [
                 'errors' => $form->getErrors()
             ]);
@@ -45,8 +44,8 @@ class ItemController extends EbayController
         $this->portalImage = $item->primary_images[0]->main;
 
         $category = $item->getCustomCategory();
-        $relate_product_rs = EbayProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
-        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];
+        $relate_product_rs = EbayProductGate::paserSugget($item->item_id, $category ? [$category->alias] : []);
+        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
         $item->relate_products = RelateProduct::setRelateProducts($relate_product);
 
         return $this->render('index', [
@@ -60,19 +59,23 @@ class ItemController extends EbayController
         // Favorite
         $fingerprint = null;
         $post = $this->request->post();
-        if (isset($post['fingerprint'])) {  $fingerprint = $post['fingerprint']; }
-        if (isset($post['_csrf'])) {  $_csrf = $post['_csrf']; }
-        $item = ArrayHelper::getValue($post,'item');
-        $id = ArrayHelper::getValue($post,'sku');
+        if (isset($post['fingerprint'])) {
+            $fingerprint = $post['fingerprint'];
+        }
+        if (isset($post['_csrf'])) {
+            $_csrf = $post['_csrf'];
+        }
+        $item = ArrayHelper::getValue($post, 'item');
+        $id = ArrayHelper::getValue($post, 'sku');
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : $fingerprint;
 
         $form = new ProductDetailFrom();
-        $form->load($this->request->getQueryParams(),'');
+        $form->load($this->request->getQueryParams(), '');
         $form->id = $id;
         $form->type = 'ebay';
         $item = $form->detail();
-        if(Yii::$app->request->isPjax){
+        if (Yii::$app->request->isPjax) {
             if ($item === false) {
                 return $this->renderAjax('@frontend/views/common/item_error', [
                     'errors' => $form->getErrors()
@@ -82,18 +85,18 @@ class ItemController extends EbayController
                 'item' => $item
             ]);
         }
-        if ($item  === false) {
+        if ($item === false) {
             return $this->render('@frontend/views/common/item_error', [
                 'errors' => $form->getErrors()
             ]);
         }
         $category = $item->getCustomCategory();
-        $relate_product_rs = EbayProductGate::paserSugget($item->item_id,$category ? [$category->alias] : []);
-        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];
+        $relate_product_rs = EbayProductGate::paserSugget($item->item_id, $category ? [$category->alias] : []);
+        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
         $item->relate_products = RelateProduct::setRelateProducts($relate_product);
 
 
-        if($uuid){
+        if ($uuid) {
             $_favorite = new FavoriteObject();
             $_favorite->create($item, $id, $uuid);
         }
@@ -121,15 +124,15 @@ class ItemController extends EbayController
 
     public function actionVariation()
     {
-        $response = ['success' => false, 'message' => 'can not call', 'content' => []];
+        $response = ['success' => false, 'message' => Yii::t('frontend', 'Failed'), 'content' => []];
         $form = new ProductDetailFrom();
         $post = Yii::$app->getRequest()->post();
         if ($form->load(Yii::$app->getRequest()->post(), '')) {
-            $response['message'] = 'can not resolve request';
+            $response['message'] = Yii::t('frontend', 'Can not resolve request');
         }
         $form->type = 'ebay';
         if (($item = $form->detail()) === false) {
-            $response['message'] = 'failed';
+            $response['message'] = Yii::t('frontend', 'Failed');
             $response['content'] = $form->getErrors();
         } else {
             /** @var $item BaseProduct */
@@ -138,7 +141,7 @@ class ItemController extends EbayController
                 $fees[$key] = $item->getAdditionalFees()->getTotalAdditionFees($key)[1];
             }
             $response['success'] = true;
-            $response['message'] = 'success';
+            $response['message'] = Yii::t('frontend', 'Success');
             $contentPrice = '<strong class="text-orange">' . WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, '') . '<span class="currency">đ</span></strong>';
             if ($item->start_price) {
                 $contentPrice .= '<b class="old-price">' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(), 1, '') . '<span class="currency">đ</span></b>';
