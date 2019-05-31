@@ -69,6 +69,9 @@ class StoreManager extends Component implements BootstrapInterface
         WeshopAsset::register($app->view);
         $options = Json::htmlEncode($this->getClientOptions());
         $app->view->registerJs("ws.init($options);");
+        $messages = Json::htmlEncode($this->getClientMessages());
+        $app->view->registerJs("ws.i18nLoadMessages($messages);");
+        $app->view->registerJs("console.log(ws.t('Hello {name}',{name:'Vinh'}))");
     }
 
     protected function getClientOptions()
@@ -78,6 +81,20 @@ class StoreManager extends Component implements BootstrapInterface
             'priceDecimal' => 0,
             'pricePrecision' => -3,
         ];
+    }
+
+    protected function getClientMessages()
+    {
+        $messages = [
+            'Hello {name}',
+            'Hello World',
+            'Error', 'Success', 'Not Found'
+        ];
+        $results = [];
+        foreach ($messages as $message) {
+            $results[$message] = Yii::t('javascript', $message, [], $this->store->locale);
+        }
+        return $results;
     }
 
     /**

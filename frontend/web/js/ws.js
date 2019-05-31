@@ -111,13 +111,16 @@ var ws = ws || (function ($) {
             document.location.href = href;
         },
         t: function (message, params = []) {
-
-            if (i18nMessages.length) {
-
+            var hash = message;
+            if (typeof (i18nMessages[hash]) !== 'undefined') {
+                message = i18nMessages[hash];
+                console.log('ws.t: message: `' + hash + '` translated to : `' + message + '`');
             }
+
             if (typeof (params) !== 'undefined') {
                 for (var search in params) {
                     message = message.replace('{' + search + '}', params[search]);
+                    console.log('ws.t: param {' + search + '} replaced to : `' + params[search] + '`');
                 }
             }
 

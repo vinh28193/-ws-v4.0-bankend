@@ -147,6 +147,8 @@ class TestController extends FrontendController
     public function actionI18n()
     {
         echo Yii::t('test', 'Hello World');
+        $s = Yii::$app->i18n->getMessageSource('frontend');
+        var_dump($s->loadMessages('frontend', 'vi'));
         die;
     }
 }
