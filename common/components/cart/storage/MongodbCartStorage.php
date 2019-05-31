@@ -2,6 +2,7 @@
 
 namespace common\components\cart\storage;
 
+use common\components\cart\CartHelper;
 use phpDocumentor\Reflection\Type;
 use Yii;
 use common\models\User;
@@ -218,6 +219,50 @@ class MongodbCartStorage extends BaseObject
         return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0], ['identity' => null]], ['remove' => 1]);
     }
 
+    public function calculateSupported($supportId = null)
+    {
+        $match = [
+            'AND',
+            ['$gt', 'create_at', CartHelper::beginSupportDay()],
+            ['$lt', 'create_at', CartHelper::endSupportDay()],
+            ['$ne', 'identity', new Expression('NULL')]
+        ];
+        if ($supportId !== null) {
+            $match[] = is_array($supportId) ? ['$in', 'key.supportId', $supportId] : ['key.supportId' => (string)$supportId];
+        }
+
+        $aggregate = [
+            [
+                [
+                    '$match' => $match
+                ],
+            ],
+            [
+
+            ]
+        ];
+        return $this->mongodb->getCollection($this->collection)->aggregate([
+            [
+                '$match' => $match
+            ],
+            [
+                '$group' => [
+                    '_id' => ['$toInt' => '$key.supportId'],
+                    'price' => [
+                        '$sum' => '$value.total_amount_local'
+                    ],
+                    'count' => [
+                        '$sum' => 1
+                    ]
+                ]
+            ],
+            [
+                '$sort' => [
+                    'count' => 1, 'price' => 1
+                ]
+            ]
+        ]);
+    }
 
     public function filterShoppingCarts($params)
     {

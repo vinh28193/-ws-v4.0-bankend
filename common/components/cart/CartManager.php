@@ -9,12 +9,16 @@
 namespace common\components\cart;
 
 
-use common\components\cart\item\OrderCartItem;
 use common\components\cart\storage\MongodbCartStorage;
-use Exception;
+use common\helpers\WeshopHelper;
+use common\models\User;
+use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use Yii;
+use Exception;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
+use common\components\cart\storage\CartStorageInterface;
+use common\components\cart\item\OrderCartItem;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -149,7 +153,7 @@ class CartManager extends Component
     public function addItem($type, $params, $safeOnly = true)
     {
         $key = $this->createKeyFormParams($params);
-        $cartItem = new OrderCartItem();
+        $cartItem = new OrderCartItem($this);
         try {
             if ($type !== CartSelection::TYPE_SHOPPING) {
                 list($ok, $value) = $cartItem->createOrderFormKey($key, false);
@@ -199,7 +203,7 @@ class CartManager extends Component
 
     public function updateItem($type, $id, $key, $params = [], $safeOnly = true)
     {
-
+        $cartItem = new OrderCartItem($this);
         try {
             if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
                 return [false, 'Sản phẩm này không có trong giỏ hàng'];
@@ -228,6 +232,7 @@ class CartManager extends Component
 
     public function removeItem($type, $id, $key = null, $safeOnly = true)
     {
+        $cartItem = new OrderCartItem($this);
         if ($key === null) {
             $success = $this->getStorage()->removeItem($id);
             return [$success, $success ? 'Giỏ hàng này đã được xóa' : 'Không thể xóa'];
@@ -412,5 +417,46 @@ class CartManager extends Component
         $lv2 = isset($source['sku']);
         $lv2 = $lv2 ? (!isset($target['sku']) ? false : $source['sku'] === $target['sku']) : true;
         return $lv1 && $lv2;
+    }
+
+    public function getSupportAssign()
+    {
+        $authManager = Yii::$app->authManager;
+        $saleIds = $authManager->getUserIdsByRole('sale');
+        $masterSaleIds = $authManager->getUserIdsByRole('master_sale');
+        $supporters = User::find()->indexBy('id')->select(['id', 'email'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
+
+        $ids = array_keys($supporters);
+        $calculateToday = ArrayHelper::map($this->getStorage()->calculateSupported($ids), '_id', function ($elem) {
+            return ['count' => $elem['count'], 'price' => $elem['price']];
+        });
+
+        $countData = [];
+        foreach ($ids as $id) {
+            $c = 0;
+            if (isset($calculateToday[$id]) && ($forSupport = $calculateToday[$id]) !== null && !empty($forSupport) && isset($forSupport['count'])) {
+                $c = $forSupport['count'];
+            }
+            $countData[$id] = $c;
+        }
+        asort($countData);
+
+        $sQMin = WeshopHelper::sortMinValueArray($countData);
+
+        $priceResult = [];
+
+        foreach ($sQMin as $id => $val) {
+            $p = 0;
+            if (isset($calculateToday[$id]) && ($forSupport = $calculateToday[$id]) !== null && !empty($forSupport) && isset($forSupport['price'])) {
+                $p = $forSupport['price'];
+            }
+            $priceResult[$id] = $p;
+        }
+        $priceResult = array_keys($priceResult);
+        $id = array_shift($priceResult);
+        if (($assigner = ArrayHelper::getValue($supporters, $id)) === null) {
+            $assigner = array_shift($supporters);
+        }
+        return ['id' => $assigner->id, 'email' => $assigner->email];
     }
 }

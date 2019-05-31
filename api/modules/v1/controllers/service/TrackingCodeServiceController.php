@@ -332,7 +332,7 @@ class TrackingCodeServiceController extends BaseApiController
                 $shipment->save(0);
                 $deliverynote->shipment_id = $shipment->id;
                 $deliverynote->save(0);
-                $deliverynote->delivery_note_code = WeshopHelper::generateTag($deliverynote->id,'WSVNDN', 16);
+                $deliverynote->delivery_note_code = WeshopHelper::generateTag($deliverynote->id,'DN_', 16);
                 $deliverynote->save(0);
                 $package->shipment_id = $shipment->id;
                 $package->delivery_note_code = $deliverynote->delivery_note_code;
@@ -344,7 +344,7 @@ class TrackingCodeServiceController extends BaseApiController
             $shipment->save(0);
             $deliverynote->shipment_id = $shipment->id;
             $deliverynote->save(0);
-            $deliverynote->delivery_note_code = WeshopHelper::generateTag($deliverynote->id,'WSVNDN', 16);
+            $deliverynote->delivery_note_code = WeshopHelper::generateTag($deliverynote->id,'DN_', 16);
             $deliverynote->save(0);
             Package::updateAll([
                 'shipment_id' => $shipment->id,

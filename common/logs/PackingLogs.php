@@ -1,6 +1,7 @@
 <?php
 namespace common\logs;
 
+use common\models\Package;
 use common\models\User;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -51,7 +52,7 @@ class PackingLogs extends \common\modelsMongo\PackingLogs
         $rs = [];
         if($code){
             /** @var self[] $data */
-            $data = self::find()->where(['like','tracking_code',$code])->orderBy('created_at desc')->all();
+            $data = self::find()->where(['like','package_code',$code])->orderBy('created_at desc')->all();
             \Yii::debug($data);
             foreach ($data as $datum){
                 \Yii::debug($datum->created_at);
@@ -116,6 +117,26 @@ class PackingLogs extends \common\modelsMongo\PackingLogs
                 break;
             default:
                 return '';
+                break;
+        }
+    }
+    public function setCodeReferent($model){
+        switch ($this->type_log){
+            case self::PACKING_MERGE_TRACKING_SELLER:
+            case self::PACKING_REMOVE:
+                 $this->tracking_code_reference = $model->tracking_code;
+                break;
+            case self::PACKING_MERGE_PACKING:
+                 $this->package_code_reference = $model->package_code;
+                break;
+            case self::PACKING_MAP_PRODUCT:
+                 $this->product_id = $model->product_id;
+                break;
+            case self::PACKING_PUT_INTO_DELIVERY_NOTE:
+            case self::PACKING_TAKE_OUT_DELIVERY_NOTE:
+                 $this->delivery_note_code = $model->delivery_note_code;
+                break;
+            default:
                 break;
         }
     }

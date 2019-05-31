@@ -51,13 +51,14 @@ class PackageController extends BaseApiController
         $manifest_id = Yii::$app->request->get('manifest_id');
         $customer_id = Yii::$app->request->get('customer_id');
         $name = Yii::$app->request->get('name');
-        $email = Yii::$app->request->get('phone');
-        $phone = Yii::$app->request->get('email');
+        $email = Yii::$app->request->get('email');
+        $phone = Yii::$app->request->get('phone');
         $tracking_code = Yii::$app->request->get('tracking_code');
         $package_code = Yii::$app->request->get('package_code');
         $product_id = Yii::$app->request->get('product_id');
         $order_code = Yii::$app->request->get('order_code');
         $type_tracking = Yii::$app->request->get('type_tracking');
+        $tab_tracking = Yii::$app->request->get('tab_tracking');
         $status = Yii::$app->request->get('status');
         $query = Package::find()
             ->with(['order','product','manifest.receiveWarehouse'])
@@ -83,16 +84,20 @@ class PackageController extends BaseApiController
             $query->andWhere(['package.type_tracking' => $type_tracking]);
         }
         if($customer_id){
-            $query->andWhere(['package.order.customer_id' => $customer_id]);
+            $query->andWhere(['order.customer_id' => $customer_id]);
         }
         if($phone){
-            $query->andWhere(['like', 'package.order.receiver_phone' , $phone]);
+            $query->andWhere(['like', 'order.receiver_phone' , $phone]);
         }
         if($name){
-            $query->andWhere(['like', 'package.order.receiver_name' , $name]);
+            $query->andWhere(['like', 'order.receiver_name' , $name]);
         }
         if($email){
-            $query->andWhere(['like', 'package.order.receiver_email' , $email]);
+            $query->andWhere(['like', 'order.receiver_email' , $email]);
+        }
+        if($tab_tracking == 'complete'){
+            $query->andWhere(['<>','package.type_tracking' , 'UNKNOWN']);
+//            $query->andWhere(['and',['is not','product_id',null],['<>','product_id',''],['<>','status',Package::STATUS_SPLITED]]);
         }
         if($status){
             if($status == 'created'){
