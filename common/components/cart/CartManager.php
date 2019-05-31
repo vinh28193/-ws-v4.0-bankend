@@ -9,14 +9,12 @@
 namespace common\components\cart;
 
 
+use common\components\cart\item\OrderCartItem;
 use common\components\cart\storage\MongodbCartStorage;
-use phpDocumentor\Reflection\DocBlock\Tags\Param;
-use Yii;
 use Exception;
+use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
-use common\components\cart\storage\CartStorageInterface;
-use common\components\cart\item\OrderCartItem;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -379,13 +377,24 @@ class CartManager extends Component
      */
     public function updateSafeItem($type, $id, $param)
     {
+        $now = Yii::$app->getFormatter()->asTimestamp('now');
         try {
-            if (($item = $this->getItem($type, $type, false)) === false) {
+            if (($item = $this->getItem($type, $id, false)) === false) {
                 return [false, 'Sản phẩm này không có trong giỏ hàng'];
             }
+            $value = $item['value'];
+            $key = $item['key'];
+            if ($param['typeUpdate'] == 'cancelCart') {
+                $key['current_status'] = 'CANCELLED';
+                $value['cancelled']['new'] = $now;
+            }
+            if ($param['typeUpdate'] == 'confirmOrderCart') {
+                $key['current_status'] = 'PURCHASED';
+                $value['purchased']['new'] = $now;
+            }
             // todo : thay đổi giá trị của $item['key']
-            $value = (new OrderCartItem())->updateItemBuyKey($item['key']);
-            $success = $this->getStorage()->updateSafeItem($type, $id, $item['key'], $value, false);
+
+            $success = $this->getStorage()->setItem($id, $key, $value);
         } catch (Exception $exception) {
             return [false, $exception->getMessage()];
         }
