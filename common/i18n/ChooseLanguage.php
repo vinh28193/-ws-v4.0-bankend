@@ -116,8 +116,7 @@ class ChooseLanguage extends Model
     }
 
     public function getKeyToSave(){
-        $store = Yii::$app->store->storeId;
-        return I18nHelper::buildName($store);
+        return I18nHelper::buildName(null);
     }
 
     public function isUserSystem($user){
