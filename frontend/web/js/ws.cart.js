@@ -44,7 +44,7 @@
                     var options = getQuantityInputOptions($target);
                     var operator = $item.data('operator');
                     if (options.max === '' || options.max < options.value) {
-                        alert('Không thể thay đổi số lượng');
+                        ws.sweetalert('Không thể thay đổi số lượng', 'error');
                     }
                     var data = {type: $item.data('type'), id: id, key: key};
                     var param = {quantity: options.value};
@@ -53,7 +53,7 @@
                         if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
                             param.quantity = options.max;
                             $target.val(param.quantity);
-                            alert('Bạn không thể mua quá: ' + options.max);
+                            ws.sweetalert('Bạn không thể mua quá: ' + options.max, 'error');
                             return;
                         }
                     } else {
@@ -61,7 +61,7 @@
                         if (param.quantity < 1) {
                             param.quantity = 1;
                             $target.val(1);
-                            alert('Bạn không thể mua dưới 1');
+                            ws.sweetalert('Bạn không thể mua dưới 1', 'error');
                             return;
                         }
                     }
@@ -80,11 +80,11 @@
                     if (param.quantity < 1) {
                         param.quantity = 1;
                         $item.val(1);
-                        alert('Bạn không thể mua dưới 1')
+                        ws.sweetalert('Bạn không thể mua dưới 1', 'error');
                     } else if (options.max !== '' && param.quantity >= options.max) {
                         param.quantity = options.max;
                         $item.val(options.max);
-                        alert(('Bạn không thể mua quá ' + options.max));
+                        ws.sweetalert('Bạn không thể mua quá: ' + options.max, 'error');
                     }
                     data.param = param;
                     methods.update.call($cart, data);

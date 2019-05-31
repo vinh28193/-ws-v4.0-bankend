@@ -110,9 +110,6 @@ var ws = ws || (function ($) {
         redirect: function (href) {
             document.location.href = href;
         },
-        sweetalert: function (smg, type, options) {
-            alert(type + ':' + smg);
-        },
         t: function (message, params = []) {
 
             if (i18nMessages.length) {

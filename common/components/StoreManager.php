@@ -173,7 +173,7 @@ class StoreManager extends Component implements BootstrapInterface
 
     public function getLanguageId()
     {
-        return 'vi';
+        return $this->store->locale;
     }
 
     public function roundMoney($money)

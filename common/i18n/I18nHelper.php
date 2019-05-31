@@ -8,6 +8,7 @@
 
 namespace common\i18n;
 
+use common\components\StoreManager;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
@@ -17,14 +18,25 @@ use yii\helpers\Inflector;
 class I18nHelper
 {
 
-    public static function translate($category, $message, $params = [], $language = null){
-        return Yii::t($category, $message, $params, $language );
+    /**
+     * @return StoreManager
+     */
+    public static function getStoreManager()
+    {
+        return Yii::$app->storeManager;
     }
 
-    public static function getAllMessage($category,$language){
+    public static function translate($category, $message, $params = [], $language = null)
+    {
+        return Yii::t($category, $message, $params, $language);
+    }
+
+    public static function getAllMessage($category, $language)
+    {
         $i18n = Yii::$app->getI18n();
         $messageSource = $i18n->getMessageSource($category);
     }
+
     /**
      * @param null $store
      * @return mixed
@@ -33,10 +45,12 @@ class I18nHelper
     {
         if ($store === null) {
             return ArrayHelper::getValue(Yii::$app->params, 'defaultLanguage', 'en-US');
-        } elseif ($store instanceof \common\components\Store) {
+        } elseif ($store instanceof \common\components\StoreManager) {
             return $store->getLanguageId();
         } elseif (is_numeric($store)) {
-            return Yii::$app->store->tryStore($store)->getLanguageId();
+            $storeManager = self::getStoreManager();
+            $storeManager->storeId = $store;
+            return $storeManager->getLanguageId();
         } else {
             throw new \InvalidArgumentException('Invalid argument for $store');
         }
@@ -122,7 +136,7 @@ class I18nHelper
 
     public static function savePath($fileName = 'save_language', $mimeType = 'application/json')
     {
-        $cachePath = Yii::getAlias('@i18nCache');
+        $cachePath = Yii::getAlias('@runtime/i18n');
         FileHelper::createDirectory($cachePath, 0777);
         $fileExtension = count($ext = FileHelper::getExtensionsByMimeType($mimeType)) > 1 ? $ext : 'json';
         return $cachePath . '/' . $fileName . '.' . $fileExtension;
@@ -134,9 +148,9 @@ class I18nHelper
             $reference = Inflector::camelize(Yii::$app->getRequest()->getUserIP());
         }
         if ($store === null) {
-            $store = Yii::$app->store->getStoreId();
-        } elseif ($store instanceof \common\components\Store) {
-            $store = $store->getStoreId();
+            $store = self::getStoreManager()->storeId;
+        } elseif ($store instanceof \common\components\StoreManager) {
+            $store = $store->storeId;
         }
         return $store . $reference;
     }

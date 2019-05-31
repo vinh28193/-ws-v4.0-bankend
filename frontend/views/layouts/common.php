@@ -328,66 +328,66 @@ FrontendAsset::register($this);
     <?= $content; ?>
 
     <?= \frontend\widgets\layout\FooterWidget::widget() ?>
+    <div class="modal otp-modal" id="otp-confirm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body" id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal password-required-modal" id="passwordRequired" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <?php
+                    $form = ActiveForm::begin([
+                        'id' => 'passwordRequiredForm',
+                        'action' => Url::toRoute('/secure/password-required', true)
+                    ]);
+                    ActiveForm::end();
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal qr-modal" id="qr-pay" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title"><img src="/img/payment_qrpay.png"/></div>
+                </div>
+                <div class="modal-body">
+                    <div class="bank-logo"><img src="/img/bank/vietcombank.png" alt=""/></div>
+                    <p>Vietcombank - Ngân hàng ngoại thương</p>
+                    <div class="qr-box"><img
+                                src="/img/qr-code.png"
+                                alt=""/></div>
+                    <p><a href="#">Download ảnh QR - Code!</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal success-modal" id="checkout-success" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <i class="fas fa-check"></i>
+                    <div class="modal-title">Cám ơn bạn!</div>
+                    <div class="order-code">Mã giao dịch: <span class="text-blue" id="transactionCode"></span></div>
+                    <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành toán
+                    </p>
+                    <button type="button" class="btn btn-submit btn-block" id="next-payment">Chuyển ngay <span
+                                id="countdown_payment">5</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php $this->endBody() ?>
 
-<div class="modal otp-modal" id="otp-confirm" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body" id="modalContent"></div>
-        </div>
-    </div>
-</div>
-
-<div class="modal password-required-modal" id="passwordRequired" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <?php
-                $form = ActiveForm::begin([
-                    'id' => 'passwordRequiredForm',
-                    'action' => Url::toRoute('/secure/password-required', true)
-                ]);
-                ActiveForm::end();
-                ?>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal qr-modal" id="qr-pay" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title"><img src="/img/payment_qrpay.png"/></div>
-            </div>
-            <div class="modal-body">
-                <div class="bank-logo"><img src="/img/bank/vietcombank.png" alt=""/></div>
-                <p>Vietcombank - Ngân hàng ngoại thương</p>
-                <div class="qr-box"><img
-                            src="/img/qr-code.png"
-                            alt=""/></div>
-                <p><a href="#">Download ảnh QR - Code!</a></p>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal success-modal" id="checkout-success" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <i class="fas fa-check"></i>
-                <div class="modal-title">Cám ơn bạn!</div>
-                <div class="order-code">Mã giao dịch: <span class="text-blue" id="transactionCode"></span></div>
-                <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành toán
-                </p>
-                <button type="button" class="btn btn-submit btn-block" id="next-payment">Chuyển ngay <span
-                            id="countdown_payment">5</span></button>
-            </div>
-        </div>
-    </div>
-</div>
 <script>
     dataLayer = [];
 </script>

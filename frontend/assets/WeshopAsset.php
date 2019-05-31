@@ -15,6 +15,7 @@ class WeshopAsset extends AssetBundle
 
     public $js = [
         'js/ws.js',
+        'js/ws.sweetalert.js',
         'js/ws.browse.js'
     ];
     public $depends = [
