@@ -3,64 +3,66 @@
 
 <div class="container checkout-content">
     <ul class="checkout-step">
-        <li class="active"><i>1</i><span>Đăng nhập</span></li>
-        <li><i>2</i><span>Địa chỉ nhận hàng</span></li>
-        <li><i>3</i><span>Thanh toán</span></li>
+        <li class="active"><i>1</i><span><?= Yii::t('frontend', 'Login'); ?></span></li>
+        <li><i>2</i><span><?= Yii::t('frontend', 'Shipping address'); ?></span></li>
+        <li><i>3</i><span><?= Yii::t('frontend', 'Payment'); ?></span></li>
     </ul>
     <div class="step-1-content">
-        <div class="title">Nhập số điện thoại/ Email để tiếp tục thanh toán</div>
+        <div class="title"><?= Yii::t('frontend', 'Enter the phone number / Email to continue payment'); ?></div>
         <div class="auth-form">
             <div class="form-group">
                 <i class="icon email"></i>
-                <input type="text" class="form-control" name="email" placeholder="Email">
+                <input type="text" class="form-control" name="email" placeholder="<?= Yii::t('frontend', 'Email'); ?>">
                 <label data-href="error" style="color: red" id="email-error"></label>
             </div>
             <div class="check-member">
                 <div class="form-group form-check">
                     <input type="radio" class="form-check-input" id="member" value="member" name="check-member" checked>
-                    <label class="form-check-label" for="member">Đã là thành viên Weshop</label>
+                    <label class="form-check-label"
+                           for="member"><?= Yii::t('frontend', 'Already a Weshop member'); ?></label>
                 </div>
                 <div class="form-group form-check">
                     <input type="radio" class="form-check-input" id="new-member" value="new-member" name="check-member">
-                    <label class="form-check-label" for="new-member">Tôi là khách hàng mới</label>
+                    <label class="form-check-label"
+                           for="new-member"><?= Yii::t('frontend', 'I am a new customer'); ?></label>
                 </div>
             </div>
             <div class="form-group" data-merge="signup-form" style="display: none">
                 <i class="icon user"></i>
-                <input type="text" class="form-control"  name="first_name" placeholder="Tên">
+                <input type="text" class="form-control" name="first_name" placeholder="<?= Yii::t('frontend', 'First name'); ?>">
                 <label data-href="error" style="color: red" id="first_name-error"></label>
             </div>
             <div class="form-group" data-merge="signup-form" style="display: none">
                 <i class="icon user"></i>
-                <input type="text" class="form-control"   name="last_name" placeholder="Họ">
+                <input type="text" class="form-control" name="last_name" placeholder="<?= Yii::t('frontend', 'Last name'); ?>">
                 <label data-href="error" style="color: red" id="last_name-error"></label>
             </div>
             <div class="form-group" data-merge="signup-form" style="display: none">
                 <i class="icon phone"></i>
-                <input type="text" class="form-control " name="phone" placeholder="Số điện thoại">
+                <input type="text" class="form-control " name="phone" placeholder="<?= Yii::t('frontend', 'Phone'); ?>">
                 <label data-href="error" style="color: red" id="phone-error"></label>
             </div>
             <div class="form-group">
                 <i class="icon password"></i>
-                <input type="password" class="form-control" name="password" placeholder="Mật khẩu">
+                <input type="password" class="form-control" name="password" placeholder="<?= Yii::t('frontend', 'Password'); ?>">
                 <label data-href="error" style="color: red" id="password-error"></label>
             </div>
             <div class="form-group" data-merge="signup-form" style="display: none">
                 <i class="icon password"></i>
-                <input type="password" class="form-control"  name="replacePassword" placeholder="Nhập lại mật khẩu">
+                <input type="password" class="form-control" name="replacePassword" placeholder="<?= Yii::t('frontend', 'Replace password'); ?>">
                 <label data-href="error" style="color: red" id="replacePassword-error"></label>
             </div>
             <div class="check-info">
                 <div class="form-group form-check">
                     <input type="checkbox" class="form-check-input" name="remember" checked>
-                    <label class="form-check-label" for="remember">Ghi nhớ</label>
+                    <label class="form-check-label" for="remember"><?= Yii::t('frontend', 'Remember'); ?></label>
                 </div>
-                <a href="#" class="forgot">Quên mật khẩu?</a>
+                <a href="#" class="forgot"><?=Yii::t('frontend','Forgot password?');?></a>
             </div>
-            <button type="button" id="loginToCheckout" class="btn btn-login">Đăng nhập để mua hàng</button>
+            <button type="button" id="loginToCheckout" class="btn btn-login"><?=Yii::t('frontend','Login to purchase');?></button>
         </div>
         <div class="other-login">
-            <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
+            <div class="text-center"><span class="or"><?=Yii::t('frontend','Or sign in through');?></span></div>
             <div class="social-button">
                 <a href="#" class="btn btn-fb">
                     <i class="social-icon fb"></i>

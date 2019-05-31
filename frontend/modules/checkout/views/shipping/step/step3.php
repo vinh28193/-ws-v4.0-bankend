@@ -7,9 +7,9 @@
 
 <div class="container checkout-content">
     <ul class="checkout-step">
-        <li><i>1</i><span>Đăng nhập</span></li>
-        <li><i>2</i><span>Địa chỉ nhận hàng</span></li>
-        <li class="active"><i>3</i><span>Thanh toán</span></li>
+        <li><i>1</i><span><?= Yii::t('frontend', 'Login'); ?></span></li>
+        <li><i>2</i><span><?= Yii::t('frontend', 'Shipping address'); ?></span></li>
+        <li class="active"><i>3</i><span><?= Yii::t('frontend', 'Payment'); ?></span></li>
     </ul>
     <div class="step-2-content row">
         <div class="col-md-8">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <?php echo $this->render('_cart',['payment' => $payment]) ?>
+            <?php echo $this->render('_cart', ['payment' => $payment]) ?>
         </div>
     </div>
 </div>

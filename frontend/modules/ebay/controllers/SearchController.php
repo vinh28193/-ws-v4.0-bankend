@@ -17,7 +17,9 @@ class SearchController extends EbayController
         $form = new ProductSearchForm();
         $form->load($queryParams);
         $form->type = 'ebay';
-        $this->portalTitle = "Search Ebay :" . Html::decode($form->keyword);
+        $this->portalTitle = Yii::t('frontend', "Search ebay: {keyword}", [
+            'keyword' => Html::decode($form->keyword)
+        ]);;
         Yii::info($form->getAttributes(), __METHOD__);
         if (($results = $form->search()) === false || (isset($results['products']) && $results['products'] === 0)) {
             return $this->renderPartial('@frontend/common/no_search_results');
