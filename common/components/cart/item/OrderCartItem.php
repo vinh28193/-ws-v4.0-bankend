@@ -4,6 +4,7 @@
 namespace common\components\cart\item;
 
 use common\components\cart\CartHelper;
+use common\components\cart\CartManager;
 use common\components\StoreManager;
 use common\helpers\WeshopHelper;
 use common\models\User;
@@ -21,6 +22,17 @@ class OrderCartItem extends BaseObject
     public $quantity = 1;
     public $image;
     public $sku = null;
+
+    /**
+     * @var CartManager
+     */
+    public $cartManager;
+
+    public function __construct(CartManager $cartManager, $config = [])
+    {
+        parent::__construct($config);
+        $this->cartManager = $cartManager;
+    }
 
     /**
      * @var StoreManager
@@ -48,7 +60,7 @@ class OrderCartItem extends BaseObject
                 'source' => $tempKey['source'],
                 'sellerId' => $tempKey['sellerId']
             ]);
-            $new = new self($param);
+            $new = new self($this->cartManager, $param);
             list($ok, $newOrder) = $new->filterProduct();
             if (!$ok) {
                 return [false, "item {$param['id']} is invalid please remove this form cart list"];
@@ -74,6 +86,15 @@ class OrderCartItem extends BaseObject
                 $order['ordercode'] = $tempKey['orderCode'];
             }
 
+//            if (($supporters = $this->cartManager->getStorage()->calculateSupported()) > 0) {
+//                /** @var  $supporter null|User */
+//                $supporter = User::find()->select(['id', 'mail'])->where(['id' => $supporters[0]['_id']])->one();
+//                $key['supportAssign'] = [
+//                    'id' => $supporter->id,
+//                    'email' => $supporter->email
+//                ];
+//
+//            }
         } else {
             $order['ordercode'] = $tempKey['orderCode'];
             $order['current_status'] = $tempKey['current_status'];
@@ -120,7 +141,7 @@ class OrderCartItem extends BaseObject
     public static function defaultKey()
     {
 
-        $store = (new static())->getStoreManager();
+        $store = Yii::$app->storeManager;
         return [
             'source' => '',
             'sellerId' => '',
