@@ -22,18 +22,6 @@ UserBackendAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="Weshop Global - Homepage"/>
-    <meta name='COPYRIGHT' content='&copy; Weshop Global'/>
-    <meta name="robots" content="noodp,index,follow"/>
-    <meta name="keywords" content=""/>
-    <meta name="description" content=""/>
-    <meta property="og:title" content="website title"/>
-    <meta property="og:locale" content="vi_VN"/>
-    <meta property="og:url" content="website link"/>
-    <meta property="og:image" content="image description"/>
-    <meta property="og:description" content="website description"/>
-    <meta property="og:site_name" content="website name"/>
-    <meta property="fb:admins" content="Facebook Admin ID page"/>
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"
@@ -95,17 +83,18 @@ $checkUrl = Yii::$app->getRequest()->url;
                         <div class="name"></div>
                         <div class="email"></div>
                     <?php } ?>
-                    <span class="status online">Online</span>
+                    <span class="status online"><?= Yii::t('frontend', 'Online'); ?></span>
                 </div>
                 <ul id="be-menu-collapse" class="be-menu-collapse" style="margin-bottom: 0">
                     <li class="<?php if (isset($checkUrl)) {
                         if ($checkUrl == '/account/home') {
                             $active = 'active' ?> active <?php }
                     } ?>">
-                        <?php echo Html::a('<span class="icon icon1"></span>Thống kê Chung', ['/account/home']); ?>
+                        <?php echo Html::a('<span class="icon icon1"></span>' . Yii::t('frontend', 'Dashboard'), ['/account/home']); ?>
                     </li>
                     <li class="accordion">
-                        <a href="/my-weshop/wallet.html"><i class="icon icon2"></i> Quản lí tiền</a>
+                        <a href="/my-weshop/wallet.html"><i class="icon icon2"></i> <?= Yii::t('frontend', 'Wallet'); ?>
+                        </a>
                         <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-1"
                            aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
                         <div id="sub-1"
@@ -113,18 +102,21 @@ $checkUrl = Yii::$app->getRequest()->url;
                              aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul>
                                 <li class="<?= in_array('top_up', $this->params) ? 'active' : '' ?>"><a
-                                            href="/my-weshop/wallet/top-up.html">Nạp tiền</a></li>
+                                            href="/my-weshop/wallet/top-up.html"><?= Yii::t('frontend', 'Top up'); ?></a>
+                                </li>
                                 <li class="<?= in_array('history', $this->params) ? 'active' : '' ?>"><a
-                                            href="/my-weshop/wallet/history.html">Giao dịch</a></li>
-                                <li class="<?= in_array('bank', $this->params) ? 'active' : '' ?>"><a href="#">Tài khoản
-                                        ngân hàng</a></li>
+                                            href="/my-weshop/wallet/history.html"><?= Yii::t('frontend', 'Transaction'); ?></a>
+                                </li>
+                                <li class="<?= in_array('bank', $this->params) ? 'active' : '' ?>"><a
+                                            href="#"><?= Yii::t('frontend', 'Account bank'); ?></a></li>
                                 <li class="<?= in_array('withdraw', $this->params) ? 'active' : '' ?>"><a
-                                            href="/my-weshop/wallet/withdraw.html">Rút tiền</a></li>
+                                            href="/my-weshop/wallet/withdraw.html"><?= Yii::t('frontend', 'Withdraw'); ?></a>
+                                </li>
                             </ul>
                         </div>
                     </li>
                     <li class="accordion">
-                        <a href="#"><i class="icon icon3"></i> Đơn hàng</a>
+                        <a href="#"><i class="icon icon3"></i> <?= Yii::t('frontend', 'Order') ?></a>
                         <?php
                         if (isset($checkUrl)) {
                             if ($checkUrl == '/account/order') {
@@ -161,51 +153,51 @@ $checkUrl = Yii::$app->getRequest()->url;
                                 } ?><?php if (isset($checkUrl)) {
                                     if ($checkUrl == '/order') { ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a('Tất cả các đơn', ['/account/order'], ['class' => 'active']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'Orders'), ['/account/order'], ['class' => 'active']); ?>
                                 </li>
                                 <li class="<?php if (isset($check['purchase'])) {
                                     if ($check['purchase'] == 'unpaid') { ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a('Chưa Thanh Toán', ['/account/order?purchase=unpaid']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'Unpaid'), ['/account/order?purchase=unpaid']); ?>
                                 </li>
                                 <li class="<?php if (isset($check['purchase'])) {
                                     if ($check['purchase'] == 'paid') { ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a('Đã thanh toán', ['/account/order?purchase=paid']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'Paid'), ['/account/order?purchase=paid']); ?>
                                 </li>
                                 <li class="<?php if (isset($check['status'])) {
                                     if ($check['status'] == 'PURCHASED') { ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a('Đã mua hàng', ['/account/order?status=PURCHASED']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'Purchased'), ['/account/order?status=PURCHASED']); ?>
                                 </li>
                                 <li class="<?php if (isset($check['status'])) {
                                     if ($check['status'] == 'STOCKIN_US') { ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a('Đã về kho US', ['/account/order?status=STOCKIN_US']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'Stock in us'), ['/account/order?status=STOCKIN_US']); ?>
                                 </li>
                                 <li class="<?php if (isset($check['status'])) {
                                     if ($check['status'] == 'STOCKIN_LOCAL') {
                                         $active = 'active' ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a('Đã về kho Việt Nam', ['/account/order?status=STOCKIN_LOCAL']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'Stock in local'), ['/account/order?status=STOCKIN_LOCAL']); ?>
                                 </li>
                                 <li class="<?php if (isset($check['status'])) {
                                     if ($check['status'] == 'AT_CUSTOMER') {
                                         $active = 'active' ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a('Đã giao', ['/account/order?status=AT_CUSTOMER']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'At customer'), ['/account/order?status=AT_CUSTOMER']); ?>
                                 </li>
                                 <li class="<?php if (isset($check['status'])) {
                                     if ($check['status'] == 'CANCELLED') {
                                         $active = 'active' ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a('Đã hủy', ['/account/order?status=CANCELLED']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'Cancel'), ['/account/order?status=CANCELLED']); ?>
                                 </li>
                             </ul>
                         </div>
                     </li>
                     <li>
-                        <?php echo Html::a('<span class="icon icon4"></span>Ví voucher', ['/account/promotion-user?status=1']); ?>
+                        <?php echo Html::a('<span class="icon icon4"></span>' . Yii::t('frontend', 'Promotion'), ['/account/promotion-user?status=1']); ?>
                     </li>
                     <li>
                         <a href="#"><i class="icon icon5"></i> Weshop xu</a>
@@ -220,7 +212,7 @@ $checkUrl = Yii::$app->getRequest()->url;
                     }
                     ?>
                     <li class="accordion">
-                        <a href="#"><i class="icon icon6"></i> Tài khoản cá nhân</a>
+                        <a href="#"><i class="icon icon6"></i> <?= Yii::t('frontend', 'Account'); ?></a>
                         <a class="dropdown-collapse <?php if (isset($checkUrl)) {
                             if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') { ?> <?= $collapsed1[0] ?> <?php }
                         } ?>" data-toggle="collapse" data-target="#sub-3" aria-expanded="<?php if (isset($checkUrl)) {
@@ -234,7 +226,7 @@ $checkUrl = Yii::$app->getRequest()->url;
                                     if ($checkUrl == '/account/customer') {
                                         $active = 'active' ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a('Tài khoản cá nhân', ['/account/customer']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'Account'), ['/account/customer']); ?>
                                 </li>
                                 <!--                                <li class="-->
                                 <?php //if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/saved.html') {?><!-- active -->
@@ -257,7 +249,9 @@ $checkUrl = Yii::$app->getRequest()->url;
 
                     $menuItems[] = [
 
-                        'label' => ' Đăng xuất (' . Yii::$app->user->identity->username . ')',
+                        'label' => Yii::t('frontend', 'Logout ({username})', [
+                            'username' => Yii::$app->user->identity->username
+                        ]),
 
                         'url' => ['/secure/logout'],
 
