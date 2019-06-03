@@ -64,7 +64,7 @@ class ListChatMongoController extends BaseApiController
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $chat = new ListChat();
         $chat->note = $post['noteC'];
-        $chat->code = 1;
+        $chat->code = $model->code + 1;
         $chat->content = $post['contentC'];
         $chat->status = $post['statusC'];
         $chat->type = 'supporting';
