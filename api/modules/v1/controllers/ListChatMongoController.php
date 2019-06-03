@@ -55,7 +55,9 @@ class ListChatMongoController extends BaseApiController
         if (isset($get['contentL'])) {
             $chat->where(['LIKE', 'content', $get['contentL']]);
         }
-//        $chat->limit($get['limit']);
+        if (isset($get['limit'])) {
+            $chat->limit($get['limit']);
+        }
         return $this->response(true, 'success',  $chat->asArray()->all());
     }
     public function actionCreate() {
