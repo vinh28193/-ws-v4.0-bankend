@@ -2,6 +2,7 @@
 
 namespace frontend\widgets\search;
 
+use common\components\StoreManager;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
@@ -11,6 +12,10 @@ use yii\helpers\Url;
 use common\products\forms\ProductSearchForm;
 
 
+/**
+ * Class SearchResultWidget
+ * @package frontend\widgets\search
+ */
 class SearchResultWidget extends Widget
 {
     /**
@@ -35,6 +40,22 @@ class SearchResultWidget extends Widget
 
     ];
 
+    /**
+     * @var StoreManager
+     */
+    public $storeManager;
+
+    /**
+     * @return StoreManager
+     */
+    public function getStoreManager()
+    {
+        if (!is_object($this->storeManager)) {
+            $this->storeManager = Yii::$app->storeManager;
+        }
+        return $this->storeManager;
+    }
+
     public function init()
     {
         parent::init();
@@ -42,7 +63,7 @@ class SearchResultWidget extends Widget
             'data-action' => $this->getClientOptions()['absoluteUrl'],
             'data-portal' => $this->portal
         ], $this->options);
-        if($this->portal === null){
+        if ($this->portal === null) {
             $this->portal = $this->form->type;
         }
         Html::addCssClass($options, "{$this->portal}-search");
@@ -58,7 +79,7 @@ class SearchResultWidget extends Widget
         $options = Json::htmlEncode($this->getClientOptions());
         $view->registerJs("jQuery('#$id').wsSearch($options);");
         $view->registerJs("console.log($('#$id').wsSearch('data'))");
-        if(strtolower($this->portal) ==='ebay'){
+        if (strtolower($this->portal) === 'ebay') {
             $view->registerJs("setInterval(function () {ws.countdownTime();}, 1000);");
         }
         return Html::tag('div', $this->renderResults(), $this->options);
@@ -72,7 +93,7 @@ class SearchResultWidget extends Widget
             'enableFilter' => true,
             'filterParam' => 'filter',
             'portal' => $this->portal
-        ],$this->clientOptions);
+        ], $this->clientOptions);
     }
 
     protected function renderResults()
@@ -98,7 +119,7 @@ class SearchResultWidget extends Widget
             'filter' => $this->form->filter,
             'categories' => ArrayHelper::getValue($this->results, 'categories', []),
             'filters' => ArrayHelper::getValue($this->results, 'filters', []),
-            'conditions' => ArrayHelper::getValue($this->results, 'conditions', [])
+            'conditions' => ArrayHelper::getValue($this->results, 'conditions', []),
         ]);
     }
 
@@ -106,13 +127,14 @@ class SearchResultWidget extends Widget
     {
         return $this->render('right', [
             'portal' => $this->portal,
-            'page' => Yii::$app->request->get('page' , 1),
+            'page' => Yii::$app->request->get('page', 1),
             'keyword' => $this->form->keyword,
             'total_product' => ArrayHelper::getValue($this->results, 'total_product', 0),
             'total_page' => ArrayHelper::getValue($this->results, 'total_page', 0),
             'item_per_page' => ArrayHelper::getValue($this->results, 'item_per_page', 0),
             'products' => ArrayHelper::getValue($this->results, 'products', []),
             'sorts' => ArrayHelper::getValue($this->results, 'sorts', []),
+            'storeManager' => $this->getStoreManager(),
         ]);
     }
 }
