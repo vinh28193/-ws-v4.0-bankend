@@ -15,6 +15,7 @@ use Yii;
 use yii\base\BootstrapInterface;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\helpers\StringHelper;
 use yii\web\NotFoundHttpException;
@@ -85,11 +86,7 @@ class StoreManager extends Component implements BootstrapInterface
 
     protected function getClientMessages()
     {
-        $messages = [
-            'Hello {name}',
-            'Hello World',
-            'Error', 'Success', 'Not Found'
-        ];
+        $messages = ArrayHelper::getValue(Yii::$app->params, 'jsMessages', []);
         $results = [];
         foreach ($messages as $message) {
             $results[$message] = Yii::t('javascript', $message, [], $this->store->locale);
