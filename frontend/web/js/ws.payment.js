@@ -59,7 +59,7 @@ ws.payment = (function ($) {
             receiver_address_id: undefined,
 
         },
-        installment: {
+        installmentParam: {
             originAmount: 0,
             banks: [],
             currentBank: {
@@ -274,7 +274,7 @@ ws.payment = (function ($) {
                     var data = response.data;
                     var banks = data.methods || [];
                     var promotion = data.promotion || undefined;
-                    pub.installment.originAmount = data.origin || (0 + pub.payment.currency);
+                    pub.installmentParam.originAmount = data.origin || (0 + pub.payment.currency);
                     initInstallmentBankView(banks);
                     ws.initEventHandler('calculateInstallment', 'periodChange', 'change', 'input[name=installmentPeriod]', function (e) {
                         pub.payment.installment_month = $(this).val();
@@ -288,7 +288,7 @@ ws.payment = (function ($) {
         installmentBankChange: function (code) {
             console.log('selected bank :' + code);
             pub.payment.installment_bank = code;
-            pub.installment.currentBank = $.grep(pub.installment.banks, function (x) {
+            pub.installmentParam.currentBank = $.grep(pub.installmentParam.banks, function (x) {
                 return String(x.bankCode) === String(code);
             })[0];
             $.each($('li[data-ref=i_bankCode]'), function () {
@@ -299,7 +299,7 @@ ws.payment = (function ($) {
                 isActive.find('span').addClass('active');
             }
             var htmlMethod = [];
-            $.each(pub.installment.currentBank.paymentMethods, function (index, method) {
+            $.each(pub.installmentParam.currentBank.paymentMethods, function (index, method) {
                 var iActive = index === 0;
                 if (iActive) {
                     pub.payment.installment_method = method.paymentMethod;
@@ -313,7 +313,7 @@ ws.payment = (function ($) {
         installmentMethodChange(code) {
             console.log('selected method :' + code);
             pub.payment.installment_method = code;
-            pub.installment.currentMethod = $.grep(pub.installment.currentBank.paymentMethods, function (x) {
+            pub.installmentParam.currentMethod = $.grep(pub.installmentParam.currentBank.paymentMethods, function (x) {
                 return String(x.paymentMethod) === String(code);
             })[0];
             $.each($('li[data-ref=i_methodCode]'), function () {
@@ -331,13 +331,13 @@ ws.payment = (function ($) {
                 rowAmountFee: [],
                 rowOption: []
             };
-            $.each(pub.installment.currentMethod.periods, function (index, period) {
+            $.each(pub.installmentParam.currentMethod.periods, function (index, period) {
                 var iActive = index === 0;
                 if (iActive) {
                     pub.payment.installment_month = period.month;
                 }
                 row.rowHeader.unshift('<td class="text-blue">' + period.month + ' tháng</td>');
-                row.rowOriginAmount.unshift('<td><b>' + pub.installment.originAmount + '</b></td>');
+                row.rowOriginAmount.unshift('<td><b>' + pub.installmentParam.originAmount + '</b></td>');
                 row.rowAmountByMonth.unshift('<td><b>' + period.amountByMonth + '</b></td>');
                 row.rowAmountFinal.unshift('<td><b>' + period.amountFinal + '</b></td>');
                 row.rowAmountFee.unshift('<td><b>' + period.amountFee + '</b></td>');
@@ -563,18 +563,18 @@ ws.payment = (function ($) {
             $errorDiscount.css('display', 'flex');
             $errorDiscount.html(error);
         }
-        var box = $('#billingBox');
-        var discountBox = box.find('li#discountPrice');
+        var billingBox = $('#billingBox');
+        var discountBox = billingBox.find('li#discountPrice');
         discountBox.css('display', 'none');
         if ($response.details.length > 0 && $response.discount > 0) {
             pub.payment.discount_detail = $response.details;
             pub.payment.total_discount_amount = $response.discount;
             pub.payment.total_amount_display = pub.payment.total_amount - pub.payment.total_discount_amount;
             discountBox.css('display', 'flex');
-            discountBox.find('div.right').html('- ' + ws.showMoney(pub.payment.total_discount_amount) + '</i>');
-            box.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.total_amount_display));
-            box.find('li[rel="detail"]').remove();
-            box.prepend(initPromotionView(pub.payment.discount_detail));
+            discountBox.find('div.right').html('- ' + ws.showMoney(pub.payment.total_discount_amount));
+            billingBox.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.total_amount_display));
+            billingBox.find('li[rel="detail"]').remove();
+            billingBox.prepend(initPromotionView(pub.payment.discount_detail));
 
         }
 
@@ -598,7 +598,7 @@ ws.payment = (function ($) {
         return text;
     };
     var initInstallmentBankView = function (banks) {
-        pub.installment.banks = banks;
+        pub.installmentParam.banks = banks;
         console.log(banks);
         var htmlBank = [];
         $.each(banks, function (index, bank) {
