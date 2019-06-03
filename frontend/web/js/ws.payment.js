@@ -197,6 +197,12 @@ ws.payment = (function ($) {
                 });
             });
         },
+        set: function (name, value) {
+            pub.payment[name] = value;
+        },
+        get: function (name, defaultValue) {
+            return pub.payment[name] || defaultValue;
+        },
         selectMethod: function (providerId, methodId, bankCode) {
             console.log('selected providerId:' + providerId + ' methodId:' + methodId + ' bankCode:' + bankCode);
             pub.payment.payment_provider = providerId;
