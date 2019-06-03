@@ -55,7 +55,7 @@ class ListChatMongoController extends BaseApiController
         if (isset($get['contentL'])) {
             $chat->where(['LIKE', 'content', $get['contentL']]);
         }
-        $chat->limit($get['limit']);
+//        $chat->limit($get['limit']);
         return $this->response(true, 'success',  $chat->asArray()->all());
     }
     public function actionCreate() {
@@ -64,7 +64,7 @@ class ListChatMongoController extends BaseApiController
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $chat = new ListChat();
         $chat->note = $post['noteC'];
-        $chat->code = $model->code + 1;
+        $chat->code = 1;
         $chat->content = $post['contentC'];
         $chat->status = $post['statusC'];
         $chat->type = 'supporting';
