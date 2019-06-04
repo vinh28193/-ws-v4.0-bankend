@@ -189,7 +189,7 @@ CSS;
     {
         return $this->render('item/info', [
             'item' => $this->item,
-            'storeManager' => $this->get
+            'storeManager' => $this->getStoreManager()
         ]);
     }
 
