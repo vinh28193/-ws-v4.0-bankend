@@ -3,6 +3,7 @@
 
 namespace frontend\widgets\item;
 
+use common\components\StoreManager;
 use common\products\BaseProduct;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -35,6 +36,25 @@ class ItemDetailWidget extends Widget
 
     public $priceOptions = [];
 
+    /**
+     * @var StoreManager
+     */
+    public $storeManager;
+
+    /**
+     * @return StoreManager
+     */
+    public function getStoreManager()
+    {
+        if (!is_object($this->storeManager)) {
+            $this->storeManager = Yii::$app->storeManager;
+        }
+        return $this->storeManager;
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
     public function init()
     {
         parent::init();
@@ -168,7 +188,8 @@ CSS;
     public function renderFullInfo()
     {
         return $this->render('item/info', [
-            'item' => $this->item
+            'item' => $this->item,
+            'storeManager' => $this->getStoreManager()
         ]);
     }
 

@@ -1,6 +1,7 @@
 <?php
-use frontend\widgets\alias\AliasWidget;
+
 use frontend\assets\FancyboxPlusAsset;
+use frontend\widgets\alias\AliasWidget;
 use frontend\widgets\search\SearchBoxWidget;
 
 
@@ -27,7 +28,22 @@ $(document).ready(function() {
             // console.log(result);  console.log(result.success);
             if(result.success){
                 $('.viewed-product').html(result.data.content);
-                $(".owl-carousel").owlCarousel();
+                $(".owl-carousel").owlCarousel({
+                    loop:false,
+                    margin:10,
+                    nav:true,
+                    responsive:{
+                        0:{
+                            items:1
+                        },
+                        600:{
+                            items:3
+                        },
+                        1000:{
+                            items:5
+                        }
+                    }
+                });
             }
         }
         });
@@ -87,7 +103,7 @@ $this->registerJs($jsga, \yii\web\View::POS_END);
         <?= $content; ?>
 
 
-        <div class="product-viewed product-list viewed-product">
+        <div class="product-viewed product-list detail-block-2 viewed-product">
             <div class="center" style="display:block; margin: auto; width: 7%;padding: 10px;">
                 <div>
                     <img src="/img/gif/loading.gif">

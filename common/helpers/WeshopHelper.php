@@ -18,9 +18,9 @@ use yii\helpers\Url;
 class WeshopHelper
 {
 
-    public static function response($success = true, $message = 'Ok', $data = [])
+    public static function response($success = true, $message = 'Ok', $data = [], $total = 0)
     {
-        return ['success' => $success, 'message' => $message, 'data' => $data];
+        return ['success' => $success, 'message' => $message, 'data' => $data, 'total' => $total];
     }
 
     /**

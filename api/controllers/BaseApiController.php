@@ -210,9 +210,9 @@ class BaseApiController extends \yii\rest\Controller
      * @param array $data
      * @return array
      */
-    public function response($success = true, $message = 'Ok', $data = [])
+    public function response($success = true, $message = 'Ok', $data = [], $total = 0)
     {
-        return WeshopHelper::response($success, $message, $data);
+        return WeshopHelper::response($success, $message, $data, $total);
     }
 
     /**

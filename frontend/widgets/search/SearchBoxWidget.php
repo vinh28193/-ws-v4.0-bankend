@@ -13,7 +13,7 @@ class SearchBoxWidget extends Widget
 
     public $redirectHref;
 
-    public $placeholder = 'Nhập từ khóa cần tìm';
+    public $placeholder;
 
     public $keywordParam = 'keyword';
 
@@ -24,6 +24,7 @@ class SearchBoxWidget extends Widget
         if ($this->redirectHref === null) {
             $this->redirectHref = Yii::$app->request->getUrl();
         }
+        $this->placeholder = Yii::t('frontend', 'Enter keyword');
         Html::addCssClass($this->options, 'search-box');
         $this->registerClientScript();
     }
