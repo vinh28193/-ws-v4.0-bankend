@@ -21,7 +21,7 @@ if($type == 'extra'){
     <div class="detail-block-2" id="description_<?= $type ?>">
         <div class="row">
             <div class="col-md-12">
-                <div class="title"><?= $type == 'extra' ? 'Chi tiết sản phẩm' : 'Mô tả sản phẩm:' ?></div>
+                <div class="title"><?=Yii::t('frontend',$type == 'extra' ? 'Product details' : 'Product description'); ?>:</div>
             </div>
             <div class="col-md-12 row">
                 <?php

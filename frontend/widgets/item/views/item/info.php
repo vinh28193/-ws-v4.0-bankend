@@ -3,9 +3,10 @@
 use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
 
-/**
- * @var $item BaseProduct
- */
+/* @var yii\web\View $this */
+/* @var BaseProduct $item */
+/* @var common\components\StoreManager $storeManager */
+
 $salePercent = $item->getSalePercent();
 $current_provider = $item->getCurrentProvider();
 $variationUseImage = null;
@@ -38,27 +39,39 @@ foreach ($item->variation_options as $index => $variationOption) {
             <i class="fas fa-star-half-alt"></i>
             <i class="far fa-star"></i>
         </div>
-        <span><?php echo(rand(10, 100)); ?> người đánh giá</span>
+        <span><?php echo Yii::t('frontend', '{count} assessor', ['count' => rand(10, 100)]); ?></span>
     </div>
     <div class="origin" style="display: none">
-        <a target="_blank" href="<?= $item->item_origin_url ?>">Xem link gốc -></a>
+        <a target="_blank"
+           href="<?= $item->item_origin_url ?>"><?= Yii::t('frontend', 'See the original link ->') ?></a>
     </div>
 
     <?php if ($item->getLocalizeTotalPrice() > 0) { ?>
         <div class="price">
-            <strong class="text-orange one-time-payment"><?= WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, '') ?>
-                <span class="currency">đ</span></strong>
+            <strong class="text-orange one-time-payment">
+                <?= $storeManager->showMoney($item->getLocalizeTotalPrice()) ?>
+            </strong>
             <?php if ($item->start_price) { ?>
-                <b class="old-price"><?= WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(), 1, '') ?><span
-                            class="currency">đ</span></b>
-                <span class="save">(Tiết kiệm: <?= WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') ?>đ)</span>
+                <b class="old-price"><?= $storeManager->showMoney($item->getLocalizeTotalStartPrice()) ?></b>
+                <span class="save"> <?= Yii::t('frontend', 'Save off: {percent}', [
+                        'percent' => $storeManager->showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice())
+                    ]); ?>
+                </span>
             <?php } // Start start_price ?>
         </div> <!-- class="price" -->
-        <div class="total-price">(Giá trọn gói về Việt Nam với trọng lượng ước tính
-            <span><?= $item->getShippingWeight() ?> kg</span>)
+        <div class="total-price">
+            <?= Yii::t('frontend', 'Weight temporary: {temporary} {unit}', [
+                'temporary' => $item->getShippingWeight(),
+                'unit' => 'kg'
+            ])
+            ?>
         </div>
         <div class="option-box form-inline">
-            <label>Tình trạng: <?= $item->condition ? $item->condition : 'Không xác định' ?></label>
+            <label>
+                <?=Yii::t('frontend','Condition : {condition}',[
+                    'condition' => $item->condition ? $item->condition : Yii::t('frontend','Unknown')
+                ]);?>
+            </label>
         </div>
         <?php
     if ($item->variation_options) {
@@ -105,10 +118,14 @@ foreach ($item->variation_options as $index => $variationOption) {
         </div>
     <?php }
     }
+
     }
     if ($item->end_time !== null && $item->type === BaseProduct::TYPE_EBAY) {
-        echo '<div class="countdown">Thời gian còn lại: <b class="text-orange">' . Yii::$app->formatter->asDatetime($item->end_time) . '</b> (<span data-toggle="countdown-time" data-timestamp="' . $item->end_time . '" data-prefix="Còn" data-day="ngày" data-hour="giờ" data-minute="phút" data-second="giây"></span>)</div>';
-    }
+        ?>
+
+        <div class="countdown"><?=Yii::t('frontend','Time end')?>: <b class="text-orange"><?=Yii::$app->formatter->asDatetime($item->end_time);?></b> (<span data-toggle="countdown-time" data-timestamp="<?=$item->end_time?>" data-prefix="<?=Yii::t('frontend','Also');?>" data-day="<?=Yii::t('frontend','day');?>" data-hour="<?=Yii::t('frontend','hour');?>" data-minute="<?=Yii::t('frontend','minute');?>" data-second="<?=Yii::t('frontend','second');?>"></span>)</div>;
+        <?php
+        }
     ?>
     <?php }else {  //ToDo 0 dong  ?>
         <script>
