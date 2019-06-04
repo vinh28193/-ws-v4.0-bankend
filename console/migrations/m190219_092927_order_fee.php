@@ -17,7 +17,7 @@ class m190219_092927_order_fee extends Migration
             // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
-        $this->createTable('order_fee',[
+        $this->createTable('{{}}',[
             'id' => $this->primaryKey()->comment(''),
             'order_id' => $this->integer(11)->comment('order id'),
             'type_fee' => $this->string(255)->comment('loại phí: đơn giá gốc, ship us, ship nhật , weshop fee, ...'),
