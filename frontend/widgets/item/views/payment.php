@@ -4,6 +4,7 @@
  */
 
 use common\helpers\WeshopHelper;
+$this->title = 'Weshop Việt Nam | '.$item->item_name;
 $sellerCurrent = Yii::$app->request->get('seller');
 $sellerCurrent = $sellerCurrent ? $sellerCurrent : $item->getSeller();
 $url = function ($seller_id){
