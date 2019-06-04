@@ -50,6 +50,10 @@
         salePercent: 0,
         contentPrice: '',
     };
+    var varration_box = {
+      image: '',
+        title: ''
+    };
     var currentVariations = [];
 
     var methods = {
@@ -109,8 +113,31 @@
                     methods.changeQuantity.apply(this);
                     return false;
                 });
+                ws.initEventHandler($item, 'mouseenter-box-select', 'mouseenter.wsItem', 'div.option-box span.box-select-item', function (event) {
+                    defaultParams = params;
+                    console.log($(this).children('img'));
+                    methods.changeTempImage.call($item,$(this).children('img').attr('src'),$(this).children('img').attr('alt'),false);
+                    return false;
+                });
+                ws.initEventHandler($item, 'mouseleave-box-select', 'mouseleave.wsItem', 'div.option-box span.box-select-item', function (event) {
+                    defaultParams = params;
+                    methods.changeTempImage.call($item,'','',true);
+                    return false;
+                });
                 $item.trigger($.Event(events.afterInit));
             });
+        },
+        changeTempImage: function (image,title,backup) {
+            console.log(title + ' - ' + image);
+            if(backup){
+                $('#detail-big-img').attr('src',varration_box.image);
+                $('div.option-box label.label-option-box').html(varration_box.title);
+            }else {
+                varration_box.image = $('#detail-big-img').attr('src');
+                varration_box.title = $('div.option-box label.label-option-box').html();
+                $('#detail-big-img').attr('src',image);
+                $('div.option-box label.label-option-box').html(title);
+            }
         },
         changeVariation: function (variationOption, selectedValue) {
             var $item = $(this);
@@ -406,6 +433,8 @@
                 '</a>';
             html += '</div>'
         });
+        varration_box.image = images[0].main;
+        varration_box.title = $('div.option-box label.label-option-box').html();
         $('#detail-slider').html(html);
         $('#detail-big-img').attr('src', images[0].main);
         $('#detail-big-img').attr('data-zoom-image', images[0].main);

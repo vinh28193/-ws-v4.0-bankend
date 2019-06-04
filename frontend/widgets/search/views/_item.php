@@ -7,6 +7,7 @@ use yii\web\View;
 /* @var yii\web\View $this */
 /* @var string $portal */
 /* @var array $product */
+/* @var common\components\StoreManager $storeManager */
 /*
  * Todo price, price range
  * Todo rate
@@ -18,10 +19,10 @@ use yii\web\View;
  * @see \yii\web\UrlRuleInterface
  */
 $url = WeshopHelper::generateUrlDetail($portal, $product['item_name'], $product['item_id']);
-$localSellprice = $product['sell_price'] * Yii::$app->storeManager->getExchangeRate();
+$localSellprice = $product['sell_price'] * $storeManager->getExchangeRate();
 $localStartPrice = 0;
 if ($product['retail_price']) {
-    $localStartPrice = $product['retail_price'] * Yii::$app->storeManager->getExchangeRate();
+    $localStartPrice = $product['retail_price'] * $storeManager->getExchangeRate();
 }
 $salePercent = 0;
 if ($product['sell_price'] && $product['retail_price'] && $product['retail_price'] > $product['sell_price']) {
@@ -57,17 +58,16 @@ if ($product['sell_price'] && $product['retail_price'] && $product['retail_price
             <div class="price">
                 <?php
                 if ($localSellprice) {
-                    echo "<strong>" . WeshopHelper::showMoney($localSellprice) . "</strong>";
+                    echo "<strong>" . $storeManager->showMoney($localSellprice) . "</strong>";
                     if ($localStartPrice && $salePercent) {
-                        echo "<span>" . WeshopHelper::showMoney($localStartPrice) . "</span>";
+                        echo "<span>" . $storeManager->showMoney($localStartPrice) . "</span>";
                         echo "<span class='sale-tag'>" . $salePercent . "% OFF</span>";
                     }
                 } else {
-                    echo "<strong>Nhấp vào để xem chi tiết</strong>";
+                    echo Html::tag('strong', Yii::t('frontend', 'Click to see details'));
                 }
                 ?>
             </div>
-<!--            <div class="price-detail">*Xem giá trọn gói về Việt Nam</div>-->
         </div>
     </a>
 </div>

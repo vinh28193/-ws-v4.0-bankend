@@ -8,16 +8,16 @@ use yii\helpers\Html;
 /* @var string $filter */
 /* @var array $categories */
 /* @var array $filters */
-/* @var array $conditions*/
+/* @var array $conditions */
 
 // Todo UrlRule
 // Hãy tham khảo mục filter để làm phần này
 // push start
-$url = function ($id) use($portal) {
-    $param = [explode('?',\yii\helpers\Url::current())[0]];
+$url = function ($id) use ($portal) {
+    $param = [explode('?', \yii\helpers\Url::current())[0]];
     $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
     $param['category'] = $id;
-    if(isset($param['keyword'])){
+    if (isset($param['keyword'])) {
         unset($param['keyword']);
     }
 //    $param['portal'] = $portal;
@@ -26,12 +26,12 @@ $url = function ($id) use($portal) {
 ?>
 <div class="filter-content">
     <div class="filter-box category">
-        <div class="title"><u>Danh mục</u></div>
+        <div class="title"><u><?= Yii::t('frontend', 'Category'); ?></u></div>
         <ul id="sub-menu-collapse">
             <?php foreach ($categories as $index => $category): ?>
                 <?php /* @var $category array */ ?>
                 <li class="accordion">
-                    <?= Html::a($category['category_name'], $url($category['category_id']), ['onclick' => "$('#loading').css('display','block');"]); ?>
+                    <?= Html::a($category['category_name'], $url($category['category_id']), ['onclick' => "ws.loading(true);"]); ?>
                     <?php if (isset($category['child_category']) && ($childs = $category['child_category']) !== null && count($childs) > 0): ?>
                         <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-<?= $index; ?>"
                            aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
@@ -51,13 +51,13 @@ $url = function ($id) use($portal) {
         </ul>
     </div>
     <div class="filter-box category">
-        <div class="title"><u>Bộ lọc</u></div>
-        <?php foreach ($filters as $item){
-            if($portal === 'amazon-jp'){
+        <div class="title"><u><?= Yii::t('frontend', 'Filter'); ?></u></div>
+        <?php foreach ($filters as $item) {
+            if ($portal === 'amazon-jp') {
                 $portal = 'amazon';
             }
-            echo $this->render("filter/{$portal}",['filter' => $item]);
-        }?>
+            echo $this->render("filter/{$portal}", ['filter' => $item]);
+        } ?>
     </div>
 </div>
 

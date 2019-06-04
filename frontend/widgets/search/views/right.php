@@ -12,6 +12,8 @@ use yii\helpers\Html;
 /* @var integer $item_per_page */
 /* @var array $products */
 /* @var array $sorts */
+/* @var common\components\StoreManager $storeManager */
+
 $sort = Yii::$app->request->get('sort','price');
 $url_page = function ($p){
     $param = [explode('?',\yii\helpers\Url::current())[0]];
@@ -24,13 +26,19 @@ $url_page = function ($p){
 <div class="search-content search-2 <?= $portal ?>">
     <div class="title-box">
         <div class="left" style="width: 50%; text-align: left;">
-            <div class="text">Tìm kiếm “<?= $keyword; ?>” từ</div>
+            <div class="text"><?= Yii::t('frontend', 'Search “{keyword}” from', [
+                    'keyword' => $keyword
+                ]); ?></div>
             <img src="<?= WeshopHelper::getLogoByPortal($portal) ?>" alt=""/>
-            <span>Hiển thị 1-<?= count($products) ?> của <?= $total_product; ?> kết quả.</span>
+            <span><?= Yii::t('frontend', 'Showing {from}-{to} of {total} result', [
+                    'from' => 1,
+                    'to' => count($products),
+                    'total' => $total_product
+                ]) ?></span>
         </div>
         <div class="right" style="width: 50%; text-align: right;">
             <div class="btn-group">
-                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= isset($sorts[$sort]) ? $sorts[$sort] : 'Sắp xếp theo' ?></button>
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= isset($sorts[$sort]) ? $sorts[$sort] : Yii::t('frontend','Sort by'); ?></button>
                 <div class="dropdown-menu dropdown-menu-right" x-placement="top-end" style="position: absolute; transform: translate3d(-56px, -102px, 0px); top: 0px; left: 0px; will-change: transform;">
                     <?php
                         foreach ($sorts as $k => $v){
@@ -58,7 +66,8 @@ $url_page = function ($p){
         foreach ($products as $product) {
             echo $this->render('_item', [
                 'portal' => $portal,
-                'product' => $product
+                'product' => $product,
+                'storeManager' => $storeManager
             ]);
         }
         ?>

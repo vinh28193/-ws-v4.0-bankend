@@ -7,19 +7,19 @@
  */
 
 return [
-    'en-US' => [
+    'en' => [
         'id' => 'en-US',
         'language' => 'en',
         'name' => 'English (US)',
         'name_ascii' => 'English (US)'
     ],
-    'vi-VN' => [
+    'vi' => [
         'id' => 'vi-VN',
         'language' => 'vi',
         'name' => 'Tiếng Việt',
         'name_ascii' => 'Vietnamese'
     ],
-    'id-ID' => [
+    'id' => [
         'id' => 'id-ID',
         'language' => 'id',
         'name' => 'Bahasa Indonesia',
