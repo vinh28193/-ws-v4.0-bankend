@@ -81,7 +81,7 @@ foreach ($item->variation_options as $index => $variationOption) {
     if ($variationOption->images_mapping && $variationUseImage === $index) {
         ?>
         <div class="option-box">
-            <label id="label_<?= $variationOption->id ?>"><?= $variationOption->name; ?>: ---</label>
+            <label class="label-option-box" id="label_<?= $variationOption->id ?>"><?= $variationOption->name; ?>: ---</label>
             <div class="color-pick" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
                 <i class="fas fa-chevron-left slider-prev2"></i>
                 <i class="fas fa-chevron-right slider-next2"></i>
@@ -92,9 +92,9 @@ foreach ($item->variation_options as $index => $variationOption) {
                             if (strtolower($image->value) == strtolower($value)) {
                                 ?>
                                 <li class="item">
-                                                <span type="spanList" tabindex="<?= $k ?>">
+                                                <span type="spanList" class="box-select-item" tabindex="<?= $k ?>">
                                                     <img src="<?= $image->images ? $image->images[0]->thumb : '/img/no_image.png' ?>"
-                                                         alt="<?= $value ?>" title="<?= $value ?>"/>
+                                                         alt="<?= $variationOption->name; ?>: <?= $value ?>" title="<?= $value ?>"/>
                                                 </span>
                                 </li>
                                 <?php break;
