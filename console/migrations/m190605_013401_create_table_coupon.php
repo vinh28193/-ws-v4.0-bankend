@@ -46,8 +46,6 @@ class m190605_013401_create_table_coupon extends Migration
 
         $this->createIndex('idx-coupon-store_id', '{{%coupon}}', 'store_id');
         $this->createIndex('idx-coupon-created_by', '{{%coupon}}', 'created_by');
-        $this->addForeignKey('fk-coupon-created_by', '{{%coupon}}', 'created_by', '{{%user}}', 'id', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('fk-coupon-store_id', '{{%coupon}}', 'store_id', '{{%store}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()

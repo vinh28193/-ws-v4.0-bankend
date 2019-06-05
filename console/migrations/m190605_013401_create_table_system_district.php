@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m190605_013403_create_table_system_district extends Migration
+class m190605_013401_create_table_system_district extends Migration
 {
     public function up()
     {

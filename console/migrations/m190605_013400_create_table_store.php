@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m190605_013403_create_table_store extends Migration
+class m190605_013400_create_table_store extends Migration
 {
     public function up()
     {
@@ -25,11 +25,6 @@ class m190605_013403_create_table_store extends Migration
             'env' => $this->integer(11)->comment('PROD or UAT or BETA ...'),
             'version' => $this->string(255)->defaultValue('4.0')->comment('version 4.0'),
         ], $tableOptions);
-
-        $this->createIndex('idx-store-country_id', '{{%store}}', 'country_id');
-        $this->createIndex('idx-store-currency_id', '{{%store}}', 'currency_id');
-        $this->addForeignKey('fk-store-country_id', '{{%store}}', 'country_id', '{{%system_country}}', 'id', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('fk-store-currency_id', '{{%store}}', 'currency_id', '{{%system_currency}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()

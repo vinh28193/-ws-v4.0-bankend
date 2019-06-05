@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m190605_013403_create_table_store_additional_fee extends Migration
+class m190605_013400_create_table_store_additional_fee extends Migration
 {
     public function up()
     {

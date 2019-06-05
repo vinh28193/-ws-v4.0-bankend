@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m190605_013403_create_table_user extends Migration
+class m190605_013400_create_table_user extends Migration
 {
     public function up()
     {
@@ -69,9 +69,6 @@ class m190605_013403_create_table_user extends Migration
             'last_token_apn_time_by' => $this->bigInteger(20)->comment('update bởi ai . 99999 : mac dinh la Weshop admin'),
         ], $tableOptions);
 
-        $this->createIndex('password_reset_token', '{{%user}}', 'password_reset_token', true);
-        $this->createIndex('username', '{{%user}}', 'username', true);
-        $this->createIndex('email', '{{%user}}', 'email', true);
     }
 
     public function down()

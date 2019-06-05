@@ -12,7 +12,7 @@ class m190605_013401_create_table_country extends Migration
         }
 
         $this->createTable('{{%country}}', [
-            'code' => $this->string(255)->notNull()->append('PRIMARY KEY'),
+            'code' => $this->string(32)->notNull()->append('PRIMARY KEY'),
             'name' => $this->string(255)->notNull(),
             'version' => $this->string(255)->defaultValue('4.0')->comment('version 4.0'),
         ], $tableOptions);

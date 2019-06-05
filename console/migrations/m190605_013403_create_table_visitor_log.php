@@ -13,7 +13,7 @@ class m190605_013403_create_table_visitor_log extends Migration
 
         $this->createTable('{{%visitor_log}}', [
             'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
-            'ip' => $this->string(255)->notNull(),
+            'ip' => $this->string(50)->notNull(),
             'created_at' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
             'request' => $this->string(255)->notNull(),
             'referer' => $this->text(),

@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m190605_013401_create_table_delivery_note extends Migration
+class m190605_013402_create_table_delivery_note extends Migration
 {
     public function up()
     {

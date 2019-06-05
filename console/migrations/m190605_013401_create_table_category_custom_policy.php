@@ -36,8 +36,6 @@ class m190605_013401_create_table_category_custom_policy extends Migration
             'version' => $this->string(255)->defaultValue('4.0')->comment('version 4.0'),
         ], $tableOptions);
 
-        $this->createIndex('idx-category_custom_policy-store_id', '{{%category_custom_policy}}', 'store_id');
-        $this->addForeignKey('fk-category_custom_policy-store_id', '{{%category_custom_policy}}', 'store_id', '{{%store}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()

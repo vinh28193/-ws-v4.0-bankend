@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m190605_013403_create_table_wallet_log extends Migration
+class m190605_013404_create_table_wallet_log extends Migration
 {
     public function up()
     {
