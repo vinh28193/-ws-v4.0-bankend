@@ -12,7 +12,7 @@ class m190605_013401_create_table_employee extends Migration
         }
 
         $this->createTable('{{%employee}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'name' => $this->string(200)->notNull(),
             'email' => $this->string(100)->notNull(),
             'created_at' => $this->timestamp(),

@@ -12,7 +12,7 @@ class m190605_013402_create_table_promotion_user extends Migration
         }
 
         $this->createTable('{{%promotion_user}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID'),
             'customer_id' => $this->integer(11)->notNull()->comment('Tên chương trình'),
             'status' => $this->smallInteger(6)->defaultValue('1')->comment('Status (1:Active;2:Inactive)'),

@@ -12,7 +12,7 @@ class m190605_013404_create_table_wallet_transaction_log extends Migration
         }
 
         $this->createTable('{{%wallet_transaction_log}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'wallet_transaction_id' => $this->integer(11),
             'create_at' => $this->dateTime(),
             'update_at' => $this->dateTime(),

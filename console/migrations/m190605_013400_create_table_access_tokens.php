@@ -12,7 +12,7 @@ class m190605_013400_create_table_access_tokens extends Migration
         }
 
         $this->createTable('{{%access_tokens}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'token' => $this->string(300)->notNull(),
             'expires_at' => $this->integer(11)->notNull(),
             'auth_code' => $this->string(200)->notNull(),

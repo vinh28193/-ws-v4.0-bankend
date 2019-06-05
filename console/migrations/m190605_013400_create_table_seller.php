@@ -12,7 +12,7 @@ class m190605_013400_create_table_seller extends Migration
         }
 
         $this->createTable('{{%seller}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'seller_name' => $this->string(255),
             'seller_link_store' => $this->text(),
             'seller_store_rate' => $this->string(255),

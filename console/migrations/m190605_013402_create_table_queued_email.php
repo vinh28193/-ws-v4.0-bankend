@@ -12,7 +12,7 @@ class m190605_013402_create_table_queued_email extends Migration
         }
 
         $this->createTable('{{%queued_email}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'Priority' => $this->integer(11),
             'From' => $this->string(500),
             'FromName' => $this->string(500),

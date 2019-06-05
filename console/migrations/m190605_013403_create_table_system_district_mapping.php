@@ -12,7 +12,7 @@ class m190605_013403_create_table_system_district_mapping extends Migration
         }
 
         $this->createTable('{{%system_district_mapping}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'district_id' => $this->integer(11)->comment('id system_district'),
             'province_id' => $this->integer(11)->comment('id system_province'),
             'box_me_district_id' => $this->integer(11)->comment('id district box me'),

@@ -12,7 +12,7 @@ class m190605_013401_create_table_customer extends Migration
         }
 
         $this->createTable('{{%customer}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'first_name' => $this->string(255),
             'last_name' => $this->string(255),
             'email' => $this->string(255),
@@ -57,7 +57,7 @@ class m190605_013401_create_table_customer extends Migration
         ], $tableOptions);
 
         $this->createIndex('idx-customer-store_id', '{{%customer}}', 'store_id');
-        $this->addForeignKey('fk-customer-store_id', '{{%customer}}', 'store_id', '{{%store}}', 'id', 'CASCADE', 'CASCADE');
+         // $this->addForeignKey('fk-customer-store_id', '{{%customer}}', 'store_id', '{{%store}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()

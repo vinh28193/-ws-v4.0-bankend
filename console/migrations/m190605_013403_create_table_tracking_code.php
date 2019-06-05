@@ -12,7 +12,7 @@ class m190605_013403_create_table_tracking_code extends Migration
         }
 
         $this->createTable('{{%tracking_code}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID reference'),
             'manifest_id' => $this->integer(11)->comment('Manifest Id'),
             'manifest_code' => $this->string(32)->comment('Manifest code'),

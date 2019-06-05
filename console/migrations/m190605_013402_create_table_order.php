@@ -12,7 +12,7 @@ class m190605_013402_create_table_order extends Migration
         }
 
         $this->createTable('{{%order}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'ordercode' => $this->string(255)->comment('ordercode : BIN Code Weshop : WSVN , WSINDO'),
             'store_id' => $this->integer(11)->notNull()->comment('hàng của nước nào Weshop Indo hay Weshop VIET NAM'),
             'type_order' => $this->string(255)->notNull()->comment('Hình thức mua hàng: SHOP | REQUEST | POS | SHIP'),
@@ -125,11 +125,14 @@ class m190605_013402_create_table_order extends Migration
         $this->createIndex('idx-order-receiver_address_id', '{{%order}}', 'receiver_address_id');
         $this->createIndex('idx-order-receiver_province_id', '{{%order}}', 'receiver_province_id');
         $this->createIndex('idx-order-customer_id', '{{%order}}', 'customer_id');
+
+        /*
         $this->addForeignKey('fk-order-seller_id', '{{%order}}', 'seller_id', '{{%seller}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-order-store_id', '{{%order}}', 'store_id', '{{%store}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-order-user', '{{%order}}', 'purchase_assignee_id', '{{%user}}', 'id', 'RESTRICT', 'RESTRICT');
         $this->addForeignKey('fk-order-customer_id', '{{%order}}', 'customer_id', '{{%customer}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-order-sale_support_id', '{{%order}}', 'sale_support_id', '{{%user}}', 'id', 'CASCADE', 'CASCADE');
+        */
     }
 
     public function down()

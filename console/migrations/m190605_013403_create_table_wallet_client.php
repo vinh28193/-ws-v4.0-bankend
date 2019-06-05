@@ -12,7 +12,7 @@ class m190605_013403_create_table_wallet_client extends Migration
         }
 
         $this->createTable('{{%wallet_client}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'username' => $this->string(255)->notNull(),
             'password_hash' => $this->string(255)->notNull(),
             'password_reset_token' => $this->string(255),

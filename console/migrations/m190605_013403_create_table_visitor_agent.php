@@ -12,7 +12,7 @@ class m190605_013403_create_table_visitor_agent extends Migration
         }
 
         $this->createTable('{{%visitor_agent}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'user_agent' => $this->text()->notNull(),
             'name' => $this->string(255),
             'info' => $this->text(),

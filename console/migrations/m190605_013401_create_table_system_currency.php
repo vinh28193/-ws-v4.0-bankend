@@ -12,7 +12,7 @@ class m190605_013401_create_table_system_currency extends Migration
         }
 
         $this->createTable('{{%system_currency}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'name' => $this->string(255),
             'currency_code' => $this->string(255),
             'currency_symbol' => $this->string(255),

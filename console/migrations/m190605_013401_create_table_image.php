@@ -12,7 +12,7 @@ class m190605_013401_create_table_image extends Migration
         }
 
         $this->createTable('{{%image}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->comment('Store ID reference'),
             'reference' => $this->string(100)->comment('Reference key'),
             'reference_id' => $this->integer(11)->comment('Reference identity'),

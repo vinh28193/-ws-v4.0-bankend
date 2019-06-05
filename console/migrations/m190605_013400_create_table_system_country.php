@@ -12,7 +12,7 @@ class m190605_013400_create_table_system_country extends Migration
         }
 
         $this->createTable('{{%system_country}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'name' => $this->string(255),
             'country_code' => $this->string(255),
             'country_code_2' => $this->string(255),

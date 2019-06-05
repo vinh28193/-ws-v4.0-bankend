@@ -12,7 +12,7 @@ class m190605_013401_create_table_warehouse extends Migration
         }
 
         $this->createTable('{{%warehouse}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'name' => $this->string(255),
             'description' => $this->string(255),
             'district_id' => $this->integer(11),
@@ -36,10 +36,12 @@ class m190605_013401_create_table_warehouse extends Migration
         $this->createIndex('idx-warehouse-province_id', '{{%warehouse}}', 'province_id');
         $this->createIndex('idx-warehouse-country_id', '{{%warehouse}}', 'country_id');
         $this->createIndex('idx-warehouse-district_id', '{{%warehouse}}', 'district_id');
+        /*
         $this->addForeignKey('fk-warehouse-country_id', '{{%warehouse}}', 'country_id', '{{%system_country}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-warehouse-district_id', '{{%warehouse}}', 'district_id', '{{%system_district}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-warehouse-province_id', '{{%warehouse}}', 'province_id', '{{%system_state_province}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-warehouse-store_id', '{{%warehouse}}', 'store_id', '{{%store}}', 'id', 'CASCADE', 'CASCADE');
+        */
     }
 
     public function down()

@@ -12,7 +12,7 @@ class m190605_013401_create_table_favorites extends Migration
         }
 
         $this->createTable('{{%favorites}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'obj_id' => $this->text()->notNull()->comment('id hoăc SKU Ebay / Amazon'),
             'obj_type' => $this->text()->notNull()->comment('Thuộc tính của từng item Ebay hoặc Amazon lúc khách hàng xem sản phẩm. Dang Seriline'),
             'ip' => $this->string(255)->notNull(),

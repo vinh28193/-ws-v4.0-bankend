@@ -12,7 +12,7 @@ class m190605_013402_create_table_promotion_condition extends Migration
         }
 
         $this->createTable('{{%promotion_condition}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID'),
             'promotion_id' => $this->string(11)->notNull()->comment('Promotion ID'),
             'name' => $this->string(80)->notNull()->comment('name of condition'),

@@ -12,7 +12,7 @@ class m190605_013402_create_table_promotion_log extends Migration
         }
 
         $this->createTable('{{%promotion_log}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID'),
             'promotion_id' => $this->string(11)->comment('Promotion ID'),
             'customer_id' => $this->integer(11)->comment('Customer ID'),

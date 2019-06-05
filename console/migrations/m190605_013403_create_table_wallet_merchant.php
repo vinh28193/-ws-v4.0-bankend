@@ -12,7 +12,7 @@ class m190605_013403_create_table_wallet_merchant extends Migration
         }
 
         $this->createTable('{{%wallet_merchant}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'account_number' => $this->string(50)->notNull()->defaultValue('')->comment('Mã ví - Ma tien to: S(danh cho master)  , nội bộ '),
             'account_email' => $this->string(255)->comment('Email '),
             'account_token' => $this->string(255),

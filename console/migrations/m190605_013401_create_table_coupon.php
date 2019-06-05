@@ -12,7 +12,7 @@ class m190605_013401_create_table_coupon extends Migration
         }
 
         $this->createTable('{{%coupon}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'name' => $this->string(255),
             'code' => $this->string(255),
             'message' => $this->string(255)->comment('thông báo khi áp dụng coupon'),

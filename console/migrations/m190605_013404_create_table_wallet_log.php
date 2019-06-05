@@ -12,7 +12,7 @@ class m190605_013404_create_table_wallet_log extends Migration
         }
 
         $this->createTable('{{%wallet_log}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'walletTransactionId' => $this->integer(11)->notNull(),
             'TypeTransaction' => $this->string(50)->comment(' TOPUP - nạp tiền
 REFUN - nạp tiền do refun

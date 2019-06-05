@@ -12,7 +12,7 @@ class m190605_013402_create_table_setting extends Migration
         }
 
         $this->createTable('{{%setting}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID reference'),
         ], $tableOptions);
 

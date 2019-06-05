@@ -12,7 +12,7 @@ class m190605_013402_create_table_purchase_payment_card extends Migration
         }
 
         $this->createTable('{{%purchase_payment_card}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'card_code' => $this->string(255),
             'balance' => $this->decimal(10),
             'current_balance' => $this->decimal(10),

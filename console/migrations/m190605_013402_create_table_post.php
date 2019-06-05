@@ -12,7 +12,7 @@ class m190605_013402_create_table_post extends Migration
         }
 
         $this->createTable('{{%post}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'title' => $this->string(255)->notNull(),
             'text' => $this->text()->notNull(),
             'status' => $this->smallInteger(6)->notNull()->defaultValue('0'),

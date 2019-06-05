@@ -12,7 +12,7 @@ class m190605_013402_create_table_shipment extends Migration
         }
 
         $this->createTable('{{%shipment}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'shipment_code' => $this->string(32)->comment('mã phiếu giao, BM_CODE'),
             'warehouse_tags' => $this->text()->comment('1 list mã thẻ kho Weshop'),
             'total_weight' => $this->double()->comment('Tổng cân nặng của các món hàng'),
@@ -56,12 +56,14 @@ class m190605_013402_create_table_shipment extends Migration
         $this->createIndex('idx-shipment-receiver_district_id', '{{%shipment}}', 'receiver_district_id');
         $this->createIndex('idx-shipment-receiver_address_id', '{{%shipment}}', 'receiver_address_id');
         $this->createIndex('idx-shipment-receiver_country_id', '{{%shipment}}', 'receiver_country_id');
+        /*
         $this->addForeignKey('fk-shipment-receiver_province_id', '{{%shipment}}', 'receiver_province_id', '{{%system_state_province}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-shipment-warehouse_send_id', '{{%shipment}}', 'warehouse_send_id', '{{%warehouse}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-shipment-customer_id', '{{%shipment}}', 'customer_id', '{{%customer}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-shipment-receiver_address_id', '{{%shipment}}', 'receiver_address_id', '{{%address}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-shipment-receiver_country_id', '{{%shipment}}', 'receiver_country_id', '{{%system_country}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-shipment-receiver_district_id', '{{%shipment}}', 'receiver_district_id', '{{%system_district}}', 'id', 'CASCADE', 'CASCADE');
+        */
     }
 
     public function down()

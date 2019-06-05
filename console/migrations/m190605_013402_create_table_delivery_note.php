@@ -12,7 +12,7 @@ class m190605_013402_create_table_delivery_note extends Migration
         }
 
         $this->createTable('{{%delivery_note}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'delivery_note_code' => $this->string(32)->comment('Mã kiện của weshop'),
             'tracking_seller' => $this->string(255)->comment('mã giao dịch của weshop'),
             'order_ids' => $this->text()->comment('List mã order cách nhau bằng dấu ,'),
@@ -54,7 +54,7 @@ class m190605_013402_create_table_delivery_note extends Migration
         ], $tableOptions);
 
         $this->createIndex('idx-package-warehouse_id', '{{%delivery_note}}', 'warehouse_id');
-        $this->addForeignKey('fk-package-warehouse_id', '{{%delivery_note}}', 'warehouse_id', '{{%warehouse}}', 'id', 'CASCADE', 'CASCADE');
+        // $this->addForeignKey('fk-package-warehouse_id', '{{%delivery_note}}', 'warehouse_id', '{{%warehouse}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()

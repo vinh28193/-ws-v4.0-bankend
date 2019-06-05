@@ -12,7 +12,7 @@ class m190605_013402_create_table_promotion extends Migration
         }
 
         $this->createTable('{{%promotion}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID'),
             'name' => $this->string(100)->comment('Tên chương trình'),
             'code' => $this->string(32)->comment('Tạo mã chạy chương trình duy nhất không trung'),

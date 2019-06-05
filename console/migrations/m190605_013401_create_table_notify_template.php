@@ -12,7 +12,7 @@ class m190605_013401_create_table_notify_template extends Migration
         }
 
         $this->createTable('{{%notify_template}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'type' => $this->string(255),
             'receive' => $this->string(255)->comment(' 0 : phone | 1: email'),
             'store' => $this->integer(11),

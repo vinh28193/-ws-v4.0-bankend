@@ -12,7 +12,7 @@ class m190605_013401_create_table_payment_provider extends Migration
         }
 
         $this->createTable('{{%payment_provider}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID reference'),
             'name' => $this->string(100)->notNull(),
             'code' => $this->string(32)->notNull(),

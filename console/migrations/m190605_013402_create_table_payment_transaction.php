@@ -12,7 +12,7 @@ class m190605_013402_create_table_payment_transaction extends Migration
         }
 
         $this->createTable('{{%payment_transaction}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID reference'),
             'customer_id' => $this->integer(11)->comment('customer id'),
             'transaction_code' => $this->string(32)->comment('mã giao dịch của weshop'),

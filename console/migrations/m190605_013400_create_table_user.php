@@ -12,7 +12,7 @@ class m190605_013400_create_table_user extends Migration
         }
 
         $this->createTable('{{%user}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'username' => $this->string(255)->notNull(),
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string(255)->notNull(),

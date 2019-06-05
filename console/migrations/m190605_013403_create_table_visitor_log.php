@@ -12,7 +12,7 @@ class m190605_013403_create_table_visitor_log extends Migration
         }
 
         $this->createTable('{{%visitor_log}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'ip' => $this->string(50)->notNull(),
             'created_at' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
             'request' => $this->string(255)->notNull(),
@@ -23,7 +23,7 @@ class m190605_013403_create_table_visitor_log extends Migration
         $this->createIndex('fki_vl_va_ua_fkey', '{{%visitor_log}}', 'id');
         $this->createIndex('visits_ip_idx', '{{%visitor_log}}', 'ip');
         $this->createIndex('visits_timestamp_idx', '{{%visitor_log}}', 'created_at');
-        $this->addForeignKey('visits_visitor_fkey', '{{%visitor_log}}', 'ip', '{{%visitor}}', 'ip', 'CASCADE', 'CASCADE');
+       // $this->addForeignKey('visits_visitor_fkey', '{{%visitor_log}}', 'ip', '{{%visitor}}', 'ip', 'CASCADE', 'CASCADE');
     }
 
     public function down()

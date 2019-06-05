@@ -17,7 +17,7 @@ class m190605_013401_create_table_country extends Migration
             'version' => $this->string(255)->defaultValue('4.0')->comment('version 4.0'),
         ], $tableOptions);
 
-        $this->createIndex('country_code_idx', '{{%country}}', 'code', true);
+        // $this->createIndex('country_code_idx', '{{%country}}', 'code', true);
     }
 
     public function down()

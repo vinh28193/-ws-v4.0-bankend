@@ -12,7 +12,7 @@ class m190605_013400_create_table_category extends Migration
         }
 
         $this->createTable('{{%category}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'alias' => $this->string(255),
             'site' => $this->string(255)->comment('ebay / amazon / amazon-jp'),
             'origin_name' => $this->string(255),

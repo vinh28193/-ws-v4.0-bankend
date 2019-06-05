@@ -12,7 +12,7 @@ class m190605_013401_create_table_email_account extends Migration
         }
 
         $this->createTable('{{%email_account}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'Email' => $this->string(255)->comment('email'),
             'DisplayName' => $this->string(255)->comment('Tên hiện thị'),
             'Host' => $this->string(255)->comment('Tên host'),

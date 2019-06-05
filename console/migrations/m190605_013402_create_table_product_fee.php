@@ -12,7 +12,7 @@ class m190605_013402_create_table_product_fee extends Migration
         }
 
         $this->createTable('{{%product_fee}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'order_id' => $this->integer(11)->comment('order id'),
             'product_id' => $this->integer(11)->notNull()->comment('Product Id'),
             'type' => $this->string(255)->comment('loại phí: đơn giá gốc, ship us, ship nhật , weshop fee, ...'),

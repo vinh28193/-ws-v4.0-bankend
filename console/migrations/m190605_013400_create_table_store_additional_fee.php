@@ -12,7 +12,7 @@ class m190605_013400_create_table_store_additional_fee extends Migration
         }
 
         $this->createTable('{{%store_additional_fee}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11)->notNull()->comment('Store ID reference'),
             'name' => $this->string(50)->notNull()->comment('Fee Name'),
             'label' => $this->string(80)->notNull()->comment('Label of fee'),

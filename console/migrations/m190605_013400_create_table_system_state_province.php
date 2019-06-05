@@ -12,7 +12,7 @@ class m190605_013400_create_table_system_state_province extends Migration
         }
 
         $this->createTable('{{%system_state_province}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'country_id' => $this->integer(11)->comment('id nước'),
             'name' => $this->string(255),
             'name_local' => $this->string(255),
@@ -24,8 +24,13 @@ class m190605_013400_create_table_system_state_province extends Migration
             'version' => $this->string(255)->defaultValue('4.0')->comment('version 4.0'),
         ], $tableOptions);
 
+
         $this->createIndex('idx-system_state_province-country_id', '{{%system_state_province}}', 'country_id');
+
+        /*
+         * @Phuchc Nâng cấp lên version mới Oracle bỏ phần này
         $this->addForeignKey('fk-system_state_province-country_id', '{{%system_state_province}}', 'country_id', '{{%system_country}}', 'id', 'CASCADE', 'CASCADE');
+        */
     }
 
     public function down()

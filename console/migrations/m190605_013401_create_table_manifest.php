@@ -12,7 +12,7 @@ class m190605_013401_create_table_manifest extends Migration
         }
 
         $this->createTable('{{%manifest}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'manifest_code' => $this->string(32)->notNull()->comment('Mã kiện về (từ us/jp ..)'),
             'send_warehouse_id' => $this->integer(11)->comment('Kho gửi đi'),
             'receive_warehouse_id' => $this->integer(11)->comment('Kho nhận'),

@@ -12,7 +12,7 @@ class m190605_013402_create_table_purchase_order extends Migration
         }
 
         $this->createTable('{{%purchase_order}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'note' => $this->string(255)->comment('Ghi chú đơn hàng'),
             'purchase_order_number' => $this->string(255)->comment('mã đơn hàng trên ebay,amazon ...'),
             'total_item' => $this->decimal(18, 2)->comment('Tổng số lượng item có'),

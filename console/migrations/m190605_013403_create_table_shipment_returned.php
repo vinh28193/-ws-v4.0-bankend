@@ -35,9 +35,11 @@ class m190605_013403_create_table_shipment_returned extends Migration
         $this->createIndex('idx-shipment_returned-customer_id', '{{%shipment_returned}}', 'customer_id');
         $this->createIndex('idx-shipment_returned-shipment_id', '{{%shipment_returned}}', 'shipment_id');
         $this->createIndex('idx-shipment_returned-warehouse_send_id', '{{%shipment_returned}}', 'warehouse_send_id');
+        /*
         $this->addForeignKey('fk-shipment_returned-customer_id', '{{%shipment_returned}}', 'customer_id', '{{%customer}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-shipment_returned-shipment_id', '{{%shipment_returned}}', 'shipment_id', '{{%shipment}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-shipment_returned-warehouse_send_id', '{{%shipment_returned}}', 'warehouse_send_id', '{{%warehouse}}', 'id', 'CASCADE', 'CASCADE');
+        */
     }
 
     public function down()

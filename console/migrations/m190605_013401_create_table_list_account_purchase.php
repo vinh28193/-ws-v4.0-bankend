@@ -15,7 +15,7 @@ class m190605_013401_create_table_list_account_purchase extends Migration
         }
 
         $this->createTable('{{%list_account_purchase}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'account' => $this->string(255)->notNull(),
             'email' => $this->string(255)->notNull(),
             'type' => $this->string(255)->notNull(),

@@ -12,7 +12,7 @@ class m190605_013402_create_table_product extends Migration
         }
 
         $this->createTable('{{%product}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'order_id' => $this->integer(11)->notNull()->comment('order id'),
             'seller_id' => $this->integer(11)->notNull(),
             'portal' => $this->string(255)->notNull()->comment('portal sản phẩm, ebay, amazon us, amazon jp , etc....'),
@@ -61,13 +61,17 @@ class m190605_013402_create_table_product extends Migration
             'confirm_change_price' => $this->integer(11)->comment('0: là không có thay đổi giá hoặc có thay đổi nhưng đã confirm. 1: là có thay đổi cần xác nhận'),
         ], $tableOptions);
 
+
         $this->createIndex('idx-product-category_id', '{{%product}}', 'category_id');
         $this->createIndex('idx-product-order_id', '{{%product}}', 'order_id');
         $this->createIndex('idx-product-custom_category_id', '{{%product}}', 'custom_category_id');
         $this->createIndex('idx-product-seller_id', '{{%product}}', 'seller_id');
+
+        /*
         $this->addForeignKey('fk-product-custom_category_id', '{{%product}}', 'custom_category_id', '{{%category_custom_policy}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-product-order_id', '{{%product}}', 'order_id', '{{%order}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-product-seller_id', '{{%product}}', 'seller_id', '{{%seller}}', 'id', 'CASCADE', 'CASCADE');
+        */
     }
 
     public function down()

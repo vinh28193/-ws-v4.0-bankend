@@ -12,7 +12,7 @@ class m190605_013400_create_table_authorization_codes extends Migration
         }
 
         $this->createTable('{{%authorization_codes}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'code' => $this->string(150)->notNull(),
             'expires_at' => $this->integer(11)->notNull(),
             'user_id' => $this->integer(11)->notNull(),

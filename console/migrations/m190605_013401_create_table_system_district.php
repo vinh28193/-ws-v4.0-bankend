@@ -12,7 +12,7 @@ class m190605_013401_create_table_system_district extends Migration
         }
 
         $this->createTable('{{%system_district}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'name' => $this->string(255),
             'name_local' => $this->string(255),
             'name_alias' => $this->string(255),
@@ -27,8 +27,10 @@ class m190605_013401_create_table_system_district extends Migration
 
         $this->createIndex('idx-system_district-country_id', '{{%system_district}}', 'country_id');
         $this->createIndex('idx-system_district-province_id', '{{%system_district}}', 'province_id');
+        /*
         $this->addForeignKey('fk-system_district-country_id', '{{%system_district}}', 'country_id', '{{%system_country}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-system_district-province_id', '{{%system_district}}', 'province_id', '{{%system_state_province}}', 'id', 'CASCADE', 'CASCADE');
+        */
     }
 
     public function down()

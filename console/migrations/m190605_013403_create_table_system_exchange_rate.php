@@ -12,7 +12,7 @@ class m190605_013403_create_table_system_exchange_rate extends Migration
         }
 
         $this->createTable('{{%system_exchange_rate}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'store_id' => $this->integer(11),
             'from' => $this->string(10)->notNull()->comment('form currency'),
             'to' => $this->string(10)->notNull()->comment('to currency'),

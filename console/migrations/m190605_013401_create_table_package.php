@@ -12,7 +12,7 @@ class m190605_013401_create_table_package extends Migration
         }
 
         $this->createTable('{{%package}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'tracking_code' => $this->string(255)->notNull(),
             'product_id' => $this->integer(11),
             'order_id' => $this->integer(11),

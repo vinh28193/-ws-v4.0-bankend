@@ -12,7 +12,7 @@ class m190605_013402_create_table_purchase_product extends Migration
         }
 
         $this->createTable('{{%purchase_product}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'product_id' => $this->integer(11)->comment('id product mua'),
             'purchase_order_id' => $this->integer(11)->comment('id purchase order'),
             'order_id' => $this->integer(11)->comment('id order'),

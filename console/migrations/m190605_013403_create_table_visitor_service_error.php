@@ -12,7 +12,7 @@ class m190605_013403_create_table_visitor_service_error extends Migration
         }
 
         $this->createTable('{{%visitor_service_error}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'service' => $this->string(255)->notNull(),
             'url' => $this->string(255)->notNull(),
             'params' => $this->text(),

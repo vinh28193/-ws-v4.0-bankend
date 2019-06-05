@@ -12,7 +12,7 @@ class m190605_013401_create_table_category_custom_policy extends Migration
         }
 
         $this->createTable('{{%category_custom_policy}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'name' => $this->string(255),
             'description' => $this->string(255),
             'code' => $this->string(255),

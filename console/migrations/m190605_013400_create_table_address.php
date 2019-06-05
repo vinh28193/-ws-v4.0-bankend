@@ -12,7 +12,7 @@ class m190605_013400_create_table_address extends Migration
         }
 
         $this->createTable('{{%address}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY')->comment('ID'),
+            'id' => $this->primaryKey()->comment('ID'),
             'first_name' => $this->string(255),
             'last_name' => $this->string(255),
             'email' => $this->string(255),
