@@ -34,8 +34,8 @@ MERCHANT - ví merchant'),
             'status' => $this->integer(1)->notNull()->defaultValue('0')->comment('0- Pending ; 1 - Success; 2 - Fail'),
         ], $tableOptions);
 
-        $this->createIndex('index-wallet-transaction', '{{%wallet_log}}', 'walletTransactionId');
         /*
+        $this->createIndex('index-wallet-transaction', '{{%wallet_log}}', 'walletTransactionId');
         $this->addForeignKey('foreignkey-wallet-transaction', '{{%wallet_log}}', 'walletTransactionId', '{{%wallet_transaction}}', 'id', 'RESTRICT', 'RESTRICT');
         */
     }

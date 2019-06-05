@@ -53,7 +53,7 @@ class m190605_013402_create_table_delivery_note extends Migration
             'pack_wood' => $this->integer(11)->defaultValue('0')->comment('0: unInsurance, 1: insurance'),
         ], $tableOptions);
 
-        $this->createIndex('idx-package-warehouse_id', '{{%delivery_note}}', 'warehouse_id');
+        // $this->createIndex('idx-package-warehouse_id', '{{%delivery_note}}', 'warehouse_id');
         // $this->addForeignKey('fk-package-warehouse_id', '{{%delivery_note}}', 'warehouse_id', '{{%warehouse}}', 'id', 'CASCADE', 'CASCADE');
     }
 

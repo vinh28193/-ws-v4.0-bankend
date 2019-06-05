@@ -35,11 +35,13 @@ class m190605_013400_create_table_address extends Migration
             'version' => $this->string(255)->defaultValue('4.0')->comment('version 4.0'),
         ], $tableOptions);
 
+        /*
         $this->createIndex('idx-address-store_id', '{{%address}}', 'store_id');
         $this->createIndex('idx-address-province_id', '{{%address}}', 'province_id');
         $this->createIndex('idx-address-customer_id', '{{%address}}', 'customer_id');
         $this->createIndex('idx-address-district_id', '{{%address}}', 'district_id');
         $this->createIndex('idx-address-country_id', '{{%address}}', 'country_id');
+        */
     }
 
     public function down()

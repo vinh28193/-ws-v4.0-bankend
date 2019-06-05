@@ -42,6 +42,7 @@ class m190605_013402_create_table_queued_email extends Migration
             'StatusV3' => $this->tinyInteger(1)->defaultValue('0'),
         ], $tableOptions);
 
+        /*
         $this->createIndex('Status', '{{%queued_email}}', 'Status');
         $this->createIndex('OrderId', '{{%queued_email}}', 'OrderId');
         $this->createIndex('TemplateId', '{{%queued_email}}', 'TemplateId');

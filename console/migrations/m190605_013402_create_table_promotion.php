@@ -36,7 +36,7 @@ class m190605_013402_create_table_promotion extends Migration
             'promotion_image' => $this->text(),
         ], $tableOptions);
 
-        $this->createIndex('code', '{{%promotion}}', 'code', true);
+        // $this->createIndex('code', '{{%promotion}}', 'code', true);
     }
 
     public function down()

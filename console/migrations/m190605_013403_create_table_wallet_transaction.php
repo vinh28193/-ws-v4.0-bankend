@@ -44,10 +44,12 @@ class m190605_013403_create_table_wallet_transaction extends Migration
             'response_content' => $this->string(1000),
         ], $tableOptions);
 
+        /*
         $this->createIndex('wallet_merchant_id', '{{%wallet_transaction}}', 'wallet_merchant_id');
         $this->createIndex('wallet_client_id', '{{%wallet_transaction}}', 'wallet_client_id');
         $this->addForeignKey('wallet_transaction_ibfk_1', '{{%wallet_transaction}}', 'wallet_client_id', '{{%wallet_client}}', 'id', 'NO ACTION', 'NO ACTION');
         $this->addForeignKey('wallet_transaction_ibfk_2', '{{%wallet_transaction}}', 'wallet_merchant_id', '{{%wallet_merchant}}', 'id', 'NO ACTION', 'NO ACTION');
+        */
     }
 
     public function down()

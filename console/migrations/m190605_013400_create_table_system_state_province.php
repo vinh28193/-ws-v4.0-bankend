@@ -25,7 +25,7 @@ class m190605_013400_create_table_system_state_province extends Migration
         ], $tableOptions);
 
 
-        $this->createIndex('idx-system_state_province-country_id', '{{%system_state_province}}', 'country_id');
+        // $this->createIndex('idx-system_state_province-country_id', '{{%system_state_province}}', 'country_id');
 
         /*
          * @Phuchc Nâng cấp lên version mới Oracle bỏ phần này

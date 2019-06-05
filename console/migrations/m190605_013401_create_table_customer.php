@@ -56,7 +56,7 @@ class m190605_013401_create_table_customer extends Migration
             'auth_key' => $this->string(255),
         ], $tableOptions);
 
-        $this->createIndex('idx-customer-store_id', '{{%customer}}', 'store_id');
+        // $this->createIndex('idx-customer-store_id', '{{%customer}}', 'store_id');
          // $this->addForeignKey('fk-customer-store_id', '{{%customer}}', 'store_id', '{{%store}}', 'id', 'CASCADE', 'CASCADE');
     }
 

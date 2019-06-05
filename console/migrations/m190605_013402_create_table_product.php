@@ -62,12 +62,12 @@ class m190605_013402_create_table_product extends Migration
         ], $tableOptions);
 
 
+        /*
         $this->createIndex('idx-product-category_id', '{{%product}}', 'category_id');
         $this->createIndex('idx-product-order_id', '{{%product}}', 'order_id');
         $this->createIndex('idx-product-custom_category_id', '{{%product}}', 'custom_category_id');
         $this->createIndex('idx-product-seller_id', '{{%product}}', 'seller_id');
 
-        /*
         $this->addForeignKey('fk-product-custom_category_id', '{{%product}}', 'custom_category_id', '{{%category_custom_policy}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-product-order_id', '{{%product}}', 'order_id', '{{%order}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-product-seller_id', '{{%product}}', 'seller_id', '{{%seller}}', 'id', 'CASCADE', 'CASCADE');

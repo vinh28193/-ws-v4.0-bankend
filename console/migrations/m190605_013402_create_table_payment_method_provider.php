@@ -23,8 +23,10 @@ class m190605_013402_create_table_payment_method_provider extends Migration
             'updated_at' => $this->integer(11)->comment('Updated at (timestamp)'),
         ], $tableOptions);
 
+        /*
         $this->createIndex('idx-payment_method_provider-payment_provider', '{{%payment_method_provider}}', 'payment_provider_id');
         $this->createIndex('idx-payment_method_provider-payment_method', '{{%payment_method_provider}}', 'payment_method_id');
+        */
         /*
         $this->addForeignKey('fk-payment_method_provider-payment_method', '{{%payment_method_provider}}', 'payment_method_id', '{{%payment_method}}', 'id', 'RESTRICT', 'RESTRICT');
         $this->addForeignKey('fk-payment_method_provider-payment_provider', '{{%payment_method_provider}}', 'payment_provider_id', '{{%payment_provider}}', 'id', 'RESTRICT', 'RESTRICT');

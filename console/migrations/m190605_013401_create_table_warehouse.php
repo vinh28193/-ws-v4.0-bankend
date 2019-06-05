@@ -32,10 +32,12 @@ class m190605_013401_create_table_warehouse extends Migration
             'version' => $this->string(255)->defaultValue('4.0')->comment('version 4.0'),
         ], $tableOptions);
 
+        /*
         $this->createIndex('idx-warehouse-store_id', '{{%warehouse}}', 'store_id');
         $this->createIndex('idx-warehouse-province_id', '{{%warehouse}}', 'province_id');
         $this->createIndex('idx-warehouse-country_id', '{{%warehouse}}', 'country_id');
         $this->createIndex('idx-warehouse-district_id', '{{%warehouse}}', 'district_id');
+        */
         /*
         $this->addForeignKey('fk-warehouse-country_id', '{{%warehouse}}', 'country_id', '{{%system_country}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-warehouse-district_id', '{{%warehouse}}', 'district_id', '{{%system_district}}', 'id', 'CASCADE', 'CASCADE');

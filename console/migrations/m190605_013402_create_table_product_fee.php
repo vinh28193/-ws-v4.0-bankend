@@ -27,7 +27,7 @@ class m190605_013402_create_table_product_fee extends Migration
             'version' => $this->string(255)->defaultValue('4.0')->comment('version 4.0'),
         ], $tableOptions);
 
-        $this->createIndex('idx-order_fee-order_id', '{{%product_fee}}', 'order_id');
+       // $this->createIndex('idx-order_fee-order_id', '{{%product_fee}}', 'order_id');
     }
 
     public function down()

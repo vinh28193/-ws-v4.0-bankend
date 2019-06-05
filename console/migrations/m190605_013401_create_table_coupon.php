@@ -44,8 +44,10 @@ class m190605_013401_create_table_coupon extends Migration
             'version' => $this->string(255)->defaultValue('4.0')->comment('version 4.0'),
         ], $tableOptions);
 
+        /*
         $this->createIndex('idx-coupon-store_id', '{{%coupon}}', 'store_id');
         $this->createIndex('idx-coupon-created_by', '{{%coupon}}', 'created_by');
+        */
     }
 
     public function down()

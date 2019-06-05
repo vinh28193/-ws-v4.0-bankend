@@ -50,6 +50,7 @@ class m190605_013402_create_table_shipment extends Migration
             'shipment_send_at' => $this->integer(11),
         ], $tableOptions);
 
+        /*
         $this->createIndex('idx-shipment-customer_id', '{{%shipment}}', 'customer_id');
         $this->createIndex('idx-shipment-receiver_province_id', '{{%shipment}}', 'receiver_province_id');
         $this->createIndex('idx-shipment-warehouse_send_id', '{{%shipment}}', 'warehouse_send_id');

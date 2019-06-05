@@ -20,10 +20,12 @@ class m190605_013403_create_table_visitor_log extends Migration
             'user_agent' => $this->text(),
         ], $tableOptions);
 
+        /*
         $this->createIndex('fki_vl_va_ua_fkey', '{{%visitor_log}}', 'id');
         $this->createIndex('visits_ip_idx', '{{%visitor_log}}', 'ip');
         $this->createIndex('visits_timestamp_idx', '{{%visitor_log}}', 'created_at');
        // $this->addForeignKey('visits_visitor_fkey', '{{%visitor_log}}', 'ip', '{{%visitor}}', 'ip', 'CASCADE', 'CASCADE');
+        */
     }
 
     public function down()

@@ -115,6 +115,7 @@ class m190605_013402_create_table_order extends Migration
             'confirm_change_price' => $this->integer(11)->comment('0: là không có thay đổi giá hoặc có thay đổi nhưng đã confirm. 1: là có thay đổi cần xác nhận'),
         ], $tableOptions);
 
+        /*
         $this->createIndex('idx-order-coupon_id', '{{%order}}', 'coupon_id');
         $this->createIndex('idx-order-sale_support_id', '{{%order}}', 'sale_support_id');
         $this->createIndex('idx-order-receiver_district_id', '{{%order}}', 'receiver_district_id');
