@@ -414,6 +414,9 @@ class CartManager extends Component
             if ($param['typeUpdate'] == 'assignSaleCart') {
                 $value['sale_support_id'] = $param['idSale'];
             }
+            if ($param['typeUpdate'] == 'markAsJunk') {
+                $key['current_status'] = 'JUNK';
+            }
             // todo : thay đổi giá trị của $item['key']
 
             $success = $this->getStorage()->setItem($id, $key, $value);

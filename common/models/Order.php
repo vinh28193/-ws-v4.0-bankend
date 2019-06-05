@@ -42,6 +42,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_ORDER_STATUS = 'updateOrderStatus';
     const SCENARIO_UPDATE_ORDER_TIME = 'updateTimeNull';
     const SCENARIO_UPDATE_READY2PURCHASE = 'updateReady2Purchase';
+    const SCENARIO_UPDATE_JUNK = 'updateStatusMarkAsJunk';
 
     /**
      * order type
@@ -188,6 +189,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_UPDATE_MARK_SUPPORTING => [
                 'current_status', 'mark_supporting'
+            ],
+            self::SCENARIO_UPDATE_JUNK => [
+                'current_status'
             ],
             self::SCENARIO_UPDATE_ORDER_STATUS => [
                 'current_status', 'new', 'supporting', 'supported', 'ready_purchase', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost'
