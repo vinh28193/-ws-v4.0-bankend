@@ -34,9 +34,11 @@ class m190605_013402_create_table_purchase_product extends Migration
             'seller_refund_amount' => $this->decimal(18, 2)->comment('Số tiền người bán hoàn chả'),
         ], $tableOptions);
 
+        /*
         $this->addForeignKey('fk-purchase-product-order', '{{%purchase_product}}', 'order_id', '{{%order}}', 'id', 'RESTRICT', 'RESTRICT');
         $this->addForeignKey('fk-purchase-product-product', '{{%purchase_product}}', 'product_id', '{{%product}}', 'id', 'RESTRICT', 'RESTRICT');
         $this->addForeignKey('fk-purchase-product-purchase_order', '{{%purchase_product}}', 'purchase_order_id', '{{%purchase_order}}', 'id', 'RESTRICT', 'RESTRICT');
+        */
     }
 
     public function down()

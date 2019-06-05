@@ -35,7 +35,9 @@ MERCHANT - ví merchant'),
         ], $tableOptions);
 
         $this->createIndex('index-wallet-transaction', '{{%wallet_log}}', 'walletTransactionId');
+        /*
         $this->addForeignKey('foreignkey-wallet-transaction', '{{%wallet_log}}', 'walletTransactionId', '{{%wallet_transaction}}', 'id', 'RESTRICT', 'RESTRICT');
+        */
     }
 
     public function down()

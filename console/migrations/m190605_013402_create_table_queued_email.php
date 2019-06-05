@@ -48,8 +48,10 @@ class m190605_013402_create_table_queued_email extends Migration
         $this->createIndex('Priority', '{{%queued_email}}', 'Priority');
         $this->createIndex('CampaignId', '{{%queued_email}}', 'CampaignId');
         $this->createIndex('QueuedEmail_EmailAccount', '{{%queued_email}}', 'EmailAccountId');
+        /*
         $this->addForeignKey('queued_email_ibfk_1', '{{%queued_email}}', 'EmailAccountId', '{{%email_account}}', 'id', 'RESTRICT', 'RESTRICT');
         $this->addForeignKey('queued_email_ibfk_4', '{{%queued_email}}', 'OrderId', '{{%order}}', 'id', 'RESTRICT', 'RESTRICT');
+        */
     }
 
     public function down()
