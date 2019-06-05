@@ -47,7 +47,8 @@
     "baibaratsky/yii2-ga-measurement-protocol": "2.0.*",
     "linslin/yii2-curl": "*",
     "lajax/yii2-translate-manager": "*",
-    "bizley/migration": "^3.3"
+    "bizley/migration": "^3.3",
+    "neconix/yii2-oci8": "1.*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

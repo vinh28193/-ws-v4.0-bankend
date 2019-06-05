@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3e2636fe6110633ff9f44e4c55a626b",
+    "content-hash": "5cac66f084731e13de9e1a6065fc72d8",
     "packages": [
         {
             "name": "baibaratsky/yii2-ga-measurement-protocol",
@@ -317,16 +317,16 @@
         },
         {
             "name": "bower-asset/sweetalert2",
-            "version": "v8.11.6",
+            "version": "v8.11.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sweetalert2/sweetalert2.git",
-                "reference": "b8219aa898abc56d4bab32d34dd31dd4c9fe7bf8"
+                "reference": "62fb85f07d82db9c2152395ccd9aa141c4af7087"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sweetalert2/sweetalert2/zipball/b8219aa898abc56d4bab32d34dd31dd4c9fe7bf8",
-                "reference": "b8219aa898abc56d4bab32d34dd31dd4c9fe7bf8"
+                "url": "https://api.github.com/repos/sweetalert2/sweetalert2/zipball/62fb85f07d82db9c2152395ccd9aa141c4af7087",
+                "reference": "62fb85f07d82db9c2152395ccd9aa141c4af7087"
             },
             "type": "bower-asset"
         },
@@ -2500,6 +2500,51 @@
             "time": "2018-11-12T12:35:44+00:00"
         },
         {
+            "name": "neconix/yii2-oci8",
+            "version": "1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Neconix/Yii2-Oci8.git",
+                "reference": "bd141f26d7d5bf7bcd7e296faec8b795dcc8b2f0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Neconix/Yii2-Oci8/zipball/bd141f26d7d5bf7bcd7e296faec8b795dcc8b2f0",
+                "reference": "bd141f26d7d5bf7bcd7e296faec8b795dcc8b2f0",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5 || ^7.0",
+                "yajra/laravel-pdo-via-oci8": "1.*",
+                "yiisoft/yii2": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "neconix\\yii2oci8\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Neconix",
+                    "email": "prostoe@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Yii2 extension which uses well written pdo-via-oci8 package for standard PHP Oracle functions (OCI8)",
+            "keywords": [
+                "database",
+                "oci8",
+                "oracle",
+                "yii2"
+            ],
+            "time": "2017-03-15T18:30:35+00:00"
+        },
+        {
             "name": "npm-asset/bootstrap",
             "version": "4.3.1",
             "dist": {
@@ -3176,6 +3221,42 @@
             "time": "2017-06-30T02:41:52+00:00"
         },
         {
+            "name": "yajra/laravel-pdo-via-oci8",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yajra/pdo-via-oci8.git",
+                "reference": "91598cf82bf67b0e006e40be11af9ba33a802a44"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yajra/pdo-via-oci8/zipball/91598cf82bf67b0e006e40be11af9ba33a802a44",
+                "reference": "91598cf82bf67b0e006e40be11af9ba33a802a44",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yajra\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arjay Angeles",
+                    "email": "aqangeles@gmail.com"
+                }
+            ],
+            "description": "PDO userspace driver proxying calls to PHP OCI8 driver",
+            "time": "2019-05-09T02:45:31+00:00"
+        },
+        {
             "name": "yii2mod/collection",
             "version": "1.3.1",
             "source": {
@@ -3268,16 +3349,16 @@
         },
         {
             "name": "yiisoft/yii2",
-            "version": "2.0.19",
+            "version": "2.0.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "3e74c7338dd83cea6ffc6f5c25202b9f2f271f89"
+                "reference": "bd05e0e0ac353cb239997da78f459d0960a1fe9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/3e74c7338dd83cea6ffc6f5c25202b9f2f271f89",
-                "reference": "3e74c7338dd83cea6ffc6f5c25202b9f2f271f89",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/bd05e0e0ac353cb239997da78f459d0960a1fe9f",
+                "reference": "bd05e0e0ac353cb239997da78f459d0960a1fe9f",
                 "shasum": ""
             },
             "require": {
@@ -3364,7 +3445,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2019-05-21T16:01:16+00:00"
+            "time": "2019-06-04T19:10:59+00:00"
         },
         {
             "name": "yiisoft/yii2-authclient",
@@ -3483,16 +3564,16 @@
         },
         {
             "name": "yiisoft/yii2-bootstrap4",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-bootstrap4.git",
-                "reference": "149f0ff76255dcbd66bc3474efc15785824924d9"
+                "reference": "dce3d0421188cf8ff6d4ec79707e6e2effd02e05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap4/zipball/149f0ff76255dcbd66bc3474efc15785824924d9",
-                "reference": "149f0ff76255dcbd66bc3474efc15785824924d9",
+                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap4/zipball/dce3d0421188cf8ff6d4ec79707e6e2effd02e05",
+                "reference": "dce3d0421188cf8ff6d4ec79707e6e2effd02e05",
                 "shasum": ""
             },
             "require": {
@@ -3548,7 +3629,7 @@
                 "bootstrap4",
                 "yii2"
             ],
-            "time": "2019-04-30T19:59:00+00:00"
+            "time": "2019-06-04T12:50:33+00:00"
         },
         {
             "name": "yiisoft/yii2-composer",
@@ -3798,16 +3879,16 @@
         },
         {
             "name": "yiisoft/yii2-queue",
-            "version": "2.2.1",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-queue.git",
-                "reference": "f5806e3f65a9f983d54b9aa920b8c06df34dc74c"
+                "reference": "25c1142558768ec0e835171c972a4edc2fb59cf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-queue/zipball/f5806e3f65a9f983d54b9aa920b8c06df34dc74c",
-                "reference": "f5806e3f65a9f983d54b9aa920b8c06df34dc74c",
+                "url": "https://api.github.com/repos/yiisoft/yii2-queue/zipball/25c1142558768ec0e835171c972a4edc2fb59cf0",
+                "reference": "25c1142558768ec0e835171c972a4edc2fb59cf0",
                 "shasum": ""
             },
             "require": {
@@ -3818,6 +3899,7 @@
             "require-dev": {
                 "aws/aws-sdk-php": ">=2.4",
                 "enqueue/amqp-lib": "^0.8||^0.9.10",
+                "enqueue/stomp": "^0.8.39",
                 "jeremeamia/superclosure": "*",
                 "pda/pheanstalk": "v3.*",
                 "php-amqplib/php-amqplib": "*",
@@ -3829,6 +3911,7 @@
             "suggest": {
                 "aws/aws-sdk-php": "Need for aws SQS.",
                 "enqueue/amqp-lib": "Need for AMQP interop queue.",
+                "enqueue/stomp": "Need for Stomp queue.",
                 "ext-gearman": "Need for Gearman queue.",
                 "ext-pcntl": "Need for process signals.",
                 "pda/pheanstalk": "Need for Beanstalk queue.",
@@ -3852,7 +3935,8 @@
                     "yii\\queue\\gearman\\": "src/drivers/gearman",
                     "yii\\queue\\redis\\": "src/drivers/redis",
                     "yii\\queue\\sync\\": "src/drivers/sync",
-                    "yii\\queue\\sqs\\": "src/drivers/sqs"
+                    "yii\\queue\\sqs\\": "src/drivers/sqs",
+                    "yii\\queue\\stomp\\": "src/drivers/stomp"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3878,7 +3962,7 @@
                 "sqs",
                 "yii"
             ],
-            "time": "2019-05-21T15:47:38+00:00"
+            "time": "2019-06-04T18:58:40+00:00"
         },
         {
             "name": "yiisoft/yii2-redis",

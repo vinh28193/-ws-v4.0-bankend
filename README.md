@@ -746,3 +746,8 @@ yum install php-bcmath.x86_64
  
 #-------------- GA User Exploer : Check xem doanh thu đến từ ông nao nhiều nhất--------------------
 http://prntscr.com/nsr24f
+
+
+### --------------Install OCI8 Oracle----------------
+https://viblo.asia/p/cai-dat-oracle-driver-vao-php-module-tren-window-bJzKmGekl9N
+https://blogs.oracle.com/opal/installing-xampp-for-php-and-oracle-database
