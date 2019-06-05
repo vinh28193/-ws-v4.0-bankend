@@ -51,7 +51,7 @@ class m190605_013403_create_table_wallet_client extends Migration
             'identity_image_url_before' => $this->string(255),
             'identity_verified' => $this->tinyInteger(1)->defaultValue('0'),
             'identity_image_url_after' => $this->string(255),
-            'status' => $this->integer(255)->comment('0:inactive;1active;2:freeze'),
+            'status' => $this->integer(11)->comment('0:inactive;1active;2:freeze'),
         ], $tableOptions);
 
     }
