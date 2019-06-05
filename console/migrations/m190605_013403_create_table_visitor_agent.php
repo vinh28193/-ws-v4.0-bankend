@@ -18,7 +18,7 @@ class m190605_013403_create_table_visitor_agent extends Migration
             'info' => $this->text(),
         ], $tableOptions);
 
-        $this->createIndex('va_ua_vl_fkey', '{{%visitor_agent}}', 'id');
+        // $this->createIndex('va_ua_vl_fkey', '{{%visitor_agent}}', 'id');
     }
 
     public function down()
