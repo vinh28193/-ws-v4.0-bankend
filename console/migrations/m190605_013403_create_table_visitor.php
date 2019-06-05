@@ -29,7 +29,7 @@ class m190605_013403_create_table_visitor extends Migration
             'proxy' => $this->string(255),
         ], $tableOptions);
 
-        $this->createIndex('visitor_ip_idx', '{{%visitor}}', 'ip', true);
+        // $this->createIndex('visitor_ip_idx', '{{%visitor}}', 'ip', true);
     }
 
     public function down()

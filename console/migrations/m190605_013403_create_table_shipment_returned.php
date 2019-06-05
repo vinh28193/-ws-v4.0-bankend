@@ -12,7 +12,7 @@ class m190605_013403_create_table_shipment_returned extends Migration
         }
 
         $this->createTable('{{%shipment_returned}}', [
-            'id' => $this->integer(11)->notNull()->append('AUTO_INCREMENT PRIMARY KEY'),
+            'id' => $this->primaryKey(),
             'shipment_code' => $this->integer(11)->comment('mã phiếu giao, BM_CODE'),
             'warehouse_send_id' => $this->integer(11)->comment('id kho gửi đi'),
             'warehouse_tags' => $this->text()->comment('1 list mã thẻ kho Weshop'),
