@@ -3,9 +3,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop-global-dev',
-            'username' => 'root',
-            'password' => '',
+            'dsn' => 'oci:dbname=//178.128.60.187/10.130.40.47:1521/boxme', // Oracle
+            'username' => 'weshopdev',
+            'password' => 'weshopdev2019',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
