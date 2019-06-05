@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "wallet_transaction".
+ * This is the model class for table "{{%wallet_transaction}}".
  *
  * @property int $id
  * @property string $wallet_transaction_code
@@ -42,14 +42,14 @@ use Yii;
  * @property WalletClient $walletClient
  * @property WalletMerchant $walletMerchant
  */
-class WalletTransaction extends \yii\db\ActiveRecord
+class WalletTransaction extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'wallet_transaction';
+        return '{{%wallet_transaction}}';
     }
 
     /**
@@ -76,36 +76,36 @@ class WalletTransaction extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'wallet_transaction_code' => 'Wallet Transaction Code',
-            'wallet_client_id' => 'Wallet Client ID',
-            'wallet_merchant_id' => 'Wallet Merchant ID',
-            'type' => 'Type',
-            'order_number' => 'Order Number',
-            'status' => 'Status',
-            'amount' => 'Amount',
-            'credit_amount' => 'Credit Amount',
-            'debit_amount' => 'Debit Amount',
-            'note' => 'Note',
-            'description' => 'Description',
-            'verify_receive_type' => 'Verify Receive Type',
-            'verify_code' => 'Verify Code',
-            'verify_count' => 'Verify Count',
-            'verify_expired_at' => 'Verify Expired At',
-            'verified_at' => 'Verified At',
-            'refresh_count' => 'Refresh Count',
-            'refresh_expired_at' => 'Refresh Expired At',
-            'create_at' => 'Create At',
-            'update_at' => 'Update At',
-            'complete_at' => 'Complete At',
-            'cancel_at' => 'Cancel At',
-            'fail_at' => 'Fail At',
-            'payment_method' => 'Payment Method',
-            'payment_provider_name' => 'Payment Provider Name',
-            'payment_bank_code' => 'Payment Bank Code',
-            'payment_transaction' => 'Payment Transaction',
-            'request_content' => 'Request Content',
-            'response_content' => 'Response Content',
+            'id' => Yii::t('db', 'ID'),
+            'wallet_transaction_code' => Yii::t('db', 'Wallet Transaction Code'),
+            'wallet_client_id' => Yii::t('db', 'Wallet Client ID'),
+            'wallet_merchant_id' => Yii::t('db', 'Wallet Merchant ID'),
+            'type' => Yii::t('db', 'Type'),
+            'order_number' => Yii::t('db', 'Order Number'),
+            'status' => Yii::t('db', 'Status'),
+            'amount' => Yii::t('db', 'Amount'),
+            'credit_amount' => Yii::t('db', 'Credit Amount'),
+            'debit_amount' => Yii::t('db', 'Debit Amount'),
+            'note' => Yii::t('db', 'Note'),
+            'description' => Yii::t('db', 'Description'),
+            'verify_receive_type' => Yii::t('db', 'Verify Receive Type'),
+            'verify_code' => Yii::t('db', 'Verify Code'),
+            'verify_count' => Yii::t('db', 'Verify Count'),
+            'verify_expired_at' => Yii::t('db', 'Verify Expired At'),
+            'verified_at' => Yii::t('db', 'Verified At'),
+            'refresh_count' => Yii::t('db', 'Refresh Count'),
+            'refresh_expired_at' => Yii::t('db', 'Refresh Expired At'),
+            'create_at' => Yii::t('db', 'Create At'),
+            'update_at' => Yii::t('db', 'Update At'),
+            'complete_at' => Yii::t('db', 'Complete At'),
+            'cancel_at' => Yii::t('db', 'Cancel At'),
+            'fail_at' => Yii::t('db', 'Fail At'),
+            'payment_method' => Yii::t('db', 'Payment Method'),
+            'payment_provider_name' => Yii::t('db', 'Payment Provider Name'),
+            'payment_bank_code' => Yii::t('db', 'Payment Bank Code'),
+            'payment_transaction' => Yii::t('db', 'Payment Transaction'),
+            'request_content' => Yii::t('db', 'Request Content'),
+            'response_content' => Yii::t('db', 'Response Content'),
         ];
     }
 

@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "coupon".
+ * This is the model class for table "{{%coupon}}".
  *
  * @property int $id ID
  * @property string $name
@@ -45,7 +45,7 @@ class Coupon extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'coupon';
+        return '{{%coupon}}';
     }
 
     /**
@@ -66,36 +66,36 @@ class Coupon extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'code' => 'Code',
-            'message' => 'Message',
-            'type_coupon' => 'Type Coupon',
-            'type_amount' => 'Type Amount',
-            'store_id' => 'Store ID',
-            'amount' => 'Amount',
-            'percent_for' => 'Percent For',
-            'created_by' => 'Created By',
-            'start_time' => 'Start Time',
-            'end_time' => 'End Time',
-            'limit_customer_count_use' => 'Limit Customer Count Use',
-            'limit_count_use' => 'Limit Count Use',
-            'count_use' => 'Count Use',
-            'limit_amount_use' => 'Limit Amount Use',
-            'limit_amount_use_order' => 'Limit Amount Use Order',
-            'for_email' => 'For Email',
-            'for_portal' => 'For Portal',
-            'for_category' => 'For Category',
-            'for_min_order_amount' => 'For Min Order Amount',
-            'for_max_order_amount' => 'For Max Order Amount',
-            'total_amount_used' => 'Total Amount Used',
-            'used_first_time' => 'Used First Time',
-            'used_last_time' => 'Used Last Time',
-            'can_use_instalment' => 'Can Use Instalment',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'remove' => 'Remove',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'name' => Yii::t('db', 'Name'),
+            'code' => Yii::t('db', 'Code'),
+            'message' => Yii::t('db', 'Message'),
+            'type_coupon' => Yii::t('db', 'Type Coupon'),
+            'type_amount' => Yii::t('db', 'Type Amount'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'amount' => Yii::t('db', 'Amount'),
+            'percent_for' => Yii::t('db', 'Percent For'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'start_time' => Yii::t('db', 'Start Time'),
+            'end_time' => Yii::t('db', 'End Time'),
+            'limit_customer_count_use' => Yii::t('db', 'Limit Customer Count Use'),
+            'limit_count_use' => Yii::t('db', 'Limit Count Use'),
+            'count_use' => Yii::t('db', 'Count Use'),
+            'limit_amount_use' => Yii::t('db', 'Limit Amount Use'),
+            'limit_amount_use_order' => Yii::t('db', 'Limit Amount Use Order'),
+            'for_email' => Yii::t('db', 'For Email'),
+            'for_portal' => Yii::t('db', 'For Portal'),
+            'for_category' => Yii::t('db', 'For Category'),
+            'for_min_order_amount' => Yii::t('db', 'For Min Order Amount'),
+            'for_max_order_amount' => Yii::t('db', 'For Max Order Amount'),
+            'total_amount_used' => Yii::t('db', 'Total Amount Used'),
+            'used_first_time' => Yii::t('db', 'Used First Time'),
+            'used_last_time' => Yii::t('db', 'Used Last Time'),
+            'can_use_instalment' => Yii::t('db', 'Can Use Instalment'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'remove' => Yii::t('db', 'Remove'),
+            'version' => Yii::t('db', 'Version'),
         ];
     }
 }

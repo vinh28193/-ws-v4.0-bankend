@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "category".
+ * This is the model class for table "{{%category}}".
  *
  * @property int $id ID
  * @property string $alias
@@ -25,8 +25,6 @@ use Yii;
  * @property int $remove
  * @property string $name
  * @property string $version version 4.0
- *
- * @property Product[] $products
  */
 class Category extends \common\components\db\ActiveRecord
 {
@@ -35,7 +33,7 @@ class Category extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'category';
+        return '{{%category}}';
     }
 
     /**
@@ -57,41 +55,24 @@ class Category extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'alias' => 'Alias',
-            'site' => 'Site',
-            'origin_name' => 'Origin Name',
-            'category_group_id' => 'Category Group ID',
-            'parent_id' => 'Parent ID',
-            'description' => 'Description',
-            'weight' => 'Weight',
-            'inter_shipping_b' => 'Inter Shipping B',
-            'custom_fee' => 'Custom Fee',
-            'level' => 'Level',
-            'path' => 'Path',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'active' => 'Active',
-            'remove' => 'Remove',
-            'name' => 'Name',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'alias' => Yii::t('db', 'Alias'),
+            'site' => Yii::t('db', 'Site'),
+            'origin_name' => Yii::t('db', 'Origin Name'),
+            'category_group_id' => Yii::t('db', 'Category Group ID'),
+            'parent_id' => Yii::t('db', 'Parent ID'),
+            'description' => Yii::t('db', 'Description'),
+            'weight' => Yii::t('db', 'Weight'),
+            'inter_shipping_b' => Yii::t('db', 'Inter Shipping B'),
+            'custom_fee' => Yii::t('db', 'Custom Fee'),
+            'level' => Yii::t('db', 'Level'),
+            'path' => Yii::t('db', 'Path'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'active' => Yii::t('db', 'Active'),
+            'remove' => Yii::t('db', 'Remove'),
+            'name' => Yii::t('db', 'Name'),
+            'version' => Yii::t('db', 'Version'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProducts()
-    {
-        return $this->hasMany(Product::className(), ['category_id' => 'id']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\CategoryQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\CategoryQuery(get_called_class());
     }
 }

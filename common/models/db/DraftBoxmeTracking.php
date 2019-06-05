@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "draft_boxme_tracking".
+ * This is the model class for table "{{%draft_boxme_tracking}}".
  *
  * @property int $id
  * @property string $tracking_code
@@ -37,7 +37,7 @@ class DraftBoxmeTracking extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'draft_boxme_tracking';
+        return '{{%draft_boxme_tracking}}';
     }
 
     /**
@@ -60,28 +60,28 @@ class DraftBoxmeTracking extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'tracking_code' => 'Tracking Code',
-            'product_id' => 'Product ID',
-            'order_id' => 'Order ID',
-            'manifest_id' => 'Manifest ID',
-            'manifest_code' => 'Manifest Code',
-            'quantity' => 'Quantity',
-            'weight' => 'Weight',
-            'dimension_l' => 'Dimension L',
-            'dimension_w' => 'Dimension W',
-            'dimension_h' => 'Dimension H',
-            'purchase_invoice_number' => 'Purchase Invoice Number',
-            'number_callback' => 'Number Callback',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'item_name' => 'Item Name',
-            'warehouse_tag_boxme' => 'Warehouse Tag Boxme',
-            'note_boxme' => 'Note Boxme',
-            'image' => 'Image',
+            'id' => Yii::t('db', 'ID'),
+            'tracking_code' => Yii::t('db', 'Tracking Code'),
+            'product_id' => Yii::t('db', 'Product ID'),
+            'order_id' => Yii::t('db', 'Order ID'),
+            'manifest_id' => Yii::t('db', 'Manifest ID'),
+            'manifest_code' => Yii::t('db', 'Manifest Code'),
+            'quantity' => Yii::t('db', 'Quantity'),
+            'weight' => Yii::t('db', 'Weight'),
+            'dimension_l' => Yii::t('db', 'Dimension L'),
+            'dimension_w' => Yii::t('db', 'Dimension W'),
+            'dimension_h' => Yii::t('db', 'Dimension H'),
+            'purchase_invoice_number' => Yii::t('db', 'Purchase Invoice Number'),
+            'number_callback' => Yii::t('db', 'Number Callback'),
+            'status' => Yii::t('db', 'Status'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'item_name' => Yii::t('db', 'Item Name'),
+            'warehouse_tag_boxme' => Yii::t('db', 'Warehouse Tag Boxme'),
+            'note_boxme' => Yii::t('db', 'Note Boxme'),
+            'image' => Yii::t('db', 'Image'),
         ];
     }
 }

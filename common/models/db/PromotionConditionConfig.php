@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "promotion_condition_config".
+ * This is the model class for table "{{%promotion_condition_config}}".
  *
  * @property int $id ID
  * @property int $store_id Store ID
@@ -26,7 +26,7 @@ class PromotionConditionConfig extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'promotion_condition_config';
+        return '{{%promotion_condition_config}}';
     }
 
     /**
@@ -49,17 +49,17 @@ class PromotionConditionConfig extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'name' => 'Name',
-            'operator' => 'Operator',
-            'type_cast' => 'Type Cast',
-            'description' => 'Description',
-            'status' => 'Status',
-            'created_by' => 'Created By',
-            'created_at' => 'Created At',
-            'updated_by' => 'Updated By',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'name' => Yii::t('db', 'Name'),
+            'operator' => Yii::t('db', 'Operator'),
+            'type_cast' => Yii::t('db', 'Type Cast'),
+            'description' => Yii::t('db', 'Description'),
+            'status' => Yii::t('db', 'Status'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'updated_at' => Yii::t('db', 'Updated At'),
         ];
     }
 }

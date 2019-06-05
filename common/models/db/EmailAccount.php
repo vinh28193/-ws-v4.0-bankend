@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "email_account".
+ * This is the model class for table "{{%email_account}}".
  *
  * @property int $id
  * @property string $Email email
@@ -19,7 +19,6 @@ use Yii;
  * @property int $OrganizationId
  * @property int $StoreId
  *
- * @property Store $store
  * @property QueuedEmail[] $queuedEmails
  */
 class EmailAccount extends \common\components\db\ActiveRecord
@@ -29,7 +28,7 @@ class EmailAccount extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'email_account';
+        return '{{%email_account}}';
     }
 
     /**
@@ -40,7 +39,6 @@ class EmailAccount extends \common\components\db\ActiveRecord
         return [
             [['Port', 'EnableSsl', 'UseDefaultCredentials', 'OrganizationId', 'StoreId'], 'integer'],
             [['Email', 'DisplayName', 'Host', 'Username', 'Password'], 'string', 'max' => 255],
-            [['StoreId'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['StoreId' => 'id']],
         ];
     }
 
@@ -50,26 +48,18 @@ class EmailAccount extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'Email' => 'Email',
-            'DisplayName' => 'Display Name',
-            'Host' => 'Host',
-            'Port' => 'Port',
-            'Username' => 'Username',
-            'Password' => 'Password',
-            'EnableSsl' => 'Enable Ssl',
-            'UseDefaultCredentials' => 'Use Default Credentials',
-            'OrganizationId' => 'Organization ID',
-            'StoreId' => 'Store ID',
+            'id' => Yii::t('db', 'ID'),
+            'Email' => Yii::t('db', 'Email'),
+            'DisplayName' => Yii::t('db', 'Display Name'),
+            'Host' => Yii::t('db', 'Host'),
+            'Port' => Yii::t('db', 'Port'),
+            'Username' => Yii::t('db', 'Username'),
+            'Password' => Yii::t('db', 'Password'),
+            'EnableSsl' => Yii::t('db', 'Enable Ssl'),
+            'UseDefaultCredentials' => Yii::t('db', 'Use Default Credentials'),
+            'OrganizationId' => Yii::t('db', 'Organization ID'),
+            'StoreId' => Yii::t('db', 'Store ID'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Store::className(), ['id' => 'StoreId']);
     }
 
     /**

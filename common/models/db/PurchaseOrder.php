@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "purchase_order".
+ * This is the model class for table "{{%purchase_order}}".
  *
  * @property int $id
  * @property string $note Ghi chú đơn hàng
@@ -34,7 +34,7 @@ class PurchaseOrder extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'purchase_order';
+        return '{{%purchase_order}}';
     }
 
     /**
@@ -56,23 +56,23 @@ class PurchaseOrder extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'note' => 'Note',
-            'purchase_order_number' => 'Purchase Order Number',
-            'total_item' => 'Total Item',
-            'total_quantity' => 'Total Quantity',
-            'total_paid_seller' => 'Total Paid Seller',
-            'total_changing_price' => 'Total Changing Price',
-            'total_type_changing' => 'Total Type Changing',
-            'receive_warehouse_id' => 'Receive Warehouse ID',
-            'purchase_account_id' => 'Purchase Account ID',
-            'purchase_card_id' => 'Purchase Card ID',
-            'purchase_card_number' => 'Purchase Card Number',
-            'purchase_amount_buck' => 'Purchase Amount Buck',
-            'transaction_payment' => 'Transaction Payment',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'updated_by' => 'Updated By',
+            'id' => Yii::t('db', 'ID'),
+            'note' => Yii::t('db', 'Note'),
+            'purchase_order_number' => Yii::t('db', 'Purchase Order Number'),
+            'total_item' => Yii::t('db', 'Total Item'),
+            'total_quantity' => Yii::t('db', 'Total Quantity'),
+            'total_paid_seller' => Yii::t('db', 'Total Paid Seller'),
+            'total_changing_price' => Yii::t('db', 'Total Changing Price'),
+            'total_type_changing' => Yii::t('db', 'Total Type Changing'),
+            'receive_warehouse_id' => Yii::t('db', 'Receive Warehouse ID'),
+            'purchase_account_id' => Yii::t('db', 'Purchase Account ID'),
+            'purchase_card_id' => Yii::t('db', 'Purchase Card ID'),
+            'purchase_card_number' => Yii::t('db', 'Purchase Card Number'),
+            'purchase_amount_buck' => Yii::t('db', 'Purchase Amount Buck'),
+            'transaction_payment' => Yii::t('db', 'Transaction Payment'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'updated_by' => Yii::t('db', 'Updated By'),
         ];
     }
 

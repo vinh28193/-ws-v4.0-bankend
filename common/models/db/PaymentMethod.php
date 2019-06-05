@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "payment_method".
+ * This is the model class for table "{{%payment_method}}".
  *
  * @property int $id ID
  * @property int $store_id Store ID reference
@@ -20,6 +20,9 @@ use Yii;
  * @property int $created_at Created at (timestamp)
  * @property int $updated_by Updated by
  * @property int $updated_at Updated at (timestamp)
+ *
+ * @property PaymentMethodBank[] $paymentMethodBanks
+ * @property PaymentMethodProvider[] $paymentMethodProviders
  */
 class PaymentMethod extends \common\components\db\ActiveRecord
 {
@@ -28,7 +31,7 @@ class PaymentMethod extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'payment_method';
+        return '{{%payment_method}}';
     }
 
     /**
@@ -51,19 +54,35 @@ class PaymentMethod extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'name' => 'Name',
-            'code' => 'Code',
-            'bank_code' => 'Bank Code',
-            'description' => 'Description',
-            'icon' => 'Icon',
-            'group' => 'Group',
-            'status' => 'Status',
-            'created_by' => 'Created By',
-            'created_at' => 'Created At',
-            'updated_by' => 'Updated By',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'name' => Yii::t('db', 'Name'),
+            'code' => Yii::t('db', 'Code'),
+            'bank_code' => Yii::t('db', 'Bank Code'),
+            'description' => Yii::t('db', 'Description'),
+            'icon' => Yii::t('db', 'Icon'),
+            'group' => Yii::t('db', 'Group'),
+            'status' => Yii::t('db', 'Status'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'updated_at' => Yii::t('db', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPaymentMethodBanks()
+    {
+        return $this->hasMany(PaymentMethodBank::className(), ['payment_method_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPaymentMethodProviders()
+    {
+        return $this->hasMany(PaymentMethodProvider::className(), ['payment_method_id' => 'id']);
     }
 }

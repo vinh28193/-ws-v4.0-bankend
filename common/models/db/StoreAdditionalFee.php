@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "store_additional_fee".
+ * This is the model class for table "{{%store_additional_fee}}".
  *
  * @property int $id ID
  * @property int $store_id Store ID reference
@@ -30,7 +30,7 @@ class StoreAdditionalFee extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'store_additional_fee';
+        return '{{%store_additional_fee}}';
     }
 
     /**
@@ -56,21 +56,21 @@ class StoreAdditionalFee extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'name' => 'Name',
-            'label' => 'Label',
-            'currency' => 'Currency',
-            'description' => 'Description',
-            'condition_data' => 'Condition Data',
-            'condition_description' => 'Condition Description',
-            'status' => 'Status',
-            'created_by' => 'Created By',
-            'created_time' => 'Created Time',
-            'updated_by' => 'Updated By',
-            'updated_time' => 'Updated Time',
-            'fee_rate' => 'Fee Rate',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'name' => Yii::t('db', 'Name'),
+            'label' => Yii::t('db', 'Label'),
+            'currency' => Yii::t('db', 'Currency'),
+            'description' => Yii::t('db', 'Description'),
+            'condition_data' => Yii::t('db', 'Condition Data'),
+            'condition_description' => Yii::t('db', 'Condition Description'),
+            'status' => Yii::t('db', 'Status'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'created_time' => Yii::t('db', 'Created Time'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'updated_time' => Yii::t('db', 'Updated Time'),
+            'fee_rate' => Yii::t('db', 'Fee Rate'),
+            'version' => Yii::t('db', 'Version'),
         ];
     }
 }

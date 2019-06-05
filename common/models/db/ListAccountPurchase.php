@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "list_account_purchase".
+ * This is the model class for table "{{%list_account_purchase}}".
  *
  * @property int $id
  * @property string $account
@@ -22,7 +22,7 @@ class ListAccountPurchase extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'list_account_purchase';
+        return '{{%list_account_purchase}}';
     }
 
     /**
@@ -43,13 +43,13 @@ class ListAccountPurchase extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'account' => 'Account',
-            'email' => 'Email',
-            'type' => 'Type',
-            'active' => 'Active',
-            'updated_at' => 'Updated At',
-            'created_at' => 'Created At',
+            'id' => Yii::t('db', 'ID'),
+            'account' => Yii::t('db', 'Account'),
+            'email' => Yii::t('db', 'Email'),
+            'type' => Yii::t('db', 'Type'),
+            'active' => Yii::t('db', 'Active'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'created_at' => Yii::t('db', 'Created At'),
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "employee".
+ * This is the model class for table "{{%employee}}".
  *
  * @property int $id
  * @property string $name
@@ -20,7 +20,7 @@ class Employee extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'employee';
+        return '{{%employee}}';
     }
 
     /**
@@ -42,11 +42,11 @@ class Employee extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'email' => 'Email',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'name' => Yii::t('db', 'Name'),
+            'email' => Yii::t('db', 'Email'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
         ];
     }
 }

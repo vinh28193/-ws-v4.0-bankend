@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "payment_provider".
+ * This is the model class for table "{{%payment_provider}}".
  *
  * @property int $id ID
  * @property int $store_id Store ID reference
@@ -33,6 +33,8 @@ use Yii;
  * @property int $created_at Created at (timestamp)
  * @property int $updated_by Updated by
  * @property int $updated_at Updated at (timestamp)
+ *
+ * @property PaymentMethodProvider[] $paymentMethodProviders
  */
 class PaymentProvider extends \common\components\db\ActiveRecord
 {
@@ -41,7 +43,7 @@ class PaymentProvider extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'payment_provider';
+        return '{{%payment_provider}}';
     }
 
     /**
@@ -67,32 +69,40 @@ class PaymentProvider extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'name' => 'Name',
-            'code' => 'Code',
-            'description' => 'Description',
-            'return_url' => 'Return Url',
-            'cancel_url' => 'Cancel Url',
-            'submit_url' => 'Submit Url',
-            'background_url' => 'Background Url',
-            'image_url' => 'Image Url',
-            'logo_url' => 'Logo Url',
-            'pending_url' => 'Pending Url',
-            'rc' => 'Rc',
-            'alg' => 'Alg',
-            'bmod' => 'Bmod',
-            'merchant_id' => 'Merchant ID',
-            'secret_key' => 'Secret Key',
-            'aes_iv' => 'Aes Iv',
-            'portal' => 'Portal',
-            'token' => 'Token',
-            'wsdl' => 'Wsdl',
-            'status' => 'Status',
-            'created_by' => 'Created By',
-            'created_at' => 'Created At',
-            'updated_by' => 'Updated By',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'name' => Yii::t('db', 'Name'),
+            'code' => Yii::t('db', 'Code'),
+            'description' => Yii::t('db', 'Description'),
+            'return_url' => Yii::t('db', 'Return Url'),
+            'cancel_url' => Yii::t('db', 'Cancel Url'),
+            'submit_url' => Yii::t('db', 'Submit Url'),
+            'background_url' => Yii::t('db', 'Background Url'),
+            'image_url' => Yii::t('db', 'Image Url'),
+            'logo_url' => Yii::t('db', 'Logo Url'),
+            'pending_url' => Yii::t('db', 'Pending Url'),
+            'rc' => Yii::t('db', 'Rc'),
+            'alg' => Yii::t('db', 'Alg'),
+            'bmod' => Yii::t('db', 'Bmod'),
+            'merchant_id' => Yii::t('db', 'Merchant ID'),
+            'secret_key' => Yii::t('db', 'Secret Key'),
+            'aes_iv' => Yii::t('db', 'Aes Iv'),
+            'portal' => Yii::t('db', 'Portal'),
+            'token' => Yii::t('db', 'Token'),
+            'wsdl' => Yii::t('db', 'Wsdl'),
+            'status' => Yii::t('db', 'Status'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'updated_at' => Yii::t('db', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPaymentMethodProviders()
+    {
+        return $this->hasMany(PaymentMethodProvider::className(), ['payment_provider_id' => 'id']);
     }
 }

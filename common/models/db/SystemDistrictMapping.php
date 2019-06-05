@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "system_district_mapping".
+ * This is the model class for table "{{%system_district_mapping}}".
  *
  * @property int $id
  * @property int $district_id id system_district
@@ -23,7 +23,7 @@ class SystemDistrictMapping extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'system_district_mapping';
+        return '{{%system_district_mapping}}';
     }
 
     /**
@@ -43,14 +43,14 @@ class SystemDistrictMapping extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'district_id' => 'District ID',
-            'province_id' => 'Province ID',
-            'box_me_district_id' => 'Box Me District ID',
-            'box_me_province_id' => 'Box Me Province ID',
-            'district_name' => 'District Name',
-            'province_name' => 'Province Name',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'district_id' => Yii::t('db', 'District ID'),
+            'province_id' => Yii::t('db', 'Province ID'),
+            'box_me_district_id' => Yii::t('db', 'Box Me District ID'),
+            'box_me_province_id' => Yii::t('db', 'Box Me Province ID'),
+            'district_name' => Yii::t('db', 'District Name'),
+            'province_name' => Yii::t('db', 'Province Name'),
+            'version' => Yii::t('db', 'Version'),
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "purchase_product".
+ * This is the model class for table "{{%purchase_product}}".
  *
  * @property int $id
  * @property int $product_id id product mua
@@ -39,7 +39,7 @@ class PurchaseProduct extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'purchase_product';
+        return '{{%purchase_product}}';
     }
 
     /**
@@ -63,26 +63,26 @@ class PurchaseProduct extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'product_id' => 'Product ID',
-            'purchase_order_id' => 'Purchase Order ID',
-            'order_id' => 'Order ID',
-            'sku' => 'Sku',
-            'product_name' => 'Product Name',
-            'image' => 'Image',
-            'purchase_quantity' => 'Purchase Quantity',
-            'receive_quantity' => 'Receive Quantity',
-            'paid_to_seller' => 'Paid To Seller',
-            'changing_price' => 'Changing Price',
-            'type_changing' => 'Type Changing',
-            'purchase_price' => 'Purchase Price',
-            'purchase_us_tax' => 'Purchase Us Tax',
-            'purchase_shipping_fee' => 'Purchase Shipping Fee',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'receive_warehouse_id' => 'Receive Warehouse ID',
-            'receive_warehouse_name' => 'Receive Warehouse Name',
-            'seller_refund_amount' => 'Seller Refund Amount',
+            'id' => Yii::t('db', 'ID'),
+            'product_id' => Yii::t('db', 'Product ID'),
+            'purchase_order_id' => Yii::t('db', 'Purchase Order ID'),
+            'order_id' => Yii::t('db', 'Order ID'),
+            'sku' => Yii::t('db', 'Sku'),
+            'product_name' => Yii::t('db', 'Product Name'),
+            'image' => Yii::t('db', 'Image'),
+            'purchase_quantity' => Yii::t('db', 'Purchase Quantity'),
+            'receive_quantity' => Yii::t('db', 'Receive Quantity'),
+            'paid_to_seller' => Yii::t('db', 'Paid To Seller'),
+            'changing_price' => Yii::t('db', 'Changing Price'),
+            'type_changing' => Yii::t('db', 'Type Changing'),
+            'purchase_price' => Yii::t('db', 'Purchase Price'),
+            'purchase_us_tax' => Yii::t('db', 'Purchase Us Tax'),
+            'purchase_shipping_fee' => Yii::t('db', 'Purchase Shipping Fee'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'receive_warehouse_id' => Yii::t('db', 'Receive Warehouse ID'),
+            'receive_warehouse_name' => Yii::t('db', 'Receive Warehouse Name'),
+            'seller_refund_amount' => Yii::t('db', 'Seller Refund Amount'),
         ];
     }
 

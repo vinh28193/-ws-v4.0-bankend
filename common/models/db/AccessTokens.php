@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "access_tokens".
+ * This is the model class for table "{{%access_tokens}}".
  *
  * @property int $id
  * @property string $token
@@ -23,7 +23,7 @@ class AccessTokens extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'access_tokens';
+        return '{{%access_tokens}}';
     }
 
     /**
@@ -45,14 +45,14 @@ class AccessTokens extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'token' => 'Token',
-            'expires_at' => 'Expires At',
-            'auth_code' => 'Auth Code',
-            'user_id' => 'User ID',
-            'app_id' => 'App ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'token' => Yii::t('db', 'Token'),
+            'expires_at' => Yii::t('db', 'Expires At'),
+            'auth_code' => Yii::t('db', 'Auth Code'),
+            'user_id' => Yii::t('db', 'User ID'),
+            'app_id' => Yii::t('db', 'App ID'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "promotion".
+ * This is the model class for table "{{%promotion}}".
  *
  * @property int $id ID
  * @property int $store_id Store ID
@@ -28,6 +28,7 @@ use Yii;
  * @property int $created_at Created at (timestamp)
  * @property int $updated_by Updated by
  * @property int $updated_at Updated at (timestamp)
+ * @property string $promotion_image
  */
 class Promotion extends \common\components\db\ActiveRecord
 {
@@ -36,7 +37,7 @@ class Promotion extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'promotion';
+        return '{{%promotion}}';
     }
 
     /**
@@ -47,7 +48,7 @@ class Promotion extends \common\components\db\ActiveRecord
         return [
             [['store_id'], 'required'],
             [['store_id', 'type', 'discount_calculator', 'discount_type', 'refund_order_Id', 'allow_instalment', 'allow_multiple', 'allow_order', 'status', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
-            [['description'], 'string'],
+            [['description', 'promotion_image'], 'string'],
             [['discount_amount', 'discount_max_amount'], 'number'],
             [['name'], 'string', 'max' => 100],
             [['code'], 'string', 'max' => 32],
@@ -63,36 +64,28 @@ class Promotion extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'name' => 'Name',
-            'code' => 'Code',
-            'message' => 'Message',
-            'description' => 'Description',
-            'type' => 'Type',
-            'discount_calculator' => 'Discount Calculator',
-            'discount_fee' => 'Discount Fee',
-            'discount_amount' => 'Discount Amount',
-            'discount_type' => 'Discount Type',
-            'discount_max_amount' => 'Discount Max Amount',
-            'refund_order_Id' => 'Refund Order ID',
-            'allow_instalment' => 'Allow Instalment',
-            'allow_multiple' => 'Allow Multiple',
-            'allow_order' => 'Allow Order',
-            'status' => 'Status',
-            'created_by' => 'Created By',
-            'created_at' => 'Created At',
-            'updated_by' => 'Updated By',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'name' => Yii::t('db', 'Name'),
+            'code' => Yii::t('db', 'Code'),
+            'message' => Yii::t('db', 'Message'),
+            'description' => Yii::t('db', 'Description'),
+            'type' => Yii::t('db', 'Type'),
+            'discount_calculator' => Yii::t('db', 'Discount Calculator'),
+            'discount_fee' => Yii::t('db', 'Discount Fee'),
+            'discount_amount' => Yii::t('db', 'Discount Amount'),
+            'discount_type' => Yii::t('db', 'Discount Type'),
+            'discount_max_amount' => Yii::t('db', 'Discount Max Amount'),
+            'refund_order_Id' => Yii::t('db', 'Refund Order ID'),
+            'allow_instalment' => Yii::t('db', 'Allow Instalment'),
+            'allow_multiple' => Yii::t('db', 'Allow Multiple'),
+            'allow_order' => Yii::t('db', 'Allow Order'),
+            'status' => Yii::t('db', 'Status'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'promotion_image' => Yii::t('db', 'Promotion Image'),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\PromotionQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\PromotionQuery(get_called_class());
     }
 }

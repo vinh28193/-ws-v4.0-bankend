@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "message".
+ * This is the model class for table "{{%message}}".
  *
  * @property int $id
  * @property string $language
@@ -20,7 +20,7 @@ class Message extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'message';
+        return '{{%message}}';
     }
 
     /**
@@ -44,9 +44,9 @@ class Message extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'language' => 'Language',
-            'translation' => 'Translation',
+            'id' => Yii::t('db', 'ID'),
+            'language' => Yii::t('db', 'Language'),
+            'translation' => Yii::t('db', 'Translation'),
         ];
     }
 

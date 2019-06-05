@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "delivery_note".
+ * This is the model class for table "{{%delivery_note}}".
  *
  * @property int $id
  * @property string $delivery_note_code Mã kiện của weshop
@@ -46,6 +46,8 @@ use Yii;
  * @property string $receiver_post_code
  * @property int $insurance 0: auto, 1: insurance, 2: unInsurance
  * @property int $pack_wood 0: unInsurance, 1: insurance
+ *
+ * @property Warehouse $warehouse
  */
 class DeliveryNote extends \common\components\db\ActiveRecord
 {
@@ -54,7 +56,7 @@ class DeliveryNote extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'delivery_note';
+        return '{{%delivery_note}}';
     }
 
     /**
@@ -69,6 +71,7 @@ class DeliveryNote extends \common\components\db\ActiveRecord
             [['delivery_note_code'], 'string', 'max' => 32],
             [['tracking_seller', 'version', 'receiver_name', 'receiver_email', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code'], 'string', 'max' => 255],
             [['current_status'], 'string', 'max' => 100],
+            [['warehouse_id'], 'exist', 'skipOnError' => true, 'targetClass' => Warehouse::className(), 'targetAttribute' => ['warehouse_id' => 'id']],
         ];
     }
 
@@ -78,45 +81,53 @@ class DeliveryNote extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'delivery_note_code' => 'Delivery Note Code',
-            'tracking_seller' => 'Tracking Seller',
-            'order_ids' => 'Order Ids',
-            'tracking_reference_1' => 'Tracking Reference 1',
-            'tracking_reference_2' => 'Tracking Reference 2',
-            'manifest_code' => 'Manifest Code',
-            'delivery_note_weight' => 'Delivery Note Weight',
-            'delivery_note_change_weight' => 'Delivery Note Change Weight',
-            'delivery_note_dimension_l' => 'Delivery Note Dimension L',
-            'delivery_note_dimension_w' => 'Delivery Note Dimension W',
-            'delivery_note_dimension_h' => 'Delivery Note Dimension H',
-            'seller_shipped' => 'Seller Shipped',
-            'stock_in_us' => 'Stock In Us',
-            'stock_out_us' => 'Stock Out Us',
-            'stock_in_local' => 'Stock In Local',
-            'lost' => 'Lost',
-            'current_status' => 'Current Status',
-            'warehouse_id' => 'Warehouse ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'remove' => 'Remove',
-            'version' => 'Version',
-            'shipment_id' => 'Shipment ID',
-            'customer_id' => 'Customer ID',
-            'receiver_address_id' => 'Receiver Address ID',
-            'receiver_name' => 'Receiver Name',
-            'receiver_email' => 'Receiver Email',
-            'receiver_phone' => 'Receiver Phone',
-            'receiver_address' => 'Receiver Address',
-            'receiver_country_id' => 'Receiver Country ID',
-            'receiver_country_name' => 'Receiver Country Name',
-            'receiver_province_id' => 'Receiver Province ID',
-            'receiver_province_name' => 'Receiver Province Name',
-            'receiver_district_id' => 'Receiver District ID',
-            'receiver_district_name' => 'Receiver District Name',
-            'receiver_post_code' => 'Receiver Post Code',
-            'insurance' => 'Insurance',
-            'pack_wood' => 'Pack Wood',
+            'id' => Yii::t('db', 'ID'),
+            'delivery_note_code' => Yii::t('db', 'Delivery Note Code'),
+            'tracking_seller' => Yii::t('db', 'Tracking Seller'),
+            'order_ids' => Yii::t('db', 'Order Ids'),
+            'tracking_reference_1' => Yii::t('db', 'Tracking Reference 1'),
+            'tracking_reference_2' => Yii::t('db', 'Tracking Reference 2'),
+            'manifest_code' => Yii::t('db', 'Manifest Code'),
+            'delivery_note_weight' => Yii::t('db', 'Delivery Note Weight'),
+            'delivery_note_change_weight' => Yii::t('db', 'Delivery Note Change Weight'),
+            'delivery_note_dimension_l' => Yii::t('db', 'Delivery Note Dimension L'),
+            'delivery_note_dimension_w' => Yii::t('db', 'Delivery Note Dimension W'),
+            'delivery_note_dimension_h' => Yii::t('db', 'Delivery Note Dimension H'),
+            'seller_shipped' => Yii::t('db', 'Seller Shipped'),
+            'stock_in_us' => Yii::t('db', 'Stock In Us'),
+            'stock_out_us' => Yii::t('db', 'Stock Out Us'),
+            'stock_in_local' => Yii::t('db', 'Stock In Local'),
+            'lost' => Yii::t('db', 'Lost'),
+            'current_status' => Yii::t('db', 'Current Status'),
+            'warehouse_id' => Yii::t('db', 'Warehouse ID'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'remove' => Yii::t('db', 'Remove'),
+            'version' => Yii::t('db', 'Version'),
+            'shipment_id' => Yii::t('db', 'Shipment ID'),
+            'customer_id' => Yii::t('db', 'Customer ID'),
+            'receiver_address_id' => Yii::t('db', 'Receiver Address ID'),
+            'receiver_name' => Yii::t('db', 'Receiver Name'),
+            'receiver_email' => Yii::t('db', 'Receiver Email'),
+            'receiver_phone' => Yii::t('db', 'Receiver Phone'),
+            'receiver_address' => Yii::t('db', 'Receiver Address'),
+            'receiver_country_id' => Yii::t('db', 'Receiver Country ID'),
+            'receiver_country_name' => Yii::t('db', 'Receiver Country Name'),
+            'receiver_province_id' => Yii::t('db', 'Receiver Province ID'),
+            'receiver_province_name' => Yii::t('db', 'Receiver Province Name'),
+            'receiver_district_id' => Yii::t('db', 'Receiver District ID'),
+            'receiver_district_name' => Yii::t('db', 'Receiver District Name'),
+            'receiver_post_code' => Yii::t('db', 'Receiver Post Code'),
+            'insurance' => Yii::t('db', 'Insurance'),
+            'pack_wood' => Yii::t('db', 'Pack Wood'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWarehouse()
+    {
+        return $this->hasOne(Warehouse::className(), ['id' => 'warehouse_id']);
     }
 }

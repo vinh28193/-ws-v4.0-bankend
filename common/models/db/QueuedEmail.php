@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "queued_email".
+ * This is the model class for table "{{%queued_email}}".
  *
  * @property int $id
  * @property int $Priority
@@ -46,7 +46,7 @@ class QueuedEmail extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'queued_email';
+        return '{{%queued_email}}';
     }
 
     /**
@@ -75,34 +75,34 @@ class QueuedEmail extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'Priority' => 'Priority',
-            'From' => 'From',
-            'FromName' => 'From Name',
-            'To' => 'To',
-            'ToName' => 'To Name',
-            'CC' => 'Cc',
-            'Bcc' => 'Bcc',
-            'Subject' => 'Subject',
-            'Body' => 'Body',
-            'CreatedTime' => 'Created Time',
-            'SentTries' => 'Sent Tries',
-            'SentOn' => 'Sent On',
-            'EmailAccountId' => 'Email Account ID',
-            'CampaignId' => 'Campaign ID',
-            'TemplateId' => 'Template ID',
-            'RecipientId' => 'Recipient ID',
-            'Opened' => 'Opened',
-            'Openedon' => 'Openedon',
-            'Status' => 'Status',
-            'OrderId' => 'Order ID',
-            'api_id' => 'Api ID',
-            'Bounce' => 'Bounce',
-            'Clicked' => 'Clicked',
-            'Sent' => 'Sent',
-            'Using' => 'Using',
-            'OrderType' => 'Order Type',
-            'StatusV3' => 'Status V3',
+            'id' => Yii::t('db', 'ID'),
+            'Priority' => Yii::t('db', 'Priority'),
+            'From' => Yii::t('db', 'From'),
+            'FromName' => Yii::t('db', 'From Name'),
+            'To' => Yii::t('db', 'To'),
+            'ToName' => Yii::t('db', 'To Name'),
+            'CC' => Yii::t('db', 'Cc'),
+            'Bcc' => Yii::t('db', 'Bcc'),
+            'Subject' => Yii::t('db', 'Subject'),
+            'Body' => Yii::t('db', 'Body'),
+            'CreatedTime' => Yii::t('db', 'Created Time'),
+            'SentTries' => Yii::t('db', 'Sent Tries'),
+            'SentOn' => Yii::t('db', 'Sent On'),
+            'EmailAccountId' => Yii::t('db', 'Email Account ID'),
+            'CampaignId' => Yii::t('db', 'Campaign ID'),
+            'TemplateId' => Yii::t('db', 'Template ID'),
+            'RecipientId' => Yii::t('db', 'Recipient ID'),
+            'Opened' => Yii::t('db', 'Opened'),
+            'Openedon' => Yii::t('db', 'Openedon'),
+            'Status' => Yii::t('db', 'Status'),
+            'OrderId' => Yii::t('db', 'Order ID'),
+            'api_id' => Yii::t('db', 'Api ID'),
+            'Bounce' => Yii::t('db', 'Bounce'),
+            'Clicked' => Yii::t('db', 'Clicked'),
+            'Sent' => Yii::t('db', 'Sent'),
+            'Using' => Yii::t('db', 'Using'),
+            'OrderType' => Yii::t('db', 'Order Type'),
+            'StatusV3' => Yii::t('db', 'Status V3'),
         ];
     }
 

@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "system_currency".
+ * This is the model class for table "{{%system_currency}}".
  *
  * @property int $id ID
  * @property string $name
@@ -21,7 +21,7 @@ class SystemCurrency extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'system_currency';
+        return '{{%system_currency}}';
     }
 
     /**
@@ -40,12 +40,12 @@ class SystemCurrency extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'currency_code' => 'Currency Code',
-            'currency_symbol' => 'Currency Symbol',
-            'status' => 'Status',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'name' => Yii::t('db', 'Name'),
+            'currency_code' => Yii::t('db', 'Currency Code'),
+            'currency_symbol' => Yii::t('db', 'Currency Symbol'),
+            'status' => Yii::t('db', 'Status'),
+            'version' => Yii::t('db', 'Version'),
         ];
     }
 }

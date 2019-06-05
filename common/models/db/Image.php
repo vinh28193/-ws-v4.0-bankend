@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "image".
+ * This is the model class for table "{{%image}}".
  *
  * @property int $id ID
  * @property int $store_id Store ID reference
@@ -32,7 +32,7 @@ class Image extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'image';
+        return '{{%image}}';
     }
 
     /**
@@ -54,32 +54,23 @@ class Image extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'reference' => 'Reference',
-            'reference_id' => 'Reference ID',
-            'base_path' => 'Base Path',
-            'name' => 'Name',
-            'full_path' => 'Full Path',
-            'width' => 'Width',
-            'height' => 'Height',
-            'quality' => 'Quality',
-            'size' => 'Size',
-            'type' => 'Type',
-            'is_uploaded' => 'Is Uploaded',
-            'status' => 'Status',
-            'uploaded_by' => 'Uploaded By',
-            'uploaded_at' => 'Uploaded At',
-            'uploaded_from_ip' => 'Uploaded From Ip',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'reference' => Yii::t('db', 'Reference'),
+            'reference_id' => Yii::t('db', 'Reference ID'),
+            'base_path' => Yii::t('db', 'Base Path'),
+            'name' => Yii::t('db', 'Name'),
+            'full_path' => Yii::t('db', 'Full Path'),
+            'width' => Yii::t('db', 'Width'),
+            'height' => Yii::t('db', 'Height'),
+            'quality' => Yii::t('db', 'Quality'),
+            'size' => Yii::t('db', 'Size'),
+            'type' => Yii::t('db', 'Type'),
+            'is_uploaded' => Yii::t('db', 'Is Uploaded'),
+            'status' => Yii::t('db', 'Status'),
+            'uploaded_by' => Yii::t('db', 'Uploaded By'),
+            'uploaded_at' => Yii::t('db', 'Uploaded At'),
+            'uploaded_from_ip' => Yii::t('db', 'Uploaded From Ip'),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\ImageQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\ImageQuery(get_called_class());
     }
 }

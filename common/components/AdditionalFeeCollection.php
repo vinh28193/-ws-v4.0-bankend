@@ -9,6 +9,7 @@
 namespace common\components;
 
 
+use common\models\ProductFee;
 use common\models\StoreAdditionalFee;
 use Yii;
 use yii\db\ActiveRecord;
@@ -42,7 +43,7 @@ class AdditionalFeeCollection extends ArrayCollection
         $ownerId = $owner->getPrimaryKey(false);
         $query = new Query();
         $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.local_amount', 'c.discount_amount', 'c.currency']);
-        $query->from(['c' => 'product_fee']);
+        $query->from(['c' => ProductFee::tableName()]);
         $query->where(['and', ['c.' . 'product_id' => $ownerId]]);
         $additionalFees = $query->all($ownerClass::getDb());
         $additionalFees = ArrayHelper::index($additionalFees, null, function ($element) {

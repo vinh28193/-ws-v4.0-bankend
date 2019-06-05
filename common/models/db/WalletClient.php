@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "wallet_client".
+ * This is the model class for table "{{%wallet_client}}".
  *
  * @property int $id
  * @property string $username
@@ -50,14 +50,14 @@ use Yii;
  *
  * @property WalletTransaction[] $walletTransactions
  */
-class WalletClient extends \yii\db\ActiveRecord
+class WalletClient extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'wallet_client';
+        return '{{%wallet_client}}';
     }
 
     /**
@@ -82,46 +82,46 @@ class WalletClient extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'username' => 'Username',
-            'password_hash' => 'Password Hash',
-            'password_reset_token' => 'Password Reset Token',
-            'auth_key' => 'Auth Key',
-            'email' => 'Email',
-            'customer_id' => 'Customer ID',
-            'customer_phone' => 'Customer Phone',
-            'customer_name' => 'Customer Name',
-            'current_balance' => 'Current Balance',
-            'freeze_balance' => 'Freeze Balance',
-            'usable_balance' => 'Usable Balance',
-            'withdrawable_balance' => 'Withdrawable Balance',
-            'total_refunded_amount' => 'Total Refunded Amount',
-            'total_topup_amount' => 'Total Topup Amount',
-            'total_using_amount' => 'Total Using Amount',
-            'total_withdraw_amount' => 'Total Withdraw Amount',
-            'last_refund_amount' => 'Last Refund Amount',
-            'last_refund_at' => 'Last Refund At',
-            'last_topup_amount' => 'Last Topup Amount',
-            'last_topup_at' => 'Last Topup At',
-            'last_using_amount' => 'Last Using Amount',
-            'last_using_at' => 'Last Using At',
-            'last_withdraw_amount' => 'Last Withdraw Amount',
-            'last_withdraw_at' => 'Last Withdraw At',
-            'current_bulk_point' => 'Current Bulk Point',
-            'current_bulk_balance' => 'Current Bulk Balance',
-            'otp_veryfy_code' => 'Otp Veryfy Code',
-            'otp_veryfy_expired_at' => 'Otp Veryfy Expired At',
-            'otp_veryfy_count' => 'Otp Veryfy Count',
-            'store_id' => 'Store ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'identity_number' => 'Identity Number',
-            'identity_issued_date' => 'Identity Issued Date',
-            'identity_issued_by' => 'Identity Issued By',
-            'identity_image_url_before' => 'Identity Image Url Before',
-            'identity_verified' => 'Identity Verified',
-            'identity_image_url_after' => 'Identity Image Url After',
-            'status' => 'Status',
+            'id' => Yii::t('db', 'ID'),
+            'username' => Yii::t('db', 'Username'),
+            'password_hash' => Yii::t('db', 'Password Hash'),
+            'password_reset_token' => Yii::t('db', 'Password Reset Token'),
+            'auth_key' => Yii::t('db', 'Auth Key'),
+            'email' => Yii::t('db', 'Email'),
+            'customer_id' => Yii::t('db', 'Customer ID'),
+            'customer_phone' => Yii::t('db', 'Customer Phone'),
+            'customer_name' => Yii::t('db', 'Customer Name'),
+            'current_balance' => Yii::t('db', 'Current Balance'),
+            'freeze_balance' => Yii::t('db', 'Freeze Balance'),
+            'usable_balance' => Yii::t('db', 'Usable Balance'),
+            'withdrawable_balance' => Yii::t('db', 'Withdrawable Balance'),
+            'total_refunded_amount' => Yii::t('db', 'Total Refunded Amount'),
+            'total_topup_amount' => Yii::t('db', 'Total Topup Amount'),
+            'total_using_amount' => Yii::t('db', 'Total Using Amount'),
+            'total_withdraw_amount' => Yii::t('db', 'Total Withdraw Amount'),
+            'last_refund_amount' => Yii::t('db', 'Last Refund Amount'),
+            'last_refund_at' => Yii::t('db', 'Last Refund At'),
+            'last_topup_amount' => Yii::t('db', 'Last Topup Amount'),
+            'last_topup_at' => Yii::t('db', 'Last Topup At'),
+            'last_using_amount' => Yii::t('db', 'Last Using Amount'),
+            'last_using_at' => Yii::t('db', 'Last Using At'),
+            'last_withdraw_amount' => Yii::t('db', 'Last Withdraw Amount'),
+            'last_withdraw_at' => Yii::t('db', 'Last Withdraw At'),
+            'current_bulk_point' => Yii::t('db', 'Current Bulk Point'),
+            'current_bulk_balance' => Yii::t('db', 'Current Bulk Balance'),
+            'otp_veryfy_code' => Yii::t('db', 'Otp Veryfy Code'),
+            'otp_veryfy_expired_at' => Yii::t('db', 'Otp Veryfy Expired At'),
+            'otp_veryfy_count' => Yii::t('db', 'Otp Veryfy Count'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'identity_number' => Yii::t('db', 'Identity Number'),
+            'identity_issued_date' => Yii::t('db', 'Identity Issued Date'),
+            'identity_issued_by' => Yii::t('db', 'Identity Issued By'),
+            'identity_image_url_before' => Yii::t('db', 'Identity Image Url Before'),
+            'identity_verified' => Yii::t('db', 'Identity Verified'),
+            'identity_image_url_after' => Yii::t('db', 'Identity Image Url After'),
+            'status' => Yii::t('db', 'Status'),
         ];
     }
 

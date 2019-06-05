@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "product_fee".
+ * This is the model class for table "{{%product_fee}}".
  *
  * @property int $id
  * @property int $order_id order id
@@ -28,7 +28,7 @@ class ProductFee extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'product_fee';
+        return '{{%product_fee}}';
     }
 
     /**
@@ -51,28 +51,19 @@ class ProductFee extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'order_id' => 'Order ID',
-            'product_id' => 'Product ID',
-            'type' => 'Type',
-            'name' => 'Name',
-            'amount' => 'Amount',
-            'local_amount' => 'Local Amount',
-            'discount_amount' => 'Discount Amount',
-            'currency' => 'Currency',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'remove' => 'Remove',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'order_id' => Yii::t('db', 'Order ID'),
+            'product_id' => Yii::t('db', 'Product ID'),
+            'type' => Yii::t('db', 'Type'),
+            'name' => Yii::t('db', 'Name'),
+            'amount' => Yii::t('db', 'Amount'),
+            'local_amount' => Yii::t('db', 'Local Amount'),
+            'discount_amount' => Yii::t('db', 'Discount Amount'),
+            'currency' => Yii::t('db', 'Currency'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'remove' => Yii::t('db', 'Remove'),
+            'version' => Yii::t('db', 'Version'),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\ProductFeeQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\ProductFeeQuery(get_called_class());
     }
 }

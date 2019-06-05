@@ -48,10 +48,13 @@ if (!YII_ENV_TEST) {
             'model' => [
                 'class' => 'yii\gii\generators\model\Generator',
                 'ns' => 'common\models\db',
+                'useTablePrefix' => true,
                 'baseClass' => 'common\components\db\ActiveRecord',
                 'generateQuery' => false,
                 'queryNs' => 'common\models\queries',
-                'queryBaseClass' => 'common\components\db\ActiveQuery'
+                'queryBaseClass' => 'common\components\db\ActiveQuery',
+                'enableI18N' => true,
+                'messageCategory' => 'db'
             ],
             'mongoDbModel' => [
                 'class' => 'yii\mongodb\gii\model\Generator'

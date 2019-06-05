@@ -5,24 +5,16 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "wallet_log".
+ * This is the model class for table "{{%wallet_log}}".
  *
  * @property int $id
  * @property int $walletTransactionId
- * @property string $TypeTransaction  TOPUP - nạp tiền
- REFUN - nạp tiền do refun
- WITHDRAW - rút tiền
- FREEZE - đóng băng
- UNFREEZEADD - mở đóng băng cộng
- UNFREEZEREDUCE - mở đóng băng trừ
- PAYMENT - thanh toán 
+ * @property string $TypeTransaction  TOPUP - nạp tiền REFUN - nạp tiền do refun WITHDRAW - rút tiền FREEZE - đóng băng UNFREEZEADD - mở đóng băng cộng UNFREEZEREDUCE - mở đóng băng trừ PAYMENT - thanh toán 
  * @property int $walletId
- * @property string $typeWallet CLIENT - ví client
- MERCHANT - ví merchant
+ * @property string $typeWallet CLIENT - ví client MERCHANT - ví merchant
  * @property string $description
  * @property string $amount số tiền giao dịch
- * @property string $BeforeAccumulatedBalances số dư trước khi giao dịch - theo field current_balance
- 
+ * @property string $BeforeAccumulatedBalances số dư trước khi giao dịch - theo field current_balance 
  * @property string $AfterAccumulatedBalances số dư sau khi giao dịch - theo field current_balance
  * @property string $createDate
  * @property int $storeId
@@ -30,14 +22,14 @@ use Yii;
  *
  * @property WalletTransaction $walletTransaction
  */
-class WalletLog extends \yii\db\ActiveRecord
+class WalletLog extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'wallet_log';
+        return '{{%wallet_log}}';
     }
 
     /**
@@ -63,18 +55,18 @@ class WalletLog extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'walletTransactionId' => 'Wallet Transaction ID',
-            'TypeTransaction' => 'Type Transaction',
-            'walletId' => 'Wallet ID',
-            'typeWallet' => 'Type Wallet',
-            'description' => 'Description',
-            'amount' => 'Amount',
-            'BeforeAccumulatedBalances' => 'Before Accumulated Balances',
-            'AfterAccumulatedBalances' => 'After Accumulated Balances',
-            'createDate' => 'Create Date',
-            'storeId' => 'Store ID',
-            'status' => 'Status',
+            'id' => Yii::t('db', 'ID'),
+            'walletTransactionId' => Yii::t('db', 'Wallet Transaction ID'),
+            'TypeTransaction' => Yii::t('db', 'Type Transaction'),
+            'walletId' => Yii::t('db', 'Wallet ID'),
+            'typeWallet' => Yii::t('db', 'Type Wallet'),
+            'description' => Yii::t('db', 'Description'),
+            'amount' => Yii::t('db', 'Amount'),
+            'BeforeAccumulatedBalances' => Yii::t('db', 'Before Accumulated Balances'),
+            'AfterAccumulatedBalances' => Yii::t('db', 'After Accumulated Balances'),
+            'createDate' => Yii::t('db', 'Create Date'),
+            'storeId' => Yii::t('db', 'Store ID'),
+            'status' => Yii::t('db', 'Status'),
         ];
     }
 

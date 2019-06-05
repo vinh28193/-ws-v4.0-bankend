@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "wallet_merchant".
+ * This is the model class for table "{{%wallet_merchant}}".
  *
  * @property int $id
  * @property string $account_number Mã ví - Ma tien to: S(danh cho master)  , nội bộ 
@@ -30,14 +30,14 @@ use Yii;
  *
  * @property WalletTransaction[] $walletTransactions
  */
-class WalletMerchant extends \yii\db\ActiveRecord
+class WalletMerchant extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'wallet_merchant';
+        return '{{%wallet_merchant}}';
     }
 
     /**
@@ -61,26 +61,26 @@ class WalletMerchant extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'account_number' => 'Account Number',
-            'account_email' => 'Account Email',
-            'account_token' => 'Account Token',
-            'account_bank_id' => 'Account Bank ID',
-            'parent_account_id' => 'Parent Account ID',
-            'description' => 'Description',
-            'opening_balance' => 'Opening Balance',
-            'current_balance' => 'Current Balance',
-            'total_credit_amount' => 'Total Credit Amount',
-            'total_debit_amount' => 'Total Debit Amount',
-            'previous_current_balance' => 'Previous Current Balance',
-            'last_amount' => 'Last Amount',
-            'last_updated' => 'Last Updated',
-            'last_edit_user_id' => 'Last Edit User ID',
-            'note' => 'Note',
-            'store_id' => 'Store ID',
-            'active' => 'Active',
-            'account_ref_payment_mapping' => 'Account Ref Payment Mapping',
-            'payment_provider_id' => 'Payment Provider ID',
+            'id' => Yii::t('db', 'ID'),
+            'account_number' => Yii::t('db', 'Account Number'),
+            'account_email' => Yii::t('db', 'Account Email'),
+            'account_token' => Yii::t('db', 'Account Token'),
+            'account_bank_id' => Yii::t('db', 'Account Bank ID'),
+            'parent_account_id' => Yii::t('db', 'Parent Account ID'),
+            'description' => Yii::t('db', 'Description'),
+            'opening_balance' => Yii::t('db', 'Opening Balance'),
+            'current_balance' => Yii::t('db', 'Current Balance'),
+            'total_credit_amount' => Yii::t('db', 'Total Credit Amount'),
+            'total_debit_amount' => Yii::t('db', 'Total Debit Amount'),
+            'previous_current_balance' => Yii::t('db', 'Previous Current Balance'),
+            'last_amount' => Yii::t('db', 'Last Amount'),
+            'last_updated' => Yii::t('db', 'Last Updated'),
+            'last_edit_user_id' => Yii::t('db', 'Last Edit User ID'),
+            'note' => Yii::t('db', 'Note'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'active' => Yii::t('db', 'Active'),
+            'account_ref_payment_mapping' => Yii::t('db', 'Account Ref Payment Mapping'),
+            'payment_provider_id' => Yii::t('db', 'Payment Provider ID'),
         ];
     }
 

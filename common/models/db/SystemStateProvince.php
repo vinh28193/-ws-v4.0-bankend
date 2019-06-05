@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "system_state_province".
+ * This is the model class for table "{{%system_state_province}}".
  *
  * @property int $id ID
  * @property int $country_id id nước
@@ -18,8 +18,6 @@ use Yii;
  * @property int $remove
  * @property string $version version 4.0
  *
- * @property Address[] $addresses
- * @property Order[] $orders
  * @property Shipment[] $shipments
  * @property SystemDistrict[] $systemDistricts
  * @property SystemCountry $country
@@ -32,7 +30,7 @@ class SystemStateProvince extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'system_state_province';
+        return '{{%system_state_province}}';
     }
 
     /**
@@ -53,33 +51,17 @@ class SystemStateProvince extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'country_id' => 'Country ID',
-            'name' => 'Name',
-            'name_local' => 'Name Local',
-            'name_alias' => 'Name Alias',
-            'display_order' => 'Display Order',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'remove' => 'Remove',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'country_id' => Yii::t('db', 'Country ID'),
+            'name' => Yii::t('db', 'Name'),
+            'name_local' => Yii::t('db', 'Name Local'),
+            'name_alias' => Yii::t('db', 'Name Alias'),
+            'display_order' => Yii::t('db', 'Display Order'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'remove' => Yii::t('db', 'Remove'),
+            'version' => Yii::t('db', 'Version'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAddresses()
-    {
-        return $this->hasMany(Address::className(), ['province_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrders()
-    {
-        return $this->hasMany(Order::className(), ['receiver_province_id' => 'id']);
     }
 
     /**
@@ -112,14 +94,5 @@ class SystemStateProvince extends \common\components\db\ActiveRecord
     public function getWarehouses()
     {
         return $this->hasMany(Warehouse::className(), ['province_id' => 'id']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\SystemStateProvinceQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\SystemStateProvinceQuery(get_called_class());
     }
 }

@@ -25,6 +25,7 @@ return [
         ],
         'migrate' => [
             'class' => 'common\components\consoles\controllers\MigrateController',
+            'useTablePrefix' => true,
             'migrationPath' => ['@console/migrations'],
         ],
         'mongodb-migrate' => [
@@ -33,6 +34,7 @@ return [
         ],
         'i18n-migrate' => [
             'class' => 'common\components\consoles\controllers\MigrateController',
+            'useTablePrefix' => true,
             'migrationPath' => ['@yii/i18n/migrations']
         ],
         'rbac' => [

@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "user".
+ * This is the model class for table "{{%user}}".
  *
  * @property int $id
  * @property string $username
@@ -63,8 +63,6 @@ use Yii;
  * @property string $last_token_apn_time Thời gian update là 
  * @property string $last_token_apn_time_by update bởi ai . 99999 : mac dinh la Weshop admin
  *
- * @property Auth[] $auths
- * @property Coupon[] $coupons
  * @property Order[] $orders
  * @property Order[] $orders0
  */
@@ -75,7 +73,7 @@ class User extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'user';
+        return '{{%user}}';
     }
 
     /**
@@ -93,9 +91,6 @@ class User extends \common\components\db\ActiveRecord
             [['auth_key'], 'string', 'max' => 32],
             [['scopes', 'github'], 'string', 'max' => 500],
             [['locale', 'verify_code'], 'string', 'max' => 10],
-            [['username'], 'unique'],
-            [['email'], 'unique'],
-            [['password_reset_token'], 'unique'],
         ];
     }
 
@@ -105,78 +100,62 @@ class User extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'username' => 'Username',
-            'auth_key' => 'Auth Key',
-            'password_hash' => 'Password Hash',
-            'password_reset_token' => 'Password Reset Token',
-            'email' => 'Email',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'scopes' => 'Scopes',
-            'store_id' => 'Store ID',
-            'locale' => 'Locale',
-            'github' => 'Github',
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
-            'phone' => 'Phone',
-            'gender' => 'Gender',
-            'birthday' => 'Birthday',
-            'avatar' => 'Avatar',
-            'link_verify' => 'Link Verify',
-            'email_verified' => 'Email Verified',
-            'phone_verified' => 'Phone Verified',
-            'last_order_time' => 'Last Order Time',
-            'note_by_employee' => 'Note By Employee',
-            'type_customer' => 'Type Customer',
-            'employee' => 'Employee',
-            'active_shipping' => 'Active Shipping',
-            'total_xu' => 'Total Xu',
-            'total_xu_start_date' => 'Total Xu Start Date',
-            'total_xu_expired_date' => 'Total Xu Expired Date',
-            'usable_xu' => 'Usable Xu',
-            'usable_xu_start_date' => 'Usable Xu Start Date',
-            'usable_xu_expired_date' => 'Usable Xu Expired Date',
-            'last_use_xu' => 'Last Use Xu',
-            'last_use_time' => 'Last Use Time',
-            'last_revenue_xu' => 'Last Revenue Xu',
-            'last_revenue_time' => 'Last Revenue Time',
-            'verify_code' => 'Verify Code',
-            'verify_code_expired_at' => 'Verify Code Expired At',
-            'verify_code_count' => 'Verify Code Count',
-            'verify_code_type' => 'Verify Code Type',
-            'remove' => 'Remove',
-            'vip' => 'Vip',
-            'uuid' => 'Uuid',
-            'token_fcm' => 'Token Fcm',
-            'token_apn' => 'Token Apn',
-            'last_update_uuid_time' => 'Last Update Uuid Time',
-            'last_update_uuid_time_by' => 'Last Update Uuid Time By',
-            'client_id_ga' => 'Client Id Ga',
-            'last_update_client_id_ga_time' => 'Last Update Client Id Ga Time',
-            'last_update_client_id_ga_time_by' => 'Last Update Client Id Ga Time By',
-            'last_token_fcm_time' => 'Last Token Fcm Time',
-            'last_token_fcm_by' => 'Last Token Fcm By',
-            'last_token_apn_time' => 'Last Token Apn Time',
-            'last_token_apn_time_by' => 'Last Token Apn Time By',
+            'id' => Yii::t('db', 'ID'),
+            'username' => Yii::t('db', 'Username'),
+            'auth_key' => Yii::t('db', 'Auth Key'),
+            'password_hash' => Yii::t('db', 'Password Hash'),
+            'password_reset_token' => Yii::t('db', 'Password Reset Token'),
+            'email' => Yii::t('db', 'Email'),
+            'status' => Yii::t('db', 'Status'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'scopes' => Yii::t('db', 'Scopes'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'locale' => Yii::t('db', 'Locale'),
+            'github' => Yii::t('db', 'Github'),
+            'first_name' => Yii::t('db', 'First Name'),
+            'last_name' => Yii::t('db', 'Last Name'),
+            'phone' => Yii::t('db', 'Phone'),
+            'gender' => Yii::t('db', 'Gender'),
+            'birthday' => Yii::t('db', 'Birthday'),
+            'avatar' => Yii::t('db', 'Avatar'),
+            'link_verify' => Yii::t('db', 'Link Verify'),
+            'email_verified' => Yii::t('db', 'Email Verified'),
+            'phone_verified' => Yii::t('db', 'Phone Verified'),
+            'last_order_time' => Yii::t('db', 'Last Order Time'),
+            'note_by_employee' => Yii::t('db', 'Note By Employee'),
+            'type_customer' => Yii::t('db', 'Type Customer'),
+            'employee' => Yii::t('db', 'Employee'),
+            'active_shipping' => Yii::t('db', 'Active Shipping'),
+            'total_xu' => Yii::t('db', 'Total Xu'),
+            'total_xu_start_date' => Yii::t('db', 'Total Xu Start Date'),
+            'total_xu_expired_date' => Yii::t('db', 'Total Xu Expired Date'),
+            'usable_xu' => Yii::t('db', 'Usable Xu'),
+            'usable_xu_start_date' => Yii::t('db', 'Usable Xu Start Date'),
+            'usable_xu_expired_date' => Yii::t('db', 'Usable Xu Expired Date'),
+            'last_use_xu' => Yii::t('db', 'Last Use Xu'),
+            'last_use_time' => Yii::t('db', 'Last Use Time'),
+            'last_revenue_xu' => Yii::t('db', 'Last Revenue Xu'),
+            'last_revenue_time' => Yii::t('db', 'Last Revenue Time'),
+            'verify_code' => Yii::t('db', 'Verify Code'),
+            'verify_code_expired_at' => Yii::t('db', 'Verify Code Expired At'),
+            'verify_code_count' => Yii::t('db', 'Verify Code Count'),
+            'verify_code_type' => Yii::t('db', 'Verify Code Type'),
+            'remove' => Yii::t('db', 'Remove'),
+            'vip' => Yii::t('db', 'Vip'),
+            'uuid' => Yii::t('db', 'Uuid'),
+            'token_fcm' => Yii::t('db', 'Token Fcm'),
+            'token_apn' => Yii::t('db', 'Token Apn'),
+            'last_update_uuid_time' => Yii::t('db', 'Last Update Uuid Time'),
+            'last_update_uuid_time_by' => Yii::t('db', 'Last Update Uuid Time By'),
+            'client_id_ga' => Yii::t('db', 'Client Id Ga'),
+            'last_update_client_id_ga_time' => Yii::t('db', 'Last Update Client Id Ga Time'),
+            'last_update_client_id_ga_time_by' => Yii::t('db', 'Last Update Client Id Ga Time By'),
+            'last_token_fcm_time' => Yii::t('db', 'Last Token Fcm Time'),
+            'last_token_fcm_by' => Yii::t('db', 'Last Token Fcm By'),
+            'last_token_apn_time' => Yii::t('db', 'Last Token Apn Time'),
+            'last_token_apn_time_by' => Yii::t('db', 'Last Token Apn Time By'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAuths()
-    {
-        return $this->hasMany(Auth::className(), ['user_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCoupons()
-    {
-        return $this->hasMany(Coupon::className(), ['created_by' => 'id']);
     }
 
     /**

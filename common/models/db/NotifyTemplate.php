@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "notify_template".
+ * This is the model class for table "{{%notify_template}}".
  *
  * @property int $id
  * @property string $type
@@ -29,7 +29,7 @@ class NotifyTemplate extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'notify_template';
+        return '{{%notify_template}}';
     }
 
     /**
@@ -50,20 +50,20 @@ class NotifyTemplate extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'type' => 'Type',
-            'receive' => 'Receive',
-            'store' => 'Store',
-            'from_name' => 'From Name',
-            'from_address' => 'From Address',
-            'to_name' => 'To Name',
-            'to_address' => 'To Address',
-            'subject' => 'Subject',
-            'html_content' => 'Html Content',
-            'text_content' => 'Text Content',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'type' => Yii::t('db', 'Type'),
+            'receive' => Yii::t('db', 'Receive'),
+            'store' => Yii::t('db', 'Store'),
+            'from_name' => Yii::t('db', 'From Name'),
+            'from_address' => Yii::t('db', 'From Address'),
+            'to_name' => Yii::t('db', 'To Name'),
+            'to_address' => Yii::t('db', 'To Address'),
+            'subject' => Yii::t('db', 'Subject'),
+            'html_content' => Yii::t('db', 'Html Content'),
+            'text_content' => Yii::t('db', 'Text Content'),
+            'status' => Yii::t('db', 'Status'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
         ];
     }
 }

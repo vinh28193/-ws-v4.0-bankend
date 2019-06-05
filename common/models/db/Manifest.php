@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "manifest".
+ * This is the model class for table "{{%manifest}}".
  *
  * @property int $id
  * @property string $manifest_code Mã kiện về (từ us/jp ..)
@@ -30,7 +30,7 @@ class Manifest extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'manifest';
+        return '{{%manifest}}';
     }
 
     /**
@@ -53,21 +53,21 @@ class Manifest extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'manifest_code' => 'Manifest Code',
-            'send_warehouse_id' => 'Send Warehouse ID',
-            'receive_warehouse_id' => 'Receive Warehouse ID',
-            'us_stock_out_time' => 'Us Stock Out Time',
-            'local_stock_in_time' => 'Local Stock In Time',
-            'local_stock_out_time' => 'Local Stock Out Time',
-            'store_id' => 'Store ID',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'active' => 'Active',
-            'version' => 'Version',
-            'status' => 'Status',
+            'id' => Yii::t('db', 'ID'),
+            'manifest_code' => Yii::t('db', 'Manifest Code'),
+            'send_warehouse_id' => Yii::t('db', 'Send Warehouse ID'),
+            'receive_warehouse_id' => Yii::t('db', 'Receive Warehouse ID'),
+            'us_stock_out_time' => Yii::t('db', 'Us Stock Out Time'),
+            'local_stock_in_time' => Yii::t('db', 'Local Stock In Time'),
+            'local_stock_out_time' => Yii::t('db', 'Local Stock Out Time'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'active' => Yii::t('db', 'Active'),
+            'version' => Yii::t('db', 'Version'),
+            'status' => Yii::t('db', 'Status'),
         ];
     }
 }

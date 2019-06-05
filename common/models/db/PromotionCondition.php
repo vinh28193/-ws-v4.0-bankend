@@ -5,13 +5,13 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "promotion_condition".
+ * This is the model class for table "{{%promotion_condition}}".
  *
  * @property int $id ID
  * @property int $store_id Store ID
  * @property string $promotion_id Promotion ID
  * @property string $name name of condition
- * @property resource $value mixed value
+ * @property string $value mixed value
  * @property int $created_by Created by
  * @property int $created_at Created at (timestamp)
  * @property int $updated_by Updated by
@@ -24,7 +24,7 @@ class PromotionCondition extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'promotion_condition';
+        return '{{%promotion_condition}}';
     }
 
     /**
@@ -33,7 +33,7 @@ class PromotionCondition extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'name', 'value'], 'required'],
+            [['store_id', 'promotion_id', 'name'], 'required'],
             [['store_id', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['value'], 'string'],
             [['promotion_id'], 'string', 'max' => 11],
@@ -47,15 +47,15 @@ class PromotionCondition extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'promotion_id' => 'Promotion ID',
-            'name' => 'Name',
-            'value' => 'Value',
-            'created_by' => 'Created By',
-            'created_at' => 'Created At',
-            'updated_by' => 'Updated By',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'promotion_id' => Yii::t('db', 'Promotion ID'),
+            'name' => Yii::t('db', 'Name'),
+            'value' => Yii::t('db', 'Value'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'updated_at' => Yii::t('db', 'Updated At'),
         ];
     }
 }

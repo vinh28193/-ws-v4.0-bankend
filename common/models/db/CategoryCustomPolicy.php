@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "category_custom_policy".
+ * This is the model class for table "{{%category_custom_policy}}".
  *
  * @property int $id ID
  * @property string $name
@@ -29,6 +29,8 @@ use Yii;
  * @property int $active
  * @property int $remove
  * @property string $version version 4.0
+ *
+ * @property Product[] $products
  */
 class CategoryCustomPolicy extends \common\components\db\ActiveRecord
 {
@@ -37,7 +39,7 @@ class CategoryCustomPolicy extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'category_custom_policy';
+        return '{{%category_custom_policy}}';
     }
 
     /**
@@ -58,28 +60,36 @@ class CategoryCustomPolicy extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'description' => 'Description',
-            'code' => 'Code',
-            'limit' => 'Limit',
-            'is_special' => 'Is Special',
-            'min_price' => 'Min Price',
-            'max_price' => 'Max Price',
-            'custom_rate_fee' => 'Custom Rate Fee',
-            'use_percentage' => 'Use Percentage',
-            'custom_fix_fee_per_unit' => 'Custom Fix Fee Per Unit',
-            'custom_fix_fee_per_weight' => 'Custom Fix Fee Per Weight',
-            'custom_fix_percent_per_weight' => 'Custom Fix Percent Per Weight',
-            'store_id' => 'Store ID',
-            'item_maximum_per_category' => 'Item Maximum Per Category',
-            'weight_maximum_per_category' => 'Weight Maximum Per Category',
-            'sort_order' => 'Sort Order',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'active' => 'Active',
-            'remove' => 'Remove',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'name' => Yii::t('db', 'Name'),
+            'description' => Yii::t('db', 'Description'),
+            'code' => Yii::t('db', 'Code'),
+            'limit' => Yii::t('db', 'Limit'),
+            'is_special' => Yii::t('db', 'Is Special'),
+            'min_price' => Yii::t('db', 'Min Price'),
+            'max_price' => Yii::t('db', 'Max Price'),
+            'custom_rate_fee' => Yii::t('db', 'Custom Rate Fee'),
+            'use_percentage' => Yii::t('db', 'Use Percentage'),
+            'custom_fix_fee_per_unit' => Yii::t('db', 'Custom Fix Fee Per Unit'),
+            'custom_fix_fee_per_weight' => Yii::t('db', 'Custom Fix Fee Per Weight'),
+            'custom_fix_percent_per_weight' => Yii::t('db', 'Custom Fix Percent Per Weight'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'item_maximum_per_category' => Yii::t('db', 'Item Maximum Per Category'),
+            'weight_maximum_per_category' => Yii::t('db', 'Weight Maximum Per Category'),
+            'sort_order' => Yii::t('db', 'Sort Order'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'active' => Yii::t('db', 'Active'),
+            'remove' => Yii::t('db', 'Remove'),
+            'version' => Yii::t('db', 'Version'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['custom_category_id' => 'id']);
     }
 }

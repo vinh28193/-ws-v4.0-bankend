@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "draft_data_tracking".
+ * This is the model class for table "{{%draft_data_tracking}}".
  *
  * @property int $id
  * @property string $tracking_code
@@ -43,7 +43,7 @@ class DraftDataTracking extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'draft_data_tracking';
+        return '{{%draft_data_tracking}}';
     }
 
     /**
@@ -66,34 +66,34 @@ class DraftDataTracking extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'tracking_code' => 'Tracking Code',
-            'product_id' => 'Product ID',
-            'order_id' => 'Order ID',
-            'manifest_id' => 'Manifest ID',
-            'manifest_code' => 'Manifest Code',
-            'quantity' => 'Quantity',
-            'weight' => 'Weight',
-            'dimension_l' => 'Dimension L',
-            'dimension_w' => 'Dimension W',
-            'dimension_h' => 'Dimension H',
-            'purchase_invoice_number' => 'Purchase Invoice Number',
-            'number_get_detail' => 'Number Get Detail',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'type_tracking' => 'Type Tracking',
-            'tracking_merge' => 'Tracking Merge',
-            'item_name' => 'Item Name',
-            'seller_refund_amount' => 'Seller Refund Amount',
-            'ws_tracking_code' => 'Ws Tracking Code',
-            'image' => 'Image',
-            'stock_in_us' => 'Stock In Us',
-            'stock_out_us' => 'Stock Out Us',
-            'stock_in_local' => 'Stock In Local',
-            'stock_out_local' => 'Stock Out Local',
+            'id' => Yii::t('db', 'ID'),
+            'tracking_code' => Yii::t('db', 'Tracking Code'),
+            'product_id' => Yii::t('db', 'Product ID'),
+            'order_id' => Yii::t('db', 'Order ID'),
+            'manifest_id' => Yii::t('db', 'Manifest ID'),
+            'manifest_code' => Yii::t('db', 'Manifest Code'),
+            'quantity' => Yii::t('db', 'Quantity'),
+            'weight' => Yii::t('db', 'Weight'),
+            'dimension_l' => Yii::t('db', 'Dimension L'),
+            'dimension_w' => Yii::t('db', 'Dimension W'),
+            'dimension_h' => Yii::t('db', 'Dimension H'),
+            'purchase_invoice_number' => Yii::t('db', 'Purchase Invoice Number'),
+            'number_get_detail' => Yii::t('db', 'Number Get Detail'),
+            'status' => Yii::t('db', 'Status'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'type_tracking' => Yii::t('db', 'Type Tracking'),
+            'tracking_merge' => Yii::t('db', 'Tracking Merge'),
+            'item_name' => Yii::t('db', 'Item Name'),
+            'seller_refund_amount' => Yii::t('db', 'Seller Refund Amount'),
+            'ws_tracking_code' => Yii::t('db', 'Ws Tracking Code'),
+            'image' => Yii::t('db', 'Image'),
+            'stock_in_us' => Yii::t('db', 'Stock In Us'),
+            'stock_out_us' => Yii::t('db', 'Stock Out Us'),
+            'stock_in_local' => Yii::t('db', 'Stock In Local'),
+            'stock_out_local' => Yii::t('db', 'Stock Out Local'),
         ];
     }
 }

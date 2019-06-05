@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "address".
+ * This is the model class for table "{{%address}}".
  *
  * @property int $id ID
  * @property string $first_name
@@ -28,6 +28,8 @@ use Yii;
  * @property string $updated_at
  * @property int $remove
  * @property string $version version 4.0
+ *
+ * @property Shipment[] $shipments
  */
 class Address extends \common\components\db\ActiveRecord
 {
@@ -36,7 +38,7 @@ class Address extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'address';
+        return '{{%address}}';
     }
 
     /**
@@ -57,27 +59,35 @@ class Address extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
-            'email' => 'Email',
-            'phone' => 'Phone',
-            'country_id' => 'Country ID',
-            'country_name' => 'Country Name',
-            'province_id' => 'Province ID',
-            'province_name' => 'Province Name',
-            'district_id' => 'District ID',
-            'district_name' => 'District Name',
-            'address' => 'Address',
-            'post_code' => 'Post Code',
-            'store_id' => 'Store ID',
-            'type' => 'Type',
-            'is_default' => 'Is Default',
-            'customer_id' => 'Customer ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'remove' => 'Remove',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'first_name' => Yii::t('db', 'First Name'),
+            'last_name' => Yii::t('db', 'Last Name'),
+            'email' => Yii::t('db', 'Email'),
+            'phone' => Yii::t('db', 'Phone'),
+            'country_id' => Yii::t('db', 'Country ID'),
+            'country_name' => Yii::t('db', 'Country Name'),
+            'province_id' => Yii::t('db', 'Province ID'),
+            'province_name' => Yii::t('db', 'Province Name'),
+            'district_id' => Yii::t('db', 'District ID'),
+            'district_name' => Yii::t('db', 'District Name'),
+            'address' => Yii::t('db', 'Address'),
+            'post_code' => Yii::t('db', 'Post Code'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'type' => Yii::t('db', 'Type'),
+            'is_default' => Yii::t('db', 'Is Default'),
+            'customer_id' => Yii::t('db', 'Customer ID'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'remove' => Yii::t('db', 'Remove'),
+            'version' => Yii::t('db', 'Version'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getShipments()
+    {
+        return $this->hasMany(Shipment::className(), ['receiver_address_id' => 'id']);
     }
 }

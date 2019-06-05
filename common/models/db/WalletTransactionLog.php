@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "wallet_transaction_log".
+ * This is the model class for table "{{%wallet_transaction_log}}".
  *
  * @property int $id
  * @property int $wallet_transaction_id
@@ -16,14 +16,14 @@ use Yii;
  * @property string $user_action
  * @property string $content
  */
-class WalletTransactionLog extends \yii\db\ActiveRecord
+class WalletTransactionLog extends \common\components\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'wallet_transaction_log';
+        return '{{%wallet_transaction_log}}';
     }
 
     /**
@@ -45,14 +45,14 @@ class WalletTransactionLog extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'wallet_transaction_id' => 'Wallet Transaction ID',
-            'create_at' => 'Create At',
-            'update_at' => 'Update At',
-            'type' => 'Type',
-            'user_name' => 'User Name',
-            'user_action' => 'User Action',
-            'content' => 'Content',
+            'id' => Yii::t('db', 'ID'),
+            'wallet_transaction_id' => Yii::t('db', 'Wallet Transaction ID'),
+            'create_at' => Yii::t('db', 'Create At'),
+            'update_at' => Yii::t('db', 'Update At'),
+            'type' => Yii::t('db', 'Type'),
+            'user_name' => Yii::t('db', 'User Name'),
+            'user_action' => Yii::t('db', 'User Action'),
+            'content' => Yii::t('db', 'Content'),
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "category_group".
+ * This is the model class for table "{{%category_group}}".
  *
  * @property int $id ID
  * @property string $name
@@ -27,7 +27,7 @@ class CategoryGroup extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'category_group';
+        return '{{%category_group}}';
     }
 
     /**
@@ -48,18 +48,18 @@ class CategoryGroup extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'description' => 'Description',
-            'store_id' => 'Store ID',
-            'parent_id' => 'Parent ID',
-            'rule' => 'Rule',
-            'rule_description' => 'Rule Description',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'active' => 'Active',
-            'remove' => 'Remove',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'name' => Yii::t('db', 'Name'),
+            'description' => Yii::t('db', 'Description'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'parent_id' => Yii::t('db', 'Parent ID'),
+            'rule' => Yii::t('db', 'Rule'),
+            'rule_description' => Yii::t('db', 'Rule Description'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'active' => Yii::t('db', 'Active'),
+            'remove' => Yii::t('db', 'Remove'),
+            'version' => Yii::t('db', 'Version'),
         ];
     }
 }

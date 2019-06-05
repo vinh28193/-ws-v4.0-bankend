@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "payment_bank".
+ * This is the model class for table "{{%payment_bank}}".
  *
  * @property int $id ID
  * @property int $store_id Store ID reference
@@ -18,6 +18,8 @@ use Yii;
  * @property int $created_at Created at (timestamp)
  * @property int $updated_by Updated by
  * @property int $updated_at Updated at (timestamp)
+ *
+ * @property PaymentMethodBank[] $paymentMethodBanks
  */
 class PaymentBank extends \common\components\db\ActiveRecord
 {
@@ -26,7 +28,7 @@ class PaymentBank extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'payment_bank';
+        return '{{%payment_bank}}';
     }
 
     /**
@@ -49,17 +51,25 @@ class PaymentBank extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'name' => 'Name',
-            'code' => 'Code',
-            'icon' => 'Icon',
-            'url' => 'Url',
-            'status' => 'Status',
-            'created_by' => 'Created By',
-            'created_at' => 'Created At',
-            'updated_by' => 'Updated By',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'name' => Yii::t('db', 'Name'),
+            'code' => Yii::t('db', 'Code'),
+            'icon' => Yii::t('db', 'Icon'),
+            'url' => Yii::t('db', 'Url'),
+            'status' => Yii::t('db', 'Status'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'updated_at' => Yii::t('db', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPaymentMethodBanks()
+    {
+        return $this->hasMany(PaymentMethodBank::className(), ['payment_bank_id' => 'id']);
     }
 }

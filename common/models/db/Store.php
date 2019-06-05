@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "store".
+ * This is the model class for table "{{%store}}".
  *
  * @property int $id ID
  * @property int $country_id
@@ -19,6 +19,10 @@ use Yii;
  * @property int $status
  * @property int $env PROD or UAT or BETA ...
  * @property string $version version 4.0
+ *
+ * @property Customer[] $customers
+ * @property Order[] $orders
+ * @property Warehouse[] $warehouses
  */
 class Store extends \common\components\db\ActiveRecord
 {
@@ -27,7 +31,7 @@ class Store extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'store';
+        return '{{%store}}';
     }
 
     /**
@@ -48,18 +52,42 @@ class Store extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'country_id' => 'Country ID',
-            'locale' => 'Locale',
-            'name' => 'Name',
-            'country_name' => 'Country Name',
-            'address' => 'Address',
-            'url' => 'Url',
-            'currency' => 'Currency',
-            'currency_id' => 'Currency ID',
-            'status' => 'Status',
-            'env' => 'Env',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'country_id' => Yii::t('db', 'Country ID'),
+            'locale' => Yii::t('db', 'Locale'),
+            'name' => Yii::t('db', 'Name'),
+            'country_name' => Yii::t('db', 'Country Name'),
+            'address' => Yii::t('db', 'Address'),
+            'url' => Yii::t('db', 'Url'),
+            'currency' => Yii::t('db', 'Currency'),
+            'currency_id' => Yii::t('db', 'Currency ID'),
+            'status' => Yii::t('db', 'Status'),
+            'env' => Yii::t('db', 'Env'),
+            'version' => Yii::t('db', 'Version'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCustomers()
+    {
+        return $this->hasMany(Customer::className(), ['store_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrders()
+    {
+        return $this->hasMany(Order::className(), ['store_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWarehouses()
+    {
+        return $this->hasMany(Warehouse::className(), ['store_id' => 'id']);
     }
 }

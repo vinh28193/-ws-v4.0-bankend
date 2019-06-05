@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "draft_extension_tracking_map".
+ * This is the model class for table "{{%draft_extension_tracking_map}}".
  *
  * @property int $id
  * @property string $tracking_code
@@ -32,7 +32,7 @@ class DraftExtensionTrackingMap extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'draft_extension_tracking_map';
+        return '{{%draft_extension_tracking_map}}';
     }
 
     /**
@@ -54,23 +54,23 @@ class DraftExtensionTrackingMap extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'tracking_code' => 'Tracking Code',
-            'product_id' => 'Product ID',
-            'order_id' => 'Order ID',
-            'purchase_invoice_number' => 'Purchase Invoice Number',
-            'status' => 'Status',
-            'quantity' => 'Quantity',
-            'weight' => 'Weight',
-            'dimension_l' => 'Dimension L',
-            'dimension_w' => 'Dimension W',
-            'dimension_h' => 'Dimension H',
-            'number_run' => 'Number Run',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'draft_data_tracking_id' => 'Draft Data Tracking ID',
+            'id' => Yii::t('db', 'ID'),
+            'tracking_code' => Yii::t('db', 'Tracking Code'),
+            'product_id' => Yii::t('db', 'Product ID'),
+            'order_id' => Yii::t('db', 'Order ID'),
+            'purchase_invoice_number' => Yii::t('db', 'Purchase Invoice Number'),
+            'status' => Yii::t('db', 'Status'),
+            'quantity' => Yii::t('db', 'Quantity'),
+            'weight' => Yii::t('db', 'Weight'),
+            'dimension_l' => Yii::t('db', 'Dimension L'),
+            'dimension_w' => Yii::t('db', 'Dimension W'),
+            'dimension_h' => Yii::t('db', 'Dimension H'),
+            'number_run' => Yii::t('db', 'Number Run'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'created_by' => Yii::t('db', 'Created By'),
+            'updated_by' => Yii::t('db', 'Updated By'),
+            'draft_data_tracking_id' => Yii::t('db', 'Draft Data Tracking ID'),
         ];
     }
 }

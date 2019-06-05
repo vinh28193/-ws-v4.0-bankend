@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "order".
+ * This is the model class for table "{{%order}}".
  *
  * @property int $id ID
  * @property string $ordercode ordercode : BIN Code Weshop : WSVN , WSINDO
@@ -109,7 +109,12 @@ use Yii;
  * @property int $check_update_payment
  * @property int $confirm_change_price 0: là không có thay đổi giá hoặc có thay đổi nhưng đã confirm. 1: là có thay đổi cần xác nhận
  *
+ * @property Customer $customer
+ * @property User $saleSupport
+ * @property Seller $seller
+ * @property Store $store
  * @property User $purchaseAssignee
+ * @property Product[] $products
  * @property PurchaseProduct[] $purchaseProducts
  * @property QueuedEmail[] $queuedEmails
  */
@@ -120,7 +125,7 @@ class Order extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'order';
+        return '{{%order}}';
     }
 
     /**
@@ -137,6 +142,10 @@ class Order extends \common\components\db\ActiveRecord
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
             [['transaction_code'], 'string', 'max' => 32],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
+            [['sale_support_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sale_support_id' => 'id']],
+            [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
+            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
             [['purchase_assignee_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['purchase_assignee_id' => 'id']],
         ];
     }
@@ -147,108 +156,140 @@ class Order extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'ordercode' => 'Ordercode',
-            'store_id' => 'Store ID',
-            'type_order' => 'Type Order',
-            'customer_id' => 'Customer ID',
-            'customer_type' => 'Customer Type',
-            'portal' => 'Portal',
-            'utm_source' => 'Utm Source',
-            'new' => 'New',
-            'purchase_start' => 'Purchase Start',
-            'purchased' => 'Purchased',
-            'seller_shipped' => 'Seller Shipped',
-            'stockin_us' => 'Stockin Us',
-            'stockout_us' => 'Stockout Us',
-            'stockin_local' => 'Stockin Local',
-            'stockout_local' => 'Stockout Local',
-            'at_customer' => 'At Customer',
-            'returned' => 'Returned',
-            'cancelled' => 'Cancelled',
-            'lost' => 'Lost',
-            'current_status' => 'Current Status',
-            'is_quotation' => 'Is Quotation',
-            'quotation_status' => 'Quotation Status',
-            'quotation_note' => 'Quotation Note',
-            'receiver_email' => 'Receiver Email',
-            'receiver_name' => 'Receiver Name',
-            'receiver_phone' => 'Receiver Phone',
-            'receiver_address' => 'Receiver Address',
-            'receiver_country_id' => 'Receiver Country ID',
-            'receiver_country_name' => 'Receiver Country Name',
-            'receiver_province_id' => 'Receiver Province ID',
-            'receiver_province_name' => 'Receiver Province Name',
-            'receiver_district_id' => 'Receiver District ID',
-            'receiver_district_name' => 'Receiver District Name',
-            'receiver_post_code' => 'Receiver Post Code',
-            'receiver_address_id' => 'Receiver Address ID',
-            'note_by_customer' => 'Note By Customer',
-            'note' => 'Note',
-            'seller_id' => 'Seller ID',
-            'seller_name' => 'Seller Name',
-            'seller_store' => 'Seller Store',
-            'total_final_amount_local' => 'Total Final Amount Local',
-            'total_amount_local' => 'Total Amount Local',
-            'total_origin_fee_local' => 'Total Origin Fee Local',
-            'total_price_amount_origin' => 'Total Price Amount Origin',
-            'total_paid_amount_local' => 'Total Paid Amount Local',
-            'total_refund_amount_local' => 'Total Refund Amount Local',
-            'total_counpon_amount_local' => 'Total Counpon Amount Local',
-            'total_promotion_amount_local' => 'Total Promotion Amount Local',
-            'total_fee_amount_local' => 'Total Fee Amount Local',
-            'total_origin_tax_fee_local' => 'Total Origin Tax Fee Local',
-            'total_origin_shipping_fee_local' => 'Total Origin Shipping Fee Local',
-            'total_weshop_fee_local' => 'Total Weshop Fee Local',
-            'total_intl_shipping_fee_local' => 'Total Intl Shipping Fee Local',
-            'total_custom_fee_amount_local' => 'Total Custom Fee Amount Local',
-            'total_delivery_fee_local' => 'Total Delivery Fee Local',
-            'total_packing_fee_local' => 'Total Packing Fee Local',
-            'total_inspection_fee_local' => 'Total Inspection Fee Local',
-            'total_insurance_fee_local' => 'Total Insurance Fee Local',
-            'total_vat_amount_local' => 'Total Vat Amount Local',
-            'exchange_rate_fee' => 'Exchange Rate Fee',
-            'exchange_rate_purchase' => 'Exchange Rate Purchase',
-            'currency_purchase' => 'Currency Purchase',
-            'payment_type' => 'Payment Type',
-            'transaction_code' => 'Transaction Code',
-            'sale_support_id' => 'Sale Support ID',
-            'support_email' => 'Support Email',
-            'is_email_sent' => 'Is Email Sent',
-            'is_sms_sent' => 'Is Sms Sent',
-            'difference_money' => 'Difference Money',
-            'coupon_id' => 'Coupon ID',
-            'revenue_xu' => 'Revenue Xu',
-            'xu_count' => 'Xu Count',
-            'xu_amount' => 'Xu Amount',
-            'xu_time' => 'Xu Time',
-            'xu_log' => 'Xu Log',
-            'promotion_id' => 'Promotion ID',
-            'total_weight' => 'Total Weight',
-            'total_weight_temporary' => 'Total Weight Temporary',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'purchase_assignee_id' => 'Purchase Assignee ID',
-            'purchase_order_id' => 'Purchase Order ID',
-            'purchase_transaction_id' => 'Purchase Transaction ID',
-            'purchase_amount' => 'Purchase Amount',
-            'purchase_account_id' => 'Purchase Account ID',
-            'purchase_account_email' => 'Purchase Account Email',
-            'purchase_card' => 'Purchase Card',
-            'purchase_amount_buck' => 'Purchase Amount Buck',
-            'purchase_amount_refund' => 'Purchase Amount Refund',
-            'purchase_refund_transaction_id' => 'Purchase Refund Transaction ID',
-            'total_quantity' => 'Total Quantity',
-            'total_purchase_quantity' => 'Total Purchase Quantity',
-            'remove' => 'Remove',
-            'version' => 'Version',
-            'mark_supporting' => 'Mark Supporting',
-            'supported' => 'Supported',
-            'ready_purchase' => 'Ready Purchase',
-            'supporting' => 'Supporting',
-            'check_update_payment' => 'Check Update Payment',
-            'confirm_change_price' => 'Confirm Change Price',
+            'id' => Yii::t('db', 'ID'),
+            'ordercode' => Yii::t('db', 'Ordercode'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'type_order' => Yii::t('db', 'Type Order'),
+            'customer_id' => Yii::t('db', 'Customer ID'),
+            'customer_type' => Yii::t('db', 'Customer Type'),
+            'portal' => Yii::t('db', 'Portal'),
+            'utm_source' => Yii::t('db', 'Utm Source'),
+            'new' => Yii::t('db', 'New'),
+            'purchase_start' => Yii::t('db', 'Purchase Start'),
+            'purchased' => Yii::t('db', 'Purchased'),
+            'seller_shipped' => Yii::t('db', 'Seller Shipped'),
+            'stockin_us' => Yii::t('db', 'Stockin Us'),
+            'stockout_us' => Yii::t('db', 'Stockout Us'),
+            'stockin_local' => Yii::t('db', 'Stockin Local'),
+            'stockout_local' => Yii::t('db', 'Stockout Local'),
+            'at_customer' => Yii::t('db', 'At Customer'),
+            'returned' => Yii::t('db', 'Returned'),
+            'cancelled' => Yii::t('db', 'Cancelled'),
+            'lost' => Yii::t('db', 'Lost'),
+            'current_status' => Yii::t('db', 'Current Status'),
+            'is_quotation' => Yii::t('db', 'Is Quotation'),
+            'quotation_status' => Yii::t('db', 'Quotation Status'),
+            'quotation_note' => Yii::t('db', 'Quotation Note'),
+            'receiver_email' => Yii::t('db', 'Receiver Email'),
+            'receiver_name' => Yii::t('db', 'Receiver Name'),
+            'receiver_phone' => Yii::t('db', 'Receiver Phone'),
+            'receiver_address' => Yii::t('db', 'Receiver Address'),
+            'receiver_country_id' => Yii::t('db', 'Receiver Country ID'),
+            'receiver_country_name' => Yii::t('db', 'Receiver Country Name'),
+            'receiver_province_id' => Yii::t('db', 'Receiver Province ID'),
+            'receiver_province_name' => Yii::t('db', 'Receiver Province Name'),
+            'receiver_district_id' => Yii::t('db', 'Receiver District ID'),
+            'receiver_district_name' => Yii::t('db', 'Receiver District Name'),
+            'receiver_post_code' => Yii::t('db', 'Receiver Post Code'),
+            'receiver_address_id' => Yii::t('db', 'Receiver Address ID'),
+            'note_by_customer' => Yii::t('db', 'Note By Customer'),
+            'note' => Yii::t('db', 'Note'),
+            'seller_id' => Yii::t('db', 'Seller ID'),
+            'seller_name' => Yii::t('db', 'Seller Name'),
+            'seller_store' => Yii::t('db', 'Seller Store'),
+            'total_final_amount_local' => Yii::t('db', 'Total Final Amount Local'),
+            'total_amount_local' => Yii::t('db', 'Total Amount Local'),
+            'total_origin_fee_local' => Yii::t('db', 'Total Origin Fee Local'),
+            'total_price_amount_origin' => Yii::t('db', 'Total Price Amount Origin'),
+            'total_paid_amount_local' => Yii::t('db', 'Total Paid Amount Local'),
+            'total_refund_amount_local' => Yii::t('db', 'Total Refund Amount Local'),
+            'total_counpon_amount_local' => Yii::t('db', 'Total Counpon Amount Local'),
+            'total_promotion_amount_local' => Yii::t('db', 'Total Promotion Amount Local'),
+            'total_fee_amount_local' => Yii::t('db', 'Total Fee Amount Local'),
+            'total_origin_tax_fee_local' => Yii::t('db', 'Total Origin Tax Fee Local'),
+            'total_origin_shipping_fee_local' => Yii::t('db', 'Total Origin Shipping Fee Local'),
+            'total_weshop_fee_local' => Yii::t('db', 'Total Weshop Fee Local'),
+            'total_intl_shipping_fee_local' => Yii::t('db', 'Total Intl Shipping Fee Local'),
+            'total_custom_fee_amount_local' => Yii::t('db', 'Total Custom Fee Amount Local'),
+            'total_delivery_fee_local' => Yii::t('db', 'Total Delivery Fee Local'),
+            'total_packing_fee_local' => Yii::t('db', 'Total Packing Fee Local'),
+            'total_inspection_fee_local' => Yii::t('db', 'Total Inspection Fee Local'),
+            'total_insurance_fee_local' => Yii::t('db', 'Total Insurance Fee Local'),
+            'total_vat_amount_local' => Yii::t('db', 'Total Vat Amount Local'),
+            'exchange_rate_fee' => Yii::t('db', 'Exchange Rate Fee'),
+            'exchange_rate_purchase' => Yii::t('db', 'Exchange Rate Purchase'),
+            'currency_purchase' => Yii::t('db', 'Currency Purchase'),
+            'payment_type' => Yii::t('db', 'Payment Type'),
+            'transaction_code' => Yii::t('db', 'Transaction Code'),
+            'sale_support_id' => Yii::t('db', 'Sale Support ID'),
+            'support_email' => Yii::t('db', 'Support Email'),
+            'is_email_sent' => Yii::t('db', 'Is Email Sent'),
+            'is_sms_sent' => Yii::t('db', 'Is Sms Sent'),
+            'difference_money' => Yii::t('db', 'Difference Money'),
+            'coupon_id' => Yii::t('db', 'Coupon ID'),
+            'revenue_xu' => Yii::t('db', 'Revenue Xu'),
+            'xu_count' => Yii::t('db', 'Xu Count'),
+            'xu_amount' => Yii::t('db', 'Xu Amount'),
+            'xu_time' => Yii::t('db', 'Xu Time'),
+            'xu_log' => Yii::t('db', 'Xu Log'),
+            'promotion_id' => Yii::t('db', 'Promotion ID'),
+            'total_weight' => Yii::t('db', 'Total Weight'),
+            'total_weight_temporary' => Yii::t('db', 'Total Weight Temporary'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'purchase_assignee_id' => Yii::t('db', 'Purchase Assignee ID'),
+            'purchase_order_id' => Yii::t('db', 'Purchase Order ID'),
+            'purchase_transaction_id' => Yii::t('db', 'Purchase Transaction ID'),
+            'purchase_amount' => Yii::t('db', 'Purchase Amount'),
+            'purchase_account_id' => Yii::t('db', 'Purchase Account ID'),
+            'purchase_account_email' => Yii::t('db', 'Purchase Account Email'),
+            'purchase_card' => Yii::t('db', 'Purchase Card'),
+            'purchase_amount_buck' => Yii::t('db', 'Purchase Amount Buck'),
+            'purchase_amount_refund' => Yii::t('db', 'Purchase Amount Refund'),
+            'purchase_refund_transaction_id' => Yii::t('db', 'Purchase Refund Transaction ID'),
+            'total_quantity' => Yii::t('db', 'Total Quantity'),
+            'total_purchase_quantity' => Yii::t('db', 'Total Purchase Quantity'),
+            'remove' => Yii::t('db', 'Remove'),
+            'version' => Yii::t('db', 'Version'),
+            'mark_supporting' => Yii::t('db', 'Mark Supporting'),
+            'supported' => Yii::t('db', 'Supported'),
+            'ready_purchase' => Yii::t('db', 'Ready Purchase'),
+            'supporting' => Yii::t('db', 'Supporting'),
+            'check_update_payment' => Yii::t('db', 'Check Update Payment'),
+            'confirm_change_price' => Yii::t('db', 'Confirm Change Price'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCustomer()
+    {
+        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSaleSupport()
+    {
+        return $this->hasOne(User::className(), ['id' => 'sale_support_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSeller()
+    {
+        return $this->hasOne(Seller::className(), ['id' => 'seller_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStore()
+    {
+        return $this->hasOne(Store::className(), ['id' => 'store_id']);
     }
 
     /**
@@ -257,6 +298,14 @@ class Order extends \common\components\db\ActiveRecord
     public function getPurchaseAssignee()
     {
         return $this->hasOne(User::className(), ['id' => 'purchase_assignee_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['order_id' => 'id']);
     }
 
     /**

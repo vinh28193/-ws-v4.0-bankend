@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "system_country".
+ * This is the model class for table "{{%system_country}}".
  *
  * @property int $id ID
  * @property string $name
@@ -15,10 +15,7 @@ use Yii;
  * @property string $status
  * @property string $version version 4.0
  *
- * @property Address[] $addresses
- * @property Order[] $orders
  * @property Shipment[] $shipments
- * @property Store[] $stores
  * @property SystemDistrict[] $systemDistricts
  * @property SystemStateProvince[] $systemStateProvinces
  * @property Warehouse[] $warehouses
@@ -30,7 +27,7 @@ class SystemCountry extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'system_country';
+        return '{{%system_country}}';
     }
 
     /**
@@ -49,30 +46,14 @@ class SystemCountry extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'country_code' => 'Country Code',
-            'country_code_2' => 'Country Code 2',
-            'language' => 'Language',
-            'status' => 'Status',
-            'version' => 'Version',
+            'id' => Yii::t('db', 'ID'),
+            'name' => Yii::t('db', 'Name'),
+            'country_code' => Yii::t('db', 'Country Code'),
+            'country_code_2' => Yii::t('db', 'Country Code 2'),
+            'language' => Yii::t('db', 'Language'),
+            'status' => Yii::t('db', 'Status'),
+            'version' => Yii::t('db', 'Version'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAddresses()
-    {
-        return $this->hasMany(Address::className(), ['country_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrders()
-    {
-        return $this->hasMany(Order::className(), ['receiver_country_id' => 'id']);
     }
 
     /**
@@ -81,14 +62,6 @@ class SystemCountry extends \common\components\db\ActiveRecord
     public function getShipments()
     {
         return $this->hasMany(Shipment::className(), ['receiver_country_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStores()
-    {
-        return $this->hasMany(Store::className(), ['country_id' => 'id']);
     }
 
     /**
@@ -113,14 +86,5 @@ class SystemCountry extends \common\components\db\ActiveRecord
     public function getWarehouses()
     {
         return $this->hasMany(Warehouse::className(), ['country_id' => 'id']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\queries\SystemStateProvinceQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\queries\SystemStateProvinceQuery(get_called_class());
     }
 }

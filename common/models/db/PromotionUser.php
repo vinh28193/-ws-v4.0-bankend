@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "promotion_user".
+ * This is the model class for table "{{%promotion_user}}".
  *
  * @property int $id ID
  * @property int $store_id Store ID
@@ -24,12 +24,7 @@ class PromotionUser extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'promotion_user';
-    }
-
-    public function getPromotion()
-    {
-        return $this->hasOne(Promotion::className(), ['id' => 'promotion_id']);
+        return '{{%promotion_user}}';
     }
 
     /**
@@ -49,15 +44,15 @@ class PromotionUser extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'customer_id' => 'Customer ID',
-            'status' => 'Status',
-            'is_used' => 'Is Used',
-            'used_order_id' => 'Used Order ID',
-            'used_at' => 'Used At',
-            'created_at' => 'Created At',
-            'promotion_id' => 'Promotion ID',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'customer_id' => Yii::t('db', 'Customer ID'),
+            'status' => Yii::t('db', 'Status'),
+            'is_used' => Yii::t('db', 'Is Used'),
+            'used_order_id' => Yii::t('db', 'Used Order ID'),
+            'used_at' => Yii::t('db', 'Used At'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'promotion_id' => Yii::t('db', 'Promotion ID'),
         ];
     }
 }

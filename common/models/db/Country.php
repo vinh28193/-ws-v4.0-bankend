@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "country".
+ * This is the model class for table "{{%country}}".
  *
  * @property string $code
  * @property string $name
@@ -18,7 +18,7 @@ class Country extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'country';
+        return '{{%country}}';
     }
 
     /**
@@ -28,7 +28,8 @@ class Country extends \common\components\db\ActiveRecord
     {
         return [
             [['code', 'name'], 'required'],
-            [['code', 'name', 'version'], 'string', 'max' => 255],
+            [['code'], 'string', 'max' => 32],
+            [['name', 'version'], 'string', 'max' => 255],
             [['code'], 'unique'],
         ];
     }
@@ -39,9 +40,9 @@ class Country extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'code' => 'Code',
-            'name' => 'Name',
-            'version' => 'Version',
+            'code' => Yii::t('db', 'Code'),
+            'name' => Yii::t('db', 'Name'),
+            'version' => Yii::t('db', 'Version'),
         ];
     }
 }

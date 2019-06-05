@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "system_zipcode".
+ * This is the model class for table "{{%system_zipcode}}".
  *
  * @property int $id ID
  * @property int $system_country_id  Weshop country id
@@ -23,7 +23,7 @@ class SystemZipcode extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'system_zipcode';
+        return '{{%system_zipcode}}';
     }
 
     /**
@@ -42,14 +42,14 @@ class SystemZipcode extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'system_country_id' => 'System Country ID',
-            'system_state_province_id' => 'System State Province ID',
-            'system_district_id' => 'System District ID',
-            'boxme_country_id' => 'Boxme Country ID',
-            'boxme_state_province_id' => 'Boxme State Province ID',
-            'boxme_district_id' => 'Boxme District ID',
-            'zip_code' => 'Zip Code',
+            'id' => Yii::t('db', 'ID'),
+            'system_country_id' => Yii::t('db', 'System Country ID'),
+            'system_state_province_id' => Yii::t('db', 'System State Province ID'),
+            'system_district_id' => Yii::t('db', 'System District ID'),
+            'boxme_country_id' => Yii::t('db', 'Boxme Country ID'),
+            'boxme_state_province_id' => Yii::t('db', 'Boxme State Province ID'),
+            'boxme_district_id' => Yii::t('db', 'Boxme District ID'),
+            'zip_code' => Yii::t('db', 'Zip Code'),
         ];
     }
 }

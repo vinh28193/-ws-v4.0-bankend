@@ -5,20 +5,17 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "promotion_log".
+ * This is the model class for table "{{%promotion_log}}".
  *
  * @property int $id ID
- * @property string $promotion_id
- * @property string $promotion_type PROMOTION/COUPON/XU
- * @property string $coupon_code
- * @property string $order_bin
+ * @property int $store_id Store ID
+ * @property string $promotion_id Promotion ID
+ * @property int $customer_id Customer ID
+ * @property string $order_id Order ID
  * @property string $revenue_xu Số xu kiếm được
  * @property string $discount_amount Số tiền giảm giá
- * @property int $customer_id
- * @property string $customer_email
  * @property string $status SUCCESS/FAIL
- * @property string $created_time Update qua behaviors tự động
- * @property string $updated_time Update qua behaviors tự động
+ * @property int $created_at Created at (timestamp)
  */
 class PromotionLog extends \common\components\db\ActiveRecord
 {
@@ -27,7 +24,7 @@ class PromotionLog extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'promotion_log';
+        return '{{%promotion_log}}';
     }
 
     /**
@@ -36,10 +33,12 @@ class PromotionLog extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
+            [['store_id'], 'required'],
+            [['store_id', 'customer_id', 'created_at'], 'integer'],
             [['revenue_xu', 'discount_amount'], 'number'],
-            [['customer_id', 'created_time', 'updated_time'], 'integer'],
             [['promotion_id'], 'string', 'max' => 11],
-            [['promotion_type', 'coupon_code', 'order_bin', 'customer_email', 'status'], 'string', 'max' => 255],
+            [['order_id'], 'string', 'max' => 32],
+            [['status'], 'string', 'max' => 255],
         ];
     }
 
@@ -49,18 +48,15 @@ class PromotionLog extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'promotion_id' => 'Promotion ID',
-            'promotion_type' => 'Promotion Type',
-            'coupon_code' => 'Coupon Code',
-            'order_bin' => 'Order Bin',
-            'revenue_xu' => 'Revenue Xu',
-            'discount_amount' => 'Discount Amount',
-            'customer_id' => 'Customer ID',
-            'customer_email' => 'Customer Email',
-            'status' => 'Status',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'promotion_id' => Yii::t('db', 'Promotion ID'),
+            'customer_id' => Yii::t('db', 'Customer ID'),
+            'order_id' => Yii::t('db', 'Order ID'),
+            'revenue_xu' => Yii::t('db', 'Revenue Xu'),
+            'discount_amount' => Yii::t('db', 'Discount Amount'),
+            'status' => Yii::t('db', 'Status'),
+            'created_at' => Yii::t('db', 'Created At'),
         ];
     }
 }

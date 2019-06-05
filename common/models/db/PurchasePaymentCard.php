@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "purchase_payment_card".
+ * This is the model class for table "{{%purchase_payment_card}}".
  *
  * @property int $id
  * @property string $card_code
@@ -25,7 +25,7 @@ class PurchasePaymentCard extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'purchase_payment_card';
+        return '{{%purchase_payment_card}}';
     }
 
     /**
@@ -46,16 +46,16 @@ class PurchasePaymentCard extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'card_code' => 'Card Code',
-            'balance' => 'Balance',
-            'current_balance' => 'Current Balance',
-            'last_transaction_time' => 'Last Transaction Time',
-            'last_amount' => 'Last Amount',
-            'store_id' => 'Store ID',
-            'status' => 'Status',
-            'updated_at' => 'Updated At',
-            'created_at' => 'Created At',
+            'id' => Yii::t('db', 'ID'),
+            'card_code' => Yii::t('db', 'Card Code'),
+            'balance' => Yii::t('db', 'Balance'),
+            'current_balance' => Yii::t('db', 'Current Balance'),
+            'last_transaction_time' => Yii::t('db', 'Last Transaction Time'),
+            'last_amount' => Yii::t('db', 'Last Amount'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'status' => Yii::t('db', 'Status'),
+            'updated_at' => Yii::t('db', 'Updated At'),
+            'created_at' => Yii::t('db', 'Created At'),
         ];
     }
 }
