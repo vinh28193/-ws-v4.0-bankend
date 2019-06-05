@@ -7,6 +7,7 @@ return [
             'username' => 'root',
             'password' => '',
             'charset' => 'utf8',
+            'tablePrefix' => 'ws_'
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',

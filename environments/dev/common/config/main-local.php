@@ -9,7 +9,8 @@ return [
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
-            'schemaCache' => 'cache'
+            'schemaCache' => 'cache',
+            'tablePrefix' => 'ws_'
 
         ],
         'db_cms' => [
