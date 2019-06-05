@@ -10,7 +10,7 @@ return [
             'enableSchemaCache' => true,
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache',
-            'tablePrefix' => 'ws_'
+            //'tablePrefix' => 'ws_'
 
         ],
         'db_cms' => [
