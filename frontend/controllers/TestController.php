@@ -147,15 +147,25 @@ class TestController extends FrontendController
 
     public function actionI18n()
     {
-        echo Yii::t('test', 'Hello World');
-        $s = Yii::$app->i18n->getMessageSource('frontend');
-        var_dump($s->loadMessages('frontend', 'vi'));
+        echo Yii::t('javascript', 'Hello {name}',['name' => 'VINH']);
         die;
     }
 
-    public function actionSql(){
+    public function actionSql()
+    {
         $sql = Store::find()->where(['id' => 1])->one();
-        var_dump($sql);
+        $st = new Store();
+        $st->country_id = 1;
+        $st->locale = 'vi';
+        $st->name = 'vi';
+        $st->country_name = 'vi';
+        $st->address = 'vi';
+        $st->url = 'vi';
+        $st->currency = 'vi';
+        $st->currency_id = 'vi';
+        $st->status =1;
+        $st->save(false);
+        var_dump($st);
         die;
     }
 }
