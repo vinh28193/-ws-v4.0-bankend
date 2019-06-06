@@ -64,7 +64,36 @@ return [
             //'param' => [  ],
         ],
         'productManager' => [
-            'class' => 'common\products\ProductManager'
+            'class' => 'common\products\ProductManager',
+            'gates' => [
+                'ebay' => [
+                    'class' => 'common\products\ebay\EbayGate',
+                    'baseUrl' => 'https://api-lbc.weshop.asia/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
+                    'searchUrl' => 'search',
+                    'lookupUrl' => 'product'
+                ],
+                'amazon' => [
+                    'class' => 'common\products\amazon\AmazonGate',
+                    'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon',
+                    'store' => \common\products\amazon\AmazonProduct::STORE_US
+                ],
+                'amazon-jp' => [
+                    'class' => 'common\products\amazon\AmazonGate',
+                    'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon',
+                    'store' => \common\products\amazon\AmazonProduct::STORE_JP
+                ]
+            ]
+        ],
+        'ga' => [
+            'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
+            'trackingId' => 'UA-140658371-1', // Put your real tracking ID here
+
+            // These parameters are optional:
+            'useSsl' => true, // If you’d like to use a secure connection to Google servers
+            'overrideIp' => false, // By default, IP is overridden by the user’s one, but you can disable this
+            'anonymizeIp' => true, // If you want to anonymize the sender’s IP address
+            'asyncMode' => true, // Enables the asynchronous mode (see below)
+            'autoSetClientId' => true, // Try to set ClientId automatically from the “_ga” cookie (disabled by default)
         ],
         'exRate' => [
             'class' => 'common\components\ExchangeRate'
