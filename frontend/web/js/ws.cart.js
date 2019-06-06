@@ -44,7 +44,7 @@
                     var options = getQuantityInputOptions($target);
                     var operator = $item.data('operator');
                     if (options.max === '' || options.max < options.value) {
-                        ws.sweetalert('Không thể thay đổi số lượng', 'error');
+                        ws.notify('Không thể thay đổi số lượng', 'error','info');
                     }
                     var data = {type: $item.data('type'), id: id, key: key};
                     var param = {quantity: options.value};
@@ -53,7 +53,7 @@
                         if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
                             param.quantity = options.max;
                             $target.val(param.quantity);
-                            ws.sweetalert('Bạn không thể mua quá: ' + options.max, 'error');
+                            ws.notifyError('Bạn không thể mua quá: ' + options.max, 'error');
                             return;
                         }
                     } else {
@@ -61,7 +61,7 @@
                         if (param.quantity < 1) {
                             param.quantity = 1;
                             $target.val(1);
-                            ws.sweetalert('Bạn không thể mua dưới 1', 'error');
+                            ws.notifyError('Bạn không thể mua dưới 1', 'error');
                             return;
                         }
                     }
@@ -80,11 +80,11 @@
                     if (param.quantity < 1) {
                         param.quantity = 1;
                         $item.val(1);
-                        ws.sweetalert('Bạn không thể mua dưới 1', 'error');
+                        ws.notifyError('Bạn không thể mua dưới 1', 'error');
                     } else if (options.max !== '' && param.quantity >= options.max) {
                         param.quantity = options.max;
                         $item.val(options.max);
-                        ws.sweetalert('Bạn không thể mua quá: ' + options.max, 'error');
+                        ws.notifyError('Bạn không thể mua quá: ' + options.max, 'error');
                     }
                     data.param = param;
                     methods.update.call($cart, data);
@@ -162,7 +162,7 @@
                     if (response.success) {
                         $.pjax.reload({container: container});
                     } else {
-                        ws.sweetalert(response.message, 'error');
+                        ws.notifyError(response.message, 'error');
                     }
                 }
             };
@@ -189,7 +189,7 @@
                             $('#cartBadge').html(countItems);
                         }
                     } else {
-                        ws.sweetalert(response.message, 'error');
+                        ws.notifyError(response.message, 'error');
                     }
 
                 }
@@ -215,12 +215,12 @@
                     if (response.success) {
                         var url = response.data || null;
                         if (url === null) {
-                            alert('action can not complete');
+                            ws.notifySuccess('action can not complete');
                             return false;
                         }
                         ws.redirect(url);
                     } else {
-                        alert(response.message);
+                        ws.notifyError(response.message);
                     }
                 }
             });

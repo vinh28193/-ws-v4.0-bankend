@@ -27,6 +27,36 @@ var ws = ws || (function ($) {
                 $('#loading').css('display', 'none');
             }
         },
+        notify: function(message,title = 'Notify',type = 'info' , submitClick = 'alert(\'Click!\')',cancelClick = ''){
+            $('#NotifyConfirmMessage').html(message);
+            $('#NotifyConfirmTitle').html(title);
+            $('#NotifyConfirmTitle').html(title);
+            $('#NotifyConfirmHeader').css('background','#17a2b8');
+            $('#NotifyConfirmHeader').css('color','#fff');
+            $('#NotifyConfirmHeader span').css('color','#fff');
+            $('#NotifyConfirmBtnSubmit').css('display','none');
+            if(type === 'confirm'){
+                $('#NotifyConfirmBtnSubmit').css('display','block');
+                $('#NotifyConfirmBtnSubmit').attr('onclick', submitClick);
+                if(cancelClick){
+                    $('#NotifyConfirmBtnClose').attr('onclick', cancelClick);
+                }
+            }else if (type === 'success'){
+                $('#NotifyConfirmHeader').css('background','#28a745');
+            }else if (type === 'error'){
+                $('#NotifyConfirmHeader').css('background','#dc3545');
+            }
+            $('#NotifyConfirm').modal('show');
+        },
+        notifySuccess: function(message = 'Success',title = 'Success'){
+            ws.notify(message,title, 'success');
+        },
+        notifyError: function(message = 'Error',title = 'Error'){
+            ws.notify(message,title, 'error');
+        },
+        notifyConfirm: function(message = 'Confirm',title = 'Confirm',submitClick = 'alert(\'Click!\')',cancelClick = ''){
+            ws.notify(message,title, 'confirm',submitClick,cancelClick);
+        },
         ajax: function (url, $options, loading = false) {
             if (loading) {
                 pub.loading(true);

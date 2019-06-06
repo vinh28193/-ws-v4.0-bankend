@@ -267,7 +267,7 @@
             }
             if (value > numberInstock) {
                 $('#quantity').val(valueOld === value ? 1 : valueOld);
-                return ws.sweetalert('Bạn không thể mua quá ' + numberInstock + ' sản phẩm.', 'Lỗi: ');
+                return ws.notifyError('Bạn không thể mua quá ' + numberInstock + ' sản phẩm.', 'Lỗi: ');
             }
             $('#quantity').val(value);
             $('#quantity').css('width', (value.toString().length * 10 + 20) + 'px');
@@ -282,12 +282,12 @@
     };
     var checkOutOfStock = function (activeVariation) {
         if (!activeVariation) {
-            alert("Hết hàng!");
+            ws.notifyError("Hết hàng!");
             markOutofStock(true);
             return false;
         } else {
             if (activeVariation.available_quantity > 0 && activeVariation.quantity_sold >= 0 && activeVariation.available_quantity - activeVariation.quantity_sold <= 0) {
-                alert("Hết hàng!");
+                ws.notifyError("Hết hàng!");
                 markOutofStock(true);
                 return false;
             }
@@ -515,11 +515,11 @@
         var $data = $item.data('wsItem');
         var quantity = $('#quantity').val();
         if (quantity < 1) {
-            return alert('Vui lòng nhập số lượng');
+            return ws.notifyError('Vui lòng nhập số lượng');
         }
 
         if ($data.params.variation_options.length > 0 && currentVariations.length !== $data.params.variation_options.length) {
-            return alert('Vui lòng chọn thộc tính');
+            return ws.notifyError('Vui lòng chọn thộc tính');
         }
 
         var params = $data.params;
@@ -550,9 +550,9 @@
                     if (countItems) {
                         $('#cartBadge').html(countItems);
                     }
-                    alert(response.message);
+                    ws.notifySuccess(response.message,'Success');
                 } else {
-                    alert(response.message);
+                    ws.notifyError(response.message);
                 }
             }
         };
