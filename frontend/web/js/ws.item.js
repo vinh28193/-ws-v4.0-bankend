@@ -512,8 +512,6 @@
 
     };
     var paymentItem = function ($item, type) {
-        return ws.notifyConfirm('Bạn có muốn mua không?','Xác nhận');
-
         var $data = $item.data('wsItem');
         var quantity = $('#quantity').val();
         if (quantity < 1) {

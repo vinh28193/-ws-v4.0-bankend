@@ -44,7 +44,7 @@
                     var options = getQuantityInputOptions($target);
                     var operator = $item.data('operator');
                     if (options.max === '' || options.max < options.value) {
-                        ws.notify('Không thể thay đổi số lượng', 'error','info');
+                        ws.notifyMessage('Không thể thay đổi số lượng', 'error','info');
                     }
                     var data = {type: $item.data('type'), id: id, key: key};
                     var param = {quantity: options.value};
