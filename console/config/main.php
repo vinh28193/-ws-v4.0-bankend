@@ -40,11 +40,11 @@ return [
         'rbac' => [
             'class' => 'common\rbac\controllers\RbacController',
         ],
-//        'migration' => [
-//            'class' => 'bizley\migration\controllers\MigrationController',
-//            'migrationPath' => '@console/migrations-backup',
-//            'generalSchema' => 0,
-//        ],
+        'migration' => [
+            'class' => 'bizley\migration\controllers\MigrationController',
+            'migrationPath' => '@console/migrations-backup-v2',
+            'generalSchema' => 0,
+        ],
     ],
     'components' => [
         'queue' => [

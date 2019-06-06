@@ -127,16 +127,17 @@ foreach ($item->variation_options as $index => $variationOption) {
         <?php
         }
     ?>
-    <?php }else {  //ToDo 0 dong  ?>
-        <script>
-            $(document).ready(function () {
-                $("#outOfStock").css('display', 'block');
-                $("#quantityGroup").css('display', 'none');
-                $("#quoteBtn").css('display', 'block');
-                $("#buyNowBtn").css('display', 'none');
-            });
-        </script>
-    <?php } //esle 0 Dong ?>
+    <?php }else {  //ToDo 0 dong
+    $js = <<<JS
+    $(document).ready(function () {
+                    $("#outOfStock").css('display', 'block');
+                    $("#quantityGroup").css('display', 'none');
+                    $("#quoteBtn").css('display', 'block');
+                    $("#buyNowBtn").css('display', 'none');
+                });
+JS;
+    $this->registerJs($js);
+        } //esle 0 Dong ?>
     <?php
     try {
         if ($item->description) {
