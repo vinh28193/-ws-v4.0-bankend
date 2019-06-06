@@ -38,7 +38,7 @@ $('button[name=submit_withdraw]').click(function () {
     if(withdraw_data.method === 'NL'){
         withdraw_data.email = $('input[name=email]').val();
         if(!withdraw_data.email){
-            ws.sweetalert("Vui lòng nhập email tài khoản ngân lượng.");
+            ws.notifyError("Vui lòng nhập email tài khoản ngân lượng.");
             return;
         }
     }else if(withdraw_data.method === 'BANK'){
@@ -47,20 +47,20 @@ $('button[name=submit_withdraw]').click(function () {
         withdraw_data.bank_account_number = $('input[name=bank_account_number]').val();
         console.log(withdraw_data);
         if(!withdraw_data.bank_id || !withdraw_data.bank_account_number || !withdraw_data.bank_account_name){
-            ws.sweetalert("Vui lòng nhập đầy đủ thông tin tài khoản ngân hàng.");
+            ws.notifyError("Vui lòng nhập đầy đủ thông tin tài khoản ngân hàng.");
             return;
         }
     }else {
-        ws.sweetalert("Vui lòng chọn phương thức rút tiền.");
+        ws.notifyError("Vui lòng chọn phương thức rút tiền.");
         return;
     }
     if(!withdraw_data.total_amount || withdraw_data.total_amount < 100000 ){
-        ws.sweetalert("Vui lòng nhập số tiền trên 100.000đ.");
+        ws.notifyError("Vui lòng nhập số tiền trên 100.000đ.");
         return;
     }
     withdraw_data.password = $('input[name=password]').val();
     if(!withdraw_data.password){
-        ws.sweetalert("Vui lòng nhập mật khẩu.");
+        ws.notifyError("Vui lòng nhập mật khẩu.");
         return;
     }
     ws.loading(true);
@@ -73,7 +73,7 @@ $('button[name=submit_withdraw]').click(function () {
                 location.assign('/my-weshop/wallet/withdraw/'+res.data.code+'.html')
             }else {
                 ws.loading(false);
-                ws.sweetalert(res.message);
+                ws.notifyError(res.message);
             }
         }
     });
@@ -94,7 +94,7 @@ var sendOtp = function () {
                 location.assign('/my-weshop/wallet/withdraw/'+res.data.code+'.html')
             }else {
                 ws.loading(false);
-                ws.sweetalert(res.message);
+                ws.notifyError(res.message);
             }
         }
     });
@@ -113,7 +113,7 @@ var cancelWithdraw = function () {
                 location.reload();
             }else {
                 ws.loading(false);
-                ws.sweetalert(res.message);
+                ws.notifyError(res.message);
             }
         }
     });

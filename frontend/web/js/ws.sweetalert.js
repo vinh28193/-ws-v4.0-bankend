@@ -1,5 +1,5 @@
-ws.sweetalert = function (msg, type, $option) {
-    alert(type + ': ' + msg);
+ws.sweetalert = function (msg, title, $option) {
+    ws.notifyMessage(msg,title,'info');
 };
 
 ws.sweetalert.prototype.fire = function ($option) {

@@ -29,7 +29,7 @@ $(document).ready(function() {
             if(result.success){
                 $('.viewed-product').html(result.data.content);
                 $(".owl-carousel").owlCarousel({
-                    loop:true,
+                    loop:false,
                     margin:10,
                     nav:true,
                     responsive:{

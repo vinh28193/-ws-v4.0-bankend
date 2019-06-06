@@ -27,6 +27,40 @@ var ws = ws || (function ($) {
                 $('#loading').css('display', 'none');
             }
         },
+        notifyMessage: function(message,title = 'Notify',type = 'info' , size = 'default' , submitClick = 'alert(\'Click!\')',cancelClick = ''){
+            $('#modal-content').removeClass('modal-default');
+            $('#modal-content').removeClass('modal-lg');
+            $('#modal-content').removeClass('modal-xl');
+            $('#modal-content').addClass('modal-'+type);
+            $('#NotifyConfirmMessage').html(message);
+            $('#NotifyConfirmTitle').html(title);
+            $('#NotifyConfirmTitle').html(title);
+            $('#NotifyConfirmHeader').css('background','#17a2b8');
+            $('#NotifyConfirmHeader').css('color','#fff');
+            $('#NotifyConfirmHeader span').css('color','#fff');
+            $('#NotifyConfirmBtnSubmit').css('display','none');
+            if(type === 'confirm'){
+                $('#NotifyConfirmBtnSubmit').css('display','block');
+                $('#NotifyConfirmBtnSubmit').attr('onclick', "$('#NotifyConfirm').modal('hide');" + submitClick);
+                if(cancelClick){
+                    $('#NotifyConfirmBtnClose').attr('onclick', cancelClick);
+                }
+            }else if (type === 'success'){
+                $('#NotifyConfirmHeader').css('background','#28a745');
+            }else if (type === 'error'){
+                $('#NotifyConfirmHeader').css('background','#dc3545');
+            }
+            $('#NotifyConfirm').modal('show');
+        },
+        notifySuccess: function(message = 'Success',title = 'Success',size = 'default'){
+            ws.notifyMessage(message,title, 'success',size);
+        },
+        notifyError: function(message = 'Error',title = 'Error',size = 'default'){
+            ws.notifyMessage(message,title, 'error',size);
+        },
+        notifyConfirm: function(message = 'Confirm',title = 'Confirm',size = 'default',submitClick = 'alert(\'Click!\')',cancelClick = ''){
+            ws.notifyMessage(message,title, 'confirm',size,submitClick,cancelClick);
+        },
         ajax: function (url, $options, loading = false) {
             if (loading) {
                 pub.loading(true);
