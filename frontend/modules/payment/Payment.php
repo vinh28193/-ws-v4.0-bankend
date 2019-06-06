@@ -33,9 +33,11 @@ use yii\helpers\Url;
 class Payment extends Model
 {
 
+    const ENV_SANDBOX = 'sandbox';
+    const ENV_PRODUCT = 'product';
+
     const PAGE_CHECKOUT = 'CHECKOUT';
     const PAGE_TOP_UP = 'TOP_UP';
-
 
     const PAYMENT_GROUP_MASTER_VISA = 1;
     const PAYMENT_GROUP_BANK = 2;
@@ -56,6 +58,8 @@ class Payment extends Model
     const PAYMENT_GROUP_MY_BANK_TRANSFER = 55;
 
     const  ALEPAY_INSTALMENT_MIN = 0;
+
+    public $env = self::ENV_PRODUCT;
 
     public $page = self::PAGE_CHECKOUT;
 
@@ -166,7 +170,7 @@ class Payment extends Model
 
     public function loadOrdersFromCarts()
     {
-        $data = CartHelper::createOrderParams($this->payment_type,$this->carts);
+        $data = CartHelper::createOrderParams($this->payment_type, $this->carts);
         $this->_orders = $data['orders'];
         $this->total_amount = $data['totalAmount'];
         $this->total_amount_display = $data['totalAmount'];
