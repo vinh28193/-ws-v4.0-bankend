@@ -13,13 +13,27 @@ class m190606_014837_uptocase_columtable extends Migration
     public function safeUp()
     {
         $dbTableNames = Yii::$app->db->schema->getTableNames();
+        $check = false;
         foreach ($dbTableNames as $dbTableName){
             echo $dbTableName ."\n";
+//            if($dbTableName == 'ws_migration'){
+//                continue;
+//            }
+//            if($dbTableName == 'ws_queued_email'){
+//                $check = true;
+//            }
+//            if(!$check){
+//                continue;
+//            }
             $dataColumns = Yii::$app->db->getTableSchema($dbTableName)->columnNames;
             foreach ($dataColumns as $column){
-                $this->renameColumn($dbTableName,$column,strtoupper($column));
+                if(!ctype_upper(preg_replace('/[^a-zA-Z]/','',$column))){
+                    $this->renameColumn($dbTableName,$column,strtoupper($column));
+                }
             }
-            $this->renameTable($dbTableName,strtoupper($dbTableName));
+            if(!ctype_upper(preg_replace('/[^a-zA-Z]/','',$dbTableName))){
+                $this->renameTable($dbTableName,strtoupper($dbTableName));
+            }
         }
     }
 
