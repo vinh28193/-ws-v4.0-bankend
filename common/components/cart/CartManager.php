@@ -408,8 +408,8 @@ class CartManager extends Component
                 $value['cancelled']['new'] = $now;
             }
             if ($param['typeUpdate'] == 'confirmOrderCart') {
-                $key['current_status'] = 'PURCHASED';
-                $value['purchased']['new'] = $now;
+                $key['current_status'] = 'SUPPORTED';
+                $value['supported'] = $now;
             }
             if ($param['typeUpdate'] == 'assignSaleCart') {
                 $value['sale_support_id'] = $param['idSale'];
