@@ -61,12 +61,13 @@ class LoginForm extends Model
      */
     public function login()
     {
+
         if ($this->validate()) {
             $success = Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
-            if ($success) {
-                $walletService = new WalletService();
-                $success = $walletService->login($this->password);
-            }
+//            if ($success) {
+//                $walletService = new WalletService();
+//                $success = $walletService->login($this->password);
+//            }
             return $success;
         }
 
