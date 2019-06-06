@@ -444,8 +444,16 @@ class CartManager extends Component
         $authManager = Yii::$app->authManager;
         $saleIds = $authManager->getUserIdsByRole('sale');
         $masterSaleIds = $authManager->getUserIdsByRole('master_sale');
-        $supporters = User::find()->indexBy('id')->select(['id', 'email'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
+        $arraySales = array_merge($saleIds,$masterSaleIds);
 
+        if(!$arraySales){
+            return false;
+        }
+        $supporters = User::find()->indexBy('id')->select(['id', 'email'])
+            ->where(['id' => $arraySales])->all();
+        if(!$supporters){
+            return false;
+        }
         $ids = array_keys($supporters);
         $calculateToday = ArrayHelper::map($this->getStorage()->calculateSupported($ids), '_id', function ($elem) {
             return ['count' => $elem['count'], 'price' => $elem['price']];

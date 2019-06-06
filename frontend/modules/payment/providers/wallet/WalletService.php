@@ -61,10 +61,11 @@ class WalletService extends BaseObject
      */
     public function getWalletClient()
     {
-        if (!is_object($this->_walletClient)) {
-            $this->_walletClient = Yii::$app->authClientCollection->getClient('wallet');
-        }
-        return $this->_walletClient;
+//        if (!is_object($this->_walletClient)) {
+//            $this->_walletClient = Yii::$app->authClientCollection->getClient('wallet');
+//        }
+//        return $this->_walletClient;
+        return null;
     }
 
     public static function isGuest()
@@ -83,17 +84,18 @@ class WalletService extends BaseObject
 
     public function callApiRequest($url, $params, $method = "POST")
     {
-        try {
-            $client = $this->getWalletClient();
-            return $client->createApiRequest()
-                ->setMethod($method)
-                ->setFormat('json')
-                ->setUrl($url)
-                ->setData($params)->send()->getData();
-        } catch (Exception $exception) {
-            Yii::error($exception);
-            return null;
-        }
+//        try {
+//            $client = $this->getWalletClient();
+//            return $client->createApiRequest()
+//                ->setMethod($method)
+//                ->setFormat('json')
+//                ->setUrl($url)
+//                ->setData($params)->send()->getData();
+//        } catch (Exception $exception) {
+//            Yii::error($exception);
+//            return null;
+//        }
+        return null;
     }
 
     public function testConnection()
@@ -104,36 +106,37 @@ class WalletService extends BaseObject
 
     public function login($password)
     {
-        /** @var  $user Customer */
-        $user = Yii::$app->user->identity;
-
-        $walletClient = $this->getWalletClient();
-        try {
-            $walletClient->authenticateUser($user->username, $password);
-            return $this->response(true, 'Login success');
-        } catch (Exception $exception) {
-            $client = new Client([
-                'baseUrl' => $walletClient->apiBaseUrl
-            ]);
-            $request = $client->createRequest();
-            $request->setUrl('wallet-no-auth/create-wallet');
-            $request->setMethod('POST');
-            $request->setData(['customer' => $user->getAttributes()]);
-            $response = $client->send($request);
-            if ($response->isOk) {
-                $response = $response->getData();
-                if ($response['success']) {
-                    try {
-                        $walletClient->authenticateUser($user->username, Yii::$app->request->post('password'));
-                        return $this->response(true, 'Login success');
-                    } catch (Exception $e) {
-                        return $this->response(false, $e->getMessage());
-                    }
-
-                }
-            }
-            return $this->response(false, 'can not login, cause unknown error');
-        }
+//        /** @var  $user Customer */
+//        $user = Yii::$app->user->identity;
+//
+//        $walletClient = $this->getWalletClient();
+//        try {
+//            $walletClient->authenticateUser($user->username, $password);
+//            return $this->response(true, 'Login success');
+//        } catch (Exception $exception) {
+//            $client = new Client([
+//                'baseUrl' => $walletClient->apiBaseUrl
+//            ]);
+//            $request = $client->createRequest();
+//            $request->setUrl('wallet-no-auth/create-wallet');
+//            $request->setMethod('POST');
+//            $request->setData(['customer' => $user->getAttributes()]);
+//            $response = $client->send($request);
+//            if ($response->isOk) {
+//                $response = $response->getData();
+//                if ($response['success']) {
+//                    try {
+//                        $walletClient->authenticateUser($user->username, Yii::$app->request->post('password'));
+//                        return $this->response(true, 'Login success');
+//                    } catch (Exception $e) {
+//                        return $this->response(false, $e->getMessage());
+//                    }
+//
+//                }
+//            }
+//            return $this->response(false, 'can not login, cause unknown error');
+//        }
+        return $this->response(false, 'Error');
     }
 
     public function topUpTransaction()
@@ -166,23 +169,24 @@ class WalletService extends BaseObject
 
     public function pushToTopUpNoAuth()
     {
-        $data['wallet_transaction_code'] = $this->transaction_code;
-        $data['payment_transaction'] = $this->payment_transaction;
-        $data['time'] = date('Y-m-d H:i:s');
-        $wlClient = $this->getWalletClient();
-        $client = new Client([
-            'baseUrl' => $wlClient->apiBaseUrl
-        ]);
-        $request = $client->createRequest()
-            ->setMethod('POST')
-            ->setUrl('wallet-no-auth/push-to-top-up')
-            ->setData($data);
-        $response = $client->send($request);
-        if (!$response->isOk) {
-            return $this->response(false, "can not connect to server");
-        }
-        $response = $response->getData();
-        return $this->response($response['success'], $response['message'], $response['data']);
+//        $data['wallet_transaction_code'] = $this->transaction_code;
+//        $data['payment_transaction'] = $this->payment_transaction;
+//        $data['time'] = date('Y-m-d H:i:s');
+//        $wlClient = $this->getWalletClient();
+//        $client = new Client([
+//            'baseUrl' => $wlClient->apiBaseUrl
+//        ]);
+//        $request = $client->createRequest()
+//            ->setMethod('POST')
+//            ->setUrl('wallet-no-auth/push-to-top-up')
+//            ->setData($data);
+//        $response = $client->send($request);
+//        if (!$response->isOk) {
+//            return $this->response(false, "can not connect to server");
+//        }
+//        $response = $response->getData();
+//        return $this->response($response['success'], $response['message'], $response['data']);
+        return $this->response(false, "error v4.1 ");
     }
 
     public function getTopUpTransaction()

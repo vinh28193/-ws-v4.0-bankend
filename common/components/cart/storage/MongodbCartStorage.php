@@ -213,10 +213,10 @@ class MongodbCartStorage extends BaseObject
      */
     public function setMeOwnerItem($id)
     {
-        if (($item = self::find()->where()->one()) === null) {
+        if (($this->mongodb->getCollection($this->collection)->findOne($id)) === null) {
             return false;
         }
-        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0], ['identity' => null]], ['remove' => 1]);
+        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0], ['identity' => null]], ['identity' => Yii::$app->user->isGuest ? null : Yii::$app->user->id]);
     }
 
     public function calculateSupported($supportId = null)
