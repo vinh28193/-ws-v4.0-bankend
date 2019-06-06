@@ -2,7 +2,7 @@
 return [
     'components' => [
         'db' => [
-            'class' => 'yii\db\Connection',
+            'class' => 'neconix\yii2oci8\Oci8Connection',
             'dsn' => 'oci:dbname=//178.128.60.187:1521/boxme', // Oracle
             'username' => 'weshopdev',
             'password' => 'weshopdev2019',
