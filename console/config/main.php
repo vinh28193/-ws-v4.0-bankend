@@ -42,7 +42,7 @@ return [
         ],
 //        'migration' => [
 //            'class' => 'bizley\migration\controllers\MigrationController',
-//            'migrationPath' => '@console/migrations-backup',
+//            'migrationPath' => '@console/migrations-backup-v2',
 //            'generalSchema' => 0,
 //        ],
     ],
