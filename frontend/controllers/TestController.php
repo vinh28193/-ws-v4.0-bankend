@@ -156,6 +156,7 @@ class TestController extends FrontendController
         $provice = new McPayProvider();
         $provice->amount = '20000';
         $provice->orderId = 'asdasdasd';
+        $provice->billName = 'asd asDSA';
         var_dump($provice->createCheckOutUrl());die;
     }
 }

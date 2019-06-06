@@ -4,6 +4,7 @@ namespace frontend\modules\payment\providers\mcpay;
 
 use common\components\ReponseData;
 use common\models\logs\PaymentGatewayLogs;
+use common\models\PaymentTransaction;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\PaymentProviderInterface;
 use yii\base\BaseObject;
@@ -55,12 +56,56 @@ class McPayProvider extends BaseObject implements PaymentProviderInterface
 
     public function handle($data)
     {
-        // TODO: Implement handle() method.
+        $logCallback = new PaymentGatewayLogs();
+        $logCallback->response_time = date('Y-m-d H:i:s');
+        $logCallback->create_time = date('Y-m-d H:i:s');
+        $logCallback->request_content = $data;
+        $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK;
+        $logCallback->transaction_code_request = "NGAN LUONG CALLBACK";
+        $logCallback->store_id = 1;
+        try {
+            $tranID = $data['tranID'];
+            $orderid = $data['orderid'];
+            $status = $data['status'];
+            $domain = $data['domain'];
+            $amount = $data['amount'];
+            $currency = $data['currency'];
+            $appcode = $data['appcode'];
+            $paydate = $data['paydate'];
+            $skey = $data['skey'];
+            if (($transaction = PaymentTransaction::findOne(['transaction_code' => $orderid])) === null) {
+                $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
+                $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+                $logCallback->save(false);
+                return ReponseData::reponseMess(false, 'Transaction không tồn tại');
+            }
+            $key0 = md5($tranID . $orderid . $status . $domain . $amount . $currency);
+            $key1 = md5($paydate . $domain . $key0 . $appcode . $this->verify_key);
+            $success = false;
+            $mess = "Giao dịch thanh toán không thành công!";
+            if ($skey == $key1 && $status === '00') {
+                $success = true;
+                $mess = "Giao dịch đang được cho duyệt";
+            }
+            if ($success) {
+                $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                $transaction->save();
+            }
+            $logCallback->response_content = null;
+            $logCallback->save();
+            return ReponseData::reponseArray($success, $mess, ['transaction' => $transaction]);
+        } catch (\Exception $e) {
+            $logCallback->request_content = $e->getMessage() . " \n " . $e->getFile() . " \n " . $e->getTraceAsString();
+            $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+            $logCallback->save(false);
+            return ReponseData::reponseArray(false, 'Call back thất bại');
+        }
+
     }
 
     public function createCheckOutUrl()
     {
-        return Url::current([$this->url, $this->getParams()],false);
+        return $this->url . '?' . http_build_query($this->getParams());
     }
 
     protected function getParams()
