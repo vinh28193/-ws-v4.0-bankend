@@ -18,4 +18,14 @@ class Message extends \common\models\db\Message
     {
         return $this->hasOne(SourceMessage::className(), ['id' => 'id']);
     }
+    public function createOrUpdate($validate = true) {
+        /** @var self $mess */
+        $mess = self::find()->where(['id' => $this->id, 'language' => $this->language])->one();
+        if($mess){
+            $mess->translation = $this->translation;
+            return $mess->save($validate);
+        }else{
+            return $this->save();
+        }
+    }
 }
