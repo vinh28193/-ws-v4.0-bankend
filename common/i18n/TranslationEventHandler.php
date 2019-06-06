@@ -34,6 +34,6 @@ class TranslationEventHandler
 
     protected static function findSourceMessage($message, $category)
     {
-        return SourceMessage::find()->where(['message' => $message, 'category' => $category])->one();
+        return SourceMessage::find()->where(['AND',['message' => $message],['category' => $category]])->one();
     }
 }

@@ -13,7 +13,8 @@ class Connection extends \yii\db\Connection
 {
 
     protected $overrideSchemaMap = [
-        'mysql' => 'common\components\db\mysql\Schema', // MySQL
+//        'mysql' => 'common\components\db\mysql\Schema', // MySQL
+        'oci' => 'common\components\db\oci\Schema' // Oracle
     ];
 
 
@@ -21,5 +22,9 @@ class Connection extends \yii\db\Connection
     {
         parent::init();
         $this->schemaMap = array_merge($this->schemaMap, $this->overrideSchemaMap);
+        if ($this->getDriverName() === 'oci') {
+            $this->getSlavePdo()->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER);
+        }
     }
+
 }

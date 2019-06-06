@@ -6,6 +6,7 @@ namespace frontend\controllers;
 use common\components\cart\CartHelper;
 use common\components\cart\CartManager;
 use common\helpers\WeshopHelper;
+use common\models\Store;
 use common\models\User;
 use Yii;
 use common\components\cart\storage\MongodbCartStorage;
@@ -149,6 +150,12 @@ class TestController extends FrontendController
         echo Yii::t('test', 'Hello World');
         $s = Yii::$app->i18n->getMessageSource('frontend');
         var_dump($s->loadMessages('frontend', 'vi'));
+        die;
+    }
+
+    public function actionSql(){
+        $sql = Store::find()->where(['id' => 1])->one();
+        var_dump($sql);
         die;
     }
 }
