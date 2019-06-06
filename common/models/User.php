@@ -228,7 +228,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
      */
     public function getId()
     {
-        return $this->getPrimaryKey();
+        return $this->id;
     }
 
     /**

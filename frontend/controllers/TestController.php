@@ -153,19 +153,8 @@ class TestController extends FrontendController
 
     public function actionSql()
     {
-        $sql = Store::find()->where(['id' => 1])->one();
-        $st = new Store();
-        $st->country_id = 1;
-        $st->locale = 'vi';
-        $st->name = 'vi';
-        $st->country_name = 'vi';
-        $st->address = 'vi';
-        $st->url = 'vi';
-        $st->currency = 'vi';
-        $st->currency_id = 'vi';
-        $st->status =1;
-        $st->save(false);
-        var_dump($st);
+        $user = User::find()->where(['id' => 1])->one();
+        var_dump($user->getPrimaryKey());
         die;
     }
 }
