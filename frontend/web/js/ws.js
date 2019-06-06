@@ -27,7 +27,11 @@ var ws = ws || (function ($) {
                 $('#loading').css('display', 'none');
             }
         },
-        notify: function(message,title = 'Notify',type = 'info' , submitClick = 'alert(\'Click!\')',cancelClick = ''){
+        notifyMessage: function(message,title = 'Notify',type = 'info' , size = 'default' , submitClick = 'alert(\'Click!\')',cancelClick = ''){
+            $('#modal-content').removeClass('modal-default');
+            $('#modal-content').removeClass('modal-lg');
+            $('#modal-content').removeClass('modal-xl');
+            $('#modal-content').addClass('modal-'+type);
             $('#NotifyConfirmMessage').html(message);
             $('#NotifyConfirmTitle').html(title);
             $('#NotifyConfirmTitle').html(title);
@@ -37,7 +41,7 @@ var ws = ws || (function ($) {
             $('#NotifyConfirmBtnSubmit').css('display','none');
             if(type === 'confirm'){
                 $('#NotifyConfirmBtnSubmit').css('display','block');
-                $('#NotifyConfirmBtnSubmit').attr('onclick', submitClick);
+                $('#NotifyConfirmBtnSubmit').attr('onclick', "$('#NotifyConfirm').modal('hide');" + submitClick);
                 if(cancelClick){
                     $('#NotifyConfirmBtnClose').attr('onclick', cancelClick);
                 }
@@ -48,14 +52,14 @@ var ws = ws || (function ($) {
             }
             $('#NotifyConfirm').modal('show');
         },
-        notifySuccess: function(message = 'Success',title = 'Success'){
-            ws.notify(message,title, 'success');
+        notifySuccess: function(message = 'Success',title = 'Success',size = 'default'){
+            ws.notifyMessage(message,title, 'success',size);
         },
-        notifyError: function(message = 'Error',title = 'Error'){
-            ws.notify(message,title, 'error');
+        notifyError: function(message = 'Error',title = 'Error',size = 'default'){
+            ws.notifyMessage(message,title, 'error',size);
         },
-        notifyConfirm: function(message = 'Confirm',title = 'Confirm',submitClick = 'alert(\'Click!\')',cancelClick = ''){
-            ws.notify(message,title, 'confirm',submitClick,cancelClick);
+        notifyConfirm: function(message = 'Confirm',title = 'Confirm',size = 'default',submitClick = 'alert(\'Click!\')',cancelClick = ''){
+            ws.notifyMessage(message,title, 'confirm',size,submitClick,cancelClick);
         },
         ajax: function (url, $options, loading = false) {
             if (loading) {

@@ -135,7 +135,7 @@
     </div>
 </div>
 <div class="modal" id="NotifyConfirm" tabindex="-1" role="dialog" aria-labelledby="NotifyConfirmTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered" id="modal-content" role="document">
         <div class="modal-content">
             <div class="modal-header" id="NotifyConfirmHeader">
                 <h5 class="modal-title" id="NotifyConfirmTitle"><?= Yii::t('frontend','Notify') ?></h5>
