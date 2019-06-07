@@ -295,13 +295,12 @@ class Payment extends Model
     {
         $form = new PromotionForm();
         $params = PaymentService::createCheckPromotionParam($this);
-        $form->loadParam($params);
+        $form->load($params, '');
         /** @var  $response PromotionResponse */
         $response = $form->checkPromotion();
         if ($response->success === true && $response->discount > 0 && count($response->details) > 0) {
             $this->total_discount_amount = $response->discount;
             $this->discount_detail = $response->details;
-            $this->discount_orders = $response->orders;
             $this->total_amount_display = $this->total_amount - $this->total_discount_amount;
         }
         return $response;
@@ -672,6 +671,7 @@ class Payment extends Model
     {
         return [
             'page' => $this->page,
+            'uuid' => $this->uuid,
             'payment_type' => $this->payment_type,
             'carts' => (array)$this->carts,
             'customer_name' => $this->customer_name,

@@ -1,6 +1,7 @@
 ws.payment = (function ($) {
     var defaults = {
         page: undefined,
+        uuid: ws.getFingerprint(),
         payment_type: undefined,
         carts: [],
         use_xu: 0,

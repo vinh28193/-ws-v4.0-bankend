@@ -57,17 +57,17 @@ class Promotion extends DbPromotion
     const DISCOUNT_TYPE_OVER_QUANTITY = 3;
 
     /**
-     * @param PromotionItem $item
+     * @param PromotionForm $form
      * @return array|bool
      */
-    public function checkCondition(PromotionItem $item)
+    public function checkCondition(PromotionForm $form)
     {
         $conditions = $this->conditions;
         if (empty($conditions)) {
             return true;
         }
         foreach ($conditions as $condition) {
-            if (($passed = $condition->checkConditionRecursive($item)) === false) {
+            if (($passed = $condition->checkConditionRecursive($form)) === false) {
                 $value = $condition->value;
                 $value = is_array($value) ? implode(', ', $value) : $value;
                 $message = "{$condition->name} {$condition->promotionConditionConfig->operator} $value";
@@ -77,103 +77,59 @@ class Promotion extends DbPromotion
         return true;
     }
 
-    protected function preRequest(PromotionRequest &$request)
-    {
-        $request->totalValidAmount = 0;
-        foreach ($request->discountOrders as $index => $order) {
-            /** @var $order Order */
-            if ($this->discount_fee !== null) {
-                $totalFeeAmount = 0;
-                foreach ($order->getProducts() as $key => $product) {
-                    /** @var $product Product */
-//                    if(!$this->allow_order){
-//                        $passedFee = $this->checkCondition($product);
-//                    }
-                    if (isset($product->additionalFees[$this->discount_fee]) && ($fee = $product->additionalFees[$this->discount_fee]) > 0) {
-                        $totalFeeAmount += $fee;
-                    }
-                }
-                $order->totalAmount = $totalFeeAmount;
-                $request->totalValidAmount += $totalFeeAmount;
-            } else {
-                $request->totalValidAmount += $order->totalAmount;
-            }
-
-        }
-    }
-
     /**
-     * @param PromotionRequest $request
+     * @param PromotionForm $form
      * @param PromotionResponse $response
      */
-    public function calculatorDiscount(PromotionRequest $request, PromotionResponse $response)
+    public function calculatorDiscount(PromotionForm $form, PromotionResponse $response)
     {
-//        if (empty($request->discountOrders)) {
-//            return;
-//        }
-        $this->preRequest($request);
+//
         $discount = $this->discount_amount;
         // nếu là % thì tính phần trăm
         if ($this->discount_calculator === self::DISCOUNT_CALCULATOR_PERCENT) {
-            $discount = ($discount / 100) * $request->totalValidAmount;
+            $calculatorAmount = $form->totalAmount;
+
+            if ($this->discount_fee !== null && isset($form->additionalFees[$this->discount_fee]) && ($fee = $form->additionalFees[$this->discount_fee]) > 0) {
+                $calculatorAmount = $fee;
+            }
+
+            $discount = ($discount / 100) * $calculatorAmount;
 
             // nếu là % mà giá trị discount lơn hơn max thì để giá trị max
             if ($this->discount_max_amount !== null && $discount > $this->discount_max_amount) {
                 $discount = $this->discount_max_amount;
             }
         }
-        $orders = [];
-        foreach ($request->discountOrders as $index => $order) {
-            /** @var $order Order */
-            if ($this->discount_fee !== null) {
-                foreach ($order->getProducts() as $key => $product) {
-                    if (isset($product->additionalFees[$this->discount_fee]) && ($fee = $product->additionalFees[$this->discount_fee]) > 0) {
-                        $feeDiscount = WeshopHelper::discountAmountPercent($fee, $request->totalValidAmount, $discount);
-                        $product->discountFees = [];
-                        $product->discountFees[$this->discount_fee] = $feeDiscount;
-                        if ($this->allow_multiple) {
-                            $product->totalDiscountAmount += $feeDiscount;
-                            $order->totalDiscountAmount += $feeDiscount;
-                        } else {
-                            $product->totalDiscountAmount = $feeDiscount;
-                            $order->totalDiscountAmount = $feeDiscount;
-                        }
-                    }
-                    $order->updateProduct($key, $product);
-                    $orders[$index]['products'][$key] = [
-                        'additionalFees' => $product->additionalFees,
-                        'discountFees' => $product->discountFees,
-//                        'totalAmount' => $product->totalAmount,
-                        'totalDiscountAmount' => $product->totalDiscountAmount
-                    ];
-                }
-            } else {
-                $discountAmount = WeshopHelper::discountAmountPercent($order->totalAmount, $request->totalValidAmount, $discount);
-                if ($this->allow_multiple) {
-                    $order->totalDiscountAmount += $discountAmount;
-                } else {
-                    $order->totalDiscountAmount = $discountAmount;
-                }
-            }
-            $orders[$index]['totalAmount'] = $order->totalAmount;
 
-            $orders[$index]['totalDiscountAmount'] = $order->totalDiscountAmount;
-
-        }
         if ($this->allow_multiple) {
-            $request->totalDiscountAmount += $discount;
+            $response->discount += $discount;
+            if ($this->discount_fee !== null) {
+                $response->discountFees[$this->discount_fee][implode('-', [self::getType($this->type), $this->code])] = $discount;
+            }
+            $response->details[] = [
+                'id' => $this->id,
+                'code' => $this->code,
+                'type' => self::getType($this->type),
+                'message' => $this->message,
+                'value' => $discount
+            ];
+
         } else {
-            $request->totalDiscountAmount = $discount;
+            $response->discount = $discount;
+            if ($this->discount_fee !== null) {
+                $response->discountFees = [];
+                $response->discountFees[$this->discount_fee][implode('-', [self::getType($this->type), $this->code])] = $discount;
+            }
+            $response->details = [];
+            $response->details[] = [
+                'id' => $this->id,
+                'code' => $this->code,
+                'type' => self::getType($this->type),
+                'message' => $this->message,
+                'value' => $discount
+            ];
         }
-        $orders['totalValidAmount'] = $request->totalValidAmount;
-        $response->orders[implode('-', [self::getType($this->type), $this->code])] = $orders;
-        $response->discount += $request->totalDiscountAmount;
-        $response->details[] = [
-            'id' => $this->id,
-            'code' => $this->code,
-            'type' => self::getType($this->type),
-            'message' => $this->message,
-            'value' => $discount];
+
     }
 
 
