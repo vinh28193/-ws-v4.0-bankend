@@ -14,7 +14,8 @@ class Resolver extends BaseObject
      * @param $key
      * @return mixed
      */
-    public function resolve($object,$key){
+    public function resolve($object, $key)
+    {
         return ObjectHelper::resolve($object, $key);
     }
 
@@ -25,7 +26,8 @@ class Resolver extends BaseObject
             'quantity' => 'getShippingQuantity',
             'price' => 'getTotalOriginPrice',
             'condition' => 'getIsNew',
-            'portal' => 'getItemType'
+            'portal' => 'getItemType',
+            'user' => 'getUser'
         ];
         return isset($keys[$key]) ? $keys[$key] : $key;
     }

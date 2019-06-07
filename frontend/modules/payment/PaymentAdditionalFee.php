@@ -1,21 +1,29 @@
 <?php
 
 
-namespace common\tests\stubs;
+namespace frontend\modules\payment;
+
 
 use common\components\AdditionalFeeInterface;
-use common\components\AdditionalFeeTrait;
 use common\models\User;
+use common\models\Category;
 use yii\base\BaseObject;
 
-class AdditionalFeeObject extends BaseObject implements AdditionalFeeInterface
+class PaymentAdditionalFee extends BaseObject implements AdditionalFeeInterface
 {
-    use AdditionalFeeTrait;
+    public $itemType;
+    public $totalOriginPrice;
+    public $shippingWeight;
+    public $shippingQuantity;
+    public $user;
+    public $exchangeRate;
+
     /**
      * @return string
      */
     public function getItemType()
     {
+        return strtolower($this->itemType);
     }
 
     /**
@@ -23,13 +31,15 @@ class AdditionalFeeObject extends BaseObject implements AdditionalFeeInterface
      */
     public function getTotalOriginPrice()
     {
+        return $this->totalOriginPrice;
     }
 
     /**
-     * @return \common\models\Category
+     * @return null|Category
      */
     public function getCustomCategory()
     {
+        return null;
     }
 
     /**
@@ -37,6 +47,7 @@ class AdditionalFeeObject extends BaseObject implements AdditionalFeeInterface
      */
     public function getShippingWeight()
     {
+        return $this->shippingWeight;
     }
 
     /**
@@ -44,6 +55,8 @@ class AdditionalFeeObject extends BaseObject implements AdditionalFeeInterface
      */
     public function getShippingQuantity()
     {
+        return $this->shippingQuantity;
+
     }
 
     /**
@@ -51,6 +64,7 @@ class AdditionalFeeObject extends BaseObject implements AdditionalFeeInterface
      */
     public function getUser()
     {
+        return $this->user;
     }
 
     /**
@@ -58,6 +72,7 @@ class AdditionalFeeObject extends BaseObject implements AdditionalFeeInterface
      */
     public function getIsNew()
     {
+        return false;
     }
 
     /**
@@ -65,5 +80,6 @@ class AdditionalFeeObject extends BaseObject implements AdditionalFeeInterface
      */
     public function getExchangeRate()
     {
+        return $this->exchangeRate;
     }
 }
