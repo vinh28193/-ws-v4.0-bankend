@@ -41,7 +41,7 @@ $(document).ready(function() {
     }, 1000 * 1);
 });
 JS;
-$this->registerJs($js_ga, \yii\web\View::POS_END);
+//$this->registerJs($js_ga, \yii\web\View::POS_END);
 
 $showStep = true;
 if($activeStep === 1){

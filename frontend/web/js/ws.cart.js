@@ -12,10 +12,12 @@
     };
 
     var defaults = {
+        listUrl: undefined,
         updateUrl: undefined,
         removeUrl: undefined,
         paymentUrl: undefined,
     };
+
 
     var methods = {
         init: function (options) {
@@ -26,10 +28,11 @@
                 }
                 var settings = $.extend({}, defaults, options || {});
 
-
                 $cart.data('wsCart', {
                     settings: settings
                 });
+
+                methods.getItems.apply($cart);
 
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
                     event.preventDefault();
@@ -44,7 +47,7 @@
                     var options = getQuantityInputOptions($target);
                     var operator = $item.data('operator');
                     if (options.max === '' || options.max < options.value) {
-                        ws.notifyMessage('Không thể thay đổi số lượng', 'error','info');
+                        ws.notifyMessage('Không thể thay đổi số lượng', 'error', 'info');
                     }
                     var data = {type: $item.data('type'), id: id, key: key};
                     var param = {quantity: options.value};
@@ -127,9 +130,26 @@
                 //     methods.watch.call($cart, data);
                 //     return false;
                 // });
+
             });
         },
-        items: function () {
+        getItems: function () {
+            var $cart = $(this);
+            var container = '#' + $cart.attr('id');
+            var data = $cart.data('wsCart');
+
+            var deferredArrays = deferredArray();
+            ws.loading(true);
+            $.when.apply(this, deferredArrays).always(function () {
+
+                var $pjaxOptions = {
+                    url: data.settings.listUrl,
+                    container: container,
+                    push: false
+                };
+                $.pjax($pjaxOptions);
+                ws.loading(false);
+            });
 
         },
         refresh: function () {
@@ -212,6 +232,7 @@
                 method: 'post',
                 data: {carts: keys},
                 success: function (response) {
+                    console.log(response);
                     if (response.success) {
                         var url = response.data || null;
                         if (url === null) {
@@ -234,6 +255,13 @@
         data: function () {
             return this.data('wsCart');
         },
+    };
+    var deferredArray = function () {
+        var array = [];
+        array.add = function (callback) {
+            this.push(new $.Deferred(callback));
+        };
+        return array;
     };
     var updateTotalPrice = function ($cart) {
         totalAmount = 0;

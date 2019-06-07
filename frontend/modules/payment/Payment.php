@@ -61,7 +61,7 @@ class Payment extends Model
     const  ALEPAY_INSTALMENT_MIN = 0;
 
     public $env = self::ENV_PRODUCT;
-
+    public $uuid = null;
     public $page = self::PAGE_CHECKOUT;
 
     public $payment_type;
@@ -172,7 +172,7 @@ class Payment extends Model
 
     public function loadOrdersFromCarts()
     {
-        $data = CartHelper::createOrderParams($this->payment_type, $this->carts);
+        $data = CartHelper::createOrderParams($this->payment_type, $this->carts, $this->uuid);
         $this->_orders = $data['orders'];
         $this->total_amount = $data['totalAmount'];
         $this->total_amount_display = $data['totalAmount'];
@@ -578,7 +578,7 @@ class Payment extends Model
 
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
                 $updateOrderAttributes['total_final_amount_local'] = $updateOrderAttributes['total_amount_local'] - $updateOrderAttributes['total_promotion_amount_local'];
-                if($this->isPaid){
+                if ($this->isPaid) {
                     $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
                 }
                 $order->updateAttributes($updateOrderAttributes);

@@ -210,7 +210,7 @@ class CartHelper
     }
 
 
-    public static function createOrderParams($type, $keys, $safeOnly = true)
+    public static function createOrderParams($type, $keys, $uuid = null)
     {
         $start = microtime(true);
         if (!is_array($keys)) {
@@ -218,7 +218,7 @@ class CartHelper
         }
         $orders = [];
         $totalFinalAmount = 0;
-        $items = self::getCartManager()->getItems($type, $keys);
+        $items = self::getCartManager()->getItems($type, $keys, $uuid);
         foreach ($items as $item) {
             $order = $item['value'];
             $totalFinalAmount += (int)$order['total_amount_local'];

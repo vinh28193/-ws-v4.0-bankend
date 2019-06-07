@@ -5,6 +5,7 @@ namespace common\tests\stubs;
 
 use common\components\AdditionalFeeInterface;
 use common\components\AdditionalFeeTrait;
+use common\models\User;
 use yii\base\BaseObject;
 
 class AdditionalFeeObject extends BaseObject implements AdditionalFeeInterface
@@ -46,9 +47,9 @@ class AdditionalFeeObject extends BaseObject implements AdditionalFeeInterface
     }
 
     /**
-     * @return boolean
+     * @return User|null
      */
-    public function getIsForWholeSale()
+    public function getUser()
     {
     }
 

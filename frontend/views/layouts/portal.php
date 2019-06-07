@@ -13,16 +13,11 @@ $this->beginContent('@frontend/views/layouts/common.php');
 FancyboxPlusAsset::register($this);
 $js = <<<JS
 $(document).ready(function() {
-    var client = new ClientJS();
-            var _fingerprint = client.getFingerprint();
-            var data = {
-                fingerprint: _fingerprint
-            };
   setTimeout(function () { 
         ws.ajax('/portal/viewed-products',{
         type: 'POST',
         dataType: 'json',
-        data: data,
+        data: {fingerprint: ws.getFingerprint()},
         loading: true,
         success: function (result) {
             // console.log(result);  console.log(result.success);
@@ -52,32 +47,6 @@ $(document).ready(function() {
 JS;
 $this->registerJs($js, \yii\web\View::POS_END);
 
-$jsga = <<<JS
-$(document).ready(function() {
-    var client = new ClientJS();
-            var _fingerprint = client.getFingerprint();
-            var data = {
-                fingerprint: _fingerprint,
-                path : window.location.pathname
-            };
-            // /cms/home/u
-            var ruler_path = window.location.pathname;
-            //if(ruler_path.match(/^"/ebay\/item/"/i) == null || ruler_path.match(/^"/amazon\/item/"/i) == null){
-                setTimeout(function () { 
-                    ws.ajax('/frontend/u',{
-                    type: 'POST',
-                    dataType: 'json',
-                    data: data,
-                    loading: true,
-                    success: function (result) {
-                        //console.log(result);  console.log(result.success); 
-                    }
-                    });
-                }, 1000 * 1);
-            //}      
-});
-JS;
-$this->registerJs($jsga, \yii\web\View::POS_END);
 
 ?>
     <div class="keep-navbar <?= strtolower($portal) == 'amazon-jp' ? 'amazon' : strtolower($portal) ?> other-page">

@@ -19,7 +19,8 @@ var ws = ws || (function ($) {
             pub.options = $.extend({}, defaultOptions, options || {});
             var $client = new ClientJS();
             pub.setFingerprint($client.getFingerprint());
-            // pub.sendFingerprint();
+            pub.sendFingerprint();
+            pub.reloadCartBadge();
         },
         // Todo loading
         loading: function (show) {
@@ -118,15 +119,23 @@ var ws = ws || (function ($) {
         },
         sendFingerprint: function () {
             setTimeout(function () {
-                ws.ajax('/frontend/u',{
+                ws.ajax('/frontend/u', {
                     type: 'POST',
                     dataType: 'json',
                     data: {
                         fingerprint: pub.getFingerprint(),
-                        path : window.location.pathname
+                        path: window.location.pathname
                     },
                 });
             }, 1000);
+        },
+        reloadCartBadge: function () {
+            ws.ajax('/checkout/cart/count', function (res) {
+                pub.setCartBadge(res);
+            }, false);
+        },
+        setCartBadge(count) {
+            $('#cartBadge').html(count);
         },
         countdownTime: function () {
             $('*[data-toggle=countdown-time]').each(function () {
