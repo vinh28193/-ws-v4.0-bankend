@@ -59,10 +59,24 @@ return [
             ]
         ],
 
+        /* // Local
         'session' => [
             // this is the name of the session cookie used for login on the backend
             'name' => 'advanced-backend',
             //'savePath' => sys_get_temp_dir()
+        ],
+        */
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => '128.199.70.160',
+            'port' => 6479,
+            'database' => 0,
+        ],
+        'session' => [
+            'name' => 'adv-frontend-ws-2019',
+            'class' => 'yii\redis\Session',
+            'cookieParams' => ['httpOnly' => true, 'lifetime' => 3600 * 4],
+            'timeout' => 3600 * 4,
         ],
 
 

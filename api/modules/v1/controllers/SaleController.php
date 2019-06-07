@@ -18,6 +18,7 @@ use yii\caching\DbDependency;
 
 class SaleController extends BaseApiController
 {
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -28,7 +29,7 @@ class SaleController extends BaseApiController
             'dependency' => [
                 'class' => 'yii\caching\ChainedDependency',
                 'dependencies' => [
-                    new DbDependency(['sql' => 'SELECT MAX(id) FROM `'.Order::tableName().'`'])
+                   // new DbDependency(['sql' => 'SELECT MAX(id) FROM `'.Order::tableName().'`'])
                 ]
             ],
         ];

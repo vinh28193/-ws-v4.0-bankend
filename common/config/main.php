@@ -17,15 +17,22 @@ return [
             'noCacheValidateKey' => 'yes'
         ],
         /*
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
+        ],
+        */
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
-                'hostname' => 'localhost',
-                'port' => 6379,
+                'hostname' => '128.199.70.160',
+                'port' => 6479,
                 'database' => 0,
             ]
         ],
-        */
+
         'api' => [
             'class' => 'common\components\Api',
         ],
