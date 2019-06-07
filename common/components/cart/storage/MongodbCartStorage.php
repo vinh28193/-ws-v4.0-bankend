@@ -276,14 +276,14 @@ class MongodbCartStorage extends BaseObject
         ];
         if (isset($params['value']) && !isset($params['keyword'])) {
             $conditions[] = ['OR',
-                ['LIKE', 'data.order.customer.email', $params['value']],
-                ['LIKE', 'data.order.customer.phone', $params['value']],
+                ['data.order.customer.email', $params['value']],
+                ['data.order.customer.phone', $params['value']],
             ];
         }
         if (isset($params['value']) && isset($params['keyword'])) {
             $conditions[] = ['OR',
-                ['LIKE', $params['keyword'], $params['value']],
-                ['LIKE', $params['keyword'], $params['value']],
+                [$params['keyword'], $params['value']],
+                [$params['keyword'], $params['value']],
             ];
         }
 
@@ -301,19 +301,16 @@ class MongodbCartStorage extends BaseObject
                 ]
             ],
         ];
-        $countAggregate = $aggregatePage = $aggregate;
+        $countAggregate = $aggregate;
         $countAggregate [] = [
             '$count' => 'sum'
         ];
         $aggregate[] = [
             '$limit' => $limit,
         ];
-        $aggregatePage[] = [
-            '$skip' => $skip,
-        ];
         return [
-            'count' => $this->mongodb->getCollection($this->collection)->aggregate($countAggregate), // thang thi e cha $aggregate merge voi $count
-            '_items' => $this->mongodb->getCollection($this->collection)->aggregate($aggregate) //// thang thi e cha $aggregate merge voi $limit, $ski[p
+            'count' => $this->mongodb->getCollection($this->collection)->aggregate($countAggregate),
+            '_items' => $this->mongodb->getCollection($this->collection)->aggregate($aggregate)
         ];
     }
 
