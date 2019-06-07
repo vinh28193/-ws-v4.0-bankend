@@ -26,7 +26,7 @@ return [
         'migrate' => [
             'class' => 'common\components\consoles\controllers\MigrateController',
             'useTablePrefix' => true,
-            'migrationPath' => ['@console/migrations'],
+            'migrationPath' => ['@console/migrations-backup-v2'],
         ],
         'mongodb-migrate' => [
             'class' => 'yii\mongodb\console\controllers\MigrateController',
