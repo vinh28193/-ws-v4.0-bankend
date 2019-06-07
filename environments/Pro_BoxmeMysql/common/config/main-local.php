@@ -2,26 +2,34 @@
 return [
     'components' => [
         'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=128.199.70.160;port=3306;dbname=weshop_global',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'class' => 'common\components\db\Connection',
+            'dsn' => 'oci:dbname=//178.128.60.187:1521/boxme', // Oracle
+            'username' => 'weshopdev',
+            'password' => '12345677',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache',
-            // 'tablePrefix' => 'ws_'
+            'tablePrefix' => 'WS_',
 
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=128.199.70.160;port=3306;dbname=weshop_h',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'dsn' => 'mysql:host=128.199.237.99;port=3306;dbname=weshop_',
+            'username' => 'weshop2020',
+            'password' => 'FaUfevTz62pgY3JE',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache'
+        ],
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => '128.199.70.160',
+                'port' => 6479,
+                'database' => 0,
+            ]
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -41,9 +49,10 @@ return [
         ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://localhost:27017/admin',
+            'dsn' => 'mongodb://128.199.70.160:27017/admin',
         ],
         'db_oauth'=>[
+            /*
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop_oauth',
             'username' => 'root',
@@ -52,22 +61,23 @@ return [
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache'
+            */
         ],
         'ga' => [
-            'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
-            'trackingId' => 'UA-140658371-1', // Put your real tracking ID here
-
-            // These parameters are optional:
-            'useSsl' => true, // If you’d like to use a secure connection to Google servers
-            'overrideIp' => false, // By default, IP is overridden by the user’s one, but you can disable this
-            'anonymizeIp' => true, // If you want to anonymize the sender’s IP address
-            'asyncMode' => true, // Enables the asynchronous mode (see below)
-            'autoSetClientId' => true, // Try to set ClientId automatically from the “_ga” cookie (disabled by default)
+            'trackingId' => 'UA-140658371-1',
         ],
-        /*
-          'request' => [
-                'enableCookieValidation' => false,
-          ],
-         */
+        'productManager' => [
+            'gates' => [
+                'ebay' => [
+                    'baseUrl' => 'https://api-lbc.weshop.asia/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
+                ],
+                'amazon' => [
+                    'baseUrl' => 'http://157.230.175.213:8000', // 'http://amazonapiv2.weshop.asia/amazon',
+                ],
+                'amazon-jp' => [
+                    'baseUrl' => 'http://157.230.175.213:8000', // 'http://amazonapiv2.weshop.asia/amazon',
+                ]
+            ]
+        ],
     ],
 ];
