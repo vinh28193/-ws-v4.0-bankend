@@ -45,9 +45,9 @@ class HomeController extends BaseAccountController
             ->all();
         $total = count($orders);
         $wallet = null;
-        if($userId){
-            $wallet = ArrayHelper::getValue((new WalletService())->detailWalletClient(),'data');
-        }
+//        if($userId){
+//            $wallet = ArrayHelper::getValue((new WalletService())->detailWalletClient(),'data');
+//        }
         $totalCart = (new CartManager())->countItems();
         return $this->render('index', [
             'wallet' => $wallet,

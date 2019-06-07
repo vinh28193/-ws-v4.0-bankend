@@ -8,6 +8,7 @@ use common\components\cart\CartManager;
 use common\helpers\WeshopHelper;
 use common\models\Store;
 use common\models\User;
+use frontend\modules\payment\providers\mcpay\McPayProvider;
 use Yii;
 use common\components\cart\storage\MongodbCartStorage;
 use frontend\modules\payment\PaymentService;
@@ -156,5 +157,12 @@ class TestController extends FrontendController
         $user = User::find()->where(['id' => 1])->one();
         var_dump($user->getPrimaryKey());
         die;
+    }
+    public function actionCreate(){
+        $provice = new McPayProvider();
+        $provice->amount = '20000';
+        $provice->orderId = 'asdasdasd';
+        $provice->billName = 'asd asDSA';
+        var_dump($provice->createCheckOutUrl());die;
     }
 }

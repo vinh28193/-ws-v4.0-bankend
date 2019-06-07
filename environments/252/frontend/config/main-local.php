@@ -12,17 +12,17 @@ $config = [
             'dsn' => 'mongodb://192.168.11.252:27017/admin',
         ],
         */
-        'authClientCollection' => [
-            'class' => 'yii\authclient\Collection',
-            'clients' => [
-                'wallet' => [
-                    'authUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/authorize',
-                    'tokenUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/token',
-                    'apiBaseUrl' => 'http://weshop-4.0.wallet.vn/v1'
-                ]
-
-            ],
-        ]
+//        'authClientCollection' => [
+//            'class' => 'yii\authclient\Collection',
+//            'clients' => [
+//                'wallet' => [
+//                    'authUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/authorize',
+//                    'tokenUrl' => 'http://weshop-4.0.wallet.vn/v1/rest/token',
+//                    'apiBaseUrl' => 'http://weshop-4.0.wallet.vn/v1'
+//                ]
+//
+//            ],
+//        ]
     ],
 ];
 

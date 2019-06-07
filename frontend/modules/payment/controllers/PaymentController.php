@@ -133,23 +133,23 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->payment_type = $payment->payment_type;
         $paymentTransaction->shipping = isset($my_shiping) && $my_shiping instanceof Address ? $my_shiping->id : $this->user->defaultShippingAddress->id;
         $paymentTransaction->save(false);
-        if ($payment->payment_provider === 42 || $payment->payment_provider === 45) {
-            $wallet = new WalletService([
-                'transaction_code' => $payment->transaction_code,
-                'total_amount' => $payment->total_amount - $payment->total_discount_amount,
-                'payment_provider' => $payment->payment_provider_name,
-                'payment_method' => $payment->payment_method_name,
-                'bank_code' => $payment->payment_bank_code,
-            ]);
-            $results = $wallet->topUpTransaction();
-            if ($results['success'] === true && isset($results['data']) && isset($results['data']['data']['code'])) {
-                $topUpCode = $results['data']['data']['code'];
-                $paymentTransaction->updateAttributes([
-                    'topup_transaction_code' => $topUpCode
-                ]);
-                $payment->transaction_code = $topUpCode;
-            }
-        }
+//        if ($payment->payment_provider === 42 || $payment->payment_provider === 45) {
+//            $wallet = new WalletService([
+//                'transaction_code' => $payment->transaction_code,
+//                'total_amount' => $payment->total_amount - $payment->total_discount_amount,
+//                'payment_provider' => $payment->payment_provider_name,
+//                'payment_method' => $payment->payment_method_name,
+//                'bank_code' => $payment->payment_bank_code,
+//            ]);
+//            $results = $wallet->topUpTransaction();
+//            if ($results['success'] === true && isset($results['data']) && isset($results['data']['data']['code'])) {
+//                $topUpCode = $results['data']['data']['code'];
+//                $paymentTransaction->updateAttributes([
+//                    'topup_transaction_code' => $topUpCode
+//                ]);
+//                $payment->transaction_code = $topUpCode;
+//            }
+//        }
         $res = $payment->processPayment();
         if ($res['success'] === false) {
             return $this->response(false, $res['message']);
@@ -201,7 +201,7 @@ class PaymentController extends BasePaymentController
                 'total_discount_amount' => $paymentTransaction->total_discount_amount,
                 'total_amount' => $paymentTransaction->before_discount_amount_local,
                 'payment_type' => $paymentTransaction->payment_type,
-
+                'isPaid' => $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS,
             ]);
 
             $receiverAddress = Address::findOne($paymentTransaction->shipping);

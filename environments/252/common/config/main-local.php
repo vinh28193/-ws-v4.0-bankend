@@ -43,16 +43,16 @@ return [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://192.168.11.252:27017/admin',
         ],
-        'db_oauth'=>[
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=192.168.11.252;port=3306;dbname=weshop_oauth',
-            'username' => 'dev',
-            'password' => 'Mwqs]Avk>q+8N2vs)zV36ia',
-            'charset' => 'utf8',
-            'enableSchemaCache' => true,
-            'schemaCacheDuration' => 7200,
-            'schemaCache' => 'cache'
-        ],
+//        'db_oauth'=>[
+//            'class' => 'yii\db\Connection',
+//            'dsn' => 'mysql:host=192.168.11.252;port=3306;dbname=weshop_oauth',
+//            'username' => 'dev',
+//            'password' => 'Mwqs]Avk>q+8N2vs)zV36ia',
+//            'charset' => 'utf8',
+//            'enableSchemaCache' => true,
+//            'schemaCacheDuration' => 7200,
+//            'schemaCache' => 'cache'
+//        ],
         'ga' => [
             'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
             'trackingId' => 'UA-140658371-1', // Put your real tracking ID here

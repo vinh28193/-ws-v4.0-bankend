@@ -213,10 +213,10 @@ class MongodbCartStorage extends BaseObject
      */
     public function setMeOwnerItem($id)
     {
-        if (($item = self::find()->where()->one()) === null) {
+        if (($this->mongodb->getCollection($this->collection)->findOne($id)) === null) {
             return false;
         }
-        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0], ['identity' => null]], ['remove' => 1]);
+        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0], ['identity' => null]], ['identity' => Yii::$app->user->isGuest ? null : Yii::$app->user->id]);
     }
 
     public function calculateSupported($supportId = null)
@@ -267,23 +267,22 @@ class MongodbCartStorage extends BaseObject
     public function filterShoppingCarts($params)
     {
         $limit = (int)ArrayHelper::remove($params, 'limit', 10);
-        $page = ArrayHelper::remove($params, 'p', 1);
+        $page = ArrayHelper::remove($params, 'keyword', 1);
         $skip = ($page - 1) * $limit;
-
         $conditions = [
             'AND',
             ['remove' => 0],
             ['NOT', 'identity', new Expression('null')],
         ];
-        if (isset($params['q']) && ($keyword = $params['q']) && $keyword !== null && $keyword !== '')
-            $conditions[] = ['OR', [
-                $this->buildFilterAggregationPipeline('value', [
-                    'customer' => [
-                        'email' => $keyword,
-                        'phone' => $keyword,
-                    ]
-                ])
-            ]];
+//        if (isset($params['value']))
+//            $conditions[] = ['OR', [
+//                $this->buildFilterAggregationPipeline('value', [
+//                    'customer' => [
+//                        'email' => $params['value'],
+//                        'phone' => $params['value'],
+//                    ]
+//                ])
+//            ]];
 
         return $this->mongodb->getCollection($this->collection)->aggregate([
             [
