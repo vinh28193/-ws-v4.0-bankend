@@ -16,6 +16,7 @@ class AmazonJpController extends CmsController
 
     public function actionIndex()
     {
+        return $this->redirect('/404.html');
         $request = Yii::$app->getRequest();
         if($request->getIsAjax()){
             $p = Yii::$app->request->get('p');

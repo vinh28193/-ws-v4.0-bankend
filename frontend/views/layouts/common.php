@@ -64,7 +64,7 @@ FrontendAsset::register($this);
                         </div>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                        <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">
                             <i class="flag jp"></i>
                             <span>Từ Nhật</span>
@@ -72,30 +72,30 @@ FrontendAsset::register($this);
                         <div class="dropdown-menu animated fadeIn">
                             <div class="title2 active">Amazon Japan</div>
                             <ul>
-                                <?= \frontend\widgets\alias\TopMenuAliasWidget::widget(['type' => 'NAV_TOP_JP']) ?>
+                                <?/*= \frontend\widgets\alias\TopMenuAliasWidget::widget(['type' => 'NAV_TOP_JP']) */?>
                             </ul>
                             <div class="see-all">
                                 <a href="#">Xem toàn bộ danh mục <i class="fa fa-long-arrow-right pull-right"></i></a>
                             </div>
                             <div class="title2">Top Japan store</div>
-                        </div>
+                        </div>-->
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                        <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">
                             <i class="flag uk"></i>
                             <span>Từ Anh</span>
                         </a>
                         <div class="dropdown-menu animated fadeIn">
                             <a href="#">Gửi link báo giá từ Anh</a>
-                        </div>
+                        </div>-->
                     </li>
                 </ul>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown"><a href="#">Blog</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">
                         Mua hộ
                     </a>
@@ -142,10 +142,10 @@ FrontendAsset::register($this);
                                 <a href="#" class="btn btn-block">Xem các địa chỉ mua sắm</a>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">
                         Ship hộ
                     </a>
@@ -190,7 +190,7 @@ FrontendAsset::register($this);
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </li>
                 <li>
                     <?php if (Yii::$app->user->isGuest) {
