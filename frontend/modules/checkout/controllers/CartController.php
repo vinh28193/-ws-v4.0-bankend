@@ -80,7 +80,6 @@ class CartController extends BillingController
         if (($item = ArrayHelper::getValue($params, 'item')) === null) {
             return ['success' => false, 'message' => 'add cart from empty data'];
         }
-
         if (($key = $this->module->cartManager->addItem($type, $item, true))[0] === false) {
             return ['success' => false, 'message' => $key[1]];
         };

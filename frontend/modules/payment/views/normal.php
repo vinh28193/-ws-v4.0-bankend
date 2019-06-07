@@ -32,7 +32,7 @@ use frontend\modules\payment\methods\UnknownWidget;
                 echo WSOfficeWidget::create($id, $item, $payment);
                 break;
             case Payment::PAYMENT_GROUP_WS_WALLET:
-                echo WSWalletWidget::create($id, $item, $payment);
+//                echo WSWalletWidget::create($id, $item, $payment);
                 break;
             case Payment::PAYMENT_GROUP_COD:
                 echo UnknownWidget::create($id, $item, $payment);
