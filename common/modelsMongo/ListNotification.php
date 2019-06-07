@@ -14,6 +14,7 @@ use Yii;
  * @property mixed $user_id
  * @property mixed $watched
  * @property mixed $created_at
+ * @property mixed $id
  */
 class ListNotification extends \yii\mongodb\ActiveRecord
 {
@@ -47,7 +48,7 @@ class ListNotification extends \yii\mongodb\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'body', 'click_action', 'user_id', 'watched', 'created_at'], 'safe']
+            [['title', 'body', 'click_action', 'user_id', 'watched', 'created_at', 'id'], 'safe']
         ];
     }
 
@@ -64,6 +65,7 @@ class ListNotification extends \yii\mongodb\ActiveRecord
             'user_id' => 'User ID',
             'watched' => 'Watched',
             'created_at' => 'Created At',
+            'id' => 'ID',
         ];
     }
 }
