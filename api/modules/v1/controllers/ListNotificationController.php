@@ -39,8 +39,14 @@ class ListNotificationController extends BaseApiController
     }
     public function actionIndex() {
         $userId = Yii::$app->user->getId();
-        $model = ListNotification::find()->where(['user_id' => $userId])->asArray()->all();
-        $total = count($model);
+        $model = ListNotification::find()->where(['user_id' => $userId])->orderBy(['created_at' => SORT_ASC])->asArray()->all();
+        $total = ListNotification::find()->select(['user_id', 'watched'])
+            ->where([
+                'AND',
+                ['user_id' => $userId],
+                ['watched' => 0],
+            ])
+            ->count();
         $data = [
             'model' => $model,
             'total' => $total
@@ -63,7 +69,7 @@ class ListNotificationController extends BaseApiController
     public function actionCreate() {
         $post = Yii::$app->request->post();
         $userId = Yii::$app->user->getId();
-        $now = Yii::$app->getFormatter()->asTimestamp('now');
+        $now = time();
         $model = new ListNotification();
         $model->user_id = $userId;
         $model->title = $post['title'];
@@ -74,7 +80,7 @@ class ListNotificationController extends BaseApiController
         if (!$model->save()) {
             return $this->response(false, 'error');
         }
-        return $this->response(false, 'success');
+        return $this->response(true, 'success');
     }
 
 }

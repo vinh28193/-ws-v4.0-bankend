@@ -23,7 +23,7 @@ class ListNotification extends \yii\mongodb\ActiveRecord
      */
     public static function collectionName()
     {
-        return ['Weshop_global_40', 'list_notification'];
+        return ['weshop_global_40', 'list_notification'];
     }
 
     /**
