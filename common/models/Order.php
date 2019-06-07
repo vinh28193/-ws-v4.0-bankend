@@ -42,7 +42,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_ORDER_STATUS = 'updateOrderStatus';
     const SCENARIO_UPDATE_ORDER_TIME = 'updateTimeNull';
     const SCENARIO_UPDATE_READY2PURCHASE = 'updateReady2Purchase';
-    const SCENARIO_UPDATE_JUNK = 'updateStatusMarkAsJunk';
+    const SCENARIO_UPDATE_JUNK = 'updateStatusJunk';
 
     /**
      * order type

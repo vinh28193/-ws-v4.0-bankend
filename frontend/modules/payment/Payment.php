@@ -14,6 +14,7 @@ use common\models\Product;
 use common\models\ProductFee;
 use common\models\Seller;
 use frontend\modules\payment\providers\alepay\AlepayProvider;
+use frontend\modules\payment\providers\vietnam\NganLuongProvider;
 use frontend\modules\payment\providers\vietnam\WalletClientProvider;
 use frontend\modules\payment\providers\vietnam\WSVNOffice;
 use frontend\modules\payment\providers\wallet\WalletHideProvider;
@@ -33,9 +34,11 @@ use yii\helpers\Url;
 class Payment extends Model
 {
 
+    const ENV_SANDBOX = 'sandbox';
+    const ENV_PRODUCT = 'product';
+
     const PAGE_CHECKOUT = 'CHECKOUT';
     const PAGE_TOP_UP = 'TOP_UP';
-
 
     const PAYMENT_GROUP_MASTER_VISA = 1;
     const PAYMENT_GROUP_BANK = 2;
@@ -56,6 +59,8 @@ class Payment extends Model
     const PAYMENT_GROUP_MY_BANK_TRANSFER = 55;
 
     const  ALEPAY_INSTALMENT_MIN = 0;
+
+    public $env = self::ENV_PRODUCT;
 
     public $page = self::PAGE_CHECKOUT;
 
@@ -91,6 +96,7 @@ class Payment extends Model
 
     public $currency;
     public $total_amount;
+    public $isPaid = false;
     public $total_amount_display;
 
     public $payment_bank_code;
@@ -166,7 +172,7 @@ class Payment extends Model
 
     public function loadOrdersFromCarts()
     {
-        $data = CartHelper::createOrderParams($this->payment_type,$this->carts);
+        $data = CartHelper::createOrderParams($this->payment_type, $this->carts);
         $this->_orders = $data['orders'];
         $this->total_amount = $data['totalAmount'];
         $this->total_amount_display = $data['totalAmount'];
@@ -209,8 +215,10 @@ class Payment extends Model
 
         switch ($this->payment_provider) {
             case 42:
-                $wlHide = new WalletHideProvider();
-                return $wlHide->create($this);
+                $nl = new NganLuongProvider();
+                return $nl->create($this);
+//                $wlHide = new WalletHideProvider();
+//                return $wlHide->create($this);
             case 43:
                 $wallet = new WalletProvider();
                 return $wallet->create($this);
@@ -235,8 +243,10 @@ class Payment extends Model
     {
         switch ($merchant) {
             case 42:
-                $wlHide = new WalletHideProvider();
-                return $wlHide->handle($request->get());
+                $Nl = new NganLuongProvider();
+                return $Nl->handle($request->get());
+//                $wlHide = new WalletHideProvider();
+//                return $wlHide->handle($request->get());
             case 43:
                 $wallet = new WalletProvider();
                 return $wallet->handle($request->get());
@@ -568,7 +578,9 @@ class Payment extends Model
 
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
                 $updateOrderAttributes['total_final_amount_local'] = $updateOrderAttributes['total_amount_local'] - $updateOrderAttributes['total_promotion_amount_local'];
-                $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
+                if($this->isPaid){
+                    $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
+                }
                 $order->updateAttributes($updateOrderAttributes);
                 $orderCodes[$order->ordercode] = [
                     'totalPaid' => $order->total_paid_amount_local,
