@@ -5,7 +5,7 @@ return [
             'class' => 'common\components\db\Connection',
             'dsn' => 'oci:dbname=//178.128.60.187:1521/boxme', // Oracle
             'username' => 'weshopdev',
-            'password' => 'weshopdev2019',
+            'password' => '12345677',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
