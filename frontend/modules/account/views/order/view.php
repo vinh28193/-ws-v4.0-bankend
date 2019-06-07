@@ -67,6 +67,8 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="col-md-4">
                 <div class="title-2"><?= Yii::t('frontend', 'Total amount'); ?></div>
+                <b class="text-orange"><?= number_format($model->total_final_amount_local, 2, ',', '.') . ' VNĐ'; ?></b>
+                <div class="title-2"><?= Yii::t('frontend', 'Total paid amount'); ?></div>
                 <b class="text-orange"><?= number_format($model->total_paid_amount_local, 2, ',', '.') . ' VNĐ'; ?></b>
             </div>
         </div>
@@ -96,7 +98,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             </td>
                             <td>01</td>
                             <td><b class="total text-orange"><?= $product->total_price_amount_local ?></b></td>
-                            <td><b><?= $product->condition ?></b></td>
+                            <td><b><?= $product->current_status ?></b></td>
                         </tr>
                     <?php } ?>
                     </tbody>
