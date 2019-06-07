@@ -31,6 +31,12 @@ return [
                 'database' => 0,
             ]
         ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => '128.199.70.160',
+            'port' => 6479,
+            'database' => 0,
+        ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',
