@@ -257,24 +257,27 @@ class MongodbCartStorage extends BaseObject
     public function filterShoppingCarts($params)
     {
         $limit = (int)ArrayHelper::remove($params, 'limit', 10);
-        $page = ArrayHelper::remove($params, 'keyword', 1);
+        $page = ArrayHelper::remove($params, 'page', 1);
         $skip = ($page - 1) * $limit;
         $conditions = [
             'AND',
             ['remove' => 0],
             ['NOT', 'uuid', new Expression('null')],
         ];
-//        if (isset($params['value']))
-//            $conditions[] = ['OR', [
-//                $this->buildFilterAggregationPipeline('value', [
-//                    'customer' => [
-//                        'email' => $params['value'],
-//                        'phone' => $params['value'],
-//                    ]
-//                ])
-//            ]];
+        if (isset($params['value']) && !isset($params['keyword'])) {
+            $conditions[] = ['OR',
+                ['data.order.customer.email', $params['value']],
+                ['data.order.customer.phone', $params['value']],
+            ];
+        }
+        if (isset($params['value']) && isset($params['keyword'])) {
+            $conditions[] = ['OR',
+                [$params['keyword'], $params['value']],
+                [$params['keyword'], $params['value']],
+            ];
+        }
 
-        return $this->mongodb->getCollection($this->collection)->aggregate([
+        $aggregate = [
             [
                 '$match' => $conditions
             ],
@@ -287,13 +290,18 @@ class MongodbCartStorage extends BaseObject
                     'uuid' => '$uuid'
                 ]
             ],
-            [
-                '$skip' => $skip
-            ],
-            [
-                '$limit' => $limit
-            ]
-        ]);
+        ];
+        $countAggregate = $aggregate;
+        $countAggregate [] = [
+            '$count' => 'sum'
+        ];
+        $aggregate[] = [
+            '$limit' => $limit,
+        ];
+        return [
+            'count' => $this->mongodb->getCollection($this->collection)->aggregate($countAggregate),
+            '_items' => $this->mongodb->getCollection($this->collection)->aggregate($aggregate)
+        ];
     }
 
 
