@@ -82,7 +82,7 @@ class CartManager extends Component
     public function getUser()
     {
         if (!is_object($this->_user)) {
-            $this->_user = Yii::$app->getUser()->getIdentity();
+            $this->_user = Yii::$app->getUser()->getIdentity(false);
         }
         return $this->_user;
     }
