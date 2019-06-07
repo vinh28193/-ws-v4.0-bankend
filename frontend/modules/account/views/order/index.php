@@ -6,6 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel userbackend\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var \common\models\Order[] $models */
 
 $this->title = Yii::t('frontend', 'Orders');
 $this->params['breadcrumbs'][] = $this->title;
@@ -41,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php } ?>
                     </td>
                     <td>
-                        <?php echo Html::a($order->ordercode, ['/account/order/' . $order->id . '.html']); ?>
+                        <?php echo Html::a($order->ordercode, ['/account/order/' . $order->ordercode]); ?>
                     </td>
                     <td>
                         <b><?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?></b>

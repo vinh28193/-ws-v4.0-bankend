@@ -167,7 +167,7 @@ class CartManager extends Component
             }
             $item = $this->filterItem($this->normalKeyFilter($key), $type, $safeOnly);
             if (!empty($item)) {
-                return [false, Yii::t('common', 'This item already exist')];
+                return [true, Yii::t('common', 'Add cart success')];
             } else {
 
                 $filter = $key;
