@@ -48,7 +48,9 @@
     "linslin/yii2-curl": "*",
     "lajax/yii2-translate-manager": "*",
     "bizley/migration": "^3.3",
-    "neconix/yii2-oci8": "1.*"
+    "neconix/yii2-oci8": "1.*",
+    "grpc/grpc": "v1.10.0",
+    "google/protobuf": "^v3.3.0"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
