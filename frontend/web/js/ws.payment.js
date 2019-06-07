@@ -100,6 +100,7 @@ ws.payment = (function ($) {
                     pub.checkPromotion();
                 }
             });
+            showStep(1);
             $('#other-receiver').click(function () {
                 if (!pub.shipping.other_receiver) {
                     pub.shipping.other_receiver = 1;
@@ -628,6 +629,20 @@ ws.payment = (function ($) {
                 }
             }
         }, $timeOut);
+    };
+    var showStep = function ($step) {
+        $step = $step - 1;
+        $('.checkout-step li').each(function (i, li) {
+            var $li = $(li);
+            $li.removeClass('active');
+
+            $($li.data('href')).css('display', 'none');
+            if ($step === i) {
+                $li.addClass('active');
+                $($li.data('href')).css('display', 'block');
+
+            }
+        });
     };
     return pub;
 })(jQuery);

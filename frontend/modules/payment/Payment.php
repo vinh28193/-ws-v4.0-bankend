@@ -4,6 +4,7 @@
 namespace frontend\modules\payment;
 
 
+use common\components\AdditionalFeeInterface;
 use common\components\cart\CartHelper;
 use common\components\cart\CartSelection;
 use common\helpers\WeshopHelper;
@@ -125,6 +126,16 @@ class Payment extends Model
     public $view;
 
 
+    public $_user;
+
+    public function getUser()
+    {
+        if ($this->_user === null && ($user = Yii::$app->user->identity) !== null) {
+            $this->_user = $user;
+        }
+        return $this->_user;
+    }
+
     /**
      * @throws \yii\base\InvalidConfigException
      */
@@ -168,6 +179,25 @@ class Payment extends Model
             $this->loadOrdersFromCarts();
         }
         return $this->_orders;
+    }
+
+    /**
+     * @var PaymentAdditionalFeeCollection
+     */
+    private $_additionalFees;
+
+    /**
+     * @return PaymentAdditionalFeeCollection
+     */
+    public function getAdditionalFees()
+    {
+        if ($this->_additionalFees === null) {
+            $this->_additionalFees = new PaymentAdditionalFeeCollection();
+            foreach ($this->getOrders() as $order) {
+                $this->_additionalFees->loadOrder($order, $this->getUser(), $this->storeManager->getExchangeRate());
+            }
+        }
+        return $this->_additionalFees;
     }
 
     public function loadOrdersFromCarts()

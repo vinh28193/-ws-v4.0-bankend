@@ -12,6 +12,8 @@ use frontend\models\PasswordRequiredForm;
 
 $passwordRequiredForm = new PasswordRequiredForm();
 FrontendAsset::register($this);
+
+$this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

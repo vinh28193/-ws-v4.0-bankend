@@ -19,7 +19,6 @@ var ws = ws || (function ($) {
             pub.options = $.extend({}, defaultOptions, options || {});
             var $client = new ClientJS();
             pub.setFingerprint($client.getFingerprint());
-            pub.sendFingerprint();
             pub.reloadCartBadge();
         },
         // Todo loading
