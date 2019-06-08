@@ -8,10 +8,11 @@ ws.payment = (function ($) {
         bulk_point: 0,
         coupon_code: undefined,
         discount_detail: [],
-        total_discount_amount: 0,
         currency: 'vnđ',
-        total_amount: 0,
-        total_amount_display: 0,
+        total_discount_amount: 0,
+        total_order_amount: 0,
+        totalAmount: 0,
+        totalAmountDisplay: 0,
         customer_name: undefined,
         customer_email: undefined,
         customer_phone: undefined,
@@ -34,7 +35,8 @@ ws.payment = (function ($) {
         otp_verify_method: 1,
         shipment_options_status: 1,
         transaction_code: undefined,
-        transaction_fee: 0
+        transaction_fee: 0,
+        additionalFees: [],
     };
     var pub = {
         payment: {},
@@ -101,7 +103,6 @@ ws.payment = (function ($) {
                     pub.checkPromotion();
                 }
             });
-            showStep(1);
             $('#other-receiver').click(function () {
                 if (!pub.shipping.other_receiver) {
                     pub.shipping.other_receiver = 1;
@@ -152,6 +153,19 @@ ws.payment = (function ($) {
             $('input').change(function () {
                 var name = $(this).attr('name');
                 $('#' + name + '-error').html('');
+            });
+
+            $('#continueAsGuest').on('click', function (e) {
+                $('.checkout-step li').removeClass('active');
+                $('.checkout-step li').each(function (k, v) {
+                    if (k === 1) {
+                        $(v).addClass('active');
+                    }
+                });
+                $('#step_checkout_1').css('display', 'none');
+                $('#step_checkout_2').css('display', 'block');
+                $('#step_checkout_3').css('display', 'none');
+                window.scrollTo(0, 0);
             });
             $('#loginToCheckout').click(function () {
                 ws.loading(true);
@@ -459,8 +473,8 @@ ws.payment = (function ($) {
             }
         },
         topUp: function () {
-            pub.payment.total_amount = $('input[name=amount_topup]').val();
-            if (pub.payment.total_amount < 100000) {
+            pub.payment.total_order_amount = $('input[name=amount_topup]').val();
+            if (pub.payment.total_order_amount < 100000) {
                 ws.notifyError('Bạn cần phải nạp trên 100.000');
                 return;
             }
@@ -571,10 +585,10 @@ ws.payment = (function ($) {
         if ($response.details.length > 0 && $response.discount > 0) {
             pub.payment.discount_detail = $response.details;
             pub.payment.total_discount_amount = $response.discount;
-            pub.payment.total_amount_display = pub.payment.total_amount - pub.payment.total_discount_amount;
+            pub.payment.totalAmountDisplay = pub.payment.totalAmount - pub.payment.total_discount_amount;
             discountBox.css('display', 'flex');
             discountBox.find('div.right').html('- ' + ws.showMoney(pub.payment.total_discount_amount));
-            billingBox.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.total_amount_display));
+            billingBox.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.totalAmountDisplay));
             billingBox.find('li[rel="detail"]').remove();
             billingBox.prepend(initPromotionView(pub.payment.discount_detail));
 
@@ -644,6 +658,16 @@ ws.payment = (function ($) {
 
             }
         });
+    };
+    var showAdditinalFee = function (fee) {
+        var $localAmount = 0;
+        var $lable = 'Unknonw fee';
+        if (fee.length > 0) {
+            for (var i = 0; i < fee.length; i++) {
+                $localAmount += fee[i].local_amount
+            }
+        }
+        return {label: $lable, amountOrigin: $localAmount, amountLocalized: ws.showMoney($localAmount)}
     };
     return pub;
 })(jQuery);

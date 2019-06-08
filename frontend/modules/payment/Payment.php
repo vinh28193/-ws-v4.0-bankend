@@ -96,7 +96,7 @@ class Payment extends Model
     public $total_discount_amount = 0;
 
     public $currency;
-    public $total_amount;
+    public $total_order_amount;
     public $isPaid = false;
     public $total_amount_display;
 
@@ -200,11 +200,17 @@ class Payment extends Model
         return $this->_additionalFees;
     }
 
+    public function setAdditionalFees($arrays)
+    {
+        $this->_additionalFees = new PaymentAdditionalFeeCollection();
+        $this->_additionalFees->fromArray($arrays);
+    }
+
     public function loadOrdersFromCarts()
     {
         $data = CartHelper::createOrderParams($this->payment_type, $this->carts, $this->uuid);
         $this->_orders = $data['orders'];
-        $this->total_amount = $data['totalAmount'];
+        $this->total_order_amount = $data['totalAmount'];
         $this->total_amount_display = $data['totalAmount'];
     }
 
@@ -301,7 +307,7 @@ class Payment extends Model
         if ($response->success === true && $response->discount > 0 && count($response->details) > 0) {
             $this->total_discount_amount = $response->discount;
             $this->discount_detail = $response->details;
-            $this->total_amount_display = $this->total_amount - $this->total_discount_amount;
+            $this->total_amount_display = $this->total_order_amount - $this->total_discount_amount;
         }
         return $response;
     }
@@ -309,6 +315,43 @@ class Payment extends Model
     public function createGaData()
     {
 
+    }
+
+    private $_totalAmount;
+
+    public function getTotalAmount()
+    {
+        if ($this->_totalAmount === null) {
+            $this->_totalAmount = $this->total_order_amount;
+            foreach ($this->getAdditionalFees()->keys() as $key) {
+                $this->_totalAmount += $this->getAdditionalFees()->getTotalAdditionFees($key)[1];
+            }
+        }
+        return $this->_totalAmount;
+    }
+
+    public function setTotalAmount($totalAmount)
+    {
+        $this->_totalAmount = $totalAmount;
+    }
+
+    private $_totalAmountDisplay;
+
+    public function getTotalAmountDisplay()
+    {
+        if ($this->_totalAmountDisplay === null) {
+            $this->_totalAmountDisplay = $this->getTotalAmount();
+            if ($this->total_discount_amount !== null && $this->total_discount_amount > 0) {
+                $this->_totalAmountDisplay -= $this->total_discount_amount;
+            }
+        }
+        return $this->_totalAmountDisplay;
+
+    }
+
+    public function setTotalAmountDisplay($totalAmountDisplay)
+    {
+        $this->_totalAmountDisplay = $totalAmountDisplay;
     }
 
     /**
@@ -688,8 +731,9 @@ class Payment extends Model
             'discount_detail' => $this->discount_detail,
             'total_discount_amount' => $this->total_discount_amount,
             'currency' => $this->currency,
-            'total_amount' => $this->total_amount,
-            'total_amount_display' => $this->total_amount_display,
+            'total_order_amount' => $this->total_order_amount,
+            'totalAmount' => $this->getTotalAmount(),
+            'totalAmountDisplay' => $this->getTotalAmountDisplay(),
             'payment_bank_code' => $this->payment_bank_code,
             'payment_method' => $this->payment_method,
             'payment_method_name' => $this->payment_method_name,
@@ -705,6 +749,7 @@ class Payment extends Model
             'shipment_options_status' => $this->shipment_options_status,
             'transaction_code' => $this->transaction_code,
             'transaction_fee' => $this->transaction_fee,
+            'additionalFees' => $this->getAdditionalFees()->toArray(),
         ];
     }
 

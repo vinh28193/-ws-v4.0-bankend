@@ -34,6 +34,7 @@
 
                 methods.getItems.apply($cart);
 
+
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
                     event.preventDefault();
                     var $item = $(this);
@@ -141,11 +142,10 @@
             var deferredArrays = deferredArray();
             ws.loading(true);
             $.when.apply(this, deferredArrays).always(function () {
-
                 var $pjaxOptions = {
                     url: data.settings.listUrl,
                     container: container,
-                    push: false
+                    push: false,
                 };
                 $.pjax($pjaxOptions);
                 ws.loading(false);

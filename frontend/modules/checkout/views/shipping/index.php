@@ -11,141 +11,18 @@ use yii\helpers\Url;
 /* @var frontend\modules\payment\models\ShippingForm $shippingForm */
 /* @var array $provinces */
 
-//echo $this->render('step/step1', ['activeStep' => $activeStep]);
 
+$showStep = true;
+$activeStep = 2;
 ?>
-<div class="container checkout-content">
-    <ul class="checkout-step">
-        <li data-href=".step-1"><i>1</i><span><?= Yii::t('frontend', 'Shipping address'); ?></span></li>
-        <li data-href=".step-2"><i>2</i><span><?= Yii::t('frontend', 'Shipping option'); ?></span></li>
-        <li data-href=".step-3"><i>3</i><span><?= Yii::t('frontend', 'Payment'); ?></span></li>
-    </ul>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="step-content step-1">
-                <div class="title"><?= Yii::t('frontend', 'Shipping address'); ?></div>
-                <div class="payment-box">
-                    <?php
-                    $form = ActiveForm::begin([
-                        'options' => [
-                            'class' => 'payment-form'
-                        ],
-                    ]);
-                    echo Html::activeHiddenInput($shippingForm, 'customer_id');
-                    echo Html::activeHiddenInput($shippingForm, 'receiver_address_id');
-
-                    echo $form->field($shippingForm, 'buyer_name', [
-                        'template' => '<i class="icon user"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->textInput(['placeholder' => 'Họ và tên']);
-
-                    echo $form->field($shippingForm, 'buyer_phone', [
-                        'template' => '<i class="icon phone"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->textInput(['placeholder' => 'Số điện thoại']);
-
-                    echo $form->field($shippingForm, 'buyer_email', [
-                        'template' => '<i class="icon email"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->textInput(['placeholder' => 'Địa chỉ email']);
-
-                    echo $form->field($shippingForm, 'buyer_province_id', [
-                        'template' => '<i class="icon globe"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->dropDownList($provinces, [
-                        'prompt' => 'Chọn thành phố',
-                    ]);
-
-                    echo Html::hiddenInput('hiddenBuyerDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenBuyerDistrictId']);
-
-                    echo $form->field($shippingForm, 'buyer_district_id', [
-                        'template' => '<i class="icon city"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->widget(DepDrop::classname(), [
-                        'pluginOptions' => [
-                            'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
-                            'placeholder' => 'Select District',
-                            'url' => Url::toRoute(['sub-district']),
-                            'loadingText' => 'Loading District ...',
-                            'initialize' => true,
-                            'params' => ['hiddenBuyerDistrictId']
-                        ]
-                    ]);
-                    echo $form->field($shippingForm, 'buyer_address', [
-                        'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->textInput(['placeholder' => 'Địa chỉ chi tiết']);
-
-                    echo $form->field($shippingForm, 'note_by_customer', [
-//                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->textarea(['rows' => 3, 'placeholder' => 'Ghi chú thêm ( không bắt buộc)']);
-
-                    echo $form->field($shippingForm, 'save_my_address', [
-                        'template' => '{input}{hint}{error}',
-                        'options' => [
-                            'class' => 'check-info',
-                        ]
-                    ])->checkbox();
-
-                    echo '<a href="javascript: void(0);" id="other-receiver" class="other-receiver"><i class="fas fa-check-circle"></i> Thông tin người nhận
-                hàng khác người đặt hàng</a>';
-                    echo "<div id='receiver-form' style='display: none'>";
-                    echo $form->field($shippingForm, 'receiver_name', [
-                        'template' => '<i class="icon user"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->textInput(['placeholder' => 'Họ và tên']);
-
-                    echo $form->field($shippingForm, 'receiver_phone', [
-                        'template' => '<i class="icon phone"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->textInput(['placeholder' => 'Số điện thoại']);
-
-                    echo $form->field($shippingForm, 'receiver_email', [
-                        'template' => '<i class="icon email"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->textInput(['placeholder' => 'Địa chỉ email']);
-
-                    echo $form->field($shippingForm, 'receiver_province_id', [
-                        'template' => '<i class="icon city"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->dropDownList(array_merge(['Chọn thành phố'], $provinces));
-
-                    echo $form->field($shippingForm, 'receiver_district_id', [
-                        'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->widget(DepDrop::classname(), [
-                        'pluginOptions' => [
-                            'depends' => [Html::getInputId($shippingForm, 'receiver_province_id')],
-                            'placeholder' => 'Select District',
-                            'url' => Url::toRoute(['sub-district'])
-                        ]
-                    ]);
-                    echo $form->field($shippingForm, 'receiver_address', [
-                        'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
-                        'options' => ['class' => 'form-group']
-                    ])->textInput(['placeholder' => 'Địa chỉ chi tiết']);
-                    echo "</div>";
-                    echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block', 'id' => 'btn-next-step3']);
-                    ActiveForm::end();
-                    ?>
-                </div>
-            </div>
-            <div class="step-content step-2">
-                <div class="title">Phương thức thanh toán</div>
-                <div class="payment-box">
-
-                </div>
-            </div>
-            <div class="step-content step-3">
-                <div class="title">Phương thức thanh toán</div>
-                <div class="payment-box">
-                    <?php echo $payment->initPaymentView(); ?>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <?php echo $this->render('cart', ['payment' => $payment]) ?>
-        </div>
-    </div>
+<!--<div id="step_checkout_1" style="display: --><? //= $activeStep === 1 ? 'block' : 'none'; ?><!--">-->
+<!--    --><?php //echo $this->render('step/step1', ['activeStep' => $activeStep]); ?>
+<!--</div>-->
+<div style="display: <?= $activeStep === 1 ? 'none' : 'block' ?>">
+    <?= $this->render('step/step2', [
+        'activeStep' => $activeStep,
+        'shippingForm' => $shippingForm,
+        'provinces' => $provinces,
+        'payment' => $payment,
+    ]); ?>
 </div>

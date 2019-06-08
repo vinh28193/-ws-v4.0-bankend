@@ -20,14 +20,18 @@ var ws = ws || (function ($) {
             var $client = new ClientJS();
             pub.setFingerprint($client.getFingerprint());
             pub.reloadCartBadge();
+            $(document).on("pjax:beforeSend", function (evt, xhr, options) {
+                // Ignore links with data-target attribute
+                xhr.setRequestHeader('X-CSRF-Token', yii.getCsrfToken());
+                xhr.setRequestHeader('X-Fingerprint-Token', ws.getFingerprint());
+                xhr.setRequestHeader('X-Fingerprint-Url', options.url);
+                console.log(evt)
+            });
         },
         // Todo loading
         loading: function (show) {
-            if (show) {
-                $('#loading').css('display', 'block');
-            } else {
-                $('#loading').css('display', 'none');
-            }
+            show = show || false;
+            $('#loading').css('display', show ? 'block' : 'none');
         },
         notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '') {
             $('#modal-content').removeClass('modal-default');

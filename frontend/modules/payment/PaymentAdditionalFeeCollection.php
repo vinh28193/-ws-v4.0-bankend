@@ -11,7 +11,6 @@ class PaymentAdditionalFeeCollection extends AdditionalFeeCollection
 
     public function loadOrder($order, $user, $exRate)
     {
-
         $additionalFee = new PaymentAdditionalFee();
         $additionalFee->itemType = $order['portal'];
         $additionalFee->totalOriginPrice = $order['total_price_amount_origin'];
@@ -19,7 +18,7 @@ class PaymentAdditionalFeeCollection extends AdditionalFeeCollection
         $additionalFee->shippingQuantity = $order['total_quantity'];
         $additionalFee->user = $user;
         $additionalFee->exchangeRate = $exRate;
-        foreach (['intl_shipping_fee'] as $name) {
+        foreach (['intl_shipping_fee', 'weshop_fee'] as $name) {
             $this->withCondition($additionalFee, $name, null);
         }
     }
