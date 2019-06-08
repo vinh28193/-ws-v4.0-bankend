@@ -1,16 +1,17 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use frontend\assets\FrontendAsset;
+use frontend\assets\DefaultAsset;
 use common\widgets\Alert;
 
-FrontendAsset::register($this);
+DefaultAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -37,15 +38,15 @@ FrontendAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'API 1.0 Documenation', 'url' => ['/site/index']],
-       // ['label' => 'About', 'url' => ['/site/about']],
-       // ['label' => 'Contact', 'url' => ['/site/contact']],
+        // ['label' => 'About', 'url' => ['/site/about']],
+        // ['label' => 'Contact', 'url' => ['/site/contact']],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
         $menuItems[] = ['label' => 'Employees', 'url' => ['/employee/index']];
-       // $menuItems[] = ['label' => 'Users', 'url' => ['/user/index']];
+        // $menuItems[] = ['label' => 'Users', 'url' => ['/user/index']];
 
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')

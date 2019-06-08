@@ -91,7 +91,6 @@ class ProductGateController extends BaseApiController
             'item_name' => $product->item_name,
             'item_origin_url' => $product->item_origin_url,
             'start_price' => $product->start_price,
-            'is_for_wholesale' => $product->getIsForWholeSale() ? 'Yes' : 'No',
             'shipping_weight' => $product->getShippingWeight(),
             'shipping_quantity' => $product->getShippingQuantity(),
         ];

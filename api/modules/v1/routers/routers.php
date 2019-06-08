@@ -85,6 +85,28 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
+        'controller' => ['list-notification'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{code}' =>  '<code:\\w[\\w,]*>',
+        ],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH {id}' => 'update',
+            'PUT,PATCH {code}' => 'update',
+            'DELETE {id}' => 'delete',
+            'DELETE {code}' => 'delete',
+            'GET,HEAD {id}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {id}' => 'options',
+            'OPTIONS {code}' => 'options',
+            'OPTIONS' => 'options',
+        ],
+        'extraPatterns' => []
+    ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
         'controller' => ['order'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',

@@ -12,6 +12,8 @@ use frontend\models\PasswordRequiredForm;
 
 $passwordRequiredForm = new PasswordRequiredForm();
 FrontendAsset::register($this);
+
+$this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -24,6 +26,7 @@ FrontendAsset::register($this);
     <meta name='COPYRIGHT' content='&copy; Weshop Global'/>
     <meta name="robots" content="noodp,index,follow"/>
     <meta name="cystack-verification" content="f63c2e531bc93b353c0dbd93f8ce0505"/>
+    <meta name="fingerprint-token" content=""/>
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
@@ -286,10 +289,7 @@ FrontendAsset::register($this);
                 <li class="active">
                     <a href="/my-cart.html">
                         <i class="nav-ico cart"></i>
-                        <span class="badge" id="cartBadge"><?php
-                            $cartManager = new \common\components\cart\CartManager();
-                            echo Yii::$app->user->isGuest ? 0 : $cartManager->countItems('shopping');
-                            ?></span>
+                        <span class="badge" id="cartBadge">0</span>
                     </a>
                 </li>
             </ul>
@@ -376,7 +376,8 @@ FrontendAsset::register($this);
                     <i class="fas fa-check"></i>
                     <div class="modal-title">Cám ơn bạn!</div>
                     <div class="order-code">Mã giao dịch: <span class="text-blue" id="transactionCode"></span></div>
-                    <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành toán
+                    <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành
+                        toán
                     </p>
                     <button type="button" class="btn btn-submit btn-block" id="next-payment">Chuyển ngay <span
                                 id="countdown_payment">5</span></button>

@@ -57,19 +57,19 @@ class MongodbCartStorage extends BaseObject
      * @param $type
      * @param $key
      * @param $value
-     * @param $identity
+     * @param $uuid
      * @return \MongoDB\BSON\ObjectID
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\mongodb\Exception
      */
-    public function addItem($type, $key, $value, $identity)
+    public function addItem($type, $key, $value, $uuid)
     {
         return $this->mongodb->getCollection($this->collection)->insert([
             'remove' => 0,
             'type' => $type,
             'key' => $key,
             'value' => $value,
-            'identity' => $identity,
+            'uuid' => $uuid,
             'create_at' => Yii::$app->getFormatter()->asDatetime('now'),
         ]);
     }
@@ -91,14 +91,14 @@ class MongodbCartStorage extends BaseObject
     /**
      * @param $type
      * @param $id
-     * @param null $identity
+     * @param null $uuid
      * @return array|false
      */
-    public function getItem($type, $id, $identity = null)
+    public function getItem($type, $id, $uuid = null)
     {
         $conditions = ['AND', ['type' => $type], ['_id' => $id], ['remove' => 0]];
-        if ($identity !== null) {
-            $conditions[] = ['identity' => $identity];
+        if ($uuid !== null) {
+            $conditions[] = ['uuid' => $uuid];
         }
         $query = new Query();
         $query->from($this->collection);
@@ -106,14 +106,14 @@ class MongodbCartStorage extends BaseObject
         return $query->one($this->mongodb);
     }
 
-    public function filterItem($filters, $type = null, $identity = null)
+    public function filterItem($filters, $type = null, $uuid = null)
     {
         $conditions = ['remove' => 0];
         if ($type !== null) {
             $conditions = ['type' => $type];
         }
-        if ($identity !== null) {
-            $conditions['identity'] = $identity;
+        if ($uuid !== null) {
+            $conditions['uuid'] = $uuid;
         }
         foreach ($filters as $attr => $value) {
             $conditions = ArrayHelper::merge($conditions, $this->buildFilterAggregationPipeline($attr, $value));
@@ -123,7 +123,7 @@ class MongodbCartStorage extends BaseObject
 
     /**
      * @param $id
-     * @param null $identity
+     * @param null $uuid
      * @return bool|int
      * @throws \yii\mongodb\Exception
      */
@@ -134,13 +134,13 @@ class MongodbCartStorage extends BaseObject
 
     /**
      * @param $type
-     * @param $identity
+     * @param $uuid
      * @param null $ids
      * @return array
      */
-    public function getItems($identity, $type = null, $ids = null)
+    public function getItems($uuid, $type = null, $ids = null)
     {
-        $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
+        $conditions = ['AND', ['uuid' => $uuid], ['remove' => 0]];
         if ($type !== null) {
             $conditions[] = ['type' => $type];
         }
@@ -163,7 +163,7 @@ class MongodbCartStorage extends BaseObject
                     'type' => '$type',
                     'key' => '$key',
                     'value' => '$value',
-                    'identity' => '$identity'
+                    'uuid' => '$uuid'
                 ]
             ]
         ]);
@@ -171,14 +171,14 @@ class MongodbCartStorage extends BaseObject
 
     /**
      * @param $type
-     * @param $identity
+     * @param $uuid
      * @return int
      * @throws \yii\mongodb\Exception
      */
-    public function countItems($identity, $type = null)
+    public function countItems($uuid, $type = null)
     {
         $query = new Query();
-        $conditions = ['AND', ['identity' => $identity], ['remove' => 0]];
+        $conditions = ['AND', ['uuid' => $uuid], ['remove' => 0]];
         if ($type !== null) {
             $conditions[] = ['type' => $type];
         }
@@ -190,14 +190,14 @@ class MongodbCartStorage extends BaseObject
 
     /**
      * @param $type
-     * @param $identity
+     * @param $uuid
      * @param null $ids
      * @return bool|int
      * @throws \yii\mongodb\Exception
      */
-    public function removeItems($type, $identity, $ids = null)
+    public function removeItems($type, $uuid, $ids = null)
     {
-        $conditions = ['AND', ['type' => $type], ['identity' => $identity], ['remove' => 0]];
+        $conditions = ['AND', ['type' => $type], ['uuid' => $uuid], ['remove' => 0]];
         if ($ids !== null) {
             $conditions[] = ['IN', '_id', !is_array($ids) ? [$ids] : $ids];
         }
@@ -216,7 +216,7 @@ class MongodbCartStorage extends BaseObject
         if (($this->mongodb->getCollection($this->collection)->findOne($id)) === null) {
             return false;
         }
-        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0], ['identity' => null]], ['identity' => Yii::$app->user->isGuest ? null : Yii::$app->user->id]);
+        return $this->mongodb->getCollection($this->collection)->update(['AND', ['_id' => $id], ['remove' => 0], ['uuid' => null]], ['uuid' => Yii::$app->user->isGuest ? null : Yii::$app->user->id]);
     }
 
     public function calculateSupported($supportId = null)
@@ -225,22 +225,12 @@ class MongodbCartStorage extends BaseObject
             'AND',
             ['$gt', 'create_at', CartHelper::beginSupportDay()],
             ['$lt', 'create_at', CartHelper::endSupportDay()],
-            ['$ne', 'identity', new Expression('NULL')]
+            ['$ne', 'uuid', new Expression('NULL')]
         ];
         if ($supportId !== null) {
             $match[] = is_array($supportId) ? ['$in', 'key.supportId', $supportId] : ['key.supportId' => (string)$supportId];
         }
 
-        $aggregate = [
-            [
-                [
-                    '$match' => $match
-                ],
-            ],
-            [
-
-            ]
-        ];
         return $this->mongodb->getCollection($this->collection)->aggregate([
             [
                 '$match' => $match
@@ -267,24 +257,26 @@ class MongodbCartStorage extends BaseObject
     public function filterShoppingCarts($params)
     {
         $limit = (int)ArrayHelper::remove($params, 'limit', 10);
-        $page = ArrayHelper::remove($params, 'keyword', 1);
+        $page = ArrayHelper::remove($params, 'page', 1);
         $skip = ($page - 1) * $limit;
+//        var_dump($params);
+//        die();
         $conditions = [
             'AND',
             ['remove' => 0],
-            ['NOT', 'identity', new Expression('null')],
+            ['NOT', 'uuid', new Expression('null')],
         ];
-//        if (isset($params['value']))
-//            $conditions[] = ['OR', [
-//                $this->buildFilterAggregationPipeline('value', [
-//                    'customer' => [
-//                        'email' => $params['value'],
-//                        'phone' => $params['value'],
-//                    ]
-//                ])
-//            ]];
+        if (isset($params['value']) && !isset($params['keyword'])) {
+            $conditions[] = ['OR',
+                ['data.order.customer.email', $params['value']],
+                ['data.order.customer.phone', $params['value']],
+            ];
+        }
+        if (isset($params['value']) && isset($params['keyword'])) {
+            $conditions[] = ['LIKE',$params['keyword'], $params['value']];
+        }
 
-        return $this->mongodb->getCollection($this->collection)->aggregate([
+        $aggregate = [
             [
                 '$match' => $conditions
             ],
@@ -294,16 +286,21 @@ class MongodbCartStorage extends BaseObject
                     'type' => '$type',
                     'key' => '$key',
                     'order' => '$value',
-                    'identity' => '$identity'
+                    'uuid' => '$uuid'
                 ]
             ],
-            [
-                '$skip' => $skip
-            ],
-            [
-                '$limit' => $limit
-            ]
-        ]);
+        ];
+        $countAggregate = $aggregate;
+        $countAggregate [] = [
+            '$count' => 'sum'
+        ];
+        $aggregate[] = [
+            '$limit' => $limit,
+        ];
+        return [
+            'count' => $this->mongodb->getCollection($this->collection)->aggregate($countAggregate),
+            '_items' => $this->mongodb->getCollection($this->collection)->aggregate($aggregate)
+        ];
     }
 
 

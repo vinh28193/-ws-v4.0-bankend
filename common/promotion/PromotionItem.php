@@ -11,25 +11,7 @@ class PromotionItem extends BaseObject
      * @var string
      */
     public $paymentService;
-    /**
-     * @var string ebay/amazon
-     */
-    public $itemType;
 
-    /**
-     * @var string|integer
-     */
-    public $categoryId;
-
-    /**
-     * @var integer
-     */
-    public $shippingQuantity;
-
-    /**
-     * @var integer
-     */
-    public $shippingWeight;
 
     /**
      * @var int
