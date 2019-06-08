@@ -259,6 +259,8 @@ class MongodbCartStorage extends BaseObject
         $limit = (int)ArrayHelper::remove($params, 'limit', 10);
         $page = ArrayHelper::remove($params, 'page', 1);
         $skip = ($page - 1) * $limit;
+//        var_dump($params);
+//        die();
         $conditions = [
             'AND',
             ['remove' => 0],
@@ -271,10 +273,7 @@ class MongodbCartStorage extends BaseObject
             ];
         }
         if (isset($params['value']) && isset($params['keyword'])) {
-            $conditions[] = ['OR',
-                [$params['keyword'], $params['value']],
-                [$params['keyword'], $params['value']],
-            ];
+            $conditions[] = ['LIKE',$params['keyword'], $params['value']];
         }
 
         $aggregate = [
