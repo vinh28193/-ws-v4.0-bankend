@@ -25,6 +25,14 @@ return [
             ]
         ],
         */
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' =>  '128.199.70.160',
+                'port' => 6479,
+                'database' => 0,
+            ]
+        ],
         'api' => [
             'class' => 'common\components\Api',
         ],
