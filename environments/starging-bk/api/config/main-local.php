@@ -6,12 +6,6 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '',
         ],
-        /*
-        'mongodb' => [
-            'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://192.168.11.252:27017/admin',
-        ],
-        */
     ],
 ];
 
@@ -37,10 +31,13 @@ if (!YII_ENV_TEST) {
             'model' => [
                 'class' => 'yii\gii\generators\model\Generator',
                 'ns' => 'common\models\db',
+                'useTablePrefix' => true,
                 'baseClass' => 'common\components\db\ActiveRecord',
                 'generateQuery' => false,
                 'queryNs' => 'common\models\queries',
-                'queryBaseClass' => 'common\components\db\ActiveQuery'
+                'queryBaseClass' => 'common\components\db\ActiveQuery',
+                'enableI18N' => true,
+                'messageCategory' => 'db'
             ],
             'model_cms' => [
                 'class' => 'common\gii\generators\cms\Generator',

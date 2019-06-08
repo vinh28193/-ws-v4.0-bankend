@@ -7,9 +7,11 @@
  */
 
 return [
-    'http://s.weshop.asia',
-    'http://v3.weshop.asia',
-    'http://v3.weshop.com.vn',
-    'http://v3.weshop.co.id',
+    'http://localhost:4200',
+    'http://192.168.11.252:8130',
+    'http://weshop-v4.operation.local.vn',
+    'https://weshop-v4.operation.local.vn',
+    'http://192.168.11.252:8130',
+    'http://192.168.11.252:8230',
 ];
 
