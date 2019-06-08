@@ -42,10 +42,10 @@ class PromotionCondition extends DbPromotionCondition
     ];
 
     /**
-     * @param PromotionItem $item
+     * @param PromotionForm $from
      * @return boolean
      */
-    public function checkConditionRecursive(PromotionItem $item)
+    public function checkConditionRecursive(PromotionForm $from)
     {
         if (($config = $this->promotionConditionConfig) === null) {
             return false;
@@ -60,7 +60,7 @@ class PromotionCondition extends DbPromotionCondition
         if (isset($resolvers[$this->name]) && ($resolver = $resolvers[$this->name]) !== null) {
             $value = call_user_func([$this, $resolver]);
         } else {
-            $value = $this->resolveObject($item, $this->name);
+            $value = $this->resolveObject($from, $this->name);
         }
         $valueType = gettype($value);
         if ($config->type_cast !== null && gettype($this->value) !== $config->type_cast) {
@@ -168,20 +168,19 @@ class PromotionCondition extends DbPromotionCondition
     }
 
     /**
-     * @param PromotionItem $item
+     * @param PromotionForm $from
      * @param $name
      * @return bool|mixed
      */
-    protected function resolveObject($item, $name)
+    protected function resolveObject($from, $name)
     {
         $maps = [
             'minAmount' => 'totalAmount',
             'maxAmount' => 'totalAmount',
-            'portal' => 'itemType'
         ];
         $name = isset($maps[$name]) ? $maps[$name] : $name;
         try {
-            return ObjectHelper::resolveRecursive($item, $name);
+            return ObjectHelper::resolveRecursive($from, $name);
         } catch (Exception $exception) {
             Yii::error($exception, __METHOD__);
             return false;

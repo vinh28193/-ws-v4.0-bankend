@@ -96,6 +96,9 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
 
                 if ($resp == null || !is_array($resp) || !isset($resp['error_code']) || empty($resp['error_code']) || $resp['error_code'] != '00' || !isset($resp['token'])) {
                     $mess = "Lỗi thanh toán trả về NL" . $resp['error_code'];
+                    if(isset($resp['description']) && $resp['description']){
+                        $mess = $resp['description'].'.';
+                    }
                     $success = false;
                 }
                 $request_content['api'] = $this->submitUrl;

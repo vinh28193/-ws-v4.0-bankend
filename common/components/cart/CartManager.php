@@ -71,58 +71,29 @@ class CartManager extends Component
 
 
     /**
-     * @var \yii\web\IdentityInterface
-     */
-    private $_user;
-
-    /**
-     * @return null|\yii\web\IdentityInterface
-     * @throws \Throwable
-     */
-    public function getUser()
-    {
-        if (!is_object($this->_user)) {
-            $this->_user = Yii::$app->getUser()->getIdentity(false);
-        }
-        return $this->_user;
-    }
-
-    public function setUser($user)
-    {
-        if ($user instanceof \yii\web\IdentityInterface) {
-            $this->_user = $user;
-        } elseif (is_string($user) || is_numeric($user)) {
-            /** @var  $class \yii\web\IdentityInterface */
-            $class = Yii::$app->getUser()->identityClass;
-            $this->_user = $class::findIdentity($user);
-        }
-    }
-
-
-    /**
-     * @param $type
-     * @param $key
-     * @param bool $safeOnly
+     * @param string $type
+     * @param string $key
+     * @param string|null $uuid
      * @return mixed
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function hasItem($type, $key, $safeOnly = true)
+    public function hasItem($type, $key, $uuid = null)
     {
-        return $this->getStorage()->hasItem($type, $key, $this->getIsSafe($safeOnly));
+        return $this->getStorage()->hasItem($type, $key, $uuid);
     }
 
     /**
-     * @param $type
-     * @param $id
-     * @param bool $safeOnly
+     * @param string $type
+     * @param string $id
+     * @param string|null $uuid
      * @return bool|mixed
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function getItem($type, $id, $safeOnly = true)
+    public function getItem($type, $id, $uuid = null)
     {
-        return $this->getStorage()->getItem($type, $id, $this->getIsSafe($safeOnly));
+        return $this->getStorage()->getItem($type, $id, $uuid);
     }
 
 
@@ -132,9 +103,9 @@ class CartManager extends Component
 
     }
 
-    public function filterItem($filter, $type = null, $safeOnly = true)
+    public function filterItem($filter, $type = null, $uuid = null)
     {
-        return $this->getStorage()->filterItem($filter, $type, $this->getIsSafe($safeOnly));
+        return $this->getStorage()->filterItem($filter, $type, $uuid);
     }
 
     /**
@@ -146,11 +117,11 @@ class CartManager extends Component
      *      -sku: sku of item (default null)
      *      -quantity: quantity
      *      -image: image
-     * @param bool $safeOnly
+     * @param string|null $uuid
      * @return array
      * @throws \Throwable
      */
-    public function addItem($type, $params, $safeOnly = true)
+    public function addItem($type, $params, $uuid = null)
     {
         $key = $this->createKeyFormParams($params);
         $cartItem = new OrderCartItem($this);
@@ -160,19 +131,18 @@ class CartManager extends Component
                 if (!$ok) {
                     return [false, $value];
                 }
-                $success = $this->getStorage()->addItem($type, $key, $value, $this->getIsSafe($safeOnly));
+                $success = $this->getStorage()->addItem($type, $key, $value, $uuid);
                 return [$success, Yii::t('common', $success ? 'Add to {type} cart success' : 'Add to {type} cart failed', [
                     'type' => $type
                 ])];
             }
-            $item = $this->filterItem($this->normalKeyFilter($key), $type, $safeOnly);
+            $item = $this->filterItem($this->normalKeyFilter($key), $type, $uuid);
             if (!empty($item)) {
-                return [false, Yii::t('common', 'This item already exist')];
+                return [true, Yii::t('common', 'Add cart success')];
             } else {
-
                 $filter = $key;
                 unset($filter['products']);
-                $parents = $this->filterItem($this->normalKeyFilter($filter), $type, $this->getIsSafe());
+                $parents = $this->filterItem($this->normalKeyFilter($filter), $type, $uuid);
                 if (count($parents) > 0) {
 
                     foreach ($parents as $parent) {
@@ -184,7 +154,7 @@ class CartManager extends Component
                             if (!$ok) {
                                 return [false, $value];
                             }
-                            $success = $this->getStorage()->setItem($parent['_id'], $parent['key'], $value, $this->getIsSafe($safeOnly));
+                            $success = $this->getStorage()->setItem($parent['_id'], $parent['key'], $value, $uuid);
                             return [$success, Yii::t('common', $success ? 'Add to {type} cart success' : 'Add to {type} cart failed', [
                                 'type' => $type
                             ])];
@@ -195,7 +165,7 @@ class CartManager extends Component
                 if (!$ok) {
                     return [false, $value];
                 }
-                $success = $this->getStorage()->addItem($type, $key, $value, $this->getIsSafe($safeOnly));
+                $success = $this->getStorage()->addItem($type, $key, $value, $uuid);
                 return [$success, Yii::t('common', $success ? 'Add to {type} cart success' : 'Add to {type} cart failed', [
                     'type' => $type
                 ])];
@@ -206,11 +176,20 @@ class CartManager extends Component
         }
     }
 
-    public function updateItem($type, $id, $key, $params = [], $safeOnly = true)
+    /**
+     * @param $type
+     * @param $id
+     * @param $key
+     * @param array $params
+     * @param $uuid
+     * @return array
+     * @throws \Throwable
+     */
+    public function updateItem($type, $id, $key, $params = [], $uuid = null)
     {
         $cartItem = new OrderCartItem($this);
         try {
-            if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
+            if (($item = $this->getItem($type, $id, $uuid)) === false) {
                 return [false, Yii::t('common', 'This item not exist in {type} cart', [
                     'type' => $type
                 ])];
@@ -228,7 +207,7 @@ class CartManager extends Component
             if (!$ok) {
                 return [false, $value];
             }
-            $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value, $this->getIsSafe($safeOnly));
+            $success = $this->getStorage()->setItem($item['_id'], $activeKey, $value, $uuid);
             return [$success, $success ? Yii::t('common', 'This item already up to date') : Yii::t('common', 'Can not update this item')];
         } catch (Exception $exception) {
             Yii::info($exception);
@@ -236,15 +215,15 @@ class CartManager extends Component
         }
     }
 
-    public function removeItem($type, $id, $key = null, $safeOnly = true)
+    public function removeItem($type, $id, $key = null, $uuid = null)
     {
         $cartItem = new OrderCartItem($this);
         if ($key === null) {
             $success = $this->getStorage()->removeItem($id);
             return [$success, $success ? Yii::t('common', 'Item has been deleted') : 'Item can not deleted'];
         } else {
-            if (($item = $this->getItem($type, $id, $safeOnly)) === false) {
-                return [false, ii::t('common', 'This item not exist in {type} cart', [
+            if (($item = $this->getItem($type, $id, $uuid)) === false) {
+                return [false, Yii::t('common', 'This item not exist in {type} cart', [
                     'type' => $type
                 ])];
             }
@@ -289,12 +268,8 @@ class CartManager extends Component
             }
             $c[$g] = $v;
         }
-        $supporter = null;
-//        if (($supportId = $this->getStorage()->calculateSupported()) > 0) {
-//            $supporter = User::find()->select(['id', 'mail'])->where(['id' => $supportId[0]['_id']])->one();
-//        }
 
-        return ArrayHelper::merge(OrderCartItem::defaultKey(), $supporter !== null ? ['supportAssign' => ['id' => $supporter->id, 'email' => $supporter->email], 'supportId' => $supporter->id] : [], $p, ['products' => [$c]]);
+        return ArrayHelper::merge(OrderCartItem::defaultKey(), $p, ['products' => [$c]]);
     }
 
     public function normalKeyFilter($key)
@@ -325,43 +300,40 @@ class CartManager extends Component
     /**
      * @param null $type
      * @param null $ids
-     * @param bool $safeOnly
-     * @return mixed
+     * @param null $uuid
+     * @return array
      * @throws InvalidConfigException
      * @throws \Throwable
      */
-    public function getItems($type = null, $ids = null, $safeOnly = true)
+    public function getItems($type = null, $ids = null, $uuid = null)
     {
 
-        return $this->getStorage()->getItems($this->getIsSafe($safeOnly), $type, $ids);
+        return $this->getStorage()->getItems($uuid, $type, $ids);
 
     }
 
 
     /**
      * @param null $type
-     * @param bool $safeOnly
-     * @return mixed
+     * @param null $uuid
+     * @return int
      * @throws InvalidConfigException
-     * @throws \Throwable
+     * @throws \yii\mongodb\Exception
      */
-    public function countItems($type = null, $safeOnly = true)
+    public function countItems($type = null, $uuid = null)
     {
-        return $this->getStorage()->countItems($this->getIsSafe($safeOnly), $type);
+        return $this->getStorage()->countItems($uuid, $type);
     }
 
     /**
-     * @param bool $safeOnly
-     * @return bool
+     * @param null $uuid
+     * @return bool|int
      * @throws InvalidConfigException
-     * @throws \Throwable
+     * @throws \yii\mongodb\Exception
      */
-    public function removeItems($safeOnly = true)
+    public function removeItems($uuid = null)
     {
-        if (($user = $this->getUser()) === null && $safeOnly) {
-            $safeOnly = false;
-        }
-        return $this->getStorage()->removeItems($safeOnly ? $user->getId() : null);
+        return $this->getStorage()->removeItems($uuid);
     }
 
     /**
@@ -382,7 +354,7 @@ class CartManager extends Component
     public function getIsSafe($force = false)
     {
         if (($user = $this->getUser()) !== null && $force) {
-            return $user->getId();
+            return $user->ui;
         }
         return null;
     }
@@ -408,8 +380,8 @@ class CartManager extends Component
                 $value['cancelled']['new'] = $now;
             }
             if ($param['typeUpdate'] == 'confirmOrderCart') {
-                $key['current_status'] = 'SUPPORTED';
-                $value['supported'] = $now;
+                $key['current_status'] = 'PURCHASED';
+                $value['purchased']['new'] = $now;
             }
             if ($param['typeUpdate'] == 'assignSaleCart') {
                 $value['sale_support_id'] = $param['idSale'];
@@ -444,8 +416,16 @@ class CartManager extends Component
         $authManager = Yii::$app->authManager;
         $saleIds = $authManager->getUserIdsByRole('sale');
         $masterSaleIds = $authManager->getUserIdsByRole('master_sale');
-        $supporters = User::find()->indexBy('id')->select(['id', 'email'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
+        $arraySales = array_merge($saleIds, $masterSaleIds);
 
+        if (!$arraySales) {
+            return false;
+        }
+        $supporters = User::find()->indexBy('id')->select(['id', 'email'])
+            ->where(['id' => $arraySales])->all();
+        if (!$supporters) {
+            return false;
+        }
         $ids = array_keys($supporters);
         $calculateToday = ArrayHelper::map($this->getStorage()->calculateSupported($ids), '_id', function ($elem) {
             return ['count' => $elem['count'], 'price' => $elem['price']];

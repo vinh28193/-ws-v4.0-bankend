@@ -134,3 +134,26 @@
         </div>
     </div>
 </div>
+<div class="modal" id="NotifyConfirm" tabindex="-1" role="dialog" aria-labelledby="NotifyConfirmTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" id="modal-content" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="NotifyConfirmHeader">
+                <h5 class="modal-title" id="NotifyConfirmTitle"><?= Yii::t('frontend','Notify') ?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div id="NotifyConfirmMessage">
+                        <?= Yii::t('frontend','Notify') ?>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="NotifyConfirmBtnClose" data-dismiss="modal"><?= Yii::t('frontend','Close') ?></button>
+                <button type="button" style="display: none" class="btn btn-primary" id="NotifyConfirmBtnSubmit"><?= Yii::t('frontend','Confirm') ?></button>
+            </div>
+        </div>
+    </div>
+</div>

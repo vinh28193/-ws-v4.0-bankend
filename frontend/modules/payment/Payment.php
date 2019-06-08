@@ -4,6 +4,7 @@
 namespace frontend\modules\payment;
 
 
+use common\components\AdditionalFeeInterface;
 use common\components\cart\CartHelper;
 use common\components\cart\CartSelection;
 use common\helpers\WeshopHelper;
@@ -14,6 +15,7 @@ use common\models\Product;
 use common\models\ProductFee;
 use common\models\Seller;
 use frontend\modules\payment\providers\alepay\AlepayProvider;
+use frontend\modules\payment\providers\vietnam\NganLuongProvider;
 use frontend\modules\payment\providers\vietnam\WalletClientProvider;
 use frontend\modules\payment\providers\vietnam\WSVNOffice;
 use frontend\modules\payment\providers\wallet\WalletHideProvider;
@@ -33,9 +35,11 @@ use yii\helpers\Url;
 class Payment extends Model
 {
 
+    const ENV_SANDBOX = 'sandbox';
+    const ENV_PRODUCT = 'product';
+
     const PAGE_CHECKOUT = 'CHECKOUT';
     const PAGE_TOP_UP = 'TOP_UP';
-
 
     const PAYMENT_GROUP_MASTER_VISA = 1;
     const PAYMENT_GROUP_BANK = 2;
@@ -57,6 +61,8 @@ class Payment extends Model
 
     const  ALEPAY_INSTALMENT_MIN = 0;
 
+    public $env = self::ENV_PRODUCT;
+    public $uuid = null;
     public $page = self::PAGE_CHECKOUT;
 
     public $payment_type;
@@ -91,6 +97,7 @@ class Payment extends Model
 
     public $currency;
     public $total_amount;
+    public $isPaid = false;
     public $total_amount_display;
 
     public $payment_bank_code;
@@ -118,6 +125,16 @@ class Payment extends Model
      */
     public $view;
 
+
+    public $_user;
+
+    public function getUser()
+    {
+        if ($this->_user === null && ($user = Yii::$app->user->identity) !== null) {
+            $this->_user = $user;
+        }
+        return $this->_user;
+    }
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -164,9 +181,28 @@ class Payment extends Model
         return $this->_orders;
     }
 
+    /**
+     * @var PaymentAdditionalFeeCollection
+     */
+    private $_additionalFees;
+
+    /**
+     * @return PaymentAdditionalFeeCollection
+     */
+    public function getAdditionalFees()
+    {
+        if ($this->_additionalFees === null) {
+            $this->_additionalFees = new PaymentAdditionalFeeCollection();
+            foreach ($this->getOrders() as $order) {
+                $this->_additionalFees->loadOrder($order, $this->getUser(), $this->storeManager->getExchangeRate());
+            }
+        }
+        return $this->_additionalFees;
+    }
+
     public function loadOrdersFromCarts()
     {
-        $data = CartHelper::createOrderParams($this->payment_type,$this->carts);
+        $data = CartHelper::createOrderParams($this->payment_type, $this->carts, $this->uuid);
         $this->_orders = $data['orders'];
         $this->total_amount = $data['totalAmount'];
         $this->total_amount_display = $data['totalAmount'];
@@ -209,8 +245,10 @@ class Payment extends Model
 
         switch ($this->payment_provider) {
             case 42:
-                $wlHide = new WalletHideProvider();
-                return $wlHide->create($this);
+                $nl = new NganLuongProvider();
+                return $nl->create($this);
+//                $wlHide = new WalletHideProvider();
+//                return $wlHide->create($this);
             case 43:
                 $wallet = new WalletProvider();
                 return $wallet->create($this);
@@ -235,8 +273,10 @@ class Payment extends Model
     {
         switch ($merchant) {
             case 42:
-                $wlHide = new WalletHideProvider();
-                return $wlHide->handle($request->get());
+                $Nl = new NganLuongProvider();
+                return $Nl->handle($request->get());
+//                $wlHide = new WalletHideProvider();
+//                return $wlHide->handle($request->get());
             case 43:
                 $wallet = new WalletProvider();
                 return $wallet->handle($request->get());
@@ -255,13 +295,12 @@ class Payment extends Model
     {
         $form = new PromotionForm();
         $params = PaymentService::createCheckPromotionParam($this);
-        $form->loadParam($params);
+        $form->load($params, '');
         /** @var  $response PromotionResponse */
         $response = $form->checkPromotion();
         if ($response->success === true && $response->discount > 0 && count($response->details) > 0) {
             $this->total_discount_amount = $response->discount;
             $this->discount_detail = $response->details;
-            $this->discount_orders = $response->orders;
             $this->total_amount_display = $this->total_amount - $this->total_discount_amount;
         }
         return $response;
@@ -568,7 +607,9 @@ class Payment extends Model
 
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
                 $updateOrderAttributes['total_final_amount_local'] = $updateOrderAttributes['total_amount_local'] - $updateOrderAttributes['total_promotion_amount_local'];
-                $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
+                if ($this->isPaid) {
+                    $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
+                }
                 $order->updateAttributes($updateOrderAttributes);
                 $orderCodes[$order->ordercode] = [
                     'totalPaid' => $order->total_paid_amount_local,
@@ -630,6 +671,7 @@ class Payment extends Model
     {
         return [
             'page' => $this->page,
+            'uuid' => $this->uuid,
             'payment_type' => $this->payment_type,
             'carts' => (array)$this->carts,
             'customer_name' => $this->customer_name,

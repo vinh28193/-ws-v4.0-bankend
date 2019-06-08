@@ -33,6 +33,7 @@ class CartController extends BillingController
 
     public function actionIndex()
     {
+
         $queryParams = $this->request->queryParams;
         $type = CartSelection::TYPE_SHOPPING;
         if (isset($queryParams['type'])) {
@@ -45,27 +46,23 @@ class CartController extends BillingController
             $ids = $queryParams['ref'];
         }
         $cartManager = $this->module->cartManager;
-        $items = $cartManager->getItems($type, $ids);
+        $items = $cartManager->getItems($type, $ids, $this->filterUuid());
         if (Yii::$app->getRequest()->getIsPjax()) {
             if (count($items) === 0) {
-                return $this->renderAjax('empty');
+                return $this->renderPartial('empty');
             }
-            return $this->renderAjax('index', [
+            return $this->renderPartial('item', [
                 'items' => $items
             ]);
         }
-        if (count($items) === 0) {
-            return $this->render('empty');
-        }
         CartSelection::setSelectedItems(CartSelection::TYPE_SHOPPING, ArrayHelper::getColumn($items, '_id', false));
-        return $this->render('index', [
-            'items' => $items
-        ]);
+        return $this->render('index');
     }
 
-    public function actionRefresh()
+    public function actionCount()
     {
-
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $this->module->cartManager->countItems(CartSelection::TYPE_SHOPPING, $this->filterUuid());
     }
 
     public function actionAdd()
@@ -74,14 +71,11 @@ class CartController extends BillingController
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $params = Yii::$app->request->bodyParams;
         $type = ArrayHelper::getValue($params, 'type', CartSelection::TYPE_SHOPPING);
-        if ($type !== CartSelection::TYPE_BUY_NOW && Yii::$app->user->getIsGuest()) {
-            return ['success' => false, 'message' => 'Please login to used this action'];
-        }
         if (($item = ArrayHelper::getValue($params, 'item')) === null) {
             return ['success' => false, 'message' => 'add cart from empty data'];
         }
 
-        if (($key = $this->module->cartManager->addItem($type, $item, true))[0] === false) {
+        if (($key = $this->module->cartManager->addItem($type, $item, $this->filterUuid()))[0] === false) {
             return ['success' => false, 'message' => $key[1]];
         };
 

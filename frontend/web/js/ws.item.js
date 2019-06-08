@@ -51,7 +51,7 @@
         contentPrice: '',
     };
     var varration_box = {
-      image: '',
+        image: '',
         title: ''
     };
     var currentVariations = [];
@@ -80,9 +80,7 @@
                 if (images.length > 0) {
                     changeImage($item, images);
                 }
-                console.log(currentVariations);
                 setUpDefaultOptions($item);
-                console.log(currentVariations);
                 ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'a#addToCart', function (event) {
                     paymentItem($item, 'shopping');
                     return false;
@@ -116,26 +114,26 @@
                 ws.initEventHandler($item, 'mouseenter-box-select', 'mouseenter.wsItem', 'div.option-box span.box-select-item', function (event) {
                     defaultParams = params;
                     console.log($(this).children('img'));
-                    methods.changeTempImage.call($item,$(this).children('img').attr('src'),$(this).children('img').attr('alt'),false);
+                    methods.changeTempImage.call($item, $(this).children('img').attr('src'), $(this).children('img').attr('alt'), false);
                     return false;
                 });
                 ws.initEventHandler($item, 'mouseleave-box-select', 'mouseleave.wsItem', 'div.option-box span.box-select-item', function (event) {
                     defaultParams = params;
-                    methods.changeTempImage.call($item,'','',true);
+                    methods.changeTempImage.call($item, '', '', true);
                     return false;
                 });
                 $item.trigger($.Event(events.afterInit));
             });
         },
-        changeTempImage: function (image,title,backup) {
+        changeTempImage: function (image, title, backup) {
             console.log(title + ' - ' + image);
-            if(backup){
-                $('#detail-big-img').attr('src',varration_box.image);
+            if (backup) {
+                $('#detail-big-img').attr('src', varration_box.image);
                 $('div.option-box label.label-option-box').html(varration_box.title);
-            }else {
+            } else {
                 varration_box.image = $('#detail-big-img').attr('src');
                 varration_box.title = $('div.option-box label.label-option-box').html();
-                $('#detail-big-img').attr('src',image);
+                $('#detail-big-img').attr('src', image);
                 $('div.option-box label.label-option-box').html(title);
             }
         },
@@ -219,10 +217,8 @@
         favorite: function () {
             var $item = $(this);
             var params = $item.data('wsItem').params;
-            var client = new ClientJS();
-            var _fingerprint = client.getFingerprint();
             var data = {
-                fingerprint: _fingerprint,
+                fingerprint: ws.getFingerprint(),
                 sku: params.id,
                 portal: params.type
             };
@@ -267,7 +263,7 @@
             }
             if (value > numberInstock) {
                 $('#quantity').val(valueOld === value ? 1 : valueOld);
-                return ws.sweetalert('Bạn không thể mua quá ' + numberInstock + ' sản phẩm.', 'Lỗi: ');
+                return ws.notifyError(ws.t('You can not buy greater than {number}', {number: numberInstock}));
             }
             $('#quantity').val(value);
             $('#quantity').css('width', (value.toString().length * 10 + 20) + 'px');
@@ -282,12 +278,12 @@
     };
     var checkOutOfStock = function (activeVariation) {
         if (!activeVariation) {
-            alert("Hết hàng!");
+            ws.notifyError(ws.t("Out of stock"));
             markOutofStock(true);
             return false;
         } else {
             if (activeVariation.available_quantity > 0 && activeVariation.quantity_sold >= 0 && activeVariation.available_quantity - activeVariation.quantity_sold <= 0) {
-                alert("Hết hàng!");
+                ws.notifyError(ws.t("Out of stock"));
                 markOutofStock(true);
                 return false;
             }
@@ -515,11 +511,11 @@
         var $data = $item.data('wsItem');
         var quantity = $('#quantity').val();
         if (quantity < 1) {
-            return alert('Vui lòng nhập số lượng');
+            return ws.notifyError(ws.t('You can not buy lesser than {number}', {number: '1'}));
         }
 
         if ($data.params.variation_options.length > 0 && currentVariations.length !== $data.params.variation_options.length) {
-            return alert('Vui lòng chọn thộc tính');
+            return ws.notifyError(ws.t('Please select the variation'));
         }
 
         var params = $data.params;
@@ -531,13 +527,11 @@
             quantity: quantity,
             image: params.images[0].main
         };
-        ws.loading(true);
         var $ajaxOptions = {
             type: 'POST',
             dataType: 'json',
             data: {item: item, type: type},
             success: function (response) {
-                ws.loading(false);
                 if (response.success) {
                     if (type === 'buynow' || type === 'installment') {
                         var url = response.data || null;
@@ -550,13 +544,13 @@
                     if (countItems) {
                         $('#cartBadge').html(countItems);
                     }
-                    alert(response.message);
+                    ws.notifySuccess(response.message);
                 } else {
-                    alert(response.message);
+                    ws.notifyError(response.message);
                 }
             }
         };
-        ws.ajax($data.options.paymentUrl, $ajaxOptions);
+        ws.ajax($data.options.paymentUrl, $ajaxOptions, true);
     }
 })(jQuery);
 var changeBigImage = function (e) {

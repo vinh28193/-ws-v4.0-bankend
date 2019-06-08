@@ -8,6 +8,8 @@
 
 namespace common\components;
 
+use common\models\User;
+
 /**
  * interface để đảm bảo có thể tính toán giá cho bất khì 1 đồi tượng nào khi được implements
  * Interface AdditionalFeeInterface
@@ -41,10 +43,11 @@ interface AdditionalFeeInterface
      */
     public function getShippingQuantity();
 
+
     /**
-     * @return boolean
+     * @return User|null
      */
-    public function getIsForWholeSale();
+    public function getUser();
 
     /**
      * @return boolean

@@ -7,6 +7,8 @@ use common\components\cart\CartHelper;
 use common\components\cart\CartManager;
 use common\helpers\WeshopHelper;
 use common\models\User;
+use common\promotion\PromotionForm;
+use frontend\modules\payment\providers\mcpay\McPayProvider;
 use Yii;
 use common\components\cart\storage\MongodbCartStorage;
 use frontend\modules\payment\PaymentService;
@@ -149,6 +151,22 @@ class TestController extends FrontendController
         echo Yii::t('test', 'Hello World');
         $s = Yii::$app->i18n->getMessageSource('frontend');
         var_dump($s->loadMessages('frontend', 'vi'));
+        die;
+    }
+    public function actionCreate(){
+        $provice = new McPayProvider();
+        $provice->amount = '20000';
+        $provice->orderId = 'asdasdasd';
+        $provice->billName = 'asd asDSA';
+        var_dump($provice->createCheckOutUrl());die;
+    }
+
+    public function actionPromotion(){
+        $posts = require dirname(dirname(__DIR__)).'/common/promotion/mock-post.php';
+        $promotionForm = new PromotionForm();
+        $promotionForm->load($posts,'');
+
+        var_dump($promotionForm->checkPromotion());
         die;
     }
 }

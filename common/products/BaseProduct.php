@@ -9,6 +9,7 @@
 namespace common\products;
 
 use common\helpers\WeshopHelper;
+use common\models\User;
 use Yii;
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
@@ -123,8 +124,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             'product_price_origin' => $this->getSellPrice(),
             'origin_shipping_fee' => !$this->is_free_ship ? ($this->shipping_fee * $this->quantity) : 0,
             'tax_fee_origin' => $this->us_tax_rate
-
-        ], true);
+        ], false);
         /**
          * Todo function initDefaultProperty
          * - vì mấy hàm này chỉ có tác dụng sử dụng 1 lần khi create object nên chỉ cần viết 1 hàm
@@ -276,11 +276,19 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     }
 
     /**
-     * @return boolean
+     * @var null|User
      */
-    public function getIsForWholeSale()
+    private $_user = null;
+
+    /**
+     * @return User|null
+     */
+    public function getUser()
     {
-        return $this->for_whole_sale;
+        if ($this->_user === null && ($user = Yii::$app->user->identity) !== null) {
+            $this->_user = $user;
+        }
+        return $this->_user;
     }
 
     public function getIsNew()

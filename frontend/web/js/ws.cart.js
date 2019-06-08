@@ -12,10 +12,12 @@
     };
 
     var defaults = {
+        listUrl: undefined,
         updateUrl: undefined,
         removeUrl: undefined,
         paymentUrl: undefined,
     };
+
 
     var methods = {
         init: function (options) {
@@ -26,10 +28,11 @@
                 }
                 var settings = $.extend({}, defaults, options || {});
 
-
                 $cart.data('wsCart', {
                     settings: settings
                 });
+
+                methods.getItems.apply($cart);
 
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
                     event.preventDefault();
@@ -44,7 +47,7 @@
                     var options = getQuantityInputOptions($target);
                     var operator = $item.data('operator');
                     if (options.max === '' || options.max < options.value) {
-                        ws.sweetalert('Không thể thay đổi số lượng', 'error');
+                        ws.notifyMessage('Không thể thay đổi số lượng', 'error', 'info');
                     }
                     var data = {type: $item.data('type'), id: id, key: key};
                     var param = {quantity: options.value};
@@ -53,7 +56,7 @@
                         if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
                             param.quantity = options.max;
                             $target.val(param.quantity);
-                            ws.sweetalert('Bạn không thể mua quá: ' + options.max, 'error');
+                            ws.notifyError('Bạn không thể mua quá: ' + options.max, 'error');
                             return;
                         }
                     } else {
@@ -61,7 +64,7 @@
                         if (param.quantity < 1) {
                             param.quantity = 1;
                             $target.val(1);
-                            ws.sweetalert('Bạn không thể mua dưới 1', 'error');
+                            ws.notifyError('Bạn không thể mua dưới 1', 'error');
                             return;
                         }
                     }
@@ -80,11 +83,11 @@
                     if (param.quantity < 1) {
                         param.quantity = 1;
                         $item.val(1);
-                        ws.sweetalert('Bạn không thể mua dưới 1', 'error');
+                        ws.notifyError('Bạn không thể mua dưới 1', 'error');
                     } else if (options.max !== '' && param.quantity >= options.max) {
                         param.quantity = options.max;
                         $item.val(options.max);
-                        ws.sweetalert('Bạn không thể mua quá: ' + options.max, 'error');
+                        ws.notifyError('Bạn không thể mua quá: ' + options.max, 'error');
                     }
                     data.param = param;
                     methods.update.call($cart, data);
@@ -127,9 +130,26 @@
                 //     methods.watch.call($cart, data);
                 //     return false;
                 // });
+
             });
         },
-        items: function () {
+        getItems: function () {
+            var $cart = $(this);
+            var container = '#' + $cart.attr('id');
+            var data = $cart.data('wsCart');
+
+            var deferredArrays = deferredArray();
+            ws.loading(true);
+            $.when.apply(this, deferredArrays).always(function () {
+
+                var $pjaxOptions = {
+                    url: data.settings.listUrl,
+                    container: container,
+                    push: false
+                };
+                $.pjax($pjaxOptions);
+                ws.loading(false);
+            });
 
         },
         refresh: function () {
@@ -162,7 +182,7 @@
                     if (response.success) {
                         $.pjax.reload({container: container});
                     } else {
-                        ws.sweetalert(response.message, 'error');
+                        ws.notifyError(response.message, 'error');
                     }
                 }
             };
@@ -189,7 +209,7 @@
                             $('#cartBadge').html(countItems);
                         }
                     } else {
-                        ws.sweetalert(response.message, 'error');
+                        ws.notifyError(response.message, 'error');
                     }
 
                 }
@@ -212,15 +232,16 @@
                 method: 'post',
                 data: {carts: keys},
                 success: function (response) {
+                    console.log(response);
                     if (response.success) {
                         var url = response.data || null;
                         if (url === null) {
-                            alert('action can not complete');
+                            ws.notifySuccess('action can not complete');
                             return false;
                         }
                         ws.redirect(url);
                     } else {
-                        alert(response.message);
+                        ws.notifyError(response.message);
                     }
                 }
             });
@@ -234,6 +255,13 @@
         data: function () {
             return this.data('wsCart');
         },
+    };
+    var deferredArray = function () {
+        var array = [];
+        array.add = function (callback) {
+            this.push(new $.Deferred(callback));
+        };
+        return array;
     };
     var updateTotalPrice = function ($cart) {
         totalAmount = 0;

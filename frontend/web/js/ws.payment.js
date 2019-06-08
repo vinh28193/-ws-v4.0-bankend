@@ -1,6 +1,7 @@
 ws.payment = (function ($) {
     var defaults = {
         page: undefined,
+        uuid: ws.getFingerprint(),
         payment_type: undefined,
         carts: [],
         use_xu: 0,
@@ -100,6 +101,7 @@ ws.payment = (function ($) {
                     pub.checkPromotion();
                 }
             });
+            showStep(1);
             $('#other-receiver').click(function () {
                 if (!pub.shipping.other_receiver) {
                     pub.shipping.other_receiver = 1;
@@ -246,12 +248,12 @@ ws.payment = (function ($) {
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
             pub.shipping.receiver_address_id = $('#shippingform-receiver_address_id').val();
             if (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id) {
-                alert('Vui lòng nhập đầy đủ thông tin người mua');
+                ws.notifyError('Vui lòng nhập đầy đủ thông tin người mua');
                 return false;
             }
             if (pub.shipping.other_receiver) {
                 if (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id) {
-                    alert('Vui lòng nhập đầy đủ thông tin người nhận');
+                    ws.notifyError('Vui lòng nhập đầy đủ thông tin người nhận');
                     return false;
                 }
             }
@@ -450,7 +452,7 @@ ws.payment = (function ($) {
             } else {
                 var $termAgree = $('input#termCheckout').is(':checked');
                 if (!$termAgree) {
-                    alert('Bạn phải đồng ý với điều khoản weshop');
+                    ws.notifyError('Bạn phải đồng ý với điều khoản weshop');
                     return;
                 }
                 processPaymment();
@@ -459,16 +461,16 @@ ws.payment = (function ($) {
         topUp: function () {
             pub.payment.total_amount = $('input[name=amount_topup]').val();
             if (pub.payment.total_amount < 100000) {
-                ws.sweetalert('Bạn cần phải nạp trên 100.000');
+                ws.notifyError('Bạn cần phải nạp trên 100.000');
                 return;
             }
             var checkArr = $('#termCheckout:checked').val();
             if (!checkArr) {
-                ws.sweetalert('Bạn chưa đồng ý với điều khoản và điều kiện giao dịch của weshop');
+                ws.notifyError('Bạn chưa đồng ý với điều khoản và điều kiện giao dịch của weshop');
                 return;
             }
             if (!pub.payment.payment_method || !pub.payment.payment_provider || !pub.payment.payment_bank_code) {
-                ws.sweetalert('Vui lòng chọn phương thức thanh toán!');
+                ws.notifyError('Vui lòng chọn phương thức thanh toán!');
                 return;
             }
             ws.loading(true);
@@ -481,7 +483,7 @@ ws.payment = (function ($) {
                     if (response.success) {
                         ws.redirect(response.data.checkoutUrl);
                     } else {
-                        alert(response.message);
+                        ws.notifyError(response.message);
                     }
 
                 }
@@ -490,7 +492,7 @@ ws.payment = (function ($) {
         installment: function () {
             var $termInstallment = $('input#termInstallment').is(':checked');
             if (!$termInstallment) {
-                alert('Bạn phải đồng ý với điều khoản trả góp weshop');
+                ws.notifyError('Bạn phải đồng ý với điều khoản trả góp weshop');
                 return;
             }
             processPaymment();
@@ -547,7 +549,7 @@ ws.payment = (function ($) {
                         redirectPaymentGateway(data, 1000);
                     }
                 } else {
-                    alert(response.message);
+                    ws.notifyError(response.message);
                 }
 
             }
@@ -628,6 +630,20 @@ ws.payment = (function ($) {
                 }
             }
         }, $timeOut);
+    };
+    var showStep = function ($step) {
+        $step = $step - 1;
+        $('.checkout-step li').each(function (i, li) {
+            var $li = $(li);
+            $li.removeClass('active');
+
+            $($li.data('href')).css('display', 'none');
+            if ($step === i) {
+                $li.addClass('active');
+                $($li.data('href')).css('display', 'block');
+
+            }
+        });
     };
     return pub;
 })(jQuery);

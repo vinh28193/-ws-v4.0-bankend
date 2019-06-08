@@ -8,6 +8,7 @@ use Yii;
 use yii\di\Instance;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
+use yii\web\Cookie;
 use yii\web\Request;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
@@ -27,6 +28,9 @@ use common\models\User;
 class FrontendController extends Controller
 {
 
+    const UUID_COOKIE_NAME = '__UuidCookieName';
+
+    const UUID_HEADER_TOKEN = 'X-Fingerprint-Token';
     /**
      * @var string|StoreManager
      */
@@ -62,7 +66,7 @@ class FrontendController extends Controller
     public function ogMetaTag()
     {
         return [
-            'title' => Yii::t('frontend','Weshop Global'),
+            'title' => Yii::t('frontend', 'Weshop Global'),
             'site_name' => Yii::$app->requestedRoute,
             'url' => $this->request->url,
             'image' => Url::to('/img/weshop-logo-vn.png'),
@@ -119,8 +123,8 @@ class FrontendController extends Controller
     protected function registerAllMetaTagLinkTag()
     {
         $metaTags = ArrayHelper::merge([
-            'author' => Yii::t('frontend','Weshop Global'),
-            'COPYRIGHT' => Yii::t('frontend','&copy; Weshop Global'),
+            'author' => Yii::t('frontend', 'Weshop Global'),
+            'COPYRIGHT' => Yii::t('frontend', '&copy; Weshop Global'),
             'robots' => 'noodp,index,follow',
             'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505'
         ], $this->metaTag(), ArrayHelper::getValue(Yii::$app->params, 'metaTagParam', []));
@@ -255,29 +259,19 @@ class FrontendController extends Controller
         }
         Yii::info("_uuid : " . $this->_uuid);
         if (!Yii::$app->user->isGuest) {
-
+            /** @var  $identity  User */
+            $identity = Yii::$app->user->identity;
             // User Create / register Weshop
-            $id = Yii::$app->user->identity->getId();
-            $email = Yii::$app->user->identity->email;
-            $this->_uuid = $id . 'WS' . $email;
             /** Update UUID == fingerprint **/
-            $User = new User();
-            if (($User = $User->findByUuid($id)) != null && !$User->uuid) {
+            if (!$identity->uuid || ($identity->uuid !== null && $identity->uuid !== $this->_uuid)) {
                 Yii::info("Insert uuid : Ok ! " . $this->_uuid . " pages " . $this->setDocumentPath);
-                $User->uuid = $this->_uuid;
-                $User->id = $id;
-                $User->last_update_uuid_time = Yii::$app->formatter->asDateTime('now');
-                $User->last_update_uuid_time_by = 99999;
-                if ($User->update()) {
-                    Yii::info("Insert uuid : Ok ! ");
-                } else {
-                    Yii::info("Insert uuid : Error ! ");
-                    Yii::info([
-                        'Error' => $User->errors,
-                    ], __CLASS__);
-                }
+                $identity->updateAttributes([
+                    'uuid' => $this->_uuid,
+                    'last_update_uuid_time' => Yii::$app->formatter->asDateTime('now'),
+                    'last_update_uuid_time_by' => 99999
+                ]);
             }
-            Yii::info("Update : " . $this->_uuid);
+            $this->_uuid = $identity->getId() . 'WS' . $identity->email;
         } else {
             // anynomus
             /*
@@ -291,7 +285,7 @@ class FrontendController extends Controller
             }
             */
         }
-
+        $this->setUuidCookie($this->_uuid);
         if ($this->_uuid) {
             if ((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true)) {
                 // ENV DEV /  TEST
@@ -307,5 +301,38 @@ class FrontendController extends Controller
         return 'Ok ! ' . $this->_uuid . ' pages ' . $this->setDocumentPath;
     }
 
+    public function getUuidCookie()
+    {
+        $cookies = Yii::$app->getRequest()->getCookies();
+        if ($cookies->has(self::UUID_COOKIE_NAME)) {
+            return $cookies->getValue(self::UUID_COOKIE_NAME);
+        }
+        return null;
+    }
 
+    public function setUuidCookie($uuid)
+    {
+        $cookies = Yii::$app->getResponse()->getCookies();
+
+        $cookie = new Cookie([
+            'name' => self::UUID_COOKIE_NAME,
+            'value' => $uuid,
+            'expire' => time() + 86400,
+            'secure' => false
+        ]);
+
+        $cookies->add($cookie);
+    }
+
+    public function filterUuid($checkHead = true)
+    {
+        if ($this->_uuid !== null) {
+            return $this->_uuid;
+        } elseif (($onCookie = $this->getUuidCookie()) !== null) {
+            return $onCookie;
+        }elseif ($checkHead && ($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN,null) !== null)){
+            return $onHead;
+        }
+        return null;
+    }
 }
