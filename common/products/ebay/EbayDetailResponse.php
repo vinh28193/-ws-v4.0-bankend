@@ -19,7 +19,6 @@ use common\products\BaseResponse;
  */
 class EbayDetailResponse extends BaseResponse
 {
-
     /**
      * EbayDetailResponse constructor.
      * @param EbayGate $gate
@@ -56,7 +55,8 @@ class EbayDetailResponse extends BaseResponse
 //                    $temp_j++;
 //                }
 //                $temp_i++;
-//            }
+//            }\
+
             $response = $response['data'];
             if (isset($response['provider'])) {
                 $response['providers'][] = $response['provider'];
