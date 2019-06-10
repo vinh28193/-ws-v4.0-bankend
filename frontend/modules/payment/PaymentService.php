@@ -4,8 +4,16 @@
 namespace frontend\modules\payment;
 ;
 
+
+use common\components\cart\CartHelper;
 use common\helpers\WeshopHelper;
+use common\models\Category;
+use common\models\db\TargetAdditionalFee;
 use common\models\PaymentMethodProvider;
+use common\models\Seller;
+use common\models\User;
+use frontend\modules\payment\models\Order;
+use frontend\modules\payment\models\Product;
 use Yii;
 use common\models\PaymentProvider;
 use yii\helpers\ArrayHelper;
@@ -89,46 +97,135 @@ class PaymentService
         }
     }
 
-    public static function createCheckPromotionParam(Payment $payment)
+    /**
+     * @param Payment $payment
+     */
+    public static function createOrderFormCart(Payment $payment)
     {
-        $items = $payment->getOrders();
-
-        if (empty($items)) {
-            return [];
+        $errors = [];
+        $keys = $payment->carts;
+        $start = microtime(true);
+        if (!is_array($keys)) {
+            $keys = [$keys];
         }
-        $fees = [];
-        foreach ($payment->getAdditionalFees()->keys() as $key) {
-            $fees[$key] = $payment->getAdditionalFees()->getTotalAdditionFees($key)[1];
+        $orders = [];
+        $totalOrderAmount = 0;
+        $items = CartHelper::getCartManager()->getItems($payment->type, $keys, $payment->uuid);
+        foreach ($items as $item) {
+            $params = $item['value'];
+            if (($sellerParams = ArrayHelper::remove($params, 'seller')) === null || !is_array($sellerParams)) {
+                $errors[] = 'Not found seller for order';
+                continue;
+            }
+            $seller = new Seller($sellerParams);
+            if (($productParams = ArrayHelper::remove($params, 'products')) === null || !is_array($productParams)) {
+                $errors[] = 'Not found products for order';
+                continue;
+            }
+            $supporter = ArrayHelper::remove($params, 'saleSupport');
+            if ($supporter !== null) {
+                $supporter = new User($supporter);
+            }
+            $productFailed = false;
+            $products = [];
+            foreach ($productParams as $key => $productParam) {
+                if (($categoryParams = ArrayHelper::remove($productParam, 'category')) === null || !is_array($categoryParams)) {
+                    $productFailed = true;
+                    $errors[] = 'Not found category for product';
+                    continue;
+                }
+                $category = new Category([
+                    'alias' => ArrayHelper::getValue($categoryParams, 'alias'),
+                    'siteId' => ArrayHelper::getValue($categoryParams, 'site'),
+                    'originName' => ArrayHelper::getValue($categoryParams, 'origin_name'),
+                ]);
+                if (($productFeeParams = ArrayHelper::remove($productParam, 'fees')) === null || !is_array($productFeeParams)) {
+                    $productFailed = true;
+                    $errors[] = 'Not found fee for product';
+                    continue;
+                }
+                $fees = [];
+                foreach ($productFeeParams as $name => $value) {
+                    $targetFee = new TargetAdditionalFee($value);
+                    $targetFee->type = 'product';
+                    $fees[] = $targetFee;
+                }
+                unset($productParam['available_quantity']);
+                unset($productParam['quantity_sold']);
+                $product = new Product($productParam);
+                $product->populateRelation('productFees', $fees);
+                $product->populateRelation('category', $category);
+                $products[$key] = $product;
+            }
+            if ($productFailed) {
+                continue;
+            }
+            unset($params['customer']);
+            $order = new Order($params);
+            $order->populateRelation('products', $products);
+            $order->populateRelation('seller', $seller);
+            $order->populateRelation('saleSupport', $supporter);
+            $order->loadPaymentAdditionalFees();
+            $totalOrderAmount += (int)$order->total_amount_local;
+            $orders[] = $order;
+        }
+        $time = sprintf('%.3f', microtime(true) - $start);
+        Yii::info("create orders total time: $time s", __METHOD__);
+        Yii::info($errors, __METHOD__);
+        return [
+            'totalAmount' => $totalOrderAmount,
+            'orders' => $orders,
+        ];
+    }
+
+    public
+    static function createCheckPromotionParam(Payment $payment)
+    {
+        $feeOrders = [];
+        foreach ($payment->getOrders() as $key => $order) {
+            $fees = [];
+            foreach ($order->getAdditionalFees()->keys() as $name) {
+                $fees[$name] = $order->getAdditionalFees()->getTotalAdditionFees($name)[1];
+            }
+            $feeOrders[$order->ordercode] = [
+                'totalAmount' => $order->total_amount_local,
+                'additionalFees' => $fees
+            ];
         }
         return [
             'couponCode' => $payment->coupon_code,
             'paymentService' => implode('_', [$payment->payment_method, $payment->payment_bank_code]),
             'totalAmount' => $payment->getTotalAmount(),
-            'additionalFees' => $fees
+            'orders' => $feeOrders,
         ];
     }
 
-    public static function toNumber($value)
+    public
+    static function toNumber($value)
     {
         return (integer)$value;
     }
 
-    public static function generateTransactionCode($prefix = 'PM')
+    public
+    static function generateTransactionCode($prefix = 'PM')
     {
         return WeshopHelper::generateTag(time(), 'PM', 16);
     }
 
-    public static function createReturnUrl($provider)
+    public
+    static function createReturnUrl($provider)
     {
         return Url::toRoute(["/payment/payment/return", 'merchant' => $provider], true);
     }
 
-    public static function createCancelUrl()
+    public
+    static function createCancelUrl()
     {
         return Url::toRoute("/checkout/cart", true);
     }
 
-    public static function getInstallmentBankIcon($code)
+    public
+    static function getInstallmentBankIcon($code)
     {
         $icons = [
             'VPBANK' => 'img/bank/vpbank.png', //NH TMCP Việt Nam Thịnh Vượng (VPBANK)
@@ -159,7 +256,8 @@ class PaymentService
         return $icon;
     }
 
-    public static function getInstallmentMethodIcon($code)
+    public
+    static function getInstallmentMethodIcon($code)
     {
         $icons = [
             'VISA' => 'img/bank/visa.png',

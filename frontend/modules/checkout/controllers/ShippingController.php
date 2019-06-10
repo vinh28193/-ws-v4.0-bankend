@@ -104,7 +104,7 @@ class ShippingController extends CheckoutController
             'page' => Payment::PAGE_CHECKOUT,
             'uuid' => $this->filterUuid(),
             'carts' => $keys,
-            'payment_type' => $type,
+            'type' => $type,
         ]);
         $payment->initDefaultMethod();
         $shippingForm = new ShippingForm();
