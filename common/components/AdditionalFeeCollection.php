@@ -31,11 +31,6 @@ class AdditionalFeeCollection extends ArrayCollection
 {
     use StoreAdditionalFeeRegisterTrait;
 
-    protected function getTargetType()
-    {
-
-    }
-
     /**
      * cho phép get dữ liệu từ một nguồn được định nghĩa từ [[ActiceRecore]]
      * @param ActiveRecord $owner
@@ -48,7 +43,7 @@ class AdditionalFeeCollection extends ArrayCollection
         $query = new Query();
         $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.local_amount', 'c.discount_amount', 'c.currency']);
         $query->from(['c' => 'target_additional_fee']);
-        $query->where(['and', ['c.target' => $tableName],['c.target_id' => $ownerId]]);
+        $query->where(['and', ['c.target' => $tableName], ['c.target_id' => $ownerId]]);
         $additionalFees = $query->all($ownerClass::getDb());
         $additionalFees = ArrayHelper::index($additionalFees, null, function ($element) {
             return $element['type'];

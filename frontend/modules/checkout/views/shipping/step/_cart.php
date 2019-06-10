@@ -90,15 +90,15 @@ $storeManager = Yii::$app->storeManager;
             <div class="left"><?= Yii::t('frontend', 'International Shipping') ?>:</div>
             <div class="right">
                 <span>
-                    <?= $storeManager->showMoney($payment->getAdditionalFees()->getTotalAdditionFees('intl_shipping_fee')[1]); ?>
+                    <?php echo $storeManager->showMoney($payment->getPaymentAdditionalFees(false)['international_shipping_fee']['amount']); ?>
                 </span>
             </div>
         </li>
         <li>
-            <div class="left"><?= Yii::t('frontend', 'Hold purchase fee') ?>:</div>
+            <div class="left"><?= Yii::t('frontend', 'Purchase fee') ?>:</div>
             <div class="right">
                 <span>
-                    <?= $storeManager->showMoney($payment->getAdditionalFees()->getTotalAdditionFees('weshop_fee')[1]); ?>
+                    <?php echo $storeManager->showMoney($payment->getPaymentAdditionalFees(false)['purchase_fee']['amount']); ?>
                 </span>
             </div>
         </li>
