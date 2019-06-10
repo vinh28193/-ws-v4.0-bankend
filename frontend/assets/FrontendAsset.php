@@ -15,7 +15,8 @@ class FrontendAsset extends AssetBundle
         'css/style.css',
         'css/variables.css',
         //'css/slick.css',
-        'css/all.css'
+        'css/all.css',
+        'css/styke-new.css',
 //        'css/mobile_style.css'
     ];
     public $js = [

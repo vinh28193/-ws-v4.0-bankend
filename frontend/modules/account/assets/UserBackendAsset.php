@@ -15,7 +15,7 @@ class UserBackendAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/style.css',
-        'css/style.css',
+        'css/styke-new.css',
         'css/slick.css',
         'owlcarousel/owl.carousel.min.css',
         'owlcarousel/owl.theme.default.min.css',

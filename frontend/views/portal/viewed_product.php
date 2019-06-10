@@ -28,7 +28,7 @@ if(!empty($items)){
                 <a href="<?= \common\helpers\WeshopHelper::generateUrlDetail($product->type, $product->item_name, $product->item_id) ?>"
                    class="item">
                     <div class="thumb">
-                        <img style="max-width: 160px" src="<?= count($product->primary_images) ? $product->primary_images[0]->thumb : '/img/no_image.png' ?>"
+                        <img style="max-width: 160px" src="<?= count($product->primary_images) ? $product->primary_images[0]->main : '/img/no_image.png' ?>"
                              alt="" title=""/>
                     </div>
                     <div class="info">
