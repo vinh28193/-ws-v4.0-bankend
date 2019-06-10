@@ -12,10 +12,10 @@
     };
 
     var defaults = {
-        listUrl: undefined,
         updateUrl: undefined,
         removeUrl: undefined,
         paymentUrl: undefined,
+        uuid: ws.getFingerprint(),
     };
 
 
@@ -32,9 +32,9 @@
                     settings: settings
                 });
 
-                methods.getItems.apply($cart);
-
-
+                if (!settings.uuid) {
+                    methods.checkUuid.apply($cart);
+                }
                 ws.initEventHandler($cart, 'update', 'click.wsCart', 'button.button-quantity-up,button.button-quantity-down', function (event) {
                     event.preventDefault();
                     var $item = $(this);
@@ -134,28 +134,22 @@
 
             });
         },
-        getItems: function () {
+        checkUuid: function () {
             var $cart = $(this);
-            var container = '#' + $cart.attr('id');
-            var data = $cart.data('wsCart');
-
             var deferredArrays = deferredArray();
-            ws.loading(true);
             $.when.apply(this, deferredArrays).always(function () {
-                var $pjaxOptions = {
-                    url: data.settings.listUrl,
-                    container: container,
-                    push: false,
-                };
-                $.pjax($pjaxOptions);
-                ws.loading(false);
+                ws.ajax('/checkout/cart/check-uuid', function (res) {
+                    if (res) {
+                        methods.refresh.apply($cart);
+                    }
+                }, true);
             });
 
         },
         refresh: function () {
-
-        },
-        add: function ($type) {
+            var $cart = $(this);
+            var container = '#' + $cart.attr('id');
+            $.pjax.reload({container: container});
         },
         watch: function ($param) {
             var $cart = $(this);

@@ -20,12 +20,32 @@ var ws = ws || (function ($) {
             var $client = new ClientJS();
             pub.setFingerprint($client.getFingerprint());
             pub.reloadCartBadge();
-            $(document).on("pjax:beforeSend", function (evt, xhr, options) {
-                // Ignore links with data-target attribute
-                xhr.setRequestHeader('X-CSRF-Token', yii.getCsrfToken());
-                xhr.setRequestHeader('X-Fingerprint-Token', ws.getFingerprint());
-                xhr.setRequestHeader('X-Fingerprint-Url', options.url);
-                console.log(evt)
+            $.ajaxPrefilter('html', function (options, originalOptions, jqXHR) {
+                var orgBeforeSendHandler = options.beforeSend;
+                options.beforeSend = function (xhr, settings) {
+                    xhr.setRequestHeader('X-CSRF-Token', yii.getCsrfToken());
+                    xhr.setRequestHeader('X-Fingerprint-Token', pub.getFingerprint());
+                    xhr.setRequestHeader('X-Fingerprint-Url', options.url);
+                    if (orgBeforeSendHandler && $.isFunction(orgBeforeSendHandler)) {
+                        orgBeforeSendHandler(xhr, settings);
+                    }
+                };
+
+                var orgErrorHandler = options.error;
+                options.error = function (xhr, textStatus, errorThrown) {
+                    if (!xhr) {
+                        return false;
+                    }
+                    var redirect = (xhr.status >= 301 && xhr.status <= 303);
+                    if (redirect && xhr.getResponseHeader('X-PJAX-REDIRECT-URL') !== '' && xhr.getResponseHeader('X-PJAX-REDIRECT-URL') !== null) {
+                        options.url = xhr.getResponseHeader('X-PJAX-REDIRECT-URL');
+                        options.replace = true;
+                        console.log('Handled redirect to: ' + options.url);
+                        $.pjax(options);
+                    } else {
+                        orgErrorHandler(xhr, textStatus, errorThrown);
+                    }
+                };
             });
         },
         // Todo loading
@@ -114,7 +134,13 @@ var ws = ws || (function ($) {
             $.ajax($options);
         },
         getFingerprint: function () {
-            return $('meta[name=fingerprint-token]').attr('content');
+            var token = $('meta[name=fingerprint-token]').attr('content');
+            if (!token || token === '') {
+                var $client = new ClientJS();
+                token = $client.getFingerprint();
+                pub.setFingerprint(token);
+            }
+            return token;
         },
         setFingerprint: function (value) {
             $('meta[name=fingerprint-token]').attr('content', value);
