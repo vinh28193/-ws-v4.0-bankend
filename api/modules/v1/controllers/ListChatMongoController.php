@@ -52,6 +52,9 @@ class ListChatMongoController extends BaseApiController
         if (isset($get['noteL'])) {
             $chat->where(['LIKE', 'note', $get['noteL']]);
         }
+        if (isset($get['show'])) {
+            $chat->where(['status' => $get['show']]);
+        }
         if (isset($get['contentL'])) {
             $chat->where(['LIKE', 'content', $get['contentL']]);
         }

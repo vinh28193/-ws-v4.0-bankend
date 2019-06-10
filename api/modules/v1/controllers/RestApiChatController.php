@@ -137,11 +137,11 @@ class RestApiChatController extends BaseApiController
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
                 // chat group ws from new to supported
-
                 if($isNew === true &&  $isSupported === true)
                 {
                         Order::updateAll([
-                            'current_status' => Order::STATUS_SUPPORTED
+                            'current_status' => Order::STATUS_SUPPORTED,
+                            'supported' => Yii::$app->getFormatter()->asDatetime('now'),
                         ],['ordercode' => $_post['Order_path']]);
                 }
                 /**
@@ -151,10 +151,10 @@ class RestApiChatController extends BaseApiController
                 // $_post['type_chat'] == 'WS_CUSTOMER'
                 if($isNew === true && $_post['type_chat'] == 'GROUP_WS' )
                 {
-                    $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}, Status Order ". $current_status ." to ".Order::STATUS_SUPPORTED;
-                        Order::updateAll([
-                            'current_status' => Order::STATUS_SUPPORTED
-                        ],['ordercode' => $_post['Order_path']]);
+                    $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']};
+//                        Order::updateAll([
+//                            'current_status' => Order::STATUS_SUPPORTED
+//                        ],['ordercode' => $_post['Order_path']]);
 
                     if (!$model->save())
                      {
