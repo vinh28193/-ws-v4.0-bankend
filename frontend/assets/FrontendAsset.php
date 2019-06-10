@@ -15,6 +15,8 @@ class FrontendAsset extends AssetBundle
         'css/style.css',
         'css/variables.css',
         'css/all.css',
+        'css/slick.css',
+        'css/slick-theme.css',
         'css/style-new.css',
         'css/all.css',
         'fonts/line-awesome/css/line-awesome.min.css',

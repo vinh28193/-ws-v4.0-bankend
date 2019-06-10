@@ -49,14 +49,14 @@ $this->registerJs($js, \yii\web\View::POS_END);
 
 
 ?>
-    <div class="keep-navbar <?= strtolower($portal) == 'amazon-jp' ? 'amazon' : strtolower($portal) ?> other-page">
+<!--    <div class="keep-navbar <?/*= strtolower($portal) == 'amazon-jp' ? 'amazon' : strtolower($portal) */?> other-page">
         <div class="container">
             <?php
-            echo AliasWidget::widget(['type' => $portal]);
+/*            echo AliasWidget::widget(['type' => $portal]);
             echo SearchBoxWidget::widget([])
-            ?>
+            */?>
         </div>
-    </div>
+    </div>-->
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
