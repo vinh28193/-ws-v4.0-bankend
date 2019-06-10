@@ -23,6 +23,7 @@ class FrontendAsset extends AssetBundle
     ];
     public $js = [
         'js/style.js',
+        'js/style-new.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
