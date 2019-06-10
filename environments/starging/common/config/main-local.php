@@ -56,6 +56,7 @@ return [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://128.199.70.160:27017/admin',
         ],
+        /*
         'db_oauth'=>[
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop_oauth',
@@ -66,6 +67,7 @@ return [
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache'
         ],
+        */
         'ga' => [
             'trackingId' => 'UA-140658371-1',
         ],
