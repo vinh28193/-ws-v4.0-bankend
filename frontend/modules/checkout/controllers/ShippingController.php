@@ -31,7 +31,7 @@ class ShippingController extends CheckoutController
 
         // Build the order data programmatically, each product of the order included in the payload
         // First, general and required hit data
-        if (!Yii::$app->user->isGuest){
+        if (!Yii::$app->user->isGuest) {
             $request->setClientId(Yii::$app->user->identity->getId() . 'WS' . Yii::$app->user->identity->email);
             $request->setUserId(Yii::$app->user->identity->getId());
         }
@@ -84,47 +84,6 @@ class ShippingController extends CheckoutController
 
     }
 
-    /**
-     * GA Param Checkout
-     **/
-    public $_uuid;
-    public $setDocumentPath;
-
-    public function actionU()
-    {
-        $post = $this->request->post();
-        if (isset($post['fingerprint']) and isset($post['path'])) {
-            $this->_uuid = $post['fingerprint'];
-            $this->setDocumentPath = $post['path'];
-            Yii::info("fingerprint : " . $this->_uuid);
-            Yii::info("fingerprint : " . $this->setDocumentPath);
-        }
-        if (!Yii::$app->getRequest()->validateCsrfToken() || $this->_uuid === null) {
-            return ['success' => false, 'message' => 'Form Security Alert', 'data' => ['content' => '']];
-        }
-        Yii::info("_uuid : " . $this->_uuid);
-
-        if (!Yii::$app->user->isGuest) {
-            $this->_uuid = Yii::$app->user->identity->getId() . 'WS' . Yii::$app->user->identity->email;
-        } else {
-            $this->_uuid = isset($this->_uuid) ? $this->_uuid : 99999;
-        }
-
-        if ($this->_uuid) {
-            if ((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true)) {
-                // ENV DEV /  TEST
-                Yii::info("ga checkour Order Tracking with Enhanced E-commerce ");
-                $this->gaCheckout();
-            } else if ((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false)) {
-                // ENV PROD
-            }
-        } else {
-            return ['success' => false, 'message' => 'fingerprint null', 'data' => ['content' => '']];
-        }
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return 'Ok ! ' . $this->_uuid . ' pages ' . $this->setDocumentPath;
-    }
-
     public function actions()
     {
         return ArrayHelper::merge(parent::actions(), [
@@ -137,16 +96,13 @@ class ShippingController extends CheckoutController
 
     public function actionIndex($type)
     {
-        $activeStep = 2;
-        $isGuest = Yii::$app->user->isGuest;
-        if ($isGuest) {
-            $activeStep = 1;
-        }
+        $activeStep = 1;
         if (($keys = CartSelection::getSelectedItems($type)) === null) {
             return $this->goBack();
         }
         $payment = new Payment([
             'page' => Payment::PAGE_CHECKOUT,
+            'uuid' => $this->filterUuid(),
             'carts' => $keys,
             'payment_type' => $type,
         ]);

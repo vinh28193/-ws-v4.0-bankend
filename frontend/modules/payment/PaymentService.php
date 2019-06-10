@@ -96,44 +96,15 @@ class PaymentService
         if (empty($items)) {
             return [];
         }
-        $orders = [];
-        foreach ($items as $idx => $order) {
-            $item = [];
-
-            $item['itemType'] = strtolower($order['portal']);
-            $item['shippingWeight'] = self::toNumber($order['total_weight_temporary']);
-            $item['shippingQuantity'] = self::toNumber($order['total_quantity']);
-            $item['totalAmount'] = self::toNumber($order['total_amount_local']);
-            if (count($order['products']) === 0) {
-                continue;
-            }
-            $products = [];
-            foreach ($order['products'] as $pid => $product) {
-                $pItem = [];
-                $pItem['itemType'] = strtolower($product['portal']);
-                $pItem['shippingWeight'] = self::toNumber($product['total_weight_temporary']);
-                $pItem['shippingQuantity'] = self::toNumber($product['quantity_customer']);
-                $pItem['categoryId'] = isset($product['category']['alias']) ? self::toNumber($product['category']['alias']) : null;
-                $pItem['totalAmount'] = self::toNumber($product['total_price_amount_local']);
-                if (count($product['fees']) === 0) {
-                    continue;
-                }
-                $fees = [];
-                foreach ($product['fees'] as $key => $fee) {
-                    $fees[$key] = isset($fee['local_amount']) ? self::toNumber($fee['local_amount']) : 0;
-                }
-                $pItem['additionalFees'] = $fees;
-                $products[$pid] = $pItem;
-            }
-            $item['products'] = $products;
-            $orders[$idx] = $item;
+        $fees = [];
+        foreach ($payment->getAdditionalFees()->keys() as $key) {
+            $fees[$key] = $payment->getAdditionalFees()->getTotalAdditionFees($key)[1];
         }
         return [
             'couponCode' => $payment->coupon_code,
             'paymentService' => implode('_', [$payment->payment_method, $payment->payment_bank_code]),
-            'totalAmount' => $payment->total_amount,
-            'customerId' => Yii::$app->getUser()->getId(),
-            'orders' => $orders
+            'totalAmount' => $payment->getTotalAmount(),
+            'additionalFees' => $fees
         ];
     }
 
@@ -184,7 +155,7 @@ class PaymentService
             'VCB' => 'img/bank/vietcombank.png', //NH TMCP Ngoại Thương Việt Nam (VCB)
             'MB' => 'img/bank/mb.png' //NH TMCP Quân Đội (MB)
         ];
-        $icon = isset($icons[$code]) ? Url::to($icons[$code], true) : ArrayHelper::getValue(Yii::$app->params,'unknownBankCode','#');
+        $icon = isset($icons[$code]) ? Url::to($icons[$code], true) : ArrayHelper::getValue(Yii::$app->params, 'unknownBankCode', '#');
         return $icon;
     }
 
@@ -195,7 +166,7 @@ class PaymentService
             'MASTERCARD' => 'img/bank/master.png',
             'JCB' => 'img/bank/jcb.png',
         ];
-        $icon = isset($icons[$code]) ? Url::to($icons[$code], true) : ArrayHelper::getValue(Yii::$app->params,'unknownMethodCode','#');
+        $icon = isset($icons[$code]) ? Url::to($icons[$code], true) : ArrayHelper::getValue(Yii::$app->params, 'unknownMethodCode', '#');
         return $icon;
     }
 

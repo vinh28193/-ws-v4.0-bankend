@@ -183,6 +183,7 @@ class PaymentController extends BasePaymentController
         if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction) {
             $payment = new Payment([
                 'carts' => StringHelper::explode($paymentTransaction->carts, ','),
+                'uuid' => $this->filterUuid(),
                 'transaction_code' => $paymentTransaction->transaction_code,
                 'customer_name' => $paymentTransaction->transaction_customer_name,
                 'customer_email' => $paymentTransaction->transaction_customer_email,

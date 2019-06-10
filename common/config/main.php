@@ -16,12 +16,20 @@ return [
             'noCacheParam' => 'noCache',
             'noCacheValidateKey' => 'yes'
         ],
-        */
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
                 'hostname' => 'localhost',
                 'port' => 6379,
+                'database' => 0,
+            ]
+        ],
+        */
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' =>  '128.199.70.160',
+                'port' => 6479,
                 'database' => 0,
             ]
         ],

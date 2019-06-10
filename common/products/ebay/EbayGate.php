@@ -30,10 +30,11 @@ class EbayGate extends BaseGate
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
-        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
+        // ToDo Caches : Get Thanh cong moi Luu cache @Phuchc 8/6/2019
+       // if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
             list($success, $response) = $this->searchRequest($request->params());
-            $this->cache->set($request->getCacheKey(), $response, $success === true ? self::MAX_CACHE_DURATION : 0);
-        }
+          //  $this->cache->set($request->getCacheKey(), $response, $success === true ? self::MAX_CACHE_DURATION : 0);
+       // }
         return [true, (new EbaySearchResponse($this))->parser($response)];
     }
 
@@ -75,10 +76,11 @@ class EbayGate extends BaseGate
     {
         $request = new EbayDetailRequest();
         $request->keyword = $condition;
-        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
+        // ToDo Caches : Get Thanh cong moi Luu cache @Phuchc 8/6/2019
+        //if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
             list($ok, $response) = $this->lookupRequest($request->params());
-            $this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
-        }
+            //$this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
+       // }
         return [true, (new EbayDetailResponse($this))->parser($response)];
 
     }

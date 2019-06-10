@@ -14,19 +14,17 @@ class FrontendAsset extends AssetBundle
     public $css = [
         'css/style.css',
         'css/variables.css',
-        //'css/slick.css',
         'css/all.css',
         'css/styke-new.css',
+        'css/all.css'
 //        'css/mobile_style.css'
     ];
     public $js = [
         'js/style.js',
-        //'js/slick.min.js',
-        'js/client.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap4\BootstrapAsset',
+        'yii\bootstrap4\BootstrapPluginAsset',
         'common\assets\JQueryEzPlus',
         //'common\assets\FontawesomeAsset',
         'common\assets\OwlCarousel',

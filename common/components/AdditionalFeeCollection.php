@@ -31,6 +31,11 @@ class AdditionalFeeCollection extends ArrayCollection
 {
     use StoreAdditionalFeeRegisterTrait;
 
+    protected function getTargetType()
+    {
+
+    }
+
     /**
      * cho phép get dữ liệu từ một nguồn được định nghĩa từ [[ActiceRecore]]
      * @param ActiveRecord $owner
@@ -42,8 +47,8 @@ class AdditionalFeeCollection extends ArrayCollection
         $ownerId = $owner->getPrimaryKey(false);
         $query = new Query();
         $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.local_amount', 'c.discount_amount', 'c.currency']);
-        $query->from(['c' => 'product_fee']);
-        $query->where(['and', ['c.' . 'product_id' => $ownerId]]);
+        $query->from(['c' => 'target_additional_fee']);
+        $query->where(['and', ['c.target' => $tableName],['c.target_id' => $ownerId]]);
         $additionalFees = $query->all($ownerClass::getDb());
         $additionalFees = ArrayHelper::index($additionalFees, null, function ($element) {
             return $element['type'];
@@ -166,8 +171,9 @@ class AdditionalFeeCollection extends ArrayCollection
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $additional->getExchangeRate());
         }
         return [
-            'type' => $config->name,
-            'name' => $config->label,
+            'name' => $config->name,
+            'label' => $config->label,
+            'type' => $config->type,
             'amount' => $amount,
             'local_amount' => $amountLocal,
             'discount_amount' => $discountAmount,

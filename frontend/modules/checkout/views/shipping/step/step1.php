@@ -1,4 +1,20 @@
 <?php
+
+/* @var yii\web\View $this */
+
+$css =<<<CSS
+    .btn-continue {
+        height: 36px;
+        border-radius: 2px;
+        background-image: linear-gradient(3deg, #2b96b6, #2b96b6);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 500;
+        width: 100%;
+        margin-top: 0.25rem;
+    }
+CSS;
+$this->registerCss($css);
 ?>
 
 <div class="container checkout-content">
@@ -19,7 +35,7 @@
                 <div class="form-group form-check">
                     <input type="radio" class="form-check-input" id="member" value="member" name="check-member" checked>
                     <label class="form-check-label"
-                           for="member"><?= Yii::t('frontend', 'Already a Weshop member'); ?></label>
+                           for="member"><?= Yii::t('frontend', 'Already a weshop member'); ?></label>
                 </div>
                 <div class="form-group form-check">
                     <input type="radio" class="form-check-input" id="new-member" value="new-member" name="check-member">
@@ -60,6 +76,7 @@
                 <a href="#" class="forgot"><?=Yii::t('frontend','Forgot password?');?></a>
             </div>
             <button type="button" id="loginToCheckout" class="btn btn-login"><?=Yii::t('frontend','Login to purchase');?></button>
+            <button type="button" id="continueAsGuest" class="btn btn-continue"><?=Yii::t('frontend','Continue as guest');?></button>
         </div>
         <div class="other-login">
             <div class="text-center"><span class="or"><?=Yii::t('frontend','Or sign in through');?></span></div>
