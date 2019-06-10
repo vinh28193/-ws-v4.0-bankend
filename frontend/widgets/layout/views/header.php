@@ -26,12 +26,16 @@
             <i class="la la-shopping-cart"></i>
             <span class="label-cart">Giỏ hàng (10)</span>
         </div>
-        <div class="account-header-box">
-            <i class="la la-user"></i>
-            <span>
+        <div class="account-header-box dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <i class="la la-user"></i>
                 <a href="javascript: void(0);" class="option-auth">Đăng ký / đăng nhập</a><br>
                 <a href="javascript: void(0);" class="account-title">Tài khoản <i class="la la-caret-down"></i></a>
-            </span>
+            </a>
+            <div class="dropdown-menu account-header-menu">
+
+            </div>
+
         </div>
     </div>
     <div class="container menu-cate">
