@@ -36,7 +36,7 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
 
 <div class="wrapper">
     <?= \frontend\widgets\layout\HeaderWidget::widget() ?>
-    <?= $content; ?>
+    <?//= $content; ?>
     <?= \frontend\widgets\layout\FooterWidget::widget() ?>
     <div class="modal otp-modal" id="otp-confirm" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">

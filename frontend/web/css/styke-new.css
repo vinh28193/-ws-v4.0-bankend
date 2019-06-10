@@ -1,11 +1,111 @@
 .navbar-ws{
     /* Style for "Rectangle" */
-    width: 1503px;
-    height: 300px;
+    /*width: 1503px;*/
+    /*height: 300px;*/
     background-color: #141c2e;
+    margin-top: 0px;
+}
+.navbar-ws .logo{
+    width: auto;
+    padding-right: 15px;
 }
 .logo-pc{
-    /* Style for "weshop-01" */
-    width: 180px;
+     /* Style for "weshop-01" */
+     width: 180px;
+     height: 50px;
+ }
+body > div.wrapper > div.navbar-ws > div.container{
+    padding-top: 11px;
+    margin: auto;
+}
+.search-box{
+    /*float: left;*/
+    padding-right: 15px;
     height: 50px;
+    text-align: right;
+}
+#searchBoxButton{
+    border-radius: 0px 5px 5px 0px;
+    width: 50px;
+    height: 50px;
+    background-color: #e67424;
+}
+#searchBoxInput{
+    height: 50px;
+    border-radius: 5px 0px 0px 5px;
+    background-color: #ffffff;
+    /* Style for "Nhập tên s" */
+    color: #6d7278;
+    font-family: Helvetica;
+    font-size: 16px;
+}
+body > div.wrapper > div.navbar-ws > div > div.search-box{
+    width: 652px;
+    border-radius: 5px;
+}
+#ico-search{
+    transform: scaleX(-1);
+    color: #fff;
+    font-size: 30px;
+}
+.cart-header-box{
+    color: #e67424;
+    height: 50px;
+    line-height: 4em;
+    padding-right: 15px;
+}
+.cart-header-box i{
+    font-size: 30px;
+}
+.cart-header-box span.label-cart{
+    width: 98px;
+    height: 18px;
+    color: #e67424;
+    font-family: Helvetica;
+    font-size: 16px;
+}
+.option-auth{
+    width: 84px;
+    height: 37px;
+    color: #2b96b6;
+    font-family: Helvetica;
+    font-size: 9px;
+    line-height: 20px;
+    font-size: 10px;
+}
+.account-title{
+    color: #2b96b6;
+    font-size: 16px;
+}
+.account-header-box > i{
+    padding-top: 10px;
+    width: 30px;
+    height: 36px;
+    color: #2b96b6;
+    font-family: "LineAwesome";
+    font-size: 30px;
+    float: left;
+}
+ul.bars-nav{
+    margin-top: 15px;
+}
+ul.bars-nav li{
+    float: left;
+    padding-right: 20px;
+    color: #2b96b6;
+    font-family: Helvetica;
+    font-size: 16px;
+}
+ul.bars-nav li a{
+    color: #2b96b6;
+}
+ul.bars-nav li:first-child{
+    padding-right: 30px;
+}
+ul.bars-nav li:first-child i:first-child{
+    font-size: 30px;
+    line-height: 0em;
+}
+ul.bars-nav li:last-child{
+    padding-right: 0px;
 }

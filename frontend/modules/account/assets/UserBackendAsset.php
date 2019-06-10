@@ -19,6 +19,8 @@ class UserBackendAsset extends AssetBundle
         'css/slick.css',
         'owlcarousel/owl.carousel.min.css',
         'owlcarousel/owl.theme.default.min.css',
+        'fonts/line-awesome/css/line-awesome.min.css',
+        'fonts/line-awesome/css/line-awesome-font-awesome.min.css',
     ];
     public $js = [
         'js/ws.js',
