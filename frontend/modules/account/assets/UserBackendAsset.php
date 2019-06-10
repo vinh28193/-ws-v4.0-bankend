@@ -25,6 +25,7 @@ class UserBackendAsset extends AssetBundle
     public $js = [
         'js/ws.js',
         'js/style.js',
+        'js/style-new.js',
         'js/account/user.js',
         'owlcarousel/owl.carousel.min.js',
         'js/account/wallet.js',

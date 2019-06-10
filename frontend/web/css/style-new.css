@@ -2,6 +2,7 @@
     /* Style for "Rectangle" */
     background-color: #141c2e;
     margin-top: 0px;
+    padding-bottom: 0px;
 }
 .navbar-ws .logo{
     width: auto;
@@ -79,29 +80,61 @@ body > div.wrapper > div.navbar-ws > div > div.search-box{
     font-size: 30px;
     float: left;
 }
-
-ul.bars-nav{
-    margin-top: 15px;
-}
-ul.bars-nav li{
+ul.bars-nav > li{
+    padding-bottom: 10px;
+    padding-top: 15px;
     float: left;
     padding-right: 20px;
     color: #2b96b6;
     font-family: Helvetica;
     font-size: 16px;
 }
-ul.bars-nav li a{
+ul.bars-nav > li a{
     color: #2b96b6;
+    padding-left: 10px;
 }
-ul.bars-nav li:first-child{
+ul.bars-nav > li:first-child{
+    border-radius: 5px 5px 0px 0px;
     padding-right: 30px;
 }
-ul.bars-nav li:first-child i:first-child{
+ul.bars-nav > li:first-child i:first-child{
     font-size: 30px;
     line-height: 0em;
 }
-ul.bars-nav li:last-child{
+ul.bars-nav > li:last-child{
     padding-right: 0px;
+}
+.category_list{
+    /* Style for "Combined S" */
+    width: 346px;
+    height: 481px;
+    border: none;
+    border-radius: 0px 0px 5px 5px;
+    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);*/
+    background-color: #ffffff;
+}
+.category_list .logo-portal img{
+    /* Style for "Bitmap" */
+    width: 113px;
+    height: 22px;
+}
+.category_list .logo-portal{
+    float: left;
+}
+#menu1 {
+    top: 12px!important;
+}
+#menu1 li a span img{
+    height: 30px;
+    margin: 15px 0px 0px 15px;
+}
+
+#menu1 li a span.ebay i{
+    font-size: 20px;
+}
+#menu1 li a span.amz i{
+    font-size: 20px;
+    color: #e87424;
 }
 @media(max-width:1090px) {
     body > div.wrapper > div.navbar-ws > div > div.search-box{
@@ -135,20 +168,17 @@ ul.bars-nav li:last-child{
     .cart-header-box i{
         font-size: 25px;
     }
-    ul.bars-nav li:first-child i:first-child{
+    ul.bars-nav > li:first-child i:first-child{
         font-size: 25px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 40px;
     }
-    ul.bars-nav{
-        margin-top: 0px;
-    }
-    .account-title,ul.bars-nav li,#searchBoxInput{
+    .account-title,ul.bars-nav > li,#searchBoxInput{
         font-size: 14px;
     }
-    ul.bars-nav li:first-child {
+    ul.bars-nav > li:first-child {
         padding-right: 25px;
     }
 }
@@ -184,23 +214,20 @@ ul.bars-nav li:last-child{
     .cart-header-box i{
         font-size: 20px;
     }
-    ul.bars-nav li:first-child i:first-child{
+    ul.bars-nav > li:first-child i:first-child{
         font-size: 20px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 40px;
     }
-    ul.bars-nav{
-        margin-top: 0px;
-    }
-    .account-title,ul.bars-nav li,#searchBoxInput{
+    .account-title,ul.bars-nav > li,#searchBoxInput{
         font-size: 12px;
     }
-    ul.bars-nav li:first-child {
+    ul.bars-nav > li:first-child {
         padding-right: 20px;
     }
-    ul.bars-nav li {
+    ul.bars-nav > li {
         padding-right: 12px;
     }
 }
@@ -236,23 +263,20 @@ ul.bars-nav li:last-child{
     .cart-header-box i{
         font-size: 15px;
     }
-    ul.bars-nav li:first-child i:first-child{
+    ul.bars-nav > li:first-child i:first-child{
         font-size: 15px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 30px;
     }
-    ul.bars-nav{
-        margin-top: 0px;
-    }
-    .account-title,ul.bars-nav li,#searchBoxInput{
+    .account-title,ul.bars-nav > li,#searchBoxInput{
         font-size: 10px;
     }
-    ul.bars-nav li:first-child {
+    ul.bars-nav > li:first-child {
         padding-right: 15px;
     }
-    ul.bars-nav li {
+    ul.bars-nav > li {
         padding-right: 10px;
     }
     .cart-header-box{

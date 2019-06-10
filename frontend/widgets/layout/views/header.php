@@ -38,12 +38,28 @@
 
         </div>
     </div>
-    <div class="container">
+    <div class="container menu-cate">
         <ul class="bars-nav">
-            <li>
-                <i class="la la-bars"></i>
-                <a href="javascript: void(0);">Danh mục sản phẩm</a>
-                <i class="la la-caret-down"></i>
+            <li class="dropdown">
+                <a id="drop1" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                    <i class="la la-bars"></i>
+                    Danh mục sản phẩm
+                    <i class="la la-caret-down"></i>
+                </a>
+                <ul id="menu1" class="dropdown-menu category_list" role="menu" aria-labelledby="drop1" style="display: none;">
+                    <li role="presentation">
+                        <a href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                            <span style="display: block; float: left;"><img src="/img/logo_amazon_us.png"></span>
+                            <span style="display: block; text-align: right" class="amz"><i class="la la-caret-up"></i></span>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                            <span style="display: block; float: left;"><img src="/img/logo_ebay.png"></span>
+                            <span style="display: block; text-align: right" class="ebay"><i class="la la-caret-down"></i></span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="#">Daily deal</a>
