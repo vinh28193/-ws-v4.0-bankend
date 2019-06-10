@@ -16,6 +16,7 @@ class FrontendAsset extends AssetBundle
         'css/variables.css',
         'css/all.css',
         'css/style-new.css',
+        'css/style-new1.css',
         'css/all.css',
         'fonts/line-awesome/css/line-awesome.min.css',
         'fonts/line-awesome/css/line-awesome-font-awesome.min.css',

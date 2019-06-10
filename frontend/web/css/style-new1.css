@@ -1,0 +1,35 @@
+.bars-nav li:active {
+    background-color: white;
+}
+.style-ull {
+    margin-left: 1em;
+}
+.style-ull li {
+    line-height: 30px;
+    padding-right: 10px;
+    position: relative;
+}
+.style-ull li a {
+    color: rgba(0, 0, 0, 0.85) !important;
+}
+.style-i {
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    display: -webkit-inline-box;
+    text-align: -webkit-center;
+    margin-right: 5px;
+}
+.style-i img {
+    text-align: center;
+}
+.sub-menu-2 {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+}
+.style-ull li:hover .sub-menu-2 {
+    display: block;
+    margin-top: 0;
+    margin-left: 10em;
+}
