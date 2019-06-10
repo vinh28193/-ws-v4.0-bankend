@@ -742,11 +742,13 @@ return [
             'PUT,PATCH {id}' => 'update',
             'DELETE {id}' => 'delete',
             'GET,HEAD {id}' => 'view',
-            'POST' => 'create,update-arrears',
+            'POST' => 'create,update-arrears,confirm-change-price',
             'OPTIONS {id}' => 'options',
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
+            'POST confirm-change-price'=> 'confirm-change-price',
+            'OPTIONS confirm-change-price'=> 'options',
             'POST update-arrears'=> 'update-arrears',
             'OPTIONS update-arrears'=> 'options',
         ]

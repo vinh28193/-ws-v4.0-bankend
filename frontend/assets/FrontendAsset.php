@@ -14,7 +14,11 @@ class FrontendAsset extends AssetBundle
     public $css = [
         'css/style.css',
         'css/variables.css',
-        'css/all.css'
+        'css/all.css',
+        'css/styke-new.css',
+        'css/all.css',
+        'fonts/line-awesome/css/line-awesome.min.css',
+        'fonts/line-awesome/css/line-awesome-font-awesome.min.css',
 //        'css/mobile_style.css'
     ];
     public $js = [
