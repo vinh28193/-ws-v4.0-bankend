@@ -86,7 +86,7 @@ body div.wrapper div.navbar-ws div div.search-box{
     font-size: 30px;
     float: left;
 }
-ul.bars-nav li{
+.bars-nav123 li{
     padding-bottom: 10px;
     padding-top: 15px;
     float: left;
@@ -95,15 +95,15 @@ ul.bars-nav li{
     font-family: Helvetica;
     font-size: 16px;
 }
-ul.bars-nav li a{
+.bars-nav123 li a{
     color: #2b96b6;
     padding-left: 10px;
 }
-ul.bars-nav li:first-child{
+.bars-nav123 li:first-child{
     border-radius: 5px 5px 0px 0px;
     padding-right: 30px;
 }
-ul.bars-nav li:first-child i:first-child{
+.bars-nav123 li:first-child i:first-child{
     font-size: 30px;
     line-height: 0em;
 }

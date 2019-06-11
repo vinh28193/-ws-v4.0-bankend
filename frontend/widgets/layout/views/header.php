@@ -121,7 +121,7 @@ $this->registerJs($js);
         </div>
     </div>
     <div class="container menu-cate">
-        <ul class="bars-nav">
+        <ul class="bars-nav bars-nav123">
             <li class="dropdown active mr-1">
                 <a id="drop1" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
                    aria-expanded="false">
@@ -129,7 +129,7 @@ $this->registerJs($js);
                     Danh mục sản phẩm
                     <i class="la la-caret-down"></i>
                 </a>
-                <ul id="menu1" class="dropdown-menu category_list" role="menu" aria-labelledby="drop1"
+                <ul id="menu1" class="dropdown-menu category_list style-u" role="menu" aria-labelledby="drop1"
                     style="display: none; border-right: 1px solid gray ">
                     <li role="presentation">
                         <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">
