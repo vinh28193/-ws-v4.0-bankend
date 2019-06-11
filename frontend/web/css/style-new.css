@@ -130,6 +130,7 @@ ul.bars-nav > li:last-child{
 }
 #menu1 {
     top: 12px!important;
+    transform: translate3d(0px, 35px,0px) !important;
 }
 #menu1 li a span img{
     height: 23px;
