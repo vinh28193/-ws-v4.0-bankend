@@ -49,10 +49,10 @@ $this->registerJs($js);
             <a class="bg-white" id="dropAcount" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
                aria-expanded="false">
                 <span class="row">
-                    <span class="col-md-3 m-0 pr-0 pt-1 float-right">
+                    <span class="col-md-3 m-0 pr-0 float-right">
                         <i class="la la-user"></i>
                     </span>
-                    <span class="col-md-9 m-0">
+                    <span class="col-md-9 m-0  pl-0 text-center">
                         <span href="javascript: void(0);" class="option-auth">Đăng ký / đăng nhập</span><br>
                         <span class="account-title">Tài khoản</span>
                     </span>
@@ -121,7 +121,7 @@ $this->registerJs($js);
         </div>
     </div>
     <div class="container menu-cate">
-        <ul class="bars-nav">
+        <ul class="bars-nav bars-nav123">
             <li class="dropdown active mr-1">
                 <a id="drop1" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
                    aria-expanded="false">
@@ -129,7 +129,7 @@ $this->registerJs($js);
                     Danh mục sản phẩm
                     <i class="la la-caret-down"></i>
                 </a>
-                <ul id="menu1" class="dropdown-menu category_list" role="menu" aria-labelledby="drop1"
+                <ul id="menu1" class="dropdown-menu category_list style-u" role="menu" aria-labelledby="drop1"
                     style="display: none; border-right: 1px solid gray ">
                     <li role="presentation">
                         <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">

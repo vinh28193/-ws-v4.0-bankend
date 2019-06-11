@@ -31,7 +31,7 @@
     display: none;
     position: absolute;
     width: 892px;
-    height: 530px;
+    min-height: 530px;
     background-color: #ffffff;
 }
 .style-ull li:hover .sub-menu-2 {
@@ -92,4 +92,12 @@ ul.bars-nav > li ul li a{
     transform: scaleY(-1);
     display:none;
 
+}
+.style-u li {
+    float: none;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+.style-u li:first-child {
+    padding-right: 10px;
 }
