@@ -138,13 +138,12 @@ class CartManager extends Component
             }
             $item = $this->filterItem($this->normalKeyFilter($key), $type, $uuid);
             if (!empty($item)) {
-                return [true, Yii::t('common', 'Add cart success')];
+                return [true, Yii::t('common', 'This item already added in to {type} cart', ['type' => $type])];
             } else {
                 $filter = $key;
                 unset($filter['products']);
                 $parents = $this->filterItem($this->normalKeyFilter($filter), $type, $uuid);
                 if (count($parents) > 0) {
-
                     foreach ($parents as $parent) {
                         $parentProducts = $parent['key']['products'];
                         if (count($parentProducts) < 3) {
@@ -237,6 +236,7 @@ class CartManager extends Component
             }
             if (empty($products)) {
                 $success = $this->getStorage()->removeItem($id);
+                $success = $success === false ? false : true;
                 return [$success, $success ? Yii::t('common', 'Item has been deleted') : 'Item can not deleted'];
             }
             $activeKey['products'] = $products;
@@ -344,19 +344,6 @@ class CartManager extends Component
     public function filterShoppingCarts($params)
     {
         return $this->getStorage()->filterShoppingCarts($params);
-    }
-
-    /**
-     * @param bool $force
-     * @return int|string|null
-     * @throws \Throwable
-     */
-    public function getIsSafe($force = false)
-    {
-        if (($user = $this->getUser()) !== null && $force) {
-            return $user->ui;
-        }
-        return null;
     }
 
     /**

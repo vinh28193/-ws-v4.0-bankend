@@ -27,6 +27,12 @@ ws.payment = (function ($) {
         payment_provider: undefined,
         payment_provider_name: undefined,
         payment_token: undefined,
+        bank_account: undefined,
+        bank_name: undefined,
+        issue_month: undefined,
+        issue_year: undefined,
+        expired_month: undefined,
+        expired_year: undefined,
         installment_bank: undefined,
         installment_method: undefined,
         installment_month: undefined,
@@ -42,26 +48,7 @@ ws.payment = (function ($) {
         payment: {},
         options: {},
         methods: [],
-        shipping: {
-            buyer_email: '',
-            buyer_phone: '',
-            buyer_name: '',
-            buyer_province_id: '',
-            buyer_district_id: '',
-            buyer_address: '',
-            receiver_email: '',
-            receiver_phone: '',
-            receiver_name: '',
-            receiver_province_id: '',
-            receiver_district_id: '',
-            receiver_address: '',
-            other_receiver: 0,
-            note_by_customer: '',
-            save_my_address: '',
-            enable_buyer: '',
-            receiver_address_id: undefined,
-
-        },
+        shipping: {},
         installmentParam: {
             originAmount: 0,
             banks: [],
@@ -103,19 +90,6 @@ ws.payment = (function ($) {
                     pub.checkPromotion();
                 }
             });
-            $('#other-receiver').click(function () {
-                if (!pub.shipping.other_receiver) {
-                    pub.shipping.other_receiver = 1;
-                    $('#other-receiver i').addClass('text-info');
-                    $('#other-receiver svg').addClass('text-info');
-                    $('#receiver-form').css('display', 'block');
-                } else {
-                    pub.shipping.other_receiver = 0;
-                    $('#other-receiver i').removeClass('text-info');
-                    $('#other-receiver svg').removeClass('text-info');
-                    $('#receiver-form').css('display', 'none');
-                }
-            });
             $('.checkout-step li').click(function () {
                 var step = $(this)[0].firstElementChild.innerHTML;
                 if ($('#step_checkout_' + step).length === 1) {
@@ -142,6 +116,7 @@ ws.payment = (function ($) {
                     window.scrollTo(0, 0);
                 }
             });
+
             $('input[name=check-member]').click(function () {
                 var value = $(this).val();
                 if (value === 'new-member') {
@@ -149,10 +124,6 @@ ws.payment = (function ($) {
                 } else {
                     $('div[data-merge=signup-form]').css('display', 'none');
                 }
-            });
-            $('input').change(function () {
-                var name = $(this).attr('name');
-                $('#' + name + '-error').html('');
             });
 
             $('#continueAsGuest').on('click', function (e) {
@@ -219,27 +190,35 @@ ws.payment = (function ($) {
         get: function (name, defaultValue) {
             return pub.payment[name] || defaultValue;
         },
-        selectMethod: function (providerId, methodId, bankCode) {
+        selectMethod: function (providerId, methodId, bankCode, checkRequire = false) {
             console.log('selected providerId:' + providerId + ' methodId:' + methodId + ' bankCode:' + bankCode);
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
             pub.payment.payment_bank_code = bankCode;
-            if (providerId === 42 && providerId === 46 && methodId === 25) {
-                bankCode = 'VCB';
-                pub.methodChange(true);
-            } else if (providerId === 42 || (providerId === 43 && methodId === 44)) {
-                pub.getWalletInfo(this);
+            if (bankCode == 'ATM_ONLINE') {
+                pub.methodChange(false);
             }
-            pub.payment.payment_provider = providerId;
-            pub.payment.payment_method = methodId;
-            pub.payment.payment_bank_code = bankCode;
+            if (checkRequire === true) {
+                pub.checkRequireField();
+            }
             $.each($('li[rel=s_bankCode]'), function () {
                 $(this).find('span').removeClass('active');
             });
-            if ($('#bank_code_' + bankCode + '_' + methodId).length > 0) {
-                $('#bank_code_' + bankCode + '_' + methodId).find('span').addClass('active');
+            var activeMethod = $('#bank_code_' + bankCode + '_' + methodId);
+            if (activeMethod.length > 0) {
+                activeMethod.find('span').addClass('active');
             }
             pub.checkPromotion();
+        },
+        checkRequireField: function () {
+            ws.ajax('/payment/' + pub.payment.payment_provider + '/check-field', {
+                dataType: 'json',
+                type: 'post',
+                data: pub.payment,
+                success: function (response) {
+                    console.log(response);
+                }
+            });
         },
         registerMethods: function ($methods) {
             pub.methods = $methods;
@@ -460,17 +439,12 @@ ws.payment = (function ($) {
 
         },
         process: function () {
-            var typePay = $('input[name=type_pay]').val();
-            if (typePay && typePay.toString().toLowerCase() === 'topup') {
-                ws.payment.topUp();
-            } else {
-                var $termAgree = $('input#termCheckout').is(':checked');
-                if (!$termAgree) {
-                    ws.notifyError('Bạn phải đồng ý với điều khoản weshop');
-                    return;
-                }
-                processPaymment();
+            var $termAgree = $('input#termCheckout').is(':checked');
+            if (!$termAgree) {
+                ws.notifyError('Bạn phải đồng ý với điều khoản weshop');
+                return;
             }
+            processPaymment();
         },
         topUp: function () {
             pub.payment.total_order_amount = $('input[name=amount_topup]').val();
@@ -512,62 +486,69 @@ ws.payment = (function ($) {
             processPaymment();
         },
         filterShippingAddress: function () {
-            var $form = $('form.payment-form');
-            if (!$form.length > 0) {
+            var form = $('form.payment-form');
+            if (!form.length > 0) {
+                return false;
+            }
+            // return false if form still have some validation errors
+            if (form.find('.has-error').length) {
                 return false;
             }
             var values = {};
-            var formDataArray = $form.serializeArray();
-            formDataArray.map(function (x) {
-                if ('buyerPhone' === x.name || 'receiverPhone' === x.name) {
-                    var val = $.trim(x.value);
-                    values[x.name] = val.indexOf("0") === 0 ? val : '0' + val;
-                    values[x.name] = val.replace('+84', '0');
-                } else {
-                    values[x.name] = $.trim(x.value);
-                }
-            });
+            var formDataArray = form.serializeArray();
+            // console.log(formDataArray);
+            // formDataArray.map(function (x) {
+            //     if ('buyerPhone' === x.name || 'receiverPhone' === x.name) {
+            //         var val = $.trim(x.value);
+            //         values[x.name] = val.indexOf("0") === 0 ? val : '0' + val;
+            //         values[x.name] = val.replace('+84', '0');
+            //     } else {
+            //         values[x.name] = $.trim(x.value);
+            //     }
+            // });
             pub.shipping = formDataArray;
             return formDataArray;
         },
     };
     var processPaymment = function () {
-        if (!pub.getInfoFormShipping()) {
+        if (!pub.filterShippingAddress()) {
             return;
         }
-        ws.ajax('/payment/payment/process', {
-            dataType: 'json',
-            type: 'post',
-            data: {payment: pub.payment, shipping: pub.shipping},
-            success: function (response) {
-                if (response.success) {
-                    var data = response.data;
-                    var code = data.code.toUpperCase() || '';
-                    var method = data.method.toUpperCase();
-                    if (method === 'POPUP') {
-                        var type = data.provider.toUpperCase() || null;
-                        if (type === 'WALLET') {
-                            var $otp = $('#otp-confirm');
-                            $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
-                        }
-                    } else {
-                        $('span#transactionCode').html(code);
-                        $('div#checkout-success').modal('show');
-                        ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
-                            if (method === 'POST') {
-                                $(data.checkoutUrl).appendTo('body').submit();
-                            } else {
-                                ws.redirect(data.checkoutUrl);
-                            }
-                        });
-                        redirectPaymentGateway(data, 1000);
-                    }
-                } else {
-                    ws.notifyError(response.message);
-                }
-
-            }
-        }, true)
+        console.log({payment: pub.payment, shipping: pub.shipping});
+        return;
+        // ws.ajax('/payment/payment/process', {
+        //     dataType: 'json',
+        //     type: 'post',
+        //     data: {payment: pub.payment, shipping: pub.shipping},
+        //     success: function (response) {
+        //         if (response.success) {
+        //             var data = response.data;
+        //             var code = data.code.toUpperCase() || '';
+        //             var method = data.method.toUpperCase();
+        //             if (method === 'POPUP') {
+        //                 var type = data.provider.toUpperCase() || null;
+        //                 if (type === 'WALLET') {
+        //                     var $otp = $('#otp-confirm');
+        //                     $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
+        //                 }
+        //             } else {
+        //                 $('span#transactionCode').html(code);
+        //                 $('div#checkout-success').modal('show');
+        //                 ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
+        //                     if (method === 'POST') {
+        //                         $(data.checkoutUrl).appendTo('body').submit();
+        //                     } else {
+        //                         ws.redirect(data.checkoutUrl);
+        //                     }
+        //                 });
+        //                 redirectPaymentGateway(data, 1000);
+        //             }
+        //         } else {
+        //             ws.notifyError(response.message);
+        //         }
+        //
+        //     }
+        // }, true)
     };
     var updatePaymentByPromotion = function ($response) {
         var input = $('input[name=couponCode]');

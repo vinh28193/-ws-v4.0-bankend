@@ -1,12 +1,13 @@
 <?php
 
 
-namespace frontend\modules\payment\providers\vietnam;
+namespace frontend\modules\payment\providers\office;
 
 use common\components\ReponseData;
 use common\models\logs\PaymentGatewayLogs;
 use common\models\PaymentTransaction;
 use frontend\modules\payment\PaymentProviderInterface;
+use frontend\modules\payment\PaymentResponse;
 use yii\helpers\Url;
 use frontend\modules\payment\Payment;
 use yii\base\BaseObject;
@@ -22,25 +23,16 @@ class WSVNOffice extends BaseObject implements PaymentProviderInterface
     {
         $summitUrl = $payment->return_url;
         $summitUrl .= '?code=' . $payment->transaction_code;
-        return ReponseData::reponseArray(true, 'create payment success', [
-            'code' => $payment->transaction_code,
-            'token' => $payment->transaction_code,
-            'checkoutUrl' => $summitUrl,
-            'returnUrl' => $payment->return_url,
-            'cancelUrl' => $payment->cancel_url,
-            'method' => 'GET',
-        ]);
+        return new PaymentResponse(true, 'create payment success', $payment->transaction_code, PaymentResponse::TYPE_ENDPOINT, PaymentResponse::METHOD_GET, $summitUrl, $payment->return_url, $payment->cancel_url);
     }
 
     public function handle($data)
     {
         /** @var $transaction  PaymentTransaction */
         if (($transaction = PaymentTransaction::find()->where(['OR', ['transaction_code' => $data['code']], ['topup_transaction_code' => $data['code']]])->one()) === null) {
-            return ReponseData::reponseMess(false, 'Transaction không tồn tại');
+            return new PaymentResponse(false, 'Transaction không tồn tại');
         }
-        return ReponseData::reponseArray(true, 'check payment success', [
-            'transaction' => $transaction,
-            'redirectUrl' => Url::to("/checkout/office/{$transaction->transaction_code}/success.html", true),
-        ]);
+        $checkoutUrl = Url::to("/checkout/office/{$transaction->transaction_code}/success.html", true);
+        return new PaymentResponse(true, 'check payment success', $transaction, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $data['code'], $checkoutUrl);
     }
 }

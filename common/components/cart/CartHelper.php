@@ -73,6 +73,33 @@ class CartHelper
         $order['support_email'] = null;
         $order['saleSupport'] = null;
         $order['customer_id'] = $user ? $user->id : null;
+
+        $primaryAddress = $user ? ($user->primaryAddress !== null ? $user->primaryAddress : null) : null;
+        $order['buyer_email'] = $primaryAddress ? $primaryAddress->email : null;
+        $order['buyer_name'] = $primaryAddress ? implode(' ', [$primaryAddress->first_name, $primaryAddress->last_name]) : null;
+        $order['buyer_address'] = $primaryAddress ? $primaryAddress->address : null;
+        $order['buyer_country_id'] = $primaryAddress ? $primaryAddress->country_id : null;
+        $order['buyer_country_name'] = $primaryAddress ? $primaryAddress->country_name : null;
+        $order['buyer_province_id'] = $primaryAddress ? $primaryAddress->province_id : null;
+        $order['buyer_province_name'] = $primaryAddress ? $primaryAddress->province_name : null;
+        $order['buyer_district_id'] = $primaryAddress ? $primaryAddress->district_id : null;
+        $order['buyer_district_name'] = $primaryAddress ? $primaryAddress->district_name : null;
+        $order['buyer_post_code'] = $primaryAddress ? $primaryAddress->post_code : null;
+        $defaultShippingAddress = $user ? ($user->defaultShippingAddress !== null ? $user->defaultShippingAddress : null) : null;
+
+        $order['receiver_email'] = $defaultShippingAddress ? $defaultShippingAddress->email : null;
+        $order['receiver_name'] = $defaultShippingAddress ? implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]) : null;
+        $order['receiver_phone'] = $defaultShippingAddress ? $defaultShippingAddress->phone : null;
+        $order['receiver_address'] = $defaultShippingAddress ? $defaultShippingAddress->address : null;
+        $order['receiver_country_id'] = $defaultShippingAddress ? $defaultShippingAddress->country_id : null;
+        $order['receiver_country_name'] = $defaultShippingAddress ? $defaultShippingAddress->country_name : null;
+        $order['receiver_province_id'] = $defaultShippingAddress ? $defaultShippingAddress->province_id : null;
+        $order['receiver_province_name'] = $defaultShippingAddress ? $defaultShippingAddress->province_name : null;
+        $order['receiver_district_id'] = $defaultShippingAddress ? $defaultShippingAddress->district_id : null;
+        $order['receiver_district_name'] = $defaultShippingAddress ? $defaultShippingAddress->district_name : null;
+        $order['receiver_post_code'] = $defaultShippingAddress ? $defaultShippingAddress->post_code : null;
+        $order['receiver_address_id'] = $defaultShippingAddress ? $defaultShippingAddress->id : null;
+
         $order['customer'] = $user ? [
             'username' => $user->username,
             'email' => $user->email,

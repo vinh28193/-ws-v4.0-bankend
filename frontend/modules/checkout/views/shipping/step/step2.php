@@ -9,6 +9,44 @@ use yii\helpers\Url;
 /* @var frontend\modules\payment\models\ShippingForm $shippingForm */
 /* @var array $provinces */
 /* @var frontend\modules\payment\Payment $payment */
+
+$id = Html::getInputId($shippingForm, 'other_receiver');
+$js = <<< JS
+    
+    var showReceiver = function(element) {
+        element  = $(element)
+        var checked = element.is(':checked');
+        $('div.receiver-form').css('display',checked ? 'block' :'none');
+    };
+    var otherReceiver =  $('#$id');
+    showReceiver(otherReceiver);
+    ws.initEventHandler('payment-form','change','change','#$id',function(event) {
+        showReceiver(this);
+    });
+    
+    $(document).on("beforeSubmit", "form.payment-form", function (e) {
+        e.preventDefault();
+        var form = $(this);
+        // return false if form still have some validation errors
+        if (form.find('.has-error').length) 
+        {
+            return false;
+        }
+        $('.checkout-step li').removeClass('active');
+        $('.checkout-step li').each(function (k, v) {
+            if (k === 2) {
+                $(v).addClass('active');
+            }
+        });
+        $('#step_checkout_1').css('display', 'none');
+        $('#step_checkout_2').css('display', 'none');
+        $('#step_checkout_3').css('display', 'block');
+        window.scrollTo(0, 0);
+        // send data to actionSave by ajax request.
+        return false; // Cancel form submitting.
+    });
+JS;
+$this->registerJs($js);
 ?>
 <div class="container checkout-content">
     <ul class="checkout-step">
@@ -25,10 +63,16 @@ use yii\helpers\Url;
                     'options' => [
                         'class' => 'payment-form'
                     ],
+                    'enableAjaxValidation' => true,
+                    'enableClientValidation' => false,
+                    'validateOnChange' => true,
+                    'validateOnBlur' => true,
+                    'validateOnType' => true,
+                    'validationUrl' => '/checkout/shipping/validate',
                 ]);
                 echo Html::activeHiddenInput($shippingForm, 'customer_id');
-                echo Html::activeHiddenInput($shippingForm, 'receiver_address_id');
 
+                echo Html::beginTag('div', ['class' => 'buyer-form']);
                 echo $form->field($shippingForm, 'buyer_name', [
                     'template' => '<i class="icon user"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
@@ -76,16 +120,17 @@ use yii\helpers\Url;
                     'options' => ['class' => 'form-group']
                 ])->textarea(['rows' => 3, 'placeholder' => 'Ghi chú thêm ( không bắt buộc)']);
 
-                echo $form->field($shippingForm, 'save_my_address', [
+                echo Html::endTag('div');
+
+                echo $form->field($shippingForm, 'other_receiver', [
                     'template' => '{input}{hint}{error}',
                     'options' => [
                         'class' => 'check-info',
                     ]
-                ])->checkbox();
+                ])->checkbox()->label('Thông tin người nhận hàng khác người đặt hàng');
 
-                echo '<a href="javascript: void(0);" id="other-receiver" class="other-receiver"><i class="fas fa-check-circle"></i> Thông tin người nhận
-                hàng khác người đặt hàng</a>';
-                echo "<div id='receiver-form' style='display: none'>";
+                echo Html::beginTag('div', ['class' => 'receiver-form']);
+
                 echo $form->field($shippingForm, 'receiver_name', [
                     'template' => '<i class="icon user"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
@@ -106,6 +151,8 @@ use yii\helpers\Url;
                     'options' => ['class' => 'form-group']
                 ])->dropDownList(array_merge(['Chọn thành phố'], $provinces));
 
+                echo Html::hiddenInput('hiddenReceiverDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenReceiverDistrictId']);
+
                 echo $form->field($shippingForm, 'receiver_district_id', [
                     'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
@@ -113,15 +160,20 @@ use yii\helpers\Url;
                     'pluginOptions' => [
                         'depends' => [Html::getInputId($shippingForm, 'receiver_province_id')],
                         'placeholder' => 'Select District',
-                        'url' => Url::toRoute(['sub-district'])
+                        'url' => Url::toRoute(['sub-district']),
+                        'loadingText' => 'Loading District ...',
+                        'initialize' => true,
+                        'params' => ['hiddenReceiverDistrictId']
                     ]
                 ]);
                 echo $form->field($shippingForm, 'receiver_address', [
                     'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->textInput(['placeholder' => 'Địa chỉ chi tiết']);
-                echo "</div>";
-                echo Html::button('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block', 'id' => 'btn-next-step3']);
+
+                echo Html::endTag('div');
+
+                echo Html::submitButton('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block', 'id' => 'btnNextStep3']);
                 ActiveForm::end();
                 ?>
             </div>

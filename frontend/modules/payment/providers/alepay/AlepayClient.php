@@ -15,7 +15,7 @@ use yii\httpclient\Client;
  */
 class AlepayClient extends Component
 {
-
+    const  ALEPAY_INSTALMENT_MIN = 0;
     const ENV_PROD = 'PROD';
     const ENV_SANDBOX = 'SANDBOX';
     public $env = self::ENV_SANDBOX;
@@ -84,7 +84,7 @@ class AlepayClient extends Component
         $result = json_decode($result);
         $success = $result->errorCode === '000';
         $data = $this->security->decrypt($result->data);
-        return ['success' => $result->errorCode === '000', 'message' => $result->errorDescription, 'data' => $success ? $this->security->decrypt($result->data) : null,'code' => $result->errorCode];
+        return ['success' => $result->errorCode === '000', 'message' => $result->errorDescription, 'data' => $success ? $this->security->decrypt($result->data) : null, 'code' => $result->errorCode];
     }
 
     protected function getUrl($url)
@@ -106,10 +106,11 @@ class AlepayClient extends Component
 
     public function requestOrder($params)
     {
-        return $this->createHttpRequest('request-order',$params);
+        return $this->createHttpRequest('request-order', $params);
     }
 
-    public function getTransactionInfo($transactionCode){
-        return $this->createHttpRequest('get-transaction-info',['transactionCode' => $transactionCode]);
+    public function getTransactionInfo($transactionCode)
+    {
+        return $this->createHttpRequest('get-transaction-info', ['transactionCode' => $transactionCode]);
     }
 }

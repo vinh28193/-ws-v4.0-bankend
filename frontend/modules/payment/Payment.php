@@ -8,16 +8,13 @@ use common\components\cart\CartHelper;
 use common\components\cart\CartSelection;
 use common\helpers\WeshopHelper;
 use common\models\Address;
-use common\models\Category;
 use common\models\db\TargetAdditionalFee;
-use common\models\Product;
-use common\models\ProductFee;
-use common\models\Seller;
 use frontend\modules\payment\providers\alepay\AlepayProvider;
-use frontend\modules\payment\providers\vietnam\NganLuongProvider;
-use frontend\modules\payment\providers\vietnam\WalletClientProvider;
-use frontend\modules\payment\providers\vietnam\WSVNOffice;
-use frontend\modules\payment\providers\wallet\WalletProvider;
+use frontend\modules\payment\providers\mcpay\McPayProvider;
+use frontend\modules\payment\providers\nganluong\ver3_1\NganLuongProvider as NLProviderV31;
+use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongProvider as NLProviderV32;
+use frontend\modules\payment\providers\nicepay\NicePayProvider;
+use frontend\modules\payment\providers\office\WSVNOffice;
 use common\promotion\PromotionResponse;
 use Yii;
 use yii\db\Exception;
@@ -38,26 +35,6 @@ class Payment extends Model
 
     const PAGE_CHECKOUT = 'CHECKOUT';
     const PAGE_TOP_UP = 'TOP_UP';
-
-    const PAYMENT_GROUP_MASTER_VISA = 1;
-    const PAYMENT_GROUP_BANK = 2;
-    const PAYMENT_GROUP_NL_WALLET = 3;
-    const PAYMENT_GROUP_WSVP = 4;
-    const PAYMENT_GROUP_WS_WALLET = 5;
-    const PAYMENT_GROUP_ALIPAY_INSTALMENT = 11;
-    const PAYMENT_GROUP_MANDIRI_INSTALMENT = 12;
-    const PAYMENT_GROUP_COD = 6;
-    const PAYMENT_GROUP_MOLMY = 9;
-    const PAYMENT_GROUP_DRAGON = 7;
-    const PAYMENT_GROUP_PAYNAMIC = 8;
-    const PAYMENT_GROUP_C2P2 = 10;
-    const PAYMENT_GROUP_MCPAY = 35;
-    const PAYMENT_GROUP_WEPAY = 36;
-    const PAYMENT_GROUP_NL_QRCODE = 77;
-    const PAYMENT_GROUP_DOKU = 13;
-    const PAYMENT_GROUP_MY_BANK_TRANSFER = 55;
-
-    const  ALEPAY_INSTALMENT_MIN = 0;
 
     public $env = self::ENV_PRODUCT;
     public $uuid = null;
@@ -111,12 +88,21 @@ class Payment extends Model
     public $payment_provider;
     public $payment_provider_name;
     public $payment_token;
+
+    public $bank_account; // Số thẻ - Tài khoản ngân hàng
+    public $bank_name; //  Họ tên chủ thẻ - tài khoản ngân hàng
+    public $issue_month; //Tháng phát hành thẻ
+    public $issue_year; // Năm phát hành thẻ
+    public $expired_month; // Tháng hết hạn của thẻ
+    public $expired_year; //  Năm hết hạn của thẻ
+
     public $installment_bank;
     public $installment_method;
     public $installment_month;
     public $instalment_type;
 
     public $ga;
+    public $otp_code;
     public $otp_verify_method = 0;
     public $shipment_options_status = 2;
 
@@ -162,14 +148,10 @@ class Payment extends Model
 
     public function initDefaultMethod()
     {
-        $this->payment_method = 1;
-        $this->payment_provider = 42;
+        $this->payment_method = 77;
+        $this->payment_provider = 46;
         $this->payment_bank_code = 'VISA';
-        if ($this->page === self::PAGE_TOP_UP) {
-            $this->payment_method = 25;
-            $this->payment_provider = 46;
-            $this->payment_bank_code = 'VCB';
-        } elseif ($this->page === self::PAGE_CHECKOUT || $this->type === CartSelection::TYPE_INSTALLMENT) {
+        if ($this->page === self::PAGE_CHECKOUT || $this->type === CartSelection::TYPE_INSTALLMENT) {
             $this->payment_method = 57;
             $this->payment_provider = 44;
         }
@@ -280,25 +262,23 @@ class Payment extends Model
 
     public function processPayment()
     {
-
         switch ($this->payment_provider) {
+            case 41:
+                return (new WSVNOffice())->create($this);
             case 42:
-                $nl = new NganLuongProvider();
+                $nl = new NLProviderV31();
                 return $nl->create($this);
-//                $wlHide = new WalletHideProvider();
-//                return $wlHide->create($this);
-            case 43:
-                $wallet = new WalletProvider();
-                return $wallet->create($this);
-            case 45:
-                $office = new WSVNOffice();
-                return $office->create($this);
-            case 46:
-                $office = new WalletClientProvider();
-                return $office->create($this);
             case 44:
                 return (new AlepayProvider())->create($this);
-
+            case 46:
+                $nl = new NLProviderV32();
+                return $nl->create($this);
+            case 48:
+                $nicePay = new NicePayProvider();
+                return $nicePay->create($this);
+            case 49:
+                $mcPay = new McPayProvider();
+                return $mcPay->create($this);
         }
     }
 
@@ -310,22 +290,23 @@ class Payment extends Model
     public static function checkPayment($merchant, $request)
     {
         switch ($merchant) {
+            case 41:
+                return (new WSVNOffice())->handle($request->get());
             case 42:
-                $Nl = new NganLuongProvider();
-                return $Nl->handle($request->get());
-//                $wlHide = new WalletHideProvider();
-//                return $wlHide->handle($request->get());
-            case 43:
-                $wallet = new WalletProvider();
-                return $wallet->handle($request->get());
-            case 45:
-                $office = new WSVNOffice();
-                return $office->handle($request->get());
-            case 46:
-                $office = new WalletClientProvider();
-                return $office->handle($request->get());
+                $nl = new NLProviderV31();
+                return $nl->handle($request->get());
             case 44:
                 return (new AlepayProvider())->handle($request->get());
+            case 46:
+                $nl = new NLProviderV32();
+                return $nl->handle($request->get());
+            case 48:
+                $nicePay = new NicePayProvider();
+                return $nicePay->handle($request->get());
+            case 49:
+                $mcPay = new McPayProvider();
+                return $mcPay->handle($request->get());
+
         }
     }
 
@@ -586,14 +567,9 @@ class Payment extends Model
         }
     }
 
-    public
-    function initPaymentView()
+    public function initPaymentView()
     {
-        if ($this->page === self::PAGE_TOP_UP) {
-            $this->payment_method = 25;
-            $this->payment_provider = 46;
-            $this->payment_bank_code = 'VCB';
-        } elseif ($this->type === CartSelection::TYPE_INSTALLMENT) {
+        if ($this->type === CartSelection::TYPE_INSTALLMENT) {
             return $this->view->render('installment', [
                 'payment' => $this
             ], new PaymentContextView());
@@ -603,17 +579,7 @@ class Payment extends Model
         foreach ($providers as $provider) {
             foreach ($provider['paymentMethodProviders'] as $paymentMethodProvider) {
                 $k = (int)$paymentMethodProvider['paymentMethod']['group'];
-                if ($k === self::PAYMENT_GROUP_ALIPAY_INSTALMENT || $k === self::PAYMENT_GROUP_MANDIRI_INSTALMENT) {
-                    continue;
-                }
-
-                if ($this->page == self::PAGE_TOP_UP &&
-                    (
-                        $k === self::PAYMENT_GROUP_WS_WALLET ||
-                        $k === self::PAYMENT_GROUP_WSVP ||
-                        $k === self::PAYMENT_GROUP_MASTER_VISA
-                    )
-                ) {
+                if ($k === PaymentService::PAYMENT_GROUP_ALIPAY_INSTALMENT || $k === PaymentService::PAYMENT_GROUP_MANDIRI_INSTALMENT) {
                     continue;
                 }
 
@@ -658,11 +624,18 @@ class Payment extends Model
             'payment_provider' => $this->payment_provider,
             'payment_provider_name' => $this->payment_provider_name,
             'payment_token' => $this->payment_token,
+            'bank_account' => $this->bank_account,
+            'bank_name' => $this->bank_name,
+            'issue_month' => $this->issue_month,
+            'issue_year' => $this->issue_year,
+            'expired_month' => $this->expired_month,
+            'expired_year' => $this->expired_year,
             'installment_bank' => $this->installment_bank,
             'installment_method' => $this->installment_method,
             'installment_month' => $this->installment_month,
             'instalment_type' => $this->instalment_type,
             'ga' => $this->ga,
+            'otp_code' => $this->otp_code,
             'otp_verify_method' => $this->otp_verify_method,
             'shipment_options_status' => $this->shipment_options_status,
             'transaction_code' => $this->transaction_code,

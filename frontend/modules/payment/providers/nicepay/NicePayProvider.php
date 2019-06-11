@@ -8,6 +8,7 @@ use common\models\logs\PaymentGatewayLogs;
 use common\models\PaymentTransaction;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\PaymentProviderInterface;
+use frontend\modules\payment\PaymentResponse;
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
@@ -185,8 +186,6 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
 
     public function create(Payment $payment)
     {
-
-
         $bankCd = !empty($payment->payment_bank_code) ? $payment->payment_bank_code : '';
         $dateNow = date('Ymd');
         $vaExpiryDate = date('Ymd', strtotime($dateNow . ' +1 day')); // Set VA expiry date +1 day (optional)
@@ -214,7 +213,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
         $this->getClient()->getData()->set('deliveryPostCd', $payment->customer_postcode);
         $this->getClient()->getData()->set('deliveryCountry', $payment->customer_country);
         if ($payment->payment_method == NicePayUtils::PAYMENT_METHOD && $payment->total_amount < NicePayUtils::AMOUNT_REQUIRED) {
-            return ReponseData::reponseArray(false, "Amount lesser than installment require");
+            return new PaymentResponse(false, "Amount lesser than installment require");
         }
         $logPaymentGateway = new PaymentGatewayLogs();
         $logPaymentGateway->transaction_code_ws = $payment->transaction_code;
@@ -229,7 +228,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                     $logPaymentGateway->response_content = $this->getClient()->getErrorMsg();
                     $logPaymentGateway->save(false);
-                    return ReponseData::reponseArray(false, $this->getClient()->getErrorMsg());
+                    return new PaymentResponse(false, $this->getClient()->getErrorMsg());
                 }
                 if (isset($response['data']) && ($data = $response['data']) !== null && !empty($data) && isset($data['resultCd']) && $data['resultCd'] == '0000') {
                     $checkoutUrl = $data['requestURL'] . '?tXid=' . $data['tXid'];
@@ -237,19 +236,13 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->response_content = $response;
                     $logPaymentGateway->url = $checkoutUrl;
                     $logPaymentGateway->save(false);
-                    return ReponseData::reponseArray(true, 'Success', [
-                        'code' => $payment->transaction_code,
-                        'status' => $data['resultCd'],
-                        'token' => $data['tXid'],
-                        'checkoutUrl' => $checkoutUrl,
-                        'method' => 'GET',
-                    ]);
+                    return new PaymentResponse(true, 'Success', $payment->transaction_code, PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, $data['tXid'], $checkoutUrl);
                 }
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
                 $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                 $logPaymentGateway->response_content = $response;
                 $logPaymentGateway->save(false);
-                return ReponseData::reponseArray(false, '"Lỗi cổng thanh toán');
+                return new PaymentResponse(false, '"Lỗi cổng thanh toán');
 
             } elseif ($payment->instalment_type == 1) {
                 $this->getClient()->getData()->set('payMethod', '02');
@@ -267,13 +260,13 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                     $logPaymentGateway->response_content = $response;
                     $logPaymentGateway->save(false);
-                    return ReponseData::reponseArray(true, 'Success');
+                    return new PaymentResponse(true, 'Success');
                 }
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
                 $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                 $logPaymentGateway->response_content = $response;
                 $logPaymentGateway->save(false);
-                return ReponseData::reponseArray(false, 'Lỗi cổng thanh toán');
+                return new PaymentResponse(false, 'Lỗi cổng thanh toán');
             } else {
                 $this->getClient()->getData()->set('payMethod', '02');
                 $this->getClient()->getData()->set('bankCd', $bankCd);
@@ -283,7 +276,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
                     $logPaymentGateway->response_content = $this->getClient()->getErrorMsg();
                     $logPaymentGateway->save(false);
-                    return ReponseData::reponseArray(false, $this->getClient()->getErrorMsg());
+                    return new PaymentResponse(false, $this->getClient()->getErrorMsg());
                 }
                 if (isset($response['resultCd']) && $response['resultCd'] == '0000') {
                     $checkoutUrl = Url::to(['/payment/nicepay/success', $response]);
@@ -291,19 +284,13 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->response_content = $response;
                     $logPaymentGateway->url = $checkoutUrl;
                     $logPaymentGateway->save(false);
-                    return ReponseData::reponseArray(true, 'Nicepay banktranfer success', [
-                        'code' => $payment->transaction_code,
-                        'status' => $response['resultCd'],
-                        'token' => $response['transDt'],
-                        'checkoutUrl' => $checkoutUrl,
-                        'method' => 'GET',
-                    ]);
+                    return new PaymentResponse(true, 'Success', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $response['transDt'], $checkoutUrl);
                 }
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
                 $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                 $logPaymentGateway->response_content = $response;
                 $logPaymentGateway->save(false);
-                return ReponseData::reponseArray(false, 'Lỗi cổng thanh toán');
+                return new PaymentResponse(false, 'Lỗi cổng thanh toán');
             }
         } catch (Exception $exception) {
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();

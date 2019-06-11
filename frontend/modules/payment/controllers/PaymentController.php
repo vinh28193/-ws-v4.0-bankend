@@ -45,63 +45,17 @@ class PaymentController extends BasePaymentController
             return $this->response(false, 'not login');
         }
         $payment = new Payment($bodyParams['payment']);
-        $shippingForm = new ShippingForm($bodyParams['shipping']);
-//        $shippingForm->setDefaultValues(); // remove it get from POST pls
-//        $shippingForm->ensureReceiver();
-        if ($shippingForm->save_my_address) {
-            $my_address = new Address();
-            $my_address->first_name = $shippingForm->buyer_name;
-            $my_address->phone = $shippingForm->buyer_phone;
-            $my_address->email = $shippingForm->buyer_email;
-            $my_address->country_id = 1;
-            $my_address->country_name = 'Viet Nam';
-            $my_address->province_id = $shippingForm->buyer_province_id;
-            $my_address->province_name = ($province = SystemStateProvince::findOne($shippingForm->buyer_province_id)) ? $province->name : '';
-            $my_address->district_id = $shippingForm->buyer_district_id;
-            $my_address->district_name = ($district = SystemDistrict::findOne($shippingForm->buyer_district_id)) ? $district->name : '';
-            $my_address->address = $shippingForm->buyer_address;
-            $my_address->customer_id = $this->user->getId();
-            $my_address->type = Address::TYPE_PRIMARY;
-            $my_address->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_PRIMARY, 'is_default' => 1])->count() ? 0 : 1;
-            $my_address->save(false);
-            $shippingForm->receiver_address_id = $my_address->id;
-            if (!$shippingForm->other_receiver) {
-                $my_shiping = new Address();
-                $addressShipping = $my_address->getAttributes();
-                unset($addressShipping['id']);
-                $my_shiping->setAttributes($addressShipping);
-                $my_shiping->type = Address::TYPE_SHIPPING;
-                $my_shiping->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_SHIPPING, 'is_default' => 1])->count() ? 0 : 1;
-                $my_shiping->save(false);
-                $shippingForm->receiver_address_id = $my_shiping->id;
-            } else {
-                $my_shiping = new Address();
-                $my_shiping->first_name = $shippingForm->receiver_name;
-                $my_shiping->phone = $shippingForm->receiver_phone;
-                $my_shiping->email = $shippingForm->receiver_email;
-                $my_shiping->country_id = 1;
-                $my_shiping->country_name = 'Viet Nam';
-                $my_shiping->province_id = $shippingForm->receiver_province_id;
-                $my_shiping->province_name = ($province = SystemStateProvince::findOne($shippingForm->receiver_province_id)) ? $province->name : '';
-                $my_shiping->district_id = $shippingForm->receiver_district_id;
-                $my_shiping->district_name = ($district = SystemDistrict::findOne($shippingForm->receiver_district_id)) ? $district->name : '';
-                $my_shiping->address = $shippingForm->receiver_address;
-                $my_shiping->customer_id = $this->user->getId();
-                $my_shiping->type = Address::TYPE_SHIPPING;
-                $my_shiping->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_SHIPPING, 'is_default' => 1])->count() ? 0 : 1;
-                $my_shiping->save(false);
-                $shippingForm->receiver_address_id = $my_shiping->id;
-            }
-        }
-        $address = isset($my_address) && $my_address instanceof Address ? $my_address : $this->user->primaryAddress;
-        $payment->customer_name = implode(' ', [$address->first_name, $address->last_name]);
-        $payment->customer_email = $address->email;
-        $payment->customer_phone = $address->phone;
-        $payment->customer_address = $address->address;
-        $payment->customer_city = $address->province_name;
-        $payment->customer_postcode = $address->post_code;
-        $payment->customer_district = $address->district_name;
-        $payment->customer_country = $address->country_name;
+        $shippingForm = new ShippingForm();
+        $shippingForm->load($bodyParams['shipping']);
+
+        $payment->customer_name = $shippingForm->buyer_name;
+        $payment->customer_email = $shippingForm->buyer_email;
+        $payment->customer_phone = $shippingForm->buyer_phone;
+        $payment->customer_address = $shippingForm->address;
+        $payment->customer_city = $shippingForm->province_name;
+        $payment->customer_postcode = $shippingForm->post_code;
+        $payment->customer_district = $shippingForm->district_name;
+        $payment->customer_country = $shippingForm->country_name;
         $payment->createTransactionCode();
         /* @var $results PromotionResponse */
         $payment->checkPromotion();

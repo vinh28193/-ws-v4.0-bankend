@@ -119,6 +119,23 @@ class ShippingController extends CheckoutController
         ]);
     }
 
+    public function actionValidate()
+    {
+        $model = new ShippingForm();
+        $model->on(ShippingForm::EVENT_AFTER_VALIDATE, function ($event) {
+            /** @var  $event yii\base\Event */
+            $sender = $event->sender;
+        });
+        $request = $this->request;
+        Yii::info($request->post(), __METHOD__);
+        // Todo save info of guest user when whole typing on form
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if ($request->isAjax && $request->isPost && $model->load($request->post())) {
+            return \yii\bootstrap4\ActiveForm::validate($model);
+        }
+        return [];
+    }
+
     public function actionLogin()
     {
         Yii::$app->response->format = Yii\web\Response::FORMAT_JSON;

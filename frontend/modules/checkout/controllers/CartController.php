@@ -34,6 +34,7 @@ class CartController extends BillingController
     public function actionIndex()
     {
 
+        $cartContent = 'cartContent';
         $queryParams = $this->request->queryParams;
         $type = CartSelection::TYPE_SHOPPING;
         if (isset($queryParams['type'])) {
@@ -45,18 +46,29 @@ class CartController extends BillingController
         if (isset($queryParams['ref'])) {
             $ids = $queryParams['ref'];
         }
+        $uuid = $this->filterUuid();
         $cartManager = $this->module->cartManager;
         $items = $cartManager->getItems($type, $ids, $this->filterUuid());
-        if (Yii::$app->getRequest()->getIsPjax()) {
-            if (count($items) === 0) {
-                return $this->renderPartial('empty');
-            }
-            return $this->renderPartial('item', [
+        if ($this->request->isPjax) {
+            return $this->renderAjax('index', [
+                'uuid' => $uuid,
+                'cartContent' => $cartContent,
                 'items' => $items
             ]);
         }
         CartSelection::setSelectedItems(CartSelection::TYPE_SHOPPING, ArrayHelper::getColumn($items, '_id', false));
-        return $this->render('index');
+        return $this->render('index', [
+            'uuid' => $uuid,
+            'cartContent' => $cartContent,
+            'items' => $items
+        ]);
+
+    }
+
+    public function actionCheckUuid()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $this->filterUuid() !== null;
     }
 
     public function actionCount()
