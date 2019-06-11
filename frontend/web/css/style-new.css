@@ -508,7 +508,12 @@ div div.product-list.row div a div.info div.price span.countdown{
 }
 @media(max-width:858px) {
     body div.wrapper div.navbar-ws div div.search-box{
-        width: 330px;
+        height: 40px;
+        border-radius: 5px;
+    }
+}
+@media(max-width:813px) {
+    body div.wrapper div.navbar-ws div div.search-box{
         height: 40px;
         border-radius: 5px;
     }
