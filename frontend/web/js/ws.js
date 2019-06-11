@@ -53,18 +53,23 @@ var ws = ws || (function ($) {
             show = show || false;
             $('#loading').css('display', show ? 'block' : 'none');
         },
-        notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '') {
+        notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '',confirmLabel = 'Confirm',cancelLabel = 'Close',confirmClass = 'btn btn-info',cancelClass = 'btn btn-warning') {
             $('#modal-content').removeClass('modal-default');
             $('#modal-content').removeClass('modal-lg');
             $('#modal-content').removeClass('modal-xl');
-            $('#modal-content').addClass('modal-' + type);
+            $('#modal-content').addClass('modal-' + size);
             $('#NotifyConfirmMessage').html(message);
             $('#NotifyConfirmTitle').html(title);
             $('#NotifyConfirmTitle').html(title);
-            $('#NotifyConfirmHeader').css('background', '#17a2b8');
-            $('#NotifyConfirmHeader').css('color', '#fff');
-            $('#NotifyConfirmHeader span').css('color', '#fff');
             $('#NotifyConfirmBtnSubmit').css('display', 'none');
+            $('#NotifyConfirmBtnSubmit').html(confirmLabel);
+            $('#NotifyConfirmBtnClose').html(cancelLabel);
+            $('#NotifyConfirmBtnSubmit').removeAttr('onclick');
+            $('#NotifyConfirmBtnClose').removeAttr('onclick');
+            $('#NotifyConfirmBtnSubmit').removeAttr('class');
+            $('#NotifyConfirmBtnClose').removeAttr('class');
+            $('#NotifyConfirmBtnSubmit').addClass(confirmClass);
+            $('#NotifyConfirmBtnClose').addClass(cancelClass);
             if (type === 'confirm') {
                 $('#NotifyConfirmBtnSubmit').css('display', 'block');
                 $('#NotifyConfirmBtnSubmit').attr('onclick', "$('#NotifyConfirm').modal('hide');" + submitClick);
@@ -72,8 +77,10 @@ var ws = ws || (function ($) {
                     $('#NotifyConfirmBtnClose').attr('onclick', cancelClick);
                 }
             } else if (type === 'success') {
+                $('#NotifyConfirmTitle').css('color', '#fff');
                 $('#NotifyConfirmHeader').css('background', '#28a745');
             } else if (type === 'error') {
+                $('#NotifyConfirmTitle').css('color', '#fff');
                 $('#NotifyConfirmHeader').css('background', '#dc3545');
             }
             $('#NotifyConfirm').modal('show');
@@ -285,6 +292,24 @@ var ws = ws || (function ($) {
         },
         showLoginWallet: function () {
             $('#loginWallet').modal('show');
+        },
+        setDefaultSearch: function (portal = 'amazon') {
+            ws.loading(true);
+            $.ajax({
+                url: '/search/set-default',
+                method: 'POST',
+                data: {
+                    portal: portal
+                },
+                success: function (res) {
+                    ws.loading(false);
+                    if (res.success) {
+                        ws.notifySuccess(res.message,'Thành công')
+                    } else {
+                        ws.notifyError(res.message,'Thất Bại')
+                    }
+                }
+            });
         },
         loginWallet: function () {
             var password = $('input[name=passwordWallet]').val();

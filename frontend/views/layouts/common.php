@@ -34,7 +34,7 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
 <body>
 <?php $this->beginBody() ?>
 
-<div class="wrapper">
+<div class="wrapper" style="background: #f7f7f7;">
     <?= \frontend\widgets\layout\HeaderWidget::widget() ?>
     <?= $content; ?>
     <?= \frontend\widgets\layout\FooterWidget::widget() ?>

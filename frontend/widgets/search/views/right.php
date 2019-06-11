@@ -22,42 +22,77 @@ $url_page = function ($p){
 //           $param['portal'] = $portal;
     return Yii::$app->getUrlManager()->createUrl($param);
 };
+$default = Yii::$app->request->cookies->getValue('user_setting_default_search');
+$tooltip = 'Nhấn enter để tìm kiếm';
+$js = <<<JS
+    $('input[name=formPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
+    $('input[name=toPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
+JS;
+$this->registerJs($js);
+if(!$default){
+    $message = "<p>" .
+        "Nhằm giúp khách hàng có trải nghiệm mua sắm xuyên biên giới tốt hơn, bạn nên tìm kiếm các sản phẩm trên website Amazon.com." .
+        "</p>" .
+        "<p>" .
+        "Đặc biệt nên mua các sản phẩm hỗ trợ dịch vụ Prime, hàng hoá chất lượng tốt hơn, thời gian nhận hàng nhanh hơn.".
+        "</p>" .
+        "<p>" .
+        "Bạn có muốn tìm kiếm mặc định các sản phẩm trên Amzon.com không?" .
+        "</p>";
+    $titleMess = "Thông báo nâng cấp trang tìm kiếm sản phẩm";
+    $js = <<<JS
+    $('input[name=formPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
+    $('input[name=toPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
+    $(document).ready(function () {
+        ws.notifyConfirm('$message','$titleMess','lg','ws.setDefaultSearch(\'amazon\')','ws.setDefaultSearch(\'ebay\')','Đồng ý sử dụng Amazon.com','Không, tiếp tục tìm kiếm mặc định trên eBay.com','btn btn-amazon','btn btn-link');
+    });
+JS;
+    $this->registerJs($js);
+}
 ?>
 <div class="search-content search-2 <?= $portal ?>">
-    <div class="title-box">
-        <div class="left" style="width: 50%; text-align: left;">
-            <div class="text"><?= Yii::t('frontend', 'Search “{keyword}” from', [
-                    'keyword' => $keyword
-                ]); ?></div>
-            <img src="<?= WeshopHelper::getLogoByPortal($portal) ?>" alt=""/>
-            <span><?= Yii::t('frontend', 'Showing {from}-{to} of {total} result', [
-                    'from' => 1,
-                    'to' => count($products),
-                    'total' => $total_product
-                ]) ?></span>
+    <div class="title-box inline">
+        <div class="lable-titlebox"><?= Yii::t('frontend','Choose website') ?> </div>
+        <div class="btn-group btn-group-sn" style="padding-right: 20px">
+            <button class="btn btn-default" <?= $portal != 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/amazon/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+                <i class="ico ico-amazon <?= $portal != 'ebay' ? 'active' : '' ?>"></i>
+            </button>
+            <button class="btn btn-default" <?= $portal == 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/ebay/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+                <i class="ico ico-ebay <?= $portal == 'ebay' ? 'active' : '' ?>"></i>
+            </button>
         </div>
-        <div class="right" style="width: 50%; text-align: right;">
-            <div class="btn-group">
-                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= isset($sorts[$sort]) ? $sorts[$sort] : Yii::t('frontend','Sort by'); ?></button>
-                <div class="dropdown-menu dropdown-menu-right" x-placement="top-end" style="position: absolute; transform: translate3d(-56px, -102px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <?php
-                        foreach ($sorts as $k => $v){
-                            $param = [explode('?',\yii\helpers\Url::current())[0]];
-                            $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
-                            $param['sort'] = $k;
-                            if(isset($param['keyword'])){
-                                unset($param['keyword']);
-                            }
-                            $url = Yii::$app->getUrlManager()->createUrl($param);
-                            echo '<a href="'.$url.'" class="dropdown-item">'.$v.'</a>';
-                        }
-                    ?>
-                </div>
+        <div class="btn-group btn-group-sm"  style="padding-right: 20px">
+            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= isset($sorts[$sort]) ? $sorts[$sort] : Yii::t('frontend','Sort by'); ?></button>
+            <div class="dropdown-menu dropdown-menu-right" x-placement="top-end" style="position: absolute; transform: translate3d(-56px, -102px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <?php
+                foreach ($sorts as $k => $v){
+                    $param = [explode('?',\yii\helpers\Url::current())[0]];
+                    $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
+                    $param['sort'] = $k;
+                    if(isset($param['keyword'])){
+                        unset($param['keyword']);
+                    }
+                    $url = Yii::$app->getUrlManager()->createUrl($param);
+                    echo '<a href="'.$url.'" class="dropdown-item">'.$v.'</a>';
+                }
+                ?>
             </div>
-            <ul class="control-page">
-                <li><a href="<?= $page > 1 ? $url_page($page-1) : '#' ?>" class="control prev"></a></li>
-                <li><a href="<?= $page < $total_page ? $url_page($page+1) : '#' ?>" class="control next"></a></li>
-            </ul>
+        </div>
+        <div class="lable-titlebox"><?= Yii::t('frontend','Price range (USD)') ?> </div>
+        <div class="form-inline" style="padding-right: 20px">
+            <input class="form-control form-control-sm" type="number" name="formPrice" placeholder="Price form">
+            <span style="padding: 10px">—</span>
+            <input class="form-control form-control-sm" type="number" name="toPrice" placeholder="Price to">
+        </div>
+        <div class="form-check lable-titlebox" style="margin-left: 15px;">
+            <?php
+            if($portal != 'ebay'){ ?>
+                <input class="form-check-input" type="checkbox" name="isPrime" id="isPrime">
+                <label class="form-check-label" for="isPrime">
+                    <img src="/images/logo/prime.jpg" >
+                </label>
+
+            <?php } ?>
         </div>
     </div>
 
@@ -73,43 +108,53 @@ $url_page = function ($p){
         ?>
     </div>
 </div>
-
-<nav aria-label="...">
-    <ul class="pagination justify-content-center">
-        <?php
-        $limitPage = 10;
-        $arr = WeshopHelper::getArrayPage($total_page,$page,$limitPage);
-        if($arr && count($arr) > 1){
-        ?>
-            <li class="page-item">
-                <a class="page-link" href="<?= $page>1 ? $url_page($page-1) : 'javascript: void (0)' ?>" tabindex="-1" aria-disabled="true"></a>
-            </li>
-        <?php
-        if($arr[0] != 1){
-            echo "<li class='page-item'><a class='page-link' href='".$url_page(1)."'>1</a></li>";
-            echo "<li class='page-item'><span class='more'>...</span></li>";
-        }
-        foreach ($arr as $p){
-            if($p == $page){
-                echo "<li class='page-item active' aria-current='page'>" .
-                    "<a class='page-link' href='".$url_page($p)."'>" .
-                    "".$p." <span class='sr-only'>(current)</span>".
-                    "</a>" .
-                    "</li>";
-            }elseif ($p == $total_page){
-                echo "<li class='page-item active' aria-current='page'><a class='page-link last' href='".$url_page($p)."'>".$p."</a></li>";
-            }else{
-                echo "<li class='page-item'><a class='page-link' href='".$url_page($p)."'>".$p."</a></li>";
-            }
-        }
-            if($arr[count($arr)-1] != $total_page){
-                echo "<li class='page-item'><span class='more'>...</span></li>";
-                echo "<li class='page-item'><a class='page-link last' href='".$url_page($total_page)."'>".$total_page."</a></li>";
-            }
-        ?>
-        <li class="page-item">
-            <a class="page-link" href="<?= $page<$total_page ? $url_page($page+1) : 'javascript: void (0)' ?>"></a>
-        </li>
-        <?php } ?>
-    </ul>
-</nav>
+<div class="row">
+    <div class="col-md-4 col-sm-6">
+        <span><?= Yii::t('frontend', 'Showing {from}-{to} of {total} result', [
+                'from' => 1,
+                'to' => count($products),
+                'total' => $total_product
+            ]) ?></span>
+    </div>
+    <div class="col-md-8 col-sm-6">
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center" style="margin-top: 0px;">
+                <?php
+                $limitPage = 6;
+                $arr = WeshopHelper::getArrayPage($total_page,$page,$limitPage);
+                if($arr && count($arr) > 1){
+                    ?>
+                    <li class="page-item">
+                        <a class="page-link" href="<?= $page>1 ? $url_page($page-1) : 'javascript: void (0)' ?>" tabindex="-1" aria-disabled="true"></a>
+                    </li>
+                    <?php
+                    if($arr[0] != 1){
+                        echo "<li class='page-item'><a class='page-link' href='".$url_page(1)."'>1</a></li>";
+                        echo "<li class='page-item'><span class='more'>...</span></li>";
+                    }
+                    foreach ($arr as $p){
+                        if($p == $page){
+                            echo "<li class='page-item active' aria-current='page'>" .
+                                "<a class='page-link' href='".$url_page($p)."'>" .
+                                "".$p." <span class='sr-only'>(current)</span>".
+                                "</a>" .
+                                "</li>";
+                        }elseif ($p == $total_page){
+                            echo "<li class='page-item active' aria-current='page'><a class='page-link last' href='".$url_page($p)."'>".$p."</a></li>";
+                        }else{
+                            echo "<li class='page-item'><a class='page-link' href='".$url_page($p)."'>".$p."</a></li>";
+                        }
+                    }
+                    if($arr[count($arr)-1] != $total_page){
+                        echo "<li class='page-item'><span class='more'>...</span></li>";
+                        echo "<li class='page-item'><a class='page-link last' href='".$url_page($total_page)."'>".$total_page."</a></li>";
+                    }
+                    ?>
+                    <li class="page-item">
+                        <a class="page-link" href="<?= $page<$total_page ? $url_page($page+1) : 'javascript: void (0)' ?>"></a>
+                    </li>
+                <?php } ?>
+            </ul>
+        </nav>
+    </div>
+</div>
