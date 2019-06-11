@@ -147,14 +147,17 @@ ul.bars-nav > li:last-child{
     border-radius: 50% !important;
     background-color: rgba(255, 255, 255, 0.5) !important;
 }
+#slides{
+    min-height: 200px;
+}
 .content-body{
-    width: 70%;
-    margin: auto;
+    /*width: 85%;*/
+    /*margin: auto;*/
     box-shadow: 0 2px 4px #d6d6d6;
     border-radius: 5px;
     background-color: #ffffff;
     position: relative;
-    margin-top: -85px;
+    margin-top: -130px;
     padding: 15px;
 }
 .content-body h3{
@@ -164,6 +167,40 @@ ul.bars-nav > li:last-child{
 }
 body div.wrapper div.content-body div.col-md-2 i{
     font-size: 30px;
+    line-height: 300%;
+}
+body div.wrapper div.content-body div.col-md-8 div{
+    color: #6d7278;
+    font-family: Helvetica;
+    font-size: 14px;
+    line-height: 24px;
+}
+body div.wrapper div.content-body div.col-md-2{
+    padding: 0px;
+}
+body div.wrapper div.content-body div.col-md-8{
+    padding: 0px;
+}
+.tutorial-shop{
+    text-align: center;
+    color: #0091ff;
+    font-family: Helvetica;
+    font-size: 16px;
+    padding: 15px;
+}
+.change-to-mobile{
+    text-align: center;
+    color: #0091ff;
+    font-family: Helvetica;
+    font-size: 14px;
+    padding-bottom: 44px;
+}
+body div.wrapper div.content-body div.col-md-8 b{
+    color: #000000;
+    font-family: Helvetica;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 24px;
 }
 @media(max-width:1090px) {
     body > div.wrapper > div.navbar-ws > div > div.search-box{
