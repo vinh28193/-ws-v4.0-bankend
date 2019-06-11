@@ -63,6 +63,7 @@ class HomeController extends CmsController
 //        if (($data = $this->renderBlock(1,6)) === false) {
 //            return $this->redirect('@frontend/views/common/404');
 //        }
+        $this->isShow = true;
         $data = [];
         return $this->render('index', ['data' => $data]);
     }

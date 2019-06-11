@@ -65,7 +65,9 @@ $this->beginContent('@frontend/views/layouts/common.php')
 //    ]);
 //echo Html::endTag('div');
 //}
-echo \frontend\widgets\layout\SlidesWidgets::widget();
+if($isShow){
+    echo \frontend\widgets\layout\SlidesWidgets::widget();
+}
 echo '<div class="container">' .
     $content.
     '</div>';
