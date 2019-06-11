@@ -775,3 +775,59 @@ https://github.com/protocolbuffers/protobuf/tree/master/php
 protoc --php_out=boxme accounting.proto
 
 protoc --php_out=common\grpc\boxme accounting.proto
+
+
+##----------------Call test grpc boxme-----------------------
+https://njp.io/grpcc-a-simple-command-line-client-for-grpc-services/
+
+$ npm install -g grpcc
+
+$ grpcc --proto accounting.proto --address 206.189.94.203:50054 -i
+
+Connecting to Accouting.Accouting on 206.189.94.203:50054. Available globals:
+
+  client - the client connection to Accouting
+    getListMerchantById (GetListMerchantByIdRequest, callback) returns GetListMerchantByIdResponse
+
+  printReply - function to easily print a unary call reply (alias: pr)
+  streamReply - function to easily print stream call replies (alias: sr)
+  createMetadata - convert JS objects into grpc metadata instances (alias: cm)
+  printMetadata - function to easily print a unary call's metadata (alias: pm)
+
+Accouting@206.189.94.203:50054> (node:12068) DeprecationWarning: grpc.load: Use the @grpc/proto-loader module with grpc.loadPackageDefinition instead
+
+
+
+###--------------http 2---------------
+https://inside-out.xyz/technology/how-to-enable-http-2-in-centos-7.html
+
+####---------------Docker Yii2 --------------
+https://github.com/dmstr/docker-php-yii2
+
+
+$ grpcc --proto Greeter.proto --address 127.0.0.1:50051 -i
+
+$ grpcc --proto accounting.proto --address 206.189.94.203:50054 -i
+
+$ let erl = client.getListMerchantById({UserId: 23 , CountryCode: 'VN'},printReply)
+Accouting@206.189.94.203:50054>
+{
+  "Error": false,
+  "Data": [
+    {
+      "UserId": 23,
+      "CountryCode": "VN",
+      "HomeCurrency": "VND",
+      "UserLevel": 2,
+      "BalancePvc": -105639628.29,
+      "BalanceCod": 0,
+      "Provisional": 0,
+      "Freeze": 4007285.65,
+      "Quota": 900000000,
+      "MoneyAvailable": 790353086.06,
+      "BalanceConfig": 0
+    }
+  ],
+  "Message": "Success"
+}
+

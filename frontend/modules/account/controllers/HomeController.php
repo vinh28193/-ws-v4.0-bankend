@@ -95,7 +95,7 @@ class HomeController extends BaseAccountController
 
     public function actionGrpc()
     {
-        $WaletBoxme  = new Merchantinfo();
+        $WaletBoxme  = new Merchantinfo('http://206.189.94.203:50054');
         $WaletBoxme->setUserId(23);
         $WaletBoxme->setCountryCode('VN');
         $getBalanceCod = $WaletBoxme->getBalanceCod();
