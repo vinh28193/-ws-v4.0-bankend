@@ -22,7 +22,13 @@ $url_page = function ($p){
 //           $param['portal'] = $portal;
     return Yii::$app->getUrlManager()->createUrl($param);
 };
-$default = null;//Yii::$app->request->cookies->getValue('user_setting_default_search');
+$default = Yii::$app->request->cookies->getValue('user_setting_default_search');
+$tooltip = 'Nhấn enter để tìm kiếm';
+$js = <<<JS
+    $('input[name=formPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
+    $('input[name=toPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
+JS;
+$this->registerJs($js);
 if(!$default){
     $message = "<p>" .
         "Nhằm giúp khách hàng có trải nghiệm mua sắm xuyên biên giới tốt hơn, bạn nên tìm kiếm các sản phẩm trên website Amazon.com." .
@@ -35,6 +41,8 @@ if(!$default){
         "</p>";
     $titleMess = "Thông báo nâng cấp trang tìm kiếm sản phẩm";
     $js = <<<JS
+    $('input[name=formPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
+    $('input[name=toPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
     $(document).ready(function () {
         ws.notifyConfirm('$message','$titleMess','lg','ws.setDefaultSearch(\'amazon\')','ws.setDefaultSearch(\'ebay\')','Đồng ý sử dụng Amazon.com','Không, tiếp tục tìm kiếm mặc định trên eBay.com','btn btn-amazon','btn btn-link');
     });
