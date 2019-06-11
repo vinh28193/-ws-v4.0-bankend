@@ -12,7 +12,7 @@
         <div class="search-box">
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" name="searchBoxInput" id="searchBoxInput" class="form-control" value=""
+                    <input type="text" name="searchBoxInput" id="searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
                            placeholder="Nhập tên sản phẩm hoặc đường link sản phẩm amzon.com, ebay.com tại đây">
                     <span class="input-group-btn">
                 <button type="button" id="searchBoxButton" class="btn btn-default">

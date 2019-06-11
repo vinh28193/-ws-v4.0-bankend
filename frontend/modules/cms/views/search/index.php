@@ -11,7 +11,11 @@ use frontend\widgets\search\SearchResultWidget;
  * @var $form \common\products\forms\ProductSearchForm
  */
 $keyword = Yii::$app->request->get('keyword');
-$this->params = ['Home' => '/','Search' => '/', $keyword => '/search/'.$keyword.'.html'];
+if($form->type == 'ebay'){
+    $this->params = ['Home' => '/','Ebay Search' => '/', $keyword => '/search/'.$keyword.'.html'];
+}else{
+    $this->params = ['Home' => '/','Amazon Search' => '/', $keyword => '/search/'.$keyword.'.html'];
+}
 echo SearchResultWidget::widget([
     'results' => \yii\helpers\ArrayHelper::getValue($data,'amazon'),
     'form' => $form,

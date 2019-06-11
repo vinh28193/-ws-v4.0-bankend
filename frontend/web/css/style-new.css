@@ -262,12 +262,6 @@ body div.wrapper div.content-body div.col-md-8 b{
 .title-box .btn-group button img{
     max-height: 22px;
 }
-.btn-amazon {
-    color: #e67425;
-}
-.btn-amazon:hover {
-    color: #e05e08;
-}
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -280,6 +274,7 @@ div.title-box.inline div.form-inline input{
 }
 .lable-titlebox{
     padding: 10px 10px 10px 0px;
+    font-size: 14px;
 }
 .search-content .title-box {
     display: inline-flex;
@@ -288,6 +283,34 @@ div.product-list.row div a div.info div.name{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.ico.ico-amazon:before {
+    content: url("/images/logo/logo_amazon_inactive.jpg");
+}
+.ico.ico-amazon.active {
+    content: url("/images/logo/logo_amazon_active.jpg");
+}
+.ico.ico-ebay:before {
+    content: url("/images/logo/logo_ebay_inactive.jpg");
+}
+.ico.ico-ebay.active {
+    content: url("/images/logo/logo_ebay.jpg");
+}
+#NotifyConfirmTitle{
+    color: rgba(0, 0, 0, 0.85);
+    font-family: Helvetica;
+    font-size: 20px;
+    margin: auto;
+    text-align: center;
+}
+.btn-amazon{
+    background-color: #fa6400;
+    color: #ffffff;
+    border: 1px #fa6400 solid;
+}
+.btn-amazon:hover{
+    background-color: #fff;
+    color: rgba(0, 0, 0, 0.85);
 }
 @media(max-width:1090px) {
     body > div.wrapper > div.navbar-ws > div > div.search-box{

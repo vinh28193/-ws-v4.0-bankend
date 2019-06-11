@@ -63,7 +63,7 @@ class SearchResultWidget extends Widget
             'data-action' => $this->getClientOptions()['absoluteUrl'],
             'data-portal' => $this->portal
         ], $this->options);
-        if ($this->portal === null) {
+        if (!$this->portal) {
             $this->portal = $this->form->type;
         }
         Html::addCssClass($options, "{$this->portal}-search");
