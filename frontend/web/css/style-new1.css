@@ -14,7 +14,7 @@
     color: rgba(0, 0, 0, 0.85);
 }
 .style-ull li a:hover {
-    color: rgba(0, 0, 0, 0.85);
+    color: #2b96b6 !important;
 }
 .style-i {
     width: 24px;
@@ -31,6 +31,7 @@
     display: none;
     position: absolute;
     width: 892px;
+    height: 530px;
     background-color: #ffffff;
 }
 .style-ull li:hover .sub-menu-2 {
@@ -49,12 +50,14 @@
     color: #555555;
 }
 .title {
+    color: #2b96b6;
     font-size: 16px;
     font-weight: 700;
 }
 .banner-sub img {
-    width: 386px;
-    height: 416px;
+    margin-top: 25px;
+    width: 404px;
+    height: 471px;
 }
 .banner-sub a {
     margin-left: 0;
@@ -64,8 +67,27 @@ ul.bars-nav > li ul li a{
     padding-left: 10px;
 }
 .category_account {
-   left: -200px !important;
+   left: -195px !important;
 }
 .show {
     background-color: white;
+}
+.color-account {
+    color: #999999;
+}
+.style-font {
+    color: white;
+    font-weight: 400;
+}
+#target {
+    display:none;
+}
+
+#targetEbay {
+    display:none;
+}
+
+.Hide
+{
+    display:none;
 }
