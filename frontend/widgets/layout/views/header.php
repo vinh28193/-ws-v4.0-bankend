@@ -41,7 +41,7 @@ $this->registerJs($js);
                aria-expanded="false">
                 <span class="row">
                     <span class="col-md-3 m-0 pr-0 pt-1 float-right">
-                        <i class="la la-user" style="font-size: 40px; color: #2b96b6"></i>
+                        <i class="la la-user"></i>
                     </span>
                     <span class="col-md-9 m-0">
                         <span href="javascript: void(0);" class="option-auth">Đăng ký / đăng nhập</span><br>

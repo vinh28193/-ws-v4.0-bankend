@@ -44,7 +44,6 @@ body div.wrapper div.navbar-ws div.container{
     font-size: 16px;
 }
 body div.wrapper div.navbar-ws div div.search-box{
-    width: 652px;
     border-radius: 5px;
 }
 #ico-search{
@@ -78,13 +77,20 @@ body div.wrapper div.navbar-ws div div.search-box{
     font-size: 16px;
 }
 .account-header-box i{
-    padding-top: 10px;
+    padding-top: 5px;
     width: 30px;
     height: 36px;
     color: #2b96b6;
     font-family: "LineAwesome";
-    font-size: 30px;
+    font-size: 40px;
     float: left;
+}
+.search-box{
+    width: 57%;
+}
+.logo,.cart-header-box,.account-header-box{
+    /*width: 20%;*/
+    width: auto;
 }
 ul.bars-nav li{
     padding-bottom: 10px;
@@ -313,9 +319,12 @@ div.product-list.row div a div.info div.name{
     background-color: #fff;
     color: rgba(0, 0, 0, 0.85);
 }
+.navbar-ws .logo img{
+    width: initial;
+}
 @media(max-width:1090px) {
     body div.wrapper div.navbar-ws div div.search-box{
-        width: 580px;
+        width: 47%;
         height: 40px;
         border-radius: 5px;
     }
@@ -331,10 +340,10 @@ div.product-list.row div a div.info div.name{
         line-height: 20px;
     }
     .account-header-box i{
-        padding-top: 8px;
+        padding-top: 4px;
         color: #2b96b6;
         font-family: "LineAwesome";
-        font-size: 25px;
+        font-size: 30px;
         float: left;
     }
     #ico-search{
@@ -349,7 +358,7 @@ div.product-list.row div a div.info div.name{
         font-size: 25px;
         line-height: 0em;
     }
-    .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
+    .navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 40px;
     }
     .account-title,ul.bars-nav li,#searchBoxInput{
@@ -398,9 +407,9 @@ div div.product-list.row div a div.info div.price span.countdown{
     font-size: 12px;
     text-transform: lowercase;
 }
-@media(max-width:879px) {
+@media(max-width:948px) {
     body div.wrapper div.navbar-ws div div.search-box{
-        width: 380px;
+        width: 30%;
         height: 40px;
         border-radius: 5px;
     }
@@ -416,7 +425,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         line-height: 20px;
     }
     .account-header-box i{
-        padding-top: 8px;
+        padding-top: 3px;
         color: #2b96b6;
         font-family: "LineAwesome";
         font-size: 20px;
@@ -434,7 +443,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 20px;
         line-height: 0em;
     }
-    .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
+    .navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 40px;
     }
     .account-title,ul.bars-nav li,#searchBoxInput{
@@ -449,7 +458,6 @@ div div.product-list.row div a div.info div.price span.countdown{
 }
 @media(max-width:774px) {
     body div.wrapper div.navbar-ws div div.search-box{
-        width: 280px;
         height: 30px;
         border-radius: 5px;
     }
@@ -465,7 +473,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         line-height: 20px;
     }
     .account-header-box i{
-        padding-top: 8px;
+        padding-top: 2px;
         color: #2b96b6;
         font-family: "LineAwesome";
         font-size: 15px;
@@ -483,7 +491,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 15px;
         line-height: 0em;
     }
-    .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
+    .navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 30px;
     }
     .account-title,ul.bars-nav li,#searchBoxInput{
@@ -501,14 +509,18 @@ div div.product-list.row div a div.info div.price span.countdown{
 }
 @media(max-width:975px) {
     body div.wrapper div.navbar-ws div div.search-box{
-        width: 480px;
         height: 40px;
         border-radius: 5px;
     }
 }
 @media(max-width:858px) {
     body div.wrapper div.navbar-ws div div.search-box{
-        width: 330px;
+        height: 40px;
+        border-radius: 5px;
+    }
+}
+@media(max-width:813px) {
+    body div.wrapper div.navbar-ws div div.search-box{
         height: 40px;
         border-radius: 5px;
     }
