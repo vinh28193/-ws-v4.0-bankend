@@ -152,6 +152,7 @@ ul.bars-nav li:last-child{
 }
 .carousel-item img{
     width: 100%;
+    height: initial;
 }
 .btn-change-slides {
     font-size: 40px !important;
@@ -165,25 +166,26 @@ ul.bars-nav li:last-child{
     min-height: 200px;
 }
 .content-body{
-    /*width: 85%;*/
-    /*margin: auto;*/
+    width: 90%;
+    margin: auto;
     box-shadow: 0 2px 4px #d6d6d6;
     border-radius: 5px;
     background-color: #ffffff;
     position: relative;
-    margin-top: -130px;
+    margin-top: -15%;
     padding: 15px;
 }
-.content-body h3{
+.content-body .title-content-home{
     color: #000;
     text-align: center;
     padding-bottom: 15px;
+    font-size: 32px;
 }
 body div.wrapper div.content-body div.col-md-2 i{
     font-size: 30px;
     line-height: 300%;
 }
-body div.wrapper div.content-body div.col-md-8 div{
+body div.wrapper div.content-body div.col-md-10 div{
     color: #6d7278;
     font-family: Helvetica;
     font-size: 14px;
@@ -192,8 +194,8 @@ body div.wrapper div.content-body div.col-md-8 div{
 body div.wrapper div.content-body div.col-md-2{
     padding: 0px;
 }
-body div.wrapper div.content-body div.col-md-8{
-    padding: 0px;
+body div.wrapper div.content-body div.col-md-10{
+    padding-left: 0px;
 }
 .tutorial-shop{
     text-align: center;
@@ -456,7 +458,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         padding-right: 12px;
     }
 }
-@media(max-width:774px) {
+@media(max-width:799px) {
     body div.wrapper div.navbar-ws div div.search-box{
         height: 30px;
         border-radius: 5px;
@@ -507,30 +509,54 @@ div div.product-list.row div a div.info div.price span.countdown{
         line-height: 2.5em;
     }
 }
-@media(max-width:975px) {
-    body div.wrapper div.navbar-ws div div.search-box{
-        height: 40px;
-        border-radius: 5px;
-    }
-}
-@media(max-width:858px) {
-    body div.wrapper div.navbar-ws div div.search-box{
-        height: 40px;
-        border-radius: 5px;
-    }
-}
-@media(max-width:813px) {
-    body div.wrapper div.navbar-ws div div.search-box{
-        height: 40px;
-        border-radius: 5px;
-    }
-}
+/*------------------------- mobile site ---------------------------*/
 @media(max-width:767px) {
+    .content-body .title-content-home{
+        font-size: 18px;
+    }
     #menu-left-search-sm{
         display: block !important;
     }
     #menu-left-search{
         display: none !important;
+    }
+    .mobile-hide{
+        display: none !important;
+    }
+    .mobile-show{
+        display: block !important;
+    }
+    body div.wrapper div.content-body div.col-md-2 i{
+        line-height: normal;
+    }
+    body div.wrapper div.content-body div.col-md-10{
+        line-height: 2em;
+    }
+    #slides {
+        max-height: 400px;
+    }
+}
+@media (min-width: 360px) {
+    .col-sm-6 {
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    .col-sm-6 .col-sm-2 {
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+    .col-sm-6 .col-sm-10 {
+        -ms-flex: 0 0 83.333333%;
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+    body div.wrapper div.content-body div.col-sm-10 div,body div.wrapper div.content-body div.col-sm-2 div{
+        font-size: 12px;
+    }
+    body div.wrapper div.content-body div.col-md-2 i{
+        font-size: 24px;
     }
 }
 #home-slick .banner {

@@ -1,5 +1,5 @@
 <footer class="footer">
-    <div class="change-to-mobile">
+    <div class="change-to-mobile mobile-hide">
         <a href="#">Chuyển qua giao diện mobile</a>
     </div>
     <div class="top">
