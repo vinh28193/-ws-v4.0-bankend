@@ -2,15 +2,19 @@
     background-color: white;
 }
 .style-ull {
-    margin-left: 1em;
+    padding-left: 1em;
+    background-color: #f6f6f6;
 }
 .style-ull li {
-    line-height: 2.2;
+    line-height: 2.4;
     padding-right: 10px;
     position: relative;
 }
 .style-ull li a {
-    color: rgba(0, 0, 0, 0.85) !important;
+    color: rgba(0, 0, 0, 0.85);
+}
+.style-ull li a:hover {
+    color: rgba(0, 0, 0, 0.85);
 }
 .style-i {
     width: 24px;
@@ -37,13 +41,31 @@
     color: rgba(0, 0, 0, 0.85);
 }
 .title-box {
-    padding: 0 30px;
-    margin-top: 10px;
-    position: relative;
-    font-size: 17px;
     line-height: 1.2;
+    border-bottom: 1px solid #ededed;
+    margin-top: 20px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    color: #555555;
 }
-.ebay-sub-slider {
-    padding: 0 30px;
-    position: relative;
+.title {
+    font-size: 16px;
+    font-weight: 700;
+}
+.banner-sub img {
+    width: 386px;
+    height: 416px;
+}
+.banner-sub a {
+    margin-left: 0;
+}
+ul.bars-nav > li ul li a{
+    color: #000;
+    padding-left: 10px;
+}
+.category_account {
+   left: -200px !important;
+}
+.show {
+    background-color: white;
 }
