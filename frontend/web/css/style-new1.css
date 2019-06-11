@@ -1,0 +1,49 @@
+.bars-nav li:active {
+    background-color: white;
+}
+.style-ull {
+    margin-left: 1em;
+}
+.style-ull li {
+    line-height: 2.2;
+    padding-right: 10px;
+    position: relative;
+}
+.style-ull li a {
+    color: rgba(0, 0, 0, 0.85) !important;
+}
+.style-i {
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    display: -webkit-inline-box;
+    text-align: -webkit-center;
+    margin-right: 5px;
+}
+.style-i img {
+    text-align: center;
+}
+.sub-menu-2 {
+    display: none;
+    position: absolute;
+    width: 892px;
+    background-color: #ffffff;
+}
+.style-ull li:hover .sub-menu-2 {
+    display: block;
+    margin-left: 332px;
+    position: fixed;
+    top: 0;
+    color: rgba(0, 0, 0, 0.85);
+}
+.title-box {
+    padding: 0 30px;
+    margin-top: 10px;
+    position: relative;
+    font-size: 17px;
+    line-height: 1.2;
+}
+.ebay-sub-slider {
+    padding: 0 30px;
+    position: relative;
+}
