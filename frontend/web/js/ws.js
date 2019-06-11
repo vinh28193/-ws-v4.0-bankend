@@ -84,6 +84,10 @@ var ws = ws || (function ($) {
         notifyError: function (message = 'Error', title = 'Error', size = 'default') {
             ws.notifyMessage(message, title, 'error', size);
         },
+        notifyInfo: function (message = 'Info', title = 'Info', size = 'default') {
+            ws.notifyMessage(message, title, 'info', size);
+        },
+
         notifyConfirm: function (message = 'Confirm', title = 'Confirm', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '') {
             ws.notifyMessage(message, title, 'confirm', size, submitClick, cancelClick);
         },

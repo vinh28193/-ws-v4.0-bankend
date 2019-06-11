@@ -62,6 +62,7 @@ return [
         'otp/<code:[^/]+>/verify.html' => 'payment/wallet/otp-verify',
         'otp/captcha' => 'payment/wallet/captcha',
         'payment/<provider:[^/]+>/calc' => 'payment/installment/calculator',
+        'payment/<provider:[^/]+>/check-field' => 'payment/validate/check-field',
 
         //account
         'my-weshop.html' => 'account/home',

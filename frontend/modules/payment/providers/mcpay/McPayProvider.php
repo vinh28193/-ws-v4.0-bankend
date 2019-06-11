@@ -2,14 +2,14 @@
 
 namespace frontend\modules\payment\providers\mcpay;
 
-use common\components\ReponseData;
+use Yii;
+use Exception;
 use common\models\logs\PaymentGatewayLogs;
 use common\models\PaymentTransaction;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\PaymentProviderInterface;
+use frontend\modules\payment\PaymentResponse;
 use yii\base\BaseObject;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
 
 class McPayProvider extends BaseObject implements PaymentProviderInterface
 {
@@ -42,16 +42,7 @@ class McPayProvider extends BaseObject implements PaymentProviderInterface
         $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED;
 
         $checkoutUrl = $this->createCheckOutUrl();
-
-
-        return ReponseData::reponseArray(true, 'McPay success', [
-            'code' => $payment->transaction_code,
-            'status' => 1,
-            'token' => $payment->transaction_code,
-            'checkoutUrl' => $checkoutUrl,
-            'method' => 'GET',
-        ]);
-
+        return new PaymentResponse(true, 'McPay success', $payment->transaction_code, PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, $payment->transaction_code, $checkoutUrl);
     }
 
     public function handle($data)
@@ -77,7 +68,7 @@ class McPayProvider extends BaseObject implements PaymentProviderInterface
                 $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logCallback->save(false);
-                return ReponseData::reponseMess(false, 'Transaction không tồn tại');
+                return new PaymentResponse(false, 'Transaction không tồn tại');
             }
             $key0 = md5($tranID . $orderid . $status . $domain . $amount . $currency);
             $key1 = md5($paydate . $domain . $key0 . $appcode . $this->verify_key);
@@ -93,12 +84,12 @@ class McPayProvider extends BaseObject implements PaymentProviderInterface
             }
             $logCallback->response_content = null;
             $logCallback->save();
-            return ReponseData::reponseArray($success, $mess, ['transaction' => $transaction]);
-        } catch (\Exception $e) {
+            return new PaymentResponse($success, $mess, $transaction);
+        } catch (Exception $e) {
             $logCallback->request_content = $e->getMessage() . " \n " . $e->getFile() . " \n " . $e->getTraceAsString();
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);
-            return ReponseData::reponseArray(false, 'Call back thất bại');
+            return new PaymentResponse(false, 'Call back thất bại');
         }
 
     }

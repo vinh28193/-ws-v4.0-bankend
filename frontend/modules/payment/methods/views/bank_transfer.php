@@ -27,23 +27,12 @@ $css = <<< CSS
     border-image: initial;
 }
 CSS;
-
 $this->registerCss($css);
-$items = $methods;
-$items = Json::htmlEncode($items);
-$this->registerJs("ws.payment.registerMethods($items);");
-$isNew = ($payment->payment_method !== 1 && $payment->payment_bank_code === null);
-if ($isNew) {
-    $this->registerJs("ws.payment.methodChange(true);");
-} else {
-    $this->registerJs("ws.payment.methodChange(false);");
-}
-
-
 ?>
 
 <div class="method-item">
-    <a class="btn method-select" data-toggle="collapse" data-target="#method<?= $group; ?>" aria-expanded="<?=$selected ? 'true' : 'false';?>"
+    <a class="btn method-select" data-toggle="collapse" data-target="#method<?= $group; ?>"
+       aria-expanded="<?= $selected ? 'true' : 'false'; ?>"
        onclick="ws.payment.selectMethod(<?= $methods[0]['payment_provider_id'] ?>,<?= $methods[0]['payment_method_id'] ?>, '<?= $methods[0]['paymentMethod']['code']; ?>')">
         <i class="icon method_<?= $group; ?>"></i>
         <div class="name">Thẻ ATM nội địa/ Internet banking</div>

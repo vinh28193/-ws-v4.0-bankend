@@ -13,6 +13,8 @@ use common\components\UserPublicIdentityInterface;
 /**
  * Class User
  * @package common\models
+ * @property-read Address $primaryAddress
+ * @property-read Address $defaultShippingAddress
  */
 class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {

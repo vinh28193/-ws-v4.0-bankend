@@ -48,7 +48,7 @@
                     var options = getQuantityInputOptions($target);
                     var operator = $item.data('operator');
                     if (options.max === '' || options.max < options.value) {
-                        ws.notifyMessage('Không thể thay đổi số lượng', 'error', 'info');
+                        ws.notifyInfo(ws.t('Cannot change quantity'), ws.t('Error'));
                     }
                     var data = {type: $item.data('type'), id: id, key: key};
                     var param = {quantity: options.value};
@@ -57,7 +57,7 @@
                         if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
                             param.quantity = options.max;
                             $target.val(param.quantity);
-                            ws.notifyError('Bạn không thể mua quá: ' + options.max, 'error');
+                            ws.notifyError(ws.t('You can not buy greater than {number}',{number:options.max}), ws.t('Error'));
                             return;
                         }
                     } else {
@@ -65,7 +65,7 @@
                         if (param.quantity < 1) {
                             param.quantity = 1;
                             $target.val(1);
-                            ws.notifyError('Bạn không thể mua dưới 1', 'error');
+                            ws.notifyError(ws.t('You can not buy lesser than {number}',{number:1}), ws.t('Error'));
                             return;
                         }
                     }
@@ -84,11 +84,11 @@
                     if (param.quantity < 1) {
                         param.quantity = 1;
                         $item.val(1);
-                        ws.notifyError('Bạn không thể mua dưới 1', 'error');
+                        ws.notifyError(ws.t('You can not buy lesser than {number}',{number:1}), ws.t('Error'));
                     } else if (options.max !== '' && param.quantity >= options.max) {
                         param.quantity = options.max;
                         $item.val(options.max);
-                        ws.notifyError('Bạn không thể mua quá: ' + options.max, 'error');
+                        ws.notifyError(ws.t('You can not buy greater than {number}',{number:options.max}), ws.t('Error'));
                     }
                     data.param = param;
                     methods.update.call($cart, data);
@@ -149,17 +149,16 @@
         refresh: function () {
             var $cart = $(this);
             var container = '#' + $cart.attr('id');
-            $.pjax.reload({container: container});
+            $.pjax.reload({container: container, push: false, replace: false});
         },
         watch: function ($param) {
             var $cart = $(this);
-            var container = '#' + $cart.attr('id');
             ws.ajax('/checkout/cart/selection', {
                 dataType: 'json',
                 method: 'post',
                 data: $param,
                 success: function () {
-                    $.pjax.reload({container: container});
+                    methods.refresh.apply($cart);
                 }
             });
 
@@ -174,9 +173,9 @@
                 data: param,
                 success: function (response, textStatus, xhr) {
                     if (response.success) {
-                        $.pjax.reload({container: container});
+                        methods.refresh.apply($cart);
                     } else {
-                        ws.notifyError(response.message, 'error');
+                        ws.notifyError(response.message, ws.t('Error'));
                     }
                 }
             };
@@ -196,14 +195,13 @@
                 data: param,
                 success: function (response, textStatus, xhr) {
                     if (response.success) {
-                        // updateItem(response);
-                        $.pjax.reload({container: container});
                         var countItems = response.countItems || false;
                         if (countItems) {
-                            $('#cartBadge').html(countItems);
+                            ws.setCartBadge(countItems);
                         }
+                        methods.refresh.apply($cart);
                     } else {
-                        ws.notifyError(response.message, 'error');
+                        ws.notifyError(response.message, ws.t('Error'));
                     }
 
                 }
@@ -230,7 +228,7 @@
                     if (response.success) {
                         var url = response.data || null;
                         if (url === null) {
-                            ws.notifySuccess('action can not complete');
+                            ws.notifySuccess(ws.t('Action cannot complete'));
                             return false;
                         }
                         ws.redirect(url);

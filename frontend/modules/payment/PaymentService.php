@@ -22,6 +22,37 @@ use yii\helpers\Url;
 class PaymentService
 {
 
+    const PAYMENT_GROUP_MASTER_VISA = 1;
+    const PAYMENT_GROUP_BANK = 2;
+    const PAYMENT_GROUP_NL_WALLET = 3;
+    const PAYMENT_GROUP_WSVP = 4;
+    const PAYMENT_GROUP_WS_WALLET = 5;
+    const PAYMENT_GROUP_ALIPAY_INSTALMENT = 11;
+    const PAYMENT_GROUP_MANDIRI_INSTALMENT = 12;
+    const PAYMENT_GROUP_COD = 6;
+    const PAYMENT_GROUP_MOLMY = 9;
+    const PAYMENT_GROUP_DRAGON = 7;
+    const PAYMENT_GROUP_PAYNAMIC = 8;
+    const PAYMENT_GROUP_C2P2 = 10;
+    const PAYMENT_GROUP_MCPAY = 35;
+    const PAYMENT_GROUP_WEPAY = 36;
+    const PAYMENT_GROUP_DOKU = 13;
+    const PAYMENT_GROUP_MY_BANK_TRANSFER = 55;
+
+    // NEW
+    const PAYMENT_GROUP_QRCODE = 78;
+    const PAYMENT_GROUP_IB = 79;
+    const PAYMENT_GROUP_ATM = 80;
+    const PAYMENT_GROUP_BANK_TRANSFER = 81;
+    const PAYMENT_GROUP_BANK_OFFICE = 82;
+    const PAYMENT_GROUP_VN_BANK_TRANSFER = 83;
+
+    public static function getClientConfig($merchant, $env = null)
+    {
+        $params = ArrayHelper::getValue(Yii::$app->params, "paymentClientParams.{$merchant}", []);
+        return $env === null ? $params : (isset($params[$env]) ? $params[$env] : []);
+    }
+
     public static function loadPaymentByStoreFromDb($store, $provider_id = null)
     {
         $query = PaymentProvider::find();
@@ -58,39 +89,39 @@ class PaymentService
     public static function getGroupName($group)
     {
         switch ((int)$group) {
-            case Payment::PAYMENT_GROUP_MASTER_VISA:
+            case self::PAYMENT_GROUP_MASTER_VISA:
                 return 'Credit Card';
-            case Payment::PAYMENT_GROUP_BANK:
+            case self::PAYMENT_GROUP_BANK:
                 return 'Bank Transfer';
-            case Payment::PAYMENT_GROUP_NL_WALLET:
+            case self::PAYMENT_GROUP_NL_WALLET:
                 return 'NganLuong E-Wallet';
-            case Payment::PAYMENT_GROUP_WSVP:
+            case self::PAYMENT_GROUP_WSVP:
                 return 'Over WeShop\'s counter';
-            case Payment::PAYMENT_GROUP_WS_WALLET:
+            case self::PAYMENT_GROUP_WS_WALLET:
                 return 'WeShop E-Wallet';
-            case Payment::PAYMENT_GROUP_COD:
+            case self::PAYMENT_GROUP_COD:
                 return 'COD';
-            case Payment::PAYMENT_GROUP_DRAGON:
+            case self::PAYMENT_GROUP_DRAGON:
                 return 'Dragon Pay';
-            case Payment::PAYMENT_GROUP_PAYNAMIC:
+            case self::PAYMENT_GROUP_PAYNAMIC:
                 return 'Paynamic';
-            case Payment::PAYMENT_GROUP_MOLMY:
+            case self::PAYMENT_GROUP_MOLMY:
                 return 'MOL';
-            case Payment::PAYMENT_GROUP_C2P2:
+            case self::PAYMENT_GROUP_C2P2:
                 return 'C2P2 Account';
-            case Payment::PAYMENT_GROUP_ALIPAY_INSTALMENT:
+            case self::PAYMENT_GROUP_ALIPAY_INSTALMENT:
                 return 'Thanh toán trả góp';
-            case Payment::PAYMENT_GROUP_MANDIRI_INSTALMENT:
+            case self::PAYMENT_GROUP_MANDIRI_INSTALMENT:
                 return 'Cicilan Bank';
-            case Payment::PAYMENT_GROUP_MCPAY:
+            case self::PAYMENT_GROUP_MCPAY:
                 return 'Kartu Kredit';
-            case Payment::PAYMENT_GROUP_WEPAY:
+            case self::PAYMENT_GROUP_WEPAY:
                 return 'Wepay';
-            case Payment::PAYMENT_GROUP_DOKU:
+            case self::PAYMENT_GROUP_DOKU:
                 return 'Doku';
-            case Payment::PAYMENT_GROUP_NL_QRCODE:
+            case self::PAYMENT_GROUP_NL_QRCODE:
                 return 'QR Code';
-            case Payment::PAYMENT_GROUP_MY_BANK_TRANSFER:
+            case self::PAYMENT_GROUP_MY_BANK_TRANSFER:
                 return 'Bank Transfer';
             default:
                 return 'Unknown';

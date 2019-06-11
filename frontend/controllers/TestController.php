@@ -9,6 +9,8 @@ use common\helpers\WeshopHelper;
 use common\models\User;
 use common\promotion\PromotionForm;
 use frontend\modules\payment\providers\mcpay\McPayProvider;
+use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
+use frontend\modules\payment\providers\nicepay\NicePayClient;
 use Yii;
 use common\components\cart\storage\MongodbCartStorage;
 use frontend\modules\payment\PaymentService;
@@ -167,6 +169,12 @@ class TestController extends FrontendController
         $promotionForm->load($posts,'');
 
         var_dump($promotionForm->checkPromotion());
+        die;
+    }
+
+    public function actionNganLuong(){
+        $client = new NganLuongClient();
+        var_dump($client->GetRequestField('IB_ICB'));
         die;
     }
 }
