@@ -3,13 +3,13 @@
 ?>
 <div class="navbar-ws" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
-        <div class="logo">
+        <div class="logo col-md-2">
             <span class="menu-toggle"></span>
             <a href="/" class="logo-pc">
                 <img src="/images/logo/weshop-01.png" alt="" title="" width ="175px"/ >
             </a>
         </div>
-        <div class="search-box">
+        <div class="search-box col-md-5">
             <div class="form-group">
                 <div class="input-group">
                     <input type="text" name="searchBoxInput" id="searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
@@ -22,16 +22,16 @@
                 </div>
             </div>
         </div>
-        <div class="cart-header-box">
+        <div class="cart-header-box col-md-2">
             <i class="la la-shopping-cart"></i>
             <span class="label-cart">Giỏ hàng (10)</span>
         </div>
-        <div class="account-header-box dropdown style-account" style="width: 150px">
+        <div class="account-header-box dropdown style-account col-md-3" style="width: 150px">
             <a class="bg-white" id="dropAcount" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
                aria-expanded="false">
                 <span class="row">
                     <span class="col-md-3 m-0 pr-0 pt-1 float-right">
-                        <i class="la la-user" style="font-size: 40px"></i>
+                        <i class="la la-user" style="/*font-size: 40px*/"></i>
                     </span>
                     <span class="col-md-9 m-0">
                         <span href="javascript: void(0);" class="option-auth">Đăng ký / đăng nhập</span><br>

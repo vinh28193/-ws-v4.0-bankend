@@ -4,7 +4,7 @@ html, body {
     font-weight: 400;
     color: #555555;
 }
-.navbar-ws,body > div.wrapper > div.navbar-ws > div.container{
+.navbar-ws,body div.wrapper div.navbar-ws div.container{
     /* Style for "Rectangle" */
     background-color: #141c2e;
     margin-top: 0px;
@@ -19,7 +19,7 @@ html, body {
      width: 180px;
      height: 50px;
  }
-body > div.wrapper > div.navbar-ws > div.container{
+body div.wrapper div.navbar-ws div.container{
     padding-top: 11px;
     margin: auto;
 }
@@ -43,7 +43,7 @@ body > div.wrapper > div.navbar-ws > div.container{
     font-family: Helvetica;
     font-size: 16px;
 }
-body > div.wrapper > div.navbar-ws > div > div.search-box{
+body div.wrapper div.navbar-ws div div.search-box{
     width: 652px;
     border-radius: 5px;
 }
@@ -77,7 +77,7 @@ body > div.wrapper > div.navbar-ws > div > div.search-box{
     color: #2b96b6;
     font-size: 16px;
 }
-.account-header-box > i{
+.account-header-box i{
     padding-top: 10px;
     width: 30px;
     height: 36px;
@@ -86,7 +86,7 @@ body > div.wrapper > div.navbar-ws > div > div.search-box{
     font-size: 30px;
     float: left;
 }
-ul.bars-nav > li{
+ul.bars-nav li{
     padding-bottom: 10px;
     padding-top: 15px;
     float: left;
@@ -95,19 +95,19 @@ ul.bars-nav > li{
     font-family: Helvetica;
     font-size: 16px;
 }
-ul.bars-nav > li a{
+ul.bars-nav li a{
     color: #2b96b6;
     padding-left: 10px;
 }
-ul.bars-nav > li:first-child{
+ul.bars-nav li:first-child{
     border-radius: 5px 5px 0px 0px;
     padding-right: 30px;
 }
-ul.bars-nav > li:first-child i:first-child{
+ul.bars-nav li:first-child i:first-child{
     font-size: 30px;
     line-height: 0em;
 }
-ul.bars-nav > li:last-child{
+ul.bars-nav li:last-child{
     padding-right: 0px;
 }
 .category_list{
@@ -314,7 +314,7 @@ div.product-list.row div a div.info div.name{
     color: rgba(0, 0, 0, 0.85);
 }
 @media(max-width:1090px) {
-    body > div.wrapper > div.navbar-ws > div > div.search-box{
+    body div.wrapper div.navbar-ws div div.search-box{
         width: 580px;
         height: 40px;
         border-radius: 5px;
@@ -330,7 +330,7 @@ div.product-list.row div a div.info div.name{
         font-size: 9px;
         line-height: 20px;
     }
-    .account-header-box > i{
+    .account-header-box i{
         padding-top: 8px;
         color: #2b96b6;
         font-family: "LineAwesome";
@@ -345,17 +345,17 @@ div.product-list.row div a div.info div.name{
     .cart-header-box i{
         font-size: 25px;
     }
-    ul.bars-nav > li:first-child i:first-child{
+    ul.bars-nav li:first-child i:first-child{
         font-size: 25px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 40px;
     }
-    .account-title,ul.bars-nav > li,#searchBoxInput{
+    .account-title,ul.bars-nav li,#searchBoxInput{
         font-size: 14px;
     }
-    ul.bars-nav > li:first-child {
+    ul.bars-nav li:first-child {
         padding-right: 25px;
     }
 }
@@ -399,7 +399,7 @@ div div.product-list.row div a div.info div.price span.countdown{
     text-transform: lowercase;
 }
 @media(max-width:879px) {
-    body > div.wrapper > div.navbar-ws > div > div.search-box{
+    body div.wrapper div.navbar-ws div div.search-box{
         width: 380px;
         height: 40px;
         border-radius: 5px;
@@ -415,7 +415,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 8px;
         line-height: 20px;
     }
-    .account-header-box > i{
+    .account-header-box i{
         padding-top: 8px;
         color: #2b96b6;
         font-family: "LineAwesome";
@@ -430,25 +430,25 @@ div div.product-list.row div a div.info div.price span.countdown{
     .cart-header-box i{
         font-size: 20px;
     }
-    ul.bars-nav > li:first-child i:first-child{
+    ul.bars-nav li:first-child i:first-child{
         font-size: 20px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 40px;
     }
-    .account-title,ul.bars-nav > li,#searchBoxInput{
+    .account-title,ul.bars-nav li,#searchBoxInput{
         font-size: 12px;
     }
-    ul.bars-nav > li:first-child {
+    ul.bars-nav li:first-child {
         padding-right: 20px;
     }
-    ul.bars-nav > li {
+    ul.bars-nav li {
         padding-right: 12px;
     }
 }
 @media(max-width:774px) {
-    body > div.wrapper > div.navbar-ws > div > div.search-box{
+    body div.wrapper div.navbar-ws div div.search-box{
         width: 280px;
         height: 30px;
         border-radius: 5px;
@@ -464,7 +464,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 8px;
         line-height: 20px;
     }
-    .account-header-box > i{
+    .account-header-box i{
         padding-top: 8px;
         color: #2b96b6;
         font-family: "LineAwesome";
@@ -479,20 +479,20 @@ div div.product-list.row div a div.info div.price span.countdown{
     .cart-header-box i{
         font-size: 15px;
     }
-    ul.bars-nav > li:first-child i:first-child{
+    ul.bars-nav li:first-child i:first-child{
         font-size: 15px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 30px;
     }
-    .account-title,ul.bars-nav > li,#searchBoxInput{
+    .account-title,ul.bars-nav li,#searchBoxInput{
         font-size: 10px;
     }
-    ul.bars-nav > li:first-child {
+    ul.bars-nav li:first-child {
         padding-right: 15px;
     }
-    ul.bars-nav > li {
+    ul.bars-nav li {
         padding-right: 10px;
     }
     .cart-header-box{
@@ -500,17 +500,25 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
 }
 @media(max-width:975px) {
-    body > div.wrapper > div.navbar-ws > div > div.search-box{
+    body div.wrapper div.navbar-ws div div.search-box{
         width: 480px;
         height: 40px;
         border-radius: 5px;
     }
 }
 @media(max-width:858px) {
-    body > div.wrapper > div.navbar-ws > div > div.search-box{
+    body div.wrapper div.navbar-ws div div.search-box{
         width: 330px;
         height: 40px;
         border-radius: 5px;
+    }
+}
+@media(max-width:767px) {
+    #menu-left-search-sm{
+        display: block !important;
+    }
+    #menu-left-search{
+        display: none !important;
     }
 }
 #home-slick .banner {
