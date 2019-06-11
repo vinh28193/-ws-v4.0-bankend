@@ -50,7 +50,10 @@
     "yiisoft/yii2-queue": "^2.0@dev",
     "baibaratsky/yii2-ga-measurement-protocol": "2.0.*",
     "linslin/yii2-curl":"*",
-    "lajax/yii2-translate-manager": "dev-master"
+    "lajax/yii2-translate-manager": "dev-master",
+    "grpc/grpc": "^v1.7.0",
+    "google/protobuf": "^v3.4.0",
+    "spiral/php-grpc": "dev-master"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

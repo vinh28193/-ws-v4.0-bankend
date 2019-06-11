@@ -13,6 +13,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+//GRPC
+use common\grpc\boxme\Accouting\Merchantinfo;
+
 /**
  * HomeController implements the CRUD actions for Order model.
  */
@@ -88,6 +91,17 @@ class HomeController extends BaseAccountController
         return $this->render('create', [
             'model' => $model,
         ]);
+    }
+
+    public function actionGrpc()
+    {
+        $WaletBoxme  = new Merchantinfo();
+        $WaletBoxme->setUserId(23);
+        $WaletBoxme->setCountryCode('VN');
+        $getBalanceCod = $WaletBoxme->getBalanceCod();
+        var_dump($getBalanceCod);
+
+        die("upiuiupp");
     }
 
     /**
