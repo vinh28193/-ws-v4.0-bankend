@@ -1,3 +1,9 @@
+html, body {
+    font-size: 14px;
+    font-family: Helvetica;
+    font-weight: 400;
+    color: #555555;
+}
 .navbar-ws,body > div.wrapper > div.navbar-ws > div.container{
     /* Style for "Rectangle" */
     background-color: #141c2e;
@@ -202,6 +208,86 @@ body div.wrapper div.content-body div.col-md-8 b{
     font-weight: 700;
     line-height: 24px;
 }
+.breadcrumb-content{
+    height: 40px;
+    box-shadow: 0 2px 4px #dddddd;
+    background-color: #ffffff;
+    margin-bottom: 15px;
+}
+.breadcrumb .breadcrumb-item + .breadcrumb-item::before{
+    content: '»';
+}
+.breadcrumb .breadcrumb-item a{
+    height: 17px;
+    color: #0091ff;
+    font-family: Helvetica;
+    font-size: 14px;
+}
+.filter-content{
+    padding-top: 0px;
+}
+.filter-content .category .title{
+    color: rgba(0, 0, 0, 0.85);
+    font-family: Helvetica;
+    font-size: 16px;
+    font-weight: 700;
+}
+.filter-content .filter-box.category ul li{
+    border: none;
+    margin: 0px;
+    color: rgba(0, 0, 0, 0.85);
+    font-family: Helvetica;
+    font-size: 14px;
+    line-height: 30px;
+}
+.collapse ul.sub-category li{
+    padding-left: 15px;
+}
+.filter-content .filter-box.category ul li ul li:before{
+    content: none;
+}
+.filter-content .filter-box.category ul li ul li{
+    padding: 0px 0px 0px 20px
+}
+.filter-content .filter-box.category ul li a:hover{
+    color: #0091ff;
+}
+.title-box .btn-group button{
+    border: 1px solid #dedede;
+    background-color: #ffffff;
+    max-height: 31px;
+    margin-top: 5px;
+}
+.title-box .btn-group button img{
+    max-height: 22px;
+}
+.btn-amazon {
+    color: #e67425;
+}
+.btn-amazon:hover {
+    color: #e05e08;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+div.title-box.inline div.form-inline input{
+    width: 80px;
+    border-radius: 3px;
+    border: 1px solid #dedede;
+}
+.lable-titlebox{
+    padding: 10px 10px 10px 0px;
+}
+.search-content .title-box {
+    display: inline-flex;
+}
+div.product-list.row div a div.info div.name{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 @media(max-width:1090px) {
     body > div.wrapper > div.navbar-ws > div > div.search-box{
         width: 580px;
@@ -247,6 +333,45 @@ body div.wrapper div.content-body div.col-md-8 b{
     ul.bars-nav > li:first-child {
         padding-right: 25px;
     }
+}
+div div.product-list.row div a div.info div.price strong{
+    color: #e02020;
+    font-family: Helvetica;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.product-list .item .info .price{
+    padding: 0px;
+}
+div div.product-list.row div a div.info div.price{
+    color: #6d7278;
+    font-family: Helvetica;
+    font-size: 12px;
+}
+div div.product-list.row div a div.info div.price span{
+    color: #6d7278;
+    font-family: Helvetica;
+    font-size: 12px;
+    text-decoration: initial;
+    text-transform: uppercase;
+}
+div div.product-list.row div a div.info div.price div.notify{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+div div.product-list.row div a div.info div.price span.old-price{
+    color: #6d7278;
+    font-family: Helvetica;
+    font-size: 12px;
+    text-decoration: line-through;
+    text-transform: uppercase;
+}
+div div.product-list.row div a div.info div.price span.countdown{
+    color: #6d7278;
+    font-family: Helvetica;
+    font-size: 12px;
+    text-transform: lowercase;
 }
 @media(max-width:879px) {
     body > div.wrapper > div.navbar-ws > div > div.search-box{

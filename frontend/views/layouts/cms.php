@@ -1,5 +1,6 @@
 <?php
 
+use frontend\widgets\breadcrumb\BreadcrumbWidget;
 use yii\helpers\Html;
 use common\models\cms\WsPage;
 use frontend\widgets\alias\AliasWidget;
@@ -67,6 +68,8 @@ $this->beginContent('@frontend/views/layouts/common.php')
 //}
 if($isShow){
     echo \frontend\widgets\layout\SlidesWidgets::widget();
+}else{
+    echo BreadcrumbWidget::widget(['params' => $this->params]);
 }
 echo '<div class="container">' .
     $content.

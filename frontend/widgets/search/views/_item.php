@@ -2,7 +2,6 @@
 
 use common\helpers\WeshopHelper;
 use yii\helpers\Html;
-use yii\web\View;
 
 /* @var yii\web\View $this */
 /* @var string $portal */
@@ -31,19 +30,21 @@ if ($product['sell_price'] && $product['retail_price'] && $product['retail_price
 
 ?>
 
-<div class="col-md-4 col-sm-6">
-    <a href="<?= $url; ?>" class="item" onclick="ws.loading(true);">
+<div class="col-md-3 col-sm-6" style="padding-right: 10px;padding-left: 10px">
+    <a href="<?= $url; ?>" class="item" onclick="ws.loading(true);"
+       style="margin-bottom: 20px; background-color: #ffffff; padding:10px">
 
         <div class="thumb">
             <?php
-            if (isset($product['end_time']) && $product['end_time'] !== null) {
-                echo '<span class="countdown text-orange" data-toggle="countdown-time" data-timestamp="' . $product['end_time'] . '" data-prefix="" data-day="d" data-hour="h" data-minute="m" data-second="s"></span>';
-            }
-            ?>
+            //            if (isset($product['end_time']) && $product['end_time'] !== null) {
+            //                echo '<span class="countdown text-orange" data-toggle="countdown-time" data-timestamp="' . $product['end_time'] . '" data-prefix="" data-day="d" data-hour="h" data-minute="m" data-second="s"></span>';
+            //            }
+            //            ?>
             <?= Html::img($product['image'], [
                 'alt' => $product['item_name'],
                 'title' => $product['item_name'],
-            ]) ?>
+            ])
+            ?>
         </div>
         <div class="info">
             <div class="rate text-orange">
@@ -56,13 +57,32 @@ if ($product['sell_price'] && $product['retail_price'] && $product['retail_price
             </div>
             <?= Html::tag('div', $product['item_name'], ['class' => 'name']) ?>
             <div class="price">
+                <div class="notify">
+                    <?php
+                    if ($localSellprice) {
+                        if ($localStartPrice && $salePercent) {
+                            echo "<span class='old-price' >" . $storeManager->showMoney($localStartPrice, '') . "VND</span>";
+                        } else {
+                            if (isset($product['end_time']) && $product['end_time'] !== null) {
+                                echo 'Còn <span class="countdown"' .
+                                    ' data-toggle="countdown-time" ' .
+                                    'data-timestamp="' . $product['end_time'] . '" ' .
+                                    'data-prefix="" data-day="d" ' .
+                                    'data-hour="h" ' .
+                                    'data-minute="m" ' .
+                                    'data-second="s"></span>';
+                            } else {
+                                echo "Nhanh tay mua ngay";
+                            }
+                        }
+                    } else {
+                        echo "Nhanh tay mua ngay";
+                    }
+                    ?>
+                </div>
                 <?php
                 if ($localSellprice) {
-                    echo "<strong>" . $storeManager->showMoney($localSellprice) . "</strong>";
-                    if ($localStartPrice && $salePercent) {
-                        echo "<span>" . $storeManager->showMoney($localStartPrice) . "</span>";
-                        echo "<span class='sale-tag'>" . $salePercent . "% OFF</span>";
-                    }
+                    echo "<strong>" . $storeManager->showMoney($localSellprice, '') . "</strong><span style='font-size: 16px;'>VNĐ</span><span> (" . $product['sell_price'] . " USD)</span>";
                 } else {
                     echo Html::tag('strong', Yii::t('frontend', 'Click to see details'));
                 }
