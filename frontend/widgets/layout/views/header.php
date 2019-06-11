@@ -1,11 +1,20 @@
 <?php
 $js = <<<JS
     $('.toggle').click(function() {
+    var check = $('#target').css('display');
+    if(check == 'none')
+        $('#asd').css('transform','scaleY(-1)');
+    else
+        $('#asd').css('transform','scaleY(1)');
     $('#target').toggle('slow');
-    $('p').css('color','red');
 });
 
     $('.toggleEbay').click(function() {
+        var check1 = $('#targetEbay').css('display');
+    if(check1 == 'none')
+        $('#asd1').css('transform','scaleY(-1)');
+    else
+        $('#asd1').css('transform','scaleY(1)');
     $('#targetEbay').toggle('slow');
 });
 JS;
@@ -125,8 +134,8 @@ $this->registerJs($js);
                     <li role="presentation">
                         <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">
                             <span style="display: block; float: left;"><img src="/img/logo_amazon_us.png"></span>
-                            <span style="display: block; text-align: right; margin-right: 8px" class="amz"><i
-                                        class="la la-caret-up"></i></span>
+                            <span style="display: block; text-align: right; margin-right: 8px" class="amz"><i id="asd"
+                                        class="la la-caret-down"></i></span>
                         </a>
                         <ul class="style-ull menu" id="target">
                             <li>
@@ -973,7 +982,7 @@ $this->registerJs($js);
                         <a href="javascript: void(0);" class="toggleEbay" data-toggle="dropdown" aria-haspopup="true" role="button"
                            aria-expanded="false">
                             <span style="display: block; float: left;"><img src="/img/logo_ebay.png"></span>
-                            <span style="display: block; text-align: right; margin-right: 8px" class="ebay"><i
+                            <span style="display: block; text-align: right; margin-right: 8px" class="ebay"><i id="asd1"
                                         class="la la-caret-down"></i></span>
                         </a>
                         <ul class="style-ull" id="targetEbay" >
@@ -1241,6 +1250,4 @@ $this->registerJs($js);
             </li>
         </ul>
     </div>
-    <button class="toggle">Show &amp; Hide</button>
-    <div id="target"></div>
 </div>

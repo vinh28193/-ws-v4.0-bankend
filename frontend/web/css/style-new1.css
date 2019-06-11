@@ -89,5 +89,7 @@ ul.bars-nav > li ul li a{
 
 .Hide
 {
+    transform: scaleY(-1);
     display:none;
+
 }
