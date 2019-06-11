@@ -1,5 +1,7 @@
-
 <footer class="footer">
+    <div class="change-to-mobile">
+        <a href="#">Chuyển qua giao diện mobile</a>
+    </div>
     <div class="top">
         <div class="container">
             <div class="row">

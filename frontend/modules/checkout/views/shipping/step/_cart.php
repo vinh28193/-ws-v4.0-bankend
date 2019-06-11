@@ -55,11 +55,11 @@ $storeManager = Yii::$app->storeManager;
                                 <a href="<?= $product['product_link']; ?>"
                                    class="name"><?= $product['product_name']; ?></a>
                                 <div class="rate">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <i class="far fa-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star-half-o"></i>
+                <i class="la la-star-o"></i>
                                 </div>
                             </div>
                             <div class="right">

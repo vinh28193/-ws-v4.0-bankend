@@ -30,7 +30,7 @@ class CmsController extends FrontendController
 
     public $type = WsPage::TYPE_HOME;
 
-    public $isShow = true;
+    public $isShow = false;
 
     public $titlePage;
 

@@ -15,6 +15,8 @@ class FrontendAsset extends AssetBundle
         'css/style.css',
         'css/variables.css',
         'css/all.css',
+        'css/slick.css',
+        'css/slick-theme.css',
         'css/style-new.css',
         'css/style-new1.css',
         'css/all.css',
