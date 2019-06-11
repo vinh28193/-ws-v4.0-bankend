@@ -88,6 +88,9 @@
             var filters = queryParams.filter;
 
             var value = $element.val();
+            if($element.attr('id') === 'isPrime'){
+                return;
+            }
             if (settings.portal === 'ebay') {
                 filters = ebayFilterParams(filters, $element.data('for'), $element.data('value'));
             } else {

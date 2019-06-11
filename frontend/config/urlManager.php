@@ -12,6 +12,7 @@ return [
         'index.php' => 'cms/home/index',
         'index.html' => 'cms/home/index',
         'search/<keyword:[^/]+>.html' => 'cms/search/index',
+        'search/set-default' => 'cms/search/set-default',
         'description/<type:[^/]+>-<id:[^/]+>.html' => 'cms/description/index',
 
         // Message read

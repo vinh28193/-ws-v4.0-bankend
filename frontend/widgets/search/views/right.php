@@ -22,20 +22,39 @@ $url_page = function ($p){
 //           $param['portal'] = $portal;
     return Yii::$app->getUrlManager()->createUrl($param);
 };
+$default = null;//Yii::$app->request->cookies->getValue('user_setting_default_search');
+if(!$default){
+    $message = "<p>" .
+        "Nhằm giúp khách hàng có trải nghiệm mua sắm xuyên biên giới tốt hơn, bạn nên tìm kiếm các sản phẩm trên website Amazon.com." .
+        "</p>" .
+        "<p>" .
+        "Đặc biệt nên mua các sản phẩm hỗ trợ dịch vụ Prime, hàng hoá chất lượng tốt hơn, thời gian nhận hàng nhanh hơn.".
+        "</p>" .
+        "<p>" .
+        "Bạn có muốn tìm kiếm mặc định các sản phẩm trên Amzon.com không?" .
+        "</p>";
+    $titleMess = "Thông báo nâng cấp trang tìm kiếm sản phẩm";
+    $js = <<<JS
+    $(document).ready(function () {
+        ws.notifyConfirm('$message','$titleMess','lg','ws.setDefaultSearch(\'amazon\')','ws.setDefaultSearch(\'ebay\')','Đồng ý sử dụng Amazon.com','Không, tiếp tục tìm kiếm mặc định trên eBay.com','btn btn-amazon','btn btn-link');
+    });
+JS;
+    $this->registerJs($js);
+}
 ?>
 <div class="search-content search-2 <?= $portal ?>">
     <div class="title-box inline">
         <div class="lable-titlebox"><?= Yii::t('frontend','Choose website') ?> </div>
         <div class="btn-group btn-group-sn" style="padding-right: 20px">
-            <button class="btn btn-default">
-                <img src="/images/logo/logo_amazon_active.jpg">
+            <button class="btn btn-default" <?= $portal != 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/amazon/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+                <i class="ico ico-amazon <?= $portal != 'ebay' ? 'active' : '' ?>"></i>
             </button>
-            <button class="btn btn-default">
-                <img src="/images/logo/logo_ebay_inactive.jpg" >
+            <button class="btn btn-default" <?= $portal == 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/ebay/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+                <i class="ico ico-ebay <?= $portal == 'ebay' ? 'active' : '' ?>"></i>
             </button>
         </div>
         <div class="btn-group btn-group-sm"  style="padding-right: 20px">
-            <button type="button" class="btn dropdown-toggle btn-amazon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= isset($sorts[$sort]) ? $sorts[$sort] : Yii::t('frontend','Sort by'); ?></button>
+            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= isset($sorts[$sort]) ? $sorts[$sort] : Yii::t('frontend','Sort by'); ?></button>
             <div class="dropdown-menu dropdown-menu-right" x-placement="top-end" style="position: absolute; transform: translate3d(-56px, -102px, 0px); top: 0px; left: 0px; will-change: transform;">
                 <?php
                 foreach ($sorts as $k => $v){
@@ -58,10 +77,14 @@ $url_page = function ($p){
             <input class="form-control form-control-sm" type="number" name="toPrice" placeholder="Price to">
         </div>
         <div class="form-check lable-titlebox" style="margin-left: 15px;">
-            <input class="form-check-input" type="checkbox" name="isPrime" id="isPrime">
-            <label class="form-check-label" for="isPrime">
-                <img src="/images/logo/prime.jpg" >
-            </label>
+            <?php
+            if($portal != 'ebay'){ ?>
+                <input class="form-check-input" type="checkbox" name="isPrime" id="isPrime">
+                <label class="form-check-label" for="isPrime">
+                    <img src="/images/logo/prime.jpg" >
+                </label>
+
+            <?php } ?>
         </div>
     </div>
 
