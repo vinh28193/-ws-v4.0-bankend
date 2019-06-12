@@ -13,6 +13,6 @@ class NotifyController extends CheckoutController
     }
 
     public function actionNicePaySuccess($code){
-        var_dump($code);die;
+        return $this->render('nice_pay_success',$this->request->get());
     }
 }
