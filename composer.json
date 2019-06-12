@@ -65,6 +65,18 @@
     "mpdf/mpdf": "~6.1.0",
     "phpseclib/phpseclib": "~2.0"
   },
+  "autoload": {
+    "psr-4": {
+      "Google\\Protobuf\\": "src/Google/Protobuf",
+      "GPBMetadata\\Google\\Protobuf\\": "src/GPBMetadata/Google/Protobuf",
+      "": "route_guide/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "": "build/gen"
+    }
+  },
   "config": {
     "process-timeout": 1800
   },

@@ -501,24 +501,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/lexer.git",
-                "reference": "1febd6c3ef84253d7c815bed85fc622ad207a9f8"
+                "reference": "975c0e44ab85fb72acc5be2082464e74cade966b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/lexer/zipball/1febd6c3ef84253d7c815bed85fc622ad207a9f8",
-                "reference": "1febd6c3ef84253d7c815bed85fc622ad207a9f8",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/975c0e44ab85fb72acc5be2082464e74cade966b",
+                "reference": "975c0e44ab85fb72acc5be2082464e74cade966b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": "^7.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.5"
+                "doctrine/coding-standard": "^6.0",
+                "phpstan/phpstan": "^0.11.8",
+                "phpunit/phpunit": "^8.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -553,7 +555,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-06-08T11:03:04+00:00"
+            "time": "2019-06-11T06:26:51+00:00"
         },
         {
             "name": "drsdre/yii2-wizardwidget",
@@ -963,19 +965,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "926eaa3ff73cde2becf652b785831bcb7618568a"
+                "reference": "e6d006f1ced100d81755966f09625d71ce6a7dca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/926eaa3ff73cde2becf652b785831bcb7618568a",
-                "reference": "926eaa3ff73cde2becf652b785831bcb7618568a",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/e6d006f1ced100d81755966f09625d71ce6a7dca",
+                "reference": "e6d006f1ced100d81755966f09625d71ce6a7dca",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0"
+                "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.36"
+                "phpunit/phpunit": "^5.7.27 || ^7.5"
             },
             "type": "library",
             "extra": {
@@ -1006,7 +1008,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2018-10-30T00:20:04+00:00"
+            "time": "2019-06-11T17:44:31+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -5313,12 +5315,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "936305eea3991ac752b8805df461befc0bb0559a"
+                "reference": "ae685042e5b264478b4fb0d9c44b72344ba93550"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/936305eea3991ac752b8805df461befc0bb0559a",
-                "reference": "936305eea3991ac752b8805df461befc0bb0559a",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/ae685042e5b264478b4fb0d9c44b72344ba93550",
+                "reference": "ae685042e5b264478b4fb0d9c44b72344ba93550",
                 "shasum": ""
             },
             "require": {
@@ -5405,7 +5407,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2019-06-10T21:33:36+00:00"
+            "time": "2019-06-11T21:09:31+00:00"
         },
         {
             "name": "yiisoft/yii2-authclient",
@@ -5528,12 +5530,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-bootstrap4.git",
-                "reference": "bc37d004c9e3eb9856d2999bdf53a3d0e9201326"
+                "reference": "27ae3c8d2d84cf47863c1c0710b1c3a189fdad0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap4/zipball/bc37d004c9e3eb9856d2999bdf53a3d0e9201326",
-                "reference": "bc37d004c9e3eb9856d2999bdf53a3d0e9201326",
+                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap4/zipball/27ae3c8d2d84cf47863c1c0710b1c3a189fdad0a",
+                "reference": "27ae3c8d2d84cf47863c1c0710b1c3a189fdad0a",
                 "shasum": ""
             },
             "require": {
@@ -5589,7 +5591,7 @@
                 "bootstrap4",
                 "yii2"
             ],
-            "time": "2019-06-08T19:41:24+00:00"
+            "time": "2019-06-11T13:28:19+00:00"
         },
         {
             "name": "yiisoft/yii2-composer",
@@ -7284,12 +7286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "8aa343a825b3fe84af58bbbfd52cc09bdba2fe2a"
+                "reference": "6520d2eb393e329038988960a81de5a8034095aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/8aa343a825b3fe84af58bbbfd52cc09bdba2fe2a",
-                "reference": "8aa343a825b3fe84af58bbbfd52cc09bdba2fe2a",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/6520d2eb393e329038988960a81de5a8034095aa",
+                "reference": "6520d2eb393e329038988960a81de5a8034095aa",
                 "shasum": ""
             },
             "require": {
@@ -7335,7 +7337,7 @@
             ],
             "description": "Symfony BrowserKit Component",
             "homepage": "https://symfony.com",
-            "time": "2019-05-30T16:10:19+00:00"
+            "time": "2019-06-11T15:42:17+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -7635,12 +7637,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-debug.git",
-                "reference": "5c189c4da717976cc807f0fe03f3caf3d6e681c1"
+                "reference": "c8145e6684d31ed978914d2922f2e1f109cf55d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/5c189c4da717976cc807f0fe03f3caf3d6e681c1",
-                "reference": "5c189c4da717976cc807f0fe03f3caf3d6e681c1",
+                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/c8145e6684d31ed978914d2922f2e1f109cf55d9",
+                "reference": "c8145e6684d31ed978914d2922f2e1f109cf55d9",
                 "shasum": ""
             },
             "require": {
@@ -7684,7 +7686,7 @@
                 "debugger",
                 "yii2"
             ],
-            "time": "2019-06-04T14:22:28+00:00"
+            "time": "2019-06-11T11:51:50+00:00"
         },
         {
             "name": "yiisoft/yii2-gii",
