@@ -11,6 +11,8 @@ use yii\helpers\Html;
 /* @var integer $total_page */
 /* @var integer $item_per_page */
 /* @var array $products */
+/* @var array $categories */
+/* @var array $filters */
 /* @var array $sorts */
 /* @var common\components\StoreManager $storeManager */
 
@@ -20,6 +22,16 @@ $url_page = function ($p){
     $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
     $param['page'] = $p;
 //           $param['portal'] = $portal;
+    return Yii::$app->getUrlManager()->createUrl($param);
+};
+$url_cate = function ($id) use ($portal) {
+    $param = [explode('?', \yii\helpers\Url::current())[0]];
+    $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
+    $param['category'] = $id;
+    if (isset($param['keyword'])) {
+        unset($param['keyword']);
+    }
+//    $param['portal'] = $portal;
     return Yii::$app->getUrlManager()->createUrl($param);
 };
 $default = Yii::$app->request->cookies->getValue('user_setting_default_search');
@@ -51,7 +63,7 @@ JS;
 }
 ?>
 <div class="search-content search-2 <?= $portal ?>">
-    <div class="title-box inline">
+    <div class="title-box inline mobile-hide">
         <div class="lable-titlebox"><?= Yii::t('frontend','Choose website') ?> </div>
         <div class="btn-group btn-group-sn" style="padding-right: 20px">
             <button class="btn btn-default" <?= $portal != 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/amazon/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
@@ -95,6 +107,102 @@ JS;
             <?php } ?>
         </div>
     </div>
+    <div class="mobile-show">
+        <div class="row" style="margin-top: -15px;margin-bottom: 15px;background: #fff;display:flex;border-top: 0.5px solid;padding:  10px">
+            <div class="col-sm-6 col-6">
+                <div class="btn-group" style="padding-right: 20px">
+                    <button class="btn btn-outline-dark" <?= $portal != 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/amazon/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+                        <i class="ico ico-amazon <?= $portal != 'ebay' ? 'active' : '' ?>"></i>
+                    </button>
+                    <button class="btn btn-outline-dark" <?= $portal == 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/ebay/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+                        <i class="ico ico-ebay <?= $portal == 'ebay' ? 'active' : '' ?>"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-sm-6 col-6 text-right">
+                <button class="btn" id="showFilter-mb" <?= $portal == 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/ebay/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+                    <i class="la la-filter"></i> <?= Yii::t('frontend','Filter') ?>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="mb-menu-filter">
+        <div class="mb-wraper-filter" style="float: right">
+            <div class="title-mb-menu">
+                <i class="la la-angle-left"></i>
+                <span>Lọc theo kết quả</span>
+            </div>
+            <div class="content-cate-mb">
+                <ul class="mb-menu-filter-cate">
+                    <li role="presentation">
+                        <div class="title-submenu" id="amazon-submenu">
+                            <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <?= isset($sorts[$sort]) ? $sorts[$sort] : Yii::t('frontend','Sort by'); ?>
+                                <i id="asd" class="la la-caret-right"></i></span>
+                            </a>
+                        </div>
+                        <div class="clearfix submenu-2" data-toggle="amazon-submenu">
+                            <ul>
+                                <?php
+                                foreach ($sorts as $k => $v){
+                                    $param = [explode('?',\yii\helpers\Url::current())[0]];
+                                    $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
+                                    $param['sort'] = $k;
+                                    if(isset($param['keyword'])){
+                                        unset($param['keyword']);
+                                    }
+                                    $url = Yii::$app->getUrlManager()->createUrl($param);
+                                    echo '<li><a href="'.$url.'" class="dropdown-item">'.$v.'</a></li>';
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                    </li>
+                    <li role="presentation">
+                        <div class="title-submenu" id="amazon-submenu">
+                            <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <?= Yii::t('frontend', 'Category'); ?>
+                                <i id="asd" class="la la-caret-right"></i></span>
+                            </a>
+                        </div>
+                        <div class="clearfix submenu-2" data-toggle="amazon-submenu">
+                            <ul>
+                                <?php foreach ($categories as $index => $category): ?>
+                                    <?php /* @var $category array */?>
+                                    <li class="accordion">
+                                        <?= Html::a($category['category_name'], $url_cate($category['category_id']), ['onclick' => "ws.loading(true);"]); ?>
+                                        <?php if (isset($category['child_category']) && ($childs = $category['child_category']) !== null && count($childs) > 0): ?>
+                                            <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-<?= $index; ?>"
+                                               aria-expanded="true" aria-controls="collapseOne"><i class="la la-chevron-down"></i></a>
+                                            <div id="sub-<?= $index; ?>" class="collapse" aria-labelledby="headingOne"
+                                                 data-parent="#sub-menu-collapse">
+                                                <ul class="sub-category">
+                                                    <?php foreach ($childs as $child): ?>
+                                                        <li>
+                                                            <?= Html::a($child['category_name'], $url_cate($child['category_id']), []); ?>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            </div>
+                                        <?php endif; ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </li>
+                    <li role="presentation">
+                        <?php foreach ($filters as $item) {
+                            if ($portal === 'amazon-jp') {
+                                $portal = 'amazon';
+                            }
+                            echo $this->render("filter/{$portal}", ['filter' => $item]);
+                        } ?>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
 
     <div class="product-list row">
         <?php
@@ -109,18 +217,18 @@ JS;
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4 col-sm-6">
+    <div class="col-md-4 col-sm-12 col-12">
         <span><?= Yii::t('frontend', 'Showing {from}-{to} of {total} result', [
                 'from' => 1,
                 'to' => count($products),
                 'total' => $total_product
             ]) ?></span>
     </div>
-    <div class="col-md-8 col-sm-6">
+    <div class="col-md-8 col-sm-12 col-12">
         <nav aria-label="...">
             <ul class="pagination justify-content-center" style="margin-top: 0px;">
                 <?php
-                $limitPage = 6;
+                $limitPage = 5;
                 $arr = WeshopHelper::getArrayPage($total_page,$page,$limitPage);
                 if($arr && count($arr) > 1){
                     ?>
