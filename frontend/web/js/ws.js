@@ -110,7 +110,14 @@ var ws = ws || (function ($) {
             $.ajax($options);
         },
         getFingerprint: function () {
-            return $('meta[name=fingerprint-token]').attr('content');
+            var content =  $('meta[name=fingerprint-token]').attr('content');
+
+            if(content === ''){
+                var $client = new ClientJS();
+                content = $client.getFingerprint();
+                pub.setFingerprint(content);
+            }
+            return content;
         },
         setFingerprint: function (value) {
             $('meta[name=fingerprint-token]').attr('content', value);

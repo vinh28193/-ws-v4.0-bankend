@@ -5,19 +5,19 @@ return [
             'class' => 'common\components\db\Connection',
             'dsn' => 'oci:dbname=//178.128.60.187:1521/boxme', // Oracle
             'username' => 'weshopdev',
-            'password' => '12345677',
+            'password' => 'weshopdev2019',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache',
-            'tablePrefix' => 'WS_',
+            // 'tablePrefix' => 'WS_',
 
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=128.199.237.99;port=3306;dbname=weshop_',
-            'username' => 'weshop2020',
-            'password' => 'FaUfevTz62pgY3JE',
+            'username' => 'sys',
+            'password' => 'FaUfevTz62pgY33JxxE',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,

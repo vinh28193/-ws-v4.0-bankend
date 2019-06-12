@@ -68,8 +68,8 @@ class PortalController extends FrontendController
         $uuid = isset($UUID) ? $UUID : $fingerprint;
         $_All_favorite = $_favorite->getfavorite($uuid);
         Yii::$app->response->format = Response::FORMAT_JSON;
-
-        if (count($_All_favorite)) {
+        $_cou = (array)$_All_favorite;
+        if (@count($_cou)) {
             $view = $this->renderPartial('viewed_product', [
                 'items' => $_All_favorite,
             ]);
