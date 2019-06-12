@@ -23,16 +23,16 @@ class WSVNOffice extends BaseObject implements PaymentProviderInterface
     {
         $summitUrl = $payment->return_url;
         $summitUrl .= '?code=' . $payment->transaction_code;
-        return new PaymentResponse(true, 'create payment success', $payment->transaction_code, PaymentResponse::TYPE_ENDPOINT, PaymentResponse::METHOD_GET, $summitUrl, $payment->return_url, $payment->cancel_url);
+        return new PaymentResponse(true, 'create payment success', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $summitUrl, $payment->return_url, $payment->cancel_url);
     }
 
     public function handle($data)
     {
         /** @var $transaction  PaymentTransaction */
-        if (($transaction = PaymentTransaction::find()->where(['OR', ['transaction_code' => $data['code']], ['topup_transaction_code' => $data['code']]])->one()) === null) {
+        if (($transaction = PaymentTransaction::findOne(['transaction_code' => $data['code']])) === null) {
             return new PaymentResponse(false, 'Transaction không tồn tại');
         }
         $checkoutUrl = Url::to("/checkout/office/{$transaction->transaction_code}/success.html", true);
-        return new PaymentResponse(true, 'check payment success', $transaction, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $data['code'], $checkoutUrl);
+        return new PaymentResponse(true, 'check payment success', $transaction, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $data['code'], 'ok', $checkoutUrl);
     }
 }

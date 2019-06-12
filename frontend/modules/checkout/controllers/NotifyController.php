@@ -11,4 +11,8 @@ class NotifyController extends CheckoutController
     {
         return $this->render('office_success');
     }
+
+    public function actionNicePaySuccess($code){
+        var_dump($code);die;
+    }
 }

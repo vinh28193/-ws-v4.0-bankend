@@ -11,26 +11,17 @@ use yii\helpers\ArrayHelper;
 class NganLuongClient extends BaseObject
 {
 
-    public $env = 'product';
-
-    public $baseUrl = 'https://www.nganluong.vn';
-
-    public $merchant_id = '';
-
+    public $summitUrl;
+    public $merchant_id;
     public $merchant_password;
-
-    public $version = '3.2';
-
-    public $function;
-
     public $receiver_email;
-
+    public $version = '3.2';
     public $time_limit = 1440;
 
     public function init()
     {
         parent::init();
-        if (($yiiParams = PaymentService::getClientConfig('nganluong_ver3.2', $this->env)) !== null && !empty($yiiParams)) {
+        if (($yiiParams = PaymentService::getClientConfig('nganluong_ver3_2')) !== null && !empty($yiiParams)) {
             Yii::configure($this, $yiiParams); // reconfig with env
         }
 
@@ -42,23 +33,23 @@ class NganLuongClient extends BaseObject
     {
         if ($this->_params === null) {
             $this->_params = new  NganLuongParamCollection();
-            $this->_params->set('merchant_id', $this->merchant_id);
-            $this->_params->set('merchant_password', $this->merchant_password);
-            $this->_params->set('version', $this->version);
-            $this->_params->set('function', $this->function);
-            $this->_params->set('receiver_email', $this->receiver_email);
+            $this->_params->setDefault('merchant_id', $this->merchant_id);
+            $this->_params->setDefault('merchant_password', md5($this->merchant_password));
+            $this->_params->setDefault('version', $this->version);
+            $this->_params->setDefault('receiver_email', $this->receiver_email);
         }
         return $this->_params;
     }
 
     public function getAPIUrl()
     {
-        return $this->baseUrl . '/paygate.weshop.php';
+        return $this->summitUrl;
     }
 
     public function callApi()
     {
         $ch = curl_init($this->getAPIUrl());
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
@@ -69,6 +60,7 @@ class NganLuongClient extends BaseObject
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->getParams()->create());
         $result = curl_exec($ch);
         curl_close($ch);
+        var_dump($this->getAPIUrl(),$this->getParams()->toArray(),NganluongHelper::normalizeResponse($result));die;
         return NganluongHelper::normalizeResponse($result);
     }
 
@@ -78,24 +70,24 @@ class NganLuongClient extends BaseObject
             $paymentMethod = NganluongHelper::getPaymentMethod($bankCode);
         }
         $this->getParams()->setDefault('function', 'GetRequestField');
-        $this->getParams()->setDefault('bank_code', $bankCode);
-        $this->getParams()->setDefault('Payment_method', $paymentMethod);
+        $this->getParams()->setDefault('bank_code', NganluongHelper::replaceBankCode($bankCode));
+        $this->getParams()->setDefault('payment_method', $paymentMethod);
         return $this->callApi();
     }
 
     public function AuthenTransaction($token, $otp, $auth_url)
     {
-        $this->function = 'AuthenTransaction';
+        $this->getParams()->setDefault('function', 'AuthenTransaction');
     }
 
-    public function SetExpressCheckout($params)
+    public function SetExpressCheckout()
     {
-        $this->function = 'SetExpressCheckout';
-
+        $this->getParams()->setDefault('function', 'SetExpressCheckout');
+        return $this->callApi();
     }
 
     public function GetTransactionDetail($token)
     {
-        $this->function = 'GetTransactionDetail';
+        $this->getParams()->setDefault('function', 'GetTransactionDetail');
     }
 }

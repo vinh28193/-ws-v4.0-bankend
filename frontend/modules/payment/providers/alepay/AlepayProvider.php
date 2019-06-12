@@ -2,15 +2,17 @@
 
 namespace frontend\modules\payment\providers\alepay;
 
-use common\components\ReponseData;
+
+use Yii;
+use Exception;
+use yii\base\BaseObject;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use common\models\logs\PaymentGatewayLogs;
 use common\models\PaymentTransaction;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\PaymentProviderInterface;
-use Yii;
-use yii\base\BaseObject;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
+use frontend\modules\payment\PaymentResponse;
 
 class AlepayProvider extends BaseObject implements PaymentProviderInterface
 {
@@ -24,88 +26,73 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
         $logCallback->type = PaymentGatewayLogs::TYPE_CREATED;
         $logCallback->transaction_code_request = "ALEPAY CREATE PAYMENT";
         $logCallback->store_id = 1;
+
+        $param = [];
+        $param['orderCode'] = $payment->transaction_code;
+        // Product
+        $param['orderDescription'] = "Giao dịch cho mã " . $payment->transaction_code . " trên hệ thống";
+        $param['amount'] = $payment->getTotalAmountDisplay();
+        $param['currency'] = 'VND';
+
+        $param['buyerCountry'] = 'VN';
+        $param['buyerCity'] = $payment->customer_city;
+        $param['buyerAddress'] = $payment->customer_address;
+        $param['buyerName'] = $payment->customer_name;
+        $param['buyerEmail'] = $payment->customer_email;
+        $param['buyerPhone'] = $payment->customer_phone;
+
+        $param['totalItem'] = count($payment->carts);
+
+        $param['checkoutType'] = 0;
+        $param['paymentHours'] = 6;
+
+        $param['returnUrl'] = $payment->return_url;
+        $param['cancelUrl'] = $payment->cancel_url;
+
+        if (!empty($payment->installment_bank) && !empty($payment->installment_method) && !empty($payment->installment_month)) {
+            $param['bankCode'] = $payment->installment_bank;
+            $param['paymentMethod'] = $payment->installment_method;
+            $param['month'] = $payment->installment_month;
+            $param['installment'] = true;
+        } else {
+            $param['month'] = 1;
+            $param['installment'] = false;
+        }
+
+        $logPaymentGateway = new PaymentGatewayLogs();
+        $logPaymentGateway->transaction_code_ws = $payment->transaction_code;
+        $logPaymentGateway->request_content = $param;
+        $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED;
+        $logPaymentGateway->url = $this->getAlepayClient()->baseUrl;
+        $mess = "Giao dịch thanh toán không thành công!";
+        $success = true;
         try {
-            $param = [];
-            $param['orderCode'] = $payment->transaction_code;
-            // Product
-            $param['orderDescription'] = "Giao dịch cho mã " . $payment->transaction_code . " trên hệ thống";
-            $param['amount'] = $payment->total_amount;
-            $param['currency'] = 'VND';
+            $resp = $this->getAlepayClient()->requestOrder($param);
+            $logPaymentGateway->payment_method = ArrayHelper::getValue($param, 'paymentMethod');
+            $logPaymentGateway->payment_bank = ArrayHelper::getValue($param, 'bankCode');
+            $logPaymentGateway->amount = ArrayHelper::getValue($param, 'amount');
+            $logPaymentGateway->response_content = ($resp);
+            $logPaymentGateway->response_time = date('Y-m-d H:i:s');
+            $logPaymentGateway->create_time = date('Y-m-d H:i:s');
+            $logPaymentGateway->store_id = 1;
+            $logPaymentGateway->save(false);
 
-            $param['buyerCountry'] = 'VN';
-            $param['buyerCity'] = $payment->customer_city;
-            $param['buyerAddress'] = $payment->customer_address;
-            $param['buyerName'] = $payment->customer_name;
-            $param['buyerEmail'] = $payment->customer_email;
-            $param['buyerPhone'] = $payment->customer_phone;
-
-            $param['totalItem'] = count($payment->carts);
-
-            $param['checkoutType'] = 0;
-            $param['paymentHours'] = 6;
-
-            $param['returnUrl'] = $payment->return_url;
-            $param['cancelUrl'] = $payment->cancel_url;
-
-            if (!empty($payment->installment_bank) && !empty($payment->installment_method) && !empty($payment->installment_month)) {
-                $param['bankCode'] = $payment->installment_bank;
-                $param['paymentMethod'] = $payment->installment_method;
-                $param['month'] = $payment->installment_month;
-                $param['installment'] = true;
-            } else {
-                $param['month'] = 1;
-                $param['installment'] = false;
+            if ($resp['success'] === false) {
+                return new PaymentResponse(false, "Lỗi thanh toán trả về Alepay" . $resp['code']);
             }
-
-            $logPaymentGateway = new PaymentGatewayLogs();
-            $logPaymentGateway->transaction_code_ws = $payment->transaction_code;
-            $logPaymentGateway->request_content = $param;
-            $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED;
-            $logPaymentGateway->url = $this->getAlepayClient()->baseUrl;
-            $mess = "Giao dịch thanh toán không thành công!";
-            $success = true;
-            try {
-                $resp = $this->getAlepayClient()->requestOrder($param);
-                $logPaymentGateway->payment_method = ArrayHelper::getValue($param, 'paymentMethod');
-                $logPaymentGateway->payment_bank = ArrayHelper::getValue($param, 'bankCode');
-                $logPaymentGateway->amount = ArrayHelper::getValue($param, 'amount');
-                $logPaymentGateway->response_content = ($resp);
-                $logPaymentGateway->response_time = date('Y-m-d H:i:s');
-                $logPaymentGateway->create_time = date('Y-m-d H:i:s');
-                $logPaymentGateway->store_id = 1;
-                $logPaymentGateway->save(false);
-
-                if ($resp['success'] === false) {
-                    $mess = "Lỗi thanh toán trả về Alepay" . $resp['code'];
-                    $success = false;
-                }
-                $data = Json::decode($resp['data'],true);
-                $dataRes = [
-                    'code' => $payment->transaction_code,
-                    'status' => $resp['code'],
-                    'token' => ArrayHelper::getValue($data, 'token'),
-                    'checkoutUrl' => ArrayHelper::getValue($data, 'checkoutUrl'),
-                    'method' => 'GET',
-                ];
-            } catch (\Exception $exception) {
-                $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
-                $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
-                $logPaymentGateway->save(false);
-                return ReponseData::reponseArray(false, 'Check payment thất bại');
-            }
-            $logCallback->response_content = "Success";
-            $logCallback->save();
-            return ReponseData::reponseArray($success, $mess, $dataRes);
+            $data = Json::decode($resp['data'], true);
+            return new PaymentResponse(true, $mess, $payment->transaction_code, PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, ArrayHelper::getValue($data, 'token'), $resp['code'], ArrayHelper::getValue($data, 'checkoutUrl'));
         } catch (\Exception $exception) {
-            $logCallback->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
-            $logCallback->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
-            $logCallback->save(false);
-            return ReponseData::reponseArray(false, 'thất bại');
+            $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
+            $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
+            $logPaymentGateway->save(false);
+            return new PaymentResponse(false, 'Check payment thất bại');
         }
 
     }
 
-    public function handle($data)
+    public
+    function handle($data)
     {
         $logCallback = new PaymentGatewayLogs();
         $logCallback->response_time = date('Y-m-d H:i:s');
@@ -121,14 +108,14 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             $resp = $this->checkTransaction($token);
 
             $transactionInfo = $this->getAlepayClient()->getTransactionInfo($resp['data'])['data'];
-            $transactionInfo = Json::decode($transactionInfo,true);
+            $transactionInfo = Json::decode($transactionInfo, true);
 
             $orderCode = $transactionInfo['orderCode'];
             if (($transaction = PaymentTransaction::findOne(['transaction_code' => $orderCode])) === null) {
                 $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logCallback->save(false);
-                return ReponseData::reponseMess(false, 'Transaction không tồn tại');
+                return new PaymentResponse(false, 'Transaction không tồn tại');
             }
             $success = false;
             $mess = "Giao dịch thanh toán không thành công!";
@@ -139,29 +126,31 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
                 $success = true;
                 $mess = "Giao dịch đã được thanh toán thành công!";
             }
-            if($success){
+            if ($success) {
                 $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
                 $transaction->save();
             }
             $logCallback->response_content = $transactionInfo;
             $logCallback->save();
-            return ReponseData::reponseArray($success, $mess, ['transaction' => $transaction]);
-        } catch (\Exception $e) {
+            return new PaymentResponse(true, $mess, $transaction);
+        } catch (Exception $e) {
             $logCallback->request_content = $e->getMessage() . " \n " . $e->getFile() . " \n " . $e->getTraceAsString();
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);
-            return ReponseData::reponseArray(false, 'Call back thất bại');
+            return new PaymentResponse(false, 'Call back thất bại');
         }
 
 
     }
 
-    public function getAlepayClient()
+    public
+    function getAlepayClient()
     {
         return new AlepayClient();
     }
 
-    public function checkTransaction($data)
+    public
+    function checkTransaction($data)
     {
         $data = base64_decode($data);
         $data = $this->getAlepayClient()->getSecurity()->decrypt($data);

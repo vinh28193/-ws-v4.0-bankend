@@ -10,6 +10,8 @@ use common\models\Order as BaseOrder;
 class Order extends BaseOrder implements AdditionalFeeInterface
 {
 
+    public $cartId;
+
     use AdditionalFeeTrait;
 
     public function getItemType()

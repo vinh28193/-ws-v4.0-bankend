@@ -224,34 +224,6 @@ ws.payment = (function ($) {
             pub.methods = $methods;
             console.log('register ' + pub.methods.length + ' methods');
         },
-        getInfoFormShipping: function () {
-            pub.shipping.buyer_name = $('#shippingform-buyer_name').val();
-            pub.shipping.buyer_phone = $('#shippingform-buyer_phone').val();
-            pub.shipping.buyer_email = $('#shippingform-buyer_email').val();
-            pub.shipping.buyer_province_id = $('#shippingform-buyer_province_id').val();
-            pub.shipping.buyer_district_id = $('#shippingform-buyer_district_id').val();
-            pub.shipping.buyer_address = $('#shippingform-buyer_address').val();
-            pub.shipping.receiver_name = $('#shippingform-receiver_name').val();
-            pub.shipping.receiver_phone = $('#shippingform-receiver_phone').val();
-            pub.shipping.receiver_email = $('#shippingform-receiver_email').val();
-            pub.shipping.receiver_province_id = $('#shippingform-receiver_province_id').val();
-            pub.shipping.receiver_district_id = $('#shippingform-receiver_district_id').val();
-            pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
-            pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
-            pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
-            pub.shipping.receiver_address_id = $('#shippingform-receiver_address_id').val();
-            if (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id) {
-                ws.notifyError('Vui lòng nhập đầy đủ thông tin người mua');
-                return false;
-            }
-            if (pub.shipping.other_receiver) {
-                if (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id) {
-                    ws.notifyError('Vui lòng nhập đầy đủ thông tin người nhận');
-                    return false;
-                }
-            }
-            return true;
-        },
         getWalletInfo: function ($element) {
             $element = $element || undefined;
             ws.ajax('/payment/wallet/check-guest', function ($res) {
@@ -494,61 +466,94 @@ ws.payment = (function ($) {
             if (form.find('.has-error').length) {
                 return false;
             }
-            var values = {};
-            var formDataArray = form.serializeArray();
-            // console.log(formDataArray);
-            // formDataArray.map(function (x) {
-            //     if ('buyerPhone' === x.name || 'receiverPhone' === x.name) {
-            //         var val = $.trim(x.value);
-            //         values[x.name] = val.indexOf("0") === 0 ? val : '0' + val;
-            //         values[x.name] = val.replace('+84', '0');
-            //     } else {
-            //         values[x.name] = $.trim(x.value);
-            //     }
-            // });
-            pub.shipping = formDataArray;
-            return formDataArray;
+
+            // var formDataArray = form.serializeArray();
+            // var values = formDataArray.reduce(function (result, item) {
+            //     result[item.name] = item.value;
+            //     return result;
+            // }, []);
+            // console.log(values);
+            // pub.shipping = values;
+
+            pub.shipping.buyer_name = $('#shippingform-buyer_name').val();
+            pub.shipping.buyer_phone = $('#shippingform-buyer_phone').val();
+            pub.shipping.buyer_email = $('#shippingform-buyer_email').val();
+            pub.shipping.buyer_province_id = $('#shippingform-buyer_province_id').val();
+            pub.shipping.buyer_district_id = $('#shippingform-buyer_district_id').val();
+            pub.shipping.buyer_address = $('#shippingform-buyer_address').val();
+            pub.shipping.receiver_name = $('#shippingform-receiver_name').val();
+            pub.shipping.receiver_phone = $('#shippingform-receiver_phone').val();
+            pub.shipping.receiver_email = $('#shippingform-receiver_email').val();
+            pub.shipping.receiver_province_id = $('#shippingform-receiver_province_id').val();
+            pub.shipping.receiver_district_id = $('#shippingform-receiver_district_id').val();
+            pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
+            pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
+            pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
+            pub.shipping.receiver_address_id = $('#shippingform-receiver_address_id').val();
+            pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
+            if (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id) {
+                ws.notifyError('Vui lòng nhập đầy đủ thông tin người mua');
+                return false;
+            }
+            if (pub.shipping.other_receiver) {
+                if (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id) {
+                    ws.notifyError('Vui lòng nhập đầy đủ thông tin người nhận');
+                    return false;
+                }
+            }
+            return true;
         },
     };
     var processPaymment = function () {
         if (!pub.filterShippingAddress()) {
             return;
         }
-        console.log({payment: pub.payment, shipping: pub.shipping});
-        return;
-        // ws.ajax('/payment/payment/process', {
-        //     dataType: 'json',
-        //     type: 'post',
-        //     data: {payment: pub.payment, shipping: pub.shipping},
-        //     success: function (response) {
-        //         if (response.success) {
-        //             var data = response.data;
-        //             var code = data.code.toUpperCase() || '';
-        //             var method = data.method.toUpperCase();
-        //             if (method === 'POPUP') {
-        //                 var type = data.provider.toUpperCase() || null;
-        //                 if (type === 'WALLET') {
-        //                     var $otp = $('#otp-confirm');
-        //                     $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
-        //                 }
-        //             } else {
-        //                 $('span#transactionCode').html(code);
-        //                 $('div#checkout-success').modal('show');
-        //                 ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
-        //                     if (method === 'POST') {
-        //                         $(data.checkoutUrl).appendTo('body').submit();
-        //                     } else {
-        //                         ws.redirect(data.checkoutUrl);
-        //                     }
-        //                 });
-        //                 redirectPaymentGateway(data, 1000);
-        //             }
-        //         } else {
-        //             ws.notifyError(response.message);
-        //         }
-        //
-        //     }
-        // }, true)
+        ws.ajax('/payment/payment/process', {
+            dataType: 'json',
+            type: 'post',
+            data: {payment: pub.payment, shipping: pub.shipping},
+            success: function (response) {
+
+                if (response.success) {
+                    var data = $.extend({}, {
+                        success: false,
+                        message: '',
+                        paymentTransaction: null,
+                        redirectType: 'normal',
+                        redirectMethod: 'get',
+                        token: null,
+                        status: null,
+                        checkoutUrl: null,
+                        returnUrl: null,
+                        cancelUrl: null
+                    }, response.data || {});
+                    var redirectType = data.redirectType.toUpperCase();
+                    var redirectMethod = data.redirectMethod.toUpperCase() || 'GET';
+                    if (redirectType === 'POPUP') {
+                        if (redirectMethod === 'WALLET') {
+                            var $otp = $('#otp-confirm');
+                            $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
+                        } else if (redirectMethod === 'QRCODE') {
+                            console.log(response);
+                        }
+                    } else if (data.paymentTransaction) {
+                        $('span#transactionCode').html(data.paymentTransaction);
+                        $('div#checkout-success').modal('show');
+                        ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
+                            if (redirectMethod === 'POST') {
+                                $(data.checkoutUrl).appendTo('body').submit();
+                            } else {
+                                ws.redirect(data.checkoutUrl);
+                            }
+                        });
+                        redirectPaymentGateway(data, 1000);
+                    }
+                } else {
+                    ws.notifyError(response.message);
+                }
+
+            }
+        }, true)
     };
     var updatePaymentByPromotion = function ($response) {
         var input = $('input[name=couponCode]');
@@ -611,16 +616,17 @@ ws.payment = (function ($) {
         console.log(banks)
     };
     var redirectPaymentGateway = function (rs, $timeOut) {
-        runTime = setInterval(function () {
+        var runTime = setInterval(function () {
             var second = parseInt($("#countdown_payment").text());
             if (second > 0) {
                 $("#countdown_payment").text(second - 1);
             } else {
-                if (rs.method == 'POST') {
+                var redirectMethod = rs.redirectMethod.toUpperCase() || 'GET';
+                if (redirectMethod === 'POST') {
                     $(rs.checkoutUrl).appendTo('body').submit();
                     clearInterval(runTime);
                 } else {
-                    window.location.href = rs.checkoutUrl;
+                    ws.redirect(rs.checkoutUrl);
                     clearInterval(runTime);
                 }
             }
@@ -649,6 +655,9 @@ ws.payment = (function ($) {
             }
         }
         return {label: $lable, amountOrigin: $localAmount, amountLocalized: ws.showMoney($localAmount)}
+    };
+    var initPaymentPopup = function ($res) {
+
     };
     return pub;
 })(jQuery);

@@ -10,6 +10,7 @@ use common\helpers\WeshopHelper;
 use common\models\Address;
 use common\models\db\TargetAdditionalFee;
 use frontend\modules\payment\providers\alepay\AlepayProvider;
+use frontend\modules\payment\providers\banktransfer\VNBankTransfer;
 use frontend\modules\payment\providers\mcpay\McPayProvider;
 use frontend\modules\payment\providers\nganluong\ver3_1\NganLuongProvider as NLProviderV31;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongProvider as NLProviderV32;
@@ -159,16 +160,15 @@ class Payment extends Model
     }
 
     /**
-     * @var Order[]
+     * @var array|Order[]
      */
-    private $_orders;
+    private $_orders = [];
 
     /**
-     * @return Order[]
+     * @return array|Order[]
      */
     public function getOrders()
     {
-
         if (empty($this->_orders) && !empty($this->carts)) {
             $res = PaymentService::createOrderFormCart($this);
 
@@ -263,13 +263,13 @@ class Payment extends Model
     public function processPayment()
     {
         switch ($this->payment_provider) {
-            case 41:
-                return (new WSVNOffice())->create($this);
             case 42:
                 $nl = new NLProviderV31();
                 return $nl->create($this);
             case 44:
                 return (new AlepayProvider())->create($this);
+            case 45:
+                return (new WSVNOffice())->create($this);
             case 46:
                 $nl = new NLProviderV32();
                 return $nl->create($this);
@@ -279,24 +279,28 @@ class Payment extends Model
             case 49:
                 $mcPay = new McPayProvider();
                 return $mcPay->create($this);
+            case 50:
+                $mcPay = new VNBankTransfer();
+                return $mcPay->create($this);
         }
     }
 
     /**
      * @param $merchant
      * @param $request \yii\web\Request
-     * @return array|mixed|void
+     * @return PaymentResponse
      */
     public static function checkPayment($merchant, $request)
     {
         switch ($merchant) {
-            case 41:
-                return (new WSVNOffice())->handle($request->get());
+
             case 42:
                 $nl = new NLProviderV31();
                 return $nl->handle($request->get());
             case 44:
                 return (new AlepayProvider())->handle($request->get());
+            case 45:
+                return (new WSVNOffice())->handle($request->get());
             case 46:
                 $nl = new NLProviderV32();
                 return $nl->handle($request->get());
@@ -305,6 +309,9 @@ class Payment extends Model
                 return $nicePay->handle($request->get());
             case 49:
                 $mcPay = new McPayProvider();
+                return $mcPay->handle($request->get());
+            case 50:
+                $mcPay = new VNBankTransfer();
                 return $mcPay->handle($request->get());
 
         }
@@ -368,25 +375,20 @@ class Payment extends Model
     }
 
     /**
-     * @param null|Address $receiverAddress
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function createOrder($receiverAddress = null)
+    public function createOrder()
     {
         $orderCodes = [];
         $now = Yii::$app->getFormatter()->asDatetime('now');
         $promotionDebug = [];
-        if ($receiverAddress === null) {
-            $receiverAddress = Yii::$app->user->identity->defaultShippingAddress;
-        }
         /* @var $results PromotionResponse */
         $results = $this->checkPromotion();
         $transaction = Order::getDb()->beginTransaction();
         try {
             foreach ($this->getOrders() as $key => $orderPayment) {
                 $order = clone $orderPayment;
-
                 $orderPromotions = []; // chứa toàn tộ những promotion được áp dụng cho order có key là $key
                 $orderTotalDiscount = 0;
                 if ($results->success === true && count($results->orders)) {
@@ -394,7 +396,17 @@ class Payment extends Model
                         if (($discountForMe = ArrayHelper::getValue($data, $key)) === null) {
                             continue;
                         }
-                        $orderTotalDiscount += ArrayHelper::getValue($discountForMe, 'totalDiscountAmount', 0);
+                        $discountValue = ArrayHelper::getValue($discountForMe, 'totalDiscountAmount', 0);
+                        $orderTotalDiscount += $discountValue;
+                        $promotionDebug[] = [
+                            'apply' => $now,
+                            'code' => $promotion,
+                            'level' => 'order_fee',
+                            'level_id' => $order->id,
+                            'ref_name' => null,
+                            'ref_id' => null,
+                            'value' => $discountValue
+                        ];
                         $orderPromotions[$promotion] = $discountForMe;
                     }
                 }
@@ -406,18 +418,6 @@ class Payment extends Model
                 $order->type_order = Order::TYPE_SHOP;
                 $order->customer_type = 'Retail';
                 $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
-                $order->receiver_email = $receiverAddress->email;
-                $order->receiver_name = $receiverAddress->last_name . ' ' . $receiverAddress->last_name;
-                $order->receiver_phone = $receiverAddress->phone;
-                $order->receiver_address = $receiverAddress->address;
-                $order->receiver_country_id = $receiverAddress->country_id;
-                $order->receiver_country_name = $receiverAddress->country_name;
-                $order->receiver_province_id = $receiverAddress->province_id;
-                $order->receiver_province_name = $receiverAddress->province_name;
-                $order->receiver_district_id = $receiverAddress->district_id;
-                $order->receiver_district_name = $receiverAddress->district_name;
-                $order->receiver_post_code = $receiverAddress->post_code;
-                $order->receiver_address_id = $receiverAddress->id;
                 $order->total_paid_amount_local = 0;
 
                 $order->total_promotion_amount_local = $orderTotalDiscount;
@@ -440,6 +440,7 @@ class Payment extends Model
                 }
 
                 foreach ($orderPayment->getAdditionalFees()->toArray() as $feeValue) {
+                    $feeValue = reset($feeValue);
                     $fee = new TargetAdditionalFee($feeValue);
                     $fee->target = 'order';
                     $fee->target_id = $order->id;
@@ -462,7 +463,7 @@ class Payment extends Model
                             $promotionDebug[] = [
                                 'apply' => $now,
                                 'code' => $promotion,
-                                'level' => 'order',
+                                'level' => 'order_fee',
                                 'level_id' => $order->id,
                                 'ref_name' => $fee->name,
                                 'ref_id' => $fee->id,
@@ -521,7 +522,7 @@ class Payment extends Model
                             // Tổng phí ship của các sản phẩm tại nơi xuất xứ
                             $orderAttribute = 'total_origin_shipping_fee_local';
                         }
-                        $fee = new TargetAdditionalFee($productFee);
+                        $fee = clone $productFee;
                         $fee->target = 'product';
                         $fee->target_id = $product->id;
 
@@ -546,7 +547,7 @@ class Payment extends Model
                 }
 
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
-                $updateOrderAttributes['total_final_amount_local'] = $updateOrderAttributes['total_amount_local'] - $updateOrderAttributes['total_promotion_amount_local'];
+                $updateOrderAttributes['total_final_amount_local'] = $order->total_amount_local - $order->total_promotion_amount_local;
                 if ($this->isPaid) {
                     $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
                 }
