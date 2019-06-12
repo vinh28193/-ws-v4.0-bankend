@@ -419,32 +419,40 @@ class CartManager extends Component
             }
             $value = $item['value'];
             $key = $item['key'];
-            if ($param['typeUpdate'] == 'cancelCart') {
-                $key['current_status'] = 'CANCELLED';
-                $value['cancelled']['new'] = $now;
+            if (isset($param['typeUpdate'])) {
+                if ($param['typeUpdate'] == 'cancelCart') {
+                    $key['current_status'] = 'CANCELLED';
+                    $value['cancelled'] = $now;
+                }
             }
-            if ($param['typeUpdate'] == 'confirmOrderCart') {
-                $key['current_status'] = 'PURCHASED';
-                $value['purchased']['new'] = $now;
+            if (isset($param['typeUpdate'])) {
+                if ($param['typeUpdate'] == 'confirmOrderCart') {
+                    $key['current_status'] = 'PURCHASED';
+                    $value['purchased'] = $now;
+                }
             }
-            if ($param['typeUpdate'] == 'assignSaleCart') {
-                $value['sale_support_id'] = $param['idSale'];
+            if (isset($param['typeUpdate'])) {
+                if ($param['typeUpdate'] == 'assignSaleCart') {
+                    $value['sale_support_id'] = $param['idSale'];
+                }
             }
-            if ($param['typeUpdate'] == 'markAsJunk') {
-                $key['current_status'] = 'JUNK';
+            if (isset($param['typeUpdate'])) {
+                if ($param['typeUpdate'] == 'markAsJunk') {
+                    $key['current_status'] = 'JUNK';
+                }
             }
-            if ($param['type_chat'] === 'WS_CUSTOMER') {
-                var_dump($key['current_status']);
-                die();
-                $key['current_status'] = 'SUPPORTING';
-                $value['supporting'] = $now;
+            if (isset($param['type_chat'])) {
+                if ($param['type_chat'] === 'WS_CUSTOMER') {
+                    var_dump($key['current_status']);
+                    $value['supporting'] = $now;
+                }
             }
-            var_dump('asad');
-            die();
-            if ($param['type_chat'] == 'GROUP_WS') {
-                $key['current_status'] = 'SUPPORTED';
-                $value['supported'] = $now;
-            }
+           if (isset($param['type_chat'])) {
+               if ($param['type_chat'] == 'GROUP_WS') {
+                   $key['current_status'] = 'SUPPORTED';
+                   $value['supported'] = $now;
+               }
+           }
             // todo : thay đổi giá trị của $item['key']
 
             $success = $this->getStorage()->setItem($id, $key, $value);
