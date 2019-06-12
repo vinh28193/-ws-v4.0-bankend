@@ -14,7 +14,7 @@ use frontend\widgets\imagelazy\ImageLazyLoadWidget;
 /* @var $saleTag integer */
 ?>
 
-<li>
+<li class="col-md col-6">
     <div class="item">
         <div class="thumb">
             <a href="<?= $url ?>">
