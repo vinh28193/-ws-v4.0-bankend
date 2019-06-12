@@ -47,10 +47,10 @@ body div.wrapper div.navbar-ws div div.search-box{
     border-radius: 5px;
 }
 .mobile-hide{
-    display: block !important;
+    /*display: block !important;*/
 }
 .mobile-show{
-    display: none !important;
+    display: none;
 }
 #ico-search{
     transform: scaleX(-1);
@@ -515,6 +515,53 @@ div div.product-list.row div a div.info div.price span.countdown{
 }
 /*------------------------- mobile site ---------------------------*/
 @media(max-width:767px) {
+    body div.wrapper div.navbar-ws div div.search-box{
+        width: 30%;
+        height: 40px;
+        border-radius: 5px;
+    }
+    .cart-header-box span.label-cart{
+        color: #e67424;
+        font-family: Helvetica;
+        font-size: 12px;
+    }
+    .option-auth{
+        color: #2b96b6;
+        font-family: Helvetica;
+        font-size: 8px;
+        line-height: 20px;
+    }
+    .account-header-box i{
+        padding-top: 8px;
+        color: #2b96b6;
+        font-family: "LineAwesome";
+        font-size: 20px;
+        float: left;
+    }
+    #ico-search{
+        transform: scaleX(-1);
+        color: #fff;
+        font-size: 20px;
+    }
+    .cart-header-box i{
+        font-size: 20px;
+    }
+    ul.bars-nav li:first-child i:first-child{
+        font-size: 20px;
+        line-height: 0em;
+    }
+    .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
+        height: 40px;
+    }
+    .account-title,ul.bars-nav li,#searchBoxInput{
+        font-size: 12px;
+    }
+    ul.bars-nav li:first-child {
+        padding-right: 20px;
+    }
+    ul.bars-nav li {
+        padding-right: 12px;
+    }
     .content-body .title-content-home{
         font-size: 18px;
     }
@@ -522,7 +569,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         display: none !important;
     }
     .mobile-show{
-        display: block !important;
+        display: block;
     }
     body div.wrapper div.content-body div.col-md-2 i{
         line-height: normal;
@@ -534,6 +581,12 @@ div div.product-list.row div a div.info div.price span.countdown{
         max-height: 400px;
     }
     a, .btn, .mb-menu, .detail-block2 .info-list {
+        -webkit-transition: all .3s;
+        -moz-transition: all .3s;
+        -ms-transition: all .3s;
+        -o-transition: all .3s;
+        transition: all .3s; }
+    .mb-menu-filter {
         -webkit-transition: all .3s;
         -moz-transition: all .3s;
         -ms-transition: all .3s;
@@ -626,16 +679,34 @@ div div.product-list.row div a div.info div.price span.countdown{
         border-top: 1px solid #2b96b6;
         z-index: 999;
     }
+    .mb-menu-filter {
+        position: fixed;
+        top: 0px;
+        right: -100%;
+        bottom: 0;
+        width: 100%;
+        background: #fff;
+        border-top: 1px solid #2b96b6;
+        z-index: 999;
+    }
+    .mb-wraper-filter{
+        width: 80%;
+        background: #fff;
+    }
     .mb-menu.open {
         left: 0; }
-    .mb-menu .item-list {
+    .mb-menu-filter.open {
+        right: 0;
+        background: #00000070;
+    }
+    .mb-menu .item-list ,.mb-menu-filter .item-list {
         width: 180px;
         background: #2b96b6;
         height: 100%;
         overflow-y: auto; }
-    .mb-menu .item-list li {
+    .mb-menu .item-list li ,.mb-menu-filter .item-list li {
         position: relative; }
-    .mb-menu .item-list li:after {
+    .mb-menu .item-list li:after ,.mb-menu-filter .item-list li:after {
         content: '';
         display: block;
         border-bottom: 1px solid rgba(254, 254, 254, 0.2);
@@ -643,12 +714,12 @@ div div.product-list.row div a div.info div.price span.countdown{
         bottom: 0;
         left: 20px;
         right: 20px; }
-    .mb-menu .item-list li a {
+    .mb-menu .item-list li a ,.mb-menu-filter .item-list li a {
         color: #fff;
         display: block;
         padding: 14px 20px;
         font-weight: 500; }
-    .mb-menu .item-list li.active a {
+    .mb-menu .item-list li.active a ,.mb-menu-filter .item-list li.active a {
         background: #fff;
         color: #2b96b6; }
     .btn-change-slides {
@@ -694,6 +765,24 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-family: "LineAwesome";
         font-size: 26px;
     }
+    .mb-wraper-filter .title-mb-menu{
+        text-align: center;
+        width: 100%;
+        background-color: #fff;
+        height: fit-content;
+        padding: 14px;
+    }
+    .mb-wraper-filter .title-mb-menu span{
+        color: rgba(0, 0, 0, 0.85);
+        font-family: Helvetica;
+        font-size: 14px;
+    }
+    .mb-wraper-filter .title-mb-menu i{
+        color: rgba(0, 0, 0, 0.85);
+        font-family: "LineAwesome";
+        font-size: 14px;
+        float: left;
+    }
     .title-submenu{
         padding: 15px;
     }
@@ -708,7 +797,7 @@ div div.product-list.row div a div.info div.price span.countdown{
     /*    padding-left: 15px;*/
     /*}*/
 }
-@media (min-width: 360px) {
+@media (max-width: 360px) {
     .col-sm-6 {
         -ms-flex: 0 0 50%;
         flex: 0 0 50%;
@@ -733,5 +822,9 @@ div div.product-list.row div a div.info div.price span.countdown{
 }
 #home-slick .banner {
     margin: 0px;
+}
+.content-404 img{
+    width: auto;
+    max-width: 100%;
 }
 @media (min-width: 991px){}

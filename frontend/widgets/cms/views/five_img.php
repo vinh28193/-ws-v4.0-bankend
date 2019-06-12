@@ -38,7 +38,7 @@ $imge_block = !empty($block['image']) ? $block['image'] : $imge_block;
         </div>
         <div class="right">
             <div class="top top-mb">
-                <div class="title-mb hidden-md hidden-lg">
+                <div class="title-mb hidden-md hidden-lg mobile-show">
                     <a href="/ebay.html">
                         <img src="https://static-v3.weshop.com.vn/uploadImages/8ae0ba/8ae0ba2d425a42295b0a85fe081b7534.png" alt="" title="">
                     </a>
