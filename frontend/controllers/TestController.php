@@ -174,7 +174,7 @@ class TestController extends FrontendController
 
     public function actionNganLuong(){
         $client = new NganLuongClient();
-        var_dump($client->GetRequestField('IB_ICB'));
+        var_dump($client->GetRequestField('QRCODE_AGB'));
         die;
     }
 }

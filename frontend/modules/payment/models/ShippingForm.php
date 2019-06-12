@@ -2,11 +2,15 @@
 
 namespace frontend\modules\payment\models;
 
+use common\components\StoreManager;
+use common\models\SystemDistrict;
+use common\models\SystemStateProvince;
 use Yii;
 use yii\base\Model;
 use common\models\Address;
 use common\models\Customer;
 use common\components\GetUserIdentityTrait;
+use yii\db\Query;
 
 /**
  * Class ShippingForm
@@ -21,6 +25,10 @@ class ShippingForm extends Model
 
     const OTHER_RECEIVER_YES = 1;
     const OTHER_RECEIVER_NO = 0;
+
+    public $cartIds;
+
+    public $checkoutType;
 
     public $customer_id;
 
@@ -48,7 +56,7 @@ class ShippingForm extends Model
     public function attributes()
     {
         return [
-            'customer_id',
+            'customer_id', 'cartIds', 'checkoutType',
             'buyer_name', 'buyer_email', 'buyer_phone', 'buyer_address', 'buyer_province_id', 'buyer_district_id',
             'receiver_name', 'receiver_email', 'receiver_phone', 'receiver_address', 'receiver_post_code', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id',
             'other_receiver', 'note_by_customer',
@@ -68,7 +76,7 @@ class ShippingForm extends Model
             ],
             [
                 [
-                    'buyer_name', 'buyer_email', 'buyer_phone', 'buyer_address', 'buyer_post_code', 'buyer_country_id', 'buyer_province_id', 'buyer_district_id',
+                    'buyer_name', 'buyer_email', 'buyer_phone', 'buyer_address', 'buyer_province_id', 'buyer_district_id',
                 ],
                 'required'
             ],
@@ -109,16 +117,29 @@ class ShippingForm extends Model
                 ],
                 'validateSelectedValue'
             ],
-
             [
                 [
+                    'cartIds', 'checkoutType',
                     'buyer_post_code', 'buyer_country_id',
                     'receiver_post_code', 'receiver_country_id',
                     'note_by_customer', 'other_receiver',
                     'customer_id', 'receiver_district_id',
                 ],
                 'safe'
+            ],
+            [
+                [
+                    'buyer_country_id', 'receiver_country_id',
+                    'buyer_province_id', 'buyer_district_id',
+                    'receiver_province_id', 'receiver_district_id',
+                    'other_receiver',
+                    'customer_id',
+                ],
+                'filter', 'filter' => function ($v) {
+                return (int)$v;
+            }
             ]
+
         ];
     }
 
@@ -159,6 +180,9 @@ class ShippingForm extends Model
 
     public function setDefaultValues()
     {
+        /** @var  $store  StoreManager */
+        $store = Yii::$app->storeManager;
+        $this->buyer_country_id = $store->store->country_id;
         /** @var  $user  Customer */
         if (($user = $this->getUser()) !== null) {
             $this->customer_id = $user->id;
@@ -211,4 +235,95 @@ class ShippingForm extends Model
             $this->other_receiver = self::OTHER_RECEIVER_YES;
         }
     }
+
+    public function ensureReceiver()
+    {
+        if ((int)$this->other_receiver === self::OTHER_RECEIVER_NO) {
+            $this->receiver_name = $this->buyer_name;
+            $this->receiver_email = $this->buyer_email;
+            $this->receiver_phone = $this->buyer_phone;
+            $this->receiver_address = $this->buyer_address;
+            $this->receiver_post_code = $this->buyer_post_code;
+            $this->receiver_district_id = $this->buyer_district_id;
+            $this->setReceiverDistrictName($this->getBuyerDistrictName());
+            $this->receiver_province_id = $this->buyer_province_id;
+            $this->setBuyerProvinceName($this->getBuyerDistrictName());
+            $this->receiver_country_id = $this->buyer_country_id;
+        }
+    }
+
+    private $_buyerDistrictName;
+
+    public function getBuyerDistrictName()
+    {
+        if ($this->_buyerDistrictName === null && $this->buyer_district_id != 0) {
+            $this->_buyerDistrictName = $this->createQuery('name', SystemDistrict::className(), ['id' => $this->buyer_district_id]);
+        }
+        return $this->_buyerDistrictName;
+    }
+
+    public function setBuyerDistrictName($name)
+    {
+        $this->_buyerDistrictName = $name;
+    }
+
+    private $_receiverDistrictName;
+
+    public function getReceiverDistrictName()
+    {
+        if ($this->_receiverDistrictName === null && $this->receiver_district_id != 0) {
+            $this->_receiverDistrictName = $this->createQuery('name', SystemDistrict::className(), ['id' => $this->receiver_district_id]);
+        }
+        return $this->_receiverDistrictName;
+    }
+
+    public function setReceiverDistrictName($name)
+    {
+        $this->_receiverDistrictName = $name;
+    }
+
+
+    private $_buyerProvinceName;
+
+    public function getBuyerProvinceName()
+    {
+        if ($this->_buyerProvinceName === null && $this->buyer_province_id != 0) {
+            $this->_buyerProvinceName = $this->createQuery('name', SystemStateProvince::className(), ['id' => $this->buyer_province_id]);
+        }
+        return $this->_buyerProvinceName;
+    }
+
+    public function setBuyerProvinceName($name)
+    {
+        $this->_buyerProvinceName = $name;
+    }
+
+    private $_receiverProvinceName;
+
+    public function getReceiverProvinceName()
+    {
+        if ($this->_receiverProvinceName === null && $this->receiver_province_id != 0) {
+            $this->_receiverProvinceName = $this->createQuery('name', SystemStateProvince::className(), ['id' => $this->receiver_province_id]);
+        }
+        return $this->_receiverProvinceName;
+    }
+
+    public function setReceiverProvinceName($name)
+    {
+        $this->_receiverProvinceName = $name;
+    }
+
+
+    private function createQuery($selectColumn, $refClass, $condition)
+    {
+        /** @var  $class yii\db\ActiveRecord */
+        $class = $refClass;
+        $q = new Query();
+        $q->from(['q' => $class::tableName()]);
+        $q->select("[[$selectColumn]]");
+        $q->where($condition);
+        return $q->column($class::getDb())[0];
+    }
+
+
 }

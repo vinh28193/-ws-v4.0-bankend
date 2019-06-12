@@ -41,26 +41,23 @@ class PaymentController extends BasePaymentController
     {
         $start = microtime(true);
         $bodyParams = $this->request->bodyParams;
-        if (($customer = $this->user) === null) {
-            return $this->response(false, 'not login');
-        }
         $payment = new Payment($bodyParams['payment']);
-        $shippingForm = new ShippingForm();
-        $shippingForm->load($bodyParams['shipping']);
+        $shippingForm = new ShippingForm($bodyParams['shipping']);
+        $shippingForm->ensureReceiver();
 
         $payment->customer_name = $shippingForm->buyer_name;
         $payment->customer_email = $shippingForm->buyer_email;
         $payment->customer_phone = $shippingForm->buyer_phone;
-        $payment->customer_address = $shippingForm->address;
-        $payment->customer_city = $shippingForm->province_name;
-        $payment->customer_postcode = $shippingForm->post_code;
-        $payment->customer_district = $shippingForm->district_name;
-        $payment->customer_country = $shippingForm->country_name;
+        $payment->customer_address = $shippingForm->buyer_address;
+        $payment->customer_city = $shippingForm->getReceiverProvinceName();
+        $payment->customer_postcode = $shippingForm->buyer_post_code;
+        $payment->customer_district = $shippingForm->getBuyerDistrictName();
+        $payment->customer_country = $this->storeManager->store->country_name;
         $payment->createTransactionCode();
         /* @var $results PromotionResponse */
         $payment->checkPromotion();
         $paymentTransaction = new PaymentTransaction();
-        $paymentTransaction->customer_id = $this->user->getId();
+        $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
         $paymentTransaction->store_id = $payment->storeManager->getId();
         $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
         $paymentTransaction->carts = implode(',', $payment->carts);
@@ -82,39 +79,22 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->used_xu = $payment->use_xu;
         $paymentTransaction->bulk_point = $payment->bulk_point;
         $paymentTransaction->total_discount_amount = $payment->total_discount_amount;
-        $paymentTransaction->before_discount_amount_local = $payment->total_amount;
-        $paymentTransaction->transaction_amount_local = $payment->total_amount - $payment->total_discount_amount;
-        $paymentTransaction->payment_type = $payment->payment_type;
-        $paymentTransaction->shipping = isset($my_shiping) && $my_shiping instanceof Address ? $my_shiping->id : $this->user->defaultShippingAddress->id;
+        $paymentTransaction->before_discount_amount_local = $payment->total_order_amount;
+        $paymentTransaction->transaction_amount_local = $payment->getTotalAmountDisplay();
+        $paymentTransaction->payment_type = $payment->type;
         $paymentTransaction->save(false);
-//        if ($payment->payment_provider === 42 || $payment->payment_provider === 45) {
-//            $wallet = new WalletService([
-//                'transaction_code' => $payment->transaction_code,
-//                'total_amount' => $payment->total_amount - $payment->total_discount_amount,
-//                'payment_provider' => $payment->payment_provider_name,
-//                'payment_method' => $payment->payment_method_name,
-//                'bank_code' => $payment->payment_bank_code,
-//            ]);
-//            $results = $wallet->topUpTransaction();
-//            if ($results['success'] === true && isset($results['data']) && isset($results['data']['data']['code'])) {
-//                $topUpCode = $results['data']['data']['code'];
-//                $paymentTransaction->updateAttributes([
-//                    'topup_transaction_code' => $topUpCode
-//                ]);
-//                $payment->transaction_code = $topUpCode;
-//            }
-//        }
+
         $res = $payment->processPayment();
-        if ($res['success'] === false) {
-            return $this->response(false, $res['message']);
+        if ($res->success === false) {
+            return $this->response(false, $res->message);
         }
-        $paymentTransaction->third_party_transaction_code = $res['data']['token'];
-        $paymentTransaction->third_party_transaction_status = $res['data']['code'];
-        $paymentTransaction->third_party_transaction_link = $res['data']['checkoutUrl'];
+        $paymentTransaction->third_party_transaction_code = $res->token;
+        $paymentTransaction->third_party_transaction_status = $res->status;
+        $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
         $paymentTransaction->save(false);
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
-        return $this->response(true, 'create success', $res['data']);
+        return $this->response(true, 'create success', $res);
     }
 
     public function actionReturn($merchant)
@@ -124,17 +104,14 @@ class PaymentController extends BasePaymentController
         $res = Payment::checkPayment((int)$merchant, $this->request);
         $cartUrl = Url::toRoute('/checkout/cart');
         $redirectUrl = Url::toRoute('/account/order', true);
-        if (!isset($res) || $res['success'] === false || !isset($res['data'])) {
+        if ($res->success === false) {
             return $this->redirect($cartUrl);
         }
-
-        $data = $res['data'];
-
-        if (isset($data['redirectUrl'])) {
-            $redirectUrl = $data['redirectUrl'];
+        if ($res->checkoutUrl !== null) {
+            $redirectUrl = $res->checkoutUrl;
         }
         /** @var $paymentTransaction PaymentTransaction */
-        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction) {
+        if (($paymentTransaction = $res->paymentTransaction) instanceof PaymentTransaction) {
             $payment = new Payment([
                 'carts' => StringHelper::explode($paymentTransaction->carts, ','),
                 'uuid' => $this->filterUuid(),
@@ -154,36 +131,31 @@ class PaymentController extends BasePaymentController
                 'use_xu' => $paymentTransaction->used_xu,
                 'bulk_point' => $paymentTransaction->bulk_point,
                 'total_discount_amount' => $paymentTransaction->total_discount_amount,
-                'total_amount' => $paymentTransaction->before_discount_amount_local,
-                'payment_type' => $paymentTransaction->payment_type,
+                'total_order_amount' => $paymentTransaction->before_discount_amount_local,
+                'type' => $paymentTransaction->payment_type,
                 'isPaid' => $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS,
             ]);
-
-            $receiverAddress = Address::findOne($paymentTransaction->shipping);
-            if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
-                $createResponse = $payment->createOrder($receiverAddress);
-                if ($createResponse['success'] && isset($createResponse['data']['orderCodes'])) {
-                    Yii::info($createResponse['data']);
-                    foreach ($createResponse['data']['orderCodes'] as $orderCode => $info) {
-                        $coupon_codes = ArrayHelper::getValue($info, 'promotion');
-                        if ($coupon_codes !== null && is_array($coupon_codes)) {
-                            $coupon_codes = implode(',', $coupon_codes);
-                        }
-                        $childTransaction = clone $paymentTransaction;
-                        $childTransaction->id = null;
-                        $childTransaction->isNewRecord = true;
-                        $childTransaction->coupon_code = $coupon_codes;
-                        $childTransaction->transaction_amount_local = ArrayHelper::getValue($info, 'totalPaid', 0);
-                        $childTransaction->total_discount_amount = ArrayHelper::getValue($info, 'discountAmount', 0);
-                        $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
-                        $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
-                        $childTransaction->order_code = $orderCode;
-                        $childTransaction->save(false);
+            $createResponse = $payment->createOrder();
+            if ($createResponse['success'] && isset($createResponse['data']['orderCodes'])) {
+                Yii::info($createResponse['data']);
+                foreach ($createResponse['data']['orderCodes'] as $orderCode => $info) {
+                    $coupon_codes = ArrayHelper::getValue($info, 'promotion');
+                    if ($coupon_codes !== null && is_array($coupon_codes)) {
+                        $coupon_codes = implode(',', $coupon_codes);
                     }
-                    foreach ($payment->carts as $key) {
-                        $this->cartManager->removeItem($payment->payment_type, $key);
-                    }
-
+                    $childTransaction = clone $paymentTransaction;
+                    $childTransaction->id = null;
+                    $childTransaction->isNewRecord = true;
+                    $childTransaction->coupon_code = $coupon_codes;
+                    $childTransaction->transaction_amount_local = ArrayHelper::getValue($info, 'totalPaid', 0);
+                    $childTransaction->total_discount_amount = ArrayHelper::getValue($info, 'discountAmount', 0);
+                    $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
+                    $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
+                    $childTransaction->order_code = $orderCode;
+                    $childTransaction->save(false);
+                }
+                foreach ($payment->carts as $key) {
+                    $this->cartManager->removeItem($payment->type, $key);
                 }
             }
             return $this->redirect($redirectUrl);

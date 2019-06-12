@@ -71,6 +71,9 @@ $this->registerJs($js);
                     'validationUrl' => '/checkout/shipping/validate',
                 ]);
                 echo Html::activeHiddenInput($shippingForm, 'customer_id');
+                echo Html::activeHiddenInput($shippingForm, 'buyer_country_id');
+                echo Html::activeHiddenInput($shippingForm, 'cartIds');
+                echo Html::activeHiddenInput($shippingForm, 'checkoutType');
 
                 echo Html::beginTag('div', ['class' => 'buyer-form']);
                 echo $form->field($shippingForm, 'buyer_name', [

@@ -50,7 +50,8 @@ class PaymentService
     public static function getClientConfig($merchant, $env = null)
     {
         $params = ArrayHelper::getValue(Yii::$app->params, "paymentClientParams.{$merchant}", []);
-        return $env === null ? $params : (isset($params[$env]) ? $params[$env] : []);
+        $env = $env === null ? $params['enable'] : $env;
+        return isset($params['params'][$env]) ? $params['params'][$env] : (isset($params['params']) ? $params['params'] : []);
     }
 
     public static function loadPaymentByStoreFromDb($store, $provider_id = null)
@@ -119,7 +120,7 @@ class PaymentService
                 return 'Wepay';
             case self::PAYMENT_GROUP_DOKU:
                 return 'Doku';
-            case self::PAYMENT_GROUP_NL_QRCODE:
+            case self::PAYMENT_GROUP_QRCODE:
                 return 'QR Code';
             case self::PAYMENT_GROUP_MY_BANK_TRANSFER:
                 return 'Bank Transfer';
@@ -141,9 +142,11 @@ class PaymentService
         }
         $orders = [];
         $totalOrderAmount = 0;
+
         $items = CartHelper::getCartManager()->getItems($payment->type, $keys, $payment->uuid);
         foreach ($items as $item) {
             $params = $item['value'];
+            $cartId = $item['_id'];
             if (($sellerParams = ArrayHelper::remove($params, 'seller')) === null || !is_array($sellerParams)) {
                 $errors[] = 'Not found seller for order';
                 continue;
@@ -193,6 +196,7 @@ class PaymentService
             }
             unset($params['customer']);
             $order = new Order($params);
+            $order->cartId = $cartId;
             $order->populateRelation('products', $products);
             $order->populateRelation('seller', $seller);
             $order->populateRelation('saleSupport', $supporter);

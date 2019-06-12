@@ -56,6 +56,7 @@ return [
         'checkout/login.html' => 'checkout/shipping/login',
         'checkout/signup.html' => 'checkout/shipping/signup',
         'checkout/office/<code:[^/]+>/success.html' => 'checkout/notify/office-success',
+        'checkout/nice-pay/<code:[^/]+>/success.html' => 'checkout/notify/nice-pay-success',
 
         // payment
         'payment/process' => 'payment/payment/process',
