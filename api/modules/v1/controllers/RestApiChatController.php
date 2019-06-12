@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\components\KeyChatList;
+use common\modelsMongo\ListChat;
 use common\modelsMongo\RestApiCall;
 use common\modelsMongo\ChatMongoWs;
 use common\models\Order;
@@ -99,8 +100,8 @@ class RestApiChatController extends BaseApiController
             //----ToDo Need More Infor param
             $_user_app = 'Weshop2019'; /***Todo Set**/
             $_request_ip = Yii::$app->getRequest()->getUserIP();
-            $isNew = false; $isSupported = 0; // 1:true;0:false
-
+            $isNew = false; $isSupported = false; // 1:true;0:false
+            $isSupporting = false;
             $order =  Order::find()->where(['ordercode' => $_post['Order_path']])->one();
             if($order == null){
                 Yii::$app->api->sendFailedResponse("Not found order by ordercode : .".$_post['Order_path']);
@@ -111,6 +112,28 @@ class RestApiChatController extends BaseApiController
             if($current_status == Order::STATUS_NEW or $current_status == Order::STATUS_SUPPORTING)
             {
                 $isNew = true;
+            }
+            if ($_post['type_chat'] == 'GROUP_WS' && strlen(strstr($_post['message'], 'Supported')) > 0) {
+                $this->keyChatManger = new KeyChatList();
+                $mess = str_replace('-Type: Supported','',$_post['message']);
+                $listChat = $this->keyChatManger->read();
+                foreach ($listChat as $value) {
+                    if ($value['content'] == $mess) {
+                        $isSupported = true;
+                        break;
+                    }
+                }
+            }
+            if ($_post['type_chat'] == 'WS_CUSTOMER' && strlen(strstr($_post['message'], 'supporting')) > 0) {
+                $this->keyChatManger = new KeyChatList();
+                $mess = str_replace('-Type: supporting','',$_post['message']);
+                $listChat = ListChat::find()->where(['status' => (string)(1)])->all();
+                foreach ($listChat as $value) {
+                    if ($value['content'] == $mess) {
+                        $isSupporting = true;
+                        break;
+                    }
+                }
             }
             $isNew = $isNew ? true : false;
             $isSupported = $isSupported ? true : false;
@@ -143,6 +166,13 @@ class RestApiChatController extends BaseApiController
                             'current_status' => Order::STATUS_SUPPORTED,
                             'supported' => Yii::$app->getFormatter()->asDatetime('now'),
                         ],['ordercode' => $_post['Order_path']]);
+                }
+                if($isNew === true &&  $isSupporting === true)
+                {
+                    Order::updateAll([
+                        'current_status' => Order::STATUS_SUPPORTING,
+                        'supporting' => Yii::$app->getFormatter()->asDatetime('now'),
+                    ],['ordercode' => $_post['Order_path']]);
                 }
                 /**
                  *  Sales Chat vào group nội bộ các từ khóa cho trước
