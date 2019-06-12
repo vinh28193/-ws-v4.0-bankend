@@ -136,7 +136,6 @@ class RestApiChatController extends BaseApiController
                 }
             }
             if ($_post['type_chat'] == 'WS_CUSTOMER' && strlen(strstr($_post['message'], 'supporting')) > 0) {
-                $this->keyChatManger = new KeyChatList();
                 $mess = str_replace('-Type: supporting','',$_post['message']);
                 $listChat = ListChat::find()->where(['status' => (string)(1)])->all();
                 foreach ($listChat as $value) {
@@ -189,18 +188,13 @@ class RestApiChatController extends BaseApiController
                 }
 
                 if ($_post['_chat'] == 'CART') {
-//                    var_dump('vao');
-//                    die();
                     if($isNew === true &&  $isSupported === true)
                     {
-                        $this->getCart()->updateSafeItem(($_post['type']), $_post['Order_path'], $_post);
+                        $this->getCart()->updateSafeItem(($_post['type']), $_post['id'], $_post);
                     }
                     if($isNew === true &&  $isSupporting === true)
                     {
-                        Order::updateAll([
-                            'current_status' => Order::STATUS_SUPPORTING,
-                            'supporting' => Yii::$app->getFormatter()->asDatetime('now'),
-                        ],['ordercode' => $_post['Order_path']]);
+                        $this->getCart()->updateSafeItem(($_post['type']), $_post['id'], $_post);
                     }
                 }
                 $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}";
