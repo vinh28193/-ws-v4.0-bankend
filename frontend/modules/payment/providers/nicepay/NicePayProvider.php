@@ -304,14 +304,27 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     return new PaymentResponse(false, $this->getClient()->getErrorMsg());
                 }
 
-                if (isset($response['data']['resultCd']) && $response['data']['resultCd'] == '0000' && isset($response['data']['resultMsg']) && $response['data']['resultMsg'] === 'SUCCESS') {
-                    $checkoutUrl = Url::toRoute(['/checkout/notify/nice-pay-success', 'code' => $response['tXid']]);
+                if (isset($response['resultCd']) && (string)$response['resultCd'] === '0000') {
+                    $checkoutUrl = Url::toRoute([
+                        '/checkout/notify/nice-pay-success',
+                        'code' => $response['referenceNo'],
+                        'token' => $response['tXid'],
+                        'billingNm' => $response['billingNm'],
+                        'transTm' => $response['transTm'],
+                        'transDt' => $response['transDt'],
+                        'bankVacctNo' => $response['bankVacctNo'],
+                        'vacctValidDt' => $response['vacctValidDt'],
+                        'vacctValidTm' => $response['vacctValidTm'],
+                        'bankCd' => $response['bankCd'],
+                        'currency' => $response['currency'],
+                        'amount' => $response['amount']
+                    ], true);
                     $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                     $logPaymentGateway->response_content = $response;
                     $logPaymentGateway->url = $checkoutUrl;
                     $logPaymentGateway->save(false);
 
-                    return new PaymentResponse(true, 'Success', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $response['tXid'], $response['data']['resultCd'], $checkoutUrl);
+                    return new PaymentResponse(true, 'Success', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $response['tXid'], $response['resultCd'], $checkoutUrl);
                 }
 
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;

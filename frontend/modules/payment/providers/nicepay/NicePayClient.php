@@ -185,7 +185,7 @@ class NicePayClient extends BaseObject
         $this->checkParam('notaxAmt', '26');
         $this->checkParam('description', '27');
         $this->checkParam('merchantToken', '28');
-        return $this->apiRequest('onePass.do');
+        return $this->apiRequest('orderRegist.do');
     }
 
     public function requestVa()
@@ -219,7 +219,7 @@ class NicePayClient extends BaseObject
         $this->checkParam('description', '27');
         $this->checkParam('merchantToken', '28');
         $this->checkParam('bankCd', '29');
-        return $this->apiRequest('orderRegist.do');
+        return $this->apiRequest('onePass.do');
     }
 
     public function cancelVA()
