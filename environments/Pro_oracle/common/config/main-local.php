@@ -31,6 +31,12 @@ return [
                 'database' => 0,
             ]
         ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => '128.199.70.160',
+            'port' => 6479,
+            'database' => 0,
+        ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',
@@ -51,8 +57,8 @@ return [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://128.199.70.160:27017/admin',
         ],
+        /*
         'db_oauth'=>[
-            /*
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop_oauth',
             'username' => 'root',
@@ -61,11 +67,20 @@ return [
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache'
-            */
         ],
+        */
         'ga' => [
-            'trackingId' => 'UA-140658371-1',
+            'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
+            'trackingId' => 'UA-140658371-1', // Put your real tracking ID here
+
+            // These parameters are optional:
+            'useSsl' => true, // If you’d like to use a secure connection to Google servers
+            'overrideIp' => false, // By default, IP is overridden by the user’s one, but you can disable this
+            'anonymizeIp' => true, // If you want to anonymize the sender’s IP address
+            'asyncMode' => true, // Enables the asynchronous mode (see below)
+            'autoSetClientId' => true, // Try to set ClientId automatically from the “_ga” cookie (disabled by default)
         ],
+        /*
         'productManager' => [
             'gates' => [
                 'ebay' => [
@@ -79,5 +94,6 @@ return [
                 ]
             ]
         ],
+        */
     ],
 ];
