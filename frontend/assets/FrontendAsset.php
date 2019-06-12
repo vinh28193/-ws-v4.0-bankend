@@ -14,11 +14,20 @@ class FrontendAsset extends AssetBundle
     public $css = [
         'css/style.css',
         'css/variables.css',
-        'css/all.css'
+        'css/all.css',
+        'css/slick.css',
+        'css/slick-theme.css',
+        'css/style-new.css',
+        'css/style-new1.css',
+        'css/all.css',
+        'fonts/line-awesome/css/line-awesome.min.css',
+        'fonts/line-awesome/css/line-awesome-font-awesome.min.css',
+        'css/header_account.css'
 //        'css/mobile_style.css'
     ];
     public $js = [
         'js/style.js',
+        'js/style-new.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -41,72 +41,23 @@ class PaymentController extends BasePaymentController
     {
         $start = microtime(true);
         $bodyParams = $this->request->bodyParams;
-        if (($customer = $this->user) === null) {
-            return $this->response(false, 'not login');
-        }
         $payment = new Payment($bodyParams['payment']);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
-//        $shippingForm->setDefaultValues(); // remove it get from POST pls
-//        $shippingForm->ensureReceiver();
-        if ($shippingForm->save_my_address) {
-            $my_address = new Address();
-            $my_address->first_name = $shippingForm->buyer_name;
-            $my_address->phone = $shippingForm->buyer_phone;
-            $my_address->email = $shippingForm->buyer_email;
-            $my_address->country_id = 1;
-            $my_address->country_name = 'Viet Nam';
-            $my_address->province_id = $shippingForm->buyer_province_id;
-            $my_address->province_name = ($province = SystemStateProvince::findOne($shippingForm->buyer_province_id)) ? $province->name : '';
-            $my_address->district_id = $shippingForm->buyer_district_id;
-            $my_address->district_name = ($district = SystemDistrict::findOne($shippingForm->buyer_district_id)) ? $district->name : '';
-            $my_address->address = $shippingForm->buyer_address;
-            $my_address->customer_id = $this->user->getId();
-            $my_address->type = Address::TYPE_PRIMARY;
-            $my_address->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_PRIMARY, 'is_default' => 1])->count() ? 0 : 1;
-            $my_address->save(false);
-            $shippingForm->receiver_address_id = $my_address->id;
-            if (!$shippingForm->other_receiver) {
-                $my_shiping = new Address();
-                $addressShipping = $my_address->getAttributes();
-                unset($addressShipping['id']);
-                $my_shiping->setAttributes($addressShipping);
-                $my_shiping->type = Address::TYPE_SHIPPING;
-                $my_shiping->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_SHIPPING, 'is_default' => 1])->count() ? 0 : 1;
-                $my_shiping->save(false);
-                $shippingForm->receiver_address_id = $my_shiping->id;
-            } else {
-                $my_shiping = new Address();
-                $my_shiping->first_name = $shippingForm->receiver_name;
-                $my_shiping->phone = $shippingForm->receiver_phone;
-                $my_shiping->email = $shippingForm->receiver_email;
-                $my_shiping->country_id = 1;
-                $my_shiping->country_name = 'Viet Nam';
-                $my_shiping->province_id = $shippingForm->receiver_province_id;
-                $my_shiping->province_name = ($province = SystemStateProvince::findOne($shippingForm->receiver_province_id)) ? $province->name : '';
-                $my_shiping->district_id = $shippingForm->receiver_district_id;
-                $my_shiping->district_name = ($district = SystemDistrict::findOne($shippingForm->receiver_district_id)) ? $district->name : '';
-                $my_shiping->address = $shippingForm->receiver_address;
-                $my_shiping->customer_id = $this->user->getId();
-                $my_shiping->type = Address::TYPE_SHIPPING;
-                $my_shiping->is_default = Address::find()->where(['customer_id' => $this->user->getId(), 'type' => Address::TYPE_SHIPPING, 'is_default' => 1])->count() ? 0 : 1;
-                $my_shiping->save(false);
-                $shippingForm->receiver_address_id = $my_shiping->id;
-            }
-        }
-        $address = isset($my_address) && $my_address instanceof Address ? $my_address : $this->user->primaryAddress;
-        $payment->customer_name = implode(' ', [$address->first_name, $address->last_name]);
-        $payment->customer_email = $address->email;
-        $payment->customer_phone = $address->phone;
-        $payment->customer_address = $address->address;
-        $payment->customer_city = $address->province_name;
-        $payment->customer_postcode = $address->post_code;
-        $payment->customer_district = $address->district_name;
-        $payment->customer_country = $address->country_name;
+        $shippingForm->ensureReceiver();
+
+        $payment->customer_name = $shippingForm->buyer_name;
+        $payment->customer_email = $shippingForm->buyer_email;
+        $payment->customer_phone = $shippingForm->buyer_phone;
+        $payment->customer_address = $shippingForm->buyer_address;
+        $payment->customer_city = $shippingForm->getReceiverProvinceName();
+        $payment->customer_postcode = $shippingForm->buyer_post_code;
+        $payment->customer_district = $shippingForm->getBuyerDistrictName();
+        $payment->customer_country = $this->storeManager->store->country_name;
         $payment->createTransactionCode();
         /* @var $results PromotionResponse */
         $payment->checkPromotion();
         $paymentTransaction = new PaymentTransaction();
-        $paymentTransaction->customer_id = $this->user->getId();
+        $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
         $paymentTransaction->store_id = $payment->storeManager->getId();
         $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
         $paymentTransaction->carts = implode(',', $payment->carts);
@@ -128,39 +79,22 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->used_xu = $payment->use_xu;
         $paymentTransaction->bulk_point = $payment->bulk_point;
         $paymentTransaction->total_discount_amount = $payment->total_discount_amount;
-        $paymentTransaction->before_discount_amount_local = $payment->total_amount;
-        $paymentTransaction->transaction_amount_local = $payment->total_amount - $payment->total_discount_amount;
-        $paymentTransaction->payment_type = $payment->payment_type;
-        $paymentTransaction->shipping = isset($my_shiping) && $my_shiping instanceof Address ? $my_shiping->id : $this->user->defaultShippingAddress->id;
+        $paymentTransaction->before_discount_amount_local = $payment->total_order_amount;
+        $paymentTransaction->transaction_amount_local = $payment->getTotalAmountDisplay();
+        $paymentTransaction->payment_type = $payment->type;
         $paymentTransaction->save(false);
-//        if ($payment->payment_provider === 42 || $payment->payment_provider === 45) {
-//            $wallet = new WalletService([
-//                'transaction_code' => $payment->transaction_code,
-//                'total_amount' => $payment->total_amount - $payment->total_discount_amount,
-//                'payment_provider' => $payment->payment_provider_name,
-//                'payment_method' => $payment->payment_method_name,
-//                'bank_code' => $payment->payment_bank_code,
-//            ]);
-//            $results = $wallet->topUpTransaction();
-//            if ($results['success'] === true && isset($results['data']) && isset($results['data']['data']['code'])) {
-//                $topUpCode = $results['data']['data']['code'];
-//                $paymentTransaction->updateAttributes([
-//                    'topup_transaction_code' => $topUpCode
-//                ]);
-//                $payment->transaction_code = $topUpCode;
-//            }
-//        }
+
         $res = $payment->processPayment();
-        if ($res['success'] === false) {
-            return $this->response(false, $res['message']);
+        if ($res->success === false) {
+            return $this->response(false, $res->message);
         }
-        $paymentTransaction->third_party_transaction_code = $res['data']['token'];
-        $paymentTransaction->third_party_transaction_status = $res['data']['code'];
-        $paymentTransaction->third_party_transaction_link = $res['data']['checkoutUrl'];
+        $paymentTransaction->third_party_transaction_code = $res->token;
+        $paymentTransaction->third_party_transaction_status = $res->status;
+        $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
         $paymentTransaction->save(false);
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
-        return $this->response(true, 'create success', $res['data']);
+        return $this->response(true, 'create success', $res);
     }
 
     public function actionReturn($merchant)
@@ -170,19 +104,17 @@ class PaymentController extends BasePaymentController
         $res = Payment::checkPayment((int)$merchant, $this->request);
         $cartUrl = Url::toRoute('/checkout/cart');
         $redirectUrl = Url::toRoute('/account/order', true);
-        if (!isset($res) || $res['success'] === false || !isset($res['data'])) {
+        if ($res->success === false) {
             return $this->redirect($cartUrl);
         }
-
-        $data = $res['data'];
-
-        if (isset($data['redirectUrl'])) {
-            $redirectUrl = $data['redirectUrl'];
+        if ($res->checkoutUrl !== null) {
+            $redirectUrl = $res->checkoutUrl;
         }
         /** @var $paymentTransaction PaymentTransaction */
-        if (($paymentTransaction = $data['transaction']) instanceof PaymentTransaction) {
+        if (($paymentTransaction = $res->paymentTransaction) instanceof PaymentTransaction) {
             $payment = new Payment([
                 'carts' => StringHelper::explode($paymentTransaction->carts, ','),
+                'uuid' => $this->filterUuid(),
                 'transaction_code' => $paymentTransaction->transaction_code,
                 'customer_name' => $paymentTransaction->transaction_customer_name,
                 'customer_email' => $paymentTransaction->transaction_customer_email,
@@ -199,36 +131,31 @@ class PaymentController extends BasePaymentController
                 'use_xu' => $paymentTransaction->used_xu,
                 'bulk_point' => $paymentTransaction->bulk_point,
                 'total_discount_amount' => $paymentTransaction->total_discount_amount,
-                'total_amount' => $paymentTransaction->before_discount_amount_local,
-                'payment_type' => $paymentTransaction->payment_type,
+                'total_order_amount' => $paymentTransaction->before_discount_amount_local,
+                'type' => $paymentTransaction->payment_type,
                 'isPaid' => $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS,
             ]);
-
-            $receiverAddress = Address::findOne($paymentTransaction->shipping);
-            if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
-                $createResponse = $payment->createOrder($receiverAddress);
-                if ($createResponse['success'] && isset($createResponse['data']['orderCodes'])) {
-                    Yii::info($createResponse['data']);
-                    foreach ($createResponse['data']['orderCodes'] as $orderCode => $info) {
-                        $coupon_codes = ArrayHelper::getValue($info, 'promotion');
-                        if ($coupon_codes !== null && is_array($coupon_codes)) {
-                            $coupon_codes = implode(',', $coupon_codes);
-                        }
-                        $childTransaction = clone $paymentTransaction;
-                        $childTransaction->id = null;
-                        $childTransaction->isNewRecord = true;
-                        $childTransaction->coupon_code = $coupon_codes;
-                        $childTransaction->transaction_amount_local = ArrayHelper::getValue($info, 'totalPaid', 0);
-                        $childTransaction->total_discount_amount = ArrayHelper::getValue($info, 'discountAmount', 0);
-                        $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
-                        $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
-                        $childTransaction->order_code = $orderCode;
-                        $childTransaction->save(false);
+            $createResponse = $payment->createOrder();
+            if ($createResponse['success'] && isset($createResponse['data']['orderCodes'])) {
+                Yii::info($createResponse['data']);
+                foreach ($createResponse['data']['orderCodes'] as $orderCode => $info) {
+                    $coupon_codes = ArrayHelper::getValue($info, 'promotion');
+                    if ($coupon_codes !== null && is_array($coupon_codes)) {
+                        $coupon_codes = implode(',', $coupon_codes);
                     }
-                    foreach ($payment->carts as $key) {
-                        $this->cartManager->removeItem($payment->payment_type, $key);
-                    }
-
+                    $childTransaction = clone $paymentTransaction;
+                    $childTransaction->id = null;
+                    $childTransaction->isNewRecord = true;
+                    $childTransaction->coupon_code = $coupon_codes;
+                    $childTransaction->transaction_amount_local = ArrayHelper::getValue($info, 'totalPaid', 0);
+                    $childTransaction->total_discount_amount = ArrayHelper::getValue($info, 'discountAmount', 0);
+                    $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
+                    $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
+                    $childTransaction->order_code = $orderCode;
+                    $childTransaction->save(false);
+                }
+                foreach ($payment->carts as $key) {
+                    $this->cartManager->removeItem($payment->type, $key);
                 }
             }
             return $this->redirect($redirectUrl);

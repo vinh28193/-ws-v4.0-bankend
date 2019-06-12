@@ -22,8 +22,9 @@ use yii\db\Query;
 use yii\db\Expression;
 
 /**
- * @property  Product[] $products
- * @property  Package[] $packages
+ * @property Product[] $products
+ * @property Package[] $packages
+ * @property Seller $seller
  */
 class Order extends DbOrder implements RuleOwnerAccessInterface
 {
@@ -94,6 +95,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
     const STATUS_NEED_CONFIRM_CHANGE_PRICE = 1;
     const STATUS_CONFIRMED_CHANGE_PRICE = 0;
+
     /**
      * @inheritdoc
      */
@@ -123,7 +125,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                             return Yii::$app->storeManager->getId();
                         },
                     ],
-                    'exchange_rate_fee' =>  [
+                    'exchange_rate_fee' => [
                         self::EVENT_BEFORE_INSERT => function ($event, $attribute) {
                             return Yii::$app->storeManager->getExchangeRate();
                         },
@@ -501,9 +503,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     {
         return $this->hasMany(PaymentTransaction::className(), ['order_code' => 'ordercode'])
             ->where([
-                'payment_type' => [PaymentTransaction::PAYMENT_TYPE_REFUND,PaymentTransaction::PAYMENT_TYPE_ADDFEE,PaymentTransaction::PAYMENT_TYPE_BUY_NOW,PaymentTransaction::PAYMENT_TYPE_SHOPPING],
+                'payment_type' => [PaymentTransaction::PAYMENT_TYPE_REFUND, PaymentTransaction::PAYMENT_TYPE_ADDFEE, PaymentTransaction::PAYMENT_TYPE_BUY_NOW, PaymentTransaction::PAYMENT_TYPE_SHOPPING],
             ])
-            ->andWhere(['<>','transaction_status',PaymentTransaction::TRANSACTION_STATUS_REPLACED])
+            ->andWhere(['<>', 'transaction_status', PaymentTransaction::TRANSACTION_STATUS_REPLACED])
             ->orderBy('id desc');
     }
 
@@ -874,38 +876,53 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         return $data;
 
     }
-    public function updateSellerShipped($time = null , $updateNew = false){
+
+    public function updateSellerShipped($time = null, $updateNew = false)
+    {
         $this->current_status = $this->seller_shipped ? $this->current_status : self::STATUS_SELLER_SHIPPED;
-        if ($updateNew || !$this->seller_shipped){
+        if ($updateNew || !$this->seller_shipped) {
             $this->seller_shipped = $time ? $time : time();
         }
     }
-    public function updateStockinUs($time = null , $updateNew = false)
+
+    public function updateStockinUs($time = null, $updateNew = false)
     {
         $this->current_status = $this->stockin_us ? $this->current_status : self::STATUS_STOCK_IN_US;
         if ($updateNew || !$this->stockin_us) {
             $this->stockin_us = $time ? $time : time();
         }
     }
-    public function updateStockoutUs($time = null , $updateNew = false){
+
+    public function updateStockoutUs($time = null, $updateNew = false)
+    {
         $this->current_status = $this->stockout_us ? $this->current_status : self::STATUS_STOCK_OUT_US;
-        if ($updateNew || !$this->stockout_us){
+        if ($updateNew || !$this->stockout_us) {
             $this->stockout_us = $time ? $time : time();
         }
     }
-    public function updateStockinLocal($time = null , $updateNew = false)
+
+    public function updateStockinLocal($time = null, $updateNew = false)
     {
         $this->current_status = $this->stockin_local ? $this->current_status : self::STATUS_STOCK_IN_LOCAL;
         if ($updateNew || !$this->stockin_local) {
             $this->stockin_local = $time ? $time : time();
         }
     }
-    public function updateStockoutLocal($time = null , $updateNew = false){
+
+    public function updateStockoutLocal($time = null, $updateNew = false)
+    {
         $this->current_status = $this->stockout_local ? $this->current_status : self::STATUS_STOCK_OUT_LOCAL;
-        if ($updateNew || !$this->stockout_local){
+        if ($updateNew || !$this->stockout_local) {
             $this->stockout_local = $time ? $time : time();
         }
     }
 
 
+    /**
+     *
+     */
+    public function getCategory()
+    {
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
+    }
 }

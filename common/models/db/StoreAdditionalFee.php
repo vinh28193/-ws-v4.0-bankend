@@ -10,6 +10,7 @@ use Yii;
  * @property int $id ID
  * @property int $store_id Store ID reference
  * @property string $name Fee Name
+ * @property string $type origin/addition/discount
  * @property string $label Label of fee
  * @property string $currency Currency (USD/VND)
  * @property string $description Description
@@ -39,11 +40,12 @@ class StoreAdditionalFee extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'name', 'label'], 'required'],
+            [['store_id', 'name', 'type', 'label'], 'required'],
             [['store_id', 'status', 'created_by', 'created_time', 'updated_by', 'updated_time'], 'integer'],
             [['description', 'condition_data', 'condition_description'], 'string'],
             [['fee_rate'], 'number'],
             [['name'], 'string', 'max' => 50],
+            [['type'], 'string', 'max' => 32],
             [['label'], 'string', 'max' => 80],
             [['currency'], 'string', 'max' => 11],
             [['version'], 'string', 'max' => 255],
@@ -56,21 +58,22 @@ class StoreAdditionalFee extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('db', 'ID'),
-            'store_id' => Yii::t('db', 'Store ID'),
-            'name' => Yii::t('db', 'Name'),
-            'label' => Yii::t('db', 'Label'),
-            'currency' => Yii::t('db', 'Currency'),
-            'description' => Yii::t('db', 'Description'),
-            'condition_data' => Yii::t('db', 'Condition Data'),
-            'condition_description' => Yii::t('db', 'Condition Description'),
-            'status' => Yii::t('db', 'Status'),
-            'created_by' => Yii::t('db', 'Created By'),
-            'created_time' => Yii::t('db', 'Created Time'),
-            'updated_by' => Yii::t('db', 'Updated By'),
-            'updated_time' => Yii::t('db', 'Updated Time'),
-            'fee_rate' => Yii::t('db', 'Fee Rate'),
-            'version' => Yii::t('db', 'Version'),
+            'id' => 'ID',
+            'store_id' => 'Store ID',
+            'name' => 'Name',
+            'type' => 'Type',
+            'label' => 'Label',
+            'currency' => 'Currency',
+            'description' => 'Description',
+            'condition_data' => 'Condition Data',
+            'condition_description' => 'Condition Description',
+            'status' => 'Status',
+            'created_by' => 'Created By',
+            'created_time' => 'Created Time',
+            'updated_by' => 'Updated By',
+            'updated_time' => 'Updated Time',
+            'fee_rate' => 'Fee Rate',
+            'version' => 'Version',
         ];
     }
 }

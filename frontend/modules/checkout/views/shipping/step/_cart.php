@@ -5,6 +5,22 @@ use yii\helpers\Html;
 
 /* @var yii\web\View $this */
 /* @var frontend\modules\payment\Payment $payment */
+
+$css = <<<CSS
+    .order-summary {
+        background: #f2f3f5;
+        border-top: 1px solid #ebebeb;
+        padding: 15px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    .order-summary li{
+        display: flex;
+        justify-content: space-between;
+    }
+CSS;
+$this->registerCss($css);
+
 $storeManager = Yii::$app->storeManager;
 ?>
 
@@ -39,11 +55,11 @@ $storeManager = Yii::$app->storeManager;
                                 <a href="<?= $product['product_link']; ?>"
                                    class="name"><?= $product['product_name']; ?></a>
                                 <div class="rate">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <i class="far fa-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star-half-o"></i>
+                <i class="la la-star-o"></i>
                                 </div>
                             </div>
                             <div class="right">
@@ -60,18 +76,44 @@ $storeManager = Yii::$app->storeManager;
             </ul>
         <?php endforeach; ?>
 
-        <div class="coupon" id="discountInputCoupon" style="border-top: none; padding:  0;margin-top: 16px;">
-            <label><?= Yii::t('frontend', 'Coupon code'); ?>:</label>
-            <div class="input-group discount-input">
-                <input type="text" class="form-control" name="couponCode">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button"
-                            id="applyCouponCode"><?= Yii::t('frontend', 'Apply'); ?></button>
-                </div>
+    </div>
+    <ul class="order-summary">
+        <li>
+            <div class="left"><?= Yii::t('frontend', 'Order amount') ?>:</div>
+            <div class="right">
+                <span>
+                    <?= $storeManager->showMoney($payment->total_order_amount); ?>
+                </span>
+            </div>
+        </li>
+        <li>
+            <div class="left"><?= Yii::t('frontend', 'International Shipping') ?>:</div>
+            <div class="right">
+                <span>
+                    <?php echo $storeManager->showMoney($payment->getPaymentAdditionalFees(false)['international_shipping_fee']['amount']); ?>
+                </span>
+            </div>
+        </li>
+        <li>
+            <div class="left"><?= Yii::t('frontend', 'Purchase fee') ?>:</div>
+            <div class="right">
+                <span>
+                    <?php echo $storeManager->showMoney($payment->getPaymentAdditionalFees(false)['purchase_fee']['amount']); ?>
+                </span>
+            </div>
+        </li>
+    </ul>
+    <div class="coupon" id="discountInputCoupon" style="border-top: none; padding:  15px;margin-top: 0px">
+        <label><?= Yii::t('frontend', 'Coupon code'); ?>:</label>
+        <div class="input-group discount-input">
+            <input type="text" class="form-control" name="couponCode">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button"
+                        id="applyCouponCode"><?= Yii::t('frontend', 'Apply'); ?></button>
             </div>
         </div>
-        <span class="text-danger" id="discountErrors" style="display: none"></span>
     </div>
+    <span class="text-danger" id="discountErrors" style="display: none"></span>
     <ul class="billing" id="billingBox">
         <li id="discountPrice" style="display: <?= $payment->total_discount_amount > 0 ? 'block' : 'none' ?>">
             <div class="left"><?= Yii::t('frontend', 'Discount amount') ?>:</div>

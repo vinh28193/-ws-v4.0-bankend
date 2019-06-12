@@ -2,6 +2,7 @@
 
 use frontend\assets\FancyboxPlusAsset;
 use frontend\widgets\alias\AliasWidget;
+use frontend\widgets\breadcrumb\BreadcrumbWidget;
 use frontend\widgets\search\SearchBoxWidget;
 
 
@@ -47,28 +48,17 @@ $(document).ready(function() {
 JS;
 $this->registerJs($js, \yii\web\View::POS_END);
 
-
+echo BreadcrumbWidget::widget(['params' => $this->params]);
 ?>
-    <div class="keep-navbar <?= strtolower($portal) == 'amazon-jp' ? 'amazon' : strtolower($portal) ?> other-page">
+<!--    <div class="keep-navbar <?/*= strtolower($portal) == 'amazon-jp' ? 'amazon' : strtolower($portal) */?> other-page">
         <div class="container">
             <?php
-            echo AliasWidget::widget(['type' => $portal]);
+/*            echo AliasWidget::widget(['type' => $portal]);
             echo SearchBoxWidget::widget([])
-            ?>
+            */?>
         </div>
-    </div>
+    </div>-->
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a href="/">Weshop Global</a></li>
-                <li class="breadcrumb-item"><a href="/<?= strtolower($portal); ?>.html"> <?php if( strtolower($portal) == "ebay") { echo 'Shop Ebay';}  if( strtolower($portal) == "amazon") { echo 'Shop Amazon';}  if( strtolower($portal) == "amazon-jp") { echo 'Shop Amazon Japan';} if( strtolower($portal) == "amazon-uk") { echo 'Shop Amazon Japan';} ?>   </a></li>
-                <?= $Ekey = Yii::$app->request->get('keyword','') ?>
-                <?php if ($Ekey != ''){?>
-                    <li class="breadcrumb-item active">Tìm kiếm từ khóa <?php  echo $Ekey; ?></li>
-                <?php } ?>
-            </ol>
-        </nav>
         <?= $content; ?>
 
 

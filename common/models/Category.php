@@ -72,4 +72,16 @@ class Category extends DbCmsCategory
     {
         return $this->hasOne(CategoryGroup::className(), ['id' => 'category_group_id']);
     }
+
+    public function safeCreate()
+    {
+        if ($this->isNewRecord === false) {
+            return false;
+        }
+        if (($categorySafe = self::find()->where(['AND', ['alias' => $this->alias], ['siteId' => $this->siteId]])->one()) === null) {
+            $this->save(false);
+            return $this;
+        }
+        return $categorySafe;
+    }
 }

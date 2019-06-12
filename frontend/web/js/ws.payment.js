@@ -2,16 +2,17 @@ ws.payment = (function ($) {
     var defaults = {
         page: undefined,
         uuid: ws.getFingerprint(),
-        payment_type: undefined,
+        type: undefined,
         carts: [],
         use_xu: 0,
         bulk_point: 0,
         coupon_code: undefined,
         discount_detail: [],
-        total_discount_amount: 0,
         currency: 'vnđ',
-        total_amount: 0,
-        total_amount_display: 0,
+        total_discount_amount: 0,
+        total_order_amount: 0,
+        totalAmount: 0,
+        totalAmountDisplay: 0,
         customer_name: undefined,
         customer_email: undefined,
         customer_phone: undefined,
@@ -26,6 +27,12 @@ ws.payment = (function ($) {
         payment_provider: undefined,
         payment_provider_name: undefined,
         payment_token: undefined,
+        bank_account: undefined,
+        bank_name: undefined,
+        issue_month: undefined,
+        issue_year: undefined,
+        expired_month: undefined,
+        expired_year: undefined,
         installment_bank: undefined,
         installment_method: undefined,
         installment_month: undefined,
@@ -34,32 +41,14 @@ ws.payment = (function ($) {
         otp_verify_method: 1,
         shipment_options_status: 1,
         transaction_code: undefined,
-        transaction_fee: 0
+        transaction_fee: 0,
+        additionalFees: [],
     };
     var pub = {
         payment: {},
         options: {},
         methods: [],
-        shipping: {
-            buyer_email: '',
-            buyer_phone: '',
-            buyer_name: '',
-            buyer_province_id: '',
-            buyer_district_id: '',
-            buyer_address: '',
-            receiver_email: '',
-            receiver_phone: '',
-            receiver_name: '',
-            receiver_province_id: '',
-            receiver_district_id: '',
-            receiver_address: '',
-            other_receiver: 0,
-            note_by_customer: '',
-            save_my_address: '',
-            enable_buyer: '',
-            receiver_address_id: undefined,
-
-        },
+        shipping: {},
         installmentParam: {
             originAmount: 0,
             banks: [],
@@ -101,20 +90,6 @@ ws.payment = (function ($) {
                     pub.checkPromotion();
                 }
             });
-            showStep(1);
-            $('#other-receiver').click(function () {
-                if (!pub.shipping.other_receiver) {
-                    pub.shipping.other_receiver = 1;
-                    $('#other-receiver i').addClass('text-info');
-                    $('#other-receiver svg').addClass('text-info');
-                    $('#receiver-form').css('display', 'block');
-                } else {
-                    pub.shipping.other_receiver = 0;
-                    $('#other-receiver i').removeClass('text-info');
-                    $('#other-receiver svg').removeClass('text-info');
-                    $('#receiver-form').css('display', 'none');
-                }
-            });
             $('.checkout-step li').click(function () {
                 var step = $(this)[0].firstElementChild.innerHTML;
                 if ($('#step_checkout_' + step).length === 1) {
@@ -141,6 +116,7 @@ ws.payment = (function ($) {
                     window.scrollTo(0, 0);
                 }
             });
+
             $('input[name=check-member]').click(function () {
                 var value = $(this).val();
                 if (value === 'new-member') {
@@ -149,9 +125,18 @@ ws.payment = (function ($) {
                     $('div[data-merge=signup-form]').css('display', 'none');
                 }
             });
-            $('input').change(function () {
-                var name = $(this).attr('name');
-                $('#' + name + '-error').html('');
+
+            $('#continueAsGuest').on('click', function (e) {
+                $('.checkout-step li').removeClass('active');
+                $('.checkout-step li').each(function (k, v) {
+                    if (k === 1) {
+                        $(v).addClass('active');
+                    }
+                });
+                $('#step_checkout_1').css('display', 'none');
+                $('#step_checkout_2').css('display', 'block');
+                $('#step_checkout_3').css('display', 'none');
+                window.scrollTo(0, 0);
             });
             $('#loginToCheckout').click(function () {
                 ws.loading(true);
@@ -205,59 +190,39 @@ ws.payment = (function ($) {
         get: function (name, defaultValue) {
             return pub.payment[name] || defaultValue;
         },
-        selectMethod: function (providerId, methodId, bankCode) {
+        selectMethod: function (providerId, methodId, bankCode, checkRequire = false) {
             console.log('selected providerId:' + providerId + ' methodId:' + methodId + ' bankCode:' + bankCode);
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
             pub.payment.payment_bank_code = bankCode;
-            if (providerId === 42 && providerId === 46 && methodId === 25) {
-                bankCode = 'VCB';
-                pub.methodChange(true);
-            } else if (providerId === 42 || (providerId === 43 && methodId === 44)) {
-                pub.getWalletInfo(this);
+            if (bankCode == 'ATM_ONLINE') {
+                pub.methodChange(false);
             }
-            pub.payment.payment_provider = providerId;
-            pub.payment.payment_method = methodId;
-            pub.payment.payment_bank_code = bankCode;
+            if (checkRequire === true) {
+                pub.checkRequireField();
+            }
             $.each($('li[rel=s_bankCode]'), function () {
                 $(this).find('span').removeClass('active');
             });
-            if ($('#bank_code_' + bankCode + '_' + methodId).length > 0) {
-                $('#bank_code_' + bankCode + '_' + methodId).find('span').addClass('active');
+            var activeMethod = $('#bank_code_' + bankCode + '_' + methodId);
+            if (activeMethod.length > 0) {
+                activeMethod.find('span').addClass('active');
             }
             pub.checkPromotion();
+        },
+        checkRequireField: function () {
+            ws.ajax('/payment/' + pub.payment.payment_provider + '/check-field', {
+                dataType: 'json',
+                type: 'post',
+                data: pub.payment,
+                success: function (response) {
+                    console.log(response);
+                }
+            });
         },
         registerMethods: function ($methods) {
             pub.methods = $methods;
             console.log('register ' + pub.methods.length + ' methods');
-        },
-        getInfoFormShipping: function () {
-            pub.shipping.buyer_name = $('#shippingform-buyer_name').val();
-            pub.shipping.buyer_phone = $('#shippingform-buyer_phone').val();
-            pub.shipping.buyer_email = $('#shippingform-buyer_email').val();
-            pub.shipping.buyer_province_id = $('#shippingform-buyer_province_id').val();
-            pub.shipping.buyer_district_id = $('#shippingform-buyer_district_id').val();
-            pub.shipping.buyer_address = $('#shippingform-buyer_address').val();
-            pub.shipping.receiver_name = $('#shippingform-receiver_name').val();
-            pub.shipping.receiver_phone = $('#shippingform-receiver_phone').val();
-            pub.shipping.receiver_email = $('#shippingform-receiver_email').val();
-            pub.shipping.receiver_province_id = $('#shippingform-receiver_province_id').val();
-            pub.shipping.receiver_district_id = $('#shippingform-receiver_district_id').val();
-            pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
-            pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
-            pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
-            pub.shipping.receiver_address_id = $('#shippingform-receiver_address_id').val();
-            if (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id) {
-                ws.notifyError('Vui lòng nhập đầy đủ thông tin người mua');
-                return false;
-            }
-            if (pub.shipping.other_receiver) {
-                if (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id) {
-                    ws.notifyError('Vui lòng nhập đầy đủ thông tin người nhận');
-                    return false;
-                }
-            }
-            return true;
         },
         getWalletInfo: function ($element) {
             $element = $element || undefined;
@@ -446,21 +411,16 @@ ws.payment = (function ($) {
 
         },
         process: function () {
-            var typePay = $('input[name=type_pay]').val();
-            if (typePay && typePay.toString().toLowerCase() === 'topup') {
-                ws.payment.topUp();
-            } else {
-                var $termAgree = $('input#termCheckout').is(':checked');
-                if (!$termAgree) {
-                    ws.notifyError('Bạn phải đồng ý với điều khoản weshop');
-                    return;
-                }
-                processPaymment();
+            var $termAgree = $('input#termCheckout').is(':checked');
+            if (!$termAgree) {
+                ws.notifyError('Bạn phải đồng ý với điều khoản weshop');
+                return;
             }
+            processPaymment();
         },
         topUp: function () {
-            pub.payment.total_amount = $('input[name=amount_topup]').val();
-            if (pub.payment.total_amount < 100000) {
+            pub.payment.total_order_amount = $('input[name=amount_topup]').val();
+            if (pub.payment.total_order_amount < 100000) {
                 ws.notifyError('Bạn cần phải nạp trên 100.000');
                 return;
             }
@@ -498,27 +458,54 @@ ws.payment = (function ($) {
             processPaymment();
         },
         filterShippingAddress: function () {
-            var $form = $('form.payment-form');
-            if (!$form.length > 0) {
+            var form = $('form.payment-form');
+            if (!form.length > 0) {
                 return false;
             }
-            var values = {};
-            var formDataArray = $form.serializeArray();
-            formDataArray.map(function (x) {
-                if ('buyerPhone' === x.name || 'receiverPhone' === x.name) {
-                    var val = $.trim(x.value);
-                    values[x.name] = val.indexOf("0") === 0 ? val : '0' + val;
-                    values[x.name] = val.replace('+84', '0');
-                } else {
-                    values[x.name] = $.trim(x.value);
+            // return false if form still have some validation errors
+            if (form.find('.has-error').length) {
+                return false;
+            }
+
+            // var formDataArray = form.serializeArray();
+            // var values = formDataArray.reduce(function (result, item) {
+            //     result[item.name] = item.value;
+            //     return result;
+            // }, []);
+            // console.log(values);
+            // pub.shipping = values;
+
+            pub.shipping.buyer_name = $('#shippingform-buyer_name').val();
+            pub.shipping.buyer_phone = $('#shippingform-buyer_phone').val();
+            pub.shipping.buyer_email = $('#shippingform-buyer_email').val();
+            pub.shipping.buyer_province_id = $('#shippingform-buyer_province_id').val();
+            pub.shipping.buyer_district_id = $('#shippingform-buyer_district_id').val();
+            pub.shipping.buyer_address = $('#shippingform-buyer_address').val();
+            pub.shipping.receiver_name = $('#shippingform-receiver_name').val();
+            pub.shipping.receiver_phone = $('#shippingform-receiver_phone').val();
+            pub.shipping.receiver_email = $('#shippingform-receiver_email').val();
+            pub.shipping.receiver_province_id = $('#shippingform-receiver_province_id').val();
+            pub.shipping.receiver_district_id = $('#shippingform-receiver_district_id').val();
+            pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
+            pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
+            pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
+            pub.shipping.receiver_address_id = $('#shippingform-receiver_address_id').val();
+            pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
+            if (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id) {
+                ws.notifyError('Vui lòng nhập đầy đủ thông tin người mua');
+                return false;
+            }
+            if (pub.shipping.other_receiver) {
+                if (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id) {
+                    ws.notifyError('Vui lòng nhập đầy đủ thông tin người nhận');
+                    return false;
                 }
-            });
-            pub.shipping = formDataArray;
-            return formDataArray;
+            }
+            return true;
         },
     };
     var processPaymment = function () {
-        if (!pub.getInfoFormShipping()) {
+        if (!pub.filterShippingAddress()) {
             return;
         }
         ws.ajax('/payment/payment/process', {
@@ -526,21 +513,34 @@ ws.payment = (function ($) {
             type: 'post',
             data: {payment: pub.payment, shipping: pub.shipping},
             success: function (response) {
+
                 if (response.success) {
-                    var data = response.data;
-                    var code = data.code.toUpperCase() || '';
-                    var method = data.method.toUpperCase();
-                    if (method === 'POPUP') {
-                        var type = data.provider.toUpperCase() || null;
-                        if (type === 'WALLET') {
+                    var data = $.extend({}, {
+                        success: false,
+                        message: '',
+                        paymentTransaction: null,
+                        redirectType: 'normal',
+                        redirectMethod: 'get',
+                        token: null,
+                        status: null,
+                        checkoutUrl: null,
+                        returnUrl: null,
+                        cancelUrl: null
+                    }, response.data || {});
+                    var redirectType = data.redirectType.toUpperCase();
+                    var redirectMethod = data.redirectMethod.toUpperCase() || 'GET';
+                    if (redirectType === 'POPUP') {
+                        if (redirectMethod === 'WALLET') {
                             var $otp = $('#otp-confirm');
                             $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
+                        } else if (redirectMethod === 'QRCODE') {
+                            console.log(response);
                         }
-                    } else {
-                        $('span#transactionCode').html(code);
+                    } else if (data.paymentTransaction) {
+                        $('span#transactionCode').html(data.paymentTransaction);
                         $('div#checkout-success').modal('show');
                         ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
-                            if (method === 'POST') {
+                            if (redirectMethod === 'POST') {
                                 $(data.checkoutUrl).appendTo('body').submit();
                             } else {
                                 ws.redirect(data.checkoutUrl);
@@ -571,10 +571,10 @@ ws.payment = (function ($) {
         if ($response.details.length > 0 && $response.discount > 0) {
             pub.payment.discount_detail = $response.details;
             pub.payment.total_discount_amount = $response.discount;
-            pub.payment.total_amount_display = pub.payment.total_amount - pub.payment.total_discount_amount;
+            pub.payment.totalAmountDisplay = pub.payment.totalAmount - pub.payment.total_discount_amount;
             discountBox.css('display', 'flex');
             discountBox.find('div.right').html('- ' + ws.showMoney(pub.payment.total_discount_amount));
-            billingBox.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.total_amount_display));
+            billingBox.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.totalAmountDisplay));
             billingBox.find('li[rel="detail"]').remove();
             billingBox.prepend(initPromotionView(pub.payment.discount_detail));
 
@@ -616,16 +616,17 @@ ws.payment = (function ($) {
         console.log(banks)
     };
     var redirectPaymentGateway = function (rs, $timeOut) {
-        runTime = setInterval(function () {
+        var runTime = setInterval(function () {
             var second = parseInt($("#countdown_payment").text());
             if (second > 0) {
                 $("#countdown_payment").text(second - 1);
             } else {
-                if (rs.method == 'POST') {
+                var redirectMethod = rs.redirectMethod.toUpperCase() || 'GET';
+                if (redirectMethod === 'POST') {
                     $(rs.checkoutUrl).appendTo('body').submit();
                     clearInterval(runTime);
                 } else {
-                    window.location.href = rs.checkoutUrl;
+                    ws.redirect(rs.checkoutUrl);
                     clearInterval(runTime);
                 }
             }
@@ -644,6 +645,19 @@ ws.payment = (function ($) {
 
             }
         });
+    };
+    var showAdditinalFee = function (fee) {
+        var $localAmount = 0;
+        var $lable = 'Unknonw fee';
+        if (fee.length > 0) {
+            for (var i = 0; i < fee.length; i++) {
+                $localAmount += fee[i].local_amount
+            }
+        }
+        return {label: $lable, amountOrigin: $localAmount, amountLocalized: ws.showMoney($localAmount)}
+    };
+    var initPaymentPopup = function ($res) {
+
     };
     return pub;
 })(jQuery);

@@ -167,4 +167,62 @@ $( document ).ready(function() {
         $(this).addClass(id);
         $('#'+id).css('display','block');
     });
+    if($(window).width() < 768) {
+        $('.navbar-2').click(function () {
+            if ($(this).hasClass('be-header')) {
+                return;
+            } else {
+                if ($(this).hasClass('open')) {
+                    return;
+                } else {
+                    $(this).addClass('open');
+                }
+            }
+        });
+
+        $(document).mouseup(function(e) {
+            var navbar = $(".navbar-2");
+            if (!navbar.is(e.target) && navbar.has(e.target).length === 0) {
+                navbar.removeClass('open');
+            }
+        });
+
+        $('.be-toggle').click(function () {
+            $('.be-menu').addClass('open');
+        });
+
+        $(document).mouseup(function(e) {
+            var be_menu = $(".be-menu");
+            if (!be_menu.is(e.target) && be_menu.has(e.target).length === 0) {
+                be_menu.removeClass('open');
+            }
+        });
+
+
+        $('.mb-navbar .btn-toggle').click(function () {
+            $('.mb-menu').toggleClass('open');
+        });
+        $('.title-mb-menu i').click(function () {
+            $('.mb-menu').removeClass('open');
+        });
+        $('.mb-menu-cate .title-submenu').click(function () {
+            var id_to = $(this).attr('id');
+            if($('div[data-toggle='+id_to+']').css('display') === 'none'){
+                $('div[data-toggle='+id_to+']').css('display','block');
+                $('#'+id_to+' .la-caret-down').addClass('la-caret-up');
+                $('#'+id_to+' .la-caret-down').removeClass('la-caret-down');
+            }else{
+                $('div[data-toggle='+id_to+']').css('display','none');
+                $('#'+id_to+' .la-caret-up').addClass('la-caret-down');
+                $('#'+id_to+' .la-caret-up').removeClass('la-caret-up');
+            }
+        });
+
+        $(document).mouseup(function(e) {
+            var mb_menu = $(".mb-menu");
+            if (!mb_menu.is(e.target) && mb_menu.has(e.target).length === 0) {
+                mb_menu.removeClass('open');
+            }
+        });
+    };
 });
