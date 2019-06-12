@@ -5,14 +5,14 @@ namespace frontend\modules\payment\controllers;
 
 use common\components\cart\CartManager;
 use common\models\Customer;
+use frontend\controllers\FrontendController;
 use Yii;
 use common\components\StoreManager;
 use yii\di\Instance;
-use yii\web\Controller;
 use yii\web\IdentityInterface;
 use yii\web\Request;
 
-class BasePaymentController extends Controller
+class BasePaymentController extends FrontendController
 {
 
     public $layout = false;

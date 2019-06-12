@@ -12,7 +12,6 @@ class PromotionItem extends BaseObject
      */
     public $paymentService;
 
-
     /**
      * @var int
      */

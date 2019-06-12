@@ -29,11 +29,11 @@ use yii\web\View;
         </div>
         <div class="info">
             <div class="rate text-orange">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <i class="far fa-star"></i>
+                <i class="la la-star"></i>
+                <i class="la la-star"></i>
+                <i class="la la-star"></i>
+                <i class="la la-star-half-o"></i>
+                <i class="la la-star-o"></i>
                 <span>(--)</span>
             </div>
             <div class="name"><?php echo $name; ?></div>

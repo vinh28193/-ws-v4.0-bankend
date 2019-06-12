@@ -10,6 +10,8 @@ namespace common\components\cart;
 
 
 use common\components\cart\storage\MongodbCartStorage;
+use common\components\GetUserIdentityTrait;
+use common\components\StoreManager;
 use common\helpers\WeshopHelper;
 use common\models\User;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
@@ -44,6 +46,7 @@ use yii\helpers\ArrayHelper;
 class CartManager extends Component
 {
 
+    use GetUserIdentityTrait;
     const TYPE_SHOPPING = 'shopping';
     const TYPE_BUY_NOW = 'buynow';
     const TYPE_SHIPPING = 'shipping';
@@ -62,9 +65,6 @@ class CartManager extends Component
     {
         if (!is_object($this->storage)) {
             $this->storage = Yii::createObject($this->storage);
-//            if (!$this->storage instanceof CartStorageInterface) {
-//                throw new InvalidConfigException(get_class($this->storage) . " not instanceof common\components\cart\CartStorageInterface");
-//            }
         }
         return $this->storage;
     }
@@ -138,13 +138,12 @@ class CartManager extends Component
             }
             $item = $this->filterItem($this->normalKeyFilter($key), $type, $uuid);
             if (!empty($item)) {
-                return [true, Yii::t('common', 'Add cart success')];
+                return [true, Yii::t('common', 'This item already added in to {type} cart', ['type' => $type])];
             } else {
                 $filter = $key;
                 unset($filter['products']);
                 $parents = $this->filterItem($this->normalKeyFilter($filter), $type, $uuid);
                 if (count($parents) > 0) {
-
                     foreach ($parents as $parent) {
                         $parentProducts = $parent['key']['products'];
                         if (count($parentProducts) < 3) {
@@ -237,6 +236,7 @@ class CartManager extends Component
             }
             if (empty($products)) {
                 $success = $this->getStorage()->removeItem($id);
+                $success = $success === false ? false : true;
                 return [$success, $success ? Yii::t('common', 'Item has been deleted') : 'Item can not deleted'];
             }
             $activeKey['products'] = $products;
@@ -269,7 +269,63 @@ class CartManager extends Component
             $c[$g] = $v;
         }
 
-        return ArrayHelper::merge(OrderCartItem::defaultKey(), $p, ['products' => [$c]]);
+        return ArrayHelper::merge($this->getDefaultKey(), $p, ['products' => [$c]]);
+    }
+
+    public function getDefaultKey()
+    {
+
+        $store = Yii::$app->storeManager;
+        /** @var $store StoreManager */
+        $user = $this->getUser();
+        $buyer = [];
+        $primaryAddress = $user ? ($user->primaryAddress !== null ? $user->primaryAddress : null) : null;
+        if ($primaryAddress !== null) {
+            $buyer['buyer_email'] = $primaryAddress ? $primaryAddress->email : null;
+            $buyer['buyer_name'] = $primaryAddress ? implode(' ', [$primaryAddress->first_name, $primaryAddress->last_name]) : null;
+            $buyer['buyer_address'] = $primaryAddress ? $primaryAddress->address : null;
+            $buyer['buyer_country_id'] = $primaryAddress ? $primaryAddress->country_id : null;
+            $buyer['buyer_country_name'] = $primaryAddress ? $primaryAddress->country_name : null;
+            $buyer['buyer_province_id'] = $primaryAddress ? $primaryAddress->province_id : null;
+            $buyer['buyer_province_name'] = $primaryAddress ? $primaryAddress->province_name : null;
+            $buyer['buyer_district_id'] = $primaryAddress ? $primaryAddress->district_id : null;
+            $buyer['buyer_district_name'] = $primaryAddress ? $primaryAddress->district_name : null;
+            $buyer['buyer_post_code'] = $primaryAddress ? $primaryAddress->post_code : null;
+        }
+        $receiver = [];
+        $defaultShippingAddress = $user ? ($user->defaultShippingAddress !== null ? $user->defaultShippingAddress : null) : null;
+        if ($defaultShippingAddress) {
+            $receiver['receiver_email'] = $defaultShippingAddress ? $defaultShippingAddress->email : null;
+            $receiver['receiver_name'] = $defaultShippingAddress ? implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]) : null;
+            $receiver['receiver_phone'] = $defaultShippingAddress ? $defaultShippingAddress->phone : null;
+            $receiver['receiver_address'] = $defaultShippingAddress ? $defaultShippingAddress->address : null;
+            $receiver['receiver_country_id'] = $defaultShippingAddress ? $defaultShippingAddress->country_id : null;
+            $receiver['receiver_country_name'] = $defaultShippingAddress ? $defaultShippingAddress->country_name : null;
+            $receiver['receiver_province_id'] = $defaultShippingAddress ? $defaultShippingAddress->province_id : null;
+            $receiver['receiver_province_name'] = $defaultShippingAddress ? $defaultShippingAddress->province_name : null;
+            $receiver['receiver_district_id'] = $defaultShippingAddress ? $defaultShippingAddress->district_id : null;
+            $receiver['receiver_district_name'] = $defaultShippingAddress ? $defaultShippingAddress->district_name : null;
+            $receiver['receiver_post_code'] = $defaultShippingAddress ? $defaultShippingAddress->post_code : null;
+            $receiver['receiver_address_id'] = $defaultShippingAddress ? $defaultShippingAddress->id : null;
+        }
+
+        return [
+            'source' => '',
+            'sellerId' => '',
+            'seller' => [],
+            'current_status' => 'NEW',
+            'times' => [
+                'new' => Yii::$app->getFormatter()->asTimestamp('now')
+            ],
+            'supportId' => '',
+            'supportAssign' => [],
+            'store_id' => $store->id,
+            'currency' => $store->store->currency,
+            'orderCode' => WeshopHelper::generateTag(Yii::$app->formatter->asTimestamp('now'), 'WSC'),
+            'products' => [],
+            'buyer' => $buyer,
+            'receiver' => $receiver,
+        ];
     }
 
     public function normalKeyFilter($key)
@@ -344,19 +400,6 @@ class CartManager extends Component
     public function filterShoppingCarts($params)
     {
         return $this->getStorage()->filterShoppingCarts($params);
-    }
-
-    /**
-     * @param bool $force
-     * @return int|string|null
-     * @throws \Throwable
-     */
-    public function getIsSafe($force = false)
-    {
-        if (($user = $this->getUser()) !== null && $force) {
-            return $user->ui;
-        }
-        return null;
     }
 
     /**
@@ -471,5 +514,42 @@ class CartManager extends Component
             $assigner = array_shift($supporters);
         }
         return ['id' => $assigner->id, 'email' => $assigner->email];
+    }
+
+    public function updateShippingAddress($type, $id, $params, $uuid)
+    {
+        try {
+            if (($item = $this->getItem($type, $id, $uuid)) === false) {
+                return [false, 'Sản phẩm này không có trong giỏ hàng'];
+            }
+            Yii::info($params, $id);
+            $value = $item['value'];
+            $key = $item['key'];
+            $buyer = $key['buyer'];
+            $receiver = $key['receiver'];
+            $newBuyer = [];
+            $newReceiver = [];
+            foreach (['buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_id', 'buyer_country_name', 'buyer_province_id', 'buyer_province_name', 'buyer_district_id', 'buyer_district_name', 'buyer_post_code'] as $name) {
+                if (($val = ArrayHelper::getValue($params, $name)) !== null && $val !== '') {
+                    $newBuyer[$name] = $val;
+                }
+            }
+
+            foreach (['receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_country_name', 'receiver_province_id', 'receiver_province_name', 'receiver_district_id', 'receiver_district_name', 'receiver_post_code', 'receiver_address_id'] as $name) {
+                if (($val = ArrayHelper::getValue($params, $name)) !== null && $val !== '') {
+                    $newReceiver[$name] = $val;
+                }
+            }
+            $buyer = ArrayHelper::merge($buyer, $newBuyer);
+            $receiver = ArrayHelper::merge($receiver, $newReceiver);
+            $key['buyer'] = $buyer;
+            $key['receiver'] = $receiver;
+            $value = ArrayHelper::merge($value, $buyer, $receiver);
+            $success = $this->getStorage()->setItem($id, $key, $value);
+            $success = $success === false ? false : true;
+            return [$success, Yii::t('common', $success ? 'Success' : 'Failed')];
+        } catch (Exception $exception) {
+            return [false, $exception->getMessage()];
+        }
     }
 }

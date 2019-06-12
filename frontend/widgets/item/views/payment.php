@@ -128,11 +128,11 @@ if (count($item->providers) > 1) {
                             <span class="currency">đ</span></b>
                         <div class="seller">Bán bởi: <span class="text-blue"><?= $provider->name ?></span></div>
                         <div class="rate text-orange">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <i class="far fa-star"></i>
+                            <i class="la la-star"></i>
+                            <i class="la la-star"></i>
+                            <i class="la la-star"></i>
+                            <i class="la la-star-half-o"></i>
+                <i class="la la-star-o"></i>
                         </div>
                         <a href="<?= $url($provider->prov_id) ?>" target="_blank" class="btn btn-view">Xem ngay</a>
                     </li>

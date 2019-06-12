@@ -39,17 +39,30 @@ class PromotionForm extends Model
      */
     public $refundOrderId;
 
-    /**
-     * @var array
-     */
-    public $additionalFees = [];
 
     /**
      * @var integer
      */
     public $totalAmount;
 
+    /**
+     * @var array
+     */
+    public $_orders = [];
 
+    /**
+     * @param $orders
+     */
+    public function setOrders($orders)
+    {
+        foreach ($orders as $key => $order) {
+            $this->_orders[$key] = new Order($order);
+        }
+    }
+
+    public function getOrders(){
+        return $this->_orders;
+    }
     /**
      * @inheritDoc
      */
@@ -68,7 +81,7 @@ class PromotionForm extends Model
     public function rules()
     {
         return [
-            [['couponCode', 'customerId', 'paymentService', 'additionalFees', 'totalAmount'], 'safe']
+            [['couponCode', 'customerId', 'paymentService', 'totalAmount','orders'], 'safe']
         ];
     }
 
@@ -88,7 +101,9 @@ class PromotionForm extends Model
                 $response->errors[$promotion->code] = $passed[1];
                 continue;
             }
-            $promotion->calculatorDiscount($this, $response);
+            $request = new PromotionRequest();
+            $request->discountOrders = $this->_orders;
+            $promotion->calculatorDiscount($request, $response);
             if (isset($response->errors[$promotion->code]) && count($response->errors[$promotion->code]) > 0) {
                 unset($response->errors[$promotion->code]);
             }
@@ -100,11 +115,14 @@ class PromotionForm extends Model
                 $response->success = count($response->details) > 0 && $response->discount > 0;
                 return $response;
             }
+
             $passed = $coupon->checkCondition($this);
             if ($passed !== true && is_array($passed) && count($passed) === 2) {
                 $response->errors[$coupon->code] = $passed[1];
             } else {
-                $coupon->calculatorDiscount($this, $response);
+                $request = new PromotionRequest();
+                $request->discountOrders = $this->_orders;
+                $coupon->calculatorDiscount($request, $response);
                 if (isset($response->errors[$coupon->code]) && count($response->errors[$coupon->code]) > 0) {
                     unset($response->errors[$coupon->code]);
                 }

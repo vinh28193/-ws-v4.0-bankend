@@ -73,6 +73,7 @@ class CartHelper
         $order['support_email'] = null;
         $order['saleSupport'] = null;
         $order['customer_id'] = $user ? $user->id : null;
+
         $order['customer'] = $user ? [
             'username' => $user->username,
             'email' => $user->email,
@@ -141,7 +142,10 @@ class CartHelper
             $fee = [];
             list($fee['amount'], $fee['local_amount']) = $additionalFees->getTotalAdditionFees($feeName);
             $fee['discount_amount'] = 0;
-            $fee['name'] = $additionalFees->getStoreAdditionalFeeByKey($feeName)->label;
+            $storeConfig = $additionalFees->getStoreAdditionalFeeByKey($feeName);
+            $fee['name'] = $storeConfig->name;
+            $fee['label'] = $storeConfig->label;
+            $fee['type'] = $storeConfig->type;
             $fee['currency'] = $additionalFees->getStoreAdditionalFeeByKey($feeName)->currency;
             $orderAttribute = "total_{$feeName}_local";
             if ($feeName === 'product_price_origin') {

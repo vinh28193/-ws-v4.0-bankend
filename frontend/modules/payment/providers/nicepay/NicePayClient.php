@@ -3,9 +3,9 @@
 
 namespace frontend\modules\payment\providers\nicepay;
 
-use weshop\modules\payment\models\indonesia\Nicepay;
 use yii\base\BaseObject;
 use yii\helpers\Json;
+use Exception;
 
 class NicePayClient extends BaseObject
 {
@@ -13,7 +13,7 @@ class NicePayClient extends BaseObject
     const TIMEOUT_READ = 25;
     const READ_TIMEOUT_ERR = 10200;
 
-    public $apiUrl;
+    public $apiUrl = 'https://www.nicepay.co.id/nicepay/api';
 
     public $status;
     public $headers = "";
@@ -67,10 +67,11 @@ class NicePayClient extends BaseObject
         $request .= $postData . "\r\n";
         $request .= "\r\n";
         if ($this->sock) {
+
             fwrite($this->sock, $request);
 
             /* Read */
-            stream_set_blocking($this->sock, FALSE);
+            stream_set_blocking($this->sock, false);
 
             $atStart = true;
             $IsHeader = true;
@@ -106,22 +107,22 @@ class NicePayClient extends BaseObject
                         continue;
                     }
                 } else {
+
                     $this->body .= $line;
                 }
             }
             fclose($this->sock);
-
             if ($timeout) {
                 $this->errors[] = "Socket Timeout(" . $diff . "SEC)";
                 return false;
             }
             // return true
-            if (!$this->parseResult($this->body)) {
+            try {
+                return $this->parseResult($this->body);
+            } catch (Exception $exception) {
                 $this->body = substr($this->body, 4);
                 return $this->parseResult($this->body);
             }
-
-            return $this->parseResult($this->body);
         } else {
             return false;
         }
@@ -147,7 +148,7 @@ class NicePayClient extends BaseObject
                 case -5 :
                     $this->errors[] = 'Connection refused or timed out (-5)';
                 default :
-                    $this->errors = 'Connection failed (' . $errno . ') ' . $errstr;
+                    $this->errors[] = ('Connection failed (' . $errno . ') ' . $errstr);
             }
             return false;
         }
@@ -340,7 +341,7 @@ class NicePayClient extends BaseObject
             '30' => '(tXid) is not set. Please set (tXid).',
         );
         if (isset($errors[$code]) && ($error = $errors[$code]) !== null) {
-            $this->errors[] = $error['errorCode'];
+            $this->errors[] = $error;
         }
     }
 }

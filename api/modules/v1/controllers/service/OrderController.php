@@ -216,7 +216,7 @@ class OrderController extends BaseApiController
         $exRate = \Yii::$app->exRate;
         $confirm_change_price = Order::STATUS_CONFIRMED_CHANGE_PRICE;
         foreach ($order->products as $model) {
-            if($product_id && $product_id != $model->id){
+            if($product_id && $product_id != $model->id && $model->confirm_change_price != Product::STATUS_CONFIRMED_CHANGE_PRICE){
                 $confirm_change_price = Order::STATUS_NEED_CONFIRM_CHANGE_PRICE;
                 continue;
             }

@@ -2,21 +2,23 @@
 
 namespace frontend\modules\payment\providers\mcpay;
 
-use common\components\ReponseData;
+use frontend\modules\payment\PaymentService;
+use Yii;
+use Exception;
 use common\models\logs\PaymentGatewayLogs;
 use common\models\PaymentTransaction;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\PaymentProviderInterface;
+use frontend\modules\payment\PaymentResponse;
 use yii\base\BaseObject;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
+use yii\base\InvalidConfigException;
 
 class McPayProvider extends BaseObject implements PaymentProviderInterface
 {
 
-    public $merchant = 'weshopdev';
-    public $url = 'https://mcbill.sandbox.id.mcpayment.net/pay/weshopdev';
-    public $verify_key = '92ccabfc283a8d6b8a5c0d3b656ad05e';
+    public $baseUrl;
+    public $merchant;
+    public $verifyKey;
 
     public $amount;
     public $orderId;
@@ -28,6 +30,18 @@ class McPayProvider extends BaseObject implements PaymentProviderInterface
     public $returnUrl;
     public $langCode;
 
+
+    public function init()
+    {
+        parent::init();
+        if (($yiiParams = PaymentService::getClientConfig('mcpay')) !== null && !empty($yiiParams)) {
+            Yii::configure($this, $yiiParams); // reconfig with env
+        }
+        if($this->baseUrl === null){
+            throw new InvalidConfigException('baseUrl can not be null');
+        }
+    }
+
     public function create(Payment $payment)
     {
         $this->orderId = $payment->transaction_code;
@@ -35,23 +49,15 @@ class McPayProvider extends BaseObject implements PaymentProviderInterface
         $this->billEmail = $payment->customer_email;
         $this->billMobile = $payment->customer_phone;
         $this->billDesc = '';
-
+        $this->amount = (string)$payment->getTotalAmountDisplay();
+        $this->returnUrl = $payment->return_url;
         $logPaymentGateway = new PaymentGatewayLogs();
         $logPaymentGateway->transaction_code_ws = $payment->transaction_code;
-        $logPaymentGateway->request_content = $this->getParams();
+        $logPaymentGateway->request_content = $this->getQueryParams();
         $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED;
 
         $checkoutUrl = $this->createCheckOutUrl();
-
-
-        return ReponseData::reponseArray(true, 'McPay success', [
-            'code' => $payment->transaction_code,
-            'status' => 1,
-            'token' => $payment->transaction_code,
-            'checkoutUrl' => $checkoutUrl,
-            'method' => 'GET',
-        ]);
-
+        return new PaymentResponse(true, 'McPay success', $payment->transaction_code, PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $checkoutUrl);
     }
 
     public function handle($data)
@@ -77,10 +83,10 @@ class McPayProvider extends BaseObject implements PaymentProviderInterface
                 $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logCallback->save(false);
-                return ReponseData::reponseMess(false, 'Transaction không tồn tại');
+                return new PaymentResponse(false, 'Transaction không tồn tại');
             }
             $key0 = md5($tranID . $orderid . $status . $domain . $amount . $currency);
-            $key1 = md5($paydate . $domain . $key0 . $appcode . $this->verify_key);
+            $key1 = md5($paydate . $domain . $key0 . $appcode . $this->verifyKey);
             $success = false;
             $mess = "Giao dịch thanh toán không thành công!";
             if ($skey == $key1 && $status === '00') {
@@ -93,40 +99,39 @@ class McPayProvider extends BaseObject implements PaymentProviderInterface
             }
             $logCallback->response_content = null;
             $logCallback->save();
-            return ReponseData::reponseArray($success, $mess, ['transaction' => $transaction]);
-        } catch (\Exception $e) {
+            return new PaymentResponse($success, $mess, $transaction);
+        } catch (Exception $e) {
             $logCallback->request_content = $e->getMessage() . " \n " . $e->getFile() . " \n " . $e->getTraceAsString();
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);
-            return ReponseData::reponseArray(false, 'Call back thất bại');
+            return new PaymentResponse(false, 'Call back thất bại');
         }
 
     }
 
     public function createCheckOutUrl()
     {
-        return $this->url . '?' . http_build_query($this->getParams());
+        return $this->baseUrl . '/pay/' . $this->merchant . '?' . $this->getQueryParams();
     }
 
-    protected function getParams()
+    protected function getQueryParams()
     {
-        return [
-            'amount' => $this->amount,
-            'orderid' => $this->orderId,
-            'bill_name' => $this->billName,
-            'bill_email' => $this->billEmail,
-            'bill_mobile' => $this->billMobile,
-            'bill_desc' => $this->billDesc,
-            'country' => 'ID',
-            'returnurl' => $this->returnUrl,
-            'vcode' => $this->renderVcode(),
-            'cur' => 'IDR',
-            'langcode' => 'en',
-        ];
+        return "amount=" . $this->amount . "&" .
+            "orderid=" . urlencode($this->orderId) . "&" .
+            "bill_name=" . urlencode($this->billName) . "&" .
+            "bill_email=" . urlencode($this->billEmail) . "&" .
+            "bill_mobile=" . urlencode($this->billMobile) . "&" .
+            "bill_desc=" . urlencode($this->billDesc) . "&" .
+            "country=ID&" .
+            "returnurl=" . urlencode($this->returnUrl) . "&" .
+            "vcode=" . $this->renderVcode() . "&" .
+            "cur=IDR&" .
+            "langcode=en";
+
     }
 
     protected function renderVcode()
     {
-        return md5($this->amount & $this->merchant & $this->orderId & $this->verify_key);
+        return md5((string)$this->amount & $this->merchant & $this->orderId & $this->verifyKey);
     }
 }
