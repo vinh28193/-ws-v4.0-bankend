@@ -1267,7 +1267,7 @@ use yii\helpers\Html; ?>
 <div class="mb-wrapper mobile-show">
     <nav class="mb-navbar">
         <span class="btn-toggle la la-bars"></span>
-        <a href="#" class="logo"><img src="./img/logo_ws.png" alt=""></a>
+        <a href="#" class="logo"><img src="/images/logo/weshop-01.png" alt=""></a>
         <ul class="action">
             <li><a href="#">
                     <i class="la la-user"></i>
