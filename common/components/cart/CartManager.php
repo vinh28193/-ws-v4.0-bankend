@@ -411,11 +411,10 @@ class CartManager extends Component
      */
     public function updateSafeItem($type, $id, $param)
     {
-//        var_dump('vao');
-//        die();
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         try {
-            if (($item = $this->getItem($type, $id, false)) === false) {
+            if (($item = $this->getItem($type, $id)) === false) {
+                Yii::info($item);
                 return [false, 'Sản phẩm này không có trong giỏ hàng'];
             }
             $value = $item['value'];
@@ -433,6 +432,18 @@ class CartManager extends Component
             }
             if ($param['typeUpdate'] == 'markAsJunk') {
                 $key['current_status'] = 'JUNK';
+            }
+            if ($param['type_chat'] === 'WS_CUSTOMER') {
+                var_dump($key['current_status']);
+                die();
+                $key['current_status'] = 'SUPPORTING';
+                $value['supporting'] = $now;
+            }
+            var_dump('asad');
+            die();
+            if ($param['type_chat'] == 'GROUP_WS') {
+                $key['current_status'] = 'SUPPORTED';
+                $value['supported'] = $now;
             }
             // todo : thay đổi giá trị của $item['key']
 
