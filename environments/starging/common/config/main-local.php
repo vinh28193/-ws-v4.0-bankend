@@ -56,33 +56,31 @@ return [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://128.199.70.160:27017/admin',
         ],
-        /*
-        'db_oauth'=>[
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop_oauth',
-            'username' => 'root',
-            'password' => '',
-            'charset' => 'utf8',
-            'enableSchemaCache' => false,
-            'schemaCacheDuration' => 7200,
-            'schemaCache' => 'cache'
-        ],
-        */
+//        'db_oauth'=>[
+//            'class' => 'yii\db\Connection',
+//            'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop_oauth',
+//            'username' => 'root',
+//            'password' => '',
+//            'charset' => 'utf8',
+//            'enableSchemaCache' => false,
+//            'schemaCacheDuration' => 7200,
+//            'schemaCache' => 'cache'
+//        ],
         'ga' => [
-            'trackingId' => 'UA-140658371-1',
+            'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
+            'trackingId' => 'UA-140658371-1', // Put your real tracking ID here
+
+            // These parameters are optional:
+            'useSsl' => true, // If you’d like to use a secure connection to Google servers
+            'overrideIp' => false, // By default, IP is overridden by the user’s one, but you can disable this
+            'anonymizeIp' => true, // If you want to anonymize the sender’s IP address
+            'asyncMode' => true, // Enables the asynchronous mode (see below)
+            'autoSetClientId' => true, // Try to set ClientId automatically from the “_ga” cookie (disabled by default)
         ],
-        'productManager' => [
-            'gates' => [
-                'ebay' => [
-                    'baseUrl' => 'https://api-lbc.weshop.asia/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
-                ],
-                'amazon' => [
-                    'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon', // 'http://157.230.175.213:8000', //
-                ],
-                'amazon-jp' => [
-                    'baseUrl' =>  'http://amazonapiv2.weshop.asia/amazon', // 'http://157.230.175.213:8000', //
-                ]
-            ]
-        ],
+        /*
+          'request' => [
+                'enableCookieValidation' => false,
+          ],
+         */
     ],
 ];

@@ -45,12 +45,13 @@
     "yii2mod/collection": "*",
     "yiisoft/yii2-queue": "*",
     "baibaratsky/yii2-ga-measurement-protocol": "2.0.*",
-    "linslin/yii2-curl": "*",
-    "lajax/yii2-translate-manager": "*",
-    "bizley/migration": "^3.3",
     "neconix/yii2-oci8": "1.*",
-    "grpc/grpc": "v1.10.0",
-    "google/protobuf": "^v3.3.0"
+    "bizley/migration": "^3.3",
+    "linslin/yii2-curl":"*",
+    "lajax/yii2-translate-manager": "*",
+    "grpc/grpc": "^v1.7.0",
+    "google/protobuf": "^v3.4.0",
+    "spiral/php-grpc": "dev-master"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
@@ -61,6 +62,18 @@
     "phpunit/phpunit": "~6.5.5",
     "mpdf/mpdf": "~6.1.0",
     "phpseclib/phpseclib": "~2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Google\\Protobuf\\": "src/Google/Protobuf",
+      "GPBMetadata\\Google\\Protobuf\\": "src/GPBMetadata/Google/Protobuf",
+      "": "route_guide/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "": "build/gen"
+    }
   },
   "config": {
     "process-timeout": 1800

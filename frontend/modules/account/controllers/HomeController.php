@@ -12,6 +12,13 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\grpc\boxme\Accouting\GreeterClient as GreeterClient;
+use common\grpc\boxme\Accouting\GetListMerchantByIdRequest as GetListMerchantByIdRequest ;
+use common\grpc\boxme\Accouting\GetListMerchantByIdResponse as GetListMerchantByIdResponse;
+use Grpc;
+
+//GRPC
+use common\grpc\boxme\Accouting\Merchantinfo;
 
 /**
  * HomeController implements the CRUD actions for Order model.
@@ -88,6 +95,43 @@ class HomeController extends BaseAccountController
         return $this->render('create', [
             'model' => $model,
         ]);
+    }
+
+    public function actionGrpc()
+    {
+        /*
+        $WaletBoxme  = new Merchantinfo('206.189.94.203:50054');
+        $WaletBoxme->setUserId(23);
+        $WaletBoxme->setCountryCode('VN');
+        $getBalanceCod = $WaletBoxme->getBalanceCod();
+        var_dump($getBalanceCod);
+
+        die("upiuiupp");
+
+        */
+
+        $greeterClient = new  GreeterClient('206.189.94.203:50054', [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+
+        print_r($greeterClient);
+        $request = new GetListMerchantByIdRequest();die;
+        $request->setUserId(23);
+        $request->setCountryCode('VN');
+
+        list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
+
+
+        print_r($reply);
+        print_r($status);
+        die("8989898");
+
+        Yii::$app->response->data = [
+            'status' => Grpc\STATUS_OK,
+            'message' => '',
+            'data' => $reply,
+        ];
+        return;
     }
 
     /**

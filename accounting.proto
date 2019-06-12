@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option objc_class_prefix = "cal";
+package Accouting;
+
+message Merchantinfo {
+    int32   UserId        = 1;
+    string  CountryCode   = 2;
+    string  HomeCurrency  = 3;  // loai tien te
+    double   UserLevel     = 4;  // 1 user,2 user
+    double   BalancePvc    = 5;  // so du pvc (dung duyet don)
+    double   BalanceCod    = 6;  // so du cod
+    double   Provisional   = 7;  // tien thu ho tam tinh
+    double   Freeze        = 8;  // phi van chueyn tam tinh
+    double   Quota              = 9;  // han muc cap cho khach hang
+    double   MoneyAvailable     = 10;
+    double   BalanceConfig   = 11;
+}
+
+message GetListMerchantByIdRequest {
+    string  CountryCode = 1;
+    int32   UserId = 2;
+}
+
+message GetListMerchantByIdResponse{
+    bool    Error   = 1;
+    repeated Merchantinfo Data = 2;
+    string  Message    = 3;
+}
+
+
+
+service Accouting {
+    rpc GetListMerchantById (GetListMerchantByIdRequest) returns (GetListMerchantByIdResponse){};
+}
