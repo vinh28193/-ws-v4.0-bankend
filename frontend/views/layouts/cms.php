@@ -1,6 +1,7 @@
 <?php
 
 use frontend\widgets\breadcrumb\BreadcrumbWidget;
+use frontend\widgets\cms\SlideWidget;
 use yii\helpers\Html;
 use common\models\cms\WsPage;
 use frontend\widgets\alias\AliasWidget;
@@ -67,7 +68,23 @@ $this->beginContent('@frontend/views/layouts/common.php')
 //echo Html::endTag('div');
 //}
 if($isShow){
-    echo \frontend\widgets\layout\SlidesWidgets::widget();
+    echo SlideWidget::widget([
+        'page' => $page,
+        'options' => [
+            'id' => 'home-slide'
+        ],
+        'owlCarouselOptions' => [
+            'slideSpeed' => 300,
+            'paginationSpeed' => 400,
+            'loop' => !0,
+            'items' => 1,
+            'itemsDesktop' => !1,
+            'itemsDesktopSmall' => !1,
+            'itemsTablet' => !1,
+            'itemsMobile' => !1,
+            'autoplay' => 1e3
+        ]
+    ]);
 }else{
     echo BreadcrumbWidget::widget(['params' => $this->params]);
 }

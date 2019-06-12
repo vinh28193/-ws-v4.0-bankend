@@ -95,8 +95,8 @@ var ws = ws || (function ($) {
             ws.notifyMessage(message, title, 'info', size);
         },
 
-        notifyConfirm: function (message = 'Confirm', title = 'Confirm', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '') {
-            ws.notifyMessage(message, title, 'confirm', size, submitClick, cancelClick);
+        notifyConfirm: function (message = 'Confirm', title = 'Confirm', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '',confirmLabel = 'Confirm',cancelLabel = 'Close',confirmClass = 'btn btn-info',cancelClass = 'btn btn-warning') {
+            ws.notifyMessage(message, title, 'confirm', size, submitClick, cancelClick,confirmLabel,cancelLabel,confirmClass,cancelClass);
         },
         ajax: function (url, $options, loading = false) {
             if (loading) {

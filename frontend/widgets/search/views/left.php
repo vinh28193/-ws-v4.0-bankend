@@ -24,7 +24,7 @@ $url = function ($id) use ($portal) {
     return Yii::$app->getUrlManager()->createUrl($param);
 }
 ?>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" id="menu-left-search-sm" style="display: none">
+<nav class="navbar navbar-expand-lg navbar-light bg-light mobile-show" style="display: none">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -68,7 +68,7 @@ $url = function ($id) use ($portal) {
         </div>
     </div>
 </nav>
-<div class="filter-content"  id="menu-left-search">
+<div class="filter-content mobile-hide">
     <div class="filter-box category">
         <div class="title"><?= Yii::t('frontend', 'Category'); ?></div>
         <ul id="sub-menu-collapse">

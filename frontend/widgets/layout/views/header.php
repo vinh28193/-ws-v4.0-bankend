@@ -1,5 +1,17 @@
 <?php
 $js = <<<JS
+$(document).ready(function () {
+    $('.bars-cate-mb').slick({
+      infinite: true,
+      arrows: false,
+      speed: 100,
+      loop: false,
+      slidesToShow: 3,
+      centerMode: false,
+      variableWidth: true,
+      swipeToSlide: true
+    });
+    });
     $('.toggle').click(function() {
     var check = $('#target').css('display');
     if(check == 'none')
@@ -19,8 +31,9 @@ $js = <<<JS
 });
 JS;
 $this->registerJs($js);
-?>
-<div class="navbar-ws" xmlns="http://www.w3.org/1999/html">
+
+use yii\helpers\Html; ?>
+<div class="navbar-ws mobile-hide" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
         <div class="logo">
             <span class="menu-toggle"></span>
@@ -1229,6 +1242,1771 @@ $this->registerJs($js);
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="#">Daily deal</a>
+            </li>
+            <li>
+                <a href="#">Thương hiệu nổi tiếng</a>
+            </li>
+            <li>
+                <a href="#">Đồng hồ</a>
+            </li>
+            <li>
+                <a href="#">Nước hoa</a>
+            </li>
+            <li>
+                <a href="#">Nước hoa</a>
+            </li>
+            <li>
+                <i class="la la-hand-o-right"></i>
+                <a href="#">Dùng thử dịch vụ Prime</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="mb-wrapper mobile-show">
+    <nav class="mb-navbar">
+        <span class="btn-toggle la la-bars"></span>
+        <a href="#" class="logo"><img src="/images/logo/weshop-01.png" alt=""></a>
+        <ul class="action">
+            <li><a href="#">
+                    <i class="la la-user"></i>
+                    Tài khoản
+                </a></li>
+            <li>
+                <a href="#">
+                    <i class="la la-shopping-cart"></i>
+                    <span class="badge">2</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="mb-menu">
+        <div class="title-mb-menu">
+            <i class="la la-close"></i>
+            <span>Danh mục sản phẩm</span>
+        </div>
+        <div class="content-cate-mb">
+            <ul class="mb-menu-cate">
+                <li role="presentation">
+                    <div class="title-submenu" id="amazon-submenu">
+                        <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <span style="display: block; float: left;"><img src="/img/logo_amazon_us.png"></span>
+                            <span style="display: block; text-align: right; margin-right: 8px" class="amz"><i id="asd"
+                                                                                                              class="la la-caret-up"></i></span>
+                        </a>
+                    </div>
+                    <div class="clearfix submenu-2" data-toggle="amazon-submenu">
+                        <ul>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap1.png" alt="">
+                                    </i>Women's Fashion <i class="la la-angle-right float-right mt-2"></i></a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap2.png" alt="">
+                                    </i>Home & Garden
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap3.png" alt="">
+                                    </i>Home Furniture
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap4.png" alt="">
+                                    </i>Shoes, Bags & Accessories
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap5.png" alt="">
+                                    </i>Toys, Mother & Kid
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap6.png" alt=""></i>Moblie and
+                                    Electronics
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap7.png" alt="">
+                                    </i>Beauty & Health
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap8.png" alt=""></i>Men's Fashion
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap9.png" alt="">
+                                    </i>Watches & Accessories
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap10.png" alt="">
+                                    </i>Sports & Outdoors
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i"><img class="style-img" src="/images/Bitmap11.png" alt=""></i>
+                                    Office & Stationry
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap13.png" alt="">
+                                    </i>Automotives
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <hr class="m-0">
+                <li role="presentation">
+                    <div class="title-submenu" id="ebay-submenu">
+                        <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <span style="display: block; float: left;"><img src="/img/logo_ebay.png"></span>
+                            <span style="display: block; text-align: right; margin-right: 8px" class="ebay"><i id="asd1"
+                                                                                                               class="la la-caret-down"></i></span>
+                        </a>
+                    </div>
+                    <div class="clearfix submenu-2" style="display: none" data-toggle="ebay-submenu">
+                        <ul>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap1.png" alt="">
+                                    </i>Women's Fashion <i class="la la-angle-right float-right mt-2"></i></a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap2.png" alt="">
+                                    </i>Home & Garden
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap3.png" alt="">
+                                    </i>Home Furniture
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap4.png" alt="">
+                                    </i>Shoes, Bags & Accessories
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap5.png" alt="">
+                                    </i>Toys, Mother & Kid
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap6.png" alt=""></i>Moblie and
+                                    Electronics
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap7.png" alt="">
+                                    </i>Beauty & Health
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap8.png" alt=""></i>Men's Fashion
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap9.png" alt="">
+                                    </i>Watches & Accessories
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap10.png" alt="">
+                                    </i>Sports & Outdoors
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i"><img class="style-img" src="/images/Bitmap11.png" alt=""></i>
+                                    Office & Stationry
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <i class="style-i">
+                                        <img class="style-img" src="/images/Bitmap13.png" alt="">
+                                    </i>Automotives
+                                    <i class="la la-angle-right float-right mt-2"></i>
+                                </a>
+                                <div class="sub-menu-2">
+                                    <div class="ebay-sub-menu ebay ml-1">
+                                        <div class="row">
+                                            <div class="col-md-6 pl-4">
+                                                <div class="title-box">
+                                                    <div class="title">Shop Amazon</div>
+                                                    <div class="desc">Worldwide shopping, Best price, Free Shipping, To door Delivery</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">More to Explore</div>
+                                                            <ul>
+                                                                <li><a href="#">Video shots</a></li>
+                                                                <li><a href="#">Style Code Live</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="item">
+                                                            <div class="title">Amazon Video</div>
+                                                            <ul>
+                                                                <li><a href="#">All videos</a></li>
+                                                                <li><a href="#">Included with Prime</a></li>
+                                                                <li><a href="#">Add-on Subscriptions</a></li>
+                                                                <li><a href="#">Rent or Buy</a></li>
+                                                                <li><a href="#">Free to Watch</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="banner-sub">
+                                                    <a href="#">
+                                                        <img src="https://static-v3.weshop.com.vn/uploadImages/bfe161/bfe1618603f223133d2b50108bef400a.jpg" alt="" title=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="search-box-mobile">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" name="searchBoxInput" id="searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
+                       placeholder="Nhập từ khoá hoặc link sản phẩm">
+                <span class="input-group-btn">
+                <button type="button" id="searchBoxButton" class="btn btn-default">
+                    <i id="ico-search" class="la la-search"></i>
+                </button>
+            </span>
+            </div>
+        </div>
+    </div>
+    <div class="container menu-cate-mb">
+        <ul class="bars-cate-mb">
             <li>
                 <a href="#">Daily deal</a>
             </li>
