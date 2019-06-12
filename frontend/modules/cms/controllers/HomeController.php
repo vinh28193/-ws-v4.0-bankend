@@ -60,11 +60,11 @@ class HomeController extends CmsController
 
     public function actionIndex()
     {
-//        if (($data = $this->renderBlock(1,6)) === false) {
-//            return $this->redirect('@frontend/views/common/404');
-//        }
+        if (($data = $this->renderBlock(1,6)) === false) {
+            return $this->redirect('@frontend/views/common/404');
+        }
         $this->isShow = true;
-        $data = [];
+//        $data = [];
         return $this->render('index', ['data' => $data]);
     }
 

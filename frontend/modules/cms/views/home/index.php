@@ -68,3 +68,4 @@ use frontend\widgets\WsStaticCMSWidget;
         </a>
     </div>
 </div>
+<?= WsStaticCMSWidget::widget(['data' => $data]); ?>
