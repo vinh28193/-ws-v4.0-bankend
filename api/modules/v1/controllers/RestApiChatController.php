@@ -8,6 +8,7 @@ use common\modelsMongo\ListChat;
 use common\modelsMongo\RestApiCall;
 use common\modelsMongo\ChatMongoWs;
 use common\models\Order;
+use userbackend\cart\ShoppingCart;
 use Yii;
 use common\data\ActiveDataProvider;
 use common\helpers\ChatHelper;
@@ -102,16 +103,26 @@ class RestApiChatController extends BaseApiController
             $_request_ip = Yii::$app->getRequest()->getUserIP();
             $isNew = false; $isSupported = false; // 1:true;0:false
             $isSupporting = false;
-            $order =  Order::find()->where(['ordercode' => $_post['Order_path']])->one();
-            if($order == null){
-                Yii::$app->api->sendFailedResponse("Not found order by ordercode : .".$_post['Order_path']);
-            }
+            if ($_post['_chat'] == 'ORDER') {
+                $order =  Order::find()->where(['ordercode' => $_post['Order_path']])->one();
+                if($order == null){
+                    Yii::$app->api->sendFailedResponse("Not found order by ordercode : .".$_post['Order_path']);
+                }
 
-            $current_status = $order->current_status;
-            $paid_status = $order->total_paid_amount_local > 0 ? true : false ;
-            if($current_status == Order::STATUS_NEW or $current_status == Order::STATUS_SUPPORTING)
-            {
-                $isNew = true;
+                $current_status = $order->current_status;
+                $paid_status = $order->total_paid_amount_local > 0 ? true : false ;
+                if($current_status == Order::STATUS_NEW or $current_status == Order::STATUS_SUPPORTING)
+                {
+                    $isNew = true;
+                }
+            }
+            if ($_post['_chat'] == 'CART') {
+                if (isset($_post['isNew'])) {
+                    if($_post['isNew'] == 'YES')
+                    {
+                        $isNew = true;
+                    }
+                }
             }
             if ($_post['type_chat'] == 'GROUP_WS' && strlen(strstr($_post['message'], 'Supported')) > 0) {
                 $this->keyChatManger = new KeyChatList();
@@ -160,49 +171,45 @@ class RestApiChatController extends BaseApiController
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
                 // chat group ws from new to supported
-                if($isNew === true &&  $isSupported === true)
-                {
+                if ($_post['_chat'] == 'ORDER') {
+                    if($isNew === true &&  $isSupported === true)
+                    {
                         Order::updateAll([
                             'current_status' => Order::STATUS_SUPPORTED,
                             'supported' => Yii::$app->getFormatter()->asDatetime('now'),
                         ],['ordercode' => $_post['Order_path']]);
+                    }
+                    if($isNew === true &&  $isSupporting === true)
+                    {
+                        Order::updateAll([
+                            'current_status' => Order::STATUS_SUPPORTING,
+                            'supporting' => Yii::$app->getFormatter()->asDatetime('now'),
+                        ],['ordercode' => $_post['Order_path']]);
+                    }
                 }
-                if($isNew === true &&  $isSupporting === true)
-                {
-                    Order::updateAll([
-                        'current_status' => Order::STATUS_SUPPORTING,
-                        'supporting' => Yii::$app->getFormatter()->asDatetime('now'),
-                    ],['ordercode' => $_post['Order_path']]);
-                }
-                /**
-                 *  Sales Chat vào group nội bộ các từ khóa cho trước
-                 *  nếu có các từ khóa đó và Tràn thái đơn NEW , SUPPORTING thì hệ thống tự hỗ trợ chuyển về SUPPORTED
-                 */
-                // $_post['type_chat'] == 'WS_CUSTOMER'
-                if($isNew === true && $_post['type_chat'] == 'GROUP_WS' )
-                {
-                    $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}";
-//                        Order::updateAll([
-//                            'current_status' => Order::STATUS_SUPPORTED
-//                        ],['ordercode' => $_post['Order_path']]);
 
-                    if (!$model->save())
-                     {
-                        Yii::$app->wsLog->push('order', $model->getScenario(), null, [
-                            'id' => $_post['Order_path'],
-                            'request' => $this->post,
-                            'response' => $model->getErrors()
-                        ]);
-                        return $this->response(false, $model->getFirstErrors());
-                     }
-                    ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM');
-                    Yii::$app->wsLog->push('order', $model->getScenario(), null, [
-                            'id' => $_post['Order_path'],
-                            'request' => $this->post,
-                            'response' => $_post['message']
-                        ]);
-
+                if ($_post['_chat'] == 'CART') {
+//                    var_dump('vao');
+//                    die();
+                    if($isNew === true &&  $isSupported === true)
+                    {
+                        $this->getCart()->updateSafeItem(($_post['type']), $_post['Order_path'], $_post);
+                    }
+                    if($isNew === true &&  $isSupporting === true)
+                    {
+                        Order::updateAll([
+                            'current_status' => Order::STATUS_SUPPORTING,
+                            'supporting' => Yii::$app->getFormatter()->asDatetime('now'),
+                        ],['ordercode' => $_post['Order_path']]);
+                    }
                 }
+                $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}";
+                ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM');
+                Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+                    'id' => $_post['Order_path'],
+                    'request' => $this->post,
+                    'response' => $_post['message']
+                ]);
                 return $this->response(true, 'Success', $response = $model->attributes);
             } else {
                 Yii::$app->api->sendFailedResponse("Invalid Record requested", (array)$model->errors);
@@ -282,6 +289,11 @@ class RestApiChatController extends BaseApiController
         }
 
         return implode(", ", $results);
+    }
+
+    protected function getCart()
+    {
+        return Yii::$app->cart;
     }
 
 

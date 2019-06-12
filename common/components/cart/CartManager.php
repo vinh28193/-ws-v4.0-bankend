@@ -368,6 +368,8 @@ class CartManager extends Component
      */
     public function updateSafeItem($type, $id, $param)
     {
+//        var_dump('vao');
+//        die();
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         try {
             if (($item = $this->getItem($type, $id, false)) === false) {
