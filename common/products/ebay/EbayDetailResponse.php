@@ -35,7 +35,8 @@ class EbayDetailResponse extends BaseResponse
      */
     public function parser($response)
     {
-        if ($response['success']) {
+        if (!empty($response) ) {
+            if($response['success']) {
 //            $temp_i = 0;
 //            foreach ($response['data']['variation_options'] as $option) {
 //                $response['data']['variation_options'][$temp_i]['name'] = str_replace("\"", "''", $option["name"]);
@@ -55,19 +56,18 @@ class EbayDetailResponse extends BaseResponse
 //                    $temp_j++;
 //                }
 //                $temp_i++;
-//            }\
-
-            $response = $response['data'];
-            if (isset($response['provider'])) {
-                $response['providers'][] = $response['provider'];
-                unset($response['provider']);
+//            }
+                $response = $response['data'];
+                if (isset($response['provider'])) {
+                    $response['providers'][] = $response['provider'];
+                    unset($response['provider']);
+                }
+                if (isset($response['usTaxRate'])) {
+                    $response['us_tax_rate'] = $response['usTaxRate'];
+                    unset($response['usTaxRate']);
+                }
+                return new EbayProduct($response);
             }
-            if (isset($response['usTaxRate'])) {
-                $response['us_tax_rate'] = $response['usTaxRate'];
-                unset($response['usTaxRate']);
-            }
-
-            return new EbayProduct($response);
         }
 
         return $response['message'];

@@ -10,8 +10,14 @@ $config = [
             'class' => 'yii\redis\Connection',
             'hostname' => '128.199.70.160',
             'port' => 6479,
-            'database' => 0,
+            'database' => 0
         ],
+        /*
+        'mongodb' => [
+            'class' => '\yii\mongodb\Connection',
+            'dsn' => 'mongodb://192.168.11.252:27017/admin',
+        ],
+        */
     ],
 ];
 
