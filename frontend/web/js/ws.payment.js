@@ -564,7 +564,7 @@ ws.payment = (function ($) {
                                 $qr.on('hidden.bs.modal', function (e) {
                                     e.preventDefault();
                                     clearInterval(runTime);
-                                    ws.redirect(data.cancelUrl);
+                                    //ws.redirect(data.cancelUrl);
                                 });
                             });
 
