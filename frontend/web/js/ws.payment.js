@@ -50,6 +50,7 @@ ws.payment = (function ($) {
         methods: [],
         shipping: {},
         installmentParam: {
+            calculator: undefined,
             originAmount: 0,
             banks: [],
             currentBank: {
@@ -88,32 +89,6 @@ ws.payment = (function ($) {
                 if ($input.length > 0 && $input.val() !== '') {
                     pub.payment.coupon_code = $input.val();
                     pub.checkPromotion();
-                }
-            });
-            $('.checkout-step li').click(function () {
-                var step = $(this)[0].firstElementChild.innerHTML;
-                if ($('#step_checkout_' + step).length === 1) {
-                    $('.checkout-step li').removeClass('active');
-                    $(this).addClass('active');
-                    $('#step_checkout_1').css('display', 'none');
-                    $('#step_checkout_2').css('display', 'none');
-                    $('#step_checkout_3').css('display', 'none');
-                    $('#step_checkout_' + step).css('display', 'block');
-                }
-            });
-            $('#btn-next-step3').click(function () {
-                if (pub.getInfoFormShipping()) {
-                    $('.checkout-step li').removeClass('active');
-                    $('.checkout-step li').each(function (k, v) {
-                        if (k === 2) {
-                            $(v).addClass('active');
-                        }
-                    });
-                    console.log(pub.shipping);
-                    $('#step_checkout_1').css('display', 'none');
-                    $('#step_checkout_2').css('display', 'none');
-                    $('#step_checkout_3').css('display', 'block');
-                    window.scrollTo(0, 0);
                 }
             });
 
@@ -241,7 +216,8 @@ ws.payment = (function ($) {
                     var data = response.data;
                     var banks = data.methods || [];
                     var promotion = data.promotion || undefined;
-                    pub.installmentParam.originAmount = data.origin || (0 + pub.payment.currency);
+                    pub.installmentParam.calculator = data.calculator;
+                    pub.installmentParam.originAmount = data.origin || ws.showMoney(0);
                     initInstallmentBankView(banks);
                     ws.initEventHandler('calculateInstallment', 'periodChange', 'change', 'input[name=installmentPeriod]', function (e) {
                         pub.payment.installment_month = $(this).val();
@@ -374,10 +350,9 @@ ws.payment = (function ($) {
             }
         },
         checkPromotion: function () {
-
             if (pub.payment.carts.length === 0) {
                 return;
-            } else if (pub.payment.payment_type === 'installment') {
+            } else if (pub.payment.type === 'installment') {
                 pub.calculateInstallment();
             } else {
                 var data = pub.payment;
@@ -504,6 +479,18 @@ ws.payment = (function ($) {
             return true;
         },
     };
+    var checkPayment = function (merchant, code, token, loading = false) {
+        var $isSuccess = false;
+        ws.ajax('/payment/' + merchant + '/check-recursive', {
+            dataType: 'json',
+            type: 'post',
+            data: {code: code, token: token},
+            success: function (response) {
+                $isSuccess = response;
+            }
+        }, loading);
+        return $isSuccess;
+    };
     var processPaymment = function () {
         if (!pub.filterShippingAddress()) {
             return;
@@ -518,6 +505,7 @@ ws.payment = (function ($) {
                     var data = $.extend({}, {
                         success: false,
                         message: '',
+                        merchant: undefined,
                         paymentTransaction: null,
                         redirectType: 'normal',
                         redirectMethod: 'get',
@@ -534,7 +522,28 @@ ws.payment = (function ($) {
                             var $otp = $('#otp-confirm');
                             $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
                         } else if (redirectMethod === 'QRCODE') {
-                            console.log(response);
+                            var $qr = $('#qr-pay');
+                            var base64src = function (src) {
+                                return 'data:image/png;base64,' + src;
+                            };
+                            $qr.on('shown.bs.modal', function (e) {
+                                e.preventDefault();
+                                var runTime = setInterval(function () {
+                                    var success = checkPayment(data.merchant, data.paymentTransaction, data.token);
+                                    if (success) {
+                                        clearInterval(runTime);
+                                        ws.redirect(data.returnUrl);
+                                    }
+                                }, 1000);
+                                $qr.on('hidden.bs.modal', function (e) {
+                                    e.preventDefault();
+                                    clearInterval(runTime);
+                                    //ws.redirect(data.cancelUrl);
+                                });
+                            });
+
+                            $qr.modal('show').find('#qrCodeImg').attr('src', base64src(data.checkoutUrl));
+
                         }
                     } else if (data.paymentTransaction) {
                         $('span#transactionCode').html(data.paymentTransaction);

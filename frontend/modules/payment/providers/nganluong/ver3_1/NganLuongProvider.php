@@ -141,16 +141,16 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway->store_id = 1;
             $logPaymentGateway->save(false);
             if ($resp['error_code'] != '00') {
-                return new PaymentResponse(false, 'failed');
+                return new PaymentResponse(false, 'failed','nganluong');
             }
             $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
             $transaction->save();
-            return new PaymentResponse(true, 'Giao dịch thanh toán không thành công!', $transaction);
+            return new PaymentResponse(true, 'Giao dịch thanh toán không thành công!','nganluong', $transaction);
         } catch (\Exception $exception) {
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logPaymentGateway->save(false);
-            return new PaymentResponse(false, 'Check payment thất bại');
+            return new PaymentResponse(false, 'Check payment thất bại','nganluong');
         }
 
 

@@ -65,6 +65,7 @@ return [
         'otp/captcha' => 'payment/wallet/captcha',
         'payment/<provider:[^/]+>/calc' => 'payment/installment/calculator',
         'payment/<provider:[^/]+>/check-field' => 'payment/validate/check-field',
+        'payment/<merchant:[^/]+>/check-recursive' => 'payment/payment/check-recursive',
 
         //account
         'my-weshop.html' => 'account/home',

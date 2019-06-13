@@ -56,7 +56,7 @@ $this->registerJs($js);
     </ul>
     <div class="step-2-content row">
         <div id="step_checkout_2" class="col-md-8">
-            <div class="title">Thông tin mua hàng</div>
+            <div class="title"><?=Yii::t('frontend','Buyer and receiver information')?></div>
             <div class="payment-box">
                 <?php
                 $form = ActiveForm::begin([
@@ -65,9 +65,10 @@ $this->registerJs($js);
                     ],
                     'enableAjaxValidation' => true,
                     'enableClientValidation' => false,
-                    'validateOnChange' => true,
-                    'validateOnBlur' => true,
-                    'validateOnType' => true,
+                    'validateOnSubmit' => true,
+                    'validateOnChange' => false,
+                    'validateOnBlur' => false,
+                    'validateOnType' => false,
                     'validationUrl' => '/checkout/shipping/validate',
                 ]);
                 echo Html::activeHiddenInput($shippingForm, 'customer_id');
@@ -79,23 +80,23 @@ $this->registerJs($js);
                 echo $form->field($shippingForm, 'buyer_name', [
                     'template' => '<i class="icon user"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => 'Họ và tên']);
+                ])->textInput(['placeholder' => Yii::t('frontend', 'Full name')]);
 
                 echo $form->field($shippingForm, 'buyer_phone', [
                     'template' => '<i class="icon phone"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => 'Số điện thoại']);
+                ])->textInput(['placeholder' => Yii::t('frontend', 'Phone number')]);
 
                 echo $form->field($shippingForm, 'buyer_email', [
                     'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => 'Địa chỉ email']);
+                ])->textInput(['placeholder' => Yii::t('frontend', 'Email')]);
 
                 echo $form->field($shippingForm, 'buyer_province_id', [
                     'template' => '<i class="icon globe"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
                 ])->dropDownList($provinces, [
-                    'prompt' => 'Chọn thành phố',
+                    'prompt' => Yii::t('frontend', 'Choose the province'),
                 ]);
 
                 echo Html::hiddenInput('hiddenBuyerDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenBuyerDistrictId']);
@@ -106,9 +107,9 @@ $this->registerJs($js);
                 ])->widget(DepDrop::classname(), [
                     'pluginOptions' => [
                         'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
-                        'placeholder' => 'Select District',
+                        'placeholder' => Yii::t('frontend', 'Choose the district'),
                         'url' => Url::toRoute(['sub-district']),
-                        'loadingText' => 'Loading District ...',
+                        'loadingText' => Yii::t('frontend', 'Loading district ...'),
                         'initialize' => true,
                         'params' => ['hiddenBuyerDistrictId']
                     ]
@@ -116,12 +117,12 @@ $this->registerJs($js);
                 echo $form->field($shippingForm, 'buyer_address', [
                     'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => 'Địa chỉ chi tiết']);
+                ])->textInput(['placeholder' => Yii::t('frontend', 'Address')]);
 
                 echo $form->field($shippingForm, 'note_by_customer', [
 //                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textarea(['rows' => 3, 'placeholder' => 'Ghi chú thêm ( không bắt buộc)']);
+                ])->textarea(['rows' => 3, 'placeholder' => Yii::t('frontend', 'Note')]);
 
                 echo Html::endTag('div');
 
@@ -129,30 +130,33 @@ $this->registerJs($js);
                     'template' => '{input}{hint}{error}',
                     'options' => [
                         'class' => 'check-info',
+                        'style' => 'margin-bottom: 1rem;'
                     ]
-                ])->checkbox()->label('Thông tin người nhận hàng khác người đặt hàng');
+                ])->checkbox()->label('Information of the receiver other than the buyer');
 
                 echo Html::beginTag('div', ['class' => 'receiver-form']);
 
                 echo $form->field($shippingForm, 'receiver_name', [
                     'template' => '<i class="icon user"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => 'Họ và tên']);
+                ])->textInput(['placeholder' => Yii::t('frontend', 'Full name')]);
 
                 echo $form->field($shippingForm, 'receiver_phone', [
                     'template' => '<i class="icon phone"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => 'Số điện thoại']);
+                ])->textInput(['placeholder' => Yii::t('frontend', 'Phone number')]);
 
                 echo $form->field($shippingForm, 'receiver_email', [
                     'template' => '<i class="icon email"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => 'Địa chỉ email']);
+                ])->textInput(['placeholder' => Yii::t('frontend', 'Email')]);
 
                 echo $form->field($shippingForm, 'receiver_province_id', [
                     'template' => '<i class="icon city"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->dropDownList(array_merge(['Chọn thành phố'], $provinces));
+                ])->dropDownList($provinces, [
+                    'prompt' => Yii::t('frontend', 'Choose the province'),
+                ]);;
 
                 echo Html::hiddenInput('hiddenReceiverDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenReceiverDistrictId']);
 
@@ -162,9 +166,9 @@ $this->registerJs($js);
                 ])->widget(DepDrop::classname(), [
                     'pluginOptions' => [
                         'depends' => [Html::getInputId($shippingForm, 'receiver_province_id')],
-                        'placeholder' => 'Select District',
+                        'placeholder' => Yii::t('frontend', 'Choose the district'),
                         'url' => Url::toRoute(['sub-district']),
-                        'loadingText' => 'Loading District ...',
+                        'loadingText' => Yii::t('frontend', 'Loading district ...'),
                         'initialize' => true,
                         'params' => ['hiddenReceiverDistrictId']
                     ]
@@ -172,11 +176,11 @@ $this->registerJs($js);
                 echo $form->field($shippingForm, 'receiver_address', [
                     'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
                     'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => 'Địa chỉ chi tiết']);
+                ])->textInput(['placeholder' => Yii::t('frontend', 'Address')]);
 
                 echo Html::endTag('div');
 
-                echo Html::submitButton('Chọn hình thức thanh toán', ['class' => 'btn btn-payment btn-block', 'id' => 'btnNextStep3']);
+                echo Html::submitButton(Yii::t('frontend', 'Choose payment method'), ['class' => 'btn btn-payment btn-block', 'id' => 'btnNextStep3']);
                 ActiveForm::end();
                 ?>
             </div>

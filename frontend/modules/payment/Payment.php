@@ -199,12 +199,10 @@ class Payment extends Model
     public function getPaymentAdditionalFees($refresh = true)
     {
         foreach (['international_shipping_fee', 'purchase_fee'] as $name) {
-            if (!isset($this->_additionalFees[$name]) || $refresh) {
-                $this->_additionalFees[$name] = [
-                    'amount' => 0,
-                    'orders' => [],
-                ];
-            }
+            $this->_additionalFees[$name] = [
+                'amount' => 0,
+                'orders' => [],
+            ];
             foreach ($this->getOrders() as $idx => $order) {
                 $amount = $order->getAdditionalFees()->getTotalAdditionFees($name)[1];
                 $this->_additionalFees[$name]['amount'] += $amount;

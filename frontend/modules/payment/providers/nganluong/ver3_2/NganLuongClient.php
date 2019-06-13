@@ -60,7 +60,6 @@ class NganLuongClient extends BaseObject
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->getParams()->create());
         $result = curl_exec($ch);
         curl_close($ch);
-        var_dump($this->getAPIUrl(),$this->getParams()->toArray(),NganluongHelper::normalizeResponse($result));die;
         return NganluongHelper::normalizeResponse($result);
     }
 
@@ -89,5 +88,7 @@ class NganLuongClient extends BaseObject
     public function GetTransactionDetail($token)
     {
         $this->getParams()->setDefault('function', 'GetTransactionDetail');
+        $this->getParams()->setDefault('token',$token);
+        return $this->callApi();
     }
 }
