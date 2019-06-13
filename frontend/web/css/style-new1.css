@@ -36,7 +36,7 @@
 }
 .style-ull li:hover .sub-menu-2 {
     display: block;
-    margin-left: 332px;
+    margin-left: 325px;
     position: fixed;
     top: 0;
     color: rgba(0, 0, 0, 0.85);
@@ -49,11 +49,6 @@
     margin-bottom: 15px;
     color: #555555;
 }
-.title {
-    color: #2b96b6;
-    font-size: 16px;
-    font-weight: 700;
-}
 .banner-sub img {
     margin-top: 25px;
     width: 404px;
@@ -63,8 +58,10 @@
     margin-left: 0;
 }
 ul.bars-nav > li ul li a{
-    color: #000;
+    color: rgba(0, 0, 0, 0.85);
     padding-left: 10px;
+    font-size: 14px;
+    font-family: Helvetica;
 }
 .category_account {
    left: -195px !important;
