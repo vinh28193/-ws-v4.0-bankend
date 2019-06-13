@@ -135,6 +135,8 @@ class SearchResultWidget extends Widget
             'products' => ArrayHelper::getValue($this->results, 'products', []),
             'sorts' => ArrayHelper::getValue($this->results, 'sorts', []),
             'storeManager' => $this->getStoreManager(),
+            'categories' => ArrayHelper::getValue($this->results, 'categories', []),
+            'filters' => ArrayHelper::getValue($this->results, 'filters', []),
         ]);
     }
 }

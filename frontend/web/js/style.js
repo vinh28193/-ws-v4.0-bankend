@@ -205,6 +205,21 @@ $( document ).ready(function() {
         $('.title-mb-menu i').click(function () {
             $('.mb-menu').removeClass('open');
         });
+
+        $('#showFilter-mb').click(function () {
+            $('.mb-menu-filter').toggleClass('open');
+        });
+        $('.mb-menu-filter .title-mb-menu i').click(function () {
+            $('.mb-menu-filter').removeClass('open');
+        });
+
+        $('.mb-navbar .auth-user').click(function () {
+            $('.mb-modal-auth').toggleClass('open');
+        });
+        $('.title-mb-menu i').click(function () {
+            $('.mb-modal-auth').removeClass('open');
+        });
+
         $('.mb-menu-cate .title-submenu').click(function () {
             var id_to = $(this).attr('id');
             if($('div[data-toggle='+id_to+']').css('display') === 'none'){
@@ -218,10 +233,24 @@ $( document ).ready(function() {
             }
         });
 
+        $('.mb-menu-filter-cate .dropdown-collapse').click(function () {
+            if($(this.getElementsByTagName('i')).hasClass('la-angle-right')){
+                $(this.getElementsByTagName('i')).removeClass('la-angle-right');
+                $(this.getElementsByTagName('i')).addClass('la-angle-down');
+            }else{
+                $(this.getElementsByTagName('i')).removeClass('la-angle-down');
+                $(this.getElementsByTagName('i')).addClass('la la-angle-right');
+            }
+        });
+
         $(document).mouseup(function(e) {
             var mb_menu = $(".mb-menu");
             if (!mb_menu.is(e.target) && mb_menu.has(e.target).length === 0) {
                 mb_menu.removeClass('open');
+            }
+            var mb_menu_filter = $(".mb-menu-filter");
+            if (!mb_menu_filter.is(e.target) && mb_menu_filter.has(e.target).length === 0) {
+                mb_menu_filter.removeClass('open');
             }
         });
     };

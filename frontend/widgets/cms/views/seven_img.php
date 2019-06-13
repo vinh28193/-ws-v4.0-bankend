@@ -36,7 +36,7 @@ $imge_block = !empty($block['image']) ? $block['image'] : $imge_block;
         </div>
         <div class="right">
             <div class="top">
-                <div class="title-mb hidden-md hidden-lg">
+                <div class="title-mb hidden-md hidden-lg mobile-show">
                     <a href="/amazon.html">
                         <img src="/images/amazon/amazon-logo.png" alt="Amazone" title="Amazone">
                     </a>

@@ -32,7 +32,7 @@ $(document).ready(function () {
 JS;
 $this->registerJs($js);
 
-use yii\helpers\Html; ?>
+?>
 <div class="navbar-ws mobile-hide" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
         <div class="logo">
@@ -1269,10 +1269,11 @@ use yii\helpers\Html; ?>
         <span class="btn-toggle la la-bars"></span>
         <a href="#" class="logo"><img src="/images/logo/weshop-01.png" alt=""></a>
         <ul class="action">
-            <li><a href="#">
+            <li><a href="#" class="auth-user">
                     <i class="la la-user"></i>
                     Tài khoản
-                </a></li>
+                </a>
+            </li>
             <li>
                 <a href="#">
                     <i class="la la-shopping-cart"></i>
@@ -2990,6 +2991,35 @@ use yii\helpers\Html; ?>
                     </div>
                 </li>
             </ul>
+        </div>
+    </div>
+    <div class="mb-modal-auth">
+        <div class="title-mb-menu">
+            <a href="#" class="logo"><img src="/images/logo/weshop-01.png" alt="" style="height: 30px"></a>
+            <i class="la la-close" style="float: right;padding:5px;"></i>
+            <div class="clearfix"></div>
+        </div>
+        <div class="content-modal-auth-mb">
+            <div class="row">
+                <div class="col-12"><span><?= Yii::t('frontend', 'Login with') ?></span></div>
+                <div class="col-6">
+                    <button class="btn btn-fb">Facebook</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-google">Google</button>
+                </div>
+                <div class="col-12"><span><?= Yii::t('frontend', 'Or login with email') ?></span></div>
+                <div class="col-12">
+                    <button class="btn btn-info"><?= Yii::t('frontend', 'Login with email') ?></button>
+                </div>
+                <div class="col-12">
+                    <hr>
+                </div>
+                <div class="col-12"><span><?= Yii::t('frontend', 'Are you have not account?') ?></span></div>
+                <div class="col-12">
+                    <button class="btn btn-amazon"><?= Yii::t('frontend', 'Register here') ?></button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="search-box-mobile">
