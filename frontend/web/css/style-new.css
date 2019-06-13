@@ -847,16 +847,16 @@ div div.product-list.row div a div.info div.price span.countdown{
     #category-mb-ebay ul li ul li a.active,#category-mb-amazon ul li ul li a.active{
         color: #2b96b6;
     }
-    #category-mb-amazon .sub-cate-2 {
+    #category-mb-amazon .sub-cate-2 ,#category-mb-ebay .sub-cate-2 {
         -webkit-transition: all .3s;
         -moz-transition: all .3s;
         -ms-transition: all .3s;
         -o-transition: all .3s;
         transition: all .3s; }
-    #category-mb-amazon .sub-cate-2{
+    #category-mb-amazon .sub-cate-2,#category-mb-ebay .sub-cate-2{
         overflow: auto;
         position: fixed;
-        top: 60px;
+        top: 0;
         left: -100%;
         bottom: 0;
         width: 100%;
@@ -864,7 +864,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         border-top: 1px solid #2b96b6;
         z-index: 999;
     }
-    #category-mb-amazon .sub-cate-2.open {
+    #category-mb-amazon .sub-cate-2.open, #category-mb-ebay .sub-cate-2.open {
         left: 0; }
     .content-menu-cate-sub-2 .title-submenu i{
         padding-right: 20px;
@@ -933,5 +933,23 @@ div div.product-list.row div a div.info div.price span.countdown{
 .mb-modal-auth .content-modal-auth-mb span {
     padding: 13px 0px 13px 0px;
     display: block;
+}
+.content-menu-cate-sub-2 .show {
+    background: #f6f6f6;
+}
+.content-menu-cate-sub-2-item{
+    padding-left: 50px;
+}
+.content-menu-cate-sub-2-item .title{
+     color: #6d7278;
+     font-size: 14px;
+ }
+.content-menu-cate-sub-2-item ul li,.content-menu-cate-sub-2-item ul li a{
+    font-size: 12px;
+    color: #6d7278 !important;
+    list-style: disc;
+}
+.content-menu-cate-sub-2-item ul{
+    padding-left: 20px;
 }
 @media (min-width: 991px){}
