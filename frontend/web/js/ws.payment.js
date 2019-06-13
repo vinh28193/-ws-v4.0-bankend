@@ -91,32 +91,6 @@ ws.payment = (function ($) {
                     pub.checkPromotion();
                 }
             });
-            $('.checkout-step li').click(function () {
-                var step = $(this)[0].firstElementChild.innerHTML;
-                if ($('#step_checkout_' + step).length === 1) {
-                    $('.checkout-step li').removeClass('active');
-                    $(this).addClass('active');
-                    $('#step_checkout_1').css('display', 'none');
-                    $('#step_checkout_2').css('display', 'none');
-                    $('#step_checkout_3').css('display', 'none');
-                    $('#step_checkout_' + step).css('display', 'block');
-                }
-            });
-            $('#btn-next-step3').click(function () {
-                if (pub.getInfoFormShipping()) {
-                    $('.checkout-step li').removeClass('active');
-                    $('.checkout-step li').each(function (k, v) {
-                        if (k === 2) {
-                            $(v).addClass('active');
-                        }
-                    });
-                    console.log(pub.shipping);
-                    $('#step_checkout_1').css('display', 'none');
-                    $('#step_checkout_2').css('display', 'none');
-                    $('#step_checkout_3').css('display', 'block');
-                    window.scrollTo(0, 0);
-                }
-            });
 
             $('input[name=check-member]').click(function () {
                 var value = $(this).val();
