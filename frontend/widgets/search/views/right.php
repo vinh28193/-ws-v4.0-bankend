@@ -126,7 +126,7 @@ JS;
             </div>
         </div>
     </div>
-    <div class="mb-menu-filter">
+    <div class="mb-menu-filter mobile-show">
         <div class="mb-wraper-filter" style="float: right">
             <div class="title-mb-menu">
                 <i class="la la-angle-left"></i>
@@ -135,37 +135,43 @@ JS;
             <div class="content-cate-mb">
                 <ul class="mb-menu-filter-cate">
                     <li role="presentation">
-                        <div class="title-submenu" id="amazon-submenu">
-                            <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                <?= isset($sorts[$sort]) ? $sorts[$sort] : Yii::t('frontend','Sort by'); ?>
-                                <i id="asd" class="la la-caret-right"></i></span>
+                        <div class="title-submenu">
+                            <a class="dropdown-collapse" data-toggle="collapse"
+                               data-target="#sort-by-filter" style="display: block"
+                               aria-expanded="true" aria-controls="collapseOne">
+                                <?= Yii::t('frontend','Sort by'); ?>
+                                <i class="la la-angle-right alert-right"></i></span>
                             </a>
                         </div>
-                        <div class="clearfix submenu-2" data-toggle="amazon-submenu">
+                        <div class="clearfix submenu-2 collapse" id="sort-by-filter">
                             <ul>
                                 <?php
+                                $activeSort = isset($sorts[$sort]) ? $sorts[$sort] : '';
                                 foreach ($sorts as $k => $v){
                                     $param = [explode('?',\yii\helpers\Url::current())[0]];
                                     $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
                                     $param['sort'] = $k;
+
                                     if(isset($param['keyword'])){
                                         unset($param['keyword']);
                                     }
                                     $url = Yii::$app->getUrlManager()->createUrl($param);
-                                    echo '<li><a href="'.$url.'" class="dropdown-item">'.$v.'</a></li>';
+                                    echo '<li><a href="'.$url.'" class="dropdown-item '.($activeSort == $v ? 'active' : '').'">'.$v.'</a></li>';
                                 }
                                 ?>
                             </ul>
                         </div>
                     </li>
                     <li role="presentation">
-                        <div class="title-submenu" id="amazon-submenu">
-                            <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <div class="title-submenu">
+                            <a class="dropdown-collapse" data-toggle="collapse"
+                               data-target="#category-filter" style="display: block"
+                               aria-expanded="true" aria-controls="collapseOne">
                                 <?= Yii::t('frontend', 'Category'); ?>
-                                <i id="asd" class="la la-caret-right"></i></span>
+                                <i class="la la-angle-right alert-right"></i></span>
                             </a>
                         </div>
-                        <div class="clearfix submenu-2" data-toggle="amazon-submenu">
+                        <div class="clearfix submenu-2 collapse" id="category-filter">
                             <ul>
                                 <?php foreach ($categories as $index => $category): ?>
                                     <?php /* @var $category array */?>
@@ -173,7 +179,7 @@ JS;
                                         <?= Html::a($category['category_name'], $url_cate($category['category_id']), ['onclick' => "ws.loading(true);"]); ?>
                                         <?php if (isset($category['child_category']) && ($childs = $category['child_category']) !== null && count($childs) > 0): ?>
                                             <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-<?= $index; ?>"
-                                               aria-expanded="true" aria-controls="collapseOne"><i class="la la-chevron-down"></i></a>
+                                               aria-expanded="true" aria-controls="collapseOne"><i class="la la-angle-right alert-right"></i></a>
                                             <div id="sub-<?= $index; ?>" class="collapse" aria-labelledby="headingOne"
                                                  data-parent="#sub-menu-collapse">
                                                 <ul class="sub-category">
@@ -190,13 +196,62 @@ JS;
                             </ul>
                         </div>
                     </li>
+                    <?php foreach ($filters as $k => $filter) {
+                        if ($portal === 'amazon-jp') {
+                            $portal = 'amazon';
+                        }?>
+                        <li role="presentation">
+                            <div class="title-submenu">
+                                <a class="dropdown-collapse" data-toggle="collapse"
+                                   data-target="#filter-<?= $k ?>-filter" style="display: block"
+                                   aria-expanded="true" aria-controls="collapseOne">
+                                    <?= Yii::t('frontend', $filter['name']); ?>
+                                    <i class="la la-angle-right alert-right"></i></span>
+                                </a>
+                            </div>
+                            <div class="clearfix submenu-2 collapse" id="filter-<?= $k ?>-filter">
+                                <ul>
+                                    <?php foreach ($filter['values'] as $value): ?>
+                                        <?php /* @var $value string */ ?>
+                                        <?php $value = Html::encode($value); ?>
+                                        <li>
+                                            <div class="form-check">
+                                                <?php
+                                                $id = $filter['name'] . $value;
+                                                ?>
+                                                <?= Html::checkbox('filter', false, [
+                                                    'class' => 'form-check-input',
+                                                    'value' => $value,
+                                                    'id' => $id,
+                                                    'data-for' => $filter['name'],
+                                                    'data-value' => $value
+                                                ]); ?>
+                                                <?= Html::label($value, $id, [
+                                                    'class' => 'form-check-label',
+                                                ]); ?>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </li>
+                        <?php } ?>
                     <li role="presentation">
-                        <?php foreach ($filters as $item) {
-                            if ($portal === 'amazon-jp') {
-                                $portal = 'amazon';
-                            }
-                            echo $this->render("filter/{$portal}", ['filter' => $item]);
-                        } ?>
+                        <div class="title-submenu">
+                            <a class="dropdown-collapse" data-toggle="collapse"
+                               data-target="#price-range-filter" style="display: block"
+                               aria-expanded="true" aria-controls="collapseOne">
+                                <?= Yii::t('frontend', 'Price range (USD)'); ?>
+                                <i class="la la-angle-down alert-right"></i></span>
+                            </a>
+                        </div>
+                        <div class="clearfix submenu-2 collapse show" id="price-range-filter">
+                            <div class="form-inline" style="padding-left: 20px">
+                                <input class="form-control" style="width: 40%" type="number" name="formPrice" placeholder="Price form">
+                                <span style="padding: 10px">—</span>
+                                <input class="form-control" style="width: 40%" type="number" name="toPrice" placeholder="Price to">
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>

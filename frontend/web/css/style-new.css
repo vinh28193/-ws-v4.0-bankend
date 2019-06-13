@@ -680,6 +680,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         z-index: 999;
     }
     .mb-menu-filter {
+        overflow: auto;
         position: fixed;
         top: 0px;
         right: -100%;
@@ -690,6 +691,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         z-index: 999;
     }
     .mb-wraper-filter{
+        min-height: 100%;
         width: 80%;
         background: #fff;
     }
@@ -766,6 +768,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 26px;
     }
     .mb-wraper-filter .title-mb-menu{
+        border: 1px solid #efefef;
         text-align: center;
         width: 100%;
         background-color: #fff;
@@ -792,6 +795,19 @@ div div.product-list.row div a div.info div.price span.countdown{
     .title-submenu img{
         max-height: 35px;
     }
+    ul.mb-menu-filter-cate li {
+        border: 1px solid #efefef;
+    }
+    .alert-right {
+        float: right;
+    }
+    ul.mb-menu-filter-cate li ul li {
+        border: none;
+        padding: 5px 15px 5px 25px;
+    }
+    ul.mb-menu-filter-cate li #category-filter ul li a{
+         color: rgba(0, 0, 0, 0.85);
+     }
     /*.mb-menu-cate{*/
     /*    padding-top: 15px;*/
     /*    padding-left: 15px;*/
