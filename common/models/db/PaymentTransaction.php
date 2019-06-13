@@ -29,7 +29,7 @@ use Yii;
  * @property int $used_xu
  * @property int $bulk_point
  * @property string $carts list cart
- * @property int $shipping Dia chi ship
+ * @property int $shipping
  * @property string $total_discount_amount
  * @property string $before_discount_amount_local
  * @property string $transaction_amount_local số tiền giao dịch, có thể âm hoặc dương
@@ -63,7 +63,7 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'payment_type', 'payment_provider', 'payment_method', 'carts', 'shipping'], 'required'],
+            [['store_id', 'payment_type', 'payment_provider', 'payment_method', 'carts'], 'required'],
             [['store_id', 'customer_id', 'used_xu', 'bulk_point', 'shipping', 'third_party_transaction_time', 'created_at'], 'integer'],
             [['carts', 'transaction_description', 'note', 'third_party_transaction_link'], 'string'],
             [['total_discount_amount', 'before_discount_amount_local', 'transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
