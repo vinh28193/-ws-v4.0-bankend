@@ -65,7 +65,7 @@ return [
 
         ],
         'mcpay' => [
-            'enable' => 'product',
+            'enable' => 'sandbox',
             'params' => [
                 'sandbox' => [
                     'baseUrl' => 'https://mcbill.sandbox.id.mcpayment.net',
