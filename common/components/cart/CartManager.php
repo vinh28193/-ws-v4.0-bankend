@@ -443,7 +443,7 @@ class CartManager extends Component
             }
             if (isset($param['type_chat'])) {
                 if ($param['type_chat'] === 'WS_CUSTOMER') {
-                    var_dump($key['current_status']);
+                    $key['current_status'] = 'SUPPORTING';
                     $value['supporting'] = $now;
                 }
             }
