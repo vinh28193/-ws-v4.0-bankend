@@ -141,6 +141,7 @@ ul.bars-nav li:last-child{
     float: left;
 }
 #menu1 {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     top: 12px!important;
     transform: translate3d(0px, 35px,0px) !important;
 }
@@ -839,6 +840,40 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
     .content-modal-auth-mb{
         padding: 28px;
+    }
+    #category-mb-amazon ul li a,#category-mb-ebay ul li a{
+         color: rgba(0, 0, 0, 0.85);
+     }
+    #category-mb-ebay ul li ul li a.active,#category-mb-amazon ul li ul li a.active{
+        color: #2b96b6;
+    }
+    #category-mb-amazon .sub-cate-2 {
+        -webkit-transition: all .3s;
+        -moz-transition: all .3s;
+        -ms-transition: all .3s;
+        -o-transition: all .3s;
+        transition: all .3s; }
+    #category-mb-amazon .sub-cate-2{
+        overflow: auto;
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        bottom: 0;
+        width: 100%;
+        background: #fff;
+        border-top: 1px solid #2b96b6;
+        z-index: 999;
+    }
+    #category-mb-amazon .sub-cate-2.open {
+        left: 0; }
+    .content-menu-cate-sub-2 .title-submenu i{
+        padding-right: 20px;
+        font-size: 14px;
+        color: #2b96b6;
+    }
+    #category-mb-amazon .content-menu-cate-sub-2 .title-submenu a,.content-menu-cate-sub-2 .title-submenu a{
+        color: #2b96b6;
+        font-size: 14px;
     }
     /*.mb-menu-cate{*/
     /*    padding-top: 15px;*/

@@ -233,13 +233,13 @@ $( document ).ready(function() {
             }
         });
 
-        $('.mb-menu-filter-cate .dropdown-collapse').click(function () {
+        $('.title-submenu .dropdown-collapse').click(function () {
             if($(this.getElementsByTagName('i')).hasClass('la-angle-right')){
                 $(this.getElementsByTagName('i')).removeClass('la-angle-right');
                 $(this.getElementsByTagName('i')).addClass('la-angle-down');
             }else{
                 $(this.getElementsByTagName('i')).removeClass('la-angle-down');
-                $(this.getElementsByTagName('i')).addClass('la la-angle-right');
+                $(this.getElementsByTagName('i')).addClass('la-angle-right');
             }
         });
 
