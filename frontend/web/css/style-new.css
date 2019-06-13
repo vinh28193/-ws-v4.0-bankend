@@ -115,12 +115,17 @@ body div.wrapper div.navbar-ws div div.search-box{
     border-radius: 5px 5px 0px 0px;
     padding-right: 30px;
 }
-.bars-nav123 li:first-child i:first-child{
+.bars-nav123 li:first-child span:first-child i:first-child{
     font-size: 30px;
     line-height: 0em;
 }
 ul.bars-nav li:last-child{
     padding-right: 0px;
+}
+.bars-nav123 li a:hover{
+    font-size: 17px;
+    color: #ffffff;
+    padding-left: 10px;
 }
 .category_list{
     /* Style for "Combined S" */
@@ -327,6 +332,11 @@ div.product-list.row div a div.info div.name{
 .btn-amazon:hover{
     background-color: #fff;
     color: rgba(0, 0, 0, 0.85);
+}
+.title {
+    color: #2b96b6;
+    font-size: 16px;
+    font-weight: 700;
 }
 /*.ico*/
 @media(max-width:1090px) {
@@ -834,6 +844,11 @@ div div.product-list.row div a div.info div.price span.countdown{
         width: 100%;
         padding-top: 25px;
         text-align: center;
+    }
+    .title {
+        color: #2b96b6;
+        font-size: 15px;
+        font-weight: 700;
     }
     .btn-search-mb button{
         width: 80%;

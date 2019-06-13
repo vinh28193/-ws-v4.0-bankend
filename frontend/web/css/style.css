@@ -2035,7 +2035,7 @@ a:hover {
 }
 
 .buy-amazon .left .list ul:after {
-    top: 198px;
+    top: 197px;
     left: 0;
     position: absolute;
     width: 0;
@@ -2148,8 +2148,8 @@ a:hover {
 }
 
 .buy-amazon .right .middle .banner-1 a img {
-    width: 470px;
-    height: 168px;
+    /*width: 470px;*/
+    /*height: 168px;*/
 }
 
 .buy-amazon .right .middle .banner-2 {
@@ -2267,9 +2267,9 @@ a:hover {
     height: 395px;
 }
 
-.buy-amazon.buy-ebay .right .bottom .banner-1 a img {
-    width: 377px;
-}
+/*.buy-amazon.buy-ebay .right .bottom .banner-1 a img {*/
+/*    width: 377px;*/
+/*}*/
 
 .buy-amazon.buy-ebay .right .bottom .banner-2 {
     height: 197.5px;
@@ -2316,9 +2316,9 @@ a:hover {
     height: 196px;
 }
 
-.buy-amazon.buy-ebay .right .bottom .banner-3 a img {
-    height: 198px;
-}
+/*.buy-amazon.buy-ebay .right .bottom .banner-3 a img {*/
+/*    height: 198px;*/
+/*}*/
 
 .buy-amazon.buy-ebay .right .bottom .banner-4 {
     border-top: 1px solid #efefef;
@@ -2369,7 +2369,8 @@ a:hover {
 }
 
 .buy-amazon.buy-ebay .right .bottom .banner-5 a img {
-    max-height: 197px;
+    width: 100%;
+    /*max-height: 197px;*/
 }
 
 .buy-amazon.ebay-block .left {
@@ -8645,6 +8646,7 @@ li.dropdown.show {
 
     .buy-amazon.buy-ebay .right .bottom .banner-2, .buy-amazon.buy-ebay .right .bottom .banner-3, .buy-amazon.buy-ebay .right .bottom .banner-4, .buy-amazon.buy-ebay .right .bottom .banner-5 {
         min-width: 100%;
+        max-width: 100%;
         height: auto;
         position: static;
         border: 1px solid #EFEFEF;
@@ -8749,9 +8751,9 @@ li.dropdown.show {
         width: 100%
     }
 
-    .buy-amazon.buy-ebay .right .bottom .banner-2 img, .buy-amazon.buy-ebay .right .bottom .banner-3 img, .buy-amazon.buy-ebay .right .bottom .banner-4 img, .buy-amazon.buy-ebay .right .bottom .banner-5 img {
-        width: 100%
-    }
+    /*.buy-amazon.buy-ebay .right .bottom .banner-2 img, .buy-amazon.buy-ebay .right .bottom .banner-3 img, .buy-amazon.buy-ebay .right .bottom .banner-4 img, .buy-amazon.buy-ebay .right .bottom .banner-5 img {*/
+    /*    width: 100%*/
+    /*}*/
 
     .buy-amazon .right .middle .banner-1 img, .buy-amazon .right .middle .banner-2 img {
         width: 100%

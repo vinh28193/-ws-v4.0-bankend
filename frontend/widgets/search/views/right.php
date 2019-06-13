@@ -41,6 +41,7 @@ $js = <<<JS
     $('input[name=toPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
 JS;
 $this->registerJs($js);
+/*
 if(!$default){
     $message = "<p>" .
         "Nhằm giúp khách hàng có trải nghiệm mua sắm xuyên biên giới tốt hơn, bạn nên tìm kiếm các sản phẩm trên website Amazon.com." .
@@ -61,6 +62,7 @@ if(!$default){
 JS;
     $this->registerJs($js);
 }
+*/
 ?>
 <div class="search-content search-2 <?= $portal ?>">
     <div class="title-box inline mobile-hide">

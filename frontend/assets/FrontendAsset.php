@@ -12,8 +12,8 @@ class FrontendAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/style.css',
         'css/variables.css',
+        'css/style.css',
         'css/all.css',
         'css/slick.css',
         'css/slick-theme.css',

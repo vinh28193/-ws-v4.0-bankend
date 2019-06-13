@@ -32,13 +32,13 @@ $(document).ready(function () {
 JS;
 $this->registerJs($js);
 
-use yii\helpers\Html; ?>
+?>
 <div class="navbar-ws mobile-hide" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
         <div class="logo">
             <span class="menu-toggle"></span>
             <a href="/" class="logo-pc">
-                <img src="/images/logo/weshop-01.png" alt="" title="" width ="175px"/ >
+                <img src="/images/logo/weshop-01.png" alt="" title="">
             </a>
         </div>
         <div class="search-box">
@@ -137,20 +137,20 @@ use yii\helpers\Html; ?>
         <ul class="bars-nav bars-nav123">
             <li class="dropdown active mr-1">
                 <a id="drop1" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
-                   aria-expanded="false">
-                    <i class="la la-bars"></i>
-                    Danh mục sản phẩm
-                    <i class="la la-caret-down"></i>
+                   aria-expanded="false" style="display: inline-flex;">
+                    <span style="padding-top: 3px;display: block;" class=""><i class="la la-bars"></i></span>
+                    <span style="display: block;">Danh mục sản phẩm</span>
+                    <span style="display: block;"><i class="la la-caret-down"></i></span>
                 </a>
                 <ul id="menu1" class="dropdown-menu category_list style-u" role="menu" aria-labelledby="drop1"
                     style="display: none; border-right: 1px solid gray ">
                     <li role="presentation">
-                        <a data-toggle="collapse" class="toggle" href="#collapseExample" id="toggle" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <a data-toggle="collapse" class="toggle" id="toggle" role="button" aria-expanded="false">
                             <span style="display: block; float: left;"><img src="/img/logo_amazon_us.png"></span>
                             <span style="display: block; text-align: right; margin-right: 8px" class="amz"><i id="asd"
-                                        class="la la-caret-down"></i></span>
+                                        class="la la-caret-down" style="transform: scaleY(-1);"></i></span>
                         </a>
-                        <ul class="style-ull menu" id="target">
+                        <ul class="style-ull menu" id="target" style="display: block;">
                             <?= \frontend\widgets\alias\TopMenuAliasWidget::widget(['type' => 'NAV_TOP_A']) ?>
                         </ul>
                     </li>
@@ -169,23 +169,25 @@ use yii\helpers\Html; ?>
                 </ul>
             </li>
             <li>
-                <a href="#">Daily deal</a>
+                <a href="javascript:void(0);">Daily deal</a>
             </li>
             <li>
-                <a href="#">Thương hiệu nổi tiếng</a>
+                <a href="javascript:void(0);">Thương hiệu nổi tiếng</a>
             </li>
             <li>
-                <a href="#">Đồng hồ</a>
+                <a href="javascript:void(0);">Đồng hồ</a>
             </li>
             <li>
-                <a href="#">Nước hoa</a>
+                <a href="javascript:void(0);">Nước hoa</a>
             </li>
             <li>
-                <a href="#">Nước hoa</a>
+                <a href="javascript:void(0);">Nước hoa</a>
             </li>
             <li>
-                <i class="la la-hand-o-right"></i>
-                <a href="#">Dùng thử dịch vụ Prime</a>
+                <a href="javascript:void(0);" style="padding-left: 0px">
+                    <i class="la la-hand-o-right"></i>
+                    Dùng thử dịch vụ Prime
+                </a>
             </li>
         </ul>
     </div>
@@ -193,15 +195,15 @@ use yii\helpers\Html; ?>
 <div class="mb-wrapper mobile-show">
     <nav class="mb-navbar">
         <span class="btn-toggle la la-bars"></span>
-        <a href="#" class="logo"><img src="/images/logo/weshop-01.png" alt=""></a>
+        <a href="/" class="logo"><img src="/images/logo/weshop-01.png" alt=""></a>
         <ul class="action">
-            <li><a href="#" class="auth-user">
+            <li><a href="javascript:void(0);" class="auth-user">
                     <i class="la la-user"></i>
                     Tài khoản
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="javascript:void(0);">
                     <i class="la la-shopping-cart"></i>
                     <span class="badge">2</span>
                 </a>
@@ -250,7 +252,7 @@ use yii\helpers\Html; ?>
     </div>
     <div class="mb-modal-auth">
         <div class="title-mb-menu">
-            <a href="#" class="logo"><img src="/images/logo/weshop-01.png" alt="" style="height: 30px"></a>
+            <a href="/" class="logo"><img src="/images/logo/weshop-01.png" alt="" style="height: 30px"></a>
             <i class="la la-close" style="float: right;padding:5px;"></i>
             <div class="clearfix"></div>
         </div>
@@ -293,23 +295,23 @@ use yii\helpers\Html; ?>
     <div class="container menu-cate-mb">
         <ul class="bars-cate-mb">
             <li>
-                <a href="#">Daily deal</a>
+                <a href="javascript:void(0);">Daily deal</a>
             </li>
             <li>
-                <a href="#">Thương hiệu nổi tiếng</a>
+                <a href="javascript:void(0);">Thương hiệu nổi tiếng</a>
             </li>
             <li>
-                <a href="#">Đồng hồ</a>
+                <a href="javascript:void(0);">Đồng hồ</a>
             </li>
             <li>
-                <a href="#">Nước hoa</a>
+                <a href="javascript:void(0);">Nước hoa</a>
             </li>
             <li>
-                <a href="#">Nước hoa</a>
+                <a href="javascript:void(0);">Nước hoa</a>
             </li>
             <li>
                 <i class="la la-hand-o-right"></i>
-                <a href="#">Dùng thử dịch vụ Prime</a>
+                <a href="javascript:void(0);">Dùng thử dịch vụ Prime</a>
             </li>
         </ul>
     </div>
