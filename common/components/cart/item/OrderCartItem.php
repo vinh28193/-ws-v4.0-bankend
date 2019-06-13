@@ -144,21 +144,7 @@ class OrderCartItem extends BaseObject
     public static function defaultKey()
     {
 
-        $store = Yii::$app->storeManager;
-        return [
-            'source' => '',
-            'sellerId' => '',
-            'seller' => [],
-            'current_status' => 'NEW',
-            'times' => [
-                'new' => Yii::$app->getFormatter()->asTimestamp('now')
-            ],
-            'supportId' => '',
-            'supportAssign' => [],
-            'store_id' => $store->id,
-            'currency' => $store->store->currency,
-            'orderCode' => WeshopHelper::generateTag(Yii::$app->formatter->asTimestamp('now'), 'WSC'),
-            'products' => []
-        ];
+
+
     }
 }

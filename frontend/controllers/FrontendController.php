@@ -97,6 +97,14 @@ class FrontendController extends Controller
         $this->getEcomobi()->register();
     }
 
+    public function beforeAction($action)
+    {
+        if (($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN, null)) !== null) {
+            $this->setUuidCookie($onHead);
+        }
+        return parent::beforeAction($action);
+    }
+
     /**
      * default params will be pass to view
      * @return array
@@ -126,7 +134,8 @@ class FrontendController extends Controller
             'author' => Yii::t('frontend', 'Weshop Global'),
             'COPYRIGHT' => Yii::t('frontend', '&copy; Weshop Global'),
             'robots' => 'noodp,index,follow',
-            'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505'
+            'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505',
+            'fingerprint-token' => ''
         ], $this->metaTag(), ArrayHelper::getValue(Yii::$app->params, 'metaTagParam', []));
         foreach ($metaTags as $name => $content) {
             $this->registerMetaTag([
@@ -335,7 +344,7 @@ class FrontendController extends Controller
             return $this->_uuid;
         } elseif (($onCookie = $this->getUuidCookie()) !== null) {
             return $onCookie;
-        }elseif ($checkHead && ($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN,null) !== null)){
+        } elseif ($checkHead && ($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN, null) !== null)) {
             return $onHead;
         }
         return null;

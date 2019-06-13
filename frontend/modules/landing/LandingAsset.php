@@ -40,6 +40,7 @@ class LandingAsset extends AssetBundle
     public $js = [
         'js/owl.carousel.js',
         'js/style.js',
+        'js/style-new.js',
         'js/skrollr.js',
         'js/jquery.mmenu.min.all.js',
         'js/app.js',

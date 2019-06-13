@@ -64,6 +64,11 @@ class WeshopHelper
      */
     public static function roundNumber($number, $precision = 0)
     {
+        if ($number === null) {
+            $number = 0;
+        } elseif ($number < 0) {
+            $number *= -1;
+        }
         $factor = pow(10, $precision);
         return round($number * $factor) / $factor;
     }

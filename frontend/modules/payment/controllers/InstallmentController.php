@@ -18,11 +18,13 @@ class InstallmentController extends BasePaymentController
         $provider = (int)$provider;
         $params = $this->request->bodyParams;
         $payment = new Payment($params);
+        $payment->setTotalAmountDisplay(null);
         $promotion = $payment->checkPromotion();
         $success = false;
         $message = 'no found';
         $data = [
-            'origin' => $this->storeManager->showMoney($payment->total_amount_display),
+            'calculator' => 'installment',
+            'origin' => $this->storeManager->showMoney($payment->getTotalAmountDisplay()),
             'promotion' => $promotion,
             'methods' => []
         ];
@@ -30,6 +32,7 @@ class InstallmentController extends BasePaymentController
             $success = true;
             $message = 'success';
             $data = ArrayHelper::merge($data, [
+                'calculator' => 'alepay',
                 'methods' => $this->getAlapayCalculator($payment)
             ]);
         }

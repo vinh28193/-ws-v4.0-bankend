@@ -63,7 +63,7 @@ class SearchResultWidget extends Widget
             'data-action' => $this->getClientOptions()['absoluteUrl'],
             'data-portal' => $this->portal
         ], $this->options);
-        if ($this->portal === null) {
+        if (!$this->portal) {
             $this->portal = $this->form->type;
         }
         Html::addCssClass($options, "{$this->portal}-search");
@@ -135,6 +135,8 @@ class SearchResultWidget extends Widget
             'products' => ArrayHelper::getValue($this->results, 'products', []),
             'sorts' => ArrayHelper::getValue($this->results, 'sorts', []),
             'storeManager' => $this->getStoreManager(),
+            'categories' => ArrayHelper::getValue($this->results, 'categories', []),
+            'filters' => ArrayHelper::getValue($this->results, 'filters', []),
         ]);
     }
 }

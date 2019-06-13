@@ -104,10 +104,15 @@ class ShippingController extends CheckoutController
             'page' => Payment::PAGE_CHECKOUT,
             'uuid' => $this->filterUuid(),
             'carts' => $keys,
-            'payment_type' => $type,
+            'type' => $type,
         ]);
         $payment->initDefaultMethod();
+        if (count($payment->getOrders()) === 0) {
+            return $this->goBack();
+        }
         $shippingForm = new ShippingForm();
+        $shippingForm->cartIds = implode(',', $keys);
+        $shippingForm->checkoutType = $type;
         $shippingForm->setDefaultValues();
         $provinces = SystemStateProvince::select2Data(1);
 
@@ -117,6 +122,49 @@ class ShippingController extends CheckoutController
             'payment' => $payment,
             'provinces' => $provinces
         ]);
+    }
+
+    public function actionValidate()
+    {
+        $model = new ShippingForm();
+        $model->on(ShippingForm::EVENT_AFTER_VALIDATE, function ($event) {
+            /** @var  $event yii\base\Event */
+            $sender = $event->sender;
+        });
+        $request = $this->request;
+        Yii::info($request->post(), __METHOD__);
+        // Todo save info of guest user when whole typing on form
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if ($request->isAjax && $request->isPost && $model->load($request->post())) {
+            $attributes = [];
+            $results = \yii\bootstrap4\ActiveForm::validate($model);
+            $clone = clone $model;
+            $clone->ensureReceiver();
+
+            foreach ($clone->getAttributes() as $name => $value) {
+                if ($name === 'customer_id' || $name === 'cartIds' || $name === 'checkoutType') {
+                    continue;
+                }
+                if (!$model->hasErrors($name)) {
+                    $attributes[$name] = $value;
+                }
+            }
+            $keys = explode(',', $model->cartIds);
+            $attributes['buyer_province_name'] = $clone->getBuyerProvinceName();
+            $attributes['receiver_province_name'] = $clone->getReceiverProvinceName();
+            $attributes['buyer_district_name'] = $clone->getBuyerDistrictName();
+            $attributes['receiver_district_name'] = $clone->getReceiverDistrictName();
+            $attributes['receiver_country_name'] = $this->storeManager->store->country_name;
+            $attributes['receiver_country_id'] = $this->storeManager->store->country_id;
+            $attributes['buyer_country_name'] = $this->storeManager->store->country_name;
+            $attributes['buyer_country_id'] = $this->storeManager->store->country_id;
+            foreach ($keys as $key) {
+                $rs = $this->module->cartManager->updateShippingAddress($model->checkoutType, $key, $attributes, $this->filterUuid());
+                Yii::info($rs);
+            }
+            return $results;
+        }
+        return [];
     }
 
     public function actionLogin()

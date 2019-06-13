@@ -7960,3 +7960,827 @@ a:hover {
 li.dropdown.show {
     background: #ffffff;
 }
+@media (max-width: 991px) {
+    .choose-shop .choose-content .banner-left {
+        display: none
+    }
+
+    .choose-shop .choose-content .banner-right {
+        width: 698px;
+        margin-left: 0;
+        height: 446px
+    }
+
+    .choose-shop .nav-tabs > li > a {
+        height: 42px;
+        font-size: 12px
+    }
+
+    .choose-shop .nav-tabs > li {
+        width: 33.53%
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 {
+        width: 464px;
+        height: 296px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 a {
+        width: 465px;
+        height: 295px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 img {
+        max-width: 465px;
+        max-height: 295px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-2 {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-2 a {
+        width: 232px;
+        height: 147px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-2 img {
+        max-width: 232px;
+        max-height: 147px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-3 {
+        width: 232px;
+        height: 148px;
+        top: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-3 a {
+        width: 232px;
+        height: 147px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-3 img {
+        max-width: 232px;
+        max-height: 147px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-4 {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-4 a {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-4 img {
+        max-width: 232px;
+        max-height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-5 {
+        width: 232px;
+        height: 148px;
+        left: 232px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-5 a {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-5 img {
+        max-width: 232px;
+        max-height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-6 {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-6 a {
+        width: 232px;
+        height: 148px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-6 img {
+        max-width: 232px;
+        max-height: 148px
+    }
+
+    .buy-amazon {
+        height: 364px;
+        display: block
+    }
+
+    .buy-amazon .left {
+        display: none
+    }
+
+    .buy-amazon .right .top ul {
+        display: none
+    }
+
+    .buy-amazon .right {
+        width: 718px
+    }
+
+    .buy-amazon .right .top h1 {
+        margin: 10px 0;
+        font-size: 20px;
+        display: block
+    }
+    .buy-amazon .right .top {
+        background: #232f3d;
+        color: #fff;
+    }
+    .buy-amazon .right .middle {
+        height: 158px
+    }
+    .buy-ebay .right .top {
+        background: #0063d1;
+        color: #fff;
+    }
+
+    .buy-amazon .right .middle .banner-1 {
+        width: 359px;
+        height: 156px
+    }
+
+    .buy-amazon .right .middle .banner-1 a {
+        width: 358px;
+        height: 128px
+    }
+    .buy-amazon .right .middle .banner-2 {
+        width: 359px;
+        height: 157px
+    }
+
+    .buy-amazon .right .middle .banner-2 a {
+        width: 359px;
+        height: 128px
+    }
+
+    .buy-amazon .right .middle .banner-2 img {
+        width: 359px;
+        height: 128px
+    }
+
+    .buy-amazon .right .bottom .banner-3 {
+        width: 143px;
+        height: 151px
+    }
+
+    .buy-amazon .right .bottom .banner-3 a {
+        width: 142px;
+        height: 151px;
+        text-align: center;
+        vertical-align: middle
+    }
+
+    .buy-amazon .right .bottom .banner-3 img {
+        width: 236px;
+        height: 151px;
+        text-align: center;
+        vertical-align: middle
+    }
+
+    .buy-amazon .right .bottom .banner-4 {
+        width: 143px;
+        height: 151px;
+        left: 143px
+    }
+
+    .buy-amazon .right .bottom .banner-4 a {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .buy-amazon .right .bottom .banner-5 {
+        width: 143px;
+        height: 151px;
+        left: 286px
+    }
+
+    .buy-amazon .right .bottom .banner-5 a {
+        width: 142px;
+        height: 151px
+    }
+    .buy-amazon .right .bottom .banner-6 {
+        width: 143px;
+        height: 151px;
+        right: 143px
+    }
+
+    .buy-amazon .right .bottom .banner-6 a {
+        width: 142px;
+        height: 151px
+    }
+    .buy-amazon .right .bottom .banner-7 {
+        width: 143px;
+        height: 151px
+    }
+
+    .buy-amazon .right .bottom .banner-7 a {
+        width: 143px;
+        height: 151px
+    }
+    .buy-amazon .right .bottom {
+        height: 151px
+    }
+
+    .buy-amazon.buy-ebay {
+        height: 354px;
+        display: block
+    }
+
+    .buy-amazon.buy-ebay .right .bottom {
+        height: 299px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-1 {
+        width: 286px;
+        height: 299px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-1 a {
+        width: 285px;
+        height: 299px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-1 img {
+        width: 377px;
+        /*height: 395px*/
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-2 {
+        width: 145px;
+        height: 150px;
+        left: 286px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-2 img {
+        max-width: 142px;
+        max-height: 148px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-3 {
+        width: 289px;
+        height: 150px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-3 a {
+        width: 289px;
+        height: 149px
+    }
+    .buy-amazon.buy-ebay .right .bottom .banner-4 img {
+        max-width: 142px;
+        max-height: 149px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-5 {
+        width: 40%;
+        height: 148px;
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-5 a {
+        width: 289px;
+        height: 148px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-5 img {
+    }
+
+    .buy-amazon.buy-dhgate {
+        height: 358px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom {
+        height: 303px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-1 {
+        width: 143.5px;
+        height: 151px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-1 a {
+        width: 142px;
+        height: 150px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-1 img {
+        max-width: 142px;
+        max-height: 150px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-2 {
+        width: 143.5px;
+        height: 151px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-2 a {
+        width: 142px;
+        height: 151px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-2 img {
+        max-width: 142px;
+        max-height: 151px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-3 {
+        width: 143.5px;
+        height: 303px;
+        left: 143.5px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-3 a {
+        width: 143px;
+        height: 302px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-3 img {
+        max-width: 143px;
+        max-height: 302px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-4 {
+        width: 143.5px;
+        height: 303px;
+        left: 287px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-4 a {
+        width: 143px;
+        height: 302px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-4 img {
+        max-width: 143px;
+        max-height: 302px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-5 {
+        width: 143.5px;
+        height: 303px;
+        right: 143.5px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-5 a {
+        width: 143px;
+        height: 302px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-5 img {
+        max-width: 143px;
+        max-height: 302px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-6 {
+        width: 143.5px;
+        height: 151px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-6 a {
+        width: 143px;
+        height: 150px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-6 img {
+        max-width: 143px;
+        max-height: 150px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-7 {
+        width: 143.5px;
+        height: 151px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-7 a {
+        width: 143px;
+        height: 150px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-7 img {
+        max-width: 143px;
+        max-height: 150px
+    }
+
+    .tabbed ul li {
+        width: 305px
+    }
+
+    .help-tab-content .help-buy img {
+        width: 550px
+    }
+}
+
+@media (max-width: 767px) {
+    .choose-shop .choose-content .banner-right {
+        width: 100%;
+        height: auto;
+        border: none
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF
+    }
+
+    .choose-shop .choose-content .banner-right .banner-2 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-3 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-4 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-5 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .choose-shop .choose-content .banner-right .banner-6 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon {
+        height: auto
+    }
+
+    .buy-amazon .right {
+        width: 100%
+    }
+
+    .buy-amazon .right .middle {
+        width: 100%;
+        padding: 0 10px;
+        border: none;
+        height: auto;
+        background: transparent
+    }
+
+    .buy-amazon .right .middle .banner-1 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon .right .middle .banner-2 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon .right .bottom {
+        width: 100%;
+        padding: 10px;
+        height: auto;
+        background: transparent
+    }
+
+    .buy-amazon .right .bottom .banner-3 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF
+    }
+
+    .buy-amazon .right .bottom .banner-4 {
+        border-right: 1px solid #EFEFEF;
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon .right .bottom .banner-5 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon .right .bottom .banner-6 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon .right .bottom .banner-7 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon.buy-dhgate {
+        height: auto
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom {
+        width: 100%;
+        padding: 10px;
+        height: auto;
+        background: transparent
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-1 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-2 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-3 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-4 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-5 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-6 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-7 {
+        position: static;
+        width: 100%;
+        height: auto;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .navbar-nav {
+        margin: 0
+    }
+
+    .top-nav .navbar-default .navbar-nav > li > a > i {
+        float: right
+    }
+
+    .navbar-nav {
+        width: 100%
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 a, .choose-shop .choose-content .banner-right .banner-2 a, .choose-shop .choose-content .banner-right .banner-3 a, .choose-shop .choose-content .banner-right .banner-4 a, .choose-shop .choose-content .banner-right .banner-5 a, .choose-shop .choose-content .banner-right .banner-6 a {
+        width: 100%;
+        height: auto;
+        display: block
+    }
+
+    .choose-shop .choose-content .banner-right .banner-1 img, .choose-shop .choose-content .banner-right .banner-2 img, .choose-shop .choose-content .banner-right .banner-3 img, .choose-shop .choose-content .banner-right .banner-4 img, .choose-shop .choose-content .banner-right .banner-5 img, .choose-shop .choose-content .banner-right .banner-6 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%
+    }
+
+    .buy-amazon .right .middle .banner-1 a, .buy-amazon .right .middle .banner-2 a, .buy-amazon .right .bottom .banner-3 a, .buy-amazon .right .bottom .banner-4 a, .buy-amazon .right .bottom .banner-5 a, .buy-amazon .right .bottom .banner-6 a, .buy-amazon .right .bottom .banner-7 a {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: #fff
+    }
+
+    .buy-amazon .right .middle .banner-1 img, .buy-amazon .right .middle .banner-2 img, .buy-amazon .right .bottom .banner-3 img, .buy-amazon .right .bottom .banner-4 img, .buy-amazon .right .bottom .banner-5 img, .buy-amazon .right .bottom .banner-6 img, .buy-amazon .right .bottom .banner-7 img {
+        width: auto
+    }
+
+    .buy-amazon.buy-ebay {
+        height: auto
+    }
+
+    .buy-amazon.buy-ebay .right .bottom {
+        height: auto
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-1 {
+        width: 100%;
+        height: auto;
+        position: static;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-1 a {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: #fff
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-1 img {
+        max-width: inherit;
+        /*max-height: inherit;*/
+        width: auto
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-2, .buy-amazon.buy-ebay .right .bottom .banner-3, .buy-amazon.buy-ebay .right .bottom .banner-4, .buy-amazon.buy-ebay .right .bottom .banner-5 {
+        min-width: 100%;
+        height: auto;
+        position: static;
+        border: 1px solid #EFEFEF;
+        margin-top: 10px;
+        float: none
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-2 a, .buy-amazon.buy-ebay .right .bottom .banner-3 a, .buy-amazon.buy-ebay .right .bottom .banner-4 a, .buy-amazon.buy-ebay .right .bottom .banner-5 a {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: #fff
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-2 img, .buy-amazon.buy-ebay .right .bottom .banner-3 img, .buy-amazon.buy-ebay .right .bottom .banner-4 img, .buy-amazon.buy-ebay .right .bottom .banner-5 img {
+        width: auto
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-1 a, .buy-amazon.buy-dhgate .right .bottom .banner-2 a, .buy-amazon.buy-dhgate .right .bottom .banner-3 a, .buy-amazon.buy-dhgate .right .bottom .banner-4 a, .buy-amazon.buy-dhgate .right .bottom .banner-5 a, .buy-amazon.buy-dhgate .right .bottom .banner-6 a, .buy-amazon.buy-dhgate .right .bottom .banner-7 a {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: #fff
+    }
+
+    .buy-amazon.buy-dhgate .right .bottom .banner-1 img, .buy-amazon.buy-dhgate .right .bottom .banner-2 img, .buy-amazon.buy-dhgate .right .bottom .banner-3 img, .buy-amazon.buy-dhgate .right .bottom .banner-4 img, .buy-amazon.buy-dhgate .right .bottom .banner-5 img, .buy-amazon.buy-dhgate .right .bottom .banner-6 img, .buy-amazon.buy-dhgate .right .bottom .banner-7 img {
+        max-width: inherit;
+        max-height: inherit;
+        width: auto
+    }
+
+    .national a span {
+        display: none
+    }
+
+    .help-me {
+        display: none
+    }
+
+    .navbar-default .navbar-nav > li.mail-box > a, .navbar-default .navbar-nav > li.user-box > a, .navbar-default .navbar-nav > li.noti-box > a, .navbar-default .navbar-nav > li.question-box > a, .navbar-default .navbar-nav > li.cart-box > a {
+        position: relative;
+        padding: 12px 15px
+    }
+
+    .navbar-nav > li.cart-box {
+        display: inline-block
+    }
+}
+
+@media (max-width: 676px) {
+    .national ul {
+        display: inline-block
+    }
+
+    .national a {
+        margin-right: 0;
+        margin-left: 15px
+    }
+}
+
+@media (max-width: 533px) {
+    .choose-shop .nav-tabs > li {
+        width: 33.6%
+    }
+
+    .choose-shop .nav-tabs > li > a {
+        height: 34px;
+        font-size: 10px
+    }
+
+    .choose-shop .choose-flag {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 30px
+    }
+}
+
+@media (max-width: 480px) {
+    .choose-shop .nav-tabs > li > a {
+        height: 34px;
+        font-size: 9px
+    }
+}
+
+@media (max-width: 414px) {
+    .national ul {
+        display: block
+    }
+
+    .national a {
+        margin-left: 0;
+        margin-right: 15px
+    }
+
+    .nav > li > a {
+        padding: 5px 15px
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-1 img {
+        width: 100%
+    }
+
+    .buy-amazon.buy-ebay .right .bottom .banner-2 img, .buy-amazon.buy-ebay .right .bottom .banner-3 img, .buy-amazon.buy-ebay .right .bottom .banner-4 img, .buy-amazon.buy-ebay .right .bottom .banner-5 img {
+        width: 100%
+    }
+
+    .buy-amazon .right .middle .banner-1 img, .buy-amazon .right .middle .banner-2 img {
+        width: 100%
+    }
+}
+
+@media (max-width: 375px) {
+    .footer-info .payment li {
+        margin-bottom: 10px
+    }
+}
+
+@media (max-width: 360px) {
+    .choose-shop .nav-tabs > li {
+        width: 100%;
+        margin-bottom: 10px
+    }
+
+    .choose-shop .nav-tabs > li > a {
+        padding: 10px 15px;
+        font-size: 12px
+    }
+
+    .choose-shop .nav-tabs > li.active > a > i, .choose-shop .nav-tabs > li.active > a:hover > i, .choose-shop .nav-tabs > li.active > a:focus > i {
+        display: none
+    }
+}
+.title-mb.hidden-md.hidden-lg {
+    text-align: center;
+    padding: 5px 0;
+    height: 52px;
+}

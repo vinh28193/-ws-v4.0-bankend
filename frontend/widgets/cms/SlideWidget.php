@@ -51,12 +51,12 @@ class SlideWidget extends WeshopBlockWidget
 
     protected function renderItems()
     {
-        $html = Html::beginTag('div', $this->options);
-        foreach ($this->getImages() as $image) {
-            $html .= $this->renderItem($image);
-        }
-        $html .= Html::endTag('div');
-        return $html;
+//        $html = Html::beginTag('div', $this->options);
+//        foreach ($this->getImages() as $image) {
+//            $html .= $this->renderItem($image);
+//        }
+//        $html .= Html::endTag('div');
+        return $this->render('slide',['images' => $this->getImages()]);
     }
 
     protected function renderItem($item)

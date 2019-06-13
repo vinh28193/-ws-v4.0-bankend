@@ -4,7 +4,11 @@ ws.browse = (function ($) {
             ws.loading(true);
             var temp = location.href.split('/');
             var keyword = encodeURI($($element).val());
-            if(temp.length >= 4 && temp[3] && temp[3] !== 'search' && temp[3] !== ''){
+            if(!keyword){
+                ws.loading(false);
+                return ws.notifyMessage('Vui lòng nhập từ khoá!')
+            }
+            if(temp.length >= 4 && temp[3] && temp[3] !== 'search' && temp[3] !== '' && (temp[3] === 'amazon' || temp[3] === 'ebay')){
                 return window.location.assign('/'+temp[3].replace('.html','')+'/search/'+keyword+'.html');
             }else {
                 return window.location.assign('/search/'+keyword+'.html');

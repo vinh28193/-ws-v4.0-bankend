@@ -11,4 +11,8 @@ class NotifyController extends CheckoutController
     {
         return $this->render('office_success');
     }
+
+    public function actionNicePaySuccess($code){
+        return $this->render('nice_pay_success',$this->request->get());
+    }
 }

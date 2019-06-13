@@ -28,16 +28,16 @@ if(!empty($items)){
                 <a href="<?= \common\helpers\WeshopHelper::generateUrlDetail($product->type, $product->item_name, $product->item_id) ?>"
                    class="item">
                     <div class="thumb">
-                        <img style="max-width: 160px" src="<?= count($product->primary_images) ? $product->primary_images[0]->thumb : '/img/no_image.png' ?>"
+                        <img style="max-width: 160px" src="<?= count($product->primary_images) ? $product->primary_images[0]->main : '/img/no_image.png' ?>"
                              alt="" title=""/>
                     </div>
                     <div class="info">
                         <div class="rate">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <i class="far fa-star"></i>
+                            <i class="la la-star"></i>
+                            <i class="la la-star"></i>
+                            <i class="la la-star"></i>
+                            <i class="la la-star-half-o"></i>
+                <i class="la la-star-o"></i>
                             <span>(87)</span>
                         </div>
                         <div class="name"><?= $product->item_name ?></div>

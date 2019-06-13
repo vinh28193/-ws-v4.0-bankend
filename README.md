@@ -779,6 +779,7 @@ https://github.com/protocolbuffers/protobuf/tree/master/php
 protoc --php_out=boxme accounting.proto
 
 protoc --php_out=common\grpc\boxme accounting.proto
+protoc --proto_path=common\grpc\boxme --php_out=build/gen accounting.proto
 
 
 ##----------------Call test grpc boxme-----------------------

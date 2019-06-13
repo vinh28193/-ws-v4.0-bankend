@@ -24,9 +24,9 @@ $url = function ($id) use ($portal) {
     return Yii::$app->getUrlManager()->createUrl($param);
 }
 ?>
-<div class="filter-content">
+<div class="filter-content mobile-hide">
     <div class="filter-box category">
-        <div class="title"><u><?= Yii::t('frontend', 'Category'); ?></u></div>
+        <div class="title"><?= Yii::t('frontend', 'Category'); ?></div>
         <ul id="sub-menu-collapse">
             <?php foreach ($categories as $index => $category): ?>
                 <?php /* @var $category array */ ?>
@@ -34,10 +34,10 @@ $url = function ($id) use ($portal) {
                     <?= Html::a($category['category_name'], $url($category['category_id']), ['onclick' => "ws.loading(true);"]); ?>
                     <?php if (isset($category['child_category']) && ($childs = $category['child_category']) !== null && count($childs) > 0): ?>
                         <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-<?= $index; ?>"
-                           aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-down"></i></a>
+                           aria-expanded="true" aria-controls="collapseOne"><i class="la la-chevron-down"></i></a>
                         <div id="sub-<?= $index; ?>" class="collapse" aria-labelledby="headingOne"
                              data-parent="#sub-menu-collapse">
-                            <ul>
+                            <ul class="sub-category">
                                 <?php foreach ($childs as $child): ?>
                                     <li>
                                         <?= Html::a($child['category_name'], $url($child['category_id']), []); ?>

@@ -85,11 +85,11 @@ $totalAmount = 0;
                                 <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
                                     <?= $product['product_name']; ?></a>
                                 <div class="rate" style="text-align: left">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <i class="far fa-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star-half-o"></i>
+                <i class="la la-star-o"></i>
                                 </div>
                                 <ol>
                                     <?php

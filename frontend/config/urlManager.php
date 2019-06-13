@@ -12,6 +12,7 @@ return [
         'index.php' => 'cms/home/index',
         'index.html' => 'cms/home/index',
         'search/<keyword:[^/]+>.html' => 'cms/search/index',
+        'search/set-default' => 'cms/search/set-default',
         'description/<type:[^/]+>-<id:[^/]+>.html' => 'cms/description/index',
 
         // Message read
@@ -55,6 +56,7 @@ return [
         'checkout/login.html' => 'checkout/shipping/login',
         'checkout/signup.html' => 'checkout/shipping/signup',
         'checkout/office/<code:[^/]+>/success.html' => 'checkout/notify/office-success',
+        'checkout/nice-pay/<code:[^/]+>/success.html' => 'checkout/notify/nice-pay-success',
 
         // payment
         'payment/process' => 'payment/payment/process',
@@ -62,6 +64,8 @@ return [
         'otp/<code:[^/]+>/verify.html' => 'payment/wallet/otp-verify',
         'otp/captcha' => 'payment/wallet/captcha',
         'payment/<provider:[^/]+>/calc' => 'payment/installment/calculator',
+        'payment/<provider:[^/]+>/check-field' => 'payment/validate/check-field',
+        'payment/<merchant:[^/]+>/check-recursive' => 'payment/payment/check-recursive',
 
         //account
         'my-weshop.html' => 'account/home',

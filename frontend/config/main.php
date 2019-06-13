@@ -72,7 +72,7 @@ return [
         ],
         'user' => [
             'identityClass' => 'common\models\User',
-            'enableAutoLogin' => false,
+            'enableAutoLogin' => true,
             'loginUrl' => '/login.html',
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],

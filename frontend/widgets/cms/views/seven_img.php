@@ -29,11 +29,18 @@ $imge_block = !empty($block['image']) ? $block['image'] : $imge_block;
                 </ul>
             </div>
             <div class="banner-deal">
-                <img src="<?= $imge_block ?>" alt="Deal" title="Deal">
+                <a href="/amazon.html">
+                    <img src="<?= $imge_block ?>" alt="Deal" title="Deal">
+                </a>
             </div>
         </div>
         <div class="right">
             <div class="top">
+                <div class="title-mb hidden-md hidden-lg mobile-show">
+                    <a href="/amazon.html">
+                        <img src="/images/amazon/amazon-logo.png" alt="Amazone" title="Amazone">
+                    </a>
+                </div>
                 <ul>
                     <?php if (!empty($images)) {
                         foreach ($images as $key => $val) {
