@@ -427,8 +427,8 @@ class CartManager extends Component
             }
             if (isset($param['typeUpdate'])) {
                 if ($param['typeUpdate'] == 'confirmOrderCart') {
-                    $key['current_status'] = 'PURCHASED';
-                    $value['purchased'] = $now;
+                    $key['current_status'] = 'SUPPORTED';
+                    $value['supported'] = $now;
                 }
             }
             if (isset($param['typeUpdate'])) {
