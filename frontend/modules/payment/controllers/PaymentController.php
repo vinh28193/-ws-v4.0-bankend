@@ -18,6 +18,7 @@ use common\models\SystemStateProvince;
 use frontend\modules\payment\models\OtpVerifyForm;
 use frontend\modules\payment\PaymentContextView;
 use frontend\modules\payment\PaymentService;
+use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
 use frontend\modules\payment\providers\wallet\WalletHideProvider;
 use frontend\modules\payment\providers\wallet\WalletService;
 use common\products\BaseProduct;
@@ -163,6 +164,21 @@ class PaymentController extends BasePaymentController
         }
         return $this->redirect($cartUrl);
 
+    }
+
+
+    public function actionCheckRecursive($merchant)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if (($token = Yii::$app->request->get('token')) === null) {
+            return false;
+        }
+        if ($merchant === 'nganluong32') {
+            $client = new NganLuongClient();
+            $res = $client->GetTransactionDetail($token);
+            return (string)$res['error_code'] === '00';
+        }
+        return false;
     }
 
     public function actionFailed()

@@ -23,16 +23,16 @@ class WSVNOffice extends BaseObject implements PaymentProviderInterface
     {
         $summitUrl = $payment->return_url;
         $summitUrl .= '?code=' . $payment->transaction_code;
-        return new PaymentResponse(true, 'create payment success', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $summitUrl, $payment->return_url, $payment->cancel_url);
+        return new PaymentResponse(true, 'create payment success','vnoffice', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $summitUrl, $payment->return_url, $payment->cancel_url);
     }
 
     public function handle($data)
     {
         /** @var $transaction  PaymentTransaction */
         if (($transaction = PaymentTransaction::findOne(['transaction_code' => $data['code']])) === null) {
-            return new PaymentResponse(false, 'Transaction không tồn tại');
+            return new PaymentResponse(false, 'Transaction không tồn tại','vnoffice');
         }
         $checkoutUrl = Url::to("/checkout/office/{$transaction->transaction_code}/success.html", true);
-        return new PaymentResponse(true, 'check payment success', $transaction, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $data['code'], 'ok', $checkoutUrl);
+        return new PaymentResponse(true, 'check payment success','vnoffice', $transaction, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $data['code'], 'ok', $checkoutUrl);
     }
 }

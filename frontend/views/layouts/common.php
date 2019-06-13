@@ -69,12 +69,9 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
                     <div class="modal-title"><img src="/img/payment_qrpay.png"/></div>
                 </div>
                 <div class="modal-body">
-                    <div class="bank-logo"><img src="/img/bank/vietcombank.png" alt=""/></div>
-                    <p>Vietcombank - Ngân hàng ngoại thương</p>
-                    <div class="qr-box"><img
-                                src="/img/qr-code.png"
-                                alt=""/></div>
-                    <p><a href="#">Download ảnh QR - Code!</a></p>
+                    <div class="qr-box">
+                        <img src="" alt="QR - Code" id="qrCodeImg">
+<!--                    <p><a href="#">Download ảnh QR - Code!</a></p>-->
                 </div>
             </div>
         </div>

@@ -11,6 +11,7 @@ use common\models\User;
 use common\promotion\PromotionForm;
 use frontend\modules\payment\providers\mcpay\McPayProvider;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
+use frontend\modules\payment\providers\nganluong\ver3_2\NganluongHelper;
 use frontend\modules\payment\providers\nicepay\NicePayClient;
 use Yii;
 use common\components\cart\storage\MongodbCartStorage;
@@ -181,6 +182,12 @@ class TestController extends FrontendController
     public function actionNganLuong(){
         $client = new NganLuongClient();
         var_dump($client->GetRequestField('QRCODE_AGB'));
+        die;
+    }
+    public function actionCheckPaymentStatus($token){
+
+        $client = new NganLuongClient();
+        var_dump($client->GetTransactionDetail($token));
         die;
     }
 }

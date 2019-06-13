@@ -505,6 +505,18 @@ ws.payment = (function ($) {
             return true;
         },
     };
+    var checkPayment = function (merchant, code, token, loading = false) {
+        var $isSuccess = false;
+        ws.ajax('/payment/' + merchant + '/check-recursive', {
+            dataType: 'json',
+            type: 'post',
+            data: {code: code, token: token},
+            success: function (response) {
+                $isSuccess = response;
+            }
+        }, loading);
+        return $isSuccess;
+    };
     var processPaymment = function () {
         if (!pub.filterShippingAddress()) {
             return;
@@ -519,6 +531,7 @@ ws.payment = (function ($) {
                     var data = $.extend({}, {
                         success: false,
                         message: '',
+                        merchant: undefined,
                         paymentTransaction: null,
                         redirectType: 'normal',
                         redirectMethod: 'get',
@@ -535,7 +548,28 @@ ws.payment = (function ($) {
                             var $otp = $('#otp-confirm');
                             $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
                         } else if (redirectMethod === 'QRCODE') {
-                            console.log(response);
+                            var $qr = $('#qr-pay');
+                            var base64src = function (src) {
+                                return 'data:image/png;base64,' + src;
+                            };
+                            $qr.on('shown.bs.modal', function (e) {
+                                e.preventDefault();
+                                var runTime = setInterval(function () {
+                                    var success = checkPayment(data.merchant, data.paymentTransaction, data.token);
+                                    if (success) {
+                                        clearInterval(runTime);
+                                        ws.redirect(data.returnUrl);
+                                    }
+                                }, 1000);
+                                $qr.on('hidden.bs.modal', function (e) {
+                                    e.preventDefault();
+                                    clearInterval(runTime);
+                                    ws.redirect(data.cancelUrl);
+                                });
+                            });
+
+                            $qr.modal('show').find('#qrCodeImg').attr('src', base64src(data.checkoutUrl));
+
                         }
                     } else if (data.paymentTransaction) {
                         $('span#transactionCode').html(data.paymentTransaction);
