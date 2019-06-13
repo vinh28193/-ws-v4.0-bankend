@@ -9,29 +9,38 @@
 namespace common\components;
 
 use common\models\User;
-
+use common\models\Category;
 /**
  * interface để đảm bảo có thể tính toán giá cho bất khì 1 đồi tượng nào khi được implements
  * Interface AdditionalFeeInterface
  * @package common\components
+ *
+ * @property-read string $type
+ * @property-read null|string $portal
+ * @property-read null|Category $category
+ * @property-read integer $shippingWeight
+ * @property-read integer $shippingQuantity
+ * @property-read null|User $userLevel
+ * @property-read boolean $isNew
+ * @property-read boolean $isSpecial
  */
 interface AdditionalFeeInterface
 {
-
     /**
-     * @return string
+     * ebay/amazon
+     * @return null|string
      */
-    public function getItemType();
+    public function getType();
 
     /**
      * @return integer
      */
-    public function getTotalOriginPrice();
+    public function getTotalOrigin();
 
     /**
-     * @return \common\models\Category
+     * @return null|Category
      */
-    public function getCustomCategory();
+    public function getCategory();
 
     /**
      * @return integer
@@ -42,7 +51,6 @@ interface AdditionalFeeInterface
      * @return integer
      */
     public function getShippingQuantity();
-
 
     /**
      * @return User|null
@@ -55,9 +63,8 @@ interface AdditionalFeeInterface
     public function getIsNew();
 
     /**
-     * @return integer
+     * @return boolean
      */
-    public function getExchangeRate();
-
+    public function getIsSpecial();
 
 }

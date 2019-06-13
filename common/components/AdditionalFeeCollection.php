@@ -41,12 +41,12 @@ class AdditionalFeeCollection extends ArrayCollection
         $ownerClass = get_class($owner);
         $ownerId = $owner->getPrimaryKey(false);
         $query = new Query();
-        $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.local_amount', 'c.discount_amount', 'c.currency']);
+        $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.label', 'c.local_amount', 'c.discount_amount', 'c.currency']);
         $query->from(['c' => 'target_additional_fee']);
         $query->where(['and', ['c.target' => $tableName], ['c.target_id' => $ownerId]]);
         $additionalFees = $query->all($ownerClass::getDb());
         $additionalFees = ArrayHelper::index($additionalFees, null, function ($element) {
-            return $element['type'];
+            return $element['name'];
         });
         Yii::info($additionalFees, 'loadFormOwner');
         $this->mset($additionalFees);
@@ -143,27 +143,30 @@ class AdditionalFeeCollection extends ArrayCollection
      */
     public function createItem(StoreAdditionalFee $config, AdditionalFeeInterface $additional, $amount = null, $discountAmount = 0, $currency = null)
     {
-        if ($amount === null && $config->hasMethod('executeCondition') &&
+        if ($config->type === StoreAdditionalFee::TYPE_ORIGIN && $amount === null) {
+            $amount = 0;
+        }
+        if ($config->type === StoreAdditionalFee::TYPE_ADDITION && $amount === null && $config->hasMethod('executeCondition') &&
             ($result = $config->executeCondition($additional)) !== false &&
             is_array($result)
         ) {
             list($amount, $amountLocal) = $result;
-        } else if ($config->name === 'product_price_origin') {
-            $amountLocal = $this->getStoreManager()->roundMoney($amount * $additional->getExchangeRate());
-        } else if ($config->name === 'tax_fee_origin') {
+        } else if ($config->name === 'product_price') {
+            $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
+        } else if ($config->name === 'tax_fee') {
             if ($amount <= 0) {
                 $amount = 0;
             } elseif ($amount < 1) {
-                $amount *= $this->getTotalAdditionFees(['product_price_origin', 'origin_shipping_fee'])[0];
+                $amount *= $this->getTotalAdditionFees(['product_price', 'shipping_fee'])[0];
             } else if ($amount > 1 && $amount < 2) {
-                $amount = ($amount - 1) * $this->getTotalAdditionFees(['product_price_origin', 'origin_shipping_fee'])[0];
+                $amount = ($amount - 1) * $this->getTotalAdditionFees(['product_price', 'shipping_fee'])[0];
             } else {
-                $amount = ($amount / 100) * $this->getTotalAdditionFees(['product_price_origin', 'origin_shipping_fee'])[0];
+                $amount = ($amount / 100) * $this->getTotalAdditionFees(['product_price', 'shipping_fee'])[0];
             }
-            $amountLocal = $this->getStoreManager()->roundMoney($amount * $additional->getExchangeRate());
+            $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         } else {
             $amount *= $additional->getShippingQuantity();
-            $amountLocal = $this->getStoreManager()->roundMoney($amount * $additional->getExchangeRate());
+            $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         }
         return [
             'name' => $config->name,
@@ -217,7 +220,7 @@ class AdditionalFeeCollection extends ArrayCollection
             $breaks = $this->keys();
             foreach ($this->storeAdditionalFee as $name => $storeAdditionalFee) {
                 /** @var $storeAdditionalFee StoreAdditionalFee */
-                if (in_array($name, $breaks)) {
+                if (in_array($name, $breaks) || $storeAdditionalFee->type === StoreAdditionalFee::TYPE_ORIGIN) {
                     continue;
                 }
                 $this->withCondition($owner, $name, null);
@@ -264,7 +267,7 @@ class AdditionalFeeCollection extends ArrayCollection
      * @param array $except
      * @return array
      */
-    public function getTotalAdditionFees($names = null, $except = [])
+    public function getTotalAdditionalFees($names = null, $except = [])
     {
         $totalFees = 0;
         $totalLocalFees = 0;
@@ -282,10 +285,29 @@ class AdditionalFeeCollection extends ArrayCollection
                 $totalFees += isset($array['amount']) ? $array['amount'] : 0;
                 $totalLocalFees += isset($array['local_amount']) ? $array['local_amount'] : 0;
             }
-
         }
         return [$totalFees, $totalLocalFees];
-
     }
 
+    public function getTotalAdditionalFeeByType($type = StoreAdditionalFee::TYPE_ORIGIN, $localize = false)
+    {
+        $results = 0;
+        foreach ($this->storeAdditionalFee as $key => $storeAdditionalFee) {
+            if ($storeAdditionalFee->type !== $type) {
+                continue;
+            }
+            $results += $this->getTotalAdditionalFees($key)[$localize ? 1 : 0];
+        }
+        return $results;
+    }
+
+    public function getTotalOrigin($localize = false)
+    {
+        return $this->getTotalAdditionalFeeByType(StoreAdditionalFee::TYPE_ORIGIN, $localize);
+    }
+
+    public function getTotalAddition($localize = false)
+    {
+        return $this->getTotalAdditionalFeeByType(StoreAdditionalFee::TYPE_ADDITION, $localize);
+    }
 }

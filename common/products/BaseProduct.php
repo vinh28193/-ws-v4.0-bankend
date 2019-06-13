@@ -8,6 +8,7 @@
 
 namespace common\products;
 
+use common\components\GetUserIdentityTrait;
 use common\helpers\WeshopHelper;
 use common\models\User;
 use Yii;
@@ -25,7 +26,7 @@ use common\components\StoreAdditionalFeeRegisterTrait;
  */
 class BaseProduct extends BaseObject implements AdditionalFeeInterface
 {
-
+    use GetUserIdentityTrait;
     use AdditionalFeeTrait;
     use ProductTrait;
 
@@ -121,9 +122,9 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         $additionalFee = $this->getAdditionalFees();
         $additionalFee->removeAll(); // đảm bảo dữ liệu không bị đúp lên nhiều lần
         $additionalFee->withConditions($this, [
-            'product_price_origin' => $this->getSellPrice(),
-            'origin_shipping_fee' => !$this->is_free_ship ? ($this->shipping_fee * $this->quantity) : 0,
-            'tax_fee_origin' => $this->us_tax_rate
+            'product_price' => $this->getSellPrice(),
+            'shipping_fee' => !$this->is_free_ship ? ($this->shipping_fee * $this->quantity) : 0,
+            'tax_fee' => $this->us_tax_rate
         ], false);
         /**
          * Todo function initDefaultProperty
@@ -184,7 +185,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     /**
      * @return string
      */
-    public function getItemType()
+    public function getType()
     {
         return strtolower($this->type);
     }
@@ -192,11 +193,9 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     /**
      * @return integer
      */
-    public function getTotalOriginPrice()
+    public function getTotalOrigin()
     {
-        return $this->getAdditionalFees()->getTotalAdditionFees([
-            'product_price_origin', 'tax_fee_origin', 'origin_shipping_fee'
-        ])[0];
+        return $this->getAdditionalFees()->getTotalOrigin();
     }
 
     private $_customCategory;
@@ -205,7 +204,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      * @param bool $refresh
      * @return Category
      */
-    public function getCustomCategory($refresh = false)
+    public function getCategory($refresh = false)
     {
         if ($this->_customCategory === null) {
             if (!$this->isEmpty($this->categories)) {
@@ -275,26 +274,15 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         return $this->quantity;
     }
 
-    /**
-     * @var null|User
-     */
-    private $_user = null;
-
-    /**
-     * @return User|null
-     */
-    public function getUser()
-    {
-        if ($this->_user === null && ($user = Yii::$app->user->identity) !== null) {
-            $this->_user = $user;
-        }
-        return $this->_user;
-    }
-
     public function getIsNew()
     {
         $condition = strtoupper($this->condition ? $this->condition : '');
         return ($condition === 'NEW' || strpos($condition, 'NEW') !== false || $condition === strtoupper('Manufacturer refurbished'));
+    }
+
+    public function getIsSpecial()
+    {
+        return false;
     }
 
     /**
@@ -318,7 +306,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getLocalizeTotalPrice()
     {
-        return $this->getAdditionalFees()->getTotalAdditionFees()[1];
+        return $this->getAdditionalFees()->getTotalAdditionalFees()[1];
     }
 
     public function getLocalizeTotalStartPrice()
@@ -327,12 +315,12 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         $tempPrice = $this->getSellPrice();
         $this->sell_price = $this->start_price;
         $this->init();
-        $temp = $this->getAdditionalFees()->getTotalAdditionFees();
+        $temp = $this->getAdditionalFees()->getTotalAdditionalFees();
         if (!empty($this->deal_price) && $this->deal_price > 0.0) {
             $deal = $this->deal_price;
             $this->deal_price = null;
             $this->init();
-            $temp = $this->getAdditionalFees()->getTotalAdditionFees();
+            $temp = $this->getAdditionalFees()->getTotalAdditionalFees();
             $this->deal_price = $deal;
         }
         //restore the sell_price to be $tempPrice before
@@ -354,7 +342,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     {
         $fees = [];
         foreach ($this->getAdditionalFees()->keys() as $key) {
-            $fees[$key] = array_combine(['amount', 'amount_local'], $this->getAdditionalFees()->getTotalAdditionFees($key));
+            $fees[$key] = array_combine(['amount', 'amount_local'], $this->getAdditionalFees()->getTotalAdditionalFees($key));
         }
         Yii::info([
             'id' => $this->item_id,
@@ -363,7 +351,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             'IsNew' => $this->getIsNew(),
             'weight' => $this->getShippingWeight(),
             'quantity' => $this->getShippingQuantity(),
-            'totalUsPrice' => $this->getTotalOriginPrice(),
+            'totalUsPrice' => $this->getTotalOrigin(),
             'totalLocalPrice' => $this->getLocalizeTotalPrice(),
             'fees' => $fees
         ], __CLASS__);

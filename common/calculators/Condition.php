@@ -3,6 +3,7 @@
 
 namespace common\calculators;
 
+use common\models\User;
 use Yii;
 use Exception;
 
@@ -47,6 +48,9 @@ class Condition extends Resolver
             $value = $this->resolve($target, $key);
             if ($key === 'getIsNew') {
                 $value = $value ? 'new' : 'used';
+            } elseif ($key === 'getUserLevel') {
+                /** @var $value null|User */
+                return $value === null ? User::LEVEL_NORMAL : $value->userLever;
             }
             return $this->check($value);
         } catch (Exception $exception) {
@@ -61,7 +65,6 @@ class Condition extends Resolver
      */
     protected function check($data)
     {
-
         switch ($this->operator) {
             case self::OPERATOR_GREATER_EQUAL:
                 return $data >= $this->value;

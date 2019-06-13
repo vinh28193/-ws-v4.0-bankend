@@ -95,6 +95,7 @@ class Calculator extends Resolver
     }
 
     /**
+     *
      * @param $target
      * @return float|int
      */
@@ -103,16 +104,16 @@ class Calculator extends Resolver
         if (!$this->checkCondition($target)) {
             return 0;
         }
-        Yii::info($this->deception(),__METHOD__);
+        Yii::info($this->deception(), __METHOD__);
         try {
             $unit = $this->resolveKey($this->unit);
             /**
              *  fix bug, tính toán theo cái, theo kg
              */
 
-            if ($unit === 'getShippingWeight' || $unit === 'getShippingQuantity') {
+            if ($unit === 'getShippingWeight' || $unit === 'getShippingQuantity' || $unit === 'getUserLevel') {
 
-                $value = $this->resolve($target, 'getTotalOriginPrice');
+                $value = $this->resolve($target, 'getTotalOrigin');
 
                 $unitValue = $this->resolve($target, $unit);
                 $value = $this->calculatorInternal($value);

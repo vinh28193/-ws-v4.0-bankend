@@ -24,10 +24,11 @@ class Resolver extends BaseObject
         $keys = [
             'weight' => 'getShippingWeight',
             'quantity' => 'getShippingQuantity',
-            'price' => 'getTotalOriginPrice',
-            'condition' => 'getIsNew',
-            'portal' => 'getItemType',
-            'user' => 'getUser'
+            'price' => 'getTotalOrigin',
+            'new' => 'getIsNew',
+            'special' => 'getIsSpecial',
+            'portal' => 'getPortal',
+            'level' => 'getUserLevel'
         ];
         return isset($keys[$key]) ? $keys[$key] : $key;
     }
