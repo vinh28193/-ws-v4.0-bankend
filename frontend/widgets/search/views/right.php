@@ -211,15 +211,20 @@ JS;
                             </div>
                             <div class="clearfix submenu-2 collapse" id="filter-<?= $k ?>-filter">
                                 <ul>
-                                    <?php foreach ($filter['values'] as $value): ?>
-                                        <?php /* @var $value string */ ?>
-                                        <?php $value = Html::encode($value); ?>
+                                    <?php foreach ($filter['values'] as $item): ?>
+                                        <?php
+                                        if(is_array($item)){
+                                            $value = Html::encode($item['param']);
+                                        }else{
+                                            $value = Html::encode($item);
+                                        }
+                                        ?>
                                         <li>
                                             <div class="form-check">
                                                 <?php
-                                                $id = $filter['name'] . $value;
+                                                $id = is_array($item) ? $item['value'] : $filter['name'] . $value;
                                                 ?>
-                                                <?= Html::checkbox('filter', false, [
+                                                <?= Html::checkbox('filter', is_array($item) ? $item['is_selected'] : false, [
                                                     'class' => 'form-check-input',
                                                     'value' => $value,
                                                     'id' => $id,
