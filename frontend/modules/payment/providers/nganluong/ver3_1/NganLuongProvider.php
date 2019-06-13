@@ -39,7 +39,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $param['order_code'] = $payment->transaction_code;
         $param['return_url'] = $payment->return_url;
         $param['cancel_url'] = $payment->cancel_url;
-        $param['order_description'] = '';
+        $param['order_description'] = "Thanh toan cho hoa don so {$payment->transaction_code}";
         $param['total_amount'] = $payment->getTotalAmountDisplay();
         $param['fee_shipping'] = 0;
         $param['payment_method'] = $this->replaceMethod($payment->payment_method_name);
