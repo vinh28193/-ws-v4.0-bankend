@@ -50,6 +50,7 @@ ws.payment = (function ($) {
         methods: [],
         shipping: {},
         installmentParam: {
+            calculator: undefined,
             originAmount: 0,
             banks: [],
             currentBank: {
@@ -241,7 +242,8 @@ ws.payment = (function ($) {
                     var data = response.data;
                     var banks = data.methods || [];
                     var promotion = data.promotion || undefined;
-                    pub.installmentParam.originAmount = data.origin || (0 + pub.payment.currency);
+                    pub.installmentParam.calculator = data.calculator;
+                    pub.installmentParam.originAmount = data.origin || ws.showMoney(0);
                     initInstallmentBankView(banks);
                     ws.initEventHandler('calculateInstallment', 'periodChange', 'change', 'input[name=installmentPeriod]', function (e) {
                         pub.payment.installment_month = $(this).val();
@@ -374,10 +376,9 @@ ws.payment = (function ($) {
             }
         },
         checkPromotion: function () {
-
             if (pub.payment.carts.length === 0) {
                 return;
-            } else if (pub.payment.payment_type === 'installment') {
+            } else if (pub.payment.type === 'installment') {
                 pub.calculateInstallment();
             } else {
                 var data = pub.payment;

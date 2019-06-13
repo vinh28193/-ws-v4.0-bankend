@@ -97,9 +97,6 @@ class AlepayClient extends Component
     protected function getUrl($url)
     {
         $baseUrl = $this->baseUrl;
-        if ($this->env === self::ENV_SANDBOX) {
-            $baseUrl = str_replace('https://alepay.vn', 'https://alepay-sandbox.nganluong.vn', $baseUrl);
-        }
         return $baseUrl . '/' . $url;
     }
 
