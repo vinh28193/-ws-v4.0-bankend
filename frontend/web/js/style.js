@@ -213,6 +213,13 @@ $( document ).ready(function() {
             $('.mb-menu-filter').removeClass('open');
         });
 
+        $('.mb-navbar .auth-user').click(function () {
+            $('.mb-modal-auth').toggleClass('open');
+        });
+        $('.title-mb-menu i').click(function () {
+            $('.mb-modal-auth').removeClass('open');
+        });
+
         $('.mb-menu-cate .title-submenu').click(function () {
             var id_to = $(this).attr('id');
             if($('div[data-toggle='+id_to+']').css('display') === 'none'){

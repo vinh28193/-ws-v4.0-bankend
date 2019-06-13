@@ -251,6 +251,9 @@ JS;
                                 <span style="padding: 10px">—</span>
                                 <input class="form-control" style="width: 40%" type="number" name="toPrice" placeholder="Price to">
                             </div>
+                            <div class="btn-search-mb">
+                                <button class="btn btn-info"><?= Yii::t('frontend','Confirm')?></button>
+                            </div>
                         </div>
                     </li>
                 </ul>

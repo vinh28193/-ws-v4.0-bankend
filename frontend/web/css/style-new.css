@@ -592,6 +592,12 @@ div div.product-list.row div a div.info div.price span.countdown{
         -ms-transition: all .3s;
         -o-transition: all .3s;
         transition: all .3s; }
+    .mb-modal-auth {
+        -webkit-transition: all .3s;
+        -moz-transition: all .3s;
+        -ms-transition: all .3s;
+        -o-transition: all .3s;
+        transition: all .3s; }
     .mb-wrapper {
         background-color: #141c2e;
         margin: 0 auto;
@@ -670,16 +676,28 @@ div div.product-list.row div a div.info div.price span.countdown{
         padding-left: 0px;
     }
     .mb-menu {
+        overflow: auto;
         position: fixed;
-        top: 0px;
-        left: -100%;
-        bottom: 0;
+        top: 0;
+        /*right: 0;*/
+        bottom: 100%;
         width: 100%;
         background: #fff;
         border-top: 1px solid #2b96b6;
         z-index: 999;
     }
-    .mb-menu-filter {
+    .mb-modal-auth {
+        overflow: auto;
+        position: fixed;
+        top: 0;
+        /*right: 0;*/
+        bottom: 100%;
+        width: 100%;
+        background: #fff;
+        border-top: 1px solid #2b96b6;
+        z-index: 999;
+    }
+    .mb-menu-filter{
         overflow: auto;
         position: fixed;
         top: 0px;
@@ -696,12 +714,15 @@ div div.product-list.row div a div.info div.price span.countdown{
         background: #fff;
     }
     .mb-menu.open {
-        left: 0; }
-    .mb-menu-filter.open {
+        bottom: 0; }
+    .mb-menu-filter.open{
         right: 0;
         background: #00000070;
     }
-    .mb-menu .item-list ,.mb-menu-filter .item-list {
+    .mb-modal-auth.open{
+        bottom: 0;
+    }
+    .mb-menu .item-list ,.mb-menu-filter .item-list,.mb-modal-auth .item-list {
         width: 180px;
         background: #2b96b6;
         height: 100%;
@@ -808,6 +829,17 @@ div div.product-list.row div a div.info div.price span.countdown{
     ul.mb-menu-filter-cate li #category-filter ul li a{
          color: rgba(0, 0, 0, 0.85);
      }
+    .btn-search-mb{
+        width: 100%;
+        padding-top: 25px;
+        text-align: center;
+    }
+    .btn-search-mb button{
+        width: 80%;
+    }
+    .content-modal-auth-mb{
+        padding: 28px;
+    }
     /*.mb-menu-cate{*/
     /*    padding-top: 15px;*/
     /*    padding-left: 15px;*/
@@ -842,5 +874,29 @@ div div.product-list.row div a div.info div.price span.countdown{
 .content-404 img{
     width: auto;
     max-width: 100%;
+}
+.btn-fb {
+    background-color: #415a98;
+    color: #ffffff;
+    border-radius: 3px;
+}
+.btn-google {
+    background-color: #3d82f1;
+    color: #ffffff;
+    border-radius: 3px;
+}
+.mb-modal-auth .content-modal-auth-mb{
+    color: #999999;
+    font-family: Helvetica;
+    font-size: 14px;
+}
+.mb-modal-auth .content-modal-auth-mb button{
+    width: 100%;
+    padding: 11px;
+    border-radius: 3px;
+}
+.mb-modal-auth .content-modal-auth-mb span {
+    padding: 13px 0px 13px 0px;
+    display: block;
 }
 @media (min-width: 991px){}
