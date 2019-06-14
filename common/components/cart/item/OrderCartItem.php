@@ -92,6 +92,7 @@ class OrderCartItem extends BaseObject
             $key['supportId'] = $supportAssign['id'];
             $order['sale_support_id'] = $supportAssign['id'];
             $order['support_email'] = $supportAssign['email'];
+            $order['support_name'] = $supportAssign['username'];
             $order['saleSupport'] = $supportAssign;
         } else {
             $order['ordercode'] = $tempKey['orderCode'];
@@ -105,6 +106,7 @@ class OrderCartItem extends BaseObject
                 $supportAssign = $key['supportAssign'];
                 $order['sale_support_id'] = $supportAssign['id'];
                 $order['support_email'] = $supportAssign['email'];
+                $order['support_name'] = $supportAssign['username'];
                 $order['saleSupport'] = $supportAssign;
             }
         }
