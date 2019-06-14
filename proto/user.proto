@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option objc_class_prefix = "cal";
+package user;
+
+message SignUpUser {
+    int32 user_id = 1;
+    string email = 2;
+    string username = 3;
+    string fullname = 4;
+    string invite_code = 5;
+    bool is_active = 9;
+    int32 created_time = 10;
+    int32 updated_time = 11;
+    int32 last_login = 12;
+}
+
+message SignUpRequest {
+    string country    = 1;
+    string currency   = 2;
+    string email      = 3;
+    string fullname   = 4;
+    string password1  = 5;
+    string password2  = 6;
+    string phone      = 7;
+    string platform   = 8; // NETSALE / WESHOP
+    int32  platform_user = 9; // User ID of Weshop
+}
+
+message SignUpResponse {
+    bool Error = 1;
+    SignUpUser Data = 2;
+    string Message = 3;
+}
+
+service UserService {
+    rpc SignUp (SignUpRequest) returns (SignUpResponse);
+}
