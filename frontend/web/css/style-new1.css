@@ -125,3 +125,10 @@ ul:after {
 .item {
     padding: 15px;
 }
+.style-facebook {
+    font-size: 2em !important;
+}
+.style-font-facebook {
+    position: absolute;
+    top: 5px !important;
+}

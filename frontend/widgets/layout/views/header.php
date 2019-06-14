@@ -82,14 +82,14 @@ $this->registerJs($js);
                             </div>
                             <div class="col-md-6 pr-1">
                                 <button class="btn btn-fb">
-                                    <i class="la la-facebook"></i>
-                                    <span>Facebook</span>
+                                    <i class="la la-facebook style-facebook"></i>
+                                    <span class="style-font-facebook">Facebook</span>
                                 </button>
                             </div>
                             <div class="col-md-6 pl-1">
                                 <button  class="btn btn-google">
-                                    <i class="la la-google"></i>
-                                    <span>Google</span>
+                                    <i class="la la-google style-facebook"></i>
+                                    <span class="style-font-facebook">Google</span>
                                 </button>
                             </div>
                         </div>
