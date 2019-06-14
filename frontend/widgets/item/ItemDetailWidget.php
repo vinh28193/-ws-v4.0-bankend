@@ -159,11 +159,11 @@ CSS;
     protected function renderEntries()
     {
         $entries = Html::tag('div', $this->renderDetailBlock(), [
-            'class' => 'col-md-9'
+            'class' => 'col-md-12'
         ]);
-        $entries .= Html::tag('div', $this->renderPaymentOption(), [
+        /*$entries .= Html::tag('div', $this->renderPaymentOption(), [
             'class' => 'col-md-3'
-        ]);
+        ]);*/
         return $entries;
     }
 

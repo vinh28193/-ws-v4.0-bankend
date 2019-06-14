@@ -81,11 +81,11 @@
                     changeImage($item, images);
                 }
                 setUpDefaultOptions($item);
-                ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'a#addToCart', function (event) {
+                ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'btn#addToCart', function (event) {
                     paymentItem($item, 'shopping');
                     return false;
                 });
-                ws.initEventHandler($item, 'buyNow', 'click.wsItem', 'button.btn-buy', function (event) {
+                ws.initEventHandler($item, 'buyNow', 'click.wsItem', 'button#buyNowBtn', function (event) {
                     paymentItem($item, 'buynow');
                     return false;
                 });
@@ -295,13 +295,13 @@
         if (outOfStock) {
             $("#outOfStock").css('display', 'block');
             $("#quantityGroup").css('display', 'none');
-            $("#quoteBtn").css('display', 'block');
+            $("#quoteBtn").css('display', 'inline-flex');
             $("#buyNowBtn").css('display', 'none');
         } else {
             $("#outOfStock").css('display', 'none');
             $("#quantityGroup").css('display', 'inline-flex');
             $("#quoteBtn").css('display', 'none');
-            $("#buyNowBtn").css('display', 'block');
+            $("#buyNowBtn").css('display', 'inline-flex');
         }
     };
     var setUpDefaultOptions = function ($item) {
