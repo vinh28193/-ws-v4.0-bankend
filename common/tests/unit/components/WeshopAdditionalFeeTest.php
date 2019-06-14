@@ -127,7 +127,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'product_price_origin', $feeValue);
         verify($collection->get('product_price_origin'))->notNull();
         verify(count($collection->get('product_price_origin', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('product_price_origin');
+        $total = $collection->getTotalAdditionalFees('product_price_origin');
         verify($total)->equals([$feeValue * $quantity, $feeValue * $quantity * $exRate]);
     }
 
@@ -162,7 +162,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'tax_fee_origin', $feeValue);
         verify($collection->get('tax_fee_origin'))->notNull();
         verify(count($collection->get('tax_fee_origin', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('tax_fee_origin');
+        $total = $collection->getTotalAdditionalFees('tax_fee_origin');
         verify($total)->equals([$feeValue * $quantity, $feeValue * $quantity * $exRate]);
     }
 
@@ -197,7 +197,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'origin_shipping_fee', $feeValue);
         verify($collection->get('origin_shipping_fee'))->notNull();
         verify(count($collection->get('origin_shipping_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('origin_shipping_fee');
+        $total = $collection->getTotalAdditionalFees('origin_shipping_fee');
         verify($total)->equals([$feeValue * $quantity, $feeValue * $quantity * $exRate]);
     }
 
@@ -251,7 +251,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([449 * 0.12 * $quantity, 449 * 0.12 * $quantity * $exRate]);
 
         // 10% amazon < 450
@@ -269,7 +269,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([449 * 0.1 * $quantity, 449 * 0.1 * $quantity * $exRate]);
         // 10% other < 450
         $this->tester->wantTo("amazon < 450");
@@ -285,7 +285,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([449 * 0.1 * $quantity, 449 * 0.1 * $quantity * $exRate]);
 
         // 450$ - 750$:10%
@@ -301,7 +301,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([450 * 0.1 * $quantity, 450 * 0.1 * $quantity * $exRate]);
 
         $additional = $this->mockAdditional([
@@ -314,7 +314,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([749 * 0.1 * $quantity, 749 * 0.1 * $quantity * $exRate]);
 
         // 750$ - 1000$:9%
@@ -330,7 +330,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([750 * 0.09 * $quantity, 750 * 0.09 * $quantity * $exRate]);
 
         $additional = $this->mockAdditional([
@@ -343,7 +343,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([999 * 0.09 * $quantity, 999 * 0.09 * $quantity * $exRate]);
 
         // 1000$ - 1500$:8.5%
@@ -359,7 +359,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([1000 * 0.085 * $quantity, 1000 * 0.085 * $quantity * $exRate]);
 
         $additional = $this->mockAdditional([
@@ -372,7 +372,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([1499 * 0.085 * $quantity, 1499 * 0.085 * $quantity * $exRate]);
 
         // 1500$ - 2000$:8%
@@ -388,7 +388,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([1500 * 0.08 * $quantity, 1500 * 0.08 * $quantity * $exRate]);
 
         $additional = $this->mockAdditional([
@@ -401,7 +401,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([1999 * 0.08 * $quantity, 1999 * 0.08 * $quantity * $exRate]);
 
 
@@ -418,7 +418,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([2000 * 0.07 * $quantity, 2000 * 0.07 * $quantity * $exRate]);
 
         $additional = $this->mockAdditional([
@@ -431,7 +431,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([2499 * 0.07 * $quantity, 2499 * 0.07 * $quantity * $exRate]);
 
         // 2500$ - 3000$:6%
@@ -447,7 +447,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([2500 * 0.06 * $quantity, 2500 * 0.06 * $quantity * $exRate]);
 
         $additional = $this->mockAdditional([
@@ -460,7 +460,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([2999 * 0.06 * $quantity, 2999 * 0.06 * $quantity * $exRate]);
 
 
@@ -477,7 +477,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([3000 * 0.05 * $quantity, 3000 * 0.05 * $quantity * $exRate]);
 
         $additional = $this->mockAdditional([
@@ -491,7 +491,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->withCondition($additional, 'weshop_fee', null);
         verify($collection->get('weshop_fee'))->notNull();
         verify(count($collection->get('weshop_fee', [], false)))->equals(1);
-        $total = $collection->getTotalAdditionFees('weshop_fee');
+        $total = $collection->getTotalAdditionalFees('weshop_fee');
         verify($total)->equals([3001 * 0.05 * $quantity, 3001 * 0.05 * $quantity * $exRate]);
     }
 
@@ -537,7 +537,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
         $collection->removeAll();
         $collection->withCondition($additional, 'intl_shipping_fee', null);
         verify($collection->get('intl_shipping_fee'))->notNull();
-        $total = $collection->getTotalAdditionFees('intl_shipping_fee');
+        $total = $collection->getTotalAdditionalFees('intl_shipping_fee');
         verify($total)->equals([10 * $weight, 10 * $weight * $exRate]);
     }
 
@@ -583,7 +583,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
 
         $collection->withCondition($additional, 'custom_fee', null);
         verify($collection->get('custom_fee'))->notNull();
-        $total = $collection->getTotalAdditionFees('custom_fee');
+        $total = $collection->getTotalAdditionalFees('custom_fee');
         verify($total)->equals([5 * $quantity, 5 * $quantity * $exRate]);
     }
 
@@ -623,7 +623,7 @@ class WeshopAdditionalFeeTest extends UnitTestCase
 
         $collection->withCondition($additional, 'delivery_fee_local', null);
         verify($collection->get('delivery_fee_local'))->notNull();
-        $total = $collection->getTotalAdditionFees('delivery_fee_local');
+        $total = $collection->getTotalAdditionalFees('delivery_fee_local');
         verify($total)->equals([2 * $quantity, 2 * $quantity * $exRate]);
     }
 }

@@ -251,11 +251,11 @@ class CheckOutForm extends Model
                     // 'đơn giá gốc ngoại tệ bao gồm các phí tại nơi xuất xứ (tiền us, us tax, us ship)
                     $product->price_amount_origin = $item->getTotalOriginPrice();
                     // Tổng tiền các phí, trừ tiền gốc sản phẩm (chỉ có các phí)
-                    $product->total_fee_product_local = $additionalFees->getTotalAdditionFees(null, ['product_price_origin'])[1];         // Tổng Phí theo sản phẩm
+                    $product->total_fee_product_local = $additionalFees->getTotalAdditionalFees(null, ['product_price_origin'])[1];         // Tổng Phí theo sản phẩm
                     // Tổng tiền local gốc sản phẩm (chỉ có tiền gốc của sản phẩm)
-                    $product->price_amount_local = $additionalFees->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
+                    $product->price_amount_local = $additionalFees->getTotalAdditionalFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
                     // Tổng tiền local tất tần tận
-                    $product->total_price_amount_local = $additionalFees->getTotalAdditionFees()[1];
+                    $product->total_price_amount_local = $additionalFees->getTotalAdditionalFees()[1];
                     $product->quantity_customer = $item->quantity;
                     $product->quantity_purchase = null;
                     /** Todo */
@@ -282,7 +282,7 @@ class CheckOutForm extends Model
 
                     // step 5: create product fee for each item
                     foreach ($additionalFees->keys() as $key) {
-                        list($amount, $local) = $item->getAdditionalFees()->getTotalAdditionFees($key);
+                        list($amount, $local) = $item->getAdditionalFees()->getTotalAdditionalFees($key);
                         $orderAttribute = '';
                         if ($key === 'product_price_origin') {
                             // Tổng giá gốc của các sản phẩm tại nơi xuất xứ
@@ -353,12 +353,12 @@ class CheckOutForm extends Model
 
                     // Tổng các phí các sản phẩm (trừ giá gốc tại nơi xuất xứ)
                     $oldAmount = isset($updateOrderAttributes['total_fee_amount_local']) ? $updateOrderAttributes['total_fee_amount_local'] : 0;
-                    $oldAmount += $additionalFees->getTotalAdditionFees(null, ['product_price_origin'])[1];
+                    $oldAmount += $additionalFees->getTotalAdditionalFees(null, ['product_price_origin'])[1];
                     $updateOrderAttributes['total_fee_amount_local'] = $oldAmount;
 
                     // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
                     $oldAmount = isset($updateOrderAttributes['total_amount_local']) ? $updateOrderAttributes['total_amount_local'] : 0;
-                    $oldAmount += $additionalFees->getTotalAdditionFees()[1];
+                    $oldAmount += $additionalFees->getTotalAdditionalFees()[1];
                     $updateOrderAttributes['total_amount_local'] = $oldAmount;
                     $updateOrderAttributes['total_final_amount_local'] = $oldAmount;
 

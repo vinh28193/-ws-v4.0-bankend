@@ -21,7 +21,6 @@ use frontend\modules\payment\methods\BankTransferVN4;
 
 <div class="accordion payment-method" id="payment-method">
     <?php
-    var_dump(array_keys($group));
     foreach ($group as $id => $item) {
 
         switch ($id) {

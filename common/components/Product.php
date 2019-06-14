@@ -386,7 +386,7 @@ class Product implements AdditionalFeeInterface
 
     public function getTotalOriginPrice()
     {
-        return $this->getTotalAdditionFees([
+        return $this->getTotalAdditionalFees([
             'origin_fee','origin_tax_fee','origin_shipping_fee'
         ])[0];
     }

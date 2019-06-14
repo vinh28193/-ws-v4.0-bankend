@@ -39,7 +39,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $param['order_code'] = $payment->transaction_code;
         $param['return_url'] = $payment->return_url;
         $param['cancel_url'] = $payment->cancel_url;
-        $param['order_description'] = '';
+        $param['order_description'] = "Thanh toan cho hoa don so {$payment->transaction_code}";
         $param['total_amount'] = $payment->getTotalAmountDisplay();
         $param['fee_shipping'] = 0;
         $param['payment_method'] = $this->replaceMethod($payment->payment_method_name);
@@ -93,7 +93,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logPaymentGateway->save(false);
-            return new PaymentResponse(false, 'Check payment thất bại');
+            return new PaymentResponse(false, 'Check payment thất bại','nganluong');
         }
     }
 
@@ -128,7 +128,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 $logPaymentGateway->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logPaymentGateway->save(false);
-                return new PaymentResponse(false, 'Transaction không tồn tại');
+                return new PaymentResponse(false, 'Transaction không tồn tại','nganluong');
             }
 
             $resp = self::callApi($this->submitUrl, $param);

@@ -132,7 +132,7 @@ CSS;
             'sku' => $this->item->item_sku,
             'seller' => $this->item->getSeller(),
             'condition' => $this->item->getIsNew(),
-            'type' => $this->item->getItemType(),
+            'type' => $this->item->getType(),
             'variation_mapping' => $this->item->variation_mapping,
             'variation_options' => $this->item->variation_options,
             'sellers' => $this->item->providers,

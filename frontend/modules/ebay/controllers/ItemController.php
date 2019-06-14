@@ -138,7 +138,7 @@ class ItemController extends EbayController
             /** @var $item BaseProduct */
             $fees = [];
             foreach ($item->getAdditionalFees()->keys() as $key) {
-                $fees[$key] = $item->getAdditionalFees()->getTotalAdditionFees($key)[1];
+                $fees[$key] = $item->getAdditionalFees()->getTotalAdditionalFees($key)[1];
             }
             $response['success'] = true;
             $response['message'] = Yii::t('frontend', 'Success');

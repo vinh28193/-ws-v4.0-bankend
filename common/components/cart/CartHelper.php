@@ -130,17 +130,17 @@ class CartHelper
         ];
         $additionalFees = $item->getAdditionalFees();
         // 'đơn giá gốc ngoại tệ bao gồm các phí tại nơi xuất xứ (tiền us, us tax, us ship)
-        $product['price_amount_origin'] = $item->getTotalOriginPrice();
+        $product['price_amount_origin'] = $item->getTotalOrigin();
         // Tổng tiền các phí, trừ tiền gốc sản phẩm (chỉ có các phí)
-        $product['total_fee_product_local'] = $additionalFees->getTotalAdditionFees(null, ['product_price_origin'])[1];         // Tổng Phí theo sản phẩm
+        $product['total_fee_product_local'] = $additionalFees->getTotalAdditionalFees(null, ['product_price_origin'])[1];         // Tổng Phí theo sản phẩm
         // Tổng tiền local gốc sản phẩm (chỉ có tiền gốc của sản phẩm)
-        $product['price_amount_local'] = $additionalFees->getTotalAdditionFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
+        $product['price_amount_local'] = $additionalFees->getTotalAdditionalFees('product_price_origin')[1];  // đơn giá local = giá gốc ngoại tệ * tỉ giá Local
         // Tổng tiền local tất tần tận
-        $product['total_price_amount_local'] = $additionalFees->getTotalAdditionFees()[1];
+        $product['total_price_amount_local'] = $additionalFees->getTotalAdditionalFees()[1];
         $productFees = [];
         foreach ($additionalFees->keys() as $feeName) {
             $fee = [];
-            list($fee['amount'], $fee['local_amount']) = $additionalFees->getTotalAdditionFees($feeName);
+            list($fee['amount'], $fee['local_amount']) = $additionalFees->getTotalAdditionalFees($feeName);
             $fee['discount_amount'] = 0;
             $storeConfig = $additionalFees->getStoreAdditionalFeeByKey($feeName);
             $fee['name'] = $storeConfig->name;
@@ -148,21 +148,26 @@ class CartHelper
             $fee['type'] = $storeConfig->type;
             $fee['currency'] = $additionalFees->getStoreAdditionalFeeByKey($feeName)->currency;
             $orderAttribute = "total_{$feeName}_local";
-            if ($feeName === 'product_price_origin') {
+            if ($feeName === 'product_price') {
                 // Tổng giá gốc của các sản phẩm tại nơi xuất xứ
                 $orderAttribute = 'total_origin_fee_local';
-            } elseif ($feeName === 'tax_fee_origin') {
+            } elseif ($feeName === 'tax_fee') {
                 // Tổng phí tax của các sản phẩm tại nơi xuất xứ
                 $orderAttribute = 'total_origin_tax_fee_local';
-            } elseif ($feeName === 'custom_fee') {
+            } elseif ($feeName === 'shipping_fee') {
                 // Tổng phí tax của các sản phẩm tại nơi xuất xứ
-                $orderAttribute = 'total_custom_fee_amount_local';
-            } elseif ($feeName === 'vat_fee') {
+                $orderAttribute = 'total_origin_shipping_fee_local';
+            } elseif ($feeName === 'purchase_fee') {
+                // Tổng phí tax của các sản phẩm tại nơi xuất xứ
+                $orderAttribute = 'total_weshop_fee_local';
+            } elseif ($feeName === 'international_shipping_fee') {
                 // Tổng vat của các sản phẩm
-                $orderAttribute = 'total_vat_amount_local';
-            } elseif ($feeName === 'delivery_fee_local') {
+                $orderAttribute = 'total_intl_shipping_fee_local';
+            } elseif ($feeName === 'vat_fee') {
                 // Tổng vận chuyển tại local của các sản phẩm
-                $orderAttribute = 'total_delivery_fee_local';
+                $orderAttribute = 'total_vat_amount_local';
+            }else if($feeName === 'delivery_fee'){
+                $orderAttribute = 'total_vat_amount_local';
             }
             // Tiền Phí
             $order[$orderAttribute] = $fee['local_amount'];
