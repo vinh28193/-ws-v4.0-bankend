@@ -113,7 +113,7 @@ class TestController extends FrontendController
         $authManager = Yii::$app->authManager;
         $saleIds = $authManager->getUserIdsByRole('sale');
         $masterSaleIds = $authManager->getUserIdsByRole('master_sale');
-        $supporters = User::find()->indexBy('id')->select(['id', 'email'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
+        $supporters = User::find()->indexBy('id')->select(['id', 'email', 'username'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
 
         $ids = array_keys($supporters);
         $calculateToday = ArrayHelper::map($storage->calculateSupported($ids), '_id', function ($elem) {
@@ -146,13 +146,14 @@ class TestController extends FrontendController
         if (($assigner = ArrayHelper::getValue($supporters, $id)) === null) {
             $assigner = array_shift($supporters);
         }
+        return ['id' => $assigner->id, 'email' => $assigner->email, 'username' => $assigner->username];
         var_dump($assigner);
         die;
     }
 
     public function actionI18n()
     {
-        echo Yii::t('javascript', 'Hello {name}',['name' => 'VINH']);
+        echo Yii::t('javascript', 'Hello {name}', ['name' => 'VINH']);
         die;
     }
 
@@ -162,32 +163,67 @@ class TestController extends FrontendController
         var_dump($user->getPrimaryKey());
         die;
     }
-    public function actionCreate(){
+
+    public function actionCreate()
+    {
         $provice = new McPayProvider();
         $provice->amount = '20000';
         $provice->orderId = 'asdasdasd';
         $provice->billName = 'asd asDSA';
-        var_dump($provice->createCheckOutUrl());die;
+        var_dump($provice->createCheckOutUrl());
+        die;
     }
 
-    public function actionPromotion(){
-        $posts = require dirname(dirname(__DIR__)).'/common/promotion/mock-post.php';
+    public function actionPromotion()
+    {
+        $posts = require dirname(dirname(__DIR__)) . '/common/promotion/mock-post.php';
         $promotionForm = new PromotionForm();
-        $promotionForm->load($posts,'');
+        $promotionForm->load($posts, '');
 
         var_dump($promotionForm->checkPromotion());
         die;
     }
 
-    public function actionNganLuong(){
+    public function actionNganLuong()
+    {
         $client = new NganLuongClient();
         var_dump($client->GetRequestField('QRCODE_AGB'));
         die;
     }
-    public function actionCheckPaymentStatus($token){
+
+    public function actionCheckPaymentStatus($token)
+    {
 
         $client = new NganLuongClient();
         var_dump($client->GetTransactionDetail($token));
         die;
+    }
+
+    public function actionCustomFee()
+    {
+        $message = [];
+        $data = require dirname(dirname(__DIR__)) . '\common\models\category_group.php';
+        foreach ($data as $array) {
+            $rules = [];
+            if($array['condition_data'] !== null){
+                foreach ($array['condition_data'] as $condition) {
+                    $calc = new \common\calculators\Calculator();
+                    $calc->register($condition);
+                    $rules[] = $calc->deception();
+                }
+            }
+            $str = "Group {$array['id']}: `{$array['name']}`";
+            if (!empty($rules)) {
+                $str .= ' calculator: ' . implode(', ', $rules);
+            }
+            $message[] = $str;
+        }
+        var_dump($message);
+        die;
+    }
+    public function actionTestSale() {
+        $sale = $this->actionTestCount();
+        var_dump($sale);
+        die();
     }
 }

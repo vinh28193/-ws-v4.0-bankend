@@ -65,31 +65,15 @@ $this->registerJs($js);
                     <span class="col-md-3 m-0 pr-0 float-right">
                         <i class="la la-user"></i>
                     </span>
-                    <span class="col-md-9 m-0  pl-0 text-center">
-                        <span href="javascript: void(0);" class="option-auth">Đăng ký / đăng nhập</span><br>
-                        <span class="account-title">Tài khoản</span>
+                    <span class="col-md-9 m-0  pl-0">
+                        <span href="javascript: void(0);" class="option-auth"><?= Yii::$app->user->isGuest ? Yii::t('frontend','Đăng ký / đăng nhập') : Yii::$app->user->getIdentity()->first_name.' '.Yii::$app->user->getIdentity()->last_name ?></span><br>
+                        <span class="account-title">Tài khoản<i class="la la-caret-down"></i></span>
                     </span>
                 </span>
             </a>
-<!--            <ul id="menuAccount" class="dropdown-menu category_list category_account" role="menu" aria-labelledby="dropAcount"-->
-<!--                style="display: none; border-right: 1px solid gray">-->
-<!--                <li class="card" style="border: none">-->
-<!--                    <div class="card-body">-->
-<!--                       <div class="row">-->
-<!--                           <div class="col-md-12 mb-2">Đơn hàng của tôi</div>-->
-<!--                           <div class="col-md-12 mb-2">Mã giảm giá của tôi</div>-->
-<!--                           <div class="col-md-12 mb-2">Khiếu nại & hoàn trả</div>-->
-<!--                           <div class="col-md-12 mb-2">Tài khoản ví(xu)</div>-->
-<!--                           <div class="col-md-12 mb-3">Cấu hình tài khoản</div>-->
-<!--                           <div class="col-md-12 mb-2">-->
-<!--                               <button class="btn style-font pt-2 pb-2" style="background-color: #2b96b6; width: 100%">Đăng xuất tài khoản</button>-->
-<!--                           </div>-->
-<!--                       </div>-->
-<!--                    </div>-->
-<!--                </li>-->
-<!--            </ul>-->
-            <ul id="menuAccount" class="dropdown-menu category_list category_account" role="menu" aria-labelledby="dropAcount"
-                style="display: none; border-right: 1px solid gray">
+            <ul id="menuAccount" class="dropdown-menu category_account" role="menu" aria-labelledby="dropAcount"
+                style="display: none">
+                <?php if(Yii::$app->user->isGuest) {?>
                 <li class="card" style="border: none">
                     <div class="card-body">
                         <div class="row">
@@ -97,15 +81,15 @@ $this->registerJs($js);
                                 <span class="color-account">Bạn đăng nhập nhanh bằng tài khoản của</span>
                             </div>
                             <div class="col-md-6 pr-1">
-                                <button class="btn btn-fb" style="background-color: #415a98; width: 100%">
-                                    <i class="la la-facebook style-font"></i>
-                                    <span class="style-font">Facebook</span>
+                                <button class="btn btn-fb">
+                                    <i class="la la-facebook"></i>
+                                    <span>Facebook</span>
                                 </button>
                             </div>
                             <div class="col-md-6 pl-1">
-                                <button  class="btn btn-google" style="background-color: #3d82f1; width: 100%">
-                                    <i class="la la-google style-font"></i>
-                                    <span class="style-font">Google</span>
+                                <button  class="btn btn-google">
+                                    <i class="la la-google"></i>
+                                    <span>Google</span>
                                 </button>
                             </div>
                         </div>
@@ -115,7 +99,7 @@ $this->registerJs($js);
                             </div>
                             <div class="col-md-12">
                                 <div class="social-button">
-                                    <button class="btn style-font" style="background-color: #2b96b6; width: 100%">Đăng nhập tài khoản email</button>
+                                    <a href="/login.html" class="btn btn-info">Đăng nhập tài khoản email</a>
                                 </div>
                             </div>
                         </div>
@@ -124,12 +108,28 @@ $this->registerJs($js);
                             <div class="col-md-12 mb-2">
                                 <span class="color-account">Bạn chưa có tài khoản ?</span>
                             </div>
-                            <div class="col-md-12">
-                                <button class="btn style-font" style="width: 100%; background-color: #e67424;">Bạn đăng kí ngay tại đây</button>
+                            <div class="col-md-12 social-button">
+                                <a href="/signup.html" class="btn btn-amazon">Bạn đăng kí ngay tại đây</a>
                             </div>
                         </div>
                     </div>
                 </li>
+                <?php }else{?>
+                <li class="card" style="border: none">
+                    <div class="card-body">
+                       <div class="row">
+                           <div class="col-md-12 mb-2">Đơn hàng của tôi</div>
+                           <div class="col-md-12 mb-2">Mã giảm giá của tôi</div>
+                           <div class="col-md-12 mb-2">Khiếu nại & hoàn trả</div>
+                           <div class="col-md-12 mb-2">Tài khoản ví(xu)</div>
+                           <div class="col-md-12 mb-3">Cấu hình tài khoản</div>
+                           <div class="col-md-12 mb-2 social-button">
+                               <a class="btn btn-info p-2" href="/logout.html">Đăng xuất tài khoản</a>
+                           </div>
+                       </div>
+                    </div>
+                </li>
+                <?php } ?>
             </ul>
         </div>
     </div>
@@ -147,7 +147,7 @@ $this->registerJs($js);
                     <li role="presentation">
                         <a data-toggle="collapse" class="toggle" id="toggle" role="button" aria-expanded="false">
                             <span style="display: block; float: left;"><img src="/img/logo_amazon_us.png"></span>
-                            <span style="display: block; text-align: right; margin-right: 8px" class="amz"><i id="asd"
+                            <span style="display: block; text-align: right; margin-right: 8px" class="ico-dropdown amz"><i id="asd"
                                         class="la la-caret-down" style="transform: scaleY(-1);"></i></span>
                         </a>
                         <ul class="style-ull menu" id="target" style="display: block;">
@@ -159,7 +159,7 @@ $this->registerJs($js);
                         <a href="javascript: void(0);" class="toggleEbay" data-toggle="dropdown" aria-haspopup="true" role="button"
                            aria-expanded="false">
                             <span style="display: block; float: left;"><img src="/img/logo_ebay.png"></span>
-                            <span style="display: block; text-align: right; margin-right: 8px" class="ebay"><i id="asd1"
+                            <span style="display: block; text-align: right; margin-right: 8px" class="ico-dropdown ebay"><i id="asd1"
                                         class="la la-caret-down"></i></span>
                         </a>
                         <ul class="style-ull" id="targetEbay" >

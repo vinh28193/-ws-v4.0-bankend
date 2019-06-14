@@ -45,7 +45,7 @@ class ItemController extends AmazonController
             /** @var $item BaseProduct */
             $fees = [];
             foreach ($item->getAdditionalFees()->keys() as $key) {
-                $fees[$key] = $item->getAdditionalFees()->getTotalAdditionFees($key)[1];
+                $fees[$key] = $item->getAdditionalFees()->getTotalAdditionalFees($key)[1];
             }
 //            $item->start_price = $item->sell_price + 10;
             $response['success'] = true;

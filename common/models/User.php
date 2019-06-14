@@ -15,6 +15,7 @@ use common\components\UserPublicIdentityInterface;
  * @package common\models
  * @property-read Address $primaryAddress
  * @property-read Address $defaultShippingAddress
+ * @property-read string $userLever
  */
 class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
@@ -24,6 +25,10 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
     const CUSTOMER = 0;
     const RETAIL_CUSTOMER = 1;
     const WHOLESALE_CUSTOMER = 2;
+
+    const LEVEL_NORMAL = 'normal';
+    const LEVEL_SLIVER = 'sliver';
+    const LEVEL_GOLD = 'gold';
 
     protected $UUID;
 
@@ -354,6 +359,20 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
             ['type' => Address::TYPE_SHIPPING],
             ['is_default' => Address::IS_DEFAULT]
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserLevel()
+    {
+        if ($this->vip === null && $this->vip <= 2) {
+            return self::LEVEL_NORMAL;
+        } else if ($this->vip < 2 && $this->vip <= 4) {
+            return self::LEVEL_SLIVER;
+        } else {
+            return self::LEVEL_GOLD;
+        }
     }
 
     /**

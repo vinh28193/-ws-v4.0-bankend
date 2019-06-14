@@ -394,7 +394,7 @@ class AdditionalFeeCollectionTest extends UnitTestCase
     /**
      * ham xem commnet tren ham
      */
-    public function testGetTotalAdditionFees()
+    public function testgetTotalAdditionalFees()
     {
 
     }

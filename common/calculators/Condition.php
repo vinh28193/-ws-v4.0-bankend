@@ -3,6 +3,7 @@
 
 namespace common\calculators;
 
+use common\models\User;
 use Yii;
 use Exception;
 
@@ -61,7 +62,6 @@ class Condition extends Resolver
      */
     protected function check($data)
     {
-
         switch ($this->operator) {
             case self::OPERATOR_GREATER_EQUAL:
                 return $data >= $this->value;

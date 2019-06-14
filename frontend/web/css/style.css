@@ -1783,6 +1783,7 @@ a:hover {
     display: block;
     white-space: nowrap;
     overflow: hidden;
+    font-size: 14px;
     text-overflow: ellipsis;
 }
 
@@ -1834,7 +1835,7 @@ a:hover {
 
 .deal-shock .deal-content ul li .item:hover .info-box .name a {
     white-space: normal;
-    font-size: 12px;
+    font-size: 14px;
     color: #2b96b6;
     font-weight: 500;
 }
@@ -2086,7 +2087,7 @@ a:hover {
 }
 
 .buy-amazon .right {
-    flex: 0 0 942px;
+    flex: 0 0 calc(100% - 196px);
 }
 
 @media (max-width: 992px) {
@@ -2198,7 +2199,7 @@ a:hover {
 .buy-amazon .right .bottom .banner-4 {
     border-right: 1px solid #efefef;
     width: 20%;
-    height: 198px;
+    /*height: 100%;*/
     position: absolute;
     left: 20%;
     top: 0;
@@ -2251,7 +2252,7 @@ a:hover {
 
 .buy-amazon.buy-ebay .right .bottom .banner-1 {
     width: 40%;
-    height: 395px;
+    /*height: 100%;*/
     border-right: 1px solid #efefef;
     position: absolute;
     top: 0;
@@ -2272,11 +2273,11 @@ a:hover {
 /*}*/
 
 .buy-amazon.buy-ebay .right .bottom .banner-2 {
-    height: 197.5px;
+    /*height: 100%;*/
     width: 20%;
     position: absolute;
     top: 0;
-    left: 377px;
+    left: 40%;
     overflow: hidden;
 }
 
@@ -2298,7 +2299,7 @@ a:hover {
 
 .buy-amazon.buy-ebay .right .bottom .banner-3 {
     width: 40%;
-    height: 198.5px;
+    /*height: 100%;*/
     border-right: none;
     border-left: 1px solid #efefef;
     position: absolute;
@@ -2323,8 +2324,8 @@ a:hover {
 .buy-amazon.buy-ebay .right .bottom .banner-4 {
     border-top: 1px solid #efefef;
     border-right: none;
-    left: 376px;
-    width: 21%;
+    left: 40%;
+    width: 20%;
     top: inherit;
     bottom: 0;
 }
@@ -2347,7 +2348,7 @@ a:hover {
 
 .buy-amazon.buy-ebay .right .bottom .banner-5 {
     bottom: 1px;
-    height: 197.5px;
+    /*height: 100%;*/
     border-right: none;
     border-top: 1px solid #efefef;
     border-left: 1px solid #efefef;

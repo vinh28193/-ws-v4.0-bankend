@@ -195,6 +195,7 @@ class PaymentService
                 continue;
             }
             unset($params['customer']);
+            unset($params['support_name']);
             $order = new Order($params);
             $order->cartId = $cartId;
             $order->populateRelation('products', $products);
@@ -220,7 +221,7 @@ class PaymentService
         foreach ($payment->getOrders() as $key => $order) {
             $fees = [];
             foreach ($order->getAdditionalFees()->keys() as $name) {
-                $fees[$name] = $order->getAdditionalFees()->getTotalAdditionFees($name)[1];
+                $fees[$name] = $order->getAdditionalFees()->getTotalAdditionalFees($name)[1];
             }
             $feeOrders[$order->ordercode] = [
                 'totalAmount' => $order->total_amount_local,
