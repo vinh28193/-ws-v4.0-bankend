@@ -1,19 +1,8 @@
 <footer class="footer">
-    <div class="change-to-mobile mobile-hide">
-        <a href="#">Chuyển qua giao diện mobile</a>
-    </div>
     <div class="top">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 item-box">
-                    <div class="title">Weshop Quốc tế:</div>
-                    <ul>
-                        <li><a href="#"><img src="/img/flag2_vie.png" alt="" title=""/></a></li>
-                        <li><a href="#"><img src="/img/flag2_us.png" alt="" title=""/></a></li>
-                        <li><a href="#"><img src="/img/flag2_indo.png" alt="" title=""/></a></li>
-                    </ul>
-                </div>
-                <div class="col-md-5 item-box">
+                <div class="col-md-6 item-box">
                     <div class="title">Chấp nhận thanh toán:</div>
                     <ul>
                         <li><a href="#"><img src="/img/pay_master.png" alt="" title=""/></a></li>
@@ -21,7 +10,7 @@
                         <li><a href="#"><img src="/img/pay_jcb.png" alt="" title=""/></a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 item-box">
+                <div class="col-md-6 item-box">
                     <div class="title">Hợp tác:</div>
                     <ul>
                         <li><a href="#"><img src="/img/operate_ebay.png" alt="" title=""/></a></li>
@@ -94,14 +83,13 @@
     </div>
     <div class="bot">
         <div class="container">
-            <div class="title">Công ty cổ phần thương mại điện tử Weshop Việt Nam</div>
+            <div class="title"><?= Yii::t('frontend','Weshop Việt Nam - Một sản phẩm của Boxme Global') ?></div>
             <ul>
                 <li><b>Hà Nội:</b> Tầng 3, tòa nhà VTC Online số 18 đường Tam Trinh, Phường Minh Khai, Quận Hai Bà
                     Trưng, Thành phố Hà Nội, Việt Nam
                 </li>
-                <li><b>Hồ Chí Minh:</b> Lầu 3, tòa nhà VTC online, 132 Cộng Hòa, Phường 4, Q. Tân Bình</li>
-                <li><b>Mã số doanh nghiệp:</b> 0106693795 do Sở Kế hoạch và Đầu tư TP. Hà Nội cấp lần đầu ngày
-                    17/11/2014
+                <li><b>Hồ Chí Minh:</b> Lầu 6, toà nhà Sumikura, 18H Cộng Hoà, Phường 4, Quận Tân Bình</li>
+                <li><b>Mã số doanh nghiệp:</b> 0106693837 do Sở Kế hoạch và Đầu tư TP. Hà Nội cấp lần đầu ngày 18/11/2014
                 </li>
             </ul>
         </div>

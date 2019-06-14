@@ -14,3 +14,6 @@ var showTab = function (id) {
 var hideTab = function (id) {
     $('#'+id).removeClass('open');
 };
+$('#menuAccount .social-button a.btn').click(function () {
+    ws.loading(true);
+});
