@@ -126,6 +126,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             'shipping_fee' => !$this->is_free_ship ? ($this->shipping_fee * $this->quantity) : 0,
             'tax_fee' => $this->us_tax_rate
         ], false);
+        $additionalFee->withCondition($this,'purchase_fee',null);
         /**
          * Todo function initDefaultProperty
          * - vì mấy hàm này chỉ có tác dụng sử dụng 1 lần khi create object nên chỉ cần viết 1 hàm
