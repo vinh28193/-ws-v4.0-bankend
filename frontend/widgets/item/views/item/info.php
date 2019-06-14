@@ -24,6 +24,10 @@ foreach ($item->variation_options as $index => $variationOption) {
         }
     }
 }
+$instockQuanty = 0;
+if ($item->available_quantity) {
+    $instockQuanty = $item->quantity_sold ? $item->available_quantity - $item->quantity_sold : $item->available_quantity;
+}
 ?>
 <div id="checkcate" style="display: none"><?= $item->category_id ?></div>
 <div class="product-full-info">
