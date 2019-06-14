@@ -122,7 +122,9 @@ $this->registerJs($js);
                            <div class="col-md-12 mb-2">Mã giảm giá của tôi</div>
                            <div class="col-md-12 mb-2">Khiếu nại & hoàn trả</div>
                            <div class="col-md-12 mb-2">Tài khoản ví(xu)</div>
-                           <div class="col-md-12 mb-3">Cấu hình tài khoản</div>
+                           <div class="col-md-12 mb-3">
+                               <a href="/my-weshop.html">Cấu hình tài khoản</a>
+                           </div>
                            <div class="col-md-12 mb-2 social-button">
                                <a class="btn btn-info p-2" href="/logout.html">Đăng xuất tài khoản</a>
                            </div>
