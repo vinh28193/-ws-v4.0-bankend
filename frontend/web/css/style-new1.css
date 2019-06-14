@@ -120,7 +120,7 @@ ul:after {
     width: 100%;
 }
 .item {
-    padding: 15px;
+    /*padding: 15px;*/
 }
 .style-facebook {
     font-size: 2em !important;
