@@ -46,7 +46,7 @@ class EbaySearchResponse extends BaseResponse
                     $result['products'][$key]['sale_price_local'] = $ebay->getStoreManager()->showMoney($ebay->getLocalizeTotalPrice());
                     $result['products'][$key]['start_price_local'] = $ebay->getStoreManager()->showMoney($ebay->getLocalizeTotalStartPrice());
 //                    if (ArrayHelper::isIn($ebay->getStoreManager()->getStoreId(), [Website::STORE_WESHOP_MY, Website::STORE_WESHOP_PH, Website::STORE_WESHOP_TH])) {
-//                        $rs['products'][$key]['sale_price_local'] = $this->getStore()->showMoney($ebay->getTotalAdditionFees(null,['gst']));
+//                        $rs['products'][$key]['sale_price_local'] = $this->getStore()->showMoney($ebay->getTotalAdditionalFees(null,['gst']));
 //                        $totalPriceTemp = $ebay->sell_price;
 //                        $ebay->sell_price = $ebay->start_price;
 //                        $totalStartPriceBeforeGst = $ebay->getLocalizeTotalPriceBeforeGst();

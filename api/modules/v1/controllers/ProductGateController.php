@@ -80,7 +80,7 @@ class ProductGateController extends BaseApiController
         $data = ['type' => $product->type];
         $calculate = [];
         foreach ($product->getAdditionalFees()->keys() as $key){
-            $calculate[$key] = implode('/',$product->getAdditionalFees()->getTotalAdditionFees($key));
+            $calculate[$key] = implode('/',$product->getAdditionalFees()->getTotalAdditionalFees($key));
         }
         $calculate['exchange'] = $product->getExchangeRate();
         $data['calculate'] = $calculate;

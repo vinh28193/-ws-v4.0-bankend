@@ -19,7 +19,7 @@ use common\models\Category;
  * @property-read string $type
  * @property-read null|string $portal
  * @property-read null|Category $category
- * @property-read null|User $user
+ * @property-read string $userLevel
  * @property-read boolean $isNew
  * @property-read boolean $isSpecial
  * @property-read integer $shippingWeight
@@ -47,9 +47,9 @@ interface AdditionalFeeInterface
     public function getCategory();
 
     /**
-     * @return User|null
+     * @return string
      */
-    public function getUser();
+    public function getUserLevel();
 
     /**
      * @return boolean

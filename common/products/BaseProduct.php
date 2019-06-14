@@ -266,6 +266,11 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         return floatval($inputWeight) < $minWeight ? $minWeight : round($inputWeight, 2);
     }
 
+    public function getUserLevel()
+    {
+        return $this->getUser()->userLever;
+    }
+
     /**
      * @return integer
      */
