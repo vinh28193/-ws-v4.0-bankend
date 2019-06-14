@@ -485,7 +485,7 @@ class CartManager extends Component
         if (!$arraySales) {
             return false;
         }
-        $supporters = User::find()->indexBy('id')->select(['id', 'email'])
+        $supporters = User::find()->indexBy('id')->select(['id', 'email', 'username'])
             ->where(['id' => $arraySales])->all();
         if (!$supporters) {
             return false;
@@ -521,7 +521,7 @@ class CartManager extends Component
         if (($assigner = ArrayHelper::getValue($supporters, $id)) === null) {
             $assigner = array_shift($supporters);
         }
-        return ['id' => $assigner->id, 'email' => $assigner->email];
+        return ['id' => $assigner->id, 'email' => $assigner->email, 'username' => $assigner->username];
     }
 
     public function updateShippingAddress($type, $id, $params, $uuid)
