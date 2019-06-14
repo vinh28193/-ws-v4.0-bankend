@@ -29,11 +29,26 @@ $(document).ready(function () {
         $('#asd1').css('transform','scaleY(1)');
     $('#targetEbay').toggle('slow');
 });
+    
+    $(document).ready(function() {
+ 
+    var div = $('#header');
+    var start = $(div).offset().top;
+ 
+    $.event.add(window, "scroll", function() {
+        var p = $(window).scrollTop();
+        $(div).css('position',((p)>start) ? 'fixed' : 'static');
+        $(div).css('width',((p)>start) ? '100%' : '100%');
+        $(div).css('padding-left',((p)>start) ? '5%' : '5%');
+        $(div).css('top',((p)>start) ? '0px' : '');
+    });
+ 
+});
 JS;
 $this->registerJs($js);
 
 ?>
-<div class="navbar-ws mobile-hide style-header" xmlns="http://www.w3.org/1999/html">
+<div class="navbar-ws mobile-hide style-header" id="header" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
         <div class="logo">
             <span class="menu-toggle"></span>

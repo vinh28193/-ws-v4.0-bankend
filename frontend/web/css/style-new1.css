@@ -107,11 +107,7 @@ ul.bars-nav > li ul li a{
     padding-right: 10px;
 }
 .style-header {
-    /* display: block !important; */
-    position: fixed;
     z-index: 99;
-    width: 100%;
-    padding-left: 4.5%;
 }
 .style-ul-after {
     z-index: 98;
