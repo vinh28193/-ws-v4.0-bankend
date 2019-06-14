@@ -8,6 +8,7 @@
 
 namespace common\models;
 
+use common\boxme\InternationalShippingCalculator;
 use Yii;
 use yii\helpers\Json;
 use common\calculators\CalculatorService;
@@ -16,10 +17,15 @@ use common\models\db\StoreAdditionalFee as DbStoreAdditionalFee;
 
 class StoreAdditionalFee extends DbStoreAdditionalFee
 {
+
+    const TYPE_ORIGIN = 'origin';
+    const TYPE_ADDITION = 'addition';
+    const TYPE_DISCOUNT = 'discount';
+
     /**
      * @return bool|array
      */
-    public function getCondition()
+    public function getConditions()
     {
         $data = $this->condition_data;
         if ($data === null) {
@@ -31,14 +37,16 @@ class StoreAdditionalFee extends DbStoreAdditionalFee
     public function executeCondition(AdditionalFeeInterface $additional)
     {
         $value = 0;
-
-        if ($this->name === 'custom_fee' && ($category = $additional->getCustomCategory()) !== null) {
+        if ($this->name === 'custom_fee' && ($category = $additional->getCategory()) !== null) {
             $value = $category->getCustomFee($additional);
-        } else if (($condition = $this->getCondition()) !== false) {
-            $value = CalculatorService::calculator($condition, $additional);
+        }elseif ($this->name === 'international_shipping_fee'){
+            $calculator = new InternationalShippingCalculator();
+            $value = $calculator->trace($additional);
+        } else if (($conditions = $this->getConditions()) !== false) {
+            $value = CalculatorService::calculator($conditions, $additional);
         }
-
-        return [$value, Yii::$app->storeManager->roundMoney($value * $additional->getExchangeRate())];
+        $storeManager =  Yii::$app->storeManager;
+        return [$value, $storeManager->roundMoney($value * $storeManager->getExchangeRate())];
 
     }
 }

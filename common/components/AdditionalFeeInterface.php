@@ -9,29 +9,57 @@
 namespace common\components;
 
 use common\models\User;
+use common\models\Category;
 
 /**
  * interface để đảm bảo có thể tính toán giá cho bất khì 1 đồi tượng nào khi được implements
  * Interface AdditionalFeeInterface
  * @package common\components
+ *
+ * @property-read string $type
+ * @property-read null|string $portal
+ * @property-read null|Category $category
+ * @property-read string $userLevel
+ * @property-read boolean $isNew
+ * @property-read boolean $isSpecial
+ * @property-read integer $shippingWeight
+ * @property-read integer $shippingQuantity
+ * @property-read null|array|mixed $shippingFrom
+ * @property-read null|array|mixed $shippingTo
+ * @property-read null|array|mixed $shippingParcel
  */
 interface AdditionalFeeInterface
 {
-
     /**
-     * @return string
+     * ebay/amazon
+     * @return null|string
      */
-    public function getItemType();
+    public function getType();
 
     /**
      * @return integer
      */
-    public function getTotalOriginPrice();
+    public function getTotalOrigin();
 
     /**
-     * @return \common\models\Category
+     * @return null|Category
      */
-    public function getCustomCategory();
+    public function getCategory();
+
+    /**
+     * @return string
+     */
+    public function getUserLevel();
+
+    /**
+     * @return boolean
+     */
+    public function getIsNew();
+
+    /**
+     * @return boolean
+     */
+    public function getIsSpecial();
 
     /**
      * @return integer
@@ -43,21 +71,18 @@ interface AdditionalFeeInterface
      */
     public function getShippingQuantity();
 
+    /**
+     * @return null|array|mixed
+     */
+    public function getShippingFrom();
 
     /**
-     * @return User|null
+     * @return null|array|mixed
      */
-    public function getUser();
+    public function getShippingTo();
 
     /**
-     * @return boolean
+     * @return null|array|mixed
      */
-    public function getIsNew();
-
-    /**
-     * @return integer
-     */
-    public function getExchangeRate();
-
-
+    public function getShippingParcel();
 }

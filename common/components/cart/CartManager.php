@@ -421,34 +421,39 @@ class CartManager extends Component
             $key = $item['key'];
             if (isset($param['typeUpdate'])) {
                 if ($param['typeUpdate'] == 'cancelCart') {
+                    $value['current_status'] = 'CANCELLED';
                     $key['current_status'] = 'CANCELLED';
                     $value['cancelled'] = $now;
                 }
             }
             if (isset($param['typeUpdate'])) {
                 if ($param['typeUpdate'] == 'confirmOrderCart') {
+                    $value['current_status'] = 'SUPPORTED';
                     $key['current_status'] = 'SUPPORTED';
                     $value['supported'] = $now;
                 }
             }
             if (isset($param['typeUpdate'])) {
                 if ($param['typeUpdate'] == 'assignSaleCart') {
-                    $value['sale_support_id'] = $param['idSale'];
+                    $value['saleSupport']['id'] = $param['idSale'];
                 }
             }
             if (isset($param['typeUpdate'])) {
                 if ($param['typeUpdate'] == 'markAsJunk') {
+                    $value['current_status'] = 'JUNK';
                     $key['current_status'] = 'JUNK';
                 }
             }
             if (isset($param['type_chat'])) {
                 if ($param['type_chat'] === 'WS_CUSTOMER') {
+                    $value['current_status'] = 'SUPPORTING';
                     $key['current_status'] = 'SUPPORTING';
                     $value['supporting'] = $now;
                 }
             }
            if (isset($param['type_chat'])) {
                if ($param['type_chat'] == 'GROUP_WS') {
+                   $value['current_status'] = 'SUPPORTED';
                    $key['current_status'] = 'SUPPORTED';
                    $value['supported'] = $now;
                }

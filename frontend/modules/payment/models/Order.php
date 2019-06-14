@@ -3,9 +3,10 @@
 
 namespace frontend\modules\payment\models;
 
-use common\components\AdditionalFeeTrait;
 use common\components\AdditionalFeeInterface;
+use common\components\AdditionalFeeTrait;
 use common\models\Order as BaseOrder;
+use common\models\User;
 
 class Order extends BaseOrder implements AdditionalFeeInterface
 {
@@ -14,14 +15,17 @@ class Order extends BaseOrder implements AdditionalFeeInterface
 
     use AdditionalFeeTrait;
 
-    public function getItemType()
+    public function getType()
     {
         return strtolower($this->portal);
     }
 
-    public function getUser()
+    public function getUserLevel()
     {
-        return parent::getUser();
+        if ($this->user === null) {
+            return User::LEVEL_NORMAL;
+        }
+        return $this->user->getUserLevel();
     }
 
     public function getShippingQuantity()
@@ -34,7 +38,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         return $this->total_weight_temporary;
     }
 
-    public function getTotalOriginPrice()
+    public function getTotalOrigin()
     {
         return $this->total_price_amount_origin;
     }
@@ -44,15 +48,36 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         return false;
     }
 
+    public function getIsSpecial()
+    {
+        return false;
+    }
+
     public function getExchangeRate()
     {
         return $this->exchange_rate_fee;
     }
 
-    public function getCustomCategory()
+    public function getCategory()
     {
         return parent::getCategory();
     }
+
+    public function getShippingFrom()
+    {
+        return null;
+    }
+
+    public function getShippingTo()
+    {
+        return null;
+    }
+
+    public function getShippingParcel()
+    {
+        return null;
+    }
+
 
     public function loadPaymentAdditionalFees()
     {

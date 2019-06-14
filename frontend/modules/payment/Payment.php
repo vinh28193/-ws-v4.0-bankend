@@ -204,7 +204,7 @@ class Payment extends Model
                 'orders' => [],
             ];
             foreach ($this->getOrders() as $idx => $order) {
-                $amount = $order->getAdditionalFees()->getTotalAdditionFees($name)[1];
+                $amount = $order->getAdditionalFees()->getTotalAdditionalFees($name)[1];
                 $this->_additionalFees[$name]['amount'] += $amount;
                 $this->_additionalFees[$name]['orders'][$order->ordercode] = $amount;
             }
@@ -420,7 +420,7 @@ class Payment extends Model
 
                 $order->total_promotion_amount_local = $orderTotalDiscount;
 
-                $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionFees('international_shipping_fee')[1];
+                $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
 
                 // 2 .seller
                 $seller = $orderPayment->seller;

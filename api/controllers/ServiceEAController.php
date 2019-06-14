@@ -200,7 +200,7 @@ class ServiceEAController extends BaseApiController
             $product->link_origin = $item['item_origin_url'];
             $product->getAdditionalFees()->mset($item['additionalFees']);
             $product->category_id = $category->id;
-            list($product->price_amount_origin, $product->total_price_amount_local) = $product->getAdditionalFees()->getTotalAdditionFees();
+            list($product->price_amount_origin, $product->total_price_amount_local) = $product->getAdditionalFees()->getTotalAdditionalFees();
             $product->quantity_customer = $item['quantity'];
 
             $order = new Order();

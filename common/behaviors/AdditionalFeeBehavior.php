@@ -65,7 +65,7 @@ class AdditionalFeeBehavior extends \yii\base\Behavior
             $model->currency = $storeAdditionFee->currency;
             $model->type = $storeAdditionFee->name;
             $model->name = $storeAdditionFee->label;
-            list($model->amount,$model->local_amount) = $getAdditionalFees->getTotalAdditionFees($key);
+            list($model->amount,$model->local_amount) = $getAdditionalFees->getTotalAdditionalFees($key);
             $model->save(false);
 
             if ($this->owner->hasAttribute($ownerName)) {
