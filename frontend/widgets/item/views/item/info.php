@@ -153,7 +153,7 @@ JS;
         } //esle 0 Dong ?>
     <?php
     if (isset($item->bid) && isset($item->bid['bid_minimum']) && ($item->bid['bid_minimum'])) { ?>
-        <div class="qty form-inline" id="" style="display: block; font-size: 12px;color: red">
+        <div class="" id="" style="display: block; font-size: 12px;color: red">
             <i class="fa fa-exclamation-triangle"></i><b>Xin lỗi quý khách, hiện tại hệ thống đấu giá trên WESHOP đang
                 tạm dừng hoạt động. <br>Mong quý khách thông cảm!</b>
         </div>
@@ -169,7 +169,7 @@ JS;
             <input type="text" class="form-control" id="quantity" value="1"/>
             <button class="btn btnQuantity" type="button" data-href="up"><i class="la la-plus"></i></button>
         </div>
-    <div class="qty form-inline" id="outOfStock" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>;">
+    <div class="" id="outOfStock" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>;">
         <label style="color: red"><?= Yii::t('frontend', 'Out of stock') ?></label>
     </div>
         <div class="register-prime">
