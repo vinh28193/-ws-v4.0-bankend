@@ -29,7 +29,6 @@ class Category extends DbCmsCategory
 
     public function getCustomFee(AdditionalFeeInterface $additionalFee)
     {
-
         if (
             $this->categoryGroup !== null &&
             ($group = $this->categoryGroup) instanceof CategoryGroup &&

@@ -93,7 +93,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logPaymentGateway->save(false);
-            return new PaymentResponse(false, 'Check payment thất bại');
+            return new PaymentResponse(false, 'Check payment thất bại','nganluong');
         }
     }
 
@@ -128,7 +128,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 $logPaymentGateway->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logPaymentGateway->save(false);
-                return new PaymentResponse(false, 'Transaction không tồn tại');
+                return new PaymentResponse(false, 'Transaction không tồn tại','nganluong');
             }
 
             $resp = self::callApi($this->submitUrl, $param);

@@ -286,12 +286,37 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     }
 
     /**
+     * @return null|array|mixed
+     */
+    public function getShippingFrom()
+    {
+        return null;
+    }
+
+    /**
+     * @return null|array|mixed
+     */
+    public function getShippingTo()
+    {
+        return null;
+    }
+
+    /**
+     * @return null|array|mixed
+     */
+    public function getShippingParcel()
+    {
+        return null;
+    }
+
+    /**
      * @return integer
      */
     public function getExchangeRate()
     {
         return $this->getStoreManager()->getExchangeRate();
     }
+
 
     /**
      * @return \common\components\StoreManager
