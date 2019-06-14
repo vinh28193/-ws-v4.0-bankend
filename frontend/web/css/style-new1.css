@@ -13,9 +13,6 @@
 .style-ull li a {
     color: rgba(0, 0, 0, 0.85);
 }
-.style-ull li a:hover {
-    color: #2b96b6 !important;
-}
 .style-i {
     width: 24px;
     height: 24px;
@@ -34,12 +31,20 @@
     min-height: 530px;
     background-color: #ffffff;
 }
-.style-ull li:hover .sub-menu-2 {
+.sub-menu-2-hover {
     display: block;
     margin-left: 325px;
     position: fixed;
     top: 0;
     color: rgba(0, 0, 0, 0.85);
+}
+.style-ull li a:hover {
+    color: #2b96b6 !important;
+}
+.style-ull li:hover {
+    color: #2b96b6 !important;
+    cursor: pointer;
+    font-size: 17px;
 }
 .title-box {
     line-height: 1.2;

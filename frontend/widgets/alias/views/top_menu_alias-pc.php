@@ -59,8 +59,8 @@ foreach ($categories as $k => $category) {
 */
 ?>
   <?php foreach ($categories as $k => $category) {?>
-    <li>
-        <a href="<?= $category->url ?>">
+    <li class="li-item-cate">
+        <a class="title-cate" href="<?= $category->url ?>">
             <i class="style-i">
 <!--                <img class="style-img" src="/images/Bitmap1.png" alt="">-->
             </i><?= $category->name ?> <i class="la la-angle-right float-right mt-2"></i></a>

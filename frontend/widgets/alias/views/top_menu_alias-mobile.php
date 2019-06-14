@@ -12,7 +12,7 @@ use common\models\cms\WsAliasItem;
 ?>
   <?php foreach ($categories as $k => $category) {?>
     <li>
-        <a href="<?= $category->url ?>">
+        <a class="title-cate" href="<?= $category->url ?>">
             <i class="style-i">
 <!--                <img class="style-img" src="/images/Bitmap1.png" alt="">-->
             </i><?= $category->name ?> </a>
