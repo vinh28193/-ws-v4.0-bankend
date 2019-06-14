@@ -4,6 +4,9 @@ html, body {
     font-weight: 400;
     color: #555555;
 }
+.container{
+    max-width: 90%;
+}
 .navbar-ws,body div.wrapper div.navbar-ws div.container{
     /* Style for "Rectangle" */
     background-color: #141c2e;
@@ -22,6 +25,10 @@ html, body {
 body div.wrapper div.navbar-ws div.container{
     padding-top: 11px;
     margin: auto;
+}
+.a-hover{
+    font-size: 17px;
+    color: #2b96b6 !important;
 }
 .search-box{
     /*float: left;*/
@@ -82,7 +89,7 @@ body div.wrapper div.navbar-ws div div.search-box{
     color: #2b96b6;
     font-size: 16px;
 }
-.account-header-box i{
+.account-header-box i.la.la-user{
     padding-top: 10px;
     width: 30px;
     height: 36px;
@@ -90,6 +97,10 @@ body div.wrapper div.navbar-ws div div.search-box{
     font-family: "LineAwesome";
     font-size: 30px;
     float: left;
+}
+.account-header-box{
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
 }
 .search-box{
     width: 57%;
@@ -115,12 +126,17 @@ body div.wrapper div.navbar-ws div div.search-box{
     border-radius: 5px 5px 0px 0px;
     padding-right: 30px;
 }
-.bars-nav123 li:first-child i:first-child{
+.bars-nav123 li:first-child span:first-child i:first-child{
     font-size: 30px;
     line-height: 0em;
 }
 ul.bars-nav li:last-child{
     padding-right: 0px;
+}
+.bars-nav123 li a:hover{
+    font-size: 17px;
+    color: #ffffff;
+    padding-left: 10px;
 }
 .category_list{
     /* Style for "Combined S" */
@@ -141,6 +157,7 @@ ul.bars-nav li:last-child{
     float: left;
 }
 #menu1 {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     top: 12px!important;
     transform: translate3d(0px, 35px,0px) !important;
 }
@@ -178,7 +195,7 @@ ul.bars-nav li:last-child{
     border-radius: 5px;
     background-color: #ffffff;
     position: relative;
-    margin-top: -15%;
+    margin-top: -5%;
     padding: 15px;
 }
 .content-body .title-content-home{
@@ -186,6 +203,9 @@ ul.bars-nav li:last-child{
     text-align: center;
     padding-bottom: 15px;
     font-size: 32px;
+}
+.tutorial-shop a{
+    color: #2b96b6;
 }
 body div.wrapper div.content-body div.col-md-2 i{
     font-size: 30px;
@@ -324,8 +344,52 @@ div.product-list.row div a div.info div.name{
     border: 1px #fa6400 solid;
 }
 .btn-amazon:hover{
-    background-color: #fff;
-    color: rgba(0, 0, 0, 0.85);
+    background-color: #f18d04;
+    color: #fff;
+    border: 1px #f18d04 solid;
+}
+.title {
+    color: #2b96b6;
+    font-size: 16px;
+    font-weight: 700;
+}
+.footer .top .container .title{
+    font-size: 14px;
+    font-family: Helvetica;
+    font-weight: 400;
+    color: #555555;
+}
+.footer .info .container .title,.footer .bot .container .title{
+    font-size: 14px;
+    color: #fff;
+}
+#menuAccount button{
+    text-align: initial;
+    width: 100%;
+}
+#menuAccount .social-button a.btn{
+    text-align: center;
+    width: 100%;
+}
+#menuAccount button i {
+    padding: 0px;
+    color: white;
+}
+#menuAccount button span {
+    line-height: 2.3em;
+}
+.btn-fb:hover{
+    background: #294b9e;
+    color: white;
+}
+.btn-google:hover{
+    background: #1a70fb;
+    color: white;
+}
+ul#menuAccount {
+    border-radius: 0px;
+    display: block;
+    border: none;
 }
 /*.ico*/
 @media(max-width:1090px) {
@@ -834,11 +898,50 @@ div div.product-list.row div a div.info div.price span.countdown{
         padding-top: 25px;
         text-align: center;
     }
+    .title {
+        color: #2b96b6;
+        font-size: 15px;
+        font-weight: 700;
+    }
     .btn-search-mb button{
         width: 80%;
     }
     .content-modal-auth-mb{
         padding: 28px;
+    }
+    #category-mb-amazon ul li a,#category-mb-ebay ul li a{
+         color: rgba(0, 0, 0, 0.85);
+     }
+    #category-mb-ebay ul li ul li a.active,#category-mb-amazon ul li ul li a.active{
+        color: #2b96b6;
+    }
+    #category-mb-amazon .sub-cate-2 ,#category-mb-ebay .sub-cate-2 {
+        -webkit-transition: all .3s;
+        -moz-transition: all .3s;
+        -ms-transition: all .3s;
+        -o-transition: all .3s;
+        transition: all .3s; }
+    #category-mb-amazon .sub-cate-2,#category-mb-ebay .sub-cate-2{
+        overflow: auto;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        bottom: 0;
+        width: 100%;
+        background: #fff;
+        border-top: 1px solid #2b96b6;
+        z-index: 999;
+    }
+    #category-mb-amazon .sub-cate-2.open, #category-mb-ebay .sub-cate-2.open {
+        left: 0; }
+    .content-menu-cate-sub-2 .title-submenu i{
+        padding-right: 20px;
+        font-size: 14px;
+        color: #2b96b6;
+    }
+    #category-mb-amazon .content-menu-cate-sub-2 .title-submenu a,.content-menu-cate-sub-2 .title-submenu a{
+        color: #2b96b6;
+        font-size: 14px;
     }
     /*.mb-menu-cate{*/
     /*    padding-top: 15px;*/
@@ -898,5 +1001,23 @@ div div.product-list.row div a div.info div.price span.countdown{
 .mb-modal-auth .content-modal-auth-mb span {
     padding: 13px 0px 13px 0px;
     display: block;
+}
+.content-menu-cate-sub-2 .show {
+    background: #f6f6f6;
+}
+.content-menu-cate-sub-2-item{
+    padding-left: 50px;
+}
+.content-menu-cate-sub-2-item .title{
+     color: #6d7278;
+     font-size: 14px;
+ }
+.content-menu-cate-sub-2-item ul li,.content-menu-cate-sub-2-item ul li a{
+    font-size: 12px;
+    color: #6d7278 !important;
+    list-style: disc;
+}
+.content-menu-cate-sub-2-item ul{
+    padding-left: 20px;
 }
 @media (min-width: 991px){}

@@ -9,6 +9,8 @@ use yii\base\Widget;
 class TopMenuAliasWidget extends Widget
 {
     public $type ;
+    public $logoMobile = '' ;
+    public $type_monitor = 'pc' ;
     public function run()
     {
         $key = $this->type . '-' . Yii::$app->storeManager->getId();
@@ -16,8 +18,10 @@ class TopMenuAliasWidget extends Widget
         if(!$view){
             $alias = WsAlias::findOne(['store_id'=>Yii::$app->storeManager->getId(),'type'=>$this->type]);
             $item_category = $alias->getCategoryList(false);
-            $view = $this->render('top_menu_alias', [
+            $view = $this->render('top_menu_alias-'.$this->type_monitor, [
                 'categories'=>$item_category,
+                'logoMobile'=>$this->logoMobile,
+                'type'=>$this->type,
                 'storeManager'=>Yii::$app->storeManager
             ]);
             Cache::set($key,$view,60*60*24);

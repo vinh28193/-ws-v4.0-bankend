@@ -113,7 +113,7 @@ class TestController extends FrontendController
         $authManager = Yii::$app->authManager;
         $saleIds = $authManager->getUserIdsByRole('sale');
         $masterSaleIds = $authManager->getUserIdsByRole('master_sale');
-        $supporters = User::find()->indexBy('id')->select(['id', 'email'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
+        $supporters = User::find()->indexBy('id')->select(['id', 'email', 'username'])->where(['or', ['id' => $saleIds], ['id' => $masterSaleIds]])->all();
 
         $ids = array_keys($supporters);
         $calculateToday = ArrayHelper::map($storage->calculateSupported($ids), '_id', function ($elem) {
@@ -146,6 +146,7 @@ class TestController extends FrontendController
         if (($assigner = ArrayHelper::getValue($supporters, $id)) === null) {
             $assigner = array_shift($supporters);
         }
+        return ['id' => $assigner->id, 'email' => $assigner->email, 'username' => $assigner->username];
         var_dump($assigner);
         die;
     }
@@ -201,7 +202,7 @@ class TestController extends FrontendController
     public function actionCustomFee()
     {
         $message = [];
-        $data = require dirname(__DIR__) . '/web/category_group.php';
+        $data = require dirname(dirname(__DIR__)) . '\common\models\category_group.php';
         foreach ($data as $array) {
             $rules = [];
             if($array['condition_data'] !== null){
@@ -219,5 +220,10 @@ class TestController extends FrontendController
         }
         var_dump($message);
         die;
+    }
+    public function actionTestSale() {
+        $sale = $this->actionTestCount();
+        var_dump($sale);
+        die();
     }
 }

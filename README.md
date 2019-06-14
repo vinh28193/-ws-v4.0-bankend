@@ -776,9 +776,17 @@ https://developers.google.com/protocol-buffers/docs/reference/php-generated
 ### protoc --proto_path=boxme --php_out=build/gen accountingboxme.proto
 #-------------------------
 https://github.com/protocolbuffers/protobuf/tree/master/php
-protoc --php_out=boxme accounting.proto
+protoc --php_out=boxme proto/accounting.proto
 
-protoc --php_out=common\grpc\boxme accounting.proto
+protoc --php_out=common\grpc\boxme proto/accounting.proto
+protoc --proto_path=common\grpc\boxme --php_out=build/gen proto/accounting.proto
+protoc --proto_path=protobuf-boxme --php_out=build/gen proto/accounting.proto
+protoc --proto_path=protobuf-boxme --php_out=build/gen proto/user.proto
+
+protoc -I=.  --php_out=./proto/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/Greeter.proto
+
+protoc -I=.  --php_out=./protobuf-boxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/accounting.proto
+protoc -I=.  --php_out=./protobuf-boxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/user.proto
 
 
 ##----------------Call test grpc boxme-----------------------

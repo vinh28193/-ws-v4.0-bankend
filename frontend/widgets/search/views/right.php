@@ -41,6 +41,7 @@ $js = <<<JS
     $('input[name=toPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
 JS;
 $this->registerJs($js);
+/*
 if(!$default){
     $message = "<p>" .
         "Nhằm giúp khách hàng có trải nghiệm mua sắm xuyên biên giới tốt hơn, bạn nên tìm kiếm các sản phẩm trên website Amazon.com." .
@@ -61,6 +62,7 @@ if(!$default){
 JS;
     $this->registerJs($js);
 }
+*/
 ?>
 <div class="search-content search-2 <?= $portal ?>">
     <div class="title-box inline mobile-hide">
@@ -140,7 +142,7 @@ JS;
                                data-target="#sort-by-filter" style="display: block"
                                aria-expanded="true" aria-controls="collapseOne">
                                 <?= Yii::t('frontend','Sort by'); ?>
-                                <i class="la la-angle-right alert-right"></i></span>
+                                <i class="la la-angle-right alert-right"></i>
                             </a>
                         </div>
                         <div class="clearfix submenu-2 collapse" id="sort-by-filter">
@@ -168,7 +170,7 @@ JS;
                                data-target="#category-filter" style="display: block"
                                aria-expanded="true" aria-controls="collapseOne">
                                 <?= Yii::t('frontend', 'Category'); ?>
-                                <i class="la la-angle-right alert-right"></i></span>
+                                <i class="la la-angle-right alert-right"></i>
                             </a>
                         </div>
                         <div class="clearfix submenu-2 collapse" id="category-filter">
@@ -206,20 +208,25 @@ JS;
                                    data-target="#filter-<?= $k ?>-filter" style="display: block"
                                    aria-expanded="true" aria-controls="collapseOne">
                                     <?= Yii::t('frontend', $filter['name']); ?>
-                                    <i class="la la-angle-right alert-right"></i></span>
+                                    <i class="la la-angle-right alert-right"></i>
                                 </a>
                             </div>
                             <div class="clearfix submenu-2 collapse" id="filter-<?= $k ?>-filter">
                                 <ul>
-                                    <?php foreach ($filter['values'] as $value): ?>
-                                        <?php /* @var $value string */ ?>
-                                        <?php $value = Html::encode($value); ?>
+                                    <?php foreach ($filter['values'] as $item): ?>
+                                        <?php
+                                        if(is_array($item)){
+                                            $value = Html::encode($item['param']);
+                                        }else{
+                                            $value = Html::encode($item);
+                                        }
+                                        ?>
                                         <li>
                                             <div class="form-check">
                                                 <?php
-                                                $id = $filter['name'] . $value;
+                                                $id = is_array($item) ? $item['value'] : $filter['name'] . $value;
                                                 ?>
-                                                <?= Html::checkbox('filter', false, [
+                                                <?= Html::checkbox('filter', is_array($item) ? $item['is_selected'] : false, [
                                                     'class' => 'form-check-input',
                                                     'value' => $value,
                                                     'id' => $id,

@@ -9,7 +9,7 @@
         <?php foreach($images as $k => $image) {?>
             <div class="carousel-item <?= $k == 0 ? 'active' : '' ?>">
                 <img src="<?= $image->domain.$image->origin_src ?>"
-                     alt="<?= $image->name ?>" width="1100" height="500">
+                     alt="<?= $image->name ?>">
             </div>
         <?php }?>
     </div>

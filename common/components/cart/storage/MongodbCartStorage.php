@@ -267,15 +267,37 @@ class MongodbCartStorage extends BaseObject
             ['NOT', 'uuid', new Expression('null')],
         ];
         if (isset($params['value']) && !isset($params['keyword'])) {
-            $conditions[] = ['OR',
-                ['data.order.customer.email', $params['value']],
-                ['data.order.customer.phone', $params['value']],
+            $conditions = ['OR',
+                ['LIKE', 'value.buyer_email', $params['value']],
+                ['value.ordercode', $params['value']],
+                ['LIKE', 'value.buyer_phone', $params['value']],
             ];
         }
-        if (isset($params['value']) && isset($params['keyword'])) {
-            $conditions[] = ['LIKE',$params['keyword'], $params['value']];
+        if (isset($params['statusShopping']) && !empty($params['statusShopping'])) {
+            $conditions = ['value.current_status' => $params['statusShopping']];
         }
 
+        if (isset($params['portal']) && !empty($params['portal'])) {
+            $conditions = ['value.portal' => $params['portal']];
+        }
+        if (isset($params['value']) && isset($params['keyword'])) {
+            $conditions = [$params['keyword'] => $params['value']];
+        }
+        if (isset($params['timeKey']) && isset($params['startTime']) && $params['endTime']) {
+            $start = (Yii::$app->formatter->asTimestamp($params['startTime']));
+            $end = (Yii::$app->formatter->asTimestamp($params['endTime']));
+            $conditions = ['between', $params['timeKey'], $start, $end];
+        }
+        if (!isset($params['timeKey']) && isset($params['startTime']) && $params['endTime']) {
+            $start = (Yii::$app->formatter->asTimestamp($params['startTime']));
+            $end = (Yii::$app->formatter->asTimestamp($params['endTime']));
+            $conditions = ['OR',
+                ['between', 'value.new', $start, $end],
+                ['between', 'value.supporting', $start, $end],
+                ['between', 'value.supported', $start, $end],
+                ['between', 'value.cancelled', $start, $end],
+                ];
+        }
         $aggregate = [
             [
                 '$match' => $conditions

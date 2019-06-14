@@ -280,7 +280,12 @@ class FrontendController extends Controller
                     'last_update_uuid_time_by' => 99999
                 ]);
             }
-            $this->_uuid = $identity->getId() . 'WS' . $identity->email;
+            Yii::info("Insert uuid User Weshop : " . $this->_uuid);
+            Yii::info([
+                '_uuid' => $this->_uuid ,
+                'identity' => $identity
+            ], __CLASS__);
+             $this->_uuid = $identity->getId() . 'WS' . $identity->email;
         } else {
             // anynomus
             /*

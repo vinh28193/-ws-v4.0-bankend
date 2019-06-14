@@ -145,13 +145,14 @@ var ws = ws || (function ($) {
             $.ajax($options);
         },
         getFingerprint: function () {
-            var token = $('meta[name=fingerprint-token]').attr('content');
-            if (!token || token === '') {
+            var content =  $('meta[name=fingerprint-token]').attr('content');
+
+            if(content === ''){
                 var $client = new ClientJS();
-                token = $client.getFingerprint();
-                pub.setFingerprint(token);
+                content = $client.getFingerprint();
+                pub.setFingerprint(content);
             }
-            return token;
+            return content;
         },
         setFingerprint: function (value) {
             $('meta[name=fingerprint-token]').attr('content', value);

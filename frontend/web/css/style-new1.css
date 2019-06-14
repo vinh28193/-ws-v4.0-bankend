@@ -13,9 +13,6 @@
 .style-ull li a {
     color: rgba(0, 0, 0, 0.85);
 }
-.style-ull li a:hover {
-    color: #2b96b6 !important;
-}
 .style-i {
     width: 24px;
     height: 24px;
@@ -34,12 +31,20 @@
     min-height: 530px;
     background-color: #ffffff;
 }
-.style-ull li:hover .sub-menu-2 {
+.sub-menu-2-hover {
     display: block;
-    margin-left: 332px;
+    margin-left: 325px;
     position: fixed;
     top: 0;
     color: rgba(0, 0, 0, 0.85);
+}
+.style-ull li a:hover {
+    color: #2b96b6 !important;
+}
+.style-ull li:hover {
+    color: #2b96b6 !important;
+    cursor: pointer;
+    font-size: 17px;
 }
 .title-box {
     line-height: 1.2;
@@ -48,11 +53,6 @@
     padding-bottom: 15px;
     margin-bottom: 15px;
     color: #555555;
-}
-.title {
-    color: #2b96b6;
-    font-size: 16px;
-    font-weight: 700;
 }
 .banner-sub img {
     margin-top: 25px;
@@ -63,11 +63,13 @@
     margin-left: 0;
 }
 ul.bars-nav > li ul li a{
-    color: #000;
+    color: rgba(0, 0, 0, 0.85);
     padding-left: 10px;
+    font-size: 14px;
+    font-family: Helvetica;
 }
 .category_account {
-   left: -195px !important;
+   left: -230px !important;
 }
 .show {
     background-color: white;
