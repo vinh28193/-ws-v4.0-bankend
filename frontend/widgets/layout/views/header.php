@@ -147,7 +147,7 @@ $this->registerJs($js);
                     <li role="presentation">
                         <a data-toggle="collapse" class="toggle" id="toggle" role="button" aria-expanded="false">
                             <span style="display: block; float: left;"><img src="/img/logo_amazon_us.png"></span>
-                            <span style="display: block; text-align: right; margin-right: 8px" class="amz"><i id="asd"
+                            <span style="display: block; text-align: right; margin-right: 8px" class="ico-dropdown amz"><i id="asd"
                                         class="la la-caret-down" style="transform: scaleY(-1);"></i></span>
                         </a>
                         <ul class="style-ull menu" id="target" style="display: block;">
@@ -159,7 +159,7 @@ $this->registerJs($js);
                         <a href="javascript: void(0);" class="toggleEbay" data-toggle="dropdown" aria-haspopup="true" role="button"
                            aria-expanded="false">
                             <span style="display: block; float: left;"><img src="/img/logo_ebay.png"></span>
-                            <span style="display: block; text-align: right; margin-right: 8px" class="ebay"><i id="asd1"
+                            <span style="display: block; text-align: right; margin-right: 8px" class="ico-dropdown ebay"><i id="asd1"
                                         class="la la-caret-down"></i></span>
                         </a>
                         <ul class="style-ull" id="targetEbay" >

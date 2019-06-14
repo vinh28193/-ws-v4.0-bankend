@@ -1783,6 +1783,7 @@ a:hover {
     display: block;
     white-space: nowrap;
     overflow: hidden;
+    font-size: 14px;
     text-overflow: ellipsis;
 }
 
@@ -1834,7 +1835,7 @@ a:hover {
 
 .deal-shock .deal-content ul li .item:hover .info-box .name a {
     white-space: normal;
-    font-size: 12px;
+    font-size: 14px;
     color: #2b96b6;
     font-weight: 500;
 }

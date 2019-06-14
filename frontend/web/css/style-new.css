@@ -26,6 +26,10 @@ body div.wrapper div.navbar-ws div.container{
     padding-top: 11px;
     margin: auto;
 }
+.a-hover{
+    font-size: 17px;
+    color: #2b96b6 !important;
+}
 .search-box{
     /*float: left;*/
     padding-right: 15px;
