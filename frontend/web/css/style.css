@@ -101,6 +101,7 @@ a:hover {
 
 .text-orange {
     color: #e67425;
+    line-height: 24px;
 }
 
 .table {
@@ -5147,7 +5148,7 @@ a:hover {
 
 .detail-block .product-full-info {
     font-size: 12px;
-    margin-left: 20px;
+    margin-left: 60px;
     width: calc(100% - 470px);
 }
 
@@ -5156,6 +5157,7 @@ a:hover {
 }
 
 .detail-block .product-full-info .title {
+    line-height: 26px;
     position: relative;
     padding-right: 36px;
 }
@@ -5164,7 +5166,9 @@ a:hover {
     font-size: 16px;
     font-weight: 500;
 }
-
+.table-none-border tr td {
+    border: none !important;
+}
 .detail-block .product-full-info .title .sale-tag {
     display: block;
     width: 32px;
@@ -5193,16 +5197,16 @@ a:hover {
     position: relative;
 }
 
-.detail-block .product-full-info .rating span:before {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 11px;
-    position: absolute;
-    top: 3px;
-    left: -12px;
-    background: #555555;
-}
+/*.detail-block .product-full-info .rating span:before {*/
+/*    content: '';*/
+/*    display: block;*/
+/*    width: 1px;*/
+/*    height: 11px;*/
+/*    position: absolute;*/
+/*    top: 3px;*/
+/*    left: -12px;*/
+/*    background: #555555;*/
+/*}*/
 
 .detail-block .product-full-info .best-sell {
     display: inline-block;

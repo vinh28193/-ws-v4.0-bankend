@@ -7,6 +7,7 @@ use frontend\widgets\item\ItemDetailWidget;
 /* @var $this yii\web\View */
 /* @var $item \common\products\BaseProduct */
 
+$this->params = ['Home' => '/','eBay' => '/ebay.html', $item->item_name => 'javascript:void(0);'];
 
 echo ItemDetailWidget::widget([
     'item' => $item,
