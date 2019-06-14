@@ -50,9 +50,8 @@
     "linslin/yii2-curl":"*",
     "lajax/yii2-translate-manager": "*",
     "spiral/php-grpc": "dev-master",
-    "grpc/grpc": "v1.15.0",
-    "google/protobuf": "^v3.6.0",
-    "eddycjy/grpc-mri": "^0.2.0"
+    "grpc/grpc": "^v1.6.0",
+    "google/protobuf": "^3.4.0"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

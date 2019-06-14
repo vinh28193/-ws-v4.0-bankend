@@ -12,17 +12,11 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
-// Check Test GRPC
-use common\grpc\boxme\Accouting\GreeterClient as GreeterClient;
-//use common\grpc\boxme\Accouting\GetListMerchantByIdRequest as GetListMerchantByIdRequest ;
-//use common\grpc\boxme\Accouting\GetListMerchantByIdResponse as GetListMerchantByIdResponse;
+use protobufboxme\Accouting\GreeterClient as GreeterClient;
 use Grpc;
-
-//GRPC
-use common\grpc\boxme\Accouting\Merchantinfo;
-
-use protobufboxme\Accouting\GetListMerchantByIdRequest as GetListMerchantByIdRequest;
+use protobufboxme\Accouting\Merchantinfo;
+use protobufboxme\Accouting\GetListMerchantByIdRequest;
+use protobufboxme\Accouting\GetListMerchantByIdResponse;
 
 /**
  * HomeController implements the CRUD actions for Order model.
@@ -44,20 +38,22 @@ class HomeController extends BaseAccountController
         ];
     }
 
-    /*
+
     public function actionGrpc()
     {
-//        $WaletBoxme  = new Merchantinfo('206.189.94.203:50054');
-//        $WaletBoxme->setUserId(23);
-//        $WaletBoxme->setCountryCode('VN');
-//        $getBalanceCod = $WaletBoxme->getBalanceCod();
-//        var_dump($getBalanceCod);
-//
-//        die("upiuiupp");
-
         $greeterClient = new  GreeterClient('206.189.94.203:50054', [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
+
+        $WaletBoxme  = new Merchantinfo();
+        $WaletBoxme->setUserId(23);
+        $WaletBoxme->setCountryCode('VN');
+        $getBalanceCod = $WaletBoxme->getBalanceCod();
+        var_dump($getBalanceCod);
+
+        die("upiuiupp");
+
+
 
         print_r($greeterClient);
         $request = new GetListMerchantByIdRequest();die;
@@ -78,26 +74,17 @@ class HomeController extends BaseAccountController
         ];
         return;
     }
-    */
 
-    public function actionGetwallet()
+    public function actionGetwallet(GetListMerchantByIdRequest $request)
     {
-        $greeterClient = new GreeterClient('206.189.94.203:50054', [
-            'credentials' => Grpc\ChannelCredentials::createInsecure(),
-        ]);
-
-        $request = new  GetListMerchantByIdRequest();
-        $request->setKey("CountryCode");
-        $request->setValue('VN');
-        $request->setKey("UserId");
-        $request->setValue(23);
-
-        list($reply, $status) = $greeterClient->getListMerchantById($request)->wait();
-
-        print_r($greeterClient);
-        print_r($reply);
-        print_r($status);
-        die("0990090090");
+        $data = new  GetListMerchantByIdResponse();
+//        $data->setData($request->getCountryCode());
+//        $data->setData($request->getUserId());
+        return Yii::$app->response->data = [
+            'status' => Grpc\STATUS_OK,
+            'message' => '',
+            'data' => $data,
+        ];
     }
 
 

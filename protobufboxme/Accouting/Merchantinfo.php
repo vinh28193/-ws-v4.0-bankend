@@ -99,7 +99,7 @@ class Merchantinfo extends \Google\Protobuf\Internal\Message
      * }
      */
     public function __construct($data = NULL) {
-        \GPBMetadata\Proto\Accounting::initOnce();
+        \protobufboxme\GPBMetadata\Proto\Accounting::initOnce();
         parent::__construct($data);
     }
 

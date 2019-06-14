@@ -857,4 +857,20 @@ Accouting@206.189.94.203:50054>
  
  let user = client.signUp({user_id: 22 ,email:adv.globalmedia2@gmail.com ,username:'adv.globalmedia2' ,fullname:'Jackly Hoang' , invite_code:5 ,is_active:9},printReply)
  
- let ef = client.signUp({country: 'VN',currency:'VND' ,email:'adv.globalmedia2@gmail.com' ,fullname:'Jackly Hoang' , password1:'ws@123#$' , password2:'ws@123#$' ,phone:'0972607988' ,platform:'WESHOP' , platform_user:22},printReply)
+ 
+ 
+ ###------------------
+ https://www.swoole.com/
+ #!/bin/bash
+ pecl install swoole
+ pear install pecl/swoole
+ 
+ yum install gcc 
+ yum update
+ 
+ #---CentOS 6 gcc 4.8-----
+ cd /usr/local/src      
+ wget http://ftp.gnu.org/gnu/gcc/gcc-7.1.0/gcc-7.1.0.tar.bz2                   #  http://ftp.gnu.org/gnu/gcc)
+ tar -jxvf gcc-7.1.0.tar.bz2  
+ --------------------- 
+https://blog.csdn.net/qq_24849765/article/details/75893393  
