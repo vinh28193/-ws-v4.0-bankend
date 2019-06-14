@@ -33,7 +33,7 @@ JS;
 $this->registerJs($js);
 
 ?>
-<div class="navbar-ws mobile-hide" xmlns="http://www.w3.org/1999/html">
+<div class="navbar-ws mobile-hide style-header" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
         <div class="logo">
             <span class="menu-toggle"></span>
