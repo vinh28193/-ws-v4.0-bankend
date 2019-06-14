@@ -30,6 +30,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
     const LEVEL_SLIVER = 'sliver';
     const LEVEL_GOLD = 'gold';
 
+
     protected $UUID;
 
     /**
@@ -374,6 +375,11 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
             return self::LEVEL_GOLD;
         }
     }
+
+    public function getFingerprint(){
+        return $this->id . 'WS' . $this->email;
+    }
+
 
     /**
      * @return null
