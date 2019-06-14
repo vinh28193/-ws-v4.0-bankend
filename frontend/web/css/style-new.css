@@ -4,6 +4,9 @@ html, body {
     font-weight: 400;
     color: #555555;
 }
+.container{
+    max-width: 90%;
+}
 .navbar-ws,body div.wrapper div.navbar-ws div.container{
     /* Style for "Rectangle" */
     background-color: #141c2e;
@@ -188,7 +191,7 @@ ul.bars-nav li:last-child{
     border-radius: 5px;
     background-color: #ffffff;
     position: relative;
-    margin-top: -15%;
+    margin-top: -5%;
     padding: 15px;
 }
 .content-body .title-content-home{
