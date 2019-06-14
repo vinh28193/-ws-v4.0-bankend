@@ -17,8 +17,8 @@
   },
   "minimum-stability": "stable",
   "require": {
-    "php": ">=5.4.0",
-    "yiisoft/yii2": "~2.0.6",
+    "php": ">=7.1.0",
+    "yiisoft/yii2": "~2.0.14",
     "yiisoft/yii2-bootstrap": "~2.0.0",
     "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
     "yiisoft/yii2-faker": "~2.0.0",
@@ -49,9 +49,10 @@
     "bizley/migration": "^3.3",
     "linslin/yii2-curl":"*",
     "lajax/yii2-translate-manager": "*",
-    "grpc/grpc": "^v1.7.0",
-    "google/protobuf": "^v3.4.0",
-    "spiral/php-grpc": "dev-master"
+    "spiral/php-grpc": "dev-master",
+    "grpc/grpc": "v1.15.0",
+    "google/protobuf": "^v3.6.0",
+    "eddycjy/grpc-mri": "^0.2.0"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
@@ -72,8 +73,12 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "": "build/gen"
+      "": "build/gen",
+      "": "tests/generated"
     }
+  },
+  "scripts": {
+    "test": "(cd tests && rm -rf generated && mkdir -p generated && ../../src/protoc --php_out=generated -I../../src -I. proto/empty/echo.proto proto/test.proto proto/test_include.proto proto/test_no_namespace.proto proto/test_prefix.proto proto/test_php_namespace.proto proto/test_empty_php_namespace.proto proto/test_reserved_enum_lower.proto proto/test_reserved_enum_upper.proto proto/test_reserved_enum_value_lower.proto proto/test_reserved_enum_value_upper.proto proto/test_reserved_message_lower.proto proto/test_reserved_message_upper.proto proto/test_service.proto proto/test_service_namespace.proto proto/test_wrapper_type_setters.proto proto/test_descriptors.proto) && (cd ../src && ./protoc --php_out=../php/tests/generated -I../php/tests -I. ../php/tests/proto/test_import_descriptor_proto.proto) && vendor/bin/phpunit"
   },
   "config": {
     "process-timeout": 1800
