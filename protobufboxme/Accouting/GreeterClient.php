@@ -1,5 +1,5 @@
 <?php
-namespace common\grpc\boxme\Accouting;
+namespace protobufboxme\Accouting;
 
 use Yii;
 use Grpc;
@@ -23,10 +23,10 @@ class GreeterClient extends \Grpc\BaseStub {
      * @param array $options call options
      */
     public function GetListMerchantById(GetListMerchantByIdRequest $argument,
-      $metadata = [], $options = []) {
+                                        $metadata = [], $options = []) {
         return $this->_simpleRequest('/Accouting.Accouting/GetListMerchantById',
-        $argument,
-        ['GetListMerchantByIdResponse', 'decode'],
-        $metadata, $options);
+            $argument,
+            ['GetListMerchantByIdResponse', 'decode'],
+            $metadata, $options);
     }
 }

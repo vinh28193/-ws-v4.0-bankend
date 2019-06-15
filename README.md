@@ -775,18 +775,24 @@ https://developers.google.com/protocol-buffers/docs/reference/php-generated
 
 ### protoc --proto_path=boxme --php_out=build/gen accountingboxme.proto
 #-------------------------
-https://github.com/protocolbuffers/protobuf/tree/master/php
+https://github.com/protocolbuffers/protobuf/tree/master/php 
+/*
 protoc --php_out=boxme proto/accounting.proto
-
 protoc --php_out=common\grpc\boxme proto/accounting.proto
 protoc --proto_path=common\grpc\boxme --php_out=build/gen proto/accounting.proto
-protoc --proto_path=protobuf-boxme --php_out=build/gen proto/accounting.proto
-protoc --proto_path=protobuf-boxme --php_out=build/gen proto/user.proto
+protoc --proto_path=protobufboxme --php_out=build/gen proto/accounting.proto
+protoc --proto_path=protobufboxme --php_out=build/gen proto/user.proto
 
 protoc -I=.  --php_out=./proto/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/Greeter.proto
 
-protoc -I=.  --php_out=./protobuf-boxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/accounting.proto
-protoc -I=.  --php_out=./protobuf-boxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/user.proto
+protoc -I=.  --php_out=./protobufboxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/accounting.proto
+protoc -I=.  --php_out=./protobufboxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/user.proto
+protoc -I=.  --php_out=./protobufboxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/Seller.proto
+*/
+
+protoc --php_out=./protobufboxme ./proto/accounting.proto
+protoc --php_out=./protobufboxme ./proto/user.proto
+protoc --php_out=./protobufboxme ./proto/Seller.proto
 
 
 ##----------------Call test grpc boxme-----------------------
@@ -794,7 +800,7 @@ https://njp.io/grpcc-a-simple-command-line-client-for-grpc-services/
 
 $ npm install -g grpcc
 
-$ grpcc --proto accounting.proto --address 206.189.94.203:50054 -i
+$ grpcc --proto proto/accounting.proto --address 206.189.94.203:50054 -i
 
 Connecting to Accouting.Accouting on 206.189.94.203:50054. Available globals:
 
@@ -817,10 +823,10 @@ https://inside-out.xyz/technology/how-to-enable-http-2-in-centos-7.html
 https://github.com/dmstr/docker-php-yii2
 
 
-$ grpcc --proto Greeter.proto --address 127.0.0.1:50051 -i
+$ grpcc --proto proto/Greeter.proto --address 127.0.0.1:50051 -i
 
-$ grpcc --proto accounting.proto --address 206.189.94.203:50054 -i
-
+$ grpcc --proto proto/accounting.proto --address 206.189.94.203:50054 -i
+ 
 $ let erl = client.getListMerchantById({UserId: 23 , CountryCode: 'VN'},printReply)
 Accouting@206.189.94.203:50054>
 {
@@ -843,3 +849,46 @@ Accouting@206.189.94.203:50054>
   "Message": "Success"
 }
  
+ 
+ $ grpcc --proto proto/user.proto --address 206.189.94.203:50053 -i
+ 
+   client - the client connection to UserService
+     signUp (SignUpRequest, callback) returns SignUpResponse
+ 
+   printReply - function to easily print a unary call reply (alias: pr)
+   streamReply - function to easily print stream call replies (alias: sr)
+   createMetadata - convert JS objects into grpc metadata instances (alias: cm)
+   printMetadata - function to easily print a unary call's metadata (alias: pm)
+ 
+ 
+ let user = client.signUp({user_id: 22 ,email:adv.globalmedia2@gmail.com ,username:'adv.globalmedia2' ,fullname:'Jackly Hoang' , invite_code:5 ,is_active:9},printReply)
+ 
+ 
+ 
+ ###------------------
+ https://www.swoole.com/
+ #!/bin/bash
+ pecl install swoole
+ pear install pecl/swoole
+ 
+ yum install gcc 
+ yum update
+ 
+ #---CentOS 6 gcc 4.8-----
+ cd /usr/local/src      
+ wget http://ftp.gnu.org/gnu/gcc/gcc-7.1.0/gcc-7.1.0.tar.bz2                   #  http://ftp.gnu.org/gnu/gcc)
+ tar -jxvf gcc-7.1.0.tar.bz2  
+ --------------------- 
+https://blog.csdn.net/qq_24849765/article/details/75893393  
+
+
+##-----config GRPC------
+composer dump-autoload
+composer validate
+composer gen-proto  # 
+"autoload": {
+    "psr-4": { 
+      "": "gen"  // folder ren code
+    }
+  },
+  

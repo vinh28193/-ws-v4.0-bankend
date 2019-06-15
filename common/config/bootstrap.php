@@ -12,4 +12,6 @@ Yii::setAlias('@landing', '@frontend/modules/landing');
 Yii::setAlias('@weshop','@backend/modules/weshop');
 Yii::setAlias('@weshop/payment','@weshop/weshop-payment/src');
 
+Yii::setAlias('@protobufboxme', dirname(dirname(__DIR__)) . '/protobufboxme');
+
 //Yii::setAlias('@mdm/admin' , '@app/extensions/mdm/yii2-admin-2.0.0');

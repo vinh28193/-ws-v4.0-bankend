@@ -12,13 +12,11 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use common\grpc\boxme\Accouting\GreeterClient as GreeterClient;
-use common\grpc\boxme\Accouting\GetListMerchantByIdRequest as GetListMerchantByIdRequest ;
-use common\grpc\boxme\Accouting\GetListMerchantByIdResponse as GetListMerchantByIdResponse;
+use protobufboxme\Accouting\GreeterClient as GreeterClient;
 use Grpc;
-
-//GRPC
-use common\grpc\boxme\Accouting\Merchantinfo;
+use protobufboxme\Accouting\Merchantinfo;
+use protobufboxme\Accouting\GetListMerchantByIdRequest;
+use protobufboxme\Accouting\GetListMerchantByIdResponse;
 
 /**
  * HomeController implements the CRUD actions for Order model.
@@ -39,6 +37,72 @@ class HomeController extends BaseAccountController
             ],
         ];
     }
+
+
+    public function actionGrpc()
+    {
+        $greeterClient = new  GreeterClient('206.189.94.203:50054', [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+
+        $WaletBoxme  = new Merchantinfo();
+        $WaletBoxme->setUserId(23);
+        $WaletBoxme->setCountryCode('VN');
+        $getBalanceCod = $WaletBoxme->getBalanceCod();
+        var_dump($getBalanceCod);
+
+        die("upiuiupp");
+
+
+
+        print_r($greeterClient);
+        $request = new GetListMerchantByIdRequest();die;
+        $request->setUserId(23);
+        $request->setCountryCode('VN');
+
+        list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
+
+
+        print_r($reply);
+        print_r($status);
+        die("8989898");
+
+        Yii::$app->response->data = [
+            'status' => Grpc\STATUS_OK,
+            'message' => '',
+            'data' => $reply,
+        ];
+        return;
+    }
+
+    public function actionGetwallet(GetListMerchantByIdRequest $request)
+    {
+        $data = new  GetListMerchantByIdResponse();
+//        $data->setData($request->getCountryCode());
+//        $data->setData($request->getUserId());
+        return Yii::$app->response->data = [
+            'status' => Grpc\STATUS_OK,
+            'message' => '',
+            'data' => $data,
+        ];
+    }
+
+    public function actionCallGrpc()
+    {
+        $options = [
+            'credentials' => $this->credentialsObject,
+            'update_metadata' => function($metaData){
+                $metaData['authorization'] = ['Bearer ' . $this->token];
+                return $metaData;
+            }
+        ];
+
+        $client = new OrganizationServiceClient($this->url,$options);
+
+        $r = new \Google\Protobuf\GPBEmpty();
+        list($data,$status) = $client->list($r)->wait();
+    }
+
 
     /**
      * Lists all Order models.
@@ -63,8 +127,6 @@ class HomeController extends BaseAccountController
             'totalCart' => $totalCart
         ]);
     }
-
-
 
     /**
      * Displays a single Order model.
@@ -97,42 +159,7 @@ class HomeController extends BaseAccountController
         ]);
     }
 
-    public function actionGrpc()
-    {
-        /*
-        $WaletBoxme  = new Merchantinfo('206.189.94.203:50054');
-        $WaletBoxme->setUserId(23);
-        $WaletBoxme->setCountryCode('VN');
-        $getBalanceCod = $WaletBoxme->getBalanceCod();
-        var_dump($getBalanceCod);
 
-        die("upiuiupp");
-
-        */
-
-        $greeterClient = new  GreeterClient('206.189.94.203:50054', [
-            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
-        ]);
-
-        print_r($greeterClient);
-        $request = new GetListMerchantByIdRequest();die;
-        $request->setUserId(23);
-        $request->setCountryCode('VN');
-
-        list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
-
-
-        print_r($reply);
-        print_r($status);
-        die("8989898");
-
-        Yii::$app->response->data = [
-            'status' => Grpc\STATUS_OK,
-            'message' => '',
-            'data' => $reply,
-        ];
-        return;
-    }
 
     /**
      * Updates an existing Order model.
