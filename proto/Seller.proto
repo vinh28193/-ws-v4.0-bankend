@@ -1,0 +1,28 @@
+///////////// GIAO DICH NAP TIEN
+syntax = "proto3";
+
+option objc_class_prefix = "cal";
+package Seller;
+
+
+
+// create cashin in by weshop
+message WsCreateCahinRequest {
+    string Param = 1;
+}
+message WsCreateCahinResponse {
+    bool    Error       = 1;
+    string  Message     = 2; // THONG BAO CHI TIET
+    string  ErrorCode   = 3; // RA VE MA LOI NEU Error = TRUE
+    string  Data        = 4; // CHUOI JSON DUMPS data User
+}
+
+// end  create cashin in by WsCreateTopupRequest
+
+service SellerService {
+
+    // grpc create topup from weshop
+    rpc WsCreateCahin (WsCreateCahinRequest) returns (WsCreateCahinResponse) {};
+
+
+}

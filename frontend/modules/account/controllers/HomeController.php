@@ -87,6 +87,21 @@ class HomeController extends BaseAccountController
         ];
     }
 
+    public function actionCallGrpc()
+    {
+        $options = [
+            'credentials' => $this->credentialsObject,
+            'update_metadata' => function($metaData){
+                $metaData['authorization'] = ['Bearer ' . $this->token];
+                return $metaData;
+            }
+        ];
+
+        $client = new OrganizationServiceClient($this->url,$options);
+
+        $r = new \Google\Protobuf\GPBEmpty();
+        list($data,$status) = $client->list($r)->wait();
+    }
 
 
     /**

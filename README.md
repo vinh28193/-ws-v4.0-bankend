@@ -780,13 +780,14 @@ protoc --php_out=boxme proto/accounting.proto
 
 protoc --php_out=common\grpc\boxme proto/accounting.proto
 protoc --proto_path=common\grpc\boxme --php_out=build/gen proto/accounting.proto
-protoc --proto_path=protobuf-boxme --php_out=build/gen proto/accounting.proto
-protoc --proto_path=protobuf-boxme --php_out=build/gen proto/user.proto
+protoc --proto_path=protobufboxme --php_out=build/gen proto/accounting.proto
+protoc --proto_path=protobufboxme --php_out=build/gen proto/user.proto
 
 protoc -I=.  --php_out=./proto/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/Greeter.proto
 
-protoc -I=.  --php_out=./protobuf-boxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/accounting.proto
-protoc -I=.  --php_out=./protobuf-boxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/user.proto
+protoc -I=.  --php_out=./protobufboxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/accounting.proto
+protoc -I=.  --php_out=./protobufboxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/user.proto
+protoc -I=.  --php_out=./protobufboxme/  --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin ./proto/Seller.proto
 
 
 ##----------------Call test grpc boxme-----------------------
@@ -874,3 +875,15 @@ Accouting@206.189.94.203:50054>
  tar -jxvf gcc-7.1.0.tar.bz2  
  --------------------- 
 https://blog.csdn.net/qq_24849765/article/details/75893393  
+
+
+##-----config GRPC------
+composer dump-autoload
+composer validate
+composer gen-proto  # 
+"autoload": {
+    "psr-4": { 
+      "": "gen"  // folder ren code
+    }
+  },
+  

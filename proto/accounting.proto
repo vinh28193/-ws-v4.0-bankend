@@ -3,20 +3,38 @@ syntax = "proto3";
 option objc_class_prefix = "cal";
 package Accouting;
 
+//  TAO THONG TIN SO DU CHO USER (CreateMerchant)
+
+message CreateMerchantByIdRequest {
+    string      CountryCode = 1;  // MA QUOC GIA (VN,TH,MY,ID)
+    int32       UserId = 2;       // USER_ID
+    string      CurrencyCode = 3; // MA TIEN THEO QUOC GIA (VN: VND,MY:MYR , ID:IDR, TH:THB)
+}
+message ReponseCreateMerchantById{
+    bool Error = 1;      //
+    string  Message = 2;  // THONG BAO LOI
+    repeated Merchantinfo Data = 3;   // THONG TIN MERCHANT
+}
+
+
+
+/// get Merchantinfo lay thong tin so du
 message Merchantinfo {
     int32   UserId        = 1;
     string  CountryCode   = 2;
     string  HomeCurrency  = 3;  // loai tien te
     double   UserLevel     = 4;  // 1 user,2 user
-    double   BalancePvc    = 5;  // so du pvc (dung duyet don)
+    double   BalancePvc    = 5;  // so du duyet don
     double   BalanceCod    = 6;  // so du cod
     double   Provisional   = 7;  // tien thu ho tam tinh
-    double   Freeze        = 8;  // phi van chueyn tam tinh
+    double   Freeze        = 8;  // phi van chuyen tam tinh
     double   Quota              = 9;  // han muc cap cho khach hang
-    double   MoneyAvailable     = 10;
+    double   MoneyAvailable     = 10; // So du kha dung (dung duyet don)
     double   BalanceConfig   = 11;
 }
-
+// KHI NAP TIEN => SO TIEN DC NAP SE + VAO SO DU PVC (BalancePvc)
+// NOTE: So du kha dung = so du duyet don   + han muc  - van chuyen tam tinh
+//
 message GetListMerchantByIdRequest {
     string  CountryCode = 1;
     int32   UserId = 2;
@@ -28,8 +46,27 @@ message GetListMerchantByIdResponse{
     string  Message    = 3;
 }
 
+////// TAO GIAO DICH (THU PHI, BOI HOAN PHI)
+message WsCreateTransactionRequest {
+    string Param = 1;   // LA CHUOI JSON.DUMPS
+}
+message WsCreateTransactionResponse {
+    bool    Error       = 1;
+    string  Message     = 2;// THONG BAO CHI TIET
+    string  ErrorCode   = 3; // RA VE MA LOI NEU Error = TRUE
+    string  Data        = 4;  // CHUOI JSON DUMPS data User
+}
 
 
 service Accouting {
+    /// TAO SO DU  CREATE - MERCHANT
+    rpc CreateMerchantById (CreateMerchantByIdRequest) returns (ReponseCreateMerchantById) {};
+    // LAY THONG TIN SO DU - GET MERCHANT
     rpc GetListMerchantById (GetListMerchantByIdRequest) returns (GetListMerchantByIdResponse){};
+    // TAO GIAO DICH ( CREATE TRANSACTION)
+    rpc WsCreateTransaction (WsCreateTransactionRequest) returns (WsCreateTransactionResponse) {};
 }
+
+// CHI TIET XEM FILE THEM FILE DOC
+
+
