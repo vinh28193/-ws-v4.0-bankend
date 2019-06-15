@@ -20,13 +20,13 @@ return [
             'enable' => 'sandbox',
             'params' => [
                 'sandbox' => [
-                    'URL' => 'http://sandbox.nganluong.vn:8088/nl30/paygate.weshop.php',
+                    'URL' => 'http://sandbox.nganluong.vn:8088/nl30/checkout.api.nganluong.post.php',
                     'ACC' => 'dev.weshopasia@gmail.com',
                     'PASS' => '0f50829fb879fa9ecf480cb788ebb218',
                     'ID' => '45378'
                 ],
                 'prod_trunggian' => [
-                    'URL' => 'https://www.nganluong.vn/paygate.weshop.php',
+                    'URL' => 'https://www.nganluong.vn/checkout.api.nganluong.post.php',
                     'ACC' => 'trunggian.wsvn@gmail.com',
                     'PASS' => 'weshop@2015',
                     'ID' => '38176'

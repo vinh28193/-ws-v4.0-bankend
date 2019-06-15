@@ -70,6 +70,9 @@ ul.bars-nav > li ul li a{
 }
 .category_account {
    left: -230px !important;
+    transform: translate3d(0, 0, 0) !important;
+    top: 89% !important;
+
 }
 .show {
     background-color: white;
@@ -102,4 +105,27 @@ ul.bars-nav > li ul li a{
 }
 .style-u li:first-child {
     padding-right: 10px;
+}
+.style-header {
+    z-index: 99;
+    padding-left: 5%;
+}
+.style-ul-after {
+    z-index: 98;
+}
+ul:after {
+    z-index: 98 !important;
+}
+.buy-amazon {
+    width: 100%;
+}
+.item {
+    /*padding: 15px;*/
+}
+.style-facebook {
+    font-size: 2em !important;
+}
+.style-font-facebook {
+    position: absolute;
+    top: 5px !important;
 }

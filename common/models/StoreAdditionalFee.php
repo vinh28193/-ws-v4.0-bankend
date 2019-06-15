@@ -8,6 +8,7 @@
 
 namespace common\models;
 
+use common\boxme\InternationalShippingCalculator;
 use Yii;
 use yii\helpers\Json;
 use common\calculators\CalculatorService;
@@ -38,6 +39,9 @@ class StoreAdditionalFee extends DbStoreAdditionalFee
         $value = 0;
         if ($this->name === 'custom_fee' && ($category = $additional->getCategory()) !== null) {
             $value = $category->getCustomFee($additional);
+        }elseif ($this->name === 'international_shipping_fee'){
+            $calculator = new InternationalShippingCalculator();
+            $value = $calculator->trace($additional);
         } else if (($conditions = $this->getConditions()) !== false) {
             $value = CalculatorService::calculator($conditions, $additional);
         }

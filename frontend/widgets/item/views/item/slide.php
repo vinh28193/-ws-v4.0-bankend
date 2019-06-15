@@ -8,8 +8,7 @@ use yii\helpers\Html;
 
 <div class="thumb-slider">
     <div class="detail-slider">
-        <i class="fas fa-chevron-up slider-prev"></i>
-        <i class="fas fa-chevron-down slider-next"></i>
+        <i class="la la-chevron-up slider-prev"></i>
         <div id="detail-slider"  class="slick-slider">
             <?php
                 foreach ($item->primary_images as $image){ ?>
@@ -21,6 +20,7 @@ use yii\helpers\Html;
                 <?php }
             ?>
         </div>
+        <i class="la la-chevron-down slider-next"></i>
     </div>
     <div class="big-img">
             <img id="detail-big-img" class="detail-big-img"

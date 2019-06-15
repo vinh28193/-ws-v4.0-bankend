@@ -135,7 +135,7 @@ class FrontendController extends Controller
             'COPYRIGHT' => Yii::t('frontend', '&copy; Weshop Global'),
             'robots' => 'noodp,index,follow',
             'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505',
-            'fingerprint-token' => ''
+            'fingerprint-token' => $this->filterUuid()
         ], $this->metaTag(), ArrayHelper::getValue(Yii::$app->params, 'metaTagParam', []));
         foreach ($metaTags as $name => $content) {
             $this->registerMetaTag([
@@ -282,10 +282,10 @@ class FrontendController extends Controller
             }
             Yii::info("Insert uuid User Weshop : " . $this->_uuid);
             Yii::info([
-                '_uuid' => $this->_uuid ,
+                '_uuid' => $this->_uuid,
                 'identity' => $identity
             ], __CLASS__);
-             $this->_uuid = $identity->getId() . 'WS' . $identity->email;
+            $this->_uuid = $identity->getFingerprint();
         } else {
             // anynomus
             /*
@@ -342,6 +342,11 @@ class FrontendController extends Controller
     {
         if ($this->_uuid !== null) {
             return $this->_uuid;
+        } elseif (($identity = Yii::$app->user->identity) !== null) {
+            /** @var  $identity User */
+            $uuid = $identity->getFingerprint();
+            $this->setUuidCookie($uuid);
+            return $uuid;
         } elseif (($onCookie = $this->getUuidCookie()) !== null) {
             return $onCookie;
         } elseif ($checkHead && ($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN, null) !== null)) {

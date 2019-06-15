@@ -29,11 +29,26 @@ $(document).ready(function () {
         $('#asd1').css('transform','scaleY(1)');
     $('#targetEbay').toggle('slow');
 });
+    
+    $(document).ready(function() {
+ 
+    var div = $('#header');
+    var start = $(div).offset().top;
+ 
+    $.event.add(window, "scroll", function() {
+        var p = $(window).scrollTop();
+        $(div).css('position',((p)>start) ? 'fixed' : 'static');
+        $(div).css('width',((p)>start) ? '100%' : '100%');
+        $(div).css('padding-left',((p)>start) ? '5%' : '5%');
+        $(div).css('top',((p)>start) ? '0px' : '');
+    });
+ 
+});
 JS;
 $this->registerJs($js);
 
 ?>
-<div class="navbar-ws mobile-hide" xmlns="http://www.w3.org/1999/html">
+<div class="navbar-ws mobile-hide style-header" id="header" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
         <div class="logo">
             <span class="menu-toggle"></span>
@@ -82,14 +97,14 @@ $this->registerJs($js);
                             </div>
                             <div class="col-md-6 pr-1">
                                 <button class="btn btn-fb">
-                                    <i class="la la-facebook"></i>
-                                    <span>Facebook</span>
+                                    <i class="la la-facebook style-facebook"></i>
+                                    <span class="style-font-facebook">Facebook</span>
                                 </button>
                             </div>
                             <div class="col-md-6 pl-1">
                                 <button  class="btn btn-google">
-                                    <i class="la la-google"></i>
-                                    <span>Google</span>
+                                    <i class="la la-google style-facebook"></i>
+                                    <span class="style-font-facebook">Google</span>
                                 </button>
                             </div>
                         </div>
@@ -122,7 +137,9 @@ $this->registerJs($js);
                            <div class="col-md-12 mb-2">Mã giảm giá của tôi</div>
                            <div class="col-md-12 mb-2">Khiếu nại & hoàn trả</div>
                            <div class="col-md-12 mb-2">Tài khoản ví(xu)</div>
-                           <div class="col-md-12 mb-3">Cấu hình tài khoản</div>
+                           <div class="col-md-12 mb-3">
+                               <a href="/my-weshop.html">Cấu hình tài khoản</a>
+                           </div>
                            <div class="col-md-12 mb-2 social-button">
                                <a class="btn btn-info p-2" href="/logout.html">Đăng xuất tài khoản</a>
                            </div>

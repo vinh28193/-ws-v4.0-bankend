@@ -43,7 +43,7 @@ class ItemController extends EbayController
         $this->portalTitle = $item->item_name;
         $this->portalImage = $item->primary_images[0]->main;
 
-        $category = $item->getCustomCategory();
+        $category = $item->getCategory();
         $relate_product_rs = EbayProductGate::paserSugget($item->item_id, $category ? [$category->alias] : []);
         $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
         $item->relate_products = RelateProduct::setRelateProducts($relate_product);
@@ -142,10 +142,10 @@ class ItemController extends EbayController
             }
             $response['success'] = true;
             $response['message'] = Yii::t('frontend', 'Success');
-            $contentPrice = '<strong class="text-orange">' . WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, '') . '<span class="currency">đ</span></strong>';
+            $contentPrice = '<strong class="text-danger">' . WeshopHelper::showMoney($item->getLocalizeTotalPrice(), 1, '') . '<span class="currency">đ</span></strong>';
             if ($item->start_price) {
                 $contentPrice .= '<b class="old-price">' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice(), 1, '') . '<span class="currency">đ</span></b>';
-                $contentPrice .= '<span class="save">(Tiết kiệm: ' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') . 'đ)</span>';
+//                $contentPrice .= '<span class="save">(Tiết kiệm: ' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') . 'đ)</span>';
             }
             $response['content'] = [
                 'fees' => $fees,

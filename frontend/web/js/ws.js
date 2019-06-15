@@ -17,8 +17,6 @@ var ws = ws || (function ($) {
         options: {},
         init: function (options) {
             pub.options = $.extend({}, defaultOptions, options || {});
-            var $client = new ClientJS();
-            pub.setFingerprint($client.getFingerprint());
             pub.reloadCartBadge();
             $.ajaxPrefilter('html', function (options, originalOptions, jqXHR) {
                 var orgBeforeSendHandler = options.beforeSend;
@@ -146,7 +144,6 @@ var ws = ws || (function ($) {
         },
         getFingerprint: function () {
             var content =  $('meta[name=fingerprint-token]').attr('content');
-
             if(content === ''){
                 var $client = new ClientJS();
                 content = $client.getFingerprint();
