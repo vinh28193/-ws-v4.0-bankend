@@ -3,7 +3,7 @@ syntax = "proto3";
 
 option objc_class_prefix = "cal";
 package Seller;
-
+option php_generic_services = true;
 
 
 // create cashin in by weshop

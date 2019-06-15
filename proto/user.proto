@@ -2,6 +2,7 @@ syntax = "proto3";
 
 option objc_class_prefix = "cal";
 package user;
+option php_generic_services = true;
 
 message SignUpUser {
     int32 user_id = 1;
