@@ -10,7 +10,7 @@ class AccoutingClient implements AccoutingInterface
 {
     public function createMerchantById(CreateMerchantByIdRequest $request): ReponseCreateMerchantById
     {
-        $reply = new CreateMerchantByIdRequest();
+        $reply = new ReponseCreateMerchantById();
         $reply->mergeFromString($this->makeRequest($request, 'CreateMerchantById'));
 
         return $reply;
@@ -19,7 +19,7 @@ class AccoutingClient implements AccoutingInterface
 
     public function getListMerchantById(GetListMerchantByIdRequest $request): GetListMerchantByIdResponse
     {
-        $reply = new GetListMerchantByIdRequest();
+        $reply = new GetListMerchantByIdResponse();
         $reply->mergeFromString($this->makeRequest($request, 'GetListMerchantById'));
 
         return $reply;
@@ -27,7 +27,7 @@ class AccoutingClient implements AccoutingInterface
 
     public function wsCreateTransaction(WsCreateTransactionRequest $request): WsCreateTransactionResponse
     {
-        $reply = new WsCreateTransactionRequest();
+        $reply = new WsCreateTransactionResponse();
         $reply->mergeFromString($this->makeRequest($request, 'WsCreateTransaction'));
 
         return $reply;
@@ -37,7 +37,7 @@ class AccoutingClient implements AccoutingInterface
     {
         $body = $message->serializeToString();
 
-        $ch = curl_init("http://localhost:8000/{$method}");
+        $ch = curl_init("206.189.94.203:50054");
 
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,

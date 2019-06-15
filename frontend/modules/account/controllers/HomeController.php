@@ -98,7 +98,8 @@ class HomeController extends BaseAccountController
         $req   = (new GetListMerchantByIdRequest())->setCountryCode('VN')->setUserId(23);
         $reply = $accoutin->getListMerchantById($req);
 
-        echo 'data ' . $reply->getData() . PHP_EOL;
+        var_dump($reply->getError());
+        var_dump($reply->getData());
     }
 
     public function actionCallGrpc()
