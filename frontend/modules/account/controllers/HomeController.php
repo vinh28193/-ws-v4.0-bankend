@@ -14,9 +14,11 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use protobufboxme\Accouting\GreeterClient as GreeterClient;
 use Grpc;
-use protobufboxme\Accouting\Merchantinfo;
-use protobufboxme\Accouting\GetListMerchantByIdRequest;
-use protobufboxme\Accouting\GetListMerchantByIdResponse;
+use Accouting\Merchantinfo;
+use Accouting\GetListMerchantByIdRequest;
+use Accouting\GetListMerchantByIdResponse;
+use Accouting\AccoutingClient;
+
 
 /**
  * HomeController implements the CRUD actions for Order model.
@@ -41,6 +43,7 @@ class HomeController extends BaseAccountController
 
     public function actionGrpc()
     {
+        /*
         $greeterClient = new  GreeterClient('206.189.94.203:50054', [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
@@ -73,10 +76,12 @@ class HomeController extends BaseAccountController
             'data' => $reply,
         ];
         return;
+        */
     }
 
-    public function actionGetwallet(GetListMerchantByIdRequest $request)
+    public function actionGetwallet()
     {
+        /*
         $data = new  GetListMerchantByIdResponse();
 //        $data->setData($request->getCountryCode());
 //        $data->setData($request->getUserId());
@@ -85,6 +90,15 @@ class HomeController extends BaseAccountController
             'message' => '',
             'data' => $data,
         ];
+        */
+
+
+        $accoutin = new AccoutingClient();
+
+        $req   = (new GetListMerchantByIdRequest())->setCountryCode('VN')->setUserId(23);
+        $reply = $accoutin->getListMerchantById($req);
+
+        echo 'data ' . $reply->getData() . PHP_EOL;
     }
 
     public function actionCallGrpc()
