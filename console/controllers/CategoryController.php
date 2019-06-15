@@ -103,14 +103,14 @@ class CategoryController extends Controller
 
     private function portalMapping($site)
     {
-        if (Category::SITE_EBAY == $site) {
-            return 'ebay';
-        } elseif (Category::SITE_EBAY == $site) {
-            return 'amazon';
-        } elseif (Category::SITE_AMAZON_JP == $site) {
-            return 'amazon-jp';
-        } elseif (Category::SITE_AMAZON_UK == $site) {
-            return 'amazon-uk';
+        if (2 == $site) {
+            return Category::SITE_EBAY;
+        } elseif (26 == $site) {
+            return Category::SITE_AMAZON_US;
+        } elseif (1014 == $site) {
+            return Category::SITE_AMAZON_JP;
+        } elseif (27 == $site) {
+            return Category::SITE_AMAZON_UK;
         } else {
             return null;
         }
