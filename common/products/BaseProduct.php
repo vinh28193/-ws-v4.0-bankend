@@ -211,7 +211,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             if (!$this->isEmpty($this->categories)) {
                 $key = implode('_', $this->categories);
                 if (!($categories = Yii::$app->cache->get($key)) || $refresh) {
-                    $categories = Category::find()->forSite($this->getSiteMapping())->alias($this->categories)->all();
+                    $categories = Category::find()->forSite($this->type)->alias($this->categories)->all();
                     Yii::$app->cache->set($key, $categories, 60 * 10);
                 }
                 $this->_customCategory = null;

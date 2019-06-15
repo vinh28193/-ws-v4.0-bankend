@@ -41,6 +41,7 @@ class CategoryQuery extends \common\components\db\ActiveQuery
         if($site === null){
             $this->allSite();
         }else{
+            $site = strtolower($site);
             $this->andWhere(['site' => $site]);
         }
         return $this;
