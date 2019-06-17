@@ -168,7 +168,7 @@ class HomeController extends BaseAccountController
 
     public function actionSignUp()
     {
-        $greeterClient = new UserClient('206.189.94.203:50054', [
+        $greeterClient = new UserClient('206.189.94.203:50053', [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $request = new SignUpRequest();
@@ -183,7 +183,7 @@ class HomeController extends BaseAccountController
         $request->setPlatformUser(21);
 
         list($reply, $status) = $greeterClient->SignUp($request)->wait();
-        print_r($reply->getError());
+
         echo "<pre>";
         print_r($reply);
         echo "</pre>";

@@ -20,7 +20,7 @@ class UserClient extends \Grpc\BaseStub {
     }
 
     public function SignUp(SignUpRequest $argument, $metadata = [], $options = []) {
-        return $this->_simpleRequest('/user.UserService/SignUp',
+        return $this->_simpleRequest('/User.UserService/SignUp',
             $argument,
             ['\User\SignUpResponse', 'decode'],
             $metadata, $options);

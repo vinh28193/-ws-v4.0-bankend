@@ -9,7 +9,7 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * Generated from protobuf message <code>user.SignUpResponse</code>
+ * Generated from protobuf message <code>User.SignUpResponse</code>
  */
 class SignUpResponse extends \Google\Protobuf\Internal\Message
 {
@@ -18,7 +18,7 @@ class SignUpResponse extends \Google\Protobuf\Internal\Message
      */
     private $Error = false;
     /**
-     * Generated from protobuf field <code>.user.SignUpUser Data = 2;</code>
+     * Generated from protobuf field <code>.User.SignUpUser Data = 2;</code>
      */
     private $Data = null;
     /**
@@ -65,7 +65,7 @@ class SignUpResponse extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.user.SignUpUser Data = 2;</code>
+     * Generated from protobuf field <code>.User.SignUpUser Data = 2;</code>
      * @return \User\SignUpUser
      */
     public function getData()
@@ -74,7 +74,7 @@ class SignUpResponse extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.user.SignUpUser Data = 2;</code>
+     * Generated from protobuf field <code>.User.SignUpUser Data = 2;</code>
      * @param \User\SignUpUser $var
      * @return $this
      */
