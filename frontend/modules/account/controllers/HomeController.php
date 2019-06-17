@@ -12,11 +12,13 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use protobufboxme\Accouting\GreeterClient as GreeterClient;
+use Accouting\GreeterClient;
 use Grpc;
-use protobufboxme\Accouting\Merchantinfo;
-use protobufboxme\Accouting\GetListMerchantByIdRequest;
-use protobufboxme\Accouting\GetListMerchantByIdResponse;
+use Accouting\Merchantinfo;
+use Accouting\GetListMerchantByIdRequest;
+use Accouting\GetListMerchantByIdResponse;
+use Accouting\AccoutingClient;
+
 
 /**
  * HomeController implements the CRUD actions for Order model.
@@ -41,6 +43,7 @@ class HomeController extends BaseAccountController
 
     public function actionGrpc()
     {
+        /*
         $greeterClient = new  GreeterClient('206.189.94.203:50054', [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
@@ -73,10 +76,12 @@ class HomeController extends BaseAccountController
             'data' => $reply,
         ];
         return;
+        */
     }
 
-    public function actionGetwallet(GetListMerchantByIdRequest $request)
+    public function actionGetwallet()
     {
+        /*
         $data = new  GetListMerchantByIdResponse();
 //        $data->setData($request->getCountryCode());
 //        $data->setData($request->getUserId());
@@ -85,22 +90,44 @@ class HomeController extends BaseAccountController
             'message' => '',
             'data' => $data,
         ];
+        */
+
+
+        $accoutin = new AccoutingClient();
+        $req   = (new GetListMerchantByIdRequest())->setCountryCode('VN')->setUserId(23);
+        $reply = $accoutin->getListMerchantById($req);
+
+        var_dump($reply->getError());
+        var_dump($reply->getData());
     }
 
-    public function actionCallGrpc()
+    public function actionCheckGrpc()
     {
-        $options = [
-            'credentials' => $this->credentialsObject,
-            'update_metadata' => function($metaData){
-                $metaData['authorization'] = ['Bearer ' . $this->token];
-                return $metaData;
-            }
-        ];
+        $greeterClient = new GreeterClient('206.189.94.203:50054', [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
 
-        $client = new OrganizationServiceClient($this->url,$options);
+        $request = new GetListMerchantByIdRequest();
+        $request->setUserId(23);
+        $request->setCountryCode("VN");
 
-        $r = new \Google\Protobuf\GPBEmpty();
-        list($data,$status) = $client->list($r)->wait();
+        list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
+
+        //$respone = new GetListMerchantByIdResponse();
+
+        //print_r($greeterClient);
+        echo "<pre>";
+        print_r($reply);
+        echo "</pre>";
+
+//        echo "\n now \n";
+//        echo "<pre>";
+//        print_r($status);
+//        echo "</pre>";
+
+        echo "<pre>";
+        print_r($reply->Data);
+        echo "</pre>";
     }
 
 

@@ -1,6 +1,8 @@
 <?php
-namespace protobufboxme\Accouting;
+namespace Accouting;
 
+use Accouting\GetListMerchantByIdRequest;
+use Accouting\GetListMerchantByIdResponse;
 use Yii;
 use Grpc;
 
@@ -22,11 +24,10 @@ class GreeterClient extends \Grpc\BaseStub {
      * @param array $metadata metadata
      * @param array $options call options
      */
-    public function GetListMerchantById(GetListMerchantByIdRequest $argument,
-                                        $metadata = [], $options = []) {
+    public function GetListMerchantById(GetListMerchantByIdRequest $argument, $metadata = [], $options = []) {
         return $this->_simpleRequest('/Accouting.Accouting/GetListMerchantById',
             $argument,
-            ['GetListMerchantByIdResponse', 'decode'],
+            ['\Accouting\GetListMerchantByIdResponse', 'decode'],
             $metadata, $options);
     }
 }
