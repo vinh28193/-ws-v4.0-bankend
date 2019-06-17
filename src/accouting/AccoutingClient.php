@@ -37,17 +37,26 @@ class AccoutingClient implements AccoutingInterface
     {
         $body = $message->serializeToString();
 
-        $ch = curl_init("206.189.94.203:50054");
+        $ch = @curl_init("206.189.94.203:50054");
 
-        curl_setopt_array($ch, [
+        echo "<pre>";
+        print_r($ch);
+        echo "</pre>";
+
+        @curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $body,
         ]);
 
-        $response = curl_exec($ch);
+        $response = @curl_exec($ch);
 
-        curl_close($ch);
+        echo "\n nala \n";
+        echo "<pre>";
+        print_r($response);
+        echo "</pre>";
+
+        @curl_close($ch);
 
         return $response;
     }
