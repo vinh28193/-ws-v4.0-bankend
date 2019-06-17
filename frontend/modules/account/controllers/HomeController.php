@@ -125,12 +125,12 @@ class HomeController extends BaseAccountController
 //        print_r($status);
 //        echo "</pre>";
 
-        echo "<pre>";
-        print_r($reply->getData()[0]);
-        echo "</pre>";
+//        echo "<pre>";
+//        print_r($reply->getData()[0]);
+//        echo "</pre>";
 
         echo "<pre>";
-        print_r($reply->getData());
+        print_r($reply);
         echo "</pre>";
 
         //print_r($Merchance->getUserId());

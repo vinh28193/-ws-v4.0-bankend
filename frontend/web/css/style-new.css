@@ -591,6 +591,9 @@ div div.product-list.row div a div.info div.price span.countdown{
 .slick-prev:before, .slick-next:before {
     color: #d4d4d4;
 }
+.mb-slide-image{
+    display: none;
+}
 @media (min-width: 414px) {
     ul.bars-nav li{
         padding-right: 0px;
@@ -1226,6 +1229,22 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
     .option-box .form-control{
         width: 100%!important;
+    }
+    .mb-slide-image{
+        display: block;
+    }
+    .mb-slide-image img{
+        width: 100%;
+        max-height: -webkit-fill-available;
+    }
+    .btn-group-detail button#buyNowBtn{
+        text-align: center;
+        width: 100%;
+    }
+    button#installmentBtn, button#addToCart {
+        width: 49%;
+        font-size: 12px;
+        margin-top: 1%;
     }
 }
 @media (max-width: 360px) {
