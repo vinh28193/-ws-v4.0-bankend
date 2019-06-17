@@ -32,15 +32,7 @@ $js = <<< JS
         {
             return false;
         }
-        $('.checkout-step li').removeClass('active');
-        $('.checkout-step li').each(function (k, v) {
-            if (k === 2) {
-                $(v).addClass('active');
-            }
-        });
-        $('#step_checkout_1').css('display', 'none');
-        $('#step_checkout_2').css('display', 'none');
-        $('#step_checkout_3').css('display', 'block');
+        ws.payment.activePaymentStep(3);
         window.scrollTo(0, 0);
         // send data to actionSave by ajax request.
         return false; // Cancel form submitting.
@@ -48,151 +40,131 @@ $js = <<< JS
 JS;
 $this->registerJs($js);
 ?>
-<div class="container checkout-content">
-    <ul class="checkout-step">
-        <li><i>1</i><span><?= Yii::t('frontend', 'Login'); ?></span></li>
-        <li class="active"><i>2</i><span><?= Yii::t('frontend', 'Shipping address'); ?></span></li>
-        <li><i>3</i><span><?= Yii::t('frontend', 'Payment'); ?></span></li>
-    </ul>
-    <div class="step-2-content row">
-        <div id="step_checkout_2" class="col-md-8">
-            <div class="title"><?=Yii::t('frontend','Buyer and receiver information')?></div>
-            <div class="payment-box">
-                <?php
-                $form = ActiveForm::begin([
-                    'options' => [
-                        'class' => 'payment-form'
-                    ],
-                    'enableAjaxValidation' => true,
-                    'enableClientValidation' => false,
-                    'validateOnSubmit' => true,
-                    'validateOnChange' => false,
-                    'validateOnBlur' => false,
-                    'validateOnType' => false,
-                    'validationUrl' => '/checkout/shipping/validate',
-                ]);
-                echo Html::activeHiddenInput($shippingForm, 'customer_id');
-                echo Html::activeHiddenInput($shippingForm, 'buyer_country_id');
-                echo Html::activeHiddenInput($shippingForm, 'cartIds');
-                echo Html::activeHiddenInput($shippingForm, 'checkoutType');
+<div class="title"><?= Yii::t('frontend', 'Buyer and receiver information') ?></div>
+<div class="payment-box">
+    <?php
+    $form = ActiveForm::begin([
+        'options' => [
+            'class' => 'payment-form'
+        ],
+        'enableAjaxValidation' => true,
+        'enableClientValidation' => false,
+        'validateOnSubmit' => true,
+        'validateOnChange' => false,
+        'validateOnBlur' => false,
+        'validateOnType' => false,
+        'validationUrl' => '/checkout/shipping/validate',
+    ]);
+    echo Html::activeHiddenInput($shippingForm, 'customer_id');
+    echo Html::activeHiddenInput($shippingForm, 'buyer_country_id');
+    echo Html::activeHiddenInput($shippingForm, 'cartIds');
+    echo Html::activeHiddenInput($shippingForm, 'checkoutType');
 
-                echo Html::beginTag('div', ['class' => 'buyer-form']);
-                echo $form->field($shippingForm, 'buyer_name', [
-                    'template' => '<i class="icon user"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => Yii::t('frontend', 'Full name')]);
+    echo Html::beginTag('div', ['class' => 'buyer-form']);
+    echo $form->field($shippingForm, 'buyer_name', [
+        'template' => '<i class="icon user"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->textInput(['placeholder' => Yii::t('frontend', 'Full name')]);
 
-                echo $form->field($shippingForm, 'buyer_phone', [
-                    'template' => '<i class="icon phone"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => Yii::t('frontend', 'Phone number')]);
+    echo $form->field($shippingForm, 'buyer_phone', [
+        'template' => '<i class="icon phone"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->textInput(['placeholder' => Yii::t('frontend', 'Phone number')]);
 
-                echo $form->field($shippingForm, 'buyer_email', [
-                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => Yii::t('frontend', 'Email')]);
+    echo $form->field($shippingForm, 'buyer_email', [
+        'template' => '<i class="icon email"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->textInput(['placeholder' => Yii::t('frontend', 'Email')]);
 
-                echo $form->field($shippingForm, 'buyer_province_id', [
-                    'template' => '<i class="icon globe"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->dropDownList($provinces, [
-                    'prompt' => Yii::t('frontend', 'Choose the province'),
-                ]);
+    echo $form->field($shippingForm, 'buyer_province_id', [
+        'template' => '<i class="icon globe"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->dropDownList($provinces, [
+        'prompt' => Yii::t('frontend', 'Choose the province'),
+    ]);
 
-                echo Html::hiddenInput('hiddenBuyerDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenBuyerDistrictId']);
+    echo Html::hiddenInput('hiddenBuyerDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenBuyerDistrictId']);
 
-                echo $form->field($shippingForm, 'buyer_district_id', [
-                    'template' => '<i class="icon city"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->widget(DepDrop::classname(), [
-                    'pluginOptions' => [
-                        'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
-                        'placeholder' => Yii::t('frontend', 'Choose the district'),
-                        'url' => Url::toRoute(['sub-district']),
-                        'loadingText' => Yii::t('frontend', 'Loading district ...'),
-                        'initialize' => true,
-                        'params' => ['hiddenBuyerDistrictId']
-                    ]
-                ]);
-                echo $form->field($shippingForm, 'buyer_address', [
-                    'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => Yii::t('frontend', 'Address')]);
+    echo $form->field($shippingForm, 'buyer_district_id', [
+        'template' => '<i class="icon city"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->widget(DepDrop::classname(), [
+        'pluginOptions' => [
+            'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
+            'placeholder' => Yii::t('frontend', 'Choose the district'),
+            'url' => Url::toRoute(['sub-district']),
+            'loadingText' => Yii::t('frontend', 'Loading district ...'),
+            'initialize' => true,
+            'params' => ['hiddenBuyerDistrictId']
+        ]
+    ]);
+    echo $form->field($shippingForm, 'buyer_address', [
+        'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->textInput(['placeholder' => Yii::t('frontend', 'Address')]);
 
-                echo $form->field($shippingForm, 'note_by_customer', [
+    echo $form->field($shippingForm, 'note_by_customer', [
 //                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->textarea(['rows' => 3, 'placeholder' => Yii::t('frontend', 'Note')]);
+        'options' => ['class' => 'form-group']
+    ])->textarea(['rows' => 3, 'placeholder' => Yii::t('frontend', 'Note')]);
 
-                echo Html::endTag('div');
+    echo Html::endTag('div');
 
-                echo $form->field($shippingForm, 'other_receiver', [
-                    'template' => '{input}{hint}{error}',
-                    'options' => [
-                        'class' => 'check-info',
-                        'style' => 'margin-bottom: 1rem;'
-                    ]
-                ])->checkbox()->label('Information of the receiver other than the buyer');
+    echo $form->field($shippingForm, 'other_receiver', [
+        'template' => '{input}{hint}{error}',
+        'options' => [
+            'class' => 'check-info',
+            'style' => 'margin-bottom: 1rem;'
+        ]
+    ])->checkbox()->label('Information of the receiver other than the buyer');
 
-                echo Html::beginTag('div', ['class' => 'receiver-form']);
+    echo Html::beginTag('div', ['class' => 'receiver-form']);
 
-                echo $form->field($shippingForm, 'receiver_name', [
-                    'template' => '<i class="icon user"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => Yii::t('frontend', 'Full name')]);
+    echo $form->field($shippingForm, 'receiver_name', [
+        'template' => '<i class="icon user"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->textInput(['placeholder' => Yii::t('frontend', 'Full name')]);
 
-                echo $form->field($shippingForm, 'receiver_phone', [
-                    'template' => '<i class="icon phone"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => Yii::t('frontend', 'Phone number')]);
+    echo $form->field($shippingForm, 'receiver_phone', [
+        'template' => '<i class="icon phone"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->textInput(['placeholder' => Yii::t('frontend', 'Phone number')]);
 
-                echo $form->field($shippingForm, 'receiver_email', [
-                    'template' => '<i class="icon email"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => Yii::t('frontend', 'Email')]);
+    echo $form->field($shippingForm, 'receiver_email', [
+        'template' => '<i class="icon email"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->textInput(['placeholder' => Yii::t('frontend', 'Email')]);
 
-                echo $form->field($shippingForm, 'receiver_province_id', [
-                    'template' => '<i class="icon city"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->dropDownList($provinces, [
-                    'prompt' => Yii::t('frontend', 'Choose the province'),
-                ]);;
+    echo $form->field($shippingForm, 'receiver_province_id', [
+        'template' => '<i class="icon city"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->dropDownList($provinces, [
+        'prompt' => Yii::t('frontend', 'Choose the province'),
+    ]);;
 
-                echo Html::hiddenInput('hiddenReceiverDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenReceiverDistrictId']);
+    echo Html::hiddenInput('hiddenReceiverDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenReceiverDistrictId']);
 
-                echo $form->field($shippingForm, 'receiver_district_id', [
-                    'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->widget(DepDrop::classname(), [
-                    'pluginOptions' => [
-                        'depends' => [Html::getInputId($shippingForm, 'receiver_province_id')],
-                        'placeholder' => Yii::t('frontend', 'Choose the district'),
-                        'url' => Url::toRoute(['sub-district']),
-                        'loadingText' => Yii::t('frontend', 'Loading district ...'),
-                        'initialize' => true,
-                        'params' => ['hiddenReceiverDistrictId']
-                    ]
-                ]);
-                echo $form->field($shippingForm, 'receiver_address', [
-                    'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
-                    'options' => ['class' => 'form-group']
-                ])->textInput(['placeholder' => Yii::t('frontend', 'Address')]);
+    echo $form->field($shippingForm, 'receiver_district_id', [
+        'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->widget(DepDrop::classname(), [
+        'pluginOptions' => [
+            'depends' => [Html::getInputId($shippingForm, 'receiver_province_id')],
+            'placeholder' => Yii::t('frontend', 'Choose the district'),
+            'url' => Url::toRoute(['sub-district']),
+            'loadingText' => Yii::t('frontend', 'Loading district ...'),
+            'initialize' => true,
+            'params' => ['hiddenReceiverDistrictId']
+        ]
+    ]);
+    echo $form->field($shippingForm, 'receiver_address', [
+        'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',
+        'options' => ['class' => 'form-group']
+    ])->textInput(['placeholder' => Yii::t('frontend', 'Address')]);
 
-                echo Html::endTag('div');
+    echo Html::endTag('div');
 
-                echo Html::submitButton(Yii::t('frontend', 'Choose payment method'), ['class' => 'btn btn-payment btn-block', 'id' => 'btnNextStep3']);
-                ActiveForm::end();
-                ?>
-            </div>
-        </div>
-        <div id="step_checkout_3" class="col-md-8" style="display: none">
-            <div class="title">Phương thức thanh toán</div>
-            <div class="payment-box payment-step3">
-                <?php echo $payment->initPaymentView(); ?>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <?php echo $this->render('_cart', ['payment' => $payment]) ?>
-        </div>
-    </div>
+    echo Html::submitButton(Yii::t('frontend', 'Choose payment method'), ['class' => 'btn btn-payment btn-block', 'id' => 'btnNextStep3']);
+    ActiveForm::end();
+    ?>
 </div>

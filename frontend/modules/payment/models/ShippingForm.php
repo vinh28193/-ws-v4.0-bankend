@@ -88,15 +88,15 @@ class ShippingForm extends Model
             ],
             [
                 [
-                    'receiver_phone', 'receiver_phone'
+                    'buyer_phone', 'receiver_phone'
                 ],
-                '\common\validators\PhoneValidator'
+                'common\validators\PhoneValidator'
             ],
             [
                 [
                     'buyer_address', 'buyer_address',
                     'buyer_email', 'receiver_email',
-                    'receiver_phone', 'receiver_phone',
+                    'buyer_phone', 'receiver_phone',
                     'note_by_customer'
                 ],
                 'string', 'max' => 255
@@ -105,7 +105,7 @@ class ShippingForm extends Model
                 [
                     'buyer_address', 'buyer_address',
                     'buyer_email', 'receiver_email',
-                    'receiver_phone', 'receiver_phone',
+                    'buyer_phone', 'receiver_phone',
                     'note_by_customer'
                 ],
                 'filter', 'filter' => 'trim'
