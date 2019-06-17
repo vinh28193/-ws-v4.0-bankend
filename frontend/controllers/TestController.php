@@ -237,115 +237,88 @@ class TestController extends FrontendController
     {
         $calculator = new InternationalShippingCalculator();
 
-        $shipment = [
-            'from' => [
-                'country' => 'US',
-                'pickup_id' => 35549,
-            ],
-            'to' => [
-                'contact_name' => 'Di Vương',
-                'company_name' => '',
-                'email' => 'vmoc@cai.net.vn',
-                'address' => '1146 Phố Vi Ty Nghị, Xã Đan, Huyện 24Lạng Sơn',
-                'address2' => '',
-                'phone' => '0127 111 4204',
-                'phone2' => '',
-                'country' => 'VN',
-                'province' => 1,
-                'district' => 7,
-                'zipcode' => '',
-                'tax_id' => '',
-            ],
-            'shipment' => [
-                'content' => '',
-                'total_parcel' => 2,
-                'total_amount' => 17505000,
-                'description' => '',
-                'amz_shipment_id' => '',
-                'chargeable_weight' => 3000,
-                'parcels' => [
-                    [
-                        'dimension' => [
-                            'width' => 0,
-                            'height' => 0,
-                            'length' => 0,
-                        ],
-                        'weight' => 2180,
-                        'amount' => 17027000,
-                        'description' => 'order of seller microtech certified',
-                        'dg_code' => '',
-                        'hs_code' => '',
-                        'items' => [
-                            [
-                                'sku' => 'B0727VQK39',
-                                'label_code' => '',
-                                'origin_country' => '',
-                                'name' => 'Microsoft Surface Laptop (1st Gen) (Intel Core i5, 8GB RAM, 256GB) - Cobalt Blue',
-                                'desciption' => '',
-                                'weight' => 2180,
-                                'amount' => 17027000,
-                                'customs_value' => 17027000,
-                                'quantity' => 1,
-                            ],
-                        ],
-                    ],
-                    [
-                        'dimension' => [
-                            'width' => 0,
-                            'height' => 0,
-                            'length' => 0,
-                        ],
-                        'weight' => 1000,
-                        'amount' => 478000,
-                        'description' => 'order of seller aventurajewellery',
-                        'dg_code' => '',
-                        'hs_code' => '',
-                        'items' => [
-                            [
-                                'sku' => '323074868639',
-                                'label_code' => '',
-                                'origin_country' => '',
-                                'name' => 'Swarovski Crystal 4 Stone Drop Necklace in 18K White Gold Plated',
-                                'desciption' => '',
-                                'weight' => 1000,
-                                'amount' => 478000,
-                                'customs_value' => 478000,
-                                'quantity' => 2,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'config' => [
-                'preview' => 'Y',
-                'return_mode' =>0,
-                'insurance' => 'N',
-                'document' => 0,
-                'currency' => 'VND',
-                'unit_metric' => 'metric',
-                'sort_mode' => 'best_rating',
-                'auto_approve' => 'Y',
-                'create_by' => 0,
-                'create_from' => 'create_order_netsale',
-                'order_type' => 'dropship',
-                'check_stock' => 'N',
-            ],
-            'payment' => [
-                'cod_amount' => 0,
-                'fee_paid_by' => 'sender',
-            ],
-            'referral' => [
-                'order_number' => '',
-                'coupon_code' => '',
-            ],
-        ];
-
+    $shipment =<<<JSON
+{
+  "ship_from": {
+    "country": "US",
+    "pickup_id": 35549
+  },
+  "ship_to": {
+    "contact_name": "1212121",
+    "company_name": "",
+    "email": "",
+    "address": "18 Đường Tam Trinh, Mai Động, Hai Bà Trưng, Hà Nội, Việt Nam",
+    "address2": "",
+    "phone": "12121212121",
+    "phone2": "",
+    "country": "VN",
+    "province": 1,
+    "district": 7,
+    "zipcode": "",
+    "tax_id": ""
+  },
+  "shipments": {
+    "content": "",
+    "total_parcel": 1,
+    "total_amount": 4000000,
+    "chargeable_weight": 500,
+    "description": "",
+    "amz_shipment_id": "",
+    "parcels": [
+      {
+        "dimension": {
+          "width": 0,
+          "height": 0,
+          "length": 0
+        },
+        "weight": 500,
+        "amount": 4000000,
+        "description": "",
+        "dg_code": "",
+        "hs_code": "",
+        "items": [
+          {
+            "sku": "593103644595420",
+            "label_code": "",
+            "origin_country": "",
+            "name": "Nhà máy trực tiếp camera không dây mạng wifi điện thoại di động từ xa HD nhìn đêm nhà màn hình trong nhà đặt - 720P100W pixel (không có thẻ nhớ)",
+            "desciption": "",
+            "weight": 500,
+            "amount": 400000,
+            "customs_value": 400000,
+            "quantity": 7
+          }
+        ]
+      }
+    ]
+  },
+  "config": {
+    "preview": "Y",
+    "return_mode": 0,
+    "insurance": "N",
+    "document": 0,
+    "currency": "VND",
+    "unit_metric": "metric",
+    "sort_mode": "best_rating",
+    "auto_approve": "Y",
+    "create_by": 0,
+    "create_from": "create_order_netsale",
+    "order_type": "dropship",
+    "check_stock": "N"
+  },
+  "payment": {
+    "cod_amount": 0,
+    "fee_paid_by": "sender"
+  },
+  "referral": {
+    "order_number": "",
+    "coupon_code": ""
+  }
+}
+JSON;
+        $shipment = json_decode($shipment,true);
         $couriers = $calculator->CalculateFee($shipment, 23, 'VN');
-
-        echo "<pre>";
-        echo json_encode($shipment);
-//        print_r($couriers);
-        echo "</pre>";
+        var_dump($couriers);
         die;
     }
 }
