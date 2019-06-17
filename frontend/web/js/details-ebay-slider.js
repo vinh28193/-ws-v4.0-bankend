@@ -7,7 +7,10 @@ $(document).ready(function () {
         nextArrow: $('.slider-next'),
         slidesToShow: 5
     });
-
+    console.log(innerWidth );
+    // if(innerWidth > ){
+    //
+    // }
     $('#detail-big-img').ezPlus({
         imageCrossfade: true,
         easing: true,
@@ -20,8 +23,8 @@ $(document).ready(function () {
     $('.style-list').slick({
         infinite: true,
         arrows: true,
-        prevArrow: $('.slider-prev2'),
-        nextArrow: $('.slider-next2'),
         slidesToShow: 6
     });
+
+    $('.mb-slide-image').slick();
 });

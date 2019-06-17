@@ -19,7 +19,7 @@ use frontend\widgets\alias\AliasImageGridWidget;
 <div class="cate-nav">
     <ul>
         <li class="globe-sub <?= $isShow ? 'open' : '' ?>">
-            <a href="#"><i class="fas fa-globe-americas"></i> <span class="text-title"><?= $alias['name']; ?></span></a>
+            <a href="#"><i class="la la-globe-americas"></i> <span class="text-title"><?= $alias['name']; ?></span></a>
             <div class="sub-menu animated fadeIn">
                 <ul>
                     <?php

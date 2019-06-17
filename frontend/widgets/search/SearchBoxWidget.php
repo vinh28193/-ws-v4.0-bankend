@@ -66,7 +66,7 @@ JS;
         $keyWord = Html::encode($keyWord);
         $input = Html::input('text', 'searchBox', $keyWord, ['class' => 'form-control', 'placeholder' => $this->placeholder]);
         $input .= Html::beginTag('span', ['class' => 'input-group-btn']);
-        $input .= Html::button('<i class="fas fa-search">', ['class' => 'btn btn-default']);
+        $input .= Html::button('<i class="la la-search">', ['class' => 'btn btn-default']);
         $input .= Html::endTag('span');
         return Html::tag('div', Html::tag('div', $input, ['class' => 'input-group']), $options);
 

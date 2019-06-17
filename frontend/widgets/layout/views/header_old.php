@@ -181,7 +181,7 @@ use yii\helpers\Html;
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Bin code">
                             <div class="input-group-append">
-                                <button class="btn btn-search" type="button"><i class="fas fa-search"></i></button>
+                                <button class="btn btn-search" type="button"><i class="la la-search"></i></button>
                             </div>
                         </div>
                     </div>

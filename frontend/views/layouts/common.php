@@ -29,7 +29,7 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
 <body>
 <?php $this->beginBody() ?>
 
-<div class="wrapper" style="background: #f7f7f7;">
+<div class="wrapper">
     <?= \frontend\widgets\layout\HeaderWidget::widget() ?>
     <?= $content; ?>
     <?= \frontend\widgets\layout\FooterWidget::widget() ?>
@@ -75,7 +75,7 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <i class="fas fa-check"></i>
+                    <i class="la la-check"></i>
                     <div class="modal-title">Cám ơn bạn!</div>
                     <div class="order-code">Mã giao dịch: <span class="text-blue" id="transactionCode"></span></div>
                     <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành

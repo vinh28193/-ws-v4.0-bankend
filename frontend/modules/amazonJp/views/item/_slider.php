@@ -4,8 +4,8 @@ use yii\helpers\Html;
 ?>
   <div class="thumb-slider">
       <div class="detail-slider">
-          <i class="fas fa-chevron-up slider-prev"></i>
-          <i class="fas fa-chevron-down slider-next"></i>
+          <i class="la la-chevron-up slider-prev"></i>
+          <i class="la la-chevron-down slider-next"></i>
           <div id="gal1 detail-slider" class="slick-slider">
             <?php foreach ($images as $index => $image)
              {

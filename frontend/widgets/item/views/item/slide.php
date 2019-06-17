@@ -25,8 +25,7 @@ use yii\helpers\Html;
     <div class="big-img">
             <img id="detail-big-img" class="detail-big-img"
                  src="<?= $item->primary_images ? $item->primary_images[0]->main : '/img/no_image.png' ?>"
-                 data-zoom-image="<?= $item->primary_images ? $item->primary_images[0]->main : '/img/no_image.png' ?>"
-                 style="max-width: 400px;max-height: 400px;position: absolute;"/>
+                 data-zoom-image="<?= $item->primary_images ? $item->primary_images[0]->main : '/img/no_image.png' ?>"/>
         <!--<div class="out-of-date">-->
         <!--<span><i class="fas fa-exclamation-triangle"></i><br/>Hàng hết hạn bán</span>-->
         <!--</div>-->

@@ -140,9 +140,9 @@ if (count($item->providers) > 1) {
             } ?>
             <li><a href="javascript:void (0)" onclick="viewMoreSeller(true)" style="display:block;"
                    id="viewMoreSellerBtn" class="see-all text-blue">Xem tất cả <b><?= count($item->providers) - 1 ?></b>
-                    người bán<i class="fas fa-caret-down"></i></a></li>
+                    người bán<i class="la la-caret-down"></i></a></li>
             <li><a href="javascript:void (0)" onclick="viewMoreSeller(false)" style="display:none;" id="HideSellerBtn"
-                   class="see-all text-blue">Ẩn bớt<i class="fas fa-caret-up"></i></a></li>
+                   class="see-all text-blue">Ẩn bớt<i class="la la-caret-up"></i></a></li>
         </ul>
     </div>
 <?php } ?>

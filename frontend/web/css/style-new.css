@@ -4,6 +4,9 @@ html, body {
     font-weight: 400;
     color: #555555;
 }
+.wrapper{
+    background: #f7f7f7;
+}
 .container{
     max-width: 90%;
 }
@@ -245,7 +248,7 @@ body div.wrapper div.content-body div.col-md-8 b{
     line-height: 24px;
 }
 .breadcrumb-content{
-    height: 40px;
+    height: auto;
     box-shadow: 0 2px 4px #dddddd;
     background-color: #ffffff;
     margin-bottom: 15px;
@@ -569,7 +572,29 @@ div div.product-list.row div a div.info div.price span.countdown{
 .content-menu-cate-sub-2-item ul{
     padding-left: 20px;
 }
+.detail-block .product-full-info {
+    width: 65%;
+    /*width: calc(100% - 470px);*/
+}
+.detail-block .thumb-slider {
+    width: 35%;
+}
+.detail-block .thumb-slider .zoomWrapper .detail-big-img {
+    width: -webkit-fill-available;
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+}
+.mb-slide-image{
+    max-height: 324px;
+}
+.slick-prev:before, .slick-next:before {
+    color: #d4d4d4;
+}
 @media (min-width: 414px) {
+    ul.bars-nav li{
+        padding-right: 0px;
+    }
     .deal-shock .deal-content ul li {
         padding: 0 5px;
         width: 50%;
@@ -657,6 +682,9 @@ div div.product-list.row div a div.info div.price span.countdown{
         height: 40px;
         border-radius: 5px;
     }
+    ul.bars-nav li{
+        padding-right: 0px;
+    }
     .cart-header-box span.label-cart{
         color: #e67424;
         font-family: Helvetica;
@@ -672,7 +700,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         padding-top: 8px;
         color: #2b96b6;
         font-family: "LineAwesome";
-        font-size: 25px;
+        font-size: 15px;
         float: left;
     }
     #ico-search{
@@ -684,7 +712,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 25px;
     }
     ul.bars-nav li:first-child i:first-child{
-        font-size: 25px;
+        font-size: 15px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
@@ -694,7 +722,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 14px;
     }
     ul.bars-nav li:first-child {
-        padding-right: 25px;
+        padding-right: 0px;
     }
 }
 @media  (max-width: 993px) {
@@ -752,6 +780,9 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
 }
 @media(max-width:799px) {
+    ul.bars-nav li{
+        padding-right: 0px !important;
+    }
     body div.wrapper div.navbar-ws div div.search-box{
         height: 30px;
         border-radius: 5px;
@@ -771,7 +802,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         padding-top: 8px;
         color: #2b96b6;
         font-family: "LineAwesome";
-        font-size: 15px;
+        font-size: 10px;
         float: left;
     }
     #ico-search{
@@ -783,7 +814,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 15px;
     }
     ul.bars-nav li:first-child i:first-child{
-        font-size: 15px;
+        font-size: 10px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
@@ -1172,6 +1203,30 @@ div div.product-list.row div a div.info div.price span.countdown{
     /*    padding-top: 15px;*/
     /*    padding-left: 15px;*/
     /*}*/
+    .detail-block .product-full-info {
+        width: 100%;
+        margin-left: auto;
+        /*width: calc(100% - 470px);*/
+    }
+    .detail-block .thumb-slider {
+        width: 0%;
+        display: none;
+    }
+    .name-product{
+        font-size: 14px;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .badge-buy-detail {
+        margin-top: 5px;
+        line-height: normal;
+    }
+    .condition-and-seller,.detail-block .product-full-info .rating span,.detail-block .product-full-info .rating i{
+        font-size: 11px!important;
+    }
+    .option-box .form-control{
+        width: 100%!important;
+    }
 }
 @media (max-width: 360px) {
     .col-sm-6 {
