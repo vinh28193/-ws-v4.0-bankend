@@ -86,11 +86,6 @@ ws.payment = (function ($) {
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
             pub.payment.currency = 'vnd';
-            if (pub.payment.page !== 4) {
-                setTimeout(function () {
-                    pub.checkPromotion();
-                }, 300)
-            }
             ws.initEventHandler($('div#discountCoupon'), 'applyCouponCode', 'click', 'button#applyCouponCode', function (e) {
                 var $input = $(this).parents('div.discount-input').find('input[name="couponCode"]');
                 if ($input.length > 0 && $input.val() !== '') {
@@ -209,14 +204,17 @@ ws.payment = (function ($) {
             console.log('register ' + pub.methods.length + ' methods');
         },
         calculatorShipping: function () {
-            if (!pub.filterShippingAddress()) {
-                return false;
+            if (!pub.filterShippingAddress(false)) {
+                return;
             }
             ws.ajax('/payment/courier/calculator', {
                 dataType: 'json',
                 type: 'post',
                 data: {payment: pub.payment, shipping: pub.shipping},
                 success: function (response) {
+                    if (response.success) {
+                        pub.checkPromotion();
+                    }
                     console.log(response);
                 }
             }, true);
@@ -447,7 +445,7 @@ ws.payment = (function ($) {
             }
             processPaymment();
         },
-        filterShippingAddress: function () {
+        filterShippingAddress: function (isSafe = true) {
             var form = $('form.payment-form');
             if (!form.length > 0) {
                 return false;
@@ -481,12 +479,12 @@ ws.payment = (function ($) {
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
             pub.shipping.receiver_address_id = $('#shippingform-receiver_address_id').val();
             pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
-            if (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id) {
-                ws.notifyError('Vui lòng nhập đầy đủ thông tin người mua');
-                return false;
-            }
-            if (pub.shipping.other_receiver) {
-                if (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id) {
+            if (isSafe) {
+                if (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id) {
+                    ws.notifyError('Vui lòng nhập đầy đủ thông tin người mua');
+                    return false;
+                }
+                if (pub.shipping.other_receiver && (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_email || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id)) {
                     ws.notifyError('Vui lòng nhập đầy đủ thông tin người nhận');
                     return false;
                 }
@@ -679,6 +677,9 @@ ws.payment = (function ($) {
             }
         }
         return {label: $lable, amountOrigin: $localAmount, amountLocalized: ws.showMoney($localAmount)}
+    };
+    var initCourierView = function (couriers) {
+
     };
     var initPaymentPopup = function ($res) {
 
