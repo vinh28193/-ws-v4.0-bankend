@@ -30,7 +30,7 @@ $(document).ready(function () {
         $('#asd').css('transform','scaleY(-1)');
     else
         $('#asd').css('transform','scaleY(1)');
-    $('#target').toggle('slow');
+    $('#target').slideToggle('fast');
 });
 
     $('.toggleEbay').click(function() {
@@ -39,7 +39,7 @@ $(document).ready(function () {
         $('#asd1').css('transform','scaleY(-1)');
     else
         $('#asd1').css('transform','scaleY(1)');
-    $('#targetEbay').toggle('slow');
+    $('#targetEbay').slideToggle('fast');
 });
     
     $(document).ready(function() {

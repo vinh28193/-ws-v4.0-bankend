@@ -22,9 +22,11 @@ $('.style-ull li.li-item-cate').mouseenter(function(){
     window.mytimeout = setTimeout(function(){
         $(".style-ull li.li-item-cate a.title-cate").removeClass('a-hover');
         $(".style-ull li.li-item-cate div.sub-menu-2").removeClass('sub-menu-2-hover');
+        $(".style-ull li.li-item-cate").removeAttr('style');
+        $($element).css('background','#fff');
         $($element).find("a.title-cate").addClass('a-hover');
         $($element).find("div.sub-menu-2").addClass('sub-menu-2-hover');
-    }, 500);
+    }, 200);
 });
 $('.style-ull li.li-item-cate').mouseleave(function(){
     clearTimeout(window.mytimeout);
@@ -33,7 +35,7 @@ $('#menu1>li[role=presentation]').click(function () {
     var $elm = this;
     $("#menu1>li[role=presentation] ul.style-ull").each(function (k,v) {
         if($(v).attr('id') !== $($elm).find('ul.style-ull').attr('id') && $(v).css('display') !== 'none'){
-            $(v).toggle('slow');
+            $(v).slideToggle('slow');
             $(v).parent().find('.ico-dropdown i').css('transform','scaleY(1)');
         }
     });
