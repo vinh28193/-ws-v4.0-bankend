@@ -149,16 +149,17 @@
         refresh: function () {
             var $cart = $(this);
             var container = '#' + $cart.attr('id');
-            $.pjax.reload({container: container, push: false, replace: false});
+            $.pjax.reload({container: container});
         },
         watch: function ($param) {
             var $cart = $(this);
+            var container = '#' + $cart.attr('id');
             ws.ajax('/checkout/cart/selection', {
                 dataType: 'json',
                 method: 'post',
                 data: $param,
                 success: function () {
-                    methods.refresh.apply($cart);
+                    $.pjax.reload({container: container});
                 }
             });
 

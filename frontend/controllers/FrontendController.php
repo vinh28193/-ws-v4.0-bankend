@@ -99,7 +99,7 @@ class FrontendController extends Controller
 
     public function beforeAction($action)
     {
-        if (($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN, null)) !== null) {
+        if ($this->filterUuid(false) === null && ($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN, null)) !== null) {
             $this->setUuidCookie($onHead);
         }
         return parent::beforeAction($action);
@@ -135,7 +135,7 @@ class FrontendController extends Controller
             'COPYRIGHT' => Yii::t('frontend', '&copy; Weshop Global'),
             'robots' => 'noodp,index,follow',
             'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505',
-            'fingerprint-token' => $this->filterUuid()
+            'fingerprint-token' => ($uuid = $this->filterUuid(false)) !== null ? $uuid : '',
         ], $this->metaTag(), ArrayHelper::getValue(Yii::$app->params, 'metaTagParam', []));
         foreach ($metaTags as $name => $content) {
             $this->registerMetaTag([

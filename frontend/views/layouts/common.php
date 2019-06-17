@@ -22,11 +22,6 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="Weshop Global - Homepage"/>
-    <meta name='COPYRIGHT' content='&copy; Weshop Global'/>
-    <meta name="robots" content="noodp,index,follow"/>
-    <meta name="cystack-verification" content="f63c2e531bc93b353c0dbd93f8ce0505"/>
-    <meta name="fingerprint-token" content=""/>
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>

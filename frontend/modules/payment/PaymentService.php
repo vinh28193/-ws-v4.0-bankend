@@ -170,8 +170,8 @@ class PaymentService
                 }
                 $category = new Category([
                     'alias' => ArrayHelper::getValue($categoryParams, 'alias'),
-                    'siteId' => ArrayHelper::getValue($categoryParams, 'site'),
-                    'originName' => ArrayHelper::getValue($categoryParams, 'origin_name'),
+                    'site' => ArrayHelper::getValue($categoryParams, 'site'),
+                    'origin_name' => ArrayHelper::getValue($categoryParams, 'origin_name'),
                 ]);
                 if (($productFeeParams = ArrayHelper::remove($productParam, 'fees')) === null || !is_array($productFeeParams)) {
                     $productFailed = true;

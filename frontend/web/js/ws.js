@@ -51,7 +51,7 @@ var ws = ws || (function ($) {
             show = show || false;
             $('#loading').css('display', show ? 'block' : 'none');
         },
-        notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '',confirmLabel = 'Confirm',cancelLabel = 'Close',confirmClass = 'btn btn-info',cancelClass = 'btn btn-warning') {
+        notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning') {
             $('#modal-content').removeClass('modal-default');
             $('#modal-content').removeClass('modal-lg');
             $('#modal-content').removeClass('modal-xl');
@@ -93,8 +93,8 @@ var ws = ws || (function ($) {
             ws.notifyMessage(message, title, 'info', size);
         },
 
-        notifyConfirm: function (message = 'Confirm', title = 'Confirm', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '',confirmLabel = 'Confirm',cancelLabel = 'Close',confirmClass = 'btn btn-info',cancelClass = 'btn btn-warning') {
-            ws.notifyMessage(message, title, 'confirm', size, submitClick, cancelClick,confirmLabel,cancelLabel,confirmClass,cancelClass);
+        notifyConfirm: function (message = 'Confirm', title = 'Confirm', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning') {
+            ws.notifyMessage(message, title, 'confirm', size, submitClick, cancelClick, confirmLabel, cancelLabel, confirmClass, cancelClass);
         },
         ajax: function (url, $options, loading = false) {
             if (loading) {
@@ -143,7 +143,7 @@ var ws = ws || (function ($) {
             $.ajax($options);
         },
         getFingerprint: function () {
-            var content =  $('meta[name=fingerprint-token]').attr('content');
+            var content = $('meta[name=fingerprint-token]').attr('content');
             if(content === ''){
                 var $client = new ClientJS();
                 content = $client.getFingerprint();
@@ -302,9 +302,9 @@ var ws = ws || (function ($) {
                 success: function (res) {
                     ws.loading(false);
                     if (res.success) {
-                        ws.notifySuccess(res.message,'Thành công')
+                        ws.notifySuccess(res.message, 'Thành công')
                     } else {
-                        ws.notifyError(res.message,'Thất Bại')
+                        ws.notifyError(res.message, 'Thất Bại')
                     }
                 }
             });

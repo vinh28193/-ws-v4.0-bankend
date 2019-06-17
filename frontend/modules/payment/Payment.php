@@ -102,6 +102,13 @@ class Payment extends Model
     public $installment_month;
     public $instalment_type;
 
+    public $courier_service; // mã hãng vận chuyển, mã code "VTP_EXP ...
+    public $courier_name; // Tên
+    public $courier_fee; // Phí vận chuyển
+    public $courier_delivery_time; // Thời gian dự kiến
+    public $courier_detail = [];
+
+
     public $ga;
     public $otp_code;
     public $otp_verify_method = 0;
@@ -633,6 +640,11 @@ class Payment extends Model
             'installment_method' => $this->installment_method,
             'installment_month' => $this->installment_month,
             'instalment_type' => $this->instalment_type,
+            'courier_service' => $this->courier_service,
+            'courier_name' => $this->courier_name,
+            'courier_fee' => $this->courier_fee,
+            'courier_delivery_time' => $this->courier_delivery_time,
+            'courier_detail' => $this->courier_detail,
             'ga' => $this->ga,
             'otp_code' => $this->otp_code,
             'otp_verify_method' => $this->otp_verify_method,

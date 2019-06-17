@@ -37,6 +37,11 @@ ws.payment = (function ($) {
         installment_method: undefined,
         installment_month: undefined,
         instalment_type: undefined,
+        courier_service: undefined,
+        courier_name: undefined,
+        courier_fee: undefined,
+        courier_delivery_time: undefined,
+        courier_detail: undefined,
         ga: undefined,
         otp_verify_method: 1,
         shipment_options_status: 1,
@@ -44,11 +49,13 @@ ws.payment = (function ($) {
         transaction_fee: 0,
         additionalFees: [],
     };
+    var current_step = 2;
     var pub = {
         payment: {},
         options: {},
         methods: [],
         shipping: {},
+        couriers: [],
         installmentParam: {
             calculator: undefined,
             originAmount: 0,
@@ -91,6 +98,8 @@ ws.payment = (function ($) {
                     pub.checkPromotion();
                 }
             });
+
+            pub.activePaymentStep(2);
 
             $('input[name=check-member]').click(function () {
                 var value = $(this).val();
@@ -170,7 +179,7 @@ ws.payment = (function ($) {
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
             pub.payment.payment_bank_code = bankCode;
-            if (bankCode == 'ATM_ONLINE') {
+            if (bankCode === 'ATM_ONLINE') {
                 pub.methodChange(false);
             }
             if (checkRequire === true) {
@@ -199,13 +208,8 @@ ws.payment = (function ($) {
             pub.methods = $methods;
             console.log('register ' + pub.methods.length + ' methods');
         },
-        getWalletInfo: function ($element) {
-            $element = $element || undefined;
-            ws.ajax('/payment/wallet/check-guest', function ($res) {
-                if (!$res) {
-                    ws.showLoginWallet();
-                }
-            }, true);
+        calculatorShipping: function ($element) {
+
         },
         calculateInstallment: function () {
             ws.ajax('/payment/' + pub.payment.payment_provider + '/calc', {
@@ -382,8 +386,9 @@ ws.payment = (function ($) {
         login: function ($form) {
             var loginForm = $($form);
         },
-        walletLogin: function () {
-
+        activePaymentStep: function (step) {
+            current_step = step;
+            showStep(step);
         },
         process: function () {
             var $termAgree = $('input#termCheckout').is(':checked');
