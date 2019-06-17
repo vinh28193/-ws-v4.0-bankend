@@ -62,6 +62,27 @@ message CourierCalculate {
     string sorting_hub         = 29;
 }
 
+message CreateOrderResultFee {
+    double cod_fee         = 1;
+    double shipping_fee    = 2;
+    double insurance_fee   = 3;
+}
+
+message CreateOrderResult {
+    string label_url            = 1;
+    CreateOrderResultFee fee    = 2;
+    string tracking_number      = 3;
+    double cod_value            = 4;
+    string service_code         = 5;
+    int32 service_id            = 6;
+    int32 courier_id            = 7;
+    double min_delivery_time     = 8;
+    double max_delivery_time     = 9;
+    double money_collect     = 10;
+    double total_fee     = 11;
+}
+
+
 /////////////////////
 message CreateOrderRequest {
     string Data = 1;
@@ -76,6 +97,7 @@ message CreateOrderResponse {
     string ErrorMessage     = 3;
     CreateOrderResult Data  = 4;
 }
+
 
 
 message CalculateFeeRequest{

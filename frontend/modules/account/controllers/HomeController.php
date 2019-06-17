@@ -174,13 +174,13 @@ class HomeController extends BaseAccountController
         $request = new SignUpRequest();
         $request->setCurrency("VND");
         $request->setCountry("VN");
-        $request->setEmail("adv.globalmedia2@gmail.com");
+        $request->setEmail("globalmedia2@gmail.com");
         $request->setFullname("Jackly Hoang");
         $request->setPassword1("weshop@123");
         $request->setPassword2("weshop@123");
         $request->setPhone("0972607988");
         $request->setPlatform("WESHOP");
-        $request->setPlatformUser(22);
+        $request->setPlatformUser(21);
 
         list($reply, $status) = $greeterClient->SignUp($request)->wait();
         print_r($reply->getError());
