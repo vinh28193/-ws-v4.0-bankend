@@ -81,7 +81,7 @@
                     changeImage($item, images);
                 }
                 setUpDefaultOptions($item);
-                ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'btn#addToCart', function (event) {
+                ws.initEventHandler($item, 'addToCart', 'click.wsItem', 'button#addToCart', function (event) {
                     paymentItem($item, 'shopping');
                     return false;
                 });

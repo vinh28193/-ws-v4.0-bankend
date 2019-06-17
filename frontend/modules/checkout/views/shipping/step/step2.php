@@ -111,7 +111,7 @@ $this->registerJs($js);
     echo Html::endTag('div');
 
     echo $form->field($shippingForm, 'other_receiver', [
-        'template' => '{input}{hint}{error}',
+        'template' => '{input}{label}',
         'options' => [
             'class' => 'check-info',
             'style' => 'margin-bottom: 1rem;'
