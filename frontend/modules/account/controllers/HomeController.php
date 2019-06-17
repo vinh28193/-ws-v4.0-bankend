@@ -116,6 +116,7 @@ class HomeController extends BaseAccountController
         $request->setCountryCode("VN");
 
         list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
+        $Merchance = $reply->getData()[0];
 
         //print_r($greeterClient);
         print_r($reply->getMessage());
@@ -128,6 +129,12 @@ class HomeController extends BaseAccountController
         print_r($reply->getData()[0]);
         echo "</pre>";
 
+        echo "<pre>";
+        print_r($reply->getData());
+        echo "</pre>";
+
+        //print_r($Merchance->getUserId());
+
         return $this->render('CheckGrpc', []);
     }
 
@@ -137,7 +144,7 @@ class HomeController extends BaseAccountController
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $request = new CreateMerchantByIdRequest();
-        $request->setUserId(22);
+        $request->setUserId(226976);
         $request->setCountryCode("VN");
         $request->setCurrencyCode("VND");
 
@@ -161,7 +168,7 @@ class HomeController extends BaseAccountController
 
     public function actionSignUp()
     {
-        $greeterClient = new Client('206.189.94.203:50054', [
+        $greeterClient = new UserClient('206.189.94.203:50054', [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $request = new SignUpRequest();
@@ -176,11 +183,11 @@ class HomeController extends BaseAccountController
         $request->setPlatformUser(22);
 
         list($reply, $status) = $greeterClient->SignUp($request)->wait();
-
+        print_r($reply->getError());
         echo "<pre>";
         print_r($reply);
         echo "</pre>";
-        die;
+        die("5453454534");
 
         /*
         print_r($reply->getMessage());

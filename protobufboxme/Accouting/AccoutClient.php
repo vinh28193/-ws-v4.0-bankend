@@ -51,7 +51,7 @@ class AccoutClient extends \Grpc\BaseStub {
      * @return Grpc\UnaryCall
      */
     public function CreateMerchantById(CreateMerchantByIdRequest $argument, $metadata = [], $options = []) {
-        return $this->_simpleRequest('/Accouting.Accouting/WsCreateTransaction',
+        return $this->_simpleRequest('/Accouting.Accouting/CreateMerchantById',
             $argument,
             ['\Accouting\ReponseCreateMerchantById', 'decode'],
             $metadata, $options);
