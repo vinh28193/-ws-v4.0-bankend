@@ -135,7 +135,7 @@ class HomeController extends BaseAccountController
 
         //print_r($Merchance->getUserId());
 
-        return $this->render('CheckGrpc', []);
+        return $this->render('checkgrpc', []);
     }
 
     public function actionCreateMerchant()
@@ -162,7 +162,7 @@ class HomeController extends BaseAccountController
         echo "</pre>";
         */
 
-        return $this->render('CreateMerchant', []);
+        return $this->render('createmerchant', []);
     }
 
 
@@ -203,7 +203,7 @@ class HomeController extends BaseAccountController
         echo "</pre>";
         */
 
-        return $this->render('CreateMerchant', []);
+        return $this->render('createmerchant', []);
     }
 
 
