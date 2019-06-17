@@ -6,9 +6,9 @@ $.ajax({
                 success: function (res) {
                 console.log(res);
                     if (res.success) {
-                        $('#count-cart').html(res.count);
+                        $('.count-cart').html(res.count);
                     } else {
-                        $('#count-cart').html('0');
+                        $('.count-cart').html('0');
                     }
                 }
             });
@@ -30,7 +30,7 @@ $(document).ready(function () {
         $('#asd').css('transform','scaleY(-1)');
     else
         $('#asd').css('transform','scaleY(1)');
-    $('#target').toggle('slow');
+    $('#target').slideToggle('fast');
 });
 
     $('.toggleEbay').click(function() {
@@ -39,7 +39,7 @@ $(document).ready(function () {
         $('#asd1').css('transform','scaleY(-1)');
     else
         $('#asd1').css('transform','scaleY(1)');
-    $('#targetEbay').toggle('slow');
+    $('#targetEbay').slideToggle('fast');
 });
     
     $(document).ready(function() {
@@ -83,7 +83,7 @@ $this->registerJs($js);
         </div>
         <div class="cart-header-box">
             <i class="la la-shopping-cart"></i>
-            <a href="/my-cart.html"><span class="label-cart">Giỏ hàng (<span id="count-cart">0</span>)</span></a>
+            <a href="/my-cart.html"><span class="label-cart">Giỏ hàng (<span class="count-cart">0</span>)</span></a>
         </div>
         <div class="account-header-box dropdown style-account" style="width: 150px">
             <a class="bg-white" id="dropAcount" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
@@ -234,7 +234,7 @@ $this->registerJs($js);
             <li>
                 <a href="javascript:void(0);">
                     <i class="la la-shopping-cart"></i>
-                    <span class="badge">2</span>
+                    <span class="badge count-cart">0</span>
                 </a>
             </li>
         </ul>

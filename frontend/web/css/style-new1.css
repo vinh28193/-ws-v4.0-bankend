@@ -1,6 +1,4 @@
-.bars-nav li:active {
-    background-color: white;
-}
+
 .style-ull {
     padding-left: 1em;
     background-color: #f6f6f6;
@@ -128,4 +126,8 @@ ul:after {
 .style-font-facebook {
     position: absolute;
     top: 5px !important;
+}
+.style-u li{
+    cursor: pointer;
+    padding-right: 10px;
 }

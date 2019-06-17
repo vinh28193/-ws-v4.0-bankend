@@ -904,4 +904,17 @@ composer gen-proto  #
   
 
 ## courier.proto  GRPC phần tính phí và tạo đơn 
-  IP sandbox : 206.189.94.203:50056
+  IP sandbox : 206.189.94.203:50056 
+  JSON trên sandbox nhé :
+  https://dpaste.de/GeL5
+  Token 424de06ca6d2650167b3bdb4fae6c7b451d20ebfcd31650649bde2dc7e6e178e
+   
+   
+  ### Tich hop tao don boxme-dropship
+  Indo thì nhập zipcode
+  VN thì nhập tỉnh thành quận huyện
+  
+  Thinh Nguyen, [16.06.19 22:47]
+  riêng với dịch vụ dropship từ US thì có mấy lưu ý : 
+  - order_type: dropship
+  - sản phẩm phải được đồng bộ sang Boxme trước khi tạo đơn

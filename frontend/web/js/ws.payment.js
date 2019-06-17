@@ -614,10 +614,10 @@ ws.payment = (function ($) {
             text += '<div class="left"><div class="code">';
             $('#discountIpnputCoupon').css('display', 'flex');
             if (item.type === 'Coupon') {
-                text += '<i class="fas fa-times text-danger remove"  title="Remove ' + item.code + '" onclick="ws.payment.changeCouponCode(\'' + item.code + '\')"></i>';
+                text += '<i class="la la-times text-danger remove"  title="Remove ' + item.code + '" onclick="ws.payment.changeCouponCode(\'' + item.code + '\')"></i>';
                 $('#discountInputCoupon').css('display', 'none');
             }
-            text += item.code + '<i class="fas fa-question-circle code-info" data-toggle="tooltip" data-placement="top" title="' + item.message + '" data-original-title="' + item.message + '"></i></div></div>';
+            text += item.code + '<i class="la la-question-circle code-info" data-toggle="tooltip" data-placement="top" title="' + item.message + '" data-original-title="' + item.message + '"></i></div></div>';
             text += '<div class="right"> - ' + ws.showMoney(item.value) + '</div>';
             text += '</li>';
         });
