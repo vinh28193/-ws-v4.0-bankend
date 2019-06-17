@@ -265,7 +265,7 @@ class AmazonGate extends BaseGate
             'OR',
             ['alias' => $result['categories']],
             ['path' => $result['categories']]
-        ])->forSite($siteId)->select(['alias as category_id', 'name as category_name', 'originName as origin_name'])->asArray()->all();
+        ])->forSite($siteId)->select(['alias as category_id', 'name as category_name', 'origin_name'])->asArray()->all();
         $data['categories'] = $categories;
         $data['sorts'] = $result['sorts'];
         $data['filters'] = $this->getFilter($result['filters']);
