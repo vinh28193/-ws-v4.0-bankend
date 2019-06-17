@@ -36,26 +36,13 @@ class AccoutingClient implements AccoutingInterface
     private function makeRequest(Message $message, string $method): string
     {
         $body = $message->serializeToString();
-
         $ch = @curl_init("206.189.94.203:50054");
-
-        echo "<pre>";
-        print_r($ch);
-        echo "</pre>";
-
         @curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $body,
         ]);
-
         $response = @curl_exec($ch);
-
-        echo "\n nala \n";
-        echo "<pre>";
-        print_r($response);
-        echo "</pre>";
-
         @curl_close($ch);
 
         return $response;

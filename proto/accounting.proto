@@ -3,6 +3,8 @@ syntax = "proto3";
 option objc_class_prefix = "cal";
 package Accouting;
 option php_generic_services = true;
+
+
 //  TAO THONG TIN SO DU CHO USER (CreateMerchant)
 
 message CreateMerchantByIdRequest {
