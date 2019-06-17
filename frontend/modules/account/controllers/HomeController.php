@@ -174,11 +174,11 @@ class HomeController extends BaseAccountController
         $request = new SignUpRequest();
         $request->setCurrency("VND");
         $request->setCountry("VN");
-        $request->setEmail("globalmedia2@gmail.com");
+        $request->setEmail("weshop.test@gmail.com");
         $request->setFullname("Jackly Hoang");
         $request->setPassword1("weshop@123");
         $request->setPassword2("weshop@123");
-        $request->setPhone("0972607988");
+        $request->setPhone("0972607999");
         $request->setPlatform("WESHOP");
         $request->setPlatformUser(21);
 
@@ -187,7 +187,14 @@ class HomeController extends BaseAccountController
         echo "<pre>";
         print_r($reply);
         echo "</pre>";
-        die("5453454534");
+
+        echo "<pre>";
+        print_r($reply->getData());
+        echo "</pre>";
+
+        print_r($reply->getData()->getUserId());
+
+
 
         /*
         print_r($reply->getMessage());
