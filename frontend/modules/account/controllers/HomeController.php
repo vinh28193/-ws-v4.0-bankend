@@ -2,6 +2,7 @@
 
 namespace frontend\modules\account\controllers;
 
+use Accouting\CreateMerchantByIdRequest;
 use common\components\cart\CartManager;
 use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
@@ -12,12 +13,18 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use protobufboxme\Accouting\GreeterClient as GreeterClient;
+use Accouting\AccoutClient as Client;
 use Grpc;
+
+// Accouting
 use Accouting\Merchantinfo;
 use Accouting\GetListMerchantByIdRequest;
 use Accouting\GetListMerchantByIdResponse;
 use Accouting\AccoutingClient;
+
+// UserClient
+use User\UserClient;
+use User\SignUpRequest;
 
 
 /**
@@ -91,10 +98,7 @@ class HomeController extends BaseAccountController
             'data' => $data,
         ];
         */
-
-
         $accoutin = new AccoutingClient();
-
         $req   = (new GetListMerchantByIdRequest())->setCountryCode('VN')->setUserId(23);
         $reply = $accoutin->getListMerchantById($req);
 
@@ -102,20 +106,97 @@ class HomeController extends BaseAccountController
         var_dump($reply->getData());
     }
 
-    public function actionCallGrpc()
+    public function actionCheckGrpc()
     {
-        $options = [
-            'credentials' => $this->credentialsObject,
-            'update_metadata' => function($metaData){
-                $metaData['authorization'] = ['Bearer ' . $this->token];
-                return $metaData;
-            }
-        ];
+        $greeterClient = new Client('206.189.94.203:50054', [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+        $request = new GetListMerchantByIdRequest();
+        $request->setUserId(23);
+        $request->setCountryCode("VN");
 
-        $client = new OrganizationServiceClient($this->url,$options);
+        list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
+        $Merchance = $reply->getData()[0];
 
-        $r = new \Google\Protobuf\GPBEmpty();
-        list($data,$status) = $client->list($r)->wait();
+        //print_r($greeterClient);
+        print_r($reply->getMessage());
+
+//        echo "<pre>";
+//        print_r($status);
+//        echo "</pre>";
+
+        echo "<pre>";
+        print_r($reply->getData()[0]);
+        echo "</pre>";
+
+        echo "<pre>";
+        print_r($reply->getData());
+        echo "</pre>";
+
+        //print_r($Merchance->getUserId());
+
+        return $this->render('CheckGrpc', []);
+    }
+
+    public function actionCreateMerchant()
+    {
+        $greeterClient = new Client('206.189.94.203:50054', [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+        $request = new CreateMerchantByIdRequest();
+        $request->setUserId(226976);
+        $request->setCountryCode("VN");
+        $request->setCurrencyCode("VND");
+
+        list($reply, $status) = $greeterClient->CreateMerchantById($request)->wait();
+
+        echo "<pre>";
+        print_r($reply);
+        echo "</pre>";
+        die;
+
+        /*
+        print_r($reply->getMessage());
+        echo "<pre>";
+        print_r($reply->getData()[0]);
+        echo "</pre>";
+        */
+
+        return $this->render('CreateMerchant', []);
+    }
+
+
+    public function actionSignUp()
+    {
+        $greeterClient = new UserClient('206.189.94.203:50053', [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+        $request = new SignUpRequest();
+        $request->setCurrency("VND");
+        $request->setCountry("VN");
+        $request->setEmail("globalmedia2@gmail.com");
+        $request->setFullname("Jackly Hoang");
+        $request->setPassword1("weshop@123");
+        $request->setPassword2("weshop@123");
+        $request->setPhone("0972607988");
+        $request->setPlatform("WESHOP");
+        $request->setPlatformUser(21);
+
+        list($reply, $status) = $greeterClient->SignUp($request)->wait();
+
+        echo "<pre>";
+        print_r($reply);
+        echo "</pre>";
+        die("5453454534");
+
+        /*
+        print_r($reply->getMessage());
+        echo "<pre>";
+        print_r($reply->getData()[0]);
+        echo "</pre>";
+        */
+
+        return $this->render('CreateMerchant', []);
     }
 
 

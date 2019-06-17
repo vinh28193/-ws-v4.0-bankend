@@ -793,6 +793,7 @@ protoc -I=.  --php_out=./protobufboxme/  --plugin=protoc-gen-grpc=/usr/local/bin
 protoc --php_out=./protobufboxme ./proto/accounting.proto
 protoc --php_out=./protobufboxme ./proto/user.proto
 protoc --php_out=./protobufboxme ./proto/Seller.proto
+protoc --php_out=./protobufboxme ./proto/courier.proto
 
 
 ##----------------Call test grpc boxme-----------------------
@@ -863,9 +864,8 @@ Accouting@206.189.94.203:50054>
  
  let user = client.signUp({user_id: 22 ,email:adv.globalmedia2@gmail.com ,username:'adv.globalmedia2' ,fullname:'Jackly Hoang' , invite_code:5 ,is_active:9},printReply)
  
- let create = client.signUp({country: 'VN' ,email:'adv.globalmedia2@gmail.com' ,currency:'VND' ,fullname:'Jackly Hoang' , password1:'weshop@123' , password2:'weshop@123' ,phone:'0972607988', platform:'WESHOP' , platform_user : 22},printReply)
-  
- 
+ let cre = client.SignUp({country: 'VN' ,email:'adv.globalmedia2@gmail.com' ,currency:'VND' ,fullname:'Jackly Hoang' , password1:'weshop@123' , password2:'weshop@123' ,phone:'0972607988', platform_user:'WESHOP' , platform_user : 22},printReply)
+   
  ###------------------
  https://www.swoole.com/
  #!/bin/bash
@@ -894,4 +894,5 @@ composer gen-proto  #
   },
   
 
-AccoutingClient.php
+## courier.proto  GRPC phần tính phí và tạo đơn 
+  IP sandbox : 206.189.94.203:50056

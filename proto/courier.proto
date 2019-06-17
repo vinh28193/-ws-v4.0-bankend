@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+option objc_class_prefix = "courier";
+package Courier;
+
+message CourierCalculateVas {
+    double cod                 = 1;
+    double insurance           = 2;
+    double checking            = 3;
+    double remote              = 4;
+    double customs             = 5;
+    double line_haul           = 6;
+    double tracking            = 7;
+    double pod                 = 8;
+    double restrict            = 9;
+}
+message CourierCalculateDiscountDetail {
+    double courier_discount          = 1;
+    double coupon_discount           = 2;
+}
+
+
+message FulfillmentFee {
+    double handling    = 1;
+    double material    = 2;
+    double special      = 3;
+}
+
+
+
+message CourierCalculate {
+    string courier_logo         = 1;
+    string service_name         = 2;
+    int32 courier_id            = 3;
+    string dropoff_point        = 4;
+    double duty                 = 5;
+    double shipping_fee         = 6;
+    double discount             = 7;
+    string handover_options     = 8;
+
+    string currency             = 9;
+    CourierCalculateVas vas     = 10;
+
+    string insurance_policy     = 11;
+    int32 delivery_time_rank    = 12;
+    int32 fee_rank              = 13;
+    string courier_name         = 14;
+    string service_code         = 15;
+    double rating               = 16;
+    double total_fee            = 17;
+    double tax                  = 18;
+
+    double min_delivery_time    = 20;
+    double max_delivery_time    = 21;
+    string handover_policy     = 22;
+    double cod_value            = 23;
+    FulfillmentFee fulfillment = 24;
+    CourierCalculateDiscountDetail discount_detail     = 25;
+    double return_fee          = 26;
+    double chargeable_weight   = 27;
+    int32 service_id           = 28;
+    string sorting_hub         = 29;
+}
+
+message CreateOrderResultFee {
+    double cod_fee         = 1;
+    double shipping_fee    = 2;
+    double insurance_fee   = 3;
+}
+
+message CreateOrderResult {
+    string label_url            = 1;
+    CreateOrderResultFee fee    = 2;
+    string tracking_number      = 3;
+    double cod_value            = 4;
+    string service_code         = 5;
+    int32 service_id            = 6;
+    int32 courier_id            = 7;
+    double min_delivery_time     = 8;
+    double max_delivery_time     = 9;
+    double money_collect     = 10;
+    double total_fee     = 11;
+}
+
+
+/////////////////////
+message CreateOrderRequest {
+    string Data = 1;
+    int32 UserId  = 2;
+    string CountryCode  = 3;
+}
+
+
+message CreateOrderResponse {
+    bool Error              = 1;
+    string ErrorCode        = 2;
+    string ErrorMessage     = 3;
+    CreateOrderResult Data  = 4;
+}
+
+
+
+message CalculateFeeRequest{
+    string Data = 1;
+    int32  UserId  = 2;
+    string CountryCode  = 3;
+}
+
+message CalculateFeeResponse{
+    bool Error = 1;
+    string ErrorCode        = 2;
+    string ErrorMessage     = 3;
+    repeated CourierCalculate Data = 4;
+}
+
+
+service CourierService {
+    rpc CalculateFee (CalculateFeeRequest) returns (CalculateFeeResponse);
+    rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+}

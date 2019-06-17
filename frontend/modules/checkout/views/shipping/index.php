@@ -15,14 +15,32 @@ use yii\helpers\Url;
 $showStep = true;
 $activeStep = 2;
 ?>
-<!--<div id="step_checkout_1" style="display: --><? //= $activeStep === 1 ? 'block' : 'none'; ?><!--">-->
-<!--    --><?php //echo $this->render('step/step1', ['activeStep' => $activeStep]); ?>
-<!--</div>-->
-<div style="display: <?= $activeStep === 1 ? 'none' : 'block' ?>">
-    <?= $this->render('step/step2', [
-        'activeStep' => $activeStep,
-        'shippingForm' => $shippingForm,
-        'provinces' => $provinces,
-        'payment' => $payment,
-    ]); ?>
+
+<div class="container checkout-content">
+    <ul class="checkout-step">
+        <li data-href=".step1"><i>1</i><span><?= Yii::t('frontend', 'Login'); ?></span></li>
+        <li data-href=".step2"><i>2</i><span><?= Yii::t('frontend', 'Shipping address'); ?></span></li>
+        <li data-href=".step3"><i>3</i><span><?= Yii::t('frontend', 'Payment'); ?></span></li>
+    </ul>
+    <div class="step-content row">
+        <div class="col-md-8">
+            <div class="step1">
+                <?php echo $this->render('step/step1', []) ?>
+            </div>
+            <div class="step2 shipping-form">
+                <?php echo $this->render('step/step2', [
+                    'shippingForm' => $shippingForm,
+                    'provinces' => $provinces
+                ]) ?>
+            </div>
+            <div class="step3 payment-form">
+                <?php echo $this->render('step/step3', [
+                    'payment' => $payment,
+                ]) ?>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <?php echo $this->render('cart', ['payment' => $payment]) ?>
+        </div>
+    </div>
 </div>

@@ -5,7 +5,7 @@
 namespace User;
 
 /**
- * Protobuf type <code>user.UserService</code>
+ * Protobuf type <code>User.UserService</code>
  */
 interface UserServiceInterface
 {

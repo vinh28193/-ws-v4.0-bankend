@@ -49,8 +49,8 @@ class CartController extends BillingController
         $uuid = $this->filterUuid();
         $cartManager = $this->module->cartManager;
         $items = $cartManager->getItems($type, $ids, $this->filterUuid());
-        if ($this->request->isPjax) {
-            return $this->renderAjax('index', [
+        if ($this->request->getIsPjax()) {
+            return $this->renderPartial('index', [
                 'uuid' => $uuid,
                 'cartContent' => $cartContent,
                 'items' => $items
