@@ -23,7 +23,12 @@ $(document).ready(function () {
     $('.style-list').slick({
         infinite: true,
         arrows: true,
-        slidesToShow: 6
+        speed: 100,
+        loop: false,
+        slidesToShow: 6,
+        centerMode: false,
+        variableWidth: true,
+        swipeToSlide: true
     });
 
     $('.mb-slide-image').slick();
