@@ -1,5 +1,17 @@
 <?php
 $js = <<<JS
+$.ajax({
+                url: '/checkout/cart/count',
+                method: 'GET',
+                success: function (res) {
+                console.log(res);
+                    if (res.success) {
+                        $('#count-cart').html(res.count);
+                    } else {
+                        $('#count-cart').html('0');
+                    }
+                }
+            });
 $(document).ready(function () {
     $('.bars-cate-mb').slick({
       infinite: true,
@@ -71,7 +83,7 @@ $this->registerJs($js);
         </div>
         <div class="cart-header-box">
             <i class="la la-shopping-cart"></i>
-            <span class="label-cart">Giỏ hàng (10)</span>
+            <a href="/my-cart.html"><span class="label-cart">Giỏ hàng (<span id="count-cart">0</span>)</span></a>
         </div>
         <div class="account-header-box dropdown style-account" style="width: 150px">
             <a class="bg-white" id="dropAcount" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
