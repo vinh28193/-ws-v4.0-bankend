@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use kartik\depdrop\DepDrop;
+use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
 use yii\helpers\Url;
 
@@ -10,17 +11,17 @@ use yii\helpers\Url;
 /* @var array $provinces */
 /* @var frontend\modules\payment\Payment $payment */
 
-$id = Html::getInputId($shippingForm, 'other_receiver');
+$otherReceiver = Html::getInputId($shippingForm, 'other_receiver');
 $js = <<< JS
     
     var showReceiver = function(element) {
-        element  = $(element)
+        element  = $(element);
         var checked = element.is(':checked');
         $('div.receiver-form').css('display',checked ? 'block' :'none');
     };
-    var otherReceiver =  $('#$id');
+    var otherReceiver =  $('#$otherReceiver');
     showReceiver(otherReceiver);
-    ws.initEventHandler('payment-form','change','change','#$id',function(event) {
+    ws.initEventHandler('payment-form','change','change','#$otherReceiver',function(event) {
         showReceiver(this);
     });
     
@@ -37,6 +38,12 @@ $js = <<< JS
         // send data to actionSave by ajax request.
         return false; // Cancel form submitting.
     });
+    var depdropChange = function(event, id, value, count) { 
+        var log = function(v){
+            console.log(v);
+        }
+        log(id); log(value); log(count); 
+    }
 JS;
 $this->registerJs($js);
 ?>
@@ -79,8 +86,12 @@ $this->registerJs($js);
     echo $form->field($shippingForm, 'buyer_province_id', [
         'template' => '<i class="icon globe"></i>{input}{hint}{error}',
         'options' => ['class' => 'form-group']
-    ])->dropDownList($provinces, [
-        'prompt' => Yii::t('frontend', 'Choose the province'),
+    ])->widget(Select2::className(), [
+        'data' => $provinces,
+        'pluginOptions' => [
+            'allowClear' => true,
+            'placeholder' => Yii::t('frontend', 'Choose the province'),
+        ],
     ]);
 
     echo Html::hiddenInput('hiddenBuyerDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenBuyerDistrictId']);
@@ -89,6 +100,12 @@ $this->registerJs($js);
         'template' => '<i class="icon city"></i>{input}{hint}{error}',
         'options' => ['class' => 'form-group']
     ])->widget(DepDrop::classname(), [
+        'type' => DepDrop::TYPE_SELECT2,
+        'select2Options' => [
+            'pluginOptions' => ['allowClear' => true], 'pluginEvents' => [
+                "change" => "function(event) { event.preventDefault();ws.payment.calculatorShipping(); }",
+            ]
+        ],
         'pluginOptions' => [
             'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
             'placeholder' => Yii::t('frontend', 'Choose the district'),
@@ -96,7 +113,7 @@ $this->registerJs($js);
             'loadingText' => Yii::t('frontend', 'Loading district ...'),
             'initialize' => true,
             'params' => ['hiddenBuyerDistrictId']
-        ]
+        ],
     ]);
     echo $form->field($shippingForm, 'buyer_address', [
         'template' => '<i class="icon mapmaker"></i>{input}{hint}{error}',

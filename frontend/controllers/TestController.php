@@ -3,12 +3,16 @@
 
 namespace frontend\controllers;
 
+use common\boxme\InternationalShippingCalculator;
 use common\components\cart\CartHelper;
 use common\components\cart\CartManager;
+use common\helpers\ObjectHelper;
 use common\helpers\WeshopHelper;
 use common\models\Store;
 use common\models\User;
 use common\promotion\PromotionForm;
+use Courier\CalculateFeeRequest;
+use Courier\CourierClient;
 use frontend\modules\payment\providers\mcpay\McPayProvider;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganluongHelper;
@@ -205,7 +209,7 @@ class TestController extends FrontendController
         $data = require dirname(dirname(__DIR__)) . '\common\models\category_group.php';
         foreach ($data as $array) {
             $rules = [];
-            if($array['condition_data'] !== null){
+            if ($array['condition_data'] !== null) {
                 foreach ($array['condition_data'] as $condition) {
                     $calc = new \common\calculators\Calculator();
                     $calc->register($condition);
@@ -221,9 +225,127 @@ class TestController extends FrontendController
         var_dump($message);
         die;
     }
-    public function actionTestSale() {
+
+    public function actionTestSale()
+    {
         $sale = $this->actionTestCount();
         var_dump($sale);
         die();
+    }
+
+    public function actionGetCourier()
+    {
+        $calculator = new InternationalShippingCalculator();
+
+        $shipment = [
+            'from' => [
+                'country' => 'US',
+                'pickup_id' => 35549,
+            ],
+            'to' => [
+                'contact_name' => 'Di Vương',
+                'company_name' => '',
+                'email' => 'vmoc@cai.net.vn',
+                'address' => '1146 Phố Vi Ty Nghị, Xã Đan, Huyện 24Lạng Sơn',
+                'address2' => '',
+                'phone' => '0127 111 4204',
+                'phone2' => '',
+                'country' => 'VN',
+                'province' => 1,
+                'district' => 7,
+                'zipcode' => '',
+                'tax_id' => '',
+            ],
+            'shipment' => [
+                'content' => '',
+                'total_parcel' => 2,
+                'total_amount' => 17505000,
+                'description' => '',
+                'amz_shipment_id' => '',
+                'chargeable_weight' => 3000,
+                'parcels' => [
+                    [
+                        'dimension' => [
+                            'width' => 0,
+                            'height' => 0,
+                            'length' => 0,
+                        ],
+                        'weight' => 2180,
+                        'amount' => 17027000,
+                        'description' => 'order of seller microtech certified',
+                        'dg_code' => '',
+                        'hs_code' => '',
+                        'items' => [
+                            [
+                                'sku' => 'B0727VQK39',
+                                'label_code' => '',
+                                'origin_country' => '',
+                                'name' => 'Microsoft Surface Laptop (1st Gen) (Intel Core i5, 8GB RAM, 256GB) - Cobalt Blue',
+                                'desciption' => '',
+                                'weight' => 2180,
+                                'amount' => 17027000,
+                                'customs_value' => 17027000,
+                                'quantity' => 1,
+                            ],
+                        ],
+                    ],
+                    [
+                        'dimension' => [
+                            'width' => 0,
+                            'height' => 0,
+                            'length' => 0,
+                        ],
+                        'weight' => 1000,
+                        'amount' => 478000,
+                        'description' => 'order of seller aventurajewellery',
+                        'dg_code' => '',
+                        'hs_code' => '',
+                        'items' => [
+                            [
+                                'sku' => '323074868639',
+                                'label_code' => '',
+                                'origin_country' => '',
+                                'name' => 'Swarovski Crystal 4 Stone Drop Necklace in 18K White Gold Plated',
+                                'desciption' => '',
+                                'weight' => 1000,
+                                'amount' => 478000,
+                                'customs_value' => 478000,
+                                'quantity' => 2,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'config' => [
+                'preview' => 'Y',
+                'return_mode' =>0,
+                'insurance' => 'N',
+                'document' => 0,
+                'currency' => 'VND',
+                'unit_metric' => 'metric',
+                'sort_mode' => 'best_rating',
+                'auto_approve' => 'Y',
+                'create_by' => 0,
+                'create_from' => 'create_order_netsale',
+                'order_type' => 'dropship',
+                'check_stock' => 'N',
+            ],
+            'payment' => [
+                'cod_amount' => 0,
+                'fee_paid_by' => 'sender',
+            ],
+            'referral' => [
+                'order_number' => '',
+                'coupon_code' => '',
+            ],
+        ];
+
+        $couriers = $calculator->CalculateFee($shipment, 23, 'VN');
+
+        echo "<pre>";
+        echo json_encode($shipment);
+//        print_r($couriers);
+        echo "</pre>";
+        die;
     }
 }

@@ -208,8 +208,18 @@ ws.payment = (function ($) {
             pub.methods = $methods;
             console.log('register ' + pub.methods.length + ' methods');
         },
-        calculatorShipping: function ($element) {
-
+        calculatorShipping: function () {
+            if (!pub.filterShippingAddress()) {
+                return false;
+            }
+            ws.ajax('/payment/courier/calculator', {
+                dataType: 'json',
+                type: 'post',
+                data: {payment: pub.payment, shipping: pub.shipping},
+                success: function (response) {
+                    console.log(response);
+                }
+            }, true);
         },
         calculateInstallment: function () {
             ws.ajax('/payment/' + pub.payment.payment_provider + '/calc', {

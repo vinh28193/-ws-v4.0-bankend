@@ -81,7 +81,6 @@ class Payment extends Model
     public $currency;
     public $total_order_amount;
     public $isPaid = false;
-    public $total_amount_display;
 
     public $payment_bank_code;
     public $payment_method;
@@ -230,7 +229,6 @@ class Payment extends Model
         $data = CartHelper::createOrderParams($this->type, $this->carts, $this->uuid);
         $this->_orders = $data['orders'];
         $this->total_order_amount = $data['totalAmount'];
-        $this->total_amount_display = $data['totalAmount'];
     }
 
     public function registerClientScript()
@@ -332,9 +330,13 @@ class Payment extends Model
         if ($response->success === true && $response->discount > 0 && count($response->details) > 0) {
             $this->total_discount_amount = $response->discount;
             $this->discount_detail = $response->details;
-            $this->total_amount_display = $this->total_order_amount - $this->total_discount_amount;
         }
         return $response;
+    }
+
+    public function courierCalculator($from, $to)
+    {
+
     }
 
     public function createGaData()

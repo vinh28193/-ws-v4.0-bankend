@@ -66,6 +66,7 @@ return [
         'payment/<provider:[^/]+>/calc' => 'payment/installment/calculator',
         'payment/<provider:[^/]+>/check-field' => 'payment/validate/check-field',
         'payment/<merchant:[^/]+>/check-recursive' => 'payment/payment/check-recursive',
+        'payment/courier/calculator' => 'payment/additional-fee-service/courier-calculator',
 
         //account
         'my-weshop.html' => 'account/home',
