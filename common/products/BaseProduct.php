@@ -269,7 +269,10 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     public function getUserLevel()
     {
-        return $this->getUser()->userLever;
+        if($this->getUser()){
+            return $this->getUser()->userLever;
+        }
+        return User::LEVEL_NORMAL;
     }
 
     /**

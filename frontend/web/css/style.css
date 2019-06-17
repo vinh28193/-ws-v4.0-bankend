@@ -5099,7 +5099,7 @@ a:hover {
     border: 1px solid #b7b7b7;
     display: block;
     border-radius: 3px;
-    width: 39px !important;
+    /*width: 39px !important;*/
     height: 50px;
     position: relative;
 }
@@ -5114,7 +5114,7 @@ a:hover {
 }
 
 .detail-block .thumb-slider .detail-slider .item:hover a {
-    border-color: #e67425;
+    border-color: #17a2b8;
 }
 
 .detail-block .thumb-slider .big-img {
@@ -7828,10 +7828,9 @@ a:hover {
     text-align: center;
 }
 
-#detail-slider .item.active {
-    border: 1px solid red;
+.detail-block .thumb-slider .detail-slider .item.active a {
+    border-color: #17a2b8;
 }
-
 .old-price {
     text-decoration: line-through;
 }
@@ -8796,4 +8795,15 @@ li.dropdown.show {
     text-align: center;
     padding: 5px 0;
     height: 52px;
+}
+.modal{
+    transform: scale(0);
+    opacity: 0;
+    -webkit-transition: all .25s linear;
+    -o-transition: all .25s linear;
+    transition: all .25s linear;
+}
+.modal.show {
+    opacity: 1;
+    transform: scale(1);
 }

@@ -83,7 +83,7 @@ if ($item->available_quantity) {
                     <td><?= Yii::t('frontend','The above price is included') ?></td>
                     <td>
                         <ul class="list-dot">
-                            <li><?= Yii::t('frontend','Purchase fee: {purchasefee}',['purchasefee' => $storeManager->showMoney(300000)]) ?></li>
+                            <li><?= Yii::t('frontend','Purchase fee: {purchasefee}',['purchasefee' => $storeManager->showMoney($item->getAdditionalFees()->getTotalAdditionalFees('purchase_fee')[1])]) ?></li>
                             <li><?= Yii::t('frontend','Price product on {portal_web}: {purchasefee}',['portal_web'=>$portal_web,'purchasefee' => WeshopHelper::showMoney($item->getSellPrice(),2)]) ?></li>
                         </ul>
                     </td>
@@ -140,7 +140,7 @@ if ($item->available_quantity) {
     if ($item->end_time !== null && $item->type === BaseProduct::TYPE_EBAY) {
         ?>
 
-        <div class="countdown"><?=Yii::t('frontend','Time end')?>: <b class="text-orange"><?=Yii::$app->formatter->asDatetime($item->end_time);?></b> (<span data-toggle="countdown-time" data-timestamp="<?=$item->end_time?>" data-prefix="<?=Yii::t('frontend','Also');?>" data-day="<?=Yii::t('frontend','day');?>" data-hour="<?=Yii::t('frontend','hour');?>" data-minute="<?=Yii::t('frontend','minute');?>" data-second="<?=Yii::t('frontend','second');?>"></span>)</div>;
+        <div class="countdown"><?=Yii::t('frontend','Time end')?>: <b class="text-orange"><?=Yii::$app->formatter->asDatetime($item->end_time);?></b> (<span data-toggle="countdown-time" data-timestamp="<?=$item->end_time?>" data-prefix="<?=Yii::t('frontend','Also');?>" data-day="<?=Yii::t('frontend','day');?>" data-hour="<?=Yii::t('frontend','hour');?>" data-minute="<?=Yii::t('frontend','minute');?>" data-second="<?=Yii::t('frontend','second');?>"></span>)</div>
         <?php
         }
     ?>

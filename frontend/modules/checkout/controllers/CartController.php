@@ -74,7 +74,8 @@ class CartController extends BillingController
     public function actionCount()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return $this->module->cartManager->countItems(CartSelection::TYPE_SHOPPING, $this->filterUuid());
+        $count = $this->module->cartManager->countItems(CartSelection::TYPE_SHOPPING, $this->filterUuid());
+        return ['success' => true,'count' => $count];
     }
 
     public function actionAdd()
