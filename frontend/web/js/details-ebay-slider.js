@@ -19,7 +19,6 @@ $(document).ready(function () {
         gallery: 'detail-slider',
         galleryActiveClass: 'active'
     });
-
     $('.style-list').slick({
         infinite: true,
         arrows: true,
