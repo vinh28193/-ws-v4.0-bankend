@@ -39,6 +39,7 @@ ws.payment = (function ($) {
         instalment_type: undefined,
         courier_service: undefined,
         courier_name: undefined,
+        courier_logo: undefined,
         courier_fee: undefined,
         courier_delivery_time: undefined,
         courier_detail: undefined,
@@ -319,6 +320,12 @@ ws.payment = (function ($) {
             table += '</tbody></table>';
             $('div#installmentPeriods').html(table);
 
+        },
+        courierChange: function(courier){
+            pub.set('courier_logo',courier.courier_logo);
+            pub.set('courier_service',courier.courier_service);
+            pub.set('courier_name',courier.courier_name + courier.service_name);
+            pub.set('name',courier.courier_name + courier.service_name);
         },
         methodChange: function (isNew) {
             isNew = isNew || false;
