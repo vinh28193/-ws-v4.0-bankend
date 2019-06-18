@@ -144,16 +144,24 @@ $this->registerJs($js);
                 <?php }else{?>
                 <li class="card" style="border: none">
                     <div class="card-body">
-                       <div class="row">
-                           <div class="col-md-12 mb-2">Đơn hàng của tôi</div>
-                           <div class="col-md-12 mb-2">Mã giảm giá của tôi</div>
-                           <div class="col-md-12 mb-2">Khiếu nại & hoàn trả</div>
-                           <div class="col-md-12 mb-2">Tài khoản ví(xu)</div>
+                       <div class="row" id="list-menu-account">
                            <div class="col-md-12 mb-3">
-                               <a href="/my-weshop.html">Cấu hình tài khoản</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/order">Đơn hàng của tôi</a>
+                           </div>
+                           <div class="col-md-12 mb-3">
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/promotion-user">Mã giảm giá của tôi</a>
+                           </div>
+                           <div class="col-md-12 mb-3">
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="#">Khiếu nại & hoàn trả</a>
+                           </div>
+                           <div class="col-md-12 mb-3">
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop/wallet.html">Tài khoản ví(xu)</a>
+                           </div>
+                           <div class="col-md-12 mb-3">
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop.html">Cấu hình tài khoản</a>
                            </div>
                            <div class="col-md-12 mb-2 social-button">
-                               <a class="btn btn-info p-2" href="/logout.html">Đăng xuất tài khoản</a>
+                               <a class="btn btn-info p-2" href="javascript:void (0);" data-action="clickToLoad" data-href="/logout.html">Đăng xuất tài khoản</a>
                            </div>
                        </div>
                     </div>

@@ -5,6 +5,9 @@ namespace frontend\controllers;
 
 use common\models\User;
 use frontend\models\PasswordRequiredForm;
+use User\SignUpRequest;
+use User\SignUpResponse;
+use User\UserClient;
 use Yii;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
@@ -77,6 +80,31 @@ class SecureController extends FrontendController
         }
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            /** @var User $user */
+            $user = Yii::$app->user->getIdentity();
+            if(!$user->bm_wallet_id){
+                try{
+                    $greeterClient = new UserClient('206.189.94.203:50053', [
+                        'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+                    ]);
+                    $request = new SignUpRequest();
+                    $request->setCurrency($user->store_id == 7 ? 'IDR' : 'VND');
+                    $request->setCountry($user->store_id == 7 ? 'ID' : 'VN');
+                    $request->setEmail($user->email);
+                    $request->setFullname(trim($user->last_name.' '. $user->first_name));
+                    $request->setPassword1($model->password);
+                    $request->setPassword2($model->password);
+                    $request->setPhone($user->phone);
+                    $request->setPlatform("WESHOP");
+                    $request->setPlatformUser($user->id);
+                    list($reply, $status) = $greeterClient->SignUp($request)->wait();
+                    /** @var SignUpResponse $reply */
+                    if(!$reply->getError()){
+                        $wallet_boxme = $reply->getData();
+                        User::updateAll(['bm_wallet_id' => $wallet_boxme->getUserId()],['id' => $user->id]);
+                    }
+                }catch (\Exception $exception){}
+            }
             $redirectUrl = Yii::$app->getHomeUrl();
             if (($url_rel = $this->request->get('rel')) !== null) {
                 $url_rel = urldecode($url_rel);

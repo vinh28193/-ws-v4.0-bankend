@@ -174,7 +174,7 @@ class HomeController extends BaseAccountController
         $request = new SignUpRequest();
         $request->setCurrency("VND");
         $request->setCountry("VN");
-        $request->setEmail("weshop.test@gmail.com");
+        $request->setEmail("weshop.test2@gmail.com");
         $request->setFullname("Jackly Hoang");
         $request->setPassword1("weshop@123");
         $request->setPassword2("weshop@123");
@@ -184,6 +184,9 @@ class HomeController extends BaseAccountController
 
         list($reply, $status) = $greeterClient->SignUp($request)->wait();
 
+        echo "<pre>";
+        print_r($reply->getMessage());
+        echo "</pre>";
         echo "<pre>";
         print_r($reply);
         echo "</pre>";
@@ -218,10 +221,15 @@ class HomeController extends BaseAccountController
             ->where(['=', 'customer_id', $userId])
             ->all();
         $total = count($orders);
-        $wallet = null;
-//        if($userId){
-//            $wallet = ArrayHelper::getValue((new WalletService())->detailWalletClient(),'data');
-//        }
+        $greeterClient = new Client('206.189.94.203:50054', [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+        $request = new GetListMerchantByIdRequest();
+        $request->setUserId(23);
+        $request->setCountryCode("VN");
+        list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
+        /** @var GetListMerchantByIdResponse $reply */
+        $wallet = !$reply->getError() && count($reply->getData()) ? $reply->getData()[0] : null;
         $totalCart = (new CartManager())->countItems();
         return $this->render('index', [
             'wallet' => $wallet,

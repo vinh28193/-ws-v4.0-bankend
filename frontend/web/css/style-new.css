@@ -594,6 +594,9 @@ div div.product-list.row div a div.info div.price span.countdown{
 .mb-slide-image{
     display: none;
 }
+.deal-title-box>.title {
+    white-space: nowrap;
+}
 @media (min-width: 414px) {
     ul.bars-nav li{
         padding-right: 0px;

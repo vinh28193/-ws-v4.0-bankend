@@ -7,10 +7,6 @@ $(document).ready(function () {
         nextArrow: $('.slider-next'),
         slidesToShow: 5
     });
-    console.log(innerWidth );
-    // if(innerWidth > ){
-    //
-    // }
     $('#detail-big-img').ezPlus({
         imageCrossfade: true,
         easing: true,
