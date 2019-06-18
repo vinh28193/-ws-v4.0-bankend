@@ -371,49 +371,34 @@ $this->registerJs($js);
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-3 m-o p-0">
                         <div class="thumb" style="height: auto;">
-                            <img src="https://i.ebayimg.com/00/s/MTEyMFgxNTAw/z/oYAAAOSwgPVcrnUX/$_1.JPG" alt="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16" title="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16">
+                            <img src="https://i.ebayimg.com/00/s/MTEyMFgxNTAw/z/oYAAAOSwgPVcrnUX/$_1.JPG" alt="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16" width="100%" title="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16">
                         </div>
+                    </div>
+                    <div class="col-9">
                         <div class="info">
                             <div class="left">
                                 <a href="http://weshop-v4.front-end-ws.local.vn/ebay/item/msi-radeon-rx-460-directx-12-rx-460-2g-oc-2gb-128-bit-gddr5-pci-express-30-x16-352639604796.html" target="_blank" class="name">
                                     MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16</a>
-                                <div class="rate" style="text-align: left">
-                                    <i class="la la-star"></i>
-                                    <i class="la la-star"></i>
-                                    <i class="la la-star"></i>
-                                    <i class="la la-star-half-o"></i>
-                                    <i class="la la-star-o"></i>
-                                </div>
-                                <ol>
-                                    <li>
-                                        Tình trạng:
-                                        <span style="margin-left: 0.25rem;" class="condition-option">Manufacturer refurbished</span>
-                                    </li>
-                                    <li>
-                                        Tạm tính:
-                                        <span style="margin-left: 0.25rem;" class="weight-option">2</span> kg
-                                    </li>
-                                </ol>
                             </div>
-                            <div class="right">
+                            <div class="price price-option text-danger">
+                                <strong>0VND</strong>
+                            </div>
+                            <div class="right mt-2 stylll">
                                 <div class="qty form-inline quantity-option">
-                                    <label>Số lượng:</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <button class="btn btn-outline-secondary button-quantity-down" data-pjax="1" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" data-update="#5d0889d5317e410bfc007089" data-operator="down" type="button">-
+                                            <button class="btn btn-outline-secondary btn-sm button-quantity-down style-add-quantyti" data-pjax="1" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" data-update="#5d0889d5317e410bfc007089" data-operator="down" type="button">-
                                             </button>
                                         </div>
-                                        <input type="text" name="cartItemQuantity" class="form-control style-quantity" value="2" data-min="1" data-type="shopping" data-max="0" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103">
+                                        <input type="text" name="cartItemQuantity" class="form-control style-quantity form-control-sm" value="2" data-min="1" data-type="shopping" data-max="0" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary button-quantity-up" data-pjax="1" data-parent="5d0889d5317e410bfc007089" data-type="shopping" data-id="352639604796" data-sku="604103" data-operator="up" type="button">+
+                                            <button class="btn btn-outline-secondary btn-sm button-quantity-up style-add-quantyti" data-pjax="1" data-parent="5d0889d5317e410bfc007089" data-type="shopping" data-id="352639604796" data-sku="604103" data-operator="up" type="button">+
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="price price-option">
-                                    0VND                                </div>
                                 <a href="#" class="del delete-item" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" <i=""> Xóa</a>
                             </div>
                         </div>

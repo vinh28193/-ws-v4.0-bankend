@@ -1348,6 +1348,13 @@ div div.product-list.row div a div.info div.price span.countdown{
     .style-quantity {
         background-image: linear-gradient(to top, #dedede, #ffffff);
         text-align: center;
+        max-width: 3em;
+    }
+    .style-add-quantyti {
+        height: 30px;
+        border: none;
+        background-image: linear-gradient(to top, #dedede, #ffffff);
+        border-radius: 0;
     }
 }
 
