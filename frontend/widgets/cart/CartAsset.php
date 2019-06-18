@@ -16,7 +16,7 @@ class CartAsset extends AssetBundle
     ];
 
     public $css = [
-
+        'css/cart-new.css'
     ];
 
     public $depends = [

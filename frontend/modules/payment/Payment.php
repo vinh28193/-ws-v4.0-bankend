@@ -406,26 +406,9 @@ class Payment extends Model
         try {
             foreach ($this->getOrders() as $key => $orderPayment) {
                 $order = clone $orderPayment;
-                $orderPromotions = []; // chứa toàn tộ những promotion được áp dụng cho order có key là $key
                 $orderTotalDiscount = 0;
-                if ($results->success === true && count($results->orders)) {
-                    foreach ($results->orders as $promotion => $data) {
-                        if (($discountForMe = ArrayHelper::getValue($data, $key)) === null) {
-                            continue;
-                        }
-                        $discountValue = ArrayHelper::getValue($discountForMe, 'totalDiscountAmount', 0);
-                        $orderTotalDiscount += $discountValue;
-                        $promotionDebug[] = [
-                            'apply' => $now,
-                            'code' => $promotion,
-                            'level' => 'order_fee',
-                            'level_id' => $order->id,
-                            'ref_name' => null,
-                            'ref_id' => null,
-                            'value' => $discountValue
-                        ];
-                        $orderPromotions[$promotion] = $discountForMe;
-                    }
+                if ($results->success === true) {
+                    $orderTotalDiscount = WeshopHelper::discountAmountPercent($order->total_amount_local, $this->total_order_amount, $results->discount);
                 }
 
                 unset($order['products']);
@@ -456,8 +439,10 @@ class Payment extends Model
                     return ['success' => false, 'message' => 'can not create order'];
                 }
 
-                foreach ($orderPayment->getAdditionalFees()->toArray() as $feeValue) {
+                foreach ($orderPayment->getAdditionalFees()->keys() as $key) {
+                    $feeValue = $orderPayment->getAdditionalFees()->get($key);
                     $feeValue = reset($feeValue);
+
                     $fee = new TargetAdditionalFee($feeValue);
                     $fee->target = 'order';
                     $fee->target_id = $order->id;
@@ -466,34 +451,8 @@ class Payment extends Model
                         $transaction->rollBack();
                         return ['success' => false, 'message' => 'can not create order'];
                     }
-                    // 10. update discount each fee
-                    $discountForFeeAmount = 0;
-                    if (!empty($orderPromotions)) {
-                        foreach ($orderPromotions as $promotion => $data) {
-                            if (($discountFee = ArrayHelper::getValue($data, 'discountFees')) !== null) {
-                                continue;
-                            }
-                            if (($forCurrentFee = ArrayHelper::getValue($discountFee, $fee->name)) === null) {
-                                continue;
-                            }
-                            $discountForFeeAmount += $forCurrentFee;
-                            $promotionDebug[] = [
-                                'apply' => $now,
-                                'code' => $promotion,
-                                'level' => 'order_fee',
-                                'level_id' => $order->id,
-                                'ref_name' => $fee->name,
-                                'ref_id' => $fee->id,
-                                'value' => $forCurrentFee
-                            ];
-                        }
-                    }
-                    $fee->updateAttributes(['discount_amount' => $discountForFeeAmount]);
-
                 }
-
                 $updateOrderAttributes = [];
-
                 // 4 products
                 foreach ($orderPayment->products as $paymentProduct) {
                     $product = clone $paymentProduct;
@@ -526,19 +485,6 @@ class Payment extends Model
                     }
 
                     foreach ($paymentProduct->productFees as $feeName => $productFee) {
-                        $orderAttribute = '';
-                        if ($feeName === 'product_price_origin') {
-                            // Tổng giá gốc của các sản phẩm tại nơi xuất xứ
-                            $orderAttribute = 'total_origin_fee_local';
-                        }
-                        if ($feeName === 'tax_fee_origin') {
-                            // Tổng phí tax của các sản phẩm tại nơi xuất xứ
-                            $orderAttribute = 'total_origin_tax_fee_local';
-                        }
-                        if ($feeName === 'origin_shipping_fee') {
-                            // Tổng phí ship của các sản phẩm tại nơi xuất xứ
-                            $orderAttribute = 'total_origin_shipping_fee_local';
-                        }
                         $fee = clone $productFee;
                         $fee->target = 'product';
                         $fee->target_id = $product->id;
@@ -547,18 +493,6 @@ class Payment extends Model
                             $transaction->rollBack();
                             return ['success' => false, 'message' => 'can not create order'];
                         }
-                        if ($orderAttribute !== '') {
-                            if ($orderAttribute === 'total_origin_fee_local') {
-                                // Tổng giá gốc của các sản phẩm tại nơi xuất xứ (giá tại nơi xuất xứ)
-                                $oldAmount = isset($updateOrderAttributes['total_price_amount_origin']) ? $updateOrderAttributes['total_price_amount_origin'] : 0;
-                                $oldAmount += (int)$fee->amount;
-                                $updateOrderAttributes['total_price_amount_origin'] = $oldAmount;
-                            }
-                            $value = isset($updateOrderAttributes[$orderAttribute]) ? $updateOrderAttributes[$orderAttribute] : 0;
-                            $value += (int)$fee->local_amount;
-                            $updateOrderAttributes[$orderAttribute] = $value;
-                        }
-
                     }
 
                 }
@@ -569,10 +503,9 @@ class Payment extends Model
                     $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
                 }
                 $order->updateAttributes($updateOrderAttributes);
-                $orderCodes[$order->ordercode] = [
+                $orderCodes[] = [
                     'totalPaid' => $order->total_paid_amount_local,
                     'discountAmount' => $order->total_promotion_amount_local,
-                    'promotion' => !empty($orderPromotions) ? array_keys($orderPromotions) : null,
                 ];
             }
             Yii::info($promotionDebug, 'promotionDebug');

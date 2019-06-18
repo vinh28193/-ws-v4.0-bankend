@@ -22,6 +22,18 @@ class CheckoutController extends FrontendController
     public $module;
 
     /**
+     * @var string
+     */
+    public $breadcrumbParam = [];
+
+    public function defaultLayoutParams()
+    {
+        return ArrayHelper::merge(parent::defaultLayoutParams(), [
+            'breadcrumbParam' => $this->breadcrumbParam
+        ]);
+    }
+
+    /**
      * @return array
      */
     public function ogMetaTag()

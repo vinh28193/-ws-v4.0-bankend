@@ -16,21 +16,25 @@ use common\components\cart\CartSelection;
 
 class CartWidget extends Widget
 {
-
+    public $uuid;
     /**
      * @var array
      */
     public $items;
 
-    public $uuid;
+    public $headers = [];
 
-    public $updateAction = 'update';
+    public $pjaxContainer = 'cartPjaxItems';
 
-    public $removeAction = 'remove';
+    public $pjaxClientOptions = [];
+
+    public $tableOptions = [];
+
+    public $headerRowOptions = [];
+
+    public $rowOptions = [];
 
     private $_totalAmount = 0;
-
-    private $_totalPaidAmount = 0;
 
     /**
      * @inheritDoc
@@ -38,16 +42,12 @@ class CartWidget extends Widget
     public function init()
     {
         parent::init();
-        $this->removeAction = Url::toRoute($this->removeAction);
-        $this->updateAction = Url::toRoute($this->updateAction);
+        $this->headers = [
+            'Sản phẩm', 'Số lượng', 'Giá tiền'
+        ];
         $this->registerClientScript();
-        Pjax::begin([
-            'options' => $this->options,
-            'linkSelector' => false,
-            'formSelector' => false,
-            'timeout' => false,
-            'enablePushState' => false
-        ]);
+        Html::addCssClass($this->tableOptions, ['cart-table']);
+        echo Html::beginTag('div', $this->options);
 
     }
 
@@ -75,21 +75,22 @@ class CartWidget extends Widget
         if (empty($this->items)) {
             echo $this->render('empty');
         } else {
-            echo $this->renderCartBox();
+            $pjaxOptions['id'] = $this->pjaxContainer;
+            Pjax::begin([
+                'options' => $pjaxOptions
+            ]);
+            echo $this->renderItems();
+            Pjax::end();
         }
-
-        Pjax::end();
-
-
+        echo Html::endTag('div');
     }
 
     protected function getClientOptions()
     {
-
         return ArrayHelper::merge([
             'uuid' => $this->uuid,
-            'updateUrl' => $this->updateAction,
-            'removeUrl' => $this->removeAction,
+            'updateUrl' => Url::toRoute(['update']),
+            'removeUrl' => Url::toRoute(['remove']),
             'paymentUrl' => Url::toRoute(['payment']),
         ], $this->clientOptions);
     }
@@ -110,9 +111,44 @@ class CartWidget extends Widget
         return '<div class="title">Giỏ hàng của bạn <span>(' . $summary . ' sản phẩm)</span></div>';
     }
 
-    protected function renderCartBox()
+    public function renderItems()
     {
-        return $this->render('item', ['items' => $this->items]);
+        $tableHeader = $this->renderTableHeader();
+        $tableBody = $this->renderTableBody();
+        $content = array_filter([
+            $tableHeader,
+            $tableBody,
+        ]);
+        return Html::tag('table', implode("\n", $content), $this->tableOptions);
+    }
+
+    protected function renderTableBody()
+    {
+        $items = $this->items;
+        $selected = false;
+        $rows = [];
+        foreach ($items as $index => $item) {
+            $rows[] = $this->renderTableRow($index, $selected, $item);
+        }
+        return "<tbody>\n" . implode("\n", $rows) . "\n</tbody>";
+    }
+
+    public function renderTableHeader()
+    {
+        $content = Html::tag('tr', implode('', $this->headers), $this->headerRowOptions);
+        return "<thead>\n" . $content . "\n</thead>";
+    }
+
+    public function renderTableRow($key, $selected, $item)
+    {
+        $content = $this->render('_item', [
+            'key' => $key,
+            'selected' => $selected,
+            'item' => $item
+        ]);
+        $options = $this->rowOptions;
+        $options['data-key'] = $key;
+        return Html::tag('tr', $content, $options);
     }
 
     protected function renderBilling()

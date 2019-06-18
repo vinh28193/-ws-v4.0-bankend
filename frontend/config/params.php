@@ -20,7 +20,7 @@ return [
             'enable' => 'sandbox',
             'params' => [
                 'sandbox' => [
-                    'URL' => 'https://sandbox.nganluong.vn:8088/nl30/paygate.weshop.php',
+                    'URL' => 'https://sandbox.nganluong.vn:8088/nl35/checkout.api.nganluong.post.php',
                     'ACC' => 'dev.weshopasia@gmail.com',
                     'PASS' => '0f50829fb879fa9ecf480cb788ebb218',
                     'ID' => '45378'

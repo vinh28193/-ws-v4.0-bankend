@@ -8,14 +8,19 @@ use frontend\widgets\cart\CartWidget;
 /* @var string $cartContent */
 /* @var string|null $uuid */
 
-echo CartWidget::widget([
-    'items' => $items,
-    'uuid' => $uuid,
-    'options' => [
-        'id' => 'cartContent',
-        'class' => 'cart-content'
-    ]
-]);
 
 ?>
 
+<div class="row">
+    <div class="col-md-12">
+        <?php
+        echo CartWidget::widget([
+            'items' => $items,
+            'uuid' => $uuid,
+            'options' => [
+                'class' => 'cart-box'
+            ]
+        ]);
+        ?>
+    </div>
+</div>
