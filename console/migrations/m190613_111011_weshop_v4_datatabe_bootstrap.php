@@ -15,10 +15,10 @@ class m190613_111011_weshop_v4_datatabe_bootstrap extends Migration
     {
         $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
         $this->truncateTable('{{%store}}');
-        $this->alterColumn('{{%store}}', 'name', $this->string(255)->notnull()->after('country_name'));
+        //$this->alterColumn('{{%store}}', 'name', $this->string(255)->notnull()->after('country_name'));
         $this->alterColumn('{{%store}}', 'locale', $this->string(5)->notnull()->after('url'));
-        $this->addColumn('{{%store}}', 'symbol', $this->string(5)->notnull()->after('currency'));
-        $this->addColumn('{{%store}}', 'country_code', $this->string(5)->notnull()->after('country_id'));
+       // $this->addColumn('{{%store}}', 'symbol', $this->string(5)->notnull()->after('currency'));
+       // $this->addColumn('{{%store}}', 'country_code', $this->string(5)->notnull()->after('country_id'));
         $this->batchInsert('{{%store}}',
             ['id', 'country_id', 'country_code', 'country_name', 'name', 'address', 'url', 'locale', 'currency', 'symbol', 'status', 'env', 'version'],
             [
@@ -114,10 +114,10 @@ class m190613_111011_weshop_v4_datatabe_bootstrap extends Migration
                 'condition_description' => $dec
             ], ['name' => $name]);
         }
-        $this->addColumn('{{%category_group}}', 'is_special', $this->integer(11)->defaultValue(1)->after('parent_id'));
-        $this->addColumn('{{%category_group}}', 'special_min_amount', $this->integer(11)->defaultValue(0)->after('is_special'));
-        $this->addColumn('{{%category_group}}', 'custom_default_value', $this->integer(11)->defaultValue(0)->after('is_special'));
-        $this->truncateTable('{{%category_group}}');
+//        $this->addColumn('{{%category_group}}', 'is_special', $this->integer(11)->defaultValue(1)->after('parent_id'));
+//        $this->addColumn('{{%category_group}}', 'special_min_amount', $this->integer(11)->defaultValue(0)->after('is_special'));
+//        $this->addColumn('{{%category_group}}', 'custom_default_value', $this->integer(11)->defaultValue(0)->after('is_special'));
+//        $this->truncateTable('{{%category_group}}');
         $category_group = require dirname(dirname(__DIR__)) . '\common\models\category_group.php';
         $inserts = [];
         foreach ($category_group as $array) {
