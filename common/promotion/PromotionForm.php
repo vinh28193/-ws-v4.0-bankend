@@ -39,30 +39,16 @@ class PromotionForm extends Model
      */
     public $refundOrderId;
 
+    /**
+     * @var
+     */
+    public $additionalFees;
 
     /**
      * @var integer
      */
     public $totalAmount;
 
-    /**
-     * @var array
-     */
-    public $_orders = [];
-
-    /**
-     * @param $orders
-     */
-    public function setOrders($orders)
-    {
-        foreach ($orders as $key => $order) {
-            $this->_orders[$key] = new Order($order);
-        }
-    }
-
-    public function getOrders(){
-        return $this->_orders;
-    }
     /**
      * @inheritDoc
      */
@@ -73,15 +59,13 @@ class PromotionForm extends Model
 
     public function attributes()
     {
-        return [
-
-        ];
+        return ['couponCode', 'customerId', 'paymentService', 'totalAmount', 'additionalFees'];
     }
 
     public function rules()
     {
         return [
-            [['couponCode', 'customerId', 'paymentService', 'totalAmount','orders'], 'safe']
+            [['couponCode', 'customerId', 'paymentService', 'totalAmount', 'additionalFees'], 'safe']
         ];
     }
 
@@ -92,7 +76,9 @@ class PromotionForm extends Model
             $result['message'] = $this->getFirstErrors();
             return $result;
         }
-
+        $request = new PromotionRequest();
+        $request->totalAmount = $this->totalAmount;
+        $request->additionalFees = $this->additionalFees;
         $response = new PromotionResponse();
         foreach ($this->findPromotion() as $key => $promotion) {
             /** @var $promotion Promotion */
@@ -101,17 +87,16 @@ class PromotionForm extends Model
                 $response->errors[$promotion->code] = $passed[1];
                 continue;
             }
-            $request = new PromotionRequest();
-            $request->discountOrders = $this->_orders;
+
             $promotion->calculatorDiscount($request, $response);
             if (isset($response->errors[$promotion->code]) && count($response->errors[$promotion->code]) > 0) {
                 unset($response->errors[$promotion->code]);
             }
-            $response->message = 'app dụng trương chình thành công';
+            $response->message = 'Applied success';
         }
         if ($this->couponCode !== null && $this->couponCode !== '') {
             if (($coupon = $this->findCoupon()) === null) {
-                $response->errors[$this->couponCode] = "Not Found Coupon `{$this->couponCode}` ";
+                $response->errors[$this->couponCode] = "Not found coupon `{$this->couponCode}` ";
                 $response->success = count($response->details) > 0 && $response->discount > 0;
                 return $response;
             }
@@ -120,8 +105,6 @@ class PromotionForm extends Model
             if ($passed !== true && is_array($passed) && count($passed) === 2) {
                 $response->errors[$coupon->code] = $passed[1];
             } else {
-                $request = new PromotionRequest();
-                $request->discountOrders = $this->_orders;
                 $coupon->calculatorDiscount($request, $response);
                 if (isset($response->errors[$coupon->code]) && count($response->errors[$coupon->code]) > 0) {
                     unset($response->errors[$coupon->code]);
@@ -145,8 +128,6 @@ class PromotionForm extends Model
                 }
 
             }
-
-
         }
         $response->success = count($response->details) > 0 && $response->discount > 0;
         return $response;

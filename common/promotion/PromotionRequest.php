@@ -8,11 +8,8 @@ use yii\base\BaseObject;
 class PromotionRequest extends BaseObject
 {
 
-    /**
-     * @var string
-     */
-    public $totalValidAmount = 0;
-    public $discountOrders = [];
+    public $totalAmount = 0;
+    public $additionalFees = [];
     public $totalDiscountAmount = 0;
-
+    public $discountFees = [];
 }

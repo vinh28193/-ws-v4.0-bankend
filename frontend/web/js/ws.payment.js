@@ -8,7 +8,7 @@ ws.payment = (function ($) {
         bulk_point: 0,
         coupon_code: undefined,
         discount_detail: [],
-        currency: 'vnđ',
+        currency: 'VND',
         total_discount_amount: 0,
         total_order_amount: 0,
         totalAmount: 0,
@@ -37,12 +37,15 @@ ws.payment = (function ($) {
         installment_method: undefined,
         installment_month: undefined,
         instalment_type: undefined,
-        courier_service: undefined,
+        acceptance_insurance: 'N',
+        insurance_fee: 0,
+        courier_sort_mode: 'best_rating',
+        service_code: undefined,
         courier_name: undefined,
         courier_logo: undefined,
-        courier_fee: undefined,
+        courier_fee: 0,
         courier_delivery_time: undefined,
-        courier_detail: undefined,
+        courier_detail: [],
         ga: undefined,
         otp_verify_method: 1,
         shipment_options_status: 1,
@@ -208,15 +211,24 @@ ws.payment = (function ($) {
             if (!pub.filterShippingAddress(false)) {
                 return;
             }
+            if (!pub.shipping.buyer_district_id || !pub.shipping.buyer_province_id) {
+                return;
+            }
             ws.ajax('/payment/courier/calculator', {
                 dataType: 'json',
                 type: 'post',
                 data: {payment: pub.payment, shipping: pub.shipping},
                 success: function (response) {
                     if (response.success) {
+                        var couriers = response.data;
+                        console.log(couriers[0]);
+                        pub.couriers = couriers;
+                        initCourierView(couriers);
+                        pub.courierChange(couriers[0]);
                         pub.checkPromotion();
+                    } else {
+                        ws.notifyError(response.message);
                     }
-                    console.log(response);
                 }
             }, true);
         },
@@ -321,11 +333,16 @@ ws.payment = (function ($) {
             $('div#installmentPeriods').html(table);
 
         },
-        courierChange: function(courier){
-            pub.set('courier_logo',courier.courier_logo);
-            pub.set('courier_service',courier.courier_service);
-            pub.set('courier_name',courier.courier_name + courier.service_name);
-            pub.set('name',courier.courier_name + courier.service_name);
+        courierChange: function (courier) {
+            pub.set('service_code', courier.service_code);
+            pub.set('courier_name', courier.courier_name + courier.service_name);
+            pub.set('courier_logo', courier.courier_logo);
+            pub.set('courier_fee', courier.shipping_fee);
+            pub.set('courier_delivery_time', courier.min_delivery_time + '-' + courier.max_delivery_time);
+            pub.set('courier_detail', courier);
+            var additionalFees = pub.get('additionalFees', {});
+            additionalFees.international_shipping_fee = courier.shipping_fee;
+            pub.set('additionalFees', additionalFees);
         },
         methodChange: function (isNew) {
             isNew = isNew || false;
@@ -600,6 +617,11 @@ ws.payment = (function ($) {
         if ($response.details.length > 0 && $response.discount > 0) {
             pub.payment.discount_detail = $response.details;
             pub.payment.total_discount_amount = $response.discount;
+            var totalAmount = pub.payment.total_order_amount;
+            $.each(pub.payment.additionalFees, function (ikey, value) {
+                totalAmount += Number(value);
+            });
+            pub.payment.totalAmount = totalAmount;
             pub.payment.totalAmountDisplay = pub.payment.totalAmount - pub.payment.total_discount_amount;
             discountBox.css('display', 'flex');
             discountBox.find('div.right').html('- ' + ws.showMoney(pub.payment.total_discount_amount));
@@ -688,8 +710,12 @@ ws.payment = (function ($) {
     var initCourierView = function (couriers) {
 
     };
+    var initAdditionalFeeView = function () {
+
+    };
     var initPaymentPopup = function ($res) {
 
     };
+
     return pub;
 })(jQuery);

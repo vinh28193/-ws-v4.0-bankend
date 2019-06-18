@@ -3,9 +3,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=128.199.70.160;port=3306;dbname=weshop_global',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop-global-dev',
+            'username' => 'root',
+            'password' => '',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
@@ -15,9 +15,9 @@ return [
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=128.199.70.160;port=3306;dbname=weshop_h',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop_cms',
+            'username' => 'root',
+            'password' => '',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
