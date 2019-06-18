@@ -47,6 +47,7 @@ class CartWidget extends Widget
         ];
         $this->registerClientScript();
         Html::addCssClass($this->tableOptions, ['cart-table']);
+        $this->items = array_map([$this, 'preItem'], $this->items);
         echo Html::beginTag('div', $this->options);
 
     }
@@ -60,12 +61,30 @@ class CartWidget extends Widget
         $key = ArrayHelper::getValue($item, '_id', '');
         $order = ArrayHelper::getValue($item, 'value');
         $selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key);
-        if ($selected) {
-            $this->_totalAmount += ArrayHelper::getValue($order, 'total_final_amount_local', 0);
+        $products = [];
+        foreach ($order['products'] as $product) {
+            $products[] = [
+                'sku' => $product['sku'],
+                'parent_sku' => $product['parent_sku'],
+                'product_name' => $product['product_name'],
+                'product_link' => $product['product_link'],
+                'link_img' => $product['link_img'],
+                'link_origin' => $product['link_origin'],
+                'variations' => $product['variations'],
+                'total_final_amount' => $product['total_price_amount_local'],
+                'available_quantity' => $product['available_quantity'],
+                'quantity_sold' => $product['quantity_sold'],
+                'quantity' => $product['quantity_customer'],
+                'weight' => $product['total_weight_temporary'],
+            ];
         }
         return [
             'key' => $key,
-            'order' => $order,
+            'selected' => $selected,
+            'portal' => $order['portal'],
+            'ordercode' => $order['ordercode'],
+            'seller' => $order['seller'],
+            'products' => $products
         ];
     }
 
@@ -113,13 +132,16 @@ class CartWidget extends Widget
 
     public function renderItems()
     {
-        $tableHeader = $this->renderTableHeader();
-        $tableBody = $this->renderTableBody();
-        $content = array_filter([
-            $tableHeader,
-            $tableBody,
+        return $this->render('content', [
+            'items' => $this->items,
         ]);
-        return Html::tag('table', implode("\n", $content), $this->tableOptions);
+//        $tableHeader = $this->renderTableHeader();
+//        $tableBody = $this->renderTableBody();
+//        $content = array_filter([
+//            $tableHeader,
+//            $tableBody,
+//        ]);
+//        return Html::tag('table', implode("\n", $content), $this->tableOptions);
     }
 
     protected function renderTableBody()
