@@ -138,15 +138,10 @@ class CartHelper
         // Tổng tiền local tất tần tận
         $product['total_price_amount_local'] = $additionalFees->getTotalAdditionalFees()[1];
         $productFees = [];
+        $product['additionalFees'] = $additionalFees->toArray();
         foreach ($additionalFees->keys() as $feeName) {
             $fee = [];
             list($fee['amount'], $fee['local_amount']) = $additionalFees->getTotalAdditionalFees($feeName);
-            $fee['discount_amount'] = 0;
-            $storeConfig = $additionalFees->getStoreAdditionalFeeByKey($feeName);
-            $fee['name'] = $storeConfig->name;
-            $fee['label'] = $storeConfig->label;
-            $fee['type'] = $storeConfig->type;
-            $fee['currency'] = $additionalFees->getStoreAdditionalFeeByKey($feeName)->currency;
             $orderAttribute = "total_{$feeName}_local";
             if ($feeName === 'product_price') {
                 // Tổng giá gốc của các sản phẩm tại nơi xuất xứ
@@ -166,7 +161,7 @@ class CartHelper
             } elseif ($feeName === 'vat_fee') {
                 // Tổng vận chuyển tại local của các sản phẩm
                 $orderAttribute = 'total_vat_amount_local';
-            }else if($feeName === 'delivery_fee'){
+            } else if ($feeName === 'delivery_fee') {
                 $orderAttribute = 'total_vat_amount_local';
             }
             // Tiền Phí
@@ -176,7 +171,6 @@ class CartHelper
             }
             $productFees[$feeName] = $fee;
         }
-        $product['fees'] = $productFees;
 
         // Tổng tiền Discount
         $order['total_promotion_amount_local'] = 0;

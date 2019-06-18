@@ -16,6 +16,16 @@ $showStep = true;
 $activeStep = 2;
 ?>
 
+<!--<div class="card card-checkout">-->
+<!--    <div class="card-header">-->
+<!--        <i class="fa fa-user"></i>Thông tin người mua hàng-->
+<!--    </div>-->
+<!--    <div class="card-body">-->
+<!--        <h5 class="card-title">Special title treatment</h5>-->
+<!--        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>-->
+<!--        <a href="#" class="btn btn-primary">Go somewhere</a>-->
+<!--    </div>-->
+<!--</div>-->
 <div class="container checkout-content">
     <ul class="checkout-step">
         <li data-href=".step1"><i>1</i><span><?= Yii::t('frontend', 'Login'); ?></span></li>

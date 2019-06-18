@@ -16,21 +16,25 @@ use common\components\cart\CartSelection;
 
 class CartWidget extends Widget
 {
-
+    public $uuid;
     /**
      * @var array
      */
     public $items;
 
-    public $uuid;
+    public $headers = [];
 
-    public $updateAction = 'update';
+    public $pjaxContainer = 'cartPjaxItems';
 
-    public $removeAction = 'remove';
+    public $pjaxClientOptions = [];
+
+    public $tableOptions = [];
+
+    public $headerRowOptions = [];
+
+    public $rowOptions = [];
 
     private $_totalAmount = 0;
-
-    private $_totalPaidAmount = 0;
 
     /**
      * @inheritDoc
@@ -38,16 +42,13 @@ class CartWidget extends Widget
     public function init()
     {
         parent::init();
-        $this->removeAction = Url::toRoute($this->removeAction);
-        $this->updateAction = Url::toRoute($this->updateAction);
+        $this->headers = [
+            'Sản phẩm', 'Số lượng', 'Giá tiền'
+        ];
         $this->registerClientScript();
-        Pjax::begin([
-            'options' => $this->options,
-            'linkSelector' => false,
-            'formSelector' => false,
-            'timeout' => false,
-            'enablePushState' => false
-        ]);
+        Html::addCssClass($this->tableOptions, ['cart-table']);
+        $this->items = array_map([$this, 'preItem'], $this->items);
+        echo Html::beginTag('div', $this->options);
 
     }
 
@@ -60,12 +61,30 @@ class CartWidget extends Widget
         $key = ArrayHelper::getValue($item, '_id', '');
         $order = ArrayHelper::getValue($item, 'value');
         $selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key);
-        if ($selected) {
-            $this->_totalAmount += ArrayHelper::getValue($order, 'total_final_amount_local', 0);
+        $products = [];
+        foreach ($order['products'] as $product) {
+            $products[] = [
+                'sku' => $product['sku'],
+                'parent_sku' => $product['parent_sku'],
+                'product_name' => $product['product_name'],
+                'product_link' => $product['product_link'],
+                'link_img' => $product['link_img'],
+                'link_origin' => $product['link_origin'],
+                'variations' => $product['variations'],
+                'total_final_amount' => $product['total_price_amount_local'],
+                'available_quantity' => $product['available_quantity'],
+                'quantity_sold' => $product['quantity_sold'],
+                'quantity' => $product['quantity_customer'],
+                'weight' => $product['total_weight_temporary'],
+            ];
         }
         return [
             'key' => $key,
-            'order' => $order,
+            'selected' => $selected,
+            'portal' => $order['portal'],
+            'ordercode' => $order['ordercode'],
+            'seller' => $order['seller'],
+            'products' => $products
         ];
     }
 
@@ -75,21 +94,22 @@ class CartWidget extends Widget
         if (empty($this->items)) {
             echo $this->render('empty');
         } else {
-            echo $this->renderCartBox();
+            $pjaxOptions['id'] = $this->pjaxContainer;
+            Pjax::begin([
+                'options' => $pjaxOptions
+            ]);
+            echo $this->renderItems();
+            Pjax::end();
         }
-
-        Pjax::end();
-
-
+        echo Html::endTag('div');
     }
 
     protected function getClientOptions()
     {
-
         return ArrayHelper::merge([
             'uuid' => $this->uuid,
-            'updateUrl' => $this->updateAction,
-            'removeUrl' => $this->removeAction,
+            'updateUrl' => Url::toRoute(['update']),
+            'removeUrl' => Url::toRoute(['remove']),
             'paymentUrl' => Url::toRoute(['payment']),
         ], $this->clientOptions);
     }
@@ -110,9 +130,47 @@ class CartWidget extends Widget
         return '<div class="title">Giỏ hàng của bạn <span>(' . $summary . ' sản phẩm)</span></div>';
     }
 
-    protected function renderCartBox()
+    public function renderItems()
     {
-        return $this->render('item', ['items' => $this->items]);
+        return $this->render('content', [
+            'items' => $this->items,
+        ]);
+//        $tableHeader = $this->renderTableHeader();
+//        $tableBody = $this->renderTableBody();
+//        $content = array_filter([
+//            $tableHeader,
+//            $tableBody,
+//        ]);
+//        return Html::tag('table', implode("\n", $content), $this->tableOptions);
+    }
+
+    protected function renderTableBody()
+    {
+        $items = $this->items;
+        $selected = false;
+        $rows = [];
+        foreach ($items as $index => $item) {
+            $rows[] = $this->renderTableRow($index, $selected, $item);
+        }
+        return "<tbody>\n" . implode("\n", $rows) . "\n</tbody>";
+    }
+
+    public function renderTableHeader()
+    {
+        $content = Html::tag('tr', implode('', $this->headers), $this->headerRowOptions);
+        return "<thead>\n" . $content . "\n</thead>";
+    }
+
+    public function renderTableRow($key, $selected, $item)
+    {
+        $content = $this->render('_item', [
+            'key' => $key,
+            'selected' => $selected,
+            'item' => $item
+        ]);
+        $options = $this->rowOptions;
+        $options['data-key'] = $key;
+        return Html::tag('tr', $content, $options);
     }
 
     protected function renderBilling()

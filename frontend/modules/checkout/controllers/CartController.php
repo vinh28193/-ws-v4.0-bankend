@@ -13,27 +13,29 @@ use common\components\cart\CartSelection;
 class CartController extends BillingController
 {
 
-    public function beforeAction($action)
-    {
-        if (parent::beforeAction($action)) {
-            if (Yii::$app->user->getIsGuest()) {
+    public $title;
 
-//                Yii::$app->user->loginRequired();
-            }
-            return true;
-        }
-        return false;
-    }
+
 
     public function init()
     {
         parent::init();
-
+        $this->title = 'Danh sách sản phẩm trong giỏ hàng';
+        $this->breadcrumbParam = [
+            $this->title => '#'
+        ];
     }
+
+    public function ogMetaTag()
+    {
+        return ArrayHelper::merge(parent::ogMetaTag(), [
+            'title' => $this->title
+        ]);
+    }
+
 
     public function actionIndex()
     {
-
         $cartContent = 'cartContent';
         $queryParams = $this->request->queryParams;
         $type = CartSelection::TYPE_SHOPPING;
@@ -75,7 +77,7 @@ class CartController extends BillingController
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $count = $this->module->cartManager->countItems(CartSelection::TYPE_SHOPPING, $this->filterUuid());
-        return ['success' => true,'count' => $count];
+        return ['success' => true, 'count' => $count];
     }
 
     public function actionAdd()

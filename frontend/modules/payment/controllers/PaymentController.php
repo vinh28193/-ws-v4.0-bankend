@@ -76,6 +76,9 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->payment_provider = $payment->payment_provider_name;
         $paymentTransaction->payment_method = $payment->payment_method_name;
         $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
+        $paymentTransaction->courier_name = $payment->courier_name;
+        $paymentTransaction->service_code = $payment->service_code;
+        $paymentTransaction->international_shipping_fee = $payment->courier_fee;
         $paymentTransaction->coupon_code = $payment->coupon_code;
         $paymentTransaction->used_xu = $payment->use_xu;
         $paymentTransaction->bulk_point = $payment->bulk_point;
@@ -113,6 +116,7 @@ class PaymentController extends BasePaymentController
         }
         /** @var $paymentTransaction PaymentTransaction */
         if (($paymentTransaction = $res->paymentTransaction) instanceof PaymentTransaction) {
+
             $payment = new Payment([
                 'carts' => StringHelper::explode($paymentTransaction->carts, ','),
                 'uuid' => $this->filterUuid(),
@@ -128,6 +132,9 @@ class PaymentController extends BasePaymentController
                 'payment_provider_name' => $paymentTransaction->payment_provider,
                 'payment_method_name' => $paymentTransaction->payment_method,
                 'payment_bank_code' => $paymentTransaction->payment_bank_code,
+                'service_code' => $paymentTransaction->service_code,
+                'courier_name' => $paymentTransaction->courier_name,
+                'courier_fee' => $paymentTransaction->international_shipping_fee,
                 'coupon_code' => $paymentTransaction->coupon_code,
                 'use_xu' => $paymentTransaction->used_xu,
                 'bulk_point' => $paymentTransaction->bulk_point,
@@ -140,14 +147,9 @@ class PaymentController extends BasePaymentController
             if ($createResponse['success'] && isset($createResponse['data']['orderCodes'])) {
                 Yii::info($createResponse['data']);
                 foreach ($createResponse['data']['orderCodes'] as $orderCode => $info) {
-                    $coupon_codes = ArrayHelper::getValue($info, 'promotion');
-                    if ($coupon_codes !== null && is_array($coupon_codes)) {
-                        $coupon_codes = implode(',', $coupon_codes);
-                    }
                     $childTransaction = clone $paymentTransaction;
                     $childTransaction->id = null;
                     $childTransaction->isNewRecord = true;
-                    $childTransaction->coupon_code = $coupon_codes;
                     $childTransaction->transaction_amount_local = ArrayHelper::getValue($info, 'totalPaid', 0);
                     $childTransaction->total_discount_amount = ArrayHelper::getValue($info, 'discountAmount', 0);
                     $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;

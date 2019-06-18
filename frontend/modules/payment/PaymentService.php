@@ -160,6 +160,11 @@ class PaymentService
             if ($supporter !== null) {
                 $supporter = new User($supporter);
             }
+            unset($params['customer']);
+            unset($params['support_name']);
+            $order = new Order($params);
+            $order->cartId = $cartId;
+            $order->getAdditionalFees()->removeAll();
             $productFailed = false;
             $products = [];
             foreach ($productParams as $key => $productParam) {
@@ -173,35 +178,46 @@ class PaymentService
                     'site' => ArrayHelper::getValue($categoryParams, 'site'),
                     'origin_name' => ArrayHelper::getValue($categoryParams, 'origin_name'),
                 ]);
-                if (($productFeeParams = ArrayHelper::remove($productParam, 'fees')) === null || !is_array($productFeeParams)) {
+                if (($productFeeParams = ArrayHelper::remove($productParam, 'additionalFees')) === null || !is_array($productFeeParams)) {
                     $productFailed = true;
                     $errors[] = 'Not found fee for product';
                     continue;
                 }
-                $fees = [];
+
+                // Collection Fee
                 foreach ($productFeeParams as $name => $value) {
-                    $targetFee = new TargetAdditionalFee($value);
-                    $targetFee->type = 'product';
-                    $fees[] = $targetFee;
+                    if ($name === 'product_price') {
+                        // exception, do not collect product_price
+                        continue;
+                    }
+                    $order->getAdditionalFees()->add($name, $value);
+                    unset($productFeeParams[$name]); // unset if this in collect
                 }
+
                 unset($productParam['available_quantity']);
                 unset($productParam['quantity_sold']);
                 $product = new Product($productParam);
-                $product->populateRelation('productFees', $fees);
+                // product_price next to save, this fee not in collect
+                if(!empty($productFeeParams)){
+                    $fees = [];
+                    foreach ($productFeeParams as $name => $value) {
+                        $value = reset($value);
+                        $targetFee = new TargetAdditionalFee($value);
+                        $targetFee->type = 'product';
+                        $fees[] = $targetFee;
+                    }
+                    $product->populateRelation('productFees', $fees);
+                }
                 $product->populateRelation('category', $category);
                 $products[$key] = $product;
             }
             if ($productFailed) {
                 continue;
             }
-            unset($params['customer']);
-            unset($params['support_name']);
-            $order = new Order($params);
-            $order->cartId = $cartId;
+
             $order->populateRelation('products', $products);
             $order->populateRelation('seller', $seller);
             $order->populateRelation('saleSupport', $supporter);
-            $order->loadPaymentAdditionalFees();
             $totalOrderAmount += (int)$order->total_amount_local;
             $orders[] = $order;
         }
@@ -217,22 +233,11 @@ class PaymentService
     public
     static function createCheckPromotionParam(Payment $payment)
     {
-        $feeOrders = [];
-        foreach ($payment->getOrders() as $key => $order) {
-            $fees = [];
-            foreach ($order->getAdditionalFees()->keys() as $name) {
-                $fees[$name] = $order->getAdditionalFees()->getTotalAdditionalFees($name)[1];
-            }
-            $feeOrders[$order->ordercode] = [
-                'totalAmount' => $order->total_amount_local,
-                'additionalFees' => $fees
-            ];
-        }
         return [
             'couponCode' => $payment->coupon_code,
             'paymentService' => implode('_', [$payment->payment_method, $payment->payment_bank_code]),
             'totalAmount' => $payment->getTotalAmount(),
-            'orders' => $feeOrders,
+            'additionalFees' => $payment->getAdditionalFees(),
         ];
     }
 

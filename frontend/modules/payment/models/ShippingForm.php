@@ -3,7 +3,9 @@
 namespace frontend\modules\payment\models;
 
 use common\components\StoreManager;
+use common\helpers\WeshopHelper;
 use common\models\SystemDistrict;
+use common\models\SystemDistrictMapping;
 use common\models\SystemStateProvince;
 use Yii;
 use yii\base\Model;
@@ -177,10 +179,26 @@ class ShippingForm extends Model
         ];
     }
 
+    /**
+     * @var StoreManager
+     */
+    private $_storeManager;
+
+    /**
+     * @return StoreManager
+     */
+    public function getStoreManager()
+    {
+        if (!is_object($this->_storeManager)) {
+            $this->_storeManager = Yii::$app->storeManager;
+        }
+        return $this->_storeManager;
+    }
+
     public function setDefaultValues()
     {
         /** @var  $store  StoreManager */
-        $store = Yii::$app->storeManager;
+        $store = $this->getStoreManager();
         $this->buyer_country_id = $store->store->country_id;
         $this->receiver_country_id = $store->store->country_id;
         /** @var  $user  Customer */
@@ -292,7 +310,6 @@ class ShippingForm extends Model
         $this->_receiverDistrictName = $name;
     }
 
-
     private $_buyerProvinceName;
 
     public function getBuyerProvinceName()
@@ -323,7 +340,6 @@ class ShippingForm extends Model
         $this->_receiverProvinceName = $name;
     }
 
-
     private function createQuery($selectColumn, $refClass, $condition)
     {
         /** @var  $class yii\db\ActiveRecord */
@@ -335,5 +351,25 @@ class ShippingForm extends Model
         return $q->column($class::getDb())[0];
     }
 
-
+    /**
+     * @return array|bool
+     */
+    public function getReceiverMapping()
+    {
+        if (WeshopHelper::isEmpty($this->buyer_province_id) || WeshopHelper::isEmpty($this->buyer_district_id)) {
+            return false;
+        }
+        $q = new Query();
+        $q->select([
+            'district' => 'm.box_me_district_id',
+            'province' => 'm.box_me_province_id'
+        ]);
+        $q->from(['m' => SystemDistrictMapping::tableName()]);
+        $q->where([
+            'AND',
+            ['m.province_id' => $this->buyer_province_id],
+            ['m.district_id' => $this->buyer_district_id]
+        ]);
+        return $q->one(SystemDistrictMapping::getDb());
+    }
 }

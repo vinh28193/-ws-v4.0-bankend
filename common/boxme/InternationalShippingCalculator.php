@@ -36,16 +36,16 @@ class InternationalShippingCalculator extends BaseObject
         $request->setData(Json::encode($shipmentData));
         $request->setUserId($userId);
         $request->setCountryCode($countryCode);
-//        list($response, $status) = $this->getGrpcClient()->CalculateFee($request)->wait();
+        list($response, $status) = $this->getGrpcClient()->CalculateFee($request)->wait();
         /** @var $response CalculateFeeResponse */
-//        $data = $response->getData();
-//        $success = $response->getError() === false && $data->count() > 0;
-//        $message = $response->getErrorMessage();
-//        if(!$success && WeshopHelper::isEmpty($message)){
-//            $message = $status->details;
-//        }
-//        return [$success, !$success ? (WeshopHelper::isEmpty($message) ? ($data->count() > 0 ? 'empty courier assigment' : 'unknown error') : $message) : $this->parserCalculateFeeResponse($data)];
-        return [true,json_decode('[{"courier_logo":"https:\/\/oms.boxme.asia\/assets\/images\/courier\/boxme.svg","courier_name":"Boxme","service_name":"International Express","service_code":"BM_DEX","shipping_fee":597168,"return_fee":0,"tax_fee":0,"total_fee":597168,"currency":"VND","min_delivery_time":6,"max_delivery_time":8}]',true)];
+        $data = $response->getData();
+        $success = $response->getError() === false && $data->count() > 0;
+        $message = $response->getErrorMessage();
+        if (!$success && WeshopHelper::isEmpty($message) && isset($status->details) && is_string($status->details)) {
+            $message = $status->details;
+        }
+        return [$success, !$success ? (WeshopHelper::isEmpty($message) ? ($data->count() > 0 ? 'empty courier assigment' : 'unknown error') : $message) : $this->parserCalculateFeeResponse($data)];
+//        return [true,json_decode('[{"courier_logo":"https:\/\/oms.boxme.asia\/assets\/images\/courier\/boxme.svg","courier_name":"Boxme","service_name":"International Express","service_code":"BM_DEX","shipping_fee":597168,"return_fee":0,"tax_fee":0,"total_fee":597168,"currency":"VND","min_delivery_time":6,"max_delivery_time":8}]',true)];
     }
 
     /**

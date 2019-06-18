@@ -41,11 +41,6 @@ class FrontendController extends Controller
      */
     public $request = 'request';
 
-    /**
-     * @var string | UUID
-     */
-    public $Uuid = '';
-
 
     /**
      * @var EcomobiComponent
@@ -61,6 +56,22 @@ class FrontendController extends Controller
             $this->_ecomobi = Yii::$app->ecomobi;
         }
         return $this->_ecomobi;
+    }
+
+    /**
+     * @var \baibaratsky\yii\google\analytics\MeasurementProtocol
+     */
+    private $_ga;
+
+    /**
+     * @return baibaratsky\yii\google\analytics\MeasurementProtocol
+     */
+    public function getGa()
+    {
+        if (!is_object($this->_ga)) {
+            $this->_ga = Yii::$app->ga;
+        }
+        return $this->_ga;
     }
 
     public function ogMetaTag()
@@ -244,7 +255,7 @@ class FrontendController extends Controller
         Yii::info("this->_uuid : " . $this->_uuid);
         if ($this->setDocumentPath) {
             Yii::info("FrondEnd Pages GA WS");
-            return Yii::$app->ga->request()
+            return $this->getGa()->request()
                 ->setClientId($this->_uuid)
                 ->setDocumentPath($this->setDocumentPath)
                 ->setAsyncRequest(true)

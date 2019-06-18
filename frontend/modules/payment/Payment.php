@@ -101,8 +101,13 @@ class Payment extends Model
     public $installment_month;
     public $instalment_type;
 
-    public $courier_service; // mã hãng vận chuyển, mã code "VTP_EXP ...
-    public $courier_name; // Tên
+    public $acceptance_insurance = false;
+    public $insurance_fee = 0;
+
+    public $courier_sort_mode = 'best_rating';
+    public $service_code; // mã hãng vận chuyển, mã code "VTP_EXP ...
+    public $courier_name;
+    public $courier_logo; // Tên
     public $courier_fee; // Phí vận chuyển
     public $courier_delivery_time; // Thời gian dự kiến
     public $courier_detail = [];
@@ -202,20 +207,25 @@ class Payment extends Model
      * @param bool $refresh
      * @return array|mixed
      */
-    public function getPaymentAdditionalFees($refresh = true)
+    public function getAdditionalFees($refresh = false)
     {
-        foreach (['international_shipping_fee', 'purchase_fee'] as $name) {
-            $this->_additionalFees[$name] = [
-                'amount' => 0,
-                'orders' => [],
-            ];
+        if (empty($this->_additionalFees) || $refresh) {
+            $this->_additionalFees = [];
+            $this->_additionalFees['international_shipping_fee'] = 0;
             foreach ($this->getOrders() as $idx => $order) {
-                $amount = $order->getAdditionalFees()->getTotalAdditionalFees($name)[1];
-                $this->_additionalFees[$name]['amount'] += $amount;
-                $this->_additionalFees[$name]['orders'][$order->ordercode] = $amount;
+                foreach ($order->getAdditionalFees()->keys() as $key) {
+                    if (!isset($this->_additionalFees[$key])) {
+                        $this->_additionalFees[$key] = 0;
+                    }
+                    $value = $this->_additionalFees[$key];
+                    $value += $order->getAdditionalFees()->getTotalAdditionalFees($key)[1];
+                    $this->_additionalFees[$key] = $value;
+                }
+            }
+            if ($this->courier_fee !== null) {
+                $this->_additionalFees['international_shipping_fee'] = $this->courier_fee;
             }
         }
-
         return $this->_additionalFees;
     }
 
@@ -350,8 +360,8 @@ class Payment extends Model
     {
         if ($this->_totalAmount === null) {
             $this->_totalAmount = $this->total_order_amount;
-            foreach ($this->getPaymentAdditionalFees() as $key => $value) {
-                $this->_totalAmount += $value['amount'];
+            foreach ($this->getAdditionalFees() as $key => $value) {
+                $this->_totalAmount += $value;
             }
         }
         return $this->_totalAmount;
@@ -396,26 +406,9 @@ class Payment extends Model
         try {
             foreach ($this->getOrders() as $key => $orderPayment) {
                 $order = clone $orderPayment;
-                $orderPromotions = []; // chứa toàn tộ những promotion được áp dụng cho order có key là $key
                 $orderTotalDiscount = 0;
-                if ($results->success === true && count($results->orders)) {
-                    foreach ($results->orders as $promotion => $data) {
-                        if (($discountForMe = ArrayHelper::getValue($data, $key)) === null) {
-                            continue;
-                        }
-                        $discountValue = ArrayHelper::getValue($discountForMe, 'totalDiscountAmount', 0);
-                        $orderTotalDiscount += $discountValue;
-                        $promotionDebug[] = [
-                            'apply' => $now,
-                            'code' => $promotion,
-                            'level' => 'order_fee',
-                            'level_id' => $order->id,
-                            'ref_name' => null,
-                            'ref_id' => null,
-                            'value' => $discountValue
-                        ];
-                        $orderPromotions[$promotion] = $discountForMe;
-                    }
+                if ($results->success === true) {
+                    $orderTotalDiscount = WeshopHelper::discountAmountPercent($order->total_amount_local, $this->total_order_amount, $results->discount);
                 }
 
                 unset($order['products']);
@@ -446,8 +439,10 @@ class Payment extends Model
                     return ['success' => false, 'message' => 'can not create order'];
                 }
 
-                foreach ($orderPayment->getAdditionalFees()->toArray() as $feeValue) {
+                foreach ($orderPayment->getAdditionalFees()->keys() as $key) {
+                    $feeValue = $orderPayment->getAdditionalFees()->get($key);
                     $feeValue = reset($feeValue);
+
                     $fee = new TargetAdditionalFee($feeValue);
                     $fee->target = 'order';
                     $fee->target_id = $order->id;
@@ -456,34 +451,8 @@ class Payment extends Model
                         $transaction->rollBack();
                         return ['success' => false, 'message' => 'can not create order'];
                     }
-                    // 10. update discount each fee
-                    $discountForFeeAmount = 0;
-                    if (!empty($orderPromotions)) {
-                        foreach ($orderPromotions as $promotion => $data) {
-                            if (($discountFee = ArrayHelper::getValue($data, 'discountFees')) !== null) {
-                                continue;
-                            }
-                            if (($forCurrentFee = ArrayHelper::getValue($discountFee, $fee->name)) === null) {
-                                continue;
-                            }
-                            $discountForFeeAmount += $forCurrentFee;
-                            $promotionDebug[] = [
-                                'apply' => $now,
-                                'code' => $promotion,
-                                'level' => 'order_fee',
-                                'level_id' => $order->id,
-                                'ref_name' => $fee->name,
-                                'ref_id' => $fee->id,
-                                'value' => $forCurrentFee
-                            ];
-                        }
-                    }
-                    $fee->updateAttributes(['discount_amount' => $discountForFeeAmount]);
-
                 }
-
                 $updateOrderAttributes = [];
-
                 // 4 products
                 foreach ($orderPayment->products as $paymentProduct) {
                     $product = clone $paymentProduct;
@@ -516,19 +485,6 @@ class Payment extends Model
                     }
 
                     foreach ($paymentProduct->productFees as $feeName => $productFee) {
-                        $orderAttribute = '';
-                        if ($feeName === 'product_price_origin') {
-                            // Tổng giá gốc của các sản phẩm tại nơi xuất xứ
-                            $orderAttribute = 'total_origin_fee_local';
-                        }
-                        if ($feeName === 'tax_fee_origin') {
-                            // Tổng phí tax của các sản phẩm tại nơi xuất xứ
-                            $orderAttribute = 'total_origin_tax_fee_local';
-                        }
-                        if ($feeName === 'origin_shipping_fee') {
-                            // Tổng phí ship của các sản phẩm tại nơi xuất xứ
-                            $orderAttribute = 'total_origin_shipping_fee_local';
-                        }
                         $fee = clone $productFee;
                         $fee->target = 'product';
                         $fee->target_id = $product->id;
@@ -537,18 +493,6 @@ class Payment extends Model
                             $transaction->rollBack();
                             return ['success' => false, 'message' => 'can not create order'];
                         }
-                        if ($orderAttribute !== '') {
-                            if ($orderAttribute === 'total_origin_fee_local') {
-                                // Tổng giá gốc của các sản phẩm tại nơi xuất xứ (giá tại nơi xuất xứ)
-                                $oldAmount = isset($updateOrderAttributes['total_price_amount_origin']) ? $updateOrderAttributes['total_price_amount_origin'] : 0;
-                                $oldAmount += (int)$fee->amount;
-                                $updateOrderAttributes['total_price_amount_origin'] = $oldAmount;
-                            }
-                            $value = isset($updateOrderAttributes[$orderAttribute]) ? $updateOrderAttributes[$orderAttribute] : 0;
-                            $value += (int)$fee->local_amount;
-                            $updateOrderAttributes[$orderAttribute] = $value;
-                        }
-
                     }
 
                 }
@@ -559,10 +503,9 @@ class Payment extends Model
                     $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
                 }
                 $order->updateAttributes($updateOrderAttributes);
-                $orderCodes[$order->ordercode] = [
+                $orderCodes[] = [
                     'totalPaid' => $order->total_paid_amount_local,
                     'discountAmount' => $order->total_promotion_amount_local,
-                    'promotion' => !empty($orderPromotions) ? array_keys($orderPromotions) : null,
                 ];
             }
             Yii::info($promotionDebug, 'promotionDebug');
@@ -642,18 +585,23 @@ class Payment extends Model
             'installment_method' => $this->installment_method,
             'installment_month' => $this->installment_month,
             'instalment_type' => $this->instalment_type,
-            'courier_service' => $this->courier_service,
+            'acceptance_insurance' => $this->acceptance_insurance,
+            'insurance_fee' => $this->insurance_fee,
+            'courier_sort_mode' => $this->courier_sort_mode,
+            'service_code' => $this->service_code,
             'courier_name' => $this->courier_name,
+            'courier_logo' => $this->courier_logo,
             'courier_fee' => $this->courier_fee,
             'courier_delivery_time' => $this->courier_delivery_time,
             'courier_detail' => $this->courier_detail,
+
             'ga' => $this->ga,
             'otp_code' => $this->otp_code,
             'otp_verify_method' => $this->otp_verify_method,
             'shipment_options_status' => $this->shipment_options_status,
             'transaction_code' => $this->transaction_code,
             'transaction_fee' => $this->transaction_fee,
-            'additionalFees' => $this->getPaymentAdditionalFees()
+            'additionalFees' => $this->getAdditionalFees()
         ];
     }
 
