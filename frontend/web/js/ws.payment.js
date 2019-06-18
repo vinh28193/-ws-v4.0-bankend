@@ -343,6 +343,8 @@ ws.payment = (function ($) {
             var additionalFees = pub.get('additionalFees', {});
             additionalFees.international_shipping_fee = courier.shipping_fee;
             pub.set('additionalFees', additionalFees);
+            getTotalAmount(pub.payment.totalAmount);
+
         },
         methodChange: function (isNew) {
             isNew = isNew || false;
@@ -606,7 +608,6 @@ ws.payment = (function ($) {
         var $errorDiscount = $('span#discountErrors');
         $errorDiscount.css('display', 'none');
         if (!$response.success || pub.payment.coupon_code in $response.errors) {
-            console.log($response.errors[pub.payment.coupon_code]);
             var error = $response.errors[pub.payment.coupon_code];
             $errorDiscount.css('display', 'flex');
             $errorDiscount.html(error);
@@ -617,11 +618,6 @@ ws.payment = (function ($) {
         if ($response.details.length > 0 && $response.discount > 0) {
             pub.payment.discount_detail = $response.details;
             pub.payment.total_discount_amount = $response.discount;
-            var totalAmount = pub.payment.total_order_amount;
-            $.each(pub.payment.additionalFees, function (ikey, value) {
-                totalAmount += Number(value);
-            });
-            pub.payment.totalAmount = totalAmount;
             pub.payment.totalAmountDisplay = pub.payment.totalAmount - pub.payment.total_discount_amount;
             discountBox.css('display', 'flex');
             discountBox.find('div.right').html('- ' + ws.showMoney(pub.payment.total_discount_amount));
@@ -716,6 +712,17 @@ ws.payment = (function ($) {
     var initPaymentPopup = function ($res) {
 
     };
+
+    var getTotalAmount = function ($total) {
+        var billingBox = $('#billingBox');
+        var totalAmount = $total;
+        $.each(pub.payment.additionalFees, function (ikey, value) {
+            totalAmount += Number(value);
+        });
+        pub.payment.totalAmount = totalAmount;
+        console.log(pub.payment.totalAmount);
+        billingBox.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.totalAmount));
+    }
 
     return pub;
 })(jQuery);
