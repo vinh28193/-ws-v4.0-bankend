@@ -224,12 +224,12 @@ $userID = Yii::$app->user->getId();
                             </ul>
                         </div>
                     </li>
-                    <li>
-                        <?php echo Html::a('<span class="icon icon4"></span>' . Yii::t('frontend', 'Promotion'), ['/account/promotion-user?status=1']); ?>
-                    </li>
-                    <li>
-                        <a href="#"><i class="icon icon5"></i> Weshop xu</a>
-                    </li>
+                 <!--   <li>
+                        <?php /*echo Html::a('<span class="icon icon4"></span>' . Yii::t('frontend', 'Promotion'), ['/account/promotion-user?status=1']); */?>
+                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#"><i class="icon icon5"></i> Weshop xu</a>-->
+<!--                    </li>-->
                     <?php
                     if (isset($checkUrl)) {
                         if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') {
