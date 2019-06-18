@@ -198,7 +198,12 @@ $( document ).ready(function() {
             }
         });
 
-
+        $('.checkout-order').click(function () {
+            $('.mb-modal-checkout-order').toggleClass('open');
+        });
+        $('.title-mb-menu-checkout i').click(function () {
+            $('.mb-modal-checkout-order').removeClass('open');
+        });
         $('.mb-navbar .btn-toggle').click(function () {
             $('.mb-menu').toggleClass('open');
         });

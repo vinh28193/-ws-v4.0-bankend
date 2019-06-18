@@ -240,7 +240,7 @@ $this->registerJs($js);
                 </a>
             </li>
             <li>
-                <a href="javascript:void(0);">
+                <a href="javascript:void(0);" class="checkout-order">
                     <i class="la la-shopping-cart"></i>
                     <span class="badge count-cart">0</span>
                 </a>
@@ -351,5 +351,80 @@ $this->registerJs($js);
                 <a href="javascript:void(0);">Dùng thử dịch vụ Prime</a>
             </li>
         </ul>
+    </div>
+    <div class="mb-modal-checkout-order">
+        <div class="mb-modal-sm-checkout">
+            <div class="title-mb-menu-checkout" style="height: 68px;">
+                <a href="/" class="close-checkout">
+                    <span style="font-weight: 700; color: white; font-size: 17px; position: absolute; margin-top: 5px">GIỎ HÀNG</span>
+                </a>
+                <i class="la la-close" style="float: right;padding:5px;"></i>
+                <div class="clearfix"></div>
+            </div>
+            <div class="content-modal-auth-mb">
+                <div class="row">
+                    <div class="col-8 pl-0">
+                        <strong>Sản phẩm trong giỏ hàng</strong>
+                    </div>
+                    <div class="col-4 pr-0 text-right">
+                        <a href="javascript:void(0)">Xóa hết</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="thumb" style="height: auto;">
+                            <img src="https://i.ebayimg.com/00/s/MTEyMFgxNTAw/z/oYAAAOSwgPVcrnUX/$_1.JPG" alt="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16" title="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16">
+                        </div>
+                        <div class="info">
+                            <div class="left">
+                                <a href="http://weshop-v4.front-end-ws.local.vn/ebay/item/msi-radeon-rx-460-directx-12-rx-460-2g-oc-2gb-128-bit-gddr5-pci-express-30-x16-352639604796.html" target="_blank" class="name">
+                                    MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16</a>
+                                <div class="rate" style="text-align: left">
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star"></i>
+                                    <i class="la la-star-half-o"></i>
+                                    <i class="la la-star-o"></i>
+                                </div>
+                                <ol>
+                                    <li>
+                                        Tình trạng:
+                                        <span style="margin-left: 0.25rem;" class="condition-option">Manufacturer refurbished</span>
+                                    </li>
+                                    <li>
+                                        Tạm tính:
+                                        <span style="margin-left: 0.25rem;" class="weight-option">2</span> kg
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="right">
+                                <div class="qty form-inline quantity-option">
+                                    <label>Số lượng:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary button-quantity-down" data-pjax="1" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" data-update="#5d0889d5317e410bfc007089" data-operator="down" type="button">-
+                                            </button>
+                                        </div>
+                                        <input type="text" name="cartItemQuantity" class="form-control style-quantity" value="2" data-min="1" data-type="shopping" data-max="0" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary button-quantity-up" data-pjax="1" data-parent="5d0889d5317e410bfc007089" data-type="shopping" data-id="352639604796" data-sku="604103" data-operator="up" type="button">+
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="price price-option">
+                                    0VND                                </div>
+                                <a href="#" class="del delete-item" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" <i=""> Xóa</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn style-btn mt-2"><span class="la la-shopping-cart" style="font-size: 1.7em;"></span>XEM GIỎ HÀNG</button>
+                    <button class="btn style-btn1 mt-2"><span class="la la-shopping-cart" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA HÀNG</button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
     </div>
 </div>
