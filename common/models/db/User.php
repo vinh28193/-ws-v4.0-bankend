@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $username
+ * @property int $bm_wallet_id Id user của boxme
  * @property string $auth_key
  * @property string $password_hash
  * @property string $password_reset_token
@@ -63,8 +64,8 @@ use Yii;
  * @property string $last_token_apn_time Thời gian update là 
  * @property string $last_token_apn_time_by update bởi ai . 99999 : mac dinh la Weshop admin
  *
+ * @property Auth[] $auths
  * @property Order[] $orders
- * @property Order[] $orders0
  */
 class User extends \common\components\db\ActiveRecord
 {
@@ -83,7 +84,7 @@ class User extends \common\components\db\ActiveRecord
     {
         return [
             [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
-            [['status', 'created_at', 'updated_at', 'store_id', 'gender', 'email_verified', 'phone_verified', 'type_customer', 'employee', 'active_shipping', 'total_xu_start_date', 'total_xu_expired_date', 'usable_xu_start_date', 'usable_xu_expired_date', 'last_use_time', 'last_revenue_time', 'verify_code_expired_at', 'verify_code_count', 'remove', 'vip', 'last_update_uuid_time_by', 'last_update_client_id_ga_time_by', 'last_token_fcm_by', 'last_token_apn_time_by'], 'integer'],
+            [['bm_wallet_id', 'status', 'created_at', 'updated_at', 'store_id', 'gender', 'email_verified', 'phone_verified', 'type_customer', 'employee', 'active_shipping', 'total_xu_start_date', 'total_xu_expired_date', 'usable_xu_start_date', 'usable_xu_expired_date', 'last_use_time', 'last_revenue_time', 'verify_code_expired_at', 'verify_code_count', 'remove', 'vip', 'last_update_uuid_time_by', 'last_update_client_id_ga_time_by', 'last_token_fcm_by', 'last_token_apn_time_by'], 'integer'],
             [['birthday', 'last_order_time', 'last_update_uuid_time', 'last_update_client_id_ga_time', 'last_token_fcm_time', 'last_token_apn_time'], 'safe'],
             [['note_by_employee'], 'string'],
             [['total_xu', 'usable_xu', 'last_use_xu', 'last_revenue_xu'], 'number'],
@@ -91,6 +92,9 @@ class User extends \common\components\db\ActiveRecord
             [['auth_key'], 'string', 'max' => 32],
             [['scopes', 'github'], 'string', 'max' => 500],
             [['locale', 'verify_code'], 'string', 'max' => 10],
+            [['username'], 'unique'],
+            [['email'], 'unique'],
+            [['password_reset_token'], 'unique'],
         ];
     }
 
@@ -102,6 +106,7 @@ class User extends \common\components\db\ActiveRecord
         return [
             'id' => Yii::t('db', 'ID'),
             'username' => Yii::t('db', 'Username'),
+            'bm_wallet_id' => Yii::t('db', 'Bm Wallet ID'),
             'auth_key' => Yii::t('db', 'Auth Key'),
             'password_hash' => Yii::t('db', 'Password Hash'),
             'password_reset_token' => Yii::t('db', 'Password Reset Token'),
@@ -161,15 +166,15 @@ class User extends \common\components\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrders()
+    public function getAuths()
     {
-        return $this->hasMany(Order::className(), ['sale_support_id' => 'id']);
+        return $this->hasMany(Auth::className(), ['user_id' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrders0()
+    public function getOrders()
     {
         return $this->hasMany(Order::className(), ['purchase_assignee_id' => 'id']);
     }

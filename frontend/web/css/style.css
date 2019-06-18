@@ -8803,11 +8803,14 @@ li.dropdown.show {
 .modal{
     transform: scale(0);
     opacity: 0;
-    -webkit-transition: all .25s linear;
-    -o-transition: all .25s linear;
-    transition: all .25s linear;
+    -webkit-transition: all .25s ease-in;
+    -o-transition: all .25s ease-in;
+    transition: all .25s ease-in;
 }
 .modal.show {
+    -webkit-transition: all .25s ease-out;
+    -o-transition: all .25s ease-out;
+    transition: all .25s ease-out;
     opacity: 1;
     transform: scale(1);
 }

@@ -4,16 +4,18 @@
 /* @var $content string */
 
 use common\components\cart\CartManager;
+use frontend\modules\account\assets\UserBackendAsset;
 use frontend\modules\payment\providers\wallet\WalletService;
+use yii\bootstrap\Nav;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use frontend\modules\account\assets\UserBackendAsset;
-
-use yii\bootstrap\Nav;
-
-use yii\bootstrap\NavBar;
 
 UserBackendAsset::register($this);
+$js = <<<JS
+    
+JS;
+$this->registerJs($js);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -33,6 +35,7 @@ UserBackendAsset::register($this);
 <?php
 $check = Yii::$app->getRequest()->getQueryParams();
 $checkUrl = Yii::$app->getRequest()->url;
+$userID = Yii::$app->user->getId();
 ?>
 <div class="wrapper backend">
     <div class="navbar-2 be-header">
@@ -56,11 +59,37 @@ $checkUrl = Yii::$app->getRequest()->url;
                         <i class="badge"><?= (new CartManager())->countItems(\common\components\cart\CartSelection::TYPE_SHOPPING) ?></i>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
+                <?php
+                $notifi = \common\modelsMongo\ListNotification::find()->where(['user_id' => $userID ])->all();
+                $countNotifi = \common\modelsMongo\ListNotification::find()->where([
+                        'AND',
+                        ['user_id' => $userID ],
+                        ['watched' => 0 ]
+                ])->count();
+                ?>
+                <li class="nav-item dropdown ">
+                    <a href="javascript:void(0)"class="dropdown-toggle" data-toggle="dropdown">
                         <i class="icon noti"></i>
-                        <i class="badge">6</i>
+                        <i class="badge"><?= $countNotifi ?></i>
                     </a>
+                    <div class="dropdown-menu notification overflow-auto" aria-labelledby="navbarDropdown" style="width: 20%; right: 0; height: 450px; top: 51px">
+                        <div class="card bs-example">
+                            <ul class="list-unstyled">
+                                <?php foreach ($notifi as $value) { ?>
+                                    <li class="media" style="<?php if ($value->watched == 1) { ?> background-color: white <?php } elseif ($value->watched == 0) {?> background-color: gainsboro <?php } ?>; padding: 10px; width: 100%">
+                                            <img class="mr-3" width="50px" src="https://uinames.com/api/photos/male/12.jpg" alt="Generic placeholder image">
+                                        <a href="<?= $value->click_action ?>" style="padding: 0; height: auto">
+                                            <div class="media-body">
+                                                <h5 class="mt-0 mb-1"><?= $value->title ?></h5>
+                                                <?= $value->body ?> <br>
+                                                <small><?= Yii::$app->formatter->asDatetime($value->created_at) ?></small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </div>
                 </li>
             <?php } ?>
         </ul>
@@ -195,12 +224,12 @@ $checkUrl = Yii::$app->getRequest()->url;
                             </ul>
                         </div>
                     </li>
-                    <li>
-                        <?php echo Html::a('<span class="icon icon4"></span>' . Yii::t('frontend', 'Promotion'), ['/account/promotion-user?status=1']); ?>
-                    </li>
-                    <li>
-                        <a href="#"><i class="icon icon5"></i> Weshop xu</a>
-                    </li>
+                 <!--   <li>
+                        <?php /*echo Html::a('<span class="icon icon4"></span>' . Yii::t('frontend', 'Promotion'), ['/account/promotion-user?status=1']); */?>
+                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#"><i class="icon icon5"></i> Weshop xu</a>-->
+<!--                    </li>-->
                     <?php
                     if (isset($checkUrl)) {
                         if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') {

@@ -1,7 +1,7 @@
 <?php
 /**
  * @var $this \yii\web\View
- * @var $wallet array
+ * @var $wallet \Accouting\Merchantinfo
  * @var $totalCart int
  * @var $total int
  */
@@ -27,9 +27,10 @@ $this->registerJs($js);
             <span class="icon-box icon1"><i class="icon"></i></span>
             <div class="name">Số dư</div>
             <?php if ($wallet) {
-                echo '<div class="info">' . \common\helpers\WeshopHelper::showMoney($wallet['current_balance']) . '</div>';
+                echo '<div class="info">' . \common\helpers\WeshopHelper::showMoney($wallet->getMoneyAvailable()) . '</div>';
             } else {
-                echo "<div><a href='javascript: void(0);' onclick='ws.showLoginWallet()'>Nhấp vào đây</a> <i class='la la-question-circle' data-toggle='tooltip' title='Vui lòng xác thực lại mật khẩu để xem thông tin.'></i></div>";
+                echo "<div>Hãy liên kết với tài khoản BoxMe</div>";
+//                echo "<div><a href='javascript: void(0);' onclick='ws.showLoginWallet()'>Nhấp vào đây</a> <i class='la la-question-circle' data-toggle='tooltip' title='Vui lòng xác thực lại mật khẩu để xem thông tin.'></i></div>";
             } ?>
             <a href="/my-weshop/wallet/history.html">Chi tiết >></a>
         </div>

@@ -108,13 +108,13 @@ $this->registerJs($js);
                                 <span class="color-account">Bạn đăng nhập nhanh bằng tài khoản của</span>
                             </div>
                             <div class="col-md-6 pr-1">
-                                <button class="btn btn-fb">
+                                <button class="btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook">
                                     <i class="la la-facebook style-facebook"></i>
                                     <span class="style-font-facebook">Facebook</span>
                                 </button>
                             </div>
                             <div class="col-md-6 pl-1">
-                                <button  class="btn btn-google">
+                                <button  class="btn btn-google" data-action="clickToLoad" data-href="/secure/auth?authclient=google">
                                     <i class="la la-google style-facebook"></i>
                                     <span class="style-font-facebook">Google</span>
                                 </button>
@@ -126,7 +126,7 @@ $this->registerJs($js);
                             </div>
                             <div class="col-md-12">
                                 <div class="social-button">
-                                    <a href="/login.html" class="btn btn-info">Đăng nhập tài khoản email</a>
+                                    <a data-action="clickToLoad" data-href="/login.html" class="btn btn-info">Đăng nhập tài khoản email</a>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +136,7 @@ $this->registerJs($js);
                                 <span class="color-account">Bạn chưa có tài khoản ?</span>
                             </div>
                             <div class="col-md-12 social-button">
-                                <a href="/signup.html" class="btn btn-amazon">Bạn đăng kí ngay tại đây</a>
+                                <a data-action="clickToLoad" data-href="/signup.html" class="btn btn-amazon">Bạn đăng kí ngay tại đây</a>
                             </div>
                         </div>
                     </div>
@@ -144,16 +144,24 @@ $this->registerJs($js);
                 <?php }else{?>
                 <li class="card" style="border: none">
                     <div class="card-body">
-                       <div class="row">
-                           <div class="col-md-12 mb-2">Đơn hàng của tôi</div>
-                           <div class="col-md-12 mb-2">Mã giảm giá của tôi</div>
-                           <div class="col-md-12 mb-2">Khiếu nại & hoàn trả</div>
-                           <div class="col-md-12 mb-2">Tài khoản ví(xu)</div>
+                       <div class="row" id="list-menu-account">
                            <div class="col-md-12 mb-3">
-                               <a href="/my-weshop.html">Cấu hình tài khoản</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/order">Đơn hàng của tôi</a>
+                           </div>
+                           <div class="col-md-12 mb-3">
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/promotion-user">Mã giảm giá của tôi</a>
+                           </div>
+                           <div class="col-md-12 mb-3">
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="#">Khiếu nại & hoàn trả</a>
+                           </div>
+                           <div class="col-md-12 mb-3">
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop/wallet.html">Tài khoản ví(xu)</a>
+                           </div>
+                           <div class="col-md-12 mb-3">
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop.html">Cấu hình tài khoản</a>
                            </div>
                            <div class="col-md-12 mb-2 social-button">
-                               <a class="btn btn-info p-2" href="/logout.html">Đăng xuất tài khoản</a>
+                               <a class="btn btn-info p-2" href="javascript:void (0);" data-action="clickToLoad" data-href="/logout.html">Đăng xuất tài khoản</a>
                            </div>
                        </div>
                     </div>
@@ -213,7 +221,7 @@ $this->registerJs($js);
                 <a href="javascript:void(0);">Nước hoa</a>
             </li>
             <li>
-                <a href="javascript:void(0);" style="padding-left: 0px">
+                <a href="javascript:void(0);">
                     <i class="la la-hand-o-right"></i>
                     Dùng thử dịch vụ Prime
                 </a>
@@ -232,7 +240,7 @@ $this->registerJs($js);
                 </a>
             </li>
             <li>
-                <a href="javascript:void(0);">
+                <a href="javascript:void(0);" class="checkout-order">
                     <i class="la la-shopping-cart"></i>
                     <span class="badge count-cart">0</span>
                 </a>
@@ -289,21 +297,21 @@ $this->registerJs($js);
             <div class="row">
                 <div class="col-12"><span><?= Yii::t('frontend', 'Login with') ?></span></div>
                 <div class="col-6">
-                    <button class="btn btn-fb">Facebook</button>
+                    <button class="btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook">Facebook</button>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-google">Google</button>
+                    <button class="btn btn-google" data-action="clickToLoad" data-href="/secure/auth?authclient=google">Google</button>
                 </div>
                 <div class="col-12"><span><?= Yii::t('frontend', 'Or login with email') ?></span></div>
                 <div class="col-12">
-                    <button class="btn btn-info"><?= Yii::t('frontend', 'Login with email') ?></button>
+                    <button class="btn btn-info" data-action="clickToLoad" data-href="/login.html"><?= Yii::t('frontend', 'Login with email') ?></button>
                 </div>
                 <div class="col-12">
                     <hr>
                 </div>
-                <div class="col-12"><span><?= Yii::t('frontend', 'Are you have not account?') ?></span></div>
+                <div class="col-12"><span><?= Yii::t('frontend', 'Are you not have account?') ?></span></div>
                 <div class="col-12">
-                    <button class="btn btn-amazon"><?= Yii::t('frontend', 'Register here') ?></button>
+                    <button class="btn btn-amazon" data-action="clickToLoad" data-href="/signup.html"><?= Yii::t('frontend', 'Register here') ?></button>
                 </div>
             </div>
         </div>
@@ -343,5 +351,65 @@ $this->registerJs($js);
                 <a href="javascript:void(0);">Dùng thử dịch vụ Prime</a>
             </li>
         </ul>
+    </div>
+    <div class="mb-modal-checkout-order">
+        <div class="mb-modal-sm-checkout">
+            <div class="title-mb-menu-checkout" style="height: 68px;">
+                <a href="/" class="close-checkout">
+                    <span style="font-weight: 700; color: white; font-size: 17px; position: absolute; margin-top: 5px">GIỎ HÀNG</span>
+                </a>
+                <i class="la la-close" style="float: right;padding:5px;"></i>
+                <div class="clearfix"></div>
+            </div>
+            <div class="content-modal-auth-mb">
+                <div class="row">
+                    <div class="col-8 pl-0">
+                        <strong>Sản phẩm trong giỏ hàng</strong>
+                    </div>
+                    <div class="col-4 pr-0 text-right">
+                        <a href="javascript:void(0)">Xóa hết</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3 m-o p-0">
+                        <div class="thumb" style="height: auto;">
+                            <img src="https://i.ebayimg.com/00/s/MTEyMFgxNTAw/z/oYAAAOSwgPVcrnUX/$_1.JPG" alt="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16" width="100%" title="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16">
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="info">
+                            <div class="left">
+                                <a href="http://weshop-v4.front-end-ws.local.vn/ebay/item/msi-radeon-rx-460-directx-12-rx-460-2g-oc-2gb-128-bit-gddr5-pci-express-30-x16-352639604796.html" target="_blank" class="name">
+                                    MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16</a>
+                            </div>
+                            <div class="price price-option text-danger">
+                                <strong>0VND</strong>
+                            </div>
+                            <div class="right mt-2 stylll">
+                                <div class="qty form-inline quantity-option">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary btn-sm button-quantity-down style-add-quantyti" data-pjax="1" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" data-update="#5d0889d5317e410bfc007089" data-operator="down" type="button">-
+                                            </button>
+                                        </div>
+                                        <input type="text" name="cartItemQuantity" class="form-control style-quantity form-control-sm" value="2" data-min="1" data-type="shopping" data-max="0" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary btn-sm button-quantity-up style-add-quantyti" data-pjax="1" data-parent="5d0889d5317e410bfc007089" data-type="shopping" data-id="352639604796" data-sku="604103" data-operator="up" type="button">+
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="#" class="del delete-item" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" <i=""> Xóa</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn style-btn mt-2"><span class="la la-shopping-cart" style="font-size: 1.7em;"></span>XEM GIỎ HÀNG</button>
+                    <button class="btn style-btn1 mt-2"><span class="la la-shopping-cart" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA HÀNG</button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
     </div>
 </div>

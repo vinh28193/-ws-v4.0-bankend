@@ -394,5 +394,30 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
     {
         return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
     }
-
+    public function getCurrencyCode(){
+        switch ($this->store_id){
+            case 1:
+                return 'VND';
+                break;
+            case 7:
+                return 'IDR';
+                break;
+            default:
+                return 'VN';
+                break;
+        }
+    }
+    public function getCountryCode(){
+        switch ($this->store_id){
+            case 1:
+                return 'VN';
+                break;
+            case 7:
+                return 'ID';
+                break;
+            default:
+                return 'VN';
+                break;
+        }
+    }
 }
