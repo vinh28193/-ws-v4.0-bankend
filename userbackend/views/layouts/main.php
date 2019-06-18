@@ -95,7 +95,7 @@ UserBackendAsset::register($this);
                     </li>
                     <li class="accordion">
                         <a href="#"><i class="icon icon2"></i> Quản lí tiền</a>
-                        <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-1" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                        <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-1" aria-expanded="true" aria-controls="collapseOne"><i class="la la-chevron-right"></i></a>
                         <div id="sub-1" class="sub-collapse collapse" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul>
                                 <li><a href="#">Nạp tiền</a></li>
@@ -123,7 +123,7 @@ UserBackendAsset::register($this);
                             }
                         }
                         ?>
-                        <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($checkUrl)){?> <?=$collapsed[1]?> <?php } ?><?php if (isset($check['status'])){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                        <a class="dropdown-collapse <?php if (isset($check['status'])){?> <?=$collapsed[0]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[0]?> <?php } ?>" data-toggle="collapse" data-target="#sub-2" aria-expanded="<?php if (isset($checkUrl)){?> <?=$collapsed[1]?> <?php } ?><?php if (isset($check['status'])){?> <?=$collapsed[1]?> <?php } ?>" aria-controls="collapseOne"><i class="la la-chevron-right"></i></a>
                         <div id="sub-2" class="sub-collapse collapse <?php if (isset($check['status'])){?> <?=$collapsed[2]?> <?php } ?><?php if (isset($checkUrl)){?> <?=$collapsed[2]?> <?php } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul class="style-nav">
                                 <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/order') { ?> active <?php }}?><?php if (isset($checkUrl)) { if ($checkUrl == '/order') { ?> active <?php }}?>">
@@ -170,7 +170,7 @@ UserBackendAsset::register($this);
                     ?>
                     <li class="accordion">
                         <a href="#"><i class="icon icon6"></i> Tài khoản cá nhân</a>
-                        <a class="dropdown-collapse <?php if (isset($checkUrl)){ if ($checkUrl == '/customer' || $checkUrl == '/customer/vip') {?> <?=$collapsed1[0]?> <?php }} ?>" data-toggle="collapse" data-target="#sub-3" aria-expanded="<?php if (isset($checkUrl)){if ($checkUrl == '/customer' || $checkUrl == '/customer/vip') {?> <?=$collapsed1[1]?> <?php } } ?>" aria-controls="collapseOne"><i class="fas fa-chevron-right"></i></a>
+                        <a class="dropdown-collapse <?php if (isset($checkUrl)){ if ($checkUrl == '/customer' || $checkUrl == '/customer/vip') {?> <?=$collapsed1[0]?> <?php }} ?>" data-toggle="collapse" data-target="#sub-3" aria-expanded="<?php if (isset($checkUrl)){if ($checkUrl == '/customer' || $checkUrl == '/customer/vip') {?> <?=$collapsed1[1]?> <?php } } ?>" aria-controls="collapseOne"><i class="la la-chevron-right"></i></a>
                         <div id="sub-3" class="sub-collapse collapse <?php if (isset($checkUrl)) { if ($checkUrl == '/customer' || $checkUrl == '/customer/vip') {?> <?=$collapsed1[2]?> <?php } } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
                             <ul>
                                 <li class="<?php if (isset($checkUrl)) { if ($checkUrl == '/customer') { $active = 'active'?> active <?php }}?>">

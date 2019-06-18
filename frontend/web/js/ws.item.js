@@ -418,6 +418,7 @@
     var changeImage = function ($item, images) {
         $item.data('wsItem').params.images = images;
         var html = '';
+        var imageMb = '';
         $.each(images, function (index, value) {
             if (index == 0)
                 html += '<div class="item active">';
@@ -427,11 +428,13 @@
             html += '<a href="javascript:void (0);"  onclick="changeBigImage(this)"  data-image="' + value.main + '" data-zoom-image="' + value.main + '"> ' +
                 '<img src="' + value.main + '" width="100"/>' +
                 '</a>';
-            html += '</div>'
+            html += '</div>';
+            imageMb += '<img src="' + value.main + '" />';
         });
         varration_box.image = images[0].main;
         varration_box.title = $('div.option-box label.label-option-box').html();
         $('#detail-slider').html(html);
+        $('.mb-slide-image').html(imageMb);
         $('#detail-big-img').attr('src', images[0].main);
         $('#detail-big-img').attr('data-zoom-image', images[0].main);
         $('#detail-slider .active a').click();

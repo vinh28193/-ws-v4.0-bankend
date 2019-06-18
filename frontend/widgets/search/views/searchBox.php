@@ -10,7 +10,7 @@
         <div class="input-group">
             <input type="text" name="searchBoxInput"  id="searchBoxInput" class="form-control" value="<?=$keyword;?>" placeholder="<?=$placeholder?>"/>
             <span class="input-group-btn">
-                <button type="button" id="searchBoxButton" class="btn btn-default"><i class="fas fa-search"></i></button>
+                <button type="button" id="searchBoxButton" class="btn btn-default"><i class="la la-search"></i></button>
             </span>
         </div>
     </div>

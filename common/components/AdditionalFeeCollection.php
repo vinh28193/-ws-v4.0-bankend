@@ -143,7 +143,7 @@ class AdditionalFeeCollection extends ArrayCollection
      */
     public function createItem(StoreAdditionalFee $config, AdditionalFeeInterface $additional, $amount = null, $discountAmount = 0, $currency = null)
     {
-        if ($config->type === StoreAdditionalFee::TYPE_ORIGIN && $amount === null) {
+        if (($config->type === StoreAdditionalFee::TYPE_ORIGIN || $config->type === StoreAdditionalFee::TYPE_LOCAL) && $amount === null) {
             $amount = 0;
         }
         if ($config->type === StoreAdditionalFee::TYPE_ADDITION && $amount === null && $config->hasMethod('executeCondition') &&
@@ -151,12 +151,12 @@ class AdditionalFeeCollection extends ArrayCollection
             is_array($result)
         ) {
             list($amount, $amountLocal) = $result;
+        } else if ($config->type === StoreAdditionalFee::TYPE_LOCAL) {
+            $amountLocal = $amount;
         } else if ($config->name === 'product_price') {
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         } else if ($config->name === 'tax_fee') {
-            if ($amount <= 0) {
-                $amount = 0;
-            } elseif ($amount < 1) {
+            if ($amount < 1) {
                 $amount *= $this->getTotalAdditionalFees(['product_price', 'shipping_fee'])[0];
             } else if ($amount > 1 && $amount < 2) {
                 $amount = ($amount - 1) * $this->getTotalAdditionalFees(['product_price', 'shipping_fee'])[0];

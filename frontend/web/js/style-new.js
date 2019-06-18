@@ -40,3 +40,7 @@ $('#menu1>li[role=presentation]').click(function () {
         }
     });
 });
+$('*[data-action=clickToLoad]').click(function () {
+    ws.loading(true);
+    window.location.assign($(this).attr('data-href'));
+});

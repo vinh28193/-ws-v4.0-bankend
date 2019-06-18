@@ -19,6 +19,7 @@ class StoreAdditionalFee extends DbStoreAdditionalFee
 {
 
     const TYPE_ORIGIN = 'origin';
+    const TYPE_LOCAL = 'local';
     const TYPE_ADDITION = 'addition';
     const TYPE_DISCOUNT = 'discount';
 

@@ -125,12 +125,12 @@ class HomeController extends BaseAccountController
 //        print_r($status);
 //        echo "</pre>";
 
-        echo "<pre>";
-        print_r($reply->getData()[0]);
-        echo "</pre>";
+//        echo "<pre>";
+//        print_r($reply->getData()[0]);
+//        echo "</pre>";
 
         echo "<pre>";
-        print_r($reply->getData());
+        print_r($reply);
         echo "</pre>";
 
         //print_r($Merchance->getUserId());
@@ -174,7 +174,7 @@ class HomeController extends BaseAccountController
         $request = new SignUpRequest();
         $request->setCurrency("VND");
         $request->setCountry("VN");
-        $request->setEmail("weshop.test@gmail.com");
+        $request->setEmail("weshop.test2@gmail.com");
         $request->setFullname("Jackly Hoang");
         $request->setPassword1("weshop@123");
         $request->setPassword2("weshop@123");
@@ -184,6 +184,9 @@ class HomeController extends BaseAccountController
 
         list($reply, $status) = $greeterClient->SignUp($request)->wait();
 
+        echo "<pre>";
+        print_r($reply->getMessage());
+        echo "</pre>";
         echo "<pre>";
         print_r($reply);
         echo "</pre>";
@@ -213,15 +216,24 @@ class HomeController extends BaseAccountController
      */
     public function actionIndex()
     {
-        $userId = Yii::$app->user->getId();
+        /** @var User $user_info */
+        $user_info = Yii::$app->user->getIdentity();
         $orders = Order::find()
-            ->where(['=', 'customer_id', $userId])
+            ->where(['=', 'customer_id', $user_info->id])
             ->all();
         $total = count($orders);
         $wallet = null;
-//        if($userId){
-//            $wallet = ArrayHelper::getValue((new WalletService())->detailWalletClient(),'data');
-//        }
+        if($user_info->bm_wallet_id){
+            $greeterClient = new Client('206.189.94.203:50054', [
+                'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+            ]);
+            $request = new GetListMerchantByIdRequest();
+            $request->setUserId($user_info->bm_wallet_id);
+            $request->setCountryCode($user_info->getCountryCode());
+            list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
+            /** @var GetListMerchantByIdResponse $reply */
+            $wallet = !$reply->getError() && count($reply->getData()) ? $reply->getData()[0] : null;
+        }
         $totalCart = (new CartManager())->countItems();
         return $this->render('index', [
             'wallet' => $wallet,

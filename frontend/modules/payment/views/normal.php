@@ -64,7 +64,7 @@ use frontend\modules\payment\methods\BankTransferVN4;
 </div>
 <?php if ($payment->page === Payment::PAGE_TOP_UP) { ?>
     <div class="form-group form-inline">
-        <label>Nhập số tiền cần nạp &nbsp;<i class="fas fa-question-circle" title="Tối thiểu phải là 100.000 VNĐ"></i>:</label>
+        <label>Nhập số tiền cần nạp &nbsp;<i class="la la-question-circle" title="Tối thiểu phải là 100.000 VNĐ"></i>:</label>
         <input type="number" class="form-control" name="amount_topup" placeholder="Ví dụ: 100.000 VNĐ"
                value="<?= Yii::$app->request->get('amount') ?>">
     </div>

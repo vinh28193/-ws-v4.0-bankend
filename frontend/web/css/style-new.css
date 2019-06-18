@@ -4,6 +4,9 @@ html, body {
     font-weight: 400;
     color: #555555;
 }
+.wrapper{
+    background: #f7f7f7;
+}
 .container{
     max-width: 90%;
 }
@@ -245,7 +248,7 @@ body div.wrapper div.content-body div.col-md-8 b{
     line-height: 24px;
 }
 .breadcrumb-content{
-    height: 40px;
+    height: auto;
     box-shadow: 0 2px 4px #dddddd;
     background-color: #ffffff;
     margin-bottom: 15px;
@@ -368,6 +371,8 @@ div.product-list.row div a div.info div.name{
     width: 100%;
 }
 #menuAccount .social-button a.btn{
+    color: white;
+    cursor: pointer;
     text-align: center;
     width: 100%;
 }
@@ -569,7 +574,35 @@ div div.product-list.row div a div.info div.price span.countdown{
 .content-menu-cate-sub-2-item ul{
     padding-left: 20px;
 }
+.detail-block .product-full-info {
+    width: 65%;
+    /*width: calc(100% - 470px);*/
+}
+.detail-block .thumb-slider {
+    width: 35%;
+}
+.detail-block .thumb-slider .zoomWrapper .detail-big-img {
+    width: -webkit-fill-available;
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+}
+.mb-slide-image{
+    max-height: 324px;
+}
+.slick-prev:before, .slick-next:before {
+    color: #d4d4d4;
+}
+.mb-slide-image{
+    display: none;
+}
+.deal-title-box>.title {
+    white-space: nowrap;
+}
 @media (min-width: 414px) {
+    ul.bars-nav li{
+        padding-right: 0px;
+    }
     .deal-shock .deal-content ul li {
         padding: 0 5px;
         width: 50%;
@@ -585,6 +618,9 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
 }
 @media(min-width:767px){
+    ul.bars-nav li {
+        padding-right: 10px;
+    }
     .deal-shock .deal-content ul li {
         padding: 0 5px;
         width: 33.3333%;
@@ -600,6 +636,9 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
 }
 @media (min-width: 991px){
+    ul.bars-nav li {
+        padding-right: 15px;
+    }
     .deal-shock .deal-content ul li {
         padding: 0 5px;
         width: 20%;
@@ -657,6 +696,9 @@ div div.product-list.row div a div.info div.price span.countdown{
         height: 40px;
         border-radius: 5px;
     }
+    ul.bars-nav li{
+        padding-right: 0px;
+    }
     .cart-header-box span.label-cart{
         color: #e67424;
         font-family: Helvetica;
@@ -672,7 +714,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         padding-top: 8px;
         color: #2b96b6;
         font-family: "LineAwesome";
-        font-size: 25px;
+        font-size: 15px;
         float: left;
     }
     #ico-search{
@@ -684,7 +726,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 25px;
     }
     ul.bars-nav li:first-child i:first-child{
-        font-size: 25px;
+        font-size: 15px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
@@ -694,7 +736,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 14px;
     }
     ul.bars-nav li:first-child {
-        padding-right: 25px;
+        padding-right: 0px;
     }
 }
 @media  (max-width: 993px) {
@@ -752,6 +794,9 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
 }
 @media(max-width:799px) {
+    ul.bars-nav li{
+        padding-right: 0px !important;
+    }
     body div.wrapper div.navbar-ws div div.search-box{
         height: 30px;
         border-radius: 5px;
@@ -771,7 +816,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         padding-top: 8px;
         color: #2b96b6;
         font-family: "LineAwesome";
-        font-size: 15px;
+        font-size: 10px;
         float: left;
     }
     #ico-search{
@@ -783,7 +828,7 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-size: 15px;
     }
     ul.bars-nav li:first-child i:first-child{
-        font-size: 15px;
+        font-size: 10px;
         line-height: 0em;
     }
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
@@ -887,6 +932,12 @@ div div.product-list.row div a div.info div.price span.countdown{
         -ms-transition: all .3s;
         -o-transition: all .3s;
         transition: all .3s; }
+    .mb-modal-checkout-order {
+        -webkit-transition: all .3s;
+        -moz-transition: all .3s;
+        -ms-transition: all .3s;
+        -o-transition: all .3s;
+        transition: all .3s; }
     .mb-wrapper {
         background-color: #141c2e;
         margin: 0 auto;
@@ -975,6 +1026,29 @@ div div.product-list.row div a div.info div.price span.countdown{
         border-top: 1px solid #2b96b6;
         z-index: 999;
     }
+    .mb-modal-checkout-order {
+        overflow: auto;
+        position: fixed;
+        top: 0;
+        /*right: 0;*/
+        bottom: 0;
+        right: -100%;
+        width: 100%;
+        background: #fff;
+        border-top: 1px solid #2b96b6;
+        z-index: 999;
+    }
+    .mb-modal-checkout-order.open {
+        right: 0;
+        background: #00000070;
+    }
+    .mb-modal-sm-checkout {
+        min-height: 100%;
+        width: 90%;
+        background: #fff;
+        position: absolute;
+        right: 0;
+    }
     .mb-modal-auth {
         overflow: auto;
         position: fixed;
@@ -1009,6 +1083,9 @@ div div.product-list.row div a div.info div.price span.countdown{
         background: #00000070;
     }
     .mb-modal-auth.open{
+        bottom: 0;
+    }
+    .mb-modal-checkout-order.open{
         bottom: 0;
     }
     .mb-menu .item-list ,.mb-menu-filter .item-list,.mb-modal-auth .item-list {
@@ -1172,6 +1249,46 @@ div div.product-list.row div a div.info div.price span.countdown{
     /*    padding-top: 15px;*/
     /*    padding-left: 15px;*/
     /*}*/
+    .detail-block .product-full-info {
+        width: 100%;
+        margin-left: auto;
+        /*width: calc(100% - 470px);*/
+    }
+    .detail-block .thumb-slider {
+        width: 0%;
+        display: none;
+    }
+    .name-product{
+        font-size: 14px;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .badge-buy-detail {
+        margin-top: 5px;
+        line-height: normal;
+    }
+    .condition-and-seller,.detail-block .product-full-info .rating span,.detail-block .product-full-info .rating i{
+        font-size: 11px!important;
+    }
+    .option-box .form-control{
+        width: 100%!important;
+    }
+    .mb-slide-image{
+        display: block;
+    }
+    .mb-slide-image img{
+        width: 100%;
+        max-height: -webkit-fill-available;
+    }
+    .btn-group-detail button#buyNowBtn{
+        text-align: center;
+        width: 100%;
+    }
+    button#installmentBtn, button#addToCart {
+        width: 49%;
+        font-size: 12px;
+        margin-top: 1%;
+    }
 }
 @media (max-width: 360px) {
     .col-sm-6 {
@@ -1194,6 +1311,50 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
     body div.wrapper div.content-body div.col-md-2 i{
         font-size: 24px;
+    }
+
+    .title-mb-menu-checkout{
+        width: 100%;
+        background-color: #141c2e;
+        height: fit-content;
+        padding: 14px;
+    }
+    .title-mb-menu-checkout span{
+        color: #ffffff;
+        font-family: Helvetica;
+        font-size: 16px;
+    }
+    .title-mb-menu-checkout i{
+        color: #ffffff;
+        font-family: "LineAwesome";
+        font-size: 26px;
+    }
+    .style-btn {
+        background-image: linear-gradient(180deg, #56c7dc 0%, #2b96b6 100%);
+        border: 1px solid #00a3d3;
+        border-radius: 3px;
+        width: 100%;
+        color: white;
+        font-weight: 500;
+    }
+    .style-btn1 {
+        border-radius: 3px;
+        border: 1px solid #d25e0d;
+        background-image: linear-gradient(180deg, #ff9d17 0%, #e67424 100%);
+        width: 100%;
+        color: white;
+        font-weight: 500;
+    }
+    .style-quantity {
+        background-image: linear-gradient(to top, #dedede, #ffffff);
+        text-align: center;
+        max-width: 3em;
+    }
+    .style-add-quantyti {
+        height: 30px;
+        border: none;
+        background-image: linear-gradient(to top, #dedede, #ffffff);
+        border-radius: 0;
     }
 }
 

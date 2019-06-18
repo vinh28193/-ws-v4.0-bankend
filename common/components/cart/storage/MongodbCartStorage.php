@@ -259,8 +259,6 @@ class MongodbCartStorage extends BaseObject
         $limit = (int)ArrayHelper::remove($params, 'limit', 10);
         $page = ArrayHelper::remove($params, 'page', 1);
         $skip = ($page - 1) * $limit;
-//        var_dump($params);
-//        die();
         $conditions = [
             'AND',
             ['remove' => 0],

@@ -3,12 +3,16 @@
 
 namespace frontend\controllers;
 
+use common\boxme\InternationalShippingCalculator;
 use common\components\cart\CartHelper;
 use common\components\cart\CartManager;
+use common\helpers\ObjectHelper;
 use common\helpers\WeshopHelper;
 use common\models\Store;
 use common\models\User;
 use common\promotion\PromotionForm;
+use Courier\CalculateFeeRequest;
+use Courier\CourierClient;
 use frontend\modules\payment\providers\mcpay\McPayProvider;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganluongHelper;
@@ -205,7 +209,7 @@ class TestController extends FrontendController
         $data = require dirname(dirname(__DIR__)) . '\common\models\category_group.php';
         foreach ($data as $array) {
             $rules = [];
-            if($array['condition_data'] !== null){
+            if ($array['condition_data'] !== null) {
                 foreach ($array['condition_data'] as $condition) {
                     $calc = new \common\calculators\Calculator();
                     $calc->register($condition);
@@ -221,9 +225,100 @@ class TestController extends FrontendController
         var_dump($message);
         die;
     }
-    public function actionTestSale() {
+
+    public function actionTestSale()
+    {
         $sale = $this->actionTestCount();
         var_dump($sale);
         die();
+    }
+
+    public function actionGetCourier()
+    {
+        $calculator = new InternationalShippingCalculator();
+
+    $shipment =<<<JSON
+{
+  "ship_from": {
+    "country": "US",
+    "pickup_id": 35549
+  },
+  "ship_to": {
+    "contact_name": "1212121",
+    "company_name": "",
+    "email": "",
+    "address": "18 Đường Tam Trinh, Mai Động, Hai Bà Trưng, Hà Nội, Việt Nam",
+    "address2": "",
+    "phone": "12121212121",
+    "phone2": "",
+    "country": "VN",
+    "province": 1,
+    "district": 7,
+    "zipcode": "",
+    "tax_id": ""
+  },
+  "shipments": {
+    "content": "",
+    "total_parcel": 1,
+    "total_amount": 4000000,
+    "chargeable_weight": 500,
+    "description": "",
+    "amz_shipment_id": "",
+    "parcels": [
+      {
+        "dimension": {
+          "width": 0,
+          "height": 0,
+          "length": 0
+        },
+        "weight": 500,
+        "amount": 4000000,
+        "description": "",
+        "dg_code": "",
+        "hs_code": "",
+        "items": [
+          {
+            "sku": "593103644595420",
+            "label_code": "",
+            "origin_country": "",
+            "name": "Nhà máy trực tiếp camera không dây mạng wifi điện thoại di động từ xa HD nhìn đêm nhà màn hình trong nhà đặt - 720P100W pixel (không có thẻ nhớ)",
+            "desciption": "",
+            "weight": 500,
+            "amount": 400000,
+            "customs_value": 400000,
+            "quantity": 7
+          }
+        ]
+      }
+    ]
+  },
+  "config": {
+    "preview": "Y",
+    "return_mode": 0,
+    "insurance": "N",
+    "document": 0,
+    "currency": "VND",
+    "unit_metric": "metric",
+    "sort_mode": "best_rating",
+    "auto_approve": "Y",
+    "create_by": 0,
+    "create_from": "create_order_netsale",
+    "order_type": "dropship",
+    "check_stock": "N"
+  },
+  "payment": {
+    "cod_amount": 0,
+    "fee_paid_by": "sender"
+  },
+  "referral": {
+    "order_number": "",
+    "coupon_code": ""
+  }
+}
+JSON;
+        $shipment = json_decode($shipment,true);
+        $couriers = $calculator->CalculateFee($shipment, 23, 'VN');
+        var_dump($couriers);
+        die;
     }
 }

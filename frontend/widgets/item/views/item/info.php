@@ -28,9 +28,16 @@ $instockQuanty = 0;
 if ($item->available_quantity) {
     $instockQuanty = $item->quantity_sold ? $item->available_quantity - $item->quantity_sold : $item->available_quantity;
 }
+$css = <<<CSS
+    .wrapper{
+    background: #fff;
+    }
+CSS;
+
+$this->registerCss($css);
 ?>
-<div id="checkcate" style="display: none"><?= $item->category_id ?></div>
 <div class="product-full-info">
+    <div id="checkcate" style="display: none"><?= $item->category_id ?></div>
     <div class="title">
         <span class="badge-buy-detail"><?= Yii::t('frontend','Mua hộ từ Mỹ') ?></span>
         <strong class="name-product"><?= $item->item_name ?></strong>
@@ -62,7 +69,13 @@ if ($item->available_quantity) {
         <a target="_blank"
            href="<?= $item->item_origin_url ?>"><?= Yii::t('frontend', 'See the original link ->') ?></a>
     </div>
-
+    <div class="mb-slide-image">
+        <?php
+        foreach ($item->primary_images as $image){ ?>
+            <img src="<?= $image->main ?>"/>
+        <?php }
+        ?>
+    </div>
     <?php if ($item->getLocalizeTotalPrice() > 0) { ?>
         <div class="price">
             <div class="title-price"><?= Yii::t('frontend','Price') ?></div>
@@ -88,6 +101,9 @@ if ($item->available_quantity) {
                         </ul>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="2"><?= Yii::t('frontend','The price does not include shipping fees to your location.') ?></td>
+                </tr>
             </table>
         </div>
         <?php
@@ -100,8 +116,6 @@ if ($item->available_quantity) {
         <div class="option-box">
             <label class="label-option-box" id="label_<?= $variationOption->id ?>"><?= $variationOption->name; ?>: ---</label>
             <div class="color-pick" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
-                <i class="fas fa-chevron-left slider-prev2"></i>
-                <i class="fas fa-chevron-right slider-next2"></i>
                 <ul class="style-list"
                     data-slick='{"slidesToShow": <?= count($variationOption->values) < 6 ? count($variationOption->values) : 6 ?>}'>
                     <?php foreach ($variationOption->values as $k => $value) {

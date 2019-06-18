@@ -182,6 +182,7 @@ class ShippingForm extends Model
         /** @var  $store  StoreManager */
         $store = Yii::$app->storeManager;
         $this->buyer_country_id = $store->store->country_id;
+        $this->receiver_country_id = $store->store->country_id;
         /** @var  $user  Customer */
         if (($user = $this->getUser()) !== null) {
             $this->customer_id = $user->id;
@@ -233,6 +234,16 @@ class ShippingForm extends Model
         } else {
             $this->other_receiver = self::OTHER_RECEIVER_YES;
         }
+    }
+
+    private $_provinces;
+
+    public function getProvinces()
+    {
+        if ($this->_provinces === null) {
+            $this->_provinces = SystemStateProvince::select2Data($this->buyer_country_id);
+        }
+        return $this->_provinces;
     }
 
     public function ensureReceiver()
