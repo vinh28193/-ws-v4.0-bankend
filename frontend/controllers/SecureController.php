@@ -88,8 +88,8 @@ class SecureController extends FrontendController
                         'credentials' => \Grpc\ChannelCredentials::createInsecure(),
                     ]);
                     $request = new SignUpRequest();
-                    $request->setCurrency($user->store_id == 7 ? 'IDR' : 'VND');
-                    $request->setCountry($user->store_id == 7 ? 'ID' : 'VN');
+                    $request->setCurrency($user->getCurrencyCode());
+                    $request->setCountry($user->getCountryCode());
                     $request->setEmail($user->email);
                     $request->setFullname(trim($user->last_name.' '. $user->first_name));
                     $request->setPassword1($model->password);
@@ -262,4 +262,39 @@ class SecureController extends FrontendController
 
         $this->render('changePassword', array('model' => $model));
     }
+    /*public function actionTestAuth(){
+        print_r(Yii::$app->request->post());
+        print_r(Yii::$app->request->get());
+        die('test');
+        $app_id = '216590825760272';
+        $secret = '<account_kit_app_secret>';
+        $version = 'v1.0';
+        function doCurl($url)
+        {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = json_decode(curl_exec($ch), true);
+            curl_close($ch);
+            return $data;
+        }
+        $token_exchange_url = 'https://graph.accountkit.com/' . $version . '/access_token?' .
+            'grant_type=authorization_code' .
+            '&code=' . $_POST['code'] .
+            "&access_token=AA|$app_id|$secret";
+        $data = doCurl($token_exchange_url);
+        $user_id = $data['id'];
+        $user_access_token = $data['access_token'];
+        $refresh_interval = $data['token_refresh_interval_sec'];
+        $me_endpoint_url = 'https://graph.accountkit.com/' . $version . '/me?' .
+            'access_token=' . $user_access_token;
+        $data = doCurl($me_endpoint_url);
+        $phone = isset($data['phone']) ? $data['phone']['number'] : '';
+        $email = isset($data['email']) ? $data['email']['address'] : '';
+
+
+        print_r(Yii::$app->request->post());
+        print_r(Yii::$app->request->get());
+        die('test');
+    }*/
 }

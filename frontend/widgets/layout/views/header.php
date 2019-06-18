@@ -108,13 +108,13 @@ $this->registerJs($js);
                                 <span class="color-account">Bạn đăng nhập nhanh bằng tài khoản của</span>
                             </div>
                             <div class="col-md-6 pr-1">
-                                <button class="btn btn-fb">
+                                <button class="btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook">
                                     <i class="la la-facebook style-facebook"></i>
                                     <span class="style-font-facebook">Facebook</span>
                                 </button>
                             </div>
                             <div class="col-md-6 pl-1">
-                                <button  class="btn btn-google">
+                                <button  class="btn btn-google" data-action="clickToLoad" data-href="/secure/auth?authclient=google">
                                     <i class="la la-google style-facebook"></i>
                                     <span class="style-font-facebook">Google</span>
                                 </button>
@@ -126,7 +126,7 @@ $this->registerJs($js);
                             </div>
                             <div class="col-md-12">
                                 <div class="social-button">
-                                    <a href="/login.html" class="btn btn-info">Đăng nhập tài khoản email</a>
+                                    <a data-action="clickToLoad" data-href="/login.html" class="btn btn-info">Đăng nhập tài khoản email</a>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +136,7 @@ $this->registerJs($js);
                                 <span class="color-account">Bạn chưa có tài khoản ?</span>
                             </div>
                             <div class="col-md-12 social-button">
-                                <a href="/signup.html" class="btn btn-amazon">Bạn đăng kí ngay tại đây</a>
+                                <a data-action="clickToLoad" data-href="/signup.html" class="btn btn-amazon">Bạn đăng kí ngay tại đây</a>
                             </div>
                         </div>
                     </div>
@@ -221,7 +221,7 @@ $this->registerJs($js);
                 <a href="javascript:void(0);">Nước hoa</a>
             </li>
             <li>
-                <a href="javascript:void(0);" style="padding-left: 0px">
+                <a href="javascript:void(0);">
                     <i class="la la-hand-o-right"></i>
                     Dùng thử dịch vụ Prime
                 </a>
@@ -297,21 +297,21 @@ $this->registerJs($js);
             <div class="row">
                 <div class="col-12"><span><?= Yii::t('frontend', 'Login with') ?></span></div>
                 <div class="col-6">
-                    <button class="btn btn-fb">Facebook</button>
+                    <button class="btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook">Facebook</button>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-google">Google</button>
+                    <button class="btn btn-google" data-action="clickToLoad" data-href="/secure/auth?authclient=google">Google</button>
                 </div>
                 <div class="col-12"><span><?= Yii::t('frontend', 'Or login with email') ?></span></div>
                 <div class="col-12">
-                    <button class="btn btn-info"><?= Yii::t('frontend', 'Login with email') ?></button>
+                    <button class="btn btn-info" data-action="clickToLoad" data-href="/login.html"><?= Yii::t('frontend', 'Login with email') ?></button>
                 </div>
                 <div class="col-12">
                     <hr>
                 </div>
-                <div class="col-12"><span><?= Yii::t('frontend', 'Are you have not account?') ?></span></div>
+                <div class="col-12"><span><?= Yii::t('frontend', 'Are you not have account?') ?></span></div>
                 <div class="col-12">
-                    <button class="btn btn-amazon"><?= Yii::t('frontend', 'Register here') ?></button>
+                    <button class="btn btn-amazon" data-action="clickToLoad" data-href="/signup.html"><?= Yii::t('frontend', 'Register here') ?></button>
                 </div>
             </div>
         </div>

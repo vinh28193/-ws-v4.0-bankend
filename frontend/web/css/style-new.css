@@ -371,6 +371,8 @@ div.product-list.row div a div.info div.name{
     width: 100%;
 }
 #menuAccount .social-button a.btn{
+    color: white;
+    cursor: pointer;
     text-align: center;
     width: 100%;
 }
@@ -616,6 +618,9 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
 }
 @media(min-width:767px){
+    ul.bars-nav li {
+        padding-right: 10px;
+    }
     .deal-shock .deal-content ul li {
         padding: 0 5px;
         width: 33.3333%;
@@ -631,6 +636,9 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
 }
 @media (min-width: 991px){
+    ul.bars-nav li {
+        padding-right: 15px;
+    }
     .deal-shock .deal-content ul li {
         padding: 0 5px;
         width: 20%;

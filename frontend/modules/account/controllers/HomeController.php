@@ -216,20 +216,24 @@ class HomeController extends BaseAccountController
      */
     public function actionIndex()
     {
-        $userId = Yii::$app->user->getId();
+        /** @var User $user_info */
+        $user_info = Yii::$app->user->getIdentity();
         $orders = Order::find()
-            ->where(['=', 'customer_id', $userId])
+            ->where(['=', 'customer_id', $user_info->id])
             ->all();
         $total = count($orders);
-        $greeterClient = new Client('206.189.94.203:50054', [
-            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
-        ]);
-        $request = new GetListMerchantByIdRequest();
-        $request->setUserId(23);
-        $request->setCountryCode("VN");
-        list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
-        /** @var GetListMerchantByIdResponse $reply */
-        $wallet = !$reply->getError() && count($reply->getData()) ? $reply->getData()[0] : null;
+        $wallet = null;
+        if($user_info->bm_wallet_id){
+            $greeterClient = new Client('206.189.94.203:50054', [
+                'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+            ]);
+            $request = new GetListMerchantByIdRequest();
+            $request->setUserId($user_info->bm_wallet_id);
+            $request->setCountryCode($user_info->getCountryCode());
+            list($reply, $status) = $greeterClient->GetListMerchantById($request)->wait();
+            /** @var GetListMerchantByIdResponse $reply */
+            $wallet = !$reply->getError() && count($reply->getData()) ? $reply->getData()[0] : null;
+        }
         $totalCart = (new CartManager())->countItems();
         return $this->render('index', [
             'wallet' => $wallet,
