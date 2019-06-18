@@ -893,6 +893,18 @@ composer gen-proto  #
     }
   },
   
+  
+#------- Protoc Install On Window -------------
+src: https://github.com/protocolbuffers/protobuf/releases
+64: https://github.com/protocolbuffers/protobuf/releases/download/v3.8.0/protoc-3.8.0-win64.zip
+32: https://github.com/protocolbuffers/protobuf/releases/download/v3.8.0/protoc-3.8.0-win32.zip
+
+=> download and copy => C:\protoc
+=> set env path => C:\protoc\bin
+
+https://github.com/protocolbuffers/protobuf/releases
+https://github.com/protocolbuffers/protobuf/releases/download/v3.8.0/protoc-3.8.0-win64.zip
+
 
 ## courier.proto  GRPC phần tính phí và tạo đơn 
   IP sandbox : 206.189.94.203:50056 
@@ -909,3 +921,41 @@ composer gen-proto  #
   riêng với dịch vụ dropship từ US thì có mấy lưu ý : 
   - order_type: dropship
   - sản phẩm phải được đồng bộ sang Boxme trước khi tạo đơn
+
+
+#------ORACLE_HOME------------ # https://www.oratable.com/oracle-home-path/
+On Window
+echo %ORACLE_HOME%
+D:\instantclient-basic-nt-18.5.0.0.0dbru\instantclient_18_5
+
+ORACLE_HOME=D:\Oracle 19- All\instantclient-basic-windows.x64-19.3.0.0.0dbru\instantclient_19_3
+
+On Unix/Linux: type
+
+env | grep ORACLE_HOME
+
+
+How to set ORACLE_HOME
+
+For the current runtime session, you can set ORACLE_HOME with a single command:
+
+On Windows:
+
+D:\>set ORACLE_HOME=C:\oraclexe\app\oracle\product\10.2.0\server
+
+D:\>echo %ORACLE_HOME%
+C:\oraclexe\app\oracle\product\10.2.0\server
+
+D:\>
+On Unix/Linux:
+
+export ORACLE_HOME=/app/oracle/product/10.2.0/server
+This value will be wiped off when you close the current command line session. To set it as a global environment variable in Windows:
+
+Go to Control Panel -> System -> Advanced.
+Click on button “Environment Variables”. This will open a window with two sets of variables – User and System. User variables are visible to your login only, while system variables are visible to anyone else who uses the system.
+Choose “New” to create ORACLE_HOME variable as either User or System variable, depending on how you want its visibility.
+Set its value to the Oracle directory.
+Click OK to save.
+Verify through a new command line session that the value has been set correctly.
+
