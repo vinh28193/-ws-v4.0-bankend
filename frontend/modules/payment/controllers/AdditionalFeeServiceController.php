@@ -4,6 +4,8 @@
 namespace frontend\modules\payment\controllers;
 
 use common\boxme\InternationalShippingCalculator;
+use common\components\GetUserIdentityTrait;
+use common\helpers\WeshopHelper;
 use frontend\modules\payment\models\ShippingForm;
 use frontend\modules\payment\Payment;
 use Yii;
@@ -12,16 +14,30 @@ use yii\helpers\ArrayHelper;
 class AdditionalFeeServiceController extends BasePaymentController
 {
 
+    use GetUserIdentityTrait;
+
     public function actionCourierCalculator()
     {
         $start = microtime(true);
         $bodyParams = $this->request->bodyParams;
+        if (($wh = $this->getPickUpWareHouse()) === false) {
+            $this->response(false, "can not get pickup warehouse");
+        }
         $payment = new Payment($bodyParams['payment']);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
         $shippingForm->ensureReceiver();
+        if (($mapping = $shippingForm->getReceiverMapping()) === false) {
+            $this->response(false, "not found mapping for {$shippingForm->getReceiverDistrictName()}");
+        }
+        if (($pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id')) === null) {
+            $this->response(false, "can not resolve pick up id");
+        }
+        if (($userId = ArrayHelper::getValue($wh, 'ref_user_id')) === null) {
+            $this->response(false, "can not resolve user id");
+        }
         $from = [
-            "country" => "US",
-            "pickup_id" => 35549
+            'country' => 'US',
+            'pickup_id' => $pickUpId
         ];
         $to = [
             'contact_name' => $shippingForm->receiver_name,
@@ -32,9 +48,9 @@ class AdditionalFeeServiceController extends BasePaymentController
             'phone' => $shippingForm->receiver_phone,
             'phone2' => '',
             'country' => $this->storeManager->store->country_code,
-            'province' => 1,
-            'district' => 7,
-            'zipcode' => '',
+            'province' => $mapping['province'],
+            'district' => $mapping['district'],
+            'zipcode' => $shippingForm->receiver_post_code,
             'tax_id' => '',
         ];
         $shipment = [
@@ -48,10 +64,10 @@ class AdditionalFeeServiceController extends BasePaymentController
         $chargeable_weight = 0;
         foreach ($payment->getOrders() as $order) {
             $parcel = [];
-            $parcel['weight'] = $order->total_weight_temporary;
-            $chargeable_weight += (int)$order->total_weight_temporary * 1000;
-            $parcel['amount'] = $order->total_amount_local;
-            $parcel['description'] = "order of seller {$order->seller->seller_name}";
+            $parcel['weight'] = WeshopHelper::roundNumber((int)$order->total_weight_temporary * 1000);
+            $chargeable_weight += WeshopHelper::roundNumber((int)$order->total_weight_temporary * 1000);
+            $parcel['amount'] = WeshopHelper::roundNumber($order->total_amount_local);
+            $parcel['description'] = "order of seller `{$order->seller->seller_name}`";
             $its = [];
             foreach ($order->products as $product) {
                 $its[] = [
@@ -60,9 +76,9 @@ class AdditionalFeeServiceController extends BasePaymentController
                     'origin_country' => '',
                     'name' => $product->product_name,
                     'desciption' => '',
-                    'weight' => $product->total_weight_temporary * 1000,
-                    'amount' => $product->total_price_amount_local,
-                    'customs_value' => $product->total_price_amount_local,
+                    'weight' => WeshopHelper::roundNumber((int)$order->total_weight_temporary * 1000),
+                    'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
+                    'customs_value' => WeshopHelper::roundNumber($product->total_price_amount_local),
                     'quantity' => $product->quantity_customer,
                 ];
             }
@@ -73,22 +89,22 @@ class AdditionalFeeServiceController extends BasePaymentController
         $shipment['chargeable_weight'] = $chargeable_weight;
         $config = [
             'preview' => 'Y',
-            'return_mode' => '0',
+            'return_mode' => 0,
             'insurance' => 'N',
-            'document' => '0',
-            'currency' => 'VND',
+            'document' => 0,
+            'currency' => $this->storeManager->store->currency,
             'unit_metric' => 'metric',
             'sort_mode' => 'best_rating',
             'auto_approve' => 'Y',
-            'create_by' => '0',
+            'create_by' => 0,
             'create_from' => 'create_order_netsale',
             'order_type' => 'dropship',
             'check_stock' => 'N',
         ];
         $params = [
-            'from' => $from,
-            'to' => $to,
-            'shipment' => $shipment,
+            'ship_from' => $from,
+            'ship_to' => $to,
+            'shipments' => $shipment,
             'config' => $config,
             'payment' => [
                 'cod_amount' => 0,
@@ -102,7 +118,23 @@ class AdditionalFeeServiceController extends BasePaymentController
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info($params, "total calculator time : $time s");
         $calculator = new InternationalShippingCalculator();
-        $response =  $calculator->CalculateFee($params, 23, 'VN');
-        return $this->response($response[0],'', $response[1]);
+        $response = $calculator->CalculateFee($params, $userId, $this->storeManager->store->country_code);
+        list($success, $data) = $response;
+        if ($success) {
+            return $this->response(true, 'Calculator success', $data);
+        }
+        return $this->response(false, $data);
+    }
+
+    public function getPickUpWareHouse()
+    {
+        if (($user = $this->getUser()) !== null && $user->getPickupWarehouse() !== null) {
+            return $user->getPickupWarehouse();
+        }
+        if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) === null) {
+            return false;
+        }
+        $current = $params['default'];
+        return ArrayHelper::getValue($params, "warehouses.$current", false);
     }
 }

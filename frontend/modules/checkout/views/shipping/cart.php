@@ -77,7 +77,7 @@ $storeManager = Yii::$app->storeManager;
         <?php endforeach; ?>
 
     </div>
-    <ul class="order-summary">
+    <ul id="orderFee" class="order-summary">
         <li>
             <div class="left"><?= Yii::t('frontend', 'Order amount') ?>:</div>
             <div class="right">
@@ -90,7 +90,7 @@ $storeManager = Yii::$app->storeManager;
             <div class="left"><?= Yii::t('frontend', 'International Shipping') ?>:</div>
             <div class="right">
                 <span>
-                    <?php echo $storeManager->showMoney($payment->getPaymentAdditionalFees(false)['international_shipping_fee']['amount']); ?>
+                    <?php echo $storeManager->showMoney($payment->getAdditionalFees(false)['international_shipping_fee']); ?>
                 </span>
             </div>
         </li>
@@ -98,7 +98,7 @@ $storeManager = Yii::$app->storeManager;
             <div class="left"><?= Yii::t('frontend', 'Purchase fee') ?>:</div>
             <div class="right">
                 <span>
-                    <?php echo $storeManager->showMoney($payment->getPaymentAdditionalFees(false)['purchase_fee']['amount']); ?>
+                    <?php echo $storeManager->showMoney($payment->getAdditionalFees(false)['purchase_fee']); ?>
                 </span>
             </div>
         </li>

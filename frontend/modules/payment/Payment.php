@@ -101,8 +101,13 @@ class Payment extends Model
     public $installment_month;
     public $instalment_type;
 
-    public $courier_service; // mã hãng vận chuyển, mã code "VTP_EXP ...
-    public $courier_name; // Tên
+    public $acceptance_insurance = false;
+    public $insurance_fee = 0;
+
+    public $courier_sort_mode = 'best_rating';
+    public $service_code; // mã hãng vận chuyển, mã code "VTP_EXP ...
+    public $courier_name;
+    public $courier_logo; // Tên
     public $courier_fee; // Phí vận chuyển
     public $courier_delivery_time; // Thời gian dự kiến
     public $courier_detail = [];
@@ -202,20 +207,25 @@ class Payment extends Model
      * @param bool $refresh
      * @return array|mixed
      */
-    public function getPaymentAdditionalFees($refresh = true)
+    public function getAdditionalFees($refresh = false)
     {
-        foreach (['international_shipping_fee', 'purchase_fee'] as $name) {
-            $this->_additionalFees[$name] = [
-                'amount' => 0,
-                'orders' => [],
-            ];
+        if (empty($this->_additionalFees) || $refresh) {
+            $this->_additionalFees = [];
+            $this->_additionalFees['international_shipping_fee'] = 0;
             foreach ($this->getOrders() as $idx => $order) {
-                $amount = $order->getAdditionalFees()->getTotalAdditionalFees($name)[1];
-                $this->_additionalFees[$name]['amount'] += $amount;
-                $this->_additionalFees[$name]['orders'][$order->ordercode] = $amount;
+                foreach ($order->getAdditionalFees()->keys() as $key) {
+                    if (!isset($this->_additionalFees[$key])) {
+                        $this->_additionalFees[$key] = 0;
+                    }
+                    $value = $this->_additionalFees[$key];
+                    $value += $order->getAdditionalFees()->getTotalAdditionalFees($key)[1];
+                    $this->_additionalFees[$key] = $value;
+                }
+            }
+            if ($this->courier_fee !== null) {
+                $this->_additionalFees['international_shipping_fee'] = $this->courier_fee;
             }
         }
-
         return $this->_additionalFees;
     }
 
@@ -350,8 +360,8 @@ class Payment extends Model
     {
         if ($this->_totalAmount === null) {
             $this->_totalAmount = $this->total_order_amount;
-            foreach ($this->getPaymentAdditionalFees() as $key => $value) {
-                $this->_totalAmount += $value['amount'];
+            foreach ($this->getAdditionalFees() as $key => $value) {
+                $this->_totalAmount += $value;
             }
         }
         return $this->_totalAmount;
@@ -642,18 +652,23 @@ class Payment extends Model
             'installment_method' => $this->installment_method,
             'installment_month' => $this->installment_month,
             'instalment_type' => $this->instalment_type,
-            'courier_service' => $this->courier_service,
+            'acceptance_insurance' => $this->acceptance_insurance,
+            'insurance_fee' => $this->insurance_fee,
+            'courier_sort_mode' => $this->courier_sort_mode,
+            'service_code' => $this->service_code,
             'courier_name' => $this->courier_name,
+            'courier_logo' => $this->courier_logo,
             'courier_fee' => $this->courier_fee,
             'courier_delivery_time' => $this->courier_delivery_time,
             'courier_detail' => $this->courier_detail,
+
             'ga' => $this->ga,
             'otp_code' => $this->otp_code,
             'otp_verify_method' => $this->otp_verify_method,
             'shipment_options_status' => $this->shipment_options_status,
             'transaction_code' => $this->transaction_code,
             'transaction_fee' => $this->transaction_fee,
-            'additionalFees' => $this->getPaymentAdditionalFees()
+            'additionalFees' => $this->getAdditionalFees()
         ];
     }
 

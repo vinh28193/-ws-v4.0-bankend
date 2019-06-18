@@ -380,6 +380,12 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         return $this->id . 'WS' . $this->email;
     }
 
+    /**
+     * @return Warehouse|null
+     */
+    public function getPickupWarehouse(){
+        return null;
+    }
 
     /**
      * @return null

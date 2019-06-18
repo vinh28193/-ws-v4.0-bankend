@@ -100,5 +100,28 @@ return [
                 'callbackUrl' => '',
             ]
         ]
+    ],
+    'pickupUSWHGlobal' => [
+        'default' => 'sandbox',
+        'warehouses' => [
+            'sandbox' => [
+                'ref_user_id' => 23,
+                'ref_pickup_id' => 35549,
+                'email' => '',
+                'name' => 'BMUS_NY',
+                'description' => 'Boxme US',
+                'address' => 'US · Newyork, United State'
+
+            ],
+            'weshoptracking' => [
+                'ref_user_id' => 377,
+                'ref_pickup_id' => 35549,
+                'email' => 'weshoptracking@gmail.com',
+                'name' => 'BMUS_NY',
+                'description' => 'Boxme US',
+                'address' => 'US · Newyork, United State'
+            ]
+        ]
+
     ]
 ];
