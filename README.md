@@ -776,6 +776,15 @@ https://developers.google.com/protocol-buffers/docs/reference/php-generated
 ### protoc --proto_path=boxme --php_out=build/gen accountingboxme.proto
 #-------------------------
 https://github.com/protocolbuffers/protobuf/tree/master/php 
+
+## ------------------ for windown -------------
+src: https://github.com/protocolbuffers/protobuf/releases
+64: https://github.com/protocolbuffers/protobuf/releases/download/v3.8.0/protoc-3.8.0-win64.zip
+32: https://github.com/protocolbuffers/protobuf/releases/download/v3.8.0/protoc-3.8.0-win32.zip
+
+=> download and copy => C:\protoc
+=> set env path => C:\protoc\bin
+
 /*
 protoc --php_out=boxme proto/accounting.proto
 protoc --php_out=common\grpc\boxme proto/accounting.proto

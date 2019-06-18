@@ -16,6 +16,7 @@ class UserBackendAsset extends AssetBundle
     public $css = [
         'css/style.css',
         'css/style-new.css',
+        'css/style-new1.css',
         'css/slick.css',
         'owlcarousel/owl.carousel.min.css',
         'owlcarousel/owl.theme.default.min.css',

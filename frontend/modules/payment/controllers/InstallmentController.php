@@ -40,14 +40,14 @@ class InstallmentController extends BasePaymentController
     }
 
     /**
-     * @param $payment
+     * @param $payment Payment
      * @return array
      */
     private function getAlapayCalculator($payment)
     {
         $alepay = new AlepayClient();
         $storeManager = $this->storeManager;
-        $rs = $alepay->getInstallmentInfo($payment->total_amount_display, 'VND');
+        $rs = $alepay->getInstallmentInfo($payment->getTotalAmountDisplay(), 'VND');
         if ($rs['success']) {
             $data = Json::decode($rs['data']);
             $banks = [];

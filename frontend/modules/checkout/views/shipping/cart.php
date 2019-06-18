@@ -59,7 +59,7 @@ $storeManager = Yii::$app->storeManager;
                                     <i class="la la-star"></i>
                                     <i class="la la-star"></i>
                                     <i class="la la-star-half-o"></i>
-                <i class="la la-star-o"></i>
+                                    <i class="la la-star-o"></i>
                                 </div>
                             </div>
                             <div class="right">
@@ -124,7 +124,7 @@ $storeManager = Yii::$app->storeManager;
         <li id="finalPrice">
             <div class="left"><?= Yii::t('frontend', 'Payment amount') ?>:</div>
             <div class="right">
-                <span><?= $storeManager->showMoney($payment->total_amount_display); ?></span></div>
+                <span><?= $storeManager->showMoney($payment->getTotalAmountDisplay()); ?></span></div>
         </li>
     </ul>
 </div>
