@@ -12,7 +12,11 @@ use yii\helpers\Html;
 
 UserBackendAsset::register($this);
 $js = <<<JS
-    
+    // $('#watched').on('click',function(event) {
+    //     event.preventDefault();
+    //     var uri = $(this).data('url');
+    //     load(uri);
+    // });
 JS;
 $this->registerJs($js);
 
@@ -75,16 +79,23 @@ $userID = Yii::$app->user->getId();
                     <div class="dropdown-menu notification overflow-auto" aria-labelledby="navbarDropdown" style="width: 20%; right: 0; height: 450px; top: 51px">
                         <div class="card bs-example">
                             <ul class="list-unstyled">
-                                <?php foreach ($notifi as $value) { ?>
+                                <li class="media bg-info" style="padding: 10px; width: 100%">
+                                    <h5 class="text-white">Thông báo</h5>
+                                </li>
+                                <?php if ($countNotifi > 0) { foreach ($notifi as $value) { ?>
                                     <li class="media" style="<?php if ($value->watched == 1) { ?> background-color: white <?php } elseif ($value->watched == 0) {?> background-color: gainsboro <?php } ?>; padding: 10px; width: 100%">
                                             <img class="mr-3" width="50px" src="https://uinames.com/api/photos/male/12.jpg" alt="Generic placeholder image">
-                                        <a href="<?= $value->click_action ?>" style="padding: 0; height: auto">
+                                        <a href="<?= $value->click_action ?>" id="watched" style="padding: 0; height: auto">
                                             <div class="media-body">
                                                 <h5 class="mt-0 mb-1"><?= $value->title ?></h5>
                                                 <?= $value->body ?> <br>
                                                 <small><?= Yii::$app->formatter->asDatetime($value->created_at) ?></small>
                                             </div>
                                         </a>
+                                    </li>
+                                <?php }} else { ?>
+                                    <li class="media" style="padding: 10px; width: 100%">
+                                        <h5 class="text-center text-danger">No Notification !</h5>
                                     </li>
                                 <?php } ?>
                             </ul>
