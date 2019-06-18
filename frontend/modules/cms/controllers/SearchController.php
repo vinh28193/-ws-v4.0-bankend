@@ -5,6 +5,12 @@ namespace frontend\modules\cms\controllers;
 
 
 use common\components\Cache;
+use common\components\UrlComponent;
+use common\helpers\WeshopHelper;
+use common\lib\AmazonProductGate;
+use common\lib\EbayProductGate;
+use common\models\amazon\AmazonSearchForm;
+use common\models\enu\StoreConfig;
 use common\products\forms\ProductSearchForm;
 use frontend\controllers\CmsController;
 use Yii;
@@ -12,7 +18,7 @@ use linslin\yii2\curl;
 
 class SearchController extends CmsController
 {
-
+    const URL_NOT_FOUND = '/404.html';
     public function actionIndex(){
         $this->isShow = false;
         $keyword = Yii::$app->request->get('keyword');
@@ -66,5 +72,15 @@ class SearchController extends CmsController
         }
         Yii::$app->response->format = 'json';
         return ['success' => true, 'content' => $content];
+    }
+    public function actionSearchDetail(){
+        Yii::$app->response->format = 'json';
+        if($this->request->isAjax){
+            $sku = Yii::$app->request->post('sku');
+            $type = Yii::$app->request->post('type','ebay');
+            if($sku && $type)
+                return ['success' => true, 'Success' => 'Faild', 'url' => WeshopHelper::generateUrlDetail($type,'item-search',$sku)];
+        }
+        return ['success' => false, 'message' => 'Faild'];
     }
 }
