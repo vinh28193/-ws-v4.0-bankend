@@ -1,9 +1,8 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 use common\components\cart\CartSelection;
-use frontend\widgets\cart\CartWidgetHepper;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /* @var yii\web\View $this */
 /* @var array $items */
@@ -87,7 +86,7 @@ $totalAmount = 0;
                                     <i class="la la-star"></i>
                                     <i class="la la-star"></i>
                                     <i class="la la-star-half-o"></i>
-                <i class="la la-star-o"></i>
+                                    <i class="la la-star-o"></i>
                                 </div>
                                 <ol>
                                     <?php

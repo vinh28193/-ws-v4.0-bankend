@@ -60,6 +60,9 @@ JS;
 $this->registerJs($js);
 
 ?>
+<datalist id="searchAutoComplete">
+
+</datalist>
 <div class="navbar-ws mobile-hide style-header" id="header" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
         <div class="logo">
@@ -71,7 +74,7 @@ $this->registerJs($js);
         <div class="search-box">
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" name="searchBoxInput" id="searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
+                    <input type="text" list="searchAutoComplete" name="searchBoxInput" id="searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
                            placeholder="Nhập tên sản phẩm hoặc đường link sản phẩm amzon.com, ebay.com tại đây">
                     <span class="input-group-btn">
                 <button type="button" id="searchBoxButton" class="btn btn-default">
@@ -105,7 +108,7 @@ $this->registerJs($js);
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mb-2">
-                                <span class="color-account">Bạn đăng nhập nhanh bằng tài khoản của</span>
+                                <span class="color-account"><?= Yii::t('frontend','Bạn đăng nhập nhanh bằng tài khoản của') ?></span>
                             </div>
                             <div class="col-md-6 pr-1">
                                 <button class="btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook">
@@ -122,11 +125,11 @@ $this->registerJs($js);
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-12 mb-2">
-                                <span class="color-account">Hoặc đăng nhập băng email</span>
+                                <span class="color-account"><?= Yii::t('frontend','Hoặc đăng nhập băng email') ?></span>
                             </div>
                             <div class="col-md-12">
                                 <div class="social-button">
-                                    <a data-action="clickToLoad" data-href="/login.html" class="btn btn-info">Đăng nhập tài khoản email</a>
+                                    <a data-action="clickToLoad" data-href="/login.html" class="btn btn-info"><?= Yii::t('frontend','Đăng nhập tài khoản email') ?></a>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +139,7 @@ $this->registerJs($js);
                                 <span class="color-account">Bạn chưa có tài khoản ?</span>
                             </div>
                             <div class="col-md-12 social-button">
-                                <a data-action="clickToLoad" data-href="/signup.html" class="btn btn-amazon">Bạn đăng kí ngay tại đây</a>
+                                <a data-action="clickToLoad" data-href="/signup.html" class="btn btn-amazon"><?= Yii::t('frontend','Bạn đăng kí ngay tại đây') ?></a>
                             </div>
                         </div>
                     </div>
@@ -146,22 +149,22 @@ $this->registerJs($js);
                     <div class="card-body">
                        <div class="row" id="list-menu-account">
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/order">Đơn hàng của tôi</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/order"><?= Yii::t('frontend','Đơn hàng của tôi')?></a>
                            </div>
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/promotion-user">Mã giảm giá của tôi</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/promotion-user"><?= Yii::t('frontend','Mã giảm giá của tôi')?></a>
                            </div>
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="#">Khiếu nại & hoàn trả</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="#"><?= Yii::t('frontend','Khiếu nại & hoàn trả')?></a>
                            </div>
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop/wallet.html">Tài khoản ví(xu)</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop/wallet.html"><?= Yii::t('frontend','Tài khoản ví')?></a>
                            </div>
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop.html">Cấu hình tài khoản</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop.html"><?= Yii::t('frontend','Cấu hình tài khoản')?></a>
                            </div>
                            <div class="col-md-12 mb-2 social-button">
-                               <a class="btn btn-info p-2" href="javascript:void (0);" data-action="clickToLoad" data-href="/logout.html">Đăng xuất tài khoản</a>
+                               <a class="btn btn-info p-2" href="javascript:void (0);" data-action="clickToLoad" data-href="/logout.html"><?= Yii::t('frontend','Đăng xuất tài khoản')?></a>
                            </div>
                        </div>
                     </div>
@@ -176,7 +179,7 @@ $this->registerJs($js);
                 <a id="drop1" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
                    aria-expanded="false" style="display: inline-flex;">
                     <span style="padding-top: 3px;display: block;" class=""><i class="la la-bars"></i></span>
-                    <span style="display: block;">Danh mục sản phẩm</span>
+                    <span style="display: block;"><?= Yii::t('frontend','Danh mục sản phẩm')?></span>
                     <span style="display: block;"><i class="la la-caret-down"></i></span>
                 </a>
                 <ul id="menu1" class="dropdown-menu category_list style-u" role="menu" aria-labelledby="drop1"
@@ -206,24 +209,24 @@ $this->registerJs($js);
                 </ul>
             </li>
             <li>
-                <a href="javascript:void(0);">Daily deal</a>
+                <a href="javascript:void(0);"><?= Yii::t('frontend','Daily deal')?></a>
             </li>
             <li>
-                <a href="javascript:void(0);">Thương hiệu nổi tiếng</a>
+                <a href="javascript:void(0);"><?= Yii::t('frontend','Thương hiệu nổi tiếng')?></a>
             </li>
             <li>
-                <a href="javascript:void(0);">Đồng hồ</a>
+                <a href="javascript:void(0);"><?= Yii::t('frontend','Đồng hồ')?></a>
             </li>
             <li>
-                <a href="javascript:void(0);">Nước hoa</a>
+                <a href="javascript:void(0);"><?= Yii::t('frontend','Nước hoa')?></a>
             </li>
             <li>
-                <a href="javascript:void(0);">Nước hoa</a>
+                <a href="javascript:void(0);"><?= Yii::t('frontend','Nước hoa')?></a>
             </li>
             <li>
                 <a href="javascript:void(0);">
                     <i class="la la-hand-o-right"></i>
-                    Dùng thử dịch vụ Prime
+                    <?= Yii::t('frontend','Dùng thử dịch vụ Prime')?>
                 </a>
             </li>
         </ul>
@@ -236,7 +239,7 @@ $this->registerJs($js);
         <ul class="action">
             <li><a href="javascript:void(0);" class="auth-user">
                     <i class="la la-user"></i>
-                    Tài khoản
+                    <?= Yii::t('frontend','Tài khoản')?>
                 </a>
             </li>
             <li>
@@ -250,7 +253,7 @@ $this->registerJs($js);
     <div class="mb-menu">
         <div class="title-mb-menu">
             <i class="la la-close"></i>
-            <span>Danh mục sản phẩm</span>
+            <span><?= Yii::t('frontend','Danh mục sản phẩm')?></span>
         </div>
         <div class="content-cate-mb">
             <ul class="mb-menu-cate">
@@ -295,7 +298,7 @@ $this->registerJs($js);
         </div>
         <div class="content-modal-auth-mb">
             <div class="row">
-                <div class="col-12"><span><?= Yii::t('frontend', 'Login with') ?></span></div>
+                <div class="col-12"><span><?= Yii::t('frontend', 'Đăng nhập với') ?></span></div>
                 <div class="col-6">
                     <button class="btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook">Facebook</button>
                 </div>
@@ -319,7 +322,7 @@ $this->registerJs($js);
     <div class="search-box-mobile">
         <div class="form-group">
             <div class="input-group">
-                <input type="text" name="searchBoxInput" id="searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
+                <input type="text" list="searchAutoComplete" name="searchBoxInput" id="searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
                        placeholder="Nhập từ khoá hoặc link sản phẩm">
                 <span class="input-group-btn">
                 <button type="button" id="searchBoxButton" class="btn btn-default">
@@ -370,7 +373,7 @@ $this->registerJs($js);
                         <a href="javascript:void(0)">Xóa hết</a>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col-3 m-o p-0">
                         <div class="thumb" style="height: auto;">
                             <img src="https://i.ebayimg.com/00/s/MTEyMFgxNTAw/z/oYAAAOSwgPVcrnUX/$_1.JPG" alt="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16" width="100%" title="MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16">
@@ -379,34 +382,39 @@ $this->registerJs($js);
                     <div class="col-9">
                         <div class="info">
                             <div class="left">
-                                <a href="http://weshop-v4.front-end-ws.local.vn/ebay/item/msi-radeon-rx-460-directx-12-rx-460-2g-oc-2gb-128-bit-gddr5-pci-express-30-x16-352639604796.html" target="_blank" class="name">
+                                <a href="http://weshop-v4.front-end-ws.local.vn/ebay/item/msi-radeon-rx-460-directx-12-rx-460-2g-oc-2gb-128-bit-gddr5-pci-express-30-x16-352639604796.html" target="_blank" class="name style-aa">
                                     MSI Radeon RX 460 DirectX 12 RX 460 2G OC 2GB 128-Bit GDDR5 PCI Express 3.0 x16</a>
                             </div>
                             <div class="price price-option text-danger">
                                 <strong>0VND</strong>
                             </div>
                             <div class="right mt-2 stylll">
-                                <div class="qty form-inline quantity-option">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-outline-secondary btn-sm button-quantity-down style-add-quantyti" data-pjax="1" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" data-update="#5d0889d5317e410bfc007089" data-operator="down" type="button">-
-                                            </button>
-                                        </div>
-                                        <input type="text" name="cartItemQuantity" class="form-control style-quantity form-control-sm" value="2" data-min="1" data-type="shopping" data-max="0" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary btn-sm button-quantity-up style-add-quantyti" data-pjax="1" data-parent="5d0889d5317e410bfc007089" data-type="shopping" data-id="352639604796" data-sku="604103" data-operator="up" type="button">+
-                                            </button>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="qty form-inline quantity-option">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-outline-secondary btn-sm button-quantity-down style-add-quantyti" data-pjax="1" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" data-update="#5d0889d5317e410bfc007089" data-operator="down" type="button">-
+                                                    </button>
+                                                </div>
+                                                <input type="text" name="cartItemQuantity" class="form-control style-quantity form-control-sm" value="2" data-min="1" data-type="shopping" data-max="0" data-parent="5d0889d5317e410bfc007089" style="height: 30px; border-left: 1px solid #ced4da; border-right: 1px solid #ced4da" data-id="352639604796" data-sku="604103">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary btn-sm button-quantity-up style-add-quantyti" data-pjax="1" data-parent="5d0889d5317e410bfc007089" data-type="shopping" data-id="352639604796" data-sku="604103" data-operator="up" type="button">+
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="col-6 text-right pt-1">
+                                        <a href="#" class="del delete-item" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" <i=""> Xóa</a>
+                                    </div>
                                 </div>
-                                <a href="#" class="del delete-item" data-type="shopping" data-parent="5d0889d5317e410bfc007089" data-id="352639604796" data-sku="604103" <i=""> Xóa</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <button class="btn style-btn mt-2"><span class="la la-shopping-cart" style="font-size: 1.7em;"></span>XEM GIỎ HÀNG</button>
-                    <button class="btn style-btn1 mt-2"><span class="la la-shopping-cart" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA HÀNG</button>
+                    <button class="btn style-btn1 mt-2"><span class="la la-shopping-cart float-left" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA HÀNG</button>
                 </div>
             </div>
         </div>

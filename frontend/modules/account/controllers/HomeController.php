@@ -4,6 +4,7 @@ namespace frontend\modules\account\controllers;
 
 use Accouting\CreateMerchantByIdRequest;
 use common\components\cart\CartManager;
+use common\modelsMongo\ListNotification;
 use frontend\modules\payment\providers\wallet\WalletService;
 use Yii;
 use common\models\Order;
@@ -309,6 +310,17 @@ class HomeController extends BaseAccountController
 
         return $this->redirect(['index']);
     }
+
+//    public function actionWatchedNotification($code) {
+//        $id = Yii::$app->user->getId();
+//        $model = ListNotification::find()
+//            ->where(['AND',
+//                ['user_id' => $id],
+//                ['_id' => $code]
+//        ])->one();
+//        $model->watched = 1;
+//        $model->save();
+//    }
     /**
      * Finds the Order model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

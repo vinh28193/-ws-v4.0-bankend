@@ -55,7 +55,7 @@ $this->registerJs($js);
         <div class="statistic-item">
             <span class="icon-box icon4"><i class="icon"></i></span>
             <div class="name">Khiếu nại</div>
-            <div class="info">+ 50K</div>
+            <div class="info">0</div>
             <a href="#">Chi tiết >></a>
         </div>
     </div>

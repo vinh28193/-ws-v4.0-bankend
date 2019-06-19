@@ -54,7 +54,8 @@ class ShippingController extends CheckoutController
             'price' => 50.00,
             'quantity' => 1,
             'coupon_code' => 'TEST 2',
-            'position' => 2
+            'position' => 2,
+            'type'=> 'eBay'
         ];
 
         $request->addProduct($productData1);
@@ -114,6 +115,8 @@ class ShippingController extends CheckoutController
         $shippingForm = new ShippingForm();
         $shippingForm->setDefaultValues();
         $provinces = SystemStateProvince::select2Data(1);
+
+//        $this->gaCheckout();
 
         return $this->render('index', [
             'activeStep' => $activeStep,

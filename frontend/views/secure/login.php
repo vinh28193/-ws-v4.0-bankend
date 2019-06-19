@@ -75,4 +75,19 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
             <?php echo Html::a('Đăng ký ngay', ['/secure/register']); ?>
         </p>
     </div>
+    <div class="other-login">
+        <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
+        <div class="social-button-ws">
+            <input value="+1" id="country_code" />
+            <input placeholder="phone number" id="phone_number"/>
+            <button onclick="smsLogin();">Login via SMS</button>
+            <div>OR</div>
+            <input placeholder="email" id="email"/>
+            <button onclick="emailLogin();">Login via Email</button>
+        </div>
+
+        <p>Quý khách chưa có tài khoản
+            <?php echo Html::a('Đăng ký ngay', ['/secure/register']); ?>
+        </p>
+    </div>
 
