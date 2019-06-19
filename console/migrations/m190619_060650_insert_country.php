@@ -12,6 +12,7 @@ class m190619_060650_insert_country extends Migration
      */
     public function safeUp()
     {
+        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
         $this->delete('{{%system_country}}');
         $data = \common\helpers\ExcelHelper::read(\Yii::getAlias('@console').'/location/country.xls');
         if(is_array($data)){
@@ -42,6 +43,7 @@ class m190619_060650_insert_country extends Migration
                 }
             }
         }
+        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
     }
 
     /**

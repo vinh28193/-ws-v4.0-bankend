@@ -12,6 +12,7 @@ class m190619_071211_insert_zipcode extends Migration
      */
     public function safeUp()
     {
+        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
         $this->delete('{{%system_zipcode}}');
         $data = \common\helpers\ExcelHelper::read(\Yii::getAlias('@console').'/location/zipcode.xls');
         if(is_array($data)){
@@ -48,6 +49,7 @@ class m190619_071211_insert_zipcode extends Migration
                 }
             }
         }
+        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
     }
 
     /**

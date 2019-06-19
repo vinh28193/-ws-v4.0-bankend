@@ -12,6 +12,7 @@ class m190619_064405_insert_provine extends Migration
      */
     public function safeUp()
     {
+        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
         $this->delete('{{%system_state_province}}');
         $data = \common\helpers\ExcelHelper::read(\Yii::getAlias('@console').'/location/province.xls');
         if(is_array($data)){
@@ -48,6 +49,7 @@ class m190619_064405_insert_provine extends Migration
                 }
             }
         }
+        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
     }
 
     /**

@@ -12,6 +12,7 @@ class m190619_070537_insert_district extends Migration
      */
     public function safeUp()
     {
+        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
         $this->delete('{{%system_district}}');
         $data = \common\helpers\ExcelHelper::read(\Yii::getAlias('@console').'/location/district.xls');
         if(is_array($data)){
@@ -50,6 +51,7 @@ class m190619_070537_insert_district extends Migration
                 }
             }
         }
+        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
     }
     /**
      * {@inheritdoc}
