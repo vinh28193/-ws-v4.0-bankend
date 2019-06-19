@@ -194,7 +194,7 @@ JS;
             <div class="" id="outOfStock">
                 <h3 style="color: red"><?= Yii::t('frontend', 'Out of Time') ?></h3>
             </div>
-        <?php }else if ($item->getLocalizeTotalPrice() > 0 && !$sellerCurrent){?>
+        <?php }else if ($item->getLocalizeTotalPrice() > 0 && $sellerCurrent){?>
             <div class="btn-group-detail">
                 <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> Đặt mua ngay</button>
                 <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> Mua trả góp</button>
