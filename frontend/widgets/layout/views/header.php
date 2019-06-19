@@ -221,9 +221,6 @@ $this->registerJs($js);
                 <a href="javascript:void(0);"><?= Yii::t('frontend','Nước hoa')?></a>
             </li>
             <li>
-                <a href="javascript:void(0);"><?= Yii::t('frontend','Nước hoa')?></a>
-            </li>
-            <li>
                 <a href="javascript:void(0);">
                     <i class="la la-hand-o-right"></i>
                     <?= Yii::t('frontend','Dùng thử dịch vụ Prime')?>
