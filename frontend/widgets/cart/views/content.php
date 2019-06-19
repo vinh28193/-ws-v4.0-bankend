@@ -7,30 +7,22 @@ use yii\helpers\Html;
 /** @var $this yii\web\View */
 /** @var $items array */
 $storeManager = Yii::$app->storeManager;
+$totalAmount = 0;
 ?>
 
 <div class="cart-box" style="border: none">
+    <div class="row m-0" style="width: 100%">
+        <div class="col-8"><strong>Sản phẩm</strong></div>
+        <div class="col-2 text-center"><strong>Số Lượng</strong></div>
+        <div class="col-2 text-right pr-1 text-right"><strong>Giá Tiền</strong></div>
+    </div>
+
     <?php foreach ($items as $item):
             $products = ArrayHelper::getValue($item, 'products', []);
 
             ?>
-            <ul class="cart-item" data-key="<?= $item['key'] ?>" data-type="shopping"
-                style="border: 1px solid #e3e3e3;margin-bottom:10px">
-                <li>
-                    <?php $seller = ArrayHelper::getValue($item, 'seller', []); ?>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox"
-                               name="cartOrder" <?= $item['selected'] ? 'checked' : ''; ?>
-                               value="<?= $item['key']; ?>" id="cartOrder<?= $item['key']; ?>">
-                        <label class="form-check-label" for="cartOrder<?= $item['key']; ?>">
-                            Bán <?= isset($seller['portal']) ? ('trên ' . Html::tag('span', strtolower($seller['portal']), ['style' => 'font-weight: 500;color: #393939'])) : ''; ?>
-                            bởi:
-                            <a style="color: #2b96b6;"
-                               href="<?= isset($seller['seller_link_store']) ? $seller['seller_link_store'] : '#' ?>"><?= isset($seller['seller_name']) ? $seller['seller_name'] : 'Unknown'; ?></a>
-                        </label>
-                    </div>
-                    <span style="margin-left: 0.5rem" class="orderSummary">(<?= count($products); ?> sản phẩm)</span>
-                </li>
+            <div class="cart-item" data-key="<?= $item['key'] ?>" data-type="shopping"
+                style="border-bottom: 1px solid #eeeeee">
                 <?php foreach ($products as $product): ?>
                     <?php
                     $availableQuantity = $product['available_quantity'];
@@ -46,93 +38,87 @@ $storeManager = Yii::$app->storeManager;
                     }
                     $availableQuantity = !($availableQuantity === null || (int)$availableQuantity < 0) ? $availableQuantity : 50;
                     $soldQuantity = !($soldQuantity === null || (int)$soldQuantity < 0) ? $soldQuantity : 0;
+                    $totalAmount += (int)$product['total_final_amount'];
                     ?>
-                    <li>
-                        <div class="thumb" style="height: auto;">
+                    <div class="row m-0 pb-2">
+                        <div class="col-1 pb-2" style="height: auto;">
                             <img src="<?= $product['link_img']; ?>"
-                                 alt="<?= $product['product_name']; ?>" title="<?= $product['product_name']; ?>">
+                                 alt="<?= $product['product_name']; ?>" width="100%" title="<?= $product['product_name']; ?>">
                         </div>
-                        <div class="info">
-                            <div class="left">
-                                <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
-                                    <?= $product['product_name']; ?></a>
-                                <div class="rate" style="text-align: left">
-                                    <i class="la la-star"></i>
-                                    <i class="la la-star"></i>
-                                    <i class="la la-star"></i>
-                                    <i class="la la-star-half-o"></i>
-                                    <i class="la la-star-o"></i>
-                                </div>
-                                <ol>
-                                    <?php
-                                    if ($variations !== null && isset($variations['options_group'])) {
-                                        $var = [];
-                                        foreach ($variations['options_group'] as $options) {
-                                            $var[] = "{$options['name']} : {$options['value']}";
-                                        }
-                                        echo '<li> Thuộc tính: ' . implode(' và ', $var) . '</li>';
-                                    }
-                                    ?>
-                                    <li>
-                                        Tình trạng:
-                                        <span style="margin-left: 0.25rem;"
-                                              class="condition-option"><?= isset($product['condition']) && $product['condition'] !== null ? $product['condition'] : ''; ?></span>
-                                    </li>
-                                    <li>
-                                        Tạm tính:
-                                        <span style="margin-left: 0.25rem;"
-                                              class="weight-option"><?= $product['weight']; ?></span> kg
-                                    </li>
-                                </ol>
-                            </div>
-                            <div class="right">
-                                <div class="qty form-inline quantity-option">
-                                    <label>Số lượng:</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-outline-secondary button-quantity-down"
-                                                    data-pjax="1"
-                                                    data-id="<?= $product['parent_sku'] ?>"
-                                                    data-sku="<?= $product['sku']; ?>"
-                                                    data-update="#<?= $item['key']; ?>"
-                                                    data-operator="down"
-                                                    type="button">-
-                                            </button>
-                                        </div>
-                                        <input type="text"
-                                               name="cartItemQuantity" class="form-control"
-                                               value="<?= $product['quantity']; ?>"
-                                               data-min="1"
-                                               data-max="<?= (int)(($max = $availableQuantity - $soldQuantity) <= 0 ? 0 : $max); ?>"
-                                               data-parent="<?= $item['key'] ?>"
-                                               data-id="<?= $product['parent_sku'] ?>"
-                                               data-sku="<?= $product['sku']; ?>"
-                                        >
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary button-quantity-up"
-                                                    data-pjax="1"
-                                                    data-parent="<?= $item['key'] ?>"
-                                                    data-id="<?= $product['parent_sku'] ?>"
-                                                    data-sku="<?= $product['sku']; ?>"
-                                                    data-operator="up"
-                                                    type="button">+
-                                            </button>
-                                        </div>
+                        <div class="col-7 pt-4">
+                            <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
+                                <strong class="style-name"><?= $product['product_name']; ?></strong>
+                            </a>
+                            <a href="#" class="del delete-item"
+                               data-parent="<?= $item['key'] ?>"
+                               data-id="<?= $product['parent_sku'] ?>"
+                               data-type="<?= $item['type'] ?>"
+                               data-sku="<?= $product['sku']; ?>"
+                            <i class="far fa-trash-alt"></i> Xóa</a>
+                        </div>
+                        <div class="col-2 pt-4 text-center">
+                            <div class="qty form-inline quantity-option" style="width: 107px; height: 31px; border-radius: 3px; border: 1px solid #cecece; background-color: #ffffff; margin: auto">
+                                <div class="input-group" style="margin: auto">
+                                    <div class="input-group-prepend">
+                                        <button class="btn button-quantity-down"
+                                                data-pjax="1"
+                                                data-id="<?= $product['parent_sku'] ?>"
+                                                data-sku="<?= $product['sku']; ?>"
+                                                data-type="<?= $item['type'] ?>"
+                                                data-parent="<?= $item['key'] ?>"
+                                                data-operator="down"
+                                                type="button"><i class="la la-minus up-down"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text"
+                                           name="cartItemQuantity" class="form-control text-center"
+                                           style="border: none; border-left: 1px solid #cecece; border-right: 1px solid #cecece"
+                                           value="<?= $product['quantity']; ?>"
+                                           data-min="1"
+                                           data-max="<?= (int)(($max = $availableQuantity - $soldQuantity) <= 0 ? 0 : $max); ?>"
+                                           data-parent="<?= $item['key'] ?>"
+                                           data-type="<?= $item['type'] ?>"
+                                           data-id="<?= $product['parent_sku'] ?>"
+                                           data-sku="<?= $product['sku']; ?>"
+                                    >
+                                    <div class="input-group-append">
+                                        <button class="btn button-quantity-up"
+                                                data-pjax="1"
+                                                data-parent="<?= $item['key'] ?>"
+                                                data-id="<?= $product['parent_sku'] ?>"
+                                                data-type="<?= $item['type'] ?>"
+                                                data-sku="<?= $product['sku']; ?>"
+                                                data-operator="up"
+                                                type="button"><i class="la la-plus up-down"></i>
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="price price-option">
-                                    <?= $storeManager->showMoney($product['total_final_amount']); ?>
-                                </div>
-                                <a href="#" class="del delete-item"
-                                   data-parent="<?= $item['key'] ?>"
-                                   data-id="<?= $product['parent_sku'] ?>"
-                                   data-sku="<?= $product['sku']; ?>"
-                                <i class="far fa-trash-alt"></i> Xóa</a>
                             </div>
                         </div>
-                    </li>
+                        <div class="col-2 pt-4 text-right pr-1">
+                            <div class="price price-option text-danger">
+                                <span style="font-weight: 600"><?= $storeManager->showMoney($product['total_final_amount']); ?></span>
+                            </div>
+                        </div>
+                    </div>
                 <?php endforeach; ?>
-            </ul>
+            </div>
         <?php endforeach; ?>
+    <div class="row mt-2">
+        <div class="col-12 text-right">
+            <strong style="font-weight: 600;">Tổng số tiền tạm tính</strong><br>
+            <span id="total" class="text-danger" style="font-size: 24px; font-weight: 500"><?= $storeManager->showMoney($totalAmount)?></span>
+        </div>
+    </div>
+    <div class="row text-right mb-5 mt-2">
+        <div class="col-12">
+            <button class="btn style-btn mt-2">
+                <span class="la la-credit-card float-left" style="font-size: 1.7em;"></span>MUA TRẢ GÓP
+            </button>
+            <button class="btn style-btn1 mt-2">
+                <span class="la la-shopping-cart float-left" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA
+            </button>
+        </div>
+    </div>
 </div>
 

@@ -12,11 +12,12 @@ use yii\helpers\Html;
 
 UserBackendAsset::register($this);
 $js = <<<JS
-    // $('#watched').on('click',function(event) {
-    //     event.preventDefault();
-    //     var uri = $(this).data('url');
-    //     load(uri);
-    // });
+    $('#watched').on('click',function(event) {
+        event.preventDefault();
+        var uri = $(this).data('url');
+        console.log(uri);
+        load(uri);
+    });
 JS;
 $this->registerJs($js);
 
@@ -85,7 +86,7 @@ $userID = Yii::$app->user->getId();
                                 <?php if ($countNotifi > 0) { foreach ($notifi as $value) { ?>
                                     <li class="media" style="<?php if ($value->watched == 1) { ?> background-color: white <?php } elseif ($value->watched == 0) {?> background-color: gainsboro <?php } ?>; padding: 10px; width: 100%">
                                             <img class="mr-3" width="50px" src="https://uinames.com/api/photos/male/12.jpg" alt="Generic placeholder image">
-                                        <a href="<?= $value->click_action ?>" id="watched" style="padding: 0; height: auto">
+                                        <a href="<?= '/my-weshop/order/' . $order->ordercode . '.html' ?>"><?= $order->ordercode ?>" id="watched" style="padding: 0; height: auto">
                                             <div class="media-body">
                                                 <h5 class="mt-0 mb-1"><?= $value->title ?></h5>
                                                 <?= $value->body ?> <br>
