@@ -22,11 +22,63 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://sdk.accountkit.com/vi_VN/sdk.js"></script>
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
 <body>
+<script>
+    // initialize Account Kit with CSRF protection
+    AccountKit_OnInteractive = function(){
+        AccountKit.init(
+            {
+                appId:"216590825760272",
+                state:"<?= Yii::$app->request->getCsrfToken() ?>",
+                version:"v1.1",
+                fbAppEventsEnabled:true,
+                redirect:"http://weshop.v4.beta.vn/secure/test-auth"
+            }
+        );
+    };
+
+    // login callback
+    function loginCallback(response) {
+        if (response.status === "PARTIALLY_AUTHENTICATED") {
+            var code = response.code;
+            var csrf = response.state;
+            // Send code to server to exchange for access token
+        }
+        else if (response.status === "NOT_AUTHENTICATED") {
+            // handle authentication failure
+        }
+        else if (response.status === "BAD_PARAMS") {
+            // handle bad parameters
+        }
+    }
+
+    // phone form submission handler
+    function smsLogin() {
+        var countryCode = document.getElementById("country_code").value;
+        var phoneNumber = document.getElementById("phone_number").value;
+        AccountKit.login(
+            'PHONE',
+            {countryCode: countryCode, phoneNumber: phoneNumber}, // will use default values if not specified
+            loginCallback
+        );
+    }
+
+
+    // email form submission handler
+    function emailLogin() {
+        var emailAddress = document.getElementById("email").value;
+        AccountKit.login(
+            'EMAIL',
+            {emailAddress: emailAddress},
+            loginCallback
+        );
+    }
+</script>
 <?php $this->beginBody() ?>
 
 <div class="wrapper">
