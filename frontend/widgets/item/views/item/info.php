@@ -84,6 +84,12 @@ $this->registerCss($css);
             </strong>
             <?php if ($item->start_price) { ?>
                 <b class="old-price"><?= $storeManager->showMoney($item->getLocalizeTotalStartPrice()) ?></b>
+                <!--<span class="save"> <?php
+                /* Yii::t('frontend', 'Save off: {percent}', [
+                        'percent' => $storeManager->showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice())
+                    ]); */
+                ?>
+                </span>-->
             <?php } // Start start_price ?>
         </div>
         <div class="description-shipping-detail">
