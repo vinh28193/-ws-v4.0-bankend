@@ -84,10 +84,6 @@ $this->registerCss($css);
             </strong>
             <?php if ($item->start_price) { ?>
                 <b class="old-price"><?= $storeManager->showMoney($item->getLocalizeTotalStartPrice()) ?></b>
-                <!--<span class="save"> <?/*= Yii::t('frontend', 'Save off: {percent}', [
-                        'percent' => $storeManager->showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice())
-                    ]); */?>
-                </span>-->
             <?php } // Start start_price ?>
         </div>
         <div class="description-shipping-detail">
@@ -163,6 +159,7 @@ $this->registerCss($css);
     $(document).ready(function () {
                     $("#outOfStock").css('display', 'block');
                     $("#quantityGroup").css('display', 'none');
+                    $("#btn-group-detail").css('display', 'none');
                     $("#quoteBtn").css('display', 'block');
                     $("#buyNowBtn").css('display', 'none');
                 });
@@ -193,11 +190,17 @@ JS;
         <div class="register-prime">
             Đăng ký dịch vụ Prime tiết kiệm tới 20% phí vận chuyển <a href="#">tại đây</a>
         </div>
-        <div class="btn-group-detail">
-            <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> Đặt mua ngay</button>
-            <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> Mua trả góp</button>
-            <button class="btn btn-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> Giỏ hàng</button>
-        </div>
+        <?php if($item->end_time !== null && $item->type === BaseProduct::TYPE_EBAY && $item->end_time < time()) {?>
+            <div class="" id="outOfStock">
+                <h3 style="color: red"><?= Yii::t('frontend', 'Out of Time') ?></h3>
+            </div>
+        <?php }else if ($item->getLocalizeTotalPrice() > 0 && !$sellerCurrent){?>
+            <div class="btn-group-detail">
+                <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> Đặt mua ngay</button>
+                <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> Mua trả góp</button>
+                <button class="btn btn-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> Giỏ hàng</button>
+            </div>
+        <?php }?>
         <div class="card-group-detail">
             <span><img src="/img/bank/icon-visa.jpg"></span>
             <span><img src="/img/bank/icon-master.jpg"></span>
