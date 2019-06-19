@@ -132,7 +132,7 @@ class PaymentService
     /**
      * @param Payment $payment
      */
-    public static function createOrderFormCart(Payment $payment)
+    public static function createOrders(Payment $payment)
     {
         $errors = [];
         $keys = $payment->carts;

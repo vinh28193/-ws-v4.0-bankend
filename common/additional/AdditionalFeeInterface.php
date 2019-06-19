@@ -6,16 +6,18 @@
  * Time: 10:19
  */
 
-namespace common\components;
+namespace common\additional;
 
 use common\models\User;
 use common\models\Category;
+use common\models\Warehouse;
 
 /**
  * interface để đảm bảo có thể tính toán giá cho bất khì 1 đồi tượng nào khi được implements
  * Interface AdditionalFeeInterface
  * @package common\components
  *
+ * @property-read string $uniqueCode
  * @property-read string $type
  * @property-read null|string $portal
  * @property-read null|Category $category
@@ -24,12 +26,17 @@ use common\models\Category;
  * @property-read boolean $isSpecial
  * @property-read integer $shippingWeight
  * @property-read integer $shippingQuantity
- * @property-read null|array|mixed $shippingFrom
- * @property-read null|array|mixed $shippingTo
- * @property-read null|array|mixed $shippingParcel
+ * @property-read null|array|mixed $shippingParams
+ * @property-read null|Warehouse|array $pickUpWareHouse
  */
 interface AdditionalFeeInterface
 {
+
+    /**
+     * @return string
+     */
+    public function getUniqueCode();
+
     /**
      * ebay/amazon
      * @return null|string
@@ -74,15 +81,10 @@ interface AdditionalFeeInterface
     /**
      * @return null|array|mixed
      */
-    public function getShippingFrom();
+    public function getShippingParams();
 
     /**
-     * @return null|array|mixed
+     * @return null|Warehouse|array
      */
-    public function getShippingTo();
-
-    /**
-     * @return null|array|mixed
-     */
-    public function getShippingParcel();
+    public function getPickUpWareHouse();
 }

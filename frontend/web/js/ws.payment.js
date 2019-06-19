@@ -37,15 +37,6 @@ ws.payment = (function ($) {
         installment_method: undefined,
         installment_month: undefined,
         instalment_type: undefined,
-        acceptance_insurance: 'N',
-        insurance_fee: 0,
-        courier_sort_mode: 'best_rating',
-        service_code: undefined,
-        courier_name: undefined,
-        courier_logo: undefined,
-        courier_fee: 0,
-        courier_delivery_time: undefined,
-        courier_detail: [],
         ga: undefined,
         otp_verify_method: 1,
         shipment_options_status: 1,
@@ -89,7 +80,6 @@ ws.payment = (function ($) {
         },
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
-            pub.payment.currency = 'vnd';
             ws.initEventHandler($('div#discountCoupon'), 'applyCouponCode', 'click', 'button#applyCouponCode', function (e) {
                 var $input = $(this).parents('div.discount-input').find('input[name="couponCode"]');
                 if ($input.length > 0 && $input.val() !== '') {
@@ -211,6 +201,7 @@ ws.payment = (function ($) {
             if (!pub.filterShippingAddress(false)) {
                 return;
             }
+            console.log(pub.shipping);
             if (!pub.shipping.buyer_district_id || !pub.shipping.buyer_province_id) {
                 return;
             }
@@ -219,16 +210,17 @@ ws.payment = (function ($) {
                 type: 'post',
                 data: {payment: pub.payment, shipping: pub.shipping},
                 success: function (response) {
-                    if (response.success) {
-                        var couriers = response.data;
-                        console.log(couriers[0]);
-                        pub.couriers = couriers;
-                        initCourierView(couriers);
-                        pub.courierChange(couriers[0]);
-                        pub.checkPromotion();
-                    } else {
-                        ws.notifyError(response.message);
-                    }
+                    console.log(response);
+                    // if (response.success) {
+                    //     var couriers = response.data;
+                    //     console.log(couriers[0]);
+                    //     pub.couriers = couriers;
+                    //     initCourierView(couriers);
+                    //     pub.courierChange(couriers[0]);
+                    //     pub.checkPromotion();
+                    // } else {
+                    //     ws.notifyError(response.message);
+                    // }
                 }
             }, true);
         },
@@ -369,8 +361,6 @@ ws.payment = (function ($) {
                     return false;
                 }
             }
-            console.log(method);
-            console.log(current_item);
             var html = '';
             $.each(current_item.paymentMethod.paymentMethodBanks, function (index, item) {
                 html += '<li rel="s_bankCode" id="bank_code_' + item.paymentBank.code + '_' + current_item.payment_method_id + '" onclick="ws.payment.selectMethod(' + current_item.payment_provider_id + ',' + current_item.payment_method_id + ',\'' + item.paymentBank.code + '\')">\n' +
@@ -470,7 +460,7 @@ ws.payment = (function ($) {
             processPaymment();
         },
         filterShippingAddress: function (isSafe = true) {
-            var form = $('form.payment-form');
+            var form = $('form.shipping-form');
             if (!form.length > 0) {
                 return false;
             }
@@ -515,6 +505,12 @@ ws.payment = (function ($) {
             }
             return true;
         },
+        saveShippingAddress: function () {
+            if (pub.filterShippingAddress(true)) {
+                return false
+            }
+            console.log(pub.shipping);
+        }
     };
     var checkPayment = function (merchant, code, token, loading = false) {
         var $isSuccess = false;

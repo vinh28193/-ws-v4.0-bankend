@@ -28,11 +28,8 @@ class ShippingForm extends Model
     const OTHER_RECEIVER_YES = 1;
     const OTHER_RECEIVER_NO = 0;
 
-    public $cartIds;
-
-    public $checkoutType;
-
     public $customer_id;
+    public $receiver_address_id;
 
     public $buyer_name;
     public $buyer_email;
@@ -44,7 +41,6 @@ class ShippingForm extends Model
     public $buyer_district_id;
 
     public $receiver_name;
-    public $receiver_email;
     public $receiver_phone;
     public $receiver_address;
     public $receiver_post_code;
@@ -84,7 +80,7 @@ class ShippingForm extends Model
             ],
             [
                 [
-                    'buyer_email', 'receiver_email'
+                    'buyer_email'
                 ],
                 'email'
             ],
@@ -97,7 +93,7 @@ class ShippingForm extends Model
             [
                 [
                     'buyer_address', 'buyer_address',
-                    'buyer_email', 'receiver_email',
+                    'buyer_email',
                     'buyer_phone', 'receiver_phone',
                     'note_by_customer'
                 ],
@@ -106,7 +102,7 @@ class ShippingForm extends Model
             [
                 [
                     'buyer_address', 'buyer_address',
-                    'buyer_email', 'receiver_email',
+                    'buyer_email',
                     'buyer_phone', 'receiver_phone',
                     'note_by_customer'
                 ],
@@ -134,8 +130,7 @@ class ShippingForm extends Model
                     'buyer_country_id', 'receiver_country_id',
                     'buyer_province_id', 'buyer_district_id',
                     'receiver_province_id', 'receiver_district_id',
-                    'other_receiver',
-                    'customer_id',
+                    'other_receiver', 'customer_id', 'receiver_address_id'
                 ],
                 'filter', 'filter' => function ($v) {
                 return (int)$v;
@@ -195,6 +190,22 @@ class ShippingForm extends Model
         return $this->_storeManager;
     }
 
+    /**
+     * @var Address[]|null
+     */
+    public $_receiverAddress = [];
+
+    /**
+     * @return Address|Address[]|null
+     */
+    public function getReceiverAddress()
+    {
+        if (empty($this->_receiverAddress) && $this->getUser() !== null && ($shippingAddress = $this->getUser()->shippingAddress) !== null) {
+            $this->_receiverAddress = $shippingAddress;
+        }
+        return $this->_receiverAddress;
+    }
+
     public function setDefaultValues()
     {
         /** @var  $store  StoreManager */
@@ -230,7 +241,6 @@ class ShippingForm extends Model
                 $this->other_receiver = self::OTHER_RECEIVER_YES;
                 $receiverName = implode(' ', [$user->first_name, $user->last_name]);
                 $this->receiver_name = $receiverName;
-                $this->receiver_email = $user->email;
                 $this->receiver_phone = $user->phone;
                 $this->receiver_address = '';
                 $this->receiver_post_code = '';
@@ -240,7 +250,6 @@ class ShippingForm extends Model
             } else {
                 $receiverName = implode(' ', [$receiver->first_name, $receiver->last_name]);
                 $this->receiver_name = $receiverName;
-                $this->receiver_email = $receiver->email;
                 $this->receiver_phone = $receiver->phone;
                 $this->receiver_address = $receiver->address;
                 $this->receiver_post_code = $receiver->post_code;
@@ -268,7 +277,6 @@ class ShippingForm extends Model
     {
         if ((int)$this->other_receiver === self::OTHER_RECEIVER_NO) {
             $this->receiver_name = $this->buyer_name;
-            $this->receiver_email = $this->buyer_email;
             $this->receiver_phone = $this->buyer_phone;
             $this->receiver_address = $this->buyer_address;
             $this->receiver_post_code = $this->buyer_post_code;
@@ -349,27 +357,5 @@ class ShippingForm extends Model
         $q->select("[[$selectColumn]]");
         $q->where($condition);
         return $q->column($class::getDb())[0];
-    }
-
-    /**
-     * @return array|bool
-     */
-    public function getReceiverMapping()
-    {
-        if (WeshopHelper::isEmpty($this->buyer_province_id) || WeshopHelper::isEmpty($this->buyer_district_id)) {
-            return false;
-        }
-        $q = new Query();
-        $q->select([
-            'district' => 'm.box_me_district_id',
-            'province' => 'm.box_me_province_id'
-        ]);
-        $q->from(['m' => SystemDistrictMapping::tableName()]);
-        $q->where([
-            'AND',
-            ['m.province_id' => $this->buyer_province_id],
-            ['m.district_id' => $this->buyer_district_id]
-        ]);
-        return $q->one(SystemDistrictMapping::getDb());
     }
 }

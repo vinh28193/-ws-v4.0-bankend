@@ -15,9 +15,8 @@ use Yii;
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
 use common\models\Category;
-use common\components\AdditionalFeeInterface;
-use common\components\AdditionalFeeTrait;
-use common\components\StoreAdditionalFeeRegisterTrait;
+use common\additional\AdditionalFeeInterface;
+use common\additional\AdditionalFeeTrait;
 
 /**
  * Class BaseProduct
@@ -126,7 +125,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             'shipping_fee' => !$this->is_free_ship ? ($this->shipping_fee * $this->quantity) : 0,
             'tax_fee' => $this->us_tax_rate
         ], false);
-        $additionalFee->withCondition($this,'purchase_fee',null);
+        $additionalFee->withCondition($this, 'purchase_fee', null);
         /**
          * Todo function initDefaultProperty
          * - vì mấy hàm này chỉ có tác dụng sử dụng 1 lần khi create object nên chỉ cần viết 1 hàm
@@ -178,9 +177,12 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getCategoryName()
     {
-        if (!empty($this->category_name)) {
-            return $this->category_name;
-        }
+        return $this->category_name;
+    }
+
+    public function getUniqueCode()
+    {
+        return implode('|', [$this->item_id, $this->item_sku]);
     }
 
     /**
@@ -269,7 +271,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     public function getUserLevel()
     {
-        if($this->getUser()){
+        if ($this->getUser()) {
             return $this->getUser()->userLever;
         }
         return User::LEVEL_NORMAL;
@@ -291,29 +293,24 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     public function getIsSpecial()
     {
+        if(($category = $this->getCategory()) !== null){
+            return $category->checkSpecialGroup($this);
+        }
         return false;
     }
 
     /**
      * @return null|array|mixed
      */
-    public function getShippingFrom()
+    public function getShippingParams()
     {
-        return null;
+        return [];
     }
 
     /**
-     * @return null|array|mixed
+     * @return array|mixed|null
      */
-    public function getShippingTo()
-    {
-        return null;
-    }
-
-    /**
-     * @return null|array|mixed
-     */
-    public function getShippingParcel()
+    public function getPickUpWareHouse()
     {
         return null;
     }
@@ -325,7 +322,6 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     {
         return $this->getStoreManager()->getExchangeRate();
     }
-
 
     /**
      * @return \common\components\StoreManager

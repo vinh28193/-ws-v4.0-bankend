@@ -104,15 +104,6 @@ class Payment extends Model
     public $acceptance_insurance = false;
     public $insurance_fee = 0;
 
-    public $courier_sort_mode = 'best_rating';
-    public $service_code; // mã hãng vận chuyển, mã code "VTP_EXP ...
-    public $courier_name;
-    public $courier_logo; // Tên
-    public $courier_fee; // Phí vận chuyển
-    public $courier_delivery_time; // Thời gian dự kiến
-    public $courier_detail = [];
-
-
     public $ga;
     public $otp_code;
     public $otp_verify_method = 0;
@@ -181,7 +172,7 @@ class Payment extends Model
     public function getOrders()
     {
         if (empty($this->_orders) && !empty($this->carts)) {
-            $res = PaymentService::createOrderFormCart($this);
+            $res = PaymentService::createOrders($this);
 
             $this->setOrders($res['orders']);
             $this->total_order_amount = $res['totalAmount'];
@@ -211,7 +202,6 @@ class Payment extends Model
     {
         if (empty($this->_additionalFees) || $refresh) {
             $this->_additionalFees = [];
-            $this->_additionalFees['international_shipping_fee'] = 0;
             foreach ($this->getOrders() as $idx => $order) {
                 foreach ($order->getAdditionalFees()->keys() as $key) {
                     if (!isset($this->_additionalFees[$key])) {
@@ -221,9 +211,6 @@ class Payment extends Model
                     $value += $order->getAdditionalFees()->getTotalAdditionalFees($key)[1];
                     $this->_additionalFees[$key] = $value;
                 }
-            }
-            if ($this->courier_fee !== null) {
-                $this->_additionalFees['international_shipping_fee'] = $this->courier_fee;
             }
         }
         return $this->_additionalFees;
@@ -547,6 +534,15 @@ class Payment extends Model
     public
     function getClientOptions()
     {
+        $orders = [];
+        foreach ($this->getOrders() as $order) {
+            $orders[] = [
+                'cartId' => $order->cartId,
+                'ordercode' => $order->ordercode,
+                'acceptance_insurance' => 'N',
+                'courier_sort_mode' => 'best_rating'
+            ];
+        }
         return [
             'page' => $this->page,
             'uuid' => $this->uuid,
@@ -587,13 +583,6 @@ class Payment extends Model
             'instalment_type' => $this->instalment_type,
             'acceptance_insurance' => $this->acceptance_insurance,
             'insurance_fee' => $this->insurance_fee,
-            'courier_sort_mode' => $this->courier_sort_mode,
-            'service_code' => $this->service_code,
-            'courier_name' => $this->courier_name,
-            'courier_logo' => $this->courier_logo,
-            'courier_fee' => $this->courier_fee,
-            'courier_delivery_time' => $this->courier_delivery_time,
-            'courier_detail' => $this->courier_detail,
 
             'ga' => $this->ga,
             'otp_code' => $this->otp_code,

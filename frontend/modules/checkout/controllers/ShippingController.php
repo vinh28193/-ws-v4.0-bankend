@@ -97,9 +97,10 @@ class ShippingController extends CheckoutController
     public function actionIndex($type)
     {
         $activeStep = 1;
-        if (($keys = CartSelection::getSelectedItems($type)) === null) {
-            return $this->goBack();
-        }
+//        if (($keys = CartSelection::getSelectedItems($type)) === null) {
+            //return $this->goBack();
+//        }
+        $keys = '5d085ddce419ac2dc0002bf6';
         $payment = new Payment([
             'page' => Payment::PAGE_CHECKOUT,
             'uuid' => $this->filterUuid(),
@@ -111,8 +112,6 @@ class ShippingController extends CheckoutController
             return $this->goBack();
         }
         $shippingForm = new ShippingForm();
-        $shippingForm->cartIds = implode(',', $keys);
-        $shippingForm->checkoutType = $type;
         $shippingForm->setDefaultValues();
         $provinces = SystemStateProvince::select2Data(1);
 

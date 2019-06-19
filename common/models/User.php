@@ -16,6 +16,7 @@ use common\components\UserPublicIdentityInterface;
  * @property-read Address $primaryAddress
  * @property-read Address $defaultShippingAddress
  * @property-read string $userLever
+ * @property Address[] $shippingAddress
  */
 class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
@@ -353,6 +354,14 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
     /**
      * @return null
      */
+    public function getShippingAddress()
+    {
+        return $this->hasMany(Address::className(), ['customer_id' => 'id'])->where(['type' => Address::TYPE_SHIPPING]);
+    }
+
+    /**
+     * @return null
+     */
     public function getDefaultShippingAddress()
     {
         return $this->hasOne(Address::className(), ['customer_id' => 'id'])->where([
@@ -376,14 +385,16 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         }
     }
 
-    public function getFingerprint(){
+    public function getFingerprint()
+    {
         return $this->id . 'WS' . $this->email;
     }
 
     /**
      * @return Warehouse|null
      */
-    public function getPickupWarehouse(){
+    public function getPickupWarehouse()
+    {
         return null;
     }
 
@@ -394,8 +405,10 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
     {
         return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
     }
-    public function getCurrencyCode(){
-        switch ($this->store_id){
+
+    public function getCurrencyCode()
+    {
+        switch ($this->store_id) {
             case 1:
                 return 'VND';
                 break;
@@ -407,8 +420,10 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
                 break;
         }
     }
-    public function getCountryCode(){
-        switch ($this->store_id){
+
+    public function getCountryCode()
+    {
+        switch ($this->store_id) {
             case 1:
                 return 'VN';
                 break;
