@@ -60,6 +60,7 @@ class CartWidget extends Widget
     {
         $key = ArrayHelper::getValue($item, '_id', '');
         $order = ArrayHelper::getValue($item, 'value');
+        $type = ArrayHelper::getValue($item, 'type', CartSelection::TYPE_SHOPPING );
         $selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key);
         $products = [];
         foreach ($order['products'] as $product) {
@@ -82,6 +83,7 @@ class CartWidget extends Widget
             'key' => $key,
             'selected' => $selected,
             'portal' => $order['portal'],
+            'type' => $type,
             'ordercode' => $order['ordercode'],
             'seller' => $order['seller'],
             'products' => $products

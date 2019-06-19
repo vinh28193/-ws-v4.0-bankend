@@ -26,8 +26,7 @@ $totalAmount = 0;
                 $totalAmount += (int)$order['total_final_amount_local'];
             }
             ?>
-            <ul class="cart-item" data-key="<?= $key ?>" data-type="<?= $type; ?>"
-                style="border: 1px solid #e3e3e3;margin-bottom:10px">
+            <ul class="cart-item" data-key="<?= $key ?>" data-type="<?= $type; ?>">
                 <li>
                     <?php $seller = ArrayHelper::getValue($order, 'seller', []); ?>
                     <div class="form-check">

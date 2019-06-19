@@ -320,7 +320,6 @@ class HomeController extends BaseAccountController
 //        ])->one();
 //        $model->watched = 1;
 //        $model->save();
-//        $this->render()
 //    }
     /**
      * Finds the Order model based on its primary key value.

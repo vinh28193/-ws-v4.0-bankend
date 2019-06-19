@@ -262,7 +262,7 @@ class SecureController extends FrontendController
 
         $this->render('changePassword', array('model' => $model));
     }
-    /*public function actionTestAuth(){
+    public function actionTestAuth(){
         print_r(Yii::$app->request->post());
         print_r(Yii::$app->request->get());
         die('test');
@@ -296,5 +296,5 @@ class SecureController extends FrontendController
         print_r(Yii::$app->request->post());
         print_r(Yii::$app->request->get());
         die('test');
-    }*/
+    }
 }

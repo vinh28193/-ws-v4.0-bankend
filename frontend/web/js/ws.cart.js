@@ -149,7 +149,7 @@
         refresh: function () {
             var $cart = $(this);
             var container = '#' + $cart.attr('id');
-            $.pjax.reload({container: container});
+            $.pjax.reload();
         },
         watch: function ($param) {
             var $cart = $(this);
