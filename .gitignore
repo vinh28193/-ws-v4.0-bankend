@@ -61,3 +61,5 @@ laradock-ws-v4.0-api/
 ./api/config/http-origin-local.php
 
 ./composer.lock
+.composer.lock
+composer.lock
