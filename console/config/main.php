@@ -46,6 +46,7 @@ return [
 //            'migrationPath' => '@console/migrations-backup-v2',
 //            'generalSchema' => 0,
 //        ],
+        'translate' => '\lajax\translatemanager\commands\TranslatemanagerController',
     ],
     'components' => [
         'queue' => [
