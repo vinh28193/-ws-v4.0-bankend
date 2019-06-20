@@ -11,6 +11,7 @@ namespace common\components\ebay;
 
 use common\lib\EbaySearchForm;
 use common\models\service\SiteService;
+use linslin\yii2\curl\Curl;
 use yii\httpclient\Client;
 
 class EbayApiV3Client
@@ -142,18 +143,20 @@ class EbayApiV3Client
 
     static function callApi($url, $data = null)
     {
-//        $data_string = json_encode($data);
+        if(!is_string($data)){
+            $data_string = json_encode((array)$data);
+        }else{
+            $data_string = $data;
+        }
+
         $ebay_api = isset(\Yii::$app->params['ebay-api']) ? (\Yii::$app->params['ebay-api']) : 'http://ebay.api/v3';
+        $ebay_api = 'http://ebay.api/v3';
         $url = $ebay_api . '/' . $url;
 
-        $client = new Client();
-       $dat= $client->createRequest()
-        ->setMethod('POST')
-            ->setUrl($url)
-        ->setData($data);
-        $rs = $dat->send();
-        if($rs->getIsOk()){
-            return $rs->getContent();
+        $curl = new Curl();
+        $rs = $curl->setRawPostData($data_string)->setHeaders(['Content-Type' => 'application/json'])->post($url);
+        if($curl->responseCode == 200){
+            return $rs;
         }else{
             \Yii::info($rs);
             return null;
@@ -166,7 +169,7 @@ class EbayApiV3Client
      * @param array $category
      * @param null $location
      */
-    public static function GetSuggetItem($id, $category = [], $location = null)
+    public static function GetSuggetItem($id, $category = [], $location = 'EBAY-US')
     {
         $url = 'suggest/similarItem';
         $post = new \stdClass();
@@ -174,7 +177,8 @@ class EbayApiV3Client
         $post->categoryIds = $category;
         $post->location = $location;
 
-        $rs = self::callApi($url, $post);
+        $rstemp = null;
+        $rs = self::callApi($url, (array)$post);
         if (empty($rs['success'])) {
             $rstemp = json_decode($rs, true);
         }

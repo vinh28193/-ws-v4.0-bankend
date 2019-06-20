@@ -3,6 +3,7 @@
 namespace common\models;
 
 
+use common\components\UserCookies;
 use common\models\db\AuthAssignment;
 use Yii;
 use yii\web\IdentityInterface;
@@ -419,5 +420,22 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
                 return 'VN';
                 break;
         }
+    }
+    public function setCookiesUser(){
+        $cookieUser = new UserCookies();
+        $cookieUser->facebook_id = $this->facebook_acc_kit_id;
+        $cookieUser->facebook_token = $this->facebook_acc_kit_token;
+        $cookieUser->name = $this->last_name.' '.$this->first_name;
+        $cookieUser->phone = $this->phone;
+        $cookieUser->email = $this->email;
+//        $cookieUser->uuid = $this->getUuidCookie();
+        if($this->primaryAddress){
+            $cookieUser->country_id = $this->primaryAddress->country_id;
+            $cookieUser->province_id = $this->primaryAddress->province_id;
+            $cookieUser->district_id = $this->primaryAddress->district_id;
+            $cookieUser->customer_id = $this->id;
+            $cookieUser->address = $this->primaryAddress->address;
+        }
+        $cookieUser->setCookies();
     }
 }

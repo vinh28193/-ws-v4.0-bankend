@@ -211,7 +211,7 @@ class EbayProductGate
      * @param null $localtion
      * @return mixed
      */
-    public static function paserSugget($sku, $category, $localtion = null){
+    public static function paserSugget($sku, $category, $localtion = 'EBAY-US'){
         $rs = Yii::$app->cache->get('CACHE_SUGGET_EBAY_'.$sku);
         if(empty($rs)){
             $rs = EbayApiV3Client::GetSuggetItem($sku,$category,$localtion);

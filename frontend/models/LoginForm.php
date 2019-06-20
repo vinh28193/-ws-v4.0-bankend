@@ -64,6 +64,7 @@ class LoginForm extends Model
 
         if ($this->validate()) {
             $success = Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            $this->getUser()->setCookiesUser();
 //            if ($success) {
 //                $walletService = new WalletService();
 //                $success = $walletService->login($this->password);
