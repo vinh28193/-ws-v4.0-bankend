@@ -47,7 +47,6 @@ class ItemController extends EbayController
         $relate_product_rs = EbayProductGate::paserSugget($item->item_id, $category ? [$category->alias] : []);
         $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
         $item->relate_products = RelateProduct::setRelateProducts($relate_product);
-
         return $this->render('index', [
             'item' => $item
         ]);
