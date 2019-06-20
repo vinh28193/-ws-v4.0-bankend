@@ -19,6 +19,8 @@ class SignupForm extends Model
     public $password;
     public $phone;
     public $replacePassword;
+    public $facebook_id;
+    public $facebook_token;
 
 
     /**
@@ -31,6 +33,8 @@ class SignupForm extends Model
             ['last_name', 'required'],
             [['last_name', 'first_name'], 'match', 'pattern' => '/[a-zA-Z]/', 'message' => 'Username does not enter special characters'],
             ['last_name', 'string', 'min' => 2, 'max' => 255],
+            ['facebook_token', 'string', 'min' => 2, 'max' => 255],
+            ['facebook_id', 'string', 'min' => 2, 'max' => 50],
             ['phone', 'string', 'min' => 10, 'max' => 15],
             ['phone', 'required'],
             ['phone', 'common\validators\PhoneValidator'],
@@ -90,6 +94,8 @@ class SignupForm extends Model
             'username' => $this->email,
             'email' => $this->email,
             'password' => $this->password,
+            'facebook_acc_kit_token' => $this->facebook_token,
+            'facebook_acc_kit_id' => $this->facebook_id,
             'updated_at' => time(),
             'store_id' => 1, // Domain Weshop Viet Nam
             'active_shipping' => 0,

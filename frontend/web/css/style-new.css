@@ -367,7 +367,7 @@ div.product-list.row div a div.info div.name{
     color: #fff;
 }
 #menuAccount button{
-    text-align: initial;
+    text-align: center;
     width: 100%;
 }
 #menuAccount .social-button a.btn{
@@ -439,6 +439,11 @@ ul#menuAccount {
 ul.list-dot li{
     padding-bottom: 10px;
     list-style: disc;
+}
+.btn-link{
+    font-weight: 400;
+    color: #007bff;
+    text-decoration: underline;
 }
 .width-auto{
     width: auto !important;

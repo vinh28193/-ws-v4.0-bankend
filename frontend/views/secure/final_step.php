@@ -1,26 +1,26 @@
 <?php
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-
-/* @var $model frontend\models\LoginForm */
-
-use yii\helpers\Html;
+/**
+ * @var \frontend\models\SignupForm $model
+ * @var string $token_refresh
+ * @var string $user_id
+ */
 use yii\bootstrap4\ActiveForm;
-use yii\authclient\widgets\AuthChoice;
-
+use yii\helpers\Html;
+use yii\web\View;
 /* @var yii\web\View $this */
 
-$this->title = 'Đăng kí';
+$this->title = Yii::t('frontend','Register');
 $session = Yii::$app->session;
 //$flashes = $session->getAllFlashes();
 
-echo Html::tag('div', Html::tag('span', $this->title), ['class' => 'title'])
+echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 ?>
 
-<p> Vui lòng điền vào các trường sau để đăng kí tài khoản :</p>
+<p> <?= Yii::t('frontend','There is only one final step to complete the registration') ?>:</p>
 
 <?php $form = ActiveForm::begin([
     'id' => 'form-signup',
+    'action' => '/signup.html',
     'options' => [
         'class' => 'payment-form',
     ],
@@ -43,7 +43,10 @@ echo Html::tag('div', Html::tag('span', $this->title), ['class' => 'title'])
 </div>
 
 <div class="form-group">
-    <?= $form->field($model, 'phone', ['template' => " <i class=\"icon phone\"></i>{input}\n{hint}\n{error}"])->textInput()->input('number', ['placeholder' => "Số điện thoại"]) ?>
+    <i class="icon phone"></i><input type="text" disabled class="form-control" value="<?= $model->phone ?>">
+</div>
+<div style="display: none">
+    <?= $form->field($model, 'phone', [])->hiddenInput()->input('hidden', ['placeholder' => "Số điện thoại"]) ?>
 </div>
 
 <div class="form-group">
@@ -58,12 +61,4 @@ echo Html::tag('div', Html::tag('span', $this->title), ['class' => 'title'])
 </div>
 
 <?php ActiveForm::end(); ?>
-<div class="other-login">
-    <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
-    <div class="social-button-ws">
-        <button onclick="smsLogin();" class="btn btn-fb" style="width: 100%;">Login via SMS</button>
-    </div>
-    <div class="text-center" style="color:#999;margin:1em 0">
-        Nếu bạn quên mật khẩu, bạn có thể <?= Html::a('khôi phục nó', ['secure/request-password-reset']) ?>.
-    </div>
-</div>
+
