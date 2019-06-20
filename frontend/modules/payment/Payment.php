@@ -453,6 +453,7 @@ class Payment extends Model
                     }
                 }
                 $updateOrderAttributes = [];
+
                 // 4 products
                 foreach ($orderPayment->products as $paymentProduct) {
                     $product = clone $paymentProduct;

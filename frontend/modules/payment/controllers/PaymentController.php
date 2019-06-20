@@ -108,7 +108,13 @@ class PaymentController extends BasePaymentController
         $res = Payment::checkPayment((int)$merchant, $this->request);
         $cartUrl = Url::toRoute('/checkout/cart');
         $redirectUrl = Url::toRoute('/account/order', true);
+
+        // @Phuc ToDo Check log Respone NL
+        Yii::info(" res Object response :");
+        Yii::info($res, __METHOD__);
+
         if ($res->success === false) {
+            Yii::info(" res return false redirect url :".$this->redirect($cartUrl));
             return $this->redirect($cartUrl);
         }
         if ($res->checkoutUrl !== null) {
