@@ -16,7 +16,7 @@ $totalAmount = 0;
         <div class="col-2 text-center"><strong>Số Lượng</strong></div>
         <div class="col-2 text-right pr-1 text-right"><strong>Giá Tiền</strong></div>
     </div>
-
+    <hr>
     <?php foreach ($items as $item):
             $products = ArrayHelper::getValue($item, 'products', []);
 
@@ -43,7 +43,7 @@ $totalAmount = 0;
                     <div class="row m-0 pb-2">
                         <div class="col-1 pb-2" style="height: auto;">
                             <img src="<?= $product['link_img']; ?>"
-                                 alt="<?= $product['product_name']; ?>" width="100%" title="<?= $product['product_name']; ?>">
+                                 alt="<?= $product['product_name']; ?>" width="80%" height="100px" title="<?= $product['product_name']; ?>">
                         </div>
                         <div class="col-7 pt-4">
                             <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
@@ -112,10 +112,10 @@ $totalAmount = 0;
     </div>
     <div class="row text-right mb-5 mt-2">
         <div class="col-12">
-            <button class="btn style-btn mt-2">
+            <button class="btn style-btn mt-2" id="installmentBtn">
                 <span class="la la-credit-card float-left" style="font-size: 1.7em;"></span>MUA TRẢ GÓP
             </button>
-            <button class="btn style-btn1 mt-2">
+            <button class="btn style-btn1 mt-2 " id="buyNowBtn">
                 <span class="la la-shopping-cart float-left" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA
             </button>
         </div>
