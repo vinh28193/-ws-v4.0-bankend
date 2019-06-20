@@ -72,6 +72,11 @@ class CartHelper
         $order['sale_support_id'] = null;
         $order['support_email'] = null;
         $order['saleSupport'] = null;
+        if (Yii::$app->user->getId()) {
+            $order['potential'] = 1; // sale ưu tiên chăm đơn
+        } else {
+            $order['potential'] = 0; // khách hàng không dăng nhập
+        }
         $order['customer_id'] = $user ? $user->id : null;
 
         $order['customer'] = $user ? [

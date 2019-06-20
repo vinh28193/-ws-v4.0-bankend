@@ -22,6 +22,13 @@ return [
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache'
         ],
+        /*
+                'cache' => [
+                    'class' => 'common\components\FileCache',
+                    'noCacheParam' => 'noCache',
+                    'noCacheValidateKey' => 'yes'
+                ],
+                */
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [

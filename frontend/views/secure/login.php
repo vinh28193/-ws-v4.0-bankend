@@ -59,31 +59,9 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
     <?php ActiveForm::end(); ?>
 
     <div class="other-login">
-        <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
+        <div class="text-center"><span class="or"><?= Yii::t('frontend','Or login with:') ?></span></div>
         <div class="social-button-ws">
-            <?php $authAuthChoice = AuthChoice::begin([  'baseAuthUrl' => ['secure/auth'] , 'popupMode' => false, ]); ?>
-                    <div class="social-button">
-                 <?php foreach ($authAuthChoice->getClients() as $client): ?>
-                     <?= $authAuthChoice->clientLink($client) ?>
-                 <?php endforeach; ?>
-                    </div>
-             <?php AuthChoice::end(); ?>
-
-        </div>
-
-        <p>Quý khách chưa có tài khoản
-            <?php echo Html::a('Đăng ký ngay', ['/secure/register']); ?>
-        </p>
-    </div>
-    <div class="other-login">
-        <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
-        <div class="social-button-ws">
-            <input value="+1" id="country_code" />
-            <input placeholder="phone number" id="phone_number"/>
-            <button onclick="smsLogin();">Login via SMS</button>
-            <div>OR</div>
-            <input placeholder="email" id="email"/>
-            <button onclick="emailLogin();">Login via Email</button>
+            <button onclick="smsLogin();" class="btn btn-fb" style="width: 100%;">Login via SMS</button>
         </div>
 
         <p>Quý khách chưa có tài khoản

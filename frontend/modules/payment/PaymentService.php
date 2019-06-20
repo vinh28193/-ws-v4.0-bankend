@@ -162,6 +162,8 @@ class PaymentService
             }
             unset($params['customer']);
             unset($params['support_name']);
+//            print_r($params);
+//            die;
             $order = new Order($params);
             $order->cartId = $cartId;
             $order->getAdditionalFees()->removeAll();

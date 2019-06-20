@@ -12,6 +12,7 @@ namespace common\products\amazon;
 
 use common\models\Category;
 use common\products\BaseGate;
+use linslin\yii2\curl\Curl;
 use Yii;
 use yii\httpclient\Client;
 
@@ -168,21 +169,19 @@ class AmazonGate extends BaseGate
     public function getAsins($ids)
     {
         $ids = implode(",", $ids);
-        $httpClient = $this->getHttpClient();
-        $httpRequest = $httpClient->createRequest();
-        $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
-        $httpRequest->setMethod('POST');
-        $httpRequest->setUrl($this->asinsUrl);
-        $httpRequest->setData([
-            'store' => $this->store,
-            'asin_ids' => $ids
-        ]);
         try {
-            $httpResponse = $httpClient->send($httpRequest);
-            if (!$httpResponse->isOk) {
+            $curl = new Curl();
+            $response = $curl->setPostParams([
+                'store' => $this->store,
+                'asin_ids' => $ids
+            ])->post($this->baseUrl.'/'.$this->asinsUrl);
+            if(!is_array($response)){
+                $response = json_decode($response,true);
+            }
+            if ($curl->responseCode != 200) {
                 return [];
             }
-            $httpResponse = $httpResponse->getData();
+            $httpResponse = $response;
             return $httpResponse['response'] ? $httpResponse['response'] : [];
         } catch (\Exception $e) {
             Yii::error($e, __METHOD__);
@@ -199,21 +198,20 @@ class AmazonGate extends BaseGate
      */
     public function getOffers($itemId)
     {
-        $httpClient = $this->getHttpClient();
-        $httpRequest = $httpClient->createRequest();
-        $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
-        $httpRequest->setMethod('POST');
-        $httpRequest->setUrl($this->offerUrl);
-        $httpRequest->setData([
-            'store' => $this->store,
-            'asin_id' => $itemId
-        ]);
         try {
-            $httpResponse = $httpClient->send($httpRequest);
-            if (!$httpResponse->isOk) {
+            $curl = new Curl();
+            $response = $curl->setPostParams([
+                'store' => $this->store,
+                'asin_id' => $itemId
+            ])->post($this->baseUrl.'/'.$this->offerUrl);
+            if(!is_array($response)){
+                $response = json_decode($response,true);
+            }
+            if ($curl->responseCode != 200) {
                 return [];
             }
-            $httpResponse = $httpResponse->getData();
+            $httpResponse = $response;
+
             return $httpResponse['response'] ? $httpResponse['response'] : [];
         } catch (\Exception $e) {
             Yii::error($e, __METHOD__);
@@ -229,22 +227,11 @@ class AmazonGate extends BaseGate
      */
     private function searchInternal($request)
     {
-        $attempts = 0;
-        do {
-            $attempts++;
-            $httpClient = $this->getHttpClient();
-            $httpRequest = $httpClient->createRequest();
-            $httpRequest->setUrl($this->searchUrl);
-            $httpRequest->setData($request->params());
-            $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
-            $httpRequest->setMethod('POST');
-            $httpResponse = $httpClient->send($httpRequest);
-            $response = $httpResponse->getData();
-            if (isset($response['response']) || isset($response['total_product'])) {
-                break;
-            }
-
-        } while ($attempts < 3);
+        $curl = new Curl();
+        $response = $curl->setPostParams($request->params())->post($this->baseUrl.'/'.$this->searchUrl);
+        if(!is_array($response)){
+            $response = json_decode($response,true);
+        }
         if (!isset($response)) {
             return [false, 'can not send request'];
         }
@@ -292,27 +279,14 @@ class AmazonGate extends BaseGate
      */
     private function lookupInternal(AmazonDetailRequest $request)
     {
-
-        $attempts = 0;
-
-//        do {
-//            $attempts++;
-            $httpClient = $this->getHttpClient();
-            $httpRequest = $httpClient->createRequest();
-            $httpRequest->setUrl($this->lookupUrl);
-            $httpRequest->setData($request->params());
-            $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
-            $httpRequest->setMethod('POST');
-            $httpResponse = $httpClient->send($httpRequest);
-            $response = $httpResponse->getData();
-            if (!$this->isValidResponse($response)) {
-                return [false, 'can not send request'];
-            }
-
-//        } while ($attempts < 3);
-//        if (!isset($response)) {
-//            return [false, 'can not send request'];
-//        }
+        $curl = new Curl();
+        $response = $curl->setPostParams($request->params())->post($this->baseUrl.'/'.$this->lookupUrl);
+        if(!is_array($response)){
+            $response = json_decode($response,true);
+        }
+        if (!$this->isValidResponse($response)) {
+            return [false, 'can not send request'];
+        }
         $amazon = $response['response'];
         $rs = [];
         $rs['categories'] = array_unique($amazon['node_ids']);

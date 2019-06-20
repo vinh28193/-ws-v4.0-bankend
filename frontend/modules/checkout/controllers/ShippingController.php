@@ -5,6 +5,7 @@ namespace frontend\modules\checkout\controllers;
 
 
 use common\components\cart\CartManager;
+use common\components\UserCookies;
 use common\models\User;
 use frontend\modules\payment\providers\wallet\WalletService;
 use frontend\models\LoginForm;

@@ -314,7 +314,7 @@ class WeshopHelper
     {
         switch ($country) {
             case 1:
-                $symbol = $symbol !== null ? $symbol : 'đ';
+                $symbol = $symbol !== null ? $symbol : 'VND';
                 $floorNumber = $round ? $round : 1000;
                 $price = $amount / $floorNumber;
                 $roundPrice = round($price);

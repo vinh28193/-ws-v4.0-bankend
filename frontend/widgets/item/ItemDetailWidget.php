@@ -91,8 +91,8 @@ CSS;
         parent::run();
         echo $this->renderEntries();
         Pjax::end();
-        echo $this->renderDescription('mini');
         echo $this->renderDescription('extra');
+        echo $this->renderDescription('mini');
     }
 
     protected function prepareItem()

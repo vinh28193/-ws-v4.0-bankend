@@ -341,14 +341,13 @@ var ws = ws || (function ($) {
 ws.initEventHandler('searchNew', 'searchBoxButton', 'click', 'button#searchBoxButton', function (event) {
     ws.browse.searchNew('input#searchBoxInput', '$url');
 });
-var key = '';
 ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input#searchBoxInput', function (event) {
     clearTimeout(window.mytimeout);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
     }else{
         var $element = this;
-        key = $(this).val();
+        var key = $(this).val();
         window.mytimeout = setTimeout(function(){
             $.ajax({
                 // type: 'GET',
@@ -360,7 +359,7 @@ ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input#searchBoxInpu
                 success: function (res) {
                     // console.log(res);
                     if (res.success) {
-                        if($($element).val() === key){
+                        if($('input#searchBoxInput').val() === key){
                             $('#searchAutoComplete').html(res.content);
                         }
                     }

@@ -22,7 +22,7 @@ class ItemController extends AmazonController
             ]);
         }
         $this->portalTitle = $item->item_name;
-        $this->portalImage = $item->primary_images[0]->main;
+        $this->portalImage = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
         return $this->render('index', [
             'item' => $item
         ]);

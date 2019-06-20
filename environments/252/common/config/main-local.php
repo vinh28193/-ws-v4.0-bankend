@@ -69,5 +69,13 @@ return [
                 'enableCookieValidation' => false,
           ],
          */
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' =>  'localhost',
+                'port' => 6379,
+                'database' => 0,
+            ]
+        ],
     ],
 ];
