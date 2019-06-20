@@ -212,4 +212,31 @@ return [
             'wallet/config/main-local.php',
         ],
     ],
+
+    // starging_sanbox_ws
+    'StargingWS' => [
+        'path' => 'starging_sanbox_ws',
+        'setWritable' => [
+            'api/runtime',
+            'api/web/assets',
+            'backend/runtime',
+            'backend/web/assets',
+            'userbackend/runtime',
+            'userbackend/web/assets',
+            'frontend/runtime',
+            'frontend/web/assets',
+            'wallet/runtime',
+            'wallet/web/assets',
+        ],
+        'setExecutable' => [
+            'yii',
+        ],
+        'setCookieValidationKey' => [
+            'api/config/main-local.php',
+            'backend/config/main-local.php',
+            'frontend/config/main-local.php',
+            'userbackend/config/main-local.php',
+            'wallet/config/main-local.php',
+        ],
+    ],
 ];
