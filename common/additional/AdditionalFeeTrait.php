@@ -10,5 +10,13 @@ namespace common\additional;
 
 trait AdditionalFeeTrait
 {
+    public $additionalFees;
 
+    public function getAdditionalFees()
+    {
+        if ($this->additionalFees === null) {
+            $this->additionalFees = new AdditionalFeeCollection();
+        }
+        return $this->additionalFees;
+    }
 }

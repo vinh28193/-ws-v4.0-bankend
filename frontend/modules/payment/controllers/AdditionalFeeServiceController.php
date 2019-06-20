@@ -6,6 +6,7 @@ namespace frontend\modules\payment\controllers;
 use common\components\InternationalShippingCalculator;
 use common\components\GetUserIdentityTrait;
 use common\helpers\WeshopHelper;
+use common\models\Address;
 use frontend\modules\payment\models\ShippingForm;
 use frontend\modules\payment\Payment;
 use Yii;
@@ -24,9 +25,58 @@ class AdditionalFeeServiceController extends BasePaymentController
         if (($wh = $this->getPickUpWareHouse()) === false) {
             $this->response(false, "can not get pickup warehouse");
         }
+        $isId = $store->country_code === 'ID';
         $payment = new Payment($bodyParams['payment']);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
         $shippingForm->ensureReceiver();
+        $ship_to = [
+            'contact_name' => $shippingForm->receiver_name,
+            'company_name' => '',
+            'email' => '',
+            'address' => $shippingForm->receiver_address,
+            'address2' => '',
+            'phone' => $shippingForm->receiver_phone,
+            'phone2' => '',
+            'province' => $shippingForm->receiver_province_id,
+            'district' => $shippingForm->receiver_district_id,
+            'country' => $store->country_code,
+            'zipcode' => $shippingForm->receiver_post_code,
+        ];
+        // lấy theo buyer
+        if ($shippingForm->other_receiver !== false) {
+            // nếu mà là địa chỉ chọn
+            if ((int)$shippingForm->enable_buyer === 1) {
+                $ship_to['contact_name'] = $shippingForm->buyer_name;
+                $ship_to['address'] = $shippingForm->buyer_address;
+                $ship_to['phone'] = $shippingForm->buyer_phone;
+                $ship_to['province'] = $shippingForm->buyer_province_id;
+                $ship_to['district'] = $shippingForm->buyer_district_id;
+                $ship_to['zipcode'] = $shippingForm->buyer_post_code;
+            } else if ($shippingForm->buyer_address_id !== null && ($buyer = Address::findOne($shippingForm->buyer_address_id)) !== null) {
+                $ship_to['contact_name'] = implode(' ', [$buyer->first_name, $buyer->last_name]);
+                $ship_to['address'] = $buyer->address;
+                $ship_to['phone'] = $buyer->phone;
+                $ship_to['province'] = $buyer->province_id;
+                $ship_to['district'] = $buyer->district_id;
+                $ship_to['zipcode'] = $store->country_code === 'ID' ? $buyer->post_code : '';
+            }
+        } else {
+            if ((int)$shippingForm->enable_receiver === 1) {
+                $ship_to['contact_name'] = $shippingForm->receiver_name;
+                $ship_to['address'] = $shippingForm->receiver_address;
+                $ship_to['phone'] = $shippingForm->receiver_phone;
+                $ship_to['province'] = $shippingForm->receiver_province_id;
+                $ship_to['district'] = $shippingForm->receiver_district_id;
+                $ship_to['zipcode'] = $shippingForm->receiver_post_code;
+            } else if ($shippingForm->receiver_address_id !== null && ($receiver = Address::findOne($shippingForm->receiver_address_id)) !== null) {
+                $ship_to['contact_name'] = implode(' ', [$receiver->first_name, $receiver->last_name]);
+                $ship_to['address'] = $receiver->address;
+                $ship_to['phone'] = $receiver->phone;
+                $ship_to['province'] = $receiver->province_id;
+                $ship_to['district'] = $receiver->district_id;
+                $ship_to['zipcode'] = $store->country_code === 'ID' ? $receiver->post_code : '';
+            }
+        }
         if (($pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id')) === null) {
             $this->response(false, "can not resolve pick up id");
         }
@@ -34,7 +84,6 @@ class AdditionalFeeServiceController extends BasePaymentController
             $this->response(false, "can not resolve user id");
         }
         $results = [];
-
         foreach ($payment->getOrders() as $order) {
             $weight = WeshopHelper::roundNumber((int)$order->total_weight_temporary * 1000);
             $totalAmount = $order->total_amount_local;
@@ -48,7 +97,6 @@ class AdditionalFeeServiceController extends BasePaymentController
                     'desciption' => '',
                     'weight' => WeshopHelper::roundNumber((int)$product->total_weight_temporary * 1000),
                     'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
-                    'customs_value' => WeshopHelper::roundNumber($product->total_price_amount_local),
                     'quantity' => $product->quantity_customer,
                 ];
             }
@@ -63,20 +111,7 @@ class AdditionalFeeServiceController extends BasePaymentController
                     'country' => 'US',
                     'pickup_id' => $pickUpId
                 ],
-                'ship_to' => [
-                    'contact_name' => $shippingForm->receiver_name,
-                    'company_name' => '',
-                    'email' => '',
-                    'address' => $shippingForm->receiver_address,
-                    'address2' => '',
-                    'phone' => $shippingForm->receiver_phone,
-                    'phone2' => '',
-                    'country' => $store->country_code,
-                    'province' => $shippingForm->receiver_province_id,
-                    'district' => $shippingForm->receiver_province_id,
-                    'zipcode' => $shippingForm->receiver_post_code,
-                    'tax_id' => '',
-                ],
+                'ship_to' => $ship_to,
                 'shipments' => [
                     'content' => '',
                     'total_parcel' => 1,
@@ -84,12 +119,13 @@ class AdditionalFeeServiceController extends BasePaymentController
                     'description' => '',
                     'amz_shipment_id' => '',
                     'chargeable_weight' => $weight,
-                    'parcels' => $parcel
+                    'parcels' => [$parcel]
                 ],
             ];
             $calculator = new InternationalShippingCalculator();
             $response = $calculator->CalculateFee($params, $userId, $store->country_code, $store->currency);
-            $results[$order->getUniqueCode()] = array_combine(['success', 'couriers'], $response);
+            $response = array_combine(['success', 'couriers'], $response);
+            $results[$order->cartId] = $response;
         }
         $time = sprintf('%.3f', microtime(true) - $start);
         return $this->response(true, "total calculator time : $time s", $results);

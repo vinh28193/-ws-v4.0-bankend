@@ -5,6 +5,13 @@ namespace common\models;
 
 use common\models\db\PaymentTransaction as DbPaymentTransaction;
 
+/**
+ * Class PaymentTransaction
+ * @package common\models
+ *
+ * @property-read PaymentTransaction[] $childPaymentTransaction
+ * @property-read Order $order
+ */
 class PaymentTransaction extends DbPaymentTransaction
 {
 
@@ -24,4 +31,20 @@ class PaymentTransaction extends DbPaymentTransaction
     const PAYMENT_TYPE_TOP_UP = 'top_up';
     const PAYMENT_TYPE_ADDFEE = 'addfee';
     const PAYMENT_TYPE_REFUND = 'refund';
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getChildPaymentTransaction()
+    {
+        return $this->hasMany(self::className(), ['parent_transaction_code' => 'transaction_code']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrder()
+    {
+        return $this->hasOne(Order::className(), ['ordercode' => 'order_code']);
+    }
 }

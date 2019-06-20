@@ -6,9 +6,12 @@ namespace frontend\modules\payment\models;
 use common\additional\AdditionalFeeCollection;
 use common\additional\AdditionalFeeInterface;
 use common\additional\AdditionalFeeTrait;
+use common\components\cart\CartHelper;
 use common\helpers\WeshopHelper;
 use common\models\Category;
+use common\models\db\TargetAdditionalFee;
 use common\models\Order as BaseOrder;
+use common\models\Seller;
 use common\models\User;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -17,10 +20,28 @@ class Order extends BaseOrder implements AdditionalFeeInterface
 {
 
     public $cartId;
+    public $checkoutType;
+    public $uuid;
     public $courierDetail = [];
     public $acceptance_insurance = 'N';
     public $courier_sort_mode = 'best_rating';
     public $_additionalFees;
+
+    /**
+     * @var
+     */
+    private $_cart;
+
+    /**
+     * @return \common\components\cart\CartManager
+     */
+    public function getCart()
+    {
+        if (!is_object($this->_cart)) {
+            $this->_cart = CartHelper::getCartManager();
+        }
+        return $this->_cart;
+    }
 
     public function getAdditionalFees()
     {
@@ -28,6 +49,11 @@ class Order extends BaseOrder implements AdditionalFeeInterface
             $this->_additionalFees = new AdditionalFeeCollection();
         }
         return $this->_additionalFees;
+    }
+
+    public function setAdditionalFees($additionalFees)
+    {
+        $this->getAdditionalFees()->fromArray($additionalFees);
     }
 
     public function extraFields()
@@ -104,7 +130,6 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     {
         return $this->total_quantity;
     }
-
 
     /**
      * @return null|array|mixed
@@ -187,4 +212,72 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         return $this->_pickUpWareHouse;
     }
 
+    public function createOrderFromCart()
+    {
+        $item = $this->getCart()->getItem($this->checkoutType, $this->cartId, $this->uuid);
+        $params = $item['value'];
+        $cartId = $item['_id'];
+        if (($sellerParams = ArrayHelper::remove($params, 'seller')) === null || !is_array($sellerParams)) {
+            $this->addError('cartId', 'Not found seller for order');
+            return false;
+        }
+        $seller = new Seller($sellerParams);
+        if (($productParams = ArrayHelper::remove($params, 'products')) === null || !is_array($productParams)) {
+            $this->addError('cartId', 'Not found products for order');
+            return false;
+        }
+        $supporter = ArrayHelper::remove($params, 'saleSupport');
+        if ($supporter !== null) {
+            $supporter = new User($supporter);
+        }
+        unset($params['customer']);
+        unset($params['support_name']);
+        $this->setAttributes($params);
+        $this->getAdditionalFees()->removeAll();
+        $products = [];
+        foreach ($productParams as $key => $productParam) {
+            if (($categoryParams = ArrayHelper::remove($productParam, 'category')) === null || !is_array($categoryParams)) {
+                $this->addError('cartId', 'Not found category for product offset' . $key);
+                return false;
+            }
+            $category = new Category([
+                'alias' => ArrayHelper::getValue($categoryParams, 'alias'),
+                'site' => ArrayHelper::getValue($categoryParams, 'site'),
+                'origin_name' => ArrayHelper::getValue($categoryParams, 'origin_name'),
+            ]);
+            if (($productFeeParams = ArrayHelper::remove($productParam, 'additionalFees')) === null || !is_array($productFeeParams)) {
+                $this->addError('cartId', 'Not found fee for product offset' . $key);
+                return false;
+            }
+            // Collection Fee
+            foreach ($productFeeParams as $name => $value) {
+                if ($name === 'product_price') {
+                    // exception, do not collect product_price
+                    continue;
+                }
+                $this->getAdditionalFees()->add($name, $value);
+                unset($productFeeParams[$name]); // unset if this in collect
+            }
+            unset($productParam['available_quantity']);
+            unset($productParam['quantity_sold']);
+            $product = new Product($productParam);
+            // product_price next to save, this fee not in collect
+            if (!empty($productFeeParams)) {
+                $fees = [];
+                foreach ($productFeeParams as $name => $value) {
+                    $value = reset($value);
+                    $targetFee = new TargetAdditionalFee($value);
+                    $targetFee->type = 'product';
+                    $fees[] = $targetFee;
+                }
+                $product->populateRelation('productFees', $fees);
+            }
+            $product->populateRelation('category', $category);
+            $products[$key] = $product;
+        }
+        $this->populateRelation('products', $products);
+        $this->populateRelation('seller', $seller);
+        $this->populateRelation('saleSupport', $supporter);
+        return $this;
+    }
 }

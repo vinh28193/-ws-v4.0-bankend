@@ -57,11 +57,17 @@ class PaymentController extends BasePaymentController
         $payment->createTransactionCode();
         /* @var $results PromotionResponse */
         $payment->checkPromotion();
+        $createResponse = $payment->createOrder();
+
+        if ($createResponse['success'] === false) {
+            return $this->response(false, $createResponse['message']);
+        }
+        $orders = $createResponse['data'];
+
         $paymentTransaction = new PaymentTransaction();
         $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
         $paymentTransaction->store_id = $payment->storeManager->getId();
         $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
-        $paymentTransaction->carts = implode(',', $payment->carts);
         $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
         $paymentTransaction->transaction_code = $payment->transaction_code;
         $paymentTransaction->transaction_customer_name = $payment->customer_name;
@@ -76,9 +82,6 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->payment_provider = $payment->payment_provider_name;
         $paymentTransaction->payment_method = $payment->payment_method_name;
         $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
-        $paymentTransaction->courier_name = $payment->courier_name;
-        $paymentTransaction->service_code = $payment->service_code;
-        $paymentTransaction->international_shipping_fee = $payment->courier_fee;
         $paymentTransaction->coupon_code = $payment->coupon_code;
         $paymentTransaction->used_xu = $payment->use_xu;
         $paymentTransaction->bulk_point = $payment->bulk_point;
@@ -87,7 +90,18 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->transaction_amount_local = $payment->getTotalAmountDisplay();
         $paymentTransaction->payment_type = $payment->type;
         $paymentTransaction->save(false);
-
+        foreach ($orders as $order) {
+            /** @var  $order Order */
+            $childTransaction = clone $paymentTransaction;
+            $childTransaction->id = null;
+            $childTransaction->isNewRecord = true;
+            $childTransaction->transaction_amount_local = $order->total_final_amount_local;
+            $childTransaction->total_discount_amount = 0;
+            $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
+            $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
+            $childTransaction->order_code = $order->ordercode;
+            $childTransaction->save(false);
+        }
         $res = $payment->processPayment();
         if ($res->success === false) {
             return $this->response(false, $res->message);
@@ -115,50 +129,11 @@ class PaymentController extends BasePaymentController
             $redirectUrl = $res->checkoutUrl;
         }
         /** @var $paymentTransaction PaymentTransaction */
-        if (($paymentTransaction = $res->paymentTransaction) instanceof PaymentTransaction) {
-
-            $payment = new Payment([
-                'carts' => StringHelper::explode($paymentTransaction->carts, ','),
-                'uuid' => $this->filterUuid(),
-                'transaction_code' => $paymentTransaction->transaction_code,
-                'customer_name' => $paymentTransaction->transaction_customer_name,
-                'customer_email' => $paymentTransaction->transaction_customer_email,
-                'customer_phone' => $paymentTransaction->transaction_customer_phone,
-                'customer_address' => $paymentTransaction->transaction_customer_address,
-                'customer_postcode' => $paymentTransaction->transaction_customer_postcode,
-                'customer_district' => $paymentTransaction->transaction_customer_district,
-                'customer_city' => $paymentTransaction->transaction_customer_city,
-                'customer_country' => $paymentTransaction->transaction_customer_country,
-                'payment_provider_name' => $paymentTransaction->payment_provider,
-                'payment_method_name' => $paymentTransaction->payment_method,
-                'payment_bank_code' => $paymentTransaction->payment_bank_code,
-                'service_code' => $paymentTransaction->service_code,
-                'courier_name' => $paymentTransaction->courier_name,
-                'courier_fee' => $paymentTransaction->international_shipping_fee,
-                'coupon_code' => $paymentTransaction->coupon_code,
-                'use_xu' => $paymentTransaction->used_xu,
-                'bulk_point' => $paymentTransaction->bulk_point,
-                'total_discount_amount' => $paymentTransaction->total_discount_amount,
-                'total_order_amount' => $paymentTransaction->before_discount_amount_local,
-                'type' => $paymentTransaction->payment_type,
-                'isPaid' => $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS,
-            ]);
-            $createResponse = $payment->createOrder();
-            if ($createResponse['success'] && isset($createResponse['data']['orderCodes'])) {
-                Yii::info($createResponse['data']);
-                foreach ($createResponse['data']['orderCodes'] as $orderCode => $info) {
-                    $childTransaction = clone $paymentTransaction;
-                    $childTransaction->id = null;
-                    $childTransaction->isNewRecord = true;
-                    $childTransaction->transaction_amount_local = ArrayHelper::getValue($info, 'totalPaid', 0);
-                    $childTransaction->total_discount_amount = ArrayHelper::getValue($info, 'discountAmount', 0);
-                    $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
-                    $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
-                    $childTransaction->order_code = $orderCode;
-                    $childTransaction->save(false);
-                }
-                foreach ($payment->carts as $key) {
-                    $this->cartManager->removeItem($payment->type, $key);
+        if (($paymentTransaction = $res->paymentTransaction) instanceof PaymentTransaction && $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
+            foreach ($paymentTransaction->childPaymentTransaction as $child) {
+                if(($order = $child->order) !== null){
+                    $order->total_paid_amount_local = $child->transaction_amount_local;
+                    $order->save(false);
                 }
             }
             return $this->redirect($redirectUrl);

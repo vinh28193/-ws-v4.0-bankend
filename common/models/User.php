@@ -13,10 +13,11 @@ use common\components\UserPublicIdentityInterface;
 /**
  * Class User
  * @package common\models
- * @property-read Address $primaryAddress
+ * @property-read Address $defaultPrimaryAddress
  * @property-read Address $defaultShippingAddress
  * @property-read string $userLever
  * @property Address[] $shippingAddress
+ * @property Address[] $primaryAddress
  */
 class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
@@ -338,11 +339,32 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         ])->one();
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAddress(){
+        return $this->hasMany(Address::className(), ['customer_id' => 'id']);
+    }
+
 
     /**
-     * Generates new password reset token
+     * @return \yii\db\ActiveQuery
      */
     public function getPrimaryAddress()
+    {
+        return $this->getAddress()->andWhere(['type' => Address::TYPE_PRIMARY]);
+    }
+
+    /**
+     * @return null
+     */
+    public function getShippingAddress()
+    {
+        return  $this->getAddress()->andWhere(['type' => Address::TYPE_SHIPPING]);
+    }
+
+
+    public function getDefaultPrimaryAddress()
     {
         return $this->hasOne(Address::className(), ['customer_id' => 'id'])->where([
             'AND',
@@ -351,13 +373,8 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         ]);
     }
 
-    /**
-     * @return null
-     */
-    public function getShippingAddress()
-    {
-        return $this->hasMany(Address::className(), ['customer_id' => 'id'])->where(['type' => Address::TYPE_SHIPPING]);
-    }
+
+
 
     /**
      * @return null

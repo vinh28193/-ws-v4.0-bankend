@@ -60,9 +60,13 @@ class InternationalShippingCalculator extends BaseObject
         \Yii::info($params);
         $request->setUserId($userId);
         $request->setCountryCode($countryCode);
-        list($response, $status) = $this->getGrpcClient()->CalculateFee($request)->wait();
-        /** @var $response CalculateFeeResponse */
+        /** @var $apires CalculateFeeResponse */
+        $apires = $this->getGrpcClient()->CalculateFee($request)->wait();
+        list($response, $status) = $apires;
+        /** @var $response CourierCalculate */
         $data = $response->getData();
+        \Yii::info($request->getData(),'getData');
+        \Yii::info($request->getUserId(),'getUserId');
         $success = $response->getError() === false && $data->count() > 0;
         $message = $response->getErrorMessage();
         if (!$success && WeshopHelper::isEmpty($message) && isset($status->details) && is_string($status->details)) {
