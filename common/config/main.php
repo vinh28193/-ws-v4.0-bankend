@@ -24,7 +24,6 @@ return [
             'database' => 0,
         ],
         */
-
         /*
         'cache' => [
             'class' => 'yii\redis\Cache',
@@ -43,7 +42,6 @@ return [
                 'database' => 0,
             ]
         ],
-
         'api' => [
             'class' => 'common\components\Api',
         ],

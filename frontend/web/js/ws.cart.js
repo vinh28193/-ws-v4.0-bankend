@@ -136,11 +136,12 @@
         },
         checkUuid: function () {
             var $cart = $(this);
+            var container = '#' + $cart.attr('id');
             var deferredArrays = deferredArray();
             $.when.apply(this, deferredArrays).always(function () {
                 ws.ajax('/checkout/cart/check-uuid', function (res) {
                     if (res) {
-                        methods.refresh.apply($cart);
+                        $.pjax.reload({container: container});
                     }
                 }, true);
             });
@@ -174,7 +175,7 @@
                 data: param,
                 success: function (response, textStatus, xhr) {
                     if (response.success) {
-                        methods.refresh.apply($cart);
+                        $.pjax.reload({container: container});
                     } else {
                         ws.notifyError(response.message, ws.t('Error'));
                     }
@@ -200,7 +201,7 @@
                         if (countItems) {
                             ws.setCartBadge(countItems);
                         }
-                        methods.refresh.apply($cart);
+                        $.pjax.reload({container: container});
                     } else {
                         ws.notifyError(response.message, ws.t('Error'));
                     }

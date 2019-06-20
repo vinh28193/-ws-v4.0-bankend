@@ -547,7 +547,7 @@ class Payment extends Model
                 'courier_sort_mode' => 'best_rating',
                 'courierDetail' => $order->courierDetail,
                 'additionalFees' => $order->getAdditionalFees()->toArray(),
-                'totalFinalAmount' => $order->getTotalAmount(),
+                'totalFinalAmount' => $order->total_final_amount_local,
             ];
         }
         return [

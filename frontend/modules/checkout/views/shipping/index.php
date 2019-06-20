@@ -216,10 +216,12 @@ $this->registerJs($js);
                 </div>
                 <div class="col-md-12 buyer-list <?= $shippingForm->enable_buyer === ShippingForm::NO ? 'open' : 'close'; ?>">
                     <?php
-                    echo 'Name:' . $buyerAddress->first_name . '' . $buyerAddress->last_name;
-                    echo $form->field($shippingForm, 'buyer_address_id')->hiddenInput()->label(false);
-                    if ($shippingForm->enable_buyer === ShippingForm::NO) {
-                        $this->registerJs('ws.payment.calculatorShipping();');
+                    if($buyerAddress !== null){
+                        echo 'Name:' . $buyerAddress->first_name . '' . $buyerAddress->last_name;
+                        echo $form->field($shippingForm, 'buyer_address_id')->hiddenInput()->label(false);
+                        if ($shippingForm->enable_buyer === ShippingForm::NO) {
+                            $this->registerJs('ws.payment.calculatorShipping();');
+                        }
                     }
                     ?>
                 </div>
