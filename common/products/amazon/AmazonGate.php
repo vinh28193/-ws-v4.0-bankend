@@ -207,11 +207,11 @@ class AmazonGate extends BaseGate
             if(!is_array($response)){
                 $response = json_decode($response,true);
             }
-            $httpResponse = $response;
             if ($curl->responseCode != 200) {
                 return [];
             }
-            $httpResponse = $httpResponse->getData();
+            $httpResponse = $response;
+
             return $httpResponse['response'] ? $httpResponse['response'] : [];
         } catch (\Exception $e) {
             Yii::error($e, __METHOD__);

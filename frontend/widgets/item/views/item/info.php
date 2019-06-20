@@ -6,7 +6,7 @@ use common\products\BaseProduct;
 /* @var yii\web\View $this */
 /* @var BaseProduct $item */
 /* @var common\components\StoreManager $storeManager */
-$portal_web = $item->type == 'ebay' ? '<a href="//ebay.com">eBay.com</a>' : '<a href="//amazon.com">Amazon.com</a>';
+$portal_web = strtolower($item->type) == 'ebay' ? '<a href="//ebay.com">eBay.com</a>' : '<a href="//amazon.com">Amazon.com</a>';
 $salePercent = $item->getSalePercent();
 $current_provider = $item->getCurrentProvider();
 $variationUseImage = null;

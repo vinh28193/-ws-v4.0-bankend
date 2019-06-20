@@ -445,6 +445,9 @@ ul.list-dot li{
     color: #007bff;
     text-decoration: underline;
 }
+#detail-big-img{
+    width: inherit;
+}
 .width-auto{
     width: auto !important;
 }

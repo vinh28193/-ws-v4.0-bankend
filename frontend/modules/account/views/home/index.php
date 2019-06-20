@@ -30,7 +30,7 @@ $this->registerJs($js);
                 echo '<div class="info">' . \common\helpers\WeshopHelper::showMoney($wallet->getMoneyAvailable()) . '</div>';
                 echo '<a href="/my-weshop/wallet/history.html">Chi tiết >></a>';
             } else {
-                echo '<div class="info">' . Yii::t('frontend','Upgrade to Prime now') . '</div>';
+                echo '<div class="info-upgrade">' . Yii::t('frontend','Upgrade to Prime now') . '</div>';
                 echo '<a href="javascript:void(0)" onclick="ws.notifyInfo(\''.Yii::t('frontend','Sorry. Service is under maintenance. Please try again later.').'\',\''.Yii::t('frontend','Notify').'\')">'.Yii::t('frontend','Click here').' >></a>';
             } ?>
         </div>
