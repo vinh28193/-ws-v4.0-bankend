@@ -12,6 +12,7 @@ class m190618_080525_update_payment_transaction_table extends Migration
      */
     public function safeUp()
     {
+        // @Vinh them Migrate thua
         $this->addColumn('payment_transaction', 'courier_name', $this->string(255)->notNull());
         $this->addColumn('payment_transaction', 'service_code', $this->string(32)->notNull());
         $this->addColumn('payment_transaction', 'international_shipping_fee', $this->integer(11)->notNull());
