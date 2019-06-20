@@ -23,7 +23,7 @@ class AdditionalFeeServiceController extends BasePaymentController
         $store = $this->storeManager->store;
         $bodyParams = $this->request->bodyParams;
         if (($wh = $this->getPickUpWareHouse()) === false) {
-            $this->response(false, "can not get pickup warehouse");
+            return $this->response(false, "can not get pickup warehouse");
         }
         $isId = $store->country_code === 'ID';
         $payment = new Payment($bodyParams['payment']);
