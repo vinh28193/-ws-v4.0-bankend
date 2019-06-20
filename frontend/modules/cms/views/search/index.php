@@ -12,7 +12,7 @@ use frontend\widgets\search\SearchResultWidget;
  */
 $keyword = Yii::$app->request->get('keyword');
 if($form->type == 'ebay'){
-    $this->params = ['Home' => '/','Ebay Search' => '/', $keyword => '/search/'.$keyword.'.html'];
+    $this->params = ['Home' => '/','eBay Search' => '/', $keyword => '/search/'.$keyword.'.html'];
 }else{
     $this->params = ['Home' => '/','Amazon Search' => '/', $keyword => '/search/'.$keyword.'.html'];
 }

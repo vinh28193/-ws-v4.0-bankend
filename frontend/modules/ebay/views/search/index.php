@@ -8,7 +8,7 @@ use frontend\widgets\search\SearchResultWidget;
 /* @var $results array */
 /* @var $form common\products\forms\ProductSearchForm */
 $keyword = Yii::$app->request->get('keyword');
-$this->params = ['Home' => '/','Ebay Search' => '/', $keyword => 'ebay/search/'.$keyword.'.html'];
+$this->params = ['Home' => '/','eBay Search' => '/', $keyword => 'ebay/search/'.$keyword.'.html'];
 
 echo SearchResultWidget::widget([
     'results' => $results,
