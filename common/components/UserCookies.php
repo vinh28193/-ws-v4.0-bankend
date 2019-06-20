@@ -53,7 +53,7 @@ class UserCookies extends Model
         return $value;
     }
     public function setUserCookies(){
-        $this->setAttributes(self::getUserCookies());
+        $this->setAttributes(self::getUserCookies(),false);
     }
     public static function getUserCookies($isArray = true){
         return json_decode(self::getCookies(),$isArray);

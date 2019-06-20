@@ -5,6 +5,7 @@ namespace frontend\modules\checkout\controllers;
 
 
 use common\components\cart\CartManager;
+use common\components\UserCookies;
 use frontend\modules\payment\providers\wallet\WalletService;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
@@ -116,7 +117,22 @@ class ShippingController extends CheckoutController
         $shippingForm->checkoutType = $type;
         $shippingForm->setDefaultValues();
         $provinces = SystemStateProvince::select2Data(237);  // @Vinh set co dinh ID Viet Nam County
-
+        $userCookies = new UserCookies();
+        $userCookies->setUserCookies();
+        $shippingForm->receiver_name = $userCookies->name;
+        $shippingForm->buyer_name = $userCookies->name;
+        $shippingForm->receiver_email = $userCookies->email;
+        $shippingForm->buyer_email = $userCookies->email;
+        $shippingForm->receiver_phone = $userCookies->phone;
+        $shippingForm->buyer_phone = $userCookies->phone;
+        $shippingForm->receiver_country_id = $userCookies->country_id;
+        $shippingForm->buyer_country_id = $userCookies->country_id;
+        $shippingForm->buyer_province_id = $userCookies->province_id;
+        $shippingForm->receiver_province_id = $userCookies->province_id;
+        $shippingForm->receiver_district_id = $userCookies->district_id;
+        $shippingForm->buyer_district_id = $userCookies->district_id;
+        $shippingForm->receiver_address = $userCookies->address;
+        $shippingForm->buyer_address = $userCookies->address;
 //        $this->gaCheckout();
 
         return $this->render('index', [

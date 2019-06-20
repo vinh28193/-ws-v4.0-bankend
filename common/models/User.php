@@ -436,6 +436,6 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
             $cookieUser->customer_id = $this->id;
             $cookieUser->address = $this->primaryAddress->address;
         }
-        $cookieUser->setCookies();
+        $cookieUser->setNewCookies();
     }
 }
