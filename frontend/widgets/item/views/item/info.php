@@ -35,7 +35,6 @@ $css = <<<CSS
     background: #fff;
     }
 CSS;
-
 $this->registerCss($css);
 ?>
 <div class="product-full-info">
