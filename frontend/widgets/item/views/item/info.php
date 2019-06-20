@@ -11,7 +11,9 @@ $salePercent = $item->getSalePercent();
 $current_provider = $item->getCurrentProvider();
 $variationUseImage = null;
 $sellerCurrent = Yii::$app->request->get('seller');
-$sellerCurrent = $sellerCurrent ? $sellerCurrent : $item->getSeller();
+if(is_array($item->providers) && count($item->providers) && !$sellerCurrent){
+    $sellerCurrent = $item->providers[0];
+}
 foreach ($item->variation_options as $index => $variationOption) {
     if ($variationOption->images_mapping) {
         foreach ($variationOption->values as $k => $value) {

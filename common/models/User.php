@@ -14,9 +14,11 @@ use common\components\UserPublicIdentityInterface;
 /**
  * Class User
  * @package common\models
- * @property-read Address $primaryAddress
+ * @property-read Address $defaultPrimaryAddress
  * @property-read Address $defaultShippingAddress
- * @property-read string $userLevel
+ * @property-read string $userLever
+ * @property Address[] $shippingAddress
+ * @property Address[] $primaryAddress
  */
 class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
@@ -338,11 +340,32 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         ])->one();
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAddress(){
+        return $this->hasMany(Address::className(), ['customer_id' => 'id']);
+    }
+
 
     /**
-     * Generates new password reset token
+     * @return \yii\db\ActiveQuery
      */
     public function getPrimaryAddress()
+    {
+        return $this->getAddress()->andWhere(['type' => Address::TYPE_PRIMARY]);
+    }
+
+    /**
+     * @return null
+     */
+    public function getShippingAddress()
+    {
+        return  $this->getAddress()->andWhere(['type' => Address::TYPE_SHIPPING]);
+    }
+
+
+    public function getDefaultPrimaryAddress()
     {
         return $this->hasOne(Address::className(), ['customer_id' => 'id'])->where([
             'AND',
@@ -350,6 +373,9 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
             ['is_default' => Address::IS_DEFAULT]
         ]);
     }
+
+
+
 
     /**
      * @return null
@@ -377,14 +403,16 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         }
     }
 
-    public function getFingerprint(){
+    public function getFingerprint()
+    {
         return $this->id . 'WS' . $this->email;
     }
 
     /**
      * @return Warehouse|null
      */
-    public function getPickupWarehouse(){
+    public function getPickupWarehouse()
+    {
         return null;
     }
 
@@ -395,8 +423,10 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
     {
         return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
     }
-    public function getCurrencyCode(){
-        switch ($this->store_id){
+
+    public function getCurrencyCode()
+    {
+        switch ($this->store_id) {
             case 1:
                 return 'VND';
                 break;
@@ -408,8 +438,10 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
                 break;
         }
     }
-    public function getCountryCode(){
-        switch ($this->store_id){
+
+    public function getCountryCode()
+    {
+        switch ($this->store_id) {
             case 1:
                 return 'VN';
                 break;

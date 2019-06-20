@@ -6,6 +6,7 @@ namespace frontend\modules\checkout\controllers;
 
 use common\components\cart\CartManager;
 use common\components\UserCookies;
+use common\models\User;
 use frontend\modules\payment\providers\wallet\WalletService;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
@@ -56,7 +57,7 @@ class ShippingController extends CheckoutController
             'quantity' => 1,
             'coupon_code' => 'TEST 2',
             'position' => 2,
-            'type'=> 'eBay'
+            'type' => 'eBay'
         ];
 
         $request->addProduct($productData1);
@@ -102,44 +103,35 @@ class ShippingController extends CheckoutController
         if (($keys = CartSelection::getSelectedItems($type)) === null) {
             return $this->goBack();
         }
+        $uuid = $this->filterUuid();
+        $shippingForm = new ShippingForm();
+        $shippingForm->setDefaultValues();
+        /** @var User $user */
+//        $keys = ['5d085ddce419ac2dc0002bf6', '5d08982ce419ac2dc0002bf8', '5d089830e419ac2dc0002bf9'];
+        $keys = array_map(function ($e) use($uuid,$type){
+            return [
+                'cartId' => $e,
+                'uuid' => $uuid,
+                'checkoutType' =>$type,
+            ];
+        },$keys);
         $payment = new Payment([
             'page' => Payment::PAGE_CHECKOUT,
             'uuid' => $this->filterUuid(),
-            'carts' => $keys,
             'type' => $type,
+            'orders' => $keys,
         ]);
         $payment->initDefaultMethod();
         if (count($payment->getOrders()) === 0) {
             return $this->goBack();
         }
-        $shippingForm = new ShippingForm();
-        $shippingForm->cartIds = implode(',', $keys);
-        $shippingForm->checkoutType = $type;
-        $shippingForm->setDefaultValues();
-        $provinces = SystemStateProvince::select2Data(237);  // @Vinh set co dinh ID Viet Nam County
-        $userCookies = new UserCookies();
-        $userCookies->setUserCookies();
-        $shippingForm->receiver_name = $userCookies->name;
-        $shippingForm->buyer_name = $userCookies->name;
-        $shippingForm->receiver_email = $userCookies->email;
-        $shippingForm->buyer_email = $userCookies->email;
-        $shippingForm->receiver_phone = $userCookies->phone;
-        $shippingForm->buyer_phone = $userCookies->phone;
-        $shippingForm->receiver_country_id = $userCookies->country_id;
-        $shippingForm->buyer_country_id = $userCookies->country_id;
-        $shippingForm->buyer_province_id = $userCookies->province_id;
-        $shippingForm->receiver_province_id = $userCookies->province_id;
-        $shippingForm->receiver_district_id = $userCookies->district_id;
-        $shippingForm->buyer_district_id = $userCookies->district_id;
-        $shippingForm->receiver_address = $userCookies->address;
-        $shippingForm->buyer_address = $userCookies->address;
+
 //        $this->gaCheckout();
 
         return $this->render('index', [
             'activeStep' => $activeStep,
             'shippingForm' => $shippingForm,
             'payment' => $payment,
-            'provinces' => $provinces
         ]);
     }
 
