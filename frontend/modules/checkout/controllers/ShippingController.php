@@ -100,14 +100,14 @@ class ShippingController extends CheckoutController
     public function actionIndex($type)
     {
         $activeStep = 1;
-        if (($keys = CartSelection::getSelectedItems($type)) === null) {
-            return $this->goBack();
-        }
+//        if (($keys = CartSelection::getSelectedItems($type)) === null) {
+//            return $this->goBack();
+//        }
         $uuid = $this->filterUuid();
         $shippingForm = new ShippingForm();
         $shippingForm->setDefaultValues();
         /** @var User $user */
-//        $keys = ['5d085ddce419ac2dc0002bf6', '5d08982ce419ac2dc0002bf8', '5d089830e419ac2dc0002bf9'];
+        $keys = ['5d0b840ae419ac02a8004d8a'];
         $keys = array_map(function ($e) use($uuid,$type){
             return [
                 'cartId' => $e,
@@ -122,9 +122,9 @@ class ShippingController extends CheckoutController
             'orders' => $keys,
         ]);
         $payment->initDefaultMethod();
-        if (count($payment->getOrders()) === 0) {
-            return $this->goBack();
-        }
+//        if (count($payment->getOrders()) === 0) {
+//            return $this->goBack();
+//        }
 
 //        $this->gaCheckout();
 

@@ -60,7 +60,7 @@ class CartWidget extends Widget
     {
         $key = ArrayHelper::getValue($item, '_id', '');
         $order = ArrayHelper::getValue($item, 'value');
-        $type = ArrayHelper::getValue($item, 'type', CartSelection::TYPE_SHOPPING );
+        $type = ArrayHelper::getValue($item, 'type', CartSelection::TYPE_SHOPPING);
         $selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key);
         $products = [];
         foreach ($order['products'] as $product) {
@@ -93,16 +93,15 @@ class CartWidget extends Widget
     public function run()
     {
         parent::run();
+        $pjaxOptions['id'] = $this->pjaxContainer;
+        Pjax::begin([
+            'options' => $pjaxOptions
+        ]);
         if (empty($this->items)) {
-            echo $this->render('empty');
-        } else {
-            $pjaxOptions['id'] = $this->pjaxContainer;
-            Pjax::begin([
-                'options' => $pjaxOptions
-            ]);
+        echo $this->render('empty');
+    }
             echo $this->renderItems();
             Pjax::end();
-        }
         echo Html::endTag('div');
     }
 
