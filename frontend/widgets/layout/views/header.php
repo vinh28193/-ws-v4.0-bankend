@@ -110,36 +110,19 @@ $this->registerJs($js);
                             <div class="col-md-12 mb-2">
                                 <span class="color-account"><?= Yii::t('frontend','Bạn đăng nhập nhanh bằng tài khoản của') ?></span>
                             </div>
-                            <div class="col-md-12">
-                                <button class=" col-md-12 btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook" style="text-align: center;" >
-                                    <i class="la la-facebook style-facebook"></i>
-                                    <span class="style-font-facebook">Facebook</span>
+                            <div class="col-md-6 pl-1">
+                                <button onclick="smsLogin();" class="btn btn-fb"><?= Yii::t('frontend','Login via SMS') ?></button>
+                            </div>
+                            <div class="col-md-6 pl-1">
+                                <button  class="btn btn-google" data-action="clickToLoad" data-href="/login.html" class="btn btn-info">
+                                    <?= Yii::t('frontend','Qua tài khoản') ?>
                                 </button>
-                            </div>
-                            <!--div class="col-md-6 pl-1">
-                                <button  class="btn btn-google" data-action="clickToLoad" data-href="/secure/auth?authclient=google">
-                                    <i class="la la-google style-facebook"></i>
-                                    <span class="style-font-facebook">Google</span>
-                                </button>
-                            </div-->
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12 mb-2">
-                                <span class="color-account"><?= Yii::t('frontend','Hoặc đăng nhập') ?></span>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="social-button">
-                                    <a data-action="clickToLoad" data-href="/login.html" class="btn btn-info"><?= Yii::t('frontend','Qua tài khoản') ?></a>
-                                </div>
-                            </div>
+                            </div
                         </div>
                         <hr class="color-account">
                         <div class="row">
-                            <div class="col-md-12 mb-2">
-                                <span class="color-account">Bạn chưa có tài khoản ?</span>
-                            </div>
-                            <div class="col-md-12 social-button">
-                                <a data-action="clickToLoad" data-href="/signup.html" class="btn btn-amazon"><?= Yii::t('frontend','Bạn đăng kí ngay tại đây') ?></a>
+                            <div class="col-md-12 mt-4">
+                                <span class="color-account">Bạn chưa có tài khoản ? <a href="javascript:void (0);" data-action="clickToLoad" data-href="/signup.html" class="btn-link"><?= Yii::t('frontend','Bạn đăng kí ngay tại đây') ?></a></span>
                             </div>
                         </div>
                     </div>

@@ -63,6 +63,8 @@ use Yii;
  * @property string $last_token_fcm_by update bởi ai . 99999 : mac dinh la Weshop admin
  * @property string $last_token_apn_time Thời gian update là 
  * @property string $last_token_apn_time_by update bởi ai . 99999 : mac dinh la Weshop admin
+ * @property string $facebook_acc_kit_id id facebook
+ * @property string $facebook_acc_kit_token token refresh auth code facebook
  *
  * @property Auth[] $auths
  * @property Order[] $orders
@@ -92,6 +94,8 @@ class User extends \common\components\db\ActiveRecord
             [['auth_key'], 'string', 'max' => 32],
             [['scopes', 'github'], 'string', 'max' => 500],
             [['locale', 'verify_code'], 'string', 'max' => 10],
+            [['facebook_acc_kit_id'], 'string', 'max' => 50],
+            [['facebook_acc_kit_token'], 'string', 'max' => 255],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
@@ -160,6 +164,8 @@ class User extends \common\components\db\ActiveRecord
             'last_token_fcm_by' => Yii::t('db', 'Last Token Fcm By'),
             'last_token_apn_time' => Yii::t('db', 'Last Token Apn Time'),
             'last_token_apn_time_by' => Yii::t('db', 'Last Token Apn Time By'),
+            'facebook_acc_kit_id' => Yii::t('db', 'Facebook Acc Kit ID'),
+            'facebook_acc_kit_token' => Yii::t('db', 'Facebook Acc Kit Token'),
         ];
     }
 
