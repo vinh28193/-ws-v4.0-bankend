@@ -173,8 +173,16 @@ CSS;
         $detailBlock .= $this->renderSlide();
         $detailBlock .= $this->renderFullInfo();
         $detailBlock .= Html::endTag('div');
+        $detailBlock .= $this->renderSellerMore();
         $detailBlock .= $this->renderRelateProduct();
         return $detailBlock;
+    }
+
+    public function renderSellerMore(){
+        if($this->item->providers && count($this->item->providers) > 1){
+            return $this->render('item/seller_more',['item' => $this->item]);
+        }
+        return '';
     }
 
     public function renderPaymentOption()
