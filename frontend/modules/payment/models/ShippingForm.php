@@ -3,6 +3,7 @@
 namespace frontend\modules\payment\models;
 
 use common\components\StoreManager;
+use common\components\UserCookies;
 use common\helpers\WeshopHelper;
 use common\models\SystemDistrict;
 use common\models\SystemDistrictMapping;
@@ -132,6 +133,22 @@ class ShippingForm extends Model
             $this->customer_id = $this->getUser()->id;
             $this->save_buyer_address = self::NO;
             $this->save_receiver_address = self::NO;
+            $userCookies = new UserCookies();
+            $userCookies->setUserCookies();
+            $this->receiver_name = $userCookies->name;
+            $this->buyer_name = $userCookies->name;
+            $this->receiver_email = $userCookies->email;
+            $this->buyer_email = $userCookies->email;
+            $this->receiver_phone = $userCookies->phone;
+            $this->buyer_phone = $userCookies->phone;
+            $this->receiver_country_id = $userCookies->country_id;
+            $this->buyer_country_id = $userCookies->country_id;
+            $this->buyer_province_id = $userCookies->province_id;
+            $this->receiver_province_id = $userCookies->province_id;
+            $this->receiver_district_id = $userCookies->district_id;
+            $this->buyer_district_id = $userCookies->district_id;
+            $this->receiver_address = $userCookies->address;
+            $this->buyer_address = $userCookies->address;
         }else {
             $this->enable_buyer = self::YES;
             $this->enable_receiver = self::YES;

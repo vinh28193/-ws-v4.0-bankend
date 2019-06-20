@@ -182,6 +182,16 @@ class OrderController extends BaseApiController
         //$this->can('canUpdate', $model);
         $check = $model->loadWithScenario($this->post);
         $dirtyAttributes = $model->getDirtyAttributes();
+        if (isset($post['typeUpdate'])) {
+            if ($post['typeUpdate'] == 'updateFee') {
+                if (isset($post['total_inspection_fee_local'])) {
+                    $model->total_inspection_fee_local = $post['total_inspection_fee_local'];
+                }
+                if (isset($post['total_inspection_fee_local'])) {
+                    $model->total_insurance_fee_local = $post['total_insurance_fee_local'];
+                }
+            }
+        }
         if ($model->getScenario() == 'confirmPurchase') {
             $product_id = Yii::$app->request->post('product_id');
             $tran = Yii::$app->db->beginTransaction();

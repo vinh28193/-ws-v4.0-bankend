@@ -27,4 +27,7 @@ $(document).ready(function () {
     });
 
     $('.mb-slide-image').slick();
+    $('#other-seller').owlCarousel({
+        loop:false,
+    });
 });
