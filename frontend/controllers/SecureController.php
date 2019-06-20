@@ -275,10 +275,9 @@ class SecureController extends FrontendController
     }
     public function actionAuthAccountKit(){
         $data = AccountKit::getAccessToken(Yii::$app->request->get('code',''));
-        $userC = Cookies::get('user_WS_cookies');
-        $user_id = $userC['id_facebook'];//ArrayHelper::getValue($data,'id');
+        $user_id = ArrayHelper::getValue($data,'id');
         if($user_id){
-            $user_access_token = $userC['token'];//ArrayHelper::getValue($data,'access_token');
+            $user_access_token = ArrayHelper::getValue($data,'access_token');
             $data = AccountKit::getInfo($user_access_token);
             $phone = isset($data['phone']) ? $data['phone']['national_number'] : '';
             if($data && $phone){
@@ -312,6 +311,19 @@ class SecureController extends FrontendController
             }
         }
         return $this->redirect('/login.html');
+    }
+    public function actionCookies(){
+        $type = Yii::$app->request->get('type');
+        if($type == 'get'){
+            var_dump(Cookies::get('user'));
+            die;
+        }else{
+            print_r(Yii::$app->user->getIdentity());
+            die;
+            Cookies::set('user',Yii::$app->user->getIdentity());
+            echo 'Success.';
+            die;
+        }
     }
 }
 
