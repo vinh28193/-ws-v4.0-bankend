@@ -190,6 +190,7 @@ class Payment extends Model
             if ($order->createOrderFromCart() === false) {
                 continue;
             }
+            $this->total_order_amount += $order->getTotalFinalAmount();
             $this->_orders[] = $order;
         }
 
@@ -226,13 +227,6 @@ class Payment extends Model
     public function setAdditionalFees($arrays)
     {
         $this->_additionalFees = $arrays;
-    }
-
-    public function loadOrdersFromCarts()
-    {
-        $data = CartHelper::createOrderParams($this->type, $this->carts, $this->uuid);
-        $this->_orders = $data['orders'];
-        $this->total_order_amount = $data['totalAmount'];
     }
 
     public function registerClientScript()
@@ -383,128 +377,6 @@ class Payment extends Model
     public function setTotalAmountDisplay($totalAmountDisplay)
     {
         $this->_totalAmountDisplay = $totalAmountDisplay;
-    }
-
-    /**
-     * @return array
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function createOrder()
-    {
-        $orders = [];
-        $now = Yii::$app->getFormatter()->asDatetime('now');
-        $promotionDebug = [];
-        /* @var $results PromotionResponse */
-        $results = $this->checkPromotion();
-        $transaction = Order::getDb()->beginTransaction();
-        try {
-            foreach ($this->getOrders() as $key => $orderPayment) {
-                $order = clone $orderPayment;
-                $orderTotalDiscount = 0;
-                if ($results->success === true) {
-                    $orderTotalDiscount = WeshopHelper::discountAmountPercent($order->total_amount_local, $this->total_order_amount, $results->discount);
-                }
-
-                unset($order['products']);
-                unset($order['seller']);
-                unset($order['saleSupport']);
-                // 1 order
-                $order->type_order = Order::TYPE_SHOP;
-                $order->customer_type = 'Retail';
-                $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
-                $order->total_paid_amount_local = 0;
-
-                $order->total_promotion_amount_local = $orderTotalDiscount;
-
-                $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
-
-                // 2 .seller
-                $seller = $orderPayment->seller;
-                $seller->portal = $orderPayment->portal;
-                $seller = $seller->safeCreate();
-
-                // 3. update seller for order
-                $order->seller_id = $seller->id;
-                $order->seller_name = $seller->seller_name;
-                $order->seller_store = $seller->seller_link_store;
-
-                if (!$order->save(false)) {
-                    $transaction->rollBack();
-                    return ['success' => false, 'message' => 'can not create order'];
-                }
-
-                foreach ($orderPayment->getAdditionalFees()->keys() as $key) {
-                    $feeValue = $orderPayment->getAdditionalFees()->get($key);
-                    $feeValue = reset($feeValue);
-
-                    $fee = new TargetAdditionalFee($feeValue);
-                    $fee->target = 'order';
-                    $fee->target_id = $order->id;
-
-                    if (!$fee->save(false)) {
-                        $transaction->rollBack();
-                        return ['success' => false, 'message' => 'can not create order'];
-                    }
-                }
-                $updateOrderAttributes = [];
-
-                // 4 products
-                foreach ($orderPayment->products as $paymentProduct) {
-                    $product = clone $paymentProduct;
-                    unset($product['productFees']);
-                    unset($product['category']);
-                    $product->order_id = $order->id;
-                    $product->quantity_purchase = null;
-                    /** Todo */
-                    $product->quantity_inspect = null;
-                    /** Todo */
-                    $product->variations = null;
-                    /** Todo */
-                    $product->variation_id = null;
-                    $product->remove = 0;
-                    $product->version = '4.0';
-
-                    // 6. // step 4: create category for each item
-                    $category = $paymentProduct->category;
-                    $category = $category->safeCreate();
-
-                    // 7. set category id for product
-                    $product->category_id = $category->id;
-                    // 8. set seller id for product
-                    $product->seller_id = $seller->id;
-
-                    // save total product discount here
-                    if (!$product->save(false)) {
-                        $transaction->rollBack();
-                        return ['success' => false, 'message' => 'can not save a product'];
-                    }
-
-                    foreach ($paymentProduct->productFees as $feeName => $productFee) {
-                        $fee = clone $productFee;
-                        $fee->target = 'product';
-                        $fee->target_id = $product->id;
-
-                        if (!$fee->save(false)) {
-                            $transaction->rollBack();
-                            return ['success' => false, 'message' => 'can not create order'];
-                        }
-                    }
-
-                }
-
-                $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
-                $updateOrderAttributes['total_final_amount_local'] = $order->total_amount_local - $order->total_promotion_amount_local;
-                $order->updateAttributes($updateOrderAttributes);
-                $orders[$order->ordercode] = $order;
-            }
-            Yii::info($promotionDebug, 'promotionDebug');
-            $transaction->commit();
-            return ['success' => true, 'message' => 'create order success', 'data' => $orders];
-        } catch (Exception $exception) {
-            $transaction->rollBack();
-            Yii::error($exception, __METHOD__);
-            return ['success' => false, 'message' => $exception->getMessage()];
-        }
     }
 
     public function initPaymentView()

@@ -216,7 +216,7 @@ $this->registerJs($js);
                 </div>
                 <div class="col-md-12 buyer-list <?= $shippingForm->enable_buyer === ShippingForm::NO ? 'open' : 'close'; ?>">
                     <?php
-                    if($buyerAddress !== null){
+                    if ($buyerAddress !== null) {
                         echo 'Name:' . $buyerAddress->first_name . '' . $buyerAddress->last_name;
                         echo $form->field($shippingForm, 'buyer_address_id')->hiddenInput()->label(false);
                         if ($shippingForm->enable_buyer === ShippingForm::NO) {
@@ -334,7 +334,7 @@ $this->registerJs($js);
                                 'select2Options' => [
                                     'pluginOptions' => ['allowClear' => true],
                                     'pluginEvents' => [
-                                        "select2:select" => "function(event) { console.log('call');ws.payment.calculatorShipping(); }",
+                                        "select2:select" => "function(event) { ;ws.payment.calculatorShipping(); }",
                                     ]
                                 ],
                                 'pluginOptions' => [
@@ -433,21 +433,22 @@ $this->registerJs($js);
                                     <th class="fee-header"><?= Yii::t('frontend', 'Total Order'); ?></th>
                                     <td class="fee-value"><?= $storeManager->showMoney($order->total_amount_local); ?></td>
                                 </tr>
-                                <tr>
+                                <tr data-role="fee" data-fee="purchase_fee">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Purchase Fee'); ?></th>
                                     <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('purchase_fee')[1]); ?></td>
                                 </tr>
-                                <tr>
+                                <tr data-role="fee" data-fee="tax_fee">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Us Tax'); ?></th>
                                     <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('tax_fee')[1]); ?></td>
                                 </tr>
-                                <tr>
+                                <tr data-role="fee" data-fee="international_shipping_fee">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Temporary Shipping Fee (for {weight} kg)', ['weight' => $order->total_weight_temporary]); ?></th>
-                                    <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('purchase_fee')[1]); ?></td>
+                                    <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
                                 </tr>
-                                <tr class="final">
+                                <tr class="final-amount">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Amount needed to prepay') ?></th>
-                                    <td class="fee-value"><?= $storeManager->showMoney($order->total_final_amount_local); ?></td>
+                                    <td class="fee-value"
+                                        data-origin="<?= $order->total_final_amount_local; ?>"><?= $storeManager->showMoney($order->total_final_amount_local); ?></td>
                                 </tr>
                             </table>
                         </div>

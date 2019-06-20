@@ -203,11 +203,9 @@ ws.payment = (function ($) {
                 return;
             }
 
-            if (Number(pub.shipping.enable_buyer) === 1 && (pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
+            if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
                 return false;
-            }
-
-            if (pub.shipping.other_receiver === true && Number(pub.shipping.enable_receiver) === 1) {
+            } else if (pub.shipping.other_receiver === true && Number(pub.shipping.enable_receiver) === 1) {
                 if (pub.shipping.other_receiver === true && (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id)) {
                     return false;
                 }
@@ -334,13 +332,22 @@ ws.payment = (function ($) {
         },
         courierChange: function ($cardOrder, courier) {
             var key = $cardOrder.data('key');
-            var text = courier.courier_name + ' ' + courier.service_name + ' (' + courier.min_delivery_time + '-' + courier.min_delivery_time + ' ' + ws.t('day') + ' )';
+            var text = courier.courier_name + ' ' + courier.service_name + ' (' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('day') + ' )';
             var courierDropDown = $cardOrder.find('div.courier-dropdown');
             courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(text);
-            var order = pub.payment.orders[key];
+            var orders = pub.get('orders');
+            var order = orders[key];
             var shippingFee = courier.total_fee;
+            var tableFee = $cardOrder.find('table.table-fee');
+            var shippingRow = tableFee.find('tr[data-fee="international_shipping_fee"]');
+            shippingRow.find('.fee-value').html(ws.showMoney(shippingFee));
+            var totalFinal = tableFee.find('tr.final-amount').find('.fee-value');
+            var value = totalFinal.data('origin');
+            value += shippingFee;
+            totalFinal.html(ws.showMoney(value));
             order.courierDetail = courier;
-            pub.payment.orders[key] = order;
+            orders[key] = order;
+            pub.set('orders', orders);
             getTotalAmount(pub.payment.totalAmount);
         },
         methodChange: function (isNew) {
@@ -504,9 +511,10 @@ ws.payment = (function ($) {
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
 
             pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
+            console.log(pub.shipping);
             // case 1 //
             if (isSafe) {
-                if (Number(pub.shipping.enable_buyer) === 1 && (pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
+                if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
                     ws.notifyError('Vui lòng nhập đầy đủ thông tin người mua');
                     return false;
                 }
