@@ -60,14 +60,8 @@ echo Html::tag('div', Html::tag('span', $this->title), ['class' => 'title'])
 <?php ActiveForm::end(); ?>
 <div class="other-login">
     <div class="text-center"><span class="or">Hoặc đăng nhâp qua</span></div>
-    <div class="social-button">
-        <?php $authAuthChoice = AuthChoice::begin(['baseAuthUrl' => ['secure/auth'], 'popupMode' => false,]); ?>
-        <div class="social-button">
-            <?php foreach ($authAuthChoice->getClients() as $client): ?>
-                <?= $authAuthChoice->clientLink($client) ?>
-            <?php endforeach; ?>
-        </div>
-        <?php AuthChoice::end(); ?>
+    <div class="social-button-ws">
+        <button onclick="smsLogin();" class="btn btn-fb" style="width: 100%;">Login via SMS</button>
     </div>
     <div class="text-center" style="color:#999;margin:1em 0">
         Nếu bạn quên mật khẩu, bạn có thể <?= Html::a('khôi phục nó', ['secure/request-password-reset']) ?>.

@@ -20,6 +20,7 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 
 <?php $form = ActiveForm::begin([
     'id' => 'form-signup',
+    'action' => '/signup.html',
     'options' => [
         'class' => 'payment-form',
     ],
@@ -42,7 +43,10 @@ echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 </div>
 
 <div class="form-group">
-    <?= $form->field($model, 'phone', ['template' => " <i class=\"icon phone\"></i>{input}\n{hint}\n{error}"])->textInput()->input('number', ['placeholder' => "Số điện thoại"]) ?>
+    <i class="icon phone"></i><input type="text" disabled class="form-control" value="<?= $model->phone ?>">
+</div>
+<div style="display: none">
+    <?= $form->field($model, 'phone', [])->hiddenInput()->input('hidden', ['placeholder' => "Số điện thoại"]) ?>
 </div>
 
 <div class="form-group">

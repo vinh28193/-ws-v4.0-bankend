@@ -275,9 +275,10 @@ class SecureController extends FrontendController
     }
     public function actionAuthAccountKit(){
         $data = AccountKit::getAccessToken(Yii::$app->request->get('code',''));
-        $user_id = ArrayHelper::getValue($data,'id');
+        $userC = Cookies::get('user_WS_cookies');
+        $user_id = $userC['id_facebook'];//ArrayHelper::getValue($data,'id');
         if($user_id){
-            $user_access_token = ArrayHelper::getValue($data,'access_token');
+            $user_access_token = $userC['token'];//ArrayHelper::getValue($data,'access_token');
             $data = AccountKit::getInfo($user_access_token);
             $phone = isset($data['phone']) ? $data['phone']['national_number'] : '';
             if($data && $phone){
@@ -300,6 +301,8 @@ class SecureController extends FrontendController
                 }else{
                     $modal = new SignupForm();
                     $modal->phone = '0'.$phone;
+                    $modal->facebook_id = $user_id;
+                    $modal->facebook_token = $user_access_token;
                     return $this->render('final_step',[
                         'id_facebook' => $user_id,
                         'token_refresh' => $user_access_token,
