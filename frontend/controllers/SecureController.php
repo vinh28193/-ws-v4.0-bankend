@@ -3,6 +3,8 @@
 
 namespace frontend\controllers;
 
+use common\components\AccountKit;
+use common\components\Cookies;
 use common\models\User;
 use frontend\models\PasswordRequiredForm;
 use User\SignUpRequest;
@@ -12,6 +14,7 @@ use Yii;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
 use yii\base\InvalidParamException;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
@@ -80,31 +83,7 @@ class SecureController extends FrontendController
         }
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            /** @var User $user */
-            $user = Yii::$app->user->getIdentity();
-            if(!$user->bm_wallet_id){
-                try{
-                    $greeterClient = new UserClient('206.189.94.203:50053', [
-                        'credentials' => \Grpc\ChannelCredentials::createInsecure(),
-                    ]);
-                    $request = new SignUpRequest();
-                    $request->setCurrency($user->getCurrencyCode());
-                    $request->setCountry($user->getCountryCode());
-                    $request->setEmail($user->email);
-                    $request->setFullname(trim($user->last_name.' '. $user->first_name));
-                    $request->setPassword1($model->password);
-                    $request->setPassword2($model->password);
-                    $request->setPhone($user->phone);
-                    $request->setPlatform("WESHOP");
-                    $request->setPlatformUser($user->id);
-                    list($reply, $status) = $greeterClient->SignUp($request)->wait();
-                    /** @var SignUpResponse $reply */
-                    if(!$reply->getError()){
-                        $wallet_boxme = $reply->getData();
-                        User::updateAll(['bm_wallet_id' => $wallet_boxme->getUserId()],['id' => $user->id]);
-                    }
-                }catch (\Exception $exception){}
-            }
+            $this->signUpBoxMe($model->password);
             $redirectUrl = Yii::$app->getHomeUrl();
             if (($url_rel = $this->request->get('rel')) !== null) {
                 $url_rel = urldecode($url_rel);
@@ -117,7 +96,33 @@ class SecureController extends FrontendController
             ]);
         }
     }
-
+    public function signUpBoxMe($password){
+//        /** @var User $user */
+//        $user = Yii::$app->user->getIdentity();
+//        if(!$user->bm_wallet_id){
+//            try{
+//                $greeterClient = new UserClient('206.189.94.203:50053', [
+//                    'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+//                ]);
+//                $request = new SignUpRequest();
+//                $request->setCurrency($user->getCurrencyCode());
+//                $request->setCountry($user->getCountryCode());
+//                $request->setEmail($user->email);
+//                $request->setFullname(trim($user->last_name.' '. $user->first_name));
+//                $request->setPassword1($password);
+//                $request->setPassword2($password);
+//                $request->setPhone($user->phone);
+//                $request->setPlatform("WESHOP");
+//                $request->setPlatformUser($user->id);
+//                list($reply, $status) = $greeterClient->SignUp($request)->wait();
+//                /** @var SignUpResponse $reply */
+//                if(!$reply->getError()){
+//                    $wallet_boxme = $reply->getData();
+//                    User::updateAll(['bm_wallet_id' => $wallet_boxme->getUserId()],['id' => $user->id]);
+//                }
+//            }catch (\Exception $exception){}
+//        }
+    }
     public function actionPasswordRequired()
     {
         if (Yii::$app->user->isGuest) {
@@ -133,9 +138,15 @@ class SecureController extends FrontendController
     /**
      * Logs out the current user.
      * @return mixed
+     * @throws \Throwable
      */
     public function actionLogout()
     {
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
+        if($user->facebook_acc_kit_id && $user->facebook_acc_kit_token){
+            (AccountKit::logout($user->facebook_acc_kit_token));
+        }
         Yii::$app->user->logout();
         return $this->goHome();
     }
@@ -149,6 +160,7 @@ class SecureController extends FrontendController
                 Yii::$app->session->setFlash('success', Yii::t('frontend', 'Check your email for further instructions.'));
                 $model->sendEmail();
                 if (Yii::$app->getUser()->login($user)) {
+                    $this->signUpBoxMe($model->password);
                     return $this->goHome();
                 }
             }
@@ -259,42 +271,44 @@ class SecureController extends FrontendController
                     $this->redirect(array('change-password', 'msg' => 'password not changed'));
             }
         }
-
         $this->render('changePassword', array('model' => $model));
     }
-    public function actionTestAuth(){
-        print_r(Yii::$app->request->post());
-        print_r(Yii::$app->request->get());
-        die('test');
-        $app_id = '216590825760272';
-        $secret = '<account_kit_app_secret>';
-        $version = 'v1.0';
-        function doCurl($url)
-        {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $data = json_decode(curl_exec($ch), true);
-            curl_close($ch);
-            return $data;
+    public function actionAuthAccountKit(){
+        $data = AccountKit::getAccessToken(Yii::$app->request->get('code',''));
+        $user_id = ArrayHelper::getValue($data,'id');
+        if($user_id){
+            $user_access_token = ArrayHelper::getValue($data,'access_token');
+            $data = AccountKit::getInfo($user_access_token);
+            $phone = isset($data['phone']) ? $data['phone']['national_number'] : '';
+            if($data && $phone){
+                Cookies::set('user_WS_cookies',[
+                    'id_facebook' => $user_id,
+                    'token' => $user_access_token,
+                    'phone' => $phone,
+                ]);
+                /** @var User $userWS */
+                $userWS = User::find()->where(['remove' => 0,'employee' => 0])->andWhere(['or',['like','phone',$phone],['facebook_acc_kit_id' => $user_id]])->one();
+                if($userWS){
+                    $userWS->phone = '0'.$phone;
+                    $userWS->facebook_acc_kit_id = $user_id;
+                    $userWS->facebook_acc_kit_token = $user_access_token;
+                    $userWS->save(0);
+                    if (Yii::$app->getUser()->login($userWS)) {
+                        return $this->goHome();
+                    }
+                    return $this->redirect('/login.html');
+                }else{
+                    $modal = new SignupForm();
+                    $modal->phone = '0'.$phone;
+                    return $this->render('final_step',[
+                        'id_facebook' => $user_id,
+                        'token_refresh' => $user_access_token,
+                        'model' => $modal,
+                    ]);
+                }
+            }
         }
-        $token_exchange_url = 'https://graph.accountkit.com/' . $version . '/access_token?' .
-            'grant_type=authorization_code' .
-            '&code=' . $_POST['code'] .
-            "&access_token=AA|$app_id|$secret";
-        $data = doCurl($token_exchange_url);
-        $user_id = $data['id'];
-        $user_access_token = $data['access_token'];
-        $refresh_interval = $data['token_refresh_interval_sec'];
-        $me_endpoint_url = 'https://graph.accountkit.com/' . $version . '/me?' .
-            'access_token=' . $user_access_token;
-        $data = doCurl($me_endpoint_url);
-        $phone = isset($data['phone']) ? $data['phone']['number'] : '';
-        $email = isset($data['email']) ? $data['email']['address'] : '';
-
-
-        print_r(Yii::$app->request->post());
-        print_r(Yii::$app->request->get());
-        die('test');
+        return $this->redirect('/login.html');
     }
 }
+
