@@ -6,12 +6,14 @@ use common\products\BaseProduct;
 /* @var yii\web\View $this */
 /* @var BaseProduct $item */
 /* @var common\components\StoreManager $storeManager */
-$portal_web = $item->type == 'ebay' ? '<a href="//ebay.com">eBay.com</a>' : '<a href="//amazon.com">Amazon.com</a>';
+$portal_web = strtolower($item->type) == 'ebay' ? '<a href="//ebay.com">eBay.com</a>' : '<a href="//amazon.com">Amazon.com</a>';
 $salePercent = $item->getSalePercent();
 $current_provider = $item->getCurrentProvider();
 $variationUseImage = null;
 $sellerCurrent = Yii::$app->request->get('seller');
-$sellerCurrent = $sellerCurrent ? $sellerCurrent : $item->getSeller();
+if(is_array($item->providers) && count($item->providers) && !$sellerCurrent){
+    $sellerCurrent = $item->providers[0];
+}
 foreach ($item->variation_options as $index => $variationOption) {
     if ($variationOption->images_mapping) {
         foreach ($variationOption->values as $k => $value) {
@@ -33,7 +35,6 @@ $css = <<<CSS
     background: #fff;
     }
 CSS;
-
 $this->registerCss($css);
 ?>
 <div class="product-full-info">

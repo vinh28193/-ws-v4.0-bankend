@@ -6,7 +6,7 @@
  * Time: 17:58
  */
 
-namespace common\components;
+namespace common\additional;
 
 trait AdditionalFeeTrait
 {

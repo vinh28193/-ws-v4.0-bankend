@@ -5,6 +5,7 @@ namespace frontend\controllers;
 
 use common\components\AccountKit;
 use common\components\Cookies;
+use common\components\UserCookies;
 use common\models\User;
 use frontend\models\PasswordRequiredForm;
 use User\SignUpRequest;
@@ -159,13 +160,13 @@ class SecureController extends FrontendController
             if ($user = $model->signup()) {
                 Yii::$app->session->setFlash('success', Yii::t('frontend', 'Check your email for further instructions.'));
                 $model->sendEmail();
+                $user->setCookiesUser();
                 if (Yii::$app->getUser()->login($user)) {
                     $this->signUpBoxMe($model->password);
                     return $this->goHome();
                 }
             }
         }
-
         return $this->render('register', [
             'model' => $model,
         ]);
@@ -281,11 +282,11 @@ class SecureController extends FrontendController
             $data = AccountKit::getInfo($user_access_token);
             $phone = isset($data['phone']) ? $data['phone']['national_number'] : '';
             if($data && $phone){
-                Cookies::set('user_WS_cookies',[
-                    'id_facebook' => $user_id,
-                    'token' => $user_access_token,
-                    'phone' => $phone,
-                ]);
+                $cookieUser = new UserCookies();
+                $cookieUser->facebook_id = $user_id;
+                $cookieUser->facebook_token = $user_access_token;
+                $cookieUser->phone = $phone;
+                $cookieUser->setNewCookies();
                 /** @var User $userWS */
                 $userWS = User::find()->where(['remove' => 0,'employee' => 0])->andWhere(['or',['like','phone',$phone],['facebook_acc_kit_id' => $user_id]])->one();
                 if($userWS){
@@ -293,6 +294,7 @@ class SecureController extends FrontendController
                     $userWS->facebook_acc_kit_id = $user_id;
                     $userWS->facebook_acc_kit_token = $user_access_token;
                     $userWS->save(0);
+                    $userWS->setCookiesUser();
                     if (Yii::$app->getUser()->login($userWS)) {
                         return $this->goHome();
                     }
@@ -311,19 +313,6 @@ class SecureController extends FrontendController
             }
         }
         return $this->redirect('/login.html');
-    }
-    public function actionCookies(){
-        $type = Yii::$app->request->get('type');
-        if($type == 'get'){
-            var_dump(Cookies::get('user'));
-            die;
-        }else{
-            print_r(Yii::$app->user->getIdentity());
-            die;
-            Cookies::set('user',Yii::$app->user->getIdentity());
-            echo 'Success.';
-            die;
-        }
     }
 }
 

@@ -12,6 +12,9 @@ use Yii;
  * @property string $description
  * @property int $store_id
  * @property int $parent_id
+ * @property int $is_special
+ * @property int $custom_default_value
+ * @property int $special_min_amount
  * @property string $rule
  * @property string $rule_description
  * @property string $created_at
@@ -36,7 +39,7 @@ class CategoryGroup extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'parent_id', 'created_at', 'updated_at', 'active', 'remove'], 'integer'],
+            [['store_id', 'parent_id', 'is_special', 'custom_default_value', 'special_min_amount', 'created_at', 'updated_at', 'active', 'remove'], 'integer'],
             [['rule', 'rule_description'], 'string'],
             [['name', 'description', 'version'], 'string', 'max' => 255],
         ];
@@ -53,6 +56,9 @@ class CategoryGroup extends \common\components\db\ActiveRecord
             'description' => Yii::t('db', 'Description'),
             'store_id' => Yii::t('db', 'Store ID'),
             'parent_id' => Yii::t('db', 'Parent ID'),
+            'is_special' => Yii::t('db', 'Is Special'),
+            'custom_default_value' => Yii::t('db', 'Custom Default Value'),
+            'special_min_amount' => Yii::t('db', 'Special Min Amount'),
             'rule' => Yii::t('db', 'Rule'),
             'rule_description' => Yii::t('db', 'Rule Description'),
             'created_at' => Yii::t('db', 'Created At'),

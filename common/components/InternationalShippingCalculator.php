@@ -1,17 +1,15 @@
 <?php
 
 
-namespace common\boxme;
-
+namespace common\components;
 
 use common\helpers\WeshopHelper;
 use Courier\CalculateFeeRequest;
 use Courier\CalculateFeeResponse;
 use Courier\CourierCalculate;
 use Courier\CourierClient;
-use Yii;
 use yii\base\BaseObject;
-use common\components\AdditionalFeeInterface;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
 class InternationalShippingCalculator extends BaseObject
@@ -30,15 +28,45 @@ class InternationalShippingCalculator extends BaseObject
     }
 
 
-    public function CalculateFee($shipmentData, $userId, $countryCode)
+    public function CalculateFee($params, $userId, $countryCode, $currency = 'VND')
     {
         $request = new CalculateFeeRequest();
-        $request->setData(Json::encode($shipmentData));
+        $params = ArrayHelper::merge([
+            'config' => [
+                'preview' => 'Y',
+                'return_mode' => 0,
+                'insurance' => 'N',
+                'document' => 0,
+                'currency' => $currency,
+                'unit_metric' => 'metric',
+                'sort_mode' => 'best_rating',
+                'auto_approve' => 'Y',
+                'create_by' => 0,
+                'create_from' => 'create_order_netsale',
+                'order_type' => 'dropship',
+                'check_stock' => 'N',
+            ],
+            'payment' => [
+                'cod_amount' => 0,
+                'fee_paid_by' => 'sender'
+            ],
+            'referral' => [
+                'order_number' => 0,
+                'coupon_code' => ''
+            ]
+        ], $params);
+
+        $request->setData(Json::encode($params));
+        \Yii::info($params);
         $request->setUserId($userId);
         $request->setCountryCode($countryCode);
-        list($response, $status) = $this->getGrpcClient()->CalculateFee($request)->wait();
-        /** @var $response CalculateFeeResponse */
+        /** @var $apires CalculateFeeResponse */
+        $apires = $this->getGrpcClient()->CalculateFee($request)->wait();
+        list($response, $status) = $apires;
+        /** @var $response CourierCalculate */
         $data = $response->getData();
+        \Yii::info($request->getData(),'getData');
+        \Yii::info($request->getUserId(),'getUserId');
         $success = $response->getError() === false && $data->count() > 0;
         $message = $response->getErrorMessage();
         if (!$success && WeshopHelper::isEmpty($message) && isset($status->details) && is_string($status->details)) {
@@ -72,11 +100,5 @@ class InternationalShippingCalculator extends BaseObject
             $results[] = $courier;
         }
         return $results;
-    }
-
-    public function trace(AdditionalFeeInterface $additional)
-    {
-        $feeValue = rand(1, 99);
-        return $feeValue;
     }
 }

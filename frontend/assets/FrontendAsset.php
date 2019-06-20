@@ -22,7 +22,8 @@ class FrontendAsset extends AssetBundle
         'css/all.css',
         'fonts/line-awesome/css/line-awesome.min.css',
         'fonts/line-awesome/css/line-awesome-font-awesome.min.css',
-        'css/header_account.css'
+        'css/header_account.css',
+        'css/checkout-new.css'
 //        'css/mobile_style.css'
     ];
     public $js = [

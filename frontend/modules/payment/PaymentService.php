@@ -132,7 +132,7 @@ class PaymentService
     /**
      * @param Payment $payment
      */
-    public static function createOrderFormCart(Payment $payment)
+    public static function createOrders(Payment $payment)
     {
         $errors = [];
         $keys = $payment->carts;
@@ -162,6 +162,8 @@ class PaymentService
             }
             unset($params['customer']);
             unset($params['support_name']);
+//            print_r($params);
+//            die;
             $order = new Order($params);
             $order->cartId = $cartId;
             $order->getAdditionalFees()->removeAll();

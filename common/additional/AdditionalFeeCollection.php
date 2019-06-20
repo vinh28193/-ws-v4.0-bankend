@@ -6,15 +6,15 @@
  * Time: 15:59
  */
 
-namespace common\components;
+namespace common\additional;
 
 
-use common\models\StoreAdditionalFee;
+
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
-
+use common\components\ArrayCollection;
 /**
  * new update co collection
  * đối tượng collection cho phép cóp nhặt 1 list data từ 1 nguồn sẵn có hoặc tự được thêm vào
@@ -33,18 +33,18 @@ class AdditionalFeeCollection extends ArrayCollection
 
     /**
      * cho phép get dữ liệu từ một nguồn được định nghĩa từ [[ActiceRecore]]
-     * @param ActiveRecord $owner
+     * @param ActiveRecord $activeRecord
      */
-    public function loadFormOwner(ActiveRecord $owner)
+    public function loadFormActiveRecord(ActiveRecord $activeRecord)
     {
-        $tableName = $owner::tableName();
-        $ownerClass = get_class($owner);
-        $ownerId = $owner->getPrimaryKey(false);
+        $tableName = $activeRecord::tableName();
+        $class = get_class($activeRecord);
+        $ownerId = $activeRecord->getPrimaryKey(false);
         $query = new Query();
         $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.label', 'c.local_amount', 'c.discount_amount', 'c.currency']);
         $query->from(['c' => 'target_additional_fee']);
         $query->where(['and', ['c.target' => $tableName], ['c.target_id' => $ownerId]]);
-        $additionalFees = $query->all($ownerClass::getDb());
+        $additionalFees = $query->all($class::getDb());
         $additionalFees = ArrayHelper::index($additionalFees, null, function ($element) {
             return $element['name'];
         });

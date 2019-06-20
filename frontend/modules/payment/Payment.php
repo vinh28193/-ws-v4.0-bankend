@@ -47,10 +47,6 @@ class Payment extends Model
     public $type;
 
     public $payment_type = 'online_payment';
-    /**
-     * @var array
-     */
-    public $carts;
 
     /**
      * @var string
@@ -69,7 +65,6 @@ class Payment extends Model
     public $customer_postcode;
     public $customer_district;
     public $customer_country;
-
 
     public $use_xu = 0;
     public $bulk_point = 0;
@@ -103,15 +98,6 @@ class Payment extends Model
 
     public $acceptance_insurance = false;
     public $insurance_fee = 0;
-
-    public $courier_sort_mode = 'best_rating';
-    public $service_code; // mã hãng vận chuyển, mã code "VTP_EXP ...
-    public $courier_name;
-    public $courier_logo; // Tên
-    public $courier_fee; // Phí vận chuyển
-    public $courier_delivery_time; // Thời gian dự kiến
-    public $courier_detail = [];
-
 
     public $ga;
     public $otp_code;
@@ -180,12 +166,6 @@ class Payment extends Model
      */
     public function getOrders()
     {
-        if (empty($this->_orders) && !empty($this->carts)) {
-            $res = PaymentService::createOrderFormCart($this);
-
-            $this->setOrders($res['orders']);
-            $this->total_order_amount = $res['totalAmount'];
-        }
         return $this->_orders;
     }
 
@@ -194,7 +174,25 @@ class Payment extends Model
      */
     public function setOrders($orders)
     {
-        $this->_orders = $orders;
+        $this->_orders = [];
+
+        foreach ($orders as $param) {
+            if (!isset($param['checkoutType'])) {
+                $param['checkoutType'] = $this->type;
+            }
+            if (!isset($param['uuid'])) {
+                $param['uuid'] = $this->uuid;
+            }
+            if (isset($param['totalFinalAmount'])) {
+                unset($param['totalFinalAmount']);
+            }
+            $order = new Order($param);
+            if ($order->createOrderFromCart() === false) {
+                continue;
+            }
+            $this->_orders[] = $order;
+        }
+
     }
 
     /**
@@ -211,7 +209,6 @@ class Payment extends Model
     {
         if (empty($this->_additionalFees) || $refresh) {
             $this->_additionalFees = [];
-            $this->_additionalFees['international_shipping_fee'] = 0;
             foreach ($this->getOrders() as $idx => $order) {
                 foreach ($order->getAdditionalFees()->keys() as $key) {
                     if (!isset($this->_additionalFees[$key])) {
@@ -221,9 +218,6 @@ class Payment extends Model
                     $value += $order->getAdditionalFees()->getTotalAdditionalFees($key)[1];
                     $this->_additionalFees[$key] = $value;
                 }
-            }
-            if ($this->courier_fee !== null) {
-                $this->_additionalFees['international_shipping_fee'] = $this->courier_fee;
             }
         }
         return $this->_additionalFees;
@@ -397,7 +391,7 @@ class Payment extends Model
      */
     public function createOrder()
     {
-        $orderCodes = [];
+        $orders = [];
         $now = Yii::$app->getFormatter()->asDatetime('now');
         $promotionDebug = [];
         /* @var $results PromotionResponse */
@@ -453,6 +447,7 @@ class Payment extends Model
                     }
                 }
                 $updateOrderAttributes = [];
+
                 // 4 products
                 foreach ($orderPayment->products as $paymentProduct) {
                     $product = clone $paymentProduct;
@@ -499,18 +494,12 @@ class Payment extends Model
 
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
                 $updateOrderAttributes['total_final_amount_local'] = $order->total_amount_local - $order->total_promotion_amount_local;
-                if ($this->isPaid) {
-                    $updateOrderAttributes['total_paid_amount_local'] = $updateOrderAttributes['total_final_amount_local'];
-                }
                 $order->updateAttributes($updateOrderAttributes);
-                $orderCodes[] = [
-                    'totalPaid' => $order->total_paid_amount_local,
-                    'discountAmount' => $order->total_promotion_amount_local,
-                ];
+                $orders[$order->ordercode] = $order;
             }
             Yii::info($promotionDebug, 'promotionDebug');
             $transaction->commit();
-            return ['success' => true, 'message' => 'create order success', 'data' => ['orderCodes' => $orderCodes, 'promotionInfo' => $promotionDebug]];
+            return ['success' => true, 'message' => 'create order success', 'data' => $orders];
         } catch (Exception $exception) {
             $transaction->rollBack();
             Yii::error($exception, __METHOD__);
@@ -547,11 +536,25 @@ class Payment extends Model
     public
     function getClientOptions()
     {
+        $orders = [];
+        foreach ($this->getOrders() as $order) {
+            $orders[$order->cartId] = [
+                'cartId' => $order->cartId,
+                'checkoutType' => $order->checkoutType,
+                'uuid' => $order->uuid,
+                'ordercode' => $order->ordercode,
+                'acceptance_insurance' => 'N',
+                'courier_sort_mode' => 'best_rating',
+                'courierDetail' => $order->courierDetail,
+                'additionalFees' => $order->getAdditionalFees()->toArray(),
+                'totalFinalAmount' => $order->getTotalAmount(),
+            ];
+        }
         return [
             'page' => $this->page,
             'uuid' => $this->uuid,
             'type' => $this->type,
-            'carts' => (array)$this->carts,
+            'orders' => (array)$orders,
             'customer_name' => $this->customer_name,
             'customer_email' => $this->customer_email,
             'customer_phone' => $this->customer_phone,
@@ -587,14 +590,6 @@ class Payment extends Model
             'instalment_type' => $this->instalment_type,
             'acceptance_insurance' => $this->acceptance_insurance,
             'insurance_fee' => $this->insurance_fee,
-            'courier_sort_mode' => $this->courier_sort_mode,
-            'service_code' => $this->service_code,
-            'courier_name' => $this->courier_name,
-            'courier_logo' => $this->courier_logo,
-            'courier_fee' => $this->courier_fee,
-            'courier_delivery_time' => $this->courier_delivery_time,
-            'courier_detail' => $this->courier_detail,
-
             'ga' => $this->ga,
             'otp_code' => $this->otp_code,
             'otp_verify_method' => $this->otp_verify_method,

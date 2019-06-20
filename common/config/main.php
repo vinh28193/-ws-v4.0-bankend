@@ -16,7 +16,7 @@ return [
             'noCacheParam' => 'noCache',
             'noCacheValidateKey' => 'yes'
         ],
-        /*
+
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',

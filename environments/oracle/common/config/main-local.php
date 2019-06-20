@@ -62,7 +62,15 @@ return [
             'schemaCache' => 'cache'
         ],
         'ga' => [
-            'trackingId' => 'UA-140658371-1',
+            'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
+            'trackingId' => 'UA-140658371-1', // Put your real tracking ID here
+
+            // These parameters are optional:
+            'useSsl' => true, // If you’d like to use a secure connection to Google servers
+            'overrideIp' => false, // By default, IP is overridden by the user’s one, but you can disable this
+            'anonymizeIp' => true, // If you want to anonymize the sender’s IP address
+            'asyncMode' => true, // Enables the asynchronous mode (see below)
+            'autoSetClientId' => true, // Try to set ClientId automatically from the “_ga” cookie (disabled by default)
         ],
         'productManager' => [
             'gates' => [

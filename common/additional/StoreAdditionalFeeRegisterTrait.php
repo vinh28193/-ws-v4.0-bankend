@@ -6,15 +6,17 @@
  * Time: 09:21
  */
 
-namespace common\components;
+namespace common\additional;
 
+use common\components\StoreManager;
 use Yii;
 use yii\base\InvalidConfigException;
 
 /**
  * Trait AdditionalFeeRegisterTrait
  * @package ws\base
- * @property \common\models\StoreAdditionalFee[] $storeAdditionalFee
+ * @property-read  StoreAdditionalFee[] $storeAdditionalFee
+ * @property-read StoreManager $storeManager
  */
 trait StoreAdditionalFeeRegisterTrait
 {
@@ -41,12 +43,12 @@ trait StoreAdditionalFeeRegisterTrait
     }
 
     /**
-     * @var
+     * @var StoreAdditionalFee[]
      */
     private $_storeAdditionalFee = [];
 
     /**
-     * @throws InvalidConfigException
+     * @return array|StoreAdditionalFee[]
      */
     public function getStoreAdditionalFee()
     {

@@ -23,7 +23,7 @@ class Store extends BbStore implements StoreInterface
 
     public function getStoreAdditionalFee()
     {
-        return $this->hasMany(StoreAdditionalFee::className(), ['store_id' => 'store_id']);
+        return $this->hasMany(\common\additional\StoreAdditionalFee::className(), ['store_id' => 'store_id']);
     }
 
     /**
@@ -38,7 +38,7 @@ class Store extends BbStore implements StoreInterface
             $condition = reset($condition);
             throw new NotFoundHttpException("Not found Store $condition");
         }
-        $storeAdditionalFee = StoreAdditionalFee::findAll(['store_id' => $store->id]);
+        $storeAdditionalFee = \common\additional\StoreAdditionalFee::findAll(['store_id' => $store->id]);
         if($storeAdditionalFee !== null){
             $storeAdditionalFee = ArrayHelper::index($storeAdditionalFee,'name');
         }else if ($storeAdditionalFee === null){

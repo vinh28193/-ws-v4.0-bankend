@@ -9,7 +9,7 @@
 namespace common\models;
 
 use Yii;
-use common\components\AdditionalFeeInterface;
+use common\additional\AdditionalFeeInterface;
 use common\models\db\Category as DbCategory;
 
 /**
@@ -42,6 +42,14 @@ class Category extends DbCategory
             return 0;
         }
 
+    }
+
+    public function checkSpecialGroup(AdditionalFeeInterface $additionalFee)
+    {
+        if (($group = $this->categoryGroup) !== null && $group  instanceof CategoryGroup) {
+            return $group->getIsSpecial($additionalFee);
+        }
+        return false;
     }
 
     /**

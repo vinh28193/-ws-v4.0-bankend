@@ -72,7 +72,7 @@ class StoreManager extends Component implements BootstrapInterface
         $app->view->registerJs("ws.init($options);");
         $messages = Json::htmlEncode($this->getClientMessages());
         $app->view->registerJs("ws.i18nLoadMessages($messages);");
-        $app->view->registerJs("console.log(ws.t('Hello {name}',{name:'Vinh'}))");
+        // $app->view->registerJs("console.log(ws.t('Hello {name}',{name:'Vinh'}))");
     }
 
     protected function getClientOptions()
@@ -143,10 +143,14 @@ class StoreManager extends Component implements BootstrapInterface
     {
         $idStore = $idStore ? $idStore : $this->store->id;
 
-        if ($idStore == self::STORE_VN) {
+        if ($idStore == self::STORE_VN and !YII_ENV_TEST) {
             $host = "weshop.com.vn";
-        } else if ($idStore == self::STORE_ID) {
+        }else if ($idStore == self::STORE_VN and YII_ENV_TEST) {
+           $host = "web-uat-v3.weshop.com.vn";
+        } else if ($idStore == self::STORE_ID and !YII_ENV_TEST) {
             $host = "weshop.co.id";
+        }else if ($idStore == self::STORE_VN and YII_ENV_TEST) {
+            $host = "uat-in.weshop.asia";
         } else {
             $host = "weshop.com.vn";
         }

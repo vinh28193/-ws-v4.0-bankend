@@ -5,6 +5,8 @@ namespace frontend\modules\checkout\controllers;
 
 
 use common\components\cart\CartManager;
+use common\components\UserCookies;
+use common\models\User;
 use frontend\modules\payment\providers\wallet\WalletService;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
@@ -55,7 +57,7 @@ class ShippingController extends CheckoutController
             'quantity' => 1,
             'coupon_code' => 'TEST 2',
             'position' => 2,
-            'type'=> 'eBay'
+            'type' => 'eBay'
         ];
 
         $request->addProduct($productData1);
@@ -101,21 +103,28 @@ class ShippingController extends CheckoutController
         if (($keys = CartSelection::getSelectedItems($type)) === null) {
             return $this->goBack();
         }
+        $uuid = $this->filterUuid();
+        $shippingForm = new ShippingForm();
+        $shippingForm->setDefaultValues();
+        /** @var User $user */
+//        $keys = ['5d085ddce419ac2dc0002bf6', '5d08982ce419ac2dc0002bf8', '5d089830e419ac2dc0002bf9'];
+        $keys = array_map(function ($e) use($uuid,$type){
+            return [
+                'cartId' => $e,
+                'uuid' => $uuid,
+                'checkoutType' =>$type,
+            ];
+        },$keys);
         $payment = new Payment([
             'page' => Payment::PAGE_CHECKOUT,
             'uuid' => $this->filterUuid(),
-            'carts' => $keys,
             'type' => $type,
+            'orders' => $keys,
         ]);
         $payment->initDefaultMethod();
         if (count($payment->getOrders()) === 0) {
             return $this->goBack();
         }
-        $shippingForm = new ShippingForm();
-        $shippingForm->cartIds = implode(',', $keys);
-        $shippingForm->checkoutType = $type;
-        $shippingForm->setDefaultValues();
-        $provinces = SystemStateProvince::select2Data(237);  // @Vinh set co dinh ID Viet Nam County
 
 //        $this->gaCheckout();
 
@@ -123,7 +132,6 @@ class ShippingController extends CheckoutController
             'activeStep' => $activeStep,
             'shippingForm' => $shippingForm,
             'payment' => $payment,
-            'provinces' => $provinces
         ]);
     }
 
