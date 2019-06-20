@@ -9,6 +9,7 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
+use common\models\db\TargetAdditionalFee;
 use common\models\Product;
 use common\models\ProductFee;
 use Yii;
@@ -46,18 +47,17 @@ class ProductFeeController extends BaseApiController
      */
     public function actionUpdate($id)
     {
-        /** @var ProductFee $model */
+        /** @var TargetAdditionalFee $model */
         $model = $this->findModel(['id' => $id]);
-        $this->post['created_at'] = $model->created_at;
-        $this->post['updated_at'] = time();
+        $model->local_amount = $this->post['fee'];
         $old_amount = $model->amount;
-        $old_local_amount = $model->local_amount;
-        if(in_array($model->type,['product_price_origin','tax_fee_origin','origin_shipping_fee'])){
-            return $this->response(false, 'Can not edit '.$model->type.' .');
+        $old_local_amount = $model->discount_amount;
+        if(in_array($model->name,['product_price_origin','tax_fee_origin','origin_shipping_fee'])){
+            return $this->response(false, 'Can not edit '.$model->name.' .');
         }
-        $type_total = $this->getTotalFeeOrder($model->type);
+        $type_total = $this->getTotalFeeOrder($model->name);
         if(!$type_total){
-            return $this->response(false, 'Can not find type fee : '.$model->type.' in order table');
+            return $this->response(false, 'Can not find type fee : '.$model->name.' in order table');
         }
 
         if (!$model->load($this->post, '')) {
@@ -67,11 +67,12 @@ class ProductFeeController extends BaseApiController
         if (!$model->save()) {
             return $this->response(false, $model->getFirstErrors());
         }
-        $product = Product::findOne($model->product_id);
+        $product = Product::findOne($model->target_id);
         $order = $product->order;
 
-        $product->total_fee_product_local += $model->local_amount - $old_local_amount ;
         $product->updated_at = time();
+        $product->save();
+        $product->total_fee_product_local += $model->local_amount - $old_local_amount ;
         $product->save();
         $order->updated_at = time();
 
@@ -82,7 +83,7 @@ class ProductFeeController extends BaseApiController
 
         $order->save(0);
         Yii::$app->wsLog->push('order','updateFee', null, [
-            'id' => $model->id,
+            'id' => $order->ordercode,
             'request' => $this->post,
             'response' => $dirtyAttributes
         ]);
@@ -101,7 +102,7 @@ class ProductFeeController extends BaseApiController
         if (is_numeric($condition)) {
             $condition = ['id' => $condition];
         }
-        if (($model = ProductFee::findOne($condition)) === null) {
+        if (($model = TargetAdditionalFee::findOne($condition)) === null) {
             throw new NotFoundHttpException("not found");
         }
         return $model;

@@ -13,6 +13,7 @@ use common\models\db\Coupon;
 use common\models\db\DraftExtensionTrackingMap;
 use common\models\db\Order as DbOrder;
 use common\models\db\Promotion;
+use common\models\db\TargetAdditionalFee;
 use common\models\queries\OrderQuery;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
@@ -464,6 +465,11 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     public function getProductFees()
     {
         return $this->hasMany(ProductFee::className(), ['order_id' => 'id']);
+    }
+
+    public function getTargetFee()
+    {
+        return $this->hasMany(TargetAdditionalFee::className(), ['order_id' => 'id']);
     }
 
     /**

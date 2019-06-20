@@ -327,9 +327,6 @@ $this->registerJs($js);
                 <a href="javascript:void(0);">Nước hoa</a>
             </li>
             <li>
-                <a href="javascript:void(0);">Nước hoa</a>
-            </li>
-            <li>
                 <i class="la la-hand-o-right"></i>
                 <a href="javascript:void(0);">Dùng thử dịch vụ Prime</a>
             </li>
