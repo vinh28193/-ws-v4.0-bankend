@@ -61,7 +61,7 @@ $this->registerJs($js);
 
 ?>
 <datalist id="searchAutoComplete">
-    
+
 </datalist>
 <div class="navbar-ws mobile-hide style-header" id="header" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
@@ -108,28 +108,28 @@ $this->registerJs($js);
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mb-2">
-                                <span class="color-account">Bạn đăng nhập nhanh bằng tài khoản của</span>
+                                <span class="color-account"><?= Yii::t('frontend','Bạn đăng nhập nhanh bằng tài khoản của') ?></span>
                             </div>
-                            <div class="col-md-6 pr-1">
-                                <button class="btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook">
+                            <div class="col-md-12">
+                                <button class=" col-md-12 btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook" style="text-align: center;" >
                                     <i class="la la-facebook style-facebook"></i>
                                     <span class="style-font-facebook">Facebook</span>
                                 </button>
                             </div>
-                            <div class="col-md-6 pl-1">
+                            <!--div class="col-md-6 pl-1">
                                 <button  class="btn btn-google" data-action="clickToLoad" data-href="/secure/auth?authclient=google">
                                     <i class="la la-google style-facebook"></i>
                                     <span class="style-font-facebook">Google</span>
                                 </button>
-                            </div>
+                            </div-->
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-12 mb-2">
-                                <span class="color-account">Hoặc đăng nhập băng email</span>
+                                <span class="color-account"><?= Yii::t('frontend','Hoặc đăng nhập') ?></span>
                             </div>
                             <div class="col-md-12">
                                 <div class="social-button">
-                                    <a data-action="clickToLoad" data-href="/login.html" class="btn btn-info">Đăng nhập tài khoản email</a>
+                                    <a data-action="clickToLoad" data-href="/login.html" class="btn btn-info"><?= Yii::t('frontend','Qua tài khoản') ?></a>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +139,7 @@ $this->registerJs($js);
                                 <span class="color-account">Bạn chưa có tài khoản ?</span>
                             </div>
                             <div class="col-md-12 social-button">
-                                <a data-action="clickToLoad" data-href="/signup.html" class="btn btn-amazon">Bạn đăng kí ngay tại đây</a>
+                                <a data-action="clickToLoad" data-href="/signup.html" class="btn btn-amazon"><?= Yii::t('frontend','Bạn đăng kí ngay tại đây') ?></a>
                             </div>
                         </div>
                     </div>
@@ -149,22 +149,22 @@ $this->registerJs($js);
                     <div class="card-body">
                        <div class="row" id="list-menu-account">
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/order">Đơn hàng của tôi</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/order"><?= Yii::t('frontend','Đơn hàng của tôi')?></a>
                            </div>
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/promotion-user">Mã giảm giá của tôi</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/account/promotion-user"><?= Yii::t('frontend','Mã giảm giá của tôi')?></a>
                            </div>
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="#">Khiếu nại & hoàn trả</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="#"><?= Yii::t('frontend','Khiếu nại & hoàn trả')?></a>
                            </div>
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop/wallet.html">Tài khoản ví(xu)</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop/wallet.html"><?= Yii::t('frontend','Tài khoản ví')?></a>
                            </div>
                            <div class="col-md-12 mb-3">
-                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop.html">Cấu hình tài khoản</a>
+                               <a href="javascript:void (0);" data-action="clickToLoad" data-href="/my-weshop.html"><?= Yii::t('frontend','Cấu hình tài khoản')?></a>
                            </div>
                            <div class="col-md-12 mb-2 social-button">
-                               <a class="btn btn-info p-2" href="javascript:void (0);" data-action="clickToLoad" data-href="/logout.html">Đăng xuất tài khoản</a>
+                               <a class="btn btn-info p-2" href="javascript:void (0);" data-action="clickToLoad" data-href="/logout.html"><?= Yii::t('frontend','Đăng xuất tài khoản')?></a>
                            </div>
                        </div>
                     </div>
@@ -179,7 +179,7 @@ $this->registerJs($js);
                 <a id="drop1" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
                    aria-expanded="false" style="display: inline-flex;">
                     <span style="padding-top: 3px;display: block;" class=""><i class="la la-bars"></i></span>
-                    <span style="display: block;">Danh mục sản phẩm</span>
+                    <span style="display: block;"><?= Yii::t('frontend','Danh mục sản phẩm')?></span>
                     <span style="display: block;"><i class="la la-caret-down"></i></span>
                 </a>
                 <ul id="menu1" class="dropdown-menu category_list style-u" role="menu" aria-labelledby="drop1"
@@ -209,24 +209,21 @@ $this->registerJs($js);
                 </ul>
             </li>
             <li>
-                <a href="javascript:void(0);">Daily deal</a>
+                <a href="javascript:void(0);"><?= Yii::t('frontend','Daily deal')?></a>
             </li>
             <li>
-                <a href="javascript:void(0);">Thương hiệu nổi tiếng</a>
+                <a href="javascript:void(0);"><?= Yii::t('frontend','Thương hiệu nổi tiếng')?></a>
             </li>
             <li>
-                <a href="javascript:void(0);">Đồng hồ</a>
+                <a href="javascript:void(0);"><?= Yii::t('frontend','Đồng hồ')?></a>
             </li>
             <li>
-                <a href="javascript:void(0);">Nước hoa</a>
-            </li>
-            <li>
-                <a href="javascript:void(0);">Nước hoa</a>
+                <a href="javascript:void(0);"><?= Yii::t('frontend','Nước hoa')?></a>
             </li>
             <li>
                 <a href="javascript:void(0);">
                     <i class="la la-hand-o-right"></i>
-                    Dùng thử dịch vụ Prime
+                    <?= Yii::t('frontend','Dùng thử dịch vụ Prime')?>
                 </a>
             </li>
         </ul>
@@ -239,7 +236,7 @@ $this->registerJs($js);
         <ul class="action">
             <li><a href="javascript:void(0);" class="auth-user">
                     <i class="la la-user"></i>
-                    Tài khoản
+                    <?= Yii::t('frontend','Tài khoản')?>
                 </a>
             </li>
             <li>
@@ -253,7 +250,7 @@ $this->registerJs($js);
     <div class="mb-menu">
         <div class="title-mb-menu">
             <i class="la la-close"></i>
-            <span>Danh mục sản phẩm</span>
+            <span><?= Yii::t('frontend','Danh mục sản phẩm')?></span>
         </div>
         <div class="content-cate-mb">
             <ul class="mb-menu-cate">
@@ -298,7 +295,7 @@ $this->registerJs($js);
         </div>
         <div class="content-modal-auth-mb">
             <div class="row">
-                <div class="col-12"><span><?= Yii::t('frontend', 'Login with') ?></span></div>
+                <div class="col-12"><span><?= Yii::t('frontend', 'Đăng nhập với') ?></span></div>
                 <div class="col-6">
                     <button class="btn btn-fb" data-action="clickToLoad" data-href="/secure/auth?authclient=facebook">Facebook</button>
                 </div>

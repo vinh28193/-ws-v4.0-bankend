@@ -10,7 +10,7 @@ $storeManager = Yii::$app->storeManager;
 $totalAmount = 0;
 ?>
 
-<div class="cart-box" style="border: none">
+<div class="cart-box" id="load-card" style="border: none">
     <div class="row m-0" style="width: 100%">
         <div class="col-8"><strong>Sản phẩm</strong></div>
         <div class="col-2 text-center"><strong>Số Lượng</strong></div>

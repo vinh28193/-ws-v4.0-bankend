@@ -115,7 +115,7 @@ class ShippingController extends CheckoutController
         $shippingForm->cartIds = implode(',', $keys);
         $shippingForm->checkoutType = $type;
         $shippingForm->setDefaultValues();
-        $provinces = SystemStateProvince::select2Data(1);
+        $provinces = SystemStateProvince::select2Data(237);  // @Vinh set co dinh ID Viet Nam County
 
 //        $this->gaCheckout();
 
