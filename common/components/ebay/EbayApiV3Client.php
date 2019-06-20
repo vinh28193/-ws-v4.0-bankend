@@ -150,7 +150,6 @@ class EbayApiV3Client
         }
 
         $ebay_api = isset(\Yii::$app->params['ebay-api']) ? (\Yii::$app->params['ebay-api']) : 'http://ebay.api/v3';
-        $ebay_api = 'http://ebay.api/v3';
         $url = $ebay_api . '/' . $url;
 
         $curl = new Curl();
