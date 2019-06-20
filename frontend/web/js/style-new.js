@@ -44,10 +44,7 @@ $('*[data-action=clickToLoad]').click(function () {
     ws.loading(true);
     window.location.assign($(this).attr('data-href'));
 });
-// var autoHeightIframe = function (e) {
-//     console.log("load done");
-//     console.log($(e));
-//     var he = $(e)[0].ownerDocument.body.clientHeight;
-//     console.log(he);
-//     $(e).css('height',he + 'px');
-// };
+var autoHeightIframe = function (e) {
+    var he = $(e)[0].ownerDocument.body.clientHeight;
+    $(e).css('height',he + 'px');
+};

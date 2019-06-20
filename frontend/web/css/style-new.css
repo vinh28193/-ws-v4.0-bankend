@@ -454,6 +454,9 @@ ul.list-dot li{
 .deal-shock .deal-content ul li .item{
     padding: 15px;
 }
+.product-viewed.product-list .owl-carousel .owl-item img {
+    width: auto;
+}
 #quantity{
     width: 30px;
 }

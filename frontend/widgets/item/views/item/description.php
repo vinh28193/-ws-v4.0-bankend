@@ -16,7 +16,7 @@ if($type == 'extra'){
     }
 }
     ?>
-    <div class="detail-block-2" id="description_<?= $type ?>" style="box-shadow: 0 2px 4px #dddddd;pad">
+    <div class="detail-block-2" id="description_<?= $type ?>" style="box-shadow: 0 2px 4px #dddddd;padding: 15px">
         <div class="row">
             <div class="col-md-12">
                 <div class="title"><?=Yii::t('frontend',$type == 'extra' ? 'Product details' : 'Product description'); ?>:</div>
@@ -34,25 +34,39 @@ if($type == 'extra'){
             </div>
             <div class="col-md-12">
                 <?php
-                if($type == 'extra'){
-                    if(isset($item->manufacturer_description) && $item->manufacturer_description){
-                        echo $item->manufacturer_description;
-                    }
-                }else{
-                    if(isset($item->sort_desc) && $item->sort_desc){
-                        echo $item->sort_desc;
-                    }elseif($item->description){
-                        if(is_array($item->description)){
-                            foreach ($item->description as $v){
-                                if(is_string($v)){
-                                    echo $v;
+                if($checkShow){
+                    if(strtolower($item->type) =='amazon'){
+                        if($type == 'extra'){
+                            if(isset($item->manufacturer_description) && $item->manufacturer_description){
+                                echo $item->manufacturer_description;
+                            }
+                        }else{
+                            if(isset($item->sort_desc) && $item->sort_desc){
+                                echo $item->sort_desc;
+                            }elseif($item->description){
+                                if(is_array($item->description)){
+                                    foreach ($item->description as $v){
+                                        if(is_string($v)){
+                                            echo $v;
+                                        }
+                                    }
+                                }elseif (is_string($item->description)){
+                                    echo $item->description;
                                 }
                             }
-                        }elseif (is_string($item->description)){
-                            echo $item->description;
                         }
+                    }else{
+                        ?>
+                        <iframe style="border: 0px; width: inherit; height: auto; overflow: hidden"
+                                onload="autoHeightIframe(this)"
+                                src="/description/<?= strtolower($item->type) ?>-<?= ($item->item_id) ?>.html?description=<?= $type ?>"
+                                frameborder="0"  sandbox="allow-forms allow-scripts" scrolling="yes"
+                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        <?php
                     }
-                } ?>
+                }
+                 ?>
             </div>
         </div>
     </div>
