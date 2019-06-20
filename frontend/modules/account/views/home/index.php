@@ -28,11 +28,11 @@ $this->registerJs($js);
             <div class="name">Số dư</div>
             <?php if ($wallet) {
                 echo '<div class="info">' . \common\helpers\WeshopHelper::showMoney($wallet->getMoneyAvailable()) . '</div>';
+                echo '<a href="/my-weshop/wallet/history.html">Chi tiết >></a>';
             } else {
-                echo "<div>Hãy liên kết với tài khoản BoxMe</div>";
-//                echo "<div><a href='javascript: void(0);' onclick='ws.showLoginWallet()'>Nhấp vào đây</a> <i class='la la-question-circle' data-toggle='tooltip' title='Vui lòng xác thực lại mật khẩu để xem thông tin.'></i></div>";
+                echo '<div class="info">' . Yii::t('frontend','Upgrade to Prime now') . '</div>';
+                echo '<a href="javascript:void(0)" onclick="ws.notifyInfo(\''.Yii::t('frontend','Sorry. Service is under maintenance. Please try again later.').'\',\''.Yii::t('frontend','Notify').'\')">'.Yii::t('frontend','Click here').' >></a>';
             } ?>
-            <a href="/my-weshop/wallet/history.html">Chi tiết >></a>
         </div>
     </div>
     <div class="col-md-3">
