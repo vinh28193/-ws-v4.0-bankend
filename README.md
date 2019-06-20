@@ -968,3 +968,11 @@ Set its value to the Oracle directory.
 Click OK to save.
 Verify through a new command line session that the value has been set correctly.
 
+
+###-------------Transalte------------
+http://weshop-v4.front-end-ws.local.vn/translatemanager/language/translate?language_id=vi-VN
+http://weshop-v4.front-end-ws.local.vn/translatemanager/language/translate?LanguageSourceSearch%5Bcategory%5D=wallet&LanguageSourceSearch%5Bmessage%5D=&LanguageSourceSearch%5Btranslation%5D=&language_id=vi-VN&page=2&LanguageSourceSearch%5Bsource%5D=vi-VN&LanguageSourceSearch%5Bsource%5D=en-US&LanguageSourceSearch%5Bsource%5D=vi-VN
+
+
+C:\xampp\htdocs\weshop-v4.0-api\vendor\lajax\yii2-translate-manager\views\layouts\language.php Line 34 : Weshop Global TranslateManager
+lin 78 : Weshop Global @2019 TranslateManager
