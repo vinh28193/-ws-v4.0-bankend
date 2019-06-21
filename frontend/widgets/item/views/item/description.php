@@ -32,7 +32,7 @@ if($type == 'extra'){
                     <?php }
                 } ?>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12" style="margin:0px;padding:0px;overflow:hidden">
                 <?php
                 if($checkShow){
                     if(strtolower($item->type) =='amazon'){
@@ -57,12 +57,20 @@ if($type == 'extra'){
                         }
                     }else{
                         ?>
-                        <iframe style="border: 0px; width: inherit; height: auto; overflow: hidden"
+                        <!--<iframe style="border: 0px; width: inherit; height: auto; overflow: hidden"
                                 onload="autoHeightIframe(this)"
-                                src="/description/<?= strtolower($item->type) ?>-<?= ($item->item_id) ?>.html?description=<?= $type ?>"
+                                src="https://vi.vipr.ebaydesc.com/ws/eBayISAPI.dll?ViewItemDescV4&item=<?/*= ($item->item_id) */?>"
                                 frameborder="0"  sandbox="allow-forms allow-scripts" scrolling="yes"
                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
+                                allowfullscreen></iframe>-->
+                        <iframe src="https://vi.vipr.ebaydesc.com/ws/eBayISAPI.dll?ViewItemDescV4&item=<?= ($item->item_id) ?>"
+                                frameborder="0" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%"></iframe>
+                        <!--<iframe style="border: 0px; width: inherit; height: auto; overflow: hidden"
+                                onload="autoHeightIframe(this)"
+                                src="/description/<?/*= strtolower($item->type) */?>-<?/*= ($item->item_id) */?>.html?description=<?/*= $type */?>"
+                                frameborder="0"  sandbox="allow-forms allow-scripts" scrolling="yes"
+                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>-->
                         <?php
                     }
                 }
