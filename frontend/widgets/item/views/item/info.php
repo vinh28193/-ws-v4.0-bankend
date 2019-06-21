@@ -54,7 +54,7 @@ $this->registerCss($css);
         <span><?php echo Yii::t('frontend', '{star} ({count} customer reviews) on {portal}', ['star' => '4.5/5','count' => rand(10, 100),'portal' => $portal_web]); ?></span>
     </div>
     <div class="condition-and-seller">
-        <strong><?= Yii::t('frontend',$current_provider?$current_provider->condition:$item->condition) ?></strong>
+        <strong><?= Yii::t('frontend',$current_provider && $current_provider->condition ? $current_provider->condition : $item->condition) ?></strong>
         <span>
             <?php
             if(is_array($item->providers) && count($item->providers)){
