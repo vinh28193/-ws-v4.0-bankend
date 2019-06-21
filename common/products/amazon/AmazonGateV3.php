@@ -9,21 +9,21 @@
 
 namespace common\products\amazon;
 
-
+use linslin\yii2\curl;
 use common\models\Category;
 use common\products\BaseGate;
-use linslin\yii2\curl\Curl;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\httpclient\Client;
 
-class AmazonGate extends BaseGate
+class AmazonGateV3 extends BaseGate
 {
 
     public $store = AmazonProduct::STORE_US;
     public $searchUrl = 'search';
     public $lookupUrl = 'get';
     public $offerUrl = 'get_offers';        //Get Seller
-    public $asinsUrl = 'get_asins';
+    public $asinsUrl = 'asin';
 
     public $sellerBlackLists = [];
 
@@ -43,13 +43,20 @@ class AmazonGate extends BaseGate
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
-        if (!($results = $this->cache->get($request->getCacheKey())) || $refresh) {
-            $results = $this->searchInternal($request);
-            $this->cache->set($request->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
-        }
+//        $results = $this->searchInternalOld($request);
+        $results = $this->searchInternal($request);
+        print_r($results);
+        die;
+//        if (!($results = $this->cache->get($request->getCacheKey())) || $refresh) {
+//            $results = $this->searchInternal($request);
+//            $this->cache->set($request->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
+//        }
 
         list($ok, $response) = $results;
         if ($ok && is_array($response)) {
+//            print_r($response);
+//            print_r((new AmazonSearchResponse($this))->parser($response));
+//            die;
             return [$ok, (new AmazonSearchResponse($this))->parser($response)];
         }
         return [false, $response];
@@ -82,10 +89,13 @@ class AmazonGate extends BaseGate
             $cloneRequest = clone $request;
             $cloneRequest->asin_id = $request->parent_asin_id;
             $cloneRequest->parent_asin_id = null;
-            if (!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh) {
-                $results = $this->lookupInternal($cloneRequest);
-                $this->cache->set($cloneRequest->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
-            }
+            $results = $this->lookupInternal($cloneRequest);
+//            if (!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh) {
+//                $results = $this->lookupInternal($cloneRequest);
+//                $this->cache->set($cloneRequest->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
+//            }
+            print_r($results);
+            die;
             list($ok, $response) = $results;
             $tokens[] = "response return :" . ($ok ? 'true' : 'false');
             if ($ok && is_array($response)) {
@@ -126,6 +136,9 @@ class AmazonGate extends BaseGate
             $cloneRequest = clone $request;
             $cloneRequest->parent_asin_id = null;
             $cloneRequest->load_sub_url = null;
+            $results = $this->lookupInternal($cloneRequest);
+            print_r($results);
+            die;
             if (!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh) {
                 $results = $this->lookupInternal($cloneRequest);
                 $this->cache->set($cloneRequest->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
@@ -169,19 +182,21 @@ class AmazonGate extends BaseGate
     public function getAsins($ids)
     {
         $ids = implode(",", $ids);
+        $httpClient = $this->getHttpClient();
+        $httpRequest = $httpClient->createRequest();
+        $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
+        $httpRequest->setMethod('POST');
+        $httpRequest->setUrl($this->asinsUrl);
+        $httpRequest->setData([
+            'store' => $this->store,
+            'asin_ids' => $ids
+        ]);
         try {
-            $curl = new Curl();
-            $response = $curl->setPostParams([
-                'store' => $this->store,
-                'asin_ids' => $ids
-            ])->post($this->baseUrl.'/'.$this->asinsUrl);
-            if(!is_array($response)){
-                $response = json_decode($response,true);
-            }
-            if ($curl->responseCode != 200) {
+            $httpResponse = $httpClient->send($httpRequest);
+            if (!$httpResponse->isOk) {
                 return [];
             }
-            $httpResponse = $response;
+            $httpResponse = $httpResponse->getData();
             return $httpResponse['response'] ? $httpResponse['response'] : [];
         } catch (\Exception $e) {
             Yii::error($e, __METHOD__);
@@ -198,27 +213,27 @@ class AmazonGate extends BaseGate
      */
     public function getOffers($itemId)
     {
+        $httpClient = $this->getHttpClient();
+        $httpRequest = $httpClient->createRequest();
+        $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
+        $httpRequest->setMethod('POST');
+        $httpRequest->setUrl($this->offerUrl);
+        $httpRequest->setData([
+            'store' => $this->store,
+            'asin_id' => $itemId
+        ]);
         try {
-            $curl = new Curl();
-            $response = $curl->setPostParams([
-                'store' => $this->store,
-                'asin_id' => $itemId
-            ])->post($this->baseUrl.'/'.$this->offerUrl);
-            if(!is_array($response)){
-                $response = json_decode($response,true);
-            }
-            if ($curl->responseCode != 200) {
+            $httpResponse = $httpClient->send($httpRequest);
+            if (!$httpResponse->isOk) {
                 return [];
             }
-            $httpResponse = $response;
-
+            $httpResponse = $httpResponse->getData();
             return $httpResponse['response'] ? $httpResponse['response'] : [];
         } catch (\Exception $e) {
             Yii::error($e, __METHOD__);
             return [];
         }
     }
-
     /**
      * @param $request AmazonSearchRequest
      * @return array
@@ -227,11 +242,13 @@ class AmazonGate extends BaseGate
      */
     private function searchInternal($request)
     {
-        $curl = new Curl();
-        $response = $curl->setPostParams($request->params())->post($this->baseUrl.'/'.$this->searchUrl);
-        if(!is_array($response)){
-            $response = json_decode($response,true);
+        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.$request->keyword.'&page='.$request->page;
+        if($request->filter){
+            $url .= '&filter='.urldecode($request->filter);
         }
+        $curl = new curl\Curl();
+        $response = $curl->get($url);
+        $response = json_decode($response,true);
         if (!isset($response)) {
             return [false, 'can not send request'];
         }
@@ -243,20 +260,27 @@ class AmazonGate extends BaseGate
         if (!isset($result['total_product'])) return [];
         $data['products'] = $this->getSearchProduct($result['products']);
         $data['total_product'] = $result['total_product'] > 0 ? $result['total_product'] : ($result['total_page'] > 0 ? $result['total_page'] * count($data['products']) : count($data['products']));
-
-        $result['categories'] = array_unique($result['categories']);
-
+//        $result['categories'] = array_unique($result['categories']);
         $siteId = $request->store === AmazonProduct::STORE_US ? Category::SITE_AMAZON_US : ($request->store === AmazonProduct::STORE_JP ? Category::SITE_AMAZON_JP : null);
 
-        $categories = Category::find()->where([
-            'OR',
-            ['alias' => $result['categories']],
-            ['path' => $result['categories']]
-        ])->forSite($siteId)->select(['alias as category_id', 'name as category_name', 'origin_name'])->asArray()->all();
-        $data['categories'] = $categories;
-        $data['sorts'] = $result['sorts'];
-        $data['filters'] = $this->getFilter($result['filters']);
-        $data['total_page'] = $result['total_page'];
+//        $categories = Category::find()->where([
+//            'OR',
+//            ['alias' => $result['categories']],
+//            ['path' => $result['categories']]
+//        ])->forSite($siteId)->select(['alias as category_id', 'name as category_name', 'originName as origin_name'])->asArray()->all();
+        $sorts = [];
+        foreach ($result['sorts'] as $value){
+            $sorts = array_merge($sorts,$value);
+        }
+        $data['categories'] = array_map(function($tag) {
+            return array(
+                'category_name' => $tag['name'],
+                'category_id' => $tag['value']
+            );
+        }, $result['categories']);//$categories;
+        $data['sorts'] = $sorts;
+        $data['filters'] = $this->getFilterNew($result['filters']);
+        $data['total_page'] = ceil($result['total_page']);
         if ($this->store === AmazonProduct::STORE_JP) {
             /** @var  $exRate \common\components\ExchangeRate */
             $exRate = Yii::$app->exRate;
@@ -279,14 +303,19 @@ class AmazonGate extends BaseGate
      */
     private function lookupInternal(AmazonDetailRequest $request)
     {
-        $curl = new Curl();
-        $response = $curl->setPostParams($request->params())->post($this->baseUrl.'/'.$this->lookupUrl);
-        if(!is_array($response)){
-            $response = json_decode($response,true);
-        }
+        $curl = new curl\Curl();
+
+        $response = $curl->get($this->baseUrl.'/'.$this->asinsUrl.'/'.$request->asin_id);
+        $response = json_decode($response,true);
+
         if (!$this->isValidResponse($response)) {
             return [false, 'can not send request'];
         }
+
+//        } while ($attempts < 3);
+//        if (!isset($response)) {
+//            return [false, 'can not send request'];
+//        }
         $amazon = $response['response'];
         $rs = [];
         $rs['categories'] = array_unique($amazon['node_ids']);
@@ -525,7 +554,7 @@ class AmazonGate extends BaseGate
         if (count($data) > 0)
             foreach ($data as $datum) {
                 $temp = [];
-                $temp['thumb'] = isset($datum['thumb']) ? $datum['thumb'] : null;
+                $temp['thumb'] = $datum['thumb'];
                 $temp['main'] = $datum['large'];
                 $imgs[] = $temp;
             }
@@ -589,49 +618,48 @@ class AmazonGate extends BaseGate
         return $rs;
     }
 
-    private function getFilter($filter)
+    private function getFilterNew($filter)
     {
         $rs = [];
         foreach ($filter as $item) {
-            if (count($item['values']) == 0)
-                continue;
-            $temp = [];
-            $temp['name'] = $item['name'];
-            $temp['values'] = $item['values'];
-            $rs[] = $temp;
+            if(isset($item['value'])){
+                if (count($item['value']) == 0 || strpos(strtolower($item['name']),'customer review'))
+                    continue;
+                $temp = [];
+                $temp['name'] = $item['name'];
+                $temp['values'] = array_map(function($tag) {
+                    return array(
+                        'count' => 1,
+                        'is_selected' => false,
+                        'new_param' => $tag['value'],
+                        'param' => $tag['value'],
+                        'value' => $tag['name']
+                    );
+                }, $item['value']);
+                $rs[] = $temp;
+            }else{
+                foreach ($item as $v) {
+                    if(isset($v['value'])){
+                        if (count($v['value']) == 0)
+                            continue;
+                        $temp = [];
+                        $temp['name'] = $v['name'];
+                        $temp['values'] = array_map(function($tag) {
+                            return array(
+                                'count' => 1,
+                                'is_selected' => false,
+                                'new_param' => $tag['value'],
+                                'param' => $tag['value'],
+                                'value' => $tag['name']
+                            );
+                        }, $v['value']);
+                        $rs[] = $temp;
+                    }else{
+                    }
+                }
+            }
         }
         return $rs;
-    }
-
-    private function getCategories($data)
-    {
-        $rs = [];
-        $data = array_unique($data);
-        foreach ($data as $datum) {
-            $t = explode(":", $datum);
-//            $arr = array();
-//            $ref = &$arr;
-//            foreach ($t as $key) {
-//                $ref['category_id']=$key;
-//                $ref['category_name']= self::getCategoryName($key);
-//                $ref = &$ref['child_category'][];
-//            }
-//            $rs[] =$arr;
-            $arr = [];
-            $count_level = count($t);
-            $arr['category_id'] = $t[$count_level - 1];
-            $arr['category_name'] = self::getCategoryName($arr['category_id']);
-//            $arr['category_path']=$datum;
-            $rs[] = $arr;
-        }
-        return $rs;
-
-    }
-
-    private function getCategoryName($alias)
-    {
-        $cate = Category::find()->select('name')->where(['alias' => $alias])->one();
-        return $cate['name'];
     }
 
     protected function ensureJpPrice(&$response)

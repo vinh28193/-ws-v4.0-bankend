@@ -63,3 +63,7 @@ laradock-ws-v4.0-api/
 ./composer.lock
 .composer.lock
 composer.lock
+
+#-------------
+./git
+/git

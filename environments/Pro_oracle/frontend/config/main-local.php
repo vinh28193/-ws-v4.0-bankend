@@ -8,7 +8,7 @@ $config = [
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => '128.199.70.160',
+            'hostname' => 'sessionRedisBm',
             'port' => 6479,
             'database' => 0,
         ],

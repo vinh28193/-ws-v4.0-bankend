@@ -271,12 +271,17 @@ JS;
 
     <div class="product-list row">
         <?php
-        foreach ($products as $product) {
-            echo $this->render('_item', [
-                'portal' => $portal,
-                'product' => $product,
-                'storeManager' => $storeManager
-            ]);
+        if($products && count($products)){
+            foreach ($products as $product) {
+                echo $this->render('_item', [
+                    'portal' => $portal,
+                    'product' => $product,
+                    'storeManager' => $storeManager
+                ]);
+            }
+        }else{
+            echo '<div class="col-12" style="font-size: 18px;font-weight: 700;">'.Yii::t('frontend','No results for {keyword}.',['keyword' => $keyword]).'</div>';
+            echo '<div class="col-12" style="font-size: 14px;font-weight: 700;">'.Yii::t('frontend','Try checking your spelling or use more general terms. Or you can try search on {portal}.',['portal' => $portal == 'ebay' ? 'Amazon' : 'eBay']).'</div>';
         }
         ?>
     </div>

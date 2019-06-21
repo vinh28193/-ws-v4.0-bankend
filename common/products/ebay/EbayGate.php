@@ -30,6 +30,7 @@ class EbayGate extends BaseGate
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
+//        print_r($this->searchRequest($request->params()));die;
         // ToDo Caches : Get Thanh cong moi Luu cache @Phuchc 8/6/2019
        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
             list($success, $response) = $this->searchRequest($request->params());

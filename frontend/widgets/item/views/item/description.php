@@ -56,11 +56,12 @@ if($type == 'extra'){
                             }
                         }
                     }else{
-/*                        src="/description/strtolower($item->type)/($item->item_id).html?description=$type*/
+/*                        src="/description/strtolower($item->type)-($item->item_id).html?description=$type*/
+//                        src="https://vi.vipr.ebaydesc.com/ws/eBayISAPI.dll?ViewItemDescV4&item=(item_id)"
                         ?>
                         <iframe style="border: 0px; width: inherit; height: auto; overflow: hidden"
                                 onload="autoHeightIframe(this)"
-                                src="https://vi.vipr.ebaydesc.com/ws/eBayISAPI.dll?ViewItemDescV4&item=<?= ($item->item_id) ?>"
+                                src="/description/<?= strtolower($item->type) ?>-<?= ($item->item_id) ?>.html?description=<?= $type ?>"
                                 frameborder="0"  sandbox="allow-forms allow-scripts" scrolling="yes"
                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen></iframe>

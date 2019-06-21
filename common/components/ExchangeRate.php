@@ -9,6 +9,7 @@
 namespace common\components;
 
 use common\models\db\SystemCurrency;
+use common\models\User;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidArgumentException;
@@ -22,7 +23,9 @@ use yii\httpclient\Client;
 class ExchangeRate extends Component
 {
 
-    public $ratePercent = 1.03;
+    use GetUserIdentityTrait;
+
+    public $defaultRatePercent = 0.02; // 2%
 
     /**
      * @var string | Connection
@@ -71,6 +74,7 @@ class ExchangeRate extends Component
         $this->cache = Instance::ensure($this->cache, 'yii\caching\CacheInterface');
     }
 
+
     private $_rates;
 
     /**
@@ -88,7 +92,9 @@ class ExchangeRate extends Component
         }
         $key = $this->buildKey($from, $to);
         $this->loadFromCache($from, $to);
-        return isset($this->_rates[$key]) ? $this->_rates[$key] : $this->setDefault($from, $to);
+        $rate = isset($this->_rates[$key]) ? $this->_rates[$key] : $this->setDefault($from, $to);
+        $ratePercent = $this->getRatePercent();
+        return ($rate * $ratePercent) + $rate;
     }
 
     /**
@@ -96,16 +102,27 @@ class ExchangeRate extends Component
      * @param $to
      * @param bool $refresh
      */
-    /*
-    protected function loadFromCache($from, $to, $refresh = false)
+
+    protected function getRatePercent()
     {
-        $key = $this->buildKey($from, $to);
-        if (!isset($this->_rates[$key]) || !($this->_rates[$key] = $this->cache->get($key)) || $refresh) {
-            $this->_rates[$key] = $this->loadFromDb($from, $to);
+        if (($user = $this->getUser()) === null) {
+            Yii::info("Rate percent for guest : {$this->defaultRatePercent}", __METHOD__);
+            return $this->defaultRatePercent;
         }
-        $this->cache->set($key, $this->_rates[$key], $this->cacheDuration);
+
+        $level = $user->getUserLevel();
+        $token = "Rate percent for user level `$level`: ";
+        if ($level === User::LEVEL_SLIVER) {
+            Yii::info("$token 0.01", __METHOD__);
+            return 0.01;
+        } elseif ($level === User::LEVEL_GOLD) {
+            Yii::info("$token 0", __METHOD__);
+            return 0;
+        }
+        Yii::info("$token {$this->defaultRatePercent}", __METHOD__);
+        return $this->defaultRatePercent;
     }
-    */
+
     protected function loadFromCache($from, $to, $refresh = false)
     {
         $key = $this->buildKey($from, $to);
@@ -155,6 +172,7 @@ class ExchangeRate extends Component
             return false;
         }
     }
+
     public function loadFromApi($console = false)
     {
         if ($console) echo "Lấy tỷ giá từ apilayer: ,,," . PHP_EOL;
@@ -172,7 +190,7 @@ class ExchangeRate extends Component
             foreach ($result['quotes'] as $key => $quote) {
                 $to = str_replace('USD', '', $key);
                 if (in_array($to, $this->currencies)) {
-                    $rate = $quote * $this->ratePercent;
+                    $rate = $quote;
                     $key = $this->buildKey($from, $to);
                     $this->_rates[$key] = $rate;
                     $this->db->createCommand()
@@ -182,16 +200,16 @@ class ExchangeRate extends Component
                             'rate' => $rate,
                             'sync_at' => Yii::$app->getFormatter()->asDatetime('now')
                         ])->execute();
-                    if ($console) echo $from." ==> ".$to.": ".$rate. PHP_EOL;
+                    if ($console) echo $from . " ==> " . $to . ": " . $rate . PHP_EOL;
                 }
             }
             $transaction->commit();
         } catch (\Exception $exception) {
-            if ($console) echo "Có lỗi sảy ra. Huỷ tất cả các tỷ giá vừa lấy  ...". PHP_EOL;
-            if ($console) echo $exception->getFile(). PHP_EOL;
-            if ($console) echo $exception->getMessage(). PHP_EOL;
-            if ($console) echo $exception->getLine(). PHP_EOL;
-            if ($console) echo $exception->getTraceAsString(). PHP_EOL;
+            if ($console) echo "Có lỗi sảy ra. Huỷ tất cả các tỷ giá vừa lấy  ..." . PHP_EOL;
+            if ($console) echo $exception->getFile() . PHP_EOL;
+            if ($console) echo $exception->getMessage() . PHP_EOL;
+            if ($console) echo $exception->getLine() . PHP_EOL;
+            if ($console) echo $exception->getTraceAsString() . PHP_EOL;
             Yii::error($exception, __METHOD__);
             $transaction->rollBack();
         }
@@ -218,7 +236,7 @@ class ExchangeRate extends Component
                 foreach ($rs['Exrate'] as $key => $val) {
                     $from = $val['@attributes']['CurrencyCode'];
                     if (in_array($from, $this->currencies)) {
-                        $rate = $val['@attributes']['Sell'] * $this->ratePercent;
+                        $rate = $val['@attributes']['Sell'];
                         $key = $this->buildKey($from, $to);
                         $this->_rates[$key] = $rate;
                         $this->db->createCommand()
@@ -228,17 +246,17 @@ class ExchangeRate extends Component
                                 'rate' => $rate,
                                 'sync_at' => Yii::$app->getFormatter()->asDatetime('now')
                             ])->execute();
-                        if ($console) echo $from." ==> ".$to.": ".$rate. PHP_EOL;
+                        if ($console) echo $from . " ==> " . $to . ": " . $rate . PHP_EOL;
                     }
                 }
             }
             $transaction->commit();
         } catch (\Exception $exception) {
-            if ($console) echo "Có lỗi sảy ra. Huỷ tất cả các tỷ giá vừa lấy  ...". PHP_EOL;
-            if ($console) echo $exception->getFile(). PHP_EOL;
-            if ($console) echo $exception->getMessage(). PHP_EOL;
-            if ($console) echo $exception->getLine(). PHP_EOL;
-            if ($console) echo $exception->getTraceAsString(). PHP_EOL;
+            if ($console) echo "Có lỗi sảy ra. Huỷ tất cả các tỷ giá vừa lấy  ..." . PHP_EOL;
+            if ($console) echo $exception->getFile() . PHP_EOL;
+            if ($console) echo $exception->getMessage() . PHP_EOL;
+            if ($console) echo $exception->getLine() . PHP_EOL;
+            if ($console) echo $exception->getTraceAsString() . PHP_EOL;
             Yii::error($exception, __METHOD__);
             $transaction->rollBack();
         }

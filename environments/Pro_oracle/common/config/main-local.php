@@ -3,7 +3,7 @@ return [
     'components' => [
         'db' => [
             'class' => 'common\components\db\Connection',
-            'dsn' => 'oci:dbname=//178.128.60.187:1521/boxme', // Oracle
+            'dsn' => 'oci:dbname=//oracledb:1521/boxme', // Oracle
             'username' => 'weshopdev',
             'password' => 'weshopdev2019',
             'charset' => 'utf8',
@@ -15,7 +15,7 @@ return [
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=128.199.237.99;port=3306;dbname=weshop_',
+            'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_',
             'username' => 'sys',
             'password' => 'FaUfevTz62pgY33JxxE',
             'charset' => 'utf8',
@@ -33,14 +33,14 @@ return [
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
-                'hostname' => '128.199.70.160',
+                'hostname' => 'sessionRedisBm',
                 'port' => 6479,
                 'database' => 0,
             ]
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => '128.199.70.160',
+            'hostname' => 'sessionRedisBm',
             'port' => 6479,
             'database' => 0,
         ],
@@ -62,7 +62,7 @@ return [
         ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://128.199.70.160:27017/admin',
+            'dsn' => 'mongodb://MongoBM:27017/admin',
         ],
         'ga' => [
             'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
