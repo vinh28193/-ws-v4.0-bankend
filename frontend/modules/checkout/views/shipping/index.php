@@ -355,7 +355,7 @@ $this->registerJs($js);
                             <table class="table table-borderless table-fee">
                                 <tr>
                                     <th class="fee-header"><?= Yii::t('frontend', 'Total Order'); ?></th>
-                                    <td class="fee-value"><?= $storeManager->showMoney($order->total_amount_local); ?></td>
+                                    <td class="fee-value"><?= $storeManager->showMoney($order->total_origin_fee_local); ?></td>
                                 </tr>
                                 <tr data-role="fee" data-fee="purchase_fee">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Purchase Fee'); ?></th>
@@ -372,7 +372,7 @@ $this->registerJs($js);
                                 <tr class="final-amount">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Amount needed to prepay') ?></th>
                                     <td class="fee-value"
-                                        data-origin="<?= $order->total_final_amount_local; ?>"><?= $storeManager->showMoney($order->total_final_amount_local); ?></td>
+                                        data-origin="<?= $order->total_amount_local ?>"><?= $storeManager->showMoney($order->total_amount_local); ?></td>
                                 </tr>
                             </table>
                         </div>

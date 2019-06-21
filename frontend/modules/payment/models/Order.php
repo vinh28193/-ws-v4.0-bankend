@@ -327,7 +327,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
 
     public function getTotalFinalAmount()
     {
-        return $this->total_amount_local;
+        return $this->total_origin_fee_local;
 //        $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees()[1];
 //        return $totalAmount;
     }
