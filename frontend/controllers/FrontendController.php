@@ -4,6 +4,7 @@
 namespace frontend\controllers;
 
 use common\components\EcomobiComponent;
+use common\components\UserCookies;
 use Yii;
 use yii\di\Instance;
 use yii\web\BadRequestHttpException;
@@ -322,6 +323,10 @@ class FrontendController extends Controller
         } else {
             return ['success' => false, 'message' => Yii::t('frontend', 'fingerprint is null'), 'data' => ['content' => '']];
         }
+        $cookUser = new UserCookies();
+        $cookUser->setUserCookies();
+        $cookUser->uuid = $this->_uuid;
+        $cookUser->setNewCookies();
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return 'Ok ! ' . $this->_uuid . ' pages ' . $this->setDocumentPath;
     }

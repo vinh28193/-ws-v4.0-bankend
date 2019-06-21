@@ -44,12 +44,8 @@ class UserCookies extends Model
     }
 
     public function setCookies(){
-        $value_old = json_decode(self::getCookies(),true);
-        $value = $this->toArray();
-        if($value_old){
-            $value = array_merge($value,$value_old);
-        }
-        Cookies::set(self::KEY_COOKIES,json_encode($value));
+        $value = json_encode($this->toArray());
+        Cookies::set(self::KEY_COOKIES,$value);
         return $value;
     }
     public function setUserCookies(){
