@@ -228,9 +228,11 @@
                     data: data,
                     dataType: 'json',
                     success: function (response) {
-                        console.log("done");
+                        if(response == 'Can not create favorite' || response == 'something wrong user uu!!!!!'){
+                            $( ".viewed-product" ).css( "display", "none" );
+                        }else { console.log("done : " + response ); }
                     }
-                }, false);
+                }, true);
             }, 3000);
         },
         quote: function () {

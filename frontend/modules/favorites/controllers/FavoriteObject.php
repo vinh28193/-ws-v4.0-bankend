@@ -31,7 +31,7 @@ class FavoriteObject
      * @param $obj_type
      * @param $obj_id
      *
-     * @return Yii\web\Response
+     * @return integer
      * @throws ErrorException
      */
     public function Create($obj_type, $obj_id , $UUID)
@@ -39,10 +39,11 @@ class FavoriteObject
         $obj_type = \serialize($obj_type);
         if ($this->create_favorite($obj_type, $obj_id, $UUID)) {
             Yii::info("app  create favorite Success");
-            // return $this->goBack();
+            return 1;
         } else {
             Yii::info(" app Can't create favorite");
-            throw new ErrorException(Yii::t('app', "Can't create favorite"));
+            // throw new ErrorException(Yii::info('app', "Can't create favorite"));
+            return 0;
         }
     }
 
@@ -152,6 +153,7 @@ class FavoriteObject
      */
     function create_favorite($obj_type, $obj_id, $UUID)
     {
+        // Todo @Huy edit thuộc tính insert lại DB + Mongodb
         if (Yii::$app->user->getId() === $UUID) {
             // Login
             $getId =  Yii::$app->user->getId() ? Yii::$app->user->getId() : '9999';

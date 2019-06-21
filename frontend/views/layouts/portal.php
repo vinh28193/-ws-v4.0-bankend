@@ -21,8 +21,8 @@ $(document).ready(function() {
         data: {fingerprint: ws.getFingerprint()},
         loading: true,
         success: function (result) {
-            // console.log(result);  console.log(result.success);
-            if(result.success){
+            console.log("RESSS : " + result);  console.log( "REER" + result.success);
+            if(result.success == 1){
                 $('.viewed-product').html(result.data.content);
                 $(".owl-carousel").owlCarousel({
                     loop:false,
@@ -40,6 +40,8 @@ $(document).ready(function() {
                         }
                     }
                 });
+            }else {
+              $( ".viewed-product" ).css( "display", "none" );
             }
         }
         });
