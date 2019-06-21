@@ -17,6 +17,8 @@ use frontend\modules\payment\methods\BankTransferVN4;
 /* @var frontend\modules\payment\Payment $payment */
 /* @var array $group */
 
+/** @var  $storeManager  \common\components\StoreManager */
+$storeManager = Yii::$app->storeManager;
 ?>
 
 <div class="accordion payment-method" id="payment-method">
@@ -62,13 +64,6 @@ use frontend\modules\payment\methods\BankTransferVN4;
     }
     ?>
 </div>
-<?php if ($payment->page === Payment::PAGE_TOP_UP) { ?>
-    <div class="form-group form-inline">
-        <label>Nhập số tiền cần nạp &nbsp;<i class="la la-question-circle" title="Tối thiểu phải là 100.000 VNĐ"></i>:</label>
-        <input type="number" class="form-control" name="amount_topup" placeholder="Ví dụ: 100.000 VNĐ"
-               value="<?= Yii::$app->request->get('amount') ?>">
-    </div>
-<?php } ?>
 <div class="form-group form-check term">
     <input type="checkbox" class="form-check-input" value="1" id="termCheckout">
     <label class="form-check-label" for="termCheckout">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và
@@ -76,5 +71,6 @@ use frontend\modules\payment\methods\BankTransferVN4;
             kiện</a> giao dịch của Weshop.</label>
 </div>
 <button type="button" class="btn btn-payment btn-block" id="btnCheckout" onclick="ws.payment.process()">Thanh toán ngay
+    <span> <?= $storeManager->showMoney($payment->getTotalAmountDisplay()); ?></span>
 </button>
 

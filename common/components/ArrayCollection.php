@@ -106,7 +106,7 @@ class ArrayCollection extends BaseObject implements IteratorAggregate, ArrayAcce
     public function setDefault($key, $value)
     {
         if (empty($this->_items[$key])) {
-            $this->_items[$key][] = $value;
+            $this->_items[$key] = $value;
         }
 
         return $this;
