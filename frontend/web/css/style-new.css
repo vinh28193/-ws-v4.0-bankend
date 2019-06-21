@@ -485,7 +485,7 @@ ul.list-dot li{
     line-height: 24px;
 }
 .btn-group-detail .btn-group-primary,.btn-group-detail .btn-group-secondary {
-    width: 40%;
+    width: 50%;
 }
 .btn-group-detail .btn-group-secondary{
     margin-top: 5px;
@@ -501,6 +501,9 @@ ul.list-dot li{
 }
 .register-prime a{
     color: #0091ff;
+}
+.filter-box ul li .form-check .form-check-label{
+    line-height: 18px;
 }
 div div.product-list.row div a div.info div.price strong{
     color: #e02020;

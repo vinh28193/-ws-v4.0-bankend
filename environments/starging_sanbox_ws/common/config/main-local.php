@@ -3,7 +3,7 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=128.199.237.99;port=3306;dbname=weshop_global',
+            'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_global',
             'username' => 'sys',
             'password' => 'FaUfevTz62pgY33JxxE',
             'charset' => 'utf8',
@@ -14,7 +14,7 @@ return [
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=128.199.237.99;port=3306;dbname=weshop_h',
+            'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_h',
             'username' => 'sys',
             'password' => 'FaUfevTz62pgY33JxxE',
             'charset' => 'utf8',
@@ -28,18 +28,26 @@ return [
             'noCacheParam' => 'noCache',
             'noCacheValidateKey' => 'yes'
         ],
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => 'sessionRedisBm',
+                'port' => 6479,
+                'database' => 0,
+            ]
+        ],
         */
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
-                'hostname' => '128.199.70.160',
-                'port' => 6479,
+                'hostname' => 'cacheRedisWs',
+                'port' => 6379,
                 'database' => 0,
             ]
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => '128.199.70.160',
+            'hostname' => 'sessionRedisBm',
             'port' => 6479,
             'database' => 0,
         ],
