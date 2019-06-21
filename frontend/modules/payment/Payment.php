@@ -216,6 +216,9 @@ class Payment extends Model
             $this->_additionalFees = [];
             foreach ($this->getOrders() as $idx => $order) {
                 foreach ($order->getAdditionalFees()->keys() as $key) {
+                    if($key === 'tax_fee' || $key === 'shipping_fee'){
+                        continue;
+                    }
                     if (!isset($this->_additionalFees[$key])) {
                         $this->_additionalFees[$key] = 0;
                     }

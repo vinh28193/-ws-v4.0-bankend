@@ -247,7 +247,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     public function createOrderFromCart()
     {
         $type = $this->checkoutType;
-        if($type === CartSelection::TYPE_INSTALLMENT){
+        if ($type === CartSelection::TYPE_INSTALLMENT) {
             $type = CartSelection::TYPE_SHOPPING;
         }
         $item = $this->getCart()->getItem($type, $this->cartId, $this->uuid);
@@ -327,8 +327,8 @@ class Order extends BaseOrder implements AdditionalFeeInterface
 
     public function getTotalFinalAmount()
     {
-        return $this->total_origin_fee_local;
-//        $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees()[1];
-//        return $totalAmount;
+        $totalAmount = $this->total_amount_local;
+        $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees(null, ['shipping_fee', 'tax_fee'])[1];
+        return $totalAmount;
     }
 }
