@@ -7,11 +7,11 @@
 use common\helpers\WeshopHelper;
 if($item->relate_products) {
     ?>
-    <div class="product-viewed product-list">
+    <div class="product-viewed product-list box-shadow">
         <div class="title">Sản phẩm liên quan:</div>
         <div id="product-viewed-2" class="owl-carousel owl-theme">
             <?php foreach ($item->relate_products as $product){
-                $percent = $product->retail_price && $product->sell_price ? round(($product->retail_price - $product->sell_price) / $product->retail_price,0) : 0;
+                $percent = $product->retail_price && $product->sell_price ? round((($product->retail_price - $product->sell_price) / $product->retail_price)*100,0) : 0;
                 ?>
                 <div class="item-box">
                     <a href="<?= WeshopHelper::generateUrlDetail($item->type,$product->title,$product->item_id) ?>" class="item">
