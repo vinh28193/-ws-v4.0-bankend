@@ -238,7 +238,7 @@ class PaymentService
         return [
             'couponCode' => $payment->coupon_code,
             'paymentService' => implode('_', [$payment->payment_method, $payment->payment_bank_code]),
-            'totalAmount' => $payment->getTotalAmount(),
+            'totalAmount' => (int)$payment->getTotalAmount(),
             'additionalFees' => $payment->getAdditionalFees(),
         ];
     }

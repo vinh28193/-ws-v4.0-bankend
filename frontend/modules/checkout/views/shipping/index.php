@@ -129,7 +129,7 @@ $this->registerJs($js);
                         <i class="fa fa-user"></i> <?php echo Yii::t('frontend', 'Buyer information'); ?>
                     </div>
                 </div>
-                <div class="col-md-12 buyer-list <?= $shippingForm->enable_buyer === ShippingForm::NO ? 'open' : 'close'; ?>">
+                <div class="col-md-12 buyer-list <?= ($buyerAddress !== null && $shippingForm->enable_buyer === ShippingForm::NO) ? 'open' : 'close'; ?>">
                     <?php
                     if ($buyerAddress !== null) {
                         echo 'Name:' . $buyerAddress->first_name . '' . $buyerAddress->last_name;
@@ -137,6 +137,8 @@ $this->registerJs($js);
                         if ($shippingForm->enable_buyer === ShippingForm::NO) {
                             $this->registerJs('ws.payment.calculatorShipping();');
                         }
+                    }else {
+                        $shippingForm->enable_buyer = ShippingForm::YES;
                     }
                     ?>
                 </div>

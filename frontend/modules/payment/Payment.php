@@ -114,7 +114,6 @@ class Payment extends Model
      */
     public $view;
 
-
     public $_user;
 
     public function getUser()
@@ -320,16 +319,17 @@ class Payment extends Model
 
     public function checkPromotion()
     {
-        $form = new PromotionForm();
-        $params = PaymentService::createCheckPromotionParam($this);
-        $form->load($params, '');
-        /** @var  $response PromotionResponse */
-        $response = $form->checkPromotion();
-        if ($response->success === true && $response->discount > 0 && count($response->details) > 0) {
-            $this->total_discount_amount = $response->discount;
-            $this->discount_detail = $response->details;
+        foreach ($this->getOrders() as $order) {
+            /** @var  $order Order */
+            $form = new PromotionForm();
+            $form->load($order->createPromotionParam(), '');
+            /** @var  $response PromotionResponse */
+            $response = $form->checkPromotion();
+            if ($response->success === true && $response->discount > 0 && count($response->details) > 0) {
+                $order->discountAmount = $response->discount;
+                $order->discountDetail = $response->details;
+            }
         }
-        return $response;
     }
 
     public function courierCalculator($from, $to)

@@ -11,7 +11,8 @@ class DiscountController extends BasePaymentController
 {
 
 
-    public function actionCheckPromotion(){
+    public function actionCheckPromotion()
+    {
         $bodyParams = $this->request->bodyParams;
         $payment = new Payment($bodyParams);
         $response = $payment->checkPromotion();

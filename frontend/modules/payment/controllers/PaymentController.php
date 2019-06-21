@@ -110,6 +110,7 @@ class PaymentController extends BasePaymentController
         /* @var $results PromotionResponse */
         $payment->checkPromotion();
         $transaction = Order::getDb()->beginTransaction();
+        $orders = [];
         try {
             foreach ($payment->getOrders() as $key => $orderPayment) {
                 $order = clone $orderPayment;
@@ -143,17 +144,19 @@ class PaymentController extends BasePaymentController
                     return $this->response(false, 'can not create order');
                 }
 
-                foreach ($orderPayment->getAdditionalFees()->keys() as $key) {
-                    $feeValue = $orderPayment->getAdditionalFees()->get($key);
-                    $feeValue = reset($feeValue);
+                foreach ($orderPayment->getAdditionalFees()->keys() as $arrayFee) {
+                    foreach ($arrayFee as $feeValue){
+                        $feeValue = $orderPayment->getAdditionalFees()->get($key);
+                        $feeValue = reset($feeValue);
 
-                    $fee = new TargetAdditionalFee($feeValue);
-                    $fee->target = 'order';
-                    $fee->target_id = $order->id;
+                        $fee = new TargetAdditionalFee($feeValue);
+                        $fee->target = 'order';
+                        $fee->target_id = $order->id;
 
-                    if (!$fee->save(false)) {
-                        $transaction->rollBack();
-                        return $this->response(false, 'can not create order');
+                        if (!$fee->save(false)) {
+                            $transaction->rollBack();
+                            return $this->response(false, 'can not create order');
+                        }
                     }
                 }
                 $updateOrderAttributes = [];
@@ -199,7 +202,6 @@ class PaymentController extends BasePaymentController
                             return $this->response(false, 'can not create order');
                         }
                     }
-
                 }
 
                 $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
