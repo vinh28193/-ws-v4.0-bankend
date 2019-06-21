@@ -219,7 +219,7 @@ ws.payment = (function ($) {
                     if (response.success) {
                         var orders = response.data;
                         var additionalFees = pub.get('additionalFees');
-                        if ('international_shipping_fee' in additionalFees) {
+                        if (('international_shipping_fee' in additionalFees)) {
                             delete additionalFees['international_shipping_fee'];
                             pub.set('additionalFees', additionalFees);
                         }
@@ -344,12 +344,13 @@ ws.payment = (function ($) {
             courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(text);
             var orders = pub.get('orders');
             var order = orders[key];
-            var shippingFee = courier.total_fee;
+            var shippingFee = ws.roundNumber(courier.total_fee);
             var additionalFees = pub.get('additionalFees');
-            if (!feeName in additionalFees) {
+            if (!(feeName in additionalFees)) {
                 additionalFees[feeName] = 0
             }
             additionalFees[feeName] += shippingFee;
+            console.log(additionalFees);
             var tableFee = $cardOrder.find('table.table-fee');
             var shippingRow = tableFee.find('tr[data-fee="' + feeName + '"]');
             shippingRow.find('.fee-value').html(ws.showMoney(shippingFee));
@@ -415,7 +416,7 @@ ws.payment = (function ($) {
                     type: 'post',
                     data: data,
                     success: function (response, textStatus, xhr) {
-                        updatePaymentByPromotion(response)
+                        // updatePaymentByPromotion(response)
                     }
                 })
             }
@@ -524,7 +525,7 @@ ws.payment = (function ($) {
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
 
             pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
-            console.log(pub.shipping);
+
             // case 1 //
             if (isSafe) {
                 if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {

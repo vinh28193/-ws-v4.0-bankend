@@ -6,18 +6,18 @@ namespace frontend\modules\payment\controllers;
 
 use common\helpers\WeshopHelper;
 use common\models\Address;
-use common\models\Order;
 use common\models\db\TargetAdditionalFee;
+use common\models\Order;
 use common\models\PaymentTransaction;
-use frontend\modules\payment\PaymentService;
-use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
 use common\promotion\PromotionResponse;
 use frontend\modules\payment\models\ShippingForm;
+use frontend\modules\payment\Payment;
+use frontend\modules\payment\PaymentService;
+use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
 use Yii;
 use yii\db\Exception;
 use yii\helpers\Url;
 use yii\web\Response;
-use frontend\modules\payment\Payment;
 
 class PaymentController extends BasePaymentController
 {
@@ -41,20 +41,20 @@ class PaymentController extends BasePaymentController
             'buyer_province_id' => $shippingForm->buyer_province_id,
             'buyer_district_id' => $shippingForm->buyer_district_id,
             'buyer_post_code' => $shippingForm->buyer_post_code,
-            'buyer_province_name' => $shippingForm->getReceiverDistrictName(),
-            'buyer_district_name' => $shippingForm->getReceiverDistrictName(),
+            'buyer_province_name' => $shippingForm->getBuyerProvinceName(),
+            'buyer_district_name' => $shippingForm->getBuyerDistrictName(),
             'buyer_country_name' => $this->storeManager->store->country_name,
-            'receiver_name' => $shippingForm->receiver_name,
-            'receiver_address' => $shippingForm->receiver_address,
-            'receiver_phone' => $shippingForm->receiver_phone,
+            'receiver_name' => $shippingForm->buyer_name,
+            'receiver_address' => $shippingForm->buyer_address,
+            'receiver_phone' => $shippingForm->buyer_phone,
             'receiver_country_id' => $this->storeManager->store->country_id,
-            'receiver_province_id' => $shippingForm->receiver_province_id,
-            'receiver_district_id' => $shippingForm->receiver_district_id,
-            'receiver_post_code' => $shippingForm->receiver_post_code,
-            'receiver_province_name' => $shippingForm->getReceiverDistrictName(),
-            'receiver_district_name' => $shippingForm->getReceiverDistrictName(),
+            'receiver_province_id' => $shippingForm->buyer_province_id,
+            'receiver_district_id' => $shippingForm->buyer_district_id,
+            'receiver_post_code' => $shippingForm->buyer_post_code,
+            'receiver_province_name' => $shippingForm->getBuyerProvinceName(),
+            'receiver_district_name' => $shippingForm->getBuyerDistrictName(),
             'receiver_country_name' => $this->storeManager->store->country_name,
-            'receiver_address_id' => $shippingForm->receiver_address_id,
+            'receiver_address_id' => null,
         ];
         if ($shippingForm->buyer_address_id !== null && ($buyer = Address::findOne($shippingForm->buyer_address_id)) !== null) {
             $shippingParams['buyer_name'] = implode(' ', [$buyer->first_name, $buyer->last_name]);
@@ -72,6 +72,8 @@ class PaymentController extends BasePaymentController
                 $shippingParams['receiver_phone'] = $buyer->province_id;
                 $shippingParams['receiver_province_id'] = $buyer->district_id;
                 $shippingParams['receiver_district_id'] = $buyer->post_code;
+                $shippingParams['receiver_province_name'] = $shippingForm->getReceiverDistrictName();
+                $shippingParams['receiver_district_name'] = $shippingForm->getReceiverDistrictName();
             }
 
         }
@@ -115,6 +117,11 @@ class PaymentController extends BasePaymentController
             foreach ($payment->getOrders() as $key => $orderPayment) {
                 $order = clone $orderPayment;
                 $order->setAttributes($shippingParams);
+                if (!empty($orderPayment->courierDetail)) {
+                    $order->courier_name = implode(' ', [$orderPayment->courierDetail['courier_name'], $orderPayment->courierDetail['service_name']]);
+                    $order->courier_service = $orderPayment->courierDetail['service_code'];
+                    $order->courier_delivery_time = implode(' ', [$orderPayment->courierDetail['min_delivery_time'], $orderPayment->courierDetail['max_delivery_time']]);
+                }
                 $orderTotalDiscount = 0;
                 unset($order['products']);
                 unset($order['seller']);
@@ -144,11 +151,8 @@ class PaymentController extends BasePaymentController
                     return $this->response(false, 'can not create order');
                 }
 
-                foreach ($orderPayment->getAdditionalFees()->keys() as $arrayFee) {
-                    foreach ($arrayFee as $feeValue){
-                        $feeValue = $orderPayment->getAdditionalFees()->get($key);
-                        $feeValue = reset($feeValue);
-
+                foreach ($orderPayment->getAdditionalFees()->toArray() as $arrayFee) {
+                    foreach ($arrayFee as $feeValue) {
                         $fee = new TargetAdditionalFee($feeValue);
                         $fee->target = 'order';
                         $fee->target_id = $order->id;
@@ -213,7 +217,7 @@ class PaymentController extends BasePaymentController
         } catch (Exception $exception) {
             $transaction->rollBack();
             Yii::error($exception, __METHOD__);
-            return ['success' => false, 'message' => $exception->getMessage()];
+            return $this->response(false, $exception->getMessage());
         }
 
         $paymentTransaction = new PaymentTransaction();

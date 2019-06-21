@@ -319,17 +319,18 @@ class Payment extends Model
 
     public function checkPromotion()
     {
+        $results = [];
         foreach ($this->getOrders() as $order) {
             /** @var  $order Order */
             $form = new PromotionForm();
             $form->load($order->createPromotionParam(), '');
             /** @var  $response PromotionResponse */
             $response = $form->checkPromotion();
-            if ($response->success === true && $response->discount > 0 && count($response->details) > 0) {
-                $order->discountAmount = $response->discount;
-                $order->discountDetail = $response->details;
-            }
+            $order->discountAmount = $response->discount;
+            $order->discountDetail = $response->details;
+            $results[$order->cartId] = $response;
         }
+        return $results;
     }
 
     public function courierCalculator($from, $to)
@@ -422,6 +423,7 @@ class Payment extends Model
                 'totalFinalAmount' => $order->total_final_amount_local,
             ];
         }
+
         return [
             'page' => $this->page,
             'uuid' => $this->uuid,

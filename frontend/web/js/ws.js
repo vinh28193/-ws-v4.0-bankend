@@ -233,6 +233,7 @@ var ws = ws || (function ($) {
             i18nMessages = $messages;
         },
         roundNumber: function (number, precision) {
+            number = Number(number);
             precision = precision || pub.options.pricePrecision;
             const $factor = Math.pow(10, precision);
             return Math.round(number * $factor) / $factor;

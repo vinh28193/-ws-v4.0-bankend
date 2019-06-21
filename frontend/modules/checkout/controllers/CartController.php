@@ -13,25 +13,7 @@ use common\components\cart\CartSelection;
 class CartController extends BillingController
 {
 
-    public $title;
-
-
-
-    public function init()
-    {
-        parent::init();
-        $this->title = 'Danh sách sản phẩm trong giỏ hàng';
-        $this->breadcrumbParam = [
-            $this->title => '#'
-        ];
-    }
-
-    public function ogMetaTag()
-    {
-        return ArrayHelper::merge(parent::ogMetaTag(), [
-            'title' => $this->title
-        ]);
-    }
+    public $title = 'Danh sách sản phẩm trong giỏ hàng';
 
 
     public function actionIndex()

@@ -42,7 +42,6 @@ class Order extends BaseOrder implements AdditionalFeeInterface
             $this->getAdditionalFees()->remove('international_shipping_fee');
             $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', (int)ArrayHelper::getValue($this->courierDetail, 'total_fee', 0));
         }
-        Yii::info($this->getAdditionalFees()->toArray());
     }
 
     /**
@@ -248,7 +247,6 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     {
         $item = $this->getCart()->getItem($this->checkoutType, $this->cartId, $this->uuid);
         $params = $item['value'];
-        $cartId = $item['_id'];
         if (($sellerParams = ArrayHelper::remove($params, 'seller')) === null || !is_array($sellerParams)) {
             $this->addError('cartId', 'Not found seller for order');
             return false;
@@ -282,16 +280,17 @@ class Order extends BaseOrder implements AdditionalFeeInterface
             }
             // Collection Fee
             foreach ($productFeeParams as $name => $arrayFee) {
-                $this->getAdditionalFees()->remove($name);
                 if ($name === 'product_price') {
                     // exception, do not collect product_price
                     continue;
                 }
+
                 foreach ($arrayFee as $value) {
                     $this->getAdditionalFees()->add($name, $value);
                 }
                 unset($productFeeParams[$name]); // unset if this in collect
             }
+
             unset($productParam['available_quantity']);
             unset($productParam['quantity_sold']);
             $product = new Product($productParam);
@@ -312,6 +311,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         $this->populateRelation('products', $products);
         $this->populateRelation('seller', $seller);
         $this->populateRelation('saleSupport', $supporter);
+
         return $this;
     }
 

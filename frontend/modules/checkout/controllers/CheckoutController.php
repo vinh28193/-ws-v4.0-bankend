@@ -33,12 +33,22 @@ class CheckoutController extends FrontendController
         ]);
     }
 
-    /**
-     * @return array
-     */
+    public $title = 'Checkout';
+
+
+    public function init()
+    {
+        parent::init();
+        $this->breadcrumbParam = [
+            $this->title => '#'
+        ];
+    }
+
     public function ogMetaTag()
     {
-        return parent::ogMetaTag();
+        return ArrayHelper::merge(parent::ogMetaTag(), [
+            'title' => $this->title
+        ]);
     }
 
 
