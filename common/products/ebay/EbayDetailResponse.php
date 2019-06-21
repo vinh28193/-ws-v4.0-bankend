@@ -21,10 +21,10 @@ class EbayDetailResponse extends BaseResponse
 {
     /**
      * EbayDetailResponse constructor.
-     * @param EbayGate $gate
+     * @param EbayGate|EbayGateV4 $gate
      * @param array $config
      */
-    public function __construct(EbayGate $gate, array $config = [])
+    public function __construct($gate, array $config = [])
     {
         parent::__construct($gate, $config);
     }
