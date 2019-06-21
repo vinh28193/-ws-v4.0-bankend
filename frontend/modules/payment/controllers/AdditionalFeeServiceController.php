@@ -26,7 +26,9 @@ class AdditionalFeeServiceController extends BasePaymentController
             return $this->response(false, "can not get pickup warehouse");
         }
         $isId = $store->country_code === 'ID';
+        if (!array_key_exists("payment",$bodyParams)) {  Yii::info('Not exit data payment in bodyParams'); die; }
         $payment = new Payment($bodyParams['payment']);
+        if (!array_key_exists("shipping",$bodyParams)) {  Yii::info('Not exit data shipping in bodyParams'); die; }
         $shippingForm = new ShippingForm($bodyParams['shipping']);
         $shippingForm->ensureReceiver();
         $ship_to = [
@@ -86,6 +88,11 @@ class AdditionalFeeServiceController extends BasePaymentController
         $results = [];
         foreach ($payment->getOrders() as $order) {
             $weight = WeshopHelper::roundNumber((int)$order->total_weight_temporary * 1000);
+            if($weight <=0) {
+                Yii::info("Lỗi nghiêm trọng Cân nặng bằng hoặc nhỏ hơn 0");
+                Yii::error("Lỗi nghiêm trọng Cân nặng bằng hoặc nhỏ hơn 0",$order);
+            }
+
             $totalAmount = $order->total_amount_local;
             $items = [];
             foreach ($order->products as $product) {

@@ -94,6 +94,7 @@ return [
         ],
         'log' => [
             /*
+            // Local
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
@@ -102,12 +103,26 @@ return [
                 ],
             ],
             */
+            // Staging
+            /*
             'targets' => [
                 [
                     'class' => 'common\wsTelegramChatPush\TelegramTarget',
                     'levels' => ['error'],
                     'botToken' => '759337325:AAFSTmTF7eqaaly8MV1JSKP13vtVnBOL5Jc', // bot token secret key
                     'chatId' => '-1001205216479', // chat id or channel username with @ like 12345 or @channel
+                ],
+            ],
+            */
+
+            // Query QA IO
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                [
+                    'class' => 'notamedia\sentry\SentryTarget',
+                    'dsn' => 'https://b3713d886aed4cd3afa56ef65572ace7@sentry.io/1487129',
+                    'levels' => ['error', 'warning'],
+                    'context' => true // Write the context information. The default is true.
                 ],
             ],
         ],
