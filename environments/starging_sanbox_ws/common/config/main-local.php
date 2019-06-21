@@ -31,7 +31,7 @@ return [
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
-                'hostname' => '128.199.70.160',
+                'hostname' => 'sessionRedisBm',
                 'port' => 6479,
                 'database' => 0,
             ]
@@ -40,14 +40,14 @@ return [
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
-                'hostname' => '128.199.229.174',
+                'hostname' => 'cacheRedisWs',
                 'port' => 6379,
                 'database' => 0,
             ]
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => '128.199.70.160',
+            'hostname' => 'sessionRedisBm',
             'port' => 6479,
             'database' => 0,
         ],

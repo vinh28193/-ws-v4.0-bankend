@@ -33,14 +33,14 @@ return [
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
-                'hostname' => '128.199.70.160',
+                'hostname' => 'sessionRedisBm',
                 'port' => 6479,
                 'database' => 0,
             ]
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => '128.199.70.160',
+            'hostname' => 'sessionRedisBm',
             'port' => 6479,
             'database' => 0,
         ],
@@ -62,7 +62,7 @@ return [
         ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://128.199.70.160:27017/admin',
+            'dsn' => 'mongodb://MongoBM:27017/admin',
         ],
         'ga' => [
             'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
