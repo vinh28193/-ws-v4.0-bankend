@@ -128,6 +128,7 @@ class PaymentController extends BasePaymentController
                 unset($order['saleSupport']);
                 // 1 order
                 $order->type_order = Order::TYPE_SHOP;
+                $order->payment_type = $payment->payment_type;
                 $order->customer_type = 'Retail';
                 $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
                 $order->total_paid_amount_local = 0;
@@ -256,6 +257,8 @@ class PaymentController extends BasePaymentController
             $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
             $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
             $childTransaction->order_code = $order->ordercode;
+            $childTransaction->courier_name = $order->courier_name;
+            $childTransaction->service_code = $order->courier_service;
             $childTransaction->save(false);
         }
         $res = $payment->processPayment();

@@ -243,15 +243,22 @@ $this->registerJs($js);
                         <i class="fa fa-user"></i><?php echo Yii::t('frontend', 'Receiver information'); ?>
                     </div>
                 </div>
-                <div class="col-md-12 receiver-list <?= $shippingForm->enable_receiver === ShippingForm::NO ? 'open' : 'close'; ?>">
+                <?php
+                ?>
+                <div class="col-md-12 receiver-list <?= !empty($receiverAddress) && $shippingForm->enable_receiver === ShippingForm::NO ? 'open' : 'close'; ?>">
                     <div class="row">
                         <div class="col-md-12">
                             <?php
-                            $receiverAddress = ArrayHelper::map($receiverAddress, 'id', function ($shipping) {
-                                /** @var $address Address */
-                                return implode(' ', [$shipping->first_name, $shipping->last_name]);
-                            });
-                            echo $form->field($shippingForm, 'receiver_address_id')->radioList($receiverAddress)->label(false);
+                            if(!empty($receiverAddress)){
+                                $receiverAddress = ArrayHelper::map($receiverAddress, 'id', function ($shipping) {
+                                    /** @var $address Address */
+                                    return implode(' ', [$shipping->first_name, $shipping->last_name]);
+                                });
+                                echo $form->field($shippingForm, 'receiver_address_id')->radioList($receiverAddress)->label(false);
+                            }else {
+                                $shippingForm->enable_receiver = ShippingForm::YES;
+                            }
+
                             ?>
                         </div>
                         <div class="col-md-12">

@@ -12,7 +12,7 @@ return [
             'enableCaching' => true,
             'db' => 'db',
             'forceTranslation' => true,
-           // 'on missingTranslation' => ['common\i18n\TranslationEventHandler', 'handleMissingTranslation']
+            // 'on missingTranslation' => ['common\i18n\TranslationEventHandler', 'handleMissingTranslation']
         ],
         'yii' => [
             'class' => 'yii\i18n\PhpMessageSource',
