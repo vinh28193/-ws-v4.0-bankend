@@ -97,6 +97,28 @@ JS;
 $this->registerJs($js);
 ?>
 <style type="text/css">
+    .card-information {
+        border-radius: 3px;
+        border: 1px solid #fceab9;
+        background-color: #fff4d5;
+        color: #de8700;
+        margin-bottom: 1rem;
+    }
+    .card-information {
+        border-radius: 3px;
+        border: 1px solid #fceab9;
+        background-color: #fff4d5;
+        color: #de8700;
+    }
+
+    .card-information .card-body {
+        padding: 0.75rem 1.25rem;
+    }
+
+    .card-information .card-body a {
+        color: #2e96b6;
+    }
+
     .btn-payment{
         color: #ffffff;
         font-size: 14px;
@@ -107,6 +129,13 @@ $this->registerJs($js);
     }
 </style>
 <div class="container">
+    <div class="card card-information">
+        <div class="card-body">
+            <?=Yii::t('frontend','<a href="{loginUrl}"> Login / sign up </a> now for more convenience & incentives',[
+                    'loginUrl' => Yii::$app->user->loginUrl
+            ]); ?>
+        </div>
+    </div>
     <div class="card card-checkout card-shipping">
         <div class="card-body">
             <?php
@@ -315,14 +344,14 @@ $this->registerJs($js);
                     <?php foreach ($order->products as $product): ?>
                         <div class="col-md-12 product-item">
                             <div class="row product">
-                                <div class="col-md-2 img-responsive">
-                                    <img style="width: 100%" src="<?= $product->link_img ?>"
+                                <div class="col-md-1 img-responsive">
+                                    <img style="width: 100%;max-height: 100px" src="<?= $product->link_img ?>"
                                          alt="<?= $product->product_name; ?>">
                                 </div>
                                 <div class="col-md-8">
                                     <p><?= $product->product_name; ?></p>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <span class="text-danger">
                                         <?php echo $storeManager->showMoney($product->total_price_amount_local); ?>
                                     </span>
@@ -334,6 +363,7 @@ $this->registerJs($js);
                     <?php endforeach; ?>
                 </div>
                 <div class="row additional-fee">
+                    <div class="col-md-8"></div>
                     <div class="col-md-4">
                         <div class="additional-list">
                             <div class="dropdown courier-dropdown">
@@ -381,6 +411,13 @@ $this->registerJs($js);
             </div>
         </div>
     <?php endforeach; ?>
+    <div class="card card-information" style="margin-top: -1rem">
+        <div class="card-body">
+            <?=Yii::t('frontend','Prices of items, seller \'s domestic shipping fees and initial taxes of countries may not be accurate. You will have to pay extra if necessary by the balance in your wallet or other forms of payment. Whenever items or packages arrive at the warehouse and their weight or size is updated by the warehouse manager {name}, the additional invoice will be sent to you.',[
+                    'name' => $storeManager->store->name
+            ]); ?>
+        </div>
+    </div>
     <div class="card card-checkout card-payment">
         <div class="card-body">
             <div class="row">
