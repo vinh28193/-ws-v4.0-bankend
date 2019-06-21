@@ -194,7 +194,7 @@ class Payment extends Model
                     }
                 }
             }
-            $this->total_order_amount += $order->getTotalFinalAmount();
+            $this->total_order_amount += $order->total_amount_local;
             $this->_orders[] = $order;
         }
 
@@ -216,6 +216,9 @@ class Payment extends Model
             $this->_additionalFees = [];
             foreach ($this->getOrders() as $idx => $order) {
                 foreach ($order->getAdditionalFees()->keys() as $key) {
+                    if($key === 'tax_fee' || $key === 'shipping_fee'){
+                        continue;
+                    }
                     if (!isset($this->_additionalFees[$key])) {
                         $this->_additionalFees[$key] = 0;
                     }

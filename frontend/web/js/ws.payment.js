@@ -728,7 +728,22 @@ ws.payment = (function ($) {
         var courierDropDown = $cardOrder.find('div.courier-dropdown');
         if (response.success && typeof couriers !== 'string' && couriers.length) {
             if (couriers.length > 1) {
-                // ini drowdown mwnu
+                var menu = $('<div/>', {
+                    id: 'courierDropdownMenu',
+                    'class': 'dropdown-menu',
+                    'aria-labelledby': 'courierDropdownButton'
+                });
+                console.log(menu);
+                // $.each(couriers, function (i, courier) {
+                //
+                //     var a = $('<a/>', {
+                //         'class': 'dropdown-item',
+                //         href: '#',
+                //         text: 'sadasdas'
+                //     });
+                //     menu.appendChild(a)
+                // });
+                // menu.appendTo(courierDropDown);
             }
             pub.courierChange($cardOrder, couriers[0]);
         } else if (typeof couriers === 'string') {

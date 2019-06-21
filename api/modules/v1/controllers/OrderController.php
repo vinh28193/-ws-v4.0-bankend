@@ -199,6 +199,12 @@ class OrderController extends BaseApiController
                 if (isset($post['additional_service'])) {
                     $model->additional_service = $post['additional_service'];
                 }
+                if (isset($post['check_inspection'])) {
+                    $model->check_inspection = $post['check_inspection'];
+                }
+                if (isset($post['check_insurance'])) {
+                    $model->check_insurance = $post['check_insurance'];
+                }
             }
         }
         if ($model->getScenario() == 'confirmPurchase') {

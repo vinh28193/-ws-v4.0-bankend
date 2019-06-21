@@ -139,40 +139,36 @@ class CartHelper
         // Tổng tiền local gốc sản phẩm (chỉ có tiền gốc của sản phẩm)
         // Tổng tiền local tất tần tận
 
-        list($product['price_amount_origin'],$product['price_amount_local']) = $additionalFees->getTotalAdditionalFees('product_price');
-        $product['total_price_amount_local'] = $additionalFees->getTotalAdditionalFees()[1];
+        list($product['price_amount_origin'], $product['price_amount_local']) = $additionalFees->getTotalAdditionalFees('product_price');
+        $product['total_price_amount_local'] = $additionalFees->getTotalAdditionalFees(null, ['shipping_fee', 'tax_fee'])[1];
         $productFees = [];
         $product['additionalFees'] = $additionalFees->toArray();
         foreach ($additionalFees->keys() as $feeName) {
             $fee = [];
             list($fee['amount'], $fee['local_amount']) = $additionalFees->getTotalAdditionalFees($feeName);
-            $orderAttribute = "total_{$feeName}_local";
             if ($feeName === 'product_price') {
                 // Tổng giá gốc của các sản phẩm tại nơi xuất xứ
-                $orderAttribute = 'total_origin_fee_local';
+                $order['total_price_amount_origin'] = $fee['amount'];
+                $order['total_origin_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'tax_fee') {
                 // Tổng phí tax của các sản phẩm tại nơi xuất xứ
-                $orderAttribute = 'total_origin_tax_fee_local';
+                $order['total_origin_tax_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'shipping_fee') {
                 // Tổng phí tax của các sản phẩm tại nơi xuất xứ
-                $orderAttribute = 'total_origin_shipping_fee_local';
+                $order['total_origin_shipping_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'purchase_fee') {
                 // Tổng phí tax của các sản phẩm tại nơi xuất xứ
-                $orderAttribute = 'total_weshop_fee_local';
+                $order['total_weshop_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'international_shipping_fee') {
                 // Tổng vat của các sản phẩm
-                $orderAttribute = 'total_intl_shipping_fee_local';
+                $order['total_intl_shipping_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'vat_fee') {
                 // Tổng vận chuyển tại local của các sản phẩm
-                $orderAttribute = 'total_vat_amount_local';
+                $order['total_vat_amount_local'] = $fee['local_amount'];
             } else if ($feeName === 'delivery_fee') {
-                $orderAttribute = 'total_vat_amount_local';
+                $order['total_vat_amount_local'] = $fee['local_amount'];
             }
             // Tiền Phí
-            $order[$orderAttribute] = $fee['local_amount'];
-            if ($orderAttribute === 'total_origin_fee_local') {
-                $order['total_price_amount_origin'] = $fee['amount'];
-            }
             $productFees[$feeName] = $fee;
         }
 
@@ -183,7 +179,7 @@ class CartHelper
         // Tổng các phí các sản phẩm (trừ giá gốc tại nơi xuất xứ)
         $order['total_fee_amount_local'] = $product['total_fee_product_local'];
         // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
-        $order['total_amount_local'] = $product['total_price_amount_local'];
+        $order['total_amount_local'] = $product['price_amount_local'];
         $order['total_final_amount_local'] = $order['total_amount_local'] + $order['total_fee_amount_local'];
         $order['total_weight_temporary'] = $product['total_weight_temporary'];
         $order['total_quantity'] = $product['quantity_customer'];

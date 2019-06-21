@@ -97,6 +97,17 @@ class ShippingController extends CheckoutController
         ]);
     }
 
+    public function init()
+    {
+
+        if (($type = Yii::$app->request->get('type')) !== null) {
+            $this->title = Yii::t('frontend','Product in {type} cart',[
+                'type' => $type
+            ]);
+        }
+        parent::init();
+    }
+
     public function actionIndex($type)
     {
         $activeStep = 1;
@@ -107,13 +118,13 @@ class ShippingController extends CheckoutController
         $shippingForm = new ShippingForm();
         $shippingForm->setDefaultValues();
         /** @var User $user */
-        $keys = array_map(function ($e) use($uuid,$type){
+        $keys = array_map(function ($e) use ($uuid, $type) {
             return [
                 'cartId' => $e,
                 'uuid' => $uuid,
-                'checkoutType' =>$type,
+                'checkoutType' => $type,
             ];
-        },$keys);
+        }, $keys);
         $payment = new Payment([
             'page' => Payment::PAGE_CHECKOUT,
             'uuid' => $this->filterUuid(),

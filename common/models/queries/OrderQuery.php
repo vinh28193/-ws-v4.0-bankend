@@ -78,7 +78,6 @@ class OrderQuery extends \common\components\db\ActiveQuery
 //        ]);
         $this->joinWith([
             'products',
-            'coupon',
             'user',
         ]);
         return $this;

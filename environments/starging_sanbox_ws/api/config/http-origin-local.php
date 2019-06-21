@@ -11,5 +11,6 @@ return [
     'http://v3.weshop.asia',
     'http://v3.weshop.com.vn',
     'http://v3.weshop.co.id',
+    'http://ops.weshop.asia',
 ];
 

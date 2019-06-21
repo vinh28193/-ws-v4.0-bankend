@@ -10,24 +10,19 @@ if(!empty($items)){   // Todo @Huy edit thuộc tính insert lại DB + Mongodb
 <div id="product-viewed-2" class="owl-carousel owl-theme">
     <?php
     foreach ($items  as $item) {
+
         try {
-            /** @var \common\products\BaseProduct $product */
             $product = unserialize($item->obj_type);
-            try{
-                if($product instanceof \common\products\BaseProduct)
-                    $salePercent = $product->getSalePercent();
-                else
-                    $salePercent = 0;
-            }catch (Exception $e){
-//                print_r($product); die;
-                $salePercent = 0;
+            $salePercent = 0;
+            if(isset($product['start_price'])){
+                $salePercent = round(100 * ($product['start_price'] - $product['sell_price']) / $product['start_price']);
             }
             ?>
             <div class="item-box">
-                <a href="<?= \common\helpers\WeshopHelper::generateUrlDetail($product->type, $product->item_name, $product->item_id) ?>"
+                <a href="<?= \common\helpers\WeshopHelper::generateUrlDetail($product['type'], $product['item_name'], $product['item_id']) ?>"
                    class="item">
                     <div class="thumb">
-                        <img style="max-width: 160px" src="<?= count($product->primary_images) ? $product->primary_images[0]->main : '/img/no_image.png' ?>"
+                        <img style="max-width: 160px" src="<?= count($product['primary_images']) ? $product['primary_images'][0]->main : '/img/no_image.png' ?>"
                              alt="" title=""/>
                     </div>
                     <div class="info">
@@ -39,11 +34,11 @@ if(!empty($items)){   // Todo @Huy edit thuộc tính insert lại DB + Mongodb
                             <i class="la la-star-o"></i>
                             <span>(87)</span>
                         </div>
-                        <div class="name"><?= $product->item_name ?></div>
+                        <div class="name"><?= $product['item_name'] ?></div>
                         <div class="price">
-                            <strong><?= WeshopHelper::showMoney($product->getLocalizeTotalPrice(), 1) ?></strong>
-                            <?php if ($product->start_price) { ?>
-                                <span><?= WeshopHelper::showMoney($product->getLocalizeTotalStartPrice(), 1) ?></span>
+                            <strong><?= Yii::$app->storeManager->showMoney($product['sell_price'] * Yii::$app->storeManager->getExchangeRate()) ?></strong>
+                            <?php if ($product['start_price']) { ?>
+                                <span><?= Yii::$app->storeManager->showMoney($product['start_price'] * Yii::$app->storeManager->getExchangeRate()) ?></span>
                                 <span class="sale-tag" style="display: <?= $salePercent > 0 ? 'block' : 'none' ?>"><?= $salePercent > 0 ? $salePercent : '' ?>% OFF</span>
                             <?php } // Start start_price
                             ?>
