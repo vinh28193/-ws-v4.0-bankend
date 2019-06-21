@@ -731,7 +731,7 @@ ws.payment = (function ($) {
             }
             pub.courierChange($cardOrder, couriers[0]);
         } else if (typeof couriers === 'string') {
-            courierDropDown.find('button#courierDropdownButton').find('courier-name').html(couriers)
+            courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(couriers)
         }
     };
 
