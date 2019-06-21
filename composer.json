@@ -52,7 +52,8 @@
     "spiral/php-grpc": "dev-master",
     "grpc/grpc": "^v1.6.0",
     "google/protobuf": "^3.4.0",
-    "ext-grpc": "*"
+    "ext-grpc": "*",
+    "notamedia/yii2-sentry": "^1.3"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
