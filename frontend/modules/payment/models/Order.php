@@ -27,10 +27,23 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     public $courier_sort_mode = 'best_rating';
     public $_additionalFees;
 
+    public $couponCode;
+    public $discountDetail = [];
+    public $discountAmount = 0;
     /**
      * @var
      */
     private $_cart;
+
+    public function init()
+    {
+        parent::init();
+        if (!empty($this->courierDetail)) {
+            $this->getAdditionalFees()->remove('international_shipping_fee');
+            $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', (int)ArrayHelper::getValue($this->courierDetail, 'total_fee', 0));
+        }
+        Yii::info($this->getAdditionalFees()->toArray());
+    }
 
     /**
      * @return \common\components\cart\CartManager
@@ -47,17 +60,16 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     {
         if ($this->_additionalFees === null) {
             $this->_additionalFees = new AdditionalFeeCollection();
-            if (!empty($this->courierDetail)) {
-                $this->_additionalFees->remove('international_shipping_fee');
-                $this->_additionalFees->withCondition($this, 'international_shipping_fee', ArrayHelper::getValue($this->courierDetail, 'total_fee', 0));
-            }
         }
         return $this->_additionalFees;
     }
 
     public function setAdditionalFees($additionalFees)
     {
-        $this->getAdditionalFees()->fromArray($additionalFees);
+        foreach ($additionalFees as $key => $value) {
+            $this->getAdditionalFees()->setDefault($key, $value);
+        }
+
     }
 
     public function extraFields()
@@ -188,7 +200,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
                 'description' => '',
                 'amz_shipment_id' => '',
                 'chargeable_weight' => $weight,
-                'parcels' => $parcel
+                'parcels' => [$parcel]
             ],
         ];
         return $params;
@@ -216,6 +228,22 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         return $this->_pickUpWareHouse;
     }
 
+    public function createPromotionParam()
+    {
+        $fees = [];
+        foreach ($this->getAdditionalFees()->keys() as $key) {
+            if ($key === 'tax_fee' || $key === 'shipping_fee') {
+                continue;
+            }
+            $fees[$key] = $this->getAdditionalFees()->getTotalAdditionalFees($key)[1];
+        }
+        return [
+            'couponCode' => $this->couponCode,
+            'totalAmount' => $this->total_final_amount_local,
+            'additionalFees' => $this->getAdditionalFees()->toArray(),
+        ];
+    }
+
     public function createOrderFromCart()
     {
         $item = $this->getCart()->getItem($this->checkoutType, $this->cartId, $this->uuid);
@@ -237,7 +265,6 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         unset($params['customer']);
         unset($params['support_name']);
         $this->setAttributes($params);
-        $this->getAdditionalFees()->removeAll();
         $products = [];
         foreach ($productParams as $key => $productParam) {
             if (($categoryParams = ArrayHelper::remove($productParam, 'category')) === null || !is_array($categoryParams)) {
@@ -255,6 +282,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
             }
             // Collection Fee
             foreach ($productFeeParams as $name => $arrayFee) {
+                $this->getAdditionalFees()->remove($name);
                 if ($name === 'product_price') {
                     // exception, do not collect product_price
                     continue;
@@ -287,10 +315,15 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         return $this;
     }
 
+    public function removeCart()
+    {
+        return $this->getCart()->removeItem($this->checkoutType, $this->cartId, $this->uuid);
+    }
+
     public function getTotalFinalAmount()
     {
-        $totalAmount = $this->total_final_amount_local;
-        $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees()[1];
-        return $totalAmount;
+        return $this->total_amount_local;
+//        $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees()[1];
+//        return $totalAmount;
     }
 }

@@ -9,12 +9,13 @@
 namespace common\additional;
 
 
-
+use common\helpers\WeshopHelper;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use common\components\ArrayCollection;
+
 /**
  * new update co collection
  * đối tượng collection cho phép cóp nhặt 1 list data từ 1 nguồn sẵn có hoặc tự được thêm vào
@@ -143,6 +144,7 @@ class AdditionalFeeCollection extends ArrayCollection
      */
     public function createItem(StoreAdditionalFee $config, AdditionalFeeInterface $additional, $amount = null, $discountAmount = 0, $currency = null)
     {
+
         if (($config->type === StoreAdditionalFee::TYPE_ORIGIN || $config->type === StoreAdditionalFee::TYPE_LOCAL) && $amount === null) {
             $amount = 0;
         }
@@ -152,7 +154,7 @@ class AdditionalFeeCollection extends ArrayCollection
         ) {
             list($amount, $amountLocal) = $result;
         } else if ($config->type === StoreAdditionalFee::TYPE_LOCAL) {
-            $amountLocal = $amount;
+            $amountLocal = $this->getStoreManager()->roundMoney($amount);
         } else if ($config->name === 'product_price') {
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         } else if ($config->name === 'tax_fee') {
@@ -273,9 +275,6 @@ class AdditionalFeeCollection extends ArrayCollection
         $totalLocalFees = 0;
         $fees = (array)$this->mget($names);
         foreach ($fees as $name => $array) {
-            if($name ==='purchase_fee'){
-
-            }
             if (in_array($name, $except)) {
                 continue;
             }

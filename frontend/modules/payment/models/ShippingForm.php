@@ -129,10 +129,17 @@ class ShippingForm extends Model
         $this->receiver_country_id = $store->store->country_id;
         // shipping Address
         $this->other_receiver = self::NO;
-        if ($this->getUser()) {
+        if ($this->getUser() !== null) {
             $this->customer_id = $this->getUser()->id;
-            $this->save_buyer_address = self::NO;
             $this->save_receiver_address = self::NO;
+            if (WeshopHelper::isEmpty($this->getBuyerAddress())) {
+                $this->enable_buyer = self::YES;
+                $this->save_buyer_address = self::YES;
+            }
+            if (WeshopHelper::isEmpty($this->getReceiverAddress())) {
+                $this->enable_receiver = self::YES;
+                $this->save_receiver_address = self::YES;
+            }
         }else {
             $this->enable_buyer = self::YES;
             $this->enable_receiver = self::YES;

@@ -11,8 +11,6 @@ $portal_web = strtolower($item->type) == 'ebay' ? '<a href="//ebay.com">eBay.com
 $salePercent = $item->getSalePercent();
 $current_provider = $item->getCurrentProvider();
 $variationUseImage = null;
-$sellerCurrent = Yii::$app->request->get('seller');
-$sellerCurrent = $sellerCurrent ? $sellerCurrent : $item->getSeller();
 
 foreach ($item->variation_options as $index => $variationOption) {
     if ($variationOption->images_mapping) {
@@ -56,11 +54,11 @@ $this->registerCss($css);
         <span><?php echo Yii::t('frontend', '{star} ({count} customer reviews) on {portal}', ['star' => '4.5/5','count' => rand(10, 100),'portal' => $portal_web]); ?></span>
     </div>
     <div class="condition-and-seller">
-        <strong><?= Yii::t('frontend',$item->condition) ?></strong>
+        <strong><?= Yii::t('frontend',$current_provider?$current_provider->condition:$item->condition) ?></strong>
         <span>
             <?php
             if(is_array($item->providers) && count($item->providers)){
-              echo Yii::t('frontend','of seller <a href="#">{seller}</a>',['seller' => $item->providers[0]->name]);
+              echo Yii::t('frontend','of seller <a href="#">{seller}</a>',['seller' => $current_provider ? $current_provider->name : '---']);
             }
             ?>
         </span>
@@ -185,13 +183,13 @@ JS;
             <b id="instockQuantity"><?= $instockQuanty ?></b><i> <?= Yii::t('frontend', 'products can be purchased'); ?></i>
         </div>
     <?php } ?>
-        <div class="qty form-inline" id="quantityGroup" style="display: <?= $sellerCurrent ? 'inline-flex' : 'none' ?>;">
+        <div class="qty form-inline" id="quantityGroup" style="display: <?= $current_provider ? 'inline-flex' : 'none' ?>;">
             <label><?= Yii::t('frontend','Quantity') ?></label>
             <button class="btn btnQuantity ml-1" type="button" data-href="down"><i class="la la-minus"></i></button>
             <input type="text" class="form-control" id="quantity" value="1"/>
             <button class="btn btnQuantity" type="button" data-href="up"><i class="la la-plus"></i></button>
         </div>
-    <div class="" id="outOfStock" style="display: <?= !$sellerCurrent ? 'block' : 'none' ?>;">
+    <div class="" id="outOfStock" style="display: <?= !$current_provider ? 'block' : 'none' ?>;">
         <label style="color: red"><?= Yii::t('frontend', 'Out of stock') ?></label>
     </div>
         <div class="register-prime">
@@ -201,11 +199,15 @@ JS;
             <div class="" id="outOfStock">
                 <h3 style="color: red"><?= Yii::t('frontend', 'Out of Time') ?></h3>
             </div>
-        <?php }else if ($item->getLocalizeTotalPrice() > 0 && $sellerCurrent){?>
+        <?php }else if ($item->getLocalizeTotalPrice() > 0 && $current_provider){?>
             <div class="btn-group-detail">
-                <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> Đặt mua ngay</button>
-                <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> Mua trả góp</button>
-                <button class="btn btn-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> Giỏ hàng</button>
+                <div class="btn-group-primary">
+                    <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> Đặt mua ngay</button>
+                </div>
+                <div class="btn-group-secondary">
+                    <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> Mua trả góp</button>
+                    <button class="btn btn-outline-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> Giỏ hàng</button>
+                </div>
             </div>
         <?php }?>
         <div class="card-group-detail">

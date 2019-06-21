@@ -463,6 +463,10 @@ ul.list-dot li{
 .btn.btnQuantity{
     border-radius: 50%;
 }
+.box-shadow{
+    box-shadow: 0 2px 4px #dddddd;
+    padding: 15px
+}
 .btn-group-detail i{
     font-size: 20px;
 }
@@ -479,6 +483,21 @@ ul.list-dot li{
     color: #6d7278;
     font-size: 13px;
     line-height: 24px;
+}
+.btn-group-detail .btn-group-primary,.btn-group-detail .btn-group-secondary {
+    width: 40%;
+}
+.btn-group-detail .btn-group-secondary{
+    margin-top: 5px;
+}
+.btn-group-detail .btn-group-primary button{
+    width: 100%;
+}
+.btn-group-detail .btn-group-secondary button#installmentBtn{
+    width: 50%;
+}
+.btn-group-detail .btn-group-secondary button#addToCart{
+    width: 49%;
 }
 .register-prime a{
     color: #0091ff;

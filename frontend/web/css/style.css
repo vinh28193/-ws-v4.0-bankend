@@ -5398,7 +5398,8 @@ a:hover {
 }
 
 .detail-content .product-viewed .owl-carousel .item-box {
-    border: 1px solid transparent;
+    border: 1px solid #dddddd;
+    /*border: 1px solid transparent;*/
     border-top: none;
 }
 

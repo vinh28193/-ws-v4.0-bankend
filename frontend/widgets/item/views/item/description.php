@@ -16,7 +16,7 @@ if($type == 'extra'){
     }
 }
     ?>
-    <div class="detail-block-2" id="description_<?= $type ?>" style="box-shadow: 0 2px 4px #dddddd;padding: 15px">
+    <div class="detail-block-2 box-shadow" id="description_<?= $type ?>">
         <div class="row">
             <div class="col-md-12">
                 <div class="title"><?=Yii::t('frontend',$type == 'extra' ? 'Product details' : 'Product description'); ?>:</div>
@@ -56,21 +56,14 @@ if($type == 'extra'){
                             }
                         }
                     }else{
+/*                        src="/description/strtolower($item->type)/($item->item_id).html?description=$type*/
                         ?>
-                        <!--<iframe style="border: 0px; width: inherit; height: auto; overflow: hidden"
+                        <iframe style="border: 0px; width: inherit; height: auto; overflow: hidden"
                                 onload="autoHeightIframe(this)"
-                                src="https://vi.vipr.ebaydesc.com/ws/eBayISAPI.dll?ViewItemDescV4&item=<?/*= ($item->item_id) */?>"
+                                src="https://vi.vipr.ebaydesc.com/ws/eBayISAPI.dll?ViewItemDescV4&item=<?= ($item->item_id) ?>"
                                 frameborder="0"  sandbox="allow-forms allow-scripts" scrolling="yes"
                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>-->
-                        <iframe src="https://vi.vipr.ebaydesc.com/ws/eBayISAPI.dll?ViewItemDescV4&item=<?= ($item->item_id) ?>"
-                                frameborder="0" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%"></iframe>
-                        <!--<iframe style="border: 0px; width: inherit; height: auto; overflow: hidden"
-                                onload="autoHeightIframe(this)"
-                                src="/description/<?/*= strtolower($item->type) */?>-<?/*= ($item->item_id) */?>.html?description=<?/*= $type */?>"
-                                frameborder="0"  sandbox="allow-forms allow-scripts" scrolling="yes"
-                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>-->
+                                allowfullscreen></iframe>
                         <?php
                     }
                 }

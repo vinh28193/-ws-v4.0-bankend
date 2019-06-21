@@ -218,6 +218,12 @@ ws.payment = (function ($) {
                     console.log(response);
                     if (response.success) {
                         var orders = response.data;
+                        var additionalFees = pub.get('additionalFees');
+                        if ('international_shipping_fee' in additionalFees) {
+                            delete additionalFees['international_shipping_fee'];
+                            pub.set('additionalFees', additionalFees);
+                        }
+
                         $.each(orders, function (key, res) {
                             initCourierView(key, res);
                         });
@@ -331,6 +337,7 @@ ws.payment = (function ($) {
 
         },
         courierChange: function ($cardOrder, courier) {
+            var feeName = 'international_shipping_fee';
             var key = $cardOrder.data('key');
             var text = courier.courier_name + ' ' + courier.service_name + ' (' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('day') + ' )';
             var courierDropDown = $cardOrder.find('div.courier-dropdown');
@@ -338,8 +345,13 @@ ws.payment = (function ($) {
             var orders = pub.get('orders');
             var order = orders[key];
             var shippingFee = courier.total_fee;
+            var additionalFees = pub.get('additionalFees');
+            if (!feeName in additionalFees) {
+                additionalFees[feeName] = 0
+            }
+            additionalFees[feeName] += shippingFee;
             var tableFee = $cardOrder.find('table.table-fee');
-            var shippingRow = tableFee.find('tr[data-fee="international_shipping_fee"]');
+            var shippingRow = tableFee.find('tr[data-fee="' + feeName + '"]');
             shippingRow.find('.fee-value').html(ws.showMoney(shippingFee));
             var totalFinal = tableFee.find('tr.final-amount').find('.fee-value');
             var value = totalFinal.data('origin');
@@ -348,7 +360,8 @@ ws.payment = (function ($) {
             order.courierDetail = courier;
             orders[key] = order;
             pub.set('orders', orders);
-            getTotalAmount(pub.payment.totalAmount);
+            pub.set('additionalFees', additionalFees);
+            getTotalAmountDisplay();
         },
         methodChange: function (isNew) {
             isNew = isNew || false;
@@ -624,20 +637,12 @@ ws.payment = (function ($) {
             $errorDiscount.css('display', 'flex');
             $errorDiscount.html(error);
         }
-        var billingBox = $('#billingBox');
-        var discountBox = billingBox.find('li#discountPrice');
-        discountBox.css('display', 'none');
         if ($response.details.length > 0 && $response.discount > 0) {
             pub.payment.discount_detail = $response.details;
             pub.payment.total_discount_amount = $response.discount;
-            pub.payment.totalAmountDisplay = pub.payment.totalAmount - pub.payment.total_discount_amount;
-            discountBox.css('display', 'flex');
-            discountBox.find('div.right').html('- ' + ws.showMoney(pub.payment.total_discount_amount));
-            billingBox.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.totalAmountDisplay));
-            billingBox.find('li[rel="detail"]').remove();
-            billingBox.prepend(initPromotionView(pub.payment.discount_detail));
 
         }
+        getTotalAmountDisplay();
 
     };
     var initPromotionView = function ($detail) {
@@ -726,26 +731,27 @@ ws.payment = (function ($) {
             }
             pub.courierChange($cardOrder, couriers[0]);
         } else if (typeof couriers === 'string') {
-            courierDropDown.find('button#courierDropdownButton').find('courier-name').html(couriers)
+            courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(couriers)
         }
     };
-    var initAdditionalFeeView = function () {
 
-    };
-    var initPaymentPopup = function ($res) {
-
-    };
-
-    var getTotalAmount = function ($total) {
-        var billingBox = $('#billingBox');
-        var totalAmount = $total;
-        $.each(pub.payment.additionalFees, function (ikey, value) {
-            totalAmount += Number(value);
+    var getTotalAmount = function ($amount = null) {
+        $amount = $amount || pub.get('total_order_amount');
+        $.each(pub.get('additionalFees'), function (ikey, value) {
+            $amount += Number(value);
         });
-        pub.payment.totalAmount = totalAmount;
-        console.log(pub.payment.totalAmount);
-        billingBox.find('li#finalPrice').find('div.right').html(ws.showMoney(pub.payment.totalAmount));
-    }
+        pub.set('totalAmount', $amount);
 
+        return $amount
+    };
+
+    var getTotalAmountDisplay = function () {
+        var $amount = getTotalAmount();
+        pub.set('totalAmountDisplay', $amount);
+        var btnCheckout = $('#btnCheckout');
+        btnCheckout.find('span').html(ws.showMoney($amount));
+
+        return $amount
+    };
     return pub;
 })(jQuery);

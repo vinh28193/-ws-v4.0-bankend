@@ -169,7 +169,7 @@ CSS;
 
     protected function renderDetailBlock()
     {
-        $detailBlock = Html::beginTag('div', ['class' => 'detail-block']);
+        $detailBlock = Html::beginTag('div', ['class' => 'detail-block box-shadow']);
         $detailBlock .= $this->renderSlide();
         $detailBlock .= $this->renderFullInfo();
         $detailBlock .= Html::endTag('div');
@@ -180,7 +180,10 @@ CSS;
 
     public function renderSellerMore(){
         if($this->item->providers && count($this->item->providers) > 1){
-            return $this->render('item/seller_more',['item' => $this->item]);
+            return $this->render('item/seller_more',[
+                'item' => $this->item,
+                'storeManager' => $this->getStoreManager()
+            ]);
         }
         return '';
     }
