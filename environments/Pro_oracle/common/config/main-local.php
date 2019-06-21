@@ -15,7 +15,7 @@ return [
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=128.199.237.99;port=3306;dbname=weshop_',
+            'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_',
             'username' => 'sys',
             'password' => 'FaUfevTz62pgY33JxxE',
             'charset' => 'utf8',
