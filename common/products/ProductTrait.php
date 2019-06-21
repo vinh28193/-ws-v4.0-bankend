@@ -22,7 +22,7 @@ trait ProductTrait
 //            $it->name = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['name']);
 //            $it->values = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['values']);
             $it->name = $datum['name'];
-            $it->values = isset($datum['values']) ? $datum['values'] : isset($datum['value']) ? $datum['value'] : [];
+            $it->values = isset($datum['values']) ? $datum['values'] : (isset($datum['value']) ? $datum['value'] : []);
             $it->setImagesMapping();
             $it->setId();
             $rs[] = $it;

@@ -98,7 +98,7 @@ $this->registerCss($css);
                     <td>
                         <ul class="list-dot">
                             <li><?= Yii::t('frontend','Purchase fee: {purchasefee}',['purchasefee' => $storeManager->showMoney($item->getAdditionalFees()->getTotalAdditionalFees('purchase_fee')[1])]) ?></li>
-                            <li><?= Yii::t('frontend','Price product on {portal_web}: {price}',['portal_web'=>$portal_web,'price' => '$'.$item->getSellPrice()]) ?></li>
+                            <li><?= Yii::t('frontend','Price product on {portal_web}: <span id="price_origin">{price}</span>',['portal_web'=>$portal_web,'price' => '$'.$item->getSellPrice()]) ?></li>
                         </ul>
                     </td>
                 </tr>
