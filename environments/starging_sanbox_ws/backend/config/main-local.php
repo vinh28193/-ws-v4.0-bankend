@@ -8,7 +8,7 @@ $config = [
         ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://admin:weshop123@mongodbWs:27017/admin',
+            'dsn' => 'mongodb://backup:QuKUBS1cQ2Q@mongodbWs:27017/admin',
         ],
     ],
 ];
