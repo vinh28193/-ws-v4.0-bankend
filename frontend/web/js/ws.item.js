@@ -299,11 +299,15 @@
             $("#quantityGroup").css('display', 'none');
             $("#quoteBtn").css('display', 'inline-flex');
             $("#buyNowBtn").css('display', 'none');
+            $("#addToCart").css('display', 'none');
+            $("#installmentBtn").css('display', 'none');
         } else {
             $("#outOfStock").css('display', 'none');
             $("#quantityGroup").css('display', 'inline-flex');
             $("#quoteBtn").css('display', 'none');
-            $("#buyNowBtn").css('display', 'inline-flex');
+            $("#buyNowBtn").css('display', 'block');
+            $("#addToCart").css('display', 'initial');
+            $("#installmentBtn").css('display', 'initial');
         }
     };
     var setUpDefaultOptions = function ($item) {

@@ -55,7 +55,7 @@ class EbayGateV4 extends BaseGate
      */
     private function searchRequest($params)
     {
-        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.$params['keywords'].'&page_id='.$params['page'];
+        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.urlencode($params['keywords']).'&page_id='.urlencode($params['page']);
         if(($filters = ArrayHelper::getValue($params,'aspectFilter')) && count($filters)){
             $value = '';
             $name = '';
@@ -65,13 +65,13 @@ class EbayGateV4 extends BaseGate
                     $name = $filter['name'];
                 }
             }
-            $url .= '&itemFilterKey='.$name.'&itemFilterValue='.$value;
+            $url .= '&itemFilterKey='.urlencode($name).'&itemFilterValue='.urlencode($value);
         }
         if(($cate = ArrayHelper::getValue($params,'categoryId')) && count($cate)){
-            $url .= '&categoryId='.$cate[0];
+            $url .= '&categoryId='.urlencode($cate[0]);
         }
         if(($sortOrder = ArrayHelper::getValue($params,'sortOrder')) && $sortOrder){
-            $url .= '&sortKey='.$sortOrder;
+            $url .= '&sortKey='.urlencode($sortOrder);
         }
         $curl = new Curl();
         $response = $curl->get($url);
@@ -92,6 +92,13 @@ class EbayGateV4 extends BaseGate
                         'StartTimeNewest' =>  'Time Newest',
                     ];
                 }
+                $products = [];
+                foreach ($response['data']['products'] as $product){
+                    $product['end_time'] = strtotime($product['end_time']);
+                    $product['start_time'] = strtotime($product['start_time']);
+                    $products[] = $product;
+                }
+                $response['data']['products'] = $products;
             }
             return [true, $response];
         }catch (Exception $exception ){
@@ -99,7 +106,16 @@ class EbayGateV4 extends BaseGate
             return [false, $response];
         }
     }
-
+    public function updateCustomerFeedback($id,$seller){
+        $url = $this->baseUrl.'/feedback?item_id='.$id.'&user_id='.$seller;
+        $curl = new Curl();
+        $response = $curl->get($url);
+        $response = json_decode($response,true);
+        if($curl->responseCode !== 200){
+            return [false, $response];
+        }
+        return ArrayHelper::getValue($response,'response');
+    }
     /**
      * @param $condition
      * @param bool $refresh
@@ -116,7 +132,11 @@ class EbayGateV4 extends BaseGate
             list($ok, $response) = $this->lookupRequest($request->params());
             //$this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
        // }
-        return [true, (new EbayDetailResponse($this))->parser($response)];
+        $product = (new EbayDetailResponse($this))->parser($response);
+        if($product->providers && count($product->providers)){
+            $product->customer_feedback = $this->updateCustomerFeedback($product->item_id,$product->providers[0]->name);
+        }
+        return [true, $product];
 
     }
 
