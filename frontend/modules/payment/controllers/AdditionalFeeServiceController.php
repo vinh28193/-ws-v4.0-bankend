@@ -86,7 +86,7 @@ class AdditionalFeeServiceController extends BasePaymentController
         $results = [];
         foreach ($payment->getOrders() as $order) {
             $weight = $order->total_weight_temporary * 1000;
-            Yii::info($weight,'weight');
+            Yii::info($weight, 'weight');
             $totalAmount = $order->total_amount_local;
             $items = [];
             foreach ($order->products as $product) {
@@ -96,7 +96,7 @@ class AdditionalFeeServiceController extends BasePaymentController
                     'origin_country' => '',
                     'name' => $product->product_name,
                     'desciption' => '',
-                    'weight' => $product->total_weight_temporary * 1000,
+                    'weight' => WeshopHelper::roundNumber(($weight / $product->quantity_customer)),
                     'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
                     'quantity' => $product->quantity_customer,
                 ];

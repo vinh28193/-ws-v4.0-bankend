@@ -280,8 +280,8 @@ class PaymentController extends BasePaymentController
         $redirectUrl = Url::toRoute('/account/order', true);
 
         // @Phuc ToDo Check log Respone NL
-        Yii::info(" res Object response :");
-        Yii::info($res, __METHOD__);
+//        Yii::info(" res Object response :");
+//        Yii::info($res, __METHOD__);
 
         if ($res->success === false) {
             Yii::info(" res return false redirect url :" . $this->redirect($cartUrl));
@@ -293,10 +293,13 @@ class PaymentController extends BasePaymentController
         /** @var $paymentTransaction PaymentTransaction */
         if (($paymentTransaction = $res->paymentTransaction) instanceof PaymentTransaction && $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
             foreach ($paymentTransaction->childPaymentTransaction as $child) {
+                $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+
                 if (($order = $child->order) !== null) {
                     $order->total_paid_amount_local = $child->transaction_amount_local;
                     $order->save(false);
                 }
+                $child->save(false);
             }
             return $this->redirect($redirectUrl);
 

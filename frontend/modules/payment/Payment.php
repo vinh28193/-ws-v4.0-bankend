@@ -35,6 +35,7 @@ class Payment extends Model
     const ENV_PRODUCT = 'product';
 
     const PAGE_CHECKOUT = 'CHECKOUT';
+    const PAGE_BILLING = 'BILLING';
     const PAGE_TOP_UP = 'TOP_UP';
 
     public $env = self::ENV_PRODUCT;
@@ -175,19 +176,23 @@ class Payment extends Model
     {
         $this->_orders = [];
 
-        foreach ($orders as $param) {
-            if (!isset($param['checkoutType'])) {
-                $param['checkoutType'] = $this->type;
-            }
-            if (!isset($param['uuid'])) {
-                $param['uuid'] = $this->uuid;
-            }
-            if (isset($param['totalFinalAmount'])) {
-                unset($param['totalFinalAmount']);
-            }
-            $order = new Order($param);
-            if ($order->createOrderFromCart() === false) {
-                continue;
+        foreach ($orders as $order) {
+            if (!is_object($order)) {
+                if (!isset($order['checkoutType'])) {
+                    $order['checkoutType'] = $this->type;
+                }
+                if (!isset($order['uuid'])) {
+                    $order['uuid'] = $this->uuid;
+                }
+                if (isset($order['totalFinalAmount'])) {
+                    unset($order['totalFinalAmount']);
+                }
+                $order = new Order($order);
+                if ($this->page === self::PAGE_CHECKOUT) {
+                    if ($order->createOrderFromCart() === false) {
+                        continue;
+                    }
+                }
             }
             $this->total_order_amount += $order->getTotalFinalAmount();
             $this->_orders[] = $order;

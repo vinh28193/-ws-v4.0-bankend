@@ -36,7 +36,7 @@ class AdditionalFeeCollection extends ArrayCollection
      * cho phép get dữ liệu từ một nguồn được định nghĩa từ [[ActiceRecore]]
      * @param ActiveRecord $activeRecord
      */
-    public function loadFormActiveRecord(ActiveRecord $activeRecord)
+    public function loadFormActiveRecord(ActiveRecord $activeRecord, $target = 'order')
     {
         $tableName = $activeRecord::tableName();
         $class = get_class($activeRecord);
@@ -44,7 +44,7 @@ class AdditionalFeeCollection extends ArrayCollection
         $query = new Query();
         $query->select(['c.id', 'c.type', 'c.name', 'c.amount', 'c.label', 'c.local_amount', 'c.discount_amount', 'c.currency']);
         $query->from(['c' => 'target_additional_fee']);
-        $query->where(['and', ['c.target' => $tableName], ['c.target_id' => $ownerId]]);
+        $query->where(['and', ['c.target' => $target], ['c.target_id' => $ownerId]]);
         $additionalFees = $query->all($class::getDb());
         $additionalFees = ArrayHelper::index($additionalFees, null, function ($element) {
             return $element['name'];

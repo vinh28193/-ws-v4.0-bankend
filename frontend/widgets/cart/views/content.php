@@ -115,7 +115,7 @@ $totalAmount = 0;
             <button class="btn style-btn mt-2" id="installmentBtn">
                 <span class="la la-credit-card float-left" style="font-size: 1.7em;"></span>MUA TRẢ GÓP
             </button>
-            <button class="btn style-btn1 mt-2 " id="buyNowBtn">
+            <button class="btn style-btn1 mt-2 " id="shoppingBtn">
                 <span class="la la-shopping-cart float-left" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA
             </button>
         </div>

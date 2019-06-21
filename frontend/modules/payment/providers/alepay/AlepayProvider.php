@@ -41,7 +41,7 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
         $param['buyerEmail'] = $payment->customer_email;
         $param['buyerPhone'] = $payment->customer_phone;
 
-        $param['totalItem'] = count($payment->carts);
+        $param['totalItem'] = count($payment->getOrders());
 
         $param['checkoutType'] = 0;
         $param['paymentHours'] = 6;

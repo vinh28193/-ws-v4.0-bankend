@@ -142,8 +142,6 @@ class ShippingForm extends Model
             }
         }else {
             $this->enable_buyer = self::YES;
-            $this->enable_receiver = self::YES;
-            $this->other_receiver = self::YES;
             $userCookies = new UserCookies();
             $userCookies->setUserCookies();
             $this->receiver_name = $userCookies->name;
@@ -153,7 +151,7 @@ class ShippingForm extends Model
             $this->receiver_phone = $userCookies->phone;
             $this->buyer_phone = $userCookies->phone;
             $this->receiver_country_id = $userCookies->country_id;
-            $this->buyer_country_id = $userCookies->country_id;
+//            $this->buyer_country_id = $userCookies->country_id;
             $this->buyer_province_id = $userCookies->province_id;
             $this->receiver_province_id = $userCookies->province_id;
             $this->receiver_district_id = $userCookies->district_id;
