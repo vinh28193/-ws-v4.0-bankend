@@ -3,35 +3,19 @@
 
 namespace frontend\modules\payment\controllers;
 
-use common\components\cart\CartHelper;
-use common\components\cart\CartSelection;
+
 use common\helpers\WeshopHelper;
 use common\models\Address;
-use common\models\Category;
 use common\models\Order;
+use common\models\db\TargetAdditionalFee;
 use common\models\PaymentTransaction;
-use common\models\Product;
-use common\models\ProductFee;
-use common\models\Seller;
-use common\models\SystemDistrict;
-use common\models\SystemStateProvince;
-use frontend\modules\payment\models\OtpVerifyForm;
-use frontend\modules\payment\PaymentContextView;
 use frontend\modules\payment\PaymentService;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
-use frontend\modules\payment\providers\wallet\WalletHideProvider;
-use frontend\modules\payment\providers\wallet\WalletService;
-use common\products\BaseProduct;
 use common\promotion\PromotionResponse;
 use frontend\modules\payment\models\ShippingForm;
 use Yii;
 use yii\db\Exception;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
-use yii\helpers\StringHelper;
 use yii\helpers\Url;
-use yii\helpers\Html;
-use yii\web\JsExpression;
 use yii\web\Response;
 use frontend\modules\payment\Payment;
 
@@ -41,10 +25,78 @@ class PaymentController extends BasePaymentController
     public function actionProcess()
     {
         $start = microtime(true);
+        $now = Yii::$app->getFormatter()->asDatetime('now');
         $bodyParams = $this->request->bodyParams;
         $payment = new Payment($bodyParams['payment']);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
         $shippingForm->ensureReceiver();
+
+
+        $shippingParams = [
+            'buyer_name' => $shippingForm->buyer_name,
+            'buyer_address' => $shippingForm->buyer_address,
+            'buyer_email' => $shippingForm->buyer_email,
+            'buyer_phone' => $shippingForm->buyer_phone,
+            'buyer_country_id' => $this->storeManager->store->country_id,
+            'buyer_province_id' => $shippingForm->buyer_province_id,
+            'buyer_district_id' => $shippingForm->buyer_district_id,
+            'buyer_post_code' => $shippingForm->buyer_post_code,
+            'buyer_province_name' => $shippingForm->getReceiverDistrictName(),
+            'buyer_district_name' => $shippingForm->getReceiverDistrictName(),
+            'buyer_country_name' => $this->storeManager->store->country_name,
+            'receiver_name' => $shippingForm->receiver_name,
+            'receiver_address' => $shippingForm->receiver_address,
+            'receiver_phone' => $shippingForm->receiver_phone,
+            'receiver_country_id' => $this->storeManager->store->country_id,
+            'receiver_province_id' => $shippingForm->receiver_province_id,
+            'receiver_district_id' => $shippingForm->receiver_district_id,
+            'receiver_post_code' => $shippingForm->receiver_post_code,
+            'receiver_province_name' => $shippingForm->getReceiverDistrictName(),
+            'receiver_district_name' => $shippingForm->getReceiverDistrictName(),
+            'receiver_country_name' => $this->storeManager->store->country_name,
+            'receiver_address_id' => $shippingForm->receiver_address_id,
+        ];
+        if ($shippingForm->buyer_address_id !== null && ($buyer = Address::findOne($shippingForm->buyer_address_id)) !== null) {
+            $shippingParams['buyer_name'] = implode(' ', [$buyer->first_name, $buyer->last_name]);
+            $shippingParams['buyer_address'] = $buyer->address;
+            $shippingParams['buyer_email'] = $buyer->email;
+            $shippingParams['buyer_phone'] = $buyer->phone;
+            $shippingParams['buyer_province_id'] = $buyer->province_id;
+            $shippingParams['buyer_district_id'] = $buyer->district_id;
+            $shippingParams['buyer_province_name'] = $buyer->province_name;
+            $shippingParams['buyer_district_name'] = $buyer->district_name;
+            $shippingParams['buyer_post_code'] = $buyer->post_code;
+            if ((int)$shippingForm->enable_receiver === ShippingForm::NO) {
+                $shippingParams['receiver_name'] = $buyer->address;
+                $shippingParams['receiver_address'] = $buyer->phone;
+                $shippingParams['receiver_phone'] = $buyer->province_id;
+                $shippingParams['receiver_province_id'] = $buyer->district_id;
+                $shippingParams['receiver_district_id'] = $buyer->post_code;
+            }
+
+        }
+        if ($shippingForm->other_receiver !== false) {
+            if ((int)$shippingForm->enable_receiver === ShippingForm::YES) {
+                $shippingParams['receiver_name'] = $shippingForm->receiver_name;
+                $shippingParams['receiver_address'] = $shippingForm->receiver_address;
+                $shippingParams['receiver_phone'] = $shippingForm->receiver_phone;
+                $shippingParams['receiver_province_id'] = $shippingForm->receiver_province_id;
+                $shippingParams['receiver_province_name'] = $shippingForm->getReceiverProvinceName();
+                $shippingParams['receiver_district_id'] = $shippingForm->receiver_district_id;
+                $shippingParams['receiver_district_name'] = $shippingForm->getReceiverDistrictName();
+                $shippingParams['receiver_post_code'] = $shippingForm->receiver_post_code;
+                $shippingParams['receiver_country_id'] = $shippingForm->receiver_country_id;
+                $shippingParams['receiver_country_name'] = $this->storeManager->store->country_name;
+            } else if ($shippingForm->receiver_address_id !== null && ($receiver = Address::findOne($shippingForm->receiver_address_id)) !== null) {
+                $shippingParams['receiver_name'] = $receiver->address;
+                $shippingParams['receiver_address'] = $receiver->phone;
+                $shippingParams['receiver_phone'] = $receiver->province_id;
+                $shippingParams['receiver_province_id'] = $receiver->district_id;
+                $shippingParams['receiver_district_id'] = $receiver->post_code;
+                $shippingParams['receiver_province_name'] = $receiver->province_name;
+                $shippingParams['receiver_district_name'] = $receiver->district_name;
+            }
+        }
 
         $payment->customer_name = $shippingForm->buyer_name;
         $payment->customer_email = $shippingForm->buyer_email;
@@ -57,12 +109,110 @@ class PaymentController extends BasePaymentController
         $payment->createTransactionCode();
         /* @var $results PromotionResponse */
         $payment->checkPromotion();
-        $createResponse = $payment->createOrder();
+        $transaction = Order::getDb()->beginTransaction();
+        try {
+            foreach ($payment->getOrders() as $key => $orderPayment) {
+                $order = clone $orderPayment;
+                $order->setAttributes($shippingParams);
+                $orderTotalDiscount = 0;
+                unset($order['products']);
+                unset($order['seller']);
+                unset($order['saleSupport']);
+                // 1 order
+                $order->type_order = Order::TYPE_SHOP;
+                $order->customer_type = 'Retail';
+                $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
+                $order->total_paid_amount_local = 0;
 
-        if ($createResponse['success'] === false) {
-            return $this->response(false, $createResponse['message']);
+                $order->total_promotion_amount_local = $orderTotalDiscount;
+
+                $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
+
+                // 2 .seller
+                $seller = $orderPayment->seller;
+                $seller->portal = $orderPayment->portal;
+                $seller = $seller->safeCreate();
+
+                // 3. update seller for order
+                $order->seller_id = $seller->id;
+                $order->seller_name = $seller->seller_name;
+                $order->seller_store = $seller->seller_link_store;
+
+                if (!$order->save(false)) {
+                    $transaction->rollBack();
+                    return $this->response(false, 'can not create order');
+                }
+
+                foreach ($orderPayment->getAdditionalFees()->keys() as $key) {
+                    $feeValue = $orderPayment->getAdditionalFees()->get($key);
+                    $feeValue = reset($feeValue);
+
+                    $fee = new TargetAdditionalFee($feeValue);
+                    $fee->target = 'order';
+                    $fee->target_id = $order->id;
+
+                    if (!$fee->save(false)) {
+                        $transaction->rollBack();
+                        return $this->response(false, 'can not create order');
+                    }
+                }
+                $updateOrderAttributes = [];
+
+                // 4 products
+                foreach ($orderPayment->products as $paymentProduct) {
+                    $product = clone $paymentProduct;
+                    unset($product['productFees']);
+                    unset($product['category']);
+                    $product->order_id = $order->id;
+                    $product->quantity_purchase = null;
+                    /** Todo */
+                    $product->quantity_inspect = null;
+                    /** Todo */
+                    $product->variations = null;
+                    /** Todo */
+                    $product->variation_id = null;
+                    $product->remove = 0;
+                    $product->version = '4.0';
+
+                    // 6. // step 4: create category for each item
+                    $category = $paymentProduct->category;
+                    $category = $category->safeCreate();
+
+                    // 7. set category id for product
+                    $product->category_id = $category->id;
+                    // 8. set seller id for product
+                    $product->seller_id = $seller->id;
+
+                    // save total product discount here
+                    if (!$product->save(false)) {
+                        $transaction->rollBack();
+                        return $this->response(false, 'can not save a product');
+                    }
+
+                    foreach ($paymentProduct->productFees as $feeName => $productFee) {
+                        $fee = clone $productFee;
+                        $fee->target = 'product';
+                        $fee->target_id = $product->id;
+
+                        if (!$fee->save(false)) {
+                            $transaction->rollBack();
+                            return $this->response(false, 'can not create order');
+                        }
+                    }
+
+                }
+
+                $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
+                $updateOrderAttributes['total_final_amount_local'] = $order->total_amount_local - $order->total_promotion_amount_local;
+                $order->updateAttributes($updateOrderAttributes);
+                $orders[$order->ordercode] = $order;
+            }
+            $transaction->commit();
+        } catch (Exception $exception) {
+            $transaction->rollBack();
+            Yii::error($exception, __METHOD__);
+            return ['success' => false, 'message' => $exception->getMessage()];
         }
-        $orders = $createResponse['data'];
 
         $paymentTransaction = new PaymentTransaction();
         $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
@@ -128,7 +278,7 @@ class PaymentController extends BasePaymentController
         Yii::info($res, __METHOD__);
 
         if ($res->success === false) {
-            Yii::info(" res return false redirect url :".$this->redirect($cartUrl));
+            Yii::info(" res return false redirect url :" . $this->redirect($cartUrl));
             return $this->redirect($cartUrl);
         }
         if ($res->checkoutUrl !== null) {
@@ -137,7 +287,7 @@ class PaymentController extends BasePaymentController
         /** @var $paymentTransaction PaymentTransaction */
         if (($paymentTransaction = $res->paymentTransaction) instanceof PaymentTransaction && $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
             foreach ($paymentTransaction->childPaymentTransaction as $child) {
-                if(($order = $child->order) !== null){
+                if (($order = $child->order) !== null) {
                     $order->total_paid_amount_local = $child->transaction_amount_local;
                     $order->save(false);
                 }

@@ -97,91 +97,6 @@ JS;
 $this->registerJs($js);
 ?>
 <style type="text/css">
-    .btn-shipping {
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: 3px;
-        border: 1px solid #00a3d3;
-        background-image: linear-gradient(180deg, #56c7dc 0%, #2b96b6 100%);
-    }
-
-    .close {
-        display: none;
-    }
-
-    .open {
-        display: block;
-    }
-
-    .card-order {
-        color: #000000;
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: -0.1px;
-        line-height: 24px;
-    }
-
-    .product-list .product-item {
-        margin-bottom: 1rem;
-        color: #000000;
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: -0.1px;
-        line-height: 24px;
-    }
-
-    .courier-dropdown button {
-        width: 100%;
-        height: 56px;
-        border-radius: 3px;
-        border: 1px solid #adb1b8;
-        background-image: linear-gradient(180deg, #f7f8f9 0%, #e8eaec 100%);
-    }
-
-    .courier-dropdown button .text {
-        text-align: left;
-    }
-
-    .courier-dropdown button .text p {
-        margin-bottom: 0.24rem;
-    }
-
-    .courier-dropdown button .text p {
-        color: rgba(0, 0, 0, 0.85);
-        margin-bottom: 0.24rem;
-        font-size: 12px;
-        line-height: 24px;
-    }
-
-    .courier-dropdown button .text .courier-name {
-        font-size: 14px;
-        font-weight: 700;
-    }
-
-    /*.courier-dropdown .dropdown-toggle:after {*/
-    /*    content: url("/images/icon/dropdown_arrow.png");*/
-    /*}*/
-    .table-fee {
-        margin-top: 1rem;
-        font-size: 12px;
-        line-height: 30px;
-    }
-
-    .table-fee th, .table-fee td {
-        padding: 0;
-    }
-
-    .table-fee .fee-value {
-        text-align: right;
-        color: red;
-        font-weight: 700;
-    }
-
-    .table-fee .final {
-        font-size: 14px;
-        border-top: 1px silver solid;
-    }
 
 </style>
 <div class="container">
@@ -216,7 +131,7 @@ $this->registerJs($js);
                 </div>
                 <div class="col-md-12 buyer-list <?= $shippingForm->enable_buyer === ShippingForm::NO ? 'open' : 'close'; ?>">
                     <?php
-                    if($buyerAddress !== null){
+                    if ($buyerAddress !== null) {
                         echo 'Name:' . $buyerAddress->first_name . '' . $buyerAddress->last_name;
                         echo $form->field($shippingForm, 'buyer_address_id')->hiddenInput()->label(false);
                         if ($shippingForm->enable_buyer === ShippingForm::NO) {
@@ -334,7 +249,7 @@ $this->registerJs($js);
                                 'select2Options' => [
                                     'pluginOptions' => ['allowClear' => true],
                                     'pluginEvents' => [
-                                        "select2:select" => "function(event) { console.log('call');ws.payment.calculatorShipping(); }",
+                                        "select2:select" => "function(event) { ;ws.payment.calculatorShipping(); }",
                                     ]
                                 ],
                                 'pluginOptions' => [
@@ -433,21 +348,22 @@ $this->registerJs($js);
                                     <th class="fee-header"><?= Yii::t('frontend', 'Total Order'); ?></th>
                                     <td class="fee-value"><?= $storeManager->showMoney($order->total_amount_local); ?></td>
                                 </tr>
-                                <tr>
+                                <tr data-role="fee" data-fee="purchase_fee">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Purchase Fee'); ?></th>
                                     <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('purchase_fee')[1]); ?></td>
                                 </tr>
-                                <tr>
+                                <tr data-role="fee" data-fee="tax_fee">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Us Tax'); ?></th>
                                     <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('tax_fee')[1]); ?></td>
                                 </tr>
-                                <tr>
+                                <tr data-role="fee" data-fee="international_shipping_fee">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Temporary Shipping Fee (for {weight} kg)', ['weight' => $order->total_weight_temporary]); ?></th>
-                                    <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('purchase_fee')[1]); ?></td>
+                                    <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
                                 </tr>
-                                <tr class="final">
+                                <tr class="final-amount">
                                     <th class="fee-header"><?= Yii::t('frontend', 'Amount needed to prepay') ?></th>
-                                    <td class="fee-value"><?= $storeManager->showMoney($order->total_final_amount_local); ?></td>
+                                    <td class="fee-value"
+                                        data-origin="<?= $order->total_final_amount_local; ?>"><?= $storeManager->showMoney($order->total_final_amount_local); ?></td>
                                 </tr>
                             </table>
                         </div>

@@ -47,6 +47,10 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     {
         if ($this->_additionalFees === null) {
             $this->_additionalFees = new AdditionalFeeCollection();
+            if (!empty($this->courierDetail)) {
+                $this->_additionalFees->remove('international_shipping_fee');
+                $this->_additionalFees->withCondition($this, 'international_shipping_fee', ArrayHelper::getValue($this->courierDetail, 'total_fee', 0));
+            }
         }
         return $this->_additionalFees;
     }
@@ -250,12 +254,14 @@ class Order extends BaseOrder implements AdditionalFeeInterface
                 return false;
             }
             // Collection Fee
-            foreach ($productFeeParams as $name => $value) {
+            foreach ($productFeeParams as $name => $arrayFee) {
                 if ($name === 'product_price') {
                     // exception, do not collect product_price
                     continue;
                 }
-                $this->getAdditionalFees()->add($name, $value);
+                foreach ($arrayFee as $value) {
+                    $this->getAdditionalFees()->add($name, $value);
+                }
                 unset($productFeeParams[$name]); // unset if this in collect
             }
             unset($productParam['available_quantity']);
@@ -279,5 +285,12 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         $this->populateRelation('seller', $seller);
         $this->populateRelation('saleSupport', $supporter);
         return $this;
+    }
+
+    public function getTotalFinalAmount()
+    {
+        $totalAmount = $this->total_final_amount_local;
+        $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees()[1];
+        return $totalAmount;
     }
 }

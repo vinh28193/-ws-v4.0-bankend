@@ -190,6 +190,12 @@ class OrderController extends BaseApiController
                 if (isset($post['total_inspection_fee_local'])) {
                     $model->total_insurance_fee_local = $post['total_insurance_fee_local'];
                 }
+                if (isset($post['total_weshop_fee_local'])) {
+                    $model->total_insurance_fee_local = $post['total_weshop_fee_local'];
+                }
+                if (isset($post['total_custom_fee_amount_local'])) {
+                    $model->total_insurance_fee_local = $post['total_custom_fee_amount_local'];
+                }
             }
         }
         if ($model->getScenario() == 'confirmPurchase') {
