@@ -21,7 +21,7 @@ $(document).ready(function() {
         data: {fingerprint: ws.getFingerprint()},
         loading: true,
         success: function (result) {
-            console.log("RESSS : " + result);  console.log( "REER" + result.success);
+           // console.log("RESSS : " + result);  console.log( "REER" + result.success);
             if(result.success == 1){
                 $('.viewed-product').html(result.data.content);
                 $(".owl-carousel").owlCarousel({
