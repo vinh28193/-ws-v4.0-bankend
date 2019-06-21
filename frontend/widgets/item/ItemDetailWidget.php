@@ -93,6 +93,8 @@ CSS;
         Pjax::end();
         echo $this->renderDescription('extra');
         echo $this->renderDescription('mini');
+        echo $this->renderSuggestSession();
+        echo $this->renderSuggestPurchase('mini');
     }
 
     protected function prepareItem()
@@ -169,7 +171,7 @@ CSS;
 
     protected function renderDetailBlock()
     {
-        $detailBlock = Html::beginTag('div', ['class' => 'detail-block']);
+        $detailBlock = Html::beginTag('div', ['class' => 'detail-block box-shadow']);
         $detailBlock .= $this->renderSlide();
         $detailBlock .= $this->renderFullInfo();
         $detailBlock .= Html::endTag('div');
@@ -180,7 +182,77 @@ CSS;
 
     public function renderSellerMore(){
         if($this->item->providers && count($this->item->providers) > 1){
-            return $this->render('item/seller_more',['item' => $this->item]);
+            return $this->render('item/seller_more',[
+                'item' => $this->item,
+                'storeManager' => $this->getStoreManager()
+            ]);
+        }
+        return '';
+    }
+    public function renderSuggestSession(){
+        if(isset($this->item->suggest_set_session) && count($this->item->suggest_set_session) > 1){
+            $id_suggest = 'suggest_session_product';
+            $js = <<<JS
+            $(document).ready(function () {
+                $('#$id_suggest').owlCarousel({
+                loop:false,
+                margin:10,
+                nav:true,
+                responsive:{
+                    0:{
+                        items:1
+                    },
+                    600:{
+                        items:3
+                    },
+                    1000:{
+                        items:5
+                    }
+                }
+            });
+            })
+JS;
+            $view = $this->getView();
+            $view->registerJs($js);
+            return $this->render('item/product_suggest',[
+                'item_suggest' => $this->item->suggest_set_session,
+                'id_suggest' => $id_suggest,
+                'storeManager' => $this->getStoreManager()
+            ]);
+        }
+        return '';
+    }
+    public function renderSuggestPurchase(){
+        if(isset($this->item->suggest_set_session) && count($this->item->suggest_set_session) > 1){
+            $id_suggest = 'suggest_purchase_product';
+            $js = <<<JS
+            $(document).ready(function () {
+                $('#$id_suggest').owlCarousel({
+                loop:false,
+                margin:10,
+                nav:true,
+                responsive:{
+                    0:{
+                        items:1
+                    },
+                    600:{
+                        items:3
+                    },
+                    1000:{
+                        items:5
+                    }
+                }
+            });
+            })
+JS;
+            $view = $this->getView();
+            $view->registerJs($js);
+            return $this->render('item/product_suggest',[
+                'item_suggest' => $this->item->suggest_set_purchase,
+                'portal' => $this->item->type,
+                'id_suggest' => $id_suggest,
+                'storeManager' => $this->getStoreManager()
+            ]);
         }
         return '';
     }

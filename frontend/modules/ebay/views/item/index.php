@@ -8,6 +8,7 @@ use frontend\widgets\item\ItemDetailWidget;
 /* @var $item \common\products\BaseProduct */
 
 $this->params = ['Home' => '/','eBay' => '/ebay.html', $item->item_name => 'javascript:void(0);'];
+$this->title = Yii::t('frontend','Detail Product Ebay |').' '.$item->item_name;
 
 echo ItemDetailWidget::widget([
     'item' => $item,
