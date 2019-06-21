@@ -322,7 +322,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
 
     public function removeCart()
     {
-        return $this->getCart()->removeItem($this->checkoutType, $this->cartId, $this->uuid);
+        return $this->getCart()->removeItem($this->checkoutType, $this->cartId, null, $this->uuid);
     }
 
     public function getTotalFinalAmount()

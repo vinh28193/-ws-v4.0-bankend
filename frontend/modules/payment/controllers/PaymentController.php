@@ -260,6 +260,7 @@ class PaymentController extends BasePaymentController
             $childTransaction->courier_name = $order->courier_name;
             $childTransaction->service_code = $order->courier_service;
             $childTransaction->save(false);
+            $order->removeCart();
         }
         $res = $payment->processPayment();
         if ($res->success === false) {

@@ -108,6 +108,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     public $ex_rate_api;
     public $suggest_set_session;
     public $suggest_set_purchase;
+    public $customer_feedback;
 
     /**
      * Initializes the object.
