@@ -45,14 +45,18 @@ class FavoriteObject
             'deal_price' => $obj_type->category_id,
             'sell_price' => $obj_type->sell_price,
             ];
-        $obj_type = \serialize($data);
-        if ($this->create_favorite($obj_type, $obj_id, $UUID)) {
-            Yii::info("app  create favorite Success");
-            return 1;
+        if ($obj_type->start_price > 0 && $obj_type->sell_price > 0) {
+            $obj_type = \serialize($data);
+            if ($this->create_favorite($obj_type, $obj_id, $UUID)) {
+                Yii::info("app  create favorite Success");
+                return 1;
+            } else {
+                Yii::info(" app Can't create favorite");
+                // throw new ErrorException(Yii::info('app', "Can't create favorite"));
+                return 0;
+            }
         } else {
-            Yii::info(" app Can't create favorite");
-            // throw new ErrorException(Yii::info('app', "Can't create favorite"));
-            return 0;
+            Yii::info(" start_price = 0");
         }
     }
 
