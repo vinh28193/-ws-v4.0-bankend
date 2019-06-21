@@ -251,7 +251,7 @@ ws.payment = (function ($) {
                         pub.payment.installment_month = $(this).val();
                     });
                     if (promotion !== undefined) {
-                        updatePaymentByPromotion(promotion)
+                        // updatePaymentByPromotion(promotion)
                     }
                 }
             }, true);

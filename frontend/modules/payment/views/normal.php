@@ -70,7 +70,10 @@ $storeManager = Yii::$app->storeManager;
             điều
             kiện</a> giao dịch của Weshop.</label>
 </div>
-<button type="button" class="btn btn-payment btn-block" id="btnCheckout" onclick="ws.payment.process()">Thanh toán ngay
-    <span> <?= $storeManager->showMoney($payment->getTotalAmountDisplay()); ?></span>
-</button>
+<div class="text-center">
+    <button type="button" class="btn btn-payment" id="btnCheckout" onclick="ws.payment.process()">Thanh toán ngay
+        <span> <?= $storeManager->showMoney($payment->getTotalAmountDisplay()); ?></span>
+    </button>
+</div>
+
 

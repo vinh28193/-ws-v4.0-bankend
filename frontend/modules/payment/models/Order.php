@@ -7,6 +7,7 @@ use common\additional\AdditionalFeeCollection;
 use common\additional\AdditionalFeeInterface;
 use common\additional\AdditionalFeeTrait;
 use common\components\cart\CartHelper;
+use common\components\cart\CartSelection;
 use common\helpers\WeshopHelper;
 use common\models\Category;
 use common\models\db\TargetAdditionalFee;
@@ -245,7 +246,11 @@ class Order extends BaseOrder implements AdditionalFeeInterface
 
     public function createOrderFromCart()
     {
-        $item = $this->getCart()->getItem($this->checkoutType, $this->cartId, $this->uuid);
+        $type = $this->checkoutType;
+        if($type === CartSelection::TYPE_INSTALLMENT){
+            $type = CartSelection::TYPE_SHOPPING;
+        }
+        $item = $this->getCart()->getItem($type, $this->cartId, $this->uuid);
         $params = $item['value'];
         if (($sellerParams = ArrayHelper::remove($params, 'seller')) === null || !is_array($sellerParams)) {
             $this->addError('cartId', 'Not found seller for order');

@@ -13,7 +13,7 @@ use frontend\models\PasswordRequiredForm;
 $passwordRequiredForm = new PasswordRequiredForm();
 FrontendAsset::register($this);
 
-$this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
+$this->registerJs("ws.sendFingerprint();", \yii\web\View::POS_READY);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -30,14 +30,14 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
 <body>
 <script>
     // initialize Account Kit with CSRF protection
-    AccountKit_OnInteractive = function(){
+    AccountKit_OnInteractive = function () {
         AccountKit.init(
             {
-                appId:"216590825760272",
-                state:"<?= Yii::$app->request->getCsrfToken() ?>",
-                version:"v1.1",
-                fbAppEventsEnabled:true,
-                redirect:"/secure/test-auth"
+                appId: "216590825760272",
+                state: "<?= Yii::$app->request->getCsrfToken() ?>",
+                version: "v1.1",
+                fbAppEventsEnabled: true,
+                redirect: "/secure/test-auth"
             }
         );
     };
@@ -81,11 +81,13 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
                 <div class="modal-body">
                     <div class="qr-box">
                         <img src="" alt="QR - Code" id="qrCodeImg">
-<!--                    <p><a href="#">Download ảnh QR - Code!</a></p>-->
+                        <!--                    <p><a href="#">Download ảnh QR - Code!</a></p>-->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="modal success-modal" id="checkout-success" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -109,38 +111,37 @@ $this->registerJs("ws.sendFingerprint();",\yii\web\View::POS_READY);
 <script>
     dataLayer = [];
 </script>
-    <script>
-        // login callback
-        function loginCallback(response) {
-            console.log(response);
-            if (response.status === "PARTIALLY_AUTHENTICATED") {
-                ws.loading(true);
-                location.assign('/secure/auth-account-kit?code='+response.code);
-            }
-            else if (response.status === "NOT_AUTHENTICATED") {
-            }
-            else if (response.status === "BAD_PARAMS") {
-            }
+<script>
+    // login callback
+    function loginCallback(response) {
+        console.log(response);
+        if (response.status === "PARTIALLY_AUTHENTICATED") {
+            ws.loading(true);
+            location.assign('/secure/auth-account-kit?code=' + response.code);
+        } else if (response.status === "NOT_AUTHENTICATED") {
+        } else if (response.status === "BAD_PARAMS") {
         }
+    }
 
-        // phone form submission handler
-        function smsLogin() {
-            AccountKit.login(
-                'PHONE',
-                {countryCode: '+84'}, // will use default values if not specified
-                loginCallback
-            );
-        }
-        // // email form submission handler
-        // function emailLogin() {
-        //     var emailAddress = document.getElementById("email").value;
-        //     AccountKit.login(
-        //         'EMAIL',
-        //         {emailAddress: emailAddress},
-        //         loginCallback
-        //     );
-        // }
-    </script>
+    // phone form submission handler
+    function smsLogin() {
+        AccountKit.login(
+            'PHONE',
+            {countryCode: '+84'}, // will use default values if not specified
+            loginCallback
+        );
+    }
+
+    // // email form submission handler
+    // function emailLogin() {
+    //     var emailAddress = document.getElementById("email").value;
+    //     AccountKit.login(
+    //         'EMAIL',
+    //         {emailAddress: emailAddress},
+    //         loginCallback
+    //     );
+    // }
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>

@@ -57,7 +57,7 @@
                         if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
                             param.quantity = options.max;
                             $target.val(param.quantity);
-                            ws.notifyError(ws.t('You can not buy greater than {number}',{number:options.max}), ws.t('Error'));
+                            ws.notifyError(ws.t('You can not buy greater than {number}', {number: options.max}), ws.t('Error'));
                             return;
                         }
                     } else {
@@ -65,7 +65,7 @@
                         if (param.quantity < 1) {
                             param.quantity = 1;
                             $target.val(1);
-                            ws.notifyError(ws.t('You can not buy lesser than {number}',{number:1}), ws.t('Error'));
+                            ws.notifyError(ws.t('You can not buy lesser than {number}', {number: 1}), ws.t('Error'));
                             return;
                         }
                     }
@@ -84,11 +84,11 @@
                     if (param.quantity < 1) {
                         param.quantity = 1;
                         $item.val(1);
-                        ws.notifyError(ws.t('You can not buy lesser than {number}',{number:1}), ws.t('Error'));
+                        ws.notifyError(ws.t('You can not buy lesser than {number}', {number: 1}), ws.t('Error'));
                     } else if (options.max !== '' && param.quantity >= options.max) {
                         param.quantity = options.max;
                         $item.val(options.max);
-                        ws.notifyError(ws.t('You can not buy greater than {number}',{number:options.max}), ws.t('Error'));
+                        ws.notifyError(ws.t('You can not buy greater than {number}', {number: options.max}), ws.t('Error'));
                     }
                     data.param = param;
                     methods.update.call($cart, data);
@@ -107,9 +107,16 @@
                     methods.continue.apply($cart);
                 });
 
-                ws.initEventHandler($cart, 'payment', 'click.wsCart', 'button.btn-payment', function (event) {
-                    methods.payment.apply($cart);
+                ws.initEventHandler($cart, 'installmentPayment', 'click.wsCart', 'button#installmentBtn', function (event) {
+                    event.preventDefault();
+                    methods.payment.apply($cart, ['installment']);
                 });
+
+                ws.initEventHandler($cart, 'shoppingPayment', 'click.wsCart', 'button#shoppingBtn', function (event) {
+                    event.preventDefault();
+                    methods.payment.apply($cart, ['shopping']);
+                });
+
                 ws.initEventHandler($cart, 'cartOrder', 'change.wsCart', 'input[name=cartOrder]', function (event) {
                     event.preventDefault();
                     var $input = $(this);
@@ -213,18 +220,19 @@
         continue: function () {
             ws.goback();
         },
-        payment: function () {
+        payment: function (type) {
             var $cart = $(this);
             var data = $cart.data('wsCart');
             var keys = [];
 
             $.each(filterCartItems($cart), function (i, $input) {
-                keys.push($($input).val());
+                // keys.push($($input).val());
+                keys.push($($input).data('key'));
             });
             ws.ajax(data.settings.paymentUrl, {
                 dataType: 'json',
                 method: 'post',
-                data: {carts: keys},
+                data: {carts: keys, type: type},
                 success: function (response) {
                     console.log(response);
                     if (response.success) {
@@ -280,7 +288,9 @@
         }
     };
     var filterCartItems = function ($cart) {
-        return $cart.find('input[name=cartOrder]:checked');
+        console.log($cart.attr('id'));
+        return $cart.find('div.cart-item');
+        // return $cart.find('input[name=cartOrder]:checked');
         // var $selected = [];
         // $.each($cart.find('input[name=cartOrder]:checked'), function (i, cartOrder) {
         //     var $cartOrder = $(cartOrder);
