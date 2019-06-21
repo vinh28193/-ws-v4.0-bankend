@@ -623,7 +623,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     ['product.id' => $params['keyWord']],
                     ['order.ordercode' => $params['keyWord']],
                     ['product.sku' => $params['keyWord']],
-                    ['coupon.code' => $params['keyWord']],
                     ['product.category_id' => $params['keyWord']],
                     ['product.product_name' => $params['keyWord']],
                     ['order.payment_type' => $params['keyWord']],
