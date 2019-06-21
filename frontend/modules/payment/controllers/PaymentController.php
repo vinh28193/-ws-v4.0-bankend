@@ -257,6 +257,8 @@ class PaymentController extends BasePaymentController
             $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
             $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
             $childTransaction->order_code = $order->ordercode;
+            $childTransaction->courier_name = $order->courier_name;
+            $childTransaction->service_code = $order->courier_service;
             $childTransaction->save(false);
         }
         $res = $payment->processPayment();

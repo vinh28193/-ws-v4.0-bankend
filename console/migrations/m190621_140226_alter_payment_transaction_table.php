@@ -13,6 +13,9 @@ class m190621_140226_alter_payment_transaction_table extends Migration
     public function safeUp()
     {
         $this->alterColumn('payment_transaction','carts',$this->string(255)->null());
+        $this->alterColumn('payment_transaction','courier_name',$this->string(255)->null());
+        $this->alterColumn('payment_transaction','service_code',$this->string(32)->null());
+        $this->alterColumn('payment_transaction','international_shipping_fee',$this->integer(11)->null());
     }
 
     /**
