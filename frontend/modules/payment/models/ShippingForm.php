@@ -129,10 +129,14 @@ class ShippingForm extends Model
         $this->receiver_country_id = $store->store->country_id;
         // shipping Address
         $this->other_receiver = self::NO;
-        if ($this->getUser() !== null) {
+        if ($this->getUser()) {
             $this->customer_id = $this->getUser()->id;
             $this->save_buyer_address = self::NO;
             $this->save_receiver_address = self::NO;
+        }else {
+            $this->enable_buyer = self::YES;
+            $this->enable_receiver = self::YES;
+            $this->other_receiver = self::YES;
             $userCookies = new UserCookies();
             $userCookies->setUserCookies();
             $this->receiver_name = $userCookies->name;
@@ -149,10 +153,6 @@ class ShippingForm extends Model
             $this->buyer_district_id = $userCookies->district_id;
             $this->receiver_address = $userCookies->address;
             $this->buyer_address = $userCookies->address;
-        }else {
-            $this->enable_buyer = self::YES;
-            $this->enable_receiver = self::YES;
-            $this->other_receiver = self::YES;
         }
         if (!WeshopHelper::isEmpty($this->getBuyerAddress())) {
             $this->enable_buyer = self::NO;

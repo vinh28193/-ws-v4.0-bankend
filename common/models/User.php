@@ -461,12 +461,12 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         $cookieUser->phone = $this->phone;
         $cookieUser->email = $this->email;
 //        $cookieUser->uuid = $this->getUuidCookie();
-        if($this->primaryAddress){
-            $cookieUser->country_id = $this->primaryAddress->country_id;
-            $cookieUser->province_id = $this->primaryAddress->province_id;
-            $cookieUser->district_id = $this->primaryAddress->district_id;
-            $cookieUser->customer_id = $this->id;
-            $cookieUser->address = $this->primaryAddress->address;
+        $cookieUser->customer_id = $this->id;
+        if($this->primaryAddress && count($this->primaryAddress) > 0){
+            $cookieUser->country_id = $this->primaryAddress[0]->country_id;
+            $cookieUser->province_id = $this->primaryAddress[0]->province_id;
+            $cookieUser->district_id = $this->primaryAddress[0]->district_id;
+            $cookieUser->address = $this->primaryAddress[0]->address;
         }
         $cookieUser->setNewCookies();
     }

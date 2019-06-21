@@ -1,7 +1,6 @@
 <?php
 /**
  * @var $item \common\products\BaseProduct
- * @var $product \common\products\RelateProduct
  */
 
 use common\helpers\WeshopHelper;
@@ -16,7 +15,7 @@ $sellerCurrent = $sellerCurrent ? $sellerCurrent : $item->getSeller();
             <?php foreach ($item->providers as $provider){
                 if($provider->prov_id != $sellerCurrent){
                     $item->updateBySeller($provider->prov_id);
-                $percent = $item->retail_price && $item->sell_price ? round(($item->retail_price - $product->sell_price) / $item->retail_price,0) : 0;
+                $percent = $item->retail_price && $item->sell_price ? round(($item->retail_price - $item->sell_price) / $item->retail_price,0) : 0;
                 ?>
                 <div class="item-box">
                     <a href="<?= WeshopHelper::generateUrlDetail($item->type,$item->item_name,$item->item_id,null,$provider->prov_id) ?>" class="item">
