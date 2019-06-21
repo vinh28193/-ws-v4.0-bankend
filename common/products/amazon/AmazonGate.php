@@ -525,7 +525,7 @@ class AmazonGate extends BaseGate
         if (count($data) > 0)
             foreach ($data as $datum) {
                 $temp = [];
-                $temp['thumb'] = $datum['thumb'];
+                $temp['thumb'] = isset($datum['thumb']) ? $datum['thumb'] : null;
                 $temp['main'] = $datum['large'];
                 $imgs[] = $temp;
             }

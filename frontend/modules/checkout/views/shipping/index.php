@@ -97,7 +97,14 @@ JS;
 $this->registerJs($js);
 ?>
 <style type="text/css">
-
+    .btn-payment{
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 3px;
+        border: 1px solid #d25e0d;
+        background-image: linear-gradient(180deg, #ff9d17 0%, #e67424 100%);
+    }
 </style>
 <div class="container">
     <div class="card card-checkout card-shipping">

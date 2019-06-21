@@ -17,5 +17,8 @@ use yii\helpers\Html;
     <label class="form-check-label" for="termInstallment">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và điều
             kiện</a> giao dịch trả góp của Weshop.</label>
 </div>
-<button type="button" class="btn btn-payment btn-block" id="btnInstallment" onclick="ws.alepay.installment()">Thanh toán trả góp ngay
-</button>
+<div class="text-center">
+    <button type="button" class="btn btn-payment" id="btnInstallment" onclick="ws.payment.installment()">Thanh toán trả góp ngay
+    </button>
+</div>
+

@@ -10,28 +10,10 @@ use yii\helpers\ArrayHelper;
 use common\products\BaseProduct;
 use common\components\cart\CartSelection;
 
-class CartController extends BillingController
+class CartController extends CheckoutController
 {
 
-    public $title;
-
-
-
-    public function init()
-    {
-        parent::init();
-        $this->title = 'Danh sách sản phẩm trong giỏ hàng';
-        $this->breadcrumbParam = [
-            $this->title => '#'
-        ];
-    }
-
-    public function ogMetaTag()
-    {
-        return ArrayHelper::merge(parent::ogMetaTag(), [
-            'title' => $this->title
-        ]);
-    }
+    public $title = 'Danh sách sản phẩm trong giỏ hàng';
 
 
     public function actionIndex()
@@ -184,7 +166,7 @@ class CartController extends BillingController
 
         CartSelection::setSelectedItems($type, $carts);
         $count = CartSelection::countSelectedItems($type);
-        return ['success' => true, 'message' => "you will be $type with $count items", 'data' => Url::toRoute(['/checkout/shipping', 'type' => CartSelection::TYPE_SHOPPING])];
+        return ['success' => true, 'message' => "you will be $type with $count items", 'data' => Url::toRoute(['/checkout/shipping', 'type' => $type])];
     }
 
     private function setDefaultSelected($items)

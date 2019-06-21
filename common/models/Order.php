@@ -210,7 +210,26 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         return [
             [
                 [
-                    'type_order', 'customer_id', 'portal', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_post_code', 'receiver_address_id', 'payment_type'
+                    'type_order',
+                    'portal',
+                    'buyer_email',
+                    'buyer_name',
+                    'buyer_phone',
+                    'buyer_address',
+                    'buyer_country_id',
+                    'buyer_province_id',
+                    'buyer_district_id',
+                    'buyer_post_code',
+
+                    'receiver_email',
+                    'receiver_name',
+                    'receiver_phone',
+                    'receiver_address',
+                    'receiver_country_id',
+                    'receiver_province_id',
+                    'receiver_district_id',
+                    'receiver_post_code',
+                    'payment_type'
                 ], 'required', 'on' => self::SCENARIO_DEFAULT
             ],
             [
@@ -229,9 +248,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 ], 'required', 'on' => self::SCENARIO_UPDATE_RECEIVER
             ],
             [[
-                'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address'
+                'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address',
+                'buyer_email', 'buyer_name', 'buyer_phone', 'buyer_address',
             ], 'filter', 'filter' => 'trim', 'on' => self::SCENARIO_UPDATE_RECEIVER],
             [[
+                'buyer_email', 'buyer_name', 'buyer_phone', 'buyer_address',
+                'buyer_country_name', 'buyer_province_name', 'buyer_district_name',
                 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address',
                 'receiver_country_name', 'receiver_province_name', 'receiver_district_name'
             ], 'filter', 'filter' => '\yii\helpers\Html::encode', 'on' => self::SCENARIO_UPDATE_RECEIVER],
@@ -278,8 +300,10 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             [
                 [
+                    'courier_name', 'courier_delivery_time',
                     'receiver_email', 'type_order', 'portal', 'utm_source', 'quotation_note',
                     'receiver_name', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code',
+                    'buyer_name', 'buyer_address', 'buyer_country_name', 'buyer_province_name', 'buyer_district_name', 'buyer_post_code',
                     'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log'
                 ], 'string', 'max' => 255
             ],
@@ -293,6 +317,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     'receiver_phone',
                 ], 'string', 'min' => 9
             ],
+            [['courier_service'], 'string', 'max' => 32],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
 //            [
@@ -308,7 +333,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             [['difference_money'], 'in', 'range' => [self::DIFF_MONEY_DEFAULT, self::DIFF_MONEY_LECH, self::DIFF_MONEY_HIDE]],
             [
                 [
-                    'receiver_email', 'support_email', 'purchase_account_email'
+                    'buyer_email', 'support_email', 'purchase_account_email'
                 ], 'email'
             ],
 //            [

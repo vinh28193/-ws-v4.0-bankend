@@ -11,7 +11,7 @@ use Yii;
  * @property string $ordercode ordercode : BIN Code Weshop : WSVN , WSINDO
  * @property int $store_id hàng của nước nào Weshop Indo hay Weshop VIET NAM
  * @property string $type_order Hình thức mua hàng: SHOP | REQUEST | POS | SHIP
- * @property int $customer_id  Mã id của customer : có thể là khách buôn hoặc khách lẻ 
+ * @property int $customer_id
  * @property string $customer_type  Mã id của customer : Retail Customer : Khách lẻ . Wholesale customers 
  * @property string $portal portal ebay, amazon us, amazon jp ...: EBAY/ AMAZON_US / AMAZON_JAPAN / OTHER / WEBSITE NGOÀI 
  * @property string $utm_source Đơn theo viết được tạo ra bới chiến dịch nào : Facebook ads, Google ads , eomobi , etc ,,,, 
@@ -41,7 +41,7 @@ use Yii;
  * @property int $buyer_district_id
  * @property string $buyer_district_name
  * @property string $buyer_post_code
- * @property string $receiver_email Email người nhận
+ * @property string $receiver_email
  * @property string $receiver_name Họ tên người nhận
  * @property string $receiver_phone Số điện thoại người nhận
  * @property string $receiver_address Địa chỉ người nhận
@@ -118,8 +118,13 @@ use Yii;
  * @property string $supporting
  * @property int $check_update_payment
  * @property int $confirm_change_price 0: là không có thay đổi giá hoặc có thay đổi nhưng đã confirm. 1: là có thay đổi cần xác nhận
+ * @property int $potential 0 là khách hàng binh thường, 1 là khách hàng tiềm năng
+ * @property string $courier_service
+ * @property string $courier_name
+ * @property string $courier_delivery_time
+ * @property string $buyer_phone
+ * @property int $additional_service dịch vụ cộng thêm
  *
- * @property Customer $customer
  * @property User $saleSupport
  * @property Seller $seller
  * @property Store $store
@@ -144,15 +149,14 @@ class Order extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'type_order', 'customer_id', 'customer_type', 'portal', 'buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_id', 'buyer_country_name', 'buyer_province_id', 'buyer_province_name', 'buyer_district_id', 'buyer_district_name', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_country_name', 'receiver_province_id', 'receiver_province_name', 'receiver_district_id', 'receiver_district_name', 'payment_type'], 'required'],
-            [['store_id', 'customer_id', 'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'buyer_country_id', 'buyer_province_id', 'buyer_district_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove', 'mark_supporting', 'supported', 'ready_purchase', 'supporting', 'check_update_payment', 'confirm_change_price'], 'integer'],
+            [['store_id', 'type_order', 'customer_type', 'portal', 'buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_id', 'buyer_country_name', 'buyer_province_id', 'buyer_province_name', 'buyer_district_id', 'buyer_district_name', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_country_name', 'receiver_province_id', 'receiver_province_name', 'receiver_district_id', 'receiver_district_name', 'payment_type', 'buyer_phone'], 'required'],
+            [['store_id', 'customer_id', 'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'buyer_country_id', 'buyer_province_id', 'buyer_district_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove', 'mark_supporting', 'supported', 'ready_purchase', 'supporting', 'check_update_payment', 'confirm_change_price', 'potential', 'additional_service'], 'integer'],
             [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_account_id', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id'], 'string'],
             [['total_final_amount_local', 'total_amount_local', 'total_origin_fee_local', 'total_price_amount_origin', 'total_paid_amount_local', 'total_refund_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_fee_amount_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_custom_fee_amount_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'revenue_xu', 'xu_count', 'xu_amount', 'total_weight', 'total_weight_temporary', 'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund'], 'number'],
-            [['ordercode', 'type_order', 'portal', 'utm_source', 'quotation_note', 'buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_name', 'buyer_province_name', 'buyer_district_name', 'buyer_post_code', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'version'], 'string', 'max' => 255],
+            [['ordercode', 'type_order', 'portal', 'utm_source', 'quotation_note', 'buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_name', 'buyer_province_name', 'buyer_district_name', 'buyer_post_code', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'version', 'courier_name', 'courier_delivery_time', 'buyer_phone'], 'string', 'max' => 255],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
-            [['transaction_code'], 'string', 'max' => 32],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
+            [['transaction_code', 'courier_service'], 'string', 'max' => 32],
             [['sale_support_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sale_support_id' => 'id']],
             [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Store::className(), 'targetAttribute' => ['store_id' => 'id']],
@@ -277,15 +281,13 @@ class Order extends \common\components\db\ActiveRecord
             'supporting' => Yii::t('db', 'Supporting'),
             'check_update_payment' => Yii::t('db', 'Check Update Payment'),
             'confirm_change_price' => Yii::t('db', 'Confirm Change Price'),
+            'potential' => Yii::t('db', 'Potential'),
+            'courier_service' => Yii::t('db', 'Courier Service'),
+            'courier_name' => Yii::t('db', 'Courier Name'),
+            'courier_delivery_time' => Yii::t('db', 'Courier Delivery Time'),
+            'buyer_phone' => Yii::t('db', 'Buyer Phone'),
+            'additional_service' => Yii::t('db', 'Additional Service'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCustomer()
-    {
-        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
     }
 
     /**

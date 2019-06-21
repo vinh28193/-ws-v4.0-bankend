@@ -12,7 +12,7 @@ class m190621_023649_update_column_additional_service_table_order extends Migrat
      */
     public function safeUp()
     {
-        $this->addColumn('order', 'additional_service' , $this->integer(50)->comment("dịch vụ cộng thêm"));
+        $this->addColumn('order', 'additional_service', $this->integer(50)->comment("dịch vụ cộng thêm"));
     }
 
     /**
@@ -20,9 +20,7 @@ class m190621_023649_update_column_additional_service_table_order extends Migrat
      */
     public function safeDown()
     {
-        echo "m190621_023649_update_column_additional_service_table_order cannot be reverted.\n";
-
-        return false;
+        $this->dropColumn('order', 'additional_service');
     }
 
     /*

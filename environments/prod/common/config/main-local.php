@@ -76,7 +76,7 @@ return [
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
-                'hostname' => '128.199.70.160',
+                'hostname' => 'sessionRedisBm',
                 'port' => 6479,
                 'database' => 0,
             ]

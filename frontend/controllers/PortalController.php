@@ -82,26 +82,18 @@ class PortalController extends FrontendController
     public function actionFavorite()
     {
         // Favorite
-        Yii::info(" Favorite : app  create favorite Success");
-
+        Yii::info(" Favorite : start create favorite");
         $fingerprint = null;
         $post = $this->request->post();
-        if (isset($post['fingerprint'])) {
-            $fingerprint = $post['fingerprint'];
-        }
+        if (isset($post['fingerprint'])) {   $fingerprint = $post['fingerprint'];  }
         //$item = ArrayHelper::getValue($post,'item');
-        $id = ArrayHelper::getValue($post, 'sku');
-        Yii::info(" id : " . $id);
-        $portal = ArrayHelper::getValue($post, 'portal');
-        Yii::info(" portal: " . $portal);
-
-        Yii::info(" Favorite : app  create favorite Success 02 ");
+        $id = ArrayHelper::getValue($post, 'sku'); Yii::info(" id sku : " . $id);
+        $portal = ArrayHelper::getValue($post, 'portal'); Yii::info(" portal: " . $portal);
         if (!Yii::$app->getRequest()->validateCsrfToken()) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return ['success' => false, 'message' => Yii::t('frontend', 'Form Security Alert'), 'data' => ['content' => '']];
         }
 
-        Yii::info(" Favorite : app  create favorite Success 03 ");
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : $fingerprint;
 
@@ -110,17 +102,10 @@ class PortalController extends FrontendController
         $form->id = $id;
         $form->type = $portal; //'ebay' , 'amazon'
         $item = $form->detail();
-
-
-        Yii::info(" Favorite : app  create favorite Success 04");
-
         if ($item == false) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return ['success' => false, 'message' => Yii::t('frontend', 'Error Get Ebay Gate'), 'data' => ['content' => '']];
         }
-
-
-        Yii::info(" Favorite : app  create favorite Success 05");
 
         /**
          * $category = $item->getCustomCategory();
@@ -134,14 +119,16 @@ class PortalController extends FrontendController
          * $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'],'item') : [];
          * $item->relate_products = RelateProduct::setRelateProducts($relate_product);
          **/
-
-        Yii::info(" Favorite : app  create favorite Success");
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if ($uuid) {
             $_favorite = new FavoriteObject();
-            $_favorite->create($item, $id, $uuid);
+            $flar = $_favorite->create($item, $id, $uuid);
+            if($flar){
+                return 'create favorite Success';
+            }else {  return 'Can not create favorite'; }
+        } else {
+        return 'something wrong user uu!!!!!';
         }
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return 'Ok';
 
         /**
          * // Queue Favorite Save

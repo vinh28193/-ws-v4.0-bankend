@@ -4,7 +4,7 @@
  */
 
 use common\helpers\WeshopHelper;
-if(!empty($items)){
+if(!empty($items)){   // Todo @Huy edit thuộc tính insert lại DB + Mongodb
 ?>
 <div class="title"><?= Yii::t('frontend', 'Sản phẩm đã xem:'); ?></div>
 <div id="product-viewed-2" class="owl-carousel owl-theme">
@@ -19,8 +19,7 @@ if(!empty($items)){
                 else
                     $salePercent = 0;
             }catch (Exception $e){
-//                print_r($product);
-//                die;
+//                print_r($product); die;
                 $salePercent = 0;
             }
             ?>
@@ -37,7 +36,7 @@ if(!empty($items)){
                             <i class="la la-star"></i>
                             <i class="la la-star"></i>
                             <i class="la la-star-half-o"></i>
-                <i class="la la-star-o"></i>
+                            <i class="la la-star-o"></i>
                             <span>(87)</span>
                         </div>
                         <div class="name"><?= $product->item_name ?></div>
