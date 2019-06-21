@@ -36,7 +36,16 @@ class FavoriteObject
      */
     public function Create($obj_type, $obj_id , $UUID)
     {
-        $obj_type = \serialize($obj_type);
+        $data = [
+            'type' => $obj_type->type,
+            'item_name' => $obj_type->category_name,
+            'item_id' => $obj_type->category_id,
+            'primary_images' => $obj_type->primary_images,
+            'start_price' => $obj_type->start_price,
+            'deal_price' => $obj_type->category_id,
+            'sell_price' => $obj_type->sell_price,
+            ];
+        $obj_type = \serialize($data);
         if ($this->create_favorite($obj_type, $obj_id, $UUID)) {
             Yii::info("app  create favorite Success");
             return 1;
