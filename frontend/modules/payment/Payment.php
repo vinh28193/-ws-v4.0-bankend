@@ -194,7 +194,7 @@ class Payment extends Model
                     }
                 }
             }
-            $this->total_order_amount += $order->getTotalFinalAmount();
+            $this->total_order_amount += $order->total_amount_local;
             $this->_orders[] = $order;
         }
 
