@@ -200,14 +200,27 @@ trait ProductTrait
             /** @var $provider Provider */
             if ($provider->prov_id == $selerId) {
                 $this->sell_price = $provider->price;
-                $this->condition = $provider->condition;
                 $this->is_prime = $provider->is_prime;
                 $this->is_free_ship = $provider->is_free_ship;
                 $this->tax_fee = $provider->tax_fee;
                 $this->shipping_fee = $provider->shipping_fee;
                 $this->provider = $provider;
-                $this->init();
+                $this->condition = $provider->condition;
+                if(strtolower($this->type) != 'ebay'){
+                    $this->init();
+                }
                 return true;
+            }elseif ($provider->prov_id == $this->getSeller() && !$this->provider){
+                $this->sell_price = $provider->price;
+                $this->is_prime = $provider->is_prime;
+                $this->is_free_ship = $provider->is_free_ship;
+                $this->tax_fee = $provider->tax_fee;
+                $this->shipping_fee = $provider->shipping_fee;
+                $this->provider = $provider;
+                $this->condition = $provider->condition;
+                if(strtolower($this->type) != 'ebay'){
+                    $this->init();
+                }
             }
         }
         return false;

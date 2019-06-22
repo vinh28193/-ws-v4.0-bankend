@@ -7,9 +7,9 @@ use common\products\BaseProduct;
 /* @var BaseProduct $item */
 /* @var common\components\StoreManager $storeManager */
 
-$portal_web = strtolower($item->type) == 'ebay' ? '<a href="//ebay.com">eBay.com</a>' : '<a href="//amazon.com">Amazon.com</a>';
+$portal_web = strtolower($item->type) == 'ebay' ? '<a href="//ebay.com" rel="nofollow" target="_blank">eBay.com</a>' : '<a href="//amazon.com"  rel="nofollow" target="_blank" >Amazon.com</a>';
 $salePercent = $item->getSalePercent();
-$current_provider = $item->getCurrentProvider();
+$current_provider = $item->provider ? $item->provider : $item->getCurrentProvider();
 $variationUseImage = null;
 
 foreach ($item->variation_options as $index => $variationOption) {
@@ -58,7 +58,7 @@ $this->registerCss($css);
         <span>
             <?php
             if(is_array($item->providers) && count($item->providers)){
-              echo Yii::t('frontend','of seller <a href="#">{seller}</a>',['seller' => $current_provider ? $current_provider->name : '---']);
+              echo Yii::t('frontend','of seller <a href="#" id="seller_name">{seller}</a>',['seller' => $current_provider ? $current_provider->name : '---']);
             }
             ?>
         </span>
@@ -126,6 +126,7 @@ $this->registerCss($css);
                                 <li class="item">
                                                 <span type="spanList" class="box-select-item" tabindex="<?= $k ?>">
                                                     <img src="<?= $image->images ? $image->images[0]->thumb : '/img/no_image.png' ?>"
+                                                         data-src="<?= $image->images ? $image->images[0]->main : '/img/no_image.png' ?>"
                                                          alt="<?= $variationOption->name; ?>: <?= $value ?>" title="<?= $value ?>"/>
                                                 </span>
                                 </li>

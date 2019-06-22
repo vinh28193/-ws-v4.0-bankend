@@ -35,9 +35,10 @@ class CategoryGroup extends DbCategoryGroup
             return 0.0;
         }
         $rules = Json::decode($this->rule, true);
+        $value =  CalculatorService::calculator($rules, $target);
         $time = microtime(true) - $start;
-        Yii::info('calculate ended (time: ' . sprintf('%.3f', $time) . ' s)', 'CUSTOM FEE INFORMATION');
-        return CalculatorService::calculator($rules, $target);
+        Yii::info("Custom fee $value: calculate ended (time: " . sprintf('%.3f', $time) . " s)", 'CUSTOM FEE INFORMATION');
+        return $value;
     }
 
     public function getIsSpecial(AdditionalFeeInterface $target)

@@ -3,7 +3,6 @@
 
 namespace frontend\modules\amazon\controllers;
 
-use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
 use common\products\forms\ProductDetailFrom;
 use Yii;
@@ -56,8 +55,21 @@ class ItemController extends AmazonController
                 $contentPrice .= '<b class="old-price">' . $this->storeManager->showMoney($item->getLocalizeTotalStartPrice()) . '</b>';
 //                $contentPrice .= '<span class="save">(Tiết kiệm: ' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') . 'đ)</span>';
             }
+            $sellerMore = '';
+            if ($item->providers && count($item->providers) > 1) {
+                foreach ($item->providers as $provider) {
+                    if ($provider->prov_id != $item->provider->prov_id) {
+                        $temp = clone $item;
+                        $temp->updateBySeller($provider->prov_id);
+                        $sellerMore .= \frontend\widgets\item\SellerMoreWidget::widget(['provider' => $provider, 'item' => $temp, 'storeManager' => $this->storeManager]);
+                    }
+                }
+            }
             $response['content'] = [
                 'fees' => $fees,
+                'sellerCurrentId' => $item->provider->prov_id,
+                'sellerCurrentName' => $item->provider->name,
+                'sellerMore' => $sellerMore,
                 'queryParams' => $post,
                 'sellPrice_origin' => $item->getSellPrice(),
                 'sellPrice' => $item->getLocalizeTotalPrice(),

@@ -114,7 +114,7 @@
                 ws.initEventHandler($item, 'mouseenter-box-select', 'mouseenter.wsItem', 'div.option-box span.box-select-item', function (event) {
                     defaultParams = params;
                     console.log($(this).children('img'));
-                    methods.changeTempImage.call($item, $(this).children('img').attr('src'), $(this).children('img').attr('alt'), false);
+                    methods.changeTempImage.call($item, $(this).children('img').attr('data-src'), $(this).children('img').attr('alt'), false);
                     return false;
                 });
                 ws.initEventHandler($item, 'mouseleave-box-select', 'mouseleave.wsItem', 'div.option-box span.box-select-item', function (event) {
@@ -162,6 +162,9 @@
                     $.when.apply(this, deferredArrays).always(function () {
                         var queryParams = data.options.queryParams;
                         queryParams.sku = activeVariation.variation_sku;
+                        if(!queryParams.seller){
+                            queryParams.seller = data.params.seller;
+                        }
                         data.params.available_quantity = activeVariation.available_quantity;
                         data.params.quantity_sold = activeVariation.quantity_sold;
                         var quantityInstock = 0;
@@ -182,6 +185,9 @@
                             success: function (response) {
                                 if (response.success) {
                                     data.ajaxed = true;
+                                    if(response.content.sellerCurrentId){
+                                        data.options.queryParams.seller = response.content.sellerCurrentId;
+                                    }
                                     var content = $.extend({}, priceUpdateResponse, response.content || {});
                                     var temp = location.href.split('?');
                                     if (temp.length) {
@@ -413,16 +419,49 @@
             $('#sale-tag').html('--% OFF');
             $('#sale-tag').css('display', 'none');
         }
+        if (content.sellPrice === 0) {
+            markOutofStock(true);
+            return;
+        }
         if(content.sellPrice_origin){
             $('#price_origin').html('$'+content.sellPrice_origin);
         }
         if(content.fees.purchase_fee_text && content.fees.purchase_fee){
             $('#purchase_fee').html(content.fees.purchase_fee_text);
         }
-        $().html()
         if (content.queryParams.sku !== undefined) {
             data.params.sku = content.queryParams.sku;
             $item.data('wsItem', data);
+        }
+        if(content.sellerCurrentName){
+            $('#seller_name').html(content.sellerCurrentName);
+        }
+        if(content.sellerMore){
+            $('#other-seller-div').css('display','block');
+            $('#other-seller-div .owl-carousel').remove();
+            var sellermore = '<div class="owl-carousel owl-theme">'+content.sellerMore+'</div>';
+            $('#other-seller-div').append(sellermore);
+            $(".owl-carousel").owlCarousel({
+                loop:false,
+                margin:10,
+                nav:true,
+                dots:true,
+                arrows:true,
+                responsive:{
+                    0:{
+                        items:2
+                    },
+                    600:{
+                        items:4
+                    },
+                    1000:{
+                        items:6
+                    }
+                }
+            });
+        }else {
+            $('#other-seller-div').css('display','none');
+            $('#other-seller').html("");
         }
     };
     var tester = function ($item) {
