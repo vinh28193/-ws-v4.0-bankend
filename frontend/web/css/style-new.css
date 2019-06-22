@@ -493,6 +493,10 @@ ul.list-dot li{
 .btn-group-detail .btn-group-primary button{
     width: 100%;
 }
+.avatar-feedback img {
+    border-radius: 50%;
+    width: 50px;
+}
 .btn-group-detail .btn-group-secondary button#installmentBtn{
     width: 50%;
 }

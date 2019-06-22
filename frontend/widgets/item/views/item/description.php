@@ -24,12 +24,26 @@ if($type == 'extra'){
             <div class="col-md-12 row">
                 <?php
                 if($type == 'extra' && $item->technical_specific){
-                    foreach ($item->technical_specific as $value) {?>
-                        <div class="col-md-6 row">
-                            <div class="col-md-6"><b><?= $value->name ?>:</b></div>
-                            <div class="col-md-6"><?= $value->value ?></div>
-                        </div>
-                    <?php }
+                    foreach ($item->technical_specific as $value) {
+                        if (is_array($value->value)) {
+                            ?>
+                            <div class="col-md-6 row">
+                                <div class="col-md-6"><b><?= $value->name ?>:</b></div>
+                                <div class="col-md-6">
+                                    <?php foreach ($value->value as $kh => $v) {
+                                    echo $kh == 0 ? $v : ' / '.$v ;
+                                    } ?>
+                                </div>
+                            </div>
+                            <?php
+                        } elseif (is_string($value->value)) {
+                            ?>
+                            <div class="col-md-6 row">
+                                <div class="col-md-6"><b><?= $value->name ?>:</b></div>
+                                <div class="col-md-6"><?= $value->value ?></div>
+                            </div>
+                        <?php }
+                    }
                 } ?>
             </div>
             <div class="col-md-12" style="margin:0px;padding:0px;overflow:hidden">

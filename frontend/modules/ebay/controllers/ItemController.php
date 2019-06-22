@@ -70,6 +70,7 @@ class ItemController extends EbayController
             /** @var $item BaseProduct */
             $fees = [];
             foreach ($item->getAdditionalFees()->keys() as $key) {
+                $fees[$key.'_text'] = $this->storeManager->showMoney($item->getAdditionalFees()->getTotalAdditionalFees($key)[1]);
                 $fees[$key] = $item->getAdditionalFees()->getTotalAdditionalFees($key)[1];
             }
             $response['success'] = true;
@@ -82,6 +83,7 @@ class ItemController extends EbayController
             $response['content'] = [
                 'fees' => $fees,
                 'queryParams' => $post,
+                'sellPrice_origin' => $item->getSellPrice(),
                 'sellPrice' => $item->getLocalizeTotalPrice(),
                 'startPrice' => $item->getLocalizeTotalStartPrice(),
                 'salePercent' => $item->getSalePercent(),
