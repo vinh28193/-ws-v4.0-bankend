@@ -6,7 +6,9 @@
 use common\helpers\WeshopHelper;
 if(!empty($items)){   // Todo @Huy edit thuộc tính insert lại DB + Mongodb
 ?>
-<div class="title"><?= Yii::t('frontend', 'Sản phẩm đã xem:'); ?></div>
+<div class="title"><?php if ($items) {
+        echo Yii::t('frontend', 'Sản phẩm đã xem:');
+    } ?></div>
 <div id="product-viewed-2" class="owl-carousel owl-theme">
     <?php
     foreach ($items  as $item) {
