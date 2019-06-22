@@ -81,6 +81,7 @@ class ProductGateController extends BaseApiController
 
     public function actionCalculator()
     {
+        $time = microtime(true);
         $paramRequests = Yii::$app->getRequest()->getQueryParams();
         $form = new ProductDetailFrom();
         $form->load($paramRequests, '');
@@ -132,6 +133,6 @@ class ProductGateController extends BaseApiController
         }
         $data['category'] = $category;
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return $this->response(true, "get calculate success", $data);
+        return ['success' => true, 'message' => 'calculate success', 'data' => $data];
     }
 }
