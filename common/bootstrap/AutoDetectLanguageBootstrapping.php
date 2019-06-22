@@ -50,12 +50,14 @@ class AutoDetectLanguageBootstrapping implements BootstrapInterface
                     I18nHelper::setLocale($languageChooser->language, $app);
                 } else {
                     $language = $languageChooser->getSavedLanguage();
+
                     if ($language === null) {
                         // Use browser preferred language
-                        $language = $app->request->getPreferredLanguage(I18nHelper::getSupportedLanguages());
-                        if ($language === null) {
+//                        $language = $app->request->getPreferredLanguage(I18nHelper::getSupportedLanguages());
+//                        if ($language === null) {
+
                             $language = $this->storeManager->getLanguageId();
-                        }
+//                        }
                     }
                     I18nHelper::setLocale($language, $app);
                 }
