@@ -81,6 +81,8 @@ class ItemController extends EbayController
 //                $contentPrice .= '<span class="save">(Tiết kiệm: ' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') . 'đ)</span>';
             }
             $response['content'] = [
+                'sellerMore' => '',
+                'sellerCurrentName' => '',
                 'fees' => $fees,
                 'queryParams' => $post,
                 'sellPrice_origin' => $item->getSellPrice(),

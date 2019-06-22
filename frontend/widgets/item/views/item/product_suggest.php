@@ -21,7 +21,7 @@ if(!$item_suggest){
         <?php foreach ($item_suggest as $item){
                 ?>
                 <div class="item-box">
-                    <a href="<?= WeshopHelper::generateUrlDetail($item['asin_id'],$item['title'],$item['asin_id']) ?>" class="item">
+                    <a href="<?= WeshopHelper::generateUrlDetail($portal,$item['title'],$item['asin_id']) ?>" class="item">
                         <div class="thumb">
                             <img src="<?= $item['images'] && count($item['images']) > 0 ? $item['images'][0] : '/img/no_image.png' ?>" alt=""
                                  title=""/>

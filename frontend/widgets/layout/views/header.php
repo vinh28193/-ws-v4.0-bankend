@@ -101,28 +101,28 @@ $this->registerJs($js);
                     </span>
                 </span>
             </a>
-            <ul id="menuAccount" class="dropdown-menu category_account" role="menu" aria-labelledby="dropAcount"
+            <ul id="menuAccount" class="box-shadow dropdown-menu category_account" role="menu" aria-labelledby="dropAcount"
                 style="display: none">
                 <?php if(Yii::$app->user->isGuest) {?>
                 <li class="card" style="border: none">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mb-2">
-                                <span class="color-account"><?= Yii::t('frontend','Bạn đăng nhập nhanh bằng tài khoản của') ?></span>
+                                <span class="color-account"><?= Yii::t('frontend','You can login with') ?></span>
                             </div>
                             <div class="col-md-6 pl-1">
                                 <button onclick="smsLogin();" class="btn btn-fb"><?= Yii::t('frontend','Login via SMS') ?></button>
                             </div>
                             <div class="col-md-6 pl-1">
                                 <button  class="btn btn-google" data-action="clickToLoad" data-href="/login.html" class="btn btn-info">
-                                    <?= Yii::t('frontend','Qua tài khoản') ?>
+                                    <?= Yii::t('frontend','Login via Email') ?>
                                 </button>
                             </div
                         </div>
                         <hr class="color-account">
                         <div class="row">
                             <div class="col-md-12 mt-4">
-                                <span class="color-account">Bạn chưa có tài khoản ? <a href="javascript:void (0);" data-action="clickToLoad" data-href="/signup.html" class="btn-link"><?= Yii::t('frontend','Bạn đăng kí ngay tại đây') ?></a></span>
+                                <span class="color-account"><?= Yii::t('frontend','You not have account ?') ?><a href="javascript:void (0);" data-action="clickToLoad" data-href="/signup.html" class="btn-link"><?= Yii::t('frontend','SignUp click here') ?></a></span>
                             </div>
                         </div>
                     </div>
@@ -397,4 +397,6 @@ $this->registerJs($js);
         </div>
         <div class="clearfix"></div>
     </div>
+</div>
+<div class="wait-main">
 </div>

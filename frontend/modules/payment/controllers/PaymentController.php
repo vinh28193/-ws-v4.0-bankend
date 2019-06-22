@@ -56,6 +56,7 @@ class PaymentController extends BasePaymentController
             'receiver_country_name' => $this->storeManager->store->country_name,
             'receiver_address_id' => null,
         ];
+
         if ($shippingForm->buyer_address_id !== null && ($buyer = Address::findOne($shippingForm->buyer_address_id)) !== null) {
             $shippingParams['buyer_name'] = implode(' ', [$buyer->first_name, $buyer->last_name]);
             $shippingParams['buyer_address'] = $buyer->address;
@@ -66,18 +67,20 @@ class PaymentController extends BasePaymentController
             $shippingParams['buyer_province_name'] = $buyer->province_name;
             $shippingParams['buyer_district_name'] = $buyer->district_name;
             $shippingParams['buyer_post_code'] = $buyer->post_code;
+
             if ((int)$shippingForm->enable_receiver === ShippingForm::NO) {
                 $shippingParams['receiver_name'] = $buyer->address;
                 $shippingParams['receiver_address'] = $buyer->phone;
                 $shippingParams['receiver_phone'] = $buyer->province_id;
                 $shippingParams['receiver_province_id'] = $buyer->district_id;
                 $shippingParams['receiver_district_id'] = $buyer->post_code;
-                $shippingParams['receiver_province_name'] = $shippingForm->getReceiverDistrictName();
-                $shippingParams['receiver_district_name'] = $shippingForm->getReceiverDistrictName();
+                $shippingParams['receiver_province_name'] = $buyer->province_name;
+                $shippingParams['receiver_district_name'] = $buyer->district_name;
             }
 
         }
-        if ($shippingForm->other_receiver !== false) {
+        if ($shippingForm->other_receiver !== 'false') {
+
             if ((int)$shippingForm->enable_receiver === ShippingForm::YES) {
                 $shippingParams['receiver_name'] = $shippingForm->receiver_name;
                 $shippingParams['receiver_address'] = $shippingForm->receiver_address;
