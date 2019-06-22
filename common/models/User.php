@@ -16,7 +16,7 @@ use common\components\UserPublicIdentityInterface;
  * @package common\models
  * @property-read Address $defaultPrimaryAddress
  * @property-read Address $defaultShippingAddress
- * @property-read string $userLever
+ * @property-read string $userLevel
  * @property Address[] $shippingAddress
  * @property Address[] $primaryAddress
  */

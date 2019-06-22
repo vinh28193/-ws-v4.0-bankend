@@ -44,26 +44,30 @@ class Employee extends BaseObject
         $saleIds = $authManager->getUserIdsByRole('sale');
         $masterSaleIds = $authManager->getUserIdsByRole('master_sale');
         $ids = array_merge($saleIds, $masterSaleIds);
-        $query= User::find();
+        $query = User::find();
         $query->indexBy('id');
         $query->select(['id', 'email', 'username']);
         $query->where(['id' => $ids]);
         return $query->all();
     }
 
-    public function calculate(){
-       $ids = array_keys($this->getSupporters());
+    public function calculate()
+    {
+        $ids = array_keys($this->getSupporters());
 
     }
 
-    protected function createQuery(){
+    public function createQuery($select = '*', $conditions = [])
+    {
         $query = new Query();
         $query->from(['o' => Order::tableName()]);
-
-        return $query;
+        $query->select($select);
+        $query->where($conditions);
+        return $query->all();
     }
 
-    public function ruleConfirmCalculate() {
+    public function ruleConfirmCalculate()
+    {
 
     }
 }
