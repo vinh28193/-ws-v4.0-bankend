@@ -49,3 +49,17 @@ var autoHeightIframe = function (e) {
     var he = $(e)[0].ownerDocument.body.clientHeight;
     $(e).css('height',he + 'px');
 };
+$('#dropAcount').click(function () {
+    console.log($('.account-header-box.style-account').css('border'));
+    if($('.account-header-box.style-account').attr('data-href') == 'hide' || !$('.account-header-box.style-account').attr('data-href')){
+        $('.wait-main').css('display','block');
+        $('.account-header-box.style-account').attr('data-href','show');
+    }else {
+        $('.wait-main').css('display','none');
+        $('.account-header-box.style-account').attr('data-href','hide');
+    }
+});
+$('.wait-main').click(function () {
+    $('.wait-main').css('display','none');
+    $('.account-header-box.style-account').attr('data-href','hide');
+});
