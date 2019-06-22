@@ -44,3 +44,6 @@
     width: 236px;
     font-weight: 500;
 }
+.form-check .form-check-input {
+    display: block;
+}

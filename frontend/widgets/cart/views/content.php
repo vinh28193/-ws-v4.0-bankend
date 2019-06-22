@@ -41,11 +41,16 @@ $totalAmount = 0;
                     $totalAmount += (int)$product['total_final_amount'];
                     ?>
                     <div class="row m-0 pb-2">
+                        <div class="col-1">
+                            <div class="form-check">
+                                <input class="form-check-input position-static" name="checkCar" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                            </div>
+                        </div>
                         <div class="col-1 pb-2" style="height: auto;">
                             <img src="<?= $product['link_img']; ?>"
                                  alt="<?= $product['product_name']; ?>" width="80%" height="100px" title="<?= $product['product_name']; ?>">
                         </div>
-                        <div class="col-7 pt-4">
+                        <div class="col-6 pt-4">
                             <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
                                 <strong class="style-name"><?= $product['product_name']; ?></strong>
                             </a>
