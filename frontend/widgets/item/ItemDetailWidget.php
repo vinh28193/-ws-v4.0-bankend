@@ -132,7 +132,7 @@ CSS;
         $params = Json::htmlEncode([
             'id' => $this->item->item_id,
             'sku' => $this->item->item_sku,
-            'seller' => $this->item->getSeller(),
+            'seller' => $this->item->provider ? $this->item->provider->prov_id : '====',
             'condition' => $this->item->getIsNew(),
             'type' => $this->item->getType(),
             'variation_mapping' => $this->item->variation_mapping,
@@ -181,13 +181,10 @@ CSS;
     }
 
     public function renderSellerMore(){
-        if($this->item->providers && count($this->item->providers) > 1){
-            return $this->render('item/seller_more',[
-                'item' => $this->item,
-                'storeManager' => $this->getStoreManager()
-            ]);
-        }
-        return '';
+        return $this->render('item/seller_more',[
+            'item' => $this->item,
+            'storeManager' => $this->getStoreManager()
+        ]);
     }
     public function renderSuggestSession(){
         if(isset($this->item->suggest_set_session) && count($this->item->suggest_set_session) > 1){
