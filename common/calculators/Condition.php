@@ -62,6 +62,7 @@ class Condition extends Resolver
      */
     protected function check($data)
     {
+        Yii::info("checking $data {$this->operator} {$this->value}",__METHOD__);
         switch ($this->operator) {
             case self::OPERATOR_GREATER_EQUAL:
                 return $data >= $this->value;

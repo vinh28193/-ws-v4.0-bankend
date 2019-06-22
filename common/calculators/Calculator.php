@@ -95,7 +95,7 @@ class Calculator extends Resolver
      */
     public function checkCondition($target)
     {
-        $pass = false;
+        $pass = true;
         foreach ($this->conditions as $condition) {
             $pass = $condition->pass($target);
             if (!$pass) {
@@ -142,6 +142,7 @@ class Calculator extends Resolver
         if (!$this->checkCondition($target)) {
             return $this->defaultValue;
         }
+
         Yii::info($this->deception(), __METHOD__);
         try {
             $unit = $this->resolveKey($this->unit);
