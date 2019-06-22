@@ -162,6 +162,9 @@
                     $.when.apply(this, deferredArrays).always(function () {
                         var queryParams = data.options.queryParams;
                         queryParams.sku = activeVariation.variation_sku;
+                        if(!queryParams.seller){
+                            queryParams.seller = data.params.seller;
+                        }
                         data.params.available_quantity = activeVariation.available_quantity;
                         data.params.quantity_sold = activeVariation.quantity_sold;
                         var quantityInstock = 0;
@@ -413,16 +416,47 @@
             $('#sale-tag').html('--% OFF');
             $('#sale-tag').css('display', 'none');
         }
+        if (content.sellPrice === 0) {
+            markOutofStock(true);
+            return;
+        }
         if(content.sellPrice_origin){
             $('#price_origin').html('$'+content.sellPrice_origin);
         }
         if(content.fees.purchase_fee_text && content.fees.purchase_fee){
             $('#purchase_fee').html(content.fees.purchase_fee_text);
         }
-        $().html()
         if (content.queryParams.sku !== undefined) {
             data.params.sku = content.queryParams.sku;
             $item.data('wsItem', data);
+        }
+        if(content.sellerCurrentName){
+            $('#seller_name').html(content.sellerCurrentName);
+        }
+        if(content.sellerMore){
+            $('#other-seller-div').css('display','block');
+            $('#other-seller-div .owl-carousel').remove();
+            var sellermore = '<div class="owl-carousel owl-theme">'+content.sellerMore+'</div>';
+            $('#other-seller-div').append(sellermore);
+            $(".owl-carousel").owlCarousel({
+                loop:false,
+                margin:10,
+                nav:true,
+                responsive:{
+                    0:{
+                        items:1
+                    },
+                    600:{
+                        items:3
+                    },
+                    1000:{
+                        items:5
+                    }
+                }
+            });
+        }else {
+            $('#other-seller-div').css('display','none');
+            $('#other-seller').html("");
         }
     };
     var tester = function ($item) {

@@ -103,6 +103,9 @@ class ProductDetailFrom extends BaseForm
         if ($this->seller !== null && trim($this->seller) !== '' && $this->type !== 'ebay') {
             $product->updateBySeller($this->seller);
         }
+        if(!$product->provider && $this->type !== 'ebay'){
+            $product->updateBySeller($product->getSeller());
+        }
         $product->init();
 
 //        if ($product->checkOutOfStock() < 1) {
