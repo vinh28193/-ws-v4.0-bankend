@@ -213,6 +213,7 @@ JS;
             $view->registerJs($js);
             return $this->render('item/product_suggest',[
                 'item_suggest' => $this->item->suggest_set_session,
+                'portal' => strtolower($this->item->type),
                 'id_suggest' => $id_suggest,
                 'storeManager' => $this->getStoreManager()
             ]);

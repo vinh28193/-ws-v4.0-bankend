@@ -114,7 +114,7 @@
                 ws.initEventHandler($item, 'mouseenter-box-select', 'mouseenter.wsItem', 'div.option-box span.box-select-item', function (event) {
                     defaultParams = params;
                     console.log($(this).children('img'));
-                    methods.changeTempImage.call($item, $(this).children('img').attr('src'), $(this).children('img').attr('alt'), false);
+                    methods.changeTempImage.call($item, $(this).children('img').attr('data-src'), $(this).children('img').attr('alt'), false);
                     return false;
                 });
                 ws.initEventHandler($item, 'mouseleave-box-select', 'mouseleave.wsItem', 'div.option-box span.box-select-item', function (event) {
@@ -445,15 +445,17 @@
                 loop:false,
                 margin:10,
                 nav:true,
+                dots:true,
+                arrows:true,
                 responsive:{
                     0:{
-                        items:1
+                        items:2
                     },
                     600:{
-                        items:3
+                        items:4
                     },
                     1000:{
-                        items:5
+                        items:6
                     }
                 }
             });

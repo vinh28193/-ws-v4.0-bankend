@@ -126,6 +126,7 @@ $this->registerCss($css);
                                 <li class="item">
                                                 <span type="spanList" class="box-select-item" tabindex="<?= $k ?>">
                                                     <img src="<?= $image->images ? $image->images[0]->thumb : '/img/no_image.png' ?>"
+                                                         data-src="<?= $image->images ? $image->images[0]->main : '/img/no_image.png' ?>"
                                                          alt="<?= $variationOption->name; ?>: <?= $value ?>" title="<?= $value ?>"/>
                                                 </span>
                                 </li>
