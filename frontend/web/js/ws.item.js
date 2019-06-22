@@ -413,6 +413,13 @@
             $('#sale-tag').html('--% OFF');
             $('#sale-tag').css('display', 'none');
         }
+        if(content.sellPrice_origin){
+            $('#price_origin').html('$'+content.sellPrice_origin);
+        }
+        if(content.fees.purchase_fee_text && content.fees.purchase_fee){
+            $('#purchase_fee').html(content.fees.purchase_fee_text);
+        }
+        $().html()
         if (content.queryParams.sku !== undefined) {
             data.params.sku = content.queryParams.sku;
             $item.data('wsItem', data);

@@ -45,6 +45,7 @@ class ItemController extends AmazonController
             /** @var $item BaseProduct */
             $fees = [];
             foreach ($item->getAdditionalFees()->keys() as $key) {
+                $fees[$key.'_text'] = $this->storeManager->showMoney($item->getAdditionalFees()->getTotalAdditionalFees($key)[1]);
                 $fees[$key] = $item->getAdditionalFees()->getTotalAdditionalFees($key)[1];
             }
 //            $item->start_price = $item->sell_price + 10;
@@ -58,6 +59,7 @@ class ItemController extends AmazonController
             $response['content'] = [
                 'fees' => $fees,
                 'queryParams' => $post,
+                'sellPrice_origin' => $item->getSellPrice(),
                 'sellPrice' => $item->getLocalizeTotalPrice(),
                 'startPrice' => $item->getLocalizeTotalStartPrice(),
                 'salePercent' => $item->getSalePercent(),
