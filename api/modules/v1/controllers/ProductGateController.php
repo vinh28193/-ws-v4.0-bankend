@@ -131,6 +131,7 @@ class ProductGateController extends BaseApiController
             }
         }
         $data['category'] = $category;
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $this->response(true, "get calculate success", $data);
     }
 }
