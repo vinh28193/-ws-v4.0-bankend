@@ -26,7 +26,7 @@ $('.style-ull li.li-item-cate').mouseenter(function(){
         $($element).css('background','#fff');
         $($element).find("a.title-cate").addClass('a-hover');
         $($element).find("div.sub-menu-2").addClass('sub-menu-2-hover');
-    }, 200);
+    }, 100);
 });
 $('.style-ull li.li-item-cate').mouseleave(function(){
     clearTimeout(window.mytimeout);

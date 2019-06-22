@@ -171,3 +171,12 @@ ul:after {
      display: none;
     position: absolute;
 }
+.product-viewed .owl-carousel .owl-nav .owl-prev{
+    left: 0px;
+}
+.product-viewed .owl-carousel .owl-nav .owl-next{
+    right: 0px;
+}
+.product-viewed .owl-carousel{
+    margin: auto;
+}
