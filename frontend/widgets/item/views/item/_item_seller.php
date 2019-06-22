@@ -9,7 +9,7 @@ use common\components\StoreManager;
 use common\helpers\WeshopHelper;
 ?>
 <div class="item-box">
-    <a href="<?= WeshopHelper::generateUrlDetail($item->type,$item->item_name,$item->item_id,null,$provider->prov_id) ?>" class="item">
+    <a href="<?= WeshopHelper::generateUrlDetail($item->type,$item->item_name,$item->item_id,($item->item_id != $item->item_sku ? $item->item_sku : ''),$provider->prov_id) ?>" class="item">
         <div class="thumb">
             <img src="<?= $item->primary_images && count($item->primary_images) > 0 ? $item->primary_images[0]->main : '/img/no_image.png' ?>" alt=""
                  title=""/>

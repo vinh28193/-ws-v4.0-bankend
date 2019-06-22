@@ -185,6 +185,9 @@
                             success: function (response) {
                                 if (response.success) {
                                     data.ajaxed = true;
+                                    if(response.content.sellerCurrentId){
+                                        data.options.queryParams.seller = response.content.sellerCurrentId;
+                                    }
                                     var content = $.extend({}, priceUpdateResponse, response.content || {});
                                     var temp = location.href.split('?');
                                     if (temp.length) {

@@ -67,6 +67,7 @@ class ItemController extends AmazonController
             }
             $response['content'] = [
                 'fees' => $fees,
+                'sellerCurrentId' => $item->provider->prov_id,
                 'sellerCurrentName' => $item->provider->name,
                 'sellerMore' => $sellerMore,
                 'queryParams' => $post,
