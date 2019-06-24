@@ -44,9 +44,11 @@ class ItemController extends EbayController
         $this->portalImage = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
 
         $category = $item->getCategory();
-        $relate_product_rs = EbayProductGate::paserSugget($item->item_id, $category ? [$category->alias] : []);
-        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
-        $item->relate_products = RelateProduct::setRelateProducts($relate_product);
+
+        //Load sau khi load xong content
+//        $relate_product_rs = EbayProductGate::paserSugget($item->item_id, $category ? [$category->alias] : []);
+//        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
+//        $item->relate_products = RelateProduct::setRelateProducts($relate_product);
         return $this->render('index', [
             'item' => $item
         ]);

@@ -13,6 +13,7 @@ use common\components\amazon\AmazonApiV2Client;
 use common\components\Product;
 use common\models\amazon\AmazonProduct;
 use common\models\amazon\AmazonSearchForm;
+use linslin\yii2\curl\Curl;
 use Yii;
 use yii\caching\Cache;
 use yii\helpers\ArrayHelper;
@@ -611,5 +612,18 @@ class AmazonProductGate
             Yii::$app->cache->set('url_tracking_price_' . $sku . '_' . $store, $url, 60 * 60);
         }
         return $url;
+    }
+    public static function getReviewCustomer($asin){
+        try{
+            $curl = new Curl();
+            $rs = $curl->get('http://157.230.175.213:8000/amazon/asin/'.$asin);
+            $response = json_decode($rs,true);
+            $response = ArrayHelper::getValue($response,'response',[]);
+            $response = ArrayHelper::getValue($response,'product_detail',[]);
+            $response = ArrayHelper::getValue($response,'product_review',[]);
+            return $response;
+        }catch (\Exception $e){
+            return null;
+        }
     }
 }
