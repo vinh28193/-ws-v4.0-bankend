@@ -46,7 +46,7 @@ if($type == 'extra'){
                     }
                 } ?>
             </div>
-            <div class="col-md-12" style="margin:0px;padding:0px;overflow:hidden">
+            <div class="col-md-12">
                 <?php
                 if($checkShow){
                     if(strtolower($item->type) =='amazon'){

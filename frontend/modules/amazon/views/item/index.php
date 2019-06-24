@@ -16,7 +16,7 @@ echo ItemDetailWidget::widget([
     ]
 ]);
 if($item->customer_feedback){
-//    echo \frontend\widgets\item\FeedBackWidget::widget(['portal' => $item->type , 'array' => $item->customer_feedback]);
+    echo \frontend\widgets\item\FeedBackWidget::widget(['portal' => $item->type , 'array' => $item->customer_feedback]);
 }
 ?>
 

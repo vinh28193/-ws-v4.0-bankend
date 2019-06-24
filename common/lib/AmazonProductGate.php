@@ -616,7 +616,7 @@ class AmazonProductGate
     public static function getReviewCustomer($asin){
         try{
             $curl = new Curl();
-            $rs = $curl->get('http://157.230.175.213:8000/amazon/asin/'.$asin);
+            $rs = $curl->get('http://sv3.weshop.asia/amazon/asin/'.$asin);
             $response = json_decode($rs,true);
             $response = ArrayHelper::getValue($response,'response',[]);
             $response = ArrayHelper::getValue($response,'product_detail',[]);
