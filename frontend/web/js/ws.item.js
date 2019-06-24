@@ -229,14 +229,14 @@
                 portal: params.type
             };
             setTimeout(function () {
-                ws.ajax('/portal/favorite', {
+                ws.ajax('/portal/f', {
                     type: 'POST',
                     data: data,
                     dataType: 'json',
                     success: function (response) {
                         if(response == 'Can not create favorite' || response == 'something wrong user uu!!!!!'){
                             $( ".viewed-product" ).css( "display", "none" );
-                        }else { console.log("done : " + response ); }
+                        }else { console.log("done : cret fv s!!! "); }
                     }
                 }, true);
             }, 3000);

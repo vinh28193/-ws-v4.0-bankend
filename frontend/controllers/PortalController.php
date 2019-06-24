@@ -50,7 +50,7 @@ class PortalController extends FrontendController
         ]);
     }
 
-    public function actionViewedProducts()
+    public function actionVP()
     {
         //Get All Favorite
         $_favorite = new FavoriteObject();
@@ -84,7 +84,7 @@ class PortalController extends FrontendController
         }
     }
 
-    public function actionFavorite()
+    public function actionF()
     {
         // Favorite
         Yii::info(" Favorite : start create favorite");
@@ -116,8 +116,8 @@ class PortalController extends FrontendController
             'type' => $portal,
             'Error' => $form->getErrors(),
         ], __CLASS__);
-        if ($item == false) {
 
+        if ($item == false) {
             Yii::info(" Gets Item call gate Error : ");
             Yii::info([
                 'item' => $item,
@@ -148,8 +148,8 @@ class PortalController extends FrontendController
             Yii::info(" start save Favorite ");
             $flar = $_favorite->create($item, $id, $uuid);
             if($flar){
-                return 'create favorite Success';
-            }else {  return 'Can not create favorite'; }
+                return 'create favo Success';
+            }else {  return 'Can not create favo'; }
         } else if($item == false or is_null($uuid) ) {
             return 'something wrong user uu! or get item data';
         }
