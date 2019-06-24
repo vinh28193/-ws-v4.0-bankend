@@ -715,7 +715,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             $query->andFilterWhere(['type_order' => $params['type_order']]);
         }
         if (isset($params['current_status'])) {
-            $query->andFilterWhere(['current_status' => $params['current_status']]);
+            if ($params['current_status'] != 'POTENTIAL') {
+                $query->andFilterWhere(['current_status' => $params['current_status']]);
+            }
+            if ($params['current_status'] == 'POTENTIAL') {
+                $query->andFilterWhere(['potential' => 1]);
+            }
         }
         if (isset($params['time_start']) and isset($params['time_end'])) {
             $query->andFilterWhere(['or',
