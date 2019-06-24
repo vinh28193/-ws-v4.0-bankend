@@ -7,7 +7,7 @@
 use common\helpers\WeshopHelper;
 ?>
     <div  id="product-relate" class="product-viewed product-list box-shadow" style="display: <?= ($item->relate_products) ? 'block' : 'none' ?>">
-        <div class="title">Sản phẩm liên quan:</div>
+        <div class="title"><?= Yii::t('frontend','Product Relate') ?>:</div>
         <div class="owl-carousel owl-theme">
             <?php
             if($item->relate_products) {
