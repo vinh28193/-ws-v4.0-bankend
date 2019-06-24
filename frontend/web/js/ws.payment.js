@@ -112,6 +112,20 @@ ws.payment = (function ($) {
                 $('#step_checkout_3').css('display', 'none');
                 window.scrollTo(0, 0);
             });
+            $('#phone').keyup(function () {
+                console.log(pub.payment)
+                if (parseInt(phone.value.length) > 8 && parseInt(phone.value.length) < 13) {
+                    ws.ajax('/checkout/shipping/add-cart-checkout', {
+                        type: 'POST',
+                        data: {
+                            phone: parseInt(phone.value),
+                            fullName: parseInt(fullName.value),
+                            email: parseInt(email.value),
+                            typeUpdate: 'updateCartInCheckout'
+                        },
+                    });
+                }
+            });
             $('#loginToCheckout').click(function () {
                 ws.loading(true);
                 var typeLogin = $('input[name=check-member]:checked').val();
