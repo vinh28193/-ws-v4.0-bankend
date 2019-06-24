@@ -279,9 +279,9 @@ class CartManager extends Component
         /** @var $store StoreManager */
         $user = $this->getUser();
         if ($user) {
-            if ($user->primaryAddress != null) {
+            if ($user->primaryAddress && isset($user->primaryAddress[0])) {
                 $buyer = [];
-                $primaryAddress = $user->primaryAddress;
+                $primaryAddress = $user->primaryAddress[0];
                 $buyer['buyer_email'] = $primaryAddress ? $primaryAddress->email : null;
                 $buyer['buyer_name'] = $primaryAddress ? implode(' ', [$primaryAddress->first_name, $primaryAddress->last_name]) : null;
                 $buyer['buyer_address'] = $primaryAddress ? $primaryAddress->address : null;
