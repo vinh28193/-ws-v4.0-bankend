@@ -3071,7 +3071,7 @@ a:hover {
 .product-list .item .info .price {
     padding-right: 48px;
     position: relative;
-    border-top: 1px solid #ebebeb;
+    border-top: none;/*1px solid #ebebeb;*/
 }
 
 .product-list .item .info .price strong {
@@ -3216,7 +3216,7 @@ a:hover {
 }
 
 .product-viewed .owl-carousel .item-box .item .info .name {
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
 }

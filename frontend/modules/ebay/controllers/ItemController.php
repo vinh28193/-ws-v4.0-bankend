@@ -110,4 +110,15 @@ class ItemController extends EbayController
         Yii::$app->response->format = 'json';
         return ['success' => true,'content' => $content];
     }
+    public function actionTopView(){
+        $relate_product_rs = EbayGateV4::getProductTopView();
+        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
+        $products = RelateProduct::setRelateProducts($relate_product);
+        $content = '';
+        foreach ($products as $product){
+            $content .= \frontend\widgets\item\RelateProduct::widget(['portal' => 'ebay' , 'product' => $product]);
+        }
+        Yii::$app->response->format = 'json';
+        return ['success' => true,'content' => $content];
+    }
 }

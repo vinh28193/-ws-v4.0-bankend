@@ -103,7 +103,7 @@ $this->registerCss($css);
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2"><?= Yii::t('frontend','The price does not include shipping fees to your location.') ?></td>
+<!--                    <td colspan="2">--><?//= Yii::t('frontend','The price does not include shipping fees to your location.') ?><!--</td>-->
                 </tr>
             </table>
         </div>
@@ -175,12 +175,12 @@ JS;
     <?php
     if (isset($item->bid) && isset($item->bid['bid_minimum']) && ($item->bid['bid_minimum'])) { ?>
         <div class="" id="" style="display: block; font-size: 12px;color: red">
-            <i class="fa fa-exclamation-triangle"></i><b><?= Yii::t('frontend','')?></b>
+            <i class="fa fa-exclamation-triangle"></i><b><?= Yii::t('frontend', 'Sorry, the auction system on WESHOP is currently under maintenance. <br> Hope you sympathize!'); ?></b>
         </div>
     <?php }else{
     if (strtolower($item->type) == 'ebay') { ?>
-        <div class="qty form-inline" id="" style="display: block; font-size: 10px">
-            <b id="instockQuantity"><?= $instockQuanty ?></b><i> <?= Yii::t('frontend', 'Sorry, the auction system on WESHOP is currently under maintenance. <br> Hope you sympathize!'); ?></i>
+        <div class="qty form-inline" id="" style="display: block; font-size: 12px">
+            <b id="instockQuantity"><?= $instockQuanty ?></b><i> <?= Yii::t('frontend', 'products can be purchased'); ?></i>
         </div>
     <?php } ?>
         <div class="qty form-inline" id="quantityGroup" style="display: <?= $current_provider ? 'inline-flex' : 'none' ?>;">

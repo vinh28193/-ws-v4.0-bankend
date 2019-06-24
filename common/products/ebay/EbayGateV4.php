@@ -171,4 +171,16 @@ class EbayGateV4 extends BaseGate
         }
         return $response;
     }
+    public static function getProductTopView(){
+        $url = 'http://sv3.weshop.asia/ebay/top_watched?categoryId';
+//        print_r($url);
+//        die;
+        $curl = new Curl();
+        $response = $curl->get($url);
+        $response = json_decode($response,true);
+        if($curl->responseCode !== 200 || !ArrayHelper::getValue($response,'success')){
+            return [];
+        }
+        return $response;
+    }
 }
