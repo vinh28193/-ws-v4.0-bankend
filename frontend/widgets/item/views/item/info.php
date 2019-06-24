@@ -38,7 +38,7 @@ $this->registerCss($css);
 <div class="product-full-info">
     <div id="checkcate" style="display: none"><?= $item->category_id ?></div>
     <div class="title">
-        <span class="badge-buy-detail"><?= Yii::t('frontend','Mua hộ từ Mỹ') ?></span>
+        <span class="badge-buy-detail"><?= Yii::t('frontend','Buy from the US') ?></span>
         <strong class="name-product"><?= $item->item_name ?></strong>
         <span id="sale-tag" class="sale-tag"
               style="display: <?= $salePercent > 0 ? 'block' : 'none' ?>"><?= $salePercent > 0 ? $salePercent : '' ?>% OFF</span>
@@ -175,13 +175,12 @@ JS;
     <?php
     if (isset($item->bid) && isset($item->bid['bid_minimum']) && ($item->bid['bid_minimum'])) { ?>
         <div class="" id="" style="display: block; font-size: 12px;color: red">
-            <i class="fa fa-exclamation-triangle"></i><b>Xin lỗi quý khách, hiện tại hệ thống đấu giá trên WESHOP đang
-                tạm dừng hoạt động. <br>Mong quý khách thông cảm!</b>
+            <i class="fa fa-exclamation-triangle"></i><b><?= Yii::t('frontend','')?></b>
         </div>
     <?php }else{
     if (strtolower($item->type) == 'ebay') { ?>
         <div class="qty form-inline" id="" style="display: block; font-size: 10px">
-            <b id="instockQuantity"><?= $instockQuanty ?></b><i> <?= Yii::t('frontend', 'products can be purchased'); ?></i>
+            <b id="instockQuantity"><?= $instockQuanty ?></b><i> <?= Yii::t('frontend', 'Sorry, the auction system on WESHOP is currently under maintenance. <br> Hope you sympathize!'); ?></i>
         </div>
     <?php } ?>
         <div class="qty form-inline" id="quantityGroup" style="display: <?= $current_provider ? 'inline-flex' : 'none' ?>;">
@@ -194,7 +193,7 @@ JS;
         <label style="color: red"><?= Yii::t('frontend', 'Out of stock') ?></label>
     </div>
         <div class="register-prime">
-            Đăng ký dịch vụ Prime tiết kiệm tới 20% phí vận chuyển <a href="#">tại đây</a>
+            <?= Yii::t('frontend','Registering Prime service saves up to 20% of shipping <a href="#"> here </a>') ?>
         </div>
         <?php if($item->end_time !== null && $item->type === BaseProduct::TYPE_EBAY && $item->end_time < time()) {?>
             <div class="" id="outOfStock">
@@ -203,11 +202,11 @@ JS;
         <?php }else if ($item->getLocalizeTotalPrice() > 0 && $current_provider){?>
             <div class="btn-group-detail">
                 <div class="btn-group-primary">
-                    <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> Đặt mua ngay</button>
+                    <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
                 </div>
                 <div class="btn-group-secondary">
-                    <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> Mua trả góp</button>
-                    <button class="btn btn-outline-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> Giỏ hàng</button>
+                    <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> <?= Yii::t('frontend','Installment') ?></button>
+                    <button class="btn btn-outline-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
                 </div>
             </div>
         <?php }?>
@@ -218,9 +217,11 @@ JS;
             <hr>
         </div>
         <div class="rules-weshop">
-            <div class="header-rule"><i class="la la-bullhorn"></i>Weshop sẽ miễn trừ trách nhiệm</div>
+            <div class="header-rule"><i class="la la-bullhorn"></i><?= Yii::t('frontend','Weshop disclaims responsibility') ?></div>
             <div class="content-rules">
-                Tất cả các sản phẩm có sẵn cho dịch vụ đại lý mua sắm được hiển thị trên Weshop là các sản phẩm được lấy từ các website thương mại điện tử của bên thứ ba và không được bán trực tiếp bởi Weshop. Weshop không chịu trách nhiệm nếu sản phẩm không giống Do đó, trong trường hợp có bất kỳ vấn đề vi phạm nào liên quan đến các sản phẩm nói trên, tất cả các khoản nợ phát sinh sẽ do người bán tương ứng chịu trên nền tảng của bên thứ ba trong khi Weshop sẽ không chịu bất kỳ trách nhiệm liên quan, tài sản thế chấp hoặc liên quan nào.
+                <?= Yii::t('frontend','Weshop disclaims responsibility') ?>
+                <?= Yii::t('frontend','All products available for shopping agency services displayed on Weshop are products taken from third party e-commerce websites and are not sold directly by Weshop. Weshop is not responsible if the product is not the same. Therefore, in the event of any violation related to the above products, all debts incurred will be borne by the respective seller on the platform. third party while Weshop will not accept any related, collateral or related responsibilities.') ?>
+
             </div>
         </div>
     <?php } ?>

@@ -27,7 +27,7 @@ if(!$item_suggest){
                                  title=""/>
                         </div>
                         <div class="info">
-                            <div class="name" style="white-space: nowrap"><?= $item['title'] ?></div>
+                            <div class="name" style="/*white-space: nowrap*/"><?= $item['title'] ?></div>
                             <div class="price">
                                 <strong><?php
                                     if($item['sell_price']){
