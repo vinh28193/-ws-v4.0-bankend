@@ -42,7 +42,7 @@
 .style-ull li:hover {
     color: #2b96b6 !important;
     cursor: pointer;
-    font-size: 17px;
+    /*font-size: 17px;*/
 }
 .title-box {
     line-height: 1.2;
@@ -158,4 +158,25 @@ ul:after {
 }
 .list-unstyled li .dropdown-toggle::after {
     display: none;
+}
+.account-header-box.style-account.show{
+    border: 1px solid white;
+}
+.wait-main{
+    background: #000;
+    opacity: 0.4;
+    z-index: 10;
+    width: 4321px;
+    height: 4000px;
+     display: none;
+    position: absolute;
+}
+.product-viewed .owl-carousel .owl-nav .owl-prev{
+    left: 0px;
+}
+.product-viewed .owl-carousel .owl-nav .owl-next{
+    right: 0px;
+}
+.product-viewed .owl-carousel{
+    margin: auto;
 }

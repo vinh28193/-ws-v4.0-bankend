@@ -97,7 +97,8 @@ class SignupForm extends Model
             'facebook_acc_kit_token' => $this->facebook_token,
             'facebook_acc_kit_id' => $this->facebook_id,
             'updated_at' => time(),
-            'store_id' => 1, // Domain Weshop Viet Nam
+            'store_id' => Yii::$app->storeManager->getId(),
+            'locale' => Yii::$app->storeManager->getLanguageId(),
             'active_shipping' => 0,
             'total_xu' => 0,
             'usable_xu' => 0,

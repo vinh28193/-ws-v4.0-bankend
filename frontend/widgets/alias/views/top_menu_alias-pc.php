@@ -68,9 +68,9 @@ foreach ($categories as $k => $category) {
             <div class="ebay-sub-menu ebay ml-1">
                 <div class="row">
                     <div class="col-md-6 pl-4">
-                        <?php foreach ($category->wsCategoryGroups as $wsCategoryGroup) { ?>
+                        <?php foreach ($category->wsCategoryGroups as $wsCategoryGroup) {?>
                             <div class="title-box">
-                                <div class="title"><?= $wsCategoryGroup->name ?></div>
+                                <div class="title"><?= $category->name ?></div>
                                 <div class="desc"></div>
                             </div>
                             <div class="row">

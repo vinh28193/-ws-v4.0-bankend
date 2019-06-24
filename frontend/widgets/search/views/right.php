@@ -102,8 +102,8 @@ JS;
             <?php
             if($portal != 'ebay'){ ?>
                 <input class="form-check-input" type="checkbox" name="isPrime" id="isPrime">
-                <label class="form-check-label" for="isPrime">
-                    <img src="/images/logo/prime.jpg" >
+                <label class="form-check-label isPrime" for="isPrime">
+                    <img src="/images/logo/prime.png" >
                 </label>
 
             <?php } ?>

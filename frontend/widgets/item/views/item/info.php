@@ -118,7 +118,7 @@ $this->registerCss($css);
             <label class="label-option-box" id="label_<?= $variationOption->id ?>"><?= $variationOption->name; ?>: ---</label>
             <div class="color-pick" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
                 <ul class="style-list"
-                    data-slick='{"slidesToShow": <?= count($variationOption->values) < 6 ? count($variationOption->values) : 6 ?>}'>
+                    data-slick='{"loop": false; "slidesToShow": <?= count($variationOption->values) < 6 ? count($variationOption->values) : 6 ?>}'>
                     <?php foreach ($variationOption->values as $k => $value) {
                         foreach ($variationOption->images_mapping as $image) {
                             if (strtolower($image->value) == strtolower($value)) {
@@ -141,7 +141,7 @@ $this->registerCss($css);
         ?>
         <div class="option-box form-group">
             <label><?= Yii::t('frontend',$variationOption->name) ?>:</label>
-            <select class="form-control form-control-sm w-auto" type="dropDown" id="<?= ($variationOption->id) ?>"
+            <select class="form-control w-auto" type="dropDown" id="<?= ($variationOption->id) ?>"
                     name="<?= ($variationOption->id) ?>" data-ref="<?= ($variationOption->id) ?>">
                 <option value=""></option>
                 <?php foreach ($variationOption->values as $k => $v) { ?>

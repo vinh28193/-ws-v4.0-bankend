@@ -9,19 +9,22 @@
 return [
     'en' => [
         'id' => 'en-US',
-        'language' => 'en',
+        'language' => 'en-US',
+        'language_code' => 'en',
         'name' => 'English (US)',
         'name_ascii' => 'English (US)'
     ],
     'vi' => [
         'id' => 'vi-VN',
-        'language' => 'vi',
+        'language' => 'vi-VN',
+        'language_code' => 'vi',
         'name' => 'Tiếng Việt',
         'name_ascii' => 'Vietnamese'
     ],
     'id' => [
         'id' => 'id-ID',
-        'language' => 'id',
+        'language' => 'id-ID',
+        'language_code' => 'id',
         'name' => 'Bahasa Indonesia',
         'name_ascii' => 'Indonesian'
     ],

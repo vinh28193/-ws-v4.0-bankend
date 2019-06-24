@@ -435,7 +435,7 @@ class CartManager extends Component
             }
             if (isset($param['typeUpdate'])) {
                 if ($param['typeUpdate'] == 'assignSaleCart') {
-                    $value['saleSupport']['id'] = $param['idSale'];
+                    $value['sale_support_id'] = $param['idSale'];
                 }
             }
             if (isset($param['typeUpdate'])) {

@@ -3206,8 +3206,8 @@ a:hover {
 }
 
 .product-viewed .owl-carousel .item-box {
-    border: 1px solid #dddddd;
-    /*border: 1px solid transparent;*/
+    /*border: 1px solid #dddddd;*/
+    border: 1px solid transparent;
     border-top: none;
 }
 
@@ -3224,12 +3224,13 @@ a:hover {
 .product-viewed .owl-carousel .item-box .item .info .price strong {
     display: block;
 }
-
+.isPrime img{
+    height: 14px;
+}
 .product-viewed .owl-carousel .item-box .item .info .price span {
     display: block;
     margin-left: 0;
 }
-
 .product-viewed .owl-carousel .item-box .item .info .price-detail {
     padding-right: 0;
     font-size: 11px;
@@ -5158,7 +5159,7 @@ a:hover {
 }
 
 .detail-block .product-full-info {
-    font-size: 12px;
+    font-size: 14px;
     margin-left: 60px;
     width: calc(100% - 470px);
 }
@@ -5399,8 +5400,8 @@ a:hover {
 }
 
 .detail-content .product-viewed .owl-carousel .item-box {
-    border: 1px solid #dddddd;
-    /*border: 1px solid transparent;*/
+    /*border: 1px solid #dddddd;*/
+    border: 1px solid transparent;
     border-top: none;
 }
 
@@ -5410,7 +5411,7 @@ a:hover {
 }
 
 .detail-content .product-viewed .owl-carousel .item-box .item .name {
-    font-size: 12px;
+    font-size: 14px;
     white-space: normal;
 }
 
@@ -5422,7 +5423,7 @@ a:hover {
     border-top: solid 1px #ebebeb;
     margin-top: 20px;
     padding: 20px 0;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .detail-block-2 .title {
