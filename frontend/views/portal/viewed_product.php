@@ -29,7 +29,7 @@ if(!empty($items)){   // Todo @Huy edit thuộc tính insert lại DB + Mongodb
                 <a href="<?= \common\helpers\WeshopHelper::generateUrlDetail($product->type, $product->item_name, $product->item_id) ?>"
                    class="item">
                     <div class="thumb">
-                        <img style="max-width: 160px" src=""
+                        <img src="<?= $product->primary_images ?>" alt=""
                              alt="" title=""/>
                     </div>
                     <div class="info">
@@ -43,9 +43,9 @@ if(!empty($items)){   // Todo @Huy edit thuộc tính insert lại DB + Mongodb
                         </div>
                         <div class="name"><?= $product->item_name ?></div>
                         <div class="price">
-                            <strong><?= Yii::$app->storeManager->showMoney($product->sell_price * Yii::$app->storeManager->getExchangeRate()) ?></strong>
-                            <?php if ($product->buynow_price) { ?>
-                                <span><?= Yii::$app->storeManager->showMoney($product->start_price * Yii::$app->storeManager->getExchangeRate()) ?></span>
+                            <strong><?= Yii::$app->storeManager->showMoney($product->buynow_price) ?></strong>
+                            <?php if ($product->old_price) { ?>
+                                <span><?= Yii::$app->storeManager->showMoney($product->old_price) ?></span>
                                 <span class="sale-tag" style="display: <?= $salePercent > 0 ? 'block' : 'none' ?>"><?= $salePercent > 0 ? $salePercent : '' ?>% OFF</span>
                             <?php } // Start start_price
                             ?>
