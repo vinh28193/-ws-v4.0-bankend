@@ -15,7 +15,7 @@ FancyboxPlusAsset::register($this);
 $js = <<<JS
 $(document).ready(function() {
   setTimeout(function () { 
-        ws.ajax('/portal/viewed-products',{
+        ws.ajax('/portal/v-p',{
         type: 'POST',
         dataType: 'json',
         data: {fingerprint: ws.getFingerprint()},

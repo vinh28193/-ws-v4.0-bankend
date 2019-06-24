@@ -5,7 +5,12 @@ html, body {
     color: #555555;
 }
 .wrapper{
-    background: #f7f7f7;
+    background: #fff;
+}
+.filter-content {
+    background: #fff;
+    border-radius: 3px;
+    padding: 24px 20px;
 }
 .container{
     max-width: 90%;
@@ -318,7 +323,7 @@ div.title-box.inline div.form-inline input{
     display: inline-flex;
 }
 div.product-list.row div a div.info div.name{
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
 }

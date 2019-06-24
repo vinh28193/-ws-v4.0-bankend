@@ -12,10 +12,6 @@ use frontend\controllers\FrontendController;
 use frontend\modules\favorites\models\Favorite;
 use common\modelsMongo\FavoritesMongoDB;
 
-/** UUID **/
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
 use common\products\BaseProduct;
 
 
@@ -26,10 +22,8 @@ class FavoriteObject
 {
     public $uuid ;
     public function init()
-    {
-        $this->uuid = (string)Uuid::uuid1();
-        Yii::info("UUID FavoriteObject : " .$this->uuid);
-    }
+    {}
+
     /**
      * @param $obj_type
      * @param $obj_id
@@ -107,7 +101,7 @@ class FavoriteObject
         } else {
             // anonymous
             try {
-                    return $this->get_favorite($uuid);
+                 return $this->get_favorite($uuid);
              } catch (\Exception $exception) {
                     Yii::info($exception);
                     return false;
@@ -198,7 +192,7 @@ class FavoriteObject
             // Login
             $getId =  Yii::$app->user->getId() ? Yii::$app->user->getId() : '9999';
             $favorite = new Favorite([
-                'obj_type' => \serialize($obj_type),
+                'obj_type' => @serialize($obj_type),
                 'obj_id' => $obj_id,
                 'ip' => Yii::$app->getRequest()->getUserIP(),
                 'created_by' => $getId,
@@ -229,7 +223,7 @@ class FavoriteObject
 
             $uuid = isset($UUID) ? $UUID : $this->uuid;
             $favoriteMongodb = new FavoritesMongoDB([
-                'obj_type' => $obj_type,
+                'obj_type' => @serialize($obj_type),
                 'obj_id' => $obj_id,
                 'ip' => Yii::$app->getRequest()->getUserIP(),
                 'created_by' => $uuid,

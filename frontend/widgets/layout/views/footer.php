@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 item-box">
-                    <div class="title">Chấp nhận thanh toán:</div>
+                    <div class="title"><?= Yii::t('frontend','Accept payment:') ?></div>
                     <ul>
                         <li><a href="#"><img src="/img/pay_master.png" alt="" title=""/></a></li>
                         <li><a href="#"><img src="/img/pay_visa.png" alt="" title=""/></a></li>
@@ -11,7 +11,7 @@
                     </ul>
                 </div>
                 <div class="col-md-6 item-box">
-                    <div class="title">Hợp tác:</div>
+                    <div class="title"><?= Yii::t('frontend','Co-operate:') ?></div>
                     <ul>
                         <li><a href="#"><img src="/img/operate_ebay.png" alt="" title=""/></a></li>
                         <li><a href="#"><img src="/img/operate_amz.png" alt="" title=""/></a></li>
@@ -26,44 +26,44 @@
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="title">Về Weshop</div>
+                            <div class="title"><?= Yii::t('frontend','About Weshop:') ?></div>
                             <ul>
-                                <li><a href="#">Thông tin về chúng tôi</a></li>
-                                <li><a href="#">Chính sách bảo mật</a></li>
-                                <li><a href="#">Các điều khoản và điều kiện</a></li>
-                                <li><a href="#">Liên hệ</a></li>
+                                <li><a href="<?= Yii::t('frontend','#aboutus') ?>"><?= Yii::t('frontend','About us') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#privacypolicy') ?>"><?= Yii::t('frontend','Privacy Policy') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#term&condition') ?>"><?= Yii::t('frontend','Terms & Condition') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#contact') ?>"><?= Yii::t('frontend','Contact us') ?></a></li>
                             </ul>
                         </div>
                         <div class="col-md-4">
-                            <div class="title">Trợ giúp khách hàng</div>
+                            <div class="title"><?= Yii::t('frontend','Help') ?></div>
                             <ul>
-                                <li><a href="#">Thanh toán như thế nào</a></li>
-                                <li><a href="#">Chính sách hoàn trả</a></li>
-                                <li><a href="#">Các mặt hàng cấm</a></li>
-                                <li><a href="#">Thuế nhập khẩu</a></li>
-                                <li><a href="#">Chính sách bảo mật</a></li>
-                                <li><a href="#">Các điều khoản và điều kiện</a></li>
+                                <li><a href="<?= Yii::t('frontend','#how2pay') ?>"><?= Yii::t('frontend','How to pay') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#termsrefund') ?>"><?= Yii::t('frontend','Terms Refund') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#prohibited') ?>"><?= Yii::t('frontend','Prohibited Items') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#importtaxduty') ?>"><?= Yii::t('frontend','Import Tax Duty') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#privacyPolicy') ?>"><?= Yii::t('frontend','Privacy Policy') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#term&condition') ?>"><?= Yii::t('frontend','Terms & Condition') ?></a></li>
                             </ul>
                         </div>
                         <div class="col-md-4">
-                            <div class="title">Dịch vụ VAS</div>
+                            <div class="title"><?= Yii::t('frontend','Value Added Services') ?></div>
                             <ul>
-                                <li><a href="#">Dịch vụ kiểm tra hàng hóa tại Mỹ</a></li>
-                                <li><a href="#">Hợp nhất lô hàng</a></li>
-                                <li><a href="#">Dịch vụ đóng gói lại</a></li>
-                                <li><a href="#">Bảo hiểm vận chuyển</a></li>
-                                <li><a href="#">Miễn phí 60 ngày lưu trữ</a></li>
-                                <li><a href="#">Xem toàn bộ dịch vụ VAS</a></li>
+                                <li><a href="<?= Yii::t('frontend','#inspectionservice') ?>"><?= Yii::t('frontend','Inspection Service') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#consolidateshipment') ?>"><?= Yii::t('frontend','Consolidate shipments') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#repackingservice') ?>"><?= Yii::t('frontend','Repacking service') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#shippinginsurance') ?>"><?= Yii::t('frontend','Shipping Insurance') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#feedaystorage') ?>"><?= Yii::t('frontend','Free 60days storage') ?></a></li>
+                                <li><a href="<?= Yii::t('frontend','#allvas') ?>"><?= Yii::t('frontend','View all service VAS') ?></a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="title-register">Đăng ký để nhận tin khuyến mãi</div>
+                    <div class="title-register"><?= Yii::t('frontend','Sign up to receive promotion news') ?></div>
                     <div class="form-group contact">
                         <div class="input-group">
                             <input class="form-control" type="text"
-                                   placeholder="Nhập email để nhận hotdeal hấp dẫn">
+                                   placeholder="<?= Yii::t('frontend','Enter email to get hot deals') ?>">
                             <span class="input-group-btn">
                                         <button type="button" class="btn btn-default"><i
                                                 class="contact-ico"></i></button>
@@ -73,9 +73,9 @@
                     <div class="sticker-bct"><a href="#" target="_blank"><img src="/img/chung_nhan_bct.png" alt=""
                                                                               title=""/></a></div>
                     <div class="connect">
-                        <span>Kết nối với Weshop qua:</span>
-                        <a href="#" target="_blank"><img src="/img/social_fb.png" alt="" title=""/></a>
-                        <a href="#" target="_blank"><img src="/img/social_youtube.png" alt="" title=""/></a>
+                        <span><?= Yii::t('frontend','Connect with Weshop:') ?>:</span>
+                        <a href="<?= Yii::t('frontend','#facebookWeshop') ?>" target="_blank"><img src="/img/social_fb.png" alt="" title=""/></a>
+                        <a href="<?= Yii::t('frontend','#youtubeWeshop') ?>" target="_blank"><img src="/img/social_youtube.png" alt="" title=""/></a>
                     </div>
                 </div>
             </div>
@@ -83,14 +83,11 @@
     </div>
     <div class="bot">
         <div class="container">
-            <div class="title"><?= Yii::t('frontend','Weshop Việt Nam - Một sản phẩm của Boxme Global') ?></div>
+            <div class="title"><?= Yii::t('frontend','WESHOP VIET NAM - WORLD WIDE SHOPPING MADE EASY') ?></div>
             <ul>
-                <li><b>Hà Nội:</b> Tầng 3, tòa nhà VTC Online số 18 đường Tam Trinh, Phường Minh Khai, Quận Hai Bà
-                    Trưng, Thành phố Hà Nội, Việt Nam
-                </li>
-                <li><b>Hồ Chí Minh:</b> Lầu 6, toà nhà Sumikura, 18H Cộng Hoà, Phường 4, Quận Tân Bình</li>
-                <li><b>Mã số doanh nghiệp:</b> 0106693837 do Sở Kế hoạch và Đầu tư TP. Hà Nội cấp lần đầu ngày 18/11/2014
-                </li>
+                <li><?= Yii::t('frontend','<b>Ha Noi:</b> 3rd floor, VTC Online building No. 18 Tam Trinh Street, Minh Khai Ward, Hai Ba Trung District, Hanoi City, Vietnam') ?></li>
+                <li><?= Yii::t('frontend','<b> Ho Chi Minh: </b> 6th floor, Sumikura building, 18H Cong Hoa, Ward 4, Tan Binh District') ?></li>
+                <li><?= Yii::t('frontend','<b> Business number: </b> 0106693837 by the City Department of Planning and Investment. Hanoi first issued on November 18, 2014') ?></li>
             </ul>
         </div>
     </div>
