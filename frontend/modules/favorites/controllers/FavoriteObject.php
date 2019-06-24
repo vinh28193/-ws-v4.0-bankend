@@ -16,6 +16,9 @@ use common\modelsMongo\FavoritesMongoDB;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+use common\products\BaseProduct;
+
+
 /**
  * Default controller for the `CommentModule` module
  */
@@ -34,26 +37,34 @@ class FavoriteObject
      * @return integer
      * @throws ErrorException
      */
-    public function Create($obj_type, $obj_id , $UUID)
+    public function Create($item, $id, $uuid)
     {
+        /* @var BaseProduct $item */
+        /* @var common\components\StoreManager $storeManager */
+
+        $data_favorite = new \stdClass();
+        $data_favorite->category_id = $item->category_id;
+        $data_favorite->item_name = isset($item->item_name) ? $item->item_name : '' ;
+        $data_favorite->salePercent = 0  ;
+        $data_favorite->providers = $item->providers ;
+        $data_favorite->item_origin_url = $item->item_origin_url ;
+        $data_favorite->primary_images = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png'  ; // $item->primary_images ;
+        $data_favorite->old_price = $item->getLocalizeTotalStartPrice() ;
+        $data_favorite->type =  isset($item->type) ? $item->type : ''  ;
+        $data_favorite->item_id = isset($item->item_id) ? $item->item_id : ''  ;
+        $data_favorite->start_price = isset($item->start_price) ? $item->start_price : 0  ;
+        $data_favorite->buynow_price = $item->getLocalizeTotalPrice()  ;
+        $data_favorite->sell_price = $item->getSellPrice() ;
+        $data_favorite->retail_price = isset($item->retail_price) ? $item->retail_price : 0  ;
+
+
         Yii::info([
-            'data' =>  $obj_type,
-            'action' => 'Create FavoriteObject'
+            'data' =>  $data_favorite,
+            'action' => 'Create'
         ], __CLASS__);
 
-        $data = [
-            'type' => $obj_type->type,
-            'item_name' => $obj_type->category_name,
-            'item_id' => $obj_type->category_id,
-            'primary_images' => $obj_type->primary_images,
-            'start_price' => $obj_type->start_price,
-            'deal_price' => $obj_type->category_id,
-            'sell_price' => $obj_type->sell_price,
-            ];
-
-        if ($obj_type->start_price > 0 && $obj_type->sell_price > 0) {
-            $obj_type = @serialize($data);
-            if ($this->create_favorite($data, $obj_id, $UUID)) {
+        if ($item->getLocalizeTotalPrice() > 0 and $item->getSellPrice() > 0) {
+            if ($this->create_favorite($data_favorite, $id, $uuid)) {
                 Yii::info("app  create favorite Success");
                 return 1;
             } else {
@@ -62,7 +73,7 @@ class FavoriteObject
                 return 0;
             }
         } else {
-            Yii::info(" start_price = 0");
+            Yii::info(" Gía bán hoặc giá gốc sản phẩm < = 0");
         }
     }
 
@@ -168,7 +179,7 @@ class FavoriteObject
                 ->exists();
             Yii::info("Find db Mysql FavoritesMongoDB ");
             Yii::info([
-                'data_find_Favorite' => $data_find,
+                'data_find_Favorite' => $data_find_mongo,
             ], __CLASS__);
             return $data_find_mongo;
         }

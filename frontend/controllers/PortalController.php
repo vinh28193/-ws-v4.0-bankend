@@ -66,10 +66,15 @@ class PortalController extends FrontendController
 
         $UUID = Yii::$app->user->getId();
         $uuid = isset($UUID) ? $UUID : $fingerprint;
+        Yii::info(" Get Favorite");
         $_All_favorite = $_favorite->getfavorite($uuid);
+        Yii::info([
+            'all_favorite' => $_All_favorite,
+        ], __CLASS__);
+
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $_cou = (array)$_All_favorite;
-        if (@count($_cou)) {
+
+        if ($_All_favorite) {
             $view = $this->renderPartial('viewed_product', [
                 'items' => $_All_favorite,
             ]);
@@ -104,7 +109,7 @@ class PortalController extends FrontendController
         $item = $form->detail();
         Yii::info(" Gets Item details Favorite ");
         Yii::info([
-            '_un_item' => @unserialize($item),
+            'item_name' => $item->item_name,
             'item' => $item,
             'form_detail_Favorite' =>'actionFavorite',
             'sku' => $id,
@@ -115,7 +120,7 @@ class PortalController extends FrontendController
 
             Yii::info(" Gets Item call gate Error : ");
             Yii::info([
-                'item' => unserialize($item),
+                'item' => $item,
                 'Error' => $form->getErrors(),
                 'sku' => $id,
                 'type' => $portal
@@ -124,8 +129,6 @@ class PortalController extends FrontendController
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return ['success' => false, 'message' => Yii::t('frontend', 'Error Get Gate'), 'data' => ['content' => '']];
         }
-
-        $item =@unserialize($item);
 
         /**
          * $category = $item->getCustomCategory();
