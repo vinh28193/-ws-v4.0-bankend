@@ -279,9 +279,9 @@ class CartManager extends Component
         /** @var $store StoreManager */
         $user = $this->getUser();
         if ($user) {
-            if ($user->primaryAddress != null) {
+            if ($user->primaryAddress && isset($user->primaryAddress[0])) {
                 $buyer = [];
-                $primaryAddress = $user->primaryAddress;
+                $primaryAddress = $user->primaryAddress[0];
                 $buyer['buyer_email'] = $primaryAddress ? $primaryAddress->email : null;
                 $buyer['buyer_name'] = $primaryAddress ? implode(' ', [$primaryAddress->first_name, $primaryAddress->last_name]) : null;
                 $buyer['buyer_address'] = $primaryAddress ? $primaryAddress->address : null;
@@ -307,6 +307,20 @@ class CartManager extends Component
                 $buyer['buyer_district_name'] = null;
                 $buyer['buyer_post_code'] = null;
             }
+        }
+        if (!$user) {
+            $buyer = [];
+            $buyer['buyer_email'] = null;
+            $buyer['buyer_name'] = null;
+            $buyer['buyer_address'] = null;
+            $buyer['buyer_phone'] = null;
+            $buyer['buyer_country_id'] = null;
+            $buyer['buyer_country_name'] = null;
+            $buyer['buyer_province_id'] = null;
+            $buyer['buyer_province_name'] = null;
+            $buyer['buyer_district_id'] = null;
+            $buyer['buyer_district_name'] = null;
+            $buyer['buyer_post_code'] = null;
         }
         $receiver = [];
         $defaultShippingAddress = $user ? ($user->defaultShippingAddress !== null ? $user->defaultShippingAddress : null) : null;
