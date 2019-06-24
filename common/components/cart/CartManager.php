@@ -278,19 +278,35 @@ class CartManager extends Component
         $store = Yii::$app->storeManager;
         /** @var $store StoreManager */
         $user = $this->getUser();
-        $buyer = [];
-        $primaryAddress = $user ? ($user->primaryAddress !== null ? $user->primaryAddress : null) : null;
-        if ($primaryAddress !== null) {
-            $buyer['buyer_email'] = $primaryAddress ? $primaryAddress->email : null;
-            $buyer['buyer_name'] = $primaryAddress ? implode(' ', [$primaryAddress->first_name, $primaryAddress->last_name]) : null;
-            $buyer['buyer_address'] = $primaryAddress ? $primaryAddress->address : null;
-            $buyer['buyer_country_id'] = $primaryAddress ? $primaryAddress->country_id : null;
-            $buyer['buyer_country_name'] = $primaryAddress ? $primaryAddress->country_name : null;
-            $buyer['buyer_province_id'] = $primaryAddress ? $primaryAddress->province_id : null;
-            $buyer['buyer_province_name'] = $primaryAddress ? $primaryAddress->province_name : null;
-            $buyer['buyer_district_id'] = $primaryAddress ? $primaryAddress->district_id : null;
-            $buyer['buyer_district_name'] = $primaryAddress ? $primaryAddress->district_name : null;
-            $buyer['buyer_post_code'] = $primaryAddress ? $primaryAddress->post_code : null;
+        if ($user) {
+            if ($user->primaryAddress != null) {
+                $buyer = [];
+                $primaryAddress = $user->primaryAddress;
+                $buyer['buyer_email'] = $primaryAddress ? $primaryAddress->email : null;
+                $buyer['buyer_name'] = $primaryAddress ? implode(' ', [$primaryAddress->first_name, $primaryAddress->last_name]) : null;
+                $buyer['buyer_address'] = $primaryAddress ? $primaryAddress->address : null;
+                $buyer['buyer_country_id'] = $primaryAddress ? $primaryAddress->country_id : null;
+                $buyer['buyer_country_name'] = $primaryAddress ? $primaryAddress->country_name : null;
+                $buyer['buyer_province_id'] = $primaryAddress ? $primaryAddress->province_id : null;
+                $buyer['buyer_province_name'] = $primaryAddress ? $primaryAddress->province_name : null;
+                $buyer['buyer_district_id'] = $primaryAddress ? $primaryAddress->district_id : null;
+                $buyer['buyer_district_name'] = $primaryAddress ? $primaryAddress->district_name : null;
+                $buyer['buyer_post_code'] = $primaryAddress ? $primaryAddress->post_code : null;
+            } else if ($user->primaryAddress == null) {
+                $primaryAddress = $user;
+                $buyer = [];
+                $buyer['buyer_email'] = $primaryAddress->email;
+                $buyer['buyer_name'] = implode(' ', [$primaryAddress->first_name, $primaryAddress->last_name]);
+                $buyer['buyer_address'] = $primaryAddress->address;
+                $buyer['buyer_phone'] = $primaryAddress->phone;
+                $buyer['buyer_country_id'] = null;
+                $buyer['buyer_country_name'] = null;
+                $buyer['buyer_province_id'] = null;
+                $buyer['buyer_province_name'] = null;
+                $buyer['buyer_district_id'] = null;
+                $buyer['buyer_district_name'] = null;
+                $buyer['buyer_post_code'] = null;
+            }
         }
         $receiver = [];
         $defaultShippingAddress = $user ? ($user->defaultShippingAddress !== null ? $user->defaultShippingAddress : null) : null;
@@ -419,6 +435,13 @@ class CartManager extends Component
             }
             $value = $item['value'];
             $key = $item['key'];
+            if (isset($param['typeUpdate'])) {
+                if ($param['typeUpdate'] == 'updateCartInCheckout') {
+                    $key['buyer']['buyer_phone'] = $param['phone'];
+                    $key['buyer']['buyer_name'] = $param['fullName'];
+                    $key['buyer']['email'] = $param['email'];
+                }
+            }
             if (isset($param['typeUpdate'])) {
                 if ($param['typeUpdate'] == 'cancelCart') {
                     $value['current_status'] = 'CANCELLED';

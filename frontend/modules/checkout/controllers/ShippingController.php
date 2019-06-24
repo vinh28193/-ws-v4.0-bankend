@@ -5,6 +5,7 @@ namespace frontend\modules\checkout\controllers;
 
 
 use common\components\cart\CartManager;
+use common\components\cart\storage\MongodbCartStorage;
 use common\components\UserCookies;
 use common\models\User;
 use frontend\modules\payment\providers\wallet\WalletService;
@@ -17,6 +18,7 @@ use frontend\modules\payment\Payment;
 use common\models\SystemStateProvince;
 use common\components\cart\CartSelection;
 use yii\helpers\ArrayHelper;
+use common\products\BaseProduct;
 
 class ShippingController extends CheckoutController
 {
@@ -231,6 +233,20 @@ class ShippingController extends CheckoutController
             }
         }
         return ['success' => false, 'message' => 'Sign up fail', 'data' => $model->errors];
+    }
+
+    public function actionAddCartCheckout() {
+        $post = Yii::$app->request->post();
+        $CartId = CartSelection::getSelectedItems();
+        return $this->getCart()->updateSafeItem('buynow', $CartId['buynow'], $post);
+
+    }
+    /**
+     * @return \common\components\cart\CartManager
+     */
+    protected function getCart()
+    {
+        return Yii::$app->cart;
     }
 
 }
