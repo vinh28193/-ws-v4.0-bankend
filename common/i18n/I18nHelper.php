@@ -76,6 +76,8 @@ class I18nHelper
     {
         if ($locale === 'en' || $locale === null) {
             $locale = 'en-US';
+        }else if ($locale === 'vi') {
+            $locale = 'vi-VN';
         }
         return $locale;
     }

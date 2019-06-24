@@ -6,6 +6,7 @@ namespace frontend\modules\ebay\controllers;
 use common\helpers\WeshopHelper;
 use common\lib\EbayProductGate;
 use common\products\BaseProduct;
+use common\products\ebay\EbayGateV4;
 use common\products\RelateProduct;
 use Yii;
 use common\products\forms\ProductDetailFrom;
@@ -96,5 +97,17 @@ class ItemController extends EbayController
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $response;
+    }
+    public function actionSuggest(){
+        $sku = Yii::$app->request->post('sku');
+        $relate_product_rs = EbayGateV4::getProductSuggest($sku);
+        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
+        $products = RelateProduct::setRelateProducts($relate_product);
+        $content = '';
+        foreach ($products as $product){
+            $content .= \frontend\widgets\item\RelateProduct::widget(['portal' => 'ebay' , 'product' => $product]);
+        }
+        Yii::$app->response->format = 'json';
+        return ['success' => true,'content' => $content];
     }
 }

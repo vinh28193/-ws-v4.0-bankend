@@ -15,9 +15,9 @@ use common\helpers\WeshopHelper;
                  title=""/>
         </div>
         <div class="info">
-            <div class="name" style="white-space: nowrap"><?= $item->item_name ?></div>
-            <div class="name" style="white-space: nowrap"><b><?= Yii::t('frontend','Solid by: ') ?></b><?= $provider->name ?></div>
-            <div class="name" style="white-space: nowrap"><b><?= Yii::t('frontend','Condition: ') ?></b><?= $provider->condition ?></div>
+            <div class="name" style="/*white-space: nowrap*/"><?= $item->item_name ?></div>
+            <div class="name" style="/*white-space: nowrap*/"><b><?= Yii::t('frontend','Solid by: ') ?></b><?= $provider->name ?></div>
+            <div class="name" style="/*white-space: nowrap*/"><b><?= Yii::t('frontend','Condition: ') ?></b><?= $provider->condition ?></div>
             <div class="price">
                 <strong><?php
                     if($item->sell_price){
