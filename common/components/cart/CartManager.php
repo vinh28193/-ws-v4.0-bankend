@@ -308,6 +308,9 @@ class CartManager extends Component
                 $buyer['buyer_post_code'] = null;
             }
         }
+        if (!$user) {
+            $buyer = [];
+        }
         $receiver = [];
         $defaultShippingAddress = $user ? ($user->defaultShippingAddress !== null ? $user->defaultShippingAddress : null) : null;
         if ($defaultShippingAddress) {
