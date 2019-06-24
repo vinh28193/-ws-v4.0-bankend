@@ -266,9 +266,9 @@ class MongodbCartStorage extends BaseObject
         ];
         if (isset($params['value']) && !isset($params['keyword'])) {
             $conditions = ['OR',
-                ['LIKE', 'value.buyer_email', $params['value']],
+                ['LIKE', 'key.buyer.buyer_email', $params['value']],
                 ['value.ordercode', $params['value']],
-                ['LIKE', 'value.buyer_phone', $params['value']],
+                ['LIKE', 'key.buyer.buyer_phone', $params['value']],
             ];
         }
         if (isset($params['statusShopping']) && !empty($params['statusShopping'])) {
