@@ -128,10 +128,13 @@ class EbayGateV4 extends BaseGate
         $request = new EbayDetailRequest();
         $request->keyword = $condition;
         // ToDo Caches : Get Thanh cong moi Luu cache @Phuchc 8/6/2019
-        //if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
+        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
             list($ok, $response) = $this->lookupRequest($request->params());
-            //$this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
-       // }
+            if(!$ok){
+                return [false, "Cannot get product"];
+            }
+            $this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
+        }
         $product = (new EbayDetailResponse($this))->parser($response);
         if($product->providers && count($product->providers)){
             $product->customer_feedback = $this->updateCustomerFeedback($product->item_id,$product->providers[0]->name);
@@ -151,7 +154,7 @@ class EbayGateV4 extends BaseGate
         $curl = new Curl();
         $response = $curl->get($url);
         $response = json_decode($response,true);
-        if($curl->responseCode !== 200){
+        if($curl->responseCode !== 200 || !ArrayHelper::getValue($response,'success')){
             return [false, $response];
         }
         return [true, $response];
