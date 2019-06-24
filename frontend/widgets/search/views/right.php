@@ -287,7 +287,7 @@ JS;
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4 col-sm-12 col-12">
+    <div class="col-md-4 col-sm-12 col-12" style="display: none;">
         <span><?= Yii::t('frontend', 'Showing {from}-{to} of {total} result', [
                 'from' => 1,
                 'to' => count($products),

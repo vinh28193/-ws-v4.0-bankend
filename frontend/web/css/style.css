@@ -1777,7 +1777,7 @@ a:hover {
 
 .deal-shock .deal-content ul li .item .info-box {
     padding: 10px 0;
-    height: 90px;
+    /*height: 90px;*/
     position: relative;
 }
 
@@ -1788,7 +1788,7 @@ a:hover {
 .deal-shock .deal-content ul li .item .info-box .name a {
     color: #555555;
     display: block;
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
     font-size: 14px;
     text-overflow: ellipsis;
@@ -1852,8 +1852,8 @@ a:hover {
 }
 
 .deal-shock .deal-content ul li .item:hover .info-box .info {
-    padding: 10px 0;
-    position: absolute;
+    /*padding: 10px 0;*/
+    /*position: absolute;*/
     top: 0;
     left: 0;
     right: 0;

@@ -27,8 +27,12 @@ $salePercent = 0;
 if ($product['sell_price'] && $product['retail_price'] && $product['retail_price'] > $product['sell_price']) {
     $salePercent = 100 - round(($product['sell_price'] / $product['retail_price']) * 100, 0);
 }
-$image = \yii\helpers\ArrayHelper::getValue($product,'bigImage');
+//print_r($product);die;
+$image = \yii\helpers\ArrayHelper::getValue($product,'bigImage',null);
 $image = $image ? $image : \yii\helpers\ArrayHelper::getValue($product,'image','/img/no_image.png');
+$rate_star = \yii\helpers\ArrayHelper::getValue($product,'rate_star',0);
+$rate_count = \yii\helpers\ArrayHelper::getValue($product,'rate_count',0);
+$rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval($rate_star);
 ?>
 
 <div class="col-md-3 col-sm-6" style="padding-right: 10px;padding-left: 10px">
@@ -48,13 +52,11 @@ $image = $image ? $image : \yii\helpers\ArrayHelper::getValue($product,'image','
             ?>
         </div>
         <div class="info">
-            <div class="rate text-orange">
-                <i class="la la-star"></i>
-                <i class="la la-star"></i>
-                <i class="la la-star"></i>
-                <i class="la la-star-half-o"></i>
-                <i class="la la-star-o"></i>
-                <span>(87)</span>
+            <div class="rate text-orange" style="display:none;">
+                <i class="a-icon a-icon-star a-star-<?= $rate_star ?> review-rating">
+                    <span class="a-icon-alt"><?= str_replace('-','.',$rate_star) ?> out of 5 stars</span>
+                </i>
+                <span>(<?=$rate_count?>)</span>
             </div>
             <?= Html::tag('div', $product['item_name'], ['class' => 'name']) ?>
             <div class="price">
