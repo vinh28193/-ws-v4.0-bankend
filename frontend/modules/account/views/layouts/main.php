@@ -42,70 +42,8 @@ $check = Yii::$app->getRequest()->getQueryParams();
 $checkUrl = Yii::$app->getRequest()->url;
 $userID = Yii::$app->user->getId();
 ?>
-<div class="wrapper backend">
-    <div class="navbar-2 be-header">
-        <a href="/" class="be-logo"><img src="/img/weshop-logo-vn.png" alt=""/></a>
-        <ul class="be-nav">
-            <?php if (Yii::$app->user->isGuest) { ?>
-                <li>
-                    <?php echo Html::a('Signup', ['/secure/signup']); ?>
-                </li>
-                <li>
-                    <?php echo Html::a('Login', ['/secure/login']); ?>
-                </li>
-            <?php } else { ?>
-                <li><span class="text-orange"><?=
-                        \common\helpers\WeshopHelper::showMoney(
-                            ArrayHelper::getValue(ArrayHelper::getValue((new WalletService())->detailWalletClient(), 'data'), 'current_balance', 0)
-                        ); ?></span></li>
-                <li>
-                    <a href="/my-cart.html">
-                        <i class="icon cart"></i>
-                        <i class="badge"><?= (new CartManager())->countItems(\common\components\cart\CartSelection::TYPE_SHOPPING) ?></i>
-                    </a>
-                </li>
-                <?php
-                $notifi = \common\modelsMongo\ListNotification::find()->where(['user_id' => $userID ])->all();
-                $countNotifi = \common\modelsMongo\ListNotification::find()->where([
-                        'AND',
-                        ['user_id' => $userID ],
-                        ['watched' => 0 ]
-                ])->count();
-                ?>
-                <li class="nav-item dropdown ">
-                    <a href="javascript:void(0)"class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon noti"></i>
-                        <i class="badge"><?= $countNotifi ?></i>
-                    </a>
-                    <div class="dropdown-menu notification overflow-auto" aria-labelledby="navbarDropdown" style="width: 20%; right: 0; height: 450px; top: 51px">
-                        <div class="card bs-example">
-                            <ul class="list-unstyled">
-                                <li class="media bg-info" style="padding: 10px; width: 100%">
-                                    <h5 class="text-white">Thông báo</h5>
-                                </li>
-                                <?php if ($countNotifi > 0) { foreach ($notifi as $value) { ?>
-                                    <li class="media" style="<?php if ($value->watched == 1) { ?> background-color: white <?php } elseif ($value->watched == 0) {?> background-color: gainsboro <?php } ?>; padding: 10px; width: 100%">
-                                            <img class="mr-3" width="50px" src="https://uinames.com/api/photos/male/12.jpg" alt="Generic placeholder image">
-                                        <a href="<?= '/my-weshop/order/' . $order->ordercode . '.html' ?>"><?= $order->ordercode ?>" id="watched" style="padding: 0; height: auto">
-                                            <div class="media-body">
-                                                <h5 class="mt-0 mb-1"><?= $value->title ?></h5>
-                                                <?= $value->body ?> <br>
-                                                <small><?= Yii::$app->formatter->asDatetime($value->created_at) ?></small>
-                                            </div>
-                                        </a>
-                                    </li>
-                                <?php }} else { ?>
-                                    <li class="media" style="padding: 10px; width: 100%">
-                                        <h5 class="text-center text-danger">No Notification !</h5>
-                                    </li>
-                                <?php } ?>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-            <?php } ?>
-        </ul>
-    </div>
+<div class="wrapper backend" style="padding-top: 0">
+    <?= \frontend\widgets\layout\HeaderWidget::widget() ?>
     <div class="be-container">
         <?php if (!Yii::$app->user->isGuest) { ?>
             <div class="be-menu">
@@ -193,7 +131,7 @@ $userID = Yii::$app->user->getId();
                                 } ?><?php if (isset($checkUrl)) {
                                     if ($checkUrl == '/order') { ?> active <?php }
                                 } ?>">
-                                    <?php echo Html::a(Yii::t('frontend', 'Orders'), ['/account/order'], ['class' => 'active']); ?>
+                                    <?php echo Html::a(Yii::t('frontend', 'All Orders List'), ['/account/order'], ['class' => 'active']); ?>
                                 </li>
                                 <li class="<?php if (isset($check['purchase'])) {
                                     if ($check['purchase'] == 'unpaid') { ?> active <?php }
@@ -205,28 +143,28 @@ $userID = Yii::$app->user->getId();
                                 } ?>">
                                     <?php echo Html::a(Yii::t('frontend', 'Paid'), ['/account/order?purchase=paid']); ?>
                                 </li>
-                                <li class="<?php if (isset($check['status'])) {
-                                    if ($check['status'] == 'PURCHASED') { ?> active <?php }
-                                } ?>">
-                                    <?php echo Html::a(Yii::t('frontend', 'Purchased'), ['/account/order?status=PURCHASED']); ?>
-                                </li>
-                                <li class="<?php if (isset($check['status'])) {
-                                    if ($check['status'] == 'STOCKIN_US') { ?> active <?php }
-                                } ?>">
-                                    <?php echo Html::a(Yii::t('frontend', 'Stock in us'), ['/account/order?status=STOCKIN_US']); ?>
-                                </li>
-                                <li class="<?php if (isset($check['status'])) {
-                                    if ($check['status'] == 'STOCKIN_LOCAL') {
-                                        $active = 'active' ?> active <?php }
-                                } ?>">
-                                    <?php echo Html::a(Yii::t('frontend', 'Stock in local'), ['/account/order?status=STOCKIN_LOCAL']); ?>
-                                </li>
-                                <li class="<?php if (isset($check['status'])) {
-                                    if ($check['status'] == 'AT_CUSTOMER') {
-                                        $active = 'active' ?> active <?php }
-                                } ?>">
-                                    <?php echo Html::a(Yii::t('frontend', 'At customer'), ['/account/order?status=AT_CUSTOMER']); ?>
-                                </li>
+<!--                                <li class="--><?php //if (isset($check['status'])) {
+//                                    if ($check['status'] == 'PURCHASED') { ?><!-- active --><?php //}
+//                                } ?><!--">-->
+<!--                                    --><?php //echo Html::a(Yii::t('frontend', 'Purchased'), ['/account/order?status=PURCHASED']); ?>
+<!--                                </li>-->
+<!--                                <li class="--><?php //if (isset($check['status'])) {
+//                                    if ($check['status'] == 'STOCKIN_US') { ?><!-- active --><?php //}
+//                                } ?><!--">-->
+<!--                                    --><?php //echo Html::a(Yii::t('frontend', 'Stock in us'), ['/account/order?status=STOCKIN_US']); ?>
+<!--                                </li>-->
+<!--                                <li class="--><?php //if (isset($check['status'])) {
+//                                    if ($check['status'] == 'STOCKIN_LOCAL') {
+//                                        $active = 'active' ?><!-- active --><?php //}
+//                                } ?><!--">-->
+<!--                                    --><?php //echo Html::a(Yii::t('frontend', 'Stock in local'), ['/account/order?status=STOCKIN_LOCAL']); ?>
+<!--                                </li>-->
+<!--                                <li class="--><?php //if (isset($check['status'])) {
+//                                    if ($check['status'] == 'AT_CUSTOMER') {
+//                                        $active = 'active' ?><!-- active --><?php //}
+//                                } ?><!--">-->
+<!--                                    --><?php //echo Html::a(Yii::t('frontend', 'At customer'), ['/account/order?status=AT_CUSTOMER']); ?>
+<!--                                </li>-->
                                 <li class="<?php if (isset($check['status'])) {
                                     if ($check['status'] == 'CANCELLED') {
                                         $active = 'active' ?> active <?php }
@@ -252,36 +190,7 @@ $userID = Yii::$app->user->getId();
                     }
                     ?>
                     <li class="accordion">
-                        <a href="#"><i class="icon icon6"></i> <?= Yii::t('frontend', 'Account'); ?></a>
-                        <a class="dropdown-collapse <?php if (isset($checkUrl)) {
-                            if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') { ?> <?= $collapsed1[0] ?> <?php }
-                        } ?>" data-toggle="collapse" data-target="#sub-3" aria-expanded="<?php if (isset($checkUrl)) {
-                            if ($checkUrl == '/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') { ?> <?= $collapsed1[1] ?> <?php }
-                        } ?>" aria-controls="collapseOne"><i class="la la-chevron-right"></i></a>
-                        <div id="sub-3" class="sub-collapse collapse <?php if (isset($checkUrl)) {
-                            if ($checkUrl == '/account/customer' || $checkUrl == '/my-weshop/customer/saved.html' || $checkUrl == '/my-weshop/customer/vip.html') { ?> <?= $collapsed1[2] ?> <?php }
-                        } ?>" aria-labelledby="headingOne" data-parent="#be-menu-collapse">
-                            <ul>
-                                <li class="<?php if (isset($checkUrl)) {
-                                    if ($checkUrl == '/account/customer') {
-                                        $active = 'active' ?> active <?php }
-                                } ?>">
-                                    <?php echo Html::a(Yii::t('frontend', 'Account'), ['/account/customer']); ?>
-                                </li>
-                                <!--                                <li class="-->
-                                <?php //if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/saved.html') {?><!-- active -->
-                                <?php //}}?><!--">-->
-                                <!--                                    --><?php //echo Html::a('Sản phẩm đã lưu', ['/account/customer/saved']);?>
-                                <!--                                </li>-->
-                                <!--                                <li>-->
-                                <!--                                <li class="-->
-                                <?php //if (isset($checkUrl)) { if ($checkUrl == '/my-weshop/customer/vip.html') {?><!-- active -->
-                                <?php //}}?><!--">-->
-                                <!--                                    --><?php //echo Html::a('Cấp độ Vip', ['/account/customer/vip']);?>
-                                <!--                                </li>-->
-                                </li>
-                            </ul>
-                        </div>
+                        <?php echo Html::a('<span class="icon icon6"></span>' . Yii::t('frontend', 'Account'), ['/account/customer']); ?>
                     </li>
                 </ul>
                 <?php

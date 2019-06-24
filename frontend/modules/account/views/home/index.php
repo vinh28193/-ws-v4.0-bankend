@@ -51,14 +51,14 @@ $this->registerJs($js);
             <a href="/my-cart.html">Chi tiết >></a>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="statistic-item">
-            <span class="icon-box icon4"><i class="icon"></i></span>
-            <div class="name">Khiếu nại</div>
-            <div class="info">0</div>
-            <a href="#">Chi tiết >></a>
-        </div>
-    </div>
+<!--    <div class="col-md-4">-->
+<!--        <div class="statistic-item">-->
+<!--            <span class="icon-box icon4"><i class="icon"></i></span>-->
+<!--            <div class="name">Khiếu nại</div>-->
+<!--            <div class="info">0</div>-->
+<!--            <a href="#">Chi tiết >></a>-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="col-md-6">
         <div class="be-box">
             <div class="be-top">
