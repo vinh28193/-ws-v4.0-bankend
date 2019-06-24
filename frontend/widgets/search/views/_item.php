@@ -27,7 +27,8 @@ $salePercent = 0;
 if ($product['sell_price'] && $product['retail_price'] && $product['retail_price'] > $product['sell_price']) {
     $salePercent = 100 - round(($product['sell_price'] / $product['retail_price']) * 100, 0);
 }
-
+$image = \yii\helpers\ArrayHelper::getValue($product,'bigImage');
+$image = $image ? $image : \yii\helpers\ArrayHelper::getValue($product,'image','/img/no_image.png');
 ?>
 
 <div class="col-md-3 col-sm-6" style="padding-right: 10px;padding-left: 10px">
@@ -40,7 +41,7 @@ if ($product['sell_price'] && $product['retail_price'] && $product['retail_price
             //                echo '<span class="countdown text-orange" data-toggle="countdown-time" data-timestamp="' . $product['end_time'] . '" data-prefix="" data-day="d" data-hour="h" data-minute="m" data-second="s"></span>';
             //            }
             //            ?>
-            <?= Html::img($product['image'], [
+            <?= Html::img($image, [
                 'alt' => $product['item_name'],
                 'title' => $product['item_name'],
             ])

@@ -87,6 +87,25 @@ $( document ).ready(function() {
         },
         dots: false
     });
+    $("#product-relate .owl-carousel").owlCarousel({
+        slideSpeed : 300,
+        paginationSpeed : 400,
+        loop: true,
+        nav: true,
+        autoplay: 1000,
+        responsive : {
+            0: {
+                items: 3,
+            },
+            575: {
+                items: 4,
+            },
+            768: {
+                items: 5,
+            }
+        },
+        dots: false
+    });
 
     $("#brand-slider").owlCarousel({
         slideSpeed : 300,

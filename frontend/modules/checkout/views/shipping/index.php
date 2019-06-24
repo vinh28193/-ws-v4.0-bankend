@@ -183,9 +183,9 @@ $this->registerJs($js);
                     <div class="row">
                         <div class="col-md-6">
                             <?php
-                            echo $form->field($shippingForm, 'buyer_name')->textInput(['placeholder' => Yii::t('frontend', 'Enter your full name')])->label(Yii::t('frontend', 'Full Name'));
-                            echo $form->field($shippingForm, 'buyer_phone')->textInput(['placeholder' => Yii::t('frontend', 'Enter your phone number')])->label(Yii::t('frontend', 'Phone'));
-                            echo $form->field($shippingForm, 'buyer_email')->textInput(['placeholder' => Yii::t('frontend', 'Enter your email address to receive notifications')])->label(Yii::t('frontend', 'Email To Receiver Tracking'));
+                            echo $form->field($shippingForm, 'buyer_name')->textInput(['placeholder' => Yii::t('frontend', 'Enter your full name'), 'id' => 'fullName', 'onchange' => 'test'])->label(Yii::t('frontend', 'Full Name'));
+                            echo $form->field($shippingForm, 'buyer_phone')->textInput(['placeholder' => Yii::t('frontend', 'Enter your phone number'), 'id' => 'phone'])->label(Yii::t('frontend', 'Phone'));
+                            echo $form->field($shippingForm, 'buyer_email')->textInput(['placeholder' => Yii::t('frontend', 'Enter your email address to receive notifications'), 'id' => 'email'])->label(Yii::t('frontend', 'Email To Receiver Tracking'));
                             if ($shippingForm->getStoreManager()->store->country_code === 'ID') {
                                 echo $form->field($shippingForm, 'buyer_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label('Address');
                             }
