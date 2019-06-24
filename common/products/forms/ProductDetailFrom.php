@@ -86,7 +86,7 @@ class ProductDetailFrom extends BaseForm
         /** @var $success boolean */
         /** @var $product BaseProduct */
         list($success, $product) = $this->getActiveGate()->lookup($this->getParams(), $renew);
-        if (!$success || is_string($product)) {
+        if (!$success || is_string($product) || !$product) {
             $this->addError($this->isSku() ? 'sku' : 'id', $product);
             return false;
         }

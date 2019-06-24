@@ -3,6 +3,7 @@
 
 namespace frontend\modules\amazon\controllers;
 
+use common\lib\AmazonProductGate;
 use common\products\BaseProduct;
 use common\products\forms\ProductDetailFrom;
 use Yii;
@@ -22,6 +23,7 @@ class ItemController extends AmazonController
         }
         $this->portalTitle = $item->item_name;
         $this->portalImage = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
+        $item->customer_feedback = AmazonProductGate::getReviewCustomer($item->item_id);
         return $this->render('index', [
             'item' => $item
         ]);
