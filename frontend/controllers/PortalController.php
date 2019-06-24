@@ -102,10 +102,30 @@ class PortalController extends FrontendController
         $form->id = $id;
         $form->type = $portal; //'ebay' , 'amazon'
         $item = $form->detail();
+        Yii::info(" Gets Item details Favorite ");
+        Yii::info([
+            '_un_item' => @unserialize($item),
+            'item' => $item,
+            'form_detail_Favorite' =>'actionFavorite',
+            'sku' => $id,
+            'type' => $portal,
+            'Error' => $form->getErrors(),
+        ], __CLASS__);
         if ($item == false) {
+
+            Yii::info(" Gets Item call gate Error : ");
+            Yii::info([
+                'item' => unserialize($item),
+                'Error' => $form->getErrors(),
+                'sku' => $id,
+                'type' => $portal
+            ], __CLASS__);
+
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return ['success' => false, 'message' => Yii::t('frontend', 'Error Get Ebay Gate'), 'data' => ['content' => '']];
+            return ['success' => false, 'message' => Yii::t('frontend', 'Error Get Gate'), 'data' => ['content' => '']];
         }
+
+        $item =@unserialize($item);
 
         /**
          * $category = $item->getCustomCategory();
@@ -120,14 +140,15 @@ class PortalController extends FrontendController
          * $item->relate_products = RelateProduct::setRelateProducts($relate_product);
          **/
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        if ($uuid) {
+        if ($uuid and $item != false) {
             $_favorite = new FavoriteObject();
+            Yii::info(" start save Favorite ");
             $flar = $_favorite->create($item, $id, $uuid);
             if($flar){
                 return 'create favorite Success';
             }else {  return 'Can not create favorite'; }
-        } else {
-        return 'something wrong user uu!!!!!';
+        } else if($item == false or is_null($uuid) ) {
+            return 'something wrong user uu! or get item data';
         }
 
         /**

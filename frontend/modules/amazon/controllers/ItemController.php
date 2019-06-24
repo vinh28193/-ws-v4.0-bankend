@@ -21,6 +21,15 @@ class ItemController extends AmazonController
                 'errors' => $form->getErrors()
             ]);
         }
+
+        Yii::info(" Gets Item call gate: ");
+        Yii::info([
+            'item' => $item,
+            'Error' => $form->getErrors(),
+            'sku' => $id,
+            'type' =>  'amazon'
+        ], __CLASS__);
+
         $this->portalTitle = $item->item_name;
         $this->portalImage = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
         $item->customer_feedback = AmazonProductGate::getReviewCustomer($item->item_id);
