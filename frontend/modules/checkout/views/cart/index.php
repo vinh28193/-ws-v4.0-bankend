@@ -8,7 +8,7 @@ use frontend\widgets\cart\CartWidget;
 /* @var string $cartContent */
 /* @var string|null $uuid */
 
-
+$this->params = ['Home' => '/','My cart' => '/my-cart.html'];
 ?>
 
 <div class="row">

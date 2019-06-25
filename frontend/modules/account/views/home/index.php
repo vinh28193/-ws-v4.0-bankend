@@ -43,14 +43,14 @@ $this->registerJs($js);
             <?php echo Html::a('Chi tiết>>', ['/account/order'], ['class' => 'active']); ?>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="statistic-item">
-            <span class="icon-box icon3"><i class="icon"></i></span>
-            <div class="name">Giỏ hàng</div>
-            <div class="info"><?= $totalCart ?></div>
-            <a href="/my-cart.html">Chi tiết >></a>
-        </div>
-    </div>
+<!--    <div class="col-md-3">-->
+<!--        <div class="statistic-item">-->
+<!--            <span class="icon-box icon3"><i class="icon"></i></span>-->
+<!--            <div class="name">Giỏ hàng</div>-->
+<!--            <div class="info">--><?//= $totalCart ?><!--</div>-->
+<!--            <a href="/my-cart.html">Chi tiết >></a>-->
+<!--        </div>-->
+<!--    </div>-->
 <!--    <div class="col-md-4">-->
 <!--        <div class="statistic-item">-->
 <!--            <span class="icon-box icon4"><i class="icon"></i></span>-->
@@ -59,6 +59,8 @@ $this->registerJs($js);
 <!--            <a href="#">Chi tiết >></a>-->
 <!--        </div>-->
 <!--    </div>-->
+</div>
+<div class="row mt-2">
     <div class="col-md-6">
         <div class="be-box">
             <div class="be-top">
@@ -131,11 +133,11 @@ $this->registerJs($js);
                         <li>
                             <p><b>Weshop</b> trao đổi mới trong đơn hàng
                                 <?php
-                                    echo Html::a($order->ordercode,new \yii\web\JsExpression('javascript:void(0);'),[
-                                            'data-url' => \yii\helpers\Url::toRoute(['/account/chat/order-chat','code' => $order->ordercode],true),
-                                            'data-target' => '#exampleModalCenter',
-                                            'data-popup' => 'modal'
-                                    ])
+                                echo Html::a($order->ordercode,new \yii\web\JsExpression('javascript:void(0);'),[
+                                    'data-url' => \yii\helpers\Url::toRoute(['/account/chat/order-chat','code' => $order->ordercode],true),
+                                    'data-target' => '#exampleModalCenter',
+                                    'data-popup' => 'modal'
+                                ])
                                 ?>
                                 vào
                                 lúc <?= Yii::$app->getFormatter()->asDatetime($order->created_at, "php:d-m-Y  H:i:s") ?>

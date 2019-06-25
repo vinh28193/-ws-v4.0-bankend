@@ -30,6 +30,7 @@ $(document).ready(function() {
                     loop:false,
                     margin:10,
                     nav:true,
+                    arrows: true,
                     responsive:{
                         0:{
                             items:1

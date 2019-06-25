@@ -45,8 +45,6 @@ class AmazonGateV3 extends BaseGate
         }
 //        $results = $this->searchInternalOld($request);
         $results = $this->searchInternal($request);
-        print_r($results);
-        die;
 //        if (!($results = $this->cache->get($request->getCacheKey())) || $refresh) {
 //            $results = $this->searchInternal($request);
 //            $this->cache->set($request->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
@@ -94,8 +92,6 @@ class AmazonGateV3 extends BaseGate
 //                $results = $this->lookupInternal($cloneRequest);
 //                $this->cache->set($cloneRequest->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
 //            }
-            print_r($results);
-            die;
             list($ok, $response) = $results;
             $tokens[] = "response return :" . ($ok ? 'true' : 'false');
             if ($ok && is_array($response)) {
@@ -242,13 +238,16 @@ class AmazonGateV3 extends BaseGate
      */
     private function searchInternal($request)
     {
-        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.$request->keyword.'&page='.$request->page;
+        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.urlencode($request->keyword).'&page='.$request->page;
         if($request->filter){
             $url .= '&filter='.urldecode($request->filter);
         }
         $curl = new curl\Curl();
         $response = $curl->get($url);
+//        print_r($response);
+//        die;
         $response = json_decode($response,true);
+
         if (!isset($response)) {
             return [false, 'can not send request'];
         }
@@ -623,8 +622,8 @@ class AmazonGateV3 extends BaseGate
         $rs = [];
         foreach ($filter as $item) {
             if(isset($item['value'])){
-                if (count($item['value']) == 0 || strpos(strtolower($item['name']),'customer review'))
-                    continue;
+//                if (count($item['value']) == 0 || strpos(strtolower($item['name']),'customer review'))
+//                    continue;
                 $temp = [];
                 $temp['name'] = $item['name'];
                 $temp['values'] = array_map(function($tag) {

@@ -18,6 +18,7 @@ class CartController extends CheckoutController
 
     public function actionIndex()
     {
+        $this->layout = '@frontend/views/layouts/portal';
         $cartContent = 'cartContent';
         $queryParams = $this->request->queryParams;
         $type = CartSelection::TYPE_SHOPPING;

@@ -318,3 +318,12 @@
         console.log($data)
     };
 })(jQuery);
+
+$('input[name=checkCar]').change(function() {
+    var values = [];
+    {
+        $("input[name=checkCar]:checked").each(function() {
+            values.push($(this).val());
+        });
+    }
+});

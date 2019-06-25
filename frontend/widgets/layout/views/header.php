@@ -60,9 +60,6 @@ JS;
 $this->registerJs($js);
 
 ?>
-<datalist id="searchAutoComplete">
-
-</datalist>
 <div class="navbar-ws mobile-hide style-header" id="header" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
         <div class="logo">
@@ -77,10 +74,10 @@ $this->registerJs($js);
                     <input type="text" list="searchAutoComplete" name="searchBoxInput" id="searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
                            placeholder="Nhập tên sản phẩm hoặc đường link sản phẩm amzon.com, ebay.com tại đây">
                     <span class="input-group-btn">
-                <button type="button" id="searchBoxButton" class="btn btn-default">
-                    <i id="ico-search" class="la la-search"></i>
-                </button>
-            </span>
+                        <button type="button" id="searchBoxButton" class="btn btn-default">
+                            <i id="ico-search" class="la la-search"></i>
+                        </button>
+                    </span>
                 </div>
             </div>
         </div>
@@ -302,7 +299,7 @@ $this->registerJs($js);
     <div class="search-box-mobile">
         <div class="form-group">
             <div class="input-group">
-                <input type="text" list="searchAutoComplete" name="searchBoxInput" id="searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
+                <input type="text" list="searchAutoComplete" name="mb-searchBoxInput" id="mb-searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
                        placeholder="Nhập từ khoá hoặc link sản phẩm">
                 <span class="input-group-btn">
                 <button type="button" id="searchBoxButton" class="btn btn-default">
@@ -400,3 +397,5 @@ $this->registerJs($js);
 </div>
 <div class="wait-main">
 </div>
+<datalist id="searchAutoComplete">
+</datalist>
