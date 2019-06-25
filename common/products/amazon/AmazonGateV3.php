@@ -240,14 +240,23 @@ class AmazonGateV3 extends BaseGate
     {
         $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.urlencode($request->keyword).'&page='.$request->page;
         if($request->filter){
-            $url .= '&filter='.urldecode($request->filter);
+            $url .= '&filter='.$request->filter;
         }
+        $url = trim($url);
         $curl = new curl\Curl();
+        $countCall = 0;
         $response = $curl->get($url);
-//        print_r($response);
-//        die;
+        while ($countCall < 3 && $curl->responseCode != 200){
+            Yii::debug($curl->responseCode);
+            $countCall ++;
+            $response = $curl->get($url);
+        }
+        Yii::debug($response);
+        if($curl->responseCode !== 200){
+            return [false, 'Request Error '.$curl->responseCode];
+        }
         $response = json_decode($response,true);
-
+        Yii::debug($response);
         if (!isset($response)) {
             return [false, 'can not send request'];
         }

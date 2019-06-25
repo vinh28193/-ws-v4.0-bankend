@@ -16,7 +16,11 @@ use yii\helpers\Html;
 $url = function ($id) use ($portal) {
     $param = [explode('?', \yii\helpers\Url::current())[0]];
     $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
-    $param['category'] = $id;
+    if(strtolower($portal) != 'ebay'){
+        $param['filter'] = $id;
+    }else{
+        $param['category'] = $id;
+    }
     if (isset($param['keyword'])) {
         unset($param['keyword']);
     }

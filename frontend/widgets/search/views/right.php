@@ -27,7 +27,11 @@ $url_page = function ($p){
 $url_cate = function ($id) use ($portal) {
     $param = [explode('?', \yii\helpers\Url::current())[0]];
     $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
-    $param['category'] = $id;
+    if(strtolower($portal) != 'ebay'){
+        $param['filter'] = $id;
+    }else{
+        $param['category'] = $id;
+    }
     if (isset($param['keyword'])) {
         unset($param['keyword']);
     }
@@ -199,6 +203,9 @@ JS;
                         </div>
                     </li>
                     <?php foreach ($filters as $k => $filter) {
+                        if(!$filter['name']){
+                            continue;
+                        }
                         if ($portal === 'amazon-jp') {
                             $portal = 'amazon';
                         }?>
@@ -233,8 +240,8 @@ JS;
                                                        data-for="<?= $filter['name'] ?>"
                                                        data-value="<?= $value ?>">
                                                 <label class="form-check-label" for="<?= md5($id) ?>">
-                                                    <?php if (strpos(strtolower($filter['name']), 'customer review')) { ?>
-                                                        <i class="a-icon a-icon-star a-star-<?= 5 - $key - 1 ?> review-rating">
+                                                    <?php if (strpos(strtolower($filter['name']), 'customer review') && trim(strtolower($value)) != 'clear') { ?>
+                                                        <i class="a-icon a-icon-star a-star-<?= intval($value) ?> review-rating">
                                                         </i>
                                                     <?php } ?>
                                                     <?= $value ?>
