@@ -3505,8 +3505,9 @@ a:hover {
 }
 
 .cart-box {
+    margin: auto;
     border-radius: 3px;
-    border: 1px solid #ebebeb;
+    width: 90%;
     margin-top: 15px;
 }
 

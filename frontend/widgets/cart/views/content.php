@@ -9,20 +9,20 @@ use yii\helpers\Html;
 $storeManager = Yii::$app->storeManager;
 $totalAmount = 0;
 ?>
-
-<div class="cart-box" id="load-card" style="border: none">
-    <div class="row m-0" style="width: 100%">
-        <div class="col-8"><strong>Sản phẩm</strong></div>
-        <div class="col-2 text-center"><strong>Số Lượng</strong></div>
-        <div class="col-2 text-right pr-1 text-right"><strong>Giá Tiền</strong></div>
-    </div>
-    <hr>
-    <?php foreach ($items as $item):
+<?php if ($items) { ?>
+    <div class="cart-box shadow-lg" id="load-card" style="border: none">
+        <div class="row m-0" style="width: 100%">
+            <div class="col-8"><strong>Sản phẩm</strong></div>
+            <div class="col-2 text-center"><strong>Số Lượng</strong></div>
+            <div class="col-2 text-right pr-1 text-right"><strong>Giá Tiền</strong></div>
+        </div>
+        <hr>
+        <?php foreach ($items as $item):
             $products = ArrayHelper::getValue($item, 'products', []);
 
             ?>
             <div class="cart-item" data-key="<?= $item['key'] ?>" data-type="shopping"
-                style="border-bottom: 1px solid #eeeeee">
+                 style="border-bottom: 1px solid #eeeeee">
                 <?php foreach ($products as $product): ?>
                     <?php
                     $availableQuantity = $product['available_quantity'];
@@ -109,21 +109,22 @@ $totalAmount = 0;
                 <?php endforeach; ?>
             </div>
         <?php endforeach; ?>
-    <div class="row mt-2">
-        <div class="col-12 text-right">
-            <strong style="font-weight: 600;">Tổng số tiền tạm tính</strong><br>
-            <span id="total" class="text-danger" style="font-size: 24px; font-weight: 500"><?= $storeManager->showMoney($totalAmount)?></span>
+        <div class="row mt-2">
+            <div class="col-12 text-right">
+                <strong style="font-weight: 600;">Tổng số tiền tạm tính</strong><br>
+                <span id="total" class="text-danger" style="font-size: 24px; font-weight: 500"><?= $storeManager->showMoney($totalAmount)?></span>
+            </div>
+        </div>
+        <div class="row text-right mb-5 mt-2">
+            <div class="col-12">
+                <button class="btn style-btn mt-2" id="installmentBtn">
+                    <span class="la la-credit-card float-left" style="font-size: 1.7em;"></span>MUA TRẢ GÓP
+                </button>
+                <button class="btn style-btn1 mt-2 " id="shoppingBtn">
+                    <span class="la la-shopping-cart float-left" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA
+                </button>
+            </div>
         </div>
     </div>
-    <div class="row text-right mb-5 mt-2">
-        <div class="col-12">
-            <button class="btn style-btn mt-2" id="installmentBtn">
-                <span class="la la-credit-card float-left" style="font-size: 1.7em;"></span>MUA TRẢ GÓP
-            </button>
-            <button class="btn style-btn1 mt-2 " id="shoppingBtn">
-                <span class="la la-shopping-cart float-left" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA
-            </button>
-        </div>
-    </div>
-</div>
+<?php } ?>
 
