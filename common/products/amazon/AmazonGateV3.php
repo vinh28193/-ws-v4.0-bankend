@@ -41,12 +41,14 @@ class AmazonGateV3 extends BaseGate
         $request = new AmazonSearchRequest();
         $request->load($params, '');
         if (!$request->validate()) {
+            print_r($request->getFirstErrors());
+            die;
             return [false, $request->getFirstErrors()];
         }
 //        $results = $this->searchInternalOld($request);
         $results = $this->searchInternal($request);
-        print_r($results);
-        die;
+//        print_r($results);
+//        die;
 //        if (!($results = $this->cache->get($request->getCacheKey())) || $refresh) {
 //            $results = $this->searchInternal($request);
 //            $this->cache->set($request->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
@@ -242,7 +244,8 @@ class AmazonGateV3 extends BaseGate
      */
     private function searchInternal($request)
     {
-        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.$request->keyword.'&page='.$request->page;
+        print_r($request);die;
+        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.urlencode($request->keyword).'&page='.$request->page;
         if($request->filter){
             $url .= '&filter='.urldecode($request->filter);
         }
