@@ -27,10 +27,9 @@ $salePercent = 0;
 if ($product['sell_price'] && $product['retail_price'] && $product['retail_price'] > $product['sell_price']) {
     $salePercent = 100 - round(($product['sell_price'] / $product['retail_price']) * 100, 0);
 }
-//print_r($product);die;
 $image = \yii\helpers\ArrayHelper::getValue($product,'bigImage',null);
 $image = $image ? $image : \yii\helpers\ArrayHelper::getValue($product,'image','/img/no_image.png');
-$rate_star = \yii\helpers\ArrayHelper::getValue($product,'rate_star',0);
+$rate_star = floatval(\yii\helpers\ArrayHelper::getValue($product,'rate_star',0));
 $rate_count = \yii\helpers\ArrayHelper::getValue($product,'rate_count',0);
 $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval($rate_star);
 ?>
@@ -52,11 +51,11 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
             ?>
         </div>
         <div class="info">
-            <div class="rate text-orange" style="display:none;">
+            <div class="rate text-orange" <?= strtolower($portal) == 'ebay' ? 'style="display:none;"' : '' ?>>
                 <i class="a-icon a-icon-star a-star-<?= $rate_star ?> review-rating">
                     <span class="a-icon-alt"><?= str_replace('-','.',$rate_star) ?> out of 5 stars</span>
                 </i>
-                <span>(<?=$rate_count?>)</span>
+                <span>(<?=$rate_count ? $rate_count : 0?>)</span>
             </div>
             <?= Html::tag('div', $product['item_name'], ['class' => 'name']) ?>
             <div class="price">
@@ -64,7 +63,7 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                     <?php
                     if ($localSellprice) {
                         if ($localStartPrice && $salePercent) {
-                            echo "<span class='old-price' >" . $storeManager->showMoney($localStartPrice, '') . "VND</span>";
+                            echo "<span class='old-price' >" . trim($storeManager->showMoney($localStartPrice, '')) . "VND</span>";
                         } else {
                             if (isset($product['end_time']) && $product['end_time'] !== null) {
                                 echo 'Còn <span class="countdown"' .
@@ -85,7 +84,7 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                 </div>
                 <?php
                 if ($localSellprice) {
-                    echo "<strong>" . $storeManager->showMoney($localSellprice, '') . "</strong><span style='font-size: 16px;'>VNĐ</span><span> (" . $product['sell_price'] . " USD)</span>";
+                    echo "<strong>" . trim($storeManager->showMoney($localSellprice, '')) . "</strong><span style='font-size: 16px;margin: 0px'>VND</span><span> ($" . $product['sell_price'] . ")</span>";
                 } else {
                     echo Html::tag('strong', Yii::t('frontend', 'Click to see details'));
                 }

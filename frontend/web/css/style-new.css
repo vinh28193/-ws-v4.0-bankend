@@ -326,6 +326,7 @@ div.product-list.row div a div.info div.name{
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 14px;
 }
 .ico.ico-amazon:before {
     content: url("/images/logo/logo_amazon_inactive.jpg");
