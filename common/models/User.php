@@ -24,6 +24,8 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
+    const EMPLOYEE_HCM = 2;
+    const EMPLOYEE_HN = 1;
     const EMPLOYEE = 1;
     const CUSTOMER = 0;
     const RETAIL_CUSTOMER = 1;
