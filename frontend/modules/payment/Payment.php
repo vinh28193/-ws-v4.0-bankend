@@ -134,7 +134,6 @@ class Payment extends Model
         $this->payment_method = 1;
         $this->payment_provider = 42;
         $this->payment_bank_code = 'VISA';
-        $this->registerClientScript();
     }
 
     /**
@@ -309,6 +308,7 @@ class Payment extends Model
 
     public function initPaymentView()
     {
+        $this->registerClientScript();
         if ($this->type === CartSelection::TYPE_INSTALLMENT) {
             return $this->view->render('installment', [
                 'payment' => $this
@@ -335,7 +335,8 @@ class Payment extends Model
     {
         $orders = [];
         foreach ($this->getOrders() as $order) {
-            $orders[$order->cartId] = [
+            $key = $order->cartId === null ? $order->ordercode : $order->cartId;
+            $orders[$key] = [
                 'cartId' => $order->cartId,
                 'checkoutType' => $order->checkoutType,
                 'uuid' => $order->uuid,

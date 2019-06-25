@@ -14,7 +14,7 @@ class BillingController extends CheckoutController
     public function init()
     {
         if (($code = Yii::$app->request->get('code')) !== null) {
-            $this->title = Yii::t('frontend', 'Payment success for invoice {code}', ['code' => $code]);
+            $this->title = Yii::t('frontend', 'Invoice {code}', ['code' => $code]);
         }
         parent::init();
     }
@@ -49,10 +49,11 @@ class BillingController extends CheckoutController
             if (($orderParam = $childPaymentTransaction->order) !== null) {
                 $order = new Order($orderParam->getAttributes());
                 $order->getAdditionalFees()->loadFormActiveRecord($orderParam);
-                $orders[] = $order;
+                $orders[$order->ordercode] = $order;
             }
         }
         $payment->setOrders($orders);
+
         return $this->render('fail', [
             'payment' => $payment,
             'code' => $code
