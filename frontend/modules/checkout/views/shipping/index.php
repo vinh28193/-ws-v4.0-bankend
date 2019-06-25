@@ -128,6 +128,41 @@ $this->registerJs($js);
         border: 1px solid #d25e0d;
         background-image: linear-gradient(180deg, #ff9d17 0%, #e67424 100%);
     }
+
+    .payment-method .method-item .method-select .icon.method_2 {
+        background: url('/images/group/group2.png') no-repeat center;
+        background-size: contain;
+    }
+
+    .payment-method .method-item .method-select .icon.method_3 {
+        background: url('/images/group/group3.png') no-repeat center;
+        background-size: contain;
+    }
+
+    .payment-method .method-item .method-select .icon.method_4 {
+        background: url('/images/group/group4.png') no-repeat center;
+        background-size: contain;
+    }
+
+    .payment-method .method-item .method-select .icon.method_5 {
+        background: url('/images/group/group5.png') no-repeat center;
+        background-size: contain;
+    }
+
+    .payment-method .method-item .method-select .icon.method_6 {
+        background: url('/images/group/group6.png') no-repeat center;
+        background-size: contain;
+    }
+
+    .payment-method .method-item .method-select .icon.method_7 {
+        background: url('/images/group/group7.png') no-repeat center;
+        background-size: contain;
+    }
+
+    .payment-method .method-item .method-select .icon.method_8 {
+        background: url('/images/group/group8.png') no-repeat center;
+        background-size: contain;
+    }
 </style>
 <div class="container">
     <div class="card card-information">
@@ -183,9 +218,9 @@ $this->registerJs($js);
                     <div class="row">
                         <div class="col-md-6">
                             <?php
-                            echo $form->field($shippingForm, 'buyer_name')->textInput(['placeholder' => Yii::t('frontend', 'Enter your full name'), 'id' => 'fullName', 'onchange' => 'test'])->label(Yii::t('frontend', 'Full Name'));
-                            echo $form->field($shippingForm, 'buyer_phone')->textInput(['placeholder' => Yii::t('frontend', 'Enter your phone number'), 'id' => 'phone'])->label(Yii::t('frontend', 'Phone'));
-                            echo $form->field($shippingForm, 'buyer_email')->textInput(['placeholder' => Yii::t('frontend', 'Enter your email address to receive notifications'), 'id' => 'email'])->label(Yii::t('frontend', 'Email To Receiver Tracking'));
+                            echo $form->field($shippingForm, 'buyer_name')->textInput(['placeholder' => Yii::t('frontend', 'Enter your full name')])->label(Yii::t('frontend', 'Full Name'));
+                            echo $form->field($shippingForm, 'buyer_phone')->textInput(['placeholder' => Yii::t('frontend', 'Enter your phone number')])->label(Yii::t('frontend', 'Phone'));
+                            echo $form->field($shippingForm, 'buyer_email')->textInput(['placeholder' => Yii::t('frontend', 'Enter your email address to receive notifications'),])->label(Yii::t('frontend', 'Email To Receiver Tracking'));
                             if ($shippingForm->getStoreManager()->store->country_code === 'ID') {
                                 echo $form->field($shippingForm, 'buyer_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label('Address');
                             }
@@ -249,13 +284,13 @@ $this->registerJs($js);
                     <div class="row">
                         <div class="col-md-12">
                             <?php
-                            if(!empty($receiverAddress)){
+                            if (!empty($receiverAddress)) {
                                 $receiverAddress = ArrayHelper::map($receiverAddress, 'id', function ($shipping) {
                                     /** @var $address Address */
                                     return implode(' ', [$shipping->first_name, $shipping->last_name]);
                                 });
                                 echo $form->field($shippingForm, 'receiver_address_id')->radioList($receiverAddress)->label(false);
-                            }else {
+                            } else {
                                 $shippingForm->enable_receiver = ShippingForm::YES;
                             }
 
@@ -371,8 +406,8 @@ $this->registerJs($js);
                     <?php endforeach; ?>
                 </div>
                 <div class="row additional-fee">
-                    <div class="col-md-8"></div>
-                    <div class="col-md-4">
+                    <div class="col-md-6 col-sm-12"></div>
+                    <div class="col-md-6 col-sm-12">
                         <div class="additional-list">
                             <div class="dropdown courier-dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button"
@@ -392,16 +427,16 @@ $this->registerJs($js);
                             </div>
                             <table class="table table-borderless table-fee">
                                 <tr>
-                                    <th class="fee-header"><?= Yii::t('frontend', 'Total Order'); ?></th>
-                                    <td class="fee-value"><?= $storeManager->showMoney($order->total_origin_fee_local); ?></td>
+                                    <th class="header"><?= Yii::t('frontend', 'Total Order'); ?></th>
+                                    <td class="value"><?= $storeManager->showMoney($order->total_origin_fee_local); ?></td>
                                 </tr>
                                 <tr data-role="fee" data-fee="purchase_fee">
-                                    <th class="fee-header"><?= Yii::t('frontend', 'Purchase Fee'); ?></th>
-                                    <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('purchase_fee')[1]); ?></td>
+                                    <th class="header"><?= Yii::t('frontend', 'Purchase Fee'); ?></th>
+                                    <td class="value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('purchase_fee')[1]); ?></td>
                                 </tr>
                                 <tr data-role="fee" data-fee="tax_fee">
-                                    <th class="fee-header"><?= Yii::t('frontend', 'Us Tax'); ?></th>
-                                    <td class="fee-value">
+                                    <th class="header"><?= Yii::t('frontend', 'Us Tax'); ?></th>
+                                    <td class="value">
                                         <?php
                                         if (strtoupper($order->portal) === \common\products\BaseProduct::TYPE_AMAZON_US) {
                                             echo Yii::t('frontend', 'Fee');
@@ -410,12 +445,36 @@ $this->registerJs($js);
                                     </td>
                                 </tr>
                                 <tr data-role="fee" data-fee="international_shipping_fee">
-                                    <th class="fee-header"><?= Yii::t('frontend', 'Temporary Shipping Fee (for {weight} kg)', ['weight' => $order->total_weight_temporary]); ?></th>
-                                    <td class="fee-value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
+                                    <th class="header"><?= Yii::t('frontend', 'Temporary Shipping Fee (for {weight} kg)', ['weight' => $order->total_weight_temporary]); ?></th>
+                                    <td class="value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
+                                </tr>
+                                <tr class="discount-detail">
+                                    <th class="header"><?= Yii::t('frontend', 'Coupon code'); ?> <span
+                                                class="coupon-code"></span>
+                                    </th>
+                                    <td class="value">
+                                        <div class="input-group discount-input" style="margin-bottom: 1rem">
+                                            <input type="text" class="form-control" name="couponCode">
+                                            <div class="input-group-append">
+                                                <button data-key="<?php echo $order->cartId; ?>"
+                                                        class="btn btn-outline-secondary" type="button"
+                                                        id="applyCouponCode"><?php echo Yii::t('frontend', 'Apply'); ?></button>
+                                            </div>
+                                        </div>
+                                        <span class="text-danger" id="discountErrors" style="display: none"></span>
+                                        <span class="discount-amount" style="display: none"><span
+                                                    class="discount-value"></span>
+                                            <i class="la la-times text-danger del-coupon"
+                                               onclick="ws.payment.removeCouponCode('<?= $order->cartId; ?>')"></i></span>
+                                    </td>
+                                </tr>
+                                <tr class="discount" style="display: none">
+                                    <th><?= Yii::t('frontend', 'Discount amount'); ?></th>
+                                    <td><?= $storeManager->showMoney($order->discountAmount); ?></td>
                                 </tr>
                                 <tr class="final-amount">
-                                    <th class="fee-header"><?= Yii::t('frontend', 'Amount needed to prepay') ?></th>
-                                    <td class="fee-value"
+                                    <th class="header"><?= Yii::t('frontend', 'Amount needed to prepay') ?></th>
+                                    <td class="value"
                                         data-origin="<?= $order->getTotalFinalAmount() ?>"><?= $storeManager->showMoney($order->getTotalFinalAmount()); ?></td>
                                 </tr>
                             </table>

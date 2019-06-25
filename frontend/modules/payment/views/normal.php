@@ -12,54 +12,49 @@ use frontend\modules\payment\methods\ATMOnlineWidget;
 use frontend\modules\payment\methods\InternetBankingWidget;
 use frontend\modules\payment\methods\QRCodeWidget;
 use frontend\modules\payment\methods\BankTransferVN4;
+use frontend\modules\payment\methods\CODWidget;
+use frontend\modules\payment\methods\AlepayWidget;
 
 /* @var yii\web\View $this */
 /* @var frontend\modules\payment\Payment $payment */
 /* @var array $group */
 
-/** @var  $storeManager  \common\components\StoreManager */
+/** @var  $storeManager  common\components\StoreManager */
 $storeManager = Yii::$app->storeManager;
 ?>
 
 <div class="accordion payment-method" id="payment-method">
     <?php
-    foreach ($group as $id => $item) {
 
+    foreach ($group as $id => $item) {
         switch ($id) {
-            case PaymentService::PAYMENT_GROUP_MASTER_VISA:
+            case PaymentService::PAYMENT_METHOD_GROUP_COD:
+                echo CODWidget::create($id, $item, $payment);
+                break;
+            case PaymentService::PAYMENT_METHOD_GROUP_INSTALMENT:
+                echo AlepayWidget::create($id, $item, $payment);
+                break;
+            case PaymentService::PAYMENT_METHOD_GROUP_MASTER_VISA:
                 echo VisaMasterWidget::create($id, $item, $payment);
                 break;
-            case PaymentService::PAYMENT_GROUP_BANK:
-                echo BankTransferWidget::create($id, $item, $payment);
-                break;
-            case PaymentService::PAYMENT_GROUP_NL_WALLET:
+            case PaymentService::PAYMENT_METHOD_NL_WALLET:
                 echo NLWalletWidget::create($id, $item, $payment);
                 break;
-            case PaymentService::PAYMENT_GROUP_ATM:
+            case PaymentService::PAYMENT_METHOD_GROUP_ATM:
                 echo ATMOnlineWidget::create($id, $item, $payment);
                 break;
-            case PaymentService::PAYMENT_GROUP_IB:
-                echo InternetBankingWidget::create($id, $item, $payment);
-                break;
-            case PaymentService::PAYMENT_GROUP_MCPAY:
-                echo McpayWidget::create($id, $item, $payment);
-                break;
-            case PaymentService::PAYMENT_GROUP_QRCODE:
+            case PaymentService::PAYMENT_METHOD_GROUP_QRCODE:
                 echo QRCodeWidget::create($id, $item, $payment);
                 break;
-            case PaymentService::PAYMENT_GROUP_WSVP:
-                echo WSOfficeWidget::create($id, $item, $payment);
-                break;
-            case PaymentService::PAYMENT_GROUP_COD:
-                echo UnknownWidget::create($id, $item, $payment);
-                break;
-            case PaymentService::PAYMENT_GROUP_VN_BANK_TRANSFER:
+            case PaymentService::PAYMENT_METHOD_BANK_TRANSFER;
                 echo BankTransferVN4::create($id, $item, $payment);
+                break;
+            case PaymentService::PAYMENT_METHOD_BANK_MCPAY;
+                echo McpayWidget::create($id, $item, $payment);
                 break;
             default:
                 echo UnknownWidget::create($id, $item, $payment);
                 break;
-
         }
     }
     ?>
