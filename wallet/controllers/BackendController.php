@@ -51,7 +51,7 @@ class BackendController extends Controller
             $token = AccessTokens::find()->where(['token' => $authorToken])->one();
             if($token && $token->expires_at && $token->expires_at > time()){
                 $this->user = User::findOne($token->user_id);
-                if($this->user && $this->user->employee == User::EMPLOYEE){
+                if($this->user && $this->user->employee == User::EMPLOYEE_HN){
                     foreach ($this->user->authAssigments as $assigment){
                         if(in_array($assigment,['superAdmin','operation','accountant','master_accountant','master_sale','sale','master_operation'])){
                             return 200;

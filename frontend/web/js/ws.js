@@ -376,7 +376,45 @@ ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input#searchBoxInpu
         }
     }
 });
+ws.initEventHandler('searchNew', 'searchBoxInput', 'change', 'input#searchBoxInput', function (event) {
+    clearTimeout(window.mytimeout);
+    if (event.keyCode === 13) {
+        ws.browse.searchNew(this, '$url');
+    }else{
+        var $element = this;
+        var key = $(this).val();
+        if(key){
+            window.mytimeout = setTimeout(function(){
+                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q='+encodeURI(key);
+                $.ajax({
+                    url: url_call,
+                    dataType: 'jsonp',
+                    jsonpCallback: "ws.getSuggestSearch",
+                });
+            }, 200);
+        }
+    }
+});
 ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'keyup', 'input#mb-searchBoxInput', function (event) {
+    clearTimeout(window.mytimeout);
+    if (event.keyCode === 13) {
+        ws.browse.searchNew(this, '$url');
+    }else{
+        var $element = this;
+        var key = $(this).val();
+        if(key){
+            window.mytimeout = setTimeout(function(){
+                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q='+encodeURI(key);
+                $.ajax({
+                    url: url_call,
+                    dataType: 'jsonp',
+                    jsonpCallback: "ws.getSuggestSearch",
+                });
+            }, 200);
+        }
+    }
+});
+ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'change', 'input#mb-searchBoxInput', function (event) {
     clearTimeout(window.mytimeout);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');

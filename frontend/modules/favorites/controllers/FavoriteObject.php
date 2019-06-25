@@ -151,7 +151,7 @@ class FavoriteObject
      *
      * @return bool
      */
-    function is_user_created_favorite($obj_type, $obj_id)
+    function is_user_created_favorite($obj_type, $obj_id, $UUID)
     {
         if (Yii::$app->user->getId()) {
             $data_find = Favorite::find()
@@ -167,11 +167,11 @@ class FavoriteObject
         } else {
             /** ToDo Done 22/5/2019 @Phuc Save UUID Web , APP ---> Mongodb **/
             $data_find_mongo = FavoritesMongoDB::find()
-                ->where(['obj_type' => $obj_type])
-                ->andWhere(['obj_id' => $obj_id])
+                //->where(['obj_type' => $obj_type])
+                ->where(['obj_id' => $obj_id])
                 ->andWhere(['ip' => Yii::$app->getRequest()->getUserIP()])
                 ->exists();
-            Yii::info("Find db Mysql FavoritesMongoDB ");
+            Yii::info("Find db FavoritesMongoDB ");
             Yii::info([
                 'data_find_Favorite' => $data_find_mongo,
             ], __CLASS__);
@@ -203,7 +203,7 @@ class FavoriteObject
             ], __CLASS__);
 
             // Check exits
-            if ($this->is_user_created_favorite($obj_type, $obj_id)) {
+            if ($this->is_user_created_favorite($obj_type, $obj_id , $UUID)) {
                 return true;
             } else {
                 $favorite->created_by = Yii::$app->user->getId();
@@ -229,7 +229,7 @@ class FavoriteObject
                 'created_by' => $uuid,
             ]);
 
-            if ($this->is_user_created_favorite($obj_type, $obj_id)) {
+            if ($this->is_user_created_favorite($obj_type, $obj_id, $UUID)) {
                     return true;
              } else {
                 try {

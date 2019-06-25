@@ -24,6 +24,8 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
+    const EMPLOYEE_HCM = 2;
+    const EMPLOYEE_HN = 1;
     const EMPLOYEE = 1;
     const CUSTOMER = 0;
     const RETAIL_CUSTOMER = 1;
@@ -460,7 +462,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         $cookieUser->name = $this->last_name.' '.$this->first_name;
         $cookieUser->phone = $this->phone;
         $cookieUser->email = $this->email;
-//        $cookieUser->uuid = $this->getUuidCookie();
+//      $cookieUser->uuid = $this->getUuidCookie();
         $cookieUser->customer_id = $this->id;
         if($this->primaryAddress && count($this->primaryAddress) > 0){
             $cookieUser->country_id = $this->primaryAddress[0]->country_id;

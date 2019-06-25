@@ -4,6 +4,9 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $filter array */
+if(!$filter['name']){
+    return '';
+}
 ?>
 
 <div class="filter-box">
@@ -27,7 +30,7 @@ use yii\helpers\Html;
                                data-for="<?= $filter['name'] ?>"
                                data-value="<?= $value ?>">
                         <label class="form-check-label" for="<?= md5($item['value'].'-'.$filter['name']) ?>">
-                            <?php if (strpos(strtolower($filter['name']), 'customer review')) { ?>
+                            <?php if (strpos(strtolower($filter['name']), 'customer review') && trim(strtolower($item['value'])) != 'clear'){ ?>
                                 <i class="a-icon a-icon-star a-star-<?= 5 - $key - 1 ?> review-rating">
                                 </i>
                             <?php } ?>
