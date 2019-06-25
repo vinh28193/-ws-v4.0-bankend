@@ -20,12 +20,8 @@
          data-parent="#payment-method">
         <div class="method-content office">
             <div class="installment-title">Bước 1: Chọn ngân hàng trả góp</div>
-            <select class="form-control select-method"  id="installmentBanks">
-
-            </select>
-            <div class="installment-title">Bước 2: Chọn loại thẻ thanh toán</div>
-            <ul class="method-list" id="installmentMethods"></ul>
-            <div class="installment-title">Bước 3: Chọn số tháng trả góp</div>
+            <ul class="method-list" id="installmentBanks"></ul>
+            <div class="installment-title">Bước 2: Chọn số tháng trả góp</div>
             <div class="installment-table" id="installmentPeriods"></div>
             <div class="form-group form-check term">
                 <input type="checkbox" class="form-check-input" value="1" id="termInstallment">

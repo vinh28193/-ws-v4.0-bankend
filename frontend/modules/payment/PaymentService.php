@@ -2,7 +2,6 @@
 
 
 namespace frontend\modules\payment;
-;
 
 
 use common\components\cart\CartHelper;

@@ -47,14 +47,10 @@ ws.payment = (function ($) {
             originAmount: 0,
             banks: [],
             currentBank: {
-                bankCode: undefined,
-                bankName: undefined,
-                bankIcon: undefined,
-                paymentMethods: []
-            },
-            currentMethod: {
-                paymentMethod: undefined,
-                methodIcon: undefined,
+                name: undefined,
+                code: undefined,
+                icon: undefined,
+                method: 'VISA',
                 periods: []
             },
             currentPeriod: {
@@ -115,7 +111,7 @@ ws.payment = (function ($) {
                 window.scrollTo(0, 0);
             });
             $('#phone').keyup(function () {
-                var  phone = $('#phone').val().trim();
+                var phone = $('#phone').val().trim();
                 phone = phone.replace('(+84)', '0');
                 phone = phone.replace('+84', '0');
                 phone = phone.replace('0084', '0');
@@ -193,9 +189,9 @@ ws.payment = (function ($) {
             if (bankCode === 'ALEPAY') {
                 pub.calculateInstallment(false);
             }
-            if (checkRequire === true) {
-                pub.checkRequireField();
-            }
+            // if (checkRequire === true) {
+            //     pub.checkRequireField();
+            // }
             $.each($('li[rel=s_bankCode]'), function () {
                 $(this).find('span').removeClass('active');
             });
@@ -206,14 +202,14 @@ ws.payment = (function ($) {
             pub.checkPromotion();
         },
         checkRequireField: function () {
-            ws.ajax('/payment/' + pub.payment.payment_provider + '/check-field', {
-                dataType: 'json',
-                type: 'post',
-                data: pub.payment,
-                success: function (response) {
-                    console.log(response);
-                }
-            });
+            // ws.ajax('/payment/' + pub.payment.payment_provider + '/check-field', {
+            //     dataType: 'json',
+            //     type: 'post',
+            //     data: pub.payment,
+            //     success: function (response) {
+            //         console.log(response);
+            //     }
+            // });
         },
         registerMethods: function ($methods) {
             pub.methods = $methods;
@@ -271,8 +267,9 @@ ws.payment = (function ($) {
         installmentBankChange: function (code) {
             console.log('selected bank :' + code);
             pub.payment.installment_bank = code;
-            pub.installmentParam.currentBank = $.grep(pub.installmentParam.banks, function (x) {
-                return String(x.bankCode) === String(code);
+            pub.payment.installment_method = 'VISA';
+            var currentBank = $.grep(pub.installmentParam.banks, function (x) {
+                return String(x.code) === String(code);
             })[0];
             $.each($('li[data-ref=i_bankCode]'), function () {
                 $(this).find('span').removeClass('active');
@@ -281,31 +278,7 @@ ws.payment = (function ($) {
             if (isActive.length > 0) {
                 isActive.find('span').addClass('active');
             }
-            var htmlMethod = [];
-            $.each(pub.installmentParam.currentBank.paymentMethods, function (index, method) {
-                var iActive = index === 0;
-                if (iActive) {
-                    pub.payment.installment_method = method.paymentMethod;
-                    pub.installmentMethodChange(method.paymentMethod);
-                }
-                var $ele = '<li data-ref="i_methodCode" data-code="' + method.paymentMethod + '"  onclick="ws.payment.installmentMethodChange(\'' + method.paymentMethod + '\')"><span class="' + (iActive ? "active" : "") + '"><img src="' + method.methodIcon + '" alt="' + method.paymentMethod + '" title="' + method.paymentMethod + '"/></span></li>';
-                htmlMethod.push($ele)
-            });
-            $('ul#installmentMethods').html(htmlMethod.join(''));
-        },
-        installmentMethodChange(code) {
-            console.log('selected method :' + code);
-            pub.payment.installment_method = code;
-            pub.installmentParam.currentMethod = $.grep(pub.installmentParam.currentBank.paymentMethods, function (x) {
-                return String(x.paymentMethod) === String(code);
-            })[0];
-            $.each($('li[data-ref=i_methodCode]'), function () {
-                $(this).find('span').removeClass('active');
-            });
-            var isActive = $('li[data-ref=i_methodCode][data-code=' + code + ']');
-            if (isActive.length > 0) {
-                isActive.find('span').addClass('active');
-            }
+
             var row = {
                 rowHeader: [],
                 rowOriginAmount: [],
@@ -314,7 +287,8 @@ ws.payment = (function ($) {
                 rowAmountFee: [],
                 rowOption: []
             };
-            $.each(pub.installmentParam.currentMethod.periods, function (index, period) {
+
+            $.each(currentBank.periods, function (index, period) {
                 var iActive = index === 0;
                 if (iActive) {
                     pub.payment.installment_month = period.month;
@@ -346,7 +320,6 @@ ws.payment = (function ($) {
             table += '<tr>' + row.rowOption.join('') + '</tr>';
             table += '</tbody></table>';
             $('div#installmentPeriods').html(table);
-
         },
         courierChange: function ($cardOrder, courier) {
             var fee = {
@@ -368,7 +341,7 @@ ws.payment = (function ($) {
             var additionalFees = order.additionalFees;
 
             if (!(fee.name in additionalFees)) {
-                 additionalFees[fee.name] = [];
+                additionalFees[fee.name] = [];
             }
             fee.amount = shippingFee;
             fee.local_amount = shippingFee;
@@ -466,37 +439,6 @@ ws.payment = (function ($) {
                 return;
             }
             processPaymment();
-        },
-        topUp: function () {
-            pub.payment.total_order_amount = $('input[name=amount_topup]').val();
-            if (pub.payment.total_order_amount < 100000) {
-                ws.notifyError('Bạn cần phải nạp trên 100.000');
-                return;
-            }
-            var checkArr = $('#termCheckout:checked').val();
-            if (!checkArr) {
-                ws.notifyError('Bạn chưa đồng ý với điều khoản và điều kiện giao dịch của weshop');
-                return;
-            }
-            if (!pub.payment.payment_method || !pub.payment.payment_provider || !pub.payment.payment_bank_code) {
-                ws.notifyError('Vui lòng chọn phương thức thanh toán!');
-                return;
-            }
-            ws.loading(true);
-            ws.ajax('/my-wallet/topup.html', {
-                dataType: 'json',
-                type: 'post',
-                data: {payment: pub.payment},
-                success: function (response) {
-                    console.log(response);
-                    if (response.success) {
-                        ws.redirect(response.data.checkoutUrl);
-                    } else {
-                        ws.notifyError(response.message);
-                    }
-
-                }
-            }, true);
         },
         installment: function () {
             var $termInstallment = $('input#termInstallment').is(':checked');
@@ -694,32 +636,17 @@ ws.payment = (function ($) {
         pub.installmentParam.banks = banks;
         console.log(banks);
         var htmlBank = [];
-        var installmentBanks = $('select#installmentBanks');
         $.each(banks, function (index, bank) {
             var iActive = index === 0;
             if (iActive) {
-                pub.payment.installment_bank = bank.bankCode;
-                pub.installmentBankChange(bank.bankCode);
+                pub.payment.installment_bank = bank.code;
+                pub.payment.installment_method = 'VISA';
+                pub.installmentBankChange(bank.code);
             }
-            var $ele = $('<option/>', {
-                'data-ref': 'i_bankCode',
-                value: bank.bankCode,
-                text: bank.bankName,
-            });
-            if (iActive) {
-                $ele.prop('selected', true);
-            }
-            installmentBanks.append($ele);
-            // var $ele = '<option data-ref="i_bankCode" value="' + bank.bankCode + '" data-code="' + bank.bankCode + '" ' + iActive ? 'selected' : '' + '>' + bank.bankName + '</option>';
-            // htmlBank.push($ele)
+            var $ele = '<li data-ref="i_bankCode" data-code="' + bank.code + '"  onclick="ws.payment.installmentBankChange(\'' + bank.code + '\')"><span class="' + (iActive ? "active" : "") + '"><img src="' + bank.icon + '" alt="' + bank.name + '" title="' + bank.name + '"/></span></li>';
+            htmlBank.push($ele)
         });
-        // installmentBanks.html(htmlBank.join(''));
-        ws.initEventHandler(installmentBanks, 'bankChange', 'change', 'select#installmentBanks', function (e) {
-            e.preventDefault();
-            var bankCode = $(this).val();
-            ws.payment.installmentBankChange(bankCode);
-            return false;
-        });
+        $('ul#installmentBanks').html(htmlBank.join(''));
     };
     var redirectPaymentGateway = function (rs, $timeOut) {
         var runTime = setInterval(function () {
@@ -745,24 +672,22 @@ ws.payment = (function ($) {
         var couriers = response.couriers;
         var courierDropDown = $cardOrder.find('div.courier-dropdown');
         if (response.success && typeof couriers !== 'string' && couriers.length) {
-            if (couriers.length > 1) {
-                var menu = $('<div/>', {
-                    id: 'courierDropdownMenu',
-                    'class': 'dropdown-menu',
-                    'aria-labelledby': 'courierDropdownButton'
-                });
-                console.log(menu);
-                // $.each(couriers, function (i, courier) {
-                //
-                //     var a = $('<a/>', {
-                //         'class': 'dropdown-item',
-                //         href: '#',
-                //         text: 'sadasdas'
-                //     });
-                //     menu.appendChild(a)
-                // });
-                // menu.appendTo(courierDropDown);
-            }
+            // if (couriers.length > 0) {
+            //     var menu = $('<div/>', {
+            //         id: 'courierDropdownMenu',
+            //         'class': 'dropdown-menu',
+            //         'aria-labelledby': 'courierDropdownButton'
+            //     });
+            //     $.each(couriers, function (i, courier) {
+            //         var a = $('<a/>', {
+            //             'class': 'dropdown-item couiers',
+            //             href: 'javascript:void(0);',
+            //             text: courier.courier_name
+            //         });
+            //         menu.append(a);
+            //     });
+            //     courierDropDown.append(menu);
+            // }
             pub.courierChange($cardOrder, couriers[0]);
         } else if (typeof couriers === 'string') {
             courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(couriers)
