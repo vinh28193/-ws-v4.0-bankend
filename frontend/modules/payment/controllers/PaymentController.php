@@ -265,6 +265,9 @@ class PaymentController extends BasePaymentController
             $childTransaction->save(false);
             $order->removeCart();
         }
+
+        // ToDo Push GA Checkout @Phuchc
+
         $res = $payment->processPayment();
         if ($res->success === false) {
             return $this->response(false, $res->message);

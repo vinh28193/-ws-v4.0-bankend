@@ -414,8 +414,7 @@ class Payment extends Model
         ], new PaymentContextView());
     }
 
-    public
-    function getClientOptions()
+    public function getClientOptions()
     {
         $orders = [];
         foreach ($this->getOrders() as $order) {
