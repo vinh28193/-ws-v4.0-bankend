@@ -6,11 +6,13 @@ namespace frontend\modules\payment;
 
 use common\components\cart\CartHelper;
 use common\components\cart\CartSelection;
+use common\components\GetUserIdentityTrait;
 use common\helpers\WeshopHelper;
 use common\models\Address;
 use common\models\db\TargetAdditionalFee;
 use frontend\modules\payment\providers\alepay\AlepayProvider;
 use frontend\modules\payment\providers\banktransfer\VNBankTransfer;
+use frontend\modules\payment\providers\cod\CodProvider;
 use frontend\modules\payment\providers\mcpay\McPayProvider;
 use frontend\modules\payment\providers\nganluong\ver3_1\NganLuongProvider as NLProviderV31;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongProvider as NLProviderV32;
@@ -30,6 +32,8 @@ use yii\helpers\Url;
 
 class Payment extends Model
 {
+
+    use GetUserIdentityTrait;
 
     const ENV_SANDBOX = 'sandbox';
     const ENV_PRODUCT = 'product';
@@ -67,16 +71,7 @@ class Payment extends Model
     public $customer_district;
     public $customer_country;
 
-    public $use_xu = 0;
-    public $bulk_point = 0;
-    public $coupon_code;
-    public $discount_detail = [];
-    public $discount_orders = [];
-    public $total_discount_amount = 0;
-
     public $currency;
-    public $total_order_amount;
-    public $isPaid = false;
 
     public $payment_bank_code;
     public $payment_method;
@@ -105,6 +100,8 @@ class Payment extends Model
     public $otp_verify_method = 0;
     public $shipment_options_status = 2;
 
+    public $errors = [];
+
     /**
      * @var string|StoreManager
      */
@@ -115,15 +112,6 @@ class Payment extends Model
      */
     public $view;
 
-    public $_user;
-
-    public function getUser()
-    {
-        if ($this->_user === null && ($user = Yii::$app->user->identity) !== null) {
-            $this->_user = $user;
-        }
-        return $this->_user;
-    }
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -133,9 +121,6 @@ class Payment extends Model
         parent::init();
         $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
         $this->view = Yii::$app->getView();
-        if ($this->page !== self::PAGE_TOP_UP) {
-            $this->getOrders();
-        }
         $this->currency = $this->storeManager->store->currency;
     }
 
@@ -146,14 +131,9 @@ class Payment extends Model
 
     public function initDefaultMethod()
     {
-        $this->payment_method = 77;
-        $this->payment_provider = 46;
+        $this->payment_method = 1;
+        $this->payment_provider = 42;
         $this->payment_bank_code = 'VISA';
-        if ($this->page === self::PAGE_CHECKOUT || $this->type === CartSelection::TYPE_INSTALLMENT) {
-            $this->payment_method = 57;
-            $this->payment_provider = 44;
-        }
-        $this->registerClientScript();
     }
 
     /**
@@ -187,53 +167,20 @@ class Payment extends Model
                 if (isset($order['totalFinalAmount'])) {
                     unset($order['totalFinalAmount']);
                 }
+                if (isset($order['totalAmountLocal'])) {
+                    unset($order['totalAmountLocal']);
+                }
                 $order = new Order($order);
                 if ($this->page === self::PAGE_CHECKOUT) {
                     if ($order->createOrderFromCart() === false) {
+                        $this->errors[] = $order->getFirstErrors();
                         continue;
                     }
                 }
             }
-            $this->total_order_amount += $order->total_amount_local;
             $this->_orders[] = $order;
         }
 
-    }
-
-    /**
-     * @var array
-     */
-    private $_additionalFees;
-
-    /**
-     * @param null $names
-     * @param bool $refresh
-     * @return array|mixed
-     */
-    public function getAdditionalFees($refresh = false)
-    {
-        if (empty($this->_additionalFees) || $refresh) {
-            $this->_additionalFees = [];
-            foreach ($this->getOrders() as $idx => $order) {
-                foreach ($order->getAdditionalFees()->keys() as $key) {
-                    if($key === 'tax_fee' || $key === 'shipping_fee'){
-                        continue;
-                    }
-                    if (!isset($this->_additionalFees[$key])) {
-                        $this->_additionalFees[$key] = 0;
-                    }
-                    $value = $this->_additionalFees[$key];
-                    $value += $order->getAdditionalFees()->getTotalAdditionalFees($key)[1];
-                    $this->_additionalFees[$key] = $value;
-                }
-            }
-        }
-        return $this->_additionalFees;
-    }
-
-    public function setAdditionalFees($arrays)
-    {
-        $this->_additionalFees = $arrays;
     }
 
     public function registerClientScript()
@@ -290,6 +237,9 @@ class Payment extends Model
             case 50:
                 $mcPay = new VNBankTransfer();
                 return $mcPay->create($this);
+            case 51:
+                $cod = new CodProvider();
+                return $cod->create($this);
         }
     }
 
@@ -301,7 +251,6 @@ class Payment extends Model
     public static function checkPayment($merchant, $request)
     {
         switch ($merchant) {
-
             case 42:
                 $nl = new NLProviderV31();
                 return $nl->handle($request->get());
@@ -321,6 +270,8 @@ class Payment extends Model
             case 50:
                 $mcPay = new VNBankTransfer();
                 return $mcPay->handle($request->get());
+            case 51:
+                return (new CodProvider())->handle($request->get());
 
         }
     }
@@ -341,55 +292,23 @@ class Payment extends Model
         return $results;
     }
 
-    public function courierCalculator($from, $to)
-    {
-
-    }
-
-    public function createGaData()
-    {
-
-    }
-
-    private $_totalAmount;
-
-    public function getTotalAmount()
-    {
-        if ($this->_totalAmount === null) {
-            $this->_totalAmount = $this->total_order_amount;
-            foreach ($this->getAdditionalFees() as $key => $value) {
-                $this->_totalAmount += $value;
-            }
-        }
-        return $this->_totalAmount;
-    }
-
-    public function setTotalAmount($totalAmount)
-    {
-        $this->_totalAmount = $totalAmount;
-    }
 
     private $_totalAmountDisplay;
 
     public function getTotalAmountDisplay()
     {
         if ($this->_totalAmountDisplay === null) {
-            $this->_totalAmountDisplay = $this->getTotalAmount();
-            if ($this->total_discount_amount !== null && $this->total_discount_amount > 0) {
-                $this->_totalAmountDisplay -= $this->total_discount_amount;
+            foreach ($this->getOrders() as $order) {
+                $this->_totalAmountDisplay += $order->getTotalFinalAmount();
             }
         }
         return $this->_totalAmountDisplay;
-
     }
 
-    public function setTotalAmountDisplay($totalAmountDisplay)
-    {
-        $this->_totalAmountDisplay = $totalAmountDisplay;
-    }
 
     public function initPaymentView()
     {
+        $this->registerClientScript();
         if ($this->type === CartSelection::TYPE_INSTALLMENT) {
             return $this->view->render('installment', [
                 'payment' => $this
@@ -400,9 +319,6 @@ class Payment extends Model
         foreach ($providers as $provider) {
             foreach ($provider['paymentMethodProviders'] as $paymentMethodProvider) {
                 $k = (int)$paymentMethodProvider['paymentMethod']['group'];
-                if ($k === PaymentService::PAYMENT_GROUP_ALIPAY_INSTALMENT || $k === PaymentService::PAYMENT_GROUP_MANDIRI_INSTALMENT) {
-                    continue;
-                }
 
                 $group[$k][] = $paymentMethodProvider;
             }
@@ -418,7 +334,8 @@ class Payment extends Model
     {
         $orders = [];
         foreach ($this->getOrders() as $order) {
-            $orders[$order->cartId] = [
+            $key = $order->cartId === null ? $order->ordercode : $order->cartId;
+            $orders[$key] = [
                 'cartId' => $order->cartId,
                 'checkoutType' => $order->checkoutType,
                 'uuid' => $order->uuid,
@@ -427,7 +344,10 @@ class Payment extends Model
                 'courier_sort_mode' => 'best_rating',
                 'courierDetail' => $order->courierDetail,
                 'additionalFees' => $order->getAdditionalFees()->toArray(),
-                'totalFinalAmount' => $order->total_final_amount_local,
+                'totalAmountLocal' => $order->total_amount_local,
+                'couponCode' => $order->couponCode,
+                'discountDetail' => $order->discountDetail,
+                'discountAmount' => $order->discountAmount,
             ];
         }
 
@@ -444,15 +364,7 @@ class Payment extends Model
             'customer_postcode' => $this->customer_postcode,
             'customer_district' => $this->customer_district,
             'customer_country' => $this->customer_country,
-            'use_xu' => $this->use_xu,
-            'bulk_point' => $this->bulk_point,
-            'coupon_code' => $this->coupon_code,
-            'discount_detail' => $this->discount_detail,
-            'total_discount_amount' => $this->total_discount_amount,
             'currency' => $this->currency,
-            'total_order_amount' => $this->total_order_amount,
-            'totalAmount' => $this->getTotalAmount(),
-            'totalAmountDisplay' => $this->getTotalAmountDisplay(),
             'payment_bank_code' => $this->payment_bank_code,
             'payment_method' => $this->payment_method,
             'payment_method_name' => $this->payment_method_name,
@@ -477,7 +389,6 @@ class Payment extends Model
             'shipment_options_status' => $this->shipment_options_status,
             'transaction_code' => $this->transaction_code,
             'transaction_fee' => $this->transaction_fee,
-            'additionalFees' => $this->getAdditionalFees()
         ];
     }
 

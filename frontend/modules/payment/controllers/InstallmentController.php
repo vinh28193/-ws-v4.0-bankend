@@ -18,14 +18,11 @@ class InstallmentController extends BasePaymentController
         $provider = (int)$provider;
         $params = $this->request->bodyParams;
         $payment = new Payment($params);
-        $payment->setTotalAmountDisplay(null);
-        $promotion = $payment->checkPromotion();
         $success = false;
         $message = 'no found';
         $data = [
             'calculator' => 'installment',
             'origin' => $this->storeManager->showMoney($payment->getTotalAmountDisplay()),
-            'promotion' => $promotion,
             'methods' => []
         ];
         if ($provider === 44) {
@@ -47,27 +44,26 @@ class InstallmentController extends BasePaymentController
     {
         $alepay = new AlepayClient();
         $storeManager = $this->storeManager;
+
         $rs = $alepay->getInstallmentInfo($payment->getTotalAmountDisplay(), 'VND');
         if ($rs['success']) {
             $data = Json::decode($rs['data']);
             $banks = [];
             foreach ($data as $key => $item) {
-                $item['bankIcon'] = PaymentService::getInstallmentBankIcon($item['bankCode']);
-                $methods = [];
-                foreach ($item['paymentMethods'] as $i => $method) {
-                    $method['methodIcon'] = PaymentService::getInstallmentMethodIcon($method['paymentMethod']);
-                    $periods = [];
-                    foreach ($method['periods'] as $period) {
-                        $period['amountByMonth'] = $storeManager->showMoney($period['amountByMonth'], $period['currency']);
-                        $period['amountFee'] = $storeManager->showMoney($period['amountFee'], $period['currency']);
-                        $period['amountFinal'] = $storeManager->showMoney($period['amountFinal'], $period['currency']);
-                        $periods[] = $period;
+                $periods = [];
+                foreach ($item['paymentMethods'] as $method) {
+                    if ($method['paymentMethod'] !== 'VISA') {
+                        continue;
                     }
-                    $method['periods'] = $periods;
-                    $methods[] = $method;
+                    $periods = $method['periods'];
                 }
-                $item['paymentMethods'] = $methods;
-                $banks[] = $item;
+                $banks[] = [
+                    'code' => $item['bankCode'],
+                    'name' => $item['bankName'],
+                    'icon' => PaymentService::getInstallmentBankIcon($item['bankCode']),
+                    'method' => 'VISA',
+                    'periods' => $periods
+                ];
             }
             return $banks;
         }

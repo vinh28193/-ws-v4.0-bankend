@@ -266,6 +266,21 @@ var ws = ws || (function ($) {
                 $("#ico-" + id).addClass('fa-chevron-down');
             }
         },
+        getSuggestSearch: function (response) {
+            // console.log(response);
+            if(response.length > 2){
+                if($('input#searchBoxInput').val() === response[0]){
+                    var txt = '<option>'+response[0]+'</option>';
+                    // console.log(response[1]);
+                    $.each(response[1],function (k,v) {
+                        txt += '<option>'+v+'</option>';
+                        // console.log('<option>'+v+'</option>');
+                        // $('#searchAutoComplete').append('<option>'+v+'</option>');
+                    });
+                    $('#searchAutoComplete').html(txt);
+                }
+            }
+        },
         // hạn chế việc khai báo event quá nhiều,
         // nếu event đã khai báo trước đó thì sẽ bị off đi
         // xử lý theo lần khai báo cuối cùng
@@ -349,23 +364,34 @@ ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input#searchBoxInpu
     }else{
         var $element = this;
         var key = $(this).val();
-        window.mytimeout = setTimeout(function(){
-            $.ajax({
-                // type: 'GET',
-                // url: 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q='+key,
-                url: '/cms/search/search-auto-complete',
-                method: 'POST',
-                data: {k: key},
-                // crossDomain: true,
-                success: function (res) {
-                    // console.log(res);
-                    if (res.success) {
-                        if($('input#searchBoxInput').val() === key){
-                            $('#searchAutoComplete').html(res.content);
-                        }
-                    }
-                }
-            });
-        }, 200);
+        if(key){
+            window.mytimeout = setTimeout(function(){
+                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q='+encodeURI(key);
+                $.ajax({
+                    url: url_call,
+                    dataType: 'jsonp',
+                    jsonpCallback: "ws.getSuggestSearch",
+                });
+            }, 200);
+        }
+    }
+});
+ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'keyup', 'input#mb-searchBoxInput', function (event) {
+    clearTimeout(window.mytimeout);
+    if (event.keyCode === 13) {
+        ws.browse.searchNew(this, '$url');
+    }else{
+        var $element = this;
+        var key = $(this).val();
+        if(key){
+            window.mytimeout = setTimeout(function(){
+                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q='+encodeURI(key);
+                $.ajax({
+                    url: url_call,
+                    dataType: 'jsonp',
+                    jsonpCallback: "ws.getSuggestSearch",
+                });
+            }, 200);
+        }
     }
 });

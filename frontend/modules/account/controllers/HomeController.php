@@ -221,6 +221,7 @@ class HomeController extends BaseAccountController
         $user_info = Yii::$app->user->getIdentity();
         $orders = Order::find()
             ->where(['=', 'customer_id', $user_info->id])
+            ->orderBy(['created_at' => SORT_DESC])
             ->all();
         $total = count($orders);
         $wallet = null;

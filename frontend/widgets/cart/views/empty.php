@@ -1,19 +1,19 @@
 <?php
 
 $homeUrl = Yii::$app->homeUrl;
+$js = <<<JS
+    $(document).ready(function() {
+    
+});
+JS;
+
+
 ?>
 
-<div class="cart-content">
-    <div class="title">
-        <?= Yii::t('frontend', 'Your shopping cart <span>({count} items)</span>', [
-            'count' => 0
-        ]); ?>
-    </div>
-    <div class="empty-box">
-        <img src="/img/cart_empty.png" alt="" title=""/>
-
-        <p><?= Yii::t('frontend', 'Your shopping cart is empty'); ?></p>
-        <a href="#" class="btn btn-continue"
-           onclick="window.location.href = '/'"><?= Yii::t('frontend', 'Continue to buy'); ?></a>
+<div class="cart-content text-center pt-5 pb-5">
+    <img src="images/icon/014-eraser.png" alt="">
+    <div class="content-notifi mt-3" style="width: 30%;margin: auto; font-size: 16px">
+        <span>Giỏ hàng của ban trống</span></br>
+        <span>Hãy thêm sản phẩm bạn muốn mua hộ vào giỏ hàng</span>
     </div>
 </div>

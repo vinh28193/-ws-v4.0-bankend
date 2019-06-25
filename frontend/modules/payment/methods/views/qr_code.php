@@ -11,7 +11,7 @@
 <div class="method-item">
     <a class="btn method-select" data-toggle="collapse" data-target="#method<?= $group; ?>"
        aria-expanded="<?= $selected ? 'true' : 'false'; ?>" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
-        <i class="icon method_<?= $group; ?>" style="background: url(./img/payment_7.png) no-repeat center;background-size: contain;"></i>
+        <i class="icon method_<?= $group; ?>"></i>
         <div class="name">Thanh toán qua Qrcode</div>
         <div class="desc">Số thẻ của bạn được giữ an toàn 100% và chỉ được sử dụng cho giao dịch này.</div>
     </a>

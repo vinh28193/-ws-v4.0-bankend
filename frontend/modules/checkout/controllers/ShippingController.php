@@ -103,7 +103,7 @@ class ShippingController extends CheckoutController
     {
 
         if (($type = Yii::$app->request->get('type')) !== null) {
-            $this->title = Yii::t('frontend','Product in {type} cart',[
+            $this->title = Yii::t('frontend', 'Product in {type} cart', [
                 'type' => $type
             ]);
         }
@@ -134,9 +134,9 @@ class ShippingController extends CheckoutController
             'orders' => $keys,
         ]);
         $payment->initDefaultMethod();
-//        if (count($payment->getOrders()) === 0) {
-//            return $this->goBack();
-//        }
+        if (count($payment->getOrders()) === 0) {
+            return $this->goBack();
+        }
 
 //        $this->gaCheckout();
 
@@ -235,12 +235,14 @@ class ShippingController extends CheckoutController
         return ['success' => false, 'message' => 'Sign up fail', 'data' => $model->errors];
     }
 
-    public function actionAddCartCheckout() {
+    public function actionAddCartCheckout()
+    {
         $post = Yii::$app->request->post();
         $CartId = CartSelection::getSelectedItems();
         return $this->getCart()->updateSafeItem('buynow', $CartId['buynow'], $post);
 
     }
+
     /**
      * @return \common\components\cart\CartManager
      */

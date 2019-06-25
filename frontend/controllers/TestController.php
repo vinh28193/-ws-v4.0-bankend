@@ -40,8 +40,30 @@ class TestController extends FrontendController
     public function actionAlepay()
     {
         $alepay = new AlepayClient();
+
+        $res = $alepay->getInstallmentInfo(10000000.00, 'VND')['data'];
+        $res = json_decode($res, true);
+        $results = [];
+        foreach ($res as $bank) {
+
+            $periods = [];
+            foreach ($bank['paymentMethods'] as $method) {
+                if($method['paymentMethod'] !== 'VISA'){
+                    continue;
+                }
+                $periods = $method['periods'];
+            }
+            $results[] = [
+                'code' => $bank['bankCode'],
+                'name' => $bank['bankName'],
+                'method' => 'VISA',
+                'periods' => $periods
+            ];
+        }
         echo "<pre>";
-        var_dump($alepay->getInstallmentInfo(10000000.00, 'VND'));
+        var_dump($results);
+        echo "</pre>";
+        die;
     }
 
     public function actionTestCart()
@@ -237,7 +259,7 @@ class TestController extends FrontendController
     {
         $calculator = new InternationalShippingCalculator();
 
-    $shipment =<<<JSON
+        $shipment = <<<JSON
 {
   "ship_from": {
     "country": "US",
@@ -316,7 +338,7 @@ class TestController extends FrontendController
   }
 }
 JSON;
-        $shipment = json_decode($shipment,true);
+        $shipment = json_decode($shipment, true);
         $couriers = $calculator->CalculateFee($shipment, 23, 'VN');
         var_dump($couriers);
         die;

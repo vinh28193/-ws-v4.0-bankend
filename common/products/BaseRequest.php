@@ -60,8 +60,8 @@ abstract class BaseRequest extends \yii\base\Model
         $rules = ArrayHelper::merge($rules, [
             // Todo complate translate keyword
             [['keyword'], 'common\validators\GoogleTranslationFilterValidator'],
-            [['keyword', 'sort', 'filter'], 'string'],
-            [['page', 'min_price', 'max_price','category'], 'integer'],
+            [['keyword', 'sort', 'filter','category'], 'string'],
+            [['page', 'min_price', 'max_price'], 'integer'],
             [['keyword', 'sort', 'filter'], 'filter', 'filter' => 'trim'],
             [['keyword', 'sort', 'filter'], 'filter', 'filter' => '\yii\helpers\Html::encode'],
             [['page'], 'integer', 'min' => 1],

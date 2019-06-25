@@ -110,7 +110,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     {
         /** @var $customer User */
         if (($customer = $this->customer) !== null) {
-            return $customer->userLever;
+            return $customer->userLevel;
         }
         return User::LEVEL_NORMAL;
     }
@@ -289,7 +289,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
                     // exception, do not collect product_price
                     continue;
                 }
-
+                $this->getAdditionalFees()->remove($name);
                 foreach ($arrayFee as $value) {
                     $this->getAdditionalFees()->add($name, $value);
                 }
@@ -327,8 +327,12 @@ class Order extends BaseOrder implements AdditionalFeeInterface
 
     public function getTotalFinalAmount()
     {
-        $totalAmount = $this->total_origin_fee_local;
+        $totalAmount = $this->total_amount_local;
+        Yii::info($this->getAdditionalFees()->toArray(), $totalAmount);
         $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees(null, ['shipping_fee', 'tax_fee'])[1];
+        if ($this->discountAmount > 0) {
+            $totalAmount -= $this->discountAmount;
+        }
         return $totalAmount;
     }
 }

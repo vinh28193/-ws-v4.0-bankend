@@ -29,9 +29,11 @@ class PaymentController extends BasePaymentController
         $bodyParams = $this->request->bodyParams;
         $payment = new Payment($bodyParams['payment']);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
+
         $shippingForm->ensureReceiver();
-
-
+        if (count($payment->errors) > 0) {
+            return $this->response(false, implode(', ', $payment->errors));
+        }
         $shippingParams = [
             'buyer_name' => $shippingForm->buyer_name,
             'buyer_address' => $shippingForm->buyer_address,
@@ -112,6 +114,29 @@ class PaymentController extends BasePaymentController
         $payment->customer_district = $shippingForm->getBuyerDistrictName();
         $payment->customer_country = $this->storeManager->store->country_name;
         $payment->createTransactionCode();
+        $paymentTransaction = new PaymentTransaction();
+        $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
+        $paymentTransaction->store_id = $payment->storeManager->getId();
+        $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
+        $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
+        $paymentTransaction->transaction_code = $payment->transaction_code;
+        $paymentTransaction->transaction_customer_name = $payment->customer_name;
+        $paymentTransaction->transaction_customer_email = $payment->customer_email;
+        $paymentTransaction->transaction_customer_phone = $payment->customer_phone;
+        $paymentTransaction->transaction_customer_address = $payment->customer_address;
+        $paymentTransaction->transaction_customer_postcode = $payment->customer_postcode;
+        $paymentTransaction->transaction_customer_address = $payment->customer_address;
+        $paymentTransaction->transaction_customer_district = $payment->customer_district;
+        $paymentTransaction->transaction_customer_city = $payment->customer_city;
+        $paymentTransaction->transaction_customer_country = $payment->customer_country;
+        $paymentTransaction->payment_provider = $payment->payment_provider_name;
+        $paymentTransaction->payment_method = $payment->payment_method_name;
+        $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
+        $paymentTransaction->total_discount_amount = 0;
+        $paymentTransaction->before_discount_amount_local = $payment->getTotalAmountDisplay();
+        $paymentTransaction->transaction_amount_local = $payment->getTotalAmountDisplay();
+        $paymentTransaction->payment_type = $payment->type;
+        $paymentTransaction->save(false);
         /* @var $results PromotionResponse */
         $payment->checkPromotion();
         $transaction = Order::getDb()->beginTransaction();
@@ -224,32 +249,6 @@ class PaymentController extends BasePaymentController
             return $this->response(false, $exception->getMessage());
         }
 
-        $paymentTransaction = new PaymentTransaction();
-        $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
-        $paymentTransaction->store_id = $payment->storeManager->getId();
-        $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
-        $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
-        $paymentTransaction->transaction_code = $payment->transaction_code;
-        $paymentTransaction->transaction_customer_name = $payment->customer_name;
-        $paymentTransaction->transaction_customer_email = $payment->customer_email;
-        $paymentTransaction->transaction_customer_phone = $payment->customer_phone;
-        $paymentTransaction->transaction_customer_address = $payment->customer_address;
-        $paymentTransaction->transaction_customer_postcode = $payment->customer_postcode;
-        $paymentTransaction->transaction_customer_address = $payment->customer_address;
-        $paymentTransaction->transaction_customer_district = $payment->customer_district;
-        $paymentTransaction->transaction_customer_city = $payment->customer_city;
-        $paymentTransaction->transaction_customer_country = $payment->customer_country;
-        $paymentTransaction->payment_provider = $payment->payment_provider_name;
-        $paymentTransaction->payment_method = $payment->payment_method_name;
-        $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
-        $paymentTransaction->coupon_code = $payment->coupon_code;
-        $paymentTransaction->used_xu = $payment->use_xu;
-        $paymentTransaction->bulk_point = $payment->bulk_point;
-        $paymentTransaction->total_discount_amount = $payment->total_discount_amount;
-        $paymentTransaction->before_discount_amount_local = $payment->total_order_amount;
-        $paymentTransaction->transaction_amount_local = $payment->getTotalAmountDisplay();
-        $paymentTransaction->payment_type = $payment->type;
-        $paymentTransaction->save(false);
         foreach ($orders as $order) {
             /** @var  $order Order */
             $childTransaction = clone $paymentTransaction;
