@@ -16,7 +16,18 @@ $totalAmount = 0;
             ?>
             <div class="shadow-lg mb-3">
                 <div class="row pt-2 pb-2 pl-2 pr-3 m-0" style="width: 100%">
-                    <div class="col-8"><span>Nhà bán <a href="<?=$item['seller']['seller_link_store'] ?>" style="color: #2b96b6;"><?=$item['seller']['seller_name'] ?></a> trên <?=$item['seller']['portal'] ?></span></div>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="form-check">
+                                    <input class="form-check-input position-static source" name="checkCar" style="margin: auto; height: 18px; width: 18px;" type="checkbox" value="<?= $item['ordercode'] ?>" aria-label="...">
+                                </div>
+                            </div>
+                            <div class="col-md-11">
+                                <span>Nhà bán <a href="<?=$item['seller']['seller_link_store'] ?>" style="color: #2b96b6;"><?=$item['seller']['seller_name'] ?></a> trên <?=$item['seller']['portal'] ?></span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-2 text-center"><span>Số Lượng</span></div>
                     <div class="col-2 text-right pr-1 text-right"><span>Giá Tiền</span></div>
                 </div>
@@ -41,16 +52,11 @@ $totalAmount = 0;
                         $totalAmount += (int)$product['total_final_amount'];
                         ?>
                         <div class="row m-0 pb-2">
-                            <div class="col-1">
-                                <div class="form-check">
-                                    <input class="form-check-input position-static source" name="checkCar" style="margin: auto; margin-top: 2em; height: 18px; width: 18px;" type="checkbox" id="blankCheckbox" value="<?= $product['sku'] ?>" aria-label="...">
-                                </div>
-                            </div>
                             <div class="col-1 pb-2" style="height: auto;">
                                 <img src="<?= $product['link_img']; ?>"
                                      alt="<?= $product['product_name']; ?>" width="80%" height="100px" title="<?= $product['product_name']; ?>">
                             </div>
-                            <div class="col-6 pt-4">
+                            <div class="col-7 pt-4">
                                 <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
                                     <strong class="style-name"><?= $product['product_name']; ?></strong>
                                 </a>

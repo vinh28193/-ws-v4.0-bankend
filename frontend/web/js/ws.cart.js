@@ -325,5 +325,6 @@ $('input[name=checkCar]').change(function() {
         $("input[name=checkCar]:checked").each(function() {
             values.push($(this).val());
         });
+        console.log(values);
     }
 });
