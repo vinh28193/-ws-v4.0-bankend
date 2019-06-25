@@ -249,6 +249,7 @@ class PaymentController extends BasePaymentController
             return $this->response(false, $exception->getMessage());
         }
 
+        // Todo remove cart after create payment success
         foreach ($orders as $order) {
             /** @var  $order Order */
             $childTransaction = clone $paymentTransaction;
