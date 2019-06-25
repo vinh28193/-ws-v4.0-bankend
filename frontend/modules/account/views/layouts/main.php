@@ -18,6 +18,15 @@ $js = <<<JS
         console.log(uri);
         load(uri);
     });
+
+$('.toggle').click(function() {
+    var check = $('#target123').css('display');
+    if(check == 'none')
+        $('#asd1234').css('transform','scaleY(-1)');
+    else
+        $('#asd1234').css('transform','scaleY(1)');
+    $('#target123').slideToggle('fast');
+});
 JS;
 $this->registerJs($js);
 
@@ -118,14 +127,18 @@ $userID = Yii::$app->user->getId();
                             }
                         }
                         ?>
-                        <a class="dropdown-collapse <?php if (isset($check['status'])) { ?> <?= $collapsed[0] ?> <?php } ?><?php if (isset($checkUrl)) { ?> <?= $collapsed[0] ?> <?php } ?>"
-                           data-toggle="collapse" data-target="#sub-2"
+                        <a class="dropdown-collapse toggle <?php if (isset($check['status'])) { ?> <?= $collapsed[0] ?> <?php } ?><?php if (isset($checkUrl)) { ?> <?= $collapsed[0] ?> <?php } ?>"
+                           data-toggle="collapse" data-target="#sub-2" id="toggle"
                            aria-expanded="<?php if (isset($checkUrl)) { ?> <?= $collapsed[1] ?> <?php } ?><?php if (isset($check['status'])) { ?> <?= $collapsed[1] ?> <?php } ?>"
-                           aria-controls="collapseOne"><i class="la la-chevron-right"></i></a>
+                           aria-controls="collapseOne">
+                            <span style="display: block; text-align: right; margin-right: 8px" class="ico-dropdown amz">
+                                <i id="asd1234" class="la la-caret-down" style="transform: scaleY(1);"></i>
+                            </span>
+                        </a>
                         <div id="sub-2"
                              class="sub-collapse collapse <?php if (isset($check['status'])) { ?> <?= $collapsed[2] ?> <?php } ?><?php if (isset($checkUrl)) { ?> <?= $collapsed[2] ?> <?php } ?>"
                              aria-labelledby="headingOne" data-parent="#be-menu-collapse">
-                            <ul class="style-nav">
+                            <ul class="style-nav" id="target123">
                                 <li class="<?php if (isset($checkUrl)) {
                                     if ($checkUrl == '/account/order') { ?> active <?php }
                                 } ?><?php if (isset($checkUrl)) {
