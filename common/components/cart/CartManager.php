@@ -454,6 +454,7 @@ class CartManager extends Component
                     $key['buyer']['buyer_phone'] = $param['phone'];
                     $key['buyer']['buyer_name'] = $param['fullName'];
                     $key['buyer']['email'] = $param['email'];
+                    $value['potential'] = 1;
                 }
             }
             if (isset($param['typeUpdate'])) {

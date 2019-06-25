@@ -10,11 +10,34 @@ $this->title = $model->ordercode;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('frontend', 'Orders'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+$js = <<<JS
+    $('a[data-popup=modal]').on('click',function(event) {
+        event.preventDefault();
+        var uri = $(this).data('url');
+        $('div#exampleModalChat').modal('show').find('#modalContent').load(uri);
+    });
+JS;
+$this->registerJs($js);
 ?>
 <div class="order-detail">
     <ul class="od-header">
         <li><a href="#" class="icon icon1">Xem shop</a></li>
-        <li><a href="#" class="icon icon2">Chat</a></li>
+        <li>
+            <style>
+                a {
+                    color: #555555;
+                }
+            </style>
+            <?php
+            echo Html::a('<span class="icon icon2"></span>Chat',new \yii\web\JsExpression('javascript:void(0);'),[
+                'data-url' => \yii\helpers\Url::toRoute(['/account/chat/order-chat','code' => $model->ordercode],true),
+                'data-target' => '#exampleModalChat',
+                'data-popup' => 'modal'
+            ])
+            ?>
+<!--            <a href="#" class="icon icon2">Chat</a>-->
+        </li>
         <li><a href="#" class="icon icon3">Khiếu nại</a></li>
     </ul>
     <?php
@@ -62,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </ul>
             </div>
             <div class="col-md-4">
-                <div class="title-2"><?= Yii::t('frontend', 'Payment type'); ?></div>
+                <div class="title-2"><?= Yii::t('frontend', 'Method Of Payment'); ?></div>
                 <div><?= $model->payment_type ?></div>
             </div>
             <div class="col-md-4">
@@ -146,5 +169,22 @@ $this->params['breadcrumbs'][] = $this->title;
         <!--                </table>-->
         <!--            </div>-->
         <!--        </div>-->
+    </div>
+</div>
+
+<div class="modal" id="exampleModalChat" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content modal-lg">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="card m-b-0">
+                        <div class="card-body">
+                            <div id="modalContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
