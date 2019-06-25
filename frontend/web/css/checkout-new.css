@@ -169,7 +169,7 @@
     padding: 0;
 }
 
-.table-fee .fee-value {
+.table-fee .value {
     text-align: right;
     color: red;
     font-weight: 700;

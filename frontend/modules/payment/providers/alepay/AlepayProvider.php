@@ -86,7 +86,7 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logPaymentGateway->save(false);
-            return new PaymentResponse(false, 'Check payment thất bại','alepay');
+            return new PaymentResponse(false, $exception->getMessage(),'alepay');
         }
 
     }

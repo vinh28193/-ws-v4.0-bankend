@@ -18,14 +18,11 @@ class InstallmentController extends BasePaymentController
         $provider = (int)$provider;
         $params = $this->request->bodyParams;
         $payment = new Payment($params);
-        $payment->setTotalAmountDisplay(null);
-        $promotion = $payment->checkPromotion();
         $success = false;
         $message = 'no found';
         $data = [
             'calculator' => 'installment',
             'origin' => $this->storeManager->showMoney($payment->getTotalAmountDisplay()),
-            'promotion' => $promotion,
             'methods' => []
         ];
         if ($provider === 44) {

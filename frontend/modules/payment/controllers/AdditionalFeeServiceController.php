@@ -30,12 +30,12 @@ class AdditionalFeeServiceController extends BasePaymentController
         $shippingForm = new ShippingForm($bodyParams['shipping']);
         $shippingForm->ensureReceiver();
         $ship_to = [
-            'contact_name' => $shippingForm->receiver_name,
+            'contact_name' => 'ws calculator',
             'company_name' => '',
             'email' => '',
-            'address' => $shippingForm->receiver_address,
+            'address' => 'ws auto',
             'address2' => '',
-            'phone' => $shippingForm->receiver_phone,
+            'phone' => '0987654321',
             'phone2' => '',
             'province' => $shippingForm->receiver_province_id,
             'district' => $shippingForm->receiver_district_id,
@@ -46,9 +46,15 @@ class AdditionalFeeServiceController extends BasePaymentController
         if ($shippingForm->other_receiver !== false) {
             // nếu mà là địa chỉ chọn
             if ((int)$shippingForm->enable_buyer === 1) {
-                $ship_to['contact_name'] = $shippingForm->buyer_name;
-                $ship_to['address'] = $shippingForm->buyer_address;
-                $ship_to['phone'] = $shippingForm->buyer_phone;
+                if ($shippingForm->buyer_name !== null) {
+                    $ship_to['contact_name'] = $shippingForm->buyer_name;
+                }
+                if ($shippingForm->buyer_address !== null) {
+                    $ship_to['address'] = $shippingForm->buyer_address;
+                }
+                if ($shippingForm->buyer_phone !== null) {
+                    $ship_to['phone'] = $shippingForm->buyer_phone;
+                }
                 $ship_to['province'] = $shippingForm->buyer_province_id;
                 $ship_to['district'] = $shippingForm->buyer_district_id;
                 $ship_to['zipcode'] = $shippingForm->buyer_post_code;
@@ -62,9 +68,16 @@ class AdditionalFeeServiceController extends BasePaymentController
             }
         } else {
             if ((int)$shippingForm->enable_receiver === 1) {
-                $ship_to['contact_name'] = $shippingForm->receiver_name;
-                $ship_to['address'] = $shippingForm->receiver_address;
-                $ship_to['phone'] = $shippingForm->receiver_phone;
+                if ($shippingForm->receiver_name !== null) {
+                    $ship_to['contact_name'] = $shippingForm->receiver_name;
+                }
+                if ($shippingForm->receiver_address !== null) {
+                    $ship_to['address'] = $shippingForm->receiver_address;
+                }
+                if ($shippingForm->receiver_phone !== null) {
+                    $ship_to['phone'] = $shippingForm->receiver_phone;
+                }
+
                 $ship_to['province'] = $shippingForm->receiver_province_id;
                 $ship_to['district'] = $shippingForm->receiver_district_id;
                 $ship_to['zipcode'] = $shippingForm->receiver_post_code;

@@ -4,15 +4,7 @@ ws.payment = (function ($) {
         uuid: ws.getFingerprint(),
         type: undefined,
         orders: [],
-        use_xu: 0,
-        bulk_point: 0,
-        coupon_code: undefined,
-        discount_detail: [],
         currency: 'VND',
-        total_discount_amount: 0,
-        total_order_amount: 0,
-        totalAmount: 0,
-        totalAmountDisplay: 0,
         customer_name: undefined,
         customer_email: undefined,
         customer_phone: undefined,
@@ -79,10 +71,20 @@ ws.payment = (function ($) {
         },
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
+
             ws.initEventHandler($('div#discountCoupon'), 'applyCouponCode', 'click', 'button#applyCouponCode', function (e) {
-                var $input = $(this).parents('div.discount-input').find('input[name="couponCode"]');
+                var button = $(this);
+                var key = button.data('key');
+                var $cardOrder = $('div.card-order[data-key=' + key + ']');
+                var $input = button.parents('div.discount-input').find('input[name="couponCode"]');
                 if ($input.length > 0 && $input.val() !== '') {
-                    pub.payment.coupon_code = $input.val();
+                    var orders = pub.get('orders');
+                    var order = orders[key];
+                    order.couponCode = $input.val();
+                    order.discountDetail = [];
+                    order.discountAmount = 0;
+                    orders[key] = order;
+                    pub.set('orders', orders);
                     pub.checkPromotion();
                 }
             });
@@ -183,8 +185,8 @@ ws.payment = (function ($) {
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
             pub.payment.payment_bank_code = bankCode;
-            if (bankCode === 'ATM_ONLINE') {
-                pub.methodChange(false);
+            if (bankCode === 'ALEPAY') {
+                pub.calculateInstallment(false);
             }
             if (checkRequire === true) {
                 pub.checkRequireField();
@@ -217,10 +219,10 @@ ws.payment = (function ($) {
                 return;
             }
 
-            if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
+            if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
                 return false;
             } else if (pub.shipping.other_receiver === true && Number(pub.shipping.enable_receiver) === 1) {
-                if (pub.shipping.other_receiver === true && (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id)) {
+                if (pub.shipping.other_receiver === true && (!pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id)) {
                     return false;
                 }
             }
@@ -232,11 +234,6 @@ ws.payment = (function ($) {
                     console.log(response);
                     if (response.success) {
                         var orders = response.data;
-                        var additionalFees = pub.get('additionalFees');
-                        if (('international_shipping_fee' in additionalFees)) {
-                            delete additionalFees['international_shipping_fee'];
-                            pub.set('additionalFees', additionalFees);
-                        }
 
                         $.each(orders, function (key, res) {
                             initCourierView(key, res);
@@ -257,16 +254,12 @@ ws.payment = (function ($) {
                 success: function (response) {
                     var data = response.data;
                     var banks = data.methods || [];
-                    var promotion = data.promotion || undefined;
                     pub.installmentParam.calculator = data.calculator;
                     pub.installmentParam.originAmount = data.origin || ws.showMoney(0);
                     initInstallmentBankView(banks);
                     ws.initEventHandler('calculateInstallment', 'periodChange', 'change', 'input[name=installmentPeriod]', function (e) {
                         pub.payment.installment_month = $(this).val();
                     });
-                    if (promotion !== undefined) {
-                        // updatePaymentByPromotion(promotion)
-                    }
                 }
             }, true);
         },
@@ -351,7 +344,15 @@ ws.payment = (function ($) {
 
         },
         courierChange: function ($cardOrder, courier) {
-            var feeName = 'international_shipping_fee';
+            var fee = {
+                amount: 0,
+                currency: pub.get('currency'),
+                discount_amount: 0,
+                label: 'International Shipping Fee',
+                local_amount: 0,
+                name: 'international_shipping_fee',
+                type: 'local'
+            };
             var key = $cardOrder.data('key');
             var text = courier.courier_name + ' ' + courier.service_name + ' (' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('day') + ' )';
             var courierDropDown = $cardOrder.find('div.courier-dropdown');
@@ -359,24 +360,25 @@ ws.payment = (function ($) {
             var orders = pub.get('orders');
             var order = orders[key];
             var shippingFee = ws.roundNumber(courier.total_fee);
-            var additionalFees = pub.get('additionalFees');
-            if (!(feeName in additionalFees)) {
-                additionalFees[feeName] = 0
+            var additionalFees = order.additionalFees;
+
+            if (!(fee.name in additionalFees)) {
+                 additionalFees[fee.name] = [];
             }
-            additionalFees[feeName] += shippingFee;
-            console.log(additionalFees);
-            var tableFee = $cardOrder.find('table.table-fee');
-            var shippingRow = tableFee.find('tr[data-fee="' + feeName + '"]');
-            shippingRow.find('.fee-value').html(ws.showMoney(shippingFee));
-            var totalFinal = tableFee.find('tr.final-amount').find('.fee-value');
-            var value = totalFinal.data('origin');
-            value += shippingFee;
-            totalFinal.html(ws.showMoney(value));
+            fee.amount = shippingFee;
+            fee.local_amount = shippingFee;
+            additionalFees[fee.name].push(fee);
+            order.additionalFees = additionalFees;
             order.courierDetail = courier;
+            initRowTableFee($cardOrder, fee);
             orders[key] = order;
             pub.set('orders', orders);
-            pub.set('additionalFees', additionalFees);
+            var tableFee = $cardOrder.find('table.table-fee');
+            var orderAmount = getTotalOrderAmount(order);
+            var totalFinal = tableFee.find('tr.final-amount').find('.value');
+            totalFinal.html(ws.showMoney(orderAmount));
             getTotalAmountDisplay();
+
         },
         methodChange: function (isNew) {
             isNew = isNew || false;
@@ -430,21 +432,19 @@ ws.payment = (function ($) {
                     type: 'post',
                     data: data,
                     success: function (response, textStatus, xhr) {
-                        // updatePaymentByPromotion(response)
+                        updatePaymentByPromotion(response.data)
                     }
                 })
             }
-
-
         },
-        changeCouponCode: function (code) {
-            if (pub.payment.coupon_code === code) {
-                $('input[name=couponCode]').val('');
-                pub.payment.coupon_code = undefined;
-            } else {
-                $('input[name=couponCode]').val(code);
-                pub.payment.coupon_code = code;
-            }
+        removeCouponCode: function (key) {
+            var orders = pub.get('orders');
+            var order = orders[key];
+            order.couponCode = null;
+            order.discountDetail = [];
+            order.discountAmount = 0;
+            orders[key] = order;
+            pub.set('orders', orders);
             pub.checkPromotion();
         },
         login: function ($form) {
@@ -539,7 +539,7 @@ ws.payment = (function ($) {
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
 
             pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
-
+            console.log(pub.shipping);
             // case 1 //
             if (isSafe) {
                 if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
@@ -644,55 +644,77 @@ ws.payment = (function ($) {
         }, true)
     };
     var updatePaymentByPromotion = function ($response) {
-        var input = $('input[name=couponCode]');
-        var $errorDiscount = $('span#discountErrors');
-        $errorDiscount.css('display', 'none');
-        if (!$response.success || pub.payment.coupon_code in $response.errors) {
-            var error = $response.errors[pub.payment.coupon_code];
-            $errorDiscount.css('display', 'flex');
-            $errorDiscount.html(error);
-        }
-        if ($response.details.length > 0 && $response.discount > 0) {
-            pub.payment.discount_detail = $response.details;
-            pub.payment.total_discount_amount = $response.discount;
 
-        }
-        getTotalAmountDisplay();
+        var orders = pub.get('orders');
+        $.each($response, function (key, data) {
+            var order = orders[key];
 
-    };
-    var initPromotionView = function ($detail) {
-        var text = '';
+            var $cardOrder = $('div.card-order[data-key=' + key + ']');
+            var $discountBox = $cardOrder.find('table.table-fee').find('tr.discount-detail');
+            $discountBox.find('.discount-input').css('display', 'flex');
+            $discountBox.find('.coupon-code').html('');
+            $discountBox.find('.discount-amount').css('display', 'none');
+            var $errorDiscount = $discountBox.find('td.value').find('span#discountErrors');
 
-        $.each($detail, function (key, item) {
-            console.log(item);
-            text += '<li rel="detail" data-key="' + item.id + '" data-code="' + item.code + '" data-type="' + item.type + '">';
-            text += '<div class="left"><div class="code">';
-            $('#discountIpnputCoupon').css('display', 'flex');
-            if (item.type === 'Coupon') {
-                text += '<i class="la la-times text-danger remove"  title="Remove ' + item.code + '" onclick="ws.payment.changeCouponCode(\'' + item.code + '\')"></i>';
-                $('#discountInputCoupon').css('display', 'none');
+            if (!data.success || order.couponCode in data.errors) {
+                var error = data.errors[order.couponCode];
+                $errorDiscount.css('display', 'block');
+                $errorDiscount.html(error);
             }
-            text += item.code + '<i class="la la-question-circle code-info" data-toggle="tooltip" data-placement="top" title="' + item.message + '" data-original-title="' + item.message + '"></i></div></div>';
-            text += '<div class="right"> - ' + ws.showMoney(item.value) + '</div>';
-            text += '</li>';
+
+            if (data.discount > 0 && data.details.length > 0) {
+                order.discountAmount = data.discount;
+                order.discountDetail = data.details;
+                $discountBox.find('.discount-input').css('display', 'none');
+                var detail = data.details[0];
+                $discountBox.find('.discount-amount').css('display', 'block');
+                $discountBox.find('.discount-amount').find('.discount-value').html('- ' + ws.showMoney(detail.value));
+                var info = detail.code + '<i class="la la-question-circle code-info"\n' +
+                    'data-toggle="tooltip"\n' +
+                    'data-placement="top"\n' +
+                    'title="' + detail.message + '"\n' +
+                    'data-original-title="\' + detail.message + \'"></i>'
+                $discountBox.find('.coupon-code').html(info);
+
+            }
+            var tableFee = $cardOrder.find('table.table-fee');
+            var orderAmount = getTotalOrderAmount(order);
+            var totalFinal = tableFee.find('tr.final-amount').find('.value');
+            totalFinal.html(ws.showMoney(orderAmount));
         });
-        return text;
+
+        getTotalAmountDisplay();
     };
     var initInstallmentBankView = function (banks) {
         pub.installmentParam.banks = banks;
         console.log(banks);
         var htmlBank = [];
+        var installmentBanks = $('select#installmentBanks');
         $.each(banks, function (index, bank) {
             var iActive = index === 0;
             if (iActive) {
                 pub.payment.installment_bank = bank.bankCode;
                 pub.installmentBankChange(bank.bankCode);
             }
-            var $ele = '<li data-ref="i_bankCode" data-code="' + bank.bankCode + '"  onclick="ws.payment.installmentBankChange(\'' + bank.bankCode + '\')"><span class="' + (iActive ? "active" : "") + '"><img src="' + bank.bankIcon + '" alt="' + bank.bankName + '" title="' + bank.bankName + '"/></span></li>';
-            htmlBank.push($ele)
+            var $ele = $('<option/>', {
+                'data-ref': 'i_bankCode',
+                value: bank.bankCode,
+                text: bank.bankName,
+            });
+            if (iActive) {
+                $ele.prop('selected', true);
+            }
+            installmentBanks.append($ele);
+            // var $ele = '<option data-ref="i_bankCode" value="' + bank.bankCode + '" data-code="' + bank.bankCode + '" ' + iActive ? 'selected' : '' + '>' + bank.bankName + '</option>';
+            // htmlBank.push($ele)
         });
-        $('ul#installmentBanks').html(htmlBank.join(''));
-        console.log(banks)
+        // installmentBanks.html(htmlBank.join(''));
+        ws.initEventHandler(installmentBanks, 'bankChange', 'change', 'select#installmentBanks', function (e) {
+            e.preventDefault();
+            var bankCode = $(this).val();
+            ws.payment.installmentBankChange(bankCode);
+            return false;
+        });
     };
     var redirectPaymentGateway = function (rs, $timeOut) {
         var runTime = setInterval(function () {
@@ -711,30 +733,7 @@ ws.payment = (function ($) {
             }
         }, $timeOut);
     };
-    var showStep = function ($step) {
-        $step = $step - 1;
-        $('.checkout-step li').each(function (i, li) {
-            var $li = $(li);
-            $li.removeClass('active');
 
-            $($li.data('href')).css('display', 'none');
-            if ($step === i) {
-                $li.addClass('active');
-                $($li.data('href')).css('display', 'block');
-
-            }
-        });
-    };
-    var showAdditinalFee = function (fee) {
-        var $localAmount = 0;
-        var $lable = 'Unknonw fee';
-        if (fee.length > 0) {
-            for (var i = 0; i < fee.length; i++) {
-                $localAmount += fee[i].local_amount
-            }
-        }
-        return {label: $lable, amountOrigin: $localAmount, amountLocalized: ws.showMoney($localAmount)}
-    };
     var initCourierView = function (key, response) {
         var $cardOrder = $('div.card-order[data-key=' + key + ']');
         // init text
@@ -764,24 +763,36 @@ ws.payment = (function ($) {
             courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(couriers)
         }
     };
-
-    var getTotalAmount = function ($amount = null) {
-        $amount = $amount || pub.get('total_order_amount');
-        $.each(pub.get('additionalFees'), function (ikey, value) {
-            $amount += Number(value);
+    var initRowTableFee = function ($cardOrder, fee) {
+        var tableFee = $cardOrder.find('table.table-fee');
+        var shippingRow = tableFee.find('tr[data-fee="' + fee.name + '"]');
+        shippingRow.find('td.value').html(ws.showMoney(fee.local_amount));
+    };
+    var getTotalOrderAmount = function (order) {
+        var $amount = order.totalAmountLocal;
+        $.each(order.additionalFees, function (name, array) {
+            var totalFeeAmount = 0;
+            for (var i = 0; i < array.length; i++) {
+                totalFeeAmount += Number(array[i].local_amount);
+            }
+            $amount += totalFeeAmount;
         });
-        pub.set('totalAmount', $amount);
-
+        if (order.discountAmount > 0) {
+            $amount -= order.discountAmount;
+        }
         return $amount
     };
 
     var getTotalAmountDisplay = function () {
-        var $amount = getTotalAmount();
-        pub.set('totalAmountDisplay', $amount);
+        var orders = pub.get('orders');
+        var totalAmountDisplay = 0;
+        $.each(orders, function (ikey, order) {
+            totalAmountDisplay += getTotalOrderAmount(order);
+        });
         var btnCheckout = $('#btnCheckout');
-        btnCheckout.find('span').html(ws.showMoney($amount));
+        btnCheckout.find('span').html(ws.showMoney(totalAmountDisplay));
 
-        return $amount
+        return totalAmountDisplay
     };
     return pub;
 })(jQuery);
