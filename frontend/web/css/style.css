@@ -3507,7 +3507,6 @@ a:hover {
 .cart-box {
     margin: auto;
     border-radius: 3px;
-    width: 90%;
     margin-top: 15px;
 }
 
@@ -8817,4 +8816,7 @@ li.dropdown.show {
     transition: all .25s ease-out;
     opacity: 1;
     transform: scale(1);
+}
+.shadow-lg {
+    box-shadow: 0 0rem 1rem rgba(0, 0, 0, 0.175) !important;
 }
