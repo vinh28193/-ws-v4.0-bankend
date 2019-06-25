@@ -8,8 +8,8 @@
  */
 ?>
 
-<nav aria-label="breadcrumb" class="breadcrumb-content">
-    <div class="container">
+<nav aria-label="breadcrumb" class="breadcrumb-content" >
+    <div class="container" style="width: 80%">
         <ol class="breadcrumb">
             <?php foreach($params as $key => $param){?>
                 <li class="breadcrumb-item"><a href="<?= $param ?>"><?= $key ?> </a></li>
