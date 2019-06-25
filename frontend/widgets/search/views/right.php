@@ -213,7 +213,7 @@ JS;
                             </div>
                             <div class="clearfix submenu-2 collapse" id="filter-<?= $k ?>-filter">
                                 <ul>
-                                    <?php foreach ($filter['values'] as $item): ?>
+                                    <?php foreach ($filter['values'] as $key => $item): ?>
                                         <?php
                                         if(is_array($item)){
                                             $value = Html::encode($item['param']);
@@ -226,16 +226,19 @@ JS;
                                                 <?php
                                                 $id = is_array($item) ? $item['value'] : $filter['name'] . $value;
                                                 ?>
-                                                <?= Html::checkbox('filter', is_array($item) ? $item['is_selected'] : false, [
-                                                    'class' => 'form-check-input',
-                                                    'value' => $value,
-                                                    'id' => $id,
-                                                    'data-for' => $filter['name'],
-                                                    'data-value' => $value
-                                                ]); ?>
-                                                <?= Html::label($value, $id, [
-                                                    'class' => 'form-check-label',
-                                                ]); ?>
+                                                <input class="form-check-input" name="filter"
+                                                       type="checkbox"
+                                                       value="<?= $value ?>"
+                                                       id="<?= md5($id) ?>"
+                                                       data-for="<?= $filter['name'] ?>"
+                                                       data-value="<?= $value ?>">
+                                                <label class="form-check-label" for="<?= md5($id) ?>">
+                                                    <?php if (strpos(strtolower($filter['name']), 'customer review')) { ?>
+                                                        <i class="a-icon a-icon-star a-star-<?= 5 - $key - 1 ?> review-rating">
+                                                        </i>
+                                                    <?php } ?>
+                                                    <?= $value ?>
+                                                </label>
                                             </div>
                                         </li>
                                     <?php endforeach; ?>
