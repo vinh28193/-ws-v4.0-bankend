@@ -293,7 +293,6 @@ class Order extends BaseOrder implements AdditionalFeeInterface
                 foreach ($arrayFee as $value) {
                     $this->getAdditionalFees()->add($name, $value);
                 }
-                unset($productFeeParams[$name]); // unset if this in collect
             }
 
             unset($productParam['available_quantity']);
