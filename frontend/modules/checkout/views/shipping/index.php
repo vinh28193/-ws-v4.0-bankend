@@ -97,74 +97,10 @@ JS;
 $this->registerJs($js);
 ?>
 <style type="text/css">
-    .card-information {
-        border-radius: 3px;
-        border: 1px solid #fceab9;
-        background-color: #fff4d5;
-        color: #de8700;
-        margin-bottom: 1rem;
-    }
 
-    .card-information {
-        border-radius: 3px;
-        border: 1px solid #fceab9;
-        background-color: #fff4d5;
-        color: #de8700;
-    }
-
-    .card-information .card-body {
-        padding: 0.75rem 1.25rem;
-    }
-
-    .card-information .card-body a {
-        color: #2e96b6;
-    }
-
-    .btn-payment {
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: 3px;
-        border: 1px solid #d25e0d;
-        background-image: linear-gradient(180deg, #ff9d17 0%, #e67424 100%);
-    }
-
-    .payment-method .method-item .method-select .icon.method_2 {
-        background: url('/images/group/group2.png') no-repeat center;
-        background-size: contain;
-    }
-
-    .payment-method .method-item .method-select .icon.method_3 {
-        background: url('/images/group/group3.png') no-repeat center;
-        background-size: contain;
-    }
-
-    .payment-method .method-item .method-select .icon.method_4 {
-        background: url('/images/group/group4.png') no-repeat center;
-        background-size: contain;
-    }
-
-    .payment-method .method-item .method-select .icon.method_5 {
-        background: url('/images/group/group5.png') no-repeat center;
-        background-size: contain;
-    }
-
-    .payment-method .method-item .method-select .icon.method_6 {
-        background: url('/images/group/group6.png') no-repeat center;
-        background-size: contain;
-    }
-
-    .payment-method .method-item .method-select .icon.method_7 {
-        background: url('/images/group/group7.png') no-repeat center;
-        background-size: contain;
-    }
-
-    .payment-method .method-item .method-select .icon.method_8 {
-        background: url('/images/group/group8.png') no-repeat center;
-        background-size: contain;
-    }
 </style>
 <div class="container">
+    <?php if($shippingForm->getUser() === null):?>
     <div class="card card-information">
         <div class="card-body">
             <?= Yii::t('frontend', '<a href="{loginUrl}"> Login / sign up </a> now for more convenience & incentives', [
@@ -172,6 +108,7 @@ $this->registerJs($js);
             ]); ?>
         </div>
     </div>
+    <?php endif;?>
     <div class="card card-checkout card-shipping">
         <div class="card-body">
             <?php
@@ -307,13 +244,17 @@ $this->registerJs($js);
                             <?php
                             echo $form->field($shippingForm, 'receiver_name')->textInput(['placeholder' => Yii::t('frontend', 'Enter your full name')])->label(Yii::t('frontend', 'Full Name'));
                             echo $form->field($shippingForm, 'receiver_phone')->textInput(['placeholder' => Yii::t('frontend', 'Enter the contact phone number')])->label(Yii::t('frontend', 'Phone'));
-                            echo $form->field($shippingForm, 'receiver_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label(Yii::t('frontend', 'Address'));
+                            if ($shippingForm->getStoreManager()->store->country_code === 'ID') {
+                                echo $form->field($shippingForm, 'receiver_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label(Yii::t('frontend', 'Address'));
+                            }
                             ?>
                         </div>
                         <div class="col-md-6">
                             <?php
                             if ($shippingForm->getStoreManager()->store->country_code === 'ID') {
                                 echo $form->field($shippingForm, 'receiver_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
+                            }else {
+                                echo $form->field($shippingForm, 'receiver_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label(Yii::t('frontend', 'Address'));
                             }
                             echo $form->field($shippingForm, 'receiver_province_id')->widget(Select2::className(), [
                                 'data' => $shippingForm->getProvinces(),
