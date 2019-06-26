@@ -34,7 +34,7 @@ class CartWidget extends Widget
 
     public $rowOptions = [];
 
-    private $_totalAmount = 0;
+    public $totalAmount = 0;
 
     /**
      * @inheritDoc
@@ -42,14 +42,10 @@ class CartWidget extends Widget
     public function init()
     {
         parent::init();
-        $this->headers = [
-            'Sản phẩm', 'Số lượng', 'Giá tiền'
-        ];
-        $this->registerClientScript();
         Html::addCssClass($this->tableOptions, ['cart-table']);
         $this->items = array_map([$this, 'preItem'], $this->items);
+        $this->registerClientScript();
         echo Html::beginTag('div', $this->options);
-
     }
 
     /**
@@ -62,8 +58,12 @@ class CartWidget extends Widget
         $order = ArrayHelper::getValue($item, 'value');
         $type = ArrayHelper::getValue($item, 'type', CartSelection::TYPE_SHOPPING);
         $selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key);
+
         $products = [];
         foreach ($order['products'] as $product) {
+            if ($selected) {
+                $this->totalAmount += $product['total_price_amount_local'];
+            }
             $products[] = [
                 'sku' => $product['sku'],
                 'parent_sku' => $product['parent_sku'],
@@ -98,10 +98,10 @@ class CartWidget extends Widget
             'options' => $pjaxOptions
         ]);
         if (empty($this->items)) {
-        echo $this->render('empty');
-    }
-            echo $this->renderItems();
-            Pjax::end();
+            echo $this->render('empty');
+        }
+        echo $this->renderItems();
+        Pjax::end();
         echo Html::endTag('div');
     }
 
@@ -119,9 +119,10 @@ class CartWidget extends Widget
     {
         $id = $this->options['id'];
         $options = Json::htmlEncode($this->getClientOptions());
+        $items = Json::htmlEncode($this->items);
         $view = $this->getView();
         CartAsset::register($view);
-        $view->registerJs("jQuery('#$id').wsCart($options);");
+        $view->registerJs("jQuery('#$id').wsCart($items,$options);");
         $view->registerJs("console.log($('#$id').wsCart('data'));");
     }
 
@@ -135,14 +136,8 @@ class CartWidget extends Widget
     {
         return $this->render('content', [
             'items' => $this->items,
+            'totalAmount' => $this->totalAmount
         ]);
-//        $tableHeader = $this->renderTableHeader();
-//        $tableBody = $this->renderTableBody();
-//        $content = array_filter([
-//            $tableHeader,
-//            $tableBody,
-//        ]);
-//        return Html::tag('table', implode("\n", $content), $this->tableOptions);
     }
 
     protected function renderTableBody()
