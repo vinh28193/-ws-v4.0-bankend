@@ -19,9 +19,6 @@ use yii\helpers\Html;
     <div id="method_unknown" class="collapse" aria-labelledby="headingOne" data-parent="#payment-method">
         <div class="method-content">
             <p><b>NOT FOUND</b></p>
-            <pre>
-                <?php var_dump($methods);?>
-            </pre>
         </div>
     </div>
 </div>
