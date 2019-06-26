@@ -134,6 +134,7 @@ class RestActionLogController extends BaseApiController
         if ($id !== null) {
             $response = ActionLog::find()
                 ->where(['id' => $id])
+                ->orderBy(['created_at' => SORT_DESC])
                 ->all();
             return $this->response(true, "Get  $id success", $response);
         } else {
