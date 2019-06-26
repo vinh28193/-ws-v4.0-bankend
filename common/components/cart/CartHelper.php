@@ -71,6 +71,10 @@ class CartHelper
         $order['exchange_rate_fee'] = $storeManager->getExchangeRate();
         $order['sale_support_id'] = null;
         $order['support_email'] = null;
+        $order['check_insurance'] = 0;
+//        $order['check_inspection'] = 0;
+//        $order['check_inspection'] = 0;
+//        $order['total_insurance_fee_local'] = 0; // bảo hiểm đê mặc định k chuyền
         $order['saleSupport'] = null;
         if (Yii::$app->user->getId()) {
             $order['potential'] = 1; // sale ưu tiên chăm đơn
