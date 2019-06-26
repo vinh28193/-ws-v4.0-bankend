@@ -113,10 +113,14 @@ class UserController extends BaseApiController
         $userNew->generateAuthKey();
         if($userNew->save()){
             if(($userNew->employee == 1 || $userNew->employee == 2) && isset($post['authAssigments']) && $post['authAssigments'] ){
-                $assiment = new AuthAssignment();
-                $assiment->item_name = $post['authAssigments'];
-                $assiment->user_id = $userNew->id;
-                $assiment->created_at = time();
+                $scopes = explode(',',$post['authAssigments']);
+                foreach ($scopes as $scope){
+                    $assiment = new AuthAssignment();
+                    $assiment->item_name = trim($scope);
+                    $assiment->user_id = $userNew->id;
+                    $assiment->created_at = time();
+                    $assiment->save();
+                }
             }
             return $this->response(true,'Save user success!');
         }
@@ -154,7 +158,6 @@ class UserController extends BaseApiController
             return $this->response(false,'Validate false',$userNew->errors);
         }
         if(isset($post['reset_pass']) && $post['reset_pass']){
-            die('Reset pass');
             if(strlen($post['reset_pass']) < 8){
                 return $this->response(false,'Password need 8 character');
             }
@@ -163,12 +166,26 @@ class UserController extends BaseApiController
         if($userNew->save()){
             if(($userNew->employee == 1 || $userNew->employee == 2) && isset($post['authAssigments']) && $post['authAssigments'] ){
                 $scopes = explode(',',$post['authAssigments']);
-                foreach ($scopes as $scope){
-                    $assiment = new AuthAssignment();
-                    $assiment->item_name = trim($scope);
-                    $assiment->user_id = $userNew->id;
-                    $assiment->created_at = time();
-                    $assiment->save();
+                $listScope = $userNew->scopeAuth;
+                foreach ($scopes as $key => $scope){
+                    if(isset($listScope[$key]) && $listScope[$key]){
+                        $listScope[$key]->item_name = trim($scope);
+                        $listScope[$key]->save();
+                    }else{
+                        $assiment = new AuthAssignment();
+                        $assiment->item_name = trim($scope);
+                        $assiment->user_id = $userNew->id;
+                        $assiment->created_at = time();
+                        $assiment->save();
+                    }
+                }
+                if(count($listScope) > count($scopes)){
+                    foreach ($listScope as $key => $scope){
+                        if(!isset($scopes[$key])){
+                            $listScope[$key]->item_name = 'canView';
+                            $listScope[$key]->save();
+                        }
+                    }
                 }
             }
             return $this->response(true,'Save user success!');
