@@ -17,10 +17,10 @@ class AmazonDetailResponse extends BaseResponse
 
     /**
      * AmazonDetailResponse constructor.
-     * @param AmazonGate $gate
+     * @param AmazonGate|AmazonGateV3 $gate
      * @param array $config
      */
-    public function __construct(AmazonGate $gate, array $config = [])
+    public function __construct($gate, array $config = [])
     {
         parent::__construct($gate, $config);
     }

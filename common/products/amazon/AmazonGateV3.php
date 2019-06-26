@@ -294,8 +294,8 @@ class AmazonGateV3 extends BaseGate
         $rs['category_id'] = isset($amazon['node_ids'][count($amazon['node_ids']) - 1]) ? $amazon['node_ids'][count($amazon['node_ids']) - 1] : null;
         $rs['item_name'] = trim($amazon['title']);
         $rs['parent_item_id'] = $request->parent_asin_id ? $request->parent_asin_id : '';
-        $rs['retail_price'] = count($price) > 0 ? $price[0] : null;
-        $rs['sell_price'] = count($price) > 0 ? $price[0] : null;
+        $rs['retail_price'] = count($price) > 0 ? floatval($price[0]) : 0;
+        $rs['sell_price'] = count($price) > 0 ? floatval($price[0]) : 0;
         $rs['sell_price_special'] = $price;
         $rs['product_type'] = count($price) == 0 ? 1 : 0;
         $rs['deal_price'] = null;
@@ -304,36 +304,20 @@ class AmazonGateV3 extends BaseGate
         $rs['shipping_fee'] = 0;
         $rs['is_prime'] = null;
         $rs['is_free_ship'] = null;
-        $rs['sort_desc'] = $amazon['product_description'];
-        $rs['description'] = '';
+        $rs['sort_desc'] = is_array($amazon['product_description']) ? implode('<br>',$amazon['product_description']) : $amazon['product_description'];
+        $rs['description'] = isset($amazon['description']) ? $amazon['description'] : '';
         $rs['best_seller'] = '';
         $rs['manufacturer_description'] = '';
         $rs['primary_images'] = $amazon['images'];
-        $rs['technical_specific'] = $amazon['product_description'];
+        $rs['technical_specific'] = [];//$amazon['product_description'];
         $rs['variation_options'] = $this->getOptionGroup($amazon['product_option']);
-        print_r($rs['variation_options']);die;
-        $rs['variation_mapping'] = $this->getVariationMapping($amazon['sale_specifics'], $amazon['detail_images']);
-        $rs['relate_products'] = $this->getRelateProduct($amazon['suggest_products']);
-        $rs['start_price'] = !empty($amazon["retail_price"]) ? ($amazon["retail_price"][0]) : 0.0;
+        $rs['variation_mapping'] = [];
+        $rs['relate_products'] = null;
+        $rs['start_price'] = count($price) > 0 ? floatval($price[0]) : 0;
         $rs['condition'] = isset($amazon['condition']) ? $amazon['condition'] : 'new';
         $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::TYPE_AMAZON_JP : AmazonProduct::TYPE_AMAZON_US;
         $rs['tax_fee'] = 0;
         $rs['store'] = $this->store;
-
-//        $suggestSetCacheKey = "suggest_set_{$rs['item_sku']}";
-//        if (!($suggestSets = $this->cache->get($suggestSetCacheKey))) {
-        foreach ($amazon['suggest_sets'] as $suggestSet) {
-            $key = $suggestSet['id'];
-            if (($key == 'purchase' || $key == 'session') && count($suggestSet['asins']) > 0) {
-                $suggestSets[$key] = $this->getAsins($suggestSet['asins']);
-            }
-        }
-//            $this->cache->set($suggestSetCacheKey, $suggestSets, 3600);
-//        }
-
-        foreach (['purchase', 'session'] as $key) {
-            $rs["suggest_set_$key"] = isset($suggestSets[$key]) ? $suggestSets[$key] : null;
-        }
 
         if (!$request->is_first_load) {
 //            $offersCacheKey = "offers_{$rs['item_sku']}";
@@ -432,10 +416,27 @@ class AmazonGateV3 extends BaseGate
                 $temp['values'] = [];
                 $temp['images_mapping'] = [];
                 foreach ($item['value'] as $value){
-                    if(isset($value['asin_color']) && isset($value['asin_size'])){
-                        $temp['values'][] = $value['asin_color'] ? $value['asin_color'] : $value['asin_size'];
+                    $value_tem = '';
+                    if(isset($value['asin_color']) && $value['asin_color']){
+                        $value_tem = $value['asin_color'];
+                    }else if(isset($value['asin_size']) && $value['asin_size']){
+                        $value_tem = $value['asin_size'];
                     }else if(isset($value['name'])){
-                        $temp['values'][] = $value['name'];
+                        $value_tem = $value['name'];
+                    }
+                    if($value_tem) {
+                        $temp['values'][] = $value_tem;
+                    }
+                    if(isset($value['asin_images']) && $value['asin_images']){
+                        $temp['images_mapping'][] = [
+                          'value' => $value_tem,
+                            'images' => [
+                                [
+                                    'thumb' => $value['asin_images'],
+                                    'main' => $value['asin_images'],
+                                ]
+                            ]
+                        ];
                     }
                 }
                 $rs[] = $temp;
