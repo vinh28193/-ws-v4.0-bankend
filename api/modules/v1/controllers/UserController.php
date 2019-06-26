@@ -111,6 +111,8 @@ class UserController extends BaseApiController
         }
         $userNew->setPassword($post['password']);
         $userNew->generateAuthKey();
+        $userNew->created_at = time();
+        $userNew->updated_at = time();
         if($userNew->save()){
             if(($userNew->employee == 1 || $userNew->employee == 2) && isset($post['authAssigments']) && $post['authAssigments'] ){
                 $scopes = explode(',',$post['authAssigments']);
@@ -163,6 +165,8 @@ class UserController extends BaseApiController
             }
             $userNew->setPassword($post['reset_pass']);
         }
+        $userNew->created_at = time();
+        $userNew->updated_at = time();
         if($userNew->save()){
             if(($userNew->employee == 1 || $userNew->employee == 2) && isset($post['authAssigments']) && $post['authAssigments'] ){
                 $scopes = explode(',',$post['authAssigments']);

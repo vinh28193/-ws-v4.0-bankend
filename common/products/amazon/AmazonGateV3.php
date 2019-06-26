@@ -285,7 +285,6 @@ class AmazonGateV3 extends BaseGate
         if(!$amazon || !$response){
             return [false, 'Request Error'];
         }
-        print_r($amazon);die;
         $rs = [];
         $price = explode('-',$amazon['price']);
         $rs['categories'] = array_unique($amazon['node_ids']);
@@ -312,6 +311,7 @@ class AmazonGateV3 extends BaseGate
         $rs['primary_images'] = $amazon['images'];
         $rs['technical_specific'] = $amazon['product_description'];
         $rs['variation_options'] = $this->getOptionGroup($amazon['product_option']);
+        print_r($rs['variation_options']);die;
         $rs['variation_mapping'] = $this->getVariationMapping($amazon['sale_specifics'], $amazon['detail_images']);
         $rs['relate_products'] = $this->getRelateProduct($amazon['suggest_products']);
         $rs['start_price'] = !empty($amazon["retail_price"]) ? ($amazon["retail_price"][0]) : 0.0;
@@ -432,7 +432,11 @@ class AmazonGateV3 extends BaseGate
                 $temp['values'] = [];
                 $temp['images_mapping'] = [];
                 foreach ($item['value'] as $value){
-                    if($value['asin_color']);
+                    if(isset($value['asin_color']) && isset($value['asin_size'])){
+                        $temp['values'][] = $value['asin_color'] ? $value['asin_color'] : $value['asin_size'];
+                    }else if(isset($value['name'])){
+                        $temp['values'][] = $value['name'];
+                    }
                 }
                 $rs[] = $temp;
             }
