@@ -85,6 +85,7 @@ class ShippingController extends CheckoutController
         // Finally, you need to send a hit; in this example, we are sending an Event
         $request->setEventCategory('Checkout')
             ->setEventAction('Purchase')
+            ->setAsyncRequest(true)  //  'asyncMode' => true,
             ->sendEvent();
 
     }

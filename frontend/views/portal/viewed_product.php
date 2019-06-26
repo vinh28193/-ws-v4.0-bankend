@@ -33,14 +33,14 @@ if(!empty($items)){   // Todo @Huy edit thuộc tính insert lại DB + Mongodb
                              alt="" title=""/>
                     </div>
                     <div class="info">
-                        <div class="rate">
+                        <!--div class="rate">
                             <i class="la la-star"></i>
                             <i class="la la-star"></i>
                             <i class="la la-star"></i>
                             <i class="la la-star-half-o"></i>
                             <i class="la la-star-o"></i>
                             <span>(87)</span>
-                        </div>
+                        </div-->
                         <div class="name"><?= $product->item_name ?></div>
                         <div class="price">
                             <strong><?= Yii::$app->storeManager->showMoney($product->buynow_price) ?></strong>
