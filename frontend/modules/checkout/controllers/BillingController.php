@@ -19,22 +19,16 @@ class BillingController extends CheckoutController
         parent::init();
     }
 
-    public function actionIndex($code)
-    {
-
-    }
-
-    public function actionSuccess($code)
-    {
-        return $this->render('success', ['code' => $code]);
-    }
-
     public function actionFail($code)
     {
-        $paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code]);
+
+        if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code])) === null) {
+
+        }
         $payment = new Payment([
             'type' => 'billing',
             'page' => Payment::PAGE_BILLING,
+            'transaction_code' => $paymentTransaction->transaction_code,
             'customer_name' => $paymentTransaction->transaction_customer_name,
             'customer_email' => $paymentTransaction->transaction_customer_email,
             'customer_phone' => $paymentTransaction->transaction_customer_phone,
@@ -43,6 +37,9 @@ class BillingController extends CheckoutController
             'customer_postcode' => $paymentTransaction->transaction_customer_postcode,
             'customer_district' => $paymentTransaction->transaction_customer_district,
             'customer_country' => $paymentTransaction->transaction_customer_country,
+            'payment_provider' => (int)$paymentTransaction->payment_provider,
+            'payment_method' => (int)$paymentTransaction->payment_method,
+            'payment_bank_code' => $paymentTransaction->payment_bank_code,
         ]);
         $orders = [];
         foreach ($paymentTransaction->childPaymentTransaction as $childPaymentTransaction) {
@@ -55,8 +52,18 @@ class BillingController extends CheckoutController
         $payment->setOrders($orders);
 
         return $this->render('fail', [
+            'code' => $code,
             'payment' => $payment,
-            'code' => $code
         ]);
+
     }
+
+    public function actionSuccess($code)
+    {
+        if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code])) === null) {
+
+        }
+        return $this->render('success', ['code' => $code, 'paymentTransaction' => $paymentTransaction,]);
+    }
+
 }

@@ -18,17 +18,54 @@
         uuid: ws.getFingerprint(),
     };
 
+    var productOption = {
+        sku: undefined,
+        parent_sku: undefined,
+        product_name: undefined,
+        product_link: undefined,
+        link_img: undefined,
+        link_origin: undefined,
+        variations: undefined,
+        total_final_amount: undefined,
+        available_quantity: undefined,
+        quantity_sold: undefined,
+        quantity: undefined,
+        weight: undefined,
+    };
 
+    var sellerOption = {
+        portal: undefined,
+        seller_link_store: undefined,
+        seller_name: undefined,
+        seller_store_rate: 0
+    };
+
+    var itemOption = {
+        key: undefined,
+        selected: undefined,
+        portal: undefined,
+        type: undefined,
+        ordercode: undefined,
+        seller: sellerOption,
+        products: [productOption],
+    };
+
+    var arraySelected = [];
     var methods = {
-        init: function (options) {
+        init: function (items, options) {
             return this.each(function () {
                 var $cart = $(this);
                 if ($cart.data('wsCart')) {
                     return;
                 }
+                items = $.extend({}, itemOption, items || {});
                 var settings = $.extend({}, defaults, options || {});
 
+                $.each(items, function (i, item) {
+
+                });
                 $cart.data('wsCart', {
+                    items: items,
                     settings: settings
                 });
 
@@ -117,7 +154,7 @@
                     methods.payment.apply($cart, ['shopping']);
                 });
 
-                ws.initEventHandler($cart, 'cartOrder', 'change.wsCart', 'input[name=cartOrder]', function (event) {
+                ws.initEventHandler($cart, 'cartOrder', 'change.wsCart', 'input[name=checkCart]', function (event) {
                     event.preventDefault();
                     var $input = $(this);
                     // var data = {param: {key: $input.val()}, selected: $input.is(':checked')};
@@ -153,11 +190,6 @@
                 }, true);
             });
 
-        },
-        refresh: function () {
-            var $cart = $(this);
-            var container = '#' + $cart.attr('id');
-            $.pjax.reload();
         },
         watch: function ($param) {
             var $cart = $(this);
@@ -226,8 +258,8 @@
             var keys = [];
 
             $.each(filterCartItems($cart), function (i, $input) {
-                // keys.push($($input).val());
-                keys.push($($input).data('key'));
+                keys.push($($input).val());
+                // keys.push($($input).data('key'));
             });
             ws.ajax(data.settings.paymentUrl, {
                 dataType: 'json',
@@ -265,17 +297,7 @@
         };
         return array;
     };
-    var updateTotalPrice = function ($cart) {
-        totalAmount = 0;
-        $.each(filterCartItems($cart), function (i, input) {
-            console.log($(input).data('price'));
-            totalAmount += $(input).data('price');
-        });
-        $('span#totalCartPrice').html(ws.numberFormat(totalAmount));
-    };
-    var updateNavBage = function ($count) {
-        $('contentCart').html($count);
-    };
+
     var getQuantityInputOptions = function ($input) {
         return {
             key: $input.data('parent'),
@@ -289,8 +311,7 @@
     };
     var filterCartItems = function ($cart) {
         console.log($cart.attr('id'));
-        return $cart.find('div.cart-item');
-        // return $cart.find('input[name=cartOrder]:checked');
+        return $cart.find('input[name=checkCart]:checked');
         // var $selected = [];
         // $.each($cart.find('input[name=cartOrder]:checked'), function (i, cartOrder) {
         //     var $cartOrder = $(cartOrder);
@@ -307,22 +328,12 @@
         // });
         // return false;
     };
-    var getParamFromElement = function ($element) {
-        return {
-            key: $element.data('parent') || null,
-            id: $element.data('id') || null,
-            sku: $element.data('sku') || null,
-        }
-    }
-    var updateItem = function ($data) {
-        console.log($data)
-    };
 })(jQuery);
 
-$('input[name=checkCar]').change(function() {
+$('input[name=checkCar]').change(function () {
     var values = [];
     {
-        $("input[name=checkCar]:checked").each(function() {
+        $("input[name=checkCar]:checked").each(function () {
             values.push($(this).val());
         });
         console.log(values);

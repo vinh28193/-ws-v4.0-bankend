@@ -16,6 +16,7 @@ use frontend\modules\payment\PaymentService;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
 use Yii;
 use yii\db\Exception;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Response;
 
@@ -29,7 +30,6 @@ class PaymentController extends BasePaymentController
         $bodyParams = $this->request->bodyParams;
         $payment = new Payment($bodyParams['payment']);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
-
         $shippingForm->ensureReceiver();
         if (count($payment->errors) > 0) {
             return $this->response(false, implode(', ', $payment->errors));
@@ -129,8 +129,8 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->transaction_customer_district = $payment->customer_district;
         $paymentTransaction->transaction_customer_city = $payment->customer_city;
         $paymentTransaction->transaction_customer_country = $payment->customer_country;
-        $paymentTransaction->payment_provider = $payment->payment_provider_name;
-        $paymentTransaction->payment_method = $payment->payment_method_name;
+        $paymentTransaction->payment_provider = $payment->payment_provider;
+        $paymentTransaction->payment_method = $payment->payment_method;
         $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
         $paymentTransaction->total_discount_amount = 0;
         $paymentTransaction->before_discount_amount_local = $payment->getTotalAmountDisplay();
@@ -281,27 +281,73 @@ class PaymentController extends BasePaymentController
         return $this->response(true, 'create success', $res);
     }
 
+    public function actionBilling()
+    {
+        $start = microtime(true);
+        $now = Yii::$app->getFormatter()->asDatetime('now');
+        $bodyParams = $this->request->bodyParams;
+        $orders = ArrayHelper::remove($bodyParams, 'orders', []);
+        if (empty($orders)) {
+            return $this->response(false, Yii::t('frontend', 'Empty orders'));
+        }
+        $payment = new Payment($bodyParams);
+        $payment->setOrders($orders);
+        if (($methodProvider = PaymentService::getMethodProvider($payment->payment_provider, $payment->payment_method)) === null) {
+            $payment->payment_method_name = $methodProvider->paymentMethod->code;
+            $payment->payment_provider_name = $methodProvider->paymentProvider->code;
+        } else {
+            $payment->initDefaultMethod();
+        }
+        $paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $payment->transaction_code]);
+        if ($paymentTransaction === null) {
+            return $this->response(false, Yii::t('frontend', 'Not found transaction for invoice {code}', [
+                'code' => $payment->transaction_code
+            ]));
+        }
+        $res = $payment->processPayment();
+        if ($res->success === false) {
+            return $this->response(false, $res->message);
+        }
+        $paymentTransaction->payment_method = $payment->payment_method;
+        $paymentTransaction->payment_provider = $payment->payment_provider;
+        $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
+        $paymentTransaction->third_party_transaction_code = $res->token;
+        $paymentTransaction->third_party_transaction_status = $res->status;
+        $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
+        foreach ($paymentTransaction->childPaymentTransaction as $childPaymentTransaction) {
+            $childPaymentTransaction->payment_method = $payment->payment_method;
+            $childPaymentTransaction->payment_provider = $payment->payment_provider;
+            $childPaymentTransaction->payment_bank_code = $payment->payment_bank_code;
+            $childPaymentTransaction->third_party_transaction_code = $res->token;
+            $childPaymentTransaction->third_party_transaction_status = $res->status;
+            $childPaymentTransaction->third_party_transaction_link = $res->checkoutUrl;
+            $childPaymentTransaction->save(false);
+        }
+        $paymentTransaction->save(false);
+        $time = sprintf('%.3f', microtime(true) - $start);
+        Yii::info("action time : $time", __METHOD__);
+        return $this->response(true, 'create success', $res);
+    }
+
     public function actionReturn($merchant)
     {
         $start = microtime(true);
         Yii::$app->response->format = Response::FORMAT_JSON;
         $res = Payment::checkPayment((int)$merchant, $this->request);
-        $cartUrl = Url::toRoute('/checkout/cart');
-        $redirectUrl = Url::toRoute('/account/order', true);
 
-        // @Phuc ToDo Check log Respone NL
-//        Yii::info(" res Object response :");
-//        Yii::info($res, __METHOD__);
+        /** @var $paymentTransaction PaymentTransaction */
+        $paymentTransaction = $res->paymentTransaction;
+        $redirectUrl = PaymentService::createSuccessUrl($paymentTransaction->transaction_code);
+        $failUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
 
         if ($res->success === false) {
-            Yii::info(" res return false redirect url :" . $this->redirect($cartUrl));
-            return $this->redirect($cartUrl);
+            return $this->redirect($failUrl);
         }
         if ($res->checkoutUrl !== null) {
             $redirectUrl = $res->checkoutUrl;
         }
-        /** @var $paymentTransaction PaymentTransaction */
-        if (($paymentTransaction = $res->paymentTransaction) instanceof PaymentTransaction && $paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
+
+        if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
             foreach ($paymentTransaction->childPaymentTransaction as $child) {
                 $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
 
@@ -311,10 +357,9 @@ class PaymentController extends BasePaymentController
                 }
                 $child->save(false);
             }
-            return $this->redirect($redirectUrl);
 
         }
-        return $this->redirect($cartUrl);
+        return $this->redirect($redirectUrl);
 
     }
 
