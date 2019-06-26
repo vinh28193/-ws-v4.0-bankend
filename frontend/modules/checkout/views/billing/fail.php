@@ -9,15 +9,6 @@ use yii\helpers\Html;
 ?>
 
 <style type="text/css">
-    .center-box {
-        text-align: center;
-    }
-
-    .button-group-fail {
-
-
-    }
-
     .btn-continue {
         border-radius: 3px;
         border: 1px solid #d25e0d;
@@ -27,32 +18,47 @@ use yii\helpers\Html;
         font-weight: 500;
         text-transform: uppercase;
     }
-
-    .btn-cancel {
-        border-radius: 3px;
-        border: 1px solid #2b96b6;
-        background-image: linear-gradient(180deg, #2b96b6 0%, #2b96b6 100%);
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 500;
-        text-transform: uppercase;
-    }
 </style>
 <div class="container">
-    <div class="card card-checkout">
-        <div class="card-body">
-            <div class="center-box">
-                <img src="/images/icon/payment_fail.png" alt="" title=""/>
-                <p class="m-3">Đã có lỗi trong quá trình thanh toán hoặc giao dịch đã quá thời gian quy định. Bạn có
-                    muốn tiến hành thanh toán lại hay không?</p>
-                <div class="button-group">
-                    <a href="#" class="btn btn-cancel" onclick="window.location.href = '/'">Huy bo</a>
-                    <a href="#" class="btn btn-continue" onclick="window.location.href = '/'">Hinh Thuc thanh toan
-                        khac</a>
+    <div class="row">
+        <div class="col-md-4 offset-md-4 text-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-checkout">
+                        <div class="card-body">
+                            <img src="/images/icon/payment_fail.png" alt="" title=""/>
+                            <p class="m-3">There was an error in the payment process or the transaction has expired. Do
+                                you want to make a payment again?</p>
+                            <div class="button-group">
+                                <button class="btn btn-block btn-continue" data-toggle="modal"
+                                        data-target="#otherMethods">Choose other payment method
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="/" style="color: #2b96b6;">Cancel</a>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="otherMethods" tabindex="-1" role="dialog" aria-labelledby="otherMethodsTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="otherMethodsTitle"><?php echo Yii::t('frontend', 'Select a payment method'); ?></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <?php echo $payment->initPaymentView(); ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 

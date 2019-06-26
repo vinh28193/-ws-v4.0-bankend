@@ -90,9 +90,14 @@ class PaymentService
     }
 
     public
-    static function createCancelUrl()
+    static function createCancelUrl($code)
     {
-        return Url::toRoute("/checkout/cart", true);
+        return Url::to("checkout/invoice/$code/fail.html", true);
+    }
+
+    public static function createSuccessUrl($code)
+    {
+        return Url::to("checkout/invoice/$code/success.html", true);
     }
 
     public

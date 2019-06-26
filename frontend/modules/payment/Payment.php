@@ -134,6 +134,10 @@ class Payment extends Model
         $this->payment_method = 1;
         $this->payment_provider = 42;
         $this->payment_bank_code = 'VISA';
+        if (($methodProvider = PaymentService::getMethodProvider($this->payment_provider, $this->payment_method)) !== null) {
+            $this->payment_method_name = $methodProvider->paymentMethod->code;
+            $this->payment_provider_name = $methodProvider->paymentProvider->code;
+        }
     }
 
     /**
@@ -155,7 +159,6 @@ class Payment extends Model
     public function setOrders($orders)
     {
         $this->_orders = [];
-
         foreach ($orders as $order) {
             if (!is_object($order)) {
                 if (!isset($order['checkoutType'])) {
@@ -176,6 +179,8 @@ class Payment extends Model
                         $this->errors[] = $order->getFirstErrors();
                         continue;
                     }
+                } elseif ($this->page === self::PAGE_BILLING) {
+                    $order = Order::findOne(['ordercode' => $order->ordercode]);
                 }
             }
             $this->_orders[] = $order;
@@ -202,17 +207,11 @@ class Payment extends Model
     public function createTransactionCode()
     {
 
-        $this->payment_provider = (int)$this->payment_provider;
-        $this->payment_method = (int)$this->payment_method;
-        if (($methodProvider = PaymentService::getMethodProvider($this->payment_provider, $this->payment_method)) !== null) {
-            $this->payment_method_name = $methodProvider->paymentMethod->code;
-            $this->payment_provider_name = $methodProvider->paymentProvider->code;
-        }
         $code = PaymentService::generateTransactionCode('PM');
         $this->transaction_code = $code;
         $this->transaction_fee = 0;
-        $this->return_url = $this->page === self::PAGE_TOP_UP ? Url::to("/my-wallet/topup/{$this->payment_provider}/return.html", true) : PaymentService::createReturnUrl($this->payment_provider);
-        $this->cancel_url = PaymentService::createCancelUrl();
+        $this->return_url = PaymentService::createReturnUrl($this->payment_provider);
+        $this->cancel_url = PaymentService::createCancelUrl($code);
     }
 
     public function processPayment()

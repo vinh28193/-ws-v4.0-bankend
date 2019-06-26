@@ -17,7 +17,13 @@ class InstallmentController extends BasePaymentController
     {
         $provider = (int)$provider;
         $params = $this->request->bodyParams;
+        $orders = ArrayHelper::remove($params, 'orders', []);
+        if (empty($orders)) {
+            return $this->response(false, 'empty');
+        }
         $payment = new Payment($params);
+        $payment->setOrders($orders);
+        Yii::info($payment->getOrders(), $payment->page);
         $success = false;
         $message = 'no found';
         $data = [
