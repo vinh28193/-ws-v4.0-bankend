@@ -7,7 +7,6 @@ use yii\helpers\Html;
 /** @var $this yii\web\View */
 /** @var $items array */
 $storeManager = Yii::$app->storeManager;
-$totalAmount = 0;
 ?>
 <?php if ($items) { ?>
     <div class="cart-box pr-3" id="load-card" style="border: none">
@@ -16,20 +15,27 @@ $totalAmount = 0;
             ?>
             <div class="shadow-lg mb-3">
                 <div class="row pt-2 pb-2 pl-2 pr-3 m-0" style="width: 100%">
-                    <div class="col-8">
+                    <div class="col-6">
                         <div class="row">
                             <div class="col-md-1">
                                 <div class="form-check">
-                                    <input class="form-check-input position-static source" name="checkCar" style="margin: auto; height: 18px; width: 18px;" type="checkbox" value="<?= $item['ordercode'] ?>" aria-label="...">
+                                    <input class="form-check-input position-static source" name="checkCart"
+                                           style="margin: auto; height: 18px; width: 18px;" type="checkbox"
+                                           value="<?= $item['key'] ?>"
+                                           aria-label="..." <?= $item['selected'] ? 'checked' : ''; ?>>
                                 </div>
                             </div>
                             <div class="col-md-11">
-                                <span>Nhà bán <a href="<?=$item['seller']['seller_link_store'] ?>" style="color: #2b96b6;"><?=$item['seller']['seller_name'] ?></a> trên <?=$item['seller']['portal'] ?></span>
+                                <span>Nhà bán <a href="<?= $item['seller']['seller_link_store'] ?>"
+                                                 style="color: #2b96b6;"><?= $item['seller']['seller_name'] ?></a> trên <?= $item['seller']['portal'] ?></span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-2 text-center"><span>Số Lượng</span></div>
-                    <div class="col-2 text-right pr-1 text-right"><span>Giá Tiền</span></div>
+                    <div class="col-2 pr-1">
+                        <span><?php echo Yii::t('frontend', 'Unit amount'); ?></span></div>
+                    <div class="col-2 text-center"><span><?php echo Yii::t('frontend', 'Quantity'); ?></span></div>
+                    <div class="col-2 text-right pr-1">
+                        <span><?php echo Yii::t('frontend', 'Total amount'); ?></span></div>
                 </div>
                 <hr>
                 <div class="cart-item" data-key="<?= $item['key'] ?>" data-type="shopping"
@@ -49,14 +55,14 @@ $totalAmount = 0;
                         }
                         $availableQuantity = !($availableQuantity === null || (int)$availableQuantity < 0) ? $availableQuantity : 50;
                         $soldQuantity = !($soldQuantity === null || (int)$soldQuantity < 0) ? $soldQuantity : 0;
-                        $totalAmount += (int)$product['total_final_amount'];
                         ?>
                         <div class="row m-0 pb-2">
                             <div class="col-1 pb-2" style="height: auto;">
                                 <img src="<?= $product['link_img']; ?>"
-                                     alt="<?= $product['product_name']; ?>" width="80%" height="100px" title="<?= $product['product_name']; ?>">
+                                     alt="<?= $product['product_name']; ?>" width="80%" height="100px"
+                                     title="<?= $product['product_name']; ?>">
                             </div>
-                            <div class="col-7 pt-4">
+                            <div class="col-5 pt-4">
                                 <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
                                     <strong class="style-name"><?= $product['product_name']; ?></strong>
                                 </a>
@@ -64,11 +70,15 @@ $totalAmount = 0;
                                    data-parent="<?= $item['key'] ?>"
                                    data-id="<?= $product['parent_sku'] ?>"
                                    data-type="<?= $item['type'] ?>"
-                                   data-sku="<?= $product['sku']; ?>"
-                                <i class="far fa-trash-alt"></i> Xóa</a>
+                                   data-sku="<?= $product['sku']; ?>">
+                                    <i class="far fa-trash-alt"></i> <?php echo Yii::t('frontend', 'Delete'); ?></a>
+                            </div>
+                            <div class="col-2 pt-4">
+                                <?= $storeManager->showMoney($product['total_unit_amount']); ?>
                             </div>
                             <div class="col-2 pt-4 text-center">
-                                <div class="qty form-inline quantity-option" style="width: 107px; height: 31px; border-radius: 3px; border: 1px solid #cecece; background-color: #ffffff; margin: auto">
+                                <div class="qty form-inline quantity-option"
+                                     style="width: 107px; height: 31px; border-radius: 3px; border: 1px solid #cecece; background-color: #ffffff; margin: auto">
                                     <div class="input-group" style="margin: auto">
                                         <div class="input-group-prepend">
                                             <button class="btn button-quantity-down"
@@ -118,17 +128,18 @@ $totalAmount = 0;
         <?php endforeach; ?>
         <div class="row mt-2">
             <div class="col-12 text-right">
-                <strong style="font-weight: 600;">Tổng số tiền tạm tính</strong><br>
-                <span id="total" class="text-danger" style="font-size: 24px; font-weight: 500"><?= $storeManager->showMoney($totalAmount)?></span>
+                <strong style="font-weight: 600;"><?= Yii::t('frontend', 'Total temporarily calculated amount'); ?></strong>
+            </div>
+            <div class="col-12 text-right mt-1">
+                <span id="totalPrice" class="text-danger"
+                      style="font-size: 24px; font-weight: 500;"><?= $storeManager->showMoney($totalAmount) ?></span>
             </div>
         </div>
         <div class="row text-right mb-5 mt-2">
             <div class="col-12">
-                <button class="btn style-btn mt-2" id="installmentBtn">
-                    <span class="la la-credit-card float-left" style="font-size: 1.7em;"></span>MUA TRẢ GÓP
-                </button>
-                <button class="btn style-btn1 mt-2 " id="shoppingBtn">
-                    <span class="la la-shopping-cart float-left" style="font-size: 1.7em;"></span>THỰC HIỆN ĐẶT MUA
+                <button class="btn style-btn1 mt-2" id="shoppingBtn" style="text-transform: uppercase">
+                    <span class="la la-shopping-cart float-left"
+                          style="font-size: 1.7em;"></span><?php echo Yii::t('frontend', 'Make payment'); ?>
                 </button>
             </div>
         </div>

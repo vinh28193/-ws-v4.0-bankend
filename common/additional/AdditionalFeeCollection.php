@@ -167,7 +167,7 @@ class AdditionalFeeCollection extends ArrayCollection
             }
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         } else {
-            $amount *= $additional->getShippingQuantity();
+            //$amount *= $additional->getShippingQuantity();
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         }
         return [
