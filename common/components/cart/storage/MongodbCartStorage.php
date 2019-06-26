@@ -110,7 +110,7 @@ class MongodbCartStorage extends BaseObject
     {
         $conditions = ['remove' => 0];
         if ($type !== null) {
-            $conditions = ['type' => $type];
+            $conditions['type'] = $type;
         }
         if ($uuid !== null) {
             $conditions['uuid'] = $uuid;

@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "{{%product}}".
+ * This is the model class for table "product".
  *
  * @property int $id
  * @property int $order_id order id
@@ -54,6 +54,7 @@ use Yii;
  * @property int $lost
  * @property int $refunded
  * @property int $confirm_change_price 0: là không có thay đổi giá hoặc có thay đổi nhưng đã confirm. 1: là có thay đổi cần xác nhận
+ * @property int $total_final_amount_local
  *
  * @property CategoryCustomPolicy $customCategory
  * @property Order $order
@@ -67,7 +68,7 @@ class Product extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%product}}';
+        return 'product';
     }
 
     /**
@@ -77,7 +78,7 @@ class Product extends \common\components\db\ActiveRecord
     {
         return [
             [['order_id', 'seller_id', 'portal', 'sku', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'created_at', 'product_name'], 'required'],
-            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancel', 'lost', 'refunded', 'confirm_change_price'], 'integer'],
+            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancel', 'lost', 'refunded', 'confirm_change_price', 'total_final_amount_local'], 'integer'],
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'product_name'], 'string'],
             [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_fee_product_local', 'price_purchase', 'shipping_fee_purchase', 'tax_fee_purchase', 'total_weight_temporary', 'seller_refund_amount'], 'number'],
             [['portal', 'sku', 'parent_sku', 'version', 'condition', 'note_boxme', 'current_status'], 'string', 'max' => 255],
@@ -94,53 +95,54 @@ class Product extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('db', 'ID'),
-            'order_id' => Yii::t('db', 'Order ID'),
-            'seller_id' => Yii::t('db', 'Seller ID'),
-            'portal' => Yii::t('db', 'Portal'),
-            'sku' => Yii::t('db', 'Sku'),
-            'parent_sku' => Yii::t('db', 'Parent Sku'),
-            'link_img' => Yii::t('db', 'Link Img'),
-            'link_origin' => Yii::t('db', 'Link Origin'),
-            'category_id' => Yii::t('db', 'Category ID'),
-            'custom_category_id' => Yii::t('db', 'Custom Category ID'),
-            'price_amount_origin' => Yii::t('db', 'Price Amount Origin'),
-            'price_amount_local' => Yii::t('db', 'Price Amount Local'),
-            'total_price_amount_local' => Yii::t('db', 'Total Price Amount Local'),
-            'total_fee_product_local' => Yii::t('db', 'Total Fee Product Local'),
-            'quantity_customer' => Yii::t('db', 'Quantity Customer'),
-            'quantity_purchase' => Yii::t('db', 'Quantity Purchase'),
-            'quantity_inspect' => Yii::t('db', 'Quantity Inspect'),
-            'price_purchase' => Yii::t('db', 'Price Purchase'),
-            'shipping_fee_purchase' => Yii::t('db', 'Shipping Fee Purchase'),
-            'tax_fee_purchase' => Yii::t('db', 'Tax Fee Purchase'),
-            'variations' => Yii::t('db', 'Variations'),
-            'variation_id' => Yii::t('db', 'Variation ID'),
-            'note_by_customer' => Yii::t('db', 'Note By Customer'),
-            'total_weight_temporary' => Yii::t('db', 'Total Weight Temporary'),
-            'created_at' => Yii::t('db', 'Created At'),
-            'updated_at' => Yii::t('db', 'Updated At'),
-            'remove' => Yii::t('db', 'Remove'),
-            'product_name' => Yii::t('db', 'Product Name'),
-            'product_link' => Yii::t('db', 'Product Link'),
-            'version' => Yii::t('db', 'Version'),
-            'condition' => Yii::t('db', 'Condition'),
-            'seller_refund_amount' => Yii::t('db', 'Seller Refund Amount'),
-            'note_boxme' => Yii::t('db', 'Note Boxme'),
-            'current_status' => Yii::t('db', 'Current Status'),
-            'purchase_start' => Yii::t('db', 'Purchase Start'),
-            'purchased' => Yii::t('db', 'Purchased'),
-            'seller_shipped' => Yii::t('db', 'Seller Shipped'),
-            'stockin_us' => Yii::t('db', 'Stockin Us'),
-            'stockout_us' => Yii::t('db', 'Stockout Us'),
-            'stockin_local' => Yii::t('db', 'Stockin Local'),
-            'stockout_local' => Yii::t('db', 'Stockout Local'),
-            'at_customer' => Yii::t('db', 'At Customer'),
-            'returned' => Yii::t('db', 'Returned'),
-            'cancel' => Yii::t('db', 'Cancel'),
-            'lost' => Yii::t('db', 'Lost'),
-            'refunded' => Yii::t('db', 'Refunded'),
-            'confirm_change_price' => Yii::t('db', 'Confirm Change Price'),
+            'id' => 'ID',
+            'order_id' => 'Order ID',
+            'seller_id' => 'Seller ID',
+            'portal' => 'Portal',
+            'sku' => 'Sku',
+            'parent_sku' => 'Parent Sku',
+            'link_img' => 'Link Img',
+            'link_origin' => 'Link Origin',
+            'category_id' => 'Category ID',
+            'custom_category_id' => 'Custom Category ID',
+            'price_amount_origin' => 'Price Amount Origin',
+            'price_amount_local' => 'Price Amount Local',
+            'total_price_amount_local' => 'Total Price Amount Local',
+            'total_fee_product_local' => 'Total Fee Product Local',
+            'quantity_customer' => 'Quantity Customer',
+            'quantity_purchase' => 'Quantity Purchase',
+            'quantity_inspect' => 'Quantity Inspect',
+            'price_purchase' => 'Price Purchase',
+            'shipping_fee_purchase' => 'Shipping Fee Purchase',
+            'tax_fee_purchase' => 'Tax Fee Purchase',
+            'variations' => 'Variations',
+            'variation_id' => 'Variation ID',
+            'note_by_customer' => 'Note By Customer',
+            'total_weight_temporary' => 'Total Weight Temporary',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'remove' => 'Remove',
+            'product_name' => 'Product Name',
+            'product_link' => 'Product Link',
+            'version' => 'Version',
+            'condition' => 'Condition',
+            'seller_refund_amount' => 'Seller Refund Amount',
+            'note_boxme' => 'Note Boxme',
+            'current_status' => 'Current Status',
+            'purchase_start' => 'Purchase Start',
+            'purchased' => 'Purchased',
+            'seller_shipped' => 'Seller Shipped',
+            'stockin_us' => 'Stockin Us',
+            'stockout_us' => 'Stockout Us',
+            'stockin_local' => 'Stockin Local',
+            'stockout_local' => 'Stockout Local',
+            'at_customer' => 'At Customer',
+            'returned' => 'Returned',
+            'cancel' => 'Cancel',
+            'lost' => 'Lost',
+            'refunded' => 'Refunded',
+            'confirm_change_price' => 'Confirm Change Price',
+            'total_final_amount_local' => 'Total Final Amount Local',
         ];
     }
 

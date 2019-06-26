@@ -167,9 +167,9 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
     public function getSellPrice()
     {
         if (!empty($this->deal_price) && $this->deal_price > 0.0) {
-            return $this->deal_price;
+            return $this->deal_price * $this->quantity;
         } else {
-            return $this->sell_price;
+            return $this->sell_price * $this->quantity;
         }
     }
 

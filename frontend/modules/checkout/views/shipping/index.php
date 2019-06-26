@@ -100,15 +100,15 @@ $this->registerJs($js);
 
 </style>
 <div class="container">
-    <?php if($shippingForm->getUser() === null):?>
-    <div class="card card-information">
-        <div class="card-body">
-            <?= Yii::t('frontend', '<a href="{loginUrl}"> Login / sign up </a> now for more convenience & incentives', [
-                'loginUrl' => Yii::$app->user->loginUrl
-            ]); ?>
+    <?php if ($shippingForm->getUser() === null): ?>
+        <div class="card card-information">
+            <div class="card-body">
+                <?= Yii::t('frontend', '<a href="{loginUrl}"> Login / sign up </a> now for more convenience & incentives', [
+                    'loginUrl' => Yii::$app->user->loginUrl
+                ]); ?>
+            </div>
         </div>
-    </div>
-    <?php endif;?>
+    <?php endif; ?>
     <div class="card card-checkout card-shipping">
         <div class="card-body">
             <?php
@@ -253,7 +253,7 @@ $this->registerJs($js);
                             <?php
                             if ($shippingForm->getStoreManager()->store->country_code === 'ID') {
                                 echo $form->field($shippingForm, 'receiver_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
-                            }else {
+                            } else {
                                 echo $form->field($shippingForm, 'receiver_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label(Yii::t('frontend', 'Address'));
                             }
                             echo $form->field($shippingForm, 'receiver_province_id')->widget(Select2::className(), [
@@ -326,6 +326,9 @@ $this->registerJs($js);
                 </div>
                 <div class="row product-list">
                     <?php foreach ($order->products as $product): ?>
+                        <?php
+                        $productFees = ArrayHelper::index($product->productFees, null, 'name');
+                        ?>
                         <div class="col-md-12 product-item">
                             <div class="row product">
                                 <div class="col-md-1 img-responsive">
