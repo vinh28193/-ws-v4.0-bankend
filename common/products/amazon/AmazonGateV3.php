@@ -152,6 +152,7 @@ class AmazonGateV3 extends BaseGate
 
     }
 
+
     /**
      * @param $itemId
      * @param bool $refresh
@@ -160,26 +161,15 @@ class AmazonGateV3 extends BaseGate
      */
     public function getOffers($itemId)
     {
-        $httpClient = $this->getHttpClient();
-        $httpRequest = $httpClient->createRequest();
-        $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
-        $httpRequest->setMethod('POST');
-        $httpRequest->setUrl($this->offerUrl);
-        $httpRequest->setData([
-            'store' => $this->store,
-            'asin_id' => $itemId
-        ]);
-        try {
-            $httpResponse = $httpClient->send($httpRequest);
-            if (!$httpResponse->isOk) {
-                return [];
-            }
-            $httpResponse = $httpResponse->getData();
-            return $httpResponse['response'] ? $httpResponse['response'] : [];
-        } catch (\Exception $e) {
-            Yii::error($e, __METHOD__);
+        return [];
+        $curl = new curl\Curl();
+
+        $response = $curl->get($this->baseUrl.'/asin_offer/'.$itemId);
+        if($curl->responseCode != 200){
             return [];
         }
+        $response = json_decode($response,true);
+        return ArrayHelper::getValue($response,'response',[]);
     }
     /**
      * @param $request AmazonSearchRequest
@@ -294,8 +284,8 @@ class AmazonGateV3 extends BaseGate
         $rs['category_id'] = isset($amazon['node_ids'][count($amazon['node_ids']) - 1]) ? $amazon['node_ids'][count($amazon['node_ids']) - 1] : null;
         $rs['item_name'] = trim($amazon['title']);
         $rs['parent_item_id'] = $request->parent_asin_id ? $request->parent_asin_id : '';
-        $rs['retail_price'] = count($price) > 0 ? floatval($price[0]) : 0;
-        $rs['sell_price'] = count($price) > 0 ? floatval($price[0]) : 0;
+        $rs['retail_price'] = count($price) > 0 ? str_replace(',','',trim($price[0])) : 0;
+        $rs['sell_price'] = count($price) > 0 ? str_replace(',','',trim($price[0])) : 0;
         $rs['sell_price_special'] = $price;
         $rs['product_type'] = count($price) == 0 ? 1 : 0;
         $rs['deal_price'] = null;
@@ -313,13 +303,12 @@ class AmazonGateV3 extends BaseGate
         $rs['variation_options'] = $this->getOptionGroup($amazon['product_option']);
         $rs['variation_mapping'] = [];
         $rs['relate_products'] = null;
-        $rs['start_price'] = count($price) > 0 ? floatval($price[0]) : 0;
+        $rs['start_price'] = count($price) > 0 ? str_replace(',','',trim($price[0])) : 0;
         $rs['condition'] = isset($amazon['condition']) ? $amazon['condition'] : 'new';
         $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::TYPE_AMAZON_JP : AmazonProduct::TYPE_AMAZON_US;
         $rs['tax_fee'] = 0;
         $rs['store'] = $this->store;
-
-        if (!$request->is_first_load) {
+        $rs['customer_feedback'] = ArrayHelper::getValue($response,'product_review',[]);
 //            $offersCacheKey = "offers_{$rs['item_sku']}";
 //            if (!($offers = $this->cache->get($offersCacheKey))) {
             $offers = $this->getOffers($rs['item_sku']);
@@ -362,7 +351,6 @@ class AmazonGateV3 extends BaseGate
                 $rs['sell_price'] = 0;
                 [false, 'no provider valid'];
             }
-        }
         $rs['price_api'] = $rs['sell_price'];
         $rs['currency_api'] = 'USD';
         $rs['ex_rate_api'] = 1;
@@ -411,35 +399,37 @@ class AmazonGateV3 extends BaseGate
         }
         $rs = [];
         foreach ($data as $item) {
-            $temp['name'] = trim($item['name']);
-            if($temp['name']){
-                $temp['values'] = [];
-                $temp['images_mapping'] = [];
-                foreach ($item['value'] as $value){
-                    $value_tem = '';
-                    if(isset($value['asin_color']) && $value['asin_color']){
-                        $value_tem = $value['asin_color'];
-                    }else if(isset($value['asin_size']) && $value['asin_size']){
-                        $value_tem = $value['asin_size'];
-                    }else if(isset($value['name'])){
-                        $value_tem = $value['name'];
-                    }
-                    if($value_tem) {
-                        $temp['values'][] = $value_tem;
-                    }
-                    if(isset($value['asin_images']) && $value['asin_images']){
-                        $temp['images_mapping'][] = [
-                          'value' => $value_tem,
-                            'images' => [
-                                [
-                                    'thumb' => $value['asin_images'],
-                                    'main' => $value['asin_images'],
+            if(isset($item['name'])){
+                $temp['name'] = trim($item['name']);
+                if($temp['name']){
+                    $temp['values'] = [];
+                    $temp['images_mapping'] = [];
+                    foreach ($item['value'] as $value){
+                        $value_tem = '';
+                        if(isset($value['asin_color']) && $value['asin_color']){
+                            $value_tem = $value['asin_color'];
+                        }else if(isset($value['asin_size']) && $value['asin_size']){
+                            $value_tem = $value['asin_size'];
+                        }else if(isset($value['name'])){
+                            $value_tem = $value['name'];
+                        }
+                        if($value_tem) {
+                            $temp['values'][] = $value_tem;
+                        }
+                        if(isset($value['asin_images']) && $value['asin_images']){
+                            $temp['images_mapping'][] = [
+                                'value' => $value_tem,
+                                'images' => [
+                                    [
+                                        'thumb' => $value['asin_images'],
+                                        'main' => $value['asin_images'],
+                                    ]
                                 ]
-                            ]
-                        ];
+                            ];
+                        }
                     }
+                    $rs[] = $temp;
                 }
-                $rs[] = $temp;
             }
         }
         return $rs;
