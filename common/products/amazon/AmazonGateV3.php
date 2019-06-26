@@ -161,7 +161,6 @@ class AmazonGateV3 extends BaseGate
      */
     public function getOffers($itemId)
     {
-        return [];
         $curl = new curl\Curl();
 
         $response = $curl->get($this->baseUrl.'/asin_offer/'.$itemId);
@@ -256,7 +255,9 @@ class AmazonGateV3 extends BaseGate
 
         $response = $curl->get($this->baseUrl.'/'.$this->asinsUrl.'/'.$request->asin_id);
         $response = json_decode($response,true);
-
+        if($curl->responseCode != 200){
+            return [false, 'Request error '. $curl->responseCode];
+        }
         if (!$this->isValidResponse($response)) {
             return [false, 'can not send request'];
         }
@@ -284,8 +285,8 @@ class AmazonGateV3 extends BaseGate
         $rs['category_id'] = isset($amazon['node_ids'][count($amazon['node_ids']) - 1]) ? $amazon['node_ids'][count($amazon['node_ids']) - 1] : null;
         $rs['item_name'] = trim($amazon['title']);
         $rs['parent_item_id'] = $request->parent_asin_id ? $request->parent_asin_id : '';
-        $rs['retail_price'] = count($price) > 0 ? str_replace(',','',trim($price[0])) : 0;
-        $rs['sell_price'] = count($price) > 0 ? str_replace(',','',trim($price[0])) : 0;
+        $rs['retail_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
+        $rs['sell_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
         $rs['sell_price_special'] = $price;
         $rs['product_type'] = count($price) == 0 ? 1 : 0;
         $rs['deal_price'] = null;
@@ -303,7 +304,7 @@ class AmazonGateV3 extends BaseGate
         $rs['variation_options'] = $this->getOptionGroup($amazon['product_option']);
         $rs['variation_mapping'] = [];
         $rs['relate_products'] = null;
-        $rs['start_price'] = count($price) > 0 ? str_replace(',','',trim($price[0])) : 0;
+        $rs['start_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
         $rs['condition'] = isset($amazon['condition']) ? $amazon['condition'] : 'new';
         $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::TYPE_AMAZON_JP : AmazonProduct::TYPE_AMAZON_US;
         $rs['tax_fee'] = 0;
@@ -323,27 +324,26 @@ class AmazonGateV3 extends BaseGate
                         continue;
                     }
                     $prov = [];
-                    $prov['name'] = $offer['seller']['seller_name'];
+                    $prov['name'] = trim($offer['seller']['seller_name']);
                     $prov['image'] = '';
                     $prov['website'] = '';
                     $prov['location'] = '';
-                    $prov['rating_score'] = $offer['seller']['rating_count'];
-                    $prov['rating_star'] = $offer['seller']['rate_star'];
-                    $prov['positive_feedback_percent'] = $offer['seller']['positive'];
-                    $prov['condition'] = $offer['condition'];
+                    $prov['rating_score'] = isset($offer['seller']['rating_count']) ? trim($offer['seller']['rating_count']) : '';
+                    $prov['rating_star'] = isset($offer['seller']['rate_star']) ? trim($offer['seller']['rate_star']) : '';
+                    $prov['positive_feedback_percent'] = isset($offer['seller']['positive']) ? trim($offer['seller']['positive']) : '';
+                    $prov['condition'] = trim($offer['condition']);
                     $prov['fulfillment'] = $offer['fulfillment'];
                     $prov['is_free_ship'] = $offer['is_free_ship'];
                     $prov['is_prime'] = $offer['is_prime'];
-                    $prov['price'] = $offer['price'];
+                    $prov['price'] = trim(str_replace(',','',$offer['price']));
                     $prov['shipping_fee'] = $offer['ship_fee'];
                     $prov['tax_fee'] = $offer['tax_fee'];
                     $rs['providers'][] = $prov;
                 }
-                $rs['sell_price'] = $offers[0]['price'];
-                $rs['condition'] = $offers[0]['condition'];
+                $rs['sell_price'] = trim(str_replace(',','',$offers[0]['price']));
+                $rs['condition'] = trim($offers[0]['condition']);
                 $rs['is_free_ship'] = $offers[0]['is_free_ship'];
                 $rs['is_prime'] = $offers[0]['is_prime'];
-                $rs['sell_price'] = $offers[0]['price'];
                 $rs['shipping_fee'] = $offers[0]['ship_fee'];
                 $rs['tax_fee'] = $offers[0]['tax_fee'];
             }

@@ -34,6 +34,9 @@ $css = <<<CSS
     }
 CSS;
 $this->registerCss($css);
+$rate_star = floatval($item->rate_star);
+$rate_count = $item->rate_count ? $item->rate_count : 0;
+$rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval($rate_star);
 ?>
 <div class="product-full-info">
     <div id="checkcate" style="display: none"><?= $item->category_id ?></div>
@@ -43,16 +46,16 @@ $this->registerCss($css);
         <span id="sale-tag" class="sale-tag"
               style="display: <?= $salePercent > 0 ? 'block' : 'none' ?>"><?= $salePercent > 0 ? $salePercent : '' ?>% OFF</span>
     </div>
-    <div class="rating">
-        <div class="rate text-orange">
-            <i class="la la-star"></i>
-            <i class="la la-star"></i>
-            <i class="la la-star"></i>
-            <i class="la la-star-half-o"></i>
-                <i class="la la-star-o"></i>
+    <?php if(strtolower($item->type) != 'ebay' ){?>
+        <div class="rating">
+            <div class="rate text-orange">
+                <i class="a-icon a-icon-star a-star-<?= $rate_star ?> review-rating">
+                    <span class="a-icon-alt"><?= str_replace('-','.',$rate_star) ?> out of 5 stars</span>
+                </i>
+            </div>
+            <span><?php echo Yii::t('frontend', '{star} ({count} customer reviews) on {portal}', ['star' => str_replace('-','.',$rate_star).'/5','count' => $rate_count ? $rate_count : 0,'portal' => $portal_web]); ?></span>
         </div>
-        <span><?php echo Yii::t('frontend', '{star} ({count} customer reviews) on {portal}', ['star' => '4.5/5','count' => rand(10, 100),'portal' => $portal_web]); ?></span>
-    </div>
+    <?php } ?>
     <div class="condition-and-seller">
         <strong><?= Yii::t('frontend',$current_provider && $current_provider->condition ? $current_provider->condition : $item->condition) ?></strong>
         <span>

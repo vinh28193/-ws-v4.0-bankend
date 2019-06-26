@@ -119,7 +119,7 @@ class UserController extends BaseApiController
                 foreach ($scopes as $scope){
                     $assiment = new AuthAssignment();
                     $assiment->item_name = trim($scope);
-                    $assiment->user_id = $userNew->id;
+                    $assiment->user_id = ''.$userNew->id;
                     $assiment->created_at = time();
                     $assiment->save();
                 }
