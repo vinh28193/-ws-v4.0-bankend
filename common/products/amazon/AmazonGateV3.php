@@ -325,6 +325,8 @@ class AmazonGateV3 extends BaseGate
 //            return [false, 'can not send request'];
 //        }
         $amazon = $response['response'];
+        print_r($amazon);
+        die;
         $rs = [];
         $rs['categories'] = array_unique($amazon['node_ids']);
         $rs['item_id'] = $request->asin_id;

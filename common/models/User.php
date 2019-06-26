@@ -19,7 +19,7 @@ use common\components\UserPublicIdentityInterface;
  * @property-read string $userLevel
  * @property Address[] $shippingAddress
  * @property Address[] $primaryAddress
- * @property AuthAssignment[] $authAssigments
+ * @property AuthAssignment[] $scopeAuth
  */
 class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
@@ -423,6 +423,13 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
      * @return null
      */
     public function getAuthAssigments()
+    {
+        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
+    }
+    /**
+     * @return null
+     */
+    public function getScopeAuth()
     {
         return $this->hasMany(AuthAssignment::className(), ['user_id' => 'id']);
     }
