@@ -19,6 +19,7 @@ use common\components\UserPublicIdentityInterface;
  * @property-read string $userLevel
  * @property Address[] $shippingAddress
  * @property Address[] $primaryAddress
+ * @property AuthAssignment[] $authAssigments
  */
 class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
@@ -423,7 +424,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
      */
     public function getAuthAssigments()
     {
-        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
+        return $this->hasMany(AuthAssignment::className(), ['user_id' => 'id']);
     }
 
     public function getCurrencyCode()
