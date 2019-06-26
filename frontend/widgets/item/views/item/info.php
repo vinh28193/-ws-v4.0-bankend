@@ -53,7 +53,7 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                     <span class="a-icon-alt"><?= str_replace('-','.',$rate_star) ?> out of 5 stars</span>
                 </i>
             </div>
-            <span><?php echo Yii::t('frontend', '{star} ({count} customer reviews) on {portal}', ['star' => str_replace('-','.',$rate_star).'/5','count' => $rate_count ? $rate_count : 0,'portal' => $portal_web]); ?></span>
+            <span><a id="countStarDetail" href="javascript:void(0);"><?php echo Yii::t('frontend', '{star} ({count} customer reviews) on {portal}', ['star' => str_replace('-','.',$rate_star).'/5','count' => $rate_count ? $rate_count : 0,'portal' => $portal_web]); ?></a></span>
         </div>
     <?php } ?>
     <div class="condition-and-seller">
@@ -84,15 +84,9 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
             <strong class="text-danger one-time-payment">
                 <?= $storeManager->showMoney($item->getLocalizeTotalPrice()) ?>
             </strong>
-            <?php if ($item->start_price) { ?>
+            <?php if ($item->start_price && $item->start_price > $item->sell_price) { ?>
                 <b class="old-price"><?= $storeManager->showMoney($item->getLocalizeTotalStartPrice()) ?></b>
-                <!--<span class="save"> <?php
-                /* Yii::t('frontend', 'Save off: {percent}', [
-                        'percent' => $storeManager->showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice())
-                    ]); */
-                ?>
-                </span>-->
-            <?php } // Start start_price ?>
+            <?php } ?>
         </div>
         <div class="description-shipping-detail">
             <table class="table table-responsive-sm table-none-border w-auto">
@@ -180,17 +174,19 @@ JS;
         <div class="" id="" style="display: block; font-size: 12px;color: red">
             <i class="fa fa-exclamation-triangle"></i><b><?= Yii::t('frontend', 'Sorry, the auction system on WESHOP is currently under maintenance. <br> Hope you sympathize!'); ?></b>
         </div>
-    <?php }else{
-    if (strtolower($item->type) == 'ebay') { ?>
-        <div class="qty form-inline" id="" style="display: block; font-size: 12px">
-            <b id="instockQuantity"><?= $instockQuanty ?></b><i> <?= Yii::t('frontend', 'products can be purchased'); ?></i>
-        </div>
-    <?php } ?>
+    <?php }else{?>
         <div class="qty form-inline" id="quantityGroup" style="display: <?= $current_provider ? 'inline-flex' : 'none' ?>;">
             <label><?= Yii::t('frontend','Quantity') ?></label>
             <button class="btn btnQuantity ml-1" type="button" data-href="down"><i class="la la-minus"></i></button>
             <input type="text" class="form-control" id="quantity" value="1"/>
             <button class="btn btnQuantity" type="button" data-href="up"><i class="la la-plus"></i></button>
+            <?php
+            if (strtolower($item->type) == 'ebay') { ?>
+                <i><?= Yii::t('frontend', 'More than {quantityStock} available',['quantityStock' => $instockQuanty]); ?></i>
+                <i class="a-icon a-icon-text-separator" role="img" aria-label="|"></i>
+                <i class="text-danger"><?= Yii::t('frontend', '{quantitySold} sold',['quantitySold' => $item->quantity_sold]); ?></i>
+            <?php }
+            ?>
         </div>
     <div class="" id="outOfStock" style="display: <?= !$current_provider ? 'block' : 'none' ?>;">
         <label style="color: red"><?= Yii::t('frontend', 'Out of stock') ?></label>
@@ -225,6 +221,71 @@ JS;
                 <?= Yii::t('frontend','Weshop disclaims responsibility') ?>
                 <?= Yii::t('frontend','All products available for shopping agency services displayed on Weshop are products taken from third party e-commerce websites and are not sold directly by Weshop. Weshop is not responsible if the product is not the same. Therefore, in the event of any violation related to the above products, all debts incurred will be borne by the respective seller on the platform. third party while Weshop will not accept any related, collateral or related responsibilities.') ?>
 
+            </div>
+        </div>
+    <?php }
+    if($item->type == BaseProduct::TYPE_AMAZON_US && count($item->providers) > 1){
+        ?>
+        <div class="seller-block">
+            <div class="title">
+                <?= Yii::t('frontend','Other sellers') ?>:
+            </div>
+            <div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th><?= Yii::t('frontend','Price + Shipping') ?></th>
+                        <th><?= Yii::t('frontend','Condition') ?></th>
+                        <th><?= Yii::t('frontend','Seller info') ?></th>
+                        <th><?= Yii::t('frontend','Buying Option') ?></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <?php foreach ($item->providers as $provider){
+                        if($provider->prov_id != $current_provider->prov_id){
+                            $item->updateBySeller($provider->prov_id);
+                            $rate_star_seller = floatval($provider->rating_star);
+                            $rate_count_seller = $provider->rating_score ? $provider->rating_score : 0;
+                            $rate_star_seller = $rate_star_seller > intval($rate_star_seller) ? intval($rate_star_seller).'-5' : intval($rate_star_seller);
+                            ?>
+                            <tr style="cursor: pointer" data-action="clickToLoad" data-href="<?= WeshopHelper::generateUrlDetail('amazon',$item->item_name,$item->item_sku,null,$provider->prov_id) ?>">
+                                <td>
+                                    <a href="javascript:void(0);"  data-action="clickToLoad" data-href="<?= WeshopHelper::generateUrlDetail('amazon',$item->item_name,$item->item_sku,null,$provider->prov_id) ?>"><i class="la la-eye"></i></a>
+                                </td>
+                                <td>
+                                    <strong class="text-danger">
+                                        <?= $storeManager->showMoney($item->getLocalizeTotalPrice()); ?>
+                                    </strong>
+                                    <?php if ($item->start_price && $item->start_price > $item->sell_price) { ?>
+                                        <br>
+                                        <b class="old-price"><?= $storeManager->showMoney($item->getLocalizeTotalStartPrice()) ?></b>
+                                    <?php } ?>
+                                </td>
+                                <td>
+                                    <strong><?= $provider->condition; ?></strong>
+                                </td>
+                                <td>
+                                    <div><?= $provider->name; ?></div>
+                                    <?php if($provider->rating_score){?>
+                                        <div class="rate text-orange">
+                                            <i class="a-icon a-icon-star a-star-<?= $rate_star_seller ?> review-rating">
+                                                <span class="a-icon-alt"><?= str_replace('-','.',$rate_star_seller) ?> out of 5 stars</span>
+                                            </i>
+                                            <u class="text-blue font-weight-bold">(<?= Yii::t('frontend','{countRate} total rating',['countRate' => $rate_count_seller]) ?>)</u>
+                                        </div>
+                                    <?php }?>
+                                </td>
+                                <td>
+
+                                </td>
+                            </tr>
+                        <?php }
+                    }
+                    ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     <?php } ?>
