@@ -111,13 +111,15 @@ class UserController extends BaseApiController
         }
         $userNew->setPassword($post['password']);
         $userNew->generateAuthKey();
+        $userNew->created_at = time();
+        $userNew->updated_at = time();
         if($userNew->save()){
             if(($userNew->employee == 1 || $userNew->employee == 2) && isset($post['authAssigments']) && $post['authAssigments'] ){
                 $scopes = explode(',',$post['authAssigments']);
                 foreach ($scopes as $scope){
                     $assiment = new AuthAssignment();
                     $assiment->item_name = trim($scope);
-                    $assiment->user_id = $userNew->id;
+                    $assiment->user_id = ''.$userNew->id;
                     $assiment->created_at = time();
                     $assiment->save();
                 }
@@ -163,6 +165,8 @@ class UserController extends BaseApiController
             }
             $userNew->setPassword($post['reset_pass']);
         }
+        $userNew->created_at = time();
+        $userNew->updated_at = time();
         if($userNew->save()){
             if(($userNew->employee == 1 || $userNew->employee == 2) && isset($post['authAssigments']) && $post['authAssigments'] ){
                 $scopes = explode(',',$post['authAssigments']);

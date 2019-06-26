@@ -24,7 +24,7 @@ class ItemController extends AmazonController
 
         $this->portalTitle = $item->item_name;
         $this->portalImage = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
-        $item->customer_feedback = AmazonProductGate::getReviewCustomer($item->item_id);
+        $item->customer_feedback = $item->customer_feedback ? $item->customer_feedback : AmazonProductGate::getReviewCustomer($item->item_id);
         return $this->render('index', [
             'item' => $item
         ]);

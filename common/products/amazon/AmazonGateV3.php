@@ -81,91 +81,42 @@ class AmazonGateV3 extends BaseGate
 
         $tokens = ["Check with `$request->store`, validated success"];
         $tokens[] = "refresh cache " . ($refresh === true ? 'true' : 'false');
-        if (!$this->isEmpty($request->parent_asin_id) && $request->parent_asin_id !== $request->asin_id) {
-            //Search ra san pham cha truoc de lay load sub url params, parent sku
-            $tokens[] = "parent sku {$request->parent_asin_id} detected, try in case 1";
-            $cloneRequest = clone $request;
-            $cloneRequest->asin_id = $request->parent_asin_id;
-            $cloneRequest->parent_asin_id = null;
-            $results = $this->lookupInternal($cloneRequest);
+        $results = $this->lookupInternal($request);
 //            if (!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh) {
 //                $results = $this->lookupInternal($cloneRequest);
 //                $this->cache->set($cloneRequest->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
 //            }
-            list($ok, $response) = $results;
-            $tokens[] = "response return :" . ($ok ? 'true' : 'false');
-            if ($ok && is_array($response)) {
-                /** @var  $product \common\products\amazon\AmazonProduct */
-                $product = (new AmazonDetailResponse($this))->parser($response);
-                //new sku cua san pham cha khac voi sku can tim kiem
-                if ($product->item_id != $request->asin_id && !$request->is_first_load) {
-                    $tokens[] = "product `{$product->item_id}` diff with `$request->asin_id`, load sub product is active";
-                    if ($request->parent_asin_id != $product->parent_item_id) {
-                        $tokens[] = "product parent sku `{$product->parent_item_id}` diff with request parent sku `$request->parent_asin_id`, `$product->parent_item_id` replaced  `$request->parent_asin_id`";
-                        //gan lai gia tri parent_asin_id  neu khac form truyen len
-                        $request->parent_asin_id = $product->parent_item_id;
-                    }
-                    //Gan gia tri load_sub_url
-                    $request->load_sub_url = $product->load_sub_url;
-                    $tokens[] = "register load sub url";
-                    if (!($subs = $this->cache->get($request->getCacheKey())) || $refresh) {
-                        $subs = $this->lookupInternal($request);
-                        $this->cache->set($request->getCacheKey(), $subs, $subs[0] === true ? self::MAX_CACHE_DURATION : 0);
-                    }
-                    list($okSub, $productSub) = $subs;
-                    $tokens[] = "load sub product, response return :" . ($okSub ? 'true' : 'false');
-                    if ($okSub && is_array($productSub)) {
-                        $productSub = (array)$productSub;
-                        $tokens[] = "update product with sub product";
-                        $this->updateProduct($product, $productSub, $request);
-                    }
-
-                }
-                Yii::info(implode(", ", $tokens), __METHOD__);
-                return [true, $product];
-            }
-            Yii::info(implode(", ", $tokens), __METHOD__);
-            return [false, $response];
-        } else {
-            //Truong hop hop load sp lan dau
-            $tokens[] = "single product request";
-            $cloneRequest = clone $request;
-            $cloneRequest->parent_asin_id = null;
-            $cloneRequest->load_sub_url = null;
-            $results = $this->lookupInternal($cloneRequest);
-            print_r($results);
-            die;
-            if (!($results = $this->cache->get($cloneRequest->getCacheKey())) || $refresh) {
-                $results = $this->lookupInternal($cloneRequest);
-                $this->cache->set($cloneRequest->getCacheKey(), $results, $results[0] === true ? self::MAX_CACHE_DURATION : 0);
-            }
-            list($ok, $response) = $results;
-
-            $tokens[] = "response return :" . ($ok ? 'true' : 'false');
-            if ($ok && is_array($response)) {
-                /** @var  $product \common\products\amazon\AmazonProduct */
-                $product = (new AmazonDetailResponse($this))->parser($response);
-                if ((($product->item_id != $request->asin_id) || (isset($product->parent_item_id) && $product->parent_item_id != $product->item_id)) && !$request->is_first_load) {
-                    $tokens[] = "sub product detected";
+        list($ok, $response) = $results;
+        $tokens[] = "response return :" . ($ok ? 'true' : 'false');
+        if ($ok && is_array($response)) {
+            /** @var  $product \common\products\amazon\AmazonProduct */
+            $product = (new AmazonDetailResponse($this))->parser($response);
+            //new sku cua san pham cha khac voi sku can tim kiem
+            if ($product->item_id != $request->asin_id && !$request->is_first_load) {
+                $tokens[] = "product `{$product->item_id}` diff with `$request->asin_id`, load sub product is active";
+                if ($request->parent_asin_id != $product->parent_item_id) {
+                    $tokens[] = "product parent sku `{$product->parent_item_id}` diff with request parent sku `$request->parent_asin_id`, `$product->parent_item_id` replaced  `$request->parent_asin_id`";
+                    //gan lai gia tri parent_asin_id  neu khac form truyen len
                     $request->parent_asin_id = $product->parent_item_id;
-                    $request->load_sub_url = $product->load_sub_url;
-                    if (!($subs = $this->cache->get($request->getCacheKey())) || $refresh) {
-                        $subs = $this->lookupInternal($request);
-                        $this->cache->set($request->getCacheKey(), $subs, $subs[0] === true ? self::MAX_CACHE_DURATION : 0);
-                    }
-                    list($okSub, $productSub) = $subs;
-                    $tokens[] = "load sub product, response return :" . ($okSub ? 'true' : 'false');
-                    if ($okSub && is_array($productSub)) {
-                        $productSub = (array)$productSub;
-                        $tokens[] = "update product with sub product";
-                        $this->updateProduct($product, $productSub, $request);
-                    }
                 }
-                Yii::info(implode(", ", $tokens), __METHOD__);
-                return [true, $product];
+                //Gan gia tri load_sub_url
+                $request->load_sub_url = $product->load_sub_url;
+                $tokens[] = "register load sub url";
+                if (!($subs = $this->cache->get($request->getCacheKey())) || $refresh) {
+                    $subs = $this->lookupInternal($request);
+                    $this->cache->set($request->getCacheKey(), $subs, $subs[0] === true ? self::MAX_CACHE_DURATION : 0);
+                }
+                list($okSub, $productSub) = $subs;
+                $tokens[] = "load sub product, response return :" . ($okSub ? 'true' : 'false');
+                if ($okSub && is_array($productSub)) {
+                    $productSub = (array)$productSub;
+                    $tokens[] = "update product with sub product";
+                    $this->updateProduct($product, $productSub, $request);
+                }
+
             }
             Yii::info(implode(", ", $tokens), __METHOD__);
-            return [false, $response];
+            return [true, $product];
         }
     }
 
@@ -201,6 +152,7 @@ class AmazonGateV3 extends BaseGate
 
     }
 
+
     /**
      * @param $itemId
      * @param bool $refresh
@@ -209,26 +161,14 @@ class AmazonGateV3 extends BaseGate
      */
     public function getOffers($itemId)
     {
-        $httpClient = $this->getHttpClient();
-        $httpRequest = $httpClient->createRequest();
-        $httpRequest->setFormat(Client::FORMAT_RAW_URLENCODED);
-        $httpRequest->setMethod('POST');
-        $httpRequest->setUrl($this->offerUrl);
-        $httpRequest->setData([
-            'store' => $this->store,
-            'asin_id' => $itemId
-        ]);
-        try {
-            $httpResponse = $httpClient->send($httpRequest);
-            if (!$httpResponse->isOk) {
-                return [];
-            }
-            $httpResponse = $httpResponse->getData();
-            return $httpResponse['response'] ? $httpResponse['response'] : [];
-        } catch (\Exception $e) {
-            Yii::error($e, __METHOD__);
+        $curl = new curl\Curl();
+
+        $response = $curl->get($this->baseUrl.'/asin_offer/'.$itemId);
+        if($curl->responseCode != 200){
             return [];
         }
+        $response = json_decode($response,true);
+        return ArrayHelper::getValue($response,'response',[]);
     }
     /**
      * @param $request AmazonSearchRequest
@@ -315,7 +255,9 @@ class AmazonGateV3 extends BaseGate
 
         $response = $curl->get($this->baseUrl.'/'.$this->asinsUrl.'/'.$request->asin_id);
         $response = json_decode($response,true);
-
+        if($curl->responseCode != 200){
+            return [false, 'Request error '. $curl->responseCode];
+        }
         if (!$this->isValidResponse($response)) {
             return [false, 'can not send request'];
         }
@@ -324,59 +266,50 @@ class AmazonGateV3 extends BaseGate
 //        if (!isset($response)) {
 //            return [false, 'can not send request'];
 //        }
-        $amazon = $response['response'];
-        print_r($amazon);
-        die;
+        $amazon = null;
+        if(isset($response['response'])){
+            $response = $response['response'];
+            if(isset($response['product_detail'])){
+                $amazon = $response['product_detail'];
+            }
+        }
+        if(!$amazon || !$response){
+            return [false, 'Request Error'];
+        }
         $rs = [];
+        $price = explode('-',$amazon['price']);
         $rs['categories'] = array_unique($amazon['node_ids']);
         $rs['item_id'] = $request->asin_id;
         $rs['item_sku'] = $request->asin_id;
         $rs['rate_star'] = isset($amazon['rate_star']) ? $amazon['rate_star'] : 0;
         $rs['category_id'] = isset($amazon['node_ids'][count($amazon['node_ids']) - 1]) ? $amazon['node_ids'][count($amazon['node_ids']) - 1] : null;
-        $rs['item_name'] = $amazon['title'];
-        $rs['parent_item_id'] = $amazon['parent_asin_id'];
-        $rs['retail_price'] = count($amazon['retail_price']) > 0 ? $amazon['retail_price'][0] : null;
-        $rs['sell_price'] = count($amazon['sell_price']) > 0 ? $amazon['sell_price'][0] : null;
-        $rs['sell_price_special'] = $amazon['sell_price'];
-        $rs['product_type'] = count($amazon['sell_price']) == 0 ? 1 : 0;
-        $rs['deal_price'] = count($amazon['deal_price']) > 0 ? $amazon['deal_price'][0] : null;
-        $rs['deal_time'] = isset($amazon['deal_time']) ? $amazon['deal_time'] : null;
-        $rs['shipping_weight'] = $amazon['shipping_weight'] / 1000;
-        $rs['shipping_fee'] = $amazon['shipping_fee'];
-        $rs['is_prime'] = $amazon['is_prime'];
-        $rs['is_free_ship'] = $amazon['is_free_ship'];
-        $rs['sort_desc'] = $amazon['description'];
-        $rs['description'] = $amazon['feature_bullets'];
-        $rs['best_seller'] = $amazon['best_seller'];
-        $rs['load_sub_url'] = base64_encode($amazon['load_sub_url']);
-        $rs['manufacturer_description'] = $amazon['manufacturer_description'];
-        $rs['primary_images'] = $this->getItemImage($amazon['primary_images']);
-        $rs['technical_specific'] = $amazon['specific_description'];
-        $rs['variation_options'] = $this->getOptionGroup($amazon['sale_specifics'], $amazon['detail_images']);
-        $rs['variation_mapping'] = $this->getVariationMapping($amazon['sale_specifics'], $amazon['detail_images']);
-        $rs['relate_products'] = $this->getRelateProduct($amazon['suggest_products']);
-        $rs['start_price'] = !empty($amazon["retail_price"]) ? ($amazon["retail_price"][0]) : 0.0;
+        $rs['item_name'] = trim($amazon['title']);
+        $rs['parent_item_id'] = $request->parent_asin_id ? $request->parent_asin_id : '';
+        $rs['retail_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
+        $rs['sell_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
+        $rs['sell_price_special'] = $price;
+        $rs['product_type'] = count($price) == 0 ? 1 : 0;
+        $rs['deal_price'] = null;
+        $rs['deal_time'] = null;
+        $rs['shipping_weight'] = 0.5;
+        $rs['shipping_fee'] = 0;
+        $rs['is_prime'] = null;
+        $rs['is_free_ship'] = null;
+        $rs['sort_desc'] = is_array($amazon['product_description']) ? implode('<br>',$amazon['product_description']) : $amazon['product_description'];
+        $rs['description'] = isset($amazon['description']) ? $amazon['description'] : '';
+        $rs['best_seller'] = '';
+        $rs['manufacturer_description'] = '';
+        $rs['primary_images'] = $amazon['images'];
+        $rs['technical_specific'] = [];//$amazon['product_description'];
+        $rs['variation_options'] = $this->getOptionGroup($amazon['product_option']);
+        $rs['variation_mapping'] = [];
+        $rs['relate_products'] = null;
+        $rs['start_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
         $rs['condition'] = isset($amazon['condition']) ? $amazon['condition'] : 'new';
         $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::TYPE_AMAZON_JP : AmazonProduct::TYPE_AMAZON_US;
         $rs['tax_fee'] = 0;
         $rs['store'] = $this->store;
-
-//        $suggestSetCacheKey = "suggest_set_{$rs['item_sku']}";
-//        if (!($suggestSets = $this->cache->get($suggestSetCacheKey))) {
-        foreach ($amazon['suggest_sets'] as $suggestSet) {
-            $key = $suggestSet['id'];
-            if (($key == 'purchase' || $key == 'session') && count($suggestSet['asins']) > 0) {
-                $suggestSets[$key] = $this->getAsins($suggestSet['asins']);
-            }
-        }
-//            $this->cache->set($suggestSetCacheKey, $suggestSets, 3600);
-//        }
-
-        foreach (['purchase', 'session'] as $key) {
-            $rs["suggest_set_$key"] = isset($suggestSets[$key]) ? $suggestSets[$key] : null;
-        }
-
-        if (!$request->is_first_load) {
+        $rs['customer_feedback'] = ArrayHelper::getValue($response,'product_review',[]);
 //            $offersCacheKey = "offers_{$rs['item_sku']}";
 //            if (!($offers = $this->cache->get($offersCacheKey))) {
             $offers = $this->getOffers($rs['item_sku']);
@@ -391,27 +324,26 @@ class AmazonGateV3 extends BaseGate
                         continue;
                     }
                     $prov = [];
-                    $prov['name'] = $offer['seller']['seller_name'];
+                    $prov['name'] = trim($offer['seller']['seller_name']);
                     $prov['image'] = '';
                     $prov['website'] = '';
                     $prov['location'] = '';
-                    $prov['rating_score'] = $offer['seller']['rating_count'];
-                    $prov['rating_star'] = $offer['seller']['rate_star'];
-                    $prov['positive_feedback_percent'] = $offer['seller']['positive'];
-                    $prov['condition'] = $offer['condition'];
+                    $prov['rating_score'] = isset($offer['seller']['rating_count']) ? trim($offer['seller']['rating_count']) : '';
+                    $prov['rating_star'] = isset($offer['seller']['rate_star']) ? trim($offer['seller']['rate_star']) : '';
+                    $prov['positive_feedback_percent'] = isset($offer['seller']['positive']) ? trim($offer['seller']['positive']) : '';
+                    $prov['condition'] = trim($offer['condition']);
                     $prov['fulfillment'] = $offer['fulfillment'];
                     $prov['is_free_ship'] = $offer['is_free_ship'];
                     $prov['is_prime'] = $offer['is_prime'];
-                    $prov['price'] = $offer['price'];
+                    $prov['price'] = trim(str_replace(',','',$offer['price']));
                     $prov['shipping_fee'] = $offer['ship_fee'];
                     $prov['tax_fee'] = $offer['tax_fee'];
                     $rs['providers'][] = $prov;
                 }
-                $rs['sell_price'] = $offers[0]['price'];
-                $rs['condition'] = $offers[0]['condition'];
+                $rs['sell_price'] = trim(str_replace(',','',$offers[0]['price']));
+                $rs['condition'] = trim($offers[0]['condition']);
                 $rs['is_free_ship'] = $offers[0]['is_free_ship'];
                 $rs['is_prime'] = $offers[0]['is_prime'];
-                $rs['sell_price'] = $offers[0]['price'];
                 $rs['shipping_fee'] = $offers[0]['ship_fee'];
                 $rs['tax_fee'] = $offers[0]['tax_fee'];
             }
@@ -419,7 +351,6 @@ class AmazonGateV3 extends BaseGate
                 $rs['sell_price'] = 0;
                 [false, 'no provider valid'];
             }
-        }
         $rs['price_api'] = $rs['sell_price'];
         $rs['currency_api'] = 'USD';
         $rs['ex_rate_api'] = 1;
@@ -461,58 +392,45 @@ class AmazonGateV3 extends BaseGate
         return isset($response['response']) || (count($response['response']['sell_price']) > 0 && count($response['response']['retail_price']) > 0 && count($response['response']['deal_price']) > 0 && $response['response']['title'] !== null);
     }
 
-    private function getOptionGroup($data, $images)
+    private function getOptionGroup($data)
     {
-        if (count($data) == 0 || count($data['options']) == 0) {
+        if (count($data) == 0) {
             return [];
         }
         $rs = [];
-        foreach ($data['options'] as $item) {
-            $temp['name'] = $item['name'];
-            $temp['values'] = $item['values'];
-            $temp['images_mapping'] = [];
-            if (count($images) > 0) {
-                if (isset($images['diff_by'])) {
-                    foreach ($images['diff_by'] as $diffBy) {
-                        if ($diffBy == $item['id']) {
-                            foreach ($item['values'] as $val) {
-                                foreach ($images['images'] as $k => $v) {
-                                    if (strpos($k, $val) !== false) {
-                                        $imgTemp = [];
-                                        foreach ($v as $img) {
-                                            $imgTemp[] = [
-                                                'thumb' => $img['thumb'],
-                                                'main' => $img['large'],
-                                            ];
-                                        }
-                                        $temp['images_mapping'][] = [
-                                            'value' => $k,
-                                            'images' => $imgTemp
-                                        ];
-                                    }
-                                }
-
-                            }
+        foreach ($data as $item) {
+            if(isset($item['name'])){
+                $temp['name'] = trim($item['name']);
+                if($temp['name']){
+                    $temp['values'] = [];
+                    $temp['images_mapping'] = [];
+                    foreach ($item['value'] as $value){
+                        $value_tem = '';
+                        if(isset($value['asin_color']) && $value['asin_color']){
+                            $value_tem = $value['asin_color'];
+                        }else if(isset($value['asin_size']) && $value['asin_size']){
+                            $value_tem = $value['asin_size'];
+                        }else if(isset($value['name'])){
+                            $value_tem = $value['name'];
                         }
-                    }
-                }
-                if (isset($images['diff_by'][0]) && $images['diff_by'][0] == $item['id']) {
-                    foreach ($images['images'] as $k => $v) {
-                        $imgTemp = [];
-                        foreach ($v as $img) {
-                            $imgTemp[] = [
-                                'thumb' => $img['thumb'],
-                                'main' => $img['large'],
+                        if($value_tem) {
+                            $temp['values'][] = $value_tem;
+                        }
+                        if(isset($value['asin_images']) && $value['asin_images']){
+                            $temp['images_mapping'][] = [
+                                'value' => $value_tem,
+                                'images' => [
+                                    [
+                                        'thumb' => $value['asin_images'],
+                                        'main' => $value['asin_images'],
+                                    ]
+                                ]
                             ];
                         }
-                        $temp['images_mapping'][] = [
-                            'value' => $k,
-                            'images' => $imgTemp
-                        ];
                     }
+                    $rs[] = $temp;
                 }
             }
-            $rs[] = $temp;
         }
         return $rs;
 

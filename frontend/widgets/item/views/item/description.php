@@ -57,7 +57,8 @@ if($type == 'extra'){
                         }else{
                             if(isset($item->sort_desc) && $item->sort_desc){
                                 echo $item->sort_desc;
-                            }elseif($item->description){
+                            }
+                            if($item->description){
                                 if(is_array($item->description)){
                                     foreach ($item->description as $v){
                                         if(is_string($v)){
