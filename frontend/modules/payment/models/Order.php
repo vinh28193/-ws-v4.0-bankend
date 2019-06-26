@@ -329,7 +329,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     {
         $totalAmount = $this->total_amount_local;
         Yii::info($this->getAdditionalFees()->toArray(), $totalAmount);
-        $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees(null, ['shipping_fee', 'tax_fee'])[1];
+        $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees()[1];
         if ($this->discountAmount > 0) {
             $totalAmount -= $this->discountAmount;
         }

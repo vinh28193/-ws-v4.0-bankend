@@ -130,7 +130,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
      */
     public static function findByUsernameForEmployee($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE, 'employee' => 1]); //  1 Là Nhân viên , 0 là khách hàng
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE, 'employee' => [1,2]]); //  1,2 Là Nhân viên , 0 là khách hàng
     }
 
     /**

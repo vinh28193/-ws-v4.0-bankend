@@ -60,9 +60,24 @@ class CartWidget extends Widget
         $selected = CartSelection::isExist(CartSelection::TYPE_SHOPPING, $key);
 
         $products = [];
+        $totalUsFee = 0;
         foreach ($order['products'] as $product) {
             if ($selected) {
                 $this->totalAmount += $product['total_price_amount_local'];
+            }
+            $fees = [];
+            foreach ($product['additionalFees'] as $name => $additionalFee) {
+                if ($name === 'product_price') {
+                    continue;
+                }
+                $amount = 0;
+                foreach ($additionalFee as $row) {
+                    $amount += $row['local_amount'];
+                    if ($name === 'shipping_fee' || $name === 'tax_fee') {
+                        $totalUsFee += $row['local_amount'];
+                    }
+                }
+                $fees[$name] = $amount;
             }
             $products[] = [
                 'sku' => $product['sku'],
@@ -73,17 +88,20 @@ class CartWidget extends Widget
                 'link_origin' => $product['link_origin'],
                 'variations' => $product['variations'],
                 'total_unit_amount' => $product['price_amount_local'],
+                'total_us_fee' => $totalUsFee,
                 'total_final_amount' => $product['total_price_amount_local'],
                 'available_quantity' => $product['available_quantity'],
                 'quantity_sold' => $product['quantity_sold'],
                 'quantity' => $product['quantity_customer'],
                 'weight' => $product['total_weight_temporary'],
+                'fees' => $fees
             ];
         }
         return [
             'key' => $key,
             'selected' => $selected,
             'portal' => $order['portal'],
+            'final_amount' => $order['total_final_amount_local'],
             'type' => $type,
             'ordercode' => $order['ordercode'],
             'seller' => $order['seller'],
@@ -182,16 +200,6 @@ class CartWidget extends Widget
     protected function renderItem($item)
     {
 
-    }
-
-    public function renderButtonBox()
-    {
-        return <<< HTML
-<div class="btn-box">
-    <button type="button" class="btn btn-continue">Tiếp tục mua hàng</button>
-    <button type="button" class="btn btn-payment">Tiến hành thanh toán</button>
-</div>
-HTML;
     }
 
 
