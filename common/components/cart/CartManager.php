@@ -136,9 +136,28 @@ class CartManager extends Component
                     'type' => $type
                 ])];
             }
-            $item = $this->filterItem($this->normalKeyFilter($key), $type, $uuid);
+            $filterKey = $this->normalKeyFilter($key);
+            $item = $this->filterItem($filterKey, $type, $uuid);
             if (!empty($item)) {
-                return [true, Yii::t('common', 'This item already added in to {type} cart', ['type' => $type])];
+                $item = $item[0];
+                $products = $item['key']['products'];
+                $isMe = $filterKey['key']['products'];
+                $newProducts = [];
+                foreach ($products as $product) {
+                    if($this->isDetectedProduct($product,$isMe)){
+                        $product['quantity'] += 1;
+                    }
+                    $newProducts[] = $product;
+                }
+                $item['key']['products'] = $newProducts;
+                list($ok, $value) = $cartItem->createOrderFormKey($item['key'], true);
+                if (!$ok) {
+                    return [false, $value];
+                }
+                $success = $this->getStorage()->setItem($item['_id'], $item['key'], $value, $uuid);
+                return [$success, Yii::t('common', $success ? 'Add to {type} cart success' : 'Add to {type} cart failed', [
+                    'type' => $type
+                ])];
             } else {
                 $filter = $key;
                 unset($filter['products']);
@@ -489,13 +508,13 @@ class CartManager extends Component
                     $value['supporting'] = $now;
                 }
             }
-           if (isset($param['type_chat'])) {
-               if ($param['type_chat'] == 'GROUP_WS') {
-                   $value['current_status'] = 'SUPPORTED';
-                   $key['current_status'] = 'SUPPORTED';
-                   $value['supported'] = $now;
-               }
-           }
+            if (isset($param['type_chat'])) {
+                if ($param['type_chat'] == 'GROUP_WS') {
+                    $value['current_status'] = 'SUPPORTED';
+                    $key['current_status'] = 'SUPPORTED';
+                    $value['supported'] = $now;
+                }
+            }
             // todo : thay đổi giá trị của $item['key']
 
             $success = $this->getStorage()->setItem($id, $key, $value);
