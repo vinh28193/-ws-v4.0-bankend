@@ -43,9 +43,33 @@ class UserController extends BaseApiController
         $type = \Yii::$app->request->get('type');
         $phone = \Yii::$app->request->get('phone');
         $userName = \Yii::$app->request->get('username');
-        $query = User::find();
+        $id = \Yii::$app->request->get('id');
+        $query = User::find()->select([
+            'id',
+            'bm_wallet_id',
+            'created_at',
+            'store_id',
+            'locale',
+            'first_name',
+            'last_name',
+            'type_customer',
+            'vip',
+            'uuid',
+            'token_fcm',
+            'token_apn',
+            'facebook_acc_kit_id',
+            'username',
+            'email',
+            'phone',
+            'employee',
+            'status',
+            'remove',
+        ])->with(['authAssigments']);
         if($email){
             $query->andWhere(['like','email',$email]);
+        }
+        if($id){
+            $query->andWhere(['id'=>$id]);
         }
         if($type){
             $query->andWhere(['employee'=>$type]);
