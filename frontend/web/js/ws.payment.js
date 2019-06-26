@@ -111,7 +111,7 @@ ws.payment = (function ($) {
                 window.scrollTo(0, 0);
             });
             $('#shippingform-buyer_phone').keyup(function () {
-                var  phone = $('#shippingform-buyer_phone').val().trim();
+                var phone = $('#shippingform-buyer_phone').val().trim();
                 phone = phone.replace('(+84)', '0');
                 phone = phone.replace('+84', '0');
                 phone = phone.replace('0084', '0');
@@ -199,7 +199,7 @@ ws.payment = (function ($) {
             if (activeMethod.length > 0) {
                 activeMethod.find('span').addClass('active');
             }
-            pub.checkPromotion();
+            //pub.checkPromotion();
         },
         checkRequireField: function () {
             // ws.ajax('/payment/' + pub.payment.payment_provider + '/check-field', {
@@ -440,12 +440,7 @@ ws.payment = (function ($) {
             }
             processPaymment();
         },
-        installment: function () {
-            var $termInstallment = $('input#termInstallment').is(':checked');
-            if (!$termInstallment) {
-                ws.notifyError('Bạn phải đồng ý với điều khoản trả góp weshop');
-                return;
-            }
+        billing: function () {
             processPaymment();
         },
         filterShippingAddress: function (isSafe = true) {
@@ -518,13 +513,20 @@ ws.payment = (function ($) {
         return $isSuccess;
     };
     var processPaymment = function () {
-        if (!pub.filterShippingAddress()) {
+        var isCheckout = pub.payment.page === 'CHECKOUT';
+        if (isCheckout && !pub.filterShippingAddress()) {
             return;
         }
-        ws.ajax('/payment/payment/process', {
+        var handleUrl = '/payment/payment/billing';
+        var data = pub.payment;
+        if(isCheckout){
+            data = {payment: pub.payment,shipping:pub.shipping};
+            handleUrl = '/payment/payment/process';
+        }
+        ws.ajax(handleUrl, {
             dataType: 'json',
             type: 'post',
-            data: {payment: pub.payment, shipping: pub.shipping},
+            data: data,
             success: function (response) {
 
                 if (response.success) {
