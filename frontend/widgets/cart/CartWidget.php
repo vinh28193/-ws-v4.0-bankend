@@ -72,6 +72,7 @@ class CartWidget extends Widget
                 'link_img' => $product['link_img'],
                 'link_origin' => $product['link_origin'],
                 'variations' => $product['variations'],
+                'total_unit_amount' => $product['price_amount_local'],
                 'total_final_amount' => $product['total_price_amount_local'],
                 'available_quantity' => $product['available_quantity'],
                 'quantity_sold' => $product['quantity_sold'],

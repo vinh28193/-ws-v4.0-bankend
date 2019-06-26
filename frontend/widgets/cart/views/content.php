@@ -15,7 +15,7 @@ $storeManager = Yii::$app->storeManager;
             ?>
             <div class="shadow-lg mb-3">
                 <div class="row pt-2 pb-2 pl-2 pr-3 m-0" style="width: 100%">
-                    <div class="col-8">
+                    <div class="col-6">
                         <div class="row">
                             <div class="col-md-1">
                                 <div class="form-check">
@@ -31,8 +31,10 @@ $storeManager = Yii::$app->storeManager;
                             </div>
                         </div>
                     </div>
+                    <div class="col-2 pr-1">
+                        <span><?php echo Yii::t('frontend', 'Unit amount'); ?></span></div>
                     <div class="col-2 text-center"><span><?php echo Yii::t('frontend', 'Quantity'); ?></span></div>
-                    <div class="col-2 text-right pr-1 text-right">
+                    <div class="col-2 text-right pr-1">
                         <span><?php echo Yii::t('frontend', 'Total amount'); ?></span></div>
                 </div>
                 <hr>
@@ -60,7 +62,7 @@ $storeManager = Yii::$app->storeManager;
                                      alt="<?= $product['product_name']; ?>" width="80%" height="100px"
                                      title="<?= $product['product_name']; ?>">
                             </div>
-                            <div class="col-7 pt-4">
+                            <div class="col-5 pt-4">
                                 <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
                                     <strong class="style-name"><?= $product['product_name']; ?></strong>
                                 </a>
@@ -70,6 +72,9 @@ $storeManager = Yii::$app->storeManager;
                                    data-type="<?= $item['type'] ?>"
                                    data-sku="<?= $product['sku']; ?>">
                                     <i class="far fa-trash-alt"></i> <?php echo Yii::t('frontend', 'Delete'); ?></a>
+                            </div>
+                            <div class="col-2 pt-4">
+                                <?= $storeManager->showMoney($product['total_unit_amount']); ?>
                             </div>
                             <div class="col-2 pt-4 text-center">
                                 <div class="qty form-inline quantity-option"

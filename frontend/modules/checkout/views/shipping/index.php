@@ -332,12 +332,19 @@ $this->registerJs($js);
                                     <img style="width: 100%;max-height: 100px" src="<?= $product->link_img ?>"
                                          alt="<?= $product->product_name; ?>">
                                 </div>
-                                <div class="col-md-8" style="vertical-align: middle">
+                                <div class="col-md-5" style="vertical-align: middle">
                                     <?= $product->product_name; ?>
+                                </div>
+
+                                <div class="col-md-2" style="vertical-align: middle">
+                                    <?= $storeManager->showMoney($product->price_amount_local); ?>
+                                </div>
+                                <div class="col-md-1" style="vertical-align: middle">
+                                    x<?= $product->quantity_customer; ?>
                                 </div>
                                 <div class="col-md-3" style="text-align: right;">
                                     <span class="text-danger">
-                                        <?php echo $storeManager->showMoney($product->price_amount_local); ?>
+                                        <?php echo $storeManager->showMoney($product->total_price_amount_local); ?>
                                     </span>
                                 </div>
                             </div>
@@ -369,7 +376,7 @@ $this->registerJs($js);
                             <table class="table table-borderless table-fee">
                                 <tr>
                                     <th class="header"><?= Yii::t('frontend', 'Total Order'); ?></th>
-                                    <td class="value"><?= $storeManager->showMoney($order->total_origin_fee_local); ?></td>
+                                    <td class="value"><?= $storeManager->showMoney($order->total_amount_local); ?></td>
                                 </tr>
                                 <tr data-role="fee" data-fee="purchase_fee">
                                     <th class="header"><?= Yii::t('frontend', 'Purchase Fee'); ?></th>
