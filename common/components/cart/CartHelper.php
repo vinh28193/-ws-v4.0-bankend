@@ -140,7 +140,9 @@ class CartHelper
         // Tổng tiền local tất tần tận
 
         list($product['price_amount_origin'], $product['price_amount_local']) = $additionalFees->getTotalAdditionalFees('product_price');
-        $product['total_price_amount_local'] = $product['price_amount_local'] * $item->getShippingQuantity();
+        $product['price_amount_origin'] = $product['price_amount_origin'] / $item->getShippingQuantity();
+        $product['price_amount_local'] = $product['price_amount_local'] / $item->getShippingQuantity();
+        $product['total_price_amount_local'] = $additionalFees->getTotalAdditionalFees(null)[1];
         $productFees = [];
         $product['additionalFees'] = $additionalFees->toArray();
         foreach ($additionalFees->keys() as $feeName) {
@@ -179,7 +181,7 @@ class CartHelper
         // Tổng các phí các sản phẩm (trừ giá gốc tại nơi xuất xứ)
         $order['total_fee_amount_local'] = $product['total_fee_product_local'];
         // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
-        $order['total_amount_local'] = $product['total_price_amount_local'];
+        $order['total_amount_local'] = $additionalFees->getTotalAdditionalFees('product_price')[1];
         $order['total_final_amount_local'] = $order['total_amount_local'] + $order['total_fee_amount_local'];
         $order['total_weight_temporary'] = $product['total_weight_temporary'];
         $order['total_quantity'] = $product['quantity_customer'];
