@@ -323,6 +323,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         return [
             'id' => $this->getId(),
             'username' => $this->username,
+            'employee' => $this->employee,
             'email' => $this->email,
             'role' => !empty($role) ? array_keys($role) : [],
             'permission' => !empty($permissions) ? array_keys($permissions) : []
