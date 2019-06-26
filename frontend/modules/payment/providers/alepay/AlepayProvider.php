@@ -83,7 +83,7 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             $data = Json::decode($resp['data'], true);
             return new PaymentResponse(true, $mess, 'alepay',$payment->transaction_code, PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, ArrayHelper::getValue($data, 'token'), $resp['code'], ArrayHelper::getValue($data, 'checkoutUrl'));
         } catch (\Exception $exception) {
-            $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
+            $logPaymentGateway->response_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logPaymentGateway->save(false);
             return new PaymentResponse(false, $exception->getMessage(),'alepay');

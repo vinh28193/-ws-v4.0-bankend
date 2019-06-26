@@ -61,12 +61,18 @@ $storeManager = Yii::$app->storeManager;
 </div>
 <div class="form-group form-check term">
     <input type="checkbox" class="form-check-input" value="1" id="termCheckout">
-    <label class="form-check-label" for="termCheckout">Tôi đồng ý với tất cả <a href="#" target="_blank">Điều khoản và
-            điều
-            kiện</a> giao dịch của Weshop.</label>
+
+    <label class="form-check-label" for="termCheckout">
+        <?= Yii::t('frontend', 'I agree with all of a <a href="{url}" target="_blank">{name}\'s terms and conditions</a> of trading.', [
+            'url' => 'javascript:void(0);',
+            'name' => $storeManager->store->name,
+        ]); ?>
+    </label>
+
 </div>
 <div class="text-center">
-    <button type="button" class="btn btn-payment" id="btnCheckout" onclick="ws.payment.process()">Thanh toán ngay
+    <button type="button" class="btn btn-payment" id="btnCheckout"
+            onclick="ws.payment.process()"><?= Yii::t('frontend', 'Pay now'); ?>
         <span> <?= $storeManager->showMoney($payment->getTotalAmountDisplay()); ?></span>
     </button>
 </div>

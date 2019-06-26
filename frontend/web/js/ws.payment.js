@@ -110,21 +110,20 @@ ws.payment = (function ($) {
                 $('#step_checkout_3').css('display', 'none');
                 window.scrollTo(0, 0);
             });
-            $('#phone').keyup(function () {
-                var phone = $('#phone').val().trim();
+            $('#shippingform-buyer_phone').keyup(function () {
+                var  phone = $('#shippingform-buyer_phone').val().trim();
                 phone = phone.replace('(+84)', '0');
                 phone = phone.replace('+84', '0');
                 phone = phone.replace('0084', '0');
                 phone = phone.replace(/ /g, '');
                 var firstNumber = phone.substring(0, 2);
-                // ToDo @Huy thiếu đầu số Indo + Đổi lại Cách Viết 25/06/2019
                 if ((firstNumber == '09' || firstNumber == '03' || firstNumber == '07' || firstNumber == '08' || firstNumber == '05') && phone.length == 10) {
                     ws.ajax('/checkout/shipping/add-cart-checkout', {
                         type: 'POST',
                         data: {
                             phone: phone,
-                            fullName: fullName.value,
-                            email: email.value,
+                            fullName: $('#shippingform-buyer_name').val().trim(),
+                            email: $('#shippingform-buyer_email').val().trim(),
                             typeUpdate: 'updateCartInCheckout'
                         },
                     });
