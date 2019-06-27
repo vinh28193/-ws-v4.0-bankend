@@ -33,7 +33,7 @@ class StoreManager extends Component implements BootstrapInterface
 {
 
     const STORE_VN = 1;
-    const STORE_ID = 7;
+    const STORE_ID = 2;
 
     const MONEY_SHOW_MODE_CURRENCY = 'currency';
     const MONEY_SHOW_MODE_SYMBOL = 'symbol';
@@ -157,6 +157,8 @@ class StoreManager extends Component implements BootstrapInterface
             $host = "uat-in.weshop.asia";
         }else if ($idStore == self::STORE_ID and YII_ENV_TEST) {
             $host = "uat-indo-v4.weshop.asia";
+        }else if ($idStore == self::STORE_ID and YII_ENV_TEST) {
+            $host = "weshop-v4-id.front-end.local.id";
         } else {
             $host = "weshop.com.vn";
         }
@@ -209,7 +211,7 @@ class StoreManager extends Component implements BootstrapInterface
     {
         $money = $this->roundMoney($money);
         if ($currency === null) {
-            $currency = $this->store->{$this->moneyShowWith};
+            $currency = $this->getCurrencyName();
         }
         $decimal = 0;
         if ($currency === 'USD' || $currency === '$') {
@@ -254,13 +256,12 @@ class StoreManager extends Component implements BootstrapInterface
         return "Weshop Vietnam";
     }
 
-    public function getCurrencyName()
+    public function getCurrencyName($type = null)
     {
-        if ($this->isID())
-            return "RP";
-        if ($this->isVN())
-            return "VNĐ";
-        return "USD";
+        if($type === null){
+            $type = $this->moneyShowWith;
+        }
+        return $this->store->{$type};
     }
 
 }

@@ -278,7 +278,7 @@ class AmazonGateV3 extends BaseGate
         $rs['description'] = isset($amazon['description']) ? $amazon['description'] : '';
         $rs['best_seller'] = '';
         $rs['manufacturer_description'] = '';
-        $rs['primary_images'] = $amazon['images'];
+        $rs['primary_images'] =  $this->getItemImage($amazon['primary_images']);//$amazon['images'];
         $rs['technical_specific'] = $this->getTechnicalSpecific($amazon['product_information']);//$amazon['product_description'];
         $rs['variation_options'] = $this->getOptionGroup($amazon['product_option'],$rs['item_name'],$rs['item_sku']);
         $rs['variation_mapping'] = [];
@@ -500,10 +500,12 @@ class AmazonGateV3 extends BaseGate
         $imgs = [];
         if (count($data) > 0)
             foreach ($data as $datum) {
-                $temp = [];
-                $temp['thumb'] = $datum['thumb'];
-                $temp['main'] = $datum['large'];
-                $imgs[] = $temp;
+                foreach ($datum as $img){
+                    $temp = [];
+                    $temp['thumb'] = $img['thumb'];
+                    $temp['main'] = $img['large'];
+                    $imgs[] = $temp;
+                }
             }
         return $imgs;
     }
