@@ -8,7 +8,7 @@ return [
         '@npm' => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
-    'sourceLanguage' => 'en-US',
+    'sourceLanguage' => 'vi-VN',
     'components' => [
         /*
         'cache' => [
@@ -47,7 +47,7 @@ return [
         ],
         'storeManager' => [
             'class' => 'common\components\StoreManager',
-            'storeId' => 1
+            'storeId' => 7
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager'

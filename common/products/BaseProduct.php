@@ -294,7 +294,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     public function getIsSpecial()
     {
-        if(($category = $this->getCategory()) !== null){
+        if (($category = $this->getCategory()) !== null) {
             return $category->checkSpecialGroup($this);
         }
         return false;
@@ -305,7 +305,79 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getShippingParams()
     {
-        return [];
+        if ($this->getUser() === null || ($wh = $this->getPickUpWareHouse()) === false) {
+            return [];
+        }
+        if (($pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id')) === null) {
+            return [];
+        }
+        $shipTo = [
+            'contact_name' => 'ws calculator',
+            'company_name' => '',
+            'email' => '',
+            'address' => 'ws auto',
+            'address2' => '',
+            'phone' => '0987654321',
+            'phone2' => '',
+            'province' => '',
+            'district' => '',
+            'country' => $this->getStoreManager()->store->country_code,
+            'zipcode' => '',
+        ];
+        if (($defaultShippingAddress = $this->getUser()->defaultShippingAddress)) {
+            $shipTo = ArrayHelper::merge($shipTo, [
+                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
+                'address' => $defaultShippingAddress->address,
+                'phone' => $defaultShippingAddress->phone,
+                'province' => $defaultShippingAddress->province_id,
+                'district' => $defaultShippingAddress->district_id,
+                'zipcode' => $defaultShippingAddress->post_code
+            ]);
+        } elseif (($address = $this->getUser()->defaultPrimaryAddress)) {
+            $shipTo = ArrayHelper::merge($shipTo, [
+                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
+                'address' => $address->address,
+                'phone' => $address->phone,
+                'province' => $address->province_id,
+                'district' => $address->district_id,
+                'zipcode' => $address->post_code
+            ]);
+        } else {
+            return [];
+        }
+        $params = [
+            'ship_from' => [
+                'country' => 'US',
+                'pickup_id' => $pickUpId
+            ],
+            'ship_to' => $shipTo,
+            'shipments' => [
+                'content' => '',
+                'total_parcel' => 1,
+                'total_amount' => $this->getLocalizeTotalPrice(),
+                'description' => '',
+                'amz_shipment_id' => '',
+                'chargeable_weight' => $this->getShippingWeight(),
+                'parcels' => [
+                    'weight' => $this->getShippingWeight(),
+                    'amount' => $this->getLocalizeTotalPrice(),
+                    'description' => "{$this->portal} {$this->getUniqueCode()}",
+                    'items' => [
+                        [
+                            'sku' => $this->getUniqueCode(),
+                            'label_code' => '',
+                            'origin_country' => '',
+                            'name' => $this->item_name,
+                            'desciption' => '',
+                            'weight' => WeshopHelper::roundNumber(($this->getShippingWeight() / $this->getShippingQuantity())),
+                            'amount' => WeshopHelper::roundNumber($this->getLocalizeTotalPrice()),
+                            'quantity' => $this->getShippingQuantity(),
+                        ]
+                    ]
+                ]
+            ],
+        ];
+        return $params;
     }
 
     /**
@@ -313,7 +385,14 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getPickUpWareHouse()
     {
-        return null;
+        if (($user = $this->getUser()) !== null && $user->getPickupWarehouse() !== null) {
+            return $user->getPickupWarehouse();
+        }
+        if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) === null) {
+            return false;
+        }
+        $current = $params['default'];
+        return ArrayHelper::getValue($params, "warehouses.$current", false);
     }
 
     /**

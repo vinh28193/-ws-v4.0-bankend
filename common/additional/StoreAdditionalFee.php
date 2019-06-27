@@ -37,7 +37,7 @@ class StoreAdditionalFee extends \common\models\StoreAdditionalFee
         $storeManager = Yii::$app->storeManager;
         if ($this->name === 'custom_fee' && ($category = $additional->getCategory()) !== null) {
             $value = $category->getCustomFee($additional);
-        } elseif ($this->name === 'international_shipping_fee') {
+        } elseif ($this->name === 'international_shipping_fee' && !empty($additional->getShippingParams())) {
             $calculator = new InternationalShippingCalculator();
             list($ok, $couriers) = $calculator->CalculateFee($additional->getShippingParams(), ArrayHelper::getValue($additional->getPickUpWareHouse(), 'ref_user_id'), $storeManager->store->country_code);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
