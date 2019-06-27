@@ -211,7 +211,7 @@ class StoreManager extends Component implements BootstrapInterface
     {
         $money = $this->roundMoney($money);
         if ($currency === null) {
-            $currency = $this->store->{$this->moneyShowWith};
+            $currency = $this->getCurrencyName();
         }
         $decimal = 0;
         if ($currency === 'USD' || $currency === '$') {
@@ -256,13 +256,12 @@ class StoreManager extends Component implements BootstrapInterface
         return "Weshop Vietnam";
     }
 
-    public function getCurrencyName()
+    public function getCurrencyName($type = null)
     {
-        if ($this->isID())
-            return "RP";
-        if ($this->isVN())
-            return "VNĐ";
-        return "USD";
+        if($type === null){
+            $type = $this->moneyShowWith;
+        }
+        return $this->store->{$type};
     }
 
 }

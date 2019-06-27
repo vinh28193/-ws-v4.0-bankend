@@ -84,7 +84,7 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                 </div>
                 <?php
                 if ($localSellprice) {
-                    echo "<strong>" . trim($storeManager->showMoney($localSellprice, '')) . "</strong><span style='font-size: 16px;margin: 0px'>VND</span><span> ($" . $product['sell_price'] . ")</span>";
+                    echo "<strong>" . trim($storeManager->showMoney($localSellprice, '')) . "</strong><span style='font-size: 16px;margin: 0px'>".$storeManager->getCurrencyName()."</span><span> ($" . $product['sell_price'] . ")</span>";
                 } else {
                     echo Html::tag('strong', Yii::t('frontend', 'Click to see details'));
                 }

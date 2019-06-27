@@ -99,9 +99,12 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                         </ul>
                     </td>
                 </tr>
-                <tr>
-<!--                    <td colspan="2">--><?//= Yii::t('frontend','The price does not include shipping fees to your location.') ?><!--</td>-->
-                </tr>
+                <?php if ($item->type === BaseProduct::TYPE_EBAY){ ?>
+                    <tr>
+                        <td><?= Yii::t('frontend','Location Seller') ?></td>
+                        <td><?= $current_provider->location.', '.$current_provider->country_code ?></td>
+                    </tr>
+                <?php  } ?>
             </table>
         </div>
         <?php
@@ -230,7 +233,7 @@ JS;
                 <?= Yii::t('frontend','Other sellers') ?>:
             </div>
             <div>
-                <table class="table table-responsive">
+                <table class="table table-responsive-md">
                     <thead>
                     <tr>
                         <th><?= Yii::t('frontend','Price + Shipping') ?></th>
