@@ -157,7 +157,14 @@ class EbayGateV4 extends BaseGate
         if($curl->responseCode !== 200 || !ArrayHelper::getValue($response,'success')){
             return [false, $response];
         }
-        return [true, $response];
+        try{
+            $response['data']['end_time'] = strtotime($response['data']['end_time']);
+            $response['data']['start_time'] = strtotime($response['data']['start_time']);
+            return [true, $response];
+        }catch (Exception $exception ){
+            Yii::error($exception);
+            return [false, $response];
+        }
     }
     public static function getProductSuggest($sku){
         $url = 'http://sv3.weshop.asia/ebay/sugget?q='.$sku.'&categoryId=';

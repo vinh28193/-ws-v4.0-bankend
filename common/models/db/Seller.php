@@ -5,7 +5,7 @@ namespace common\models\db;
 use Yii;
 
 /**
- * This is the model class for table "{{%seller}}".
+ * This is the model class for table "seller".
  *
  * @property int $id ID
  * @property string $seller_name
@@ -17,6 +17,8 @@ use Yii;
  * @property int $seller_remove
  * @property string $portal
  * @property string $version version 4.0
+ * @property string $location
+ * @property string $country_code
  *
  * @property Order[] $orders
  * @property Product[] $products
@@ -28,7 +30,7 @@ class Seller extends \common\components\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%seller}}';
+        return 'seller';
     }
 
     /**
@@ -39,7 +41,8 @@ class Seller extends \common\components\db\ActiveRecord
         return [
             [['seller_link_store', 'seller_store_description', 'portal'], 'string'],
             [['created_at', 'updated_at', 'seller_remove'], 'integer'],
-            [['seller_name', 'seller_store_rate', 'version'], 'string', 'max' => 255],
+            [['seller_name', 'seller_store_rate', 'version', 'location'], 'string', 'max' => 255],
+            [['country_code'], 'string', 'max' => 32],
         ];
     }
 
@@ -49,16 +52,18 @@ class Seller extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('db', 'ID'),
-            'seller_name' => Yii::t('db', 'Seller Name'),
-            'seller_link_store' => Yii::t('db', 'Seller Link Store'),
-            'seller_store_rate' => Yii::t('db', 'Seller Store Rate'),
-            'seller_store_description' => Yii::t('db', 'Seller Store Description'),
-            'created_at' => Yii::t('db', 'Created At'),
-            'updated_at' => Yii::t('db', 'Updated At'),
-            'seller_remove' => Yii::t('db', 'Seller Remove'),
-            'portal' => Yii::t('db', 'Portal'),
-            'version' => Yii::t('db', 'Version'),
+            'id' => 'ID',
+            'seller_name' => 'Seller Name',
+            'seller_link_store' => 'Seller Link Store',
+            'seller_store_rate' => 'Seller Store Rate',
+            'seller_store_description' => 'Seller Store Description',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'seller_remove' => 'Seller Remove',
+            'portal' => 'Portal',
+            'version' => 'Version',
+            'location' => 'Location',
+            'country_code' => 'Country Code',
         ];
     }
 

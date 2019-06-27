@@ -90,8 +90,7 @@ class AlepayClient extends Component
         $result = curl_exec($ch);
         $result = json_decode($result);
         $success = $result->errorCode === '000';
-        $data = $this->security->decrypt($result->data);
-        return ['success' => $result->errorCode === '000', 'message' => $result->errorDescription, 'data' => $success ? $this->security->decrypt($result->data) : null, 'code' => $result->errorCode];
+        return ['success' => $success, 'message' => $result->errorDescription, 'data' => $success ? $this->security->decrypt($result->data) : null, 'code' => $result->errorCode];
     }
 
     protected function getUrl($url)

@@ -99,9 +99,12 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                         </ul>
                     </td>
                 </tr>
-                <tr>
-<!--                    <td colspan="2">--><?//= Yii::t('frontend','The price does not include shipping fees to your location.') ?><!--</td>-->
-                </tr>
+                <?php if ($item->type === BaseProduct::TYPE_EBAY){ ?>
+                    <tr>
+                        <td><?= Yii::t('frontend','Location Seller') ?></td>
+                        <td><?= $current_provider->location.', '.$current_provider->country_code ?></td>
+                    </tr>
+                <?php  } ?>
             </table>
         </div>
         <?php
@@ -114,8 +117,7 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
         <div class="option-box">
             <label class="label-option-box" id="label_<?= $variationOption->id ?>"><?= $variationOption->name; ?>: ---</label>
             <div class="color-pick" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
-                <ul class="style-list"
-                    data-slick='{"loop": false; "slidesToShow": <?= count($variationOption->values) < 6 ? count($variationOption->values) : 6 ?>}'>
+                <ul class="style-list">
                     <?php foreach ($variationOption->values as $k => $value) {
                         foreach ($variationOption->images_mapping as $image) {
                             if (strtolower($image->value) == strtolower($value)) {
@@ -231,19 +233,18 @@ JS;
                 <?= Yii::t('frontend','Other sellers') ?>:
             </div>
             <div>
-                <table class="table">
+                <table class="table table-responsive-md">
                     <thead>
                     <tr>
-                        <th></th>
                         <th><?= Yii::t('frontend','Price + Shipping') ?></th>
                         <th><?= Yii::t('frontend','Condition') ?></th>
                         <th><?= Yii::t('frontend','Seller info') ?></th>
-                        <th><?= Yii::t('frontend','Buying Option') ?></th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <?php foreach ($item->providers as $provider){
+                    <?php
+                    foreach ($item->providers as $provider) {
                         if($provider->prov_id != $current_provider->prov_id){
                             $item->updateBySeller($provider->prov_id);
                             $rate_star_seller = floatval($provider->rating_star);
@@ -251,9 +252,6 @@ JS;
                             $rate_star_seller = $rate_star_seller > intval($rate_star_seller) ? intval($rate_star_seller).'-5' : intval($rate_star_seller);
                             ?>
                             <tr style="cursor: pointer" data-action="clickToLoad" data-href="<?= WeshopHelper::generateUrlDetail('amazon',$item->item_name,$item->item_sku,null,$provider->prov_id) ?>">
-                                <td>
-                                    <a href="javascript:void(0);"  data-action="clickToLoad" data-href="<?= WeshopHelper::generateUrlDetail('amazon',$item->item_name,$item->item_sku,null,$provider->prov_id) ?>"><i class="la la-eye"></i></a>
-                                </td>
                                 <td>
                                     <strong class="text-danger">
                                         <?= $storeManager->showMoney($item->getLocalizeTotalPrice()); ?>
@@ -267,18 +265,21 @@ JS;
                                     <strong><?= $provider->condition; ?></strong>
                                 </td>
                                 <td>
-                                    <div><?= $provider->name; ?></div>
-                                    <?php if($provider->rating_score){?>
+                                    <div class="text-blue"><?= $provider->name; ?></div>
                                         <div class="rate text-orange">
-                                            <i class="a-icon a-icon-star a-star-<?= $rate_star_seller ?> review-rating">
-                                                <span class="a-icon-alt"><?= str_replace('-','.',$rate_star_seller) ?> out of 5 stars</span>
-                                            </i>
-                                            <u class="text-blue font-weight-bold">(<?= Yii::t('frontend','{countRate} total rating',['countRate' => $rate_count_seller]) ?>)</u>
+                                            <?php if ($rate_star_seller) { ?>
+                                                <i class="a-icon a-icon-star a-star-<?= $rate_star_seller ?> review-rating">
+                                                    <span class="a-icon-alt"><?= str_replace('-','.',$rate_star_seller) ?> out of 5 stars</span>
+                                                </i>
+                                            <?php }if ($provider->positive_feedback_percent) { ?>
+                                                <u class="text-blue font-weight-bold"><?= Yii::t('frontend','{positive}% positive',['positive' => $provider->positive_feedback_percent]) ?></u>
+                                            <?php }
+                                            if ($rate_count_seller) {
+                                                ?>
+                                                <br>
+                                                <u class="text-blue font-weight-bold">(<?= Yii::t('frontend','{countRate} total rating',['countRate' => $rate_count_seller]) ?>)</u>
+                                            <?php } ?>
                                         </div>
-                                    <?php }?>
-                                </td>
-                                <td>
-
                                 </td>
                             </tr>
                         <?php }

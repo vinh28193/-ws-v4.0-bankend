@@ -53,7 +53,7 @@ a, .btn, .navbar-2, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-men
     transform: scale(1.05);
 }
 
-.keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-slider .item .item-box .thumb a img, .deal-shock .deal-content ul li .item .thumb img, .product-list .item .thumb img, .cart-box .cart-item li .thumb img, .order-list li .thumb img, .method-list li span img, .product-block .pd-content .right .right-1 ul li .item .thumb img, .product-block .pd-content .right .right-2 ul li .item .thumb img, .related-product ul li a .thumb img, .detail-block .thumb-slider .detail-slider .item a img, .detail-block .product-full-info .option-box .style-list li span img, .otp-modal .modal-dialog .modal-content .modal-body .form-group .input-group .input-group-text img, .be-box .be-body .new-update li .mess-content .logo img, .be-recharge .tab-content .be-method-list li span img, .be-order .be-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .od-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .package-table .table tbody tr td .product-info .thumb img, .be-noti .noti-list li .thumb img, .voucher-wallet .vb-content .voucher-list li .thumb img, .ws-coin .wc-table .be-table .table tbody tr td .product-info .thumb img, .saved-pd .be-table .table tbody tr td .product-info .thumb img, .vip-level .vl_block2 .point-list li .thumb img {
+.keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-slider .item .item-box .thumb a img, .deal-shock .deal-content ul li .item .thumb img, .product-list .item .thumb img, .cart-box .cart-item li .thumb img, .order-list li .thumb img, .method-list li span img, .product-block .pd-content .right .right-1 ul li .item .thumb img, .product-block .pd-content .right .right-2 ul li .item .thumb img, .related-product ul li a .thumb img, .detail-block .thumb-slider .detail-slider .item a img, .detail-block .product-full-info .option-box .style-list li span img, .detail-block .product-full-info .option-box-amazon .style-list li span img, .otp-modal .modal-dialog .modal-content .modal-body .form-group .input-group .input-group-text img, .be-box .be-body .new-update li .mess-content .logo img, .be-recharge .tab-content .be-method-list li span img, .be-order .be-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .od-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .package-table .table tbody tr td .product-info .thumb img, .be-noti .noti-list li .thumb img, .voucher-wallet .vb-content .voucher-list li .thumb img, .ws-coin .wc-table .be-table .table tbody tr td .product-info .thumb img, .saved-pd .be-table .table tbody tr td .product-info .thumb img, .vip-level .vl_block2 .point-list li .thumb img {
     position: absolute;
     top: 50%;
     max-width: 100%;
@@ -5275,23 +5275,23 @@ a:hover {
     margin: 6px 0 16px;
 }
 
-.detail-block .product-full-info .option-box ~ .option-box {
+.detail-block .product-full-info .option-box ~ .option-box, .detail-block .product-full-info .option-box-amazon ~ .option-box-amazon {
     margin-top: 10px;
 }
 
-.detail-block .product-full-info .option-box label {
+.detail-block .product-full-info .option-box, label .detail-block .product-full-info .option-box-amazon label {
     font-size: 12px;
 }
 
-.detail-block .product-full-info .option-box label ~ label {
+.detail-block .product-full-info .option-box label ~ label, .detail-block .product-full-info .option-box-amazon label ~ label {
     margin-left: 20px;
 }
 
-.detail-block .product-full-info .option-box .dropdown {
+.detail-block .product-full-info .option-box .dropdown, .detail-block .product-full-info .option-box-amazon .dropdown {
     margin-left: 10px;
 }
 
-.detail-block .product-full-info .option-box .dropdown .dropdown-toggle {
+.detail-block .product-full-info .option-box .dropdown .dropdown-toggle, .detail-block .product-full-info .option-box-amazon .dropdown .dropdown-toggle {
     height: 30px;
     border-radius: 2px;
     border: solid 1px #ebebeb;
@@ -5302,28 +5302,28 @@ a:hover {
     position: relative;
 }
 
-.detail-block .product-full-info .option-box .dropdown .dropdown-toggle::after {
+.detail-block .product-full-info .option-box .dropdown .dropdown-toggle::after, .detail-block .product-full-info .option-box-amazon .dropdown .dropdown-toggle::after {
     position: absolute;
     top: .85rem;
     right: .75rem;
 }
 
-.detail-block .product-full-info .option-box .dropdown .dropdown-menu .dropdown-item {
+.detail-block .product-full-info .option-box .dropdown .dropdown-menu .dropdown-item ,.detail-block .product-full-info .option-box-amazon .dropdown .dropdown-menu .dropdown-item {
     font-size: 12px;
     padding: .25rem .75rem;
 }
 
-.detail-block .product-full-info .option-box .style-list {
+.detail-block .product-full-info .option-box .style-list, .detail-block .product-full-info .option-box-amazon .style-list {
     display: flex;
     flex-wrap: wrap;
     margin: 0 -2px;
 }
 
-.detail-block .product-full-info .option-box .style-list li {
+.detail-block .product-full-info .option-box .style-list li, .detail-block .product-full-info .option-box-amazon .style-list li {
     margin: 2px;
 }
 
-.detail-block .product-full-info .option-box .style-list li span {
+.detail-block .product-full-info .option-box .style-list li span, .detail-block .product-full-info .option-box-amazon .style-list li span {
     display: block;
     width: 40px;
     height: 50px;
@@ -5334,6 +5334,9 @@ a:hover {
 }
 
 .detail-block .product-full-info .option-box .style-list li.active span, .detail-block .product-full-info .option-box .style-list li:hover span {
+    border-color: #e67425;
+}
+.detail-block .product-full-info .option-box-amazon .style-list li.active span, .detail-block .product-full-info .option-box-amazon .style-list li:hover span {
     border-color: #e67425;
 }
 

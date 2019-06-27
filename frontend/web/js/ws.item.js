@@ -142,9 +142,20 @@
             var data = $item.data('wsItem');
             const value = variationOption.values[selectedValue];
             const name = variationOption.name;
-            console.log(value);
+            console.log(variationOption);
             if (!value) {
                 return;
+            }
+            if(variationOption.option_link && variationOption.sku){
+                const sku = variationOption.sku.filter(s => s.value_option === value);
+                if(sku && sku[0].link){
+                    ws.loading(true);
+                    window.location.assign(sku[0].link);
+                    return;
+                }else {
+                    markOutofStock(true);
+                    return;
+                }
             }
             if (variationOption.images_mapping.length > 0) {
                 const imgs = variationOption.images_mapping.filter(i => i.value === value);
@@ -155,9 +166,11 @@
             var deferredArrays = deferredArray();
             var params = data.params;
             currentVariations = currentVariations.filter(c => c.name !== name);
+            console.log(currentVariations);
             currentVariations.push({name: name, value: value});
             if (currentVariations.length === data.params.variation_options.length) {
                 const activeVariation = findVariation(params.variation_mapping, currentVariations);
+                console.log(activeVariation);
                 if (checkOutOfStock(activeVariation)) {
                     $.when.apply(this, deferredArrays).always(function () {
                         var queryParams = data.options.queryParams;
@@ -319,17 +332,34 @@
     var setUpDefaultOptions = function ($item) {
         var data = $item.data('wsItem');
         if (data.params.variation_mapping.length === 0) {
-            return;
+            // return;
         }
         var activeVariation = [];
         var sku = data.params.sku;
         if (sku !== undefined) {
             activeVariation = data.params.variation_mapping.filter(m => m.variation_sku === sku);
         }
+        console.log(activeVariation);
         if (activeVariation.length === 0) {
-            return;
+            var optionTemp = [];
+            $.each(data.params.variation_options,function (k,v) {
+                if(v.option_link && v.value_current){
+                    optionTemp.push({
+                        name: v.name,
+                        value: v.value_current,
+                    });
+                }
+            });
+            if(optionTemp.length > 0){
+                activeVariation.push({
+                    options_group: optionTemp
+                });
+            }else {
+                return;
+            }
             // activeVariation = data.params.variation_mapping[0];
         }
+        console.log(activeVariation);
         var images = data.params.images;
         $.each(activeVariation[0].options_group, function (index, group) {
             for (var i = 0; i < data.params.variation_options.length; i++) {
@@ -348,7 +378,7 @@
                             } else if (type === 'dropDown' && $input.length > 0) {
                                 $input.val(j);
                             }
-                            if (variation_options.images_mapping.length > 0) {
+                            if (variation_options.images_mapping.length > 0 && activeVariation[0].variation_sku) {
                                 const imgs = variation_options.images_mapping.filter(i => i.value === values[j]);
                                 if (imgs.length > 0) {
                                     images = imgs[0].images;
@@ -517,6 +547,7 @@
 
     };
     var findVariation = function (mapping, options) {
+        console.log(options);
         return $.grep(mapping, function (i) {
             return JSON.stringify(i.options_group.sort(sortBy('name'))) == JSON.stringify(options.sort(sortBy('name')));
         })[0];
@@ -588,18 +619,11 @@
             data: {item: item, type: type},
             success: function (response) {
                 if (response.success) {
-                    if (type === 'buynow' || type === 'installment') {
-                        var url = response.data || null;
-                        if (url !== null && url !== undefined) {
-                            ws.redirect(url);
-                            return false
-                        }
+                    var url = response.data || null;
+                    if (url !== null && url !== undefined) {
+                        ws.redirect(url);
+                        return false
                     }
-                    var countItems = response.data.countItems || false;
-                    if (countItems) {
-                        $('#cartBadge').html(countItems);
-                    }
-                    ws.notifySuccess(response.message);
                 } else {
                     ws.notifyError(response.message);
                 }

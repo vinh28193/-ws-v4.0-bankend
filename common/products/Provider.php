@@ -16,6 +16,7 @@ class Provider extends \yii\base\BaseObject
     public $image;
     public $website;
     public $location;
+    public $country_code;
     public $rating_score;
     public $rating_star;
     public $positive_feedback_percent;

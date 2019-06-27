@@ -63,6 +63,10 @@ $('.wait-main').click(function () {
     $('.wait-main').css('display','none');
     $('.account-header-box.style-account').attr('data-href','hide');
 });
-// $('#countStarDetail').click(function () {
-//     $(window).scrollTop($('#feed_back').top())
-// });
+$('#countStarDetail').click(function () {
+    console.log('Click');
+    console.log($("#feed_back").offset().top);
+    $('html,body').animate({
+        scrollTop: $("#feed_back").offset().top - 300
+    }, 'slow');
+});

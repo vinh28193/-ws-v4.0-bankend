@@ -8,15 +8,16 @@
 
 namespace common\products;
 
+use common\additional\AdditionalFeeInterface;
+use common\additional\AdditionalFeeTrait;
 use common\components\GetUserIdentityTrait;
+use common\components\InternationalShippingCalculator;
 use common\helpers\WeshopHelper;
+use common\models\Category;
 use common\models\User;
 use Yii;
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
-use common\models\Category;
-use common\additional\AdditionalFeeInterface;
-use common\additional\AdditionalFeeTrait;
 
 /**
  * Class BaseProduct
@@ -294,7 +295,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     public function getIsSpecial()
     {
-        if(($category = $this->getCategory()) !== null){
+        if (($category = $this->getCategory()) !== null) {
             return $category->checkSpecialGroup($this);
         }
         return false;
@@ -305,15 +306,126 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getShippingParams()
     {
-        return [];
+        if ($this->getUser() === null || ($wh = $this->getPickUpWareHouse()) === false) {
+            return [];
+        }
+        if (($pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id')) === null) {
+            return [];
+        }
+        $shipTo = [
+            'contact_name' => 'ws calculator',
+            'company_name' => '',
+            'email' => '',
+            'address' => 'ws auto',
+            'address2' => '',
+            'phone' => '0987654321',
+            'phone2' => '',
+            'province' => '',
+            'district' => '',
+            'country' => $this->getStoreManager()->store->country_code,
+            'zipcode' => '',
+        ];
+        if (($defaultShippingAddress = $this->getUser()->defaultShippingAddress)) {
+            $shipTo = ArrayHelper::merge($shipTo, [
+                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
+                'address' => $defaultShippingAddress->address,
+                'phone' => $defaultShippingAddress->phone,
+                'province' => $defaultShippingAddress->province_id,
+                'district' => $defaultShippingAddress->district_id,
+                'zipcode' => $defaultShippingAddress->post_code
+            ]);
+        } elseif (($address = $this->getUser()->defaultPrimaryAddress)) {
+            $shipTo = ArrayHelper::merge($shipTo, [
+                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
+                'address' => $address->address,
+                'phone' => $address->phone,
+                'province' => $address->province_id,
+                'district' => $address->district_id,
+                'zipcode' => $address->post_code
+            ]);
+        } else {
+            return [];
+        }
+        $weight = $this->getShippingWeight() * 1000;
+        $params = [
+            'ship_from' => [
+                'country' => 'US',
+                'pickup_id' => $pickUpId
+            ],
+            'ship_to' => $shipTo,
+            'shipments' => [
+                'content' => '',
+                'total_parcel' => 1,
+                'total_amount' => $this->getLocalizeTotalPrice(),
+                'description' => '',
+                'amz_shipment_id' => '',
+                'chargeable_weight' => $weight,
+                'parcels' => [
+                    'weight' => $weight,
+                    'amount' => $this->getLocalizeTotalPrice(),
+                    'description' => "{$this->portal} {$this->getUniqueCode()}",
+                    'items' => [
+                        [
+                            'sku' => $this->getUniqueCode(),
+                            'label_code' => '',
+                            'origin_country' => '',
+                            'name' => $this->item_name,
+                            'desciption' => '',
+                            'weight' => WeshopHelper::roundNumber(($weight / $this->getShippingQuantity())),
+                            'amount' => WeshopHelper::roundNumber($this->getLocalizeTotalPrice()),
+                            'quantity' => $this->getShippingQuantity(),
+                        ]
+                    ]
+                ]
+            ],
+        ];
+        return $params;
+    }
+
+    public $courierCode;
+
+    private $_couriers = [];
+
+    public function getInternationalShipping($refresh = false)
+    {
+        if ((empty($this->_couriers) || $refresh) && !empty($this->getShippingParams())) {
+            $location = InternationalShippingCalculator::LOCATION_AMAZON;
+            if ($this->type === self::TYPE_EBAY) {
+                $location = InternationalShippingCalculator::LOCATION_EBAY_US;
+                $currentSeller = $this->getCurrentProvider();
+                if (strtoupper($currentSeller->country_code) !== 'US') {
+                    $location = InternationalShippingCalculator::LOCATION_EBAY;
+                }
+            }
+            $calculator = new InternationalShippingCalculator();
+            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code, $location);
+            if ($ok && is_array($couriers) && count($couriers) > 0) {
+                $this->_couriers = $couriers;
+                $firstCourier = $couriers[0];
+                $this->courierCode = $firstCourier['service_code'];
+                $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', $firstCourier['total_fee']);
+            }
+        }
+        return $this->_couriers;
     }
 
     /**
      * @return array|mixed|null
      */
+    private $_pickUpWareHouse = false;
+
     public function getPickUpWareHouse()
     {
-        return null;
+        if (!$this->_pickUpWareHouse) {
+            if (($user = $this->getUser()) !== null && $user->getPickupWarehouse() !== null) {
+                $this->_pickUpWareHouse = $user->getPickupWarehouse();
+            } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) === null) {
+                $current = $params['default'];
+                $this->_pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
+            }
+        }
+        return $this->_pickUpWareHouse;
+
     }
 
     /**

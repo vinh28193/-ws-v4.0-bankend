@@ -3,29 +3,42 @@
 
 namespace common\components\employee;
 
+use common\components\employee\rules\BaseRule;
 use common\models\Order;
 use common\models\User;
 use Yii;
 use yii\base\BaseObject;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
+use common\components\GetUserIdentityTrait;
 
 /**
  * Class Employee
  * @package common\components
+ * @link https://docs.google.com/spreadsheets/d/1wgzOoDENLLjXP1JhTLS2ZUFf37YVjWPTe0mtlp6JXNo/edit#gid=0
  *
  * @property-read User[] $supporters
  */
 class Employee extends BaseObject
 {
+    use GetUserIdentityTrait;
+    /**
+     * @var string
+     */
+    public $ruleClass = 'common\components\employee\rules\ConfirmRule';
 
+    /**
+     * @var array
+     */
+    public $ruleConfig = [];
     /**
      * @var User[]
      */
     private $_supporters = [];
 
     /**
-     * @return array|User[]
+     * @return User[]
      */
     public function getSupporters()
     {
@@ -36,7 +49,7 @@ class Employee extends BaseObject
     }
 
     /**
-     * @return array|\yii\db\ActiveRecord[]
+     * @return User[]
      */
     protected function loadSupporterByRoles()
     {
@@ -51,23 +64,35 @@ class Employee extends BaseObject
         return $query->all();
     }
 
-    public function calculate()
+    /**
+     * @return User
+     */
+    public function getAssign()
     {
-        $ids = array_keys($this->getSupporters());
+        if ($this->checkUserHasSupporter()) {
 
+        }
+        return $this->getActiveRule()->getActiveSupporter();
     }
 
-    public function createQuery($select = '*', $conditions = [])
+    /**
+     * @return BaseRule
+     */
+    protected function getActiveRule()
     {
-        $query = new Query();
-        $query->from(['o' => Order::tableName()]);
-        $query->select($select);
-        $query->where($conditions);
-        return $query->all();
+        $config = $this->ruleConfig;
+        if (!isset($config['class'])) {
+            $config['class'] = $this->ruleClass;
+        }
+        $config['employee'] = $this;
+        return Yii::createObject($config);
     }
 
-    public function ruleConfirmCalculate()
+    public function checkUserHasSupporter()
     {
-
+        if ($this->getUser() === null) {
+            return false;
+        }
+        return false;
     }
 }

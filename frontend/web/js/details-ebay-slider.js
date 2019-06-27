@@ -15,7 +15,7 @@ $(document).ready(function () {
         gallery: 'detail-slider',
         galleryActiveClass: 'active'
     });
-    $('.style-list').slick({
+   /* $('.style-list').slick({
         infinite: true,
         arrows: true,
         speed: 100,
@@ -24,7 +24,7 @@ $(document).ready(function () {
         centerMode: false,
         variableWidth: true,
         swipeToSlide: true
-    });
+    });*/
 
     $('.mb-slide-image').slick();
     $('#other-seller').owlCarousel({

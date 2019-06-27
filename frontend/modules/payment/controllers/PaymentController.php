@@ -109,7 +109,7 @@ class PaymentController extends BasePaymentController
         $payment->customer_email = $shippingForm->buyer_email;
         $payment->customer_phone = $shippingForm->buyer_phone;
         $payment->customer_address = $shippingForm->buyer_address;
-        $payment->customer_city = $shippingForm->getReceiverProvinceName();
+        $payment->customer_city = $shippingForm->getBuyerProvinceName();
         $payment->customer_postcode = $shippingForm->buyer_post_code;
         $payment->customer_district = $shippingForm->getBuyerDistrictName();
         $payment->customer_country = $this->storeManager->store->country_name;
@@ -298,12 +298,15 @@ class PaymentController extends BasePaymentController
         } else {
             $payment->initDefaultMethod();
         }
+
         $paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $payment->transaction_code]);
         if ($paymentTransaction === null) {
             return $this->response(false, Yii::t('frontend', 'Not found transaction for invoice {code}', [
                 'code' => $payment->transaction_code
             ]));
         }
+        $payment->return_url = PaymentService::createReturnUrl($payment->payment_provider);
+        $payment->cancel_url = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         $res = $payment->processPayment();
         if ($res->success === false) {
             return $this->response(false, $res->message);

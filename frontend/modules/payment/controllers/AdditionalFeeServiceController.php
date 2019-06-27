@@ -7,6 +7,7 @@ use common\components\InternationalShippingCalculator;
 use common\components\GetUserIdentityTrait;
 use common\helpers\WeshopHelper;
 use common\models\Address;
+use common\products\BaseProduct;
 use frontend\modules\payment\models\ShippingForm;
 use frontend\modules\payment\Payment;
 use Yii;
@@ -99,7 +100,6 @@ class AdditionalFeeServiceController extends BasePaymentController
         $results = [];
         foreach ($payment->getOrders() as $order) {
             $weight = $order->total_weight_temporary * 1000;
-            Yii::info($weight, 'weight');
             $totalAmount = $order->total_amount_local;
             $items = [];
             foreach ($order->products as $product) {
@@ -136,8 +136,16 @@ class AdditionalFeeServiceController extends BasePaymentController
                     'parcels' => [$parcel]
                 ],
             ];
+
+            $location = InternationalShippingCalculator::LOCATION_AMAZON;
+            if (strtoupper($order->type) === BaseProduct::TYPE_EBAY) {
+                $location = InternationalShippingCalculator::LOCATION_EBAY_US;
+                if (strtoupper($order->seller->country_code) !== 'US') {
+                    $location = InternationalShippingCalculator::LOCATION_EBAY;
+                }
+            }
             $calculator = new InternationalShippingCalculator();
-            $response = $calculator->CalculateFee($params, $userId, $store->country_code, $store->currency);
+            $response = $calculator->CalculateFee($params, $userId, $store->country_code, $store->currency, $location);
             $response = array_combine(['success', 'couriers'], $response);
             $results[$order->cartId] = $response;
         }

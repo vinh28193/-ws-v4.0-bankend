@@ -8,6 +8,7 @@
     font-size: 12px;
     line-height: 24px;
     margin-bottom: 1rem;
+    box-shadow: 0 0rem 1rem rgba(0, 0, 0, 0.175) !important;
 }
 
 .card-checkout .card-body {
@@ -156,11 +157,23 @@
     font-weight: 700;
 }
 
+.courier-dropdown .dropdown-menu{
+    width: 100%;
+    padding: 0;
+}
+
+.courier-dropdown .dropdown-menu .dropdown-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 1rem 0.85rem;
+}
+
+.courier-dropdown .dropdown-menu .dropdown-item:last-child {
+    border-bottom: none;
+}
 /*.courier-dropdown .dropdown-toggle:after {*/
 /*    content: url("/images/icon/dropdown_arrow.png");*/
 /*}*/
 .table-fee {
-    margin-top: 1rem;
     font-size: 12px;
     line-height: 30px;
 }
@@ -179,26 +192,23 @@
     font-size: 14px;
     border-top: 1px silver solid;
 }
-.card-information {
-    border-radius: 3px;
-    border: 1px solid #fceab9;
-    background-color: #fff4d5;
-    color: #de8700;
-    margin-bottom: 1rem;
-}
 
 .card-information {
     border-radius: 3px;
     border: 1px solid #fceab9;
     background-color: #fff4d5;
-    color: #de8700;
 }
 
 .card-information .card-body {
-    padding: 0.75rem 1.25rem;
+    background-color: #fff4d5;
 }
 
-.card-information .card-body a {
+.text-information {
+    color: #de8700;
+}
+
+
+.text-information a {
     color: #2e96b6;
 }
 

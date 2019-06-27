@@ -63,7 +63,7 @@ class CartWidget extends Widget
         $totalUsFee = 0;
         foreach ($order['products'] as $product) {
             if ($selected) {
-                $this->totalAmount += $product['total_price_amount_local'];
+                $this->totalAmount += $product['total_final_amount_local'];
             }
             $fees = [];
             foreach ($product['additionalFees'] as $name => $additionalFee) {
@@ -89,7 +89,7 @@ class CartWidget extends Widget
                 'variations' => $product['variations'],
                 'total_unit_amount' => $product['price_amount_local'],
                 'total_us_fee' => $totalUsFee,
-                'total_final_amount' => $product['total_price_amount_local'],
+                'total_final_amount' => $product['total_final_amount_local'],
                 'available_quantity' => $product['available_quantity'],
                 'quantity_sold' => $product['quantity_sold'],
                 'quantity' => $product['quantity_customer'],

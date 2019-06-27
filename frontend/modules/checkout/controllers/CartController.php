@@ -77,16 +77,14 @@ class CartController extends CheckoutController
             return ['success' => false, 'message' => $key[1]];
         };
 
+        $redirectUrl = Url::toRoute(['/checkout/cart'], true);
+
         if ($type === CartSelection::TYPE_BUY_NOW || $type === CartSelection::TYPE_INSTALLMENT) {
             CartSelection::setSelectedItems($type, (string)$key[0]);
-            $checkOutAction = Url::toRoute(['/checkout/shipping', 'type' => $type]);
-            return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key[0], 'data' => $checkOutAction];
-        } else {
-            return ['success' => true, 'message' => $key[1], 'data' => [
-                'key' => $key[0],
-                'countItems' => $this->module->cartManager->countItems(CartSelection::TYPE_SHOPPING),
-            ]];
+            $redirectUrl = Url::toRoute(['/checkout/shipping', 'type' => $type], true);
+
         }
+        return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key[0], 'data' => $redirectUrl];
     }
 
     public function actionUpdate()

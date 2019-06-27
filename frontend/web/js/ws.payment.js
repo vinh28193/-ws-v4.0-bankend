@@ -36,7 +36,7 @@ ws.payment = (function ($) {
         transaction_fee: 0,
         additionalFees: [],
     };
-    var current_step = 2;
+    var orderCouriers = [];
     var pub = {
         payment: {},
         options: {},
@@ -235,7 +235,7 @@ ws.payment = (function ($) {
                     console.log(response);
                     if (response.success) {
                         var orders = response.data;
-
+                        orderCouriers = orders;
                         $.each(orders, function (key, res) {
                             initCourierView(key, res);
                         });
@@ -321,7 +321,7 @@ ws.payment = (function ($) {
             table += '</tbody></table>';
             $('div#installmentPeriods').html(table);
         },
-        courierChange: function ($cardOrder, courier) {
+        courierChange: function (key, service_code) {
             var fee = {
                 amount: 0,
                 currency: pub.get('currency'),
@@ -331,18 +331,24 @@ ws.payment = (function ($) {
                 name: 'international_shipping_fee',
                 type: 'local'
             };
-            var key = $cardOrder.data('key');
-            var text = courier.courier_name + ' ' + courier.service_name + ' (' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('day') + ' )';
-            var courierDropDown = $cardOrder.find('div.courier-dropdown');
-            courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(text);
+
+            var $cardOrder = $('div.card-order[data-key=' + key + ']');
+
+            var couriers = orderCouriers[key];
+            var courier = $.grep(couriers.couriers, function (x) {
+                return x.service_code === service_code
+            })[0];
+
+
+            // var text = courier.courier_name + ' ' + courier.service_name + ' (' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days') + ' )';
+            // var courierDropDown = $cardOrder.find('div.courier-dropdown');
+            // courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(text);
+
             var orders = pub.get('orders');
             var order = orders[key];
             var shippingFee = ws.roundNumber(courier.total_fee);
             var additionalFees = order.additionalFees;
-
-            if (!(fee.name in additionalFees)) {
-                additionalFees[fee.name] = [];
-            }
+            additionalFees[fee.name] = [];
             fee.amount = shippingFee;
             fee.local_amount = shippingFee;
             additionalFees[fee.name].push(fee);
@@ -352,6 +358,13 @@ ws.payment = (function ($) {
             orders[key] = order;
             pub.set('orders', orders);
             var tableFee = $cardOrder.find('table.table-fee');
+
+            var courierRow = tableFee.find('tr.courier');
+            courierRow.remove();
+            courierRow.append('<th class="header">' + courier.courier_name + ' ' + courier.service_name + '</th>');
+            courierRow.append('<td class="text-right">' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days') + '</td>');
+            courierRow.css('display', 'table-row');
+
             var orderAmount = getTotalOrderAmount(order);
             var totalFinal = tableFee.find('tr.final-amount').find('.value');
             totalFinal.html(ws.showMoney(orderAmount));
@@ -519,8 +532,8 @@ ws.payment = (function ($) {
         }
         var handleUrl = '/payment/payment/billing';
         var data = pub.payment;
-        if(isCheckout){
-            data = {payment: pub.payment,shipping:pub.shipping};
+        if (isCheckout) {
+            data = {payment: pub.payment, shipping: pub.shipping};
             handleUrl = '/payment/payment/process';
         }
         ws.ajax(handleUrl, {
@@ -674,23 +687,20 @@ ws.payment = (function ($) {
         var couriers = response.couriers;
         var courierDropDown = $cardOrder.find('div.courier-dropdown');
         if (response.success && typeof couriers !== 'string' && couriers.length) {
-            // if (couriers.length > 0) {
-            //     var menu = $('<div/>', {
-            //         id: 'courierDropdownMenu',
-            //         'class': 'dropdown-menu',
-            //         'aria-labelledby': 'courierDropdownButton'
-            //     });
-            //     $.each(couriers, function (i, courier) {
-            //         var a = $('<a/>', {
-            //             'class': 'dropdown-item couiers',
-            //             href: 'javascript:void(0);',
-            //             text: courier.courier_name
-            //         });
-            //         menu.append(a);
-            //     });
-            //     courierDropDown.append(menu);
-            // }
-            pub.courierChange($cardOrder, couriers[0]);
+            if (couriers.length > 0) {
+                var menu = $('<div/>').attr({
+                    id: 'courierDropdownMenu',
+                    class: 'dropdown-menu',
+                    'aria-labelledby': 'courierDropdownButton'
+                });
+                $.each(couriers, function (i, courier) {
+                    var text = courier.courier_name + ' ' + courier.service_name + ' (' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days') + ' )';
+                    var item = '<span class="dropdown-item" onclick="ws.payment.courierChange(\'' + key + '\',\'' + courier.service_code + '\')">' + text + '</span>';
+                    menu.append(item);
+                });
+                courierDropDown.append(menu);
+            }
+            pub.courierChange(key, couriers[0].service_code);
         } else if (typeof couriers === 'string') {
             courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(couriers)
         }
