@@ -109,7 +109,7 @@ class PaymentController extends BasePaymentController
         $payment->customer_email = $shippingForm->buyer_email;
         $payment->customer_phone = $shippingForm->buyer_phone;
         $payment->customer_address = $shippingForm->buyer_address;
-        $payment->customer_city = $shippingForm->getReceiverProvinceName();
+        $payment->customer_city = $shippingForm->getBuyerProvinceName();
         $payment->customer_postcode = $shippingForm->buyer_post_code;
         $payment->customer_district = $shippingForm->getBuyerDistrictName();
         $payment->customer_country = $this->storeManager->store->country_name;
