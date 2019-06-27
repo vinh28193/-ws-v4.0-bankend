@@ -206,30 +206,30 @@ $userID = Yii::$app->user->getId();
                         <?php echo Html::a('<span class="icon icon6"></span>' . Yii::t('frontend', 'Account'), ['/account/customer']); ?>
                     </li>
                 </ul>
-                <?php
-                if (!Yii::$app->user->isGuest) {
-
-                    $menuItems[] = [
-
-                        'label' => Yii::t('frontend', 'Logout ({username})', [
-                            'username' => Yii::$app->user->identity->username
-                        ]),
-
-                        'url' => ['/secure/logout'],
-
-                        'linkOptions' => ['data-method' => 'post']
-
-                    ];
-                }
-                echo Nav::widget([
-
-                    'options' => ['class' => 'be-menu-collapse'],
-
-                    'items' => $menuItems,
-
-                ]);
-
-                ?>
+<!--                --><?php
+//                if (!Yii::$app->user->isGuest) {
+//
+//                    $menuItems[] = [
+//
+//                        'label' => Yii::t('frontend', 'Logout ({username})', [
+//                            'username' => Yii::$app->user->identity->username
+//                        ]),
+//
+//                        'url' => ['/secure/logout'],
+//
+//                        'linkOptions' => ['data-method' => 'post']
+//
+//                    ];
+//                }
+//                echo Nav::widget([
+//
+//                    'options' => ['class' => 'be-menu-collapse'],
+//
+//                    'items' => $menuItems,
+//
+//                ]);
+//
+//                ?>
             </div>
         <?php } ?>
         <div class="be-content">

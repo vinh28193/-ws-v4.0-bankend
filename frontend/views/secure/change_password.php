@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model frontend\models\LoginForm */
+/* @var $model frontend\models\ChangePasswordForm */
 
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
@@ -10,25 +10,25 @@ use yii\authclient\widgets\AuthChoice;
 
 /* @var yii\web\View $this */
 
-$this->title = 'Thay đổi mật khảu';
+$this->title = 'Thay đổi mật khẩu';
 $session = Yii::$app->session;
 //$flashes = $session->getAllFlashes();
 
 echo Html::tag('div',Html::tag('span',$this->title),['class' => 'title'])
 ?>
 
-<p> Vui lòng điền đầy đủ thông tin vào các trường sau:</p>
+<p class="mt-3"> Vui lòng điền đầy đủ thông tin vào các trường sau:</p>
 
 
 <?php $form = ActiveForm::begin(['id' => 'change-password-form', 'options' => [ 'class' => 'payment-form']]); ?>
 <div class="form-group">
-    <?= $form->field($model, 'passwordOld',['template' => " <i class=\"icon password\"></i>{input}\n{hint}\n{error}"])->textInput(['autofocus' => true])->input('text', ['placeholder' => "Nhập mật khẩu hiện tại"])?>
+    <?= $form->field($model, 'password_hash',['template' => " <i class=\"icon password\"></i>{input}\n{hint}\n{error}"])->textInput(['autofocus' => true])->input('password', ['placeholder' => "Nhập mật khẩu hiện tại"])?>
 </div>
 <div class="form-group">
     <?= $form->field($model, 'passwordNew', ['template' => "<i class=\"icon password\"></i>{input}\n{hint}\n{error}"])->passwordInput(['placeholder' => "Mật khẩu"]) ?>
 </div>
 <div class="form-group">
-    <?= $form->field($model, 'replacePassword', ['template' => "<i class=\"icon password\"></i>{input}\n{hint}\n{error}"])->passwordInput(['placeholder' => "Mật khẩu"]) ?>
+    <?= $form->field($model, 'replacePassword', ['template' => "<i class=\"icon password\"></i>{input}\n{hint}\n{error}"])->passwordInput(['placeholder' => "Nhập lại mật khẩu"]) ?>
 </div>
 
 <div class="form-group" style="width: 100%">

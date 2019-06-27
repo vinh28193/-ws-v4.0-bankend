@@ -330,7 +330,7 @@ class OrderController extends BaseApiController
         Yii::$app->wsLog->push('order', $model->getScenario(), null, [
             'id' => $model->ordercode,
             'request' => $this->post,
-            'response' => $dirtyAttributes
+            'response' => $this->resolveChatMessage($dirtyAttributes,$model),
         ]);
         return $this->response(true, $messages);
     }
