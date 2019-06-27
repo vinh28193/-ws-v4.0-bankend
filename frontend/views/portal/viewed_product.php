@@ -4,7 +4,7 @@
  */
 
 use common\helpers\WeshopHelper;
-if(!empty($items)){   // Todo @Huy edit thuộc tính insert lại DB + Mongodb
+if(!empty($items)){
 ?>
 <div class="title"><?php if (!is_null($items)) {
         echo Yii::t('frontend', 'Sản phẩm đã xem:');
