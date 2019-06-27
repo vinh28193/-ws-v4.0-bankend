@@ -153,6 +153,8 @@ class StoreManager extends Component implements BootstrapInterface
             $host = "uat-in.weshop.asia";
         }else if ($idStore == self::STORE_ID and YII_ENV_TEST) {
             $host = "uat-indo-v4.weshop.asia";
+        }else if ($idStore == self::STORE_ID and YII_ENV_TEST) {
+            $host = "weshop-v4-id.front-end.local.id";
         } else {
             $host = "weshop.com.vn";
         }
