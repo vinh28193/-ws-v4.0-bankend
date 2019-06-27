@@ -394,29 +394,27 @@ $this->registerJs($js);
                 <div class="col-md-7 col-sm-12"></div>
                 <div class="col-md-5 col-sm-12">
                     <div class="additional-list">
-                        <div class="dropdown courier-dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button"
-                                    id="courierDropdownButton" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    <span class="text">
-                                        <p style="margin-bottom: 0">Choose shipping service</p>
-                                        <p class="courier-name" style="margin-bottom: 0">No shipping service</p>
-                                    </span>
-                            </button>
-                            <!--                            <div class="dropdown-menu" aria-labelledby="courierDropdownButton"-->
-                            <!--                                 id="courierDropdownMenu">-->
-                            <!--                                <span class="dropdown-item">-->
-                            <!--                                     Boxme International Express (12-15 day )-->
-                            <!--                                </span>-->
-                            <!--                                <span class="dropdown-item">-->
-                            <!--                                    Boxme International Express (12-15 day )-->
-                            <!--                                </span>-->
-
-                            <!--                            </div>-->
-                        </div>
+<!--                        <div class="dropdown courier-dropdown">-->
+<!--                            <button class="btn btn-secondary dropdown-toggle" type="button"-->
+<!--                                    id="courierDropdownButton" data-toggle="dropdown" aria-haspopup="true"-->
+<!--                                    aria-expanded="false">-->
+<!--                                    <span class="text">-->
+<!--                                        <p style="margin-bottom: 0">Choose shipping service</p>-->
+<!--                                        <p class="courier-name" style="margin-bottom: 0">No shipping service</p>-->
+<!--                                    </span>-->
+<!--                            </button>-->
+<!--                            <div class="dropdown-menu" aria-labelledby="courierDropdownButton" id="courierDropdownMenu">-->
+<!--                                <span class="dropdown-item">-->
+<!--                                     Boxme International Express (12-15 day )-->
+<!--                                </span>-->
+<!--                                <span class="dropdown-item">-->
+<!--                                    Boxme International Express (12-15 day )-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <table class="table table-borderless table-fee">
                             <tr data-role="fee" data-fee="international_shipping_fee">
-                                <th class="header"><?= Yii::t('frontend', 'Temporary Shipping Fee'); ?>
+                                <th class="header"><?= Yii::t('frontend', 'Shipping fee'); ?>
                                     <?php
                                     $tooltipMessage = Yii::t('frontend', 'for {weight} {dram}', [
                                         'weight' => $order->total_weight_temporary,
@@ -429,6 +427,7 @@ $this->registerJs($js);
                                 </th>
                                 <td class="value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
                             </tr>
+                            <tr class="courier" style="display: none"></tr>
                             <tr class="discount-detail">
                                 <th class="header"><?= Yii::t('frontend', 'Coupon code'); ?> <span
                                             class="coupon-code"></span>
@@ -454,7 +453,7 @@ $this->registerJs($js);
                                 <td><?= $storeManager->showMoney($order->discountAmount); ?></td>
                             </tr>
                             <tr class="final-amount">
-                                <th class="header"><?= Yii::t('frontend', 'Amount needed to prepay') ?></th>
+                                <th class="header"><?= Yii::t('frontend', 'Amount must to pre-pay') ?></th>
                                 <td class="value"
                                     data-origin="<?= $order->getTotalFinalAmount() ?>"><?= $storeManager->showMoney($order->getTotalFinalAmount()); ?></td>
                             </tr>

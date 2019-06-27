@@ -338,9 +338,12 @@ ws.payment = (function ($) {
             var courier = $.grep(couriers.couriers, function (x) {
                 return x.service_code === service_code
             })[0];
-            var text = courier.courier_name + ' ' + courier.service_name + ' (' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days') + ' )';
-            var courierDropDown = $cardOrder.find('div.courier-dropdown');
-            courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(text);
+
+
+            // var text = courier.courier_name + ' ' + courier.service_name + ' (' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days') + ' )';
+            // var courierDropDown = $cardOrder.find('div.courier-dropdown');
+            // courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(text);
+
             var orders = pub.get('orders');
             var order = orders[key];
             var shippingFee = ws.roundNumber(courier.total_fee);
@@ -355,6 +358,12 @@ ws.payment = (function ($) {
             orders[key] = order;
             pub.set('orders', orders);
             var tableFee = $cardOrder.find('table.table-fee');
+
+            var courierRow = tableFee.find('tr.courier');
+            courierRow.append('<th class="header">' + courier.courier_name + ' ' + courier.service_name + '</th>');
+            courierRow.append('<td class="text-right">' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days') + '</td>');
+            courierRow.css('display', 'table-row');
+
             var orderAmount = getTotalOrderAmount(order);
             var totalFinal = tableFee.find('tr.final-amount').find('.value');
             totalFinal.html(ws.showMoney(orderAmount));

@@ -6,6 +6,7 @@ namespace frontend\controllers;
 use common\boxme\InternationalShippingCalculator;
 use common\components\cart\CartHelper;
 use common\components\cart\CartManager;
+use common\components\employee\Employee;
 use common\helpers\ObjectHelper;
 use common\helpers\WeshopHelper;
 use common\models\Store;
@@ -341,6 +342,13 @@ JSON;
         $shipment = json_decode($shipment, true);
         $couriers = $calculator->CalculateFee($shipment, 23, 'VN');
         var_dump($couriers);
+        die;
+    }
+
+    public function actionSaleAssign(){
+        $employee = new Employee();
+
+        var_dump($employee->getSupporters(),$employee->getAssign());
         die;
     }
 }
