@@ -204,7 +204,7 @@ $this->registerJs($js);
             <div class="row">
                 <div class="col-md-12">
                     <?php
-                    echo $form->field($shippingForm, 'other_receiver')->checkbox()->label('Information of the receiver other than the buyer');
+                    echo $form->field($shippingForm, 'other_receiver')->checkbox()->label(Yii::t('frontend', 'Information of the receiver other than the buyer'));
                     ?>
                 </div>
             </div>
