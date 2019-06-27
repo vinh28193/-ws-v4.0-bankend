@@ -411,9 +411,7 @@ $this->registerJs($js);
                             <!--                                <span class="dropdown-item">-->
                             <!--                                    Boxme International Express (12-15 day )-->
                             <!--                                </span>-->
-                            <!--                                <span class="dropdown-item">-->
-                            <!--                                    Boxme International Express (12-15 day )-->
-                            <!--                                </span>-->
+
                             <!--                            </div>-->
                         </div>
                         <table class="table table-borderless table-fee">
