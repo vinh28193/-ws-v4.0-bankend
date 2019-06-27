@@ -298,12 +298,15 @@ class PaymentController extends BasePaymentController
         } else {
             $payment->initDefaultMethod();
         }
+
         $paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $payment->transaction_code]);
         if ($paymentTransaction === null) {
             return $this->response(false, Yii::t('frontend', 'Not found transaction for invoice {code}', [
                 'code' => $payment->transaction_code
             ]));
         }
+        $payment->return_url = PaymentService::createReturnUrl($payment->payment_provider);
+        $payment->cancel_url = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         $res = $payment->processPayment();
         if ($res->success === false) {
             return $this->response(false, $res->message);

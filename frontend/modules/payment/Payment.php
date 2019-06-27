@@ -134,6 +134,11 @@ class Payment extends Model
         $this->payment_method = 1;
         $this->payment_provider = 42;
         $this->payment_bank_code = 'VISA';
+        if($this->type === CartSelection::TYPE_INSTALLMENT){
+            $this->payment_method = 57;
+            $this->payment_provider = 44;
+            $this->payment_bank_code = 'ALEPAY';
+        }
         if (($methodProvider = PaymentService::getMethodProvider($this->payment_provider, $this->payment_method)) !== null) {
             $this->payment_method_name = $methodProvider->paymentMethod->code;
             $this->payment_provider_name = $methodProvider->paymentProvider->code;
@@ -308,11 +313,6 @@ class Payment extends Model
     public function initPaymentView()
     {
         $this->registerClientScript();
-        if ($this->type === CartSelection::TYPE_INSTALLMENT) {
-            return $this->view->render('installment', [
-                'payment' => $this
-            ], new PaymentContextView());
-        }
         $providers = $this->loadPaymentProviderFromCache();
         $group = [];
         foreach ($providers as $provider) {
