@@ -6,8 +6,12 @@ use yii\helpers\Html;
 
 /** @var $this yii\web\View */
 /** @var $items array */
+
+/** @var  $storeManager  common\components\StoreManager */
+
 $storeManager = Yii::$app->storeManager;
 ?>
+
 <?php if ($items) { ?>
     <div class="cart-box pr-3" id="load-card" style="border: none">
         <?php foreach ($items as $item):
@@ -30,9 +34,9 @@ $storeManager = Yii::$app->storeManager;
                     </div>
                 </div>
                 <div class="cart-header row hidden-md pt-2">
-                    <div class="col-md-5"></div>
+                    <div class="col-md-4"></div>
                     <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Price'); ?></div>
-                    <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Quantity'); ?></div>
+                    <div class="col-md-2 text-center"><?= Yii::t('frontend', 'Quantity'); ?></div>
                     <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Tax / Domestic shipping'); ?></div>
                     <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Purchase Fee'); ?></div>
                     <div class="col-md-2 text-center"><?= Yii::t('frontend', 'International shipping fee'); ?></div>
@@ -56,13 +60,13 @@ $storeManager = Yii::$app->storeManager;
                         $soldQuantity = !($soldQuantity === null || (int)$soldQuantity < 0) ? $soldQuantity : 0;
                         ?>
                         <div class="col-md-12">
-                            <div class="row">
+                            <div class="row" style="margin: 0">
                                 <div class="col-md-1 col-sm-12 text-center pt-2" style="height: auto;">
                                     <img src="<?= $product['link_img']; ?>"
                                          alt="<?= $product['product_name']; ?>" width="80%" height="100px"
                                          title="<?= $product['product_name']; ?>">
                                 </div>
-                                <div class="col-md-4 col-sm-12 text-center pt-4">
+                                <div class="col-md-3 col-sm-12 text-center pt-4">
                                     <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
                                         <strong class="style-name"><?= $product['product_name']; ?></strong>
                                     </a>
@@ -76,7 +80,7 @@ $storeManager = Yii::$app->storeManager;
                                 <div class="col-md-1 text-center col-sm-12 pt-4">
                                     <?= $storeManager->showMoney($product['total_unit_amount']); ?>
                                 </div>
-                                <div class="col-md-1 col-sm-12 text-center pt-4">
+                                <div class="col-md-2 col-sm-12 text-center pt-4">
                                     <div class="qty form-inline quantity-option"
                                          style="width: 107px; height: 31px; border-radius: 3px; border: 1px solid #cecece; background-color: #ffffff; margin: auto">
                                         <div class="input-group" style="margin: auto">
@@ -93,7 +97,7 @@ $storeManager = Yii::$app->storeManager;
                                             </div>
                                             <input type="text"
                                                    name="cartItemQuantity" class="form-control text-center"
-                                                   style="border: none; border-left: 1px solid #cecece; border-right: 1px solid #cecece"
+                                                   style="border: none; border-left: 1px solid #cecece; border-right: 1px solid #cecece;max-height: 28.5px;"
                                                    value="<?= $product['quantity']; ?>"
                                                    data-min="1"
                                                    data-max="<?= (int)(($max = $availableQuantity - $soldQuantity) <= 0 ? 0 : $max); ?>"
@@ -158,11 +162,14 @@ $storeManager = Yii::$app->storeManager;
                       style="font-size: 24px; font-weight: 500;"><?= $storeManager->showMoney($totalAmount) ?></span>
             </div>
         </div>
-        <div class="row text-right mb-5 mt-2">
-            <div class="col-md-12">
+        <div class="row  mb-5 mt-2">
+            <div class="col-md-12 text-right">
+                <button class="btn btn-outline-info text-uppercase mt-2" style="text-transform: uppercase" onclick="ws.goback()">
+                    <?php echo Yii::t('frontend', 'Continue shopping'); ?>
+                </button>
                 <button class="btn style-btn1 mt-2" id="shoppingBtn" style="text-transform: uppercase">
                     <span class="la la-shopping-cart float-left"
-                          style="font-size: 1.7em;"></span><?php echo Yii::t('frontend', 'Make payment'); ?>
+                          style="font-size: 1.6rem;"></span><?php echo Yii::t('frontend', 'Make payment'); ?>
                 </button>
             </div>
         </div>

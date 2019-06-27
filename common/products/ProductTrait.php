@@ -149,6 +149,7 @@ trait ProductTrait
                 return $provider;
             }
         }
+        return null;
     }
 
     /**

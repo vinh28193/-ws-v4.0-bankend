@@ -39,10 +39,6 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     public function init()
     {
         parent::init();
-        if (!empty($this->courierDetail)) {
-            $this->getAdditionalFees()->remove('international_shipping_fee');
-            $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', (int)ArrayHelper::getValue($this->courierDetail, 'total_fee', 0));
-        }
     }
 
     /**
@@ -269,6 +265,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         unset($params['support_name']);
         $this->setAttributes($params);
         $products = [];
+        $this->getAdditionalFees()->removeAll();
         foreach ($productParams as $key => $productParam) {
             if (($categoryParams = ArrayHelper::remove($productParam, 'category')) === null || !is_array($categoryParams)) {
                 $this->addError('cartId', 'Not found category for product offset' . $key);
@@ -289,7 +286,6 @@ class Order extends BaseOrder implements AdditionalFeeInterface
                     // exception, do not collect product_price
                     continue;
                 }
-                $this->getAdditionalFees()->remove($name);
                 foreach ($arrayFee as $value) {
                     $this->getAdditionalFees()->add($name, $value);
                 }
@@ -315,7 +311,9 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         $this->populateRelation('products', $products);
         $this->populateRelation('seller', $seller);
         $this->populateRelation('saleSupport', $supporter);
-
+        if (!empty($this->courierDetail)) {
+            $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', (int)ArrayHelper::getValue($this->courierDetail, 'total_fee', 0));
+        }
         return $this;
     }
 

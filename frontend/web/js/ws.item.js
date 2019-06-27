@@ -588,18 +588,11 @@
             data: {item: item, type: type},
             success: function (response) {
                 if (response.success) {
-                    if (type === 'buynow' || type === 'installment') {
-                        var url = response.data || null;
-                        if (url !== null && url !== undefined) {
-                            ws.redirect(url);
-                            return false
-                        }
+                    var url = response.data || null;
+                    if (url !== null && url !== undefined) {
+                        ws.redirect(url);
+                        return false
                     }
-                    var countItems = response.data.countItems || false;
-                    if (countItems) {
-                        $('#cartBadge').html(countItems);
-                    }
-                    ws.notifySuccess(response.message);
                 } else {
                     ws.notifyError(response.message);
                 }

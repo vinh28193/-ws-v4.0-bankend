@@ -132,7 +132,7 @@ CSS;
         $params = Json::htmlEncode([
             'id' => $this->item->item_id,
             'sku' => $this->item->item_sku,
-            'seller' => $this->item->provider ? $this->item->provider->prov_id : '====',
+            'seller' => $this->item->provider ? $this->item->provider->name : ($this->item->getCurrentProvider() !== null ? $this->item->getCurrentProvider()->name : null),
             'condition' => $this->item->getIsNew(),
             'type' => $this->item->getType(),
             'variation_mapping' => $this->item->variation_mapping,
@@ -180,14 +180,17 @@ CSS;
         return $detailBlock;
     }
 
-    public function renderSellerMore(){
-        return $this->render('item/seller_more',[
+    public function renderSellerMore()
+    {
+        return $this->render('item/seller_more', [
             'item' => $this->item,
             'storeManager' => $this->getStoreManager()
         ]);
     }
-    public function renderSuggestSession(){
-        if(isset($this->item->suggest_set_session) && count($this->item->suggest_set_session) > 1){
+
+    public function renderSuggestSession()
+    {
+        if (isset($this->item->suggest_set_session) && count($this->item->suggest_set_session) > 1) {
             $id_suggest = 'suggest_session_product';
             $js = <<<JS
             $(document).ready(function () {
@@ -211,7 +214,7 @@ CSS;
 JS;
             $view = $this->getView();
             $view->registerJs($js);
-            return $this->render('item/product_suggest',[
+            return $this->render('item/product_suggest', [
                 'item_suggest' => $this->item->suggest_set_session,
                 'portal' => strtolower($this->item->type),
                 'id_suggest' => $id_suggest,
@@ -220,8 +223,10 @@ JS;
         }
         return '';
     }
-    public function renderSuggestPurchase(){
-        if(isset($this->item->suggest_set_session) && count($this->item->suggest_set_session) > 1){
+
+    public function renderSuggestPurchase()
+    {
+        if (isset($this->item->suggest_set_session) && count($this->item->suggest_set_session) > 1) {
             $id_suggest = 'suggest_purchase_product';
             $js = <<<JS
             $(document).ready(function () {
@@ -245,7 +250,7 @@ JS;
 JS;
             $view = $this->getView();
             $view->registerJs($js);
-            return $this->render('item/product_suggest',[
+            return $this->render('item/product_suggest', [
                 'item_suggest' => $this->item->suggest_set_purchase,
                 'portal' => $this->item->type,
                 'id_suggest' => $id_suggest,
