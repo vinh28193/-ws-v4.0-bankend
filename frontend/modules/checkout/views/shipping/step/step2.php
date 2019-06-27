@@ -133,7 +133,7 @@ $this->registerJs($js);
             'class' => 'check-info',
             'style' => 'margin-bottom: 1rem;'
         ]
-    ])->checkbox()->label('Information of the receiver other than the buyer');
+    ])->checkbox()->label(Yii::t('frontend', 'Information of the receiver other than the buyer'));
 
     echo Html::beginTag('div', ['class' => 'receiver-form']);
 
