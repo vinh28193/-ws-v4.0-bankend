@@ -26,7 +26,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
     public $courierDetail = [];
     public $acceptance_insurance = 'N';
     public $courier_sort_mode = 'best_rating';
-    public $_additionalFees;
+    public $sellerCountryCode;
 
     public $couponCode;
     public $discountDetail = [];
@@ -51,6 +51,8 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         }
         return $this->_cart;
     }
+
+    public $_additionalFees;
 
     public function getAdditionalFees()
     {

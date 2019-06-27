@@ -360,6 +360,7 @@ ws.payment = (function ($) {
             var tableFee = $cardOrder.find('table.table-fee');
 
             var courierRow = tableFee.find('tr.courier');
+            courierRow.remove();
             courierRow.append('<th class="header">' + courier.courier_name + ' ' + courier.service_name + '</th>');
             courierRow.append('<td class="text-right">' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days') + '</td>');
             courierRow.css('display', 'table-row');

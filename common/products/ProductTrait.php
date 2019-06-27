@@ -152,7 +152,7 @@ trait ProductTrait
                 return $provider;
             }
         }
-        return null;
+        return $this->providers[0];
     }
 
     /**

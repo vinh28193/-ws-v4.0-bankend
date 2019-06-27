@@ -104,7 +104,9 @@ class CartHelper
             'seller_name' => $provider->name,
             'portal' => $item->type,
             'seller_store_rate' => $provider->rating_score,
-            'seller_link_store' => $provider->website
+            'seller_link_store' => $provider->website,
+            'location' => $provider->location,
+            'country_code' => $provider->country_code
         ];
         $product = [];
         $product['portal'] = $item->type;
@@ -184,7 +186,7 @@ class CartHelper
         // Tổng các phí các sản phẩm (trừ giá gốc tại nơi xuất xứ)
         $order['total_fee_amount_local'] = $product['total_fee_product_local'];
         // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
-        $order['total_amount_local'] =  $product['total_price_amount_local'];
+        $order['total_amount_local'] = $product['total_price_amount_local'];
         $order['total_final_amount_local'] = $order['total_amount_local'] + $order['total_fee_amount_local'];
         $order['total_weight_temporary'] = $product['total_weight_temporary'];
         $order['total_quantity'] = $product['quantity_customer'];

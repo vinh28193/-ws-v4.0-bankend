@@ -8,15 +8,16 @@
 
 namespace common\products;
 
+use common\additional\AdditionalFeeInterface;
+use common\additional\AdditionalFeeTrait;
 use common\components\GetUserIdentityTrait;
+use common\components\InternationalShippingCalculator;
 use common\helpers\WeshopHelper;
+use common\models\Category;
 use common\models\User;
 use Yii;
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
-use common\models\Category;
-use common\additional\AdditionalFeeInterface;
-use common\additional\AdditionalFeeTrait;
 
 /**
  * Class BaseProduct
@@ -345,6 +346,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         } else {
             return [];
         }
+        $weight = $this->getShippingWeight() * 1000;
         $params = [
             'ship_from' => [
                 'country' => 'US',
@@ -357,9 +359,9 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'total_amount' => $this->getLocalizeTotalPrice(),
                 'description' => '',
                 'amz_shipment_id' => '',
-                'chargeable_weight' => $this->getShippingWeight(),
+                'chargeable_weight' => $weight,
                 'parcels' => [
-                    'weight' => $this->getShippingWeight(),
+                    'weight' => $weight,
                     'amount' => $this->getLocalizeTotalPrice(),
                     'description' => "{$this->portal} {$this->getUniqueCode()}",
                     'items' => [
@@ -369,7 +371,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                             'origin_country' => '',
                             'name' => $this->item_name,
                             'desciption' => '',
-                            'weight' => WeshopHelper::roundNumber(($this->getShippingWeight() / $this->getShippingQuantity())),
+                            'weight' => WeshopHelper::roundNumber(($weight / $this->getShippingQuantity())),
                             'amount' => WeshopHelper::roundNumber($this->getLocalizeTotalPrice()),
                             'quantity' => $this->getShippingQuantity(),
                         ]
@@ -380,19 +382,50 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         return $params;
     }
 
+    public $courierCode;
+
+    private $_couriers = [];
+
+    public function getInternationalShipping($refresh = false)
+    {
+        if ((empty($this->_couriers) || $refresh) && !empty($this->getShippingParams())) {
+            $location = InternationalShippingCalculator::LOCATION_AMAZON;
+            if ($this->type === self::TYPE_EBAY) {
+                $location = InternationalShippingCalculator::LOCATION_EBAY_US;
+                $currentSeller = $this->getCurrentProvider();
+                if (strtoupper($currentSeller->country_code) !== 'US') {
+                    $location = InternationalShippingCalculator::LOCATION_EBAY;
+                }
+            }
+            $calculator = new InternationalShippingCalculator();
+            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code, $location);
+            if ($ok && is_array($couriers) && count($couriers) > 0) {
+                $this->_couriers = $couriers;
+                $firstCourier = $couriers[0];
+                $this->courierCode = $firstCourier['service_code'];
+                $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', $firstCourier['total_fee']);
+            }
+        }
+        return $this->_couriers;
+    }
+
     /**
      * @return array|mixed|null
      */
+    private $_pickUpWareHouse = false;
+
     public function getPickUpWareHouse()
     {
-        if (($user = $this->getUser()) !== null && $user->getPickupWarehouse() !== null) {
-            return $user->getPickupWarehouse();
+        if (!$this->_pickUpWareHouse) {
+            if (($user = $this->getUser()) !== null && $user->getPickupWarehouse() !== null) {
+                $this->_pickUpWareHouse = $user->getPickupWarehouse();
+            } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) === null) {
+                $current = $params['default'];
+                $this->_pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
+            }
         }
-        if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) === null) {
-            return false;
-        }
-        $current = $params['default'];
-        return ArrayHelper::getValue($params, "warehouses.$current", false);
+        return $this->_pickUpWareHouse;
+
     }
 
     /**

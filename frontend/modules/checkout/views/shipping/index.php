@@ -332,7 +332,7 @@ $this->registerJs($js);
             </div>
             <div class="product-header row pt-2">
                 <div class="col-md-4"></div>
-                <div class="col-md-2 text-center">Price</div>
+                <div class="col-md-2 text-center"><?=Yii::t('frontend','Price');?></div>
                 <div class="col-md-1 text-center">Quantity</div>
                 <div class="col-md-2 text-center">Tax / Domestic shipping</div>
                 <div class="col-md-1 text-center">Purchase Fee</div>
