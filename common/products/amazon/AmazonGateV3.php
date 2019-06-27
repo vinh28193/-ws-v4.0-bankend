@@ -9,6 +9,7 @@
 
 namespace common\products\amazon;
 
+use common\helpers\WeshopHelper;
 use linslin\yii2\curl;
 use common\models\Category;
 use common\products\BaseGate;
@@ -91,30 +92,6 @@ class AmazonGateV3 extends BaseGate
         if ($ok && is_array($response)) {
             /** @var  $product \common\products\amazon\AmazonProduct */
             $product = (new AmazonDetailResponse($this))->parser($response);
-            //new sku cua san pham cha khac voi sku can tim kiem
-            if ($product->item_id != $request->asin_id && !$request->is_first_load) {
-                $tokens[] = "product `{$product->item_id}` diff with `$request->asin_id`, load sub product is active";
-                if ($request->parent_asin_id != $product->parent_item_id) {
-                    $tokens[] = "product parent sku `{$product->parent_item_id}` diff with request parent sku `$request->parent_asin_id`, `$product->parent_item_id` replaced  `$request->parent_asin_id`";
-                    //gan lai gia tri parent_asin_id  neu khac form truyen len
-                    $request->parent_asin_id = $product->parent_item_id;
-                }
-                //Gan gia tri load_sub_url
-                $request->load_sub_url = $product->load_sub_url;
-                $tokens[] = "register load sub url";
-                if (!($subs = $this->cache->get($request->getCacheKey())) || $refresh) {
-                    $subs = $this->lookupInternal($request);
-                    $this->cache->set($request->getCacheKey(), $subs, $subs[0] === true ? self::MAX_CACHE_DURATION : 0);
-                }
-                list($okSub, $productSub) = $subs;
-                $tokens[] = "load sub product, response return :" . ($okSub ? 'true' : 'false');
-                if ($okSub && is_array($productSub)) {
-                    $productSub = (array)$productSub;
-                    $tokens[] = "update product with sub product";
-                    $this->updateProduct($product, $productSub, $request);
-                }
-
-            }
             Yii::info(implode(", ", $tokens), __METHOD__);
             return [true, $product];
         }
@@ -255,6 +232,7 @@ class AmazonGateV3 extends BaseGate
 
         $response = $curl->get($this->baseUrl.'/'.$this->asinsUrl.'/'.$request->asin_id);
         $response = json_decode($response,true);
+        Yii::debug($curl->responseCode);
         if($curl->responseCode != 200){
             return [false, 'Request error '. $curl->responseCode];
         }
@@ -282,6 +260,7 @@ class AmazonGateV3 extends BaseGate
         $rs['item_id'] = $request->asin_id;
         $rs['item_sku'] = $request->asin_id;
         $rs['rate_star'] = isset($amazon['rate_star']) ? $amazon['rate_star'] : 0;
+        $rs['rate_count'] = isset($amazon['rate_count']) ? intval(trim($amazon['rate_count'])) : 0;
         $rs['category_id'] = isset($amazon['node_ids'][count($amazon['node_ids']) - 1]) ? $amazon['node_ids'][count($amazon['node_ids']) - 1] : null;
         $rs['item_name'] = trim($amazon['title']);
         $rs['parent_item_id'] = $request->parent_asin_id ? $request->parent_asin_id : '';
@@ -300,8 +279,8 @@ class AmazonGateV3 extends BaseGate
         $rs['best_seller'] = '';
         $rs['manufacturer_description'] = '';
         $rs['primary_images'] = $amazon['images'];
-        $rs['technical_specific'] = [];//$amazon['product_description'];
-        $rs['variation_options'] = $this->getOptionGroup($amazon['product_option']);
+        $rs['technical_specific'] = $this->getTechnicalSpecific($amazon['product_information']);//$amazon['product_description'];
+        $rs['variation_options'] = $this->getOptionGroup($amazon['product_option'],$rs['item_name'],$rs['item_sku']);
         $rs['variation_mapping'] = [];
         $rs['relate_products'] = null;
         $rs['start_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
@@ -328,7 +307,7 @@ class AmazonGateV3 extends BaseGate
                     $prov['image'] = '';
                     $prov['website'] = '';
                     $prov['location'] = '';
-                    $prov['rating_score'] = isset($offer['seller']['rating_count']) ? trim($offer['seller']['rating_count']) : '';
+                    $prov['rating_score'] = isset($offer['seller']['rate_count']) ? trim($offer['seller']['rate_count']) : '';
                     $prov['rating_star'] = isset($offer['seller']['rate_star']) ? trim($offer['seller']['rate_star']) : '';
                     $prov['positive_feedback_percent'] = isset($offer['seller']['positive']) ? trim($offer['seller']['positive']) : '';
                     $prov['condition'] = trim($offer['condition']);
@@ -360,7 +339,32 @@ class AmazonGateV3 extends BaseGate
         return [true, $rs];
 
     }
-
+    public function getTechnicalSpecific($data){
+        if(!$data){
+            return [];
+        }
+        $res = [];
+        foreach ($data as $datum){
+            if (isset($datum['value']) && is_array($datum['value'])){
+               foreach ($datum['value'] as $key => $value){
+                   if(is_string($value)){
+                       $temp = [];
+                       $temp['name'] = 'Description';
+                       $temp['value'] = $value;
+                       $res[] = $temp;
+                   }elseif(is_array($value)){
+                       foreach ($value as $k => $v){
+                           $temp = [];
+                           $temp['name'] = trim(str_replace(':','' ,$k));
+                           $temp['value'] = $value;
+                           $res[] = $temp;
+                       }
+                   }
+               }
+            }
+        }
+        return $res;
+    }
 
     /**
      * @param $product AmazonProduct
@@ -392,7 +396,7 @@ class AmazonGateV3 extends BaseGate
         return isset($response['response']) || (count($response['response']['sell_price']) > 0 && count($response['response']['retail_price']) > 0 && count($response['response']['deal_price']) > 0 && $response['response']['title'] !== null);
     }
 
-    private function getOptionGroup($data)
+    private function getOptionGroup($data, $title, $skuCurrent)
     {
         if (count($data) == 0) {
             return [];
@@ -400,10 +404,13 @@ class AmazonGateV3 extends BaseGate
         $rs = [];
         foreach ($data as $item) {
             if(isset($item['name'])){
-                $temp['name'] = trim($item['name']);
+                $temp['name'] = trim(str_replace(':','',$item['name']));
                 if($temp['name']){
                     $temp['values'] = [];
+                    $temp['value_current'] = '';
+                    $temp['option_link'] = true;
                     $temp['images_mapping'] = [];
+                    $temp['sku'] = [];
                     foreach ($item['value'] as $value){
                         $value_tem = '';
                         if(isset($value['asin_color']) && $value['asin_color']){
@@ -415,6 +422,18 @@ class AmazonGateV3 extends BaseGate
                         }
                         if($value_tem) {
                             $temp['values'][] = $value_tem;
+                            if(isset($value['asin_id']) && $value['asin_id']){
+                                $temp['sku'][] = [
+                                    'asin_id' => $value['asin_id'],
+                                    'value_option' => $value_tem,
+                                    'link' => WeshopHelper::generateUrlDetail('amazon',$title,$value['asin_id']),
+                                ];
+                                if($value['asin_id'] == $skuCurrent){
+                                    $temp['value_current'] = $value_tem;
+                                }else if (ArrayHelper::keyExists('asin_url',$value) && !ArrayHelper::getValue($value,'asin_url')){
+                                    $temp['value_current'] = $value_tem;
+                                }
+                            }
                         }
                         if(isset($value['asin_images']) && $value['asin_images']){
                             $temp['images_mapping'][] = [
