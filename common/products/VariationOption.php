@@ -5,7 +5,10 @@ namespace common\products;
 /**
  * @property String $id;
  * @property String $name;
+ * @property String $value_current;
+ * @property bool $option_link;
  * @property String[] $values;
+ * @property String[] $sku;
  * @property VariationOptionImage[] $images_mapping;
  */
 
@@ -15,6 +18,9 @@ class VariationOption extends \yii\base\BaseObject
     public $id;
     public $name;
     public $values;
+    public $value_current;
+    public $option_link = false;
+    public $sku = [];
     public $images_mapping = [];
 
     public function init()

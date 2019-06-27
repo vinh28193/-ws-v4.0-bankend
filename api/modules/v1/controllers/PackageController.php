@@ -156,7 +156,7 @@ class PackageController extends BaseApiController
         $model->order_id = $post['order_id'];
         $model->tracking_code = $post['tracking_code'];
         $dirtyAttributes = $model->getDirtyAttributes();
-        $messages = "order {$post['ordercode']} Create DeliveryNote Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        $messages = "order {$model->order->ordercode} Create DeliveryNote Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
         if (!$model->save()) {
             Yii::$app->wsLog->push('order', 'createPackageItem', null, [
                 'id' => $model->order->ordercode,
@@ -171,7 +171,41 @@ class PackageController extends BaseApiController
             'request' => $this->post,
             'response' => $dirtyAttributes
         ]);
-        return $this->response(true, 'create package item success', $model);
+        return $this->response(true, "create package {$messages}", $model);
+    }
+
+    public function actionUpdate($id)
+    {
+        $post = Yii::$app->request->post();
+        $model = Package::findOne($id);
+        if ($model) {
+            $model->weight = $post['weight'];
+            $model->quantity = $post['quantity'];
+            $model->dimension_l = $post['dimension_l'];
+            $model->dimension_h = $post['dimension_h'];
+            $model->dimension_w = $post['dimension_w'];
+            var_dump($model->getDirtyAttributes());
+            die();
+            $dirtyAttributes = $model->getDirtyAttributes();
+            $messages = "order {$model->order->ordercode} update package {$this->resolveChatMessage($dirtyAttributes,$model)}";
+            if (!$model->save()) {
+                Yii::$app->wsLog->push('order', 'updatePackage', null, [
+                    'id' => $model->order->ordercode,
+                    'request' => $this->post,
+                    'response' => $model->getErrors()
+                ]);
+                var_dump($messages);
+                die();
+                return $this->response(false, $messages);
+            }
+            ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
+            Yii::$app->wsLog->push('order', 'update package', null, [
+                'id' => $model->order->ordercode,
+                'request' => $this->post,
+                'response' => $dirtyAttributes
+            ]);
+            return $this->response(true, $messages);
+        }
     }
 
     protected function resolveChatMessage($dirtyAttributes, $reference)

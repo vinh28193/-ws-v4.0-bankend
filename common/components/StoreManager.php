@@ -35,6 +35,9 @@ class StoreManager extends Component implements BootstrapInterface
     const STORE_VN = 1;
     const STORE_ID = 7;
 
+    const MONEY_SHOW_MODE_CURRENCY = 'currency';
+    const MONEY_SHOW_MODE_SYMBOL = 'symbol';
+
     /**
      * @var integer
      */
@@ -44,6 +47,7 @@ class StoreManager extends Component implements BootstrapInterface
      */
     public $defaultDomain;
 
+    public $moneyShowWith = self::MONEY_SHOW_MODE_CURRENCY;
     /**
      * @var Store;
      */
@@ -78,7 +82,7 @@ class StoreManager extends Component implements BootstrapInterface
     protected function getClientOptions()
     {
         return [
-            'currency' => $this->store->currency,
+            'currency' => $this->store->{$this->moneyShowWith},
             'priceDecimal' => 0,
             'pricePrecision' => -3,
         ];
@@ -207,15 +211,15 @@ class StoreManager extends Component implements BootstrapInterface
     {
         $money = $this->roundMoney($money);
         if ($currency === null) {
-            $currency = $this->store->currency;
+            $currency = $this->store->{$this->moneyShowWith};
         }
         $decimal = 0;
-        if ($currency === 'USD') {
+        if ($currency === 'USD' || $currency === '$') {
             $decimal = 2;
         }
         $money = number_format($money, $decimal);
         $money = StringHelper::normalizeNumber($money);
-        return $money . '' . $currency;
+        return implode($this->moneyShowWith === self::MONEY_SHOW_MODE_CURRENCY ? ' ' : '', [$money, $currency]);
     }
 
 

@@ -71,14 +71,14 @@ class DraftPackageItemController extends BaseApiController
     public function actionView($id)
     {
         if ($id) {
-            $package = Package::find()->where(['order_id' => (int)$id])->with('shipment')->asArray()->all();
+            $package = DraftDataTracking::find()->where(['order_id' => (int)$id])->with('shipment')->asArray()->all();
             return $this->response(true, 'success', $package);
         }
     }
     public function actionCreate()
     {
         $post = Yii::$app->request->post();
-        $model = new Package();
+        $model = new DraftDataTracking();
         $model->product_id = $post['product_id'];
         $model->tracking_code = $post['tracking_code'];
         $model->weight = $post['weight'];
@@ -109,7 +109,7 @@ class DraftPackageItemController extends BaseApiController
 
     public function actionDelete($id)
     {
-        $model = Package::findOne($id);
+        $model = DraftDataTracking::findOne($id);
         if (!$model->delete()) {
             Yii::$app->wsLog->push('order', 'deleteDraftPackageItem', null, [
                 'id' => $model->order->ordercode,
@@ -144,7 +144,7 @@ class DraftPackageItemController extends BaseApiController
     public function actionUpdate($id)
     {
         $post = Yii::$app->request->post();
-        $model = Package::findOne($id);
+        $model = DraftDataTracking::findOne($id);
         if ($model) {
             $model->tracking_code = $post['tracking_code'];
             $model->weight = $post['weight'];
@@ -153,18 +153,18 @@ class DraftPackageItemController extends BaseApiController
             $model->dimension_h = $post['dimension_h'];
             $model->dimension_w = $post['dimension_w'];
             $dirtyAttributes = $model->getDirtyAttributes();
-            $messages = "order {$model->order->ordercode} Update Draft Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
+            $messages = "order {$post['ordercode']} Update Draft Package Item {$this->resolveChatMessage($dirtyAttributes,$model)}";
             if (!$model->save()) {
                 Yii::$app->wsLog->push('order', 'updateDraftPackageItem', null, [
-                    'id' => $model->order->ordercode,
+                    'id' => $post['ordercode'],
                     'request' => $this->post,
                     'response' => $model->getErrors()
                 ]);
                 return $this->response(false, $messages);
             }
-            ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
+            ChatHelper::push($messages, $post['ordercode'], 'GROUP_WS', 'SYSTEM');
             Yii::$app->wsLog->push('order', 'update draft package item', null, [
-                'id' => $model->order->ordercode,
+                'id' => $post['ordercode'],
                 'request' => $this->post,
                 'response' => $dirtyAttributes
             ]);
