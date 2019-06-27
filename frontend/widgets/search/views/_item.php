@@ -63,7 +63,7 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                     <?php
                     if ($localSellprice) {
                         if ($localStartPrice && $salePercent) {
-                            echo "<span class='old-price' >" . trim($storeManager->showMoney($localStartPrice, '')) . "VND</span>";
+                            echo "<span class='old-price' >" . trim($storeManager->showMoney($localStartPrice)) . "</span>";
                         } else {
                             if (isset($product['end_time']) && $product['end_time'] !== null) {
                                 echo 'Còn <span class="countdown"' .

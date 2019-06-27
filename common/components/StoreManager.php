@@ -33,7 +33,7 @@ class StoreManager extends Component implements BootstrapInterface
 {
 
     const STORE_VN = 1;
-    const STORE_ID = 7;
+    const STORE_ID = 2;
 
     /**
      * @var integer
