@@ -38,6 +38,13 @@ body div.wrapper div.navbar-ws div.container{
     font-size: 17px;
     color: #2b96b6 !important;
 }
+.slick-list {
+    position: unset;
+    display: block;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
 .search-box{
     /*float: left;*/
     padding-right: 15px;
@@ -71,6 +78,9 @@ body div.wrapper div.navbar-ws div div.search-box{
     transform: scaleX(-1);
     color: #fff;
     font-size: 30px;
+}
+.seller-block{
+    margin-top: 20px;
 }
 .cart-header-box{
     color: #e67424;
@@ -351,6 +361,9 @@ div.product-list.row div a div.info div.name{
     background-color: #fa6400;
     color: #ffffff;
     border: 1px #fa6400 solid;
+}
+ul.style-list{
+    width: 620px;
 }
 .btn-amazon:hover{
     background-color: #f18d04;
@@ -1313,11 +1326,16 @@ div div.product-list.row div a div.info div.price span.countdown{
     .condition-and-seller,.detail-block .product-full-info .rating span,.detail-block .product-full-info .rating i{
         font-size: 11px!important;
     }
-    .option-box .form-control{
+    .option-box .form-control,.option-box-amazon .form-control{
         width: 100%!important;
     }
     .mb-slide-image{
         display: block;
+        position: unset;
+        display: block;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
     }
     .mb-slide-image img{
         width: 100%;
@@ -1337,11 +1355,11 @@ div div.product-list.row div a div.info div.price span.countdown{
     }
 }
 @media (max-width: 360px) {
-    .col-sm-6 {
-        -ms-flex: 0 0 50%;
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
+    /*.col-sm-6 {*/
+    /*    -ms-flex: 0 0 50%;*/
+    /*    flex: 0 0 50%;*/
+    /*    max-width: 50%;*/
+    /*}*/
     .col-sm-6 .col-sm-2 {
         -ms-flex: 0 0 16.666667%;
         flex: 0 0 16.666667%;
@@ -1409,6 +1427,11 @@ div div.product-list.row div a div.info div.price span.countdown{
         font-weight: 500;
         letter-spacing: -0.1px;
         line-height: 24px;
+    }
+}
+@media (max-width: 620px) {
+    ul.style-list{
+        width: 100%;
     }
 }
 

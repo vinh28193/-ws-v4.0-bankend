@@ -175,7 +175,7 @@ CSS;
         $detailBlock .= $this->renderSlide();
         $detailBlock .= $this->renderFullInfo();
         $detailBlock .= Html::endTag('div');
-        $detailBlock .= $this->renderSellerMore();
+//        $detailBlock .= $this->renderSellerMore();
         $detailBlock .= $this->renderRelateProduct();
         return $detailBlock;
     }

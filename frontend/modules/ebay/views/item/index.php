@@ -47,43 +47,6 @@ $(document).ready(function () {
                 }
             }
         });
-        $.ajax({
-            url: '/ebay/item/top-view',
-            method: 'post',
-            async: true,
-            data: {sku: '$item->item_id'},
-            success: function (res) {
-                if(res.content){
-                    $('#product-top-view').css('display','block');
-                    $("#product-top-view .owl-carousel").remove();
-                    var text = '<div class="owl-carousel owl-theme">';
-                    text += res.content;
-                    text += '</div>';
-                    $('#product-top-view').append(text);
-                    $(".owl-carousel").owlCarousel({
-                        slideSpeed : 300,
-                        paginationSpeed : 400,
-                        loop: true,
-                        nav: true,
-                        autoplay: 1000,
-                        responsive : {
-                            0: {
-                                items: 3,
-                            },
-                            575: {
-                                items: 4,
-                            },
-                            768: {
-                                items: 5,
-                            }
-                        },
-                        dots: false
-                    });
-                }else {
-                    $('#product-top-view').css('display','none');
-                }
-            }
-        });
     });
 JS;
 $this->registerJs($js);
@@ -126,9 +89,3 @@ if ($item->customer_feedback && false) {
     <?php
 }
 ?>
-<div  id="product-top-view" class="product-viewed product-list box-shadow" style="display: none">
-    <div class="title"><?= Yii::t('frontend','Top View Product') ?>:</div>
-    <div class="owl-carousel owl-theme">
-
-    </div>
-</div>

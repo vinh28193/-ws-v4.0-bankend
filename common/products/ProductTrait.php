@@ -21,6 +21,9 @@ trait ProductTrait
             $it->images_mapping = $datum['images_mapping'];
 //            $it->name = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['name']);
 //            $it->values = preg_replace('/[^A-Za-z0-9\-\ ]/', '', $datum['values']);
+            $it->sku = isset($datum['sku']) ? $datum['sku'] : null;
+            $it->option_link = isset($datum['option_link']) ? $datum['option_link'] : false;
+            $it->value_current = isset($datum['value_current']) ? $datum['value_current'] : '';
             $it->name = $datum['name'];
             $it->values = isset($datum['values']) ? $datum['values'] : (isset($datum['value']) ? $datum['value'] : []);
             $it->setImagesMapping();
