@@ -333,10 +333,10 @@ $this->registerJs($js);
             <div class="product-header row pt-2">
                 <div class="col-md-4"></div>
                 <div class="col-md-2 text-center"><?=Yii::t('frontend','Price');?></div>
-                <div class="col-md-1 text-center">Quantity</div>
-                <div class="col-md-2 text-center">Tax / Domestic shipping</div>
-                <div class="col-md-1 text-center">Purchase Fee</div>
-                <div class="col-md-2 text-center">Total amount</div>
+                <div class="col-md-1 text-center"><?=Yii::t('frontend','Quantity');?></div>
+                <div class="col-md-2 text-center"><?=Yii::t('frontend','Tax/Domestic shipping');?></div>
+                <div class="col-md-1 text-center"><?=Yii::t('frontend','Purchase Fee');?></div>
+                <div class="col-md-2 text-center"><?=Yii::t('frontend','Total amount');?></div>
             </div>
             <div class="row product-list">
                 <?php foreach ($order->products as $product): ?>

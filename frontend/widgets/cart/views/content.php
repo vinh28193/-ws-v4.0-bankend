@@ -37,7 +37,7 @@ $storeManager = Yii::$app->storeManager;
                     <div class="col-md-4"></div>
                     <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Price'); ?></div>
                     <div class="col-md-2 text-center"><?= Yii::t('frontend', 'Quantity'); ?></div>
-                    <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Tax / Domestic shipping'); ?></div>
+                    <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Tax/Domestic shipping'); ?></div>
                     <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Purchase Fee'); ?></div>
                     <div class="col-md-2 text-center"><?= Yii::t('frontend', 'International shipping fee'); ?></div>
                     <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Total amount'); ?></div>
