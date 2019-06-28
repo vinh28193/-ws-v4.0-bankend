@@ -11,7 +11,8 @@ $portal_web = strtolower($item->type) == 'ebay' ? '<a href="//ebay.com" rel="nof
 $salePercent = $item->getSalePercent();
 $current_provider = $item->provider ? $item->provider : $item->getCurrentProvider();
 $variationUseImage = null;
-
+print_r($item->getInternationalShipping());
+die;
 foreach ($item->variation_options as $index => $variationOption) {
     if ($variationOption->images_mapping) {
         foreach ($variationOption->values as $k => $value) {
@@ -105,6 +106,10 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                         <td><?= $current_provider->location.', '.$current_provider->country_code ?></td>
                     </tr>
                 <?php  } ?>
+                <tr>
+                    <td><?= Yii::t('frontend','Shipping detail') ?></td>
+                    <td><?= $current_provider->location.', '.$current_provider->country_code ?></td>
+                </tr>
             </table>
         </div>
         <?php

@@ -17,7 +17,7 @@ class UserController extends Controller
         $this->stdout('Bắt đầu chạy...'.PHP_EOL);
         /** @var Customer[] $usersOld */
         $usersOld = Customer::find()
-            ->where(['or',['<>','AdminComment' ,self::commentClone],['<>','AdminComment' ,''],['is','AdminComment' ,null]])->andWhere(['storeId' => [1,7]])
+            ->where(['or',['<>','AdminComment' ,self::commentClone],['AdminComment' => ''],['is','AdminComment' ,null]])->andWhere(['storeId' => [1,7]])->andWhere(['<>','phone','0912345678'])
             ->orderBy('id desc')->limit(500)->all();
         $this->stdout('Có '.count($usersOld).' items'.PHP_EOL);
         foreach ($usersOld as $k => $userOld){
@@ -50,6 +50,7 @@ class UserController extends Controller
                         'email_verified' => 1,  // Nếu là Google Email lấy được rồi nên coi như là dã xác nhận
                         'phone_verified' => 1, // đăng kí trực tiếp nên xác nhận phone là đúng luôn chỉ còn vấn đề @ToDo Phone đúng đinh dạng Việt Nam
                         'gender' => 0,
+                        'version' => 'v3',
                         'type_customer' => 1, // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
                         'avatar' => $userOld->avatar,
                         'note_by_employee' => 'Khách hàng cũ từ weshop ver3',
