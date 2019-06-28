@@ -4,6 +4,9 @@ html, body {
     font-weight: 400;
     color: #555555;
 }
+.big-img .zoomWrapper {
+    text-align: center;
+}
 .wrapper{
     background: #fff;
 }

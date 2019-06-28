@@ -12,6 +12,7 @@ use common\additional\AdditionalFeeInterface;
 use common\additional\AdditionalFeeTrait;
 use common\components\GetUserIdentityTrait;
 use common\components\InternationalShippingCalculator;
+use common\components\UserCookies;
 use common\helpers\WeshopHelper;
 use common\models\Category;
 use common\models\User;
@@ -325,27 +326,34 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             'country' => $this->getStoreManager()->store->country_code,
             'zipcode' => '',
         ];
-//        if (($defaultShippingAddress = $this->getUser()->defaultShippingAddress)) {
-//            $shipTo = ArrayHelper::merge($shipTo, [
-//                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
-//                'address' => $defaultShippingAddress->address,
-//                'phone' => $defaultShippingAddress->phone,
-//                'province' => $defaultShippingAddress->province_id,
-//                'district' => $defaultShippingAddress->district_id,
-//                'zipcode' => $defaultShippingAddress->post_code
-//            ]);
-//        } elseif (($address = $this->getUser()->defaultPrimaryAddress)) {
-//            $shipTo = ArrayHelper::merge($shipTo, [
-//                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
-//                'address' => $address->address,
-//                'phone' => $address->phone,
-//                'province' => $address->province_id,
-//                'district' => $address->district_id,
-//                'zipcode' => $address->post_code
-//            ]);
-//        } else {
-//            return [];
-//        }
+        if (($defaultShippingAddress = $this->getUser()->defaultShippingAddress)) {
+            $shipTo = ArrayHelper::merge($shipTo, [
+                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
+                'address' => $defaultShippingAddress->address,
+                'phone' => $defaultShippingAddress->phone,
+                'province' => $defaultShippingAddress->province_id,
+                'district' => $defaultShippingAddress->district_id,
+                'zipcode' => $defaultShippingAddress->post_code
+            ]);
+        } elseif (($address = $this->getUser()->defaultPrimaryAddress)) {
+            $shipTo = ArrayHelper::merge($shipTo, [
+                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
+                'address' => $address->address,
+                'phone' => $address->phone,
+                'province' => $address->province_id,
+                'district' => $address->district_id,
+                'zipcode' => $address->post_code
+            ]);
+        } else if(($userInfoCookie = (new UserCookies())->setUserCookies())) {
+            $shipTo = ArrayHelper::merge($shipTo, [
+                'contact_name' => $userInfoCookie->name ? $userInfoCookie->name : $shipTo['contact_name'],
+                'address' => $userInfoCookie->address ? $userInfoCookie->address : $shipTo['address'],
+                'phone' => $userInfoCookie->phone ? $userInfoCookie->phone : $shipTo['phone'],
+                'province' => $userInfoCookie->province_id ? $userInfoCookie->province_id : $shipTo['province'],
+                'district' => $userInfoCookie->district_id ? $userInfoCookie->district_id : $shipTo['district'],
+                'zipcode' => $userInfoCookie->zipcode ? $userInfoCookie->zipcode : $shipTo['zipcode']
+            ]);
+        }
         $weight = $this->getShippingWeight() * 1000;
         $params = [
             'ship_from' => [
