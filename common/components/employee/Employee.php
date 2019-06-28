@@ -11,7 +11,6 @@ use yii\base\BaseObject;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
-use common\components\GetUserIdentityTrait;
 
 /**
  * Class Employee
@@ -22,7 +21,6 @@ use common\components\GetUserIdentityTrait;
  */
 class Employee extends BaseObject
 {
-    use GetUserIdentityTrait;
     /**
      * @var string
      */
@@ -43,7 +41,15 @@ class Employee extends BaseObject
     public function getSupporters()
     {
         if (empty($this->_supporters)) {
-            $this->_supporters = $this->loadSupporterByRoles();
+//            $this->_supporters = $this->loadSupporterByRoles();
+            $s = [];
+            for ($i = 1;$i < 10;$i++){
+                $s[$i] = [
+                    'name' => "Sale $i"
+                ];
+            }
+            $this->_supporters = $s;
+
         }
         return $this->_supporters;
     }
@@ -69,9 +75,6 @@ class Employee extends BaseObject
      */
     public function getAssign()
     {
-        if ($this->checkUserHasSupporter()) {
-
-        }
         return $this->getActiveRule()->getActiveSupporter();
     }
 
@@ -86,13 +89,5 @@ class Employee extends BaseObject
         }
         $config['employee'] = $this;
         return Yii::createObject($config);
-    }
-
-    public function checkUserHasSupporter()
-    {
-        if ($this->getUser() === null) {
-            return false;
-        }
-        return false;
     }
 }
