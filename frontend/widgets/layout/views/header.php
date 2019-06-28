@@ -71,7 +71,7 @@ $this->registerJs($js);
         <div class="search-box">
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" list="listSuggestSearch" autocomplete="search-new" name="searchBoxInput"  id="searchBoxInput" class="form-control" <?= Yii::$app->request->get('keyword','') ? 'value="'.Yii::$app->request->get('keyword','').'"' : '' ?>
+                    <input type="text" list="listSuggestSearch" autocomplete="off" class="form-control searchBoxInput" <?= Yii::$app->request->get('keyword','') ? 'value="'.Yii::$app->request->get('keyword','').'"' : '' ?>
                            placeholder="<?= Yii::t('frontend','Paste link or id product amazon.com, ebay.com at here') ?>">
                     <span class="input-group-btn">
                         <button type="button" id="searchBoxButton" class="btn btn-default">
@@ -288,7 +288,7 @@ $this->registerJs($js);
     <div class="search-box-mobile">
         <div class="form-group">
             <div class="input-group">
-                <input type="text" list="listSuggestSearch" name="mb-searchBoxInput" id="mb-searchBoxInput" class="form-control" value="<?= Yii::$app->request->get('keyword','') ?>"
+                <input type="text" list="listSuggestSearch" class="form-control searchBoxInput" value="<?= Yii::$app->request->get('keyword','') ?>"
                        placeholder="<?= Yii::t('frontend', 'Paste link or id product') ?>">
                 <span class="input-group-btn">
                 <button type="button" id="searchBoxButton" class="btn btn-default">
