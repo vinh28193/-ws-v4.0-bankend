@@ -134,7 +134,7 @@ class Payment extends Model
         $this->payment_method = 1;
         $this->payment_provider = 42;
         $this->payment_bank_code = 'VISA';
-        if($this->type === CartSelection::TYPE_INSTALLMENT){
+        if ($this->type === CartSelection::TYPE_INSTALLMENT) {
             $this->payment_method = 57;
             $this->payment_provider = 44;
             $this->payment_bank_code = 'ALEPAY';
@@ -206,7 +206,7 @@ class Payment extends Model
 
     public function loadPaymentProviderFromCache()
     {
-        return PaymentService::loadPaymentByStoreFromDb(1, $this->page === self::PAGE_TOP_UP ? $this->payment_provider : null);
+        return PaymentService::loadPaymentByStoreFromDb($this->storeManager->storeId, $this->page === self::PAGE_TOP_UP ? $this->payment_provider : null);
     }
 
     public function createTransactionCode()
