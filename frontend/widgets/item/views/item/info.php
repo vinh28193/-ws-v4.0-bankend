@@ -2,6 +2,7 @@
 
 use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
+use yii\helpers\ArrayHelper;
 
 /* @var yii\web\View $this */
 /* @var BaseProduct $item */
@@ -11,8 +12,6 @@ $portal_web = strtolower($item->type) == 'ebay' ? '<a href="//ebay.com" rel="nof
 $salePercent = $item->getSalePercent();
 $current_provider = $item->provider ? $item->provider : $item->getCurrentProvider();
 $variationUseImage = null;
-print_r($item->getInternationalShipping());
-die;
 foreach ($item->variation_options as $index => $variationOption) {
     if ($variationOption->images_mapping) {
         foreach ($variationOption->values as $k => $value) {
@@ -38,6 +37,8 @@ $this->registerCss($css);
 $rate_star = floatval($item->rate_star);
 $rate_count = $item->rate_count ? $item->rate_count : 0;
 $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval($rate_star);
+$internal_shipping = $item->getInternationalShipping();
+$internal_shipping_fee = $item->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
 ?>
 <div class="product-full-info">
     <div id="checkcate" style="display: none"><?= $item->category_id ?></div>
@@ -100,7 +101,9 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                         </ul>
                     </td>
                 </tr>
-                <?php if ($item->type === BaseProduct::TYPE_EBAY){ ?>
+                <?php
+                if ($item->type === BaseProduct::TYPE_EBAY){
+                    ?>
                     <tr>
                         <td><?= Yii::t('frontend','Location Seller') ?></td>
                         <td><?= $current_provider->location.', '.$current_provider->country_code ?></td>
@@ -108,7 +111,12 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                 <?php  } ?>
                 <tr>
                     <td><?= Yii::t('frontend','Shipping detail') ?></td>
-                    <td><?= $current_provider->location.', '.$current_provider->country_code ?></td>
+                    <td>
+                        <ul class="list-dot">
+                            <li><?= Yii::t('frontend','Internal Shipping fee: <span id="shipping_fee">{shipping_fee}</span>',['shipping_fee' => $storeManager->showMoney($internal_shipping_fee)]) ?></li>
+                            <li><?= Yii::t('frontend','Estimate time: <span id="time_estimate">{min_time}</span> days - <span id="time_estimate">{max_time}</span> days',['min_time'=>isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'max_delivery_time','14') : '14','max_time' => isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'min_delivery_time','7') : '7' ]) ?></li>
+                        </ul>
+                    </td>
                 </tr>
             </table>
         </div>

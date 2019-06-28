@@ -361,19 +361,21 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'amz_shipment_id' => '',
                 'chargeable_weight' => $weight,
                 'parcels' => [
-                    'weight' => $weight,
-                    'amount' => $this->getLocalizeTotalPrice(),
-                    'description' => "{$this->type} {$this->getUniqueCode()}",
-                    'items' => [
-                        [
-                            'sku' => $this->getUniqueCode(),
-                            'label_code' => '',
-                            'origin_country' => '',
-                            'name' => $this->item_name,
-                            'desciption' => '',
-                            'weight' => WeshopHelper::roundNumber(($weight / $this->getShippingQuantity())),
-                            'amount' => WeshopHelper::roundNumber($this->getLocalizeTotalPrice()),
-                            'quantity' => $this->getShippingQuantity(),
+                    [
+                        'weight' => $weight,
+                        'amount' => $this->getLocalizeTotalPrice(),
+                        'description' => "{$this->type} {$this->getUniqueCode()}",
+                        'items' => [
+                            [
+                                'sku' => $this->getUniqueCode(),
+                                'label_code' => '',
+                                'origin_country' => '',
+                                'name' => $this->item_name,
+                                'desciption' => '',
+                                'weight' => WeshopHelper::roundNumber(($weight / $this->getShippingQuantity())),
+                                'amount' => WeshopHelper::roundNumber($this->getLocalizeTotalPrice()),
+                                'quantity' => $this->getShippingQuantity(),
+                            ]
                         ]
                     ]
                 ]
@@ -399,9 +401,6 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             }
             $calculator = new InternationalShippingCalculator();
             list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code,$this->getStoreManager()->store->currency ,$location);
-            var_dump($ok);
-            print_r($couriers);
-            die;
             if ($ok && is_array($couriers) && count($couriers) > 0) {
                 $this->_couriers = $couriers;
                 $firstCourier = $couriers[0];
