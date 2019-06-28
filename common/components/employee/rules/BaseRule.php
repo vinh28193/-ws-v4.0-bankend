@@ -4,6 +4,7 @@
 namespace common\components\employee\rules;
 
 
+use common\models\Order;
 use Yii;
 use common\models\User;
 use yii\base\BaseObject;

@@ -43,7 +43,7 @@ class Employee extends BaseObject
         if (empty($this->_supporters)) {
 //            $this->_supporters = $this->loadSupporterByRoles();
             $s = [];
-            for ($i = 1;$i < 10;$i++){
+            for ($i = 1;$i <= 4;$i++){
                 $s[$i] = [
                     'name' => "Sale $i"
                 ];
@@ -81,7 +81,7 @@ class Employee extends BaseObject
     /**
      * @return BaseRule
      */
-    protected function getActiveRule()
+    public function getActiveRule()
     {
         $config = $this->ruleConfig;
         if (!isset($config['class'])) {

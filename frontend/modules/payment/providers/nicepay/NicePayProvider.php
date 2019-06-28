@@ -292,7 +292,6 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                 $logPaymentGateway->save(false);
                 return new PaymentResponse(false, 'Lỗi cổng thanh toán', 'nicepay');
             } else {
-
                 $this->getClient()->getData()->set('payMethod', '02');
                 $this->getClient()->getData()->set('bankCd', $bankCd);
                 $this->getClient()->getData()->set('vacctValidDt', $vaExpiryDate); // Set VA expiry date example: +1 day
@@ -334,7 +333,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                 return new PaymentResponse(false, 'Lỗi cổng thanh toán', 'nicepay');
             }
         } catch (Exception $exception) {
-            $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
+            $logPaymentGateway->response_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logPaymentGateway->save(false);
             return new PaymentResponse(false, $exception->getMessage(), 'nicepay');

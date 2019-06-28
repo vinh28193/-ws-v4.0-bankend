@@ -30,7 +30,10 @@ class ConfirmRule extends BaseRule
      *          agv:1000
      *      },
      *      current_assign: {
-     *          assigned: [],
+     *          assigned: [
+     *              total:0
+     *              amount:0
+     *          ],
      *          total:100
      *      {
      *
@@ -50,11 +53,11 @@ class ConfirmRule extends BaseRule
     }
 
     /**
-     * @return array
+     * @return array|\common\models\User|mixed
      */
     public function getActiveSupporter()
     {
-
+        echo "<pre>";
         $confirmPercent = $this->getConfirmPercent();
         $currentAssign = $this->getCurrentAssign();
         $confirmConverted = $confirmPercent['converted'];
@@ -63,39 +66,42 @@ class ConfirmRule extends BaseRule
         $totalAssigned += 1;
         $results = [];
         foreach (array_keys($this->employee->getSupporters()) as $id) {
-            $ownerConvert = ArrayHelper::getValue($confirmConverted, $id, 100);
+            $ownerConvert = ArrayHelper::getValue($confirmConverted, $id, 0);
             $assignRate = ($ownerConvert / $this->countSupporter() / $confirmAgv);
             $results[$id] = $assignRate;
         }
-
         $assigned = ArrayHelper::getValue($currentAssign, 'assigned', []);
         $calculator = [];
         foreach ($results as $id => $rate) {
             if (!isset($assigned[$id])) {
                 $assigned[$id] = 0;
             }
-            $ownerAssign = $assigned[$id];
-            $calculator[$id] = (string)(($totalAssigned - $ownerAssign) * $rate);
+            $calculator[$id] = ($totalAssigned - $assigned[$id]) * $rate;
         }
-
-        asort($calculator);
-
         var_dump($calculator);
-        die;
-        $assigner = array_keys($calculator);
+        arsort($calculator);
+        $sMax = WeshopHelper::sortMaxValueArray($calculator);
+//
+//        if (count($sMax) > 1) {
+//            foreach (array_keys($sMax) as $id) {
+//                $sMax[$id] = $assigned[$id];
+//            }
+//        }
+//
+//        asort($sMax);
+        $assigner = array_keys($sMax);
         $assigner = array_shift($assigner);
-
-
-        $assigned[$assigner] += 1;
-        var_dump($assigned, $assigner);
+        $value = $assigned[$assigner];
+        $value += 1;
+        $assigned[$assigner] = $value;
+        echo "order $totalAssigned assign to {$this->employee->getSupporters()[$assigner]['name']} \n";
 
         $this->setFileCache('current_assign', [
             'assigned' => $assigned,
             'total' => $totalAssigned
         ]);
-
-        die;
-        return $assigner;
+        echo "</pre>";
+        return $this->employee->getSupporters()[$assigner];
     }
 
     public function countSupporter()
@@ -113,8 +119,14 @@ class ConfirmRule extends BaseRule
             if ($confirmPercent === null || $confirmPercent['expired_at'] <= time()) {
 //                $caculators = $this->loadConfirmPercentBySupporter($supportIds);
                 $converted = [];
+                $array = [
+                    1 => 18,
+                    2 => 24,
+                    3 => 32,
+                    4 => 26
+                ];
                 foreach ($supportIds as $supportId) {
-                    $converted[$supportId] = rand(10, 100);
+                    $converted[$supportId] = $array[$supportId];
                 }
                 $agv = array_sum($converted) / count($converted);
                 $confirmPercent = [
@@ -140,13 +152,6 @@ class ConfirmRule extends BaseRule
         return $this->_currentAssign;
     }
 
-    public function isCanAssign($id)
-    {
-
-
-        var_dump([$id => ['Tỷ lệ phân đơn' => $assignRate, 'So doi da phan' => $ownerAssigned]], ($ownerAssigned / ($totalAssigned - 1)) - $assignRate);
-
-    }
 
     public function loadConfirmPercentBySupporter($ids = [])
     {

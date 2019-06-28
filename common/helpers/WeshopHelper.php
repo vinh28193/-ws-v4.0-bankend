@@ -499,4 +499,23 @@ class WeshopHelper
         }
         return $result;
     }
+
+    public static function sortMaxValueArray($array, $start = 0)
+    {
+        $result = [];
+        if (empty($array)) {
+            return $result;
+        }
+        $i = 0;
+        foreach ($array as $key => $value) {
+            if ($i == 0) {
+                $start = $value;
+            } elseif ($value < $start) {
+                break;
+            }
+            $result[$key] = $value;
+            $i++;
+        }
+        return $result;
+    }
 }
