@@ -15,6 +15,7 @@ use common\models\draft\DraftWastingTracking;
 use common\models\Manifest;
 use common\models\Product;
 use common\models\PurchaseProduct;
+use common\models\TrackingCode;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -230,6 +231,13 @@ class ServiceUsSendingController extends BaseApiController
             return $this->response(false,'Please fill all field require!');
         }
         $count = 0;
+        $trackingCode = TrackingCode::findOne(['tracking_code' => $this->post['tracking_code']]);
+        if(!$trackingCode){
+            $trackingCode = new TrackingCode();
+            $trackingCode->tracking_code = $this->post['tracking_code'];
+        }
+        $order_ids = explode(',',$trackingCode->order_ids);
+        $product_ids = explode(',',$trackingCode->product_ids);
         foreach ($this->post['info'] as $info){
             $order_id = ArrayHelper::getValue($info,'order_id');
             $product_id = ArrayHelper::getValue($info,'product_id');
@@ -239,6 +247,13 @@ class ServiceUsSendingController extends BaseApiController
                 $product = Product::findOne($product_id);
                 $order = $product->order;
                 if($product && (!$order_id || $order_id == $product->order_id) && $order){
+                    if(in_array($product->id,$product_ids)){
+                        $product_ids[] = $product->id;
+                    }
+                    if(in_array($product->order_id,$order_ids)){
+                        $order_ids[] = $product->order_id;
+                    }
+                    $trackingCode->quantity = $trackingCode->quantity ? $trackingCode->quantity + $quantity : $quantity;
                     $order->updateSellerShipped();
                     $order->save(false);
                     $product->updateSellerShipped();
@@ -253,7 +268,7 @@ class ServiceUsSendingController extends BaseApiController
                     $model->created_by = Yii::$app->user->getId();
                     $model->updated_by = Yii::$app->user->getId();
                     $model->created_at = time();
-                    $model->updated_by = time();
+                    $model->updated_at = time();
                     $model->save(0);
                     $logTracking = new TrackingLogs();
                     $logTracking->tracking_code = $model->tracking_code;
@@ -278,6 +293,11 @@ class ServiceUsSendingController extends BaseApiController
                 }
             }
         }
-        return $this->response(true,'Insert '.$count.' tracking success!');
+//        $trackingCode-> = implode(',',$product_ids);
+        $trackingCode->product_ids = $product_ids && count($product_ids) ? implode(',',$product_ids) : '';
+        $trackingCode->order_ids = $order_ids && count($order_ids) ?  implode(',',$order_ids) : '';
+        $trackingCode->status = $trackingCode->status ? $trackingCode->status : TrackingCode::STATUS_MERGE_NEW;
+        $trackingCode->save(false);
+        return $this->response(true,'Insert tracking to '.$count.' product success!');
     }
 }

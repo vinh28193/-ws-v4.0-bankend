@@ -326,7 +326,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             'country' => $this->getStoreManager()->store->country_code,
             'zipcode' => '',
         ];
-        if (($defaultShippingAddress = $this->getUser()->defaultShippingAddress)) {
+        if ($this->getUser() && ($defaultShippingAddress = $this->getUser()->defaultShippingAddress)) {
             $shipTo = ArrayHelper::merge($shipTo, [
                 'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
                 'address' => $defaultShippingAddress->address,
@@ -335,7 +335,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'district' => $defaultShippingAddress->district_id,
                 'zipcode' => $defaultShippingAddress->post_code
             ]);
-        } elseif (($address = $this->getUser()->defaultPrimaryAddress)) {
+        } elseif ($this->getUser() && ($address = $this->getUser()->defaultPrimaryAddress)) {
             $shipTo = ArrayHelper::merge($shipTo, [
                 'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
                 'address' => $address->address,

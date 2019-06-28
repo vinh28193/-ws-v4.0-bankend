@@ -113,12 +113,14 @@ $internal_shipping_fee = $internal_shipping_fees[1] ? $storeManager->showMoney($
                 <tr>
                     <td>
                         <?= Yii::t('frontend','Shipping detail') ?><br>
-                        (<?= Yii::t('frontend','Ship to <span class="text-blue">{district_name}, {province_name}</span>',['district_name' => 'Hai Bà Trưng', 'province_name' => 'Hà Nội']) ?>)
                     </td>
                     <td>
                         <ul class="list-dot">
                             <li><?= Yii::t('frontend','Internal Shipping fee: <span id="shipping_fee">{shipping_fee}</span>',['shipping_fee' => $internal_shipping_fee]) ?></li>
-                            <li><?= Yii::t('frontend','Estimate time: <span id="time_estimate">{min_time}</span> days - <span id="time_estimate">{max_time}</span> days',['min_time'=>isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'max_delivery_time','7') : '7','max_time' => isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'min_delivery_time','14') : '14' ]) ?></li>
+                            <li>
+                                <?= Yii::t('frontend','Estimate time: <span id="time_estimate_min">{min_time}</span> - <span id="time_estimate_max">{max_time}</span> days',['min_time'=>isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'min_delivery_time','7') : '7','max_time' => isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'max_delivery_time','14') : '14' ]) ?><br>
+                                (<?= Yii::t('frontend','Ship to <span class="text-blue">{district_name}, {province_name}</span>',['district_name' => 'Hai Bà Trưng', 'province_name' => 'Hà Nội']) ?>)
+                            </li>
                         </ul>
                     </td>
                 </tr>
