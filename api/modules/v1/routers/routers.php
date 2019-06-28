@@ -301,7 +301,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['actionlog' => 'rest-action-log', 'packing-log' => 'rest-api-packing-log'],
+        'controller' => ['actionlog' => 'rest-action-log', 'packing-log' => 'rest-api-packing-log', 'ex-log' => 'exchange-rate-log'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
