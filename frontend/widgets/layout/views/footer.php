@@ -125,7 +125,7 @@
     <div class="modal-dialog modal-dialog-centered" id="modal-content" role="document">
         <div class="modal-content">
             <div class="modal-header" id="NotifyConfirmHeader">
-                <div class="modal-title" id="NotifyConfirmTitle">Thông báo nâng cấp trang tìm kiếm sản phẩm</div>
+                <div class="modal-title" id="NotifyConfirmTitle"><?= Yii::t('frontend','Notify upgrade search')?></div>
             </div>
             <div class="modal-body">
                 <div class="form-group">
