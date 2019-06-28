@@ -626,10 +626,10 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     ['product.category_id' => $params['keyWord']],
                     ['product.product_name' => $params['keyWord']],
                     ['order.payment_type' => $params['keyWord']],
-                    ['user.email' => $params['keyWord']],
+                    ['order.buyer_email' => $params['keyWord']],
                     ['order.receiver_email' => $params['keyWord']],
                     ['order.receiver_phone' => $params['keyWord']],
-                    ['user.phone' => $params['keyWord']],
+                    ['order.buyer_phone' => $params['keyWord']],
                 ]);
             } elseif ($params['searchKeyword'] != 'ALL') {
                 if ($params['searchKeyword'] == 'email') {
