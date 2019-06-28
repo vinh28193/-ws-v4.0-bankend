@@ -7,6 +7,7 @@ use common\components\AccountKit;
 use common\components\Cookies;
 use common\components\UserCookies;
 use common\models\User;
+use frontend\models\ChangePasswordForm;
 use frontend\models\PasswordRequiredForm;
 use User\SignUpRequest;
 use User\SignUpResponse;
@@ -253,26 +254,14 @@ class SecureController extends FrontendController
 
     public function actionChangePassword()
     {
-        $userId = Yii::$app->user->getId();
-        $model = User::find()->where(['id' => $userId])->one();
-
-
-        if (isset($_POST['User'])) {
-
-            $model->attributes = $_POST['User'];
-            $valid = $model->validate();
-
-            if ($valid) {
-
-                $model->password_hash = md5($model->passwordNew);
-
-                if ($model->save())
-                    $this->redirect(array('change-password', 'msg' => 'successfully changed password'));
-                else
-                    $this->redirect(array('change-password', 'msg' => 'password not changed'));
-            }
+        Yii::info('ChangePasswordForm');
+        $model = new ChangePasswordForm();
+        if ($model->load(Yii::$app->request->post()) && $model->changePassword()) {
+            Yii::$app->session->setFlash('success', Yii::t('frontend', 'New password saved'));
+            Yii::info('success', 'ResetPassword.');
+            return $this->redirect('/account/customer');
         }
-        $this->render('changePassword', array('model' => $model));
+        return $this->render('change_password',['model'=>$model]);
     }
     public function actionAuthAccountKit(){
         $data = AccountKit::getAccessToken(Yii::$app->request->get('code',''));

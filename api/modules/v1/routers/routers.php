@@ -155,7 +155,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
+        'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists', 'ex' => 'exchange-rate'],
         'tokens' => [
             '{content}' => '<content:\\w[\\w,]*>',
             '{id}' => '<id:\\w[\\w,]*>',
@@ -301,7 +301,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['actionlog' => 'rest-action-log'],
+        'controller' => ['actionlog' => 'rest-action-log', 'packing-log' => 'rest-api-packing-log'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',

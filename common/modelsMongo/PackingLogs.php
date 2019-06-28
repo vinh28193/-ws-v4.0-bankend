@@ -23,6 +23,8 @@ use Yii;
  * @property mixed $user_id
  * @property mixed $user_email
  * @property mixed $user_name
+ * @property mixed $role
+ * @property mixed $request_ip
  */
 class PackingLogs extends \yii\mongodb\ActiveRecord
 {
@@ -56,6 +58,8 @@ class PackingLogs extends \yii\mongodb\ActiveRecord
             'user_email',
             'user_name',
             'product_id',
+            'role',
+            'request_ip',
         ];
     }
 
@@ -65,7 +69,7 @@ class PackingLogs extends \yii\mongodb\ActiveRecord
     public function rules()
     {
         return [
-            [['manifest_id', 'manifest_code', 'package_id', 'package_code', 'type_log', 'message_log', 'package_code_reference', 'tracking_code_reference', 'delivery_note_code', 'created_at', 'more_data', 'user_id', 'user_email', 'user_name','product_id'], 'safe']
+            [['manifest_id', 'role', 'request_ip', 'manifest_code', 'package_id', 'package_code', 'type_log', 'message_log', 'package_code_reference', 'tracking_code_reference', 'delivery_note_code', 'created_at', 'more_data', 'user_id', 'user_email', 'user_name','product_id'], 'safe']
         ];
     }
 
@@ -91,6 +95,8 @@ class PackingLogs extends \yii\mongodb\ActiveRecord
             'user_email' => 'User Email',
             'user_name' => 'User Name',
             'product_id' => 'Product Id',
+            'role' => 'Role',
+            'request_ip' => 'request_ip',
         ];
     }
 }
