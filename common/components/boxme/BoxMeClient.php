@@ -133,6 +133,14 @@ class BoxMeClient
         $res = $response->getData();
         return $res;
     }
+    public static function CreateLiveShipment(){
+        $param = [];
+        $param['shipping_method'] = 5;
+        $param['pickup_id'] = 5;
+        $param['ff_id'] = 5;
+        $param['user_id'] = 5;
+        $param['procducts'] = 5;
+    }
 
 
 }

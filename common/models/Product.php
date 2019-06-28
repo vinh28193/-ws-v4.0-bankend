@@ -22,7 +22,8 @@ use common\components\AdditionalFeeTrait;
  * @property Order $order
  * @property Category $category
  * @property TargetAdditionalFee[] $productFees
- *
+ * @property ProductFee $unitPrice
+ * @property ProductFee $usTax
  *
  */
 class Product extends DbProduct
@@ -154,17 +155,17 @@ class Product extends DbProduct
 
     public function getUsShippingFee()
     {
-        return self::getProductFees()->andWhere(['name' => 'origin_shipping_fee']);
+        return self::getProductFees()->andWhere(['name' => 'origin_shipping_fee'])->one();
     }
 
     public function getUnitPrice()
     {
-        return self::getProductFees()->andWhere(['name' => 'product_price_origin']);
+        return self::getProductFees()->andWhere(['name' => 'product_price_origin'])->one();
     }
 
     public function getUsTax()
     {
-        return self::getProductFees()->andWhere(['type' => 'tax_fee_origin']);
+        return self::getProductFees()->andWhere(['type' => 'tax_fee_origin'])->one();
     }
 
     /**

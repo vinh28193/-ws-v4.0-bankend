@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "{{%tracking_code}}".
  *
  * @property int $id ID
+ * @property string $version version 4.0
  * @property int $store_id Store ID reference
  * @property int $manifest_id Manifest Id
  * @property string $manifest_code Manifest code
@@ -36,12 +37,12 @@ use Yii;
  * @property int $created_at Created at (timestamp)
  * @property int $updated_by Updated by
  * @property int $updated_at Updated at (timestamp)
- * @property string $version version 4.0
  * @property string $status_merge Trạng thái của tracking với việc đối chiếu tracking với bảng ext
  * @property int $stock_in_us
  * @property int $stock_out_us
  * @property int $stock_in_local
  * @property int $stock_out_local
+ * @property string $product_ids list product id Cách nhau dấu (,)
  */
 class TrackingCode extends \common\components\db\ActiveRecord
 {
@@ -63,8 +64,8 @@ class TrackingCode extends \common\components\db\ActiveRecord
             [['store_id', 'manifest_id', 'delivery_note_id', 'package_id', 'warehouse_us_id', 'warehouse_local_id', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'stock_out_local'], 'integer'],
             [['warehouse_local_note', 'operation_note'], 'string'],
             [['weight', 'quantity', 'dimension_width', 'dimension_length', 'dimension_height'], 'number'],
+            [['version', 'tracking_code', 'order_ids', 'warehouse_us_name', 'status_merge', 'product_ids'], 'string', 'max' => 255],
             [['manifest_code', 'delivery_note_code', 'weshop_tag', 'warehouse_local_name', 'warehouse_local_tag', 'status'], 'string', 'max' => 32],
-            [['tracking_code', 'order_ids', 'warehouse_us_name', 'version', 'status_merge'], 'string', 'max' => 255],
             [['warehouse_local_status'], 'string', 'max' => 10],
         ];
     }
@@ -76,6 +77,7 @@ class TrackingCode extends \common\components\db\ActiveRecord
     {
         return [
             'id' => Yii::t('db', 'ID'),
+            'version' => Yii::t('db', 'Version'),
             'store_id' => Yii::t('db', 'Store ID'),
             'manifest_id' => Yii::t('db', 'Manifest ID'),
             'manifest_code' => Yii::t('db', 'Manifest Code'),
@@ -104,12 +106,12 @@ class TrackingCode extends \common\components\db\ActiveRecord
             'created_at' => Yii::t('db', 'Created At'),
             'updated_by' => Yii::t('db', 'Updated By'),
             'updated_at' => Yii::t('db', 'Updated At'),
-            'version' => Yii::t('db', 'Version'),
             'status_merge' => Yii::t('db', 'Status Merge'),
             'stock_in_us' => Yii::t('db', 'Stock In Us'),
             'stock_out_us' => Yii::t('db', 'Stock Out Us'),
             'stock_in_local' => Yii::t('db', 'Stock In Local'),
             'stock_out_local' => Yii::t('db', 'Stock Out Local'),
+            'product_ids' => Yii::t('db', 'Product IDs'),
         ];
     }
 }

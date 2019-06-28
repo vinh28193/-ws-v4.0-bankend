@@ -12,6 +12,7 @@ use common\additional\AdditionalFeeInterface;
 use common\additional\AdditionalFeeTrait;
 use common\components\GetUserIdentityTrait;
 use common\components\InternationalShippingCalculator;
+use common\components\UserCookies;
 use common\helpers\WeshopHelper;
 use common\models\Category;
 use common\models\User;
@@ -306,7 +307,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getShippingParams()
     {
-        if ($this->getUser() === null || ($wh = $this->getPickUpWareHouse()) === false) {
+        if (($wh = $this->getPickUpWareHouse()) === false) {
             return [];
         }
         if (($pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id')) === null) {
@@ -320,12 +321,12 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             'address2' => '',
             'phone' => '0987654321',
             'phone2' => '',
-            'province' => '',
-            'district' => '',
+            'province' => 1,
+            'district' => 8,
             'country' => $this->getStoreManager()->store->country_code,
             'zipcode' => '',
         ];
-        if (($defaultShippingAddress = $this->getUser()->defaultShippingAddress)) {
+        if ($this->getUser() && ($defaultShippingAddress = $this->getUser()->defaultShippingAddress)) {
             $shipTo = ArrayHelper::merge($shipTo, [
                 'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
                 'address' => $defaultShippingAddress->address,
@@ -334,7 +335,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'district' => $defaultShippingAddress->district_id,
                 'zipcode' => $defaultShippingAddress->post_code
             ]);
-        } elseif (($address = $this->getUser()->defaultPrimaryAddress)) {
+        } elseif ($this->getUser() && ($address = $this->getUser()->defaultPrimaryAddress)) {
             $shipTo = ArrayHelper::merge($shipTo, [
                 'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
                 'address' => $address->address,
@@ -343,8 +344,15 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'district' => $address->district_id,
                 'zipcode' => $address->post_code
             ]);
-        } else {
-            return [];
+        } else if(($userInfoCookie = (new UserCookies())->setUserCookies())) {
+            $shipTo = ArrayHelper::merge($shipTo, [
+                'contact_name' => $userInfoCookie->name ? $userInfoCookie->name : $shipTo['contact_name'],
+                'address' => $userInfoCookie->address ? $userInfoCookie->address : $shipTo['address'],
+                'phone' => $userInfoCookie->phone ? $userInfoCookie->phone : $shipTo['phone'],
+                'province' => $userInfoCookie->province_id ? $userInfoCookie->province_id : $shipTo['province'],
+                'district' => $userInfoCookie->district_id ? $userInfoCookie->district_id : $shipTo['district'],
+                'zipcode' => $userInfoCookie->zipcode ? $userInfoCookie->zipcode : $shipTo['zipcode']
+            ]);
         }
         $weight = $this->getShippingWeight() * 1000;
         $params = [
@@ -361,19 +369,21 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'amz_shipment_id' => '',
                 'chargeable_weight' => $weight,
                 'parcels' => [
-                    'weight' => $weight,
-                    'amount' => $this->getLocalizeTotalPrice(),
-                    'description' => "{$this->portal} {$this->getUniqueCode()}",
-                    'items' => [
-                        [
-                            'sku' => $this->getUniqueCode(),
-                            'label_code' => '',
-                            'origin_country' => '',
-                            'name' => $this->item_name,
-                            'desciption' => '',
-                            'weight' => WeshopHelper::roundNumber(($weight / $this->getShippingQuantity())),
-                            'amount' => WeshopHelper::roundNumber($this->getLocalizeTotalPrice()),
-                            'quantity' => $this->getShippingQuantity(),
+                    [
+                        'weight' => $weight,
+                        'amount' => $this->getLocalizeTotalPrice(),
+                        'description' => "{$this->type} {$this->getUniqueCode()}",
+                        'items' => [
+                            [
+                                'sku' => $this->getUniqueCode(),
+                                'label_code' => '',
+                                'origin_country' => '',
+                                'name' => $this->item_name,
+                                'desciption' => '',
+                                'weight' => WeshopHelper::roundNumber(($weight / $this->getShippingQuantity())),
+                                'amount' => WeshopHelper::roundNumber($this->getLocalizeTotalPrice()),
+                                'quantity' => $this->getShippingQuantity(),
+                            ]
                         ]
                     ]
                 ]
@@ -398,7 +408,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 }
             }
             $calculator = new InternationalShippingCalculator();
-            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code, $location);
+            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code,$this->getStoreManager()->store->currency ,$location);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
                 $this->_couriers = $couriers;
                 $firstCourier = $couriers[0];
@@ -419,7 +429,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         if (!$this->_pickUpWareHouse) {
             if (($user = $this->getUser()) !== null && $user->getPickupWarehouse() !== null) {
                 $this->_pickUpWareHouse = $user->getPickupWarehouse();
-            } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) === null) {
+            } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
                 $current = $params['default'];
                 $this->_pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
             }

@@ -4,6 +4,9 @@ html, body {
     font-weight: 400;
     color: #555555;
 }
+.big-img .zoomWrapper {
+    /*text-align: center;*/
+}
 .wrapper{
     background: #fff;
 }
@@ -56,7 +59,7 @@ body div.wrapper div.navbar-ws div.container{
     height: inherit;
     background-color: #e67424;
 }
-#searchBoxInput{
+.searchBoxInput{
     height: inherit;
     border-radius: 5px 0px 0px 5px;
     background-color: #ffffff;
@@ -788,7 +791,7 @@ div div.product-list.row div a div.info div.price span.countdown{
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 40px;
     }
-    .account-title,ul.bars-nav li,#searchBoxInput{
+    .account-title,ul.bars-nav li,.searchBoxInput{
         font-size: 14px;
     }
     ul.bars-nav li:first-child {
@@ -839,7 +842,7 @@ div div.product-list.row div a div.info div.price span.countdown{
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 40px;
     }
-    .account-title,ul.bars-nav li,#searchBoxInput{
+    .account-title,ul.bars-nav li,.searchBoxInput{
         font-size: 12px;
     }
     ul.bars-nav li:first-child {
@@ -890,7 +893,7 @@ div div.product-list.row div a div.info div.price span.countdown{
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 30px;
     }
-    .account-title,ul.bars-nav li,#searchBoxInput{
+    .account-title,ul.bars-nav li,.searchBoxInput{
         font-size: 10px;
     }
     ul.bars-nav li:first-child {
@@ -943,7 +946,7 @@ div div.product-list.row div a div.info div.price span.countdown{
     .navbar-ws .logo img,.navbar-ws .logo,.cart-header-box,.account-header-box{
         height: 40px;
     }
-    .account-title,ul.bars-nav li,#searchBoxInput{
+    .account-title,ul.bars-nav li,.searchBoxInput{
         font-size: 12px;
     }
     ul.bars-nav li:first-child {

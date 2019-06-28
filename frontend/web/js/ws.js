@@ -267,9 +267,9 @@ var ws = ws || (function ($) {
             }
         },
         getSuggestSearch: function (response) {
-            // console.log(response);
+            console.log(response);
             if(response.length > 2){
-                if($('input#searchBoxInput').val() === response[0]){
+                if($('input.searchBoxInput').val() === response[0]){
                     var txt = '<option>'+response[0]+'</option>';
                     // console.log(response[1]);
                     $.each(response[1],function (k,v) {
@@ -277,7 +277,7 @@ var ws = ws || (function ($) {
                         // console.log('<option>'+v+'</option>');
                         // $('#searchAutoComplete').append('<option>'+v+'</option>');
                     });
-                    $('#searchAutoComplete').html(txt);
+                    $('#listSuggestSearch').html(txt);
                 }
             }
         },
@@ -355,9 +355,9 @@ var ws = ws || (function ($) {
 })(jQuery);
 
 ws.initEventHandler('searchNew', 'searchBoxButton', 'click', 'button#searchBoxButton', function (event) {
-    ws.browse.searchNew('input#searchBoxInput', '$url');
+    ws.browse.searchNew('input.searchBoxInput', '$url');
 });
-ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input#searchBoxInput', function (event) {
+ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input.searchBoxInput', function (event) {
     clearTimeout(window.mytimeout);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
@@ -376,11 +376,11 @@ ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input#searchBoxInpu
         }
     }
 });
-ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'keyup', 'input#mb-searchBoxInput', function (event) {
+ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'keyup', 'input.mb-searchBoxInput', function (event) {
     clearTimeout(window.mytimeout);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
-    }else{
+    }else if (event.keyCode){
         var $element = this;
         var key = $(this).val();
         if(key){
@@ -396,11 +396,13 @@ ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'keyup', 'input#mb-searchB
     }
 });
 
-$('input#searchBoxInput').change(function () {
+$('input.searchBoxInput').change(function () {
     // clearTimeout(window.mytimeout);
     ws.browse.searchNew(this, '$url');
 });
-$('input#mb-searchBoxInput').change(function () {
-    // clearTimeout(window.mytimeout);
-    ws.browse.searchNew(this, '$url');
+$('datalist#listSuggestSearch').keyup(function () {
+    console.log('Key up: '+event.key);
+    if (event.keyCode === 13) {
+        ws.browse.searchNew(this, '$url');
+    }
 });

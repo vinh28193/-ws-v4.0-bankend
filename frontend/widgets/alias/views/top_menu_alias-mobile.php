@@ -14,13 +14,12 @@ use common\models\cms\WsAliasItem;
     <li>
         <a class="title-cate" href="<?= $category->url ?>">
             <i class="style-i">
-<!--                <img class="style-img" src="/images/Bitmap1.png" alt="">-->
             </i><?= $category->name ?> </a>
         <i class="la la-angle-right float-right mt-2" onclick="showTab('sub-tab-cate-<?= $type?>-<?= $k ?>')"></i>
         <div class="sub-cate-2" id="sub-tab-cate-<?= $type?>-<?= $k ?>" style="background-color: #f6f6f6;">
             <div class="title-mb-menu" onclick="hideTab('sub-tab-cate-<?= $type?>-<?= $k ?>')">
                 <i class="la la-close"></i>
-                <span>Danh mục sản phẩm</span>
+                <span><?= Yii::t('frontend','Categories')?></span>
             </div>
             <div class="title-submenu" style="background-color: #ffffff;">
                 <a style="display: block"

@@ -47,7 +47,7 @@ return [
         ],
         'storeManager' => [
             'class' => 'common\components\StoreManager',
-            'storeId' => 7
+            'storeId' => 1
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager'

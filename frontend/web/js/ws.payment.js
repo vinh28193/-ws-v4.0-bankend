@@ -117,7 +117,7 @@ ws.payment = (function ($) {
                 phone = phone.replace('0084', '0');
                 phone = phone.replace(/ /g, '');
                 var firstNumber = phone.substring(0, 2);
-                if ((firstNumber == '09' || firstNumber == '03' || firstNumber == '07' || firstNumber == '08' || firstNumber == '05') && phone.length == 10) {
+                if ((firstNumber == '09' || firstNumber == '03' || firstNumber == '07' || firstNumber == '08' || firstNumber == '05') && phone.length < 13) {
                     ws.ajax('/checkout/shipping/add-cart-checkout', {
                         type: 'POST',
                         data: {

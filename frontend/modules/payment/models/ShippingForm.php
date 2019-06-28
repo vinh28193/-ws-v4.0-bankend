@@ -135,10 +135,16 @@ class ShippingForm extends Model
             if (WeshopHelper::isEmpty($this->getBuyerAddress())) {
                 $this->enable_buyer = self::YES;
                 $this->save_buyer_address = self::YES;
+                $this->buyer_name = $this->getUser()->last_name .' '.$this->getUser()->first_name;
+                $this->buyer_phone = $this->getUser()->phone;
+                $this->buyer_email = $this->getUser()->email;
             }
             if (WeshopHelper::isEmpty($this->getReceiverAddress())) {
                 $this->enable_receiver = self::YES;
                 $this->save_receiver_address = self::YES;
+                $this->receiver_name = $this->getUser()->last_name .' '.$this->getUser()->first_name;
+                $this->receiver_email = $this->getUser()->email;
+                $this->receiver_phone = $this->getUser()->phone;
             }
         }else {
             $this->enable_buyer = self::YES;

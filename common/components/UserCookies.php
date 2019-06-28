@@ -20,6 +20,7 @@ use yii\base\Model;
  * @property $district_id
  * @property $address
  * @property $facebook_id
+ * @property $zipcode
  * @property $facebook_token
  */
 
@@ -35,6 +36,7 @@ class UserCookies extends Model
     public $province_id;
     public $district_id;
     public $address;
+    public $zipcode;
     public $facebook_id;
     public $facebook_token;
     public function setNewCookies(){
@@ -50,6 +52,7 @@ class UserCookies extends Model
     }
     public function setUserCookies(){
         $this->setAttributes(self::getUserCookies(),false);
+        return $this;
     }
     public static function getUserCookies($isArray = true){
         return json_decode(self::getCookies(),$isArray);
