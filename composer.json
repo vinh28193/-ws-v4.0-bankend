@@ -63,7 +63,8 @@
     "codeception/codeception": "~2.4.0",
     "phpunit/phpunit": "~6.5.5",
     "mpdf/mpdf": "~6.1.0",
-    "phpseclib/phpseclib": "~2.0"
+    "phpseclib/phpseclib": "~2.0",
+    "mailchimp/mailchimp": "^2.0"
   },
   "autoload": {
     "psr-4": {
