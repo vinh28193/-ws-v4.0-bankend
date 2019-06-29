@@ -51,7 +51,7 @@ class UserController extends Controller
                         'phone_verified' => 1, // đăng kí trực tiếp nên xác nhận phone là đúng luôn chỉ còn vấn đề @ToDo Phone đúng đinh dạng Việt Nam
                         'gender' => 0,
                         'version' => 'v3',
-                        'type_customer' => 1, // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
+                        'type_customer' => $userOld->customerGroupId == 2 ? 2 : 1, // set 1 là Khách Lẻ và 2 là Khách buôn - WholeSale Customer
                         'avatar' => $userOld->avatar,
                         'note_by_employee' => 'Khách hàng cũ từ weshop ver3',
                         'employee' => 0, //  1 Là Nhân viên , 0 là khách hàng

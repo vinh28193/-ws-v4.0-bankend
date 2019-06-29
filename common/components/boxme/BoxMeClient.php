@@ -3,6 +3,7 @@ namespace common\components\boxme;
 use common\models\boxme\ConfigForm;
 use common\models\boxme\ShipToForm;
 use common\models\boxme\ShipmentForm;
+use linslin\yii2\curl\Curl;
 use Yii;
 
 /**
@@ -133,13 +134,46 @@ class BoxMeClient
         $res = $response->getData();
         return $res;
     }
-    public static function CreateLiveShipment(){
+    public static function CreateLiveShipment($data,$tracking){
         $param = [];
         $param['shipping_method'] = 5;
-        $param['pickup_id'] = 5;
-        $param['ff_id'] = 5;
-        $param['user_id'] = 5;
-        $param['procducts'] = 5;
+        $param['pickup_id'] = 39412;
+        $param['ff_id'] = 39412;
+        $param['user_id'] = 41;
+        $param['procducts'] = [];
+        foreach ($data as $datum){
+            $temp = [
+              'bsin' => $datum['sku'],
+              'quantity' => $datum['quantity'],
+              'img_check' => $datum['img_check'],
+              'description' => $datum['description']
+            ];
+            $param['procducts'][] = $temp;
+        }
+        $param['packages'] = [];
+        /*foreach ($data as $datum){
+            $temp = [
+                'code' => $datum['packing_code'],
+                'weight' => $datum['weight'],
+                'width' => $datum['width'],
+                'length' => $datum['length'],
+                'quantity' => $datum['quantity'],
+                'height' => $datum['height'],
+                'description' => $datum['description'],
+            ];
+            $param['packages'][] = $temp;
+        }*/
+        $param['tracking']['type'] = 2;
+        $param['tracking']['tracking_number'] = $tracking;
+        $curl = new Curl();
+        $response = $curl->setRawPostData(json_encode($param))
+            ->setHeader('Content-Type','application/json')
+            ->setHeader('Authorization','Token 424d31352012b39b1c399a669ab4a22a230d74d1ca2f0012e1079a8199c9fbd6')
+            ->post('https://oms.boxme.asia/api/v1/sellers/shipments/create/');
+//        Yii::debug($response);
+        print_r(json_decode($response,true));
+        die;
+        return $response;
     }
 
 

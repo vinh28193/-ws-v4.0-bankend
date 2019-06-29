@@ -43,6 +43,7 @@ use Yii;
  * @property int $stock_in_local
  * @property int $stock_out_local
  * @property string $product_ids list product id Cách nhau dấu (,)
+ * @property string $shipment_bm_code Mã shipment bên boxme
  */
 class TrackingCode extends \common\components\db\ActiveRecord
 {
@@ -64,7 +65,7 @@ class TrackingCode extends \common\components\db\ActiveRecord
             [['store_id', 'manifest_id', 'delivery_note_id', 'package_id', 'warehouse_us_id', 'warehouse_local_id', 'remove', 'created_by', 'created_at', 'updated_by', 'updated_at', 'stock_in_us', 'stock_out_us', 'stock_in_local', 'stock_out_local'], 'integer'],
             [['warehouse_local_note', 'operation_note'], 'string'],
             [['weight', 'quantity', 'dimension_width', 'dimension_length', 'dimension_height'], 'number'],
-            [['version', 'tracking_code', 'order_ids', 'warehouse_us_name', 'status_merge', 'product_ids'], 'string', 'max' => 255],
+            [['version', 'tracking_code', 'order_ids', 'warehouse_us_name', 'status_merge', 'product_ids', 'shipment_bm_code'], 'string', 'max' => 255],
             [['manifest_code', 'delivery_note_code', 'weshop_tag', 'warehouse_local_name', 'warehouse_local_tag', 'status'], 'string', 'max' => 32],
             [['warehouse_local_status'], 'string', 'max' => 10],
         ];
@@ -111,7 +112,8 @@ class TrackingCode extends \common\components\db\ActiveRecord
             'stock_out_us' => Yii::t('db', 'Stock Out Us'),
             'stock_in_local' => Yii::t('db', 'Stock In Local'),
             'stock_out_local' => Yii::t('db', 'Stock Out Local'),
-            'product_ids' => Yii::t('db', 'Product IDs'),
+            'product_ids' => Yii::t('db', 'Product Ids'),
+            'shipment_bm_code' => Yii::t('db', 'Shipment Bm Code'),
         ];
     }
 }
