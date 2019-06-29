@@ -497,7 +497,6 @@ ws.payment = (function ($) {
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
             pub.shipping.receiver_post_code = $('#shippingform-receiver_post_code').val();
             pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
-
             // case 1 //
             if (isSafe) {
                 if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
