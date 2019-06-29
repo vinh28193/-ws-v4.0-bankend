@@ -218,14 +218,15 @@ class OrderController extends BaseApiController
         if ($model->getScenario() == 'confirmPurchase') {
             $product_id = Yii::$app->request->post('product_id');
             $tran = Yii::$app->db->beginTransaction();
-            if($model->total_paid_amount_local < 0){
-                return $this->response(false,'Order has not paid amount!');
+            $status = Product::STATUS_SUPPORTED;
+            if($model->total_paid_amount_local >= 0 && $model->total_paid_amount_local >= $model->total_final_amount_local){
+                $status = Product::STATUS_READY2PURCHASE;
             }
             foreach ($model->products as $product){
                 if($product_id){
                     if($product->id == $product_id){
                         if($product->custom_category_id){
-                            $product->current_status = Product::STATUS_READY2PURCHASE;
+                            $product->current_status = $status;
                             $product->save(0);
                         }else{
                             $tran->rollBack();
@@ -234,7 +235,7 @@ class OrderController extends BaseApiController
                     }
                 }else{
                     if($product->custom_category_id){
-                        $product->current_status = Product::STATUS_READY2PURCHASE;
+                        $product->current_status = $status;
                         $product->save(0);
                     }else{
                         $tran->rollBack();
@@ -243,8 +244,10 @@ class OrderController extends BaseApiController
                 }
             }
             if(in_array($model->current_status,[Order::STATUS_READY2PURCHASE,Order::STATUS_NEW,Order::STATUS_SUPPORTED,Order::STATUS_SUPPORTING])){
-                $model->current_status = Order::STATUS_READY2PURCHASE;
-                $model->ready_purchase = time();
+                $model->current_status = $status;
+                if($status == Order::STATUS_READY2PURCHASE){
+                    $model->ready_purchase = time();
+                }
                 $model->save(false);
             }
             $tran->commit();

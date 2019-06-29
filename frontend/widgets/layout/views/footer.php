@@ -159,7 +159,7 @@ use kartik\depdrop\DepDrop;
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <div class="text-danger">
+                    <div class="font-weight-bold">
                         <?= Yii::t('frontend', 'Please enter your address so we can display shipping fee correctly.') ?>
                     </div>
                 </div>
