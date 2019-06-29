@@ -484,6 +484,7 @@ ws.payment = (function ($) {
             pub.shipping.buyer_province_id = $('#shippingform-buyer_province_id').val();
             pub.shipping.buyer_district_id = $('#shippingform-buyer_district_id').val();
             pub.shipping.buyer_address = $('#shippingform-buyer_address').val();
+            pub.shipping.buyer_post_code = $('#shippingform-buyer_post_code').val();
 
             pub.shipping.enable_receiver = $('#shippingform-enable_receiver').val();
             pub.shipping.receiver_address_id = $('[name="ShippingForm[receiver_address_id]:checked').val();
@@ -494,9 +495,9 @@ ws.payment = (function ($) {
             pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
             pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
-
+            pub.shipping.receiver_post_code = $('#shippingform-receiver_post_code').val();
             pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
-            console.log(pub.shipping);
+
             // case 1 //
             if (isSafe) {
                 if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
