@@ -248,7 +248,6 @@ class OrderController extends BaseApiController
                 if($status == Order::STATUS_READY2PURCHASE){
                     $model->ready_purchase = time();
                 }
-                $model->save(false);
             }
             $tran->commit();
 //            if (isset($post['Order']['checkR2p'])) {
