@@ -62,7 +62,7 @@ class InternationalShippingCalculator extends BaseObject
         ], $params);
 
         $request->setData(Json::encode($params));
-        \Yii::info($params);
+        \Yii::info($request->getData());
         $request->setUserId($userId);
         $request->setCountryCode($countryCode);
         /** @var $apires CalculateFeeResponse */
@@ -72,6 +72,7 @@ class InternationalShippingCalculator extends BaseObject
         $data = $response->getData();
         $success = $response->getError() === false && $data->count() > 0;
         $message = $response->getErrorMessage();
+        \Yii::info($message);
         if (!$success && WeshopHelper::isEmpty($message) && isset($status->details) && is_string($status->details)) {
             $message = $status->details;
         }
