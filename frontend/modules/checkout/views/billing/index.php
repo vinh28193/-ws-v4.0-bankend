@@ -21,7 +21,7 @@ use yii\helpers\ArrayHelper; ?>
 </style>
 <div class="container">
 
-    <div class="card card-checkout">
+    <div class="card card-checkout card-order" data-key="<?= $order->ordercode ?>">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
