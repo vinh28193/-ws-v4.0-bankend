@@ -326,25 +326,9 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             'country' => $this->getStoreManager()->store->country_code,
             'zipcode' => '',
         ];
-        if ($this->getUser() && ($defaultShippingAddress = $this->getUser()->defaultShippingAddress)) {
-            $shipTo = ArrayHelper::merge($shipTo, [
-                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
-                'address' => $defaultShippingAddress->address,
-                'phone' => $defaultShippingAddress->phone,
-                'province' => $defaultShippingAddress->province_id,
-                'district' => $defaultShippingAddress->district_id,
-                'zipcode' => $defaultShippingAddress->post_code
-            ]);
-        } elseif ($this->getUser() && ($address = $this->getUser()->defaultPrimaryAddress)) {
-            $shipTo = ArrayHelper::merge($shipTo, [
-                'contact_name' => implode(' ', [$defaultShippingAddress->first_name, $defaultShippingAddress->last_name]),
-                'address' => $address->address,
-                'phone' => $address->phone,
-                'province' => $address->province_id,
-                'district' => $address->district_id,
-                'zipcode' => $address->post_code
-            ]);
-        } else if(($userInfoCookie = (new UserCookies())->setUserCookies())) {
+        $userInfoCookie = new UserCookies();
+        $userInfoCookie->setUser();
+        if($userInfoCookie && $userInfoCookie->district_id && $userInfoCookie->province_id) {
             $shipTo = ArrayHelper::merge($shipTo, [
                 'contact_name' => $userInfoCookie->name ? $userInfoCookie->name : $shipTo['contact_name'],
                 'address' => $userInfoCookie->address ? $userInfoCookie->address : $shipTo['address'],
@@ -353,6 +337,8 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'district' => $userInfoCookie->district_id ? $userInfoCookie->district_id : $shipTo['district'],
                 'zipcode' => $userInfoCookie->zipcode ? $userInfoCookie->zipcode : $shipTo['zipcode']
             ]);
+        }else{
+            return [];
         }
         $weight = $this->getShippingWeight() * 1000;
         $params = [

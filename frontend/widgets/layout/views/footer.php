@@ -1,3 +1,13 @@
+<?php
+use common\components\UserCookies;
+use frontend\modules\payment\models\ShippingForm;
+use kartik\depdrop\DepDrop;
+use yii\helpers\Html;
+use yii\helpers\Url;
+/**
+ * @var ShippingForm $shippingForm
+ */
+?>
 <footer class="footer">
     <div class="top">
         <div class="container">
@@ -146,52 +156,70 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title"><?= Yii::t('frontend', 'Select Your Address') ?></div>
+                <div class="modal-title title"><?= Yii::t('frontend', 'Select Your Address') ?></div>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <div>
+                    <div class="text-danger">
                         <?= Yii::t('frontend', 'Please enter your address so we can display shipping fee correctly.') ?>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <div class="input-group formIconTitle">
                         <span class="input-group-addon">
                             <i class="la la-user"></i>
                         </span>
-                        <input name="fullName_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Full Name') ?>">
+                        <input name="fullName_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Full Name') ?>" value="<?= $shippingForm->receiver_name ?>">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <div class="input-group formIconTitle">
                         <span class="input-group-addon">
                             <i class="la la-phone"></i>
                         </span>
-                        <input name="phone_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Phone') ?>">
+                        <input name="phone_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Phone') ?>" value="<?= $shippingForm->receiver_phone ?>">
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="input-group formIconTitle">
-                        <span class="input-group-addon">
-                            <i class="la la-map-marker"></i>
-                        </span>
-                        <input name="city_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','City') ?>">
-                    </div>
+                    <?=
+                    \kartik\select2\Select2::widget([
+                        'data' => $shippingForm->getProvinces(),
+                        'id' => 'city_default',
+                        'name' => 'city_default',
+                        'value' => $shippingForm->receiver_province_id,
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'placeholder' => Yii::t('frontend', 'Choose the province'),
+                        ],
+                    ]);
+                    ?>
                 </div>
                 <div class="form-group">
-                    <div class="input-group formIconTitle">
-                        <span class="input-group-addon">
-                            <i class="la la-map-marker"></i>
-                        </span>
-                        <input name="district_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','District') ?>">
-                    </div>
+                    <?=
+                    DepDrop::widget([
+                        'type' => DepDrop::TYPE_SELECT2,
+                        'name' => 'district_default',
+                        'attribute' => 'district_default',
+                        'value' => $shippingForm->receiver_district_id,
+                        'select2Options' => [
+                            'pluginOptions' => ['allowClear' => true],
+                        ],
+                        'pluginOptions' => [
+                            'depends' => ['city_default'],
+                            'placeholder' => Yii::t('frontend', 'Choose the district'),
+                            'url' => '/checkout/shipping/sub-district',
+                            'loadingText' => Yii::t('frontend', 'Loading district ...'),
+                            'initialize' => true,
+                            'params' => ['hiddenReceiverDistrictId']
+                        ],
+                    ]);
+                    ?>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" style="display: none"
-                        class="btn btn-primary"><?= Yii::t('frontend', 'Confirm') ?></button>
-                <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal"><?= Yii::t('frontend', 'Close') ?></button>
+                <button type="button"
+                        id="setDefaultAddressSmBtn"
+                        class="btn btn-success"><?= Yii::t('frontend', 'Confirm') ?></button>
             </div>
         </div>
     </div>

@@ -2,9 +2,11 @@
 
 namespace frontend\controllers;
 
+use common\components\UserCookies;
 use Yii;
 use common\models\Customer;
 use frontend\models\CustomerSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -123,5 +125,28 @@ class CustomerController extends Controller
         }
 
         return $this->render('@frontend/views/common/404');
+    }
+    public function actionSaveAddressDefault(){
+        $post = Yii::$app->request->post();
+        $userCookie = new UserCookies();
+        $userCookie->setUser();
+//        if(($name = ArrayHelper::getValue($post,'name'))){
+//            $userCookie->name = $name;
+//        }
+//        if(($phone = ArrayHelper::getValue($post,'phone'))){
+//            $userCookie->phone = $phone;
+//        }
+        if(($city_id = ArrayHelper::getValue($post,'city_id'))){
+            $userCookie->province_id = $city_id;
+        }
+        if(($district_id = ArrayHelper::getValue($post,'district_id'))){
+            $userCookie->district_id = $district_id;
+        }
+        Yii::$app->response->format = 'json';
+        if(!$userCookie->province_id || !$userCookie->district_id){
+            return ['success'=> false,'message' => Yii::t('frontend','Save Fail')];
+        }
+        $userCookie->setCookies();
+        return ['success'=> true,'message' => Yii::t('frontend','Save Success')];
     }
 }

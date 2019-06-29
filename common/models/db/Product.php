@@ -57,7 +57,7 @@ use Yii;
  * @property int $total_final_amount_local
  * @property string $tracking_codes list tracking_code seller, Cách nhau dấu (,)
  *
- * @property CategoryCustomPolicy $customCategory
+ * @property CategoryGroup $customCategory
  * @property Order $order
  * @property Seller $seller
  * @property PurchaseProduct[] $purchaseProducts
@@ -84,7 +84,7 @@ class Product extends \common\components\db\ActiveRecord
             [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_fee_product_local', 'price_purchase', 'shipping_fee_purchase', 'tax_fee_purchase', 'total_weight_temporary', 'seller_refund_amount'], 'number'],
             [['portal', 'sku', 'parent_sku', 'version', 'condition', 'note_boxme', 'current_status'], 'string', 'max' => 255],
             [['product_link'], 'string', 'max' => 500],
-            [['custom_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoryCustomPolicy::className(), 'targetAttribute' => ['custom_category_id' => 'id']],
+            [['custom_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoryGroup::className(), 'targetAttribute' => ['custom_category_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seller::className(), 'targetAttribute' => ['seller_id' => 'id']],
         ];
@@ -153,7 +153,7 @@ class Product extends \common\components\db\ActiveRecord
      */
     public function getCustomCategory()
     {
-        return $this->hasOne(CategoryCustomPolicy::className(), ['id' => 'custom_category_id']);
+        return $this->hasOne(CategoryGroup::className(), ['id' => 'custom_category_id']);
     }
 
     /**

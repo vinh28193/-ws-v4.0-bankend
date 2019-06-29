@@ -111,7 +111,7 @@ class ShippingForm extends Model
     private $_buyerAddress;
 
     /**
-     * @return Address|null
+     * @return Address[]|null
      */
     public function getBuyerAddress()
     {
@@ -149,7 +149,7 @@ class ShippingForm extends Model
         }else {
             $this->enable_buyer = self::YES;
             $userCookies = new UserCookies();
-            $userCookies->setUserCookies();
+            $userCookies->setUser();
             $this->receiver_name = $userCookies->name;
             $this->buyer_name = $userCookies->name;
             $this->receiver_email = $userCookies->email;
@@ -167,11 +167,25 @@ class ShippingForm extends Model
         }
         if (!WeshopHelper::isEmpty($this->getBuyerAddress())) {
             $this->enable_buyer = self::NO;
-            $this->buyer_address_id = $this->getBuyerAddress()->id;
+            $buy_default = $this->getBuyerAddress()[0];
+            $this->buyer_address_id = $buy_default->id;
+            $this->buyer_district_id = $buy_default->district_id;
+            $this->buyer_province_id = $buy_default->province_id;
+            $this->buyer_name = $buy_default->last_name.' '.$buy_default->first_name;
+            $this->buyer_phone = $buy_default->phone;
+            $this->buyer_email = $buy_default->email;
+            $this->buyer_address = $buy_default->address;
         }
         if (!WeshopHelper::isEmpty($this->getReceiverAddress())) {
             $this->enable_receiver = self::NO;
-            $this->receiver_address_id = $this->getReceiverAddress()[0]->id;
+            $re_default = $this->getReceiverAddress()[0];
+            $this->receiver_address_id = $re_default->id;
+            $this->receiver_district_id = $re_default->district_id;
+            $this->receiver_province_id = $re_default->province_id;
+            $this->receiver_name = $re_default->last_name.' '.$re_default->first_name;
+            $this->receiver_phone = $re_default->phone;
+            $this->receiver_email = $re_default->email;
+            $this->receiver_address = $re_default->address;
         }
     }
 
