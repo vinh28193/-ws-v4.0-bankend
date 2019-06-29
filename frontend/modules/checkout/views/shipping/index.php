@@ -149,9 +149,6 @@ $this->registerJs($js);
                 if ($buyerAddress !== null) {
                     echo 'Name:' . $buyerAddress->first_name . '' . $buyerAddress->last_name;
                     echo $form->field($shippingForm, 'buyer_address_id')->hiddenInput()->label(false);
-                    if ($shippingForm->enable_buyer === ShippingForm::NO) {
-                        $this->registerJs('ws.payment.calculatorShipping();');
-                    }
                 } else {
                     $shippingForm->enable_buyer = ShippingForm::YES;
                 }

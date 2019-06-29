@@ -85,6 +85,8 @@ class PaymentController extends BasePaymentController
         if ($shippingForm->other_receiver !== 'false') {
 
             if ((int)$shippingForm->enable_receiver === ShippingForm::YES) {
+                var_dump($shippingForm);
+                die();
                 $shippingParams['receiver_name'] = $shippingForm->receiver_name;
                 $shippingParams['receiver_address'] = $shippingForm->receiver_address;
                 $shippingParams['receiver_phone'] = $shippingForm->receiver_phone;
