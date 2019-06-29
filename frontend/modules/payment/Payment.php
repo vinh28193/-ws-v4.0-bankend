@@ -326,6 +326,9 @@ class Payment extends Model
         foreach ($providers as $provider) {
             foreach ($provider['paymentMethodProviders'] as $paymentMethodProvider) {
                 $k = (int)$paymentMethodProvider['paymentMethod']['group'];
+                if ($paymentMethodProvider['paymentMethod']['group'] == PaymentService::PAYMENT_METHOD_GROUP_INSTALMENT && ($this->getTotalAmountDisplay() < PaymentService::INSTALMENT_MIN_AMOUNT)) {
+                    continue;
+                }
 
                 $group[$k][] = $paymentMethodProvider;
             }
