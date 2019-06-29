@@ -105,7 +105,7 @@ class ProductController extends BaseApiController
             Yii::$app->wsLog->push('order', "update product {$post['title']}", null, [
                 'id' => $post['order_path'],
                 'request' => $this->post,
-                'response' => $dirtyAttributes
+                'response' => $messages
             ]);
             return $this->response(true, 'success', $product);
         }
