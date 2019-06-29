@@ -308,11 +308,10 @@ class PaymentController extends BasePaymentController
         }
         $payment = new Payment($bodyParams);
         $payment->setOrders($orders);
-        if (($methodProvider = PaymentService::getMethodProvider($payment->payment_provider, $payment->payment_method)) === null) {
-            $payment->payment_method_name = $methodProvider->paymentMethod->code;
-            $payment->payment_provider_name = $methodProvider->paymentProvider->code;
-        } else {
+        if ($payment->payment_provider === null && $payment->payment_method === null) {
             $payment->initDefaultMethod();
+        } else {
+            $payment->getPaymentMethodProviderName();
         }
 
         $paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $payment->transaction_code]);

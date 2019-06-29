@@ -29,7 +29,9 @@ class CheckoutController extends FrontendController
     public function defaultLayoutParams()
     {
         return ArrayHelper::merge(parent::defaultLayoutParams(), [
-            'breadcrumbParam' => $this->breadcrumbParam
+            'breadcrumbParam' => $this->title === null ? [] : [
+                $this->title => '#'
+            ]
         ]);
     }
 
@@ -39,9 +41,6 @@ class CheckoutController extends FrontendController
     public function init()
     {
         parent::init();
-        $this->breadcrumbParam = [
-            $this->title => '#'
-        ];
     }
 
     public function ogMetaTag()

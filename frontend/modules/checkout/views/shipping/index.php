@@ -10,7 +10,6 @@ use yii\helpers\ArrayHelper;
 use frontend\modules\payment\models\ShippingForm;
 
 /* @var yii\web\View $this */
-/* @var integer $activeStep */
 /* @var frontend\modules\payment\Payment $payment */
 /* @var ShippingForm $shippingForm */
 /* @var array $provinces */

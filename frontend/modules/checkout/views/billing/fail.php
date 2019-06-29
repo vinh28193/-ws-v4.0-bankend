@@ -55,7 +55,7 @@ use yii\helpers\Html;
                         </button>
                     </div>
                     <div class="modal-body">
-                        <?php echo $payment->initPaymentView(); ?>
+                        <?php echo $payment; ?>
                     </div>
                 </div>
             </div>
