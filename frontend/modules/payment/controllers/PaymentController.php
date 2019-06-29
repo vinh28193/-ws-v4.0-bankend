@@ -70,6 +70,7 @@ class PaymentController extends BasePaymentController
             $shippingParams['buyer_province_name'] = $buyer->province_name;
             $shippingParams['buyer_district_name'] = $buyer->district_name;
             $shippingParams['buyer_post_code'] = $buyer->post_code;
+
             if ((int)$shippingForm->enable_receiver === ShippingForm::NO) {
                 $shippingParams['receiver_name'] = $buyer->first_name;
                 $shippingParams['receiver_address'] = $buyer->address;
@@ -84,6 +85,8 @@ class PaymentController extends BasePaymentController
         if ($shippingForm->other_receiver !== 'false') {
 
             if ((int)$shippingForm->enable_receiver === ShippingForm::YES) {
+                var_dump($shippingForm);
+                die();
                 $shippingParams['receiver_name'] = $shippingForm->receiver_name;
                 $shippingParams['receiver_address'] = $shippingForm->receiver_address;
                 $shippingParams['receiver_phone'] = $shippingForm->receiver_phone;

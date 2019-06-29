@@ -15,6 +15,7 @@ class SystemStateProvince extends \common\models\db\SystemStateProvince
         if (!($provinces = Yii::$app->cache->get($cacheKey)) || $refreshCache) {
             $query = new Query();
             $query->from(['p' => self::tableName()]);
+            $query->orderBy('display_order , name');
             $query->select(["id" => "p.$dataKey", "name" => "p.$dataValue"]);
             $query->where(['AND', ['p.remove' => 0], ['p.country_id' => $country]]);
             $provinces = ArrayHelper::map($query->all(self::getDb()), $dataKey, $dataValue);

@@ -121,7 +121,7 @@ $userCookies->setUser();
                         <ul class="list-dot">
                             <li><?= Yii::t('frontend','Internal Shipping fee: <span id="shipping_fee">{shipping_fee}</span>',['shipping_fee' => $userCookies->province_id && $userCookies->district_id ? $internal_shipping_fee : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>']) ?></li>
                             <li>
-                                <?= Yii::t('frontend','Estimate time: <span id="time_estimate_min">{min_time}</span> - <span id="time_estimate_max">{max_time}</span> days',['min_time'=> $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'min_delivery_time','') : '','max_time' => $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'max_delivery_time','<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>') : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>' ]) ?><br>
+                                <?= $userCookies->checkAddress() ? Yii::t('frontend','Estimate time: <span id="time_estimate_min">{min_time}</span> - <span id="time_estimate_max">{max_time}</span> days',['min_time'=> $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'min_delivery_time','') : '','max_time' => $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'max_delivery_time','<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>') : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>' ]) : '' ?><br>
                                 (<?= Yii::t('frontend','Ship to <span class="text-blue">{district_name}, {province_name}</span>',$userCookies->checkAddress() ? ['district_name' => $userCookies->getDistrict() ? $userCookies->getDistrict()->name : '', 'province_name' => $userCookies->getProvince() ? $userCookies->getProvince()->name : ''] : ['district_name' => '', 'province_name' => '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>']) ?>)
                             </li>
                         </ul>
@@ -224,17 +224,18 @@ JS;
             </div>
         <?php }else if ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0){?>
             <div class="btn-group-detail">
-                <div class="btn-group-primary">
-                    <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
-                </div>
                 <?php if ($item->checkInstallment()){?>
+                    <div class="btn-group-primary">
+                        <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
+                    </div>
                     <div class="btn-group-secondary">
                         <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> <?= Yii::t('frontend','Installment') ?></button>
                         <button class="btn btn-outline-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
                     </div>
                 <?php }else{ ?>
-                    <div class="btn-group-primary">
-                        <button class="btn btn-outline-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
+                    <div class="btn-group-secondary">
+                        <button class="btn btn-amazon text-uppercase" id="buyNowBtn" style="width: 70%"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
+                        <button class="btn btn-outline-info text-uppercase" id="addToCart" style="width: auto"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
                     </div>
                 <?php } ?>
             </div>
