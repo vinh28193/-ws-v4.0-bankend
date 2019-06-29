@@ -25,7 +25,7 @@ foreach ($item->variation_options as $index => $variationOption) {
         }
     }
 }
-$instockQuanty = 0;
+$instockQuanty = $item->type = BaseProduct::TYPE_EBAY ? 0 : 50;
 if ($item->available_quantity) {
     $instockQuanty = $item->quantity_sold ? $item->available_quantity - $item->quantity_sold : $item->available_quantity;
 }
@@ -222,7 +222,7 @@ JS;
             <div class="" id="outOfStock">
                 <h3 style="color: red"><?= Yii::t('frontend', 'Out of Time') ?></h3>
             </div>
-        <?php }else if ($item->getLocalizeTotalPrice() > 0 && $current_provider && ($item->type === BaseProduct::TYPE_EBAY && $instockQuanty > 0)){?>
+        <?php }else if ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0){?>
             <div class="btn-group-detail">
                 <div class="btn-group-primary">
                     <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>

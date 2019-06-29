@@ -132,7 +132,11 @@ class ConfirmRule extends BaseRule
 //                foreach ($supportIds as $supportId) {
 //                    $converted[$supportId] = $array[$supportId];
 //                }
-                $converted = $this->loadConfirmPercentBySupporter($supportIds);
+                $converted = [];
+                $results = $this->loadConfirmPercentBySupporter($supportIds);
+                foreach ($supportIds as $id){
+                    $converted[$id] = isset($results[$id]) ? $results[$id] : 0;
+                }
                 $agv = array_sum($converted) / count($converted);
                 $confirmPercent = [
                     'expired_at' => $this->getDayExpiredAt(),
