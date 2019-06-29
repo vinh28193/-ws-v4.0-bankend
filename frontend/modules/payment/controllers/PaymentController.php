@@ -269,8 +269,9 @@ class PaymentController extends BasePaymentController
         // ToDo Push GA Checkout @Phuchc
 
         $res = $payment->processPayment();
+        $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         if ($res->success === false) {
-            return $this->response(false, $res->message);
+            return $this->response(false, $res->message, $onFailedUrl);
         }
         $paymentTransaction->third_party_transaction_code = $res->token;
         $paymentTransaction->third_party_transaction_status = $res->status;
