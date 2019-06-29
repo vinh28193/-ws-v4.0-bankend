@@ -105,6 +105,11 @@ class PaymentService
         return Url::to("/checkout/invoice/$code/success.html", true);
     }
 
+    public static function createBillingUrl($orderCode)
+    {
+        return Url::to("/order-$orderCode/billing.html", true);
+    }
+
     public
     static function getInstallmentBankIcon($code)
     {
