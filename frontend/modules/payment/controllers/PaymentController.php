@@ -242,7 +242,7 @@ class PaymentController extends BasePaymentController
                     }
                 }
 
-                $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
+                $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id, $this->storeManager->store->country_code, 8);
                 $updateOrderAttributes['total_final_amount_local'] = $order->total_amount_local - $order->total_promotion_amount_local;
                 $order->updateAttributes($updateOrderAttributes);
                 $orders[$order->ordercode] = $order;
@@ -253,7 +253,6 @@ class PaymentController extends BasePaymentController
             Yii::error($exception, __METHOD__);
             return $this->response(false, $exception->getMessage());
         }
-
 
 
         // ToDo Push GA Checkout @Phuchc
@@ -282,7 +281,7 @@ class PaymentController extends BasePaymentController
             $childTransaction->service_code = $order->courier_service;
             $childTransaction->save(false);
             $employee = new Employee();
-            if(($assign = $employee->getAssign()) !== null){
+            if (($assign = $employee->getAssign()) !== null) {
                 $order->sale_support_id = $assign->id;
                 $order->support_email = $assign->email;
                 $order->save(false);
