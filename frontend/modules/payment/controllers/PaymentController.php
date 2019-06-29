@@ -4,6 +4,7 @@
 namespace frontend\modules\payment\controllers;
 
 
+use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
 use common\models\Address;
 use common\models\db\TargetAdditionalFee;
@@ -249,34 +250,43 @@ class PaymentController extends BasePaymentController
             return $this->response(false, $exception->getMessage());
         }
 
-        // Todo remove cart after create payment success
-        foreach ($orders as $order) {
-            /** @var  $order Order */
-            $childTransaction = clone $paymentTransaction;
-            $childTransaction->id = null;
-            $childTransaction->isNewRecord = true;
-            $childTransaction->transaction_amount_local = $order->total_final_amount_local;
-            $childTransaction->total_discount_amount = 0;
-            $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
-            $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
-            $childTransaction->order_code = $order->ordercode;
-            $childTransaction->courier_name = $order->courier_name;
-            $childTransaction->service_code = $order->courier_service;
-            $childTransaction->save(false);
-            $order->removeCart();
-        }
+
 
         // ToDo Push GA Checkout @Phuchc
 
         $res = $payment->processPayment();
         $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         if ($res->success === false) {
-            return $this->response(false, $res->message, $onFailedUrl);
+            return $this->response(false, $res->message);
         }
         $paymentTransaction->third_party_transaction_code = $res->token;
         $paymentTransaction->third_party_transaction_status = $res->status;
         $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
         $paymentTransaction->save(false);
+        // Todo remove cart after create payment success
+        foreach ($orders as $order) {
+            /** @var  $order Order */
+            $childTransaction = clone $paymentTransaction;
+            $childTransaction->id = null;
+            $childTransaction->isNewRecord = true;
+            $childTransaction->transaction_amount_local = $order->getTotalFinalAmount();
+            $childTransaction->total_discount_amount = $order->discountAmount;
+            $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
+            $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
+            $childTransaction->order_code = $order->ordercode;
+            $childTransaction->courier_name = $order->courier_name;
+            $childTransaction->service_code = $order->courier_service;
+            $childTransaction->save(false);
+            $employee = new Employee();
+            if(($assign = $employee->getAssign()) !== null){
+                $order->sale_support_id = $assign->id;
+                $order->support_email = $assign->email;
+                $order->save(false);
+            }
+
+            $order->removeCart();
+        }
+
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res);
