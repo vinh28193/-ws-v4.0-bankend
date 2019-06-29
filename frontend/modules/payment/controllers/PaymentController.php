@@ -322,6 +322,9 @@ class PaymentController extends BasePaymentController
         }
         $payment->return_url = PaymentService::createReturnUrl($payment->payment_provider);
         $payment->cancel_url = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
+        if($payment->type === 'order' && $paymentTransaction->order_code !== null){
+            $payment->cancel_url = PaymentService::createBillingUrl($paymentTransaction->order_code);
+        }
         $res = $payment->processPayment();
         if ($res->success === false) {
             return $this->response(false, $res->message);

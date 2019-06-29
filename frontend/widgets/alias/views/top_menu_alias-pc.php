@@ -11,8 +11,7 @@ use common\models\cms\WsAliasItem;
   <?php foreach ($categories as $k => $category) {?>
     <li class="li-item-cate">
         <a class="title-cate" href="<?= $category->url ?>">
-            <i class="style-i">
-            </i><?= $category->name ?> <i class="la la-angle-right float-right mt-2"></i></a>
+            <?= $category->name ?> <i class="la la-angle-right float-right mt-2"></i></a>
         <div class="sub-menu-2">
             <div class="ebay-sub-menu ebay ml-1">
                 <div class="row">

@@ -43,6 +43,12 @@ $js = <<< JS
             ws.payment.calculatorShipping();
         });
     };
+    
+     ws.initEventHandler('shipping-form','changeZipCode','keyup','#shippingform-buyer_post_code, #shippingform-receiver_post_code',function(event) {
+          event.preventDefault();
+          ws.payment.calculatorShipping();
+     });
+     
     var otherReceiver =  $('#$otherReceiver');
     // showReceiver(otherReceiver);
     ws.initEventHandler('shipping-form','change','change','#$otherReceiver',function(event) {
@@ -328,11 +334,11 @@ $this->registerJs($js);
             </div>
             <div class="product-header row pt-2">
                 <div class="col-md-4"></div>
-                <div class="col-md-2 text-center"><?=Yii::t('frontend','Price');?></div>
-                <div class="col-md-1 text-center"><?=Yii::t('frontend','Quantity');?></div>
-                <div class="col-md-2 text-center"><?=Yii::t('frontend','Tax/Domestic shipping');?></div>
-                <div class="col-md-1 text-center"><?=Yii::t('frontend','Purchase Fee');?></div>
-                <div class="col-md-2 text-center"><?=Yii::t('frontend','Total amount');?></div>
+                <div class="col-md-2 text-center"><?= Yii::t('frontend', 'Price'); ?></div>
+                <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Quantity'); ?></div>
+                <div class="col-md-2 text-center"><?= Yii::t('frontend', 'Tax/Domestic shipping'); ?></div>
+                <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Purchase Fee'); ?></div>
+                <div class="col-md-2 text-center"><?= Yii::t('frontend', 'Total amount'); ?></div>
             </div>
             <div class="row product-list">
                 <?php foreach ($order->products as $product): ?>
@@ -390,24 +396,24 @@ $this->registerJs($js);
                 <div class="col-md-7 col-sm-12"></div>
                 <div class="col-md-5 col-sm-12">
                     <div class="additional-list">
-<!--                        <div class="dropdown courier-dropdown">-->
-<!--                            <button class="btn btn-secondary dropdown-toggle" type="button"-->
-<!--                                    id="courierDropdownButton" data-toggle="dropdown" aria-haspopup="true"-->
-<!--                                    aria-expanded="false">-->
-<!--                                    <span class="text">-->
-<!--                                        <p style="margin-bottom: 0">Choose shipping service</p>-->
-<!--                                        <p class="courier-name" style="margin-bottom: 0">No shipping service</p>-->
-<!--                                    </span>-->
-<!--                            </button>-->
-<!--                            <div class="dropdown-menu" aria-labelledby="courierDropdownButton" id="courierDropdownMenu">-->
-<!--                                <span class="dropdown-item">-->
-<!--                                     Boxme International Express (12-15 day )-->
-<!--                                </span>-->
-<!--                                <span class="dropdown-item">-->
-<!--                                    Boxme International Express (12-15 day )-->
-<!--                                </span>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <!--                        <div class="dropdown courier-dropdown">-->
+                        <!--                            <button class="btn btn-secondary dropdown-toggle" type="button"-->
+                        <!--                                    id="courierDropdownButton" data-toggle="dropdown" aria-haspopup="true"-->
+                        <!--                                    aria-expanded="false">-->
+                        <!--                                    <span class="text">-->
+                        <!--                                        <p style="margin-bottom: 0">Choose shipping service</p>-->
+                        <!--                                        <p class="courier-name" style="margin-bottom: 0">No shipping service</p>-->
+                        <!--                                    </span>-->
+                        <!--                            </button>-->
+                        <!--                            <div class="dropdown-menu" aria-labelledby="courierDropdownButton" id="courierDropdownMenu">-->
+                        <!--                                <span class="dropdown-item">-->
+                        <!--                                     Boxme International Express (12-15 day )-->
+                        <!--                                </span>-->
+                        <!--                                <span class="dropdown-item">-->
+                        <!--                                    Boxme International Express (12-15 day )-->
+                        <!--                                </span>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
                         <table class="table table-borderless table-fee">
                             <tr data-role="fee" data-fee="international_shipping_fee">
                                 <th class="header"><?= Yii::t('frontend', 'Shipping fee'); ?>
@@ -418,8 +424,8 @@ $this->registerJs($js);
                                     ])
                                     ?>
                                     <i class="la la-question-circle code-info" data-toggle="tooltip"
-                                       data-placement="top" title="<?= $tooltipMessage;?>"
-                                       data-original-title="<?= $tooltipMessage;?>"></i>
+                                       data-placement="top" title="<?= $tooltipMessage; ?>"
+                                       data-original-title="<?= $tooltipMessage; ?>"></i>
                                 </th>
                                 <td class="value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
                             </tr>
