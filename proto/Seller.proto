@@ -19,10 +19,38 @@ message WsCreateCahinResponse {
 
 // end  create cashin in by WsCreateTopupRequest
 
+
+message CreateShipmentRequest {
+    string Country  = 1; // Ma Quoc Gia
+    int32  UserId   = 2; // User id
+    int32  Source   = 3; // Nguon tao (weshop : 2)
+    string Param    = 4;  // chuoi json dumps
+}
+message CreateShipmentResponse {
+    bool    Error       = 1; // True, Fasle
+    string  Message     = 2; //Message rror
+    string  Data        = 3; //chuoi json dumps Data
+}
+
+
+
+message SyncProductRequest {
+    string Data = 1;
+}
+
+message SyncProductResponse {
+    bool    Error               = 1;
+    string  Message             = 2;
+}
+
+
+
 service SellerService {
 
     // grpc create topup from weshop
     rpc WsCreateCahin (WsCreateCahinRequest) returns (WsCreateCahinResponse) {};
+	rpc CreateShipment (CreateShipmentRequest) returns (CreateShipmentResponse) {};
+	rpc SyncProduct(SyncProductRequest) returns (SyncProductResponse) {};
 
 
 }
