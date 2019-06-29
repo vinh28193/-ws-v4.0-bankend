@@ -167,7 +167,7 @@ class BaseApiController extends \yii\rest\Controller
                     'formatters' => [
                         Response::FORMAT_JSON => [
                             'class' => 'yii\web\JsonResponseFormatter',
-                            'prettyPrint' => true, // use "pretty" output in debug mode
+//                            'prettyPrint' => true, // use "pretty" output in debug mode
                         ],
                     ],
                 ]
