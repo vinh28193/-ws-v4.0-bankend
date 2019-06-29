@@ -155,17 +155,17 @@ class Product extends DbProduct
 
     public function getUsShippingFee()
     {
-        return self::getProductFees()->andWhere(['name' => 'origin_shipping_fee'])->one();
+        return self::getProductFees()->andWhere(['name' => 'shipping_fee'])->one();
     }
 
     public function getUnitPrice()
     {
-        return self::getProductFees()->andWhere(['name' => 'product_price_origin'])->one();
+        return self::getProductFees()->andWhere(['name' => 'product_price'])->one();
     }
 
     public function getUsTax()
     {
-        return self::getProductFees()->andWhere(['type' => 'tax_fee_origin'])->one();
+        return self::getProductFees()->andWhere(['name' => 'tax_fee'])->one();
     }
 
     /**
