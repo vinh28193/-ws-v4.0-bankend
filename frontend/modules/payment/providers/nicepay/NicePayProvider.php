@@ -208,6 +208,9 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
     public function create(Payment $payment)
     {
         $bankCd = !empty($payment->payment_bank_code) ? $payment->payment_bank_code : '';
+        if (strpos($bankCd, 'ATM_') !== false) {
+            $bankCd = str_replace('ATM_', '', $bankCd);
+        }
         $dateNow = date('Ymd');
         $vaExpiryDate = date('Ymd', strtotime($dateNow . ' +1 day')); // Set VA expiry date +1 day (optional)
         // Populate Mandatory parameters to send
@@ -236,7 +239,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
         $this->getClient()->getData()->set('deliveryState', $payment->customer_city);
         $this->getClient()->getData()->set('deliveryPostCd', $payment->customer_postcode);
         $this->getClient()->getData()->set('deliveryCountry', $payment->customer_country);
-        if ($payment->payment_method == NicePayUtils::PAYMENT_METHOD && $payment->total_amount < NicePayUtils::AMOUNT_REQUIRED) {
+        if ($payment->payment_method == NicePayUtils::PAYMENT_METHOD && $payment->getTotalAmountDisplay() < NicePayUtils::AMOUNT_REQUIRED) {
             return new PaymentResponse(false, "Amount lesser than installment require", 'nicepay');
         }
         $logPaymentGateway = new PaymentGatewayLogs();
@@ -292,7 +295,6 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                 $logPaymentGateway->save(false);
                 return new PaymentResponse(false, 'Lỗi cổng thanh toán', 'nicepay');
             } else {
-
                 $this->getClient()->getData()->set('payMethod', '02');
                 $this->getClient()->getData()->set('bankCd', $bankCd);
                 $this->getClient()->getData()->set('vacctValidDt', $vaExpiryDate); // Set VA expiry date example: +1 day
@@ -334,7 +336,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                 return new PaymentResponse(false, 'Lỗi cổng thanh toán', 'nicepay');
             }
         } catch (Exception $exception) {
-            $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
+            $logPaymentGateway->response_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logPaymentGateway->save(false);
             return new PaymentResponse(false, $exception->getMessage(), 'nicepay');

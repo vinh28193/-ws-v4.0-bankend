@@ -141,3 +141,58 @@
         </div>
     </div>
 </div>
+<div class="modal" id="modal-address" tabindex="-1" role="dialog" aria-labelledby="NotifyConfirmTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><?= Yii::t('frontend', 'Select Your Address') ?></div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div>
+                        <?= Yii::t('frontend', 'Please enter your address so we can display shipping fee correctly.') ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group formIconTitle">
+                        <span class="input-group-addon">
+                            <i class="la la-user"></i>
+                        </span>
+                        <input name="fullName_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Full Name') ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group formIconTitle">
+                        <span class="input-group-addon">
+                            <i class="la la-phone"></i>
+                        </span>
+                        <input name="phone_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Phone') ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group formIconTitle">
+                        <span class="input-group-addon">
+                            <i class="la la-map-marker"></i>
+                        </span>
+                        <input name="city_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','City') ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group formIconTitle">
+                        <span class="input-group-addon">
+                            <i class="la la-map-marker"></i>
+                        </span>
+                        <input name="district_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','District') ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="display: none"
+                        class="btn btn-primary"><?= Yii::t('frontend', 'Confirm') ?></button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal"><?= Yii::t('frontend', 'Close') ?></button>
+            </div>
+        </div>
+    </div>
+</div>

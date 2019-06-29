@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
+use common\components\boxme\BoxMeClient;
 use common\logs\PackingLogs;
 use common\logs\TrackingLogs;
 use common\models\draft\DraftDataTracking;
@@ -238,7 +239,9 @@ class ServiceUsSendingController extends BaseApiController
         }
         $order_ids = explode(',',$trackingCode->order_ids);
         $product_ids = explode(',',$trackingCode->product_ids);
+        $dataShipment = [];
         foreach ($this->post['info'] as $info){
+            $datumShipment = [];
             $order_id = ArrayHelper::getValue($info,'order_id');
             $product_id = ArrayHelper::getValue($info,'product_id');
             $quantity = ArrayHelper::getValue($info,'quantity');
@@ -253,6 +256,11 @@ class ServiceUsSendingController extends BaseApiController
                     if(in_array($product->order_id,$order_ids)){
                         $order_ids[] = $product->order_id;
                     }
+                    $datumShipment['sku'] = $product->sku;
+                    $datumShipment['quantity'] = $quantity;
+                    $datumShipment['img_check'] = 1;
+                    $datumShipment['description'] = $product->product_name;
+                    $datumShipment['sku'] = $product->sku;
                     $trackingCode->quantity = $trackingCode->quantity ? $trackingCode->quantity + $quantity : $quantity;
                     $order->updateSellerShipped();
                     $order->save(false);
@@ -290,6 +298,7 @@ class ServiceUsSendingController extends BaseApiController
 
                     Yii::$app->wsLog->push('TrackingLog','Seller Shipped','Người bán gửi hàng',$params);
                     $count ++;
+                    $dataShipment[] = $datumShipment;
                 }
             }
         }
@@ -298,6 +307,10 @@ class ServiceUsSendingController extends BaseApiController
         $trackingCode->order_ids = $order_ids && count($order_ids) ?  implode(',',$order_ids) : '';
         $trackingCode->status = $trackingCode->status ? $trackingCode->status : TrackingCode::STATUS_MERGE_NEW;
         $trackingCode->save(false);
+        if($dataShipment && count($dataShipment)){
+            $response = BoxMeClient::CreateLiveShipment($dataShipment,$trackingCode->tracking_code);
+//        $trackingCode->save(false);
+        }
         return $this->response(true,'Insert tracking to '.$count.' product success!');
     }
 }

@@ -14,6 +14,7 @@ use common\models\User;
 use common\promotion\PromotionForm;
 use Courier\CalculateFeeRequest;
 use Courier\CourierClient;
+use frontend\modules\payment\models\Order;
 use frontend\modules\payment\providers\mcpay\McPayProvider;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganLuongClient;
 use frontend\modules\payment\providers\nganluong\ver3_2\NganluongHelper;
@@ -23,6 +24,7 @@ use common\components\cart\storage\MongodbCartStorage;
 use frontend\modules\payment\PaymentService;
 use frontend\modules\payment\providers\alepay\AlepayClient;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 
 class TestController extends FrontendController
 {
@@ -49,7 +51,7 @@ class TestController extends FrontendController
 
             $periods = [];
             foreach ($bank['paymentMethods'] as $method) {
-                if($method['paymentMethod'] !== 'VISA'){
+                if ($method['paymentMethod'] !== 'VISA') {
                     continue;
                 }
                 $periods = $method['periods'];
@@ -345,10 +347,13 @@ JSON;
         die;
     }
 
-    public function actionSaleAssign(){
+    public function actionSaleAssign()
+    {
         $employee = new Employee();
-
-        var_dump($employee->getSupporters(),$employee->getAssign());
+        @unlink($employee->getActiveRule()->saveFileName);
+        for ($index = 1; $index <= 500; $index++) {
+            $employee->getAssign();
+        }
         die;
     }
 }
