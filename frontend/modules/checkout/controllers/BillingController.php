@@ -38,10 +38,11 @@ class BillingController extends CheckoutController
         $order = new Order($paymentTransaction->order->getAttributes());
         $order->getAdditionalFees()->loadFormActiveRecord($paymentTransaction->order);
         $payment->setOrders([$order]);
-        $paymentView =  $payment->initPaymentView();
+        $paymentView = $payment->initPaymentView();
         return $this->render('index', [
             'paymentTransaction' => $paymentTransaction,
-            'payment' =>$paymentView,
+            'payment' => $paymentView,
+            'order' => $order
         ]);
     }
 

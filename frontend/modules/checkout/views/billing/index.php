@@ -3,8 +3,7 @@
 /* @var yii\web\View $this */
 /* @var frontend\modules\payment\Payment $payment */
 /* @var common\models\PaymentTransaction $paymentTransaction */
-
-$order = $paymentTransaction->order;
+/* @var frontend\modules\payment\models\Order $order */
 
 use common\models\db\TargetAdditionalFee;
 use yii\helpers\ArrayHelper; ?>
@@ -219,8 +218,7 @@ use yii\helpers\ArrayHelper; ?>
 
                             <tr class="final-amount">
                                 <th class="header"><?= Yii::t('frontend', 'Amount must to pre-pay') ?></th>
-                                <td class="value"
-                                    data-origin="<?= $order->total_final_amount_local ?>"><?= $storeManager->showMoney($order->total_final_amount_local); ?></td>
+                                <td class="value"><?= $storeManager->showMoney($order->getTotalFinalAmount()); ?></td>
                             </tr>
                         </table>
                     </div>
