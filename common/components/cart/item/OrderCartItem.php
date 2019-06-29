@@ -19,6 +19,7 @@ class OrderCartItem extends BaseObject
     public $id;
     public $source;
     public $sellerId;
+    public $link_payment;
     public $quantity = 1;
     public $image;
     public $sku = null;

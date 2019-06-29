@@ -41,14 +41,14 @@ class Employee extends BaseObject
     public function getSupporters()
     {
         if (empty($this->_supporters)) {
-//            $this->_supporters = $this->loadSupporterByRoles();
-            $s = [];
-            for ($i = 1;$i <= 4;$i++){
-                $s[$i] = [
-                    'name' => "Sale $i"
-                ];
-            }
-            $this->_supporters = $s;
+            $this->_supporters = $this->loadSupporterByRoles();
+//            $s = [];
+//            for ($i = 1;$i <= 4;$i++){
+//                $s[$i] = [
+//                    'name' => "Sale $i"
+//                ];
+//            }
+//            $this->_supporters = $s;
 
         }
         return $this->_supporters;

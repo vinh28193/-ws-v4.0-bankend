@@ -189,7 +189,8 @@ class TestController extends FrontendController
     public function actionSql()
     {
         $user = User::find()->where(['id' => 1])->one();
-        var_dump($user->getPrimaryKey());
+        var_dump(WeshopHelper::generateBinCode(1234567890, 'vn'));
+        var_dump(1234567890);
         die;
     }
 
@@ -352,8 +353,20 @@ JSON;
         $employee = new Employee();
         @unlink($employee->getActiveRule()->saveFileName);
         for ($index = 1; $index <= 500; $index++) {
-            $employee->getAssign();
+            var_dump($employee->getAssign());
         }
+        die;
+    }
+
+    public function actionSupportTime()
+    {
+        $dateTime = new \DateTime();
+        $dateTime->setTimezone(new \DateTimeZone('Asia/Ho_Chi_Minh'));
+        var_dump([
+            'today' => (clone $dateTime)->modify('today')->format('Y-m-d H:s:i'),
+            'Last Monday' => (clone $dateTime)->modify('Last Monday - 7 days')->format('Y-m-d H:s:i'),
+            'Last Sunday' => (clone $dateTime)->modify('Last Sunday')->format('Y-m-d H:s:i'),
+        ]);
         die;
     }
 }

@@ -20,7 +20,7 @@ abstract class BaseRule extends BaseObject
     public $employee;
 
     /**
-     * @return User
+     * @return User|null
      */
     abstract function getActiveSupporter();
 }

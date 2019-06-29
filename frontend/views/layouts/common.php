@@ -93,12 +93,14 @@ $this->registerJs("ws.sendFingerprint();", \yii\web\View::POS_READY);
             <div class="modal-content">
                 <div class="modal-body">
                     <i class="la la-check"></i>
-                    <div class="modal-title">Cám ơn bạn!</div>
-                    <div class="order-code">Mã giao dịch: <span class="text-blue" id="transactionCode"></span></div>
-                    <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành
-                        toán
+                    <div class="modal-title"><?=Yii::t('frontend','Thank you!');?></div>
+                    <div class="order-code">
+                        <?=Yii::t('frontend','Transaction code');?>
+                        <span class="text-blue" id="transactionCode"></span>
+                    </div>
+                    <p><?=Yii::t('frontend','Your order has been successfully! <br/> The system will be automatically redirect to page of payment gate way');?>
                     </p>
-                    <button type="button" class="btn btn-submit btn-block" id="next-payment">Chuyển ngay <span
+                    <button type="button" class="btn btn-submit btn-block" id="next-payment"><?=Yii::t('frontend','Redirect now');?> <span
                                 id="countdown_payment">5</span></button>
                 </div>
             </div>
