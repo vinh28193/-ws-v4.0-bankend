@@ -26,7 +26,7 @@
                     <p class="note"><span class="text-orange">(*)</span> Với những giao dịch nạp tiền chuyển khoản ngoài giờ hành chính. Thời gian nạp tiền vào hệ thống sẽ chậmhơn bình thường. Mong quý khách thông cảm!</p>
                 </div>
                 <div class="col-md-4 col-sm-12">
-                    <img style="width: 100%" src="/images/0451000277143.jpg" alt="0451000277143 Nguyễn Thị Hằng Vietcombank">
+                    <img style="width: 200px" src="/images/0451000277143.jpg" alt="0451000277143 Nguyễn Thị Hằng Vietcombank">
                     <p class="mb-1"></p>
                 </div>
             </div>
