@@ -12,16 +12,9 @@ use yii\web\NotFoundHttpException;
 class BillingController extends CheckoutController
 {
 
-    public function init()
-    {
-        if (($code = Yii::$app->request->get('code')) !== null) {
-            $this->title = Yii::t('frontend', 'Invoice {code}', ['code' => $code]);
-        }
-        parent::init();
-    }
-
     public function actionIndex($code)
     {
+        $this->title = Yii::t('frontend', 'Billing for order {code}', ['code' => $code]);
         if (($paymentTransaction = PaymentTransaction::findOne(['order_code' => $code])) === null) {
             throw new NotFoundHttpException("not found transaction for order code $code");
         }
@@ -45,15 +38,16 @@ class BillingController extends CheckoutController
         $order = new Order($paymentTransaction->order->getAttributes());
         $order->getAdditionalFees()->loadFormActiveRecord($paymentTransaction->order);
         $payment->setOrders([$order]);
+        $paymentView =  $payment->initPaymentView();
         return $this->render('index', [
             'paymentTransaction' => $paymentTransaction,
-            'payment' => $payment,
+            'payment' =>$paymentView,
         ]);
     }
 
     public function actionFail($code)
     {
-
+        $this->title = Yii::t('frontend', 'Invoice failed {code}', ['code' => $code]);
         if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code])) === null) {
             throw new NotFoundHttpException("not found transaction code $code");
         }
@@ -85,15 +79,16 @@ class BillingController extends CheckoutController
 
         return $this->render('fail', [
             'code' => $code,
-            'payment' => $payment,
+            'payment' => $payment->initPaymentView(),
         ]);
 
     }
 
     public function actionSuccess($code)
     {
+        $this->title = Yii::t('frontend', 'Invoice success {code}', ['code' => $code]);
         if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code])) === null) {
-
+            throw new NotFoundHttpException("not found transaction code $code");
         }
         return $this->render('success', ['code' => $code, 'paymentTransaction' => $paymentTransaction,]);
     }

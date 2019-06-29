@@ -139,6 +139,12 @@ class Payment extends Model
             $this->payment_provider = 44;
             $this->payment_bank_code = 'ALEPAY';
         }
+        $this->getPaymentMethodProviderName();
+
+    }
+
+    public function getPaymentMethodProviderName()
+    {
         if (($methodProvider = PaymentService::getMethodProvider($this->payment_provider, $this->payment_method)) !== null) {
             $this->payment_method_name = $methodProvider->paymentMethod->code;
             $this->payment_provider_name = $methodProvider->paymentProvider->code;
@@ -217,6 +223,7 @@ class Payment extends Model
         $this->transaction_fee = 0;
         $this->return_url = PaymentService::createReturnUrl($this->payment_provider);
         $this->cancel_url = PaymentService::createCancelUrl($code);
+        $this->getPaymentMethodProviderName();
     }
 
     public function processPayment()
