@@ -88,7 +88,8 @@ class CmsController extends FrontendController
      */
     protected function getActivePage()
     {
-        return PageService::getPage($this->type, Yii::$app->storeManager->getId() ? Yii::$app->storeManager->getId() : 1);
+        return PageService::getPage($this->type, 1);
+//        return PageService::getPage($this->type, Yii::$app->storeManager->getId() ? Yii::$app->storeManager->getId() : 1);
     }
 
     public function defaultLayoutParams()
