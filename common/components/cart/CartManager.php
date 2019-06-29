@@ -474,6 +474,7 @@ class CartManager extends Component
                     $key['buyer']['buyer_name'] = $param['fullName'];
                     $key['buyer']['email'] = $param['email'];
                     $value['potential'] = 1;
+                    $value['link_payment'] = $param['link'];
                 }
             }
             if (isset($param['typeUpdate'])) {

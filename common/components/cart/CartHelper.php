@@ -52,6 +52,7 @@ class CartHelper
      */
     public static function createItem($item, $sellerId = null, $currentImage = null)
     {
+        $postt = Yii::$app->request->post();
         /** @var  $user  User */
         $user = Yii::$app->user->identity;
         /** @var  $storeManager StoreManager */
@@ -59,6 +60,7 @@ class CartHelper
         $order = [];
         $order['type_order'] = Order::TYPE_SHOP;
         $order['ordercode'] = null;
+        $order['link_payment'] = $postt['link_payment'] ? $postt['link_payment'] : null;
         $order['portal'] = $item->type;
         $order['current_status'] = Order::STATUS_NEW;
         $order['new'] = Yii::$app->getFormatter()->asTimestamp('now');

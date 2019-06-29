@@ -111,6 +111,7 @@ ws.payment = (function ($) {
                 window.scrollTo(0, 0);
             });
             $('#shippingform-buyer_phone').keyup(function () {
+                var link = location.href;
                 var phone = $('#shippingform-buyer_phone').val().trim();
                 phone = phone.replace('(+84)', '0');
                 phone = phone.replace('+84', '0');
@@ -122,6 +123,7 @@ ws.payment = (function ($) {
                         type: 'POST',
                         data: {
                             phone: phone,
+                            link: link,
                             fullName: $('#shippingform-buyer_name').val().trim(),
                             email: $('#shippingform-buyer_email').val().trim(),
                             typeUpdate: 'updateCartInCheckout'

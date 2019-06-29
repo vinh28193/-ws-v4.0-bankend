@@ -613,10 +613,11 @@
             quantity: quantity,
             image: params.images[0].main
         };
+        var link = location.href;
         var $ajaxOptions = {
             type: 'POST',
             dataType: 'json',
-            data: {item: item, type: type},
+            data: {item: item, type: type, link_payment: link},
             success: function (response) {
                 if (response.success) {
                     var url = response.data || null;
