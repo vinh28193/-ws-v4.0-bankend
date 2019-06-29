@@ -130,7 +130,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
      */
     public static function findByUsernameForEmployee($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE, 'employee' => [1,2]]); //  1,2 Là Nhân viên , 0 là khách hàng
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE, 'employee' => [1, 2]]); //  1,2 Là Nhân viên , 0 là khách hàng
     }
 
     /**
@@ -340,14 +340,16 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
                 ['email' => $condition],
                 ['phone' => $condition]
             ],
-            ['status' => self::STATUS_ACTIVE]
+            ['status' => self::STATUS_ACTIVE],
+            ['store_id' => Yii::$app->storeManager->storeId]
         ])->one();
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getAddress(){
+    public function getAddress()
+    {
         return $this->hasMany(Address::className(), ['customer_id' => 'id']);
     }
 
@@ -365,7 +367,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
      */
     public function getShippingAddress()
     {
-        return  $this->getAddress()->andWhere(['type' => Address::TYPE_SHIPPING]);
+        return $this->getAddress()->andWhere(['type' => Address::TYPE_SHIPPING]);
     }
 
 
@@ -377,8 +379,6 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
             ['is_default' => Address::IS_DEFAULT]
         ]);
     }
-
-
 
 
     /**
@@ -427,6 +427,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
     {
         return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
     }
+
     /**
      * @return null
      */
@@ -464,16 +465,18 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
                 break;
         }
     }
-    public function setCookiesUser(){
+
+    public function setCookiesUser()
+    {
         $cookieUser = new UserCookies();
         $cookieUser->facebook_id = $this->facebook_acc_kit_id;
         $cookieUser->facebook_token = $this->facebook_acc_kit_token;
-        $cookieUser->name = $this->last_name.' '.$this->first_name;
+        $cookieUser->name = $this->last_name . ' ' . $this->first_name;
         $cookieUser->phone = $this->phone;
         $cookieUser->email = $this->email;
 //      $cookieUser->uuid = $this->getUuidCookie();
         $cookieUser->customer_id = $this->id;
-        if($this->primaryAddress && count($this->primaryAddress) > 0){
+        if ($this->primaryAddress && count($this->primaryAddress) > 0) {
             $cookieUser->country_id = $this->primaryAddress[0]->country_id;
             $cookieUser->province_id = $this->primaryAddress[0]->province_id;
             $cookieUser->district_id = $this->primaryAddress[0]->district_id;

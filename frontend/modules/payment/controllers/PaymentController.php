@@ -166,6 +166,10 @@ class PaymentController extends BasePaymentController
 
                 $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
 
+                $order->total_fee_amount_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees()[1];
+
+                $order->total_final_amount_local = $orderPayment->getTotalFinalAmount();
+
                 // 2 .seller
                 $seller = $orderPayment->seller;
                 $seller->portal = $orderPayment->portal;
