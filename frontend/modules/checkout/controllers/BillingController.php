@@ -6,6 +6,7 @@ namespace frontend\modules\checkout\controllers;
 use common\models\PaymentTransaction;
 use frontend\modules\payment\models\Order;
 use frontend\modules\payment\Payment;
+use frontend\modules\payment\PaymentService;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -19,7 +20,7 @@ class BillingController extends CheckoutController
             throw new NotFoundHttpException("not found transaction for order code $code");
         }
         $payment = new Payment([
-            'type' => 'billing',
+            'type' => 'order',
             'page' => Payment::PAGE_BILLING,
             'transaction_code' => $paymentTransaction->transaction_code,
             'customer_name' => $paymentTransaction->transaction_customer_name,
@@ -53,7 +54,7 @@ class BillingController extends CheckoutController
             throw new NotFoundHttpException("not found transaction code $code");
         }
         $payment = new Payment([
-            'type' => 'billing',
+            'type' => 'invoice',
             'page' => Payment::PAGE_BILLING,
             'transaction_code' => $paymentTransaction->transaction_code,
             'customer_name' => $paymentTransaction->transaction_customer_name,
