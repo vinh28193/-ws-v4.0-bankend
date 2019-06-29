@@ -25,7 +25,7 @@ foreach ($item->variation_options as $index => $variationOption) {
         }
     }
 }
-$instockQuanty = $item->type = BaseProduct::TYPE_EBAY ? 0 : 50;
+$instockQuanty = $item->type == BaseProduct::TYPE_EBAY ? 0 : 50;
 if ($item->available_quantity) {
     $instockQuanty = $item->quantity_sold ? $item->available_quantity - $item->quantity_sold : $item->available_quantity;
 }

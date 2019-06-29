@@ -54,9 +54,8 @@ class UserCookies extends Model
         return $value;
     }
     public function setUser(){
-        if(Yii::$app->user->isGuest){
-            $this->setAttributes(self::getUserCookies(),false);
-        }else{
+        $this->setAttributes(self::getUserCookies(),false);
+        if(!Yii::$app->user->isGuest){
             /** @var User $user */
             $user = Yii::$app->user->getIdentity();
             $this->email = $user->email;
