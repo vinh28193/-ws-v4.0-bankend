@@ -62,7 +62,7 @@ class InternationalShippingCalculator extends BaseObject
         ], $params);
 
         $request->setData(Json::encode($params));
-        \Yii::info($params);
+        \Yii::info($request->getData());
         $request->setUserId($userId);
         $request->setCountryCode($countryCode);
         /** @var $apires CalculateFeeResponse */
