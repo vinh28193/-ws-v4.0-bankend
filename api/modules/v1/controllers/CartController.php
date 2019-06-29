@@ -70,4 +70,18 @@ class CartController extends BaseApiController
     {
         return Yii::$app->cart;
     }
+
+    protected function resolveChatMessage($dirtyAttributes, $reference)
+    {
+
+        $results = [];
+        foreach ($dirtyAttributes as $name => $value) {
+            if (strpos($name, '_id') !== false && is_numeric($value)) {
+                continue;
+            }
+            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+        }
+
+        return implode(", ", $results);
+    }
 }

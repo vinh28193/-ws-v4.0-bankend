@@ -469,6 +469,34 @@ class CartManager extends Component
             $value = $item['value'];
             $key = $item['key'];
             if (isset($param['typeUpdate'])) {
+                if ($param['typeUpdate']  == 'updateReceiverCart') {
+                    $key['receiver']['receiver_address'] = $param['receiver_address'];
+                    $key['receiver']['receiver_country_id'] = $param['receiver_country_id'];
+                    $key['receiver']['receiver_country_name'] = $param['receiver_country_name'];
+                    $key['receiver']['receiver_district_id'] = $param['receiver_district_id'];
+                    $key['receiver']['receiver_district_name'] = $param['receiver_district_name'];
+                    $key['receiver']['receiver_email'] = $param['receiver_email'];
+                    $key['receiver']['receiver_name'] = $param['receiver_name'];
+                    $key['receiver']['receiver_phone'] = $param['receiver_phone'];
+                    $key['receiver']['receiver_post_code'] = $param['receiver_post_code'];
+                    $key['receiver']['receiver_province_id'] = $param['receiver_province_id'];
+                    $key['receiver']['receiver_province_name'] = $param['receiver_province_name'];
+                }
+                if ($param['typeUpdate']  == 'updateBuyerCart') {
+                    $key['buyer']['buyer_address'] = $param['buyer_address'];
+                    $key['buyer']['buyer_country_id'] = $param['buyer_country_id'];
+                    $key['buyer']['buyer_country_name'] = $param['buyer_country_name'];
+                    $key['buyer']['buyer_district_id'] = $param['buyer_district_id'];
+                    $key['buyer']['buyer_district_name'] = $param['buyer_district_name'];
+                    $key['buyer']['buyer_email'] = $param['buyer_email'];
+                    $key['buyer']['buyer_name'] = $param['buyer_name'];
+                    $key['buyer']['buyer_phone'] = $param['buyer_phone'];
+                    $key['buyer']['buyer_post_code'] = $param['buyer_post_code'];
+                    $key['buyer']['buyer_province_id'] = $param['buyer_province_id'];
+                    $key['buyer']['buyer_province_name'] = $param['buyer_province_name'];
+                }
+            }
+            if (isset($param['typeUpdate'])) {
                 if ($param['typeUpdate'] == 'updateCartInCheckout') {
                     $key['buyer']['buyer_phone'] = $param['phone'];
                     $key['buyer']['buyer_name'] = $param['fullName'];
@@ -494,6 +522,13 @@ class CartManager extends Component
             if (isset($param['typeUpdate'])) {
                 if ($param['typeUpdate'] == 'assignSaleCart') {
                     $value['sale_support_id'] = $param['idSale'];
+                    $key['supportId'] = $param['idSale'];
+                    $key['supportAssign']['id'] = $param['idSale'];
+                    $key['supportAssign']['email'] = $param['saleEmail'];
+                    $key['supportAssign']['username'] = $param['saleName'];
+                    $value['saleSupport']['id'] = $param['idSale'];
+                    $value['saleSupport']['email'] = $param['saleEmail'];
+                    $value['saleSupport']['username'] = $param['saleName'];
                 }
             }
             if (isset($param['typeUpdate'])) {

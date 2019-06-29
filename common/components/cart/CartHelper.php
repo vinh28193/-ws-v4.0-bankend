@@ -60,7 +60,9 @@ class CartHelper
         $order = [];
         $order['type_order'] = Order::TYPE_SHOP;
         $order['ordercode'] = null;
-        $order['link_payment'] = $postt['link_payment'] ? $postt['link_payment'] : null;
+        if (isset($postt['link_payment']) ) {
+            $order['link_payment'] = $postt['link_payment'];
+        }
         $order['portal'] = $item->type;
         $order['current_status'] = Order::STATUS_NEW;
         $order['new'] = Yii::$app->getFormatter()->asTimestamp('now');

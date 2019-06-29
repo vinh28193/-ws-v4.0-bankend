@@ -88,7 +88,7 @@
                         ws.notifyInfo(ws.t('Cannot change quantity'), ws.t('Error'));
                     }
                     var data = {type: $item.data('type'), id: id, key: key};
-                    var param = {quantity: options.value};
+                    var param = {quantity: options.value, link_payment: options.link};
                     if (operator === 'up') {
                         param.quantity += 1;
                         if (param.quantity > options.max && options.max !== '' && options.max > options.value) {
@@ -307,6 +307,7 @@
             value: Number($input.attr('value')),
             min: $input.data('min'),
             max: $input.data('max'),
+            link: location.href,
         }
     };
     var filterCartItems = function ($cart) {
