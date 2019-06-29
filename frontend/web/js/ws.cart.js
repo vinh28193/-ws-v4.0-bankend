@@ -86,6 +86,7 @@
                     var operator = $item.data('operator');
                     if (options.max === '' || options.max < options.value) {
                         ws.notifyInfo(ws.t('Cannot change quantity'), ws.t('Error'));
+                        return;
                     }
                     var data = {type: $item.data('type'), id: id, key: key};
                     var param = {quantity: options.value, link_payment: options.link};

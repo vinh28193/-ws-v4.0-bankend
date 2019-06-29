@@ -189,7 +189,8 @@ class TestController extends FrontendController
     public function actionSql()
     {
         $user = User::find()->where(['id' => 1])->one();
-        var_dump($user->getPrimaryKey());
+        var_dump(WeshopHelper::generateBinCode(1234567890, 'vn'));
+        var_dump(1234567890);
         die;
     }
 
