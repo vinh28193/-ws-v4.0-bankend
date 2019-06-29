@@ -1,5 +1,6 @@
 <?php
 
+use common\components\UserCookies;
 use common\helpers\WeshopHelper;
 use common\products\BaseProduct;
 use yii\helpers\ArrayHelper;
@@ -40,6 +41,8 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
 $internal_shipping = $item->getInternationalShipping();
 $internal_shipping_fees = $item->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee');
 $internal_shipping_fee = $internal_shipping_fees[1] ? $storeManager->showMoney($internal_shipping_fees[1]) : '---';
+$userCookies = new UserCookies();
+$userCookies->setUser();
 ?>
 <div class="product-full-info">
     <div id="checkcate" style="display: none"><?= $item->category_id ?></div>
@@ -116,10 +119,10 @@ $internal_shipping_fee = $internal_shipping_fees[1] ? $storeManager->showMoney($
                     </td>
                     <td>
                         <ul class="list-dot">
-                            <li><?= Yii::t('frontend','Internal Shipping fee: <span id="shipping_fee">{shipping_fee}</span>',['shipping_fee' => $internal_shipping_fee]) ?></li>
+                            <li><?= Yii::t('frontend','Internal Shipping fee: <span id="shipping_fee">{shipping_fee}</span>',['shipping_fee' => $userCookies->province_id && $userCookies->district_id ? $internal_shipping_fee : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>']) ?></li>
                             <li>
-                                <?= Yii::t('frontend','Estimate time: <span id="time_estimate_min">{min_time}</span> - <span id="time_estimate_max">{max_time}</span> days',['min_time'=>isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'min_delivery_time','7') : '7','max_time' => isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'max_delivery_time','14') : '14' ]) ?><br>
-                                (<?= Yii::t('frontend','Ship to <span class="text-blue">{district_name}, {province_name}</span>',['district_name' => 'Hai Bà Trưng', 'province_name' => 'Hà Nội']) ?>)
+                                <?= Yii::t('frontend','Estimate time: <span id="time_estimate_min">{min_time}</span> - <span id="time_estimate_max">{max_time}</span> days',['min_time'=> $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'min_delivery_time','') : '','max_time' => $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'max_delivery_time','<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>') : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>' ]) ?><br>
+                                (<?= Yii::t('frontend','Ship to <span class="text-blue">{district_name}, {province_name}</span>',$userCookies->checkAddress() ? ['district_name' => $userCookies->getDistrict() ? $userCookies->getDistrict()->name : '', 'province_name' => $userCookies->getProvince() ? $userCookies->getProvince()->name : ''] : ['district_name' => '', 'province_name' => '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>']) ?>)
                             </li>
                         </ul>
                     </td>
@@ -171,7 +174,7 @@ $internal_shipping_fee = $internal_shipping_fees[1] ? $storeManager->showMoney($
     }
 
     }
-    if ($item->end_time !== null && $item->type === BaseProduct::TYPE_EBAY) {
+    if ($item->end_time !== null && $item->type === BaseProduct::TYPE_EBAY && $item->end_time < (time() + 60*60*24*7 )) {
         ?>
 
         <div class="countdown"><?=Yii::t('frontend','Time end')?>: <b class="text-orange"><?=Yii::$app->formatter->asDatetime($item->end_time);?></b> (<span data-toggle="countdown-time" data-timestamp="<?=$item->end_time?>" data-prefix="<?=Yii::t('frontend','Also');?>" data-day="<?=Yii::t('frontend','day');?>" data-hour="<?=Yii::t('frontend','hour');?>" data-minute="<?=Yii::t('frontend','minute');?>" data-second="<?=Yii::t('frontend','second');?>"></span>)</div>
@@ -215,19 +218,29 @@ JS;
         <div class="register-prime">
             <?= Yii::t('frontend','Registering Prime service saves up to 20% of shipping <a href="#"> here </a>') ?>
         </div>
-        <?php if($item->end_time !== null && $item->type === BaseProduct::TYPE_EBAY && $item->end_time < time()) {?>
+        <?php if(($item->end_time !== null && $item->type === BaseProduct::TYPE_EBAY && $item->end_time < time())) {?>
             <div class="" id="outOfStock">
                 <h3 style="color: red"><?= Yii::t('frontend', 'Out of Time') ?></h3>
             </div>
-        <?php }else if ($item->getLocalizeTotalPrice() > 0 && $current_provider){?>
+        <?php }else if ($item->getLocalizeTotalPrice() > 0 && $current_provider && ($item->type === BaseProduct::TYPE_EBAY && $instockQuanty > 0)){?>
             <div class="btn-group-detail">
                 <div class="btn-group-primary">
                     <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
                 </div>
-                <div class="btn-group-secondary">
-                    <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> <?= Yii::t('frontend','Installment') ?></button>
-                    <button class="btn btn-outline-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
-                </div>
+                <?php if ($item->checkInstallment()){?>
+                    <div class="btn-group-secondary">
+                        <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> <?= Yii::t('frontend','Installment') ?></button>
+                        <button class="btn btn-outline-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
+                    </div>
+                <?php }else{ ?>
+                    <div class="btn-group-primary">
+                        <button class="btn btn-outline-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php }else{?>
+            <div class="" id="outOfStock">
+                <h3 style="color: red"><?= Yii::t('frontend', 'Out of stock') ?></h3>
             </div>
         <?php }?>
         <div class="card-group-detail">

@@ -324,7 +324,7 @@ class FrontendController extends Controller
             return ['success' => false, 'message' => Yii::t('frontend', 'fingerprint is null'), 'data' => ['content' => '']];
         }
         $cookUser = new UserCookies();
-        $cookUser->setUserCookies();
+        $cookUser->setUser();
         $cookUser->uuid = $this->_uuid;
         $cookUser->setNewCookies();
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

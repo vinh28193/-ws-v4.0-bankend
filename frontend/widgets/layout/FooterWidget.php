@@ -1,10 +1,30 @@
 <?php
 namespace frontend\widgets\layout;
 
+use common\components\UserCookies;
+use frontend\modules\payment\models\ShippingForm;
+
 class FooterWidget extends \yii\base\Widget
 {
     public function run()
     {
-        return $this->render('footer');
+
+        $shippingForm = new ShippingForm();
+        $shippingForm->setDefaultValues();
+        $js = <<<JS
+            $(document).ready(function() {
+              $('#modal-address').modal('show');
+            });
+JS;
+        $userCook = new UserCookies();
+        $userCook->setUser();
+        if(!$userCook->province_id || !$userCook->district_id){
+            $view = $this->getView();
+            $view->registerJs($js);
+        }
+
+        return $this->render('footer',[
+            'shippingForm' => $shippingForm
+        ]);
     }
 }

@@ -348,14 +348,42 @@ var ws = ws || (function ($) {
                     }
                 }
             });
-        }
+        },
+        saveDefaultAddress: function () {
+            $('#modal-address').modal('hide');
+            ws.loading(true);
+            $.ajax({
+                url: '/customer/save-address-default',
+                method: 'POST',
+                data: {
+                    name: $('input[name=fullName_default]').val(),
+                    phone: $('input[name=phone_default]').val(),
+                    city_id: $('select[name=city_default]').val(),
+                    district_id: $('select[name=district_default]').val(),
+                },
+                success: function (res) {
+                    if (res.success) {
+                        window.location.reload();
+                    } else {
+                        ws.loading(false);
+                        ws.notifyError(res.message);
+                    }
+                }
+            });
+        },
+        showModal: function (id) {
+          $('#'+id).modal();
+        },
     };
 
     return pub;
 })(jQuery);
 
-ws.initEventHandler('searchNew', 'searchBoxButton', 'click', 'button#searchBoxButton', function (event) {
+ws.initEventHandler('saveDefaultAddress', 'searchBoxButton', 'click', 'button#searchBoxButton', function (event) {
     ws.browse.searchNew('input.searchBoxInput', '$url');
+});
+ws.initEventHandler('setDefaultAddressSmBtn', 'setDefaultAddressSmBtn', 'click', 'button#setDefaultAddressSmBtn', function (event) {
+    ws.saveDefaultAddress();
 });
 ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input.searchBoxInput', function (event) {
     clearTimeout(window.mytimeout);
