@@ -298,8 +298,8 @@ ws.payment = (function ($) {
                 row.rowHeader.unshift('<td class="text-blue">' + period.month + ' tháng</td>');
                 row.rowOriginAmount.unshift('<td><b>' + pub.installmentParam.originAmount + '</b></td>');
                 row.rowAmountByMonth.unshift('<td><b>' + period.amountByMonth + '</b></td>');
-                row.rowAmountFinal.unshift('<td><b>' + period.amountFinal + '</b></td>');
-                row.rowAmountFee.unshift('<td><b>' + period.amountFee + '</b></td>');
+                row.rowAmountFinal.unshift('<td><b>' + ws.showMoney(period.amountFinal) + '</b></td>');
+                row.rowAmountFee.unshift('<td><b>' + ws.showMoney(period.amountFee) + '</b></td>');
                 row.rowOption.unshift('<td>\n' +
                     '<div class="form-check">\n' +
                     '     <input class="form-check-input" type="radio" value="' + period.month + '"  ' + (iActive ? 'checked' : '') + '  id="installment' + period.month + '" name="installmentPeriod" checked="">\n' +
