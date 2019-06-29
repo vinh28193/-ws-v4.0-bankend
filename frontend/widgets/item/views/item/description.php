@@ -30,8 +30,13 @@ if($type == 'extra'){
                             <div class="col-md-6 row">
                                 <div class="col-md-6"><b><?= $value->name ?>:</b></div>
                                 <div class="col-md-6">
-                                    <?php foreach ($value->value as $kh => $v) {
-                                    echo $kh == 0 ? $v : ' / '.$v ;
+                                    <?php
+                                    foreach ($value->value as $kh => $v) {
+                                        if(is_string($v)){
+                                            echo $kh == 0 ? $v : ' / '.$v ;
+                                        }elseif(is_array($v)){
+                                            echo implode('/',$v);
+                                        }
                                     } ?>
                                 </div>
                             </div>

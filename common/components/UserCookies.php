@@ -4,6 +4,9 @@
 namespace common\components;
 
 
+use common\models\SystemDistrict;
+use common\models\SystemStateProvince;
+use common\models\User;
 use Yii;
 use yii\base\Model;
 
@@ -50,8 +53,25 @@ class UserCookies extends Model
         Cookies::set(self::KEY_COOKIES,$value);
         return $value;
     }
-    public function setUserCookies(){
+    public function setUser(){
         $this->setAttributes(self::getUserCookies(),false);
+        if(!Yii::$app->user->isGuest){
+            /** @var User $user */
+            $user = Yii::$app->user->getIdentity();
+            $this->email = $user->email;
+            $this->name = implode(' ',[$user->first_name,$user->last_name]);
+            $this->phone = $user->phone;
+            $this->customer_id = $user->id;
+            $addressDefault = $user->defaultShippingAddress ? $user->defaultShippingAddress : $user->defaultPrimaryAddress;
+            if($addressDefault){
+                $this->district_id = $addressDefault->district_id;
+                $this->province_id = $addressDefault->province_id;
+                $this->country_id = $addressDefault->country_id;
+                $this->address = $addressDefault->address;
+                $this->zipcode = $addressDefault->post_code;
+            }
+            $this->setCookies();
+        }
         return $this;
     }
     public static function getUserCookies($isArray = true){
@@ -59,5 +79,22 @@ class UserCookies extends Model
     }
     public static function getCookies() {
         return Cookies::get(self::KEY_COOKIES);
+    }
+
+    /**
+     * @return SystemDistrict|null
+     */
+    public function getDistrict(){
+        return SystemDistrict::findOne($this->district_id);
+    }
+
+    /**
+     * @return SystemStateProvince|null
+     */
+    public function getProvince(){
+        return SystemStateProvince::findOne($this->province_id);
+    }
+    public function checkAddress(){
+        return $this->district_id && $this->province_id;
     }
 }
