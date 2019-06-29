@@ -273,7 +273,26 @@ class OrderController extends BaseApiController
                 }
             }
 //            $model->current_status = strtoupper($post['Order']['current_status']);
-            $model->current_status = strtoupper($StatusOrder[(int)($post['Order']['status']) - 1]);
+            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'purchase_start') {
+                $model->current_status = Order::STATUS_PURCHASING;
+            }
+            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'stockin_us') {
+                $model->current_status = Order::STATUS_STOCK_IN_US;
+            }
+            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'stockout_us') {
+                $model->current_status = Order::STATUS_STOCK_OUT_US;
+            }
+            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'stockin_local') {
+                $model->current_status = Order::STATUS_STOCK_IN_LOCAL;
+            }
+            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'stockout_local') {
+                $model->current_status = Order::STATUS_STOCK_OUT_LOCAL;
+            }
+            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'ready_purchase') {
+                $model->current_status = Order::STATUS_READY2PURCHASE;
+            } else {
+                $model->current_status = strtoupper($StatusOrder[(int)($post['Order']['status']) - 1]);
+            }
         }
         if ($model->getScenario() == 'updateReady2Purchase') {
             $model->ready_purchase = $now;

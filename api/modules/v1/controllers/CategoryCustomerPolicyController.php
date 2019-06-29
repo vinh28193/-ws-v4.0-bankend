@@ -11,6 +11,7 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use common\models\db\CategoryCustomPolicy;
+use common\models\db\CategoryGroup;
 use Yii;
 use yii\caching\DbDependency;
 class CategoryCustomerPolicyController extends BaseApiController
@@ -59,7 +60,7 @@ class CategoryCustomerPolicyController extends BaseApiController
 
     public function actionView($id) {
         if ($id) {
-            $model = CategoryCustomPolicy::find()
+            $model = CategoryGroup::find()
                 ->where(['store_id' => $id])
                 ->asArray()->all();
             return $this->response(true, 'get data success', $model);
@@ -68,7 +69,7 @@ class CategoryCustomerPolicyController extends BaseApiController
     }
 
     public function actionIndex() {
-        $model = CategoryCustomPolicy::find()->asArray()->all();
+        $model = CategoryGroup::find()->asArray()->all();
         return $this->response(true, 'get data success', $model);
     }
 }
