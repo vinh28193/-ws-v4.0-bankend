@@ -111,7 +111,7 @@ class ShippingForm extends Model
     private $_buyerAddress;
 
     /**
-     * @return Address[]|null
+     * @return Address|null
      */
     public function getBuyerAddress()
     {
@@ -167,7 +167,7 @@ class ShippingForm extends Model
         }
         if (!WeshopHelper::isEmpty($this->getBuyerAddress())) {
             $this->enable_buyer = self::NO;
-            $buy_default = $this->getBuyerAddress()[0];
+            $buy_default = $this->getBuyerAddress();
             $this->buyer_address_id = $buy_default->id;
             $this->buyer_district_id = $buy_default->district_id;
             $this->buyer_province_id = $buy_default->province_id;

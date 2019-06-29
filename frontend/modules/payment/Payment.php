@@ -43,7 +43,7 @@ class Payment extends Model
     const PAGE_TOP_UP = 'TOP_UP';
 
     public $env = self::ENV_PRODUCT;
-    public $uuid = null;
+    public $uuid;
     public $page = self::PAGE_CHECKOUT;
 
     /**
@@ -298,7 +298,8 @@ class Payment extends Model
             $response = $form->checkPromotion();
             $order->discountAmount = $response->discount;
             $order->discountDetail = $response->details;
-            $results[$order->cartId] = $response;
+            $key = $this->page === self::PAGE_CHECKOUT ? $order->cartId : $order->ordercode;
+            $results[$key] = $response;
         }
         return $results;
     }

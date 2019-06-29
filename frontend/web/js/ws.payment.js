@@ -85,9 +85,9 @@ ws.payment = (function ($) {
                 }
             });
 
-            // setTimeout(function () {
-            //     pub.calculatorShipping();
-            // }, 1000);
+            setTimeout(function () {
+                pub.calculatorShipping();
+            }, 1000);
 
             $('input[name=check-member]').click(function () {
                 var value = $(this).val();
