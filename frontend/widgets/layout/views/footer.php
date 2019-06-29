@@ -1,9 +1,8 @@
 <?php
-use common\components\UserCookies;
+
 use frontend\modules\payment\models\ShippingForm;
 use kartik\depdrop\DepDrop;
-use yii\helpers\Html;
-use yii\helpers\Url;
+
 /**
  * @var ShippingForm $shippingForm
  */
@@ -224,3 +223,48 @@ use yii\helpers\Url;
         </div>
     </div>
 </div>
+<script>
+    window.intercomSettings = {
+        <?php
+        if(!Yii::$app->user->isGuest){
+            /** @var \common\models\User $user_login */
+            $user_login = Yii::$app->user->getIdentity();
+            ?>
+        name: "<?= implode(' ',[$user_login->last_name,$user_login->first_name]) ?>", // Full name
+        email: "<?= $user_login->email ?>", // Email address
+        created_at: "<?= $user_login->created_at ?>", // Signup date as a Unix timestamp
+        <?php } ?>
+        app_id: "wc8x0ims"
+    };
+</script>
+<script>(function () {
+        var w = window;
+        var ic = w.Intercom;
+        if (typeof ic === "function") {
+            ic('reattach_activator');
+            ic('update', w.intercomSettings);
+        } else {
+            var d = document;
+            var i = function () {
+                i.c(arguments);
+            };
+            i.q = [];
+            i.c = function (args) {
+                i.q.push(args);
+            };
+            w.Intercom = i;
+            var l = function () {
+                var s = d.createElement('script');
+                s.type = 'text/javascript';
+                s.async = true;
+                s.src = 'https://widget.intercom.io/widget/wc8x0ims';
+                var x = d.getElementsByTagName('script')[0];
+                x.parentNode.insertBefore(s, x);
+            };
+            if (w.attachEvent) {
+                w.attachEvent('onload', l);
+            } else {
+                w.addEventListener('load', l, false);
+            }
+        }
+    })();</script>
