@@ -70,13 +70,12 @@ class PaymentController extends BasePaymentController
             $shippingParams['buyer_province_name'] = $buyer->province_name;
             $shippingParams['buyer_district_name'] = $buyer->district_name;
             $shippingParams['buyer_post_code'] = $buyer->post_code;
-
             if ((int)$shippingForm->enable_receiver === ShippingForm::NO) {
-                $shippingParams['receiver_name'] = $buyer->address;
-                $shippingParams['receiver_address'] = $buyer->phone;
-                $shippingParams['receiver_phone'] = $buyer->province_id;
-                $shippingParams['receiver_province_id'] = $buyer->district_id;
-                $shippingParams['receiver_district_id'] = $buyer->post_code;
+                $shippingParams['receiver_name'] = $buyer->first_name;
+                $shippingParams['receiver_address'] = $buyer->address;
+                $shippingParams['receiver_phone'] = $buyer->phone;
+                $shippingParams['receiver_province_id'] = $buyer->province_id;
+                $shippingParams['receiver_district_id'] = $buyer->district_id;
                 $shippingParams['receiver_province_name'] = $buyer->province_name;
                 $shippingParams['receiver_district_name'] = $buyer->district_name;
             }
@@ -306,11 +305,10 @@ class PaymentController extends BasePaymentController
         }
         $payment = new Payment($bodyParams);
         $payment->setOrders($orders);
-        if (($methodProvider = PaymentService::getMethodProvider($payment->payment_provider, $payment->payment_method)) === null) {
-            $payment->payment_method_name = $methodProvider->paymentMethod->code;
-            $payment->payment_provider_name = $methodProvider->paymentProvider->code;
-        } else {
+        if ($payment->payment_provider === null && $payment->payment_method === null) {
             $payment->initDefaultMethod();
+        } else {
+            $payment->getPaymentMethodProviderName();
         }
 
         $paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $payment->transaction_code]);

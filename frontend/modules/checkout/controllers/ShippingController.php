@@ -113,7 +113,6 @@ class ShippingController extends CheckoutController
 
     public function actionIndex($type)
     {
-        $activeStep = 1;
         if (($keys = CartSelection::getSelectedItems($type)) === null) {
             return $this->goBack();
         }
@@ -142,7 +141,6 @@ class ShippingController extends CheckoutController
 //        $this->gaCheckout();
 
         return $this->render('index', [
-            'activeStep' => $activeStep,
             'shippingForm' => $shippingForm,
             'payment' => $payment,
         ]);
