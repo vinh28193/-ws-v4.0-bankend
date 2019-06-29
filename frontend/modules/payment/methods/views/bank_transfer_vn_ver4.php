@@ -22,7 +22,9 @@
             <p class="">Nội dung chuyển khoản cần ghi rõ: <span class="banking-content text-blue"><b>Weshop</b> Số điện thoại của bạn</span></p>
             <p class="">Ví dụ: Weshop 0988380918</p>
             <p class="note"><span class="text-orange">(*)</span> Với những giao dịch nạp tiền chuyển khoản ngoài giờ hành chính. Thời gian nạp tiền vào hệ thống sẽ chậmhơn bình thường. Mong quý khách thông cảm!</p>
-<!--            <p class="mb-1">Hoặc quét mà QR Code</p>-->
+            <p class="mb-1">Hoặc quét mà QR Code:</p>
+            <img style="width: 250px" src="/images/0451000277143.jpg" alt="0451000277143 Nguyễn Thị Hằng Vietcombank">
+            <p class="mb-1"></p>
         </div>
     </div>
 </div>
