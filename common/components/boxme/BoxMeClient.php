@@ -1,5 +1,6 @@
 <?php
 namespace common\components\boxme;
+use common\components\lib\TextUtility;
 use common\models\boxme\ConfigForm;
 use common\models\boxme\ShipToForm;
 use common\models\boxme\ShipmentForm;
@@ -151,7 +152,7 @@ class BoxMeClient
         $param['procducts'] = [];
         foreach ($data as $datum){
             $temp = [
-              'bsin' => $datum['sku'],
+              'bsin' => $datum['bsin'],
               'quantity' => $datum['quantity'],
               'img_check' => $datum['img_check'],
               'description' => $datum['description']
@@ -197,7 +198,7 @@ class BoxMeClient
         $data['seller_id'] = $product->seller_id;
         $data['category_id'] = $product->category_id;
         $data['seller_sku'] = strtoupper($product->portal) == 'EBAY' ? $product->parent_sku : $product->sku;
-        $data['bsin'] = $product->id;
+        $data['bsin'] = TextUtility::GenerateBSinBoxMe($product->id);
         $data['name'] = $product->product_name;
         $data['name_local'] = $product->product_name;
         $data['type_sku'] = 1;
@@ -220,13 +221,9 @@ class BoxMeClient
         $apires = $service->syncProduct($request)->wait();
         /** @var SyncProductResponse $response */
         list($response, $status) = $apires;
-
-//        print_r($service);
-        print_r($response->getMessage());
-        print_r($response->getError());
-//        print_r($error);
-//        print_r($message);
-        die;
+        Yii::debug($response->getMessage());
+        Yii::debug($response->getError());
+        return $response->getError();
 
     }
 
