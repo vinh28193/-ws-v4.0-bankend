@@ -41,7 +41,7 @@ class SaleAction extends \yii\base\Action
         $id1 = $this->authManager->getUserIdsByRole('sale');
         $id2 = $this->authManager->getUserIdsByRole('master.sale');
         $id3 = $this->authManager->getUserIdsByRole('master_sale');
-        return User::find()->select(['id', 'username', 'email'])
+        return User::find()->select(['id', 'username', 'email', 'employee'])
             ->where(['or',
                 ['id' => $id1],
                 ['id' => $id2],
