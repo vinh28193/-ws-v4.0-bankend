@@ -139,6 +139,11 @@ class Payment extends Model
             $this->payment_provider = 44;
             $this->payment_bank_code = 'ALEPAY';
         }
+        if($this->storeManager->store->country_code === 'ID'){
+            $this->payment_method = 136;
+            $this->payment_provider = 48;
+            $this->payment_bank_code = 'ATM_BMRI';
+        }
         $this->getPaymentMethodProviderName();
 
     }
