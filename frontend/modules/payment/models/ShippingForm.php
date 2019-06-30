@@ -8,6 +8,7 @@ use common\helpers\WeshopHelper;
 use common\models\SystemDistrict;
 use common\models\SystemDistrictMapping;
 use common\models\SystemStateProvince;
+use common\models\SystemZipcode;
 use Yii;
 use yii\base\Model;
 use common\models\Address;
@@ -197,6 +198,15 @@ class ShippingForm extends Model
             $this->_provinces = SystemStateProvince::select2Data($this->buyer_country_id);
         }
         return $this->_provinces;
+    }
+    public function getZipCodes()
+    {
+        $zipcodes = SystemZipcode::loadZipCode(101);
+        $data = [];
+        foreach ($zipcodes  as  $zipcode){
+            $data[$zipcode['zip_code']] = $zipcode['label'];
+        }
+        return $data;
     }
 
     public function ensureReceiver()

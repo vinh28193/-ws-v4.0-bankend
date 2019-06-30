@@ -179,7 +179,7 @@ use kartik\depdrop\DepDrop;
                         <input name="phone_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Phone') ?>" value="<?= $shippingForm->receiver_phone ?>">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="<?= (Yii::$app->storeManager->getId() == 7) ?  'display:none;' : ''?>">
                     <?=
                     \kartik\select2\Select2::widget([
                         'data' => $shippingForm->getProvinces(),
@@ -193,7 +193,7 @@ use kartik\depdrop\DepDrop;
                     ]);
                     ?>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="<?= (Yii::$app->storeManager->getId() == 7) ?  'display:none;' : ''?>">
                     <?=
                     DepDrop::widget([
                         'type' => DepDrop::TYPE_SELECT2,
@@ -214,6 +214,22 @@ use kartik\depdrop\DepDrop;
                     ]);
                     ?>
                 </div>
+                <?php if(Yii::$app->storeManager->getId() == 7) {?>
+                <div class="form-group">
+                    <?=
+                    \kartik\select2\Select2::widget([
+                        'data' => $shippingForm->getZipCodes(),
+                        'id' => 'zipcode_default',
+                        'name' => 'zipcode_default',
+                        'value' => $shippingForm->receiver_post_code,
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'placeholder' => Yii::t('frontend', 'Choose the zip code'),
+                        ],
+                    ]);
+                    ?>
+                </div>
+                <?php } ?>
             </div>
             <div class="modal-footer">
                 <button type="button"

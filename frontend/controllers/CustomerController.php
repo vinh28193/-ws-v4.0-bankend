@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\components\UserCookies;
+use common\models\SystemZipcode;
 use Yii;
 use common\models\Customer;
 use frontend\models\CustomerSearch;
@@ -136,11 +137,30 @@ class CustomerController extends Controller
 //        if(($phone = ArrayHelper::getValue($post,'phone'))){
 //            $userCookie->phone = $phone;
 //        }
-        if(($city_id = ArrayHelper::getValue($post,'city_id'))){
-            $userCookie->province_id = $city_id;
+        if(Yii::$app->storeManager->getId() !== 7){
+            if(($city_id = ArrayHelper::getValue($post,'city_id'))){
+                $userCookie->province_id = $city_id;
+            }else{
+                return ['success'=> false,'message' => Yii::t('frontend','Enter city')];
+            }
+            if(($district_id = ArrayHelper::getValue($post,'district_id'))){
+                $userCookie->district_id = $district_id;
+            }else{
+                return ['success'=> false,'message' => Yii::t('frontend','Enter district')];
+            }
         }
-        if(($district_id = ArrayHelper::getValue($post,'district_id'))){
-            $userCookie->district_id = $district_id;
+        if(Yii::$app->storeManager->getId() == 7){
+            if(($zipcode = ArrayHelper::getValue($post,'zipcode'))){
+                $zip = SystemZipcode::findOne(['zip_code' => $zipcode]);
+                if(!$zip){
+                    return ['success'=> false,'message' => Yii::t('frontend','Zipcode not found')];
+                }
+                $userCookie->zipcode = $zipcode;
+                $userCookie->district_id = $zip->boxme_district_id;
+                $userCookie->province_id = $zip->boxme_state_province_id;
+            }else{
+                return ['success'=> false,'message' => Yii::t('frontend','Enter zip code')];
+            }
         }
         Yii::$app->response->format = 'json';
         if(!$userCookie->province_id || !$userCookie->district_id){

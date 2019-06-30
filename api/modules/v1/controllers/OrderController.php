@@ -13,6 +13,7 @@ use api\controllers\BaseApiController;
 use common\helpers\ChatHelper;
 use common\models\Order;
 use common\models\Product;
+use common\modelsMongo\PaymentLogWS;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
@@ -176,6 +177,7 @@ class OrderController extends BaseApiController
             'cancelled',
             'lost',
         );
+        $user = Yii::$app->user->identity;
         $post = Yii::$app->request->post();
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $model = Order::findOne($id);
@@ -354,7 +356,7 @@ class OrderController extends BaseApiController
         Yii::$app->wsLog->push('order', $model->getScenario(), null, [
             'id' => $model->ordercode,
             'request' => $this->post,
-            'response' => $this->resolveChatMessage($dirtyAttributes,$model),
+            'response' => $messages
         ]);
         return $this->response(true, $messages);
     }

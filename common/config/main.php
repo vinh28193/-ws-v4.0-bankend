@@ -84,14 +84,19 @@ return [
             'class' => 'common\products\ProductManager',
             'gates' => [
                 'ebay' => [
-                    'class' => 'common\products\ebay\EbayGate',
-                    'baseUrl' => 'https://api-lbc.weshop.asia/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
+//                    'class' => 'common\products\ebay\EbayGate',
+//                    'baseUrl' => 'https://api-lbc.weshop.asia/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
+
+                    'class' => 'common\products\ebay\EbayGateV4',
+                    'baseUrl' => 'http://sv3.weshop.asia/ebay',
                     'searchUrl' => 'search',
                     'lookupUrl' => 'product'
                 ],
                 'amazon' => [
-                    'class' => 'common\products\amazon\AmazonGate',
-                    'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon',
+//                    'class' => 'common\products\amazon\AmazonGate',
+//                    'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon',
+                    'class' => 'common\products\amazon\AmazonGateV3',
+                    'baseUrl' => 'http://sv3.weshop.asia/amazon',
                     'store' => \common\products\amazon\AmazonProduct::STORE_US
                 ],
                 'amazon-jp' => [

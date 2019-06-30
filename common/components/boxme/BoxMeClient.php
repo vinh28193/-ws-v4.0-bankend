@@ -1,5 +1,6 @@
 <?php
 namespace common\components\boxme;
+use common\components\lib\TextUtility;
 use common\models\boxme\ConfigForm;
 use common\models\boxme\ShipToForm;
 use common\models\boxme\ShipmentForm;
@@ -140,7 +141,7 @@ class BoxMeClient
         return $res;
     }
     public static function CreateLiveShipment($data,$tracking){
-        $service = new CourierClient('206.189.94.203:50056', [
+        $service = new CourierClient('206.189.94.203:50060', [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $param = [];
@@ -151,7 +152,7 @@ class BoxMeClient
         $param['procducts'] = [];
         foreach ($data as $datum){
             $temp = [
-              'bsin' => $datum['sku'],
+              'bsin' => $datum['bsin'],
               'quantity' => $datum['quantity'],
               'img_check' => $datum['img_check'],
               'description' => $datum['description']
@@ -189,7 +190,7 @@ class BoxMeClient
      * @throws \Exception
      */
     public static function SyncProduct($product){
-        $service = new SellerClient('206.189.94.203:50056', [
+        $service = new SellerClient('206.189.94.203:50060', [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $data = [];
@@ -197,7 +198,7 @@ class BoxMeClient
         $data['seller_id'] = $product->seller_id;
         $data['category_id'] = $product->category_id;
         $data['seller_sku'] = strtoupper($product->portal) == 'EBAY' ? $product->parent_sku : $product->sku;
-        $data['bsin'] = $product->id;
+        $data['bsin'] = TextUtility::GenerateBSinBoxMe($product->id);
         $data['name'] = $product->product_name;
         $data['name_local'] = $product->product_name;
         $data['type_sku'] = 1;
@@ -217,15 +218,12 @@ class BoxMeClient
             $product->link_img
         ];
         $request = new SyncProductRequest(['Data' => json_encode($data)]);
-        /** @var SyncProductResponse $apires */
         $apires = $service->syncProduct($request)->wait();
-        list($error, $message) = $apires;
-        Yii::debug($error);
-        Yii::debug($message);
-        print_r($service);
-        print_r($error);
-        print_r($message);
-        die;
+        /** @var SyncProductResponse $response */
+        list($response, $status) = $apires;
+        Yii::debug($response->getMessage());
+        Yii::debug($response->getError());
+        return $response->getError();
 
     }
 
