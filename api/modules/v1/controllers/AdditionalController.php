@@ -74,7 +74,8 @@ class AdditionalController extends BaseApiController
             $product->total_final_amount_local = $additionalFees->getTotalAdditionalFees(null)[1];
             $order = $product->order;
             $order->on(Order::EVENT_AFTER_UPDATE, function ($event) {
-
+                /** @var $event  \yii\db\AfterSaveEvent */
+                Yii::info($event->changedAttributes,$event::className());
             });
             $orderUpdateAttribute = [];
             $totalOrderQuantity = 0;
@@ -129,8 +130,7 @@ class AdditionalController extends BaseApiController
             // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
             $orderUpdateAttribute['total_amount_local'] = $orderUpdateAttribute['total_origin_fee_local'];
             $orderUpdateAttribute['total_final_amount_local'] = $orderUpdateAttribute['total_amount_local'] + $orderUpdateAttribute[''];
-            $order['total_weight_temporary'] = $product['total_weight_temporary'];
-            $order['total_quantity'] = $product['quantity_customer'];
+            $orderUpdateAttribute['total_quantity'] = $totalOrderQuantity;
 
         }
         return $this->response(true, 'call success', []);
