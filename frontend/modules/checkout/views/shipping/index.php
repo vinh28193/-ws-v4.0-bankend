@@ -7,6 +7,7 @@ use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use yii\web\JsExpression;
 use frontend\modules\payment\models\ShippingForm;
 
 /* @var yii\web\View $this */
@@ -85,7 +86,6 @@ $js = <<< JS
         newElement.addClass(close === 1 ? 'open' :'close');
         ws.payment.calculatorShipping();
     };
-    
     $(document).on("beforeSubmit", "form.payment-form", function (e) {
         e.preventDefault();
         var form = $(this);
@@ -100,6 +100,91 @@ $js = <<< JS
     });
 JS;
 $this->registerJs($js);
+
+$urlAjaxUrl = Url::toRoute(['/checkout/shipping/get-zip-ajax']);
+$zipJs = <<<JS
+    var zipAjaxParam = function(params) {
+        var query = {};
+        var type = $(this).data('ownwer');
+        query.zipcode = params.term;
+        var province =  $('#shippingform'+type+'_province_id').val();
+        var district =  $('#shippingform-'+type+'_district_id').val();
+        if(province !== undefined && province !== ''){
+            query.province = province;
+        }
+         if(district !== undefined && district !== ''){
+            query.district = district;
+        }
+        return query;
+    };
+    var zipAjaxProcessResults = function (response, params) {
+        params.page = params.page || 1;
+        var results = response.data.map(item => {
+            return {
+                id:item.zip_code,
+                text:item.zip_code,
+                label:item.label,
+                province:item.province_id,
+                district: item.district_id
+                }
+        });
+        if(params.term){
+            results.push({id:params.term,text:params.term,label:params.term})
+        }
+        if(results.length === 1 && results[0].id === '0'){
+            results = [];
+        }
+        return {
+            results: results,
+            pagination: {
+                more: (params.page * 30) < response.count
+            }
+        };
+    };
+    var formatZipAjaxResults = function (response) {
+        return (response.label) || response.text;
+    };
+    var formatZipAjaxSelection = function (response) {
+        if (response.loading) {
+            return response.text;
+        }
+        return response.text;
+    };
+    var refreshZipcode = function(active,type = 'buyer') {
+        active = active || false;
+        console.log(active);
+        if(active){
+            var zip = $('shippingform-'+type+'_post_code');
+            zip.val('').trigger('change');
+        }
+    };
+    var suggetsAddress = function(event) {
+        event.preventDefault();
+        var params = event.params;
+        var data = params.data;
+        var type = params._type;
+        var target = $(event.target).data('ownwer');
+        var province = $('#shippingform-'+target+'_province_id');
+        var activeProvinceOption = province.find("option[value='" + data.province + "']");
+        if (activeProvinceOption.length && !activeProvinceOption.is(':selected')) {
+            province.val(data.province);
+            province.trigger('change');
+            province.trigger('select2:select');
+            province.trigger('done');
+        }
+        var depdropDistrict = $('#shippingform-'+target+'_district_id');
+        depdropDistrict.trigger('depdrop:ready');
+        $(depdropDistrict).on('depdrop:afterChange', function(event, id, value, jqXHR, textStatus) {
+            var activeDistrictOption = depdropDistrict.find("option[value='" + data.district + "']");
+            if(activeDistrictOption.length && !activeDistrictOption.is(':selected')){
+                depdropDistrict.val(data.district);
+                depdropDistrict.trigger('change');
+                depdropDistrict.trigger('select2:select');
+            }
+        });
+    };
+JS;
+$this->registerJs($zipJs, yii\web\View::POS_HEAD);
 ?>
 <style type="text/css">
 
@@ -174,7 +259,30 @@ $this->registerJs($js);
                     <div class="col-md-6">
                         <?php
                         if ($shippingForm->getStoreManager()->store->country_code === 'ID') {
-                            echo $form->field($shippingForm, 'buyer_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
+//                            echo $form->field($shippingForm, 'buyer_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
+                            echo $form->field($shippingForm, 'buyer_post_code')->widget(Select2::className(), [
+                                'options' => [
+                                    'data-ownwer' => 'buyer',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'placeholder' => Yii::t('frontend', 'Enter your post code'),
+                                    'ajax' => [
+                                        'url' => $urlAjaxUrl,
+                                        'dataType' => 'json',
+                                        'data' => new JsExpression('zipAjaxParam'),
+                                        'processResults' => new JsExpression('zipAjaxProcessResults'),
+                                    ],
+                                    'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                                    'templateResult' => new JsExpression('formatZipAjaxResults'),
+                                    'templateSelection' => new JsExpression('formatZipAjaxSelection'),
+
+                                ],
+                                'pluginEvents' => [
+                                    "select2:select" => new JsExpression('suggetsAddress'),
+                                    "select2:unselect" => new JsExpression('suggetsAddress')
+                                ]
+                            ])->label(Yii::t('frontend', 'Post Code'));
                         } else {
                             echo $form->field($shippingForm, 'buyer_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label(Yii::t('frontend', 'Address'));
                         }
@@ -199,10 +307,9 @@ $this->registerJs($js);
                                 'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
                                 'placeholder' => Yii::t('frontend', 'Choose the district'),
                                 'url' => Url::toRoute(['sub-district']),
-                                'loadingText' => Yii::t('frontend', 'Loading district ...'),
-                                'initialize' => true,
                                 'params' => ['hiddenBuyerDistrictId']
                             ],
+//
                         ])->label(Yii::t('frontend', 'District')); ?>
                     </div>
                 </div>
@@ -260,7 +367,30 @@ $this->registerJs($js);
                     <div class="col-md-6">
                         <?php
                         if ($shippingForm->getStoreManager()->store->country_code === 'ID') {
-                            echo $form->field($shippingForm, 'receiver_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
+//                            echo $form->field($shippingForm, 'receiver_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
+                            echo $form->field($shippingForm, 'receiver_post_code')->widget(Select2::className(), [
+                                'options' => [
+                                    'data-ownwer' => 'receiver',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'placeholder' => Yii::t('frontend', 'Enter your post code'),
+                                    'ajax' => [
+                                        'url' => $urlAjaxUrl,
+                                        'dataType' => 'json',
+                                        'data' => new JsExpression('zipAjaxParam'),
+                                        'processResults' => new JsExpression('zipAjaxProcessResults'),
+                                    ],
+                                    'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                                    'templateResult' => new JsExpression('formatZipAjaxResults'),
+                                    'templateSelection' => new JsExpression('formatZipAjaxSelection'),
+
+                                ],
+                                'pluginEvents' => [
+                                    "select2:select" => new JsExpression('suggetsAddress'),
+                                    "select2:unselect" => new JsExpression('suggetsAddress')
+                                ]
+                            ])->label(Yii::t('frontend', 'Post Code'));
                         } else {
                             echo $form->field($shippingForm, 'receiver_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label(Yii::t('frontend', 'Address'));
                         }
