@@ -1,6 +1,9 @@
 <?php
 return [
     'components' => [
+        'storeManager' => [
+            'storeId' => 7
+        ],
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_global',
@@ -14,7 +17,7 @@ return [
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_h',
+            'dsn' => 'mysql:host=boxmesql;port=3306;dbname=ws_cms_indo',
             'username' => 'sys',
             'password' => 'FaUfevTz62pgY33JxxE',
             'charset' => 'utf8',

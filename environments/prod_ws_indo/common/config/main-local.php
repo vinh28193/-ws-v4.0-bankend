@@ -2,13 +2,13 @@
 return [
     'components' => [
         'storeManager' => [
-            'storeId' => 1
+            'storeId' => 7
         ],
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_global',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'username' => 'ws2020',
+            'password' => 'q4CgJyTNBT63RWfQ',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
@@ -17,9 +17,9 @@ return [
         ],
         'db_cms' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_h',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'dsn' => 'mysql:host=boxmesql;port=3306;dbname=ws_cms_indo',
+            'username' => 'cms_indo',
+            'password' => 'hg4UErPpPch52Xz3',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
@@ -51,7 +51,7 @@ return [
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'sessionRedisBm',
-            'port' => 6479,
+            'port' => 6379,
             'database' => 0,
         ],
         'mailer' => [
@@ -72,7 +72,7 @@ return [
         ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://backup:QuKUBS1cQ2Q@WSBOX2019@mongodbWs:27017/admin',
+            'dsn' => 'mongodb://backup:QuKUBS1cQ2Q@mongodbWs:27017/admin',
         ],
 //        'db_oauth'=>[
 //            'class' => 'yii\db\Connection',
@@ -86,7 +86,7 @@ return [
 //        ],
         'ga' => [
             'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
-            'trackingId' => 'UA-68960158-1', // Put your real tracking ID here
+            'trackingId' => 'UA-53391706-1', // 'UA-140658371-1', // Put your real tracking ID here WS_ID : UA-53391706-1
 
             // These parameters are optional:
             'useSsl' => true, // If you’d like to use a secure connection to Google servers

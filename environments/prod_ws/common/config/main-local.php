@@ -7,8 +7,8 @@ return [
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_global',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'username' => 'ws2020',
+            'password' => 'q4CgJyTNBT63RWfQ',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
@@ -18,8 +18,8 @@ return [
         'db_cms' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_h',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'username' => 'ws2020',
+            'password' => 'q4CgJyTNBT63RWfQ',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
@@ -51,7 +51,7 @@ return [
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'sessionRedisBm',
-            'port' => 6479,
+            'port' => 6379,
             'database' => 0,
         ],
         'mailer' => [
@@ -86,7 +86,7 @@ return [
 //        ],
         'ga' => [
             'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
-            'trackingId' => 'UA-68960158-1', // Put your real tracking ID here
+            'trackingId' => 'UA-68960158-1' , // 'UA-68960158-1', // Put your real tracking ID here WS-VN UA-68960158-1
 
             // These parameters are optional:
             'useSsl' => true, // If you’d like to use a secure connection to Google servers
