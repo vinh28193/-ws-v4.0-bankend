@@ -131,6 +131,7 @@ class AdditionalController extends BaseApiController
             $orderUpdateAttribute['total_amount_local'] = $orderUpdateAttribute['total_origin_fee_local'];
             $orderUpdateAttribute['total_final_amount_local'] = $orderUpdateAttribute['total_amount_local'] + $orderUpdateAttribute[''];
             $orderUpdateAttribute['total_quantity'] = $totalOrderQuantity;
+            $order->updateAttributes($orderUpdateAttribute);
 
         }
         return $this->response(true, 'call success', []);
