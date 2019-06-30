@@ -8,7 +8,7 @@ return [
         '@npm' => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
-    'sourceLanguage' => 'vi-VN',
+    'sourceLanguage' => 'en-US',
     'components' => [
         /*
         'cache' => [
