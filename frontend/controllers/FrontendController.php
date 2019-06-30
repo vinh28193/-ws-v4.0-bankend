@@ -354,6 +354,17 @@ class FrontendController extends Controller
         $cookies->add($cookie);
     }
 
+    public function removeUuidCookie()
+    {
+        $cookies = Yii::$app->getResponse()->getCookies();
+        $cookie = new Cookie([
+            'name' => self::UUID_COOKIE_NAME,
+            'secure' => false
+        ]);
+        $cookies->remove($cookie);
+
+    }
+
     public function filterUuid($checkHead = true)
     {
         if ($this->_uuid !== null) {

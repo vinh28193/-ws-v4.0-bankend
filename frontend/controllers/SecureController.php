@@ -150,6 +150,7 @@ class SecureController extends FrontendController
             (AccountKit::logout($user->facebook_acc_kit_token));
         }
         Yii::$app->user->logout();
+        $this->removeUuidCookie();
         return $this->goHome();
     }
 

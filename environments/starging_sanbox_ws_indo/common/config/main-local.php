@@ -7,8 +7,8 @@ return [
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_global',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'username' => 'weshop2020',
+            'password' => 'FaUfevTz62pgY3JE',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
@@ -18,8 +18,8 @@ return [
         'db_cms' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=boxmesql;port=3306;dbname=ws_cms_indo',
-            'username' => 'sys',
-            'password' => 'FaUfevTz62pgY33JxxE',
+            'username' => 'weshop2020',
+            'password' => 'FaUfevTz62pgY3JE',
             'charset' => 'utf8',
             'enableSchemaCache' => false,
             'schemaCacheDuration' => 7200,
@@ -44,7 +44,7 @@ return [
             'class' => 'yii\redis\Cache',
             'redis' => [
                 'hostname' => 'cacheRedisWs',
-                'port' => 6379,
+                'port' => 6479,
                 'database' => 0,
             ]
         ],

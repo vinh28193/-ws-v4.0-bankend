@@ -204,6 +204,9 @@ class OrderController extends BaseApiController
                 if (isset($post['check_insurance'])) {
                     $model->check_insurance = $post['check_insurance'];
                 }
+                if (isset($post['check_packing_wood'])) {
+                    $model->check_packing_wood = $post['check_packing_wood'];
+                }
                 if (isset($post['total_intl_shipping_fee_local'])) {
                     $model->total_intl_shipping_fee_local = $post['total_intl_shipping_fee_local'];
                 }

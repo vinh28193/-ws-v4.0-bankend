@@ -240,6 +240,33 @@ return [
         ],
     ],
 
+    // starging_sanbox_ws_indo
+    'StargingWSID' => [
+        'path' => 'starging_sanbox_ws_indo',
+        'setWritable' => [
+            'api/runtime',
+            'api/web/assets',
+            'backend/runtime',
+            'backend/web/assets',
+            'userbackend/runtime',
+            'userbackend/web/assets',
+            'frontend/runtime',
+            'frontend/web/assets',
+            'wallet/runtime',
+            'wallet/web/assets',
+        ],
+        'setExecutable' => [
+            'yii',
+        ],
+        'setCookieValidationKey' => [
+            'api/config/main-local.php',
+            'backend/config/main-local.php',
+            'frontend/config/main-local.php',
+            'userbackend/config/main-local.php',
+            'wallet/config/main-local.php',
+        ],
+    ],
+
     // prod_ws_indo
     'ProWSID' => [
         'path' => 'prod_ws_indo',
