@@ -16,7 +16,8 @@ class TopMenuAliasWidget extends Widget
         $key = 'category_'.$this->type . '-' . Yii::$app->storeManager->getId();
         $item_category = Cache::get($key);
         if(!$item_category){
-            $alias = WsAlias::findOne(['store_id'=>Yii::$app->storeManager->getId(),'type'=>$this->type]);
+            $alias = WsAlias::findOne(['store_id'=>1,'type'=>$this->type]);
+//            $alias = WsAlias::findOne(['store_id'=>Yii::$app->storeManager->getId(),'type'=>$this->type]);
             $item_category = $alias->getCategoryList(false);
             Cache::set($key,$item_category,60*60*24);
         }

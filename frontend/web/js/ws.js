@@ -350,7 +350,6 @@ var ws = ws || (function ($) {
             });
         },
         saveDefaultAddress: function () {
-            $('#modal-address').modal('hide');
             ws.loading(true);
             $.ajax({
                 url: '/customer/save-address-default',
@@ -360,13 +359,14 @@ var ws = ws || (function ($) {
                     phone: $('input[name=phone_default]').val(),
                     city_id: $('select[name=city_default]').val(),
                     district_id: $('select[name=district_default]').val(),
+                    zipcode: $('select[name=zipcode_default]').val(),
                 },
                 success: function (res) {
                     if (res.success) {
                         window.location.reload();
                     } else {
                         ws.loading(false);
-                        ws.notifyError(res.message);
+                        alert(res.message);
                     }
                 }
             });
