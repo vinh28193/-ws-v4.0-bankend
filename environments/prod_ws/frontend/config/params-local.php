@@ -13,7 +13,7 @@ return [
             'params' => [
                 'prod_trunggian' => [
                     'URL' => 'https://www.nganluong.vn/checkout.api.nganluong.post.php',
-                    'ACC' => 'buynow@weshop@asia',
+                    'ACC' => 'buynow@weshop.asia',
                     'PASS' => '8a9e7f1add29b10c6588fc9517e4c402',
                     'ID' => '60075'
                 ],
@@ -33,7 +33,7 @@ return [
                     'summitUrl' => 'https://www.nganluong.vn/checkoutseamless.api.nganluong.post.php',
                     'merchant_id' => '60126',
                     'merchant_password' => '55df210eba73fed2d7627ae0817c16bb',
-                    'receiver_email' => 'buynow@weshop@asia',
+                    'receiver_email' => 'buynow@weshop.asia',
                 ]
             ],
         ],
