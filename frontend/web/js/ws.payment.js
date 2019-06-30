@@ -112,6 +112,8 @@ ws.payment = (function ($) {
             });
             $('#shippingform-buyer_phone').keyup(function () {
                 var link = location.href;
+                var session = sessionStorage.getItem();
+                console.log(document.cookie);
                 var phone = $('#shippingform-buyer_phone').val().trim();
                 phone = phone.replace('(+84)', '0');
                 phone = phone.replace('+84', '0');
