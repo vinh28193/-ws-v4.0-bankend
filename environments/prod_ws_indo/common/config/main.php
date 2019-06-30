@@ -85,7 +85,7 @@ return [
             'gates' => [
                 'ebay' => [
                     'class' => 'common\products\ebay\EbayGate',
-                    'baseUrl' => 'https://api-lbc.weshop.asia/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
+                    'baseUrl' => 'http://sv3.weshop.asia/ebay', // 'baseUrl' => 'https://api-lbc.weshop.asia/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
                     'searchUrl' => 'search',
                     'lookupUrl' => 'product'
                 ],

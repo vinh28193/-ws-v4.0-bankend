@@ -140,7 +140,7 @@ class BoxMeClient
         return $res;
     }
     public static function CreateLiveShipment($data,$tracking){
-        $service = new CourierClient('206.189.94.203:50056', [
+        $service = new CourierClient('206.189.94.203:50060', [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $param = [];
@@ -189,7 +189,7 @@ class BoxMeClient
      * @throws \Exception
      */
     public static function SyncProduct($product){
-        $service = new SellerClient('206.189.94.203:50056', [
+        $service = new SellerClient('206.189.94.203:50060', [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $data = [];
@@ -217,14 +217,15 @@ class BoxMeClient
             $product->link_img
         ];
         $request = new SyncProductRequest(['Data' => json_encode($data)]);
-        /** @var SyncProductResponse $apires */
         $apires = $service->syncProduct($request)->wait();
-        list($error, $message) = $apires;
-        Yii::debug($error);
-        Yii::debug($message);
-        print_r($service);
-        print_r($error);
-        print_r($message);
+        /** @var SyncProductResponse $response */
+        list($response, $status) = $apires;
+
+//        print_r($service);
+        print_r($response->getMessage());
+        print_r($response->getError());
+//        print_r($error);
+//        print_r($message);
         die;
 
     }
