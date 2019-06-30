@@ -256,6 +256,7 @@ class ServiceUsSendingController extends BaseApiController
                     if(in_array($product->order_id,$order_ids)){
                         $order_ids[] = $product->order_id;
                     }
+                    BoxMeClient::SyncProduct($product);
                     $datumShipment['sku'] = $product->sku;
                     $datumShipment['quantity'] = $quantity;
                     $datumShipment['img_check'] = 1;

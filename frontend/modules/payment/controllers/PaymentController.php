@@ -4,6 +4,7 @@
 namespace frontend\modules\payment\controllers;
 
 
+use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
 use common\models\Address;
 use common\models\db\TargetAdditionalFee;
@@ -71,11 +72,11 @@ class PaymentController extends BasePaymentController
             $shippingParams['buyer_post_code'] = $buyer->post_code;
 
             if ((int)$shippingForm->enable_receiver === ShippingForm::NO) {
-                $shippingParams['receiver_name'] = $buyer->address;
-                $shippingParams['receiver_address'] = $buyer->phone;
-                $shippingParams['receiver_phone'] = $buyer->province_id;
-                $shippingParams['receiver_province_id'] = $buyer->district_id;
-                $shippingParams['receiver_district_id'] = $buyer->post_code;
+                $shippingParams['receiver_name'] = $buyer->first_name;
+                $shippingParams['receiver_address'] = $buyer->address;
+                $shippingParams['receiver_phone'] = $buyer->phone;
+                $shippingParams['receiver_province_id'] = $buyer->province_id;
+                $shippingParams['receiver_district_id'] = $buyer->district_id;
                 $shippingParams['receiver_province_name'] = $buyer->province_name;
                 $shippingParams['receiver_district_name'] = $buyer->district_name;
             }
@@ -84,6 +85,8 @@ class PaymentController extends BasePaymentController
         if ($shippingForm->other_receiver !== 'false') {
 
             if ((int)$shippingForm->enable_receiver === ShippingForm::YES) {
+                var_dump($shippingForm);
+                die();
                 $shippingParams['receiver_name'] = $shippingForm->receiver_name;
                 $shippingParams['receiver_address'] = $shippingForm->receiver_address;
                 $shippingParams['receiver_phone'] = $shippingForm->receiver_phone;
@@ -165,6 +168,10 @@ class PaymentController extends BasePaymentController
 
                 $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
 
+                $order->total_fee_amount_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees()[1];
+
+                $order->total_final_amount_local = $orderPayment->getTotalFinalAmount();
+
                 // 2 .seller
                 $seller = $orderPayment->seller;
                 $seller->portal = $orderPayment->portal;
@@ -237,7 +244,7 @@ class PaymentController extends BasePaymentController
                     }
                 }
 
-                $updateOrderAttributes['ordercode'] = WeshopHelper::generateTag($order->id, 'WSVN', 16);
+                $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id, $this->storeManager->store->country_code, 8);
                 $updateOrderAttributes['total_final_amount_local'] = $order->total_amount_local - $order->total_promotion_amount_local;
                 $order->updateAttributes($updateOrderAttributes);
                 $orders[$order->ordercode] = $order;
@@ -249,26 +256,11 @@ class PaymentController extends BasePaymentController
             return $this->response(false, $exception->getMessage());
         }
 
-        // Todo remove cart after create payment success
-        foreach ($orders as $order) {
-            /** @var  $order Order */
-            $childTransaction = clone $paymentTransaction;
-            $childTransaction->id = null;
-            $childTransaction->isNewRecord = true;
-            $childTransaction->transaction_amount_local = $order->total_final_amount_local;
-            $childTransaction->total_discount_amount = 0;
-            $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
-            $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
-            $childTransaction->order_code = $order->ordercode;
-            $childTransaction->courier_name = $order->courier_name;
-            $childTransaction->service_code = $order->courier_service;
-            $childTransaction->save(false);
-            $order->removeCart();
-        }
 
         // ToDo Push GA Checkout @Phuchc
 
         $res = $payment->processPayment();
+        $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         if ($res->success === false) {
             return $this->response(false, $res->message);
         }
@@ -276,6 +268,30 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->third_party_transaction_status = $res->status;
         $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
         $paymentTransaction->save(false);
+        // Todo remove cart after create payment success
+        foreach ($orders as $order) {
+            /** @var  $order Order */
+            $childTransaction = clone $paymentTransaction;
+            $childTransaction->id = null;
+            $childTransaction->isNewRecord = true;
+            $childTransaction->transaction_amount_local = $order->getTotalFinalAmount();
+            $childTransaction->total_discount_amount = $order->discountAmount;
+            $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
+            $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
+            $childTransaction->order_code = $order->ordercode;
+            $childTransaction->courier_name = $order->courier_name;
+            $childTransaction->service_code = $order->courier_service;
+            $childTransaction->save(false);
+            $employee = new Employee();
+            if (($assign = $employee->getAssign()) !== null) {
+                $order->sale_support_id = $assign->id;
+                $order->support_email = $assign->email;
+                $order->save(false);
+            }
+
+            $order->removeCart();
+        }
+
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res);
@@ -292,11 +308,10 @@ class PaymentController extends BasePaymentController
         }
         $payment = new Payment($bodyParams);
         $payment->setOrders($orders);
-        if (($methodProvider = PaymentService::getMethodProvider($payment->payment_provider, $payment->payment_method)) === null) {
-            $payment->payment_method_name = $methodProvider->paymentMethod->code;
-            $payment->payment_provider_name = $methodProvider->paymentProvider->code;
-        } else {
+        if ($payment->payment_provider === null && $payment->payment_method === null) {
             $payment->initDefaultMethod();
+        } else {
+            $payment->getPaymentMethodProviderName();
         }
 
         $paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $payment->transaction_code]);
@@ -307,6 +322,9 @@ class PaymentController extends BasePaymentController
         }
         $payment->return_url = PaymentService::createReturnUrl($payment->payment_provider);
         $payment->cancel_url = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
+        if($payment->type === 'order' && $paymentTransaction->order_code !== null){
+            $payment->cancel_url = PaymentService::createBillingUrl($paymentTransaction->order_code);
+        }
         $res = $payment->processPayment();
         if ($res->success === false) {
             return $this->response(false, $res->message);
@@ -356,6 +374,9 @@ class PaymentController extends BasePaymentController
 
                 if (($order = $child->order) !== null) {
                     $order->total_paid_amount_local = $child->transaction_amount_local;
+                    if($order->current_status == Order::STATUS_SUPPORTED){
+                        $order->current_status = Order::STATUS_READY2PURCHASE;
+                    }
                     $order->save(false);
                 }
                 $child->save(false);

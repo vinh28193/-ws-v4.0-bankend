@@ -85,9 +85,9 @@ ws.payment = (function ($) {
                 }
             });
 
-            // setTimeout(function () {
-            //     pub.calculatorShipping();
-            // }, 1000);
+            setTimeout(function () {
+                pub.calculatorShipping();
+            }, 1000);
 
             $('input[name=check-member]').click(function () {
                 var value = $(this).val();
@@ -111,6 +111,7 @@ ws.payment = (function ($) {
                 window.scrollTo(0, 0);
             });
             $('#shippingform-buyer_phone').keyup(function () {
+                var link = location.href;
                 var phone = $('#shippingform-buyer_phone').val().trim();
                 phone = phone.replace('(+84)', '0');
                 phone = phone.replace('+84', '0');
@@ -122,6 +123,7 @@ ws.payment = (function ($) {
                         type: 'POST',
                         data: {
                             phone: phone,
+                            link: link,
                             fullName: $('#shippingform-buyer_name').val().trim(),
                             email: $('#shippingform-buyer_email').val().trim(),
                             typeUpdate: 'updateCartInCheckout'
@@ -296,8 +298,8 @@ ws.payment = (function ($) {
                 row.rowHeader.unshift('<td class="text-blue">' + period.month + ' tháng</td>');
                 row.rowOriginAmount.unshift('<td><b>' + pub.installmentParam.originAmount + '</b></td>');
                 row.rowAmountByMonth.unshift('<td><b>' + period.amountByMonth + '</b></td>');
-                row.rowAmountFinal.unshift('<td><b>' + period.amountFinal + '</b></td>');
-                row.rowAmountFee.unshift('<td><b>' + period.amountFee + '</b></td>');
+                row.rowAmountFinal.unshift('<td><b>' + ws.showMoney(period.amountFinal) + '</b></td>');
+                row.rowAmountFee.unshift('<td><b>' + ws.showMoney(period.amountFee) + '</b></td>');
                 row.rowOption.unshift('<td>\n' +
                     '<div class="form-check">\n' +
                     '     <input class="form-check-input" type="radio" value="' + period.month + '"  ' + (iActive ? 'checked' : '') + '  id="installment' + period.month + '" name="installmentPeriod" checked="">\n' +
@@ -360,7 +362,7 @@ ws.payment = (function ($) {
             var tableFee = $cardOrder.find('table.table-fee');
 
             var courierRow = tableFee.find('tr.courier');
-            courierRow.remove();
+            courierRow.html('');
             courierRow.append('<th class="header">' + courier.courier_name + ' ' + courier.service_name + '</th>');
             courierRow.append('<td class="text-right">' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days') + '</td>');
             courierRow.css('display', 'table-row');
@@ -482,6 +484,7 @@ ws.payment = (function ($) {
             pub.shipping.buyer_province_id = $('#shippingform-buyer_province_id').val();
             pub.shipping.buyer_district_id = $('#shippingform-buyer_district_id').val();
             pub.shipping.buyer_address = $('#shippingform-buyer_address').val();
+            pub.shipping.buyer_post_code = $('#shippingform-buyer_post_code').val();
 
             pub.shipping.enable_receiver = $('#shippingform-enable_receiver').val();
             pub.shipping.receiver_address_id = $('[name="ShippingForm[receiver_address_id]:checked').val();
@@ -492,9 +495,8 @@ ws.payment = (function ($) {
             pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
             pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
-
+            pub.shipping.receiver_post_code = $('#shippingform-receiver_post_code').val();
             pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
-            console.log(pub.shipping);
             // case 1 //
             if (isSafe) {
                 if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
@@ -600,6 +602,12 @@ ws.payment = (function ($) {
                     }
                 } else {
                     ws.notifyError(response.message);
+                    var url = response.data || null;
+                    if (url !== null && typeof url === 'string') {
+                        setTimeout(function () {
+                            ws.redirect(url);
+                        }, 1000);
+                    }
                 }
 
             }

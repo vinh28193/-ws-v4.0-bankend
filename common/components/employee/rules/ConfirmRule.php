@@ -4,6 +4,8 @@ namespace common\components\employee\rules;
 
 use common\helpers\WeshopHelper;
 use Yii;
+use DateTime;
+use DateTimeZone;
 use common\models\Order;
 use yii\db\Expression;
 use yii\db\Query;
@@ -53,11 +55,11 @@ class ConfirmRule extends BaseRule
     }
 
     /**
-     * @return array|\common\models\User|mixed
+     * @inheritDoc
      */
     public function getActiveSupporter()
     {
-        echo "<pre>";
+        $supporters = $this->employee->getSupporters();
         $confirmPercent = $this->getConfirmPercent();
         $currentAssign = $this->getCurrentAssign();
         $confirmConverted = $confirmPercent['converted'];
@@ -65,9 +67,13 @@ class ConfirmRule extends BaseRule
         $totalAssigned = ArrayHelper::getValue($currentAssign, 'total', 0);
         $totalAssigned += 1;
         $results = [];
-        foreach (array_keys($this->employee->getSupporters()) as $id) {
+        foreach (array_keys($supporters) as $id) {
             $ownerConvert = ArrayHelper::getValue($confirmConverted, $id, 0);
-            $assignRate = ($ownerConvert / $this->countSupporter() / $confirmAgv);
+            if($confirmAgv === 0){
+                $assignRate = 100;
+            }else {
+                $assignRate = ($ownerConvert / $this->countSupporter() / $confirmAgv);
+            }
             $results[$id] = $assignRate;
         }
         $assigned = ArrayHelper::getValue($currentAssign, 'assigned', []);
@@ -76,32 +82,30 @@ class ConfirmRule extends BaseRule
             if (!isset($assigned[$id])) {
                 $assigned[$id] = 0;
             }
+            //(Lấy số thứ tự đơn hiện tại - tổng số đơn đã được nhận )* tỷ lệ => lớn nhất thì giao
             $calculator[$id] = ($totalAssigned - $assigned[$id]) * $rate;
         }
-        var_dump($calculator);
         arsort($calculator);
         $sMax = WeshopHelper::sortMaxValueArray($calculator);
-//
-//        if (count($sMax) > 1) {
-//            foreach (array_keys($sMax) as $id) {
-//                $sMax[$id] = $assigned[$id];
-//            }
-//        }
-//
-//        asort($sMax);
+        // Nếu trọng số bằng nhau thì ưu chỉ số đã nhận thấp hơn
+        if (count($sMax) > 1) {
+            foreach (array_keys($sMax) as $id) {
+                $sMax[$id] = $assigned[$id];
+            }
+        }
+
+        asort($sMax);
         $assigner = array_keys($sMax);
         $assigner = array_shift($assigner);
         $value = $assigned[$assigner];
         $value += 1;
         $assigned[$assigner] = $value;
-        echo "order $totalAssigned assign to {$this->employee->getSupporters()[$assigner]['name']} \n";
 
         $this->setFileCache('current_assign', [
             'assigned' => $assigned,
             'total' => $totalAssigned
         ]);
-        echo "</pre>";
-        return $this->employee->getSupporters()[$assigner];
+        return isset($supporters[$assigner]) ? $supporters[$assigner] : null;
     }
 
     public function countSupporter()
@@ -117,20 +121,25 @@ class ConfirmRule extends BaseRule
             $confirmPercent = $this->getFileCache('confirm_percent', null);
             $supportIds = array_keys($this->employee->getSupporters());
             if ($confirmPercent === null || $confirmPercent['expired_at'] <= time()) {
-//                $caculators = $this->loadConfirmPercentBySupporter($supportIds);
+
+//                $converted = [];
+//                $array = [
+//                    1 => 18,
+//                    2 => 24,
+//                    3 => 32,
+//                    4 => 26
+//                ];
+//                foreach ($supportIds as $supportId) {
+//                    $converted[$supportId] = $array[$supportId];
+//                }
                 $converted = [];
-                $array = [
-                    1 => 18,
-                    2 => 24,
-                    3 => 32,
-                    4 => 26
-                ];
-                foreach ($supportIds as $supportId) {
-                    $converted[$supportId] = $array[$supportId];
+                $results = $this->loadConfirmPercentBySupporter($supportIds);
+                foreach ($supportIds as $id){
+                    $converted[$id] = isset($results[$id]) ? $results[$id] : 0;
                 }
                 $agv = array_sum($converted) / count($converted);
                 $confirmPercent = [
-                    'expired_at' => Yii::$app->formatter->asTimestamp('now + 7days'),
+                    'expired_at' => $this->getDayExpiredAt(),
                     'converted' => $converted,
                     'agv' => $agv
                 ];
@@ -158,10 +167,18 @@ class ConfirmRule extends BaseRule
         $q = new Query();
         $q->from(['o' => Order::tableName()]);
         $q->select([
-            'support' => new Expression('`o`.`support_id`'),
+            'support' => new Expression('`o`.`sale_support_id`'),
             'total' => new Expression('COUNT(`o`.`id`)'),
             'supported' => new Expression('COUNT(IF(`o`.`supported` is not null ,1,null))')
         ]);
+        $q->where([
+            'AND',
+            ['sale_support_id' => $ids],
+            ['>=', 'o.new', $this->getFirstDayOfLastWeek()],
+            ['<=', 'o.new', $this->getLastDayOfLastWeek()],
+        ]);
+        $q->groupBy(['support']);
+        return ArrayHelper::map($q->all(Order::getDb()), 'support', 'supported');
     }
 
     public function setFileCache($name, $value)
@@ -186,5 +203,29 @@ class ConfirmRule extends BaseRule
             return $name !== null ? ArrayHelper::getValue($contents, $name, $default) : $contents;
         }
         return $default;
+    }
+
+    private function createDateTime($value = 'today', $hour = 23, $minute = 59, $second = 59, $format = 'Y-m-d H:i:s')
+    {
+        $dateTimeZone = new DateTimeZone(($timeZone = Yii::$app->formatter->timeZone) !== null ? $timeZone : 'UTC');
+        $dateTime = new DateTime();
+        $dateTime->setTimezone($dateTimeZone);
+        $dateTime->modify($value);
+        $dateTime->setTime($hour, $minute, $second);
+        return $dateTime->format($format);
+    }
+
+    public function getFirstDayOfLastWeek()
+    {
+        return $this->createDateTime('Last Monday - 7 days', 00, 00, 00, 'U');
+    }
+
+    public function getLastDayOfLastWeek()
+    {
+        return $this->createDateTime('Last Sunday', 23, 59, 59, 'U');
+    }
+
+    public function getDayExpiredAt(){
+        return $this->createDateTime('Next Sunday',23, 59, 59, 'U');
     }
 }

@@ -1,5 +1,22 @@
 <?php
 return [
+    'account_kit' => [
+        'store_1' => [
+            'ver' => 'v1.1',
+            'code_phone' => '+84',
+            'app_id' => '1909464509361286',
+        ],
+        'store_7' => [
+            'app_id' => '181219292667675',
+            'ver' => 'v1.1',
+            'code_phone' => '+63',
+        ],
+        'store_2' => [
+            'app_id' => '181219292667675',
+            'ver' => 'v1.1',
+            'code_phone' => '+63',
+        ],
+    ],
     'adminEmail' => 'admin@example.com',
     'jsMessages' => [
         'Hello {name}',

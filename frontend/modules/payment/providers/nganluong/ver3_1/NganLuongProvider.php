@@ -42,14 +42,20 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $param['order_description'] = "Thanh toan cho hoa don so {$payment->transaction_code}";
         $param['total_amount'] = $payment->getTotalAmountDisplay();
         $param['fee_shipping'] = 0;
-        $param['payment_method'] = $this->replaceMethod($payment->payment_method_name);
+        Yii::info($payment->payment_method_name);
+        if (strpos($payment->payment_method_name, 'ATM_') !== false) {
+            $param['payment_method'] = 'ATM_ONLINE';
+        }else {
+            $param['payment_method'] = $this->replaceMethod($payment->payment_method_name);
+        }
+
         $param['bank_code'] = $payment->payment_bank_code;
         if (strpos($payment->payment_bank_code, 'VISA') !== false) {
             $param['bank_code'] = 'VISA';
         } else if (strpos($payment->payment_bank_code, 'MASTER') !== false) {
             $param['bank_code'] = 'MASTER';
-        } else if (strpos($payment->payment_bank_code, 'QRCODE') !== false) {
-            $param['bank_code'] = 'ICB';
+        } else if (strpos($payment->payment_bank_code, 'ATM_') !== false) {
+            $param['bank_code'] = str_replace('ATM_','',$payment->payment_bank_code);
         }
         $param['buyer_fullname'] = $payment->customer_name;
         $param['buyer_email'] = $payment->customer_email;

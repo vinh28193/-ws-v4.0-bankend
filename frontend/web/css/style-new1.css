@@ -1,6 +1,6 @@
 
 .style-ull {
-    padding-left: 1em;
+    /*padding-left: 1em;*/
     background-color: #f6f6f6;
 }
 .style-ull li {
@@ -67,7 +67,7 @@ ul.bars-nav > li ul li a{
     font-family: Helvetica;
 }
 .category_account {
-   left: -230px !important;
+   left: -290px !important;
     transform: translate3d(0, 0, 0) !important;
     top: 89% !important;
 

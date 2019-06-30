@@ -1,3 +1,12 @@
+<?php
+
+use frontend\modules\payment\models\ShippingForm;
+use kartik\depdrop\DepDrop;
+
+/**
+ * @var ShippingForm $shippingForm
+ */
+?>
 <footer class="footer">
     <div class="top">
         <div class="container">
@@ -146,53 +155,119 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title"><?= Yii::t('frontend', 'Select Your Address') ?></div>
+                <div class="modal-title title"><?= Yii::t('frontend', 'Select Your Address') ?></div>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <div>
+                    <div class="font-weight-bold">
                         <?= Yii::t('frontend', 'Please enter your address so we can display shipping fee correctly.') ?>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <div class="input-group formIconTitle">
                         <span class="input-group-addon">
                             <i class="la la-user"></i>
                         </span>
-                        <input name="fullName_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Full Name') ?>">
+                        <input name="fullName_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Full Name') ?>" value="<?= $shippingForm->receiver_name ?>">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <div class="input-group formIconTitle">
                         <span class="input-group-addon">
                             <i class="la la-phone"></i>
                         </span>
-                        <input name="phone_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Phone') ?>">
+                        <input name="phone_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','Phone') ?>" value="<?= $shippingForm->receiver_phone ?>">
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="input-group formIconTitle">
-                        <span class="input-group-addon">
-                            <i class="la la-map-marker"></i>
-                        </span>
-                        <input name="city_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','City') ?>">
-                    </div>
+                    <?=
+                    \kartik\select2\Select2::widget([
+                        'data' => $shippingForm->getProvinces(),
+                        'id' => 'city_default',
+                        'name' => 'city_default',
+                        'value' => $shippingForm->receiver_province_id,
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'placeholder' => Yii::t('frontend', 'Choose the province'),
+                        ],
+                    ]);
+                    ?>
                 </div>
                 <div class="form-group">
-                    <div class="input-group formIconTitle">
-                        <span class="input-group-addon">
-                            <i class="la la-map-marker"></i>
-                        </span>
-                        <input name="district_default" type="text" class="form-control" placeholder="<?= Yii::t('frontend','District') ?>">
-                    </div>
+                    <?=
+                    DepDrop::widget([
+                        'type' => DepDrop::TYPE_SELECT2,
+                        'name' => 'district_default',
+                        'attribute' => 'district_default',
+                        'value' => $shippingForm->receiver_district_id,
+                        'select2Options' => [
+                            'pluginOptions' => ['allowClear' => true],
+                        ],
+                        'pluginOptions' => [
+                            'depends' => ['city_default'],
+                            'placeholder' => Yii::t('frontend', 'Choose the district'),
+                            'url' => '/checkout/shipping/sub-district',
+                            'loadingText' => Yii::t('frontend', 'Loading district ...'),
+                            'initialize' => true,
+                            'params' => ['hiddenReceiverDistrictId']
+                        ],
+                    ]);
+                    ?>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" style="display: none"
-                        class="btn btn-primary"><?= Yii::t('frontend', 'Confirm') ?></button>
-                <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal"><?= Yii::t('frontend', 'Close') ?></button>
+                <button type="button"
+                        id="setDefaultAddressSmBtn"
+                        class="btn btn-success"><?= Yii::t('frontend', 'Confirm') ?></button>
             </div>
         </div>
     </div>
 </div>
+<script>
+    window.intercomSettings = {
+        <?php
+        if(!Yii::$app->user->isGuest){
+            /** @var \common\models\User $user_login */
+            $user_login = Yii::$app->user->getIdentity();
+            ?>
+        name: "<?= implode(' ',[$user_login->last_name,$user_login->first_name]) ?>", // Full name
+        email: "<?= $user_login->email ?>", // Email address
+        created_at: "<?= $user_login->created_at ?>", // Signup date as a Unix timestamp
+        <?php } ?>
+        app_id: "wc8x0ims"
+    };
+</script>
+<script>(function () {
+        var w = window;
+        var ic = w.Intercom;
+        if (typeof ic === "function") {
+            ic('reattach_activator');
+            ic('update', w.intercomSettings);
+        } else {
+            var d = document;
+            var i = function () {
+                i.c(arguments);
+            };
+            i.q = [];
+            i.c = function (args) {
+                i.q.push(args);
+            };
+            w.Intercom = i;
+            var l = function () {
+                var s = d.createElement('script');
+                s.type = 'text/javascript';
+                s.async = true;
+                s.src = 'https://widget.intercom.io/widget/wc8x0ims';
+                var x = d.getElementsByTagName('script')[0];
+                x.parentNode.insertBefore(s, x);
+            };
+            if (w.attachEvent) {
+                w.attachEvent('onload', l);
+            } else {
+                w.addEventListener('load', l, false);
+            }
+        }
+    })();</script>
+
+
+

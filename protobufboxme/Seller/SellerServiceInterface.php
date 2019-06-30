@@ -19,5 +19,21 @@ interface SellerServiceInterface
      */
     public function wsCreateCahin(\Seller\WsCreateCahinRequest $request);
 
+    /**
+     * Method <code>createShipment</code>
+     *
+     * @param \Seller\CreateShipmentRequest $request
+     * @return \Seller\CreateShipmentResponse
+     */
+    public function createShipment(\Seller\CreateShipmentRequest $request);
+
+    /**
+     * Method <code>syncProduct</code>
+     *
+     * @param \Seller\SyncProductRequest $request
+     * @return \Seller\SyncProductResponse
+     */
+    public function syncProduct(\Seller\SyncProductRequest $request);
+
 }
 

@@ -43,7 +43,7 @@ class Payment extends Model
     const PAGE_TOP_UP = 'TOP_UP';
 
     public $env = self::ENV_PRODUCT;
-    public $uuid = null;
+    public $uuid;
     public $page = self::PAGE_CHECKOUT;
 
     /**
@@ -139,6 +139,17 @@ class Payment extends Model
             $this->payment_provider = 44;
             $this->payment_bank_code = 'ALEPAY';
         }
+        if($this->storeManager->store->country_code === 'ID'){
+            $this->payment_method = 136;
+            $this->payment_provider = 48;
+            $this->payment_bank_code = 'ATM_BMRI';
+        }
+        $this->getPaymentMethodProviderName();
+
+    }
+
+    public function getPaymentMethodProviderName()
+    {
         if (($methodProvider = PaymentService::getMethodProvider($this->payment_provider, $this->payment_method)) !== null) {
             $this->payment_method_name = $methodProvider->paymentMethod->code;
             $this->payment_provider_name = $methodProvider->paymentProvider->code;
@@ -217,6 +228,7 @@ class Payment extends Model
         $this->transaction_fee = 0;
         $this->return_url = PaymentService::createReturnUrl($this->payment_provider);
         $this->cancel_url = PaymentService::createCancelUrl($code);
+        $this->getPaymentMethodProviderName();
     }
 
     public function processPayment()
@@ -291,7 +303,8 @@ class Payment extends Model
             $response = $form->checkPromotion();
             $order->discountAmount = $response->discount;
             $order->discountDetail = $response->details;
-            $results[$order->cartId] = $response;
+            $key = $this->page === self::PAGE_CHECKOUT ? $order->cartId : $order->ordercode;
+            $results[$key] = $response;
         }
         return $results;
     }
@@ -318,6 +331,9 @@ class Payment extends Model
         foreach ($providers as $provider) {
             foreach ($provider['paymentMethodProviders'] as $paymentMethodProvider) {
                 $k = (int)$paymentMethodProvider['paymentMethod']['group'];
+                if ($paymentMethodProvider['paymentMethod']['group'] == PaymentService::PAYMENT_METHOD_GROUP_INSTALMENT && ($this->getTotalAmountDisplay() < PaymentService::INSTALMENT_MIN_AMOUNT)) {
+                    continue;
+                }
 
                 $group[$k][] = $paymentMethodProvider;
             }

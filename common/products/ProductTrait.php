@@ -9,6 +9,8 @@
 namespace common\products;
 
 
+use yii\helpers\ArrayHelper;
+
 trait ProductTrait
 {
 
@@ -95,6 +97,9 @@ trait ProductTrait
         if ($this->start_price > $this->sell_price) return
             round(100 * ($this->start_price - $this->sell_price) / $this->start_price);
         else return 0;
+    }
+    public function checkInstallment() {
+        return $this->getLocalizeTotalPrice() > ArrayHelper::getValue(\Yii::$app->params,'min_amount_installment',3500000);
     }
 
     public function getSpecific($sku)

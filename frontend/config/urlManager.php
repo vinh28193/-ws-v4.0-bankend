@@ -59,6 +59,7 @@ return [
         'checkout/nice-pay/<code:[^/]+>/success.html' => 'checkout/notify/nice-pay-success',
         'checkout/invoice/<code:[^/]+>/success.html' => 'checkout/billing/success',
         'checkout/invoice/<code:[^/]+>/fail.html' => 'checkout/billing/fail',
+        'order-<code:[^/]+>/billing.html' => 'checkout/billing/index',
 
         // payment
         'payment/process' => 'payment/payment/process',

@@ -307,5 +307,9 @@ class SecureController extends FrontendController
         print_r(UserCookies::getCookies());
         die;
     }
+    public function actionDeleteCookies(){
+        Cookies::set(UserCookies::KEY_COOKIES,null);
+        die('Ok');
+    }
 }
 

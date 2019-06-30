@@ -3,7 +3,12 @@ namespace common\components\boxme;
 use common\models\boxme\ConfigForm;
 use common\models\boxme\ShipToForm;
 use common\models\boxme\ShipmentForm;
+use common\models\Product;
+use Courier\CourierClient;
 use linslin\yii2\curl\Curl;
+use Seller\SellerClient;
+use Seller\SyncProductRequest;
+use Seller\SyncProductResponse;
 use Yii;
 
 /**
@@ -135,6 +140,9 @@ class BoxMeClient
         return $res;
     }
     public static function CreateLiveShipment($data,$tracking){
+        $service = new CourierClient('206.189.94.203:50056', [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
         $param = [];
         $param['shipping_method'] = 5;
         $param['pickup_id'] = 39412;
@@ -176,5 +184,49 @@ class BoxMeClient
         return $response;
     }
 
+    /**
+     * @param Product $product
+     * @throws \Exception
+     */
+    public static function SyncProduct($product){
+        $service = new SellerClient('206.189.94.203:50056', [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+        $data = [];
+        $data['country'] = $product->order->store->country_code;
+        $data['seller_id'] = $product->seller_id;
+        $data['category_id'] = $product->category_id;
+        $data['seller_sku'] = strtoupper($product->portal) == 'EBAY' ? $product->parent_sku : $product->sku;
+        $data['bsin'] = $product->id;
+        $data['name'] = $product->product_name;
+        $data['name_local'] = $product->product_name;
+        $data['type_sku'] = 1;
+        $data['desc'] = $product->product_name;
+        $data['link'] = $product->link_origin;
+        $data['price'] = $product->total_price_amount_local;
+        $data['price_sale'] = $product->price_amount_local;
+        $data['active'] = 1;
+        $data['weight'] = $product->total_weight_temporary ? $product->total_weight_temporary * 1000 : 500;
+        $data['unit_weight'] = 'g';
+        $data['volume'] = '';
+        $data['tag'] = '';
+        $data['warehouse_condition'] = 1;
+        $data['supplier_name'] = '';
+        $data['min_quantity'] = 1;
+        $data['images'] = [
+            $product->link_img
+        ];
+        $request = new SyncProductRequest(['Data' => json_encode($data)]);
+        /** @var SyncProductResponse $apires */
+        $apires = $service->syncProduct($request)->wait();
+        list($error, $message) = $apires;
+        Yii::debug($error);
+        Yii::debug($message);
+        print_r($service);
+        print_r($error);
+        print_r($message);
+        die;
+
+    }
 
 }

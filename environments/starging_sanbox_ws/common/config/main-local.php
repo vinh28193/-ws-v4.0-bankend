@@ -83,7 +83,7 @@ return [
 //        ],
         'ga' => [
             'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
-            'trackingId' => 'UA-140658371-1', // Put your real tracking ID here
+            'trackingId' => 'UA-68960158-1', // Put your real tracking ID here
 
             // These parameters are optional:
             'useSsl' => true, // If you’d like to use a secure connection to Google servers

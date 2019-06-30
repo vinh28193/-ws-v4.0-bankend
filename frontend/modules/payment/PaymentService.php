@@ -21,6 +21,8 @@ use yii\helpers\Url;
 class PaymentService
 {
 
+    const INSTALMENT_MIN_AMOUNT = 3500000;
+
     const PAYMENT_METHOD_GROUP_COD = 1;
     const PAYMENT_METHOD_GROUP_INSTALMENT = 2;
     const PAYMENT_METHOD_GROUP_MASTER_VISA = 3;
@@ -101,6 +103,11 @@ class PaymentService
     public static function createSuccessUrl($code)
     {
         return Url::to("/checkout/invoice/$code/success.html", true);
+    }
+
+    public static function createBillingUrl($orderCode)
+    {
+        return Url::to("/order-$orderCode/billing.html", true);
     }
 
     public

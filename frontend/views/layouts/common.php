@@ -4,6 +4,7 @@
 
 /* @var $content string */
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap4\ActiveForm;
@@ -14,6 +15,8 @@ $passwordRequiredForm = new PasswordRequiredForm();
 FrontendAsset::register($this);
 
 $this->registerJs("ws.sendFingerprint();", \yii\web\View::POS_READY);
+$ParamConfigAccountKit = ArrayHelper::getValue(Yii::$app->params,'account_kit',[]);
+$ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$app->storeManager->getId(),[]);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -33,11 +36,11 @@ $this->registerJs("ws.sendFingerprint();", \yii\web\View::POS_READY);
     AccountKit_OnInteractive = function () {
         AccountKit.init(
             {
-                appId: "216590825760272",
+                appId: "<?= ArrayHelper::getValue($ConfigAccountKit,'app_id','181219292667675'); ?>",
                 state: "<?= Yii::$app->request->getCsrfToken() ?>",
-                version: "v1.1",
+                version: "<?= ArrayHelper::getValue($ConfigAccountKit,'ver','v1.1'); ?>",
                 fbAppEventsEnabled: true,
-                redirect: "/secure/test-auth"
+                redirect: ""
             }
         );
     };
@@ -93,12 +96,14 @@ $this->registerJs("ws.sendFingerprint();", \yii\web\View::POS_READY);
             <div class="modal-content">
                 <div class="modal-body">
                     <i class="la la-check"></i>
-                    <div class="modal-title">Cám ơn bạn!</div>
-                    <div class="order-code">Mã giao dịch: <span class="text-blue" id="transactionCode"></span></div>
-                    <p>Đơn hàng của bạn đã được đặt hàng thành công!<br/>Hệ thống sẽ tự chuyển sang trang của nhà thành
-                        toán
+                    <div class="modal-title"><?=Yii::t('frontend','Thank you!');?></div>
+                    <div class="order-code">
+                        <?=Yii::t('frontend','Transaction code');?>
+                        <span class="text-blue" id="transactionCode"></span>
+                    </div>
+                    <p><?=Yii::t('frontend','Your order has been successfully! <br/> The system will be automatically redirect to page of payment gate way');?>
                     </p>
-                    <button type="button" class="btn btn-submit btn-block" id="next-payment">Chuyển ngay <span
+                    <button type="button" class="btn btn-submit btn-block" id="next-payment"><?=Yii::t('frontend','Redirect now');?> <span
                                 id="countdown_payment">5</span></button>
                 </div>
             </div>
@@ -127,11 +132,10 @@ $this->registerJs("ws.sendFingerprint();", \yii\web\View::POS_READY);
     function smsLogin() {
         AccountKit.login(
             'PHONE',
-            {countryCode: '+84'}, // will use default values if not specified
+            {countryCode: '<?= ArrayHelper::getValue($ConfigAccountKit,'code_phone','+84'); ?>'}, // will use default values if not specified
             loginCallback
         );
     }
-
     // // email form submission handler
     // function emailLogin() {
     //     var emailAddress = document.getElementById("email").value;
