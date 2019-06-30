@@ -6,6 +6,7 @@ namespace api\modules\v1\controllers\service;
 
 use api\controllers\BaseApiController;
 use common\components\boxme\BoxMeClient;
+use common\components\lib\TextUtility;
 use common\logs\PackingLogs;
 use common\logs\TrackingLogs;
 use common\models\draft\DraftDataTracking;
@@ -250,56 +251,57 @@ class ServiceUsSendingController extends BaseApiController
                 $product = Product::findOne($product_id);
                 $order = $product->order;
                 if($product && (!$order_id || $order_id == $product->order_id) && $order){
-                    if(in_array($product->id,$product_ids)){
-                        $product_ids[] = $product->id;
-                    }
-                    if(in_array($product->order_id,$order_ids)){
-                        $order_ids[] = $product->order_id;
-                    }
-                    BoxMeClient::SyncProduct($product);
-                    $datumShipment['sku'] = $product->sku;
-                    $datumShipment['quantity'] = $quantity;
-                    $datumShipment['img_check'] = 1;
-                    $datumShipment['description'] = $product->product_name;
-                    $datumShipment['sku'] = $product->sku;
-                    $trackingCode->quantity = $trackingCode->quantity ? $trackingCode->quantity + $quantity : $quantity;
-                    $order->updateSellerShipped();
-                    $order->save(false);
-                    $product->updateSellerShipped();
-                    $product->save(false);
-                    $model = new DraftExtensionTrackingMap();
-                    $model->tracking_code = $this->post['tracking_code'];
-                    $model->order_id = $product->order_id;
-                    $model->product_id = $product->id;
-                    $model->quantity = $quantity;
-                    $model->purchase_invoice_number = $purchase_number_invoice;
-                    $model->status = DraftExtensionTrackingMap::STATUST_NEW;
-                    $model->created_by = Yii::$app->user->getId();
-                    $model->updated_by = Yii::$app->user->getId();
-                    $model->created_at = time();
-                    $model->updated_at = time();
-                    $model->save(0);
-                    $logTracking = new TrackingLogs();
-                    $logTracking->tracking_code = $model->tracking_code;
-                    $logTracking->message_log = 'Tạo Tracking Seller '.$model->tracking_code.' cho product '.$product->id.' của order '.$product->order->ordercode;
-                    $logTracking->type_log = TrackingLogs::TRACKING_CREATE;
-                    $logTracking->current_status = TrackingLogs::STATUS_SELLER_SHIPPED;
-                    $logTracking->product_id = $product->id;
-                    $logTracking->order_id = $product->order_id;
-                    $logTracking->more_data = $model->getAttributes();
-                    $logTracking->save();
-                    $params = array(
-                        'manifest'=>null,
-                        'trackingcode' => $model->tracking_code,
-                        'text' => 'Người bán gửi',
-                        'log_type' => 'Seller Shipped',
-                        'store' => null,
-                        'boxme_warehosue' => null
-                    );
+                    if(BoxMeClient::SyncProduct($product)){
+                        if(in_array($product->id,$product_ids)){
+                            $product_ids[] = $product->id;
+                        }
+                        if(in_array($product->order_id,$order_ids)){
+                            $order_ids[] = $product->order_id;
+                        }
+                        $datumShipment['sku'] = $product->sku;
+                        $datumShipment['quantity'] = $quantity;
+                        $datumShipment['img_check'] = 1;
+                        $datumShipment['description'] = $product->product_name;
+                        $datumShipment['bsin'] = TextUtility::GenerateBSinBoxMe($product->id);
+                        $trackingCode->quantity = $trackingCode->quantity ? $trackingCode->quantity + $quantity : $quantity;
+                        $order->updateSellerShipped();
+                        $order->save(false);
+                        $product->updateSellerShipped();
+                        $product->save(false);
+                        $model = new DraftExtensionTrackingMap();
+                        $model->tracking_code = $this->post['tracking_code'];
+                        $model->order_id = $product->order_id;
+                        $model->product_id = $product->id;
+                        $model->quantity = $quantity;
+                        $model->purchase_invoice_number = $purchase_number_invoice;
+                        $model->status = DraftExtensionTrackingMap::STATUST_NEW;
+                        $model->created_by = Yii::$app->user->getId();
+                        $model->updated_by = Yii::$app->user->getId();
+                        $model->created_at = time();
+                        $model->updated_at = time();
+                        $model->save(0);
+                        $logTracking = new TrackingLogs();
+                        $logTracking->tracking_code = $model->tracking_code;
+                        $logTracking->message_log = 'Tạo Tracking Seller '.$model->tracking_code.' cho product '.$product->id.' của order '.$product->order->ordercode;
+                        $logTracking->type_log = TrackingLogs::TRACKING_CREATE;
+                        $logTracking->current_status = TrackingLogs::STATUS_SELLER_SHIPPED;
+                        $logTracking->product_id = $product->id;
+                        $logTracking->order_id = $product->order_id;
+                        $logTracking->more_data = $model->getAttributes();
+                        $logTracking->save();
+                        $params = array(
+                            'manifest'=>null,
+                            'trackingcode' => $model->tracking_code,
+                            'text' => 'Người bán gửi',
+                            'log_type' => 'Seller Shipped',
+                            'store' => null,
+                            'boxme_warehosue' => null
+                        );
 
-                    Yii::$app->wsLog->push('TrackingLog','Seller Shipped','Người bán gửi hàng',$params);
-                    $count ++;
-                    $dataShipment[] = $datumShipment;
+                        Yii::$app->wsLog->push('TrackingLog','Seller Shipped','Người bán gửi hàng',$params);
+                        $count ++;
+                        $dataShipment[] = $datumShipment;
+                    }
                 }
             }
         }

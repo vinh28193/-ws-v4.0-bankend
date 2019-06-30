@@ -2,22 +2,22 @@
 return [
     'account_kit' => [
         'store_1' => [
-            'ver' => 'v1.1',
-            'code_phone' => '+84',
             'app_id' => '1909464509361286',
             'secret' => '3c652143186f587854f9fd405abd1aba',
+            'ver' => 'v1.1',
+            'code_phone' => '+84',
         ],
         'store_7' => [
             'app_id' => '181219292667675',
             'secret' => '8623d33f089a5f5e4a9fa5e48b08722e',
             'ver' => 'v1.1',
-            'code_phone' => '+63',
+            'code_phone' => '+62',
         ],
         'store_2' => [
-            'app_id' => '1909464509361286',
-            'secret' => '3c652143186f587854f9fd405abd1aba',
+            'app_id' => '181219292667675',
+            'secret' => '8623d33f089a5f5e4a9fa5e48b08722e',
             'ver' => 'v1.1',
-            'code_phone' => '+84',
+            'code_phone' => '+62',
         ],
     ],
     'adminEmail' => 'admin@example.com',

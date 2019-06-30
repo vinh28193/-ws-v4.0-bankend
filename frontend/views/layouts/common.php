@@ -25,7 +25,7 @@ $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://sdk.accountkit.com/vi_VN/sdk.js"></script>
+    <script src="https://sdk.accountkit.com/<?= Yii::$app->storeManager->getId() == 1 ? 'vi_VN' : (Yii::$app->storeManager->getId() == 7 ? 'id_ID' : 'en_US') ?>/sdk.js"></script>
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
