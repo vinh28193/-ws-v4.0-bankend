@@ -9,6 +9,7 @@
 namespace common\additional;
 
 use common\components\StoreManager;
+use common\models\Store;
 use Yii;
 use yii\base\InvalidConfigException;
 
