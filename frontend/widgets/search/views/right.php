@@ -15,7 +15,7 @@ use yii\helpers\Html;
 /* @var array $filters */
 /* @var array $sorts */
 /* @var common\components\StoreManager $storeManager */
-
+$this->title = '{keyword} - Shopping US Amazon, eBay - Weshop Global';
 $sort = Yii::$app->request->get('sort','price');
 $url_page = function ($p){
     $param = [explode('?',\yii\helpers\Url::current())[0]];
