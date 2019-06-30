@@ -122,11 +122,20 @@ return [
         ]
     ],
     'pickupUSWHGlobal' => [
-        'default' => 'sandbox',
+        'default' => 'sandbox_vn',
         'warehouses' => [
-            'sandbox' => [
+            'sandbox_vn' => [
                 'ref_user_id' => 23,
                 'ref_pickup_id' => 35549,
+                'email' => '',
+                'name' => 'BMUS_NY',
+                'description' => 'Boxme US',
+                'address' => 'US · Newyork, United State'
+
+            ],
+            'sandbox_id' => [
+                'ref_user_id' => 23,
+                'ref_pickup_id' => 35669,
                 'email' => '',
                 'name' => 'BMUS_NY',
                 'description' => 'Boxme US',
