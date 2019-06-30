@@ -98,6 +98,9 @@ $js = <<< JS
         // send data to actionSave by ajax request.
         return false; // Cancel form submitting.
     });
+    $(document).ready(function () {
+       ws.startForm();
+    });
 JS;
 $this->registerJs($js);
 

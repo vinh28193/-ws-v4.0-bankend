@@ -1,6 +1,9 @@
 <?php
 return [
     'components' => [
+        'storeManager' => [
+            'storeId' => 1
+        ],
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_global',
@@ -61,15 +64,15 @@ return [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'no-reply-dev-wsvn@weshop.com.vn',
-                'password' => 'a>d2&XK4@nowWeshop2019!@#',
+                'username' => 'weshopvn@boxme.vn',
+                'password' => '&nCPjR9>@WSBOX2019',
                 'port' =>  '587',
                 'encryption' => 'tls'
             ],
         ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://backup:QuKUBS1cQ2Q@mongodbWs:27017/admin',
+            'dsn' => 'mongodb://backup:QuKUBS1cQ2Q@WSBOX2019@mongodbWs:27017/admin',
         ],
 //        'db_oauth'=>[
 //            'class' => 'yii\db\Connection',

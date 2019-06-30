@@ -13,19 +13,19 @@ class TopMenuAliasWidget extends Widget
     public $type_monitor = 'pc' ;
     public function run()
     {
-        $key = $this->type . '-' . Yii::$app->storeManager->getId();
-        $view = null;Cache::get($key);
-        if(!$view){
+        $key = 'category_'.$this->type . '-' . Yii::$app->storeManager->getId();
+        $item_category = Cache::get($key);
+        if(!$item_category){
             $alias = WsAlias::findOne(['store_id'=>Yii::$app->storeManager->getId(),'type'=>$this->type]);
             $item_category = $alias->getCategoryList(false);
-            $view = $this->render('top_menu_alias-'.$this->type_monitor, [
-                'categories'=>$item_category,
-                'logoMobile'=>$this->logoMobile,
-                'type'=>$this->type,
-                'storeManager'=>Yii::$app->storeManager
-            ]);
-            Cache::set($key,$view,60*60*24);
+            Cache::set($key,$item_category,60*60*24);
         }
+        $view = $this->render('top_menu_alias-'.$this->type_monitor, [
+            'categories'=>$item_category,
+            'logoMobile'=>$this->logoMobile,
+            'type'=>$this->type,
+            'storeManager'=>Yii::$app->storeManager
+        ]);
         return $view;
     }
 }

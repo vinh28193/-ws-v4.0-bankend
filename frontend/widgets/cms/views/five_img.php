@@ -49,7 +49,9 @@ $imge_block = !empty($block['image']) ? $block['image'] : $imge_block;
                             ?>
 
                             <li for="<?= $key + 1 ?>">
-                                <a class="ebay-branch-logo-<?= $key + 1 ?>" href="<?= $val['link']?>" title="<?= $val['name'] ?>"></a>
+                                <a class="ebay-branch-logo-<?= $key + 1 ?>" href="<?= $val['link']?>" title="<?= $val['name'] ?>">
+                                    <img src="<?= $val['domain'].'/'.$val['origin_src'] ?>">
+                                </a>
                             </li>
 
                             <?php
