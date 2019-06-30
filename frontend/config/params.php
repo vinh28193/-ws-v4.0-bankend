@@ -133,6 +133,22 @@ return [
                 'address' => 'US · Newyork, United State'
 
             ],
+            'ws_vn' => [
+                'ref_user_id' => 248341,
+                'ref_pickup_id' => 62555,
+                'email' => '',
+                'name' => 'BMUS_NY',
+                'description' => 'Boxme US',
+                'address' => 'US · Newyork, United State'
+            ],
+            'ws_id' => [
+                'ref_user_id' => 248341,
+                'ref_pickup_id' => 62556,
+                'email' => '',
+                'name' => 'BMUS_NY',
+                'description' => 'Boxme US',
+                'address' => 'US · Newyork, United State'
+            ],
             'weshoptracking' => [
                 'ref_user_id' => 377,
                 'ref_pickup_id' => 35549,
