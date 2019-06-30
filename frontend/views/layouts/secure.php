@@ -9,19 +9,19 @@ $this->beginContent('@frontend/views/layouts/common.php');
 <div class="container">
     <div class="auth-content style-margin-top">
         <div class="logo">
-            <img src="/img/weshop-logo-vn.png" alt="" title=""/>
+            <img src="/images/logo/weshop-02.png" alt="" title=""/>
         </div>
         <div class="auth-box">
             <div class="left">
                 <?=$content;?>
             </div>
             <div class="right">
-                <h2>Quyền Lợi Thành Viên</h2>
+                <h2><?= Yii::t('frontend' , 'Member Benefits') ?></h2>
                 <ul>
-                    <li>Mua sắm đơn giản, nhanh chóng</li>
-                    <li>Theo dõi đơn hàng dễ dàng</li>
-                    <li>Giá ưu đãi cho thành viên</li>
-                    <li>Nhận ưu đãi hấp dẫn trên khắp thế giới</li>
+                    <li><?= Yii::t('frontend' , 'Shopping simple, fast') ?></li>
+                    <li><?= Yii::t('frontend' , 'Track orders easily') ?></li>
+                    <li><?= Yii::t('frontend' , 'Preferential price for members') ?></li>
+                    <li><?= Yii::t('frontend' , 'Get attractive deals around the world') ?></li>
                 </ul>
             </div>
         </div>

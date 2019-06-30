@@ -13,7 +13,7 @@ class FooterWidget extends \yii\base\Widget
         $shippingForm->setDefaultValues();
         $js = <<<JS
             $(document).ready(function() {
-              $('#modal-address').modal('show');
+              $('#modal-address').modal({backdrop: 'static', keyboard: false});
             });
 JS;
         $userCook = new UserCookies();

@@ -19,7 +19,7 @@ if($type == 'extra'){
     <div class="detail-block-2 box-shadow" id="description_<?= $type ?>">
         <div class="row">
             <div class="col-md-12">
-                <div class="title"><?=Yii::t('frontend',$type == 'extra' ? 'Product details' : 'Product description'); ?>:</div>
+                <div class="title"><?=Yii::t('frontend',$type == 'extra' ? Yii::t('frontend','Product details') : Yii::t('frontend','Product description')); ?>:</div>
             </div>
             <div class="col-md-12 row">
                 <?php

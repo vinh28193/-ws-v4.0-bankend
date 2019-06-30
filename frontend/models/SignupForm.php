@@ -29,10 +29,10 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            ['last_name', 'trim'],
-            ['last_name', 'required'],
-            [['last_name', 'first_name'], 'match', 'pattern' => '/[a-zA-Z]/', 'message' => 'Username does not enter special characters'],
-            ['last_name', 'string', 'min' => 2, 'max' => 255],
+//            ['last_name', 'trim'],
+//            ['last_name', 'required'],
+            [['first_name'], 'match', 'pattern' => '/[a-zA-Z]/', 'message' => 'Username does not enter special characters'],
+//            ['last_name', 'string', 'min' => 2, 'max' => 255],
             ['facebook_token', 'string', 'min' => 2, 'max' => 255],
             ['facebook_id', 'string', 'min' => 2, 'max' => 50],
             ['phone', 'string', 'min' => 10, 'max' => 15],
