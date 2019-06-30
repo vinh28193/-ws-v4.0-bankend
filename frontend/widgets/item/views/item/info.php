@@ -8,7 +8,6 @@ use yii\helpers\ArrayHelper;
 /* @var yii\web\View $this */
 /* @var BaseProduct $item */
 /* @var common\components\StoreManager $storeManager */
-
 $portal_web = strtolower($item->type) == 'ebay' ? '<a href="//ebay.com" rel="nofollow" target="_blank">eBay.com</a>' : '<a href="//amazon.com"  rel="nofollow" target="_blank" >Amazon.com</a>';
 $salePercent = $item->getSalePercent();
 $current_provider = $item->provider ? $item->provider : $item->getCurrentProvider();
@@ -101,7 +100,7 @@ $userCookies->setUser();
                     <td>
                         <ul class="list-dot">
                             <li><?= Yii::t('frontend','Purchase fee: <span id="purchase_fee">{purchasefee}</span>',['purchasefee' => $storeManager->showMoney($item->getAdditionalFees()->getTotalAdditionalFees('purchase_fee')[1])]) ?></li>
-                            <li><?= Yii::t('frontend','Price product on {portal_web}: <span id="price_origin">{price}</span>',['portal_web'=>$portal_web,'price' => '$'.$item->getSellPrice()]) ?></li>
+                            <li><?= Yii::t('frontend','Price product on {portal_web}: <span id="price_origin_local">{price_local}</span> (<span id="price_origin">{price}</span>)',['portal_web'=>$portal_web,'price' => '$'.$item->getSellPrice(),'price_local' => $storeManager->showMoney($item->getAdditionalFees()->getTotalAdditionalFees('product_price')[1])]) ?></li>
                         </ul>
                     </td>
                 </tr>
@@ -120,10 +119,13 @@ $userCookies->setUser();
                     <td>
                         <ul class="list-dot">
                             <li><?= Yii::t('frontend','Internal Shipping fee: <span id="shipping_fee">{shipping_fee}</span>',['shipping_fee' => $userCookies->province_id && $userCookies->district_id ? $internal_shipping_fee : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>']) ?></li>
-                            <li>
-                                <?= $userCookies->checkAddress() ? Yii::t('frontend','Estimate time: <span id="time_estimate_min">{min_time}</span> - <span id="time_estimate_max">{max_time}</span> days',['min_time'=> $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'min_delivery_time','') : '','max_time' => $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'max_delivery_time','<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>') : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>' ]) : '' ?><br>
-                                (<?= Yii::t('frontend','Ship to <span class="text-blue">{district_name}, {province_name}</span>',$userCookies->checkAddress() ? ['district_name' => $userCookies->getDistrict() ? $userCookies->getDistrict()->name : '', 'province_name' => $userCookies->getProvince() ? $userCookies->getProvince()->name : ''] : ['district_name' => '', 'province_name' => '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>']) ?>)
-                            </li>
+                            <?php if ($userCookies->checkAddress()){ ?>
+                                <li>
+                                    <?= Yii::t('frontend','Estimate time: <span id="time_estimate_min">{min_time}</span> - <span id="time_estimate_max">{max_time}</span> days',['min_time'=> $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'min_delivery_time','') : '','max_time' => $userCookies->checkAddress() && isset($internal_shipping[0]) ? ArrayHelper::getValue($internal_shipping[0],'max_delivery_time','<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>') : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>' ]) ?><br>
+                                    (<?= Yii::t('frontend','Ship to <a onclick="ws.showModal(\'modal-address\')" class="text-blue" style="color: #2e9ab8;cursor: pointer;">{district_name}, {province_name}</a>',$userCookies->checkAddress() ? ['district_name' => $userCookies->getDistrict() ? $userCookies->getDistrict()->name : '', 'province_name' => $userCookies->getProvince() ? $userCookies->getProvince()->name : ''] : ['district_name' => '', 'province_name' => '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>']) ?>)
+                                </li>
+                           <?php }
+                            ?>
                         </ul>
                     </td>
                 </tr>
@@ -146,8 +148,8 @@ $userCookies->setUser();
                                 ?>
                                 <li class="item">
                                                 <span type="spanList" class="box-select-item" tabindex="<?= $k ?>">
-                                                    <img src="<?= $image->images ? $image->images[0]->thumb : '/img/no_image.png' ?>"
-                                                         data-src="<?= $image->images ? $image->images[0]->main : '/img/no_image.png' ?>"
+                                                    <img src="<?= $image->images ? (is_string($image->images[0]->thumb) ? $image->images[0]->thumb : $image->images[0]->thumb[0] ) : '/img/no_image.png' ?>"
+                                                         data-src="<?= $image->images ? (is_string($image->images[0]->main) ? $image->images[0]->main : $image->images[0]->main[0] ) : '/img/no_image.png' ?>"
                                                          alt="<?= $variationOption->name; ?>: <?= $value ?>" title="<?= $value ?>"/>
                                                 </span>
                                 </li>
