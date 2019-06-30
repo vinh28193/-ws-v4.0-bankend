@@ -7,6 +7,9 @@ namespace frontend\modules\checkout\controllers;
 use common\components\cart\CartManager;
 use common\components\cart\storage\MongodbCartStorage;
 use common\components\UserCookies;
+use common\models\SystemCountry;
+use common\models\SystemDistrict;
+use common\models\SystemZipcode;
 use common\models\User;
 use frontend\modules\payment\providers\wallet\WalletService;
 use frontend\models\LoginForm;
@@ -17,6 +20,8 @@ use frontend\modules\payment\models\ShippingForm;
 use frontend\modules\payment\Payment;
 use common\models\SystemStateProvince;
 use common\components\cart\CartSelection;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use common\products\BaseProduct;
 
@@ -85,7 +90,7 @@ class ShippingController extends CheckoutController
         // Finally, you need to send a hit; in this example, we are sending an Event
         $request->setEventCategory('Checkout')
             ->setEventAction('Purchase')
-            ->setAsyncRequest(true)  //  'asyncMode' => true,
+            ->setAsyncRequest(true)//  'asyncMode' => true,
             ->sendEvent();
 
     }
@@ -250,4 +255,41 @@ class ShippingController extends CheckoutController
         return Yii::$app->cart;
     }
 
+    public function actionGetAddressAjax()
+    {
+        $store = $this->storeManager->store;
+        $queryParams = $this->request->getQueryParams();
+        $message = ["load address for country `{$store->country_code}`"];
+        if (($zip = ArrayHelper::getValue($queryParams, 'zipcode', null)) !== null) {
+            $message[] = "for zip code `{$zip}`";
+        }
+        $results = SystemZipcode::loadAddress(101, $zip);
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return ['success' => true, "message" => implode(', ', $message), 'data' => $results, 'count' => count($results)];
+    }
+
+    public function actionGetZipAjax()
+    {
+        $store = $this->storeManager->store;
+        $queryParams = $this->request->getQueryParams();
+        $message = ["load zipcode for country `{$store->country_code}`"];
+
+        if (($province = ArrayHelper::getValue($queryParams, 'province', null)) !== null) {
+            $message[] = "for province `{$province}`";
+        }
+        if (($district = ArrayHelper::getValue($queryParams, 'district', null)) !== null) {
+            $message[] = "for district `{$district}`";
+        }
+        if (($zip = ArrayHelper::getValue($queryParams, 'zipcode', null)) !== null) {
+            $message[] = "search zipcode `{$zip}`";
+        }
+        $refresh = isset($queryParams['refresh']) && $queryParams['refresh'] === 'yess';
+        $refresh = true;
+        if ($refresh === true) {
+            $message[] = "invalid on cache";
+        }
+        $results = SystemZipcode::loadZipCode(101,$zip, $province, $district, $refresh);
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return ['success' => true, "message" => implode(', ', $message), 'data' => $results, 'count' => count($results)];
+    }
 }

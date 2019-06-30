@@ -50,11 +50,12 @@ class ItemController extends AmazonController
                 $fees[$key.'_text'] = $this->storeManager->showMoney($item->getAdditionalFees()->getTotalAdditionalFees($key)[1]);
                 $fees[$key] = $item->getAdditionalFees()->getTotalAdditionalFees($key)[1];
             }
+            $item->getInternationalShipping();
 //            $item->start_price = $item->sell_price + 10;
             $response['success'] = true;
             $response['message'] = Yii::t('frontend', 'Success');
             $contentPrice = '<div class="title-price">'.Yii::t('frontend','Price').'</div><strong class="text-danger">' . $this->storeManager->showMoney($item->getLocalizeTotalPrice()) . '</strong>';
-            if ($item->start_price) {
+            if ($item->start_price > $item->sell_price) {
                 $contentPrice .= '<b class="old-price">' . $this->storeManager->showMoney($item->getLocalizeTotalStartPrice()) . '</b>';
 //                $contentPrice .= '<span class="save">(Tiết kiệm: ' . WeshopHelper::showMoney($item->getLocalizeTotalStartPrice() - $item->getLocalizeTotalPrice(), 1, '') . 'đ)</span>';
             }

@@ -1,6 +1,9 @@
 <?php
 return [
     'components' => [
+        'storeManager' => [
+            'storeId' => 1
+        ],
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=boxmesql;port=3306;dbname=weshop_global',

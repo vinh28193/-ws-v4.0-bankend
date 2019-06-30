@@ -455,6 +455,7 @@
         }
         if(content.sellPrice_origin){
             $('#price_origin').html('$'+content.sellPrice_origin);
+            $('#price_origin_local').html('$'+content.fees.product_price_text);
         }
         if(content.fees.purchase_fee_text && content.fees.purchase_fee){
             $('#purchase_fee').html(content.fees.purchase_fee_text);
