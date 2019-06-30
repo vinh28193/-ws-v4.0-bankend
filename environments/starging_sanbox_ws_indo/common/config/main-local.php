@@ -61,8 +61,8 @@ return [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'no-reply-dev-wsvn@weshop.com.vn',
-                'password' => 'a>d2&XK4@nowWeshop2019!@#',
+                'username' => 'weshopvn@boxme.vn',
+                'password' => '&nCPjR9>@WSBOX2019',
                 'port' =>  '587',
                 'encryption' => 'tls'
             ],
