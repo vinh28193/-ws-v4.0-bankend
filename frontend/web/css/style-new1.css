@@ -183,3 +183,6 @@ ul:after {
 .product-viewed .owl-carousel{
     margin: auto;
 }
+.left-130{
+    left: -130px !important;
+}

@@ -5,6 +5,8 @@
  */
 
 use common\helpers\WeshopHelper;
+//print_r($item->relate_products);
+//die;
 ?>
     <div  id="product-relate" class="product-viewed product-list box-shadow" style="display: <?= ($item->relate_products) ? 'block' : 'none' ?>">
         <div class="title"><?= Yii::t('frontend','Product Relate') ?>:</div>
