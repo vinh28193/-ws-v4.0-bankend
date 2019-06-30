@@ -267,9 +267,11 @@ class SecureController extends FrontendController
     public function actionAuthAccountKit(){
         $data = AccountKit::getAccessToken(Yii::$app->request->get('code',''));
         $user_id = ArrayHelper::getValue($data,'id');
+        Yii::debug($data);
         if($user_id){
             $user_access_token = ArrayHelper::getValue($data,'access_token');
             $data = AccountKit::getInfo($user_access_token);
+            Yii::debug($data);
             $phone = isset($data['phone']) ? $data['phone']['national_number'] : '';
             if($data && $phone){
                 $cookieUser = new UserCookies();
@@ -278,7 +280,7 @@ class SecureController extends FrontendController
                 $cookieUser->phone = $phone;
                 $cookieUser->setNewCookies();
                 /** @var User $userWS */
-                $userWS = User::find()->where(['remove' => 0,'employee' => 0])->andWhere(['or',['like','phone',$phone],['facebook_acc_kit_id' => $user_id]])->one();
+                $userWS = User::find()->where(['remove' => 0,'employee' => 0, 'store_id' => $this->storeManager->getId()])->andWhere(['or',['like','phone',$phone],['facebook_acc_kit_id' => $user_id]])->one();
                 if($userWS){
                     $userWS->phone = '0'.$phone;
                     $userWS->facebook_acc_kit_id = $user_id;
