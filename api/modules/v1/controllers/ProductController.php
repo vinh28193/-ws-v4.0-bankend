@@ -92,6 +92,9 @@ class ProductController extends BaseApiController
             if (isset($post['noteCustomer'])) {
                 $product->note_by_customer = $post['noteCustomer'];
             }
+            if (isset($post['total_price_amount_local'])) {
+                $product->total_price_amount_local = $post['total_price_amount_local'];
+            }
             if (isset($post['note_boxme'])) {
                 $product->note_boxme = $post['note_boxme'];
             }
@@ -102,7 +105,7 @@ class ProductController extends BaseApiController
                 return $this->response(false, 'error', $product->getErrors());
             }
             ChatHelper::push($messages, $post['order_path'], 'GROUP_WS', 'SYSTEM');
-            Yii::$app->wsLog->push('order', "update product {$post['title']}", null, [
+            Yii::$app->wsLog->push('order', "update product - {$post['title']}", null, [
                 'id' => $post['order_path'],
                 'request' => $this->post,
                 'response' => $messages
