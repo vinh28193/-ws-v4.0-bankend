@@ -5,22 +5,40 @@ namespace common\components;
 
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class AccountKit
 {
-    public static $app_id = '216590825760272';
-    public static $secret = '5c7a8ea1b0017499f3e659ad431c87b0';
-    public static $version = 'v1.0';
+    public static function getConfig() {
+        $ParamConfigAccountKit = ArrayHelper::getValue(Yii::$app->params,'account_kit',[]);
+        $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$app->storeManager->getId(),[]);
+        return $ConfigAccountKit;
+    }
+
+    public static function getAppId() {
+        $ConfigAccountKit = self::getConfig();
+        return ArrayHelper::getValue($ConfigAccountKit,'app_id','');
+    }
+    public static function getSecret() {
+        $ConfigAccountKit = self::getConfig();
+        return ArrayHelper::getValue($ConfigAccountKit,'secret','');
+    }
+    public static function getVersion() {
+        $ConfigAccountKit = self::getConfig();
+        return ArrayHelper::getValue($ConfigAccountKit,'ver','');
+    }
+
     public static function getAccessToken($code){
-        $token_exchange_url = 'https://graph.accountkit.com/' . self::$version . '/access_token?' .
+
+        $token_exchange_url = 'https://graph.accountkit.com/' . self::getVersion() . '/access_token?' .
             'grant_type=authorization_code' .
             '&code=' . $code.
-            "&access_token=AA|".self::$app_id."|".self::$secret;
+            "&access_token=AA|".self::getAppId()."|".self::getSecret();
         $data = self::doCurl($token_exchange_url);
         return $data;
     }
     public static function getInfo($user_access_token){
-        $me_endpoint_url = 'https://graph.accountkit.com/' . self::$version . '/me?' .
+        $me_endpoint_url = 'https://graph.accountkit.com/' . self::getVersion() . '/me?' .
             'access_token=' . $user_access_token;
         $data = self::doCurl($me_endpoint_url);
         return $data;

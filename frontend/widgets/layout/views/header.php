@@ -98,8 +98,8 @@ $this->registerJs($js);
                     </span>
                 </span>
             </a>
-            <ul id="menuAccount" class="box-shadow dropdown-menu category_account" role="menu" aria-labelledby="dropAcount"
-                style="display: none">
+            <ul id="menuAccount" class="box-shadow dropdown-menu category_account <?= Yii::$app->user->isGuest ? '' : 'left-130' ?>" role="menu" aria-labelledby="dropAcount"
+                style="display: none;">
                 <?php if(Yii::$app->user->isGuest) {?>
                 <li class="card" style="border: none">
                     <div class="card-body">

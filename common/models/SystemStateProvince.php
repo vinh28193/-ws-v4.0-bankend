@@ -11,6 +11,7 @@ class SystemStateProvince extends \common\models\db\SystemStateProvince
 
     public static function select2Data($country = 1, $dataKey = 'id', $dataValue = 'name', $refreshCache = false)
     {
+
         $cacheKey = ['SystemStateProvince', $country, $dataKey, $dataValue];
         if (!($provinces = Yii::$app->cache->get($cacheKey)) || $refreshCache) {
             $query = new Query();
@@ -23,4 +24,5 @@ class SystemStateProvince extends \common\models\db\SystemStateProvince
         }
         return $provinces;
     }
+
 }
