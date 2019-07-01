@@ -128,6 +128,7 @@ class CustomerController extends Controller
         return $this->render('@frontend/views/common/404');
     }
     public function actionSaveAddressDefault(){
+        Yii::$app->response->format = 'json';
         $post = Yii::$app->request->post();
         $userCookie = new UserCookies();
         $userCookie->setUser();
@@ -162,7 +163,6 @@ class CustomerController extends Controller
                 return ['success'=> false,'message' => Yii::t('frontend','Enter zip code')];
             }
         }
-        Yii::$app->response->format = 'json';
         if(!$userCookie->province_id || !$userCookie->district_id){
             return ['success'=> false,'message' => Yii::t('frontend','Save Fail')];
         }

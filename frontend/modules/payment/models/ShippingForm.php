@@ -201,12 +201,12 @@ class ShippingForm extends Model
     }
     public function getZipCodes()
     {
-        $zipcodes = SystemZipcode::loadZipCode(101);
-        $data = [];
-        foreach ($zipcodes  as  $zipcode){
-            $data[$zipcode['zip_code']] = $zipcode['label'];
-        }
-        return $data;
+        return $zipcodes = SystemZipcode::loadZipCode($this->buyer_country_id);
+//        $data = [];
+//        foreach ($zipcodes  as  $zipcode){
+//            $data[$zipcode['zip_code']] = $zipcode['label'];
+//        }
+//        return $data;
     }
 
     public function ensureReceiver()

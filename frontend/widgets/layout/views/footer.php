@@ -1,11 +1,24 @@
 <?php
 
+use common\models\SystemDistrict;
+use common\models\SystemZipcode;
 use frontend\modules\payment\models\ShippingForm;
 use kartik\depdrop\DepDrop;
 
 /**
+ * @var \yii\web\View $this
  * @var ShippingForm $shippingForm
  */
+$zipcode = (SystemZipcode::loadZipCode($shippingForm->buyer_country_id));
+$province = (\common\models\SystemStateProvince::select2DataForCountry($shippingForm->buyer_country_id));
+$district = (SystemDistrict::select2DataForCountry($shippingForm->buyer_country_id));
+$jszipcode = json_encode($zipcode);
+$jsprovince = json_encode($province);
+$jsdistrict = json_encode($district);
+$js = <<<JS
+
+JS;
+$this->registerJs($js);
 ?>
 <footer class="footer">
     <div class="top">
@@ -215,20 +228,28 @@ use kartik\depdrop\DepDrop;
                     ?>
                 </div>
                 <?php if(Yii::$app->storeManager->getId() == 7) {?>
-                <div class="form-group">
-                    <?=
-                    \kartik\select2\Select2::widget([
-                        'data' => $shippingForm->getZipCodes(),
-                        'id' => 'zipcode_default',
-                        'name' => 'zipcode_default',
-                        'value' => $shippingForm->receiver_post_code,
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                            'placeholder' => Yii::t('frontend', 'Choose the zip code'),
-                        ],
-                    ]);
-                    ?>
-                </div>
+                    <div class="form-group">
+                        <div class="input-group formIconTitle">
+                        <span class="input-group-addon">
+                            <i class="la la-map-marker"></i>
+                        </span>
+                            <input autocomplete="off" list="list_zipcode" id="zipcode_default" type="text" class="form-control"
+                                   placeholder="<?= Yii::t('frontend', 'Zip Code') ?>"
+                                   value="<?= $shippingForm->receiver_post_code ?>">
+                            <datalist id="list_zipcode">
+                                <?php
+                                $count = 0;
+                                foreach ($zipcode as $datazip) {
+                                    $count ++;
+                                    if($count > 20){
+                                        break;
+                                    }
+                                    echo "<option value='".$datazip['zip_code']."'>".$datazip['label']."</option>";
+                                }
+                                ?>
+                            </datalist>
+                        </div>
+                    </div>
                 <?php } ?>
             </div>
             <div class="modal-footer">
@@ -284,6 +305,10 @@ use kartik\depdrop\DepDrop;
             }
         }
     })();</script>
-
+<script>
+    var zipcode_data = <?= $jszipcode ?>;
+    var province_data = <?= $jsprovince ?>;
+    var district_data = <?= $jsdistrict ?>;
+</script>
 
 
