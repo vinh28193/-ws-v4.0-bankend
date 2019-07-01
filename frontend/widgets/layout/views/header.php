@@ -48,6 +48,24 @@ $(document).ready(function () {
 JS;
 $this->registerJs($js);
 
+$userCookie = new \common\components\UserCookies();
+$userCookie->setUser();
+$shipTo = Yii::t('frontend', 'Click here');
+if ($userCookie->checkAddress()) {
+    $array = [];
+    if (($district = $userCookie->zipcode)) {
+        $array[] = $userCookie->zipcode;
+    }
+    if (($district = $userCookie->getDistrict())) {
+        $array[] = $district->name;
+    }
+    if (($provide = $userCookie->getProvince())) {
+        $array[] = $provide->name;
+    }
+    if (!empty($array)) {
+        $shipTo = implode(', ',$array);
+    }
+}
 ?>
 <div class="navbar-ws mobile-hide style-header" id="header" xmlns="http://www.w3.org/1999/html">
     <div class="container row">
@@ -57,6 +75,10 @@ $this->registerJs($js);
                 <img src="/images/logo/weshop-01.png" alt="" title="">
             </a>
         </div>
+            <div class="shipping-header-box">
+                <div class="shipping-label"><?php echo Yii::t('frontend', 'Ship to'); ?>:</div>
+                <div class="shipping-address"><a onclick="ws.showModal('modal-address')" href="javascript:void(0);"><?=$shipTo;?></a><i class="la la-caret-down"></i></div>
+            </div>
         <div class="search-box">
             <div class="form-group">
                 <div class="input-group">
