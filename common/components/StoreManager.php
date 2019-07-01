@@ -212,9 +212,9 @@ class StoreManager extends Component implements BootstrapInterface
         return WeshopHelper::roundNumber($money, -3);
     }
 
-    public function showMoney($money, $currency = null)
+    public function showMoney($money, $currency = null , $isRound = true)
     {
-        $money = $this->roundMoney($money);
+        $money = $isRound ? $this->roundMoney($money) : $money;
         if ($currency === null) {
             $currency = $this->getCurrencyName();
         }

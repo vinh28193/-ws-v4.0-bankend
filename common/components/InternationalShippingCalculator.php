@@ -81,10 +81,14 @@ class InternationalShippingCalculator extends BaseObject
             'setUserId' => $request->getUserId(),
             'setCountryCode' => $request->getCountryCode(),
         ]);
+//        return null;
         /** @var $apires CalculateFeeResponse */
         $apires = $this->getGrpcClient()->CalculateFee($request)->wait();
         list($response, $status) = $apires;
         /** @var $response CourierCalculate */
+        if(!$response){
+            return null;
+        }
         $data = $response->getData();
         $success = $response->getError() === false && $data->count() > 0;
         $message = $response->getErrorMessage();
