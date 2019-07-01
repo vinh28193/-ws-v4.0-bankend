@@ -26,8 +26,6 @@ use common\models\Warehouse;
  * @property-read boolean $isSpecial
  * @property-read integer $shippingWeight
  * @property-read integer $shippingQuantity
- * @property-read null|array|mixed $shippingParams
- * @property-read null|Warehouse|array $pickUpWareHouse
  */
 interface AdditionalFeeInterface
 {
@@ -78,13 +76,4 @@ interface AdditionalFeeInterface
      */
     public function getShippingQuantity();
 
-    /**
-     * @return null|array|mixed
-     */
-    public function getShippingParams();
-
-    /**
-     * @return null|Warehouse|array
-     */
-    public function getPickUpWareHouse();
 }

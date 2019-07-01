@@ -35,7 +35,7 @@ return [
             'class' => 'yii\redis\Cache',
             'redis' => [
                 'hostname' => 'sessionRedisBm',
-                'port' => 6479,
+                'port' => 6379,
                 'database' => 0,
             ]
         ],
@@ -64,8 +64,8 @@ return [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'weshopvn@boxme.vn',
-                'password' => '&nCPjR9>@WSBOX2019',
+                'username' => 'dev.weshop@gmail.com',
+                'password' => 'Aa@12345',
                 'port' =>  '587',
                 'encryption' => 'tls'
             ],
