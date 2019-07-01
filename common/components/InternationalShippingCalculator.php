@@ -20,12 +20,23 @@ class InternationalShippingCalculator extends BaseObject
     const LOCATION_EBAY = 'EBAY';
     const LOCATION_EBAY_US = 'EBAY_US';
 
+    public $hostname;
     private $_grpcClient;
+
+    public function init()
+    {
+        parent::init();
+        if ($this->hostname === null) {
+            $this->hostname = Yii::$app->params['BOXME_GRPC_SERVICE_COURIER'];
+        }
+
+    }
 
     public function getGrpcClient()
     {
         if (!is_object($this->_grpcClient)) {
-            $this->_grpcClient = new CourierClient('206.189.94.203:50056', [
+            Yii::info("Open connent to hostname {$this->hostname}", __METHOD__);
+            $this->_grpcClient = new CourierClient($this->hostname, [
                 'credentials' => \Grpc\ChannelCredentials::createInsecure(),
             ]);
         }
@@ -61,11 +72,15 @@ class InternationalShippingCalculator extends BaseObject
                 'coupon_code' => ''
             ]
         ], $params);
-
         $request->setData(Json::encode($params));
-        \Yii::info($request->getData());
+
         $request->setUserId($userId);
         $request->setCountryCode($countryCode);
+        \Yii::info([
+            'setData' => $request->getData(),
+            'setUserId' => $request->getUserId(),
+            'setCountryCode' => $request->getCountryCode(),
+        ]);
         /** @var $apires CalculateFeeResponse */
         $apires = $this->getGrpcClient()->CalculateFee($request)->wait();
         list($response, $status) = $apires;

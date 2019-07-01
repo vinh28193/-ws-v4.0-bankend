@@ -17,6 +17,7 @@ FrontendAsset::register($this);
 $this->registerJs("ws.sendFingerprint();", \yii\web\View::POS_READY);
 $ParamConfigAccountKit = ArrayHelper::getValue(Yii::$app->params,'account_kit',[]);
 $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$app->storeManager->getId(),[]);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -29,6 +30,7 @@ $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <link href="/favicon.ico" rel="shortcut icon">
 </head>
 <body>
 <script>

@@ -34,7 +34,11 @@ class EbayGate extends BaseGate
         // ToDo Caches : Get Thanh cong moi Luu cache @Phuchc 8/6/2019
        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
             list($success, $response) = $this->searchRequest($request->params());
-          $this->cache->set($request->getCacheKey(), $response, $success === true ? self::MAX_CACHE_DURATION : 0);
+            if($success){
+                $this->cache->set($request->getCacheKey(), $response, $success === true ? self::MAX_CACHE_DURATION : 0);
+            }else{
+                return [false, []];
+            }
        }
         return [true, (new EbaySearchResponse($this))->parser($response)];
     }

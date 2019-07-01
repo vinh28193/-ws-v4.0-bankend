@@ -159,6 +159,14 @@ if ($userCookie->checkAddress()) {
                 <?php } ?>
             </ul>
         </div>
+        <div class="account-header-box dropdown style-account">
+            <span class="view-exchange-rate">
+                USD
+            </span><br>
+            <span class="view-exchange-rate">
+                <?= Yii::$app->storeManager->showMoney(Yii::$app->storeManager->getExchangeRate()) ?>
+            </span>
+        </div>
     </div>
     <div class="container menu-cate">
         <ul class="bars-nav bars-nav123">
@@ -217,11 +225,6 @@ if ($userCookie->checkAddress()) {
                 </a>
             </li>
         </ul>
-        <span class="view-exchange-rate">
-            <?php echo Yii::t('frontend', 'Exchange rate :{rate}', [
-                'rate' => Yii::$app->storeManager->getExchangeRate()
-            ]) ?>
-        </span>
 
     </div>
 </div>

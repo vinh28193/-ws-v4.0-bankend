@@ -84,6 +84,31 @@ return [
 //            'schemaCacheDuration' => 7200,
 //            'schemaCache' => 'cache'
 //        ],
+        'productManager' => [
+            'class' => 'common\products\ProductManager',
+            'gates' => [
+                'ebay' => [
+//                    'class' => 'common\products\ebay\EbayGate',
+//                    'baseUrl' => 'https://api-lbc.weshop.asia/v3', //'https://ebay-api-wshopx-v3.weshop.com.vn/v3',
+                    'class' => 'common\products\ebay\EbayGateV4',
+                    'baseUrl' => 'http://s1.weshop.asia/ebay', // 'http://sv3.weshop.asia/ebay',
+                    'searchUrl' => 'search',
+                    'lookupUrl' => 'product'
+                ],
+                'amazon' => [
+//                    'class' => 'common\products\amazon\AmazonGate',
+//                    'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon',
+                    'class' => 'common\products\amazon\AmazonGateV3',
+                    'baseUrl' =>'http://s1.weshop.asia/amazon', // 'http://sv1.weshop.asia/amazon',
+                    'store' => \common\products\amazon\AmazonProduct::STORE_US
+                ],
+                'amazon-jp' => [
+                    'class' => 'common\products\amazon\AmazonGate',
+                    'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon',
+                    'store' => \common\products\amazon\AmazonProduct::STORE_JP
+                ]
+            ]
+        ],
         'ga' => [
             'class' => 'baibaratsky\yii\google\analytics\MeasurementProtocol',
             'trackingId' => 'UA-68960158-1', // Put your real tracking ID here

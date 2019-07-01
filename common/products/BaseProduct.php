@@ -328,7 +328,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         ];
         $userInfoCookie = new UserCookies();
         $userInfoCookie->setUser();
-        if($userInfoCookie && $userInfoCookie->district_id && $userInfoCookie->province_id) {
+        if ($userInfoCookie && $userInfoCookie->district_id && $userInfoCookie->province_id) {
             $shipTo = ArrayHelper::merge($shipTo, [
                 'contact_name' => $userInfoCookie->name ? $userInfoCookie->name : $shipTo['contact_name'],
                 'address' => $userInfoCookie->address ? $userInfoCookie->address : $shipTo['address'],
@@ -337,7 +337,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'district' => $userInfoCookie->district_id ? $userInfoCookie->district_id : $shipTo['district'],
                 'zipcode' => $userInfoCookie->zipcode ? $userInfoCookie->zipcode : $shipTo['zipcode']
             ]);
-        }else{
+        } else {
             return [];
         }
         $weight = $this->getShippingWeight() * 1000;
@@ -384,6 +384,12 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     public function getInternationalShipping($refresh = false)
     {
+        Yii::info([
+            'params' => $this->getShippingParams(),
+            'wh' => $this->getPickUpWareHouse(),
+        ],'getInternationalShipping');
+
+
         if ((empty($this->_couriers) || $refresh) && !empty($this->getShippingParams())) {
             $location = InternationalShippingCalculator::LOCATION_AMAZON;
             if ($this->type === self::TYPE_EBAY) {
@@ -394,7 +400,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 }
             }
             $calculator = new InternationalShippingCalculator();
-            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code,$this->getStoreManager()->store->currency ,$location);
+            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code, $this->getStoreManager()->store->currency, $location);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
                 $this->_couriers = $couriers;
                 $firstCourier = $couriers[0];
