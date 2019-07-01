@@ -981,3 +981,17 @@ lin 78 : Weshop Global @2019 TranslateManager
 ###-----------EBAY details-------------------
 https://vi.vipr.ebaydesc.com/ws/eBayISAPI.dll?ViewItemDescV4&item=263745698785
 https://vi.vipr.ebaydesc.com/ws/eBayISAPI.dll?ViewItemDescV4&item=152120842857&t=1560997885000&tid=10&category=51071&seller=wowwow-shop&excSoj=1&excTrk=1&lsite=0&ittenable=false&domain=ebay.com&descgauge=1&cspheader=1&oneClk=1&secureDesc=1
+
+vi frontend/config/params-local.php
+<?php
+return [
+    'user.passwordResetTokenExpire' => 3600,
+    'supportEmail'=> 'csadmin@weshop.com.vn',
+    'Url_User_Back_end'=>'http://s.weshop.asia',
+    'Url_FrontEnd'=>'http://v3.weshop.com.vn',
+    'Url_wallet_api' => 'http://v3.weshop.com.vn',
+    'ENV' => true,
+    'pickupUSWHGlobal' => [
+        'default' => 'ws_id',
+    ]
+];
