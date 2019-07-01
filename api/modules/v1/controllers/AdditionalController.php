@@ -6,6 +6,7 @@ namespace api\modules\v1\controllers;
 
 use common\models\Order;
 use common\modelsMongo\AdditionalFeeLog;
+use common\modelsMongo\OrderUpdateLog;
 use Yii;
 use api\controllers\BaseApiController;
 use api\modules\v1\models\AdditionalFeeFrom;
@@ -15,6 +16,8 @@ use common\models\Product;
 
 class AdditionalController extends BaseApiController
 {
+
+
     protected function rules()
     {
         return [
@@ -35,11 +38,12 @@ class AdditionalController extends BaseApiController
     public function actionIndex()
     {
         $form = new AdditionalFeeFrom();
-        if (!$form->load(Yii::$app->getRequest()->getQueryParams())) {
+        if (!$form->load(Yii::$app->getRequest()->getQueryParams(), '')) {
             return $this->response(false, 'can not resolved current request');
         }
-        if ($form->target === 'product' && ($product = Product::findOne($form->target_id)) === null) {
-            if ($form->shipping_quantity > 0 && WeshopHelper::compareValue($product->quantity_customer, $form->shipping_quantity)) {
+        if ($form->target_name === 'product' && ($product = $form->getTarget()) !== null) {
+            /** @var $product Product */
+            if ($form->shipping_quantity !== null && $form->shipping_quantity !== '' && (int)$form->shipping_quantity > 0 && !WeshopHelper::compareValue($product->quantity_customer, $form->shipping_quantity)) {
                 $product->quantity_customer = $form->shipping_quantity;
             }
             $productFees = $product->productFees;
@@ -51,7 +55,7 @@ class AdditionalController extends BaseApiController
             foreach ($productFees as $productFee) {
                 /** @var  $productFee TargetAdditionalFee */
                 list($amount, $local) = $form->getAdditionalFees()->getTotalAdditionalFees($productFee->name);
-                if (WeshopHelper::compareValue($productFee->amount, $amount)) {
+                if (!WeshopHelper::compareValue($productFee->amount, $amount)) {
                     $productFee->local_amount = $local;
                     $productFee->amount = $amount;
                     $productFee->save();
@@ -72,10 +76,36 @@ class AdditionalController extends BaseApiController
             $product->total_price_amount_local = $productPrice[1];
             // Tổng tiền local tất tần tận
             $product->total_final_amount_local = $additionalFees->getTotalAdditionalFees(null)[1];
+            $product->save(false);
             $order = $product->order;
             $order->on(Order::EVENT_AFTER_UPDATE, function ($event) {
                 /** @var $event  \yii\db\AfterSaveEvent */
-                Yii::info($event->changedAttributes,$event::className());
+                $diffValue = [];
+                /** @var $sender Order */
+                $sender = $event->sender;
+                $dirtyAttribute = [];
+                $formatter = Yii::$app->formatter;
+                foreach ($event->changedAttributes as $attribute => $value) {
+                    $newValue = $sender->getAttribute($attribute);
+                    if ($attribute !== 'updated_at') {
+                        $value = (int)$value;
+                        $newValue -= $value;
+
+                    } else {
+                        $newValue = $formatter->asDatetime($newValue);
+                        $value = $formatter->asDatetime($value);
+                    }
+                    $dirtyAttribute[$attribute] = $value;
+                    $diffValue[$attribute] = $newValue;
+                }
+                $orderChangeLog = new OrderUpdateLog();
+                $orderChangeLog->action = 'update';
+                $orderChangeLog->order_code = $sender->ordercode;
+                $orderChangeLog->dirty_attribute = $dirtyAttribute;
+                $orderChangeLog->diff_value = $diffValue;
+                $orderChangeLog->create_by = Yii::$app->getUser()->getId();
+                $orderChangeLog->create_at = $formatter->asDatetime('now');
+                $orderChangeLog->save(false);
             });
             $orderUpdateAttribute = [];
             $totalOrderQuantity = 0;
@@ -125,13 +155,21 @@ class AdditionalController extends BaseApiController
                 $fee = $orderUpdateAttribute['total_fee_amount_local'];
                 $fee += (int)$product->total_fee_product_local;
 
-                $orderUpdateAttribute['total_fee_amount_local'] =$fee;
+                $orderUpdateAttribute['total_fee_amount_local'] = $fee;
             }
+
             // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
             $orderUpdateAttribute['total_amount_local'] = $orderUpdateAttribute['total_origin_fee_local'];
-            $orderUpdateAttribute['total_final_amount_local'] = $orderUpdateAttribute['total_amount_local'] + $orderUpdateAttribute[''];
+            $orderUpdateAttribute['total_final_amount_local'] = $orderUpdateAttribute['total_amount_local'] + $orderUpdateAttribute['total_fee_amount_local'];
             $orderUpdateAttribute['total_quantity'] = $totalOrderQuantity;
-            $order->updateAttributes($orderUpdateAttribute);
+//            $compareAttributes = [];
+//            foreach ($orderUpdateAttribute as $updateName => $updateValue) {
+//                if (WeshopHelper::compareValue($order->$updateName, $updateValue)) {
+//                    $compareAttributes[$updateName] = $updateValue;
+//                }
+//            }
+            $order->setAttributes($orderUpdateAttribute);
+            $order->update(false);
 
         }
         return $this->response(true, 'call success', []);

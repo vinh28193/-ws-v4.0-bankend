@@ -21,9 +21,9 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['check-out','cart'],
+        'controller' => ['check-out', 'cart'],
         'tokens' => [
-            '{code}' =>  '<code:\\w[\\w,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET' => 'index',
@@ -66,7 +66,7 @@ return [
         'controller' => ['list-chat-mongo'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
-            '{code}' =>  '<code:\\w[\\w,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
@@ -88,7 +88,7 @@ return [
         'controller' => ['list-notification'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
-            '{code}' =>  '<code:\\w[\\w,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
@@ -111,7 +111,7 @@ return [
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
             '{image}' => '<image:\\d[\\d,]*>',
-            '{code}' =>  '<code:\\w[\\w,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
@@ -135,7 +135,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['p' => 'package' ,'u' => 'user', 's' => 'shipment', 'tracking-code','us-sending','manifest','tracking' , 'warehouse-ws' => 'warehouse-management' , 'dn' => 'delivery-note'],
+        'controller' => ['p' => 'package', 'u' => 'user', 's' => 'shipment', 'tracking-code', 'us-sending', 'manifest', 'tracking', 'warehouse-ws' => 'warehouse-management', 'dn' => 'delivery-note'],
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
@@ -155,7 +155,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists'],
+        'controller' => ['chat' => 'rest-api-chat', 'chatlists' => 'rest-api-chatlists'],
         'tokens' => [
             '{content}' => '<content:\\w[\\w,]*>',
             '{id}' => '<id:\\w[\\w,]*>',
@@ -173,7 +173,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['chat' => 'rest-api-chat','chatlists' => 'rest-api-chatlists',  'ex' => 'exchange-rate'],
+        'controller' => ['chat' => 'rest-api-chat', 'chatlists' => 'rest-api-chatlists', 'ex' => 'exchange-rate'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{content}' => '<content:\\w[\\w,]*>',
@@ -223,12 +223,12 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'PUT update/<id:\d+>'=> 'update',
-            'OPTIONS update/<id:\d+>'=> 'options',
-            'POST create'=> 'create',
-            'OPTIONS create'=> 'options',
-            'DELETE delete/<id:\d+>'=> 'delete',
-            'OPTIONS delete/<id:\d+>'=> 'options',
+            'PUT update/<id:\d+>' => 'update',
+            'OPTIONS update/<id:\d+>' => 'options',
+            'POST create' => 'create',
+            'OPTIONS create' => 'options',
+            'DELETE delete/<id:\d+>' => 'delete',
+            'OPTIONS delete/<id:\d+>' => 'options',
         ]
     ],
     [
@@ -261,11 +261,11 @@ return [
             '{token}' => '<token:\\d[\\d,]*>',
         ],
         'patterns' => [
-           // 'GET' => 'list-card-payment',
+            // 'GET' => 'list-card-payment',
             'POST' => 'list-card-payment',
             'OPTIONS' => 'options',
         ],
-        'extraPatterns' => [ ]
+        'extraPatterns' => []
     ],
 
     [
@@ -418,7 +418,7 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['package-item' , 'draft-package-item'],
+        'controller' => ['package-item', 'draft-package-item'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -453,10 +453,10 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'PUT update/<id:\d+>'=> 'update',
-            'OPTIONS update/<id:\d+>'=> 'options',
-            'GET view/<id:\d+>'=> 'view',
-            'OPTIONS view/<id:\d+>'=> 'options',
+            'PUT update/<id:\d+>' => 'update',
+            'OPTIONS update/<id:\d+>' => 'options',
+            'GET view/<id:\d+>' => 'view',
+            'OPTIONS view/<id:\d+>' => 'options',
         ]
     ],
     [
@@ -565,8 +565,8 @@ return [
             'GET {manifest_id}' => 'get-detail',
         ],
         'extraPatterns' => [
-            'GET get-detail/<manifest_id:\d+>'=> 'get-detail',
-            'OPTIONS get-detail/<manifest_id:\d+>'=> 'options',
+            'GET get-detail/<manifest_id:\d+>' => 'get-detail',
+            'OPTIONS get-detail/<manifest_id:\d+>' => 'options',
         ]
     ],
     /*
@@ -603,7 +603,7 @@ return [
             'GET' => 'list',
             'OPTIONS' => 'options',
         ],
-        'extraPatterns' => [ ]
+        'extraPatterns' => []
     ],
     [
         'class' => \common\filters\ApiUrlRule::className(),
@@ -622,14 +622,14 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'POST create'=> 'create',
-            'OPTIONS create'=> 'options',
+            'POST create' => 'create',
+            'OPTIONS create' => 'options',
         ]
     ],
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['notifications' => 'notifications', 'downloadexcel' => 'download-file-excel','trackinglogs'=>'rest-api-tracking-log'],
+        'controller' => ['notifications' => 'notifications', 'downloadexcel' => 'download-file-excel', 'trackinglogs' => 'rest-api-tracking-log'],
         'tokens' => [
             '{id}' => '<id:\\w[\\w,]*>',
             '{token}' => '<token:\\d[\\d,]*>',
@@ -661,15 +661,15 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'POST map-unknown/<id:\d+>'=> 'map-unknown',
-            'OPTIONS map-unknown/<id:\d+>'=> 'options',
-            'POST seller-refund/<id:\d+>'=> 'seller-refund',
-            'OPTIONS seller-refund/<id:\d+>'=> 'options',
-            'POST mark-hold/<id:\d+>'=> 'mark-hold',
-            'OPTIONS mark-hold/<id:\d+>'=> 'options',
+            'POST map-unknown/<id:\d+>' => 'map-unknown',
+            'OPTIONS map-unknown/<id:\d+>' => 'options',
+            'POST seller-refund/<id:\d+>' => 'seller-refund',
+            'OPTIONS seller-refund/<id:\d+>' => 'options',
+            'POST mark-hold/<id:\d+>' => 'mark-hold',
+            'OPTIONS mark-hold/<id:\d+>' => 'options',
             'OPTIONS {id}' => 'options',
-            'POST insert-shipment'=> 'insert-shipment',
-            'OPTIONS insert-shipment'=> 'options',
+            'POST insert-shipment' => 'insert-shipment',
+            'OPTIONS insert-shipment' => 'options',
         ]
     ],
     [
@@ -724,12 +724,12 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'POST map-unknown/<id:\d+>'=> 'map-unknown',
-            'OPTIONS map-unknown/<id:\d+>'=> 'options',
-            'POST seller-refund/<id:\d+>'=> 'seller-refund',
-            'OPTIONS seller-refund/<id:\d+>'=> 'options',
-            'POST insert-tracking'=> 'insert-tracking',
-            'OPTIONS insert-tracking'=> 'options',
+            'POST map-unknown/<id:\d+>' => 'map-unknown',
+            'OPTIONS map-unknown/<id:\d+>' => 'options',
+            'POST seller-refund/<id:\d+>' => 'seller-refund',
+            'OPTIONS seller-refund/<id:\d+>' => 'options',
+            'POST insert-tracking' => 'insert-tracking',
+            'OPTIONS insert-tracking' => 'options',
             'OPTIONS {id}' => 'options',
         ]
     ],
@@ -747,10 +747,10 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'POST confirm-change-price'=> 'confirm-change-price',
-            'OPTIONS confirm-change-price'=> 'options',
-            'POST update-arrears'=> 'update-arrears',
-            'OPTIONS update-arrears'=> 'options',
+            'POST confirm-change-price' => 'confirm-change-price',
+            'OPTIONS confirm-change-price' => 'options',
+            'POST update-arrears' => 'update-arrears',
+            'OPTIONS update-arrears' => 'options',
         ]
     ],
     [
@@ -767,8 +767,8 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'POST merge'=> 'merge',
-            'OPTIONS merge'=> 'options',
+            'POST merge' => 'merge',
+            'OPTIONS merge' => 'options',
         ]
     ],
     [
@@ -777,7 +777,7 @@ return [
         'controller' => ['fcm-noti'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
-            '{code}' =>  '<code:\\w[\\w,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
@@ -788,10 +788,10 @@ return [
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['log-tracking'=>'service/log-tracking'],
+        'controller' => ['log-tracking' => 'service/log-tracking'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
-            '{code}' =>  '<code:\\w[\\w,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
@@ -800,17 +800,17 @@ return [
 
         ],
         'extraPatterns' => [
-            'POST view-log'=> 'view-log',
-            'OPTIONS view-log'=> 'options',
+            'POST view-log' => 'view-log',
+            'OPTIONS view-log' => 'options',
         ]
     ],
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['s-package'=>'service/package'],
+        'controller' => ['s-package' => 'service/package'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
-            '{code}' =>  '<code:\\w[\\w,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
@@ -818,17 +818,17 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'POST merge'=> 'merge',
-            'OPTIONS merge'=> 'options',
+            'POST merge' => 'merge',
+            'OPTIONS merge' => 'options',
         ]
     ],
     [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['i18n'=>'i18n'],
+        'controller' => ['i18n' => 'i18n'],
         'tokens' => [
             '{id}' => '<id:\\d[\\d,]*>',
-            '{code}' =>  '<code:\\w[\\w,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
         ],
         'patterns' => [
             'GET,HEAD' => 'index',
@@ -841,8 +841,17 @@ return [
             'OPTIONS' => 'options',
         ],
         'extraPatterns' => [
-            'GET get-lang'=> 'get-lang',
-            'OPTIONS get-lang'=> 'options',
+            'GET get-lang' => 'get-lang',
+            'OPTIONS get-lang' => 'options',
         ]
     ],
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['additional'],
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'OPTIONS' => 'options',
+        ],
+    ]
 ];
