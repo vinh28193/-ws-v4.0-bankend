@@ -39,9 +39,9 @@ class FrontendController extends Controller
     public $storeManager = 'storeManager';
 
     /**
-     * @var string
+     * @var
      */
-    public $pageTitle;
+    public $title;
 
     /**
      * @var string|Request
@@ -84,7 +84,7 @@ class FrontendController extends Controller
     public function ogMetaTag()
     {
         return [
-            'title' => $this->pageTitle,
+            'title' => $this->title,
             'site_name' => Yii::$app->requestedRoute,
             'url' => $this->request->url,
             'image' => Url::to('/img/weshop-logo-vn.png'),
@@ -111,7 +111,12 @@ class FrontendController extends Controller
         parent::init();
         $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
         $this->request = Instance::ensure($this->request, Request::className());
+        if($this->title !== null){
+            $this->title = $this->storeManager->store->name;
+        }
         $this->registerAllMetaTagLinkTag();
+
+        $this->getView()->title = $this->title;
         $this->getEcomobi()->register();
     }
 
@@ -143,9 +148,7 @@ class FrontendController extends Controller
      */
     public function defaultLayoutParams()
     {
-        return [
-            'pageTitle' => $this->pageTitle
-        ];
+        return [];
     }
 
     protected function registerAllMetaTagLinkTag()

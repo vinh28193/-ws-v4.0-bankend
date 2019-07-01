@@ -1,5 +1,6 @@
 <?php
 return [
+    'version_gate' => 'Old', //Api Chương: '' or Api WESHOP: 'Old'
     'ebay-api' => 'https://api-lbc.weshop.asia/v3',
     'boxme' =>[
         'vn' => [

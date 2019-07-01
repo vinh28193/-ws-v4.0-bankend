@@ -17,6 +17,7 @@ FrontendAsset::register($this);
 $this->registerJs("ws.sendFingerprint();", \yii\web\View::POS_READY);
 $ParamConfigAccountKit = ArrayHelper::getValue(Yii::$app->params,'account_kit',[]);
 $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$app->storeManager->getId(),[]);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
