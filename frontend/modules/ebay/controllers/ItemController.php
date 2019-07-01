@@ -44,7 +44,7 @@ class ItemController extends EbayController
         $this->portalTitle = $item->item_name;
         $this->portalImage = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
 
-        $category = $item->getCategory();
+//        $category = $item->getCategory();
 
         //Load sau khi load xong content
 //        $relate_product_rs = EbayProductGate::paserSugget($item->item_id, $category ? [$category->alias] : []);

@@ -85,14 +85,26 @@ class UserCookies extends Model
      * @return SystemDistrict|null
      */
     public function getDistrict(){
-        return SystemDistrict::findOne($this->district_id);
+        $key = "DISTRICT_".$this->district_id;
+        $district = Yii::$app->cache->get($key);
+        if(!$district){
+            $district = SystemDistrict::findOne($this->district_id);
+            Yii::$app->cache->set($key,$district,60*60*24);
+        }
+        return $district;
     }
 
     /**
      * @return SystemStateProvince|null
      */
     public function getProvince(){
-        return SystemStateProvince::findOne($this->province_id);
+        $key = "PROVINCE_".$this->province_id;
+        $province = Yii::$app->cache->get($key);
+        if(!$province){
+            $province = SystemStateProvince::findOne($this->province_id);
+            Yii::$app->cache->set($key,$province,60*60*24);
+        }
+        return $province;
     }
     public function checkAddress(){
         return $this->district_id && $this->province_id;
