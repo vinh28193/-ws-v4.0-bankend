@@ -7,6 +7,6 @@ return [
     'Url_wallet_api' => 'http://v3.weshop.com.vn',
     'ENV' => true, // True --> envaroment Develop , false : Prod
     'pickupUSWHGlobal' => [
-        'default' => 'sandbox_id',
+        'default' => 'ws_id',
     ]
 ];
