@@ -18,5 +18,13 @@ return [
     'https://v3.weshop.com.vn',
     'https://v3.weshop.co.id',
     'https://ops.weshop.asia',
+
+    'https://s-stag.weshop.asia',
+    'https://ops-stag.weshop.asia',
+
+    'https://s.weshop.asia',
+    'https://s-cms.weshop.asia',
+    'https://admin-cms-stag.weshop.asia',
+    'https://admin-cms.weshop.asia',
 ];
 
