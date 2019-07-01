@@ -278,6 +278,10 @@ class MongodbCartStorage extends BaseObject
         if (isset($params['portal']) && !empty($params['portal'])) {
             $conditions = ['value.portal' => $params['portal']];
         }
+
+        if (isset($params['saleID']) && !empty($params['saleID'])) {
+            $conditions = ['value.sale_support_id' => $params['saleID']];
+        }
         if (isset($params['potential']) && !empty($params['potential'])) {
             $conditions = ['value.potential' => (int)$params['potential']];
         }
