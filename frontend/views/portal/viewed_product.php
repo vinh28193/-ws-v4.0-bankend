@@ -7,7 +7,7 @@ use common\helpers\WeshopHelper;
 if(!empty($items)){
 ?>
 <div class="title"><?php if (!is_null($items)) {
-        echo Yii::t('frontend', 'Sản phẩm đã xem:');
+        echo Yii::t('frontend', 'Products viewed:');
     } ?></div>
 
     <div id="product-viewed-2" class="owl-carousel owl-theme">
