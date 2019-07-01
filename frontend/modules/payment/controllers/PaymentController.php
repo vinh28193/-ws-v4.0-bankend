@@ -85,8 +85,6 @@ class PaymentController extends BasePaymentController
         if ($shippingForm->other_receiver !== 'false') {
 
             if ((int)$shippingForm->enable_receiver === ShippingForm::YES) {
-                var_dump($shippingForm);
-                die();
                 $shippingParams['receiver_name'] = $shippingForm->receiver_name;
                 $shippingParams['receiver_address'] = $shippingForm->receiver_address;
                 $shippingParams['receiver_phone'] = $shippingForm->receiver_phone;
@@ -192,6 +190,8 @@ class PaymentController extends BasePaymentController
                     $firstFee = $arrayFee[0];
                     $firstFee = new TargetAdditionalFee($firstFee);
                     list($firstFee->amount, $firstFee->local_amount) = $orderPayment->getAdditionalFees()->getTotalAdditionalFees($feeName);
+                    $firstFee->target = 'order';
+                    $firstFee->target_id = $order->id;
                     if (!$firstFee->save(false)) {
                         $transaction->rollBack();
                         return $this->response(false, 'can not create order');

@@ -8,7 +8,6 @@
 
 namespace common\models;
 
-use common\helpers\WeshopHelper;
 use common\models\db\Coupon;
 use common\models\db\DraftExtensionTrackingMap;
 use common\models\db\Order as DbOrder;
@@ -17,10 +16,10 @@ use common\models\db\TargetAdditionalFee;
 use common\models\queries\OrderQuery;
 use common\rbac\rules\RuleOwnerAccessInterface;
 use Yii;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
-use yii\db\Query;
-use yii\db\Expression;
 
 /**
  * @property Product[] $products
@@ -262,7 +261,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             [['receiver_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemCountry::className(), 'targetAttribute' => ['receiver_country_id' => 'id'], 'on' => [self::SCENARIO_UPDATE_RECEIVER, self::SCENARIO_DEFAULT]],
             [['receiver_district_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemDistrict::className(), 'targetAttribute' => ['receiver_district_id' => 'id'], 'on' => [self::SCENARIO_UPDATE_RECEIVER, self::SCENARIO_DEFAULT]],
             [['receiver_province_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemStateProvince::className(), 'targetAttribute' => ['receiver_province_id' => 'id'], 'on' => [self::SCENARIO_UPDATE_RECEIVER, self::SCENARIO_DEFAULT]],
-
+            [['total_intl_shipping_fee_amount', 'total_origin_tax_fee_amount', 'total_weshop_fee_amount', 'total_boxed_fee_amount', 'total_origin_shipping_fee_amount', 'total_vat_amount_amount'], 'number'],
             [['current_status'], 'required', 'on' => self::SCENARIO_UPDATE_STATUS],
 //            [['current_status'], 'validateCurrentStatus', 'on' => self::SCENARIO_UPDATE_STATUS],
 
