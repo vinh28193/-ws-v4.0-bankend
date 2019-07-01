@@ -26,7 +26,7 @@ class InternationalShippingCalculator extends BaseObject
     public function init()
     {
         parent::init();
-        if($this->hostname === null){
+        if ($this->hostname === null) {
             $this->hostname = Yii::$app->params['BOXME_GRPC_SERVICE_COURIER'];
         }
 
@@ -35,6 +35,7 @@ class InternationalShippingCalculator extends BaseObject
     public function getGrpcClient()
     {
         if (!is_object($this->_grpcClient)) {
+            Yii::info("Open connent to hostname {$this->hostname}", __METHOD__);
             $this->_grpcClient = new CourierClient($this->hostname, [
                 'credentials' => \Grpc\ChannelCredentials::createInsecure(),
             ]);
