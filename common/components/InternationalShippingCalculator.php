@@ -58,7 +58,6 @@ class InternationalShippingCalculator extends BaseObject
                 'sort_mode' => 'best_rating',
                 'auto_approve' => 'Y',
                 'create_by' => 0,
-                'create_from' => 'create_order_netsale',
                 'order_type' => 'dropship',
                 'check_stock' => 'N',
                 'include_special_goods' => 'N'
@@ -69,7 +68,6 @@ class InternationalShippingCalculator extends BaseObject
             ],
             'referral' => [
                 'order_number' => 0,
-                'coupon_code' => ''
             ]
         ], $params);
         $request->setData(Json::encode($params));

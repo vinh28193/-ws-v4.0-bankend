@@ -315,12 +315,8 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         }
         $shipTo = [
             'contact_name' => 'ws calculator',
-            'company_name' => '',
-            'email' => '',
             'address' => 'ws auto',
-            'address2' => '',
             'phone' => '0987654321',
-            'phone2' => '',
             'province' => 1,
             'district' => 8,
             'country' => $this->getStoreManager()->store->country_code,
@@ -352,7 +348,6 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'total_parcel' => 1,
                 'total_amount' => $this->getLocalizeTotalPrice(),
                 'description' => '',
-                'amz_shipment_id' => '',
                 'chargeable_weight' => $weight,
                 'parcels' => [
                     [
