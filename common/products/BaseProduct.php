@@ -384,10 +384,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     public function getInternationalShipping($refresh = false)
     {
-        Yii::info([
-            'params' => $this->getShippingParams(),
-            'wh' => $this->getPickUpWareHouse(),
-        ],'getInternationalShipping');
+
         if ((empty($this->_couriers) || $refresh) && !empty($this->getShippingParams())) {
             $location = InternationalShippingCalculator::LOCATION_AMAZON;
             if ($this->type === self::TYPE_EBAY) {
@@ -421,7 +418,6 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 $this->_pickUpWareHouse = $user->getPickupWarehouse();
             } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
                 $current = $params['default'];
-                Yii::info($params, "load form params pickupUSWHGlobal $current");
                 $this->_pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
             }
         }
