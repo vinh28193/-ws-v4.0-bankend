@@ -12,7 +12,7 @@ use yii\helpers\Html;
     <a class="btn method-select" data-toggle="collapse" data-target="#method<?=$group;?>" aria-expanded="<?=$selected ? 'true' : 'false';?>" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
         <i class="icon method_<?=$group;?>"></i>
         <div class="name">Thanh toán Quốc tế ( Visa/ Master)</div>
-        <div class="desc">Số thẻ của bạn được giữ an toàn 100% và chỉ được sử dụng cho giao dịch này.</div>
+        <div class="desc"><span class="text-danger">Phí giao dịch 2,5%</span>. Số thẻ của bạn được giữ an toàn 100% và chỉ được sử dụng cho giao dịch này.</div>
     </a>
 
     <div id="method<?=$group;?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne" data-parent="#payment-method">

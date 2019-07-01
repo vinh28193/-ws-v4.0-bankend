@@ -143,7 +143,7 @@ return [
 
             ],
             'ws_vn' => [
-                'ref_user_id' => 248341,
+                'ref_user_id' => 253019,
                 'ref_pickup_id' => 62555,
                 'email' => '',
                 'name' => 'BMUS_NY',
@@ -151,7 +151,7 @@ return [
                 'address' => 'US · Newyork, United State'
             ],
             'ws_id' => [
-                'ref_user_id' => 248341,
+                'ref_user_id' => 253019,
                 'ref_pickup_id' => 62556,
                 'email' => '',
                 'name' => 'BMUS_NY',

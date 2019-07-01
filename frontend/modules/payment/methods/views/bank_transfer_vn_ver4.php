@@ -11,7 +11,7 @@
     <a class="btn method-select" data-toggle="collapse" data-target="#method<?=$group;?>" aria-expanded="<?=$selected ? 'true' : 'false';?>" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
         <i class="icon method_<?=$group;?>"></i>
         <div class="name">Chuyển khoản ngân hàng</div>
-        <div class="desc">Qúy khách vui lòng chuyển tiền tới tài khoản sau</div>
+        <div class="desc">Miễn phí. Qúy khách vui lòng chuyển tiền tới tài khoản sau</div>
     </a>
 
     <div id="method<?=$group;?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne" data-parent="#payment-method">

@@ -36,7 +36,7 @@ $this->registerCss($css);
        onclick="ws.payment.selectMethod(<?= $methods[0]['payment_provider_id'] ?>,<?= $methods[0]['payment_method_id'] ?>, '<?= $methods[0]['paymentMethod']['code']; ?>')">
         <i class="icon method_<?= $group; ?>"></i>
         <div class="name">Thẻ ATM nội địa/ Internet banking</div>
-        <div class="desc">Số thẻ của bạn được giữ an toàn 100% và chỉ được sử dụng cho giao dịch này.</div>
+        <div class="desc">Miễn phí. Số thẻ của bạn được giữ an toàn 100% và chỉ được sử dụng cho giao dịch này.</div>
     </a>
 
     <div id="method<?= $group; ?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne"

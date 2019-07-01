@@ -58,7 +58,6 @@ class InternationalShippingCalculator extends BaseObject
                 'sort_mode' => 'best_rating',
                 'auto_approve' => 'Y',
                 'create_by' => 0,
-                'create_from' => 'create_order_netsale',
                 'order_type' => 'dropship',
                 'check_stock' => 'N',
                 'include_special_goods' => 'N'
@@ -69,7 +68,6 @@ class InternationalShippingCalculator extends BaseObject
             ],
             'referral' => [
                 'order_number' => 0,
-                'coupon_code' => ''
             ]
         ], $params);
         $request->setData(Json::encode($params));
@@ -81,10 +79,14 @@ class InternationalShippingCalculator extends BaseObject
             'setUserId' => $request->getUserId(),
             'setCountryCode' => $request->getCountryCode(),
         ]);
+//        return null;
         /** @var $apires CalculateFeeResponse */
         $apires = $this->getGrpcClient()->CalculateFee($request)->wait();
         list($response, $status) = $apires;
         /** @var $response CourierCalculate */
+        if(!$response){
+            return null;
+        }
         $data = $response->getData();
         $success = $response->getError() === false && $data->count() > 0;
         $message = $response->getErrorMessage();

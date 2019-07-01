@@ -13,7 +13,7 @@
        aria-expanded="<?= $selected ? 'true' : 'false'; ?>" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
         <i class="icon method_<?= $group; ?>"></i>
         <div class="name">Thanh toán qua QR Code</div>
-        <div class="desc">Thanh toán bằng mã QR Code, nhanh chóng tiện lợi</div>
+        <div class="desc">Miễn phí. Thanh toán bằng mã QR Code, nhanh chóng tiện lợi</div>
     </a>
 
     <div  id="method<?= $group; ?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne"
