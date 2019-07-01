@@ -21,7 +21,90 @@ use frontend\modules\payment\models\ShippingForm;
 $showStep = true;
 $activeStep = 2;
 $otherReceiver = Html::getInputId($shippingForm, 'other_receiver');
-$zipcode = (SystemZipcode::loadZipCode($shippingForm->buyer_country_id));
+$js = <<< JS
+    
+    var showReceiver = function(element) {
+        element  = $(element);
+        var checked = element.is(':checked');
+        var target = $('div.receiver-address');
+        if(target.hasClass('close')){
+             target.removeClass('close');
+             target.addClass('open');
+        }else if(target.hasClass('open')){
+            target.removeClass('open');
+            target.addClass('close');
+        }else {
+            target.removeClass('close');
+            target.removeClass('open');
+            target.addClass( checked? 'open' : 'close');
+        }
+        if(checked === false){
+            $('#shippingform-enable_receiver').val(0);
+        }
+        ws.payment.calculatorShipping();
+        ws.initEventHandler('shipping-form','calculatorShipping','change','input[type=radio]',function(event) {
+            ws.payment.calculatorShipping();
+        });
+    };
+    
+     ws.initEventHandler('shipping-form','changeZipCode','keyup','#shippingform-buyer_post_code, #shippingform-receiver_post_code',function(event) {
+          event.preventDefault();
+          ws.payment.calculatorShipping();
+     });
+     
+    var otherReceiver =  $('#$otherReceiver');
+    // showReceiver(otherReceiver);
+    ws.initEventHandler('shipping-form','change','change','#$otherReceiver',function(event) {
+        event.preventDefault();
+        showReceiver(this);
+    });
+    
+     
+    ws.initEventHandler('shipping-form','addNewAddress','click','button.btn-shipping',function(event) {
+        event.preventDefault();
+        var btn = $(this);
+        showNewAddress(btn.data('ref'),btn.data('enable'));
+    });
+    
+    var showNewAddress = function(type,close = 1){
+        if(!type){
+            return;
+        }
+        close = Number(close) || 1;
+        var findEnable = 'input#shippingform-enable_'+type;
+        var enable = $(findEnable);
+        enable.attr('value',close);
+        var listElement = $('div.'+type +'-list');
+        
+        if(listElement.hasClass(close === 1 ? 'open' :'close')){
+            listElement.removeClass(close === 1 ? 'open' :'close')
+        }
+        listElement.addClass(close === 1 ? 'close' :'open');
+        
+        var newElement =  $('div.'+type +'-new');
+        if(newElement.hasClass(close === 1 ? 'close' :'open')){
+            newElement.removeClass(close === 1 ? 'close' :'open')
+        }
+        newElement.addClass(close === 1 ? 'open' :'close');
+        ws.payment.calculatorShipping();
+    };
+    $(document).on("beforeSubmit", "form.payment-form", function (e) {
+        e.preventDefault();
+        var form = $(this);
+        // return false if form still have some validation errors
+        if (form.find('.has-error').length) 
+        {
+            return false;
+        }
+        window.scrollTo(0, 0);
+        // send data to actionSave by ajax request.
+        return false; // Cancel form submitting.
+    });
+    $(document).ready(function () {
+       ws.startForm();
+    });
+JS;
+$this->registerJs($js);
 
 ?>
 <style type="text/css">
