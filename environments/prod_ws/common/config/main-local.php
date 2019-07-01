@@ -100,7 +100,7 @@ return [
 //                    'class' => 'common\products\amazon\AmazonGate',
 //                    'baseUrl' => 'http://amazonapiv2.weshop.asia/amazon',
                     'class' => 'common\products\amazon\AmazonGateV3',
-                    'baseUrl' => 'http://sv3.weshop.asia/amazon',
+                    'baseUrl' =>'http://s1.weshop.asia/amazon', // 'http://sv1.weshop.asia/amazon',
                     'store' => \common\products\amazon\AmazonProduct::STORE_US
                 ],
                 'amazon-jp' => [
