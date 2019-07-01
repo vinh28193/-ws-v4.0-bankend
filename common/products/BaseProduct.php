@@ -328,7 +328,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         ];
         $userInfoCookie = new UserCookies();
         $userInfoCookie->setUser();
-        if($userInfoCookie && $userInfoCookie->district_id && $userInfoCookie->province_id) {
+        if ($userInfoCookie && $userInfoCookie->district_id && $userInfoCookie->province_id) {
             $shipTo = ArrayHelper::merge($shipTo, [
                 'contact_name' => $userInfoCookie->name ? $userInfoCookie->name : $shipTo['contact_name'],
                 'address' => $userInfoCookie->address ? $userInfoCookie->address : $shipTo['address'],
@@ -337,7 +337,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 'district' => $userInfoCookie->district_id ? $userInfoCookie->district_id : $shipTo['district'],
                 'zipcode' => $userInfoCookie->zipcode ? $userInfoCookie->zipcode : $shipTo['zipcode']
             ]);
-        }else{
+        } else {
             return [];
         }
         $weight = $this->getShippingWeight() * 1000;
@@ -394,7 +394,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 }
             }
             $calculator = new InternationalShippingCalculator();
-            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code,$this->getStoreManager()->store->currency ,$location);
+            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code, $this->getStoreManager()->store->currency, $location);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
                 $this->_couriers = $couriers;
                 $firstCourier = $couriers[0];
@@ -417,6 +417,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 $this->_pickUpWareHouse = $user->getPickupWarehouse();
             } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
                 $current = $params['default'];
+                Yii::info("load form params pickupUSWHGlobal $current", 'getPickUpWareHouse');
                 $this->_pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
             }
         }
