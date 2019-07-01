@@ -36,6 +36,7 @@ class PortalController extends FrontendController
     {
         return ArrayHelper::merge(parent::ogMetaTag(), [
             'title' => $this->portalTitle,
+            'site_name' => $this->portalTitle,
             'image' => $this->portalImage,
             'description' => $this->portalDescription,
             'portal' => strtolower($this->portal),
