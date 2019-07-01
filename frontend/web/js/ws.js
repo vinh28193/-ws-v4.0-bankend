@@ -173,7 +173,7 @@ var ws = ws || (function ($) {
             }, false);
         },
         setCartBadge(count) {
-            $('#cartBadge').html(count);
+            $('.count-cart').html(count);
         },
         countdownTime: function () {
             $('*[data-toggle=countdown-time]').each(function () {
@@ -359,7 +359,7 @@ var ws = ws || (function ($) {
                     phone: $('input[name=phone_default]').val(),
                     city_id: $('select[name=city_default]').val(),
                     district_id: $('select[name=district_default]').val(),
-                    zipcode: $('select[name=zipcode_default]').val(),
+                    zipcode: $('#zipcode_default').val(),
                 },
                 success: function (res) {
                     if (res.success) {
@@ -456,4 +456,18 @@ $('datalist#listSuggestSearch').keyup(function () {
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
     }
+});
+$('#zipcode_default').keyup(function () {
+    var txt = '';
+    var count = 0;
+    var tesst = zipcode_data.filter(function (z) {
+        if(z.zip_code.indexOf($('#zipcode_default').val()) > -1){
+            count++;
+        }
+        return count < 20 && z.zip_code.indexOf($('#zipcode_default').val()) > -1;
+    });
+    $.each(tesst, function (k,v) {
+        txt += "<option value='"+v.zip_code+"'>"+v.label+"</option>";
+    });
+    $('#list_zipcode').html(txt);
 });

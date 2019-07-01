@@ -187,16 +187,14 @@ class PaymentController extends BasePaymentController
                     return $this->response(false, 'can not create order');
                 }
 
-                foreach ($orderPayment->getAdditionalFees()->toArray() as $arrayFee) {
-                    foreach ($arrayFee as $feeValue) {
-                        $fee = new TargetAdditionalFee($feeValue);
-                        $fee->target = 'order';
-                        $fee->target_id = $order->id;
-
-                        if (!$fee->save(false)) {
-                            $transaction->rollBack();
-                            return $this->response(false, 'can not create order');
-                        }
+                foreach ($orderPayment->getAdditionalFees()->toArray() as $feeName => $arrayFee) {
+                    // luu tong
+                    $firstFee = $arrayFee[0];
+                    $firstFee = new TargetAdditionalFee($firstFee);
+                    list($firstFee->amount, $firstFee->local_amount) = $orderPayment->getAdditionalFees()->getTotalAdditionalFees($feeName);
+                    if (!$firstFee->save(false)) {
+                        $transaction->rollBack();
+                        return $this->response(false, 'can not create order');
                     }
                 }
                 $updateOrderAttributes = [];
@@ -322,7 +320,7 @@ class PaymentController extends BasePaymentController
         }
         $payment->return_url = PaymentService::createReturnUrl($payment->payment_provider);
         $payment->cancel_url = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
-        if($payment->type === 'order' && $paymentTransaction->order_code !== null){
+        if ($payment->type === 'order' && $paymentTransaction->order_code !== null) {
             $payment->cancel_url = PaymentService::createBillingUrl($paymentTransaction->order_code);
         }
         $res = $payment->processPayment();
@@ -374,7 +372,7 @@ class PaymentController extends BasePaymentController
 
                 if (($order = $child->order) !== null) {
                     $order->total_paid_amount_local = $child->transaction_amount_local;
-                    if($order->current_status == Order::STATUS_SUPPORTED){
+                    if ($order->current_status == Order::STATUS_SUPPORTED) {
                         $order->current_status = Order::STATUS_READY2PURCHASE;
                     }
                     $order->save(false);

@@ -13,6 +13,11 @@ use common\models\User;
  */
 trait GetUserIdentityTrait
 {
+
+    /**
+     * @var bool
+     */
+    public $usedIdentity = true;
     /**
      * @var null|User
      */
@@ -23,7 +28,7 @@ trait GetUserIdentityTrait
      */
     public function getUser()
     {
-        if ($this->_user === null && ($user = Yii::$app->user->identity) !== null) {
+        if ($this->_user === null && ($user = Yii::$app->user->identity) !== null && $this->usedIdentity) {
             $this->_user = $user;
         }
         return $this->_user;

@@ -5,6 +5,7 @@ namespace frontend\controllers;
 
 use common\components\EcomobiComponent;
 use common\components\UserCookies;
+use common\models\db\SystemExchangeRate;
 use Yii;
 use yii\di\Instance;
 use yii\web\BadRequestHttpException;

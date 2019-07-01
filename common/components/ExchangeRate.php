@@ -111,7 +111,7 @@ class ExchangeRate extends Component
         }
 
         $level = $user->getUserLevel();
-        $token = "Rate percent for user level `$level`: ";
+        $token = "Rate percent for user `{$user->id}` level `$level`: ";
         if ($level === User::LEVEL_SLIVER) {
             Yii::info("$token 0.01", __METHOD__);
             return 0.01;

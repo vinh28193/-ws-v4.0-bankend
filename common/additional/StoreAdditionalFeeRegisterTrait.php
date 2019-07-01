@@ -34,9 +34,6 @@ trait StoreAdditionalFeeRegisterTrait
     {
         if ($this->_storeManager === null) {
             $app = Yii::$app;
-            if ($app instanceof \yii\console\Application) {
-                $app->storeManager->setStore(1);
-            }
             $this->_storeManager = $app->storeManager;
 
         }
