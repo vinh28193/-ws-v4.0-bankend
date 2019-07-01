@@ -1,17 +1,6 @@
 <?php
 $js = <<<JS
-$.ajax({
-                url: '/checkout/cart/count',
-                method: 'GET',
-                success: function (res) {
-                console.log(res);
-                    if (res.success) {
-                        $('.count-cart').html(res.count);
-                    } else {
-                        $('.count-cart').html('0');
-                    }
-                }
-            });
+ws.reloadCartBadge();
 $(document).ready(function () {
     $('.bars-cate-mb').slick({
       infinite: true,
@@ -86,6 +75,9 @@ $this->registerJs($js);
             <a href="/my-cart.html"><span class="label-cart"><?= Yii::t('frontend','Cart') ?> (<span class="count-cart">0</span>)</span></a>
         </div>
         <div class="account-header-box dropdown style-account" style="width: 150px">
+            <div>
+                <span>Exchange Rate : </span><span class="view-exchange-rate"><?php echo Yii::$app->storeManager->getExchangeRate() ?></span>
+            </div>
             <a class="bg-white" id="dropAcount" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true" role="button"
                aria-expanded="false">
                 <span class="row">

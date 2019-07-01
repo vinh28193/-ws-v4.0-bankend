@@ -4,11 +4,13 @@
 namespace frontend\modules\checkout\controllers;
 
 use common\components\cart\CartHelper;
+use common\components\StoreManager;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use common\products\BaseProduct;
 use common\components\cart\CartSelection;
+use common\models\db\SystemExchangeRate;
 
 class CartController extends CheckoutController
 {

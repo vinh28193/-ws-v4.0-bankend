@@ -92,8 +92,8 @@ class ProductController extends BaseApiController
             if (isset($post['noteCustomer'])) {
                 $product->note_by_customer = $post['noteCustomer'];
             }
-            if (isset($post['total_price_amount_local'])) {
-                $product->total_price_amount_local = $post['total_price_amount_local'];
+            if (isset($post['price_amount_origin'])) {
+                $product->price_amount_origin = $post['price_amount_origin'];
             }
             if (isset($post['note_boxme'])) {
                 $product->note_boxme = $post['note_boxme'];
