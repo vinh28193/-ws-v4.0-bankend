@@ -113,40 +113,47 @@ class AdditionalController extends BaseApiController
                 $totalOrderQuantity += $product->quantity_customer;
                 foreach ($product->productFees as $productFee) {
                     $attribute = "total_{$productFee->name}_local";
+                    $attributeAmount = "total_{$productFee->name}_amount";
                     if ($productFee->name === 'product_price') {
                         // Tổng giá gốc của các sản phẩm tại nơi xuất xứ
                         $attribute = 'total_origin_fee_local';
+                        $attributeAmount = 'total_price_amount_origin';
                     } elseif ($productFee->name === 'tax_fee') {
                         // Tổng phí tax của các sản phẩm tại nơi xuất xứ
                         $attribute = 'total_origin_tax_fee_local';
+                        $attributeAmount = 'total_origin_tax_fee_amount';
                     } elseif ($productFee->name === 'shipping_fee') {
                         // Tổng phí tax của các sản phẩm tại nơi xuất xứ
                         $attribute = 'total_origin_shipping_fee_local';
+                        $attributeAmount = 'total_origin_shipping_fee_amount';
                     } elseif ($productFee->name === 'purchase_fee') {
                         // Tổng phí tax của các sản phẩm tại nơi xuất xứ
                         $attribute = 'total_weshop_fee_local';
+                        $attributeAmount = 'total_weshop_fee_amount';
                     } elseif ($productFee->name === 'international_shipping_fee') {
                         // Tổng vat của các sản phẩm
                         $attribute = 'total_intl_shipping_fee_local';
+                        $attributeAmount = 'total_intl_shipping_fee_amount';
                     } elseif ($productFee->name === 'vat_fee') {
                         // Tổng vận chuyển tại local của các sản phẩm
                         $attribute = 'total_vat_amount_local';
+                        $attributeAmount = 'total_vat_amount_amount';
                     }
                     if (!isset($orderUpdateAttribute[$attribute])) {
                         $orderUpdateAttribute[$attribute] = 0;
+                    }
+                    if (!isset($orderUpdateAttribute[$attributeAmount])) {
+                        $orderUpdateAttribute[$attributeAmount] = 0;
                     }
                     if ($order->hasAttribute($attribute)) {
                         $value = $orderUpdateAttribute[$attribute];
                         $value += (int)$productFee->local_amount;
                         $orderUpdateAttribute[$attribute] = $value;
-                        if ($attribute === 'total_origin_fee_local') {
-                            if (!isset($orderUpdateAttribute['total_price_amount_origin'])) {
-                                $orderUpdateAttribute['total_price_amount_origin'] = 0;
-                            }
-                            $amount = $orderUpdateAttribute['total_price_amount_origin'];
-                            $amount += (int)$productFee->amount;
-                            $orderUpdateAttribute['total_price_amount_origin'] = $amount;
-                        }
+                    }
+                    if ($order->hasAttribute($attributeAmount)) {
+                        $valueAmount = $orderUpdateAttribute[$attributeAmount];
+                        $valueAmount += $productFee->amount;
+                        $orderUpdateAttribute[$attributeAmount] = $valueAmount;
                     }
                 }
                 if (!isset($orderUpdateAttribute['total_fee_amount_local'])) {

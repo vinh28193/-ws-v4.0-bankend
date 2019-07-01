@@ -164,7 +164,7 @@ if ($userCookie->checkAddress()) {
                 USD
             </span><br>
             <span class="view-exchange-rate">
-                <?= Yii::$app->storeManager->showMoney(Yii::$app->storeManager->getExchangeRate()) ?>
+                <?= Yii::$app->storeManager->showMoney(Yii::$app->storeManager->getExchangeRate(),$currency = null , $isRound = false) ?>
             </span>
         </div>
     </div>
