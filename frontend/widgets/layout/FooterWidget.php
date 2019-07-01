@@ -3,6 +3,7 @@ namespace frontend\widgets\layout;
 
 use common\components\UserCookies;
 use frontend\modules\payment\models\ShippingForm;
+use Yii;
 
 class FooterWidget extends \yii\base\Widget
 {
@@ -19,6 +20,9 @@ JS;
         $userCook = new UserCookies();
         $userCook->setUser();
         if(!$userCook->province_id || !$userCook->district_id){
+            $view = $this->getView();
+            $view->registerJs($js);
+        }elseif (!$userCook->zipcode && Yii::$app->storeManager->getId() == 7){
             $view = $this->getView();
             $view->registerJs($js);
         }

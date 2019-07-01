@@ -15,10 +15,6 @@ $district = (SystemDistrict::select2DataForCountry($shippingForm->buyer_country_
 $jszipcode = json_encode($zipcode);
 $jsprovince = json_encode($province);
 $jsdistrict = json_encode($district);
-$js = <<<JS
-
-JS;
-$this->registerJs($js);
 ?>
 <footer class="footer">
     <div class="top">
@@ -309,6 +305,7 @@ $this->registerJs($js);
     var zipcode_data = <?= $jszipcode ?>;
     var province_data = <?= $jsprovince ?>;
     var district_data = <?= $jsdistrict ?>;
+    var store_id = <?= Yii::$app->storeManager->getId() ?>;
 </script>
 
 
