@@ -421,7 +421,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 $this->_pickUpWareHouse = $user->getPickupWarehouse();
             } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
                 $current = $params['default'];
-                Yii::info("load form params pickupUSWHGlobal $current", 'getPickUpWareHouse');
+                Yii::info($params, "load form params pickupUSWHGlobal $current");
                 $this->_pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
             }
         }
