@@ -167,7 +167,7 @@ class CartHelper
                 $order['total_origin_tax_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'shipping_fee') {
                 // Tổng phí tax của các sản phẩm tại nơi xuất xứ
-                $order['total_intl_shipping_fee_amount'] = $fee['amount'];
+                $order['total_intl_shipping_fee_amount'] = $fee['amount'];  // phis tax amount
                 $order['total_origin_shipping_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'purchase_fee') {
                 // Tổng phí mua hộ
