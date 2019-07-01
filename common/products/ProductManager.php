@@ -10,6 +10,7 @@ namespace common\products;
 
 use Yii;
 use yii\base\Component;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class ProductManager
@@ -50,6 +51,8 @@ class ProductManager extends Component
      */
     public function getGate($name)
     {
+        $config = ArrayHelper::getValue(Yii::$app->params,'version_gate','');
+        $name = $name.$config;
         if (!$this->hasGate($name)) {
             throw new \yii\base\InvalidParamException("Unknown gate '{$name}'.");
         }
