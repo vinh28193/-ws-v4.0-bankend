@@ -39,6 +39,11 @@ class FrontendController extends Controller
     public $storeManager = 'storeManager';
 
     /**
+     * @var string
+     */
+    public $pageTitle;
+
+    /**
      * @var string|Request
      */
     public $request = 'request';
@@ -79,7 +84,7 @@ class FrontendController extends Controller
     public function ogMetaTag()
     {
         return [
-            'title' => Yii::t('frontend', 'Weshop Global'),
+            'title' => $this->pageTitle,
             'site_name' => Yii::$app->requestedRoute,
             'url' => $this->request->url,
             'image' => Url::to('/img/weshop-logo-vn.png'),
@@ -138,7 +143,9 @@ class FrontendController extends Controller
      */
     public function defaultLayoutParams()
     {
-        return [];
+        return [
+            'pageTitle' => $this->pageTitle
+        ];
     }
 
     protected function registerAllMetaTagLinkTag()
