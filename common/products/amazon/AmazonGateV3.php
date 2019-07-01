@@ -163,11 +163,12 @@ class AmazonGateV3 extends BaseGate
         $curl = new curl\Curl();
         $countCall = 0;
         $response = $curl->get($url);
-        while ($countCall < 3 && $curl->responseCode != 200){
-            Yii::debug($curl->responseCode);
-            $countCall ++;
-            $response = $curl->get($url);
-        }
+        Yii::debug($curl->responseCode);
+//        while ($countCall < 3 && $curl->responseCode != 200){
+//            $countCall ++;
+//            $response = $curl->get($url);
+//            Yii::debug($curl->responseCode);
+//        }
         Yii::debug($response);
         if($curl->responseCode !== 200){
             return [false, 'Request Error '.$curl->responseCode];
