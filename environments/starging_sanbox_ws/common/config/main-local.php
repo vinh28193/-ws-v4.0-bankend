@@ -44,7 +44,7 @@ return [
             'class' => 'yii\redis\Cache',
             'redis' => [
                 'hostname' => 'cacheRedisWs',
-                'port' => 6379,
+                'port' => 6479,
                 'database' => 0,
             ]
         ],
