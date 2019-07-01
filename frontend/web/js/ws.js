@@ -173,7 +173,7 @@ var ws = ws || (function ($) {
             }, false);
         },
         setCartBadge(count) {
-            $('#cartBadge').html(count);
+            $('.count-cart').html(count);
         },
         countdownTime: function () {
             $('*[data-toggle=countdown-time]').each(function () {
