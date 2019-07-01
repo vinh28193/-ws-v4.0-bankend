@@ -50,6 +50,7 @@ class InternationalShippingCalculator extends BaseObject
                 'create_from' => 'create_order_netsale',
                 'order_type' => 'dropship',
                 'check_stock' => 'N',
+                'include_special_goods' => 'N'
             ],
             'payment' => [
                 'cod_amount' => 0,

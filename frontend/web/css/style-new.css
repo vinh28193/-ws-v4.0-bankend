@@ -66,13 +66,13 @@ body div.wrapper div.navbar-ws div.container{
 }
 #searchBoxButton{
     border-radius: 0px 5px 5px 0px;
-    height: inherit;
+    height: 50px;
     background-color: #e67424;
 }
 .searchBoxInput{
-    height: inherit;
     border-radius: 5px 0px 0px 5px;
     background-color: #ffffff;
+    height: 50px;
     /* Style for "Nhập tên s" */
     color: #6d7278;
     font-family: Helvetica;
@@ -97,21 +97,17 @@ body div.wrapper div.navbar-ws div div.search-box{
 }
 
 .shipping-header-box {
-    width: 137px;
-    margin-top: 5px;
+    width: 70px;
     color: #2b96b6;
-    font-size: 16px;
-
-}
-.shipping-header-box .shipping-label {
-    line-height: 20px;
-    font-size: 12px;
+    padding: 5px 5px;
+    border-radius: 3px;
+    border: 1px solid;
+    margin: 0 10px 0 0;
+    font-size: 11px;
 
 }
 
 .shipping-header-box .shipping-address {
-    line-height: 20px;
-    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
