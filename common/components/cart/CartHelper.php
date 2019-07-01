@@ -163,12 +163,15 @@ class CartHelper
                 $order['total_origin_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'tax_fee') {
                 // Tổng phí tax của các sản phẩm tại nơi xuất xứ
+                $order['total_origin_tax_fee_amount'] = $fee['amount'];
                 $order['total_origin_tax_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'shipping_fee') {
                 // Tổng phí tax của các sản phẩm tại nơi xuất xứ
+                $order['total_intl_shipping_fee_amount'] = $fee['amount'];
                 $order['total_origin_shipping_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'purchase_fee') {
-                // Tổng phí tax của các sản phẩm tại nơi xuất xứ
+                // Tổng phí mua hộ
+                $order['total_weshop_fee_amount'] = $fee['amount'];
                 $order['total_weshop_fee_local'] = $fee['local_amount'];
             } elseif ($feeName === 'international_shipping_fee') {
                 // Tổng vat của các sản phẩm
