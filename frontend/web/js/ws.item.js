@@ -251,7 +251,7 @@
                             $( ".viewed-product" ).css( "display", "none" );
                         }else { console.log("done : cret fv s!!! "); }
                     }
-                }, true);
+                }, false);
             }, 3000);
         },
         quote: function () {

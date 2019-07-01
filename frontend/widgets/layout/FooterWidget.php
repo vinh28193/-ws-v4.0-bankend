@@ -22,7 +22,7 @@ JS;
         if(!$userCook->province_id || !$userCook->district_id){
             $view = $this->getView();
             $view->registerJs($js);
-        }elseif (!$userCook->zipcode && Yii::$app->storeManager->getId()){
+        }elseif (!$userCook->zipcode && Yii::$app->storeManager->getId() == 7){
             $view = $this->getView();
             $view->registerJs($js);
         }

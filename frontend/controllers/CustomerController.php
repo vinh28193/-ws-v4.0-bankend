@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\components\UserCookies;
 use common\models\SystemZipcode;
+use common\models\User;
 use Yii;
 use common\models\Customer;
 use frontend\models\CustomerSearch;
@@ -167,6 +168,17 @@ class CustomerController extends Controller
             return ['success'=> false,'message' => Yii::t('frontend','Save Fail')];
         }
         $userCookie->setCookies();
+        if(!Yii::$app->user->isGuest){
+            /** @var User $user */
+            $user = Yii::$app->user->getIdentity();
+            $defaultAddress = $user->defaultShippingAddress ? $user->defaultShippingAddress : $user->defaultPrimaryAddress;
+            if($defaultAddress){
+                $defaultAddress->province_id = $userCookie->province_id;
+                $defaultAddress->district_id = $userCookie->district_id;
+                $defaultAddress->post_code = $userCookie->zipcode;
+                $defaultAddress->save(false);
+            }
+        }
         return ['success'=> true,'message' => Yii::t('frontend','Save Success')];
     }
 }
