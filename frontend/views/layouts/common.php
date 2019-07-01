@@ -29,6 +29,7 @@ $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <link href="/favicon.ico" rel="shortcut icon">
 </head>
 <body>
 <script>
