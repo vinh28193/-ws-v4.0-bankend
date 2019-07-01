@@ -61,7 +61,6 @@ class InternationalShippingCalculator extends BaseObject
                 'coupon_code' => ''
             ]
         ], $params);
-
         $request->setData(Json::encode($params));
         \Yii::info($request->getData());
         $request->setUserId($userId);
