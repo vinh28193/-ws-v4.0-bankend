@@ -388,6 +388,8 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             'params' => $this->getShippingParams(),
             'wh' => $this->getPickUpWareHouse(),
         ],'getInternationalShipping');
+
+
         if ((empty($this->_couriers) || $refresh) && !empty($this->getShippingParams())) {
             $location = InternationalShippingCalculator::LOCATION_AMAZON;
             if ($this->type === self::TYPE_EBAY) {
