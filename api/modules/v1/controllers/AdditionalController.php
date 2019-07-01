@@ -152,7 +152,7 @@ class AdditionalController extends BaseApiController
                     }
                     if ($order->hasAttribute($attributeAmount)) {
                         $valueAmount = $orderUpdateAttribute[$attributeAmount];
-                        $valueAmount += (int)$productFee->amount;
+                        $valueAmount += $productFee->amount;
                         $orderUpdateAttribute[$attributeAmount] = $valueAmount;
                     }
                 }
