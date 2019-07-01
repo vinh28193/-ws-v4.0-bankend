@@ -302,7 +302,10 @@ $jsdistrict = json_encode($district);
         }
     })();</script>
 <script>
-
+    var zipcode_data = <?= $jszipcode ?>;
+    var province_data = <?= $jsprovince ?>;
+    var district_data = <?= $jsdistrict ?>;
+    var store_id = <?= Yii::$app->storeManager->getId() ?>;
 </script>
 
 
