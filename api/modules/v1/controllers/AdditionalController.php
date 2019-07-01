@@ -23,15 +23,27 @@ class AdditionalController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'roles' => $this->getAllRoles(true)
-            ]
+                'actions' => ['index', 'view', 'create', 'update'],
+                'roles' => $this->getAllRoles(true),
+
+            ],
+            [
+                'allow' => true,
+                'actions' => ['view'],
+                'roles' => $this->getAllRoles(true),
+                'permissions' => ['canView']
+            ],
         ];
     }
 
     protected function verbs()
     {
         return [
-            'index' => ['GET'],
+            'index' => ['GET', 'POST'],
+            'create' => ['POST'],
+            'update' => ['PATCH', 'PUT'],
+            'view' => ['GET'],
+            'delete' => ['DELETE']
         ];
     }
 
@@ -180,5 +192,10 @@ class AdditionalController extends BaseApiController
 
         }
         return $this->response(true, 'call success', []);
+    }
+
+    public function actionView($code) {
+        $model = OrderUpdateLog::find()->where(['order_code' => $code])->asArray()->one();
+        return $this->response(true, 'sucess', $model);
     }
 }
