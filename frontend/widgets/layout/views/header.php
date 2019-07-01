@@ -53,17 +53,8 @@ $userCookie->setUser();
 $shipTo = Yii::t('frontend', 'Click here');
 if ($userCookie->checkAddress()) {
     $array = [];
-    if (($district = $userCookie->zipcode)) {
-        $array[] = $userCookie->zipcode;
-    }
-    if (($district = $userCookie->getDistrict())) {
-        $array[] = $district->name;
-    }
     if (($provide = $userCookie->getProvince())) {
-        $array[] = $provide->name;
-    }
-    if (!empty($array)) {
-        $shipTo = implode(', ',$array);
+        $shipTo = $provide->name;
     }
 }
 ?>
@@ -80,7 +71,7 @@ if ($userCookie->checkAddress()) {
                 <div class="shipping-address"><a onclick="ws.showModal('modal-address')" href="javascript:void(0);"><?=$shipTo;?></a><i class="la la-caret-down"></i></div>
             </div>
         <div class="search-box">
-            <div class="form-group">
+            <div class="form-group mb-0">
                 <div class="input-group">
                     <input type="text" list="listSuggestSearch" autocomplete="off"
                            class="form-control searchBoxInput" <?= Yii::$app->request->get('keyword', '') ? 'value="' . Yii::$app->request->get('keyword', '') . '"' : '' ?>
