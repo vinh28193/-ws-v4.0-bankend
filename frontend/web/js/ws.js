@@ -169,7 +169,9 @@ var ws = ws || (function ($) {
         },
         reloadCartBadge: function () {
             ws.ajax('/checkout/cart/count', function (res) {
-                pub.setCartBadge(res);
+                if(res.success){
+                    pub.setCartBadge(res.count);
+                }
             }, false);
         },
         setCartBadge(count) {

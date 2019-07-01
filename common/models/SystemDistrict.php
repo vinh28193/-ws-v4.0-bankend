@@ -22,6 +22,19 @@ class SystemDistrict extends \common\models\db\SystemDistrict
         }
         return $provinces;
     }
+    public static function selectData($province_id = 1, $dataKey = 'id', $dataValue = 'name', $refreshCache = false)
+    {
+        $cacheKey = ['SystemDistrict_select_',$province_id, $dataKey, $dataValue];
+        if (!($provinces = Yii::$app->cache->get($cacheKey)) || $refreshCache) {
+            $query = new Query();
+            $query->from(['d' => self::tableName()]);
+            $query->select(["id" => "d.$dataKey", "name" => "d.$dataValue"]);
+            $query->where(['AND', ['d.remove' => 0], ['d.province_id' => $province_id]]);
+            $provinces = ArrayHelper::map($query->all(self::getDb()), $dataKey, $dataValue);
+            Yii::$app->cache->set($cacheKey, $provinces, 3600);
+        }
+        return $provinces;
+    }
     public static function select2DataForCountry($country_id, $refreshCache = false)
     {
         $cacheKey = 'SystemDistrict'.$country_id;
