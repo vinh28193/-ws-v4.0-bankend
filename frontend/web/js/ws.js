@@ -268,6 +268,20 @@ var ws = ws || (function ($) {
                 $("#ico-" + id).addClass('fa-chevron-down');
             }
         },
+        showMoreFilter: function (element) {
+            console.log($(element).html());
+            var tagert = $(element).attr('data-target');
+            console.log(tagert);
+            if(!$('.'+tagert).hasClass('hide-filter')){
+                $('.'+tagert).addClass('hide-filter');
+                $('.type-show-'+tagert).removeClass('hide-filter');
+                $(element).parent().addClass('hide-filter');
+            }else {
+                $('.'+tagert).removeClass('hide-filter');
+                $('.type-show-'+tagert).removeClass('hide-filter');
+                $(element).parent().addClass('hide-filter');
+            }
+        },
         getSuggestSearch: function (response) {
             console.log(response);
             if(response.length > 2){
