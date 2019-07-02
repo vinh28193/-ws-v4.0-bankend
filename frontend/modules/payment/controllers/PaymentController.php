@@ -239,9 +239,8 @@ class PaymentController extends BasePaymentController
                         }
                     }
                 }
-
-                $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id,6);
-                $updateOrderAttributes['total_final_amount_local'] = $order->total_amount_local - $order->total_promotion_amount_local;
+                $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id, $this->storeManager->store->country_code, 8);
+                $updateOrderAttributes['total_final_amount_local'] = $orderPayment->getTotalFinalAmount() - $order->total_promotion_amount_local;
                 $order->updateAttributes($updateOrderAttributes);
                 $orders[$order->ordercode] = $order;
             }

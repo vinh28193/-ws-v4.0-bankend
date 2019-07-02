@@ -7,12 +7,11 @@ use frontend\widgets\cms\ProductWidget;
 /* @var $iphoneOld boolean */
 /* @var $categories array */
 /* @var $products array */
-
 ?>
 <div class="deal-shock">
     <div class="container">
         <div class="deal-title-box">
-            <div class="title">Deal sốc trong ngày</div>
+            <div class="title"><?= $block['name'] ?></div>
             <ul class="title-breadcrumb mobile-hide">
                 <?php if (!empty($categories)) {
                     foreach ($categories as $key => $val) { ?>
@@ -20,7 +19,7 @@ use frontend\widgets\cms\ProductWidget;
                     <?php }
                 } ?>
             </ul>
-            <a href="<?= $block['url'] ?>" class="see-all mobile-hide"><span>Xem tất cả</span><i class="see-ico"></i></a>
+            <a href="<?= $block['url'] ?>" class="see-all mobile-hide"><span><?= Yii::t('frontend','View All') ?></span><i class="see-ico"></i></a>
         </div>
         <div class="deal-content">
             <ul class="row">
