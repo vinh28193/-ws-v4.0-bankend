@@ -16,7 +16,7 @@ class CodProvider extends BaseObject implements PaymentProviderInterface
     {
         $summitUrl = $payment->return_url;
         $summitUrl .= '?code=' . $payment->transaction_code;
-        return new PaymentResponse(true, 'create payment success','cod', $payment->transaction_code, null,PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $summitUrl, $payment->return_url, $payment->cancel_url);
+        return new PaymentResponse(true, 'create payment success','cod', $payment->transaction_code, $payment->getOrderCodes(),PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $summitUrl, $payment->return_url, $payment->cancel_url);
     }
 
     public function handle($data)
