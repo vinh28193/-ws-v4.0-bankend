@@ -660,9 +660,14 @@ ws.payment = (function ($) {
                     }, response.data || {});
                     var redirectType = data.redirectType.toUpperCase();
                     var redirectMethod = data.redirectMethod.toUpperCase() || 'GET';
+                    var $otherMethod = $('#otherMethods');
+                    if($otherMethod.length && $otherMethod.hasClass('show')){
+                        $otherMethod.modal('hide');
+                    }
                     if (redirectType === 'POPUP') {
                         if (redirectMethod === 'WALLET') {
                             var $otp = $('#otp-confirm');
+
                             $otp.modal('show').find('#modalContent').load(data.checkoutUrl);
                         } else if (redirectMethod === 'QRCODE') {
                             var $qr = $('#qr-pay');
