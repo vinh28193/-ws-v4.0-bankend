@@ -360,6 +360,7 @@ class PaymentController extends BasePaymentController
         if ($res->success === false) {
             return $this->redirect($failUrl);
         }
+
         if ($res->checkoutUrl !== null) {
             $redirectUrl = $res->checkoutUrl;
         }
