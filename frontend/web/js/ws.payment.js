@@ -660,7 +660,6 @@ ws.payment = (function ($) {
                     }, response.data || {});
                     var redirectType = data.redirectType.toUpperCase();
                     var redirectMethod = data.redirectMethod.toUpperCase() || 'GET';
-                    var message = data.orderCodes || data.paymentTransaction || null;
                     if (redirectType === 'POPUP') {
                         if (redirectMethod === 'WALLET') {
                             var $otp = $('#otp-confirm');
@@ -689,8 +688,11 @@ ws.payment = (function ($) {
                             $qr.modal('show').find('#qrCodeImg').attr('src', base64src(data.checkoutUrl));
 
                         }
-                    } else if (message) {
-                        $('span#transactionCode').html(message);
+                    } else if (data.paymentTransaction) {
+                        $('span#transactionCode').html(data.paymentTransaction);
+                        var invoiceHide =  $('p.invoice-hide');
+                        invoiceHide.find('span').html(data.orderCodes);
+                        invoiceHide.css('display','block');
                         $('div#checkout-success').modal('show');
                         ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
                             if (redirectMethod === 'POST') {
