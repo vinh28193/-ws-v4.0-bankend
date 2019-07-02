@@ -219,7 +219,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
         $this->getClient()->getData()->set('dbProcessUrl', $payment->return_url); // Total gross amount
         $this->getClient()->getData()->set('referenceNo', $payment->transaction_code);
         $this->getClient()->getData()->set('callBackUrl', $payment->cancel_url);
-        $decs = 'Payment of Invoice No ' . $this->getClient()->getData()->get('referenceNo');
+        $decs = 'Payment of orders ' . $payment->getOrderCodes();
         $this->getClient()->getData()->set('description', $decs); // Transaction description
         $this->getClient()->getData()->set('goodsNm', $decs);
 
