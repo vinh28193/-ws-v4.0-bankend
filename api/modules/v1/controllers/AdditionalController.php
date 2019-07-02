@@ -85,6 +85,7 @@ class AdditionalController extends BaseApiController
             $product->price_amount_origin = $product->price_amount_origin / $product->quantity_customer;
             $product->price_amount_local = $product->price_amount_local / $product->quantity_customer;
 
+
             $product->total_price_amount_local = $productPrice[1];
             // Tổng tiền local tất tần tận
             $product->total_final_amount_local = $additionalFees->getTotalAdditionalFees(null)[1];

@@ -24,4 +24,4 @@ use yii\helpers\Html; ?>
             </div>
         </div>
     </div>
-</div>>
+</div>
