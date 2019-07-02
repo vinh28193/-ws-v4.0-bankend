@@ -240,7 +240,7 @@ class PaymentController extends BasePaymentController
                     }
                 }
 
-                $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id, $this->storeManager->store->country_code, 8);
+                $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id,8);
                 $updateOrderAttributes['total_final_amount_local'] = $order->total_amount_local - $order->total_promotion_amount_local;
                 $order->updateAttributes($updateOrderAttributes);
                 $orders[$order->ordercode] = $order;
@@ -252,9 +252,8 @@ class PaymentController extends BasePaymentController
             return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
         }
 
-
         // ToDo Push GA Checkout @Phuchc
-
+        $payment->setOrders($orders);
         $res = $payment->processPayment();
         $res->orderCodes = implode(', ', array_keys($orders));
         $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);

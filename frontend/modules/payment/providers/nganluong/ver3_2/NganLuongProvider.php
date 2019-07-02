@@ -43,7 +43,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $this->getClient()->getParams()->set('cancel_url', $payment->cancel_url);
         $this->getClient()->getParams()->set('return_url', $payment->cancel_url);
         $this->getClient()->getParams()->set('total_amount', $payment->getTotalAmountDisplay());
-        $this->getClient()->getParams()->set('order_description', "Thanh toan cho hoa don so {$payment->transaction_code}");
+        $this->getClient()->getParams()->set('order_description', "Thanh toan cho cac ma don: {$payment->getOrderCodes()}");
         $this->getClient()->getParams()->set('buyer_fullname', $payment->customer_name);
         $this->getClient()->getParams()->set('buyer_email', $payment->customer_email);
         $this->getClient()->getParams()->set('buyer_mobile', $payment->customer_phone);
