@@ -446,7 +446,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getLocalizeTotalPrice()
     {
-        return $this->getAdditionalFees()->getTotalAdditionalFees()[1];
+        return $this->getAdditionalFees()->getTotalAdditionalFees(null,['international_shipping_fee'])[1];
     }
 
     public function getLocalizeTotalStartPrice()
@@ -455,12 +455,12 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         $tempPrice = $this->getSellPrice();
         $this->sell_price = $this->start_price;
         $this->init();
-        $temp = $this->getAdditionalFees()->getTotalAdditionalFees();
+        $temp = $this->getAdditionalFees()->getTotalAdditionalFees(null,['international_shipping_fee']);
         if (!empty($this->deal_price) && $this->deal_price > 0.0) {
             $deal = $this->deal_price;
             $this->deal_price = null;
             $this->init();
-            $temp = $this->getAdditionalFees()->getTotalAdditionalFees();
+            $temp = $this->getAdditionalFees()->getTotalAdditionalFees(null,['international_shipping_fee']);
             $this->deal_price = $deal;
         }
         //restore the sell_price to be $tempPrice before
