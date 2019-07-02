@@ -102,6 +102,12 @@ $storeManager = Yii::$app->storeManager;
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-6 control-label">Deskripsi :</label>
+                    <div class="col-sm-6">
+                        <p><?= $description; ?></p>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="inputEmail3" class="col-sm-6 control-label">Berlaku Hingga :</label>
                     <div class="col-sm-6">
                         <p><?= $outdate; ?></p>

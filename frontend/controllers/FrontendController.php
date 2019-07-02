@@ -54,6 +54,9 @@ class FrontendController extends Controller
      */
     private $_ecomobi;
 
+    public $portalTitle;
+    public $portalImage;
+    public $portalDescription;
     /**
      * @return EcomobiComponent|mixed
      */
@@ -88,13 +91,19 @@ class FrontendController extends Controller
             'site_name' => Yii::$app->requestedRoute,
             'url' => $this->request->url,
             'image' => Url::to('/img/weshop-logo-vn.png'),
-            'description' => '',
+            'description' => $this->portalDescription,
         ];
     }
 
     public function metaTag()
     {
-        return [];
+        return [
+            'title' => $this->title,
+            'site_name' => Yii::$app->requestedRoute,
+            'url' => $this->request->url,
+            'image' => Url::to('/img/weshop-logo-vn.png'),
+            'description' => $this->portalDescription,
+        ];
 
     }
 

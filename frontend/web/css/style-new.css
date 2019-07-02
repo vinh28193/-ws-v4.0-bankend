@@ -531,6 +531,9 @@ ul.list-dot li{
 .btn-group-detail i{
     font-size: 20px;
 }
+.hide-filter {
+    display: none;
+}
 .btn-group-detail{
     padding-top: 15px;
 }
@@ -540,13 +543,18 @@ ul.list-dot li{
 .card-group-detail span{
     margin-right: 15px;
 }
+.error{
+    margin-left: 15px;
+    color: red;
+    font-weight: 700;
+}
 .register-prime{
     color: #6d7278;
     font-size: 13px;
     line-height: 24px;
 }
 .btn-group-detail .btn-group-primary,.btn-group-detail .btn-group-secondary {
-    width: 50%;
+    width: auto;
 }
 .btn-group-detail .btn-group-secondary{
     margin-top: 5px;

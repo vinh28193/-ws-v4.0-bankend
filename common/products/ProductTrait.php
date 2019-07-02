@@ -157,7 +157,7 @@ trait ProductTrait
                 return $provider;
             }
         }
-        return $this->providers[0];
+        return $this->providers && count($this->providers) > 0 ? $this->providers[0] : [];
     }
 
     /**

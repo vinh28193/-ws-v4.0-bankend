@@ -218,13 +218,13 @@ var ws = ws || (function ($) {
             var hash = message;
             if (typeof (i18nMessages[hash]) !== 'undefined') {
                 message = i18nMessages[hash];
-                console.log('ws.t: message: `' + hash + '` translated to : `' + message + '`');
+                // console.log('ws.t: message: `' + hash + '` translated to : `' + message + '`');
             }
 
             if (typeof (params) !== 'undefined') {
                 for (var search in params) {
                     message = message.replace('{' + search + '}', params[search]);
-                    console.log('ws.t: param {' + search + '} replaced to : `' + params[search] + '`');
+                    // console.log('ws.t: param {' + search + '} replaced to : `' + params[search] + '`');
                 }
             }
 
@@ -266,6 +266,20 @@ var ws = ws || (function ($) {
                 $("#" + id).css('display', 'none');
                 $("#ico-" + id).removeClass('fa-chevron-up');
                 $("#ico-" + id).addClass('fa-chevron-down');
+            }
+        },
+        showMoreFilter: function (element) {
+            console.log($(element).html());
+            var tagert = $(element).attr('data-target');
+            console.log(tagert);
+            if(!$('.'+tagert).hasClass('hide-filter')){
+                $('.'+tagert).addClass('hide-filter');
+                $('.type-show-'+tagert).removeClass('hide-filter');
+                $(element).parent().addClass('hide-filter');
+            }else {
+                $('.'+tagert).removeClass('hide-filter');
+                $('.type-show-'+tagert).removeClass('hide-filter');
+                $(element).parent().addClass('hide-filter');
             }
         },
         getSuggestSearch: function (response) {

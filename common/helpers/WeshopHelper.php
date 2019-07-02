@@ -178,17 +178,14 @@ class WeshopHelper
 
     }
 
-    public static function generateBinCode($reference, $storeCode = 'VN', $length = 8)
+    public static function generateBinCode($reference,  $length = 8)
     {
-        $length -= 2;
-        $length -= strlen($storeCode);
         $length -= strlen($reference);
-        $reference .= rand(0, 9) . 'b';
         while ($length > 0) {
             $reference .= mt_rand(0, 9);
             $length--;
         }
-        return self::strToUpperCase($storeCode . $reference);
+        return $reference;
     }
 
     public static function discountAmountPercent($itemAmount, $orderAmount, $discountAmount)

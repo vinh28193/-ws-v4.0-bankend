@@ -62,7 +62,7 @@ $userCookies->setUser();
         </div>
     <?php } ?>
     <div class="condition-and-seller">
-        <strong><?= Yii::t('frontend',$current_provider && $current_provider->condition ? $current_provider->condition : $item->condition) ?></strong>
+        <strong><?= Yii::t('frontend',$current_provider && $current_provider->condition ? ($current_provider->condition ? $current_provider->condition : 'Use or new') : ($item->condition ? $item->condition : 'Use or new')) ?></strong>
         <span>
             <?php
             if(is_array($item->providers) && count($item->providers)){
@@ -139,7 +139,7 @@ $userCookies->setUser();
     if ($variationOption->images_mapping && $variationUseImage === $index) {
         ?>
         <div class="option-box">
-            <label class="label-option-box" id="label_<?= $variationOption->id ?>"><?= $variationOption->name; ?>: ---</label>
+            <label class="label-option-box" id="label_<?= $variationOption->id ?>"><?= $variationOption->name; ?>: ---</label><span class="error" id="error-<?= ($variationOption->id) ?>"></span>
             <div class="color-pick" id="<?= $variationOption->id ?>" data-ref="<?= ($variationOption->id) ?>">
                 <ul class="style-list">
                     <?php foreach ($variationOption->values as $k => $value) {
@@ -163,7 +163,7 @@ $userCookies->setUser();
     <?php }else {
         ?>
         <div class="option-box form-group">
-            <label><?= Yii::t('frontend',$variationOption->name) ?>:</label>
+            <label><?= Yii::t('frontend',$variationOption->name) ?>:</label><span class="error" id="error-<?= ($variationOption->id) ?>"></span>
             <select class="form-control w-auto" type="dropDown" id="<?= ($variationOption->id) ?>"
                     name="<?= ($variationOption->id) ?>" data-ref="<?= ($variationOption->id) ?>">
                 <option value=""></option>
@@ -236,8 +236,8 @@ JS;
                     </div>
                 <?php }else{ ?>
                     <div class="btn-group-secondary">
-                        <button class="btn btn-amazon text-uppercase" id="buyNowBtn" style="width: 70%"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
-                        <button class="btn btn-outline-info text-uppercase" id="addToCart" style="width: auto"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
+                        <button class="btn btn-amazon text-uppercase" id="buyNowBtn" style="width: 50%; display: block; float: left;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
+                        <button class="btn btn-outline-info text-uppercase" id="addToCart" style="width: auto; display: block; margin-left: 5px;"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
                     </div>
                 <?php } ?>
             </div>

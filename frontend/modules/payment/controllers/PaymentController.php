@@ -252,9 +252,8 @@ class PaymentController extends BasePaymentController
             return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
         }
 
-
         // ToDo Push GA Checkout @Phuchc
-
+        $payment->setOrders($orders);
         $res = $payment->processPayment();
         $res->orderCodes = implode(', ', array_keys($orders));
         $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);

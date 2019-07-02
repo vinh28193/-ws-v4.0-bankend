@@ -15,11 +15,11 @@ use yii\web\View;
                 <span><i class="fa fa-chevron-up" id="ico-<?= md5($filter['name']) ?>"></i></span>
             </h6>
         </div>
-        <ul style="display: block" id="<?= md5($filter['name']) ?>">
-            <?php foreach ($filter['values'] as $value): ?>
+        <ul id="<?= md5($filter['name']) ?>">
+            <?php foreach ($filter['values'] as $k => $value): ?>
                 <?php /* @var $value string */ ?>
                 <?php $value = Html::encode($value); ?>
-                <li>
+                <li class="<?= $k < 10 ? '' : 'filter-'.md5($filter['name']).' hide-filter'?>">
                     <div class="form-check">
                         <?php
                         $id = $filter['name'] . $value;
@@ -37,6 +37,12 @@ use yii\web\View;
                     </div>
                 </li>
             <?php endforeach; ?>
+            <?php
+                if (count($filter['values']) >= 10 ){
+                    echo "<li class='type-show-filter-".md5($filter['name'])."'><a href='javascript:void(0);' style='color: #2e9ab8' onclick='ws.showMoreFilter(this)' data-target='filter-".md5($filter['name'])."' >".Yii::t('frontend','<<< See more >>>')."</a></li>";
+                    echo "<li class='type-show-filter-".md5($filter['name'])." hide-filter'><a href='javascript:void(0);' style='color: #2e9ab8' onclick='ws.showMoreFilter(this)' data-target='filter-".md5($filter['name'])."' >".Yii::t('frontend','>>> See less <<<')."</a></li>";
+                }
+            ?>
         </ul>
     </div>
 </div>
