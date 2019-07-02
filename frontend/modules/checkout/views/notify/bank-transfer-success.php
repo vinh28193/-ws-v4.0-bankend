@@ -35,7 +35,7 @@ $storeManager = Yii::$app->storeManager;
                                 <p class="">Nội dung chuyển khoản cần ghi rõ: <span class="banking-content text-blue"><b>Weshop</b> Số điện thoại của bạn</span></p>
                                 <p class="">Ví dụ: Weshop 0988380918</p>
                             <?php endif;?>
-                            <p class="note"><span class="text-orange">(*)</span> Với những giao dịch nạp tiền chuyển khoản ngoài giờ hành chính. Thời gian nạp tiền vào hệ thống sẽ chậm hơn bình thường. Mong quý khách thông cảm!</p>
+                            <p class="note"><span class="text-orange">(*)</span> Với những giao dịch nạp tiền chuyển khoản ngoài giờ hành chính. Thời gian hệ thống nhận được sẽ chậm hơn bình thường. Mong quý khách thông cảm!</p>
                         </div>
                         <div class="col-md-4 col-sm-12">
                             <img style="width: 200px" src="/images/0451000277143.jpg" alt="0451000277143 Nguyễn Thị Hằng Vietcombank">
