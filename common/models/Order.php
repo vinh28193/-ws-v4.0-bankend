@@ -175,7 +175,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 'sale_support_id', 'support_email'
             ],
             self::SCENARIO_UPDATE_ADJUST_PAYMENT => [
-                'total_paid_amount_local', 'check_update_payment'
+                'total_paid_amount_local', 'check_update_payment', 'note_update_payment'
             ],
             self::SCENARIO_UPDATE_COUPON => [
                 'coupon_id'
