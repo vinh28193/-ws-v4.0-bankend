@@ -36,7 +36,9 @@ $this->title = Yii::t('frontend', 'Payment success, invoice {code}', ['code' => 
                                 <strong><?= Yii::t('frontend', 'Shipping address'); ?></strong>
                                 : <?php echo $paymentTransaction->transaction_customer_address; ?>
                                 <br>
-                                <strong><?= Yii::t('frontend', 'Estimated delivery time'); ?></strong> : 10 -15 days
+                                <strong><?= Yii::t('frontend', 'Estimated delivery time'); ?></strong> : <?php echo Yii::t('frontend','{days} days',[
+                                        'days' => $paymentTransaction->courier_delivery_time
+                                ])?>
                             </p>
                             <p class="text-lead">
                                 <?= Yii::t('frontend', 'Please check your email regularly to update your order it to avoid unexpected occurrences.'); ?>
@@ -47,7 +49,7 @@ $this->title = Yii::t('frontend', 'Payment success, invoice {code}', ['code' => 
                                 ]); ?>
                             </p>
                             <a class="btn btn-primary btn-lg" href="/"
-                               role="button"><?= Yii::t('frontend', 'Ok'); ?></a>
+                               role="button"><?= Yii::t('frontend', 'Continue shopping'); ?></a>
                         </div>
                     </div>
                 </div>
