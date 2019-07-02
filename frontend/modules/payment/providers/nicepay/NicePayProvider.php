@@ -263,13 +263,15 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->response_content = $response;
                     $logPaymentGateway->url = $checkoutUrl;
                     $logPaymentGateway->save(false);
-                    return new PaymentResponse(true, 'Success', 'nicepay', $payment->transaction_code, PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, $data['tXid'], $checkoutUrl);
+                    return new PaymentResponse(true, 'Success', 'nicepay', $payment->transaction_code, null,PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, $data['tXid'], $checkoutUrl);
                 }
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
                 $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                 $logPaymentGateway->response_content = $response;
                 $logPaymentGateway->save(false);
-                return new PaymentResponse(false, '"Lỗi cổng thanh toán', 'nicepay');
+                return new PaymentResponse(false, Yii::t('frontend','Payment gateway error `{message}`',[
+                    'message' => Yii::t('frontend','Unknown error')
+                ]), 'nicepay');
 
             } elseif ($payment->instalment_type == 1) {
                 $this->getClient()->getData()->set('payMethod', '02');
@@ -281,7 +283,9 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                     $logPaymentGateway->response_content = $this->getClient()->getErrorMsg();
                     $logPaymentGateway->save(false);
-                    return new PaymentResponse(false, $this->getClient()->getErrorMsg(), 'nicepay');
+                    return new PaymentResponse(false, Yii::t('frontend','Payment gateway error `{message}`',[
+                        'message' => $this->getClient()->getErrorMsg()
+                    ]), 'nicepay');
                 }
                 if (isset($response['resultCd']) && $response['resultCd'] == '0000') {
                     $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
@@ -293,7 +297,9 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                 $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                 $logPaymentGateway->response_content = $response;
                 $logPaymentGateway->save(false);
-                return new PaymentResponse(false, 'Lỗi cổng thanh toán', 'nicepay');
+                return new PaymentResponse(false, Yii::t('frontend','Payment gateway error `{message}`',[
+                    'message' => Yii::t('frontend','Unknown error')
+                ]), 'nicepay');
             } else {
                 $this->getClient()->getData()->set('payMethod', '02');
                 $this->getClient()->getData()->set('bankCd', $bankCd);
@@ -303,7 +309,9 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
                     $logPaymentGateway->response_content = $this->getClient()->getErrorMsg();
                     $logPaymentGateway->save(false);
-                    return new PaymentResponse(false, $this->getClient()->getErrorMsg(), 'nicepay');
+                    return new PaymentResponse(false, Yii::t('frontend','Payment gateway error `{message}`',[
+                        'message' => $this->getClient()->getErrorMsg()
+                    ]), 'nicepay');
                 }
 
                 if (isset($response['resultCd']) && (string)$response['resultCd'] === '0000') {
@@ -326,20 +334,24 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->url = $checkoutUrl;
                     $logPaymentGateway->save(false);
 
-                    return new PaymentResponse(true, 'Success', 'nicepay', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $response['tXid'], $response['resultCd'], $checkoutUrl);
+                    return new PaymentResponse(true, Yii::t('frontend','Success'), 'nicepay', $payment->transaction_code, null,PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $response['tXid'], $response['resultCd'], $checkoutUrl);
                 }
 
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
                 $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
                 $logPaymentGateway->response_content = $response;
                 $logPaymentGateway->save(false);
-                return new PaymentResponse(false, 'Lỗi cổng thanh toán', 'nicepay');
+                return new PaymentResponse(false, Yii::t('frontend','Payment gateway error `{message}`',[
+                    'message' => Yii::t('frontend','Unknown error')
+                ]), 'nicepay');
             }
         } catch (Exception $exception) {
             $logPaymentGateway->response_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logPaymentGateway->save(false);
-            return new PaymentResponse(false, $exception->getMessage(), 'nicepay');
+            return new PaymentResponse(false, Yii::t('frontend','Payment gateway error `{message}`',[
+                'message' => Yii::t('yii','An internal server error occurred.')
+            ]), 'nicepay');
 
         }
     }
@@ -365,13 +377,15 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
             $logCallback->response_content = $this->getNotifications()->toArray();
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);
-            return new PaymentResponse(false, 'Missing parameter referenceNo', 'nicepay');
+            return new PaymentResponse(false, Yii::t('yii','Missing required parameters: {params}',[
+               'params' => 'referenceNo'
+            ]), 'nicepay');
         }
         if (($transaction = PaymentTransaction::findOne(['transaction_code' => $referenceNo])) === null) {
             $logCallback->request_content = "Không tìm thấy transaction";
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);
-            return new PaymentResponse(false, 'Transaction not found', 'nicepay');
+            return new PaymentResponse(false, Yii::t('frontend','Transaction not found'), 'nicepay');
         }
         try {
 
@@ -387,7 +401,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                 $transaction->save(false);
                 $logCallback->response_content = $response;
                 $logCallback->save(false);
-                return new PaymentResponse(true, 'Success', 'nicepay', $transaction);
+                return new PaymentResponse(true, Yii::t('frontend','Success'), 'nicepay', $transaction);
             } else {
                 $this->isInstallment = true;
                 if (($response = $this->checkPaymentStatus($tXid, $referenceNo, $amt)) === false) {

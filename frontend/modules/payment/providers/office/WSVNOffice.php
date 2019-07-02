@@ -23,7 +23,7 @@ class WSVNOffice extends BaseObject implements PaymentProviderInterface
     {
         $summitUrl = $payment->return_url;
         $summitUrl .= '?code=' . $payment->transaction_code;
-        return new PaymentResponse(true, 'create payment success','vnoffice', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $summitUrl, $payment->return_url, $payment->cancel_url);
+        return new PaymentResponse(true, 'create payment success','vnoffice', $payment->transaction_code, null,PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $summitUrl, $payment->return_url, $payment->cancel_url);
     }
 
     public function handle($data)

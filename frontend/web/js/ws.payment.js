@@ -463,10 +463,8 @@ ws.payment = (function ($) {
             var tableFee = $cardOrder.find('table.table-fee');
 
             var courierRow = tableFee.find('tr.courier');
-            courierRow.html('');
-            courierRow.append('<th class="header">' + courier.courier_name + ' ' + courier.service_name + '</th>');
-            courierRow.append('<td class="text-right">' + courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days') + '</td>');
-            courierRow.css('display', 'table-row');
+            var text = courier.min_delivery_time + '-' + courier.max_delivery_time + ' ' + ws.t('days');
+            courierRow.find('td.text-right').html(text);
 
             var orderAmount = getTotalOrderAmount(order);
             var totalFinal = tableFee.find('tr.final-amount').find('.value');
@@ -651,6 +649,7 @@ ws.payment = (function ($) {
                         message: '',
                         merchant: undefined,
                         paymentTransaction: null,
+                        orderCodes:null,
                         redirectType: 'normal',
                         redirectMethod: 'get',
                         token: null,
@@ -661,6 +660,7 @@ ws.payment = (function ($) {
                     }, response.data || {});
                     var redirectType = data.redirectType.toUpperCase();
                     var redirectMethod = data.redirectMethod.toUpperCase() || 'GET';
+                    var message = data.orderCodes || data.paymentTransaction || null;
                     if (redirectType === 'POPUP') {
                         if (redirectMethod === 'WALLET') {
                             var $otp = $('#otp-confirm');
@@ -689,8 +689,8 @@ ws.payment = (function ($) {
                             $qr.modal('show').find('#qrCodeImg').attr('src', base64src(data.checkoutUrl));
 
                         }
-                    } else if (data.paymentTransaction) {
-                        $('span#transactionCode').html(data.paymentTransaction);
+                    } else if (message) {
+                        $('span#transactionCode').html(message);
                         $('div#checkout-success').modal('show');
                         ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
                             if (redirectMethod === 'POST') {

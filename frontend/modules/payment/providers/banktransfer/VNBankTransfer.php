@@ -17,7 +17,7 @@ class VNBankTransfer extends BaseObject implements PaymentProviderInterface
     {
         $summitUrl = $payment->return_url;
         $summitUrl .= '?code=' . $payment->transaction_code;
-        return new PaymentResponse(true, 'create payment success','bankstransfervn', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $summitUrl, $payment->return_url, $payment->cancel_url);
+        return new PaymentResponse(true, 'create payment success','bankstransfervn', $payment->transaction_code, $payment->getOrderCodes(),PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $summitUrl, $payment->return_url, $payment->cancel_url);
     }
 
     public function handle($data)

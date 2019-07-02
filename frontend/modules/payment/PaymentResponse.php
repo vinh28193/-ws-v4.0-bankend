@@ -21,6 +21,7 @@ class PaymentResponse
     public $message;
     public $merchant;
     public $paymentTransaction;
+    public $orderCodes;
     public $redirectType;
     public $token;
     public $status;
@@ -30,12 +31,13 @@ class PaymentResponse
     public $cancelUrl;
 
 
-    function __construct($success, $message, $merchant,$paymentTransaction = null, $redirectType = self::TYPE_NORMAL, $redirectMethod = self::METHOD_GET, $token = null, $status = null,$checkoutUrl = null, $returnUrl = null, $cancelUrl = null, Payment $payment = null)
+    function __construct($success, $message, $merchant, $paymentTransaction = null, $orderCodes = null, $redirectType = self::TYPE_NORMAL, $redirectMethod = self::METHOD_GET, $token = null, $status = null, $checkoutUrl = null, $returnUrl = null, $cancelUrl = null, Payment $payment = null)
     {
         $this->success = $success;
         $this->message = $message;
         $this->merchant = $merchant;
         $this->paymentTransaction = $paymentTransaction;
+        $this->orderCodes = $orderCodes;
         $this->redirectMethod = $redirectMethod;
         $this->redirectType = $redirectType;
         $this->token = $token;

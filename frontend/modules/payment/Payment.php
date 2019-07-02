@@ -139,7 +139,7 @@ class Payment extends Model
             $this->payment_provider = 44;
             $this->payment_bank_code = 'ALEPAY';
         }
-        if($this->storeManager->store->country_code === 'ID'){
+        if ($this->storeManager->store->country_code === 'ID') {
             $this->payment_method = 136;
             $this->payment_provider = 48;
             $this->payment_bank_code = 'ATM_BMRI';
@@ -202,6 +202,21 @@ class Payment extends Model
             $this->_orders[] = $order;
         }
 
+    }
+
+    public function getOrderCodes()
+    {
+        if (empty($this->getOrders())) {
+            return null;
+        }
+        $codes = [];
+        foreach ($this->getOrders() as $order) {
+            if ($order->ordercode === null) {
+                continue;
+            }
+            $codes[] = $order->ordercode;
+        }
+        return empty($codes) ? null : implode(',', $codes);
     }
 
     public function registerClientScript()

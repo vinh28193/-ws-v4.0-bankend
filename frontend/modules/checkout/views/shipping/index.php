@@ -445,7 +445,12 @@ $this->registerJs($js);
                                 </th>
                                 <td class="value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
                             </tr>
-                            <tr class="courier" style="display: none"></tr>
+                            <tr class="courier">
+                                <th class="header"><?=Yii::t('frontend','Estimated time')?></th>
+                                <td class="text-right">
+                                    <?php echo Yii::t('frontend','Please select your address to suggest')?>
+                                </td>
+                            </tr>
                             <tr class="discount-detail">
                                 <th class="header"><?= Yii::t('frontend', 'Coupon code'); ?> <span
                                             class="coupon-code"></span>

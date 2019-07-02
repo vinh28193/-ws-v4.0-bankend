@@ -11,7 +11,7 @@
     <a class="btn method-select" data-toggle="collapse" data-target="#method<?=$group?>" aria-expanded="<?=$selected ? 'true' : 'false';?>" onclick="ws.payment.selectMethod(<?=$methods[0]['payment_provider_id']?>,<?=$methods[0]['payment_method_id']?>, '<?=$methods[0]['paymentMethod']['code'];?>')">
         <i class="icon method_<?= $group; ?>"></i>
         <div class="name">Ví điện tử Ngân Lượng</div>
-        <div class="desc">Miễn phí giao dịch</div>
+        <div class="desc"><span class="text-danger">Miễn phí giao dịch</span></div>
     </a>
     <div id="method<?= $group; ?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne" data-parent="#payment-method">
         <div class="method-content wallet">
