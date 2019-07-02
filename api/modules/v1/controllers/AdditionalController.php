@@ -195,7 +195,7 @@ class AdditionalController extends BaseApiController
     }
 
     public function actionView($code) {
-        $model = OrderUpdateLog::find()->where(['order_code' => $code])->asArray()->one();
+        $model = OrderUpdateLog::find()->where(['order_code' => $code])->orderBy(['create_at' => SORT_DESC])->asArray()->one();
         return $this->response(true, 'sucess', $model);
     }
 }
