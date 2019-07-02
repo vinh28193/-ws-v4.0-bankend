@@ -239,7 +239,7 @@ class PaymentController extends BasePaymentController
                         }
                     }
                 }
-                $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id,  6);
+                $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id, 6);
                 $updateOrderAttributes['total_final_amount_local'] = $orderPayment->getTotalFinalAmount() - $order->total_promotion_amount_local;
                 $order->updateAttributes($updateOrderAttributes);
                 $orders[$order->ordercode] = $order;
@@ -254,16 +254,25 @@ class PaymentController extends BasePaymentController
         // ToDo Push GA Checkout @Phuchc
         $payment->setOrders($orders);
         $res = $payment->processPayment();
-        $res->orderCodes = implode(', ', array_keys($orders));
+        $employee = new Employee();
+        $assign = $employee->getAssign();
+
         $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         if ($res->success === false) {
             return $this->response(false, $res->message);
         }
+        if ($assign !== null) {
+            $paymentTransaction->support_id = $assign->id;
+        }
+        /** @var  $fOrder Order */
+        $paymentTransaction->courier_delivery_time = (isset(array_values($orders)[0]) && ($fOrder = array_values($orders)[0])) ? $fOrder->courier_delivery_time : null;
         $paymentTransaction->third_party_transaction_code = $res->token;
         $paymentTransaction->third_party_transaction_status = $res->status;
         $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
         $paymentTransaction->save(false);
         // Todo remove cart after create payment success
+
+
         foreach ($orders as $order) {
             /** @var  $order Order */
             $childTransaction = clone $paymentTransaction;
@@ -272,13 +281,13 @@ class PaymentController extends BasePaymentController
             $childTransaction->transaction_amount_local = $order->getTotalFinalAmount();
             $childTransaction->total_discount_amount = $order->discountAmount;
             $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
-            $childTransaction->transaction_code = PaymentService::generateTransactionCode('ORDER');
+            $childTransaction->transaction_code = PaymentService::generateTransactionCode('PM');
             $childTransaction->order_code = $order->ordercode;
             $childTransaction->courier_name = $order->courier_name;
             $childTransaction->service_code = $order->courier_service;
+            $childTransaction->courier_delivery_time = $order->courier_delivery_time;
             $childTransaction->save(false);
-            $employee = new Employee();
-            if (($assign = $employee->getAssign()) !== null) {
+            if ($assign !== null) {
                 $order->sale_support_id = $assign->id;
                 $order->support_email = $assign->email;
                 $order->save(false);

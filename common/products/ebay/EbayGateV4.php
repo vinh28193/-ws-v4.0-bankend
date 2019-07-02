@@ -179,7 +179,7 @@ class EbayGateV4 extends BaseGate
         return $response;
     }
     public static function getProductTopView(){
-        $url = 'http://sv3.weshop.asia/ebay/top_watched?categoryId';
+        $url = 'http://s1.weshop.asia/ebay/top_watched?categoryId';
 //        print_r($url);
 //        die;
         $curl = new Curl();
