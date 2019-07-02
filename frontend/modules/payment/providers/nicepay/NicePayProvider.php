@@ -322,6 +322,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                         'billingNm' => $response['billingNm'],
                         'transTm' => $response['transTm'],
                         'transDt' => $response['transDt'],
+                        'description' => $response['description'],
                         'bankVacctNo' => $response['bankVacctNo'],
                         'vacctValidDt' => $response['vacctValidDt'],
                         'vacctValidTm' => $response['vacctValidTm'],
