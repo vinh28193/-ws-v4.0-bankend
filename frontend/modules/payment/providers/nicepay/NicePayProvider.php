@@ -263,7 +263,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->response_content = $response;
                     $logPaymentGateway->url = $checkoutUrl;
                     $logPaymentGateway->save(false);
-                    return new PaymentResponse(true, 'Success', 'nicepay', $payment->transaction_code, PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, $data['tXid'], $checkoutUrl);
+                    return new PaymentResponse(true, 'Success', 'nicepay', $payment->transaction_code, null,PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, $data['tXid'], $checkoutUrl);
                 }
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
                 $logPaymentGateway->request_content = $this->getClient()->getData()->toArray();
@@ -326,7 +326,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->url = $checkoutUrl;
                     $logPaymentGateway->save(false);
 
-                    return new PaymentResponse(true, 'Success', 'nicepay', $payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $response['tXid'], $response['resultCd'], $checkoutUrl);
+                    return new PaymentResponse(true, 'Success', 'nicepay', $payment->transaction_code, null,PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $response['tXid'], $response['resultCd'], $checkoutUrl);
                 }
 
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;

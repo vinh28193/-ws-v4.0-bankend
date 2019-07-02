@@ -94,7 +94,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 }
                 $success = false;
             }
-            return new PaymentResponse($success, $mess,'nganluong' ,$payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $resp['token'], $resp['error_code'], isset($resp['checkout_url']) ? $resp['checkout_url'] : null);
+            return new PaymentResponse($success, $mess,'nganluong' ,$payment->transaction_code, null,PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $resp['token'], $resp['error_code'], isset($resp['checkout_url']) ? $resp['checkout_url'] : null);
         } catch (Exception $exception) {
             $logPaymentGateway->request_content = $param;
             $logPaymentGateway->response_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();

@@ -57,7 +57,7 @@ class McPayProvider extends BaseObject implements PaymentProviderInterface
         $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED;
 
         $checkoutUrl = $this->createCheckOutUrl();
-        return new PaymentResponse(true, 'McPay success', 'mcpay',$payment->transaction_code, PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $checkoutUrl);
+        return new PaymentResponse(true, 'McPay success', 'mcpay',$payment->transaction_code, null,PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, $payment->transaction_code, 'ok', $checkoutUrl);
     }
 
     public function handle($data)

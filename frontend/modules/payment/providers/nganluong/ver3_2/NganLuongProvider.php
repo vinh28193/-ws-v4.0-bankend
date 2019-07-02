@@ -76,7 +76,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $returnUrl = $payment->return_url;
             $returnUrl .= "?token={$resp['token']}&order_code={$payment->transaction_code}";
             $cancelUrl = $payment->cancel_url;
-            return new PaymentResponse($success, $mess, 'nganluong32', $payment->transaction_code, PaymentResponse::TYPE_POPUP, PaymentResponse::METHOD_QRCODE, $resp['token'], $resp['error_code'], isset($resp['qr_data']) ? $resp['qr_data'] : '', $returnUrl, $cancelUrl);
+            return new PaymentResponse($success, $mess, 'nganluong32', $payment->transaction_code, null,PaymentResponse::TYPE_POPUP, PaymentResponse::METHOD_QRCODE, $resp['token'], $resp['error_code'], isset($resp['qr_data']) ? $resp['qr_data'] : '', $returnUrl, $cancelUrl);
 
         } catch (Exception $exception) {
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();

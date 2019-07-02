@@ -182,7 +182,7 @@ class PaymentController extends BasePaymentController
 
                 if (!$order->save(false)) {
                     $transaction->rollBack();
-                    return $this->response(false, 'can not create order');
+                    return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                 }
 
                 foreach ($orderPayment->getAdditionalFees()->toArray() as $feeName => $arrayFee) {
@@ -194,7 +194,7 @@ class PaymentController extends BasePaymentController
                     $firstFee->target_id = $order->id;
                     if (!$firstFee->save(false)) {
                         $transaction->rollBack();
-                        return $this->response(false, 'can not create order');
+                        return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                     }
                 }
                 $updateOrderAttributes = [];
@@ -227,7 +227,7 @@ class PaymentController extends BasePaymentController
                     // save total product discount here
                     if (!$product->save(false)) {
                         $transaction->rollBack();
-                        return $this->response(false, 'can not save a product');
+                        return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                     }
 
                     foreach ($paymentProduct->productFees as $feeName => $productFee) {
@@ -237,7 +237,7 @@ class PaymentController extends BasePaymentController
 
                         if (!$fee->save(false)) {
                             $transaction->rollBack();
-                            return $this->response(false, 'can not create order');
+                            return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                         }
                     }
                 }
@@ -251,13 +251,14 @@ class PaymentController extends BasePaymentController
         } catch (Exception $exception) {
             $transaction->rollBack();
             Yii::error($exception, __METHOD__);
-            return $this->response(false, $exception->getMessage());
+            return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
         }
 
 
         // ToDo Push GA Checkout @Phuchc
 
         $res = $payment->processPayment();
+        $res->orderCodes = implode(', ', array_keys($orders));
         $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         if ($res->success === false) {
             return $this->response(false, $res->message);
