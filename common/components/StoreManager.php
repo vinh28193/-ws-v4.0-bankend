@@ -90,11 +90,25 @@ class StoreManager extends Component implements BootstrapInterface
 
     protected function getClientMessages()
     {
-        $messages = ArrayHelper::getValue(Yii::$app->params, 'jsMessages', []);
-        $results = [];
-        foreach ($messages as $message) {
-            $results[$message] = Yii::t('javascript', $message, [], $this->store->locale);
-        }
+        $results = [
+            'Error' => Yii::t('javascript','Error'),
+            'Success' => Yii::t('javascript','Success'),
+            'Confirm' => Yii::t('javascript','Confirm'),
+            'Delete' => Yii::t('javascript','Delete'),
+            'Select' => Yii::t('javascript','Select'),
+            'Not Found' => Yii::t('javascript','Not Found'),
+            'Cannot change quantity' => Yii::t('javascript','Cannot change quantity'),
+            'You can not buy greater than {number}' => Yii::t('javascript','You can not buy greater than {number}'),
+            'You can not buy lesser than {number}' => Yii::t('javascript','You can not buy lesser than {number}'),
+            'Out of stock' => Yii::t('javascript','Out of stock'),
+            'Please select the variation' => Yii::t('javascript','Please select the variation'),
+            'Please fill full the buyer information' => Yii::t('javascript','Please fill full the buyer information'),
+            'Please fill full the receiver information' => Yii::t('javascript','Please fill full the receiver information'),
+            'You must agree to the {name} terms' => Yii::t('javascript','You must agree to the {name} terms'),
+            'You need to top up over {amount}' => Yii::t('javascript','You need to top up over {amount}'),
+            'You have not agreed to {name}\'s terms and conditions of trading' => Yii::t('javascript','You have not agreed to {name}\'s terms and conditions of trading'),
+            '{days} days' => Yii::t('javascript','{days} days')
+        ];
         return $results;
     }
 

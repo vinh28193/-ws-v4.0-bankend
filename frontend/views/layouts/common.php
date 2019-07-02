@@ -100,7 +100,7 @@ $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$
                     <i class="la la-check"></i>
                     <div class="modal-title"><?=Yii::t('frontend','Thank you!');?></div>
                     <div class="order-code">
-                        <?=Yii::t('frontend','Transaction code');?>
+                        <?=Yii::t('frontend','Order codes');?>
                         <span class="text-blue" id="transactionCode"></span>
                     </div>
                     <p><?=Yii::t('frontend','Your order has been successfully! <br/> The system will be automatically redirect to page of payment gate way');?>

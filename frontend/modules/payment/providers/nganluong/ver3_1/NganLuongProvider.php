@@ -74,7 +74,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $logPaymentGateway->request_content = $param;
         $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED;
         $logPaymentGateway->url = $this->submitUrl;
-        $mess = "Giao dịch thanh toán thành công!";
+        $mess = Yii::t('frontend','Success');
         $success = true;
         try {
             $resp = $this->callApi($this->submitUrl, $param);
@@ -88,19 +88,24 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway->save(false);
 
             if ($resp == null || !is_array($resp) || !isset($resp['error_code']) || empty($resp['error_code']) || $resp['error_code'] != '00' || !isset($resp['token'])) {
-                $mess = "Lỗi thanh toán trả về NL" . $resp['error_code'];
+                $err = $resp['error_code'];
                 if (isset($resp['description']) && $resp['description']) {
-                    $mess = $resp['description'] . '.';
+                    $err .= (':'.$resp['description'] . '.');
                 }
+                $mess = Yii::t('frontend','Payment gateway error `{message}`',[
+                    'message' => $err
+                ]);
                 $success = false;
             }
-            return new PaymentResponse($success, $mess,'nganluong' ,$payment->transaction_code, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $resp['token'], $resp['error_code'], isset($resp['checkout_url']) ? $resp['checkout_url'] : null);
+            return new PaymentResponse($success, $mess,'nganluong' ,$payment->transaction_code, $payment->getOrderCodes(),PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $resp['token'], $resp['error_code'], isset($resp['checkout_url']) ? $resp['checkout_url'] : null);
         } catch (Exception $exception) {
             $logPaymentGateway->request_content = $param;
             $logPaymentGateway->response_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logPaymentGateway->save(false);
-            return new PaymentResponse(false, 'Create payment thất bại','nganluong');
+            return new PaymentResponse(false, Yii::t('frontend','Payment gateway error `{message}`',[
+                'message' => Yii::t('yii','An internal server error occurred.')
+            ]),'nganluong');
         }
     }
 

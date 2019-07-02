@@ -849,8 +849,18 @@ return [
         'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'controller' => ['additional'],
+        'tokens' => [
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
+        ],
         'patterns' => [
             'GET,HEAD' => 'index',
+            'GET' => 'get-lang',
+            'PUT,PATCH {id}' => 'update',
+            'DELETE {id}' => 'delete',
+            'GET,HEAD {code}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {code}' => 'options',
             'OPTIONS' => 'options',
         ],
     ]

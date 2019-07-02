@@ -12,7 +12,7 @@
        onclick="ws.payment.selectMethod(<?= $methods[0]['payment_provider_id'] ?>,<?= $methods[0]['payment_method_id'] ?>, '<?= $methods[0]['paymentMethod']['code']; ?>')">
         <i class="icon method_<?= $group; ?>"></i>
         <div class="name"><?= Yii::t('frontend', 'Payment via domestic ATM card') ?></div>
-        <div class="desc"><?= Yii::t('frontend', 'Your card number is kept 100% safe and is only used for this transaction.'); ?></div>
+        <div class="desc"><span class="text-danger"> <?=Yii::t('frontend','Free ');?></span>.<?= Yii::t('frontend', 'Your card number is kept 100% safe and is only used for this transaction.'); ?></div>
     </a>
 
     <div id="method<?= $group; ?>" class="<?= $selected ? 'collapse show' : 'collapse' ?>" aria-labelledby="headingOne"

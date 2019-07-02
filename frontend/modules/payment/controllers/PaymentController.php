@@ -83,8 +83,7 @@ class PaymentController extends BasePaymentController
 
         }
         if ($shippingForm->other_receiver !== 'false') {
-
-            if ((int)$shippingForm->enable_receiver === ShippingForm::YES) {
+            if ((int)$shippingForm->enable_receiver === ShippingForm::NO) {
                 $shippingParams['receiver_name'] = $shippingForm->receiver_name;
                 $shippingParams['receiver_address'] = $shippingForm->receiver_address;
                 $shippingParams['receiver_phone'] = $shippingForm->receiver_phone;
@@ -93,7 +92,7 @@ class PaymentController extends BasePaymentController
                 $shippingParams['receiver_district_id'] = $shippingForm->receiver_district_id;
                 $shippingParams['receiver_district_name'] = $shippingForm->getReceiverDistrictName();
                 $shippingParams['receiver_post_code'] = $shippingForm->receiver_post_code;
-                $shippingParams['receiver_country_id'] = $shippingForm->receiver_country_id;
+                $shippingParams['receiver_country_id'] = $this->storeManager->store->country_id;
                 $shippingParams['receiver_country_name'] = $this->storeManager->store->country_name;
             } else if ($shippingForm->receiver_address_id !== null && ($receiver = Address::findOne($shippingForm->receiver_address_id)) !== null) {
                 $shippingParams['receiver_name'] = $receiver->address;
@@ -105,7 +104,6 @@ class PaymentController extends BasePaymentController
                 $shippingParams['receiver_district_name'] = $receiver->district_name;
             }
         }
-
         $payment->customer_name = $shippingForm->buyer_name;
         $payment->customer_email = $shippingForm->buyer_email;
         $payment->customer_phone = $shippingForm->buyer_phone;
@@ -182,7 +180,7 @@ class PaymentController extends BasePaymentController
 
                 if (!$order->save(false)) {
                     $transaction->rollBack();
-                    return $this->response(false, 'can not create order');
+                    return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                 }
 
                 foreach ($orderPayment->getAdditionalFees()->toArray() as $feeName => $arrayFee) {
@@ -194,7 +192,7 @@ class PaymentController extends BasePaymentController
                     $firstFee->target_id = $order->id;
                     if (!$firstFee->save(false)) {
                         $transaction->rollBack();
-                        return $this->response(false, 'can not create order');
+                        return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                     }
                 }
                 $updateOrderAttributes = [];
@@ -227,7 +225,7 @@ class PaymentController extends BasePaymentController
                     // save total product discount here
                     if (!$product->save(false)) {
                         $transaction->rollBack();
-                        return $this->response(false, 'can not save a product');
+                        return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                     }
 
                     foreach ($paymentProduct->productFees as $feeName => $productFee) {
@@ -237,7 +235,7 @@ class PaymentController extends BasePaymentController
 
                         if (!$fee->save(false)) {
                             $transaction->rollBack();
-                            return $this->response(false, 'can not create order');
+                            return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                         }
                     }
                 }
@@ -251,13 +249,14 @@ class PaymentController extends BasePaymentController
         } catch (Exception $exception) {
             $transaction->rollBack();
             Yii::error($exception, __METHOD__);
-            return $this->response(false, $exception->getMessage());
+            return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
         }
 
 
         // ToDo Push GA Checkout @Phuchc
 
         $res = $payment->processPayment();
+        $res->orderCodes = implode(', ', array_keys($orders));
         $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         if ($res->success === false) {
             return $this->response(false, $res->message);
