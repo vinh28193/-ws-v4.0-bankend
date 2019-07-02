@@ -34,8 +34,6 @@ class VNBankTransfer extends BaseObject implements PaymentProviderInterface
             return new PaymentResponse(false, 'Transaction không tồn tại', 'bankstransfervn');
         }
         $checkoutUrl = Url::to("/checkout/bank-transfer/{$transaction->transaction_code}/success.html", true);
-        unset($data['code']);
-        unset($data['merchant']);
         $checkoutUrl .= '?' . http_build_query($data);
         return new PaymentResponse(true, 'check payment success', 'bankstransfervn', $transaction, null, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $data['code'], 'ok', $checkoutUrl);
     }
