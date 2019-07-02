@@ -16,7 +16,7 @@ use yii\helpers\Html;
 /* @var array $sorts */
 /* @var common\components\StoreManager $storeManager */
 $sort = Yii::$app->request->get('sort','price');
-$this->title = Yii::t('frontend','{keyword} - Shopping US Amazon, eBay - Weshop Global',['keyword' => $keyword]);
+$this->title = Yii::t('frontend','{keyword} - Shopping US Amazon, eBay - Weshop {web_name}',['keyword' => $keyword, 'web_name' => Yii::$app->storeManager->getName()]);
 $url_page = function ($p){
     $param = [explode('?',\yii\helpers\Url::current())[0]];
     $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;

@@ -61,10 +61,10 @@ class CmsController extends FrontendController
     public function ogMetaTag()
     {
         return ArrayHelper::merge(parent::ogMetaTag(), $this->page !== null ? [
-            'site_name' => $this->page->title,
+            'site_name' => $this->title ? $this->title : $this->page->title,
             'url' => $this->page->url,
             'image' => $this->page->image,
-            'description' => $this->page->description,
+            'description' => $this->portalDescription ? $this->portalDescription : $this->page->description,
         ] : []);
     }
 

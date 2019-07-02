@@ -271,8 +271,8 @@ class StoreManager extends Component implements BootstrapInterface
         if ($this->isID())
             return "Weshop Indonesia";
         if ($this->isVN())
-            return "Weshop Indonesia";
-        return "Weshop Vietnam";
+            return "Weshop Việt Nam";
+        return "Weshop Global";
     }
 
     public function getCurrencyName($type = null)

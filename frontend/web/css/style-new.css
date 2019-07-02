@@ -531,6 +531,9 @@ ul.list-dot li{
 .btn-group-detail i{
     font-size: 20px;
 }
+.hide-filter {
+    display: none;
+}
 .btn-group-detail{
     padding-top: 15px;
 }
@@ -546,7 +549,7 @@ ul.list-dot li{
     line-height: 24px;
 }
 .btn-group-detail .btn-group-primary,.btn-group-detail .btn-group-secondary {
-    width: 50%;
+    width: auto;
 }
 .btn-group-detail .btn-group-secondary{
     margin-top: 5px;

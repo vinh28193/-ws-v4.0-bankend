@@ -20,9 +20,6 @@ class PortalController extends FrontendController
 
     public $portal = BaseProduct::TYPE_EBAY;
 
-    public $portalTitle;
-    public $portalImage;
-    public $portalDescription;
 
     public function init()
     {
