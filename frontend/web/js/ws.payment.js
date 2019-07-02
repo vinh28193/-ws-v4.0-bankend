@@ -701,7 +701,7 @@ ws.payment = (function ($) {
                                 ws.redirect(data.checkoutUrl);
                             }
                         });
-                        //redirectPaymentGateway(data, 1000);
+                        redirectPaymentGateway(data, 1000);
                     }
                 } else {
                     ws.notifyError(response.message);
