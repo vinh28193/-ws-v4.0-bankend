@@ -267,7 +267,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         return $this->roundShippingWeight($this->shipping_weight * $this->quantity);
     }
 
-    public function roundShippingWeight($inputWeight = 0, $minWeight = 0.5)
+    public function roundShippingWeight($inputWeight = 0, $minWeight = 1)
     {
         return floatval($inputWeight) < $minWeight ? $minWeight : round($inputWeight, 2);
     }
