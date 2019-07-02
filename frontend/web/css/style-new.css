@@ -543,6 +543,11 @@ ul.list-dot li{
 .card-group-detail span{
     margin-right: 15px;
 }
+.error{
+    margin-left: 15px;
+    color: red;
+    font-weight: 700;
+}
 .register-prime{
     color: #6d7278;
     font-size: 13px;

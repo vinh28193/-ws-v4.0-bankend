@@ -142,6 +142,7 @@
             var data = $item.data('wsItem');
             const value = variationOption.values[selectedValue];
             const name = variationOption.name;
+            $('#error-'+variationOption.id).html("");
             console.log(variationOption);
             if (!value) {
                 return;
@@ -299,12 +300,12 @@
     };
     var checkOutOfStock = function (activeVariation) {
         if (!activeVariation) {
-            ws.notifyError(ws.t("Out of stock"));
+            // ws.notifyError(ws.t("Out of stock"));
             markOutofStock(true);
             return false;
         } else {
             if (activeVariation.available_quantity > 0 && activeVariation.quantity_sold >= 0 && activeVariation.available_quantity - activeVariation.quantity_sold <= 0) {
-                ws.notifyError(ws.t("Out of stock"));
+                // ws.notifyError(ws.t("Out of stock"));
                 markOutofStock(true);
                 return false;
             }
@@ -602,7 +603,18 @@
         }
 
         if ($data.params.variation_options.length > 0 && currentVariations.length !== $data.params.variation_options.length) {
-            return ws.notifyError(ws.t('Please select the variation'));
+            for(let ind = 0; ind < $data.params.variation_options.length ; ind ++){
+                var check = false;
+                for(let ind_2 = 0; ind_2 < currentVariations.length ; ind_2 ++){
+                    if(currentVariations[ind_2].name === $data.params.variation_options[ind].name){
+                        check = true;
+                    }
+                }
+                if(!check){
+                    $('#error-'+$data.params.variation_options[ind].id).html(ws.t('Please select {variation}',{variation:$data.params.variation_options[ind].name}));
+                }
+            }
+            return false;
         }
 
         var params = $data.params;
