@@ -46,9 +46,9 @@ $this->registerJs($js, \yii\web\View::POS_END);
 <div class="row error-404">
     <div class="col-md-6 m-auto row">
         <div class="col-12 col-sm-12 col-md-6" style="margin-top: 10%">
-            <p class="title title-error">We looked everywhere.</p>
-            <p class="content-error">Looks like this page is missing. If you still need help, visit our help pages</p>
-            <p class="content-error"><a href="/" class="btn btn-amazon" style="border-radius: 0px">Go to home page</a></p>
+            <p class="title title-error"><?= Yii::t('frontend','We looked everywhere.') ?></p>
+            <p class="content-error"><?= Yii::t('frontend','Looks like this page is missing. If you still need help, visit our help pages') ?></p>
+            <p class="content-error"><a href="/" class="btn btn-amazon" style="border-radius: 0px"><?= Yii::t('frontend' , 'Go to home page') ?></a></p>
         </div>
         <div class="col-12 col-sm-12 col-md-6">
             <img src="/images/404.png">
