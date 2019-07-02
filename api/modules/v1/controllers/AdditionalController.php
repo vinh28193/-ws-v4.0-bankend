@@ -99,7 +99,6 @@ class AdditionalController extends BaseApiController
                 $dirtyAttribute = [];
                 $formatter = Yii::$app->formatter;
                 foreach ($event->changedAttributes as $attribute => $value) {
-                    var_dump($value);
                     $newValue = $sender->getAttribute($attribute);
                     if ($attribute !== 'updated_at') {
                         $value = (int)$value;
