@@ -178,7 +178,7 @@ class WeshopHelper
 
     }
 
-    public static function generateBinCode($reference,  $length = 8)
+    public static function generateBinCode($reference,  $length = 6)
     {
         $length -= strlen($reference);
         while ($length > 0) {
