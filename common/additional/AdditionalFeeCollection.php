@@ -157,17 +157,8 @@ class AdditionalFeeCollection extends ArrayCollection
             $amountLocal = $this->getStoreManager()->roundMoney($amount);
         } else if ($config->name === 'product_price') {
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
-        } else if ($config->name === 'tax_fee') {
-            if ($amount < 1) {
-                $amount *= $this->getTotalAdditionalFees(['product_price', 'shipping_fee'])[0];
-            } else if ($amount > 1 && $amount < 2) {
-                $amount = ($amount - 1) * $this->getTotalAdditionalFees(['product_price', 'shipping_fee'])[0];
-            } else {
-                $amount = ($amount / 100) * $this->getTotalAdditionalFees(['product_price', 'shipping_fee'])[0];
-            }
-            $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         } else {
-            //$amount *= $additional->getShippingQuantity();
+            $amount *= $additional->getShippingQuantity();
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         }
         return [
