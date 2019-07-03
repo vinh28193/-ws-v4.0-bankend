@@ -14,7 +14,6 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use common\models\db\Product as DbProduct;
 use common\models\queries\ProductQuery;
-use common\components\AdditionalFeeTrait;
 
 /**
  * Class Product
