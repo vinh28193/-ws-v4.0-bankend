@@ -25,9 +25,6 @@ html, body {
     border-radius: 3px;
     padding: 24px 20px;
 }
-.container{
-    max-width: 90%;
-}
 .navbar-ws,body div.wrapper div.navbar-ws div.container{
     /* Style for "Rectangle" */
     background-color: #141c2e;
@@ -97,7 +94,7 @@ body div.wrapper div.navbar-ws div div.search-box{
 }
 
 .shipping-header-box {
-    width: 70px;
+    min-width: 70px;
     color: #2b96b6;
     padding: 5px 5px;
     border-radius: 3px;

@@ -109,7 +109,7 @@ ul.bars-nav > li ul li a{
 }
 .style-header {
     z-index: 99;
-    padding-left: 5%;
+    padding-left: 0 !important;
 }
 .style-ul-after {
     z-index: 98;
