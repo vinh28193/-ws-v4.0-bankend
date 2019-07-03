@@ -143,7 +143,7 @@ class CartHelper
         $additionalFees = $item->getAdditionalFees();
         $productPrice = $additionalFees->getTotalAdditionalFees('product_price');
         // Tổng tiền các phí, trừ tiền gốc sản phẩm (chỉ có các phí)
-        $product['total_fee_product_local'] = $additionalFees->getTotalAdditionalFees(null, ['product_price'])[1];         // Tổng Phí theo sản phẩm
+        $product['total_fee_product_local'] = $additionalFees->getTotalAdditionalFees(['tax_fee','shipping_fee'])[1];         // Tổng Phí theo sản phẩm
         // Tổng tiền local gốc sản phẩm (chỉ có tiền gốc của sản phẩm)
         list($product['price_amount_origin'], $product['price_amount_local']) = $productPrice;
         $product['price_amount_origin'] = $product['price_amount_origin'] / $item->getShippingQuantity();

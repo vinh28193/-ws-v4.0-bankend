@@ -4,6 +4,7 @@
 namespace frontend\modules\payment\controllers;
 
 
+use common\additional\StoreAdditionalFee;
 use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
 use common\models\Address;
@@ -160,11 +161,12 @@ class PaymentController extends BasePaymentController
                 $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
                 $order->total_paid_amount_local = 0;
 
-                $order->total_promotion_amount_local = $orderTotalDiscount;
+                $order->total_promotion_amount_local = $order->discountAmount;
 
                 $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
 
                 $order->total_fee_amount_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees()[1];
+
 
                 $order->total_final_amount_local = $orderPayment->getTotalFinalAmount();
 
@@ -177,6 +179,10 @@ class PaymentController extends BasePaymentController
                 $order->seller_id = $seller->id;
                 $order->seller_name = $seller->seller_name;
                 $order->seller_store = $seller->seller_link_store;
+
+                $order->payment_provider = $payment->payment_provider_name;
+                $order->payment_method = $payment->payment_method_name;
+                $order->payment_bank = $payment->payment_bank_code;
 
                 if (!$order->save(false)) {
                     $transaction->rollBack();
@@ -229,9 +235,6 @@ class PaymentController extends BasePaymentController
                     }
 
                     foreach ($paymentProduct->productFees as $feeName => $productFee) {
-                        if($productFee->type !== 'origin'){
-                            continue;
-                        }
                         $fee = clone $productFee;
                         $fee->target = 'product';
                         $fee->target_id = $product->id;
@@ -281,10 +284,9 @@ class PaymentController extends BasePaymentController
             $childTransaction = clone $paymentTransaction;
             $childTransaction->id = null;
             $childTransaction->isNewRecord = true;
-            $childTransaction->transaction_amount_local = $order->getTotalFinalAmount();
-            $childTransaction->total_discount_amount = $order->discountAmount;
-            $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
-            $childTransaction->transaction_code = PaymentService::generateTransactionCode('PM');
+            $childTransaction->transaction_amount_local = $order->total_final_amount_local;
+            $childTransaction->total_discount_amount = $order->total_promotion_amount_local;
+            $childTransaction->before_discount_amount_local = $childTransaction->transaction_amount_local - $order->total_promotion_amount_local;
             $childTransaction->order_code = $order->ordercode;
             $childTransaction->courier_name = $order->courier_name;
             $childTransaction->service_code = $order->courier_service;
