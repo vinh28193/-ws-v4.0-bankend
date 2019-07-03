@@ -170,6 +170,8 @@ class PaymentController extends BasePaymentController
 
                 $order->total_final_amount_local = $orderPayment->getTotalFinalAmount();
 
+                $order->payment_transaction_code = $payment->transaction_code;
+
                 // 2 .seller
                 $seller = $orderPayment->seller;
                 $seller->portal = $orderPayment->portal;
@@ -271,13 +273,14 @@ class PaymentController extends BasePaymentController
             $paymentTransaction->support_id = $assign->id;
         }
         /** @var  $fOrder Order */
-        $paymentTransaction->courier_delivery_time = (isset(array_values($orders)[0]) && ($fOrder = array_values($orders)[0])) ? $fOrder->courier_delivery_time : null;
+        $fOrder = array_values($orders)[0];
+        $paymentTransaction->courier_delivery_time = $fOrder->courier_delivery_time;
+        $paymentTransaction->courier_name = $fOrder->courier_name;
         $paymentTransaction->third_party_transaction_code = $res->token;
         $paymentTransaction->third_party_transaction_status = $res->status;
         $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
         $paymentTransaction->save(false);
         // Todo remove cart after create payment success
-
 
         foreach ($orders as $order) {
             /** @var  $order Order */
