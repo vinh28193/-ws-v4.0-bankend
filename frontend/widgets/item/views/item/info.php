@@ -70,7 +70,7 @@ $userCookies->setUser();
             }
             if($item->type === BaseProduct::TYPE_EBAY && $current_provider && $current_provider->positive_feedback_percent){
                 echo "<a href='javascript:void(0)' class=\"text-black\">&nbsp;&nbsp;&nbsp;(".Yii::t('frontend','{positive}% positive',['positive' => $current_provider->positive_feedback_percent]).")</a>";
-            }elseif($item->is_prime){
+            }elseif($item->type === BaseProduct::TYPE_AMAZON_US && $item->is_prime){
                 echo "<img style='height: 14px;padding-left: 5px;' src='/images/logo/prime.png'>";
             }
             ?>
