@@ -161,7 +161,7 @@ class AmazonGateV3 extends BaseGate
         }
         $url = trim($url);
         $curl = new curl\Curl();
-        $countCall = 0;
+//        $countCall = 0;
         $response = $curl->get($url);
         Yii::debug($curl->responseCode);
 //        while ($countCall < 3 && $curl->responseCode != 200){
@@ -169,9 +169,13 @@ class AmazonGateV3 extends BaseGate
 //            $response = $curl->get($url);
 //            Yii::debug($curl->responseCode);
 //        }
-        Yii::debug($response);
+//        Yii::debug($response);
         if($curl->responseCode !== 200){
-            return [false, 'Request Error '.$curl->responseCode];
+            $response = $curl->get($url);
+            Yii::debug($curl->responseCode);
+            if($curl->responseCode !== 200){
+                return [false, 'Request Error '.$curl->responseCode];
+            }
         }
         $response = json_decode($response,true);
         Yii::debug($response);
@@ -326,6 +330,25 @@ class AmazonGateV3 extends BaseGate
                 $rs['is_prime'] = $offers[0]['is_prime'];
                 $rs['shipping_fee'] = $offers[0]['ship_fee'];
                 $rs['tax_fee'] = $offers[0]['tax_fee'];
+            }else{
+                if(($auth = ArrayHelper::getValue($amazon,'author'))){
+                    $prov = [];
+                    $prov['name'] = trim($auth);
+                    $prov['image'] = '';
+                    $prov['website'] = '';
+                    $prov['location'] = '';
+                    $prov['rating_score'] = ArrayHelper::getValue($amazon,'rate_count');
+                    $prov['rating_star'] = ArrayHelper::getValue($amazon,'rate_star');
+                    $prov['positive_feedback_percent'] = null;
+                    $prov['condition'] = 'used or new';
+                    $prov['fulfillment'] = null;
+                    $prov['is_free_ship'] = $rs['is_free_ship'];
+                    $prov['is_prime'] = $rs['is_prime'];
+                    $prov['price'] = $rs['sell_price'];
+                    $prov['shipping_fee'] = $rs['shipping_fee'];
+                    $prov['tax_fee'] = $rs['tax_fee'];
+                    $rs['providers'][] = $prov;
+                }
             }
             if (!count($rs['providers']) && $check) {
                 $rs['sell_price'] = 0;

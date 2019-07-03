@@ -236,7 +236,7 @@ JS;
                     </div>
                 <?php }else{ ?>
                     <div class="btn-group-secondary">
-                        <button class="btn btn-amazon text-uppercase" id="buyNowBtn" style="width: 50%; display: block; float: left;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
+                        <button class="btn btn-amazon text-uppercase" id="buyNowBtn" style="width: 50%; display: block; float: left;margin-left: 5px;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
                         <button class="btn btn-outline-info text-uppercase" id="addToCart" style="width: auto; display: block; margin-left: 5px;"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
                     </div>
                 <?php } ?>

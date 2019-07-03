@@ -9,6 +9,7 @@ use common\components\cart\CartManager;
 use common\components\employee\Employee;
 use common\helpers\ObjectHelper;
 use common\helpers\WeshopHelper;
+use common\models\PaymentTransaction;
 use common\models\Store;
 use common\models\User;
 use common\promotion\PromotionForm;
@@ -25,6 +26,7 @@ use frontend\modules\payment\PaymentService;
 use frontend\modules\payment\providers\alepay\AlepayClient;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
+use yii\web\NotFoundHttpException;
 
 class TestController extends FrontendController
 {
@@ -368,5 +370,17 @@ JSON;
             'Last Sunday' => (clone $dateTime)->modify('Last Sunday')->format('Y-m-d H:s:i'),
         ]);
         die;
+    }
+
+    public function actionTestMail($code)
+    {
+        if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code])) === null) {
+            throw new NotFoundHttpException("not found transaction code $code");
+        }
+        $this->layout = '@common/views/mail/layouts/html';
+        return $this->render('@common/views/mail/paymentSuccess-html', [
+            'paymentTransaction' => $paymentTransaction,
+            'storeManager' => $this->storeManager
+        ]);
     }
 }

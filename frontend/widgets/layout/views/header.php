@@ -89,7 +89,7 @@ if ($userCookie->checkAddress()) {
             <a href="/my-cart.html"><span class="label-cart"><?= Yii::t('frontend', 'Cart') ?> (<span
                             class="count-cart">0</span>)</span></a>
         </div>
-        <div class="account-header-box dropdown style-account" style="width: 150px">
+        <div class="account-header-box dropdown style-account">
             <a class="bg-white" id="dropAcount" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true"
                role="button"
                aria-expanded="false">

@@ -1,0 +1,107 @@
+param = {
+        "shipping_method" :5,
+        "pickup_id"		: #id kho cua khach hang ,
+        "ff_id"			: #id kho boxme,
+        "have_labeling" : 1 da co ma vach, 2 Kho dan ma (Mac dinh = 2)  (co tinh phi)
+        "procducts": [
+            {
+            "bsin":     Ma BSIN san pham
+            "quantity": so luong ,
+            "img_check": yeu cau chup anh (co tinh phi) 0: khong yeu cau, 1 co yeu cau chup anh
+            "description":# Ghi chu cho kho
+            },
+            {
+            "bsin":  ,
+            "quantity": ,
+            "img_check"	:,
+            "description":
+            }
+        ],
+        "packages": [
+            {
+            "code"      : # ma kien se den kho,
+            "weight"    : # Khoi luong kien hang ,
+            "quantity"  : # So luong san pham trong kien,
+            "width"     : # chieu rong (cm)
+            "length"    : # chieu dai (cm)
+            "height"    : # chieu cao (cm)
+            "description":# Ghi chu cua kien thu 1
+            },
+            {
+            "code": 
+            "weight":
+            "width":
+            "length": 
+            "quantity":,
+            "height": 
+            "description":
+            }
+        ],
+        "tracking": {
+            "type": 2, (1 su dung dich vu van chuyen cua boxme), 2 Tu van chuyen (hang tu US ve la 2)
+            "tracking_number": Ma HVC
+        }
+        }
+        obj = json.dumps(obj)
+        
+from boxme_core.rpc.services.seller.SellerClient import SellerClient
+param = json.dumps(param)
+resp = SellerClient().create_shipment(param, country, int(user_id))
+
+Example:
+param = {
+        "shipping_method" : 5,
+        "pickup_id"		: 4647,
+        "ff_id"			: 56656,
+        "have_labeling: : 2,
+        "procducts": [
+            {
+            "bsin"      : "N14694496635",
+            "quantity"  : 10,
+            "img_check" : 1,
+            "description":"Yeu cau chup hinh san pham"
+            },
+            {
+            "bsin"      : "NET64279342804186165" ,
+            "quantity"  : 12,
+            "img_check"	: 0,
+            "description":"Thay nhãn Trung Quốc nếu có"
+            }
+        ],
+        "packages": [
+            {
+            "code"      : "DHL_123456789",
+            "weight"    : 1000,
+            "quantity"  : 10,
+            "width"     : "60",
+            "length"    : "70",
+            "height"    : "50",
+            "description":"Kien hang thu 1"
+            },
+            {
+            "code"      : "DHL_987654321",
+            "weight"    : "12000",
+            "width"     : "50",
+            "length"    : "60",
+            "quantity"  : "40",
+            "height"    : "40",
+            "description":"Kien hang thu 2"
+            }
+        ],
+        "tracking": {
+            "type": 2,
+            "tracking_number": ""
+        }
+    }
+from boxme_core.rpc.services.seller.SellerClient import SellerClient
+param = json.dumps(param)
+resp = SellerClient().create_shipment(param, country, int(user_id))
+//Reponse:
+Error : True or False
+Data  : json.dumps cua chuoi json
+"Message": "Create shipment success.",
+"Data": "{\"shipment_code\": \"SM-VN-146-32924629\"}",
+"Error": false
+if Error == True: Tạo không thành công, vui lòng check Message
+if Error = False:
+    json load data => get ma "shipment_code"

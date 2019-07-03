@@ -92,6 +92,8 @@ class BillingController extends CheckoutController
         if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code])) === null) {
             throw new NotFoundHttpException("not found transaction code $code");
         }
+        $mailer = Yii::$app->mailer;
+
         return $this->render('success', ['code' => $code, 'paymentTransaction' => $paymentTransaction,]);
     }
 
