@@ -160,11 +160,12 @@ class PaymentController extends BasePaymentController
                 $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
                 $order->total_paid_amount_local = 0;
 
-                $order->total_promotion_amount_local = $orderTotalDiscount;
+                $order->total_promotion_amount_local = $order->discountAmount;
 
                 $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
 
                 $order->total_fee_amount_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees()[1];
+
 
                 $order->total_final_amount_local = $orderPayment->getTotalFinalAmount();
 
@@ -278,8 +279,9 @@ class PaymentController extends BasePaymentController
             $childTransaction = clone $paymentTransaction;
             $childTransaction->id = null;
             $childTransaction->isNewRecord = true;
-            $childTransaction->transaction_amount_local = $order->getTotalFinalAmount();
-            $childTransaction->total_discount_amount = $order->discountAmount;
+            $childTransaction->transaction_amount_local = $order->total_final_amount_local;
+            $childTransaction->total_discount_amount = $order->total_promotion_amount_local;
+            $childTransaction->before_discount_amount_local = $childTransaction->transaction_amount_local - $order->total_promotion_amount_local;
             $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
             $childTransaction->transaction_code = PaymentService::generateTransactionCode('PM');
             $childTransaction->order_code = $order->ordercode;
