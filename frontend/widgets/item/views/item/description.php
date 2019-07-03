@@ -27,15 +27,19 @@ if($type == 'extra'){
                     foreach ($item->technical_specific as $value) {
                         if (is_array($value->value)) {
                             ?>
-                            <div class="col-md-6 row">
-                                <div class="col-md-6"><b><?= $value->name ?>:</b></div>
-                                <div class="col-md-6">
+                            <div class="col-md-<?= strtolower($value->name) == 'description' ? '12' : '6' ?> row">
+                                <div class="col-md-<?= strtolower($value->name) == 'description' ? '12 pb-2' : '6' ?>"><b><?= $value->name ?>:</b></div>
+                                <div class="col-md-<?= strtolower($value->name) == 'description' ? '12 pb-2' : '6' ?>">
                                     <?php
                                     foreach ($value->value as $kh => $v) {
-                                        if(is_string($v)){
-                                            echo $kh == 0 ? $v : ' / '.$v ;
-                                        }elseif(is_array($v)){
-                                            echo implode('/',$v);
+                                        if(strtolower($value->name) == 'description'){
+                                            echo $v.'&nbsp;&nbsp;&nbsp;';
+                                        }else{
+                                            if(is_string($v)){
+                                                echo $kh == 0 ? $v : ' / '.$v ;
+                                            }elseif(is_array($v)){
+                                                echo implode('/',$v);
+                                            }
                                         }
                                     } ?>
                                 </div>

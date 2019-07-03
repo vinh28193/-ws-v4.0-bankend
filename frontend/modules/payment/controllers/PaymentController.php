@@ -4,6 +4,7 @@
 namespace frontend\modules\payment\controllers;
 
 
+use common\additional\StoreAdditionalFee;
 use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
 use common\models\Address;

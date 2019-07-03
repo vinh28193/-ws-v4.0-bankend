@@ -367,15 +367,12 @@ class AmazonGateV3 extends BaseGate
         if(!$data){
             return [];
         }
-        $res = [];
+        $dessc = [];
         foreach ($data as $datum){
             if (isset($datum['value']) && is_array($datum['value'])){
                foreach ($datum['value'] as $key => $value){
                    if(is_string($value)){
-                       $temp = [];
-                       $temp['name'] = 'Description';
-                       $temp['value'] = $value;
-                       $res[] = $temp;
+                       $dessc['value'][] = $value;
                    }elseif(is_array($value)){
                        foreach ($value as $k => $v){
                            $temp = [];
@@ -386,6 +383,11 @@ class AmazonGateV3 extends BaseGate
                    }
                }
             }
+        }
+        if($dessc && count($dessc) > 0){
+            $dessc['name'] = 'Description';
+            $res[] = $dessc;
+            $res = array_reverse($res);
         }
         return $res;
     }
