@@ -302,7 +302,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
                 foreach ($productFeeParams as $name => $value) {
                     $value = reset($value);
                     $targetFee = new TargetAdditionalFee($value);
-                    $targetFee->type = 'product';
+                    $targetFee->target = 'product';
                     $fees[] = $targetFee;
                 }
                 $product->populateRelation('productFees', $fees);

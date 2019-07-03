@@ -4,6 +4,7 @@
 namespace frontend\modules\payment\controllers;
 
 
+use common\additional\StoreAdditionalFee;
 use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
 use common\models\Address;
@@ -229,9 +230,6 @@ class PaymentController extends BasePaymentController
                     }
 
                     foreach ($paymentProduct->productFees as $feeName => $productFee) {
-                        if($productFee->type !== 'origin'){
-                            continue;
-                        }
                         $fee = clone $productFee;
                         $fee->target = 'product';
                         $fee->target_id = $product->id;
