@@ -97,7 +97,7 @@ body div.wrapper div.navbar-ws div div.search-box{
 }
 
 .shipping-header-box {
-    min-width: 70px;
+    max-width: 95px;
     color: #2b96b6;
     padding: 5px 5px;
     border-radius: 3px;
@@ -155,7 +155,7 @@ body div.wrapper div.navbar-ws div div.search-box{
     border-top-left-radius: 5px;
 }
 .search-box{
-    width: 50%;
+    width: 47%;
 }
 .logo,.cart-header-box,.account-header-box{
     /*width: 20%;*/
