@@ -44,6 +44,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     const SCENARIO_UPDATE_ORDER_TIME = 'updateTimeNull';
     const SCENARIO_UPDATE_READY2PURCHASE = 'updateReady2Purchase';
     const SCENARIO_UPDATE_JUNK = 'updateStatusJunk';
+    const SCENARIO_UPDATE_ADD_FEE = 'updateAddFee';
 
     /**
      * order type
@@ -188,6 +189,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             ],
             self::SCENARIO_UPDATE_SELLER_REFUND => [
                 'purchase_refund_transaction_id', 'purchase_amount_refund'
+            ],
+            self::SCENARIO_UPDATE_ADD_FEE => [
+                'check_packing_wood', 'boxed_fee'
             ],
             self::SCENARIO_UPDATE_MARK_SUPPORTING => [
                 'current_status', 'mark_supporting'
@@ -787,8 +791,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             if ($params['noTracking'] == 'STOCKIN_US2DAY') {
                 for ($i = 0; $i < count($countOrder); $i++) {
                     if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Friday') {
-                        var_dump(Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l'));
-                        die();
                         $query->andFilterWhere([
                             'and',
                             ['IS NOT', 'stockin_us', new Expression('null')],

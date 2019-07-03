@@ -183,43 +183,43 @@ class OrderController extends BaseApiController
         $model = Order::findOne($id);
         //$this->can('canUpdate', $model);
         $check = $model->loadWithScenario($this->post);
-        if (isset($post['typeUpdate'])) {
-            if ($post['typeUpdate'] == 'updateFee') {
-                if (isset($post['total_inspection_fee_local'])) {
-                    $model->total_inspection_fee_local = $post['total_inspection_fee_local'];
-                }
-                if (isset($post['total_inspection_fee_local'])) {
-                    $model->total_insurance_fee_local = $post['total_insurance_fee_local'];
-                }
-                if (isset($post['total_weshop_fee_local'])) {
-                    $model->total_weshop_fee_local = $post['total_weshop_fee_local'];
-                }
-                if (isset($post['total_custom_fee_amount_local'])) {
-                    $model->total_custom_fee_amount_local = $post['total_custom_fee_amount_local'];
-                }
-                if (isset($post['additional_service'])) {
-                    $model->additional_service = $post['additional_service'];
-                }
-                if (isset($post['check_inspection'])) {
-                    $model->check_inspection = $post['check_inspection'];
-                }
-                if (isset($post['check_insurance'])) {
-                    $model->check_insurance = $post['check_insurance'];
-                }
-                if (isset($post['check_packing_wood'])) {
-                    $model->check_packing_wood = $post['check_packing_wood'];
-                }
-                if (isset($post['total_intl_shipping_fee_local'])) {
-                    $model->total_intl_shipping_fee_local = $post['total_intl_shipping_fee_local'];
-                }
-                if (isset($post['total_origin_tax_fee_local'])) {
-                    $model->total_origin_tax_fee_local = $post['total_origin_tax_fee_local'];
-                }
-                if (isset($post['boxed_fee'])) {
-                    $model->boxed_fee = $post['boxed_fee'];
-                }
-            }
-        }
+//        if (isset($post['typeUpdate'])) {
+//            if ($post['typeUpdate'] == 'updateFee') {
+//                if (isset($post['total_inspection_fee_local'])) {
+//                    $model->total_inspection_fee_local = $post['total_inspection_fee_local'];
+//                }
+//                if (isset($post['total_inspection_fee_local'])) {
+//                    $model->total_insurance_fee_local = $post['total_insurance_fee_local'];
+//                }
+//                if (isset($post['total_weshop_fee_local'])) {
+//                    $model->total_weshop_fee_local = $post['total_weshop_fee_local'];
+//                }
+//                if (isset($post['total_custom_fee_amount_local'])) {
+//                    $model->total_custom_fee_amount_local = $post['total_custom_fee_amount_local'];
+//                }
+//                if (isset($post['additional_service'])) {
+//                    $model->additional_service = $post['additional_service'];
+//                }
+//                if (isset($post['check_inspection'])) {
+//                    $model->check_inspection = $post['check_inspection'];
+//                }
+//                if (isset($post['check_insurance'])) {
+//                    $model->check_insurance = $post['check_insurance'];
+//                }
+//                if (isset($post['check_packing_wood'])) {
+//                    $model->check_packing_wood = $post['check_packing_wood'];
+//                }
+//                if (isset($post['total_intl_shipping_fee_local'])) {
+//                    $model->total_intl_shipping_fee_local = $post['total_intl_shipping_fee_local'];
+//                }
+//                if (isset($post['total_origin_tax_fee_local'])) {
+//                    $model->total_origin_tax_fee_local = $post['total_origin_tax_fee_local'];
+//                }
+//                if (isset($post['boxed_fee'])) {
+//                    $model->boxed_fee = $post['boxed_fee'];
+//                }
+//            }
+//        }
         if ($model->getScenario() == 'confirmPurchase') {
             $product_id = Yii::$app->request->post('product_id');
             $tran = Yii::$app->db->beginTransaction();
