@@ -94,7 +94,7 @@ if ($userCookie->checkAddress()) {
                role="button"
                aria-expanded="false">
                 <span class="row">
-                    <span class="col-md-3 m-0 pr-0 float-right" style="padding-left: 5px;">
+                    <span class="col-md-3 m-0 pr-0 float-right">
                         <i class="la la-user"></i>
                     </span>
                     <span class="col-md-9 m-0  pl-0">

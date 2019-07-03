@@ -13,6 +13,7 @@ class Cookies
         $cookies->add(new \yii\web\Cookie([
             'name' => $key,
             'value' => $value,
+            'expire' => 60*60*24*30*12,
         ]));
     }
     public static function mergeValue($key, $value){
@@ -21,6 +22,7 @@ class Cookies
         $cookies->add(new \yii\web\Cookie([
             'name' => $key,
             'value' => array_merge($old,$value),
+            'expire' => 60*60*24*30*12,
         ]));
     }
     public static function get($key){

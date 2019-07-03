@@ -9,16 +9,17 @@
 namespace common\products\ebay;
 
 
+use common\products\BaseGate;
+use Exception;
 use linslin\yii2\curl\Curl;
 use Yii;
-use Exception;
-use common\products\BaseGate;
 use yii\helpers\ArrayHelper;
 
 class EbayGateV4 extends BaseGate
 {
 
     public $product_url = 'product_id';
+
     /**
      * @param $params
      * @param bool $refresh
@@ -37,14 +38,17 @@ class EbayGateV4 extends BaseGate
 //        $re = $this->searchRequest($request->params());
 //        print_r($re);die;
         // ToDo Caches : Get Thanh cong moi Luu cache @Phuchc 8/6/2019
-       if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
-            list($success, $response) = $this->searchRequest($request->params());
-            if($success){
-                $this->cache->set($request->getCacheKey(), $response, $success === true ? self::MAX_CACHE_DURATION : 0);
-            }else{
-                return [false, null];
-            }
-       }
+//       if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
+        list($success, $response) = $this->searchRequest($request->params());
+        if (!$success) {
+            return [false, null];
+        }
+//            if($success){
+//                $this->cache->set($request->getCacheKey(), $response, $success === true ? self::MAX_CACHE_DURATION : 0);
+//            }else{
+//                return [false, null];
+//            }
+//       }
         return [true, (new EbaySearchResponse($this))->parser($response)];
     }
 
@@ -77,7 +81,11 @@ class EbayGateV4 extends BaseGate
         $response = $curl->get($url);
         $response = json_decode($response,true);
         if($curl->responseCode !== 200){
-            return [false, $response];
+            $response = $curl->get($url);
+            $response = json_decode($response,true);
+            if($curl->responseCode !== 200){
+                return [false, $response];
+            }
         }
         try{
             if(!isset($response['data']['sorts']) || !$response['data']['sorts']){
@@ -106,6 +114,7 @@ class EbayGateV4 extends BaseGate
             return [false, $response];
         }
     }
+
     public function updateCustomerFeedback($id,$seller){
         $url = $this->baseUrl.'/feedback?item_id='.$id.'&user_id='.$seller;
         $curl = new Curl();
@@ -116,6 +125,7 @@ class EbayGateV4 extends BaseGate
         }
         return ArrayHelper::getValue($response,'response');
     }
+
     /**
      * @param $condition
      * @param bool $refresh
@@ -128,13 +138,13 @@ class EbayGateV4 extends BaseGate
         $request = new EbayDetailRequest();
         $request->keyword = $condition;
         // ToDo Caches : Get Thanh cong moi Luu cache @Phuchc 8/6/2019
-        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
+//        if (!($response = $this->cache->get($request->getCacheKey())) || $refresh) {
             list($ok, $response) = $this->lookupRequest($request->params());
             if(!$ok){
                 return [false, "Cannot get product"];
             }
-            $this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
-        }
+//            $this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
+//        }
         $product = (new EbayDetailResponse($this))->parser($response);
         if($product->providers && count($product->providers)){
             $product->customer_feedback = $this->updateCustomerFeedback($product->item_id,$product->providers[0]->name);
@@ -166,6 +176,7 @@ class EbayGateV4 extends BaseGate
             return [false, $response];
         }
     }
+
     public static function getProductSuggest($sku){
         $url = 'http://sv3.weshop.asia/ebay/sugget?q='.$sku.'&categoryId=';
 //        print_r($url);
@@ -178,6 +189,7 @@ class EbayGateV4 extends BaseGate
         }
         return $response;
     }
+
     public static function getProductTopView(){
         $url = 'http://s1.weshop.asia/ebay/top_watched?categoryId';
 //        print_r($url);
