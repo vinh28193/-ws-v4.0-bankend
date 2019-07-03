@@ -21,7 +21,7 @@ class LandingAsset extends AssetBundle
         'css/drawer.css',
         'css/normalize.css',
         'css/daterangepicker.css',
-        'css/common.css',
+//        'css/common.css',
         'css/responsive.css',
         'css/weshop.css', //weshop css customize
         'css/home.css',
@@ -35,7 +35,10 @@ class LandingAsset extends AssetBundle
         'css/landing-pd.css',
         'css/landing.css',
         'css/popup-new.css',
-        'css/app.css', //all css website
+        'css/app.css',
+        '//weshop.v4.beta.vn/css/style.css',
+        '//weshop.v4.beta.vn/css/style-new.css',
+        '//weshop.v4.beta.vn/css/style-new1.css',
     ];
     public $js = [
         'js/owl.carousel.js',
@@ -45,7 +48,7 @@ class LandingAsset extends AssetBundle
         'js/jquery.mmenu.min.all.js',
         'js/app.js',
         'js/order.js',
-        'js/common.js',
+//        'js/common.js',
         'js/bootstrap.js',
         'js/skrollr.js',
         'js/backgroundVideo.js',
@@ -61,7 +64,9 @@ class LandingAsset extends AssetBundle
         'js/flipclock.js',
         'js/popup.js',
         'js/style-new.js',
-        'js/lazyload.js'
+        'js/lazyload.js',
+        '//weshop.v4.beta.vn/css/style.js',
+        '//weshop.v4.beta.vn/css/style-new.js',
     ];
 
     public $jsOptions = [

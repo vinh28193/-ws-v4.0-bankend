@@ -14,7 +14,7 @@ class WeshopOldAsset extends AssetBundle
 
     public $css = [
         'css/owl.carousel.css',
-        'css/common.css',
+//        'css/common.css',
         'plugins/tags-input/src/jquery.tagsinput.css'
     ];
 
