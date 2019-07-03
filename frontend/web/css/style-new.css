@@ -28,6 +28,10 @@ button#buyNowBtn {
     border-radius: 3px;
     padding: 24px 20px;
 }
+.container{
+    max-width: 90%;
+    width: 90%;
+}
 .navbar-ws,body div.wrapper div.navbar-ws div.container{
     /* Style for "Rectangle" */
     background-color: #141c2e;
