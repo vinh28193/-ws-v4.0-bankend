@@ -87,9 +87,10 @@ class AdditionalController extends BaseApiController
 
 
             $product->total_price_amount_local = $productPrice[1];
+            $product->total_price_amount_origin = $productPrice[0];
             // Tổng tiền local tất tần tận
             $product->total_final_amount_local = $additionalFees->getTotalAdditionalFees(null)[1];
-            $product->total_final_amount_origin = $additionalFees->getTotalAdditionalFees(null)[0];
+//            $product->total_final_amount_origin =  $additionalFees->getTotalAdditionalFees(null)[0];
             $product->save(false);
             $order = $product->order;
             $order->on(Order::EVENT_AFTER_UPDATE, function ($event) {

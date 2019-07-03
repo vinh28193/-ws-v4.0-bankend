@@ -44,6 +44,7 @@ class PaymentTransactionController extends BaseApiController
         foreach ($models as $model){
             $model->transaction_status = 'SUCCESS';
             $model->note = $post['note'];
+            $model->link_image = $post['link_image'];
             $model->save(false);
         }
         return $this->response(true, 'success');

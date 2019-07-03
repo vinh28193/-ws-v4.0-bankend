@@ -151,7 +151,7 @@ class CartHelper
 
         $product['total_price_amount_local'] = $productPrice[1];
         // Tổng tiền local tất tần tận
-        $product['total_final_amount_local'] = $additionalFees->getTotalAdditionalFees(null)[1];
+        list($product['total_final_amount_origin'],$product['total_final_amount_local'])  = $additionalFees->getTotalAdditionalFees(['product_price','shipping_fee','tax_fee']);
         $productFees = [];
         $product['additionalFees'] = $additionalFees->toArray();
         foreach ($additionalFees->keys() as $feeName) {
