@@ -64,8 +64,8 @@ return [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'weshopvn@boxme.vn',
-                'password' => '&nCPjR9>@WSBOX2019',
+                'username' => 'noreplyws2019@gmail.com',
+                'password' => 'uyhqwirrtdygyllp',
                 'port' =>  '587',
                 'encryption' => 'tls'
             ],
