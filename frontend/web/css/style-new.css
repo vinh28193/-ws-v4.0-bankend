@@ -20,6 +20,9 @@ html, body {
 .formIconTitle input{
     border: none;
 }
+button#buyNowBtn {
+    margin-right: 11px;
+}
 .filter-content {
     background: #fff;
     border-radius: 3px;
