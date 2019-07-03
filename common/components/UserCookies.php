@@ -29,7 +29,7 @@ use yii\base\Model;
 
 class UserCookies extends Model
 {
-    const KEY_COOKIES = '_USER_COOKIES';
+    const KEY_COOKIES = 'USER_COOKIES';
     public $uuid;
     public $name;
     public $phone;
