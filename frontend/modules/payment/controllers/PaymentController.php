@@ -386,7 +386,6 @@ class PaymentController extends BasePaymentController
                 $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
 
                 if (($order = $child->order) !== null) {
-                    $order->total_paid_amount_local = $child->transaction_amount_local;
                     if ($order->current_status == Order::STATUS_SUPPORTED) {
                         $order->current_status = Order::STATUS_READY2PURCHASE;
                     }
