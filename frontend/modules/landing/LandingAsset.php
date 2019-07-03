@@ -3,6 +3,7 @@
 
 namespace landing;
 
+use yii\helpers\Url;
 use yii\web\AssetBundle;
 use yii\web\View;
 
@@ -36,9 +37,6 @@ class LandingAsset extends AssetBundle
         'css/landing.css',
         'css/popup-new.css',
         'css/app.css',
-        '//weshop.v4.beta.vn/css/style.css',
-        '//weshop.v4.beta.vn/css/style-new.css',
-        '//weshop.v4.beta.vn/css/style-new1.css',
     ];
     public $js = [
         'js/owl.carousel.js',
@@ -65,8 +63,6 @@ class LandingAsset extends AssetBundle
         'js/popup.js',
         'js/style-new.js',
         'js/lazyload.js',
-        '//weshop.v4.beta.vn/css/style.js',
-        '//weshop.v4.beta.vn/css/style-new.js',
     ];
 
     public $jsOptions = [
@@ -75,5 +71,6 @@ class LandingAsset extends AssetBundle
 
     public $depends = [
         'landing\AppOldAsset',
+        'frontend\assets\FrontendAsset'
     ];
 }

@@ -45,6 +45,6 @@ class PaymentTransaction extends DbPaymentTransaction
      */
     public function getOrder()
     {
-        return $this->hasOne(Order::className(), ['ordercode' => 'order_code']);
+        return $this->hasMany(Order::className(), ['ordercode' => 'order_code']);
     }
 }

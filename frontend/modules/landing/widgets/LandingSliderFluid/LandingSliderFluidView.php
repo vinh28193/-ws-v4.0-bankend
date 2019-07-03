@@ -1,4 +1,12 @@
 <?php
+/**
+ * @var $this \yii\web\View
+ * @var $categories array
+ * @var $images \common\models\cms\WsImage[]
+ */
+
+use frontend\widgets\cms\SlideWidget;
+
 
 ?>
 <div class="main-tabs text-right">
@@ -16,18 +24,25 @@
 </div>
 
 
-<div id="ld-deal-slider" class="owl-carousel owl-theme ld-deal-slider">
-    <?php if (isset($images)) {
-        foreach ($images as $key => $value) { ?>
-            <div class="item">
-                <a href="<?=$value['link'];?>" class="image">
-                    <img src="<?= $value['domain'] . $value['origin_src'] ?>" alt=""
-                         title="">
-                </a>
-            </div>
-        <?php }
-    } ?>
+<?php
 
-</div>
+echo SlideWidget::widget([
+    'list_images' => $images,
+    'options' => [
+        'id' => 'home-slide'
+    ],
+    'owlCarouselOptions' => [
+        'slideSpeed' => 300,
+        'paginationSpeed' => 400,
+        'loop' => !0,
+        'items' => 1,
+        'itemsDesktop' => !1,
+        'itemsDesktopSmall' => !1,
+        'itemsTablet' => !1,
+        'itemsMobile' => !1,
+        'autoplay' => 1e3
+    ]
+]);
+?>
 
 
