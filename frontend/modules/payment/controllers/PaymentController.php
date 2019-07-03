@@ -179,6 +179,10 @@ class PaymentController extends BasePaymentController
                 $order->seller_name = $seller->seller_name;
                 $order->seller_store = $seller->seller_link_store;
 
+                $order->payment_provider = $payment->payment_provider_name;
+                $order->payment_method = $payment->payment_method_name;
+                $order->payment_bank = $payment->payment_bank_code;
+
                 if (!$order->save(false)) {
                     $transaction->rollBack();
                     return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
@@ -282,8 +286,6 @@ class PaymentController extends BasePaymentController
             $childTransaction->transaction_amount_local = $order->total_final_amount_local;
             $childTransaction->total_discount_amount = $order->total_promotion_amount_local;
             $childTransaction->before_discount_amount_local = $childTransaction->transaction_amount_local - $order->total_promotion_amount_local;
-            $childTransaction->parent_transaction_code = $paymentTransaction->transaction_code;
-            $childTransaction->transaction_code = PaymentService::generateTransactionCode('PM');
             $childTransaction->order_code = $order->ordercode;
             $childTransaction->courier_name = $order->courier_name;
             $childTransaction->service_code = $order->courier_service;

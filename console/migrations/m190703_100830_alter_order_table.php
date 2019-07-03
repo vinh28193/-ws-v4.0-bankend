@@ -12,7 +12,10 @@ class m190703_100830_alter_order_table extends Migration
      */
     public function safeUp()
     {
-
+        $this->addColumn('order', 'payment_provider', $this->string(255)->null());
+        $this->addColumn('order', 'payment_method', $this->string(255)->null());
+        $this->addColumn('order', 'payment_bank', $this->string(255)->null());
+        $this->addColumn('order', 'payment_transaction_code', $this->string(32)->null());
     }
 
     /**
@@ -20,9 +23,10 @@ class m190703_100830_alter_order_table extends Migration
      */
     public function safeDown()
     {
-        echo "m190703_100830_alter_order_table cannot be reverted.\n";
-
-        return false;
+        $this->dropColumn('order', 'payment_provider');
+        $this->dropColumn('order', 'payment_method');
+        $this->dropColumn('order', 'payment_bank');
+        $this->dropColumn('order', 'payment_transaction_code');
     }
 
     /*
