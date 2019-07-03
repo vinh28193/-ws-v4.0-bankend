@@ -123,17 +123,16 @@ class PageForm extends Model
      */
     public function initBlock($page, $limit = self::PAGE_ITEM_LIMIT, $offset = 1)
     {
-
         $items = [];
+        /** @var $pageItems WsPageItem[] */
         if ((count($pageItems = PageService::getPageitem($page->id, $limit, $offset))) > 0) {
             foreach ($pageItems as $key => $item) {
-                /** @var $item WsPageItem */
+                /** @var $block WsBlock  */
                 if (($block = PageService::getBlockByPageItem($item->id)) === null) {
                     continue;
                 }
                 $data = [];
                 $data['block'] = ArrayHelper::toArray($block);
-                /** @var $item WsBlock */
                 if ($groupCategory = PageService::getGroupCategoryByBlockId($block->id)) {
 //                $data['groupCategory'] = ArrayHelper::toArray($groupCategory);
                     $data['categories'] = ArrayHelper::toArray(PageService::getCategoryByGroupId($groupCategory->id));

@@ -38,7 +38,8 @@ use frontend\widgets\cms\WeshopBlockWidget;
                 </div>
                 <?php
             }
-            if ($block['block']['type'] == WeshopBlockWidget::LANDING_SLIDE_FLUID) { ?>
+            if ($block['block']['type'] == WeshopBlockWidget::LANDING_SLIDE_FLUID) {
+                ?>
                 <?= LandingSliderFluidWidget::widget(['block' => $block]) ?>
             <?php }
 

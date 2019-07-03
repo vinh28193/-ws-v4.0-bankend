@@ -10,7 +10,7 @@ $(window).on('load', function () {
     $('#Selangkah').modal('show');
 }), $(document).ready(function () {
 
-    if ($('img').attr('alt') != '' || $('img').attr('alt') != NULL) {
+    if ($('img').attr('alt')) {
     } else {
         $('img').attr('alt', '');
     }

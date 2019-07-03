@@ -11,6 +11,8 @@ class SlideWidget extends WeshopBlockWidget
 
     public $page;
 
+    public $list_images;
+
     public $owlCarouselOptions = [];
 
     /**
@@ -43,6 +45,9 @@ class SlideWidget extends WeshopBlockWidget
 
     public function getImages()
     {
+        if($this->list_images){
+            return $this->list_images;
+        }
         if (empty($this->_images)) {
             $this->_images = PageService::getSlider($this->page->id);
         }
