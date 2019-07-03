@@ -32,8 +32,8 @@ class LandingAsset extends AssetBundle
         'css/flipclock.css',
         'css/landing-mkt.css',
         'css/landing-top-store.css',
-        'css/langding-pd.css',
-        'css/langding.css',
+        'css/landing-pd.css',
+        'css/landing.css',
         'css/popup-new.css',
         'css/app.css', //all css website
     ];

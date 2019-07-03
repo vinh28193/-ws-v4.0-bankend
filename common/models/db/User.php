@@ -97,7 +97,9 @@ class User extends \common\components\db\ActiveRecord
             [['facebook_acc_kit_id'], 'string', 'max' => 50],
             [['facebook_acc_kit_token'], 'string', 'max' => 255],
             [['username'], 'unique'],
-            [['email'], 'unique'],
+            [['email'], 'unique', 'when' => function($model){
+            return $model->employee != 1 && $model->employee != 2;
+            }],
             [['password_reset_token'], 'unique'],
         ];
     }

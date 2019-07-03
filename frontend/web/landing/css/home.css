@@ -77,15 +77,15 @@
 }
 
 .choose-shop .choose-flag.us {
-    background: url(/img/base.png) no-repeat -1382px -137px
+    background: url(/images/base.png) no-repeat -1382px -137px
 }
 
 .choose-shop .choose-flag.cn {
-    background: url(/img/base.png) no-repeat -1435px -137px
+    background: url(/images/base.png) no-repeat -1435px -137px
 }
 
 .choose-shop .choose-flag.kor {
-    background: url(/img/base.png) no-repeat -1488px -137px
+    background: url(/images/base.png) no-repeat -1488px -137px
 }
 
 .choose-shop .nav-tabs > li > a > i {
@@ -935,7 +935,7 @@
     -o-transition: all .3s;
     -webkit-transition: all .3s;
     z-index: 90;
-    background: url(/img/base.png) no-repeat -1439px -71px;
+    background: url(/images/base.png) no-repeat -1439px -71px;
     background-size: 2000px;
     cursor: pointer
 }
@@ -994,7 +994,7 @@ video {
     left: calc((100% - 20px) / 2);
     z-index: 99;
     cursor: pointer;
-    background: url(/img/base.png) no-repeat -438px -124px;
+    background: url(/images/base.png) no-repeat -438px -124px;
     background-size: 1500px
 }
 
@@ -1156,27 +1156,27 @@ video {
 }
 
 .help-tab-content .help-buy .step ul li.icon .img .shop-icon.step-1 {
-    background: url(/img/base.png) no-repeat -21px -21px
+    background: url(/images/base.png) no-repeat -21px -21px
 }
 
 .help-tab-content .help-ship .step ul li.icon .img .ship-icon.step-1 {
-    background: url(/img/base.png) no-repeat -1839px -113px
+    background: url(/images/base.png) no-repeat -1839px -113px
 }
 
 .help-tab-content .help-buy .step ul li.icon .img .shop-icon.step-2 {
-    background: url(/img/base.png) no-repeat -150px -14px
+    background: url(/images/base.png) no-repeat -150px -14px
 }
 
 .help-tab-content .help-ship .step ul li.icon .img .ship-icon.step-2 {
-    background: url(/img/base.png) no-repeat -1913px -114px
+    background: url(/images/base.png) no-repeat -1913px -114px
 }
 
 .help-tab-content .help-ship .step ul li.icon .img .ship-icon.step-3, .help-tab-content .help-buy .step ul li.icon .img .shop-icon.step-3 {
-    background: url(/img/base.png) no-repeat -272px -15px
+    background: url(/images/base.png) no-repeat -272px -15px
 }
 
 .help-tab-content .help-ship .step ul li.icon .img .ship-icon.step-4, .help-tab-content .help-buy .step ul li.icon .img .shop-icon.step-4 {
-    background: url(/img/base.png) no-repeat -398px -15px
+    background: url(/images/base.png) no-repeat -398px -15px
 }
 
 .help-tab-content .help-ship .step ul li.icon .img img, .help-tab-content .help-buy .step ul li.icon .img img {
@@ -1246,27 +1246,27 @@ video {
 }
 
 .buyforme-content .step ul li.icon .img .shop-icon.step-1 {
-    background: url(/img/base.png) no-repeat -21px -21px
+    background: url(/images/base.png) no-repeat -21px -21px
 }
 
 .shipforme-content .step ul li.icon .img .ship-icon.step-1 {
-    background: url(/img/base.png) no-repeat -1839px -113px
+    background: url(/images/base.png) no-repeat -1839px -113px
 }
 
 .buyforme-content .step ul li.icon .img .shop-icon.step-2 {
-    background: url(/img/base.png) no-repeat -150px -14px
+    background: url(/images/base.png) no-repeat -150px -14px
 }
 
 .shipforme-content .step ul li.icon .img .ship-icon.step-2 {
-    background: url(/img/base.png) no-repeat -1913px -114px
+    background: url(/images/base.png) no-repeat -1913px -114px
 }
 
 .buyforme-content .step ul li.icon .img .shop-icon.step-3, .shipforme-content .step ul li.icon .img .ship-icon.step-3 {
-    background: url(/img/base.png) no-repeat -272px -15px
+    background: url(/images/base.png) no-repeat -272px -15px
 }
 
 .buyforme-content .step ul li.icon .img .shop-icon.step-4, .shipforme-content .step ul li.icon .img .ship-icon.step-4 {
-    background: url(/img/base.png) no-repeat -398px -15px
+    background: url(/images/base.png) no-repeat -398px -15px
 }
 
 .buyforme-content .step ul li.icon .text-step, .shipforme-content .step ul li.icon .text-step {
@@ -1608,37 +1608,37 @@ video {
 }
 
 .icon-nav.icon-user {
-    background: url(/img/base.png) no-repeat -574px 0;
+    background: url(/images/base.png) no-repeat -574px 0;
     background-size: 700px
 }
 
 .icon-nav.icon-mail {
-    background: url(/img/base.png) no-repeat -407px 2px;
+    background: url(/images/base.png) no-repeat -407px 2px;
     background-size: 700px
 }
 
 .icon-nav.icon-noti {
-    background: url(/img/base.png) no-repeat -554px 0;
+    background: url(/images/base.png) no-repeat -554px 0;
     background-size: 700px
 }
 
 .icon-nav.icon-question {
-    background: url(/img/base.png) no-repeat -514px 0;
+    background: url(/images/base.png) no-repeat -514px 0;
     background-size: 700px
 }
 
 .icon-nav.icon-cart {
-    background: url(/img/base.png) no-repeat -294px 0;
+    background: url(/images/base.png) no-repeat -294px 0;
     background-size: 700px
 }
 
 .icon-nav.icon-wallet {
-    background: url(/img/base.png) no-repeat -613px 0;
+    background: url(/images/base.png) no-repeat -613px 0;
     background-size: 700px
 }
 
 .icon-nav.icon-gear {
-    background: url(/img/base.png) no-repeat -388px 0;
+    background: url(/images/base.png) no-repeat -388px 0;
     background-size: 700px
 }
 
@@ -1649,22 +1649,22 @@ video {
 }
 
 .ico.ico-fullname {
-    background: url(/img/base.png) no-repeat -464px 0;
+    background: url(/images/base.png) no-repeat -464px 0;
     background-size: 700px
 }
 
 .ico.ico-mobile {
-    background: url(/img/base.png) no-repeat -478px 0;
+    background: url(/images/base.png) no-repeat -478px 0;
     background-size: 700px
 }
 
 .ico.ico-email {
-    background: url(/img/base.png) no-repeat -427px 2px;
+    background: url(/images/base.png) no-repeat -427px 2px;
     background-size: 700px
 }
 
 .ico.ico-address {
-    background: url(/img/base.png) no-repeat -685px 0;
+    background: url(/images/base.png) no-repeat -685px 0;
     background-size: 700px
 }
 
@@ -1673,27 +1673,27 @@ video {
 }
 
 .navbar-default .navbar-nav > li.mail-box:hover > a .icon-nav.icon-mail, .navbar-default .navbar-nav > li.mail-box.open > a .icon-nav.icon-mail {
-    background: url(/img/base.png) no-repeat -447px 2px;
+    background: url(/images/base.png) no-repeat -447px 2px;
     background-size: 700px
 }
 
 .navbar-default .navbar-nav > li.user-box:hover > a .icon-nav.icon-user, .navbar-default .navbar-nav > li.user-box.open > a .icon-nav.icon-user {
-    background: url(/img/base.png) no-repeat -594px 0;
+    background: url(/images/base.png) no-repeat -594px 0;
     background-size: 700px
 }
 
 .navbar-default .navbar-nav > li.noti-box:hover > a .icon-nav.icon-noti, .navbar-default .navbar-nav > li.noti-box.open > a .icon-nav.icon-noti {
-    background: url(/img/base.png) no-repeat -534px 0;
+    background: url(/images/base.png) no-repeat -534px 0;
     background-size: 700px
 }
 
 .navbar-default .navbar-nav > li.question-box:hover > a .icon-nav.icon-question, .navbar-default .navbar-nav > li.question-box.open > a .icon-nav.icon-question {
-    background: url(/img/base.png) no-repeat -494px 0;
+    background: url(/images/base.png) no-repeat -494px 0;
     background-size: 700px
 }
 
 .navbar-default .navbar-nav > li.cart-box:hover > a .icon-nav.icon-cart, .navbar-default .navbar-nav > li.cart-box.open > a .icon-nav.icon-cart {
-    background: url(/img/base.png) no-repeat -276px 0;
+    background: url(/images/base.png) no-repeat -276px 0;
     background-size: 700px
 }
 
@@ -2701,7 +2701,7 @@ video {
     vertical-align: middle;
     width: 25px;
     height: 25px;
-    background: url(/img/base.png) no-repeat -491px 2px;
+    background: url(/images/base.png) no-repeat -491px 2px;
     background-size: 1100px
 }
 
@@ -2761,7 +2761,7 @@ video {
     width: 20px;
     height: 10px;
     content: "";
-    background: url(/img/icons/dropdown-arrow.png) no-repeat;
+    background: url(/images/icons/dropdown-arrow.png) no-repeat;
     background-size: contain;
     position: absolute;
     top: -7px;
@@ -2904,7 +2904,7 @@ video {
     width: 20px;
     height: 10px;
     content: "";
-    background: url(/img/icons/dropdown-arrow.png) no-repeat;
+    background: url(/images/icons/dropdown-arrow.png) no-repeat;
     background-size: contain;
     position: absolute;
     top: -7px;
@@ -2947,7 +2947,7 @@ video {
     -webkit-transition: all .3s;
     top: 45%;
     z-index: 9;
-    background: url(/img/base.png) no-repeat -710px -88px;
+    background: url(/images/base.png) no-repeat -710px -88px;
     background-size: 1500px
 }
 
@@ -3076,7 +3076,7 @@ video {
     -webkit-transition: all .3s;
     top: 45%;
     z-index: 9;
-    background: url(/img/base.png) no-repeat -1101px -136px
+    background: url(/images/base.png) no-repeat -1101px -136px
 }
 
 .deal-slider-prev {
@@ -3307,7 +3307,7 @@ video {
     width: 20px;
     height: 10px;
     content: "";
-    background: transparent url(/img/icons/dropdown-arrow2.png) no-repeat scroll 0 0 / contain;
+    background: transparent url(/images/icons/dropdown-arrow2.png) no-repeat scroll 0 0 / contain;
     position: absolute;
     top: -7px;
     left: 45%
@@ -3731,7 +3731,7 @@ video {
     vertical-align: middle;
     width: 25px;
     height: 25px;
-    background: url(/img/base.png) no-repeat -522px 3px;
+    background: url(/images/base.png) no-repeat -522px 3px;
     background-size: 1100px
 }
 
@@ -4050,7 +4050,7 @@ video {
     display: block;
     width: 20px;
     height: 20px;
-    background: url(/img/base.png) no-repeat -567px -70px;
+    background: url(/images/base.png) no-repeat -567px -70px;
     background-size: 1200px
 }
 
@@ -4159,7 +4159,7 @@ video {
     display: block;
     width: 20px;
     height: 20px;
-    background: url(/img/base.png) no-repeat -567px -70px;
+    background: url(/images/base.png) no-repeat -567px -70px;
     background-size: 1200px
 }
 
@@ -4340,27 +4340,27 @@ video {
 }
 
 .dhg-featured-cate ul li a .featured-icon.fashion {
-    background: url(/img/base.png) no-repeat -687px 8px;
+    background: url(/images/base.png) no-repeat -687px 8px;
     width: 82px
 }
 
 .dhg-featured-cate ul li a .featured-icon.phone {
-    background: url(/img/base.png) no-repeat -855px 2px;
+    background: url(/images/base.png) no-repeat -855px 2px;
     width: 62px
 }
 
 .dhg-featured-cate ul li a .featured-icon.pc {
-    background: url(/img/base.png) no-repeat -600px 12px;
+    background: url(/images/base.png) no-repeat -600px 12px;
     width: 82px
 }
 
 .dhg-featured-cate ul li a .featured-icon.furniture {
-    background: url(/img/base.png) no-repeat -773px 19px;
+    background: url(/images/base.png) no-repeat -773px 19px;
     width: 82px
 }
 
 .dhg-featured-cate ul li a .featured-icon.baby {
-    background: url(/img/base.png) no-repeat -513px 3px;
+    background: url(/images/base.png) no-repeat -513px 3px;
     width: 82px
 }
 
@@ -4675,31 +4675,31 @@ video {
     }
 
     .dhg-featured-cate ul li a .featured-icon.baby {
-        background: url(/img/base.png) no-repeat -396px 1px;
+        background: url(/images/base.png) no-repeat -396px 1px;
         width: 62px;
         background-size: 1800px
     }
 
     .dhg-featured-cate ul li a .featured-icon.furniture {
-        background: url(/img/base.png) no-repeat -597px 14px;
+        background: url(/images/base.png) no-repeat -597px 14px;
         width: 62px;
         background-size: 1800px
     }
 
     .dhg-featured-cate ul li a .featured-icon.pc {
-        background: url(/img/base.png) no-repeat -463px 8px;
+        background: url(/images/base.png) no-repeat -463px 8px;
         width: 62px;
         background-size: 1800px
     }
 
     .dhg-featured-cate ul li a .featured-icon.phone {
-        background: url(/img/base.png) no-repeat -659px 0;
+        background: url(/images/base.png) no-repeat -659px 0;
         width: 50px;
         background-size: 1800px
     }
 
     .dhg-featured-cate ul li a .featured-icon.fashion {
-        background: url(/img/base.png) no-repeat -530px 4px;
+        background: url(/images/base.png) no-repeat -530px 4px;
         width: 62px;
         background-size: 1800px
     }
@@ -4779,31 +4779,31 @@ video {
     }
 
     .dhg-featured-cate ul li a .featured-icon.baby {
-        background: url(/img/base.png) no-repeat -241px 1px;
+        background: url(/images/base.png) no-repeat -241px 1px;
         width: 39px;
         background-size: 1100px
     }
 
     .dhg-featured-cate ul li a .featured-icon.furniture {
-        background: url(/img/base.png) no-repeat -364px 10px;
+        background: url(/images/base.png) no-repeat -364px 10px;
         width: 39px;
         background-size: 1100px
     }
 
     .dhg-featured-cate ul li a .featured-icon.pc {
-        background: url(/img/base.png) no-repeat -282px 6px;
+        background: url(/images/base.png) no-repeat -282px 6px;
         width: 39px;
         background-size: 1100px
     }
 
     .dhg-featured-cate ul li a .featured-icon.phone {
-        background: url(/img/base.png) no-repeat -404px 1px;
+        background: url(/images/base.png) no-repeat -404px 1px;
         width: 27px;
         background-size: 1100px
     }
 
     .dhg-featured-cate ul li a .featured-icon.fashion {
-        background: url(/img/base.png) no-repeat -324px 4px;
+        background: url(/images/base.png) no-repeat -324px 4px;
         width: 39px;
         background-size: 1100px
     }
@@ -5107,7 +5107,7 @@ video {
     vertical-align: middle;
     width: 25px;
     height: 25px;
-    background: url(/img/base.png) no-repeat -522px 3px;
+    background: url(/images/base.png) no-repeat -522px 3px;
     background-size: 1100px
 }
 
@@ -5339,7 +5339,7 @@ video {
     width: 35px;
     height: 35px;
     display: block;
-    background: url(/img/base.png) no-repeat -811px -101px;
+    background: url(/images/base.png) no-repeat -811px -101px;
     background-size: 1800px;
     margin: auto
 }
@@ -5727,7 +5727,7 @@ video {
     display: block;
     width: 106px;
     height: 94px;
-    background: url(/img/base.png) no-repeat -2148px -84px;
+    background: url(/images/base.png) no-repeat -2148px -84px;
     position: absolute;
     top: -5px;
     left: -5px
@@ -7061,7 +7061,7 @@ video {
     display: block;
     width: 36px;
     height: 12px;
-    background: url(/img/icons/dropdown-arrow2.png) no-repeat;
+    background: url(/images/icons/dropdown-arrow2.png) no-repeat;
     background-size: contain;
     position: absolute;
     top: -12px;
@@ -7457,7 +7457,7 @@ video {
     position: absolute;
     top: 16px;
     right: 15px;
-    background: url(/img/base.png) no-repeat -844px -49px;
+    background: url(/images/base.png) no-repeat -844px -49px;
     background-size: 1500px
 }
 
@@ -7480,7 +7480,7 @@ video {
     position: absolute;
     top: 16px;
     right: 15px;
-    background: url(/img/base.png) no-repeat -1136px -48px;
+    background: url(/images/base.png) no-repeat -1136px -48px;
     background-size: 1400px
 }
 
@@ -7498,12 +7498,12 @@ i.dot {
 }
 
 .dot-unactive {
-    background: url(/img/base.png) no-repeat -759px -101px;
+    background: url(/images/base.png) no-repeat -759px -101px;
     background-size: 2800px
 }
 
 .dot-active {
-    background: url(/img/base.png) no-repeat -788px -101px;
+    background: url(/images/base.png) no-repeat -788px -101px;
     background-size: 2800px
 }
 
@@ -7581,7 +7581,7 @@ i.dot {
     border: none;
     width: 33px;
     height: 23px;
-    background: url(/img/check-bg.png) no-repeat;
+    background: url(/images/check-bg.png) no-repeat;
     background-size: contain
 }
 
@@ -7602,12 +7602,12 @@ i.dot {
 }
 
 .payment-box .credit-card .pay-method .card.visa {
-    background: url(/img/base.png) no-repeat -1314px -75px;
+    background: url(/images/base.png) no-repeat -1314px -75px;
     width: 60px
 }
 
 .payment-box .credit-card .pay-method .card.master {
-    background: url(/img/base.png) no-repeat -1373px -75px;
+    background: url(/images/base.png) no-repeat -1373px -75px;
     width: 35px
 }
 
@@ -7834,7 +7834,7 @@ i.dot {
     color: #fff;
     font-size: 12px;
     display: none;
-    background: url(/img/check-bg.png) no-repeat;
+    background: url(/images/check-bg.png) no-repeat;
     background-size: contain;
     width: 30px;
     height: 20px
@@ -8273,7 +8273,7 @@ i.flag img {
     .ebay-dailydeal .slider-box .item .thumb .sale-tag {
         width: 70px;
         height: 61px;
-        background: url(/img/base.png) no-repeat -1380px -53px;
+        background: url(/images/base.png) no-repeat -1380px -53px;
         background-size: 1500px
     }
 
@@ -8731,66 +8731,66 @@ i.flag img {
     width : 100%;
 }
 [class*='ebay-branch-logo']{
-   transition: all .5s ease;
+    transition: all .5s ease;
 }
 /*CSS for optimize*/
-/*background: url(/assets/b2f3c852/css//img/base/base-new.png) no-repeat 0 -869px;*/
+/*background: url(/assets/b2f3c852/css//images/base/base-new.png) no-repeat 0 -869px;*/
 .ebay-branch-logo-1{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -80px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -80px -5px;
 }
 .ebay-branch-logo-2{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -178px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -178px -5px;
 }
 .ebay-branch-logo-3{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -277px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -277px -5px;
 }
 .ebay-branch-logo-4{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -375px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -375px -5px;
 }
 .ebay-branch-logo-5{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -475px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -475px -5px;
 }
 .ebay-branch-logo-6{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -575px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -575px -5px;
 }
 .ebay-branch-logo-7{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -675px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -675px -5px;
 }
 .ebay-branch-logo-8{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -770px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -770px -5px;
 }
 
 .ebay-branch-logo-1:hover,
 .ebay-branch-logo-1:focus{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -95px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -95px -5px;
 }
 .ebay-branch-logo-2:hover,
 .ebay-branch-logo-2:focus{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -193px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -193px -5px;
 }
 .ebay-branch-logo-3:hover,
 .ebay-branch-logo-3:focus{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -292px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -292px -5px;
 }
 .ebay-branch-logo-4:hover,
 .ebay-branch-logo-4:focus{
-    background: url(/img/ebay/group-icon-new.png)  no-repeat -390px -5px;
+    background: url(/images/ebay/group-icon-new.png)  no-repeat -390px -5px;
 }
 .ebay-branch-logo-5:hover,
 .ebay-branch-logo-5:focus{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -490px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -490px -5px;
 }
 .ebay-branch-logo-6:hover,
 .ebay-branch-logo-6:focus{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -590px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -590px -5px;
 }
 .ebay-branch-logo-7:hover,
 .ebay-branch-logo-7:focus{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -690px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -690px -5px;
 }
 .ebay-branch-logo-8:hover,
 .ebay-branch-logo-8:focus{
-    background: url(/img/ebay/group-icon-new.png) no-repeat -785px -5px;
+    background: url(/images/ebay/group-icon-new.png) no-repeat -785px -5px;
 }
 /*New css for indo*/
 .deal-shock-mb .ws-indo-hotdeal li{
@@ -8820,8 +8820,8 @@ i.flag img {
 }
 @media (max-width: 414px){
     .deal-shock-mb .ws-indo-hotdeal .item .thumb img{
-    max-width: 205px;
-    max-height: 318px;
+        max-width: 205px;
+        max-height: 318px;
     }
 }
 @media (max-width: 480px) {

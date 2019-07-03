@@ -18,6 +18,7 @@ use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\helpers\StringHelper;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use common\helpers\WeshopHelper;
 
@@ -70,8 +71,17 @@ class StoreManager extends Component implements BootstrapInterface
      */
     public function bootstrap($app)
     {
+        $url_arr = explode('/',$app->request->url);
         $app->getView();
-        WeshopAsset::register($app->view);
+        if($url_arr && count($url_arr) > 1){
+            if($url_arr[0] && strpos('-'.$url_arr[0], 'landing')){}
+            elseif ($url_arr[1] && strpos('-'.$url_arr[1], 'landing')){}
+            else{
+                WeshopAsset::register($app->view);
+            }
+        }else{
+            WeshopAsset::register($app->view);
+        }
         $options = Json::htmlEncode($this->getClientOptions());
         $app->view->registerJs("ws.init($options);");
         $messages = Json::htmlEncode($this->getClientMessages());

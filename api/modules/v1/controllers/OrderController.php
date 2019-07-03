@@ -333,8 +333,11 @@ class OrderController extends BaseApiController
         $dirtyAttributes = $model->getDirtyAttributes();
         $action = Inflector::camel2words($model->getScenario());
         Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());
-
-        $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        if ($model->getScenario() == 'editAdjustPayment') {
+            $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}, update Payment Transaction: `Transaction Status` changed from `CREATE` to `SUCCESS`";
+        } else {
+            $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        }
         $model->validate();
         if (!$model->save(false)) {
             Yii::$app->wsLog->push('order', $model->getScenario(), null, [

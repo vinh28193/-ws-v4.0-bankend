@@ -166,12 +166,12 @@ a {
 }
 
 .top-nav .navbar-default .navbar-nav > li > a.choose-lang .lang.vn {
-    background: url(/img/base/base.png) no-repeat -986px -123px;
+    background: url(/images/base/base.png) no-repeat -986px -123px;
     background-size: 1500px
 }
 
 .top-nav .navbar-default .navbar-nav > li > a.choose-lang .lang.us {
-    background: url(/img/base/base.png) no-repeat -958px -123px;
+    background: url(/images/base/base.png) no-repeat -958px -123px;
     background-size: 1500px
 }
 
@@ -351,7 +351,7 @@ a {
     vertical-align: middle;
     width: 25px;
     height: 25px;
-    background: url(/img/base/base.png) no-repeat -522px 2px;
+    background: url(/images/base/base.png) no-repeat -522px 2px;
     background-size: 1100px
 }
 
@@ -392,7 +392,7 @@ header .navbar-nav > li > .dropdown-menu {
     display: block;
     width: 36px;
     height: 12px;
-    background: url(/img/icons/dropdown-arrow2.png) no-repeat;
+    background: url(/images/icons/dropdown-arrow2.png) no-repeat;
     background-size: contain;
     position: absolute;
     top: -12px;
@@ -403,7 +403,7 @@ header .navbar-nav > li > .dropdown-menu {
     display: block;
     width: 36px;
     height: 12px;
-    background: url(/img/icons/dropdown-arrow2.png) no-repeat;
+    background: url(/images/icons/dropdown-arrow2.png) no-repeat;
     background-size: contain;
     position: absolute;
     top: -12px
@@ -466,32 +466,32 @@ header .navbar-nav > li > .dropdown-menu {
 }
 
 .national a .flag.vn {
-    background: url(/img/base/base.png) no-repeat -986px -123px;
+    background: url(/images/base/base.png) no-repeat -986px -123px;
     background-size: 1500px
 }
 
 .national a .flag.us {
-    background: url(/img/base/base.png) no-repeat -958px -123px;
+    background: url(/images/base/base.png) no-repeat -958px -123px;
     background-size: 1500px
 }
 
 .national a .flag.indo {
-    background: url(/img/base/base.png) no-repeat -844px -123px;
+    background: url(/images/base/base.png) no-repeat -844px -123px;
     background-size: 1500px
 }
 
 .national a .flag.malay {
-    background: url(/img/base/base.png) no-repeat -873px -123px;
+    background: url(/images/base/base.png) no-repeat -873px -123px;
     background-size: 1500px
 }
 
 .national a .flag.sing {
-    background: url(/img/base/base.png) no-repeat -901px -123px;
+    background: url(/images/base/base.png) no-repeat -901px -123px;
     background-size: 1500px
 }
 
 .national a .flag.thai {
-    background: url(/img/base/base.png) no-repeat -929px -123px;
+    background: url(/images/base/base.png) no-repeat -929px -123px;
     background-size: 1500px
 }
 
@@ -544,7 +544,7 @@ header .navbar-nav > li > .dropdown-menu {
     width: 22px;
     height: 22px;
     display: block;
-    background: url(/img/base/base.png) no-repeat -317px -57px;
+    background: url(/images/base/base.png) no-repeat -317px -57px;
     background-size: 1000px
 }
 
@@ -621,17 +621,17 @@ header .navbar-nav > li > .dropdown-menu {
 }
 
 .footer-info .payment li .item.visa {
-    background: url(/img/base/base.png) no-repeat -1315px -73px;
+    background: url(/images/base/base.png) no-repeat -1315px -73px;
     width: 60px
 }
 
 .footer-info .payment li .item.master {
-    background: url(/img/base/base.png) no-repeat -2015px -75px;
+    background: url(/images/base/base.png) no-repeat -2015px -75px;
     width: 40px
 }
 
 .footer-info .payment li .item.paypal {
-    background: url(/img/base/base.png) no-repeat -1215px -42px;
+    background: url(/images/base/base.png) no-repeat -1215px -42px;
     width: 70px;
     background-size: 1500px
 }
@@ -714,12 +714,12 @@ header .navbar-nav > li > .dropdown-menu {
 }
 
 .change-lang .dropdown-menu > li > a > .lang.vn {
-    background: url(/img/base/base.png) no-repeat -986px -123px;
+    background: url(/images/base/base.png) no-repeat -986px -123px;
     background-size: 1500px
 }
 
 .change-lang .dropdown-menu > li > a > .lang.us {
-    background: url(/img/base/base.png) no-repeat -958px -123px;
+    background: url(/images/base/base.png) no-repeat -958px -123px;
     background-size: 1500px
 }
 
@@ -817,7 +817,7 @@ header .navbar-nav > li > .dropdown-menu {
     display: block !important;
     width: 32px;
     height: 32px;
-    background: url(/img/base/base-new.png) no-repeat 0 -598px;
+    background: url(/images/base/base-new.png) no-repeat 0 -598px;
     position: absolute;
     top: 110px;
     left: -45px
@@ -827,7 +827,7 @@ header .navbar-nav > li > .dropdown-menu {
     display: block !important;
     width: 32px;
     height: 32px;
-    background: url(/img/base/base-new.png) no-repeat 0 -598px;
+    background: url(/images/base/base-new.png) no-repeat 0 -598px;
     position: absolute;
     top: 120px;
     right: -45px;
@@ -897,27 +897,27 @@ footer .top .item-box .nation li .flag-ico {
 }
 
 footer .top .item-box .nation li .flag-ico.vn {
-    background: url(/img/base/base-new.png) no-repeat 0 -869px
+    background: url(/images/base/base-new.png) no-repeat 0 -869px
 }
 
 footer .top .item-box .nation li .flag-ico.us {
-    background: url(/img/base/base-new.png) no-repeat -60px -869px
+    background: url(/images/base/base-new.png) no-repeat -60px -869px
 }
 
 footer .top .item-box .nation li .flag-ico.indo {
-    background: url(/img/base/base-new.png) no-repeat -120px -869px
+    background: url(/images/base/base-new.png) no-repeat -120px -869px
 }
 
 footer .top .item-box .nation li .flag-ico.malay {
-    background: url(/img/base/base-new.png) no-repeat -181px -869px
+    background: url(/images/base/base-new.png) no-repeat -181px -869px
 }
 
 footer .top .item-box .nation li .flag-ico.sing {
-    background: url(/img/base/base-new.png) no-repeat -239px -869px
+    background: url(/images/base/base-new.png) no-repeat -239px -869px
 }
 
 footer .top .item-box .nation li .flag-ico.ph {
-    background: url(/img/base/base-new.png) no-repeat -381px -869px;
+    background: url(/images/base/base-new.png) no-repeat -381px -869px;
     width: 54px
 }
 
@@ -941,87 +941,87 @@ footer .top .item-box .accept-payment li .payment-ico {
 }
 
 footer .top .item-box .accept-payment li .payment-ico.visa {
-    background: url(/img/base/base-new.png) no-repeat 0 -918px
+    background: url(/images/base/base-new.png) no-repeat 0 -918px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.master {
-    background: url(/img/base/base-new.png) no-repeat -91px -918px
+    background: url(/images/base/base-new.png) no-repeat -91px -918px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.jcb {
-    background: url(/img/base/base-new.png) no-repeat -182px -918px
+    background: url(/images/base/base-new.png) no-repeat -182px -918px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.paypal {
-    background: url(/img/base/base-new.png) no-repeat -274px -918px
+    background: url(/images/base/base-new.png) no-repeat -274px -918px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.ucp {
-    background: url(/img/base/base-new.png) no-repeat -413px -959px
+    background: url(/images/base/base-new.png) no-repeat -413px -959px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.eleven {
-    background: url(/img/base/base-new.png) no-repeat -502px -959px
+    background: url(/images/base/base-new.png) no-repeat -502px -959px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.gxi {
-    background: url(/img/base/base-new.png) no-repeat -591px -959px
+    background: url(/images/base/base-new.png) no-repeat -591px -959px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.paynamics {
-    background: url(/img/base/base-new.png) no-repeat -678px -959px
+    background: url(/images/base/base-new.png) no-repeat -678px -959px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.bca {
-    background: url(/img/base/base-new.png) no-repeat -728px -918px
+    background: url(/images/base/base-new.png) no-repeat -728px -918px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.bni {
-    background: url(/img/base/base-new.png) no-repeat -817px -918px
+    background: url(/images/base/base-new.png) no-repeat -817px -918px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.maybank {
-    background: url(/img/base/base-new.png) no-repeat -909px -918px
+    background: url(/images/base/base-new.png) no-repeat -909px -918px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.mandiri {
-    background: url(/img/base/base-new.png) no-repeat -1001px -918px
+    background: url(/images/base/base-new.png) no-repeat -1001px -918px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.permata {
-    background: url(/img/base/base-new.png) no-repeat -448px -867px
+    background: url(/images/base/base-new.png) no-repeat -448px -867px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.pay {
-    background: url(/img/base/base-new.png) no-repeat -544px -867px
+    background: url(/images/base/base-new.png) no-repeat -544px -867px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.nicepay {
-    background: url(/img/base/base-new.png) no-repeat -640px -867px
+    background: url(/images/base/base-new.png) no-repeat -640px -867px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.sacbank {
-    background: url(/img/base/base-new.png) no-repeat -736px -867px
+    background: url(/images/base/base-new.png) no-repeat -736px -867px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.pay-second {
-    background: url(/img/base/base-new.png) no-repeat -832px -867px
+    background: url(/images/base/base-new.png) no-repeat -832px -867px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.secured {
-    background: url(/img/base/base-new.png) no-repeat -928px -867px
+    background: url(/images/base/base-new.png) no-repeat -928px -867px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.loyality {
-    background: url(/img/base/base-new.png) no-repeat -236px -959px
+    background: url(/images/base/base-new.png) no-repeat -236px -959px
 }
 
 footer .top .item-box .accept-payment li .payment-ico.bcard {
-    background: url(/img/base/base-new.png) no-repeat -146px -959px
+    background: url(/images/base/base-new.png) no-repeat -146px -959px
 }
 
 footer .top .item-box .accept-payment li .payment-seal {
-    background: url(/img/base/base-new.png) no-repeat -390px -703px;
+    background: url(/images/base/base-new.png) no-repeat -390px -703px;
     width: 80px;
     height: 92px;
     display: block
@@ -1045,25 +1045,25 @@ footer .top .item-box .partner li .partner-ico {
 }
 
 footer .top .item-box .partner li .partner-ico.ebay {
-    background: url(/img/base/base-new.png) no-repeat -365px -918px
+    background: url(/images/base/base-new.png) no-repeat -365px -918px
 }
 footer .top .item-box .partner li .partner-ico.amazon {
-    background: url(/img/base/base-new.png) no-repeat -762px -959px
+    background: url(/images/base/base-new.png) no-repeat -762px -959px
 }
 footer .top .item-box .partner li .partner-ico.interpark {
-    background: url(/img/base/base-new.png) no-repeat -456px -918px
+    background: url(/images/base/base-new.png) no-repeat -456px -918px
 }
 
 footer .top .item-box .partner li .partner-ico.dhgate {
-    background: url(/img/base/base-new.png) no-repeat -546px -918px
+    background: url(/images/base/base-new.png) no-repeat -546px -918px
 }
 
 footer .top .item-box .partner li .partner-ico.dragonplay {
-    background: url(/img/base/base-new.png) no-repeat -635px -918px
+    background: url(/images/base/base-new.png) no-repeat -635px -918px
 }
 
 footer .top .item-box .partner li .partner-ico.two_cp {
-    background: url(/img/base/base-new.png) no-repeat -325px -959px
+    background: url(/images/base/base-new.png) no-repeat -325px -959px
 }
 
 footer .info {
@@ -1128,7 +1128,7 @@ footer .info .contact .btn .contact-ico {
     display: block;
     width: 20px;
     height: 20px;
-    background: url(/img/base/base-new.png) no-repeat -96px -108px
+    background: url(/images/base/base-new.png) no-repeat -96px -108px
 }
 
 footer .info .contact .place-holder {
@@ -1163,19 +1163,19 @@ footer .info .connect .connect-ico {
 }
 
 footer .info .connect .connect-ico.youtube {
-    background: url(/img/base/base-new.png) no-repeat -1px -963px
+    background: url(/images/base/base-new.png) no-repeat -1px -963px
 }
 
 footer .info .connect .connect-ico.facebook {
-    background: url(/img/base/base-new.png) no-repeat -37px -963px
+    background: url(/images/base/base-new.png) no-repeat -37px -963px
 }
 
 footer .info .connect .connect-ico.twitter {
-    background: url(/img/base/base-new.png) no-repeat -72px -963px
+    background: url(/images/base/base-new.png) no-repeat -72px -963px
 }
 
 footer .info .connect .connect-ico.insta {
-    background: url(/img/base/base-new.png) no-repeat -109px -963px
+    background: url(/images/base/base-new.png) no-repeat -109px -963px
 }
 
 footer .bot {
@@ -1445,7 +1445,7 @@ footer .top .item-box .list-it {
 
 .ws-fixed-nav .navbar-default .buyforme-content .left, .ws-fixed-nav .navbar-default .shipforme-content .left, .top-nav .navbar-default .buyforme-content .left, .top-nav .navbar-default .shipforme-content .left {
     text-align: center;
-    background: url(/img/ship-line.png) no-repeat;
+    background: url(/images/ship-line.png) no-repeat;
     background-size: contain;
     background-position: center right
 }
@@ -1479,7 +1479,7 @@ footer .top .item-box .list-it {
 }
 
 .sign-in:hover .icon-user {
-    background: url(/img/base/base.png) no-repeat -594px 0;
+    background: url(/images/base/base.png) no-repeat -594px 0;
     background-size: 700px
 }
 
@@ -2034,33 +2034,33 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block;
     width: 37px;
     height: 15px;
-    background: url(/img/base/base-new.png) no-repeat 0 0
+    background: url(/images/base/base-new.png) no-repeat 0 0
 }
 
 /*.navbar-default.navbar-2 ul li.open .ebay-ico, .navbar-default.navbar-2 ul li:focus .ebay-ico, .navbar-default.navbar-2 ul li.active .ebay-ico {*/
-    /*background: url(/img/base/base-new.png) no-repeat -105px 0;*/
+/*background: url(/images/base/base-new.png) no-repeat -105px 0;*/
 /*}*/
 
 .navbar-default.navbar-2 ul li#ebay-header:hover .ebay-ico, .navbar-default.navbar-2 ul li:focus .ebay-ico, .navbar-default.navbar-2 ul li.active .ebay-ico {
-    background: url(/img/base/base-new.png) no-repeat -105px 0;
+    background: url(/images/base/base-new.png) no-repeat -105px 0;
 }
 
 .navbar-default.navbar-2 ul li .amz-ico {
     display: block;
     width: 49px;
     height: 15px;
-    background: url(/img/base/base-new.png) no-repeat -1px -24px
+    background: url(/images/base/base-new.png) no-repeat -1px -24px
 }
 
 /*.navbar-default.navbar-2 ul li.open .amz-ico, .navbar-default.navbar-2 ul li.open:hover .amz-ico, .navbar-default.navbar-2 ul li:focus .amz-ico {*/
-    /*background: url(/img/base/base-new.png) no-repeat -123px -24px;*/
+/*background: url(/images/base/base-new.png) no-repeat -123px -24px;*/
 /*}*/
 .navbar-default.navbar-2 ul li#amz-header:hover .amz-ico, .navbar-default.navbar-2 ul li.focus:hover .amz-ico, .navbar-default.navbar-2 ul li:active .amz-ico {
-    background: url(/img/base/base-new.png) no-repeat -123px -24px;
+    background: url(/images/base/base-new.png) no-repeat -123px -24px;
 }
 
 .navbar-default.navbar-2 ul li.active:hover .amz-ico {
-    background: url(/img/base/base-new.png) no-repeat -1px -24px
+    background: url(/images/base/base-new.png) no-repeat -1px -24px
 }
 
 .navbar-default.navbar-2 ul li .nav-ico {
@@ -2085,7 +2085,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .navbar-default.navbar-2 ul li .flags-ico.vn {
-    background: url(/img/base/base-new.png) no-repeat -291px -869px
+    background: url(/images/base/base-new.png) no-repeat -291px -869px
 }
 
 .navbar-default.navbar-2 .navbar-right li a .dot {
@@ -2221,39 +2221,39 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a .user-ico.num1 {
-    background: url(/img/base/base-new.png) no-repeat 6px -840px
+    background: url(/images/base/base-new.png) no-repeat 6px -840px
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a .user-ico.num2 {
-    background: url(/img/base/base-new.png) no-repeat -21px -840px
+    background: url(/images/base/base-new.png) no-repeat -21px -840px
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a .user-ico.num3 {
-    background: url(/img/base/base-new.png) no-repeat -49px -840px
+    background: url(/images/base/base-new.png) no-repeat -49px -840px
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a .user-ico.num4 {
-    background: url(/img/base/base-new.png) no-repeat -79px -840px
+    background: url(/images/base/base-new.png) no-repeat -79px -840px
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a .user-ico.num5 {
-    background: url(/img/base/base-new.png) no-repeat -112.5px -840px
+    background: url(/images/base/base-new.png) no-repeat -112.5px -840px
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a .user-ico.num6 {
-    background: url(/img/base/base-new.png) no-repeat -144px -840px
+    background: url(/images/base/base-new.png) no-repeat -144px -840px
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a .user-ico.num7 {
-    background: url(/img/base/base-new.png) no-repeat -170px -840px
+    background: url(/images/base/base-new.png) no-repeat -170px -840px
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a .user-ico.num8 {
-    background: url(/img/base/base-new.png) no-repeat -197px -840px
+    background: url(/images/base/base-new.png) no-repeat -197px -840px
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a .user-ico.num9 {
-    background: url(/img/base/base-new.png) no-repeat -225px -840px
+    background: url(/images/base/base-new.png) no-repeat -225px -840px
 }
 
 .navbar-default.navbar-2 .navbar-right li.user-in .dropdown-menu ul li a b {
@@ -2298,47 +2298,47 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .navbar-default.navbar-2 ul li .nav-ico.user {
-    background: url(/img/base/base-new.png) no-repeat 3px -80px
+    background: url(/images/base/base-new.png) no-repeat 3px -80px
 }
 
 .navbar-default.navbar-2 ul li.open .nav-ico.user, .navbar-default.navbar-2 ul li.active .nav-ico.user, .navbar-default.navbar-2 ul li:hover .nav-ico.user, .navbar-default.navbar-2 ul li:focus .nav-ico.user {
-    background: url(/img/base/base-new.png) no-repeat 3px -80px
+    background: url(/images/base/base-new.png) no-repeat 3px -80px
 }
 
 .navbar-default.navbar-2 ul li .nav-ico.message {
-    background: url(/img/base/base-new.png) no-repeat -27px -50px
+    background: url(/images/base/base-new.png) no-repeat -27px -50px
 }
 
 .navbar-default.navbar-2 ul li.active .nav-ico.message, .navbar-default.navbar-2 ul li:hover .nav-ico.message, .navbar-default.navbar-2 ul li:focus .nav-ico.message {
-    background: url(/img/base/base-new.png) no-repeat -27px -80px
+    background: url(/images/base/base-new.png) no-repeat -27px -80px
 }
 
 .navbar-default.navbar-2 ul li .nav-ico.noti {
-    background: url(/img/base/base-new.png) no-repeat -57px -80px
+    background: url(/images/base/base-new.png) no-repeat -57px -80px
 }
 
 .navbar-default.navbar-2 ul li .nav-ico.tracking {
-    background: url(/img/base/base-new.png) no-repeat -149px -82px
+    background: url(/images/base/base-new.png) no-repeat -149px -82px
 }
 
 .navbar-default.navbar-2 ul li.open .nav-ico.noti, .navbar-default.navbar-2 ul li.active .nav-ico.noti, .navbar-default.navbar-2 ul li:hover .nav-ico.noti, .navbar-default.navbar-2 ul li:focus .nav-ico.noti {
-    background: url(/img/base/base-new.png) no-repeat -57px -80px
+    background: url(/images/base/base-new.png) no-repeat -57px -80px
 }
 
 .navbar-default.navbar-2 ul li .nav-ico.question {
-    background: url(/img/base/base-new.png) no-repeat -85px -80px
+    background: url(/images/base/base-new.png) no-repeat -85px -80px
 }
 
 .navbar-default.navbar-2 ul li.open .nav-ico.question, .navbar-default.navbar-2 ul li.active .nav-ico.question, .navbar-default.navbar-2 ul li:hover .nav-ico.question, .navbar-default.navbar-2 ul li:focus .nav-ico.question {
-    background: url(/img/base/base-new.png) no-repeat -85px -80px
+    background: url(/images/base/base-new.png) no-repeat -85px -80px
 }
 
 .navbar-default.navbar-2 ul li .nav-ico.cart {
-    background: url(/img/base/base-new.png) no-repeat -113px -51px
+    background: url(/images/base/base-new.png) no-repeat -113px -51px
 }
 
 .navbar-default.navbar-2 ul li.active .nav-ico.cart, .navbar-default.navbar-2 ul li:hover .nav-ico.cart, .navbar-default.navbar-2 ul li:focus .nav-ico.cart {
-    background: url(/img/base/base-new.png) no-repeat -115px -80px
+    background: url(/images/base/base-new.png) no-repeat -115px -80px
 }
 
 .navbar-2 .navbar-nav > li > .dropdown-menu {
@@ -2507,7 +2507,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 20px;
     height: 20px;
-    background: url(/img/base/base-new.png) no-repeat -31px -108px;
+    background: url(/images/base/base-new.png) no-repeat -31px -108px;
     margin-right: 5px
 }
 
@@ -2883,7 +2883,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block;
     width: 20px;
     height: 20px;
-    background: url(/img/base/base-new.png) no-repeat 0 -108px
+    background: url(/images/base/base-new.png) no-repeat 0 -108px
 }
 
 .keep-navbar .search-box .search-tag {
@@ -2911,7 +2911,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .keep-navbar.open .search-box .search-tag .search-icon {
-    background: url(/img/base/base-new.png) no-repeat -63px -108px
+    background: url(/images/base/base-new.png) no-repeat -63px -108px
 }
 
 .keep-navbar .cate-nav ul li.globe-sub .sub-menu li.portal a {
@@ -2964,23 +2964,23 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .navbar-ws .produce-box ul li .produce-ico.product {
-    background: url(/img/base/base-new.png) no-repeat 0 -141px
+    background: url(/images/base/base-new.png) no-repeat 0 -141px
 }
 
 .navbar-ws .produce-box ul li .produce-ico.plane {
-    background: url(/img/base/base-new.png) no-repeat -60px -141px
+    background: url(/images/base/base-new.png) no-repeat -60px -141px
 }
 
 .navbar-ws .produce-box ul li .produce-ico.ship {
-    background: url(/img/base/base-new.png) no-repeat -124px -141px
+    background: url(/images/base/base-new.png) no-repeat -124px -141px
 }
 
 .navbar-ws .produce-box ul li .produce-ico.insurance {
-    background: url(/img/base/base-new.png) no-repeat -190px -141px
+    background: url(/images/base/base-new.png) no-repeat -190px -141px
 }
 
 .navbar-ws .produce-box ul li .produce-ico.dragonplay {
-    background: url(/img/base/base-new.png) no-repeat -546px -918px
+    background: url(/images/base/base-new.png) no-repeat -546px -918px
 }
 
 .navbar-ws .produce-box ul li .text {
@@ -3371,7 +3371,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     width: 50px;
     height: 50px;
     position: absolute;
-    background: url(/img/base/base-new.png) no-repeat 0 -480px;
+    background: url(/images/base/base-new.png) no-repeat 0 -480px;
     top: 0;
     left: 0
 }
@@ -3560,7 +3560,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block;
     width: 20px;
     height: 20px;
-    background: url(/img/base/base-new.png) no-repeat 0 -108px
+    background: url(/images/base/base-new.png) no-repeat 0 -108px
 }
 
 .submenu-search .form-group .place-holder {
@@ -3766,7 +3766,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block !important;
     width: 32px;
     height: 32px;
-    background: url(/img/base/base-new.png) no-repeat 0 -193px;
+    background: url(/images/base/base-new.png) no-repeat 0 -193px;
     position: absolute;
     top: calc((450px - 32px) / 2);
     transition: all .3s;
@@ -4068,7 +4068,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 16px;
     height: 16px;
-    background: url(/img/base/base-new.png) no-repeat -1px -556px;
+    background: url(/images/base/base-new.png) no-repeat -1px -556px;
     transition: all .5s;
     -moz-transition: all .5s;
     -o-transition: all .5s;
@@ -4688,11 +4688,11 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     width: 20px;
     height: 20px;
     margin-right: 5px;
-    background: url(/img/base/base-new.png) no-repeat -41px -193px
+    background: url(/images/base/base-new.png) no-repeat -41px -193px
 }
 
 .keep-navbar .search-box .form-group .input-group-btn:hover .drop-ico, .keep-navbar .search-box .form-group .input-group-btn.open .drop-ico {
-    background: url(/img/base/base-new.png) no-repeat -69px -193px
+    background: url(/images/base/base-new.png) no-repeat -69px -193px
 }
 
 .keep-navbar .search-box .form-group .input-group-btn .dropdown-menu ul {
@@ -4749,7 +4749,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: inline-block;
     width: 54px;
     height: 15px;
-    background: url(/img/base/base-new.png) no-repeat -40px -632px;
+    background: url(/images/base/base-new.png) no-repeat -40px -632px;
     vertical-align: middle
 }
 
@@ -5449,7 +5449,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: inline-block;
     width: 20px;
     height: 20px;
-    background: url(/img/base/base-new.png) no-repeat 0 -108px;
+    background: url(/images/base/base-new.png) no-repeat 0 -108px;
     z-index: 9999999
 }
 
@@ -5530,7 +5530,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 7px;
     height: 10px;
-    background: url(/img/base/base-new.png) no-repeat -1px -663px;
+    background: url(/images/base/base-new.png) no-repeat -1px -663px;
     margin-right: 5px
 }
 
@@ -5645,35 +5645,35 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(2) > .dropdown-menu .buyship .left .timeline li .buyship-ico.ico1 {
-    background: url(/img/base/base-new.png) no-repeat -1px -703px
+    background: url(/images/base/base-new.png) no-repeat -1px -703px
 }
 
 .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(2) > .dropdown-menu .buyship .left .timeline li .buyship-ico.ico2 {
-    background: url(/img/base/base-new.png) no-repeat -82px -703px
+    background: url(/images/base/base-new.png) no-repeat -82px -703px
 }
 
 .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(2) > .dropdown-menu .buyship .left .timeline li .buyship-ico.ico3 {
-    background: url(/img/base/base-new.png) no-repeat -162px -703px
+    background: url(/images/base/base-new.png) no-repeat -162px -703px
 }
 
 .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(2) > .dropdown-menu .buyship .left .timeline li .buyship-ico.ico4 {
-    background: url(/img/base/base-new.png) no-repeat -243px -703px
+    background: url(/images/base/base-new.png) no-repeat -243px -703px
 }
 
 .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(3) > .dropdown-menu .buyship .left .timeline li .buyship-ico.ico1 {
-    background: url(/img/base/base-new.png) no-repeat -321px -703px
+    background: url(/images/base/base-new.png) no-repeat -321px -703px
 }
 
 .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(3) > .dropdown-menu .buyship .left .timeline li .buyship-ico.ico2 {
-    background: url(/img/base/base-new.png) no-repeat -1px -703px
+    background: url(/images/base/base-new.png) no-repeat -1px -703px
 }
 
 .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(3) > .dropdown-menu .buyship .left .timeline li .buyship-ico.ico3 {
-    background: url(/img/base/base-new.png) no-repeat -82px -703px
+    background: url(/images/base/base-new.png) no-repeat -82px -703px
 }
 
 .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(3) > .dropdown-menu .buyship .left .timeline li .buyship-ico.ico4 {
-    background: url(/img/base/base-new.png) no-repeat -243px -703px
+    background: url(/images/base/base-new.png) no-repeat -243px -703px
 }
 
 .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(2) > .dropdown-menu .buyship .left .timeline li .step, .navbar-default.navbar-2 .navbar-collapse .navbar-nav > li:nth-child(3) > .dropdown-menu .buyship .left .timeline li .step {
@@ -5929,7 +5929,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 7px;
     height: 10px;
-    background: url(/img/base/base-new.png) no-repeat -1px -663px;
+    background: url(/images/base/base-new.png) no-repeat -1px -663px;
     margin-right: 5px
 }
 
@@ -6091,7 +6091,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block !important;
     width: 32px;
     height: 32px;
-    background: url(/img/base/base-new.png) no-repeat 0 -598px;
+    background: url(/images/base/base-new.png) no-repeat 0 -598px;
     position: absolute;
     top: 110px;
     left: -45px
@@ -6101,7 +6101,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block !important;
     width: 32px;
     height: 32px;
-    background: url(/img/base/base-new.png) no-repeat 0 -598px;
+    background: url(/images/base/base-new.png) no-repeat 0 -598px;
     position: absolute;
     top: 120px;
     right: -45px;
@@ -6324,7 +6324,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .btn-searchbrand {
-    background: url(/img/base/base-new.png) no-repeat scroll -144px -110px;
+    background: url(/images/base/base-new.png) no-repeat scroll -144px -110px;
     width: 24px;
     height: 24px;
     position: absolute;
@@ -6362,11 +6362,11 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     padding: 0;
     vertical-align: middle;
     width: 16px;
-    background: url(/img/base/base-new.png) no-repeat -42px -229px
+    background: url(/images/base/base-new.png) no-repeat -42px -229px
 }
 
 .amz-browser-content .left .cate-item .check-box li:hover label:before {
-    background: url(/img/base/base-new.png) no-repeat -42px -247px
+    background: url(/images/base/base-new.png) no-repeat -42px -247px
 }
 
 .amz-browser-content .left .cate-item .check-box li:hover label, .amz-browser-content .left .cate-item .radio-box li:hover label {
@@ -6377,7 +6377,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 .amz-browser-content .left .cate-item .check-box input[type="checkbox"]:checked + label:before {
     content: "";
     text-align: center;
-    background: url(/img/base/base-new.png) no-repeat -42px -247px
+    background: url(/images/base/base-new.png) no-repeat -42px -247px
 }
 
 .amz-browser-content .left .cate-item .check-box input[type="checkbox"]:checked + label:after {
@@ -6408,7 +6408,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 
 .amz-browser-content .ui-slider-horizontal .ui-slider-handle {
     border-radius: 0;
-    background: url(/img/base/base-new.png) no-repeat -1px -227px;
+    background: url(/images/base/base-new.png) no-repeat -1px -227px;
     top: -15px
 }
 
@@ -6452,17 +6452,17 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     padding: 0;
     vertical-align: middle;
     width: 16px;
-    background: url(/img/base/base-new.png) no-repeat -22px -229px
+    background: url(/images/base/base-new.png) no-repeat -22px -229px
 }
 
 .amz-browser-content .left .cate-item .radio-box input[type="radio"]:checked + label:before {
     content: "";
     text-align: center;
-    background: url(/img/base/base-new.png) no-repeat -24px -248px
+    background: url(/images/base/base-new.png) no-repeat -24px -248px
 }
 
 .amz-browser-content .left .cate-item .radio-box li:hover label:before {
-    background: url(/img/base/base-new.png) no-repeat -24px -248px
+    background: url(/images/base/base-new.png) no-repeat -24px -248px
 }
 
 .amz-browser-content .left .cate-item .radio-box input[type="radio"]:checked + label:after {
@@ -6563,7 +6563,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block;
     width: 18px;
     height: 18px;
-    background: url(/img/base/base-new.png) no-repeat -144px -109px
+    background: url(/images/base/base-new.png) no-repeat -144px -109px
 }
 
 .amz-browser-content .right {
@@ -6912,7 +6912,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 12px;
     height: 12px;
-    background: url(/img/base/base-new.png) no-repeat -137px -82px;
+    background: url(/images/base/base-new.png) no-repeat -137px -82px;
     margin-right: 3px
 }
 
@@ -6946,7 +6946,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 16px;
     height: 16px;
-    background: url(/img/base/base-new.png) no-repeat -1px -537px;
+    background: url(/images/base/base-new.png) no-repeat -1px -537px;
     transition: all .3s;
     -o-transition: all .3s;
     -moz-transition: all .3s;
@@ -7071,7 +7071,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block !important;
     width: 24px;
     height: 24px;
-    background: url(/img/base/base-new.png) no-repeat -1px -602px;
+    background: url(/images/base/base-new.png) no-repeat -1px -602px;
     position: absolute;
     top: 23px;
     opacity: .5
@@ -7246,7 +7246,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 16px;
     height: 16px;
-    background: url(/img/base/base-new.png) no-repeat -1px -577px;
+    background: url(/images/base/base-new.png) no-repeat -1px -577px;
     margin-right: 4px
 }
 
@@ -7255,7 +7255,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 16px;
     height: 16px;
-    background: url(/img/base/base-new.png) no-repeat -21px -577px;
+    background: url(/images/base/base-new.png) no-repeat -21px -577px;
     margin-right: 4px
 }
 
@@ -7724,7 +7724,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 20px;
     height: 20px;
-    background: url(/img/base/base-new.png) no-repeat -112px -48px
+    background: url(/images/base/base-new.png) no-repeat -112px -48px
 }
 
 .product-info-box .product-info .content .payment-box .favorite-ico_active {
@@ -7732,7 +7732,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 16px;
     height: 16px;
-    background: url(/img/base/base-new.png) no-repeat -21px -577px
+    background: url(/images/base/base-new.png) no-repeat -21px -577px
 }
 
 .product-info-box .product-info .content .payment-box .favorite-ico {
@@ -7740,7 +7740,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 16px;
     height: 16px;
-    background: url(/img/base/base-new.png) no-repeat -21px -556px
+    background: url(/images/base/base-new.png) no-repeat -21px -556px
 }
 
 .product-info-box .product-info .content .payment-box .phone {
@@ -7748,7 +7748,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 14px;
     height: 14px;
-    background: url(/img/base/base-new.png) no-repeat -1px -633px
+    background: url(/images/base/base-new.png) no-repeat -1px -633px
 }
 
 .product-info-box .product-info .content .payment-box .pm-2 {
@@ -7870,7 +7870,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 16px;
     height: 16px;
-    background: url(/img/base/base-new.png) no-repeat -39px -577px
+    background: url(/images/base/base-new.png) no-repeat -39px -577px
 }
 
 .product-info-box .product-info .content .row-cl .payment-method {
@@ -7904,7 +7904,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     height: 18px;
     width: 33px;
     display: block;
-    background: url(/img/base/base-new.png) no-repeat -265px -809px;
+    background: url(/images/base/base-new.png) no-repeat -265px -809px;
     margin: 0 auto
 }
 
@@ -7912,22 +7912,22 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     height: 18px;
     width: 18px;
     display: block;
-    background: url(/img/base/base-new.png) no-repeat -205px -809px;
+    background: url(/images/base/base-new.png) no-repeat -205px -809px;
     margin: 0 auto
 }
 
 .product-info-box .product-info .content .row-cl .payment-method li .icon_paypal {
-     height: 18px;
-     width: 35px;
-     display: block;
-     background: url(/img/base/base-new.png) no-repeat -227px -809px;
-     margin: 0 auto
- }
+    height: 18px;
+    width: 35px;
+    display: block;
+    background: url(/images/base/base-new.png) no-repeat -227px -809px;
+    margin: 0 auto
+}
 .product-info-box .product-info .content .row-cl .payment-method li .icon_mol {
     height: 18px;
     width: 35px;
     display: block;
-    background: url(/img/base/base-new.png) no-repeat -305px -809px;
+    background: url(/images/base/base-new.png) no-repeat -305px -809px;
     margin: 0 auto
 }
 
@@ -7935,7 +7935,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     height: 18px;
     width: 18px;
     display: block;
-    background: url(/img/base/base-new.png) no-repeat -59px -809px;
+    background: url(/images/base/base-new.png) no-repeat -59px -809px;
     margin: 0 auto
 }
 
@@ -7944,7 +7944,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     width: 19px;
     display: block;
     margin: 0 auto;
-    background: url(/img/base/base-new.png) no-repeat -79px -809px
+    background: url(/images/base/base-new.png) no-repeat -79px -809px
 }
 
 .product-info-box .product-info .content .row-cl .payment-method li .icon_bank_globe {
@@ -7952,7 +7952,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     width: 38px;
     display: block;
     margin: 0 auto;
-    background: url(/img/base/base-new.png) no-repeat -101px -809px
+    background: url(/images/base/base-new.png) no-repeat -101px -809px
 }
 
 .product-info-box .product-info .content .row-cl .payment-method li .icon_bank_payment {
@@ -7960,7 +7960,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     width: 61px;
     display: block;
     margin: 0 auto;
-    background: url(/img/base/base-new.png) no-repeat -141px -809px
+    background: url(/images/base/base-new.png) no-repeat -141px -809px
 }
 
 .icon-detail {
@@ -7969,17 +7969,17 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .icon-detail.icon-visa {
-    background: url(/img/base/base-new.png) no-repeat -34px -600px;
+    background: url(/images/base/base-new.png) no-repeat -34px -600px;
     display: inline-block
 }
 
 .icon-detail.icon-master {
-    background: url(/img/base/base-new.png) no-repeat -86px -600px;
+    background: url(/images/base/base-new.png) no-repeat -86px -600px;
     display: inline-block
 }
 
 .icon-detail.icon-paypal {
-    background: url(/img/base/base-new.png) no-repeat -142px -600px;
+    background: url(/images/base/base-new.png) no-repeat -142px -600px;
     display: inline-block
 }
 
@@ -8426,7 +8426,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 37px;
     height: 15px;
-    background: url(/img/base/base-new.png) no-repeat -105px -2px
+    background: url(/images/base/base-new.png) no-repeat -105px -2px
 }
 
 .amz-browser-content.weshop .nav-tabs > li > a .amz-ico {
@@ -8434,7 +8434,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     vertical-align: middle;
     width: 55px;
     height: 18px;
-    background: url(/img/base/base-new.png) no-repeat -182px -20px
+    background: url(/images/base/base-new.png) no-repeat -182px -20px
 }
 
 .amz-browser-content.weshop .nav-tabs > li > a > span {
@@ -8496,7 +8496,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: inline-block;
     width: 37px;
     height: 15px;
-    background: url(/img/base/base-new.png) no-repeat -105px -2px;
+    background: url(/images/base/base-new.png) no-repeat -105px -2px;
     vertical-align: middle
 }
 
@@ -8523,11 +8523,11 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .amz-browser-content.weshop .left .cate-item .check-box li:hover label::before {
-    background: url(/img/base/base-new.png) no-repeat -96px -247px
+    background: url(/images/base/base-new.png) no-repeat -96px -247px
 }
 
 .amz-browser-content.weshop .left .cate-item .radio-box li:hover label::before {
-    background: url(/img/base/base-new.png) no-repeat -114px -247px
+    background: url(/images/base/base-new.png) no-repeat -114px -247px
 }
 
 .amz-browser-content.weshop .left .cate-item .check-box li:hover label, .amz-browser-content.weshop .left .cate-item .radio-box li:hover label {
@@ -8536,11 +8536,11 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
 }
 
 .amz-browser-content.weshop .left .cate-item .check-box input[type="checkbox"]:checked + label::before {
-    background: url(/img/base/base-new.png) no-repeat -96px -247px
+    background: url(/images/base/base-new.png) no-repeat -96px -247px
 }
 
 .amz-browser-content.weshop .left .cate-item .radio-box input[type="radio"]:checked + label::before {
-    background: url(/img/base/base-new.png) no-repeat -114px -247px
+    background: url(/images/base/base-new.png) no-repeat -114px -247px
 }
 
 .amz-browser-content.weshop .left .cate-item .size-box2 li .size:hover, .amz-browser-content.weshop .left .cate-item .size-box2 li.active .size {
@@ -8686,7 +8686,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block;
     width: 37px;
     height: 15px;
-    background: url(/img/base/base-new.png) no-repeat -105px -2px;
+    background: url(/images/base/base-new.png) no-repeat -105px -2px;
     position: absolute;
     top: 10px;
     left: 10px
@@ -8706,7 +8706,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block !important;
     width: 32px;
     height: 32px;
-    background: url(/img/base/base-new.png) no-repeat 0 -193px;
+    background: url(/images/base/base-new.png) no-repeat 0 -193px;
     position: absolute;
     top: calc((415px - 32px) / 2)
 }
@@ -8728,7 +8728,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block !important;
     width: 32px;
     height: 32px;
-    background: url(/img/base/base-new.png) no-repeat 0 -193px;
+    background: url(/images/base/base-new.png) no-repeat 0 -193px;
     position: absolute;
     top: 50%;
     margin-top: -16px
@@ -8777,7 +8777,7 @@ header .nav > li.user-in, header .nav > li.change-lang, header .nav > li.order-t
     display: block;
     width: 22px;
     height: 22px;
-    background: url(/img/icons/search-tag.png) no-repeat;
+    background: url(/images/icons/search-tag.png) no-repeat;
     position: absolute;
     top: -1px;
     right: -20px
@@ -9043,7 +9043,7 @@ figure.mz-figure a {
         display: block;
         width: 24px;
         height: 24px;
-        background: url(/img/base/base-new.png) no-repeat -3px -378px;
+        background: url(/images/base/base-new.png) no-repeat -3px -378px;
         position: absolute;
         top: 15px;
         right: 15px;
@@ -9236,87 +9236,87 @@ figure.mz-figure a {
     }
 
     .toggle-navbar.ebay-leftmn .top .menu-nav .mbnav-ico.cart {
-        background: url(/img/base/base-new.png) no-repeat -36px -373px
+        background: url(/images/base/base-new.png) no-repeat -36px -373px
     }
 
     .toggle-navbar.ebay-leftmn .top .menu-nav .mbnav-ico.user {
-        background: url(/img/base/base-new.png) no-repeat -74px -375px
+        background: url(/images/base/base-new.png) no-repeat -74px -375px
     }
 
     .toggle-navbar.ebay-leftmn .top .menu-nav .mbnav-ico.noti {
-        background: url(/img/base/base-new.png) no-repeat -111px -376px
+        background: url(/images/base/base-new.png) no-repeat -111px -376px
     }
 
     .left-menu .menu-list .mbnav-ico.amazon {
-        background: url(/img/base/base-new.png) no-repeat -448px -425px
+        background: url(/images/base/base-new.png) no-repeat -448px -425px
     }
 
     .left-menu .menu-list .mbnav-ico.ebay {
-        background: url(/img/base/base-new.png) no-repeat -483px -425px
+        background: url(/images/base/base-new.png) no-repeat -483px -425px
     }
 
     .left-menu .menu-list .mbnav-ico.default {
-        background: url(/img/base/base-new.png) no-repeat -320px -423px
+        background: url(/images/base/base-new.png) no-repeat -320px -423px
     }
 
     .toggle-navbar .mbnav-ico.user {
-        background: url(/img/base/base-new.png) no-repeat -1px -424px
+        background: url(/images/base/base-new.png) no-repeat -1px -424px
     }
 
     .toggle-navbar .mbnav-ico.cart {
-        background: url(/img/base/base-new.png) no-repeat -50px -422px
+        background: url(/images/base/base-new.png) no-repeat -50px -422px
     }
 
     .toggle-navbar .mbnav-ico.noti {
-        background: url(/img/base/base-new.png) no-repeat -106px -424px
+        background: url(/images/base/base-new.png) no-repeat -106px -424px
     }
 
     .toggle-navbar .mbnav-ico.home {
-        background: url(/img/base/base-new.png) no-repeat -165px -426px
+        background: url(/images/base/base-new.png) no-repeat -165px -426px
     }
 
     .toggle-navbar .mbnav-ico.amz {
-        background: url(/img/base/base-new.png) no-repeat -210px -425px
+        background: url(/images/base/base-new.png) no-repeat -210px -425px
     }
 
     .toggle-navbar .mbnav-ico.ebay {
-        background: url(/img/base/base-new.png) no-repeat -270px -425px
+        background: url(/images/base/base-new.png) no-repeat -270px -425px
     }
 
     .toggle-navbar .mbnav-ico.topstore {
-        background: url(/img/base/base-new.png) no-repeat -329px -421px
+        background: url(/images/base/base-new.png) no-repeat -329px -421px
     }
 
     .toggle-navbar .mbnav-ico.prime {
-        background: url(/img/base/base-new.png) no-repeat -437px -421px
+        background: url(/images/base/base-new.png) no-repeat -437px -421px
     }
 
     .toggle-navbar .mbnav-ico.help {
-        background: url(/img/base/base-new.png) no-repeat -384px -421px
+        background: url(/images/base/base-new.png) no-repeat -384px -421px
     }
 
     .toggle-navbar .mbnav-ico.pricing {
-        background: url(/img/base/base-new.png) no-repeat -197px -423px
+        background: url(/images/base/base-new.png) no-repeat -197px -423px
     }
 
     .toggle-navbar .mbnav-ico.help-shop {
-        background: url(/img/base/base-new.png) no-repeat -229px -423px;
+        background: url(/images/base/base-new.png) no-repeat -229px -423px;
         width: 45px;
         margin-left: -13px
     }
 
     .toggle-navbar .mbnav-ico.help-ship {
-        background: url(/img/base/base-new.png) no-repeat -275px -423px;
+        background: url(/images/base/base-new.png) no-repeat -275px -423px;
         width: 45px;
         margin-left: -13px
     }
 
     .toggle-navbar .mbnav-ico.support {
-        background: url(/img/base/base-new.png) no-repeat -352px -426px
+        background: url(/images/base/base-new.png) no-repeat -352px -426px
     }
 
     .toggle-navbar .mbnav-ico.lang {
-        background: url(/img/base/base-new.png) no-repeat -384px -426px
+        background: url(/images/base/base-new.png) no-repeat -384px -426px
     }
 
     .toggle-navbar .bottom ul {
@@ -9752,7 +9752,7 @@ figure.mz-figure a {
 
 .gotop {
     border-radius: 50%;
-    background: url(/img/gotop.png) ;
+    background: url(/images/gotop.png) ;
     color: #000;
     display: inline-block;
     position: fixed;

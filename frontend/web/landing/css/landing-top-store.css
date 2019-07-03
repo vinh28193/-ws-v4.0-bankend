@@ -234,7 +234,7 @@
 .lts-title:before {
     content: '';
     position: absolute;
-    background: url(/img/common/base-lts.png) no-repeat 0px -115px;
+    background: url(/images/common/base-lts.png) no-repeat 0px -115px;
     width: 48px;
     height: 4px;
     left: 0;
@@ -299,19 +299,19 @@
 }
 
 .lts-content .lts-detail ul li .lts-other span#lts-step1 {
-    background: url('/img/common/base-lts.png') no-repeat 0px 0px;
+    background: url('/images/common/base-lts.png') no-repeat 0px 0px;
 }
 
 .lts-content .lts-detail ul li .lts-other span#lts-step2 {
-    background: url('/img/common/base-lts.png') no-repeat -112px 0px;
+    background: url('/images/common/base-lts.png') no-repeat -112px 0px;
 }
 
 .lts-content .lts-detail ul li .lts-other span#lts-step3 {
-    background: url('/img/common/base-lts.png') no-repeat -223px 0px;
+    background: url('/images/common/base-lts.png') no-repeat -223px 0px;
 }
 
 .lts-content .lts-detail ul li .lts-other span#lts-step4 {
-    background: url('/img/common/base-lts.png') no-repeat -334px 0px;
+    background: url('/images/common/base-lts.png') no-repeat -334px 0px;
 }
 
 .lts-content .lts-detail ul li .lts-other p {
@@ -336,7 +336,7 @@
 }
 
 .lts-buyer {
-    background: url('/img/common/banner-content.png') no-repeat;
+    background: url('/images/common/banner-content.png') no-repeat;
     background-size: cover;
     padding: 50px 0;
     margin-top: 50px;
