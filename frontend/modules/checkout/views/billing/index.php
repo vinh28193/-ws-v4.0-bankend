@@ -1,12 +1,14 @@
 <?php
 
+use yii\helpers\ArrayHelper;
+
 /* @var yii\web\View $this */
 /* @var frontend\modules\payment\Payment $payment */
 /* @var common\models\PaymentTransaction $paymentTransaction */
 /* @var frontend\modules\payment\models\Order $order */
 
-use common\models\db\TargetAdditionalFee;
-use yii\helpers\ArrayHelper; ?>
+$this->title = Yii::t('frontend', 'Order {code} billing', ['code' => $order->ordercode]);
+?>
 
 <style type="text/css">
     .btn-continue {
@@ -222,12 +224,13 @@ use yii\helpers\ArrayHelper; ?>
                             </tr>
                         </table>
                     </div>
-                    <?php if(!(int)$order->total_paid_amount_local > 0 ):?>
-                        <div class="button-group text-right" >
-                            <button class="btn btn-continue" data-toggle="modal" data-target="#otherMethods">Choose other payment method
+                    <?php if (!(int)$order->total_paid_amount_local > 0): ?>
+                        <div class="button-group text-right">
+                            <button class="btn btn-continue" data-toggle="modal" data-target="#otherMethods">Choose
+                                other payment method
                             </button>
                         </div>
-                    <?php endif;?>
+                    <?php endif; ?>
 
                 </div>
             </div>
@@ -239,7 +242,8 @@ use yii\helpers\ArrayHelper; ?>
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="otherMethodsTitle"><?php echo Yii::t('frontend', 'Select a payment method'); ?></h5>
+                <h5 class="modal-title"
+                    id="otherMethodsTitle"><?php echo Yii::t('frontend', 'Select a payment method'); ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
