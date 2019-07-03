@@ -282,7 +282,6 @@ JS;
     <div class="product-list row">
         <?php
         if($products && count($products)){
-//            print_r($products);die;
             foreach ($products as $product) {
                 echo $this->render('_item', [
                     'portal' => $portal,

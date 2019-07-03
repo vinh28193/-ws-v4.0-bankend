@@ -65,20 +65,19 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                         if ($localStartPrice && $salePercent) {
                             echo "<span class='old-price' >" . trim($storeManager->showMoney($localStartPrice)) . "</span>";
                         } else {
-                            if (isset($product['end_time']) && $product['end_time'] !== null) {
-                                echo 'Còn <span class="countdown"' .
-                                    ' data-toggle="countdown-time" ' .
-                                    'data-timestamp="' . $product['end_time'] . '" ' .
-                                    'data-prefix="" data-day="d" ' .
-                                    'data-hour="h" ' .
-                                    'data-minute="m" ' .
-                                    'data-second="s"></span>';
+                            if (isset($product['provider'])) {
+                                if(($seller = \yii\helpers\ArrayHelper::getValue($product['provider'],'name'))){
+                                    echo "<div>".Yii::t('frontend','Sold by:')."<b> ".$seller."</b></div>";
+                                }
+                                if(($positive_feedback_percent = \yii\helpers\ArrayHelper::getValue($product['provider'],'positive_feedback_percent'))){
+                                    echo "<div><u class=\"text-blue font-weight-bold\">".Yii::t('frontend','{positive}% positive',['positive' => $positive_feedback_percent])."</u></div>";
+                                }
                             } else {
-                                echo "Nhanh tay mua ngay";
+                                echo "";
                             }
                         }
                     } else {
-                        echo "Nhanh tay mua ngay";
+                        echo "";
                     }
                     ?>
                 </div>
