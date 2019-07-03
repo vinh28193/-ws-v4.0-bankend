@@ -64,8 +64,8 @@ return [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'dev.weshop@gmail.com',
-                'password' => 'Aa@12345',
+                'username' => 'noreplyws2019@gmail.com',
+                'password' => 'uyhqwirrtdygyllp',
                 'port' =>  '587',
                 'encryption' => 'tls'
             ],

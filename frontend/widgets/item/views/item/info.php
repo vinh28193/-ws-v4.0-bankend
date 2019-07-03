@@ -255,7 +255,7 @@ JS;
         <div class="rules-weshop">
             <div class="header-rule"><i class="la la-bullhorn"></i><?= Yii::t('frontend','Weshop disclaims responsibility') ?></div>
             <div class="content-rules">
-                <?= Yii::t('frontend','Weshop disclaims responsibility') ?>
+                <?php //  Yii::t('frontend','Weshop disclaims responsibility') ?>
                 <?= Yii::t('frontend','All products available for shopping agency services displayed on Weshop are products taken from third party e-commerce websites and are not sold directly by Weshop. Weshop is not responsible if the product is not the same. Therefore, in the event of any violation related to the above products, all debts incurred will be borne by the respective seller on the platform. third party while Weshop will not accept any related, collateral or related responsibilities.') ?>
 
             </div>
