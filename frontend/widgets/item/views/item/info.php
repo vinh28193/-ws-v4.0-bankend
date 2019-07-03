@@ -227,16 +227,16 @@ JS;
         <?php }else if ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0){?>
             <div class="btn-group-detail">
                 <?php if ($item->checkInstallment()){?>
-                    <div class="btn-group-primary">
+                    <div class="btn-group-primary w-50">
                         <button class="btn btn-amazon text-uppercase" id="buyNowBtn"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
                     </div>
-                    <div class="btn-group-secondary">
+                    <div class="btn-group-secondary w-50">
                         <button class="btn btn-danger text-uppercase" id="installmentBtn"><i class="la la-credit-card"></i> <?= Yii::t('frontend','Installment') ?></button>
                         <button class="btn btn-outline-info text-uppercase" id="addToCart"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
                     </div>
                 <?php }else{ ?>
                     <div class="btn-group-secondary">
-                        <button class="btn btn-amazon text-uppercase" id="buyNowBtn" style="width: 50%; display: block; float: left;margin-left: 5px;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
+                        <button class="btn btn-amazon text-uppercase" id="buyNowBtn" style="width: 50%; display: block; float: left;margin-right: 5px;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
                         <button class="btn btn-outline-info text-uppercase" id="addToCart" style="width: auto; display: block; margin-left: 5px;"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
                     </div>
                 <?php } ?>

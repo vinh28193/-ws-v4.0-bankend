@@ -293,7 +293,7 @@ class AmazonGateV3 extends BaseGate
         $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::TYPE_AMAZON_JP : AmazonProduct::TYPE_AMAZON_US;
         $rs['tax_fee'] = 0;
         $rs['store'] = $this->store;
-        $rs['customer_feedback'] = ArrayHelper::getValue($response,'product_review',[]);
+        $rs['customer_feedback'] = ArrayHelper::getValue($amazon,'product_review',[]);
 //            $offersCacheKey = "offers_{$rs['item_sku']}";
 //            if (!($offers = $this->cache->get($offersCacheKey))) {
             $offers = $this->getOffers($rs['item_sku']);
@@ -417,7 +417,15 @@ class AmazonGateV3 extends BaseGate
 
     private function isValidResponse($response)
     {
-        return isset($response['response']) || (count($response['response']['sell_price']) > 0 && count($response['response']['retail_price']) > 0 && count($response['response']['deal_price']) > 0 && $response['response']['title'] !== null);
+        return isset($response['response']) ||
+            (isset($response['response']['sell_price'])
+                && count($response['response']['sell_price']) > 0
+                && isset($response['response']['retail_price'])
+                && count($response['response']['retail_price']) > 0
+                && isset($response['response']['deal_price'])
+                && count($response['response']['deal_price']) > 0
+                && isset($response['response']['title'])
+                && $response['response']['title'] !== null);
     }
 
     private function getOptionGroup($data, $title, $skuCurrent)
