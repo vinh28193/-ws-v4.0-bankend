@@ -863,5 +863,23 @@ return [
             'OPTIONS {code}' => 'options',
             'OPTIONS' => 'options',
         ],
-    ]
-];
+    ],
+    [
+    'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['pay' => 'payment-transaction'],
+        'tokens' => [
+        '{id}' => '<id:\\d[\\d,]*>',
+        '{code}' => '<code:\\w[\\w,]*>',
+    ],
+        'patterns' => [
+        'GET,HEAD' => 'index',
+        'GET' => 'get-lang',
+        'PUT,PATCH {code}' => 'update',
+        'GET,HEAD {code}' => 'view',
+        'POST' => 'create',
+        'OPTIONS {code}' => 'options',
+        'OPTIONS' => 'options',
+    ],
+        ]
+    ];
