@@ -13,6 +13,7 @@ use common\products\forms\ProductDetailFrom;
 use  frontend\modules\favorites\controllers\FavoriteObject as FavoriteObject;
 use  frontend\modules\favorites\controllers\FavoriteObjectQueue as Favorite;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 
 class ItemController extends EbayController
@@ -41,9 +42,9 @@ class ItemController extends EbayController
                 'errors' => $form->getErrors()
             ]);
         }
-        $this->site_title = Yii::t('frontend','{name} | Product eBay' , ['name' => $item->item_name]);
-        $this->site_description = Yii::t('frontend','Buy the "{name}" product on eBay immediately via Weshop to get the product within 7-15 days with many attractive offers. Shopping US Amazon, eBay easily.' , ['name' => $item->item_name]);
-        $this->site_image = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
+        $this->site_title = Yii::t('frontend', '{name} | Product eBay', ['name' => $item->item_name]);
+        $this->site_description = Yii::t('frontend', 'Buy the "{name}" product on eBay immediately via Weshop to get the product within 7-15 days with many attractive offers. Shopping US Amazon, eBay easily.', ['name' => $item->item_name]);
+        $this->site_image = isset($item->primary_images[0]) ? $item->primary_images[0]->main : Url::to('/img/no_image.png',true);
 
 //        $category = $item->getCategory();
 

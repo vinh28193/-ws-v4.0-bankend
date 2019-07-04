@@ -24,9 +24,6 @@ class PortalController extends FrontendController
     {
         parent::init();
         $this->site_title = Yii::t('frontend', 'Buy in Amazon, eBay');
-        $this->site_name = Yii::t('frontend', 'Portal {portal}', [
-            'portal' => $this->portal = BaseProduct::TYPE_EBAY ? 'eBay' : 'Amazon'
-        ]);
         $this->site_description = Yii::t('frontend', 'Buy in Amazon, eBay & Top Stores US Viet Nam. Order easy & online payment.');
     }
 
