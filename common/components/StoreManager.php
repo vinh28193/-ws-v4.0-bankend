@@ -11,6 +11,7 @@ namespace common\components;
 
 use common\models\Store;
 use frontend\assets\WeshopAsset;
+use landing\LandingAsset;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\base\Component;

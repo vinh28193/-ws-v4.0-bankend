@@ -134,14 +134,12 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CHECK_PAYMENT;
         $logPaymentGateway->url = $this->submitUrl;
         try {
-            $findWhere = ['transaction_code' => $orderCode];
-            if (($transaction = PaymentTransaction::findOne($findWhere)) === null) {
+            if (($transaction = PaymentService::findParentTransaction($orderCode)) === null) {
                 $logPaymentGateway->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logPaymentGateway->save(false);
                 return new PaymentResponse(false, 'Transaction không tồn tại','nganluong');
             }
-
             $resp = self::callApi($this->submitUrl, $param);
             $logPaymentGateway->payment_method = ArrayHelper::getValue($resp, 'payment_method');
             $logPaymentGateway->payment_bank = ArrayHelper::getValue($resp, 'bank_code');
@@ -155,7 +153,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 return new PaymentResponse(false, 'failed','nganluong');
             }
             $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-            $transaction->save();
+            $transaction->save(false);
             return new PaymentResponse(true, 'Giao dịch thanh toán không thành công!','nganluong', $transaction);
         } catch (\Exception $exception) {
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();

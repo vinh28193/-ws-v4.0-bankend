@@ -9,12 +9,14 @@ use common\helpers\WeshopHelper;
 use common\models\Category;
 use common\models\db\TargetAdditionalFee;
 use common\models\PaymentMethodProvider;
+use common\models\PaymentTransaction;
 use common\models\Seller;
 use common\models\User;
 use frontend\modules\payment\models\Order;
 use frontend\modules\payment\models\Product;
 use Yii;
 use common\models\PaymentProvider;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
@@ -72,6 +74,21 @@ class PaymentService
             ->one();
     }
 
+
+    /**
+     * @param $code
+     * @return PaymentTransaction|null
+     */
+    public static function findParentTransaction($code)
+    {
+        $q = PaymentTransaction::find();
+        $q->where([
+            'AND',
+            ['transaction_code' => $code],
+            ['IS', 'order_code', new Expression('NULL')]
+        ]);
+        return $q->one();
+    }
 
     public
     static function toNumber($value)

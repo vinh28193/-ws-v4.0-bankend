@@ -59,7 +59,7 @@ if ($userCookie->checkAddress()) {
 }
 ?>
 <div class="navbar-ws mobile-hide style-header" id="header" xmlns="http://www.w3.org/1999/html">
-    <div class="container row">
+    <div class="container row header-global">
         <div class="logo">
             <span class="menu-toggle"></span>
             <a href="/" class="logo-pc">
@@ -89,15 +89,15 @@ if ($userCookie->checkAddress()) {
             <a href="/my-cart.html"><span class="label-cart"><?= Yii::t('frontend', 'Cart') ?> (<span
                             class="count-cart">0</span>)</span></a>
         </div>
-        <div class="account-header-box dropdown style-account">
+        <div class="account-header-box pt-1 dropdown style-account">
             <a class="bg-white" id="dropAcount" href="javascript: void(0);" data-toggle="dropdown" aria-haspopup="true"
                role="button"
                aria-expanded="false">
                 <span class="row">
-                    <span class="col-md-3 m-0 pr-0 float-right">
+                    <span class="col-md-3 m-0 pr-2 float-right">
                         <i class="la la-user"></i>
                     </span>
-                    <span class="col-md-9 m-0  pl-0">
+                    <span class="col-md-9 m-0 pl-2">
                         <span href="javascript: void(0);"
                               class="option-auth"><?= Yii::$app->user->isGuest ? Yii::t('frontend', 'Sign Up / Login') : Yii::$app->user->getIdentity()->first_name . ' ' . Yii::$app->user->getIdentity()->last_name ?></span><br>
                         <span class="account-title"><?= Yii::t('frontend', 'Account') ?><i class="la la-caret-down"></i></span>
@@ -159,7 +159,7 @@ if ($userCookie->checkAddress()) {
                 <?php } ?>
             </ul>
         </div>
-        <div class="account-header-box dropdown style-account">
+        <div class="account-header-box pt-1 dropdown style-account">
             <span class="view-exchange-rate">
                 USD
             </span><br>

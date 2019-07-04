@@ -6,6 +6,8 @@ use yii\helpers\Html;
 /* @var string $code */
 /* @var frontend\modules\payment\Payment $payment */
 
+$this->title = Yii::t('frontend', 'Payment failed {code}', ['code' => $code]) . ' | ' . Yii::t('frontend', 'Payment method {method}', ['method' => implode(', ', [$payment->payment_method_name, $payment->payment_provider_name])])
+
 ?>
 
 <style type="text/css">
@@ -27,11 +29,11 @@ use yii\helpers\Html;
                     <div class="card card-checkout">
                         <div class="card-body">
                             <img src="/images/icon/payment_fail.png" alt="" title=""/>
-                            <p class="m-3">There was an error in the payment process or the transaction has expired. Do
-                                you want to make a payment again?</p>
+                            <p class="m-3"><?= Yii::t('frontend', 'There was an error in the payment process or the transaction has expired. Do
+                                you want to make a payment again?') ?></p>
                             <div class="button-group">
                                 <button class="btn btn-block btn-continue" data-toggle="modal"
-                                        data-target="#otherMethods">Choose other payment method
+                                        data-target="#otherMethods"><?php echo Yii::t('frontend', 'Choose other payment method'); ?>
                                 </button>
                             </div>
                         </div>
@@ -49,7 +51,8 @@ use yii\helpers\Html;
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="otherMethodsTitle"><?php echo Yii::t('frontend', 'Select a payment method'); ?></h5>
+                        <h5 class="modal-title"
+                            id="otherMethodsTitle"><?php echo Yii::t('frontend', 'Select a payment method'); ?></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

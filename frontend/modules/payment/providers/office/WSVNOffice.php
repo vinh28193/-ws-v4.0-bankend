@@ -8,6 +8,7 @@ use common\models\logs\PaymentGatewayLogs;
 use common\models\PaymentTransaction;
 use frontend\modules\payment\PaymentProviderInterface;
 use frontend\modules\payment\PaymentResponse;
+use frontend\modules\payment\PaymentService;
 use yii\helpers\Url;
 use frontend\modules\payment\Payment;
 use yii\base\BaseObject;
@@ -29,7 +30,7 @@ class WSVNOffice extends BaseObject implements PaymentProviderInterface
     public function handle($data)
     {
         /** @var $transaction  PaymentTransaction */
-        if (($transaction = PaymentTransaction::findOne(['transaction_code' => $data['code']])) === null) {
+        if (($transaction = PaymentService::findParentTransaction($data['code'])) === null) {
             return new PaymentResponse(false, 'Transaction không tồn tại','vnoffice');
         }
         $checkoutUrl = Url::to("/checkout/office/{$transaction->transaction_code}/success.html", true);

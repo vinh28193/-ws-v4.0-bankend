@@ -4,6 +4,7 @@
 namespace common\models;
 
 use common\models\db\PaymentTransaction as DbPaymentTransaction;
+use yii\db\Expression;
 
 /**
  * Class PaymentTransaction
@@ -37,7 +38,7 @@ class PaymentTransaction extends DbPaymentTransaction
      */
     public function getChildPaymentTransaction()
     {
-        return $this->hasMany(self::className(), ['parent_transaction_code' => 'transaction_code']);
+        return $this->hasMany(self::className(), ['transaction_code' => 'transaction_code'])->where(['IS NOT','order_code', new Expression('NULL')]);
     }
 
     /**

@@ -9,22 +9,7 @@ use yii\helpers\Url;
 
 $domain = Yii::$app->request->hostInfo;
 ?>
-
-<table bgcolor="#2796b6" border="0" cellpadding="0" cellspacing="0" width="100%"
-       style=" width:600px;margin:5px auto;font-family: Arial,Helvetica,sans-serif;font-size: 12px;">
-    <tbody>
-    <tr bgcolor="#141c2e" `>
-        <td style="padding:20px 0 17px 15px" align="center">
-            <a href="<?= $domain; ?>" target="_blank">
-                <img class="CToWUd" src="<?= $domain; ?>/images/logo/weshop-01.png"
-                     alt="Weshop" width="116" height="44">
-            </a>
-        </td>
-    </tr>
-    <tr bgcolor="#232f3e">
-        <td>
-            <table style="padding:0 0 0 0; border=" 0
-            " cellpadding="0" cellspacing="0" width="100%">
+<table style="padding:0 0 0 0;" border="0" cellpadding="0" cellspacing="0" width="100%">
     <tbody>
     <tr>
         <td>
@@ -56,7 +41,8 @@ $domain = Yii::$app->request->hostInfo;
     </tr>
     <tr>
         <td style="padding: 0 20px;">
-            <table style="border-collapse:collapse;color: #ffffff" border="0" bgcolor="#141c2e" cellpadding="0"
+            <table style="border-collapse:collapse;color: #ffffff" border="0" bgcolor="#141c2e"
+                   cellpadding="0"
                    cellspacing="0" width="100%">
                 <tbody>
                 <tr>
@@ -87,7 +73,8 @@ $domain = Yii::$app->request->hostInfo;
     </tr>
     <tr>
         <td style="padding:10px 20px">
-            <table style="border-collapse:collapse;color: #ffffff" bgcolor="#141c2e" cellpadding="0" cellspacing="0"
+            <table style="border-collapse:collapse;color: #ffffff" bgcolor="#141c2e" cellpadding="0"
+                   cellspacing="0"
                    width="100%">
                 <tbody>
                 <tr>
@@ -110,35 +97,17 @@ $domain = Yii::$app->request->hostInfo;
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                         <tbody>
                                         <tr>
-                                            <td colspan="1" style="width:20%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
+                                            <td colspan="1"
+                                                style="width:50%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
                                                 OrderCode : sdaSs
                                             </td>
-                                            <td colspan="1" style="width:50%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
+                                            <td colspan="1"
+                                                style="width:20%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
                                                 Amazon
                                             </td>
-                                            <td colspan="1" style="width:30%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
+                                            <td colspan="1"
+                                                style="width:30%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
                                                 Seller : sdaSs
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:70%;padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                ABC
-                                            </td>
-                                            <td style="width:70%;padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                12232c VND
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:70%;padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                ABC
-                                            </td>
-                                            <td style="width:70%;padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                12232c VND
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <i style="display: block;height: 1px; background: #2796b6;"></i>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -146,12 +115,14 @@ $domain = Yii::$app->request->hostInfo;
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                         <tbody>
                                         <tr>
-                                            <td colspan="3" style="width:70%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
+                                            <td colspan="3"
+                                                style="width:70%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
                                                 Seller : sdaSs
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" style="padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
+                                            <td colspan="2"
+                                                style="padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
                                                 ABC
                                             </td>
                                             <td style="width:30%;padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
@@ -159,7 +130,8 @@ $domain = Yii::$app->request->hostInfo;
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" style="padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
+                                            <td colspan="2"
+                                                style="padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
                                                 ABC
                                             </td>
                                             <td style="width:30%;padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
@@ -184,24 +156,4 @@ $domain = Yii::$app->request->hostInfo;
         </td>
     </tr>
     </tbody>
-</table>
-</td>
-</tr>
-<tr>
-    <td bgcolor="#131a22" style="padding: 20px 0">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-            <tbody>
-            <tr>
-                <td style="padding:5px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
-                    <img height="32px" src="/images/logo/weshop-01.png" alt="">
-                </td>
-                <td style="padding:5px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
-                    WESHOP VIET NAM - WORLD WIDE SHOPPING MADE EASY
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </td>
-</tr>
-</tbody>
 </table>

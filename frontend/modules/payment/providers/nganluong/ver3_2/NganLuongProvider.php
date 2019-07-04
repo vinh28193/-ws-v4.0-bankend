@@ -5,6 +5,7 @@ namespace frontend\modules\payment\providers\nganluong\ver3_2;
 
 use common\models\logs\PaymentGatewayLogs;
 use common\models\PaymentTransaction;
+use frontend\modules\payment\PaymentService;
 use Yii;
 use Exception;
 use yii\base\BaseObject;
@@ -99,8 +100,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $logPaymentGateway->url = $this->getClient()->getAPIUrl();
 
         try {
-            $findWhere = ['transaction_code' => $orderCode];
-            if (($transaction = PaymentTransaction::findOne($findWhere)) === null) {
+            if (($transaction = $transaction = PaymentService::findParentTransaction($orderCode)) === null) {
                 $logPaymentGateway->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logPaymentGateway->save(false);
@@ -118,7 +118,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 return new PaymentResponse(false, 'failed','nganluong32');
             }
             $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-            $transaction->save();
+            $transaction->save(false);
             return new PaymentResponse(true, 'Giao dịch thanh toán thành công!','nganluong32', $transaction);
         } catch (Exception $exception) {
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();

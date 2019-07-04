@@ -535,12 +535,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
      */
     public function getWalletTransactions()
     {
-        return $this->hasMany(PaymentTransaction::className(), ['order_code' => 'ordercode'])
-            ->where([
-                'payment_type' => [PaymentTransaction::PAYMENT_TYPE_REFUND, PaymentTransaction::PAYMENT_TYPE_ADDFEE, PaymentTransaction::PAYMENT_TYPE_BUY_NOW, PaymentTransaction::PAYMENT_TYPE_SHOPPING],
-            ])
-            ->andWhere(['<>', 'transaction_status', PaymentTransaction::TRANSACTION_STATUS_REPLACED])
-            ->orderBy('id desc');
+        return $this->hasMany(PaymentTransaction::className(), ['order_code' => 'ordercode']);
     }
 
 

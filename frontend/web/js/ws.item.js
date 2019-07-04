@@ -624,7 +624,7 @@
             sku: params.sku,
             sellerId: params.seller,
             quantity: quantity,
-            image: params.images[0].main
+            image: params.images[0] ? params.images[0].main : '/img/no_image.png'
         };
         var link = location.href;
         var $ajaxOptions = {

@@ -5,6 +5,7 @@ namespace frontend\modules\payment\providers\cod;
 use common\models\PaymentTransaction;
 use frontend\modules\payment\Payment;
 use frontend\modules\payment\PaymentResponse;
+use frontend\modules\payment\PaymentService;
 use yii\base\BaseObject;
 use frontend\modules\payment\PaymentProviderInterface;
 use yii\helpers\Url;
@@ -22,7 +23,7 @@ class CodProvider extends BaseObject implements PaymentProviderInterface
     public function handle($data)
     {
         /** @var $transaction  PaymentTransaction */
-        if (($transaction = PaymentTransaction::findOne(['transaction_code' => $data['code']])) === null) {
+        if (($transaction = PaymentService::findParentTransaction($data['code'])) === null) {
             return new PaymentResponse(false, 'Transaction không tồn tại','cod');
         }
         $checkoutUrl = Url::to("/checkout/cod/{$transaction->transaction_code}/success.html", true);

@@ -79,17 +79,17 @@ class AdditionalController extends BaseApiController
             }
             $productPrice = $additionalFees->getTotalAdditionalFees('product_price');
             // Tổng tiền các phí, trừ tiền gốc sản phẩm (chỉ có các phí)
-            $product->total_fee_product_local = $additionalFees->getTotalAdditionalFees(null, ['product_price'])[1];         // Tổng Phí theo sản phẩm
+            $product->total_fee_product_local = $additionalFees->getTotalAdditionalFees(['tax_fee','shipping_fee'])[1];         // Tổng Phí theo sản phẩm
             // Tổng tiền local gốc sản phẩm (chỉ có tiền gốc của sản phẩm)
             list($product->price_amount_origin, $product->price_amount_local) = $productPrice;
             $product->price_amount_origin = $product->price_amount_origin / $product->quantity_customer;
             $product->price_amount_local = $product->price_amount_local / $product->quantity_customer;
-
-
             $product->total_price_amount_local = $productPrice[1];
+            $product->total_price_amount_origin = $productPrice[0];
+            list($product->total_final_amount_origin, $product->total_final_amount_local)  = $additionalFees->getTotalAdditionalFees(['product_price','shipping_fee','tax_fee']);
+
             // Tổng tiền local tất tần tận
-            $product->total_final_amount_local = $additionalFees->getTotalAdditionalFees(null)[1];
-            $product->total_final_amount_origin = $additionalFees->getTotalAdditionalFees(null)[0];
+
             $product->save(false);
             $order = $product->order;
             $order->on(Order::EVENT_AFTER_UPDATE, function ($event) {

@@ -3,6 +3,7 @@
 namespace frontend\modules\payment\providers\alepay;
 
 
+use frontend\modules\payment\PaymentService;
 use Yii;
 use Exception;
 use yii\base\BaseObject;
@@ -111,7 +112,7 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             $transactionInfo = Json::decode($transactionInfo, true);
 
             $orderCode = $transactionInfo['orderCode'];
-            if (($transaction = PaymentTransaction::findOne(['transaction_code' => $orderCode])) === null) {
+            if (($transaction = PaymentService::findParentTransaction($orderCode)) === null) {
                 $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logCallback->save(false);
@@ -128,7 +129,7 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             }
             if ($success) {
                 $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-                $transaction->save();
+                $transaction->save(false);
             }
             $logCallback->response_content = $transactionInfo;
             $logCallback->save();
