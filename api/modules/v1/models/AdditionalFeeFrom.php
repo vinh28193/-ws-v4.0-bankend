@@ -118,7 +118,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             }
 
             if ($hasChange || $totalOrigin = $this->getTotalOrigin() > 0) {
-                $this->_additionalFees->remove('purchase_fee', $this->us_ship);
+                $this->_additionalFees->remove('purchase_fee');
                 $this->_additionalFees->withCondition($this, 'purchase_fee', null);
             }
 

@@ -249,7 +249,7 @@ class StoreManager extends Component implements BootstrapInterface
         }
         $money = number_format($money, $decimal);
         $money = StringHelper::normalizeNumber($money);
-        return implode($this->moneyShowWith === self::MONEY_SHOW_MODE_CURRENCY ? ' ' : '', [$money, $currency]);
+        return implode($this->moneyShowWith === self::MONEY_SHOW_MODE_CURRENCY ? '' : '', [$money, $currency]);
     }
 
 

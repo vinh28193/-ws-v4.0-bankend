@@ -10,6 +10,9 @@ html, body {
 .wrapper{
     background: #fff;
 }
+.breadcrumb-content .container{
+    padding: 0 30px;
+}
 .formIconTitle{
     border: 1px solid #7f7f7f7f;
     border-radius: 5px;

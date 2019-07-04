@@ -590,8 +590,8 @@ class AmazonGateV3 extends BaseGate
                     $item['prices_range'] = [min($param['sell_price']), max($param['sell_price'])];
                 }
             }
-            $item['sell_price'] = isset($param['sell_price'][0]) ? $param['sell_price'][0] : 0;
-            $item['retail_price'] = count($param['retail_price']) > 0 ? $param['retail_price'][0] : 0;
+            $item['sell_price'] = isset($param['sell_price'][0]) ? $this->convertStringToNumber($param['sell_price'][0]) : 0;
+            $item['retail_price'] = count($param['retail_price']) > 0 ? $this->convertStringToNumber($param['retail_price'][0]) : 0;
             $item['rate_star'] = $param['rate_star'];
             $item['rate_count'] = $param['rate_count'];
             $item['item_name'] = $param['title'];
@@ -600,7 +600,11 @@ class AmazonGateV3 extends BaseGate
 
         return $rs;
     }
-
+    public function convertStringToNumber($str){
+        $num = str_replace(' ','',$str);
+        $num = str_replace(',','',$num);
+        return $num;
+    }
     private function getFilterNew($filter)
     {
         $rs = [];

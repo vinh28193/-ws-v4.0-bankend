@@ -168,10 +168,15 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getSellPrice()
     {
-        if (!empty($this->deal_price) && $this->deal_price > 0.0) {
-            return $this->deal_price * $this->quantity;
-        } else {
-            return $this->sell_price * $this->quantity;
+        try{
+            if (!empty($this->deal_price) && $this->deal_price > 0.0) {
+                return $this->deal_price * $this->quantity;
+            } else {
+                return $this->sell_price ? $this->sell_price * $this->quantity : 0;
+            }
+        }catch (\Exception $exception){
+            Yii::error($exception);
+            return 0;
         }
     }
 
