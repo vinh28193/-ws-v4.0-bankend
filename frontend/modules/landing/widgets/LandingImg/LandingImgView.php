@@ -8,7 +8,7 @@
                 <div class="row">
                     <?php
                     if (!empty($images)) {
-                        foreach ($images as $key => $val) {
+                        foreach ($images as $key => $value) {
                             ?>
 
                             <li class="col-xs-6">
