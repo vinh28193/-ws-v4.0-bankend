@@ -63,8 +63,8 @@ class CmsController extends FrontendController
         return ArrayHelper::merge(parent::metaTag(), [
             'title' => $this->page->title ? $this->page->title : $this->site_title,
             'site_name' => $this->page->title ? $this->page->name : $this->site_name,
-            'url' => $this->page->url ? $this->page->url : '#',
-            'image' => $this->page->image ? $this->page->image : '#',
+            'url' => $this->page->url ? $this->page->url : $this->request->absoluteUrl,
+            'image' => $this->page->image ? $this->page->image : $this->site_image,
             'description' => $this->page->description ? $this->page->description : $this->site_description,
         ]);
     }
@@ -74,8 +74,8 @@ class CmsController extends FrontendController
         return ArrayHelper::merge(parent::ogMetaTag(), $this->page !== null ? [
             'title' => $this->page->title ? $this->page->title : $this->site_title,
             'site_name' => $this->page->title ? $this->page->name : $this->site_name,
-            'url' => $this->page->url ? $this->page->url : '#',
-            'image' => $this->page->image ? $this->page->image : '#',
+            'url' => $this->page->url ? $this->page->url : $this->request->absoluteUrl,
+            'image' => $this->page->image ? $this->page->image : $this->site_image,
             'description' => $this->page->description ? $this->page->description : $this->site_description,
         ] : []);
     }
@@ -100,9 +100,7 @@ class CmsController extends FrontendController
      */
     protected function getActivePage()
     {
-//         return PageService::getPage($this->type, 1);
-        Yii::info("storeId", Yii::$app->storeManager->getId());
-        return PageService::getPage($this->type, Yii::$app->storeManager->getId() ? Yii::$app->storeManager->getId() : 1);
+        return PageService::getPage($this->type, $this->storeManager->getId());
     }
 
     public function defaultLayoutParams()
