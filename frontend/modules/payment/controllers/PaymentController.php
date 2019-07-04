@@ -214,9 +214,7 @@ class PaymentController extends BasePaymentController
                     $product->quantity_purchase = null;
                     /** Todo */
                     $product->quantity_inspect = null;
-                    /** Todo */
-                    $product->variations = null;
-                    /** Todo */
+
                     $product->variation_id = null;
                     $product->remove = 0;
                     $product->version = '4.0';
