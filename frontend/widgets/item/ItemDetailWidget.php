@@ -132,7 +132,7 @@ CSS;
         $params = Json::htmlEncode([
             'id' => $this->item->item_id,
             'sku' => $this->item->item_sku,
-            'seller' => $this->item->provider ? $this->item->provider->name : ($this->item->getCurrentProvider() ? $this->item->getCurrentProvider()->name : null),
+            'seller' => $this->item->provider ? $this->item->provider->prov_id : ($this->item->getCurrentProvider() ? $this->item->getCurrentProvider()->prov_id : null),
             'condition' => $this->item->getIsNew(),
             'type' => $this->item->getType(),
             'variation_mapping' => $this->item->variation_mapping,

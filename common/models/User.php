@@ -20,6 +20,7 @@ use common\components\UserPublicIdentityInterface;
  * @property Address[] $shippingAddress
  * @property Address[] $primaryAddress
  * @property AuthAssignment[] $scopeAuth
+ * @property Store $store
  */
 class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInterface, UserPublicIdentityInterface
 {
@@ -484,5 +485,8 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
             $cookieUser->address = $this->primaryAddress[0]->address;
         }
         $cookieUser->setNewCookies();
+    }
+    public function getLanguage(){
+
     }
 }
