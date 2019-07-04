@@ -143,7 +143,7 @@ class AdditionalController extends BaseApiController
                     $amount = $orderFees[$productFee->name]['amount'];
                     $amount += $productFee->amount;
                     $local_amount = $orderFees[$productFee->name]['local_amount'];
-                    $amount += $productFee->local_amount;
+                    $local_amount += $productFee->local_amount;
                     $orderFees[$productFee->name] = [
                         'amount' => $amount,
                         'local_amount' => $local_amount
