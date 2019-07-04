@@ -4,7 +4,7 @@ use common\models\SystemDistrict;
 use common\models\SystemZipcode;
 use frontend\modules\payment\models\ShippingForm;
 use kartik\depdrop\DepDrop;
-
+use yii\helpers\Url;
 /**
  * @var \yii\web\View $this
  * @var ShippingForm $shippingForm
@@ -23,16 +23,16 @@ $jsdistrict = json_encode($district);
                 <div class="col-md-6 item-box">
                     <div class="title"><?= Yii::t('frontend','Accept payment:') ?></div>
                     <ul>
-                        <li><a href="#"><img src="/img/pay_master.png" alt="" title=""/></a></li>
-                        <li><a href="#"><img src="/img/pay_visa.png" alt="" title=""/></a></li>
-                        <li><a href="#"><img src="/img/pay_jcb.png" alt="" title=""/></a></li>
+                        <li><a href="#"><img src="<?= Url::to('/img/pay_master.png', true); ?>" alt="" title=""/></a></li>
+                        <li><a href="#"><img src="<?= Url::to('/img/pay_visa.png', true); ?>" alt="" title=""/></a></li>
+                        <li><a href="#"><img src="<?= Url::to('/img/pay_jcb.png', true); ?>" alt="" title=""/></a></li>
                     </ul>
                 </div>
                 <div class="col-md-6 item-box">
                     <div class="title"><?= Yii::t('frontend','Co-operate:') ?></div>
                     <ul>
-                        <li><a href="#"><img src="/img/operate_ebay.png" alt="" title=""/></a></li>
-                        <li><a href="#"><img src="/img/operate_amz.png" alt="" title=""/></a></li>
+                        <li><a href="#"><img src="<?= Url::to('/img/operate_ebay.png', true); ?>" alt="" title=""/></a></li>
+                        <li><a href="#"><img src="<?= Url::to('/img/operate_amz.png', true); ?>" alt="" title=""/></a></li>
                     </ul>
                 </div>
             </div>
@@ -88,12 +88,12 @@ $jsdistrict = json_encode($district);
                                     </span>
                         </div>
                     </div>
-                    <div class="sticker-bct"><a href="#" target="_blank"><img src="/img/chung_nhan_bct.png" alt=""
+                    <div class="sticker-bct"><a href="#" target="_blank"><img src="<?= Url::to('/img/chung_nhan_bct.png', true); ?>" alt=""
                                                                               title=""/></a></div>
                     <div class="connect">
                         <span><?= Yii::t('frontend','Connect with Weshop:') ?>:</span>
-                        <a href="<?= Yii::t('frontend','#facebookWeshop') ?>" target="_blank"><img src="/img/social_fb.png" alt="" title=""/></a>
-                        <a href="<?= Yii::t('frontend','#youtubeWeshop') ?>" target="_blank"><img src="/img/social_youtube.png" alt="" title=""/></a>
+                        <a href="<?= Yii::t('frontend','#facebookWeshop') ?>" target="_blank"><img src="<?= Url::to('/img/social_fb.png', true); ?>" alt="" title=""/></a>
+                        <a href="<?= Yii::t('frontend','#youtubeWeshop') ?>" target="_blank"><img src="<?= Url::to('/img/social_youtube.png', true); ?>" alt="" title=""/></a>
                     </div>
                 </div>
             </div>
