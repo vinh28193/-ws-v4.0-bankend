@@ -90,7 +90,7 @@ class FrontendController extends Controller
             'title' => $this->title,
             'site_name' => Yii::$app->requestedRoute,
             'url' => $this->request->url,
-            'image' => Url::to('/img/weshop-logo-vn.png'),
+            'image' => Url::to('/img/weshop-logo-vn.png', true),
             'description' => $this->portalDescription,
         ];
     }
@@ -101,7 +101,7 @@ class FrontendController extends Controller
             'title' => $this->title,
             'site_name' => Yii::$app->requestedRoute,
             'url' => $this->request->url,
-            'image' => Url::to('/img/weshop-logo-vn.png'),
+            'image' => Url::to('/img/weshop-logo-vn.png', true),
             'description' => $this->portalDescription,
         ];
 
@@ -164,9 +164,9 @@ class FrontendController extends Controller
     {
         $metaTags = ArrayHelper::merge([
             'author' => Yii::t('frontend', 'Weshop Global'),
-            'COPYRIGHT' => Yii::t('frontend', '&copy; Weshop Global'),
-            'robots' => 'noodp,index,follow',
-            'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505',
+            'COPYRIGHT' => Yii::t('frontend', 'Weshop Global'),
+            'robots' => 'index,follow',
+            //'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505',
             'fingerprint-token' => ($uuid = $this->filterUuid(false)) !== null ? $uuid : '',
         ], $this->metaTag(), ArrayHelper::getValue(Yii::$app->params, 'metaTagParam', []));
         foreach ($metaTags as $name => $content) {
@@ -178,8 +178,8 @@ class FrontendController extends Controller
         $ogMetaTags = ArrayHelper::merge([
             'type' => 'website',
             'locale' => 'vi_VN',
-            'image:height' => 200,
-            'image:width' => 150,
+            //'image:height' => 200,
+            //'image:width' => 150,
 
         ], $this->ogMetaTag(), ArrayHelper::getValue(Yii::$app->params, 'ogMetaTagParam', []));
         foreach ($ogMetaTags as $name => $content) {
