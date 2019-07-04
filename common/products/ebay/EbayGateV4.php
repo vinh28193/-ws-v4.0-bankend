@@ -146,9 +146,9 @@ class EbayGateV4 extends BaseGate
 //            $this->cache->set($request->getCacheKey(), $response, $ok === true ? self::MAX_CACHE_DURATION : 0);
 //        }
         $product = (new EbayDetailResponse($this))->parser($response);
-        if($product->providers && count($product->providers)){
-            $product->customer_feedback = $this->updateCustomerFeedback($product->item_id,$product->providers[0]->name);
-        }
+//        if($product->providers && count($product->providers)){
+//            $product->customer_feedback = $this->updateCustomerFeedback($product->item_id,$product->providers[0]->name);
+//        }
         return [true, $product];
 
     }
