@@ -32,6 +32,7 @@ class PageService
      */
     public static function getPage($type, $store = 1, $id = null, $flushCache = false)
     {
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = 'PAGE_CACHE_KEY_PREFIX';
         if ($id !== null) {
             $key .= '_ID' . $id;
@@ -55,6 +56,7 @@ class PageService
 
     public static function getPageItem($pageId, $limit = 6, $offset = 0, $flushCache = false)
     {
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = 'LIST_PAGE_ITEM_BY_PAGE_' . $pageId;
         if ($limit < 0 && $offset < 0) {
             $key .= '_COUNT';
@@ -83,6 +85,7 @@ class PageService
     public static function getAlias($type, $store = 1, $flushCache = false)
     {
 
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
 
         if ($type === WsPage::TYPE_AMZ) {
             $type = 'amazon';
@@ -115,6 +118,7 @@ class PageService
      */
     public static function getSlider($pageId, $flushCache = false)
     {
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = 'SLIDE_' . $pageId;
         if (!($slides = self::getCache()->get($key)) || $flushCache) {
             if (
@@ -130,6 +134,7 @@ class PageService
 
     public static function getBlockByPageItem($pageItemId, $flushCache = false)
     {
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = "ITEM_BLOCK_BY_PAGE_ITEM_{$pageItemId}_ID";
         if (!($blocks = self::getCache()->get($key)) || $flushCache) {
             $blocks = WsBlock::find()
@@ -146,6 +151,7 @@ class PageService
 
     public static function getGroupCategoryByBlockId($blockId, $flushCache = false)
     {
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = 'GROUP_CATEGORY_BY_BLOCK_ID' . $blockId;
         if (!($groupCategory = self::getCache()->get($key)) || $flushCache) {
             $groupCategory = WsCategoryGroup::find()->where(['ws_block_id' => $blockId])->one();
@@ -157,6 +163,7 @@ class PageService
 
     public static function getCategoryByGroupId($groupId, $flushCache = false)
     {
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = 'LIST_CATE_BY_GROUP_' . $groupId;
         if (!($categories = self::getCache()->get($key)) || $flushCache) {
             $categories = WsCategory::find()
@@ -172,6 +179,7 @@ class PageService
     public static function getGroupProductByBlockId($blockId, $flushCache = false)
     {
 
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = 'ITEM_GROUP_BY_BLOCK_ID_' . $blockId;
         if (!($groupProduct = self::getCache()->get($key)) || $flushCache) {
             $groupProduct = WsProductGroup::find()->where(['ws_block_id' => $blockId])->one();
@@ -183,6 +191,7 @@ class PageService
     public static function getProductByGroupId($groupId, $flushCache = false)
     {
 
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = 'LIST_PRODUCT_BY_GROUP_TOP_' . $groupId;
         if (!($products = self::getCache()->get($key)) || $flushCache) {
             $products = WsProduct::find()
@@ -204,6 +213,7 @@ class PageService
 
     public static function getItemGroupImage($blockId, $type = WsImageGroup::TYPE_BRAND, $flushCache = false)
     {
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = 'ITEM_GROUP_IMAGE_BY_BLOCK_ID_' . $blockId . $type;
         if (!($groupImage = self::getCache()->get($key)) || $flushCache) {
             $groupImage = WsImageGroup::find()->where(['ws_block_id' => $blockId, 'type' => $type])->one();
@@ -214,6 +224,7 @@ class PageService
 
     public static function getImageByGroupId($ImageGroupId, $flushCache = false)
     {
+        $flushCache = $flushCache ? $flushCache : Yii::$app->request->get('nocache','') === 'yes';
         $key = 'LIST_IMAGE_BRAN_BY_BLOCK_' . $ImageGroupId;
         if (!($images = self::getCache()->get($key)) || $flushCache) {
             $images = WsImage::find()

@@ -1,7 +1,7 @@
 <div class="ld-deal-banner">
     <div class="row">
         <?php if (!empty($images)) {
-            foreach ($images as $key => $val) {
+            foreach ($images as $key => $value) {
                 ?>
                 <?php if (count($images) == 1) { ?>
                     <div class="col-md-12">

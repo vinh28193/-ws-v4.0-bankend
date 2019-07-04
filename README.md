@@ -1004,8 +1004,22 @@ $ let erl3 = client.CalculateFee({Data: '{"config":{"preview":"Y","return_mode":
 
 
 #---------------Move user------------------------------
+php yii user/clone-user-old : 500 User
+
 php yii user/clone-user-old-by-email ntanh28@gmail.com
 php yii user/clone-user-old-by-email ngoctham213@gmail.com
 php yii user/clone-user-old-by-email tuongan.cntt@gmail.com
 php yii user/clone-user-old-by-email nguyen_quang_minh@outlook.com.vn
 
+
+#------------------API gRPC IP product------------------------------
+BOXME_GRPC_SERVICE_LOCATION=10.130.111.53:50052
+BOXME_GRPC_SERVICE_USER=10.130.111.53:50053
+BOXME_GRPC_SERVICE_ACCOUNTING=10.130.111.53:50054
+BOXME_GRPC_SERVICE_SHIPMENT=10.130.111.53:50060
+BOXME_GRPC_SERVICE_COURIER=10.130.111.53:50056
+BOXME_GRPC_SERVICE_CURRENCY=10.130.111.53:50060
+BOXME_GRPC_SERVICE_ORDER=10.130.111.53:50058
+BOXME_GRPC_SERVICE_SELLER=10.130.111.53:50060
+BOXME_GRPC_SERVICE_NOTIFICATION=10.130.111.53:50051
+BOXME_GRPC_SERVICE_OPS=10.130.111.53:50059
