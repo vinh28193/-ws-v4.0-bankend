@@ -1,3 +1,10 @@
+syntax = "proto3";
+
+option objc_class_prefix = "cal";
+package Shipment;
+
+option php_generic_services = true;
+
 message CreateShipmentRequest {
     string Country  = 1; // Ma Quoc Gia
     int32  UserId   = 2; // User id
@@ -17,3 +24,4 @@ service SellerService {
 //from boxme_core.rpc.services.seller.SellerClient import SellerClient
 //param = json.dumps(param)
 //resp = SellerClient().create_shipment(param, country, int(user_id))
+
