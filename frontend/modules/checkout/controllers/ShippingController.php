@@ -118,7 +118,7 @@ class ShippingController extends CheckoutController
 
     }
 
-    public function actionIndex($page, $type)
+    public function actionIndex($type,$page = Payment::PAGE_CHECKOUT)
     {
         if (($keys = CartSelection::getSelectedItems($type)) === null) {
             return $this->goBack();
