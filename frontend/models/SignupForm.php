@@ -7,6 +7,7 @@ use yii\base\Model;
 use common\models\User;
 use Yii;
 use common\models\Auth;
+use yii\helpers\Html;
 
 /**
  * Signup form
@@ -38,15 +39,17 @@ class SignupForm extends Model
             ['phone', 'string', 'min' => 10, 'max' => 15],
             ['phone', 'required'],
             ['phone', 'common\validators\PhoneValidator'],
-            ['phone', 'unique', 'targetClass' => '\common\models\User'],
+            ['phone', 'unique', 'targetClass' => '\common\models\User','filter' => function(\yii\db\ActiveQuery  $query) {
+                $query->andWhere(['store_id' => Yii::$app->storeManager->getId()]);
+            }],
 
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
-
-
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.','filter' => function(\yii\db\ActiveQuery  $query) {
+                $query->andWhere(['store_id' => Yii::$app->storeManager->getId()]);
+            }],
             ['password', 'required'],
             ['password', 'string', 'min' => 8, 'max' => 72],
             ['password', 'match', 'pattern' => '/[0-9a-zA-Z]/', 'message' => 'Password does not enter special characters'],
@@ -89,8 +92,8 @@ class SignupForm extends Model
         @date_default_timezone_set('Asia/Ho_Chi_Minh');
         $user = new User([
             'phone' => $this->phone,
-            'last_name' => $this->last_name,
-            'first_name' => $this->first_name,
+            'last_name' => Html::encode($this->last_name),
+            'first_name' => Html::encode($this->first_name),
             'username' => $this->email,
             'email' => $this->email,
             'password' => $this->password,

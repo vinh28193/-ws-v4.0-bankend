@@ -20,23 +20,23 @@ class PortalController extends FrontendController
 
     public $portal = BaseProduct::TYPE_EBAY;
 
+    public $site_image;
 
     public function init()
     {
         parent::init();
-        $this->portalTitle = Yii::t('frontend', 'Buy in Amazon, eBay');
-        $this->portalImage = '';
-        $this->portalDescription = Yii::t('frontend', 'Buy in Amazon, eBay & Top Stores US Viet Nam. Order easy & online payment.');
+        $this->site_title = Yii::t('frontend', 'Buy in Amazon, eBay');
+        $this->site_image = '';
+        $this->site_name = Yii::t('frontend', 'Portal {portal}', [
+            'portal' => $this->portal = BaseProduct::TYPE_EBAY ? 'eBay' : 'Amazon'
+        ]);
+        $this->site_description = Yii::t('frontend', 'Buy in Amazon, eBay & Top Stores US Viet Nam. Order easy & online payment.');
     }
 
-    public function ogMetaTag()
+    protected function ogMetaTag()
     {
         return ArrayHelper::merge(parent::ogMetaTag(), [
-            'title' => $this->portalTitle,
-            //'site_name' => $this->portalTitle,
-            'image' => $this->portalImage,
-            'description' => $this->portalDescription,
-           // 'portal' => strtolower($this->portal),
+            'image' => $this->site_image,
             'keyword' => Yii::t('frontend', 'weshop, ebay, amazon, ebay vn, amazon vn, buy ebay, buy amazon, buy usa, us shipping, watch, technological, electronics, high-tech, clothing, gadgets, accessories, jewelry, watches, beauty, cosmetic, health product, sport')
         ]);
     }
@@ -88,10 +88,14 @@ class PortalController extends FrontendController
         Yii::info(" Favorite : start create favorite");
         $fingerprint = null;
         $post = $this->request->post();
-        if (isset($post['fingerprint'])) {   $fingerprint = $post['fingerprint'];  }
+        if (isset($post['fingerprint'])) {
+            $fingerprint = $post['fingerprint'];
+        }
         //$item = ArrayHelper::getValue($post,'item');
-        $id = ArrayHelper::getValue($post, 'sku'); Yii::info(" id sku : " . $id);
-        $portal = ArrayHelper::getValue($post, 'portal'); Yii::info(" portal: " . $portal);
+        $id = ArrayHelper::getValue($post, 'sku');
+        Yii::info(" id sku : " . $id);
+        $portal = ArrayHelper::getValue($post, 'portal');
+        Yii::info(" portal: " . $portal);
         if (!Yii::$app->getRequest()->validateCsrfToken()) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return ['success' => false, 'message' => Yii::t('frontend', 'Form Security Alert'), 'data' => ['content' => '']];
@@ -109,7 +113,7 @@ class PortalController extends FrontendController
         Yii::info([
             'item_name' => $item->item_name,
             'item' => $item,
-            'form_detail_Favorite' =>'actionFavorite',
+            'form_detail_Favorite' => 'actionFavorite',
             'sku' => $id,
             'type' => $portal,
             'Error' => $form->getErrors(),
@@ -145,10 +149,12 @@ class PortalController extends FrontendController
             $_favorite = new FavoriteObject();
             Yii::info(" start save Favorite ");
             $flar = $_favorite->create($item, $id, $uuid);
-            if($flar){
+            if ($flar) {
                 return 'create favo Success';
-            }else {  return 'Can not create favo'; }
-        } else if($item == false or is_null($uuid) ) {
+            } else {
+                return 'Can not create favo';
+            }
+        } else if ($item == false or is_null($uuid)) {
             return 'something wrong user uu! or get item data';
         }
 
@@ -178,10 +184,14 @@ class PortalController extends FrontendController
         Yii::info(" Favorite : start create favorite");
         $fingerprint = null;
         $post = $this->request->post();
-        if (isset($post['fingerprint'])) {   $fingerprint = $post['fingerprint'];  }
+        if (isset($post['fingerprint'])) {
+            $fingerprint = $post['fingerprint'];
+        }
         //$item = ArrayHelper::getValue($post,'item');
-        $id = ArrayHelper::getValue($post, 'sku'); Yii::info(" id sku : " . $id);
-        $portal = ArrayHelper::getValue($post, 'portal'); Yii::info(" portal: " . $portal);
+        $id = ArrayHelper::getValue($post, 'sku');
+        Yii::info(" id sku : " . $id);
+        $portal = ArrayHelper::getValue($post, 'portal');
+        Yii::info(" portal: " . $portal);
         if (!Yii::$app->getRequest()->validateCsrfToken()) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return ['success' => false, 'message' => Yii::t('frontend', 'Form Security Alert'), 'data' => ['content' => '']];
@@ -199,7 +209,7 @@ class PortalController extends FrontendController
         Yii::info([
             'item_name' => $item->item_name,
             'item' => $item,
-            'form_detail_Favorite' =>'actionFavorite',
+            'form_detail_Favorite' => 'actionFavorite',
             'sku' => $id,
             'type' => $portal,
             'Error' => $form->getErrors(),
@@ -235,10 +245,12 @@ class PortalController extends FrontendController
             $_favorite = new FavoriteObject();
             Yii::info(" start save Favorite ");
             $flar = $_favorite->create($item, $id, $uuid);
-            if($flar){
+            if ($flar) {
                 return 'create favo Success';
-            }else {  return 'Can not create favo'; }
-        } else if($item == false or is_null($uuid) ) {
+            } else {
+                return 'Can not create favo';
+            }
+        } else if ($item == false or is_null($uuid)) {
             return 'something wrong user uu! or get item data';
         }
 

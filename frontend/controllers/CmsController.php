@@ -58,19 +58,31 @@ class CmsController extends FrontendController
         return $this->_page;
     }
 
-    public function ogMetaTag()
+    public function metaTag()
+    {
+        return ArrayHelper::merge(parent::metaTag(), [
+            'title' => $this->page->title ? $this->page->title : $this->site_title,
+            'site_name' => $this->page->title ? $this->page->name : $this->site_name,
+            'url' => $this->page->url ? $this->page->url : '#',
+            'image' => $this->page->image ? $this->page->image : '#',
+            'description' => $this->page->description ? $this->page->description : $this->site_description,
+        ]);
+    }
+
+    protected function ogMetaTag()
     {
         return ArrayHelper::merge(parent::ogMetaTag(), $this->page !== null ? [
-            'site_name' => $this->title ? $this->title : $this->page->title,
-            'url' => $this->page->url,
-            'image' => $this->page->image,
-            'description' => $this->portalDescription ? $this->portalDescription : $this->page->description,
+            'title' => $this->page->title ? $this->page->title : $this->site_title,
+            'site_name' => $this->page->title ? $this->page->name : $this->site_name,
+            'url' => $this->page->url ? $this->page->url : '#',
+            'image' => $this->page->image ? $this->page->image : '#',
+            'description' => $this->page->description ? $this->page->description : $this->site_description,
         ] : []);
     }
 
-    public function linkTag()
+    protected function linkTag()
     {
-        return ArrayHelper::merge(parent::ogMetaTag(), $this->page !== null ? [
+        return ArrayHelper::merge(parent::linkTag(), $this->page !== null ? [
             'canonical' => $this->page->url,
         ] : []);
     }
@@ -89,8 +101,8 @@ class CmsController extends FrontendController
     protected function getActivePage()
     {
 //         return PageService::getPage($this->type, 1);
-        Yii::info("storeId" , Yii::$app->storeManager->getId());
-         return PageService::getPage($this->type, Yii::$app->storeManager->getId() ? Yii::$app->storeManager->getId() : 1);
+        Yii::info("storeId", Yii::$app->storeManager->getId());
+        return PageService::getPage($this->type, Yii::$app->storeManager->getId() ? Yii::$app->storeManager->getId() : 1);
     }
 
     public function defaultLayoutParams()

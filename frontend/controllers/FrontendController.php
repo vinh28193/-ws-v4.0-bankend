@@ -41,8 +41,11 @@ class FrontendController extends Controller
     /**
      * @var
      */
-    public $title;
+    public $site_title;
 
+    public $site_name;
+
+    public $site_description;
     /**
      * @var string|Request
      */
@@ -54,9 +57,6 @@ class FrontendController extends Controller
      */
     private $_ecomobi;
 
-    public $portalTitle;
-    public $portalImage;
-    public $portalDescription;
     /**
      * @return EcomobiComponent|mixed
      */
@@ -84,30 +84,30 @@ class FrontendController extends Controller
         return $this->_ga;
     }
 
-    public function ogMetaTag()
+    protected function ogMetaTag()
     {
         return [
-            'title' => $this->title,
-            'site_name' => Yii::$app->requestedRoute,
-            'url' => $this->request->url,
+            'title' => $this->site_title,
+            'site_name' => $this->site_name,
+            'url' => $this->request->absoluteUrl,
             'image' => Url::to('/img/weshop-logo-vn.png', true),
-            'description' => $this->portalDescription,
+            'description' => $this->site_description,
         ];
     }
 
-    public function metaTag()
+    protected function metaTag()
     {
         return [
-            'title' => $this->title,
-            'site_name' => Yii::$app->requestedRoute,
-            'url' => $this->request->url,
+            'title' => $this->site_title,
+            'site_name' => $this->site_name,
+            'url' => $this->request->absoluteUrl,
             'image' => Url::to('/img/weshop-logo-vn.png', true),
-            'description' => $this->portalDescription,
+            'description' => $this->site_description,
         ];
 
     }
 
-    public function linkTag()
+    protected function linkTag()
     {
         return [];
     }
@@ -120,22 +120,32 @@ class FrontendController extends Controller
         parent::init();
         $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
         $this->request = Instance::ensure($this->request, Request::className());
-        if($this->title !== null){
-            $this->title = $this->storeManager->store->name;
-        }
-        $this->registerAllMetaTagLinkTag();
-
-        $this->getView()->title = $this->title;
+        $this->site_title = $this->storeManager->store->name;
+        $this->site_name = $this->storeManager->store->name;
+        $this->site_description = Yii::t('frontend', '{name} - World Wide Shopping Made Easy', [
+            'name' => $this->site_name
+        ]);
         $this->getEcomobi()->register();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function beforeAction($action)
     {
         if ($this->filterUuid(false) === null && ($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN, null)) !== null) {
             $this->setUuidCookie($onHead);
         }
-        return parent::beforeAction($action);
+        if (parent::beforeAction($action)) {
+            if ($this->request->isAjax) {
+
+            }
+            return true;
+        }
+
+        return false;
     }
+
 
     /**
      * default params will be pass to view
@@ -158,47 +168,6 @@ class FrontendController extends Controller
     public function defaultLayoutParams()
     {
         return [];
-    }
-
-    protected function registerAllMetaTagLinkTag()
-    {
-        $metaTags = ArrayHelper::merge([
-            'author' => Yii::t('frontend', 'Weshop Global'),
-            'COPYRIGHT' => Yii::t('frontend', 'Weshop Global'),
-            'robots' => 'index,follow',
-            //'cystack-verification' => 'f63c2e531bc93b353c0dbd93f8ce0505',
-            'fingerprint-token' => ($uuid = $this->filterUuid(false)) !== null ? $uuid : '',
-        ], $this->metaTag(), ArrayHelper::getValue(Yii::$app->params, 'metaTagParam', []));
-        foreach ($metaTags as $name => $content) {
-            $this->registerMetaTag([
-                'name' => $name,
-                'content' => $content !== null ? $content : '',
-            ]);
-        }
-        $ogMetaTags = ArrayHelper::merge([
-            'type' => 'website',
-            'locale' => 'vi_VN',
-            //'image:height' => 200,
-            //'image:width' => 150,
-
-        ], $this->ogMetaTag(), ArrayHelper::getValue(Yii::$app->params, 'ogMetaTagParam', []));
-        foreach ($ogMetaTags as $name => $content) {
-            $this->registerMetaTag([
-                'property' => "og:$name",
-                'name' => $name,
-                'content' => $content !== null ? $content : '',
-            ]);
-        }
-        $links = ArrayHelper::merge([
-            'shortcut icon' => Url::to('/favicon.ico', true),
-        ], $this->linkTag(), ArrayHelper::getValue(Yii::$app->params, 'linkTagParam', []));
-        foreach ($links as $rel => $href) {
-            $this->registerLinkTag([
-                'rel' => $rel,
-                'href' => $href !== null ? $href : '#'
-            ]);
-        }
-
     }
 
 
@@ -232,7 +201,42 @@ class FrontendController extends Controller
                 ]));
             }
             $params['content'] = $content;
-            return $this->getView()->renderFile($layoutFile, $params, $this);
+            $view = $this->getView();
+            $view->title = $this->site_title;
+            $metaTags = ArrayHelper::merge([
+                'author' => $this->storeManager->store->name,
+                'COPYRIGHT' => $this->storeManager->store->name,
+                'robots' => 'index,follow',
+                'fingerprint-token' => ($uuid = $this->filterUuid(false)) !== null ? $uuid : '',
+            ], $this->metaTag(), ArrayHelper::getValue(Yii::$app->params, 'metaTagParam', []));
+            foreach ($metaTags as $name => $content) {
+                $view->registerMetaTag([
+                    'name' => $name,
+                    'content' => $content !== null ? $content : '',
+                ]);
+            }
+            $ogMetaTags = ArrayHelper::merge([
+                'type' => 'website',
+                'locale' => Yii::$app->language,
+
+            ], $this->ogMetaTag(), ArrayHelper::getValue(Yii::$app->params, 'ogMetaTagParam', []));
+            foreach ($ogMetaTags as $name => $content) {
+                $view->registerMetaTag([
+                    'property' => "og:$name",
+                    'name' => $name,
+                    'content' => $content !== null ? $content : '',
+                ]);
+            }
+            $links = ArrayHelper::merge([
+                'shortcut icon' => Url::to('/favicon.ico', true),
+            ], $this->linkTag(), ArrayHelper::getValue(Yii::$app->params, 'linkTagParam', []));
+            foreach ($links as $rel => $href) {
+                $view->registerLinkTag([
+                    'rel' => $rel,
+                    'href' => $href !== null ? $href : '#'
+                ]);
+            }
+            return $view->renderFile($layoutFile, $params, $this);
         }
         return $content;
     }

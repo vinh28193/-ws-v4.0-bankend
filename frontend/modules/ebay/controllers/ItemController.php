@@ -41,10 +41,9 @@ class ItemController extends EbayController
                 'errors' => $form->getErrors()
             ]);
         }
-        $this->portalTitle = Yii::t('frontend','{name} | Product eBay' , ['name' => $item->item_name]);
-        $this->portalDescription = Yii::t('frontend','Buy the "{name}" product on eBay immediately via Weshop to get the product within 7-15 days with many attractive offers. Shopping US Amazon, eBay easily.' , ['name' => $item->item_name]);
-        $this->portalImage = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
-        $this->registerAllMetaTagLinkTag();
+        $this->site_title = Yii::t('frontend','{name} | Product eBay' , ['name' => $item->item_name]);
+        $this->site_description = Yii::t('frontend','Buy the "{name}" product on eBay immediately via Weshop to get the product within 7-15 days with many attractive offers. Shopping US Amazon, eBay easily.' , ['name' => $item->item_name]);
+        $this->site_image = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
 
 //        $category = $item->getCategory();
 
