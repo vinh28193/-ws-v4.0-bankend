@@ -267,7 +267,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         return $this->roundShippingWeight($this->shipping_weight * $this->quantity);
     }
 
-    public function roundShippingWeight($inputWeight = 0, $minWeight = 1)
+    public function roundShippingWeight($inputWeight = 0, $minWeight = 0.5)
     {
         return floatval($inputWeight) < $minWeight ? $minWeight : round($inputWeight, 2);
     }
@@ -382,7 +382,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         Yii::info([
             'params' => $this->getShippingParams(),
             'wh' => $this->getPickUpWareHouse(),
-        ],'getInternationalShipping');
+        ], 'getInternationalShipping');
 
 
         if ((empty($this->_couriers) || $refresh) && !empty($this->getShippingParams())) {
@@ -446,7 +446,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getLocalizeTotalPrice()
     {
-        return $this->getAdditionalFees()->getTotalAdditionalFees(null,['international_shipping_fee'])[1];
+        return $this->getAdditionalFees()->getTotalAdditionalFees(null, ['international_shipping_fee'])[1];
     }
 
     public function getLocalizeTotalStartPrice()
@@ -455,12 +455,12 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         $tempPrice = $this->getSellPrice();
         $this->sell_price = $this->start_price;
         $this->init();
-        $temp = $this->getAdditionalFees()->getTotalAdditionalFees(null,['international_shipping_fee']);
+        $temp = $this->getAdditionalFees()->getTotalAdditionalFees(null, ['international_shipping_fee']);
         if (!empty($this->deal_price) && $this->deal_price > 0.0) {
             $deal = $this->deal_price;
             $this->deal_price = null;
             $this->init();
-            $temp = $this->getAdditionalFees()->getTotalAdditionalFees(null,['international_shipping_fee']);
+            $temp = $this->getAdditionalFees()->getTotalAdditionalFees(null, ['international_shipping_fee']);
             $this->deal_price = $deal;
         }
         //restore the sell_price to be $tempPrice before

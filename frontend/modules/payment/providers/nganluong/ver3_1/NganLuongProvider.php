@@ -153,7 +153,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
                 return new PaymentResponse(false, 'failed','nganluong');
             }
             $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-            $transaction->save();
+            $transaction->save(false);
             return new PaymentResponse(true, 'Giao dịch thanh toán không thành công!','nganluong', $transaction);
         } catch (\Exception $exception) {
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
