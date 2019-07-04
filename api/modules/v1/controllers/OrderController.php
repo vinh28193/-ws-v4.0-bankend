@@ -242,6 +242,9 @@ class OrderController extends BaseApiController
                     $model->{$StatusOrder[$i]} = $now;
                 }
             }
+            for ($j = (int)($post['Order']['status']) + 1; $j < 15 ; $j++) {
+                $model->{$StatusOrder[$j]} = null;
+            }
 //            $model->current_status = strtoupper($post['Order']['current_status']);
             if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'purchase_start') {
                 $model->current_status = Order::STATUS_PURCHASING;
