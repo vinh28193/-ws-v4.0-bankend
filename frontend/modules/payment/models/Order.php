@@ -16,6 +16,7 @@ use common\models\Seller;
 use common\models\User;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 
 class Order extends BaseOrder implements AdditionalFeeInterface
 {
@@ -273,11 +274,24 @@ class Order extends BaseOrder implements AdditionalFeeInterface
                 $this->addError('cartId', 'Not found category for product offset' . $key);
                 return false;
             }
+
             $category = new Category([
                 'alias' => ArrayHelper::getValue($categoryParams, 'alias'),
                 'site' => ArrayHelper::getValue($categoryParams, 'site'),
                 'origin_name' => ArrayHelper::getValue($categoryParams, 'origin_name'),
             ]);
+
+            $variations = ArrayHelper::remove($productParam, 'variations', []);
+            if (!empty($variations) && isset($variations['options_group']) && is_array($variations['options_group'])) {
+                $specific = [];
+                foreach ($variations['options_group'] as $option) {
+                    $specific = array_merge($specific, [$option['name'] => $option['value']]);
+                }
+                if (!empty($specific)) {
+                    $variations = $specific;
+                }
+            }
+
             if (($productFeeParams = ArrayHelper::remove($productParam, 'additionalFees')) === null || !is_array($productFeeParams)) {
                 $this->addError('cartId', 'Not found fee for product offset' . $key);
                 return false;
@@ -295,6 +309,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
 
             unset($productParam['available_quantity']);
             unset($productParam['quantity_sold']);
+            $productParam['variations'] = Json::encode($variations);
             $product = new Product($productParam);
             // product_price next to save, this fee not in collect
             if (!empty($productFeeParams)) {

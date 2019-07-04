@@ -24,8 +24,7 @@ $storeManager = Yii::$app->storeManager;
                                style="margin: auto; height: 18px; width: 18px;" type="checkbox"
                                value="<?= $item['key'] ?>"
                                aria-label="..." <?= $item['selected'] ? 'checked' : ''; ?>>
-                        <span>Nhà bán <a href="<?= $item['seller']['seller_link_store'] ?>"
-                                         style="color: #2b96b6;"><?= $item['seller']['seller_name'] ?></a> trên <?= $item['seller']['portal'] ?></span>
+                        <span>Nhà bán <span style="color: #2b96b6;"><?= $item['seller']['seller_name'] ?></span> trên <?= $item['seller']['portal'] ?></span>
                     </div>
                     <div class="col-md-5 summary text-right">
                         <span> <?= Yii::t('frontend', 'Total order amount'); ?></span> :
@@ -67,9 +66,7 @@ $storeManager = Yii::$app->storeManager;
                                          title="<?= $product['product_name']; ?>">
                                 </div>
                                 <div class="col-md-3 col-sm-12 text-center pt-4">
-                                    <a href="<?= $product['product_link']; ?>" target="_blank" class="name">
-                                        <strong class="style-name"><?= $product['product_name']; ?></strong>
-                                    </a>
+                                    <strong class="style-name"><?= $product['product_name']; ?></strong>
                                     <a href="#" class="del delete-item ml-2" style="color: #2b96b6;"
                                        data-parent="<?= $item['key'] ?>"
                                        data-id="<?= $product['parent_sku'] ?>"
@@ -164,13 +161,10 @@ $storeManager = Yii::$app->storeManager;
         </div>
         <div class="row  mb-5 mt-2">
             <div class="col-md-12 text-right">
-                <button class="btn btn-outline-info text-uppercase mt-2" style="text-transform: uppercase" onclick="ws.goback()">
+                <button class="btn btn-outline-info text-uppercase" style="float: left" onclick="ws.goback()">
                     <?php echo Yii::t('frontend', 'Continue shopping'); ?>
                 </button>
-                <button class="btn style-btn1 mt-2" id="shoppingBtn" style="text-transform: uppercase">
-                    <span class="la la-shopping-cart float-left"
-                          style="font-size: 1.6rem;"></span><?php echo Yii::t('frontend', 'Make payment'); ?>
-                </button>
+                <button class="btn btn-amazon text-uppercase" id="shoppingBtn" style="float: right;margin-right: 5px;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Make payment') ?></button>
             </div>
         </div>
     </div>
