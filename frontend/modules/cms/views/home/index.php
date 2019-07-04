@@ -63,7 +63,10 @@ $this->title = Yii::t('frontend','Weshop - Worldwide shopping made easy');
         </div>
     </div>
     <div class="m-auto tutorial-shop">
-        <a href="<?= Yii::t('frontend','#guildShopping') ?>">
+        <!--a href="<?= Yii::t('frontend','#guildShopping') ?>">
+            <?= Yii::t('frontend','Instructions for ordering Weshop') ?><i class="la la-arrow-right"></i>
+        </a-->
+        <a href="https://blog.weshop.asia/help-center/huong-dan-mua-hang-tai-weshop/" target="_blank">
             <?= Yii::t('frontend','Instructions for ordering Weshop') ?><i class="la la-arrow-right"></i>
         </a>
     </div>

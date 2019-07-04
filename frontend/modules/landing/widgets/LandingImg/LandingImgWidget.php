@@ -13,8 +13,11 @@ class LandingImgWidget extends LandingWidget
     public function run()
     {
         $images = [];
-        if (isset($this->block['Grid'])) {
-            $images = $this->block['Grid'];
+        if (isset($this->block['grid'])) {
+            $images = $this->block['grid'];
+        }
+        if(!$images && isset($this->block['images'])){
+            $images = $this->block['images'];
         }
         return $this->render("LandingImgView", [
             'images' => $images

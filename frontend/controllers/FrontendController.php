@@ -46,6 +46,8 @@ class FrontendController extends Controller
     public $site_name;
 
     public $site_description;
+
+    public $site_image;
     /**
      * @var string|Request
      */
@@ -90,7 +92,7 @@ class FrontendController extends Controller
             'title' => $this->site_title,
             'site_name' => $this->site_name,
             'url' => $this->request->absoluteUrl,
-            'image' => Url::to('/img/weshop-logo-vn.png', true),
+            'image' => $this->site_image,
             'description' => $this->site_description,
         ];
     }
@@ -101,7 +103,7 @@ class FrontendController extends Controller
             'title' => $this->site_title,
             'site_name' => $this->site_name,
             'url' => $this->request->absoluteUrl,
-            'image' => Url::to('/img/weshop-logo-vn.png', true),
+            'image' => $this->site_image,
             'description' => $this->site_description,
         ];
 
@@ -125,6 +127,7 @@ class FrontendController extends Controller
         $this->site_description = Yii::t('frontend', '{name} - World Wide Shopping Made Easy', [
             'name' => $this->site_name
         ]);
+        $this->site_image =  Url::to('/img/weshop-logo-vn.png', true);
         $this->getEcomobi()->register();
     }
 

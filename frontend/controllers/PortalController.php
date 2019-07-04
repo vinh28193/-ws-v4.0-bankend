@@ -20,13 +20,10 @@ class PortalController extends FrontendController
 
     public $portal = BaseProduct::TYPE_EBAY;
 
-    public $site_image;
-
     public function init()
     {
         parent::init();
         $this->site_title = Yii::t('frontend', 'Buy in Amazon, eBay');
-        $this->site_image = '';
         $this->site_name = Yii::t('frontend', 'Portal {portal}', [
             'portal' => $this->portal = BaseProduct::TYPE_EBAY ? 'eBay' : 'Amazon'
         ]);
@@ -36,7 +33,6 @@ class PortalController extends FrontendController
     protected function ogMetaTag()
     {
         return ArrayHelper::merge(parent::ogMetaTag(), [
-            'image' => $this->site_image,
             'keyword' => Yii::t('frontend', 'weshop, ebay, amazon, ebay vn, amazon vn, buy ebay, buy amazon, buy usa, us shipping, watch, technological, electronics, high-tech, clothing, gadgets, accessories, jewelry, watches, beauty, cosmetic, health product, sport')
         ]);
     }

@@ -22,7 +22,7 @@ class LandingController extends CmsController
 
     protected function getActivePage()
     {
-        return PageService::getPage($this->type, 1, $this->request->get('id'));
+        return PageService::getPage($this->type, 1, $this->request->get('id'), \Yii::$app->request->get('nocache','') === 'yes');
     }
 
 }
