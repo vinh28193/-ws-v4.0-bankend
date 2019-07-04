@@ -53,6 +53,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
     public function rules()
     {
         return [
+            // [['first_name','last_name'],'filter','filter'=>'\yii\helpers\HtmlPurifier::process'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
