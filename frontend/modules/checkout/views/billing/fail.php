@@ -6,7 +6,6 @@ use yii\helpers\Html;
 /* @var string $code */
 /* @var frontend\modules\payment\Payment $payment */
 
-$this->title = Yii::t('frontend', 'Payment failed {code}', ['code' => $code]) . ' | ' . Yii::t('frontend', 'Payment method {method}', ['method' => implode(', ', [$payment->payment_method_name, $payment->payment_provider_name])])
 
 ?>
 

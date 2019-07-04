@@ -71,8 +71,8 @@ $storeManager = Yii::$app->storeManager;
 
 </div>
 <div class="text-center">
-    <button type="button" class="btn btn-payment" id="btnCheckout"
-            onclick="ws.payment.process()"><?= Yii::t('frontend', 'Pay now'); ?>
+    <button class="btn btn-amazon text-uppercase" id="btnCheckout" onclick="ws.payment.process()">
+        <?= Yii::t('frontend', 'Pay now'); ?>
         <span> <?= $storeManager->showMoney($payment->getTotalAmountDisplay()); ?></span>
     </button>
 </div>
