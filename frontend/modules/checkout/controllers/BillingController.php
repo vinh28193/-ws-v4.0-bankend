@@ -16,7 +16,7 @@ class BillingController extends CheckoutController
     public function actionIndex($code)
     {
         $this->title = Yii::t('frontend', 'Billing for order {code}', ['code' => $code]);
-        if (($paymentTransaction = PaymentTransaction::findOne(['order_code' => $code])) === null) {
+        if (($paymentTransaction = PaymentService::findParentTransaction($code)) === null) {
             throw new NotFoundHttpException("not found transaction for order code $code");
         }
         $payment = new Payment([
@@ -50,9 +50,10 @@ class BillingController extends CheckoutController
     public function actionFail($code)
     {
         $this->title = Yii::t('frontend', 'Invoice failed {code}', ['code' => $code]);
-        if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code])) === null) {
+        if (($paymentTransaction =  PaymentService::findParentTransaction($code)) === null) {
             throw new NotFoundHttpException("not found transaction code $code");
         }
+
         $payment = new Payment([
             'type' => 'invoice',
             'page' => Payment::PAGE_BILLING,
@@ -69,6 +70,7 @@ class BillingController extends CheckoutController
             'payment_method' => (int)$paymentTransaction->payment_method,
             'payment_bank_code' => $paymentTransaction->payment_bank_code,
         ]);
+        $this->title = Yii::t('frontend', 'Payment failed {code}', ['code' => $code]) . ' | ' . Yii::t('frontend', 'Payment method {method}', ['method' => implode(', ', [$payment->payment_method_name, $payment->payment_provider_name])]);
         $orders = [];
         foreach ($paymentTransaction->childPaymentTransaction as $childPaymentTransaction) {
             if (($orderParam = $childPaymentTransaction->order) !== null) {
@@ -89,7 +91,7 @@ class BillingController extends CheckoutController
     public function actionSuccess($code)
     {
         $this->title = Yii::t('frontend', 'Invoice success {code}', ['code' => $code]);
-        if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code])) === null) {
+        if (($paymentTransaction = PaymentService::findParentTransaction( $code)) === null) {
             throw new NotFoundHttpException("not found transaction code $code");
         }
         $mailer = Yii::$app->mailer;
