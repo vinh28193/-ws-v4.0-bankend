@@ -31,6 +31,7 @@ use frontend\widgets\cms\WeshopBlockWidget;
     <?php
     if (!empty($data_block)) {
         foreach ($data_block as $key => $block) {
+            echo "<!---".$block['block']['id']."--->";
             if ($block['block']['type'] == WeshopBlockWidget::BLOCK_CONTENT) {
                 ?>
                 <div class="container">
