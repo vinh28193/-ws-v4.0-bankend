@@ -52,7 +52,11 @@ return [
         'GET my-cart.html' => 'checkout/cart',
 
         // checkout
+
         'GET checkout-<type:[0-9A-Za-z_-]*>.html' => 'checkout/shipping',
+//        'GET order-<type:[0-9A-Za-z_-]*>/<page:[A-Za-z_-]*>.html' => 'checkout/shipping',
+//        'GET payment/<type:[0-9A-Za-z_-]*>/<page:[A-Za-z_-]*>.html' => 'checkout/shipping',
+
         'checkout/login.html' => 'checkout/shipping/login',
         'checkout/signup.html' => 'checkout/shipping/signup',
         'checkout/office/<code:[^/]+>/success.html' => 'checkout/notify/office-success',

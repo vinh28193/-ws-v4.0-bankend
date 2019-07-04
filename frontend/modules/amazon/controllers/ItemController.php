@@ -7,6 +7,7 @@ use common\lib\AmazonProductGate;
 use common\products\BaseProduct;
 use common\products\forms\ProductDetailFrom;
 use Yii;
+use yii\helpers\Url;
 
 class ItemController extends AmazonController
 {
@@ -21,10 +22,9 @@ class ItemController extends AmazonController
                 'errors' => $form->getErrors()
             ]);
         }
-//        $this->portalTitle = Yii::t('frontend','{name} | Product Amazon' , ['name' => $item->item_name]);
-//        $this->portalDescription = Yii::t('frontend','Buy the "{name}" product on Amazon immediately via Weshop to get the product within 7-15 days with many attractive offers. Shopping US Amazon, eBay easily.' , ['name' => $item->item_name]);
-//        $this->portalImage = isset($item->primary_images[0]) ? $item->primary_images[0]->main : '/img/no_image.png';
-//        $this->registerAllMetaTagLinkTag();
+        $this->site_title = Yii::t('frontend', '{name} | Product US Amazon', ['name' => $item->item_name]);
+        $this->site_description = Yii::t('frontend', 'Buy the "{name}" product on US Amazon immediately via {store} to get the product within 7-15 days with many attractive offers. Shopping US Amazon, eBay easily.', ['name' => $item->item_name,'store' => $this->storeManager->store->name]);
+        $this->site_image = isset($item->primary_images[0]) ? $item->primary_images[0]->main : Url::to('/img/no_image.png',true);
 
         return $this->render('index', [
             'item' => $item

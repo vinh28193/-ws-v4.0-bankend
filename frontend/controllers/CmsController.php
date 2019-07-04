@@ -62,7 +62,6 @@ class CmsController extends FrontendController
     {
         return ArrayHelper::merge(parent::metaTag(), [
             'title' => $this->page->title ? $this->page->title : $this->site_title,
-            'site_name' => $this->page->title ? $this->page->name : $this->site_name,
             'url' => $this->page->url ? $this->page->url : $this->request->absoluteUrl,
             'image' => $this->page->image ? $this->page->image : $this->site_image,
             'description' => $this->page->description ? $this->page->description : $this->site_description,
@@ -73,7 +72,6 @@ class CmsController extends FrontendController
     {
         return ArrayHelper::merge(parent::ogMetaTag(), $this->page !== null ? [
             'title' => $this->page->title ? $this->page->title : $this->site_title,
-            'site_name' => $this->page->title ? $this->page->name : $this->site_name,
             'url' => $this->page->url ? $this->page->url : $this->request->absoluteUrl,
             'image' => $this->page->image ? $this->page->image : $this->site_image,
             'description' => $this->page->description ? $this->page->description : $this->site_description,

@@ -9,7 +9,7 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => [
-        'translatemanager',
+        // 'translatemanager',
         'storeManager',
         'language' => [
             'class' => 'common\bootstrap\AutoDetectLanguageBootstrapping'
@@ -27,7 +27,7 @@ return [
         ],
         */
         'translatemanager' => [
-            'class' => 'lajax\translatemanager\Component'
+           'class' => 'lajax\translatemanager\Component'
         ],
         'assetManager' => [
             'bundles' => [
@@ -180,6 +180,7 @@ return [
                 'queue' => '\yii\queue\debug\Panel',
             ],
         ],
+        /*
         'translatemanager' => [
             'class' => 'lajax\translatemanager\Module',
             'root' => '@frontend',               // The root directory of the project scan.
@@ -214,5 +215,6 @@ return [
                 '\lajax\translatemanager\services\scanners\ScannerDatabase',
             ],
         ],
+        */
     ],
 ];

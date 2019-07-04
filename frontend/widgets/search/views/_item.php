@@ -67,7 +67,7 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                         } else {
                             if (isset($product['provider'])) {
                                 if(($seller = \yii\helpers\ArrayHelper::getValue($product['provider'],'name'))){
-                                    echo "<div>".Yii::t('frontend','Sold by:')."<b> ".$seller."</b></div>";
+                                    echo "<div>".Yii::t('frontend','Sold by:')."<b> ".$seller."</b> (".\yii\helpers\ArrayHelper::getValue($product['provider'],'rating_score',0)."<i class='la la-star text-warning'></i>)</div>";
                                 }
                                 if(($positive_feedback_percent = \yii\helpers\ArrayHelper::getValue($product['provider'],'positive_feedback_percent'))){
                                     echo "<div><u class=\"text-blue font-weight-bold\">".Yii::t('frontend','{positive}% positive',['positive' => $positive_feedback_percent])."</u></div>";
@@ -81,13 +81,18 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                     }
                     ?>
                 </div>
-                <?php
-                if ($localSellprice) {
-                    echo "<strong>" . trim($storeManager->showMoney($localSellprice, '')) . "</strong><span style='font-size: 16px;margin: 0px'>".$storeManager->getCurrencyName()."</span><span> ($" . $product['sell_price'] . ")</span>";
-                } else {
-                    echo Html::tag('strong', Yii::t('frontend', 'Click to see details'));
-                }
-                ?>
+                <?php if(isset($product['condition'])){?>
+                    <div class="condition-product"><?= Yii::t('frontend',$product['condition']) ?></div>
+                <?php } ?>
+                <div>
+                    <?php
+                    if ($localSellprice) {
+                        echo "<strong>" . trim($storeManager->showMoney($localSellprice)) . "</strong><span> ($" . $product['sell_price'] . ")</span>";
+                    } else {
+                        echo Html::tag('strong', Yii::t('frontend', 'Click to see details'));
+                    }
+                    ?>
+                </div>
             </div>
         </div>
     </a>
