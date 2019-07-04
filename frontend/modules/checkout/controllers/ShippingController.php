@@ -118,7 +118,7 @@ class ShippingController extends CheckoutController
 
     }
 
-    public function actionIndex($type)
+    public function actionIndex($page, $type)
     {
         if (($keys = CartSelection::getSelectedItems($type)) === null) {
             return $this->goBack();
@@ -135,7 +135,7 @@ class ShippingController extends CheckoutController
             ];
         }, $keys);
         $payment = new Payment([
-            'page' => Payment::PAGE_CHECKOUT,
+            'page' => strtoupper($page),
             'uuid' => $this->filterUuid(),
             'type' => $type,
             'orders' => $keys,
@@ -144,10 +144,10 @@ class ShippingController extends CheckoutController
         if (count($payment->getOrders()) === 0) {
             return $this->goBack();
         }
-        $siteName = Yii::t('frontend','Checkout');
+        $siteName = Yii::t('frontend', 'Checkout');
         $titleCollection = [];
         if ($payment->type === CartSelection::TYPE_BUY_NOW) {
-            $siteName =  Yii::t('frontend', 'Buy now');
+            $siteName = Yii::t('frontend', 'Buy now');
 
         } elseif ($payment->type === CartSelection::TYPE_SHOPPING) {
             $siteName = Yii::t('frontend', 'Shopping');
@@ -311,7 +311,7 @@ class ShippingController extends CheckoutController
         if ($refresh === true) {
             $message[] = "invalid on cache";
         }
-        $results = SystemZipcode::loadZipCode(101,$zip, $province, $district, $refresh);
+        $results = SystemZipcode::loadZipCode(101, $zip, $province, $district, $refresh);
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return ['success' => true, "message" => implode(', ', $message), 'data' => $results, 'count' => count($results)];
     }

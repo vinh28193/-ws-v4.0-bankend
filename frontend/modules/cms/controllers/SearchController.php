@@ -36,12 +36,11 @@ class SearchController extends CmsController
             return $this->render('@frontend/views/common/no_search_results');
         }
         $data['amazon'] = $results;
-//        $this->portalTitle = Yii::t('frontend','{keyword} - Shopping US Amazon, eBay - Weshop {web_name}',['keyword' => $form->keyword, 'web_name' => Yii::$app->storeManager->getName()]);
-//        $this->portalDescription = Yii::t('frontend','{keyword} - Shopping US Amazon, eBay  easily immediately via Weshop {web_name}  to get the product within 7-15 days with many attractive offers, support goods inspection, direct consultation before purchase!',[
-//            'keyword' => $form->keyword,
-//            'web_name' => Yii::$app->storeManager->getName()
-//        ]);
-//        $this->registerAllMetaTagLinkTag();
+        $this->site_title = Yii::t('frontend','{keyword} - Shopping US Amazon, eBay - {web_name}',['keyword' => $form->keyword, 'web_name' =>$this->storeManager->store->name]);
+        $this->site_description = Yii::t('frontend','{keyword} - Shopping US Amazon, eBay  easily immediately via {web_name}  to get the product within 7-15 days with many attractive offers, support goods inspection, direct consultation before purchase!',[
+            'keyword' => $form->keyword,
+            'web_name' => $this->storeManager->store->name
+        ]);
 
         return $this->render('index',['data' => $data,'form' => $form]);
     }

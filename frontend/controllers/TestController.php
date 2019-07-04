@@ -46,7 +46,8 @@ class TestController extends FrontendController
     {
 
         $yiiParams = PaymentService::getClientConfig('alepay');
-        var_dump($yiiParams);die;
+        var_dump($yiiParams);
+        die;
         $alepay = new AlepayClient();
 
         $res = $alepay->getInstallmentInfo(10000000.00, 'VND')['data'];
@@ -385,5 +386,11 @@ JSON;
             'paymentTransaction' => $paymentTransaction,
             'storeManager' => $this->storeManager
         ]);
+    }
+
+    public function actionCheckout($type, $page = 'Checkout')
+    {
+        var_dump(['$page' => $page, '$type' => $type]);
+        die;
     }
 }
