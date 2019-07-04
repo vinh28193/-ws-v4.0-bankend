@@ -1,4 +1,8 @@
 <?php
+
+use yii\helpers\Url;
+use yii\helpers\Html;
+
 $js = <<<JS
 ws.reloadCartBadge();
 $(document).ready(function () {
@@ -58,18 +62,20 @@ if ($userCookie->checkAddress()) {
     }
 }
 ?>
-<div class="navbar-ws mobile-hide style-header" id="header" xmlns="http://www.w3.org/1999/html">
+<div class="navbar-ws mobile-hide style-header" id="header">
     <div class="container row header-global">
         <div class="logo">
             <span class="menu-toggle"></span>
             <a href="/" class="logo-pc">
-                <img src="/images/logo/weshop-01.png" alt="" title="">
+                <?php echo Html::img(Url::to('/images/logo/weshop-01.png', true)); ?>
             </a>
         </div>
-            <div class="shipping-header-box">
-                <div class="shipping-label"><?php echo Yii::t('frontend', 'Ship to'); ?>:</div>
-                <div class="shipping-address"><a onclick="ws.showModal('modal-address')" href="javascript:void(0);"><?=$shipTo;?></a><i class="la la-caret-down"></i></div>
-            </div>
+        <div class="shipping-header-box">
+            <div class="shipping-label"><?php echo Yii::t('frontend', 'Ship to'); ?>:</div>
+            <div class="shipping-address"><a onclick="ws.showModal('modal-address')"
+                                             href="javascript:void(0);"><?= $shipTo; ?></a><i
+                        class="la la-caret-down"></i></div>
+        </div>
         <div class="search-box">
             <div class="form-group mb-0">
                 <div class="input-group">
@@ -86,7 +92,7 @@ if ($userCookie->checkAddress()) {
         </div>
         <div class="cart-header-box">
             <i class="la la-shopping-cart"></i>
-            <a href="/my-cart.html"><span class="label-cart"><?= Yii::t('frontend', 'Cart') ?> (<span
+            <a href="<?= Url::to('/my-cart.html', true); ?>"><span class="label-cart"><?= Yii::t('frontend', 'Cart') ?> (<span
                             class="count-cart">0</span>)</span></a>
         </div>
         <div class="account-header-box pt-1 dropdown style-account">
@@ -120,7 +126,8 @@ if ($userCookie->checkAddress()) {
                                             class="btn btn-fb"><?= Yii::t('frontend', 'Login via SMS') ?></button>
                                 </div>
                                 <div class="col-md-6 pl-1">
-                                    <button class="btn btn-google" data-action="clickToLoad" data-href="/login.html"
+                                    <button class="btn btn-google" data-action="clickToLoad"
+                                            data-href="<?= Url::to('/login.html', true) ?>"
                                             class="btn btn-info">
                                         <?= Yii::t('frontend', 'Login via Email') ?>
                                     </button>
@@ -131,7 +138,7 @@ if ($userCookie->checkAddress()) {
                                 <div class="col-md-12 mt-4">
                                     <span class="color-account"><?= Yii::t('frontend', 'You not have account ?') ?><a
                                                 href="javascript:void (0);" data-action="clickToLoad"
-                                                data-href="/signup.html"
+                                                data-href="<?= Url::to('/signup.html', true); ?>"
                                                 class="btn-link">&nbsp;<?= Yii::t('frontend', 'SignUp click here') ?></a></span>
                                 </div>
                             </div>
@@ -143,15 +150,15 @@ if ($userCookie->checkAddress()) {
                             <div class="row" id="list-menu-account">
                                 <div class="col-md-12 mb-3">
                                     <a href="javascript:void (0);" data-action="clickToLoad"
-                                       data-href="/account/order"><?= Yii::t('frontend', 'My orders') ?></a>
+                                       data-href="<?= Url::to('/account/order', true); ?>"><?= Yii::t('frontend', 'My orders') ?></a>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <a href="javascript:void (0);" data-action="clickToLoad"
-                                       data-href="/my-weshop.html"><?= Yii::t('frontend', 'My Account') ?></a>
+                                       data-href="<?= Url::to('/my-weshop.html', true); ?>"><?= Yii::t('frontend', 'My Account') ?></a>
                                 </div>
                                 <div class="col-md-12 mb-2 social-button">
                                     <a class="btn btn-info p-2" href="javascript:void (0);" data-action="clickToLoad"
-                                       data-href="/logout.html"><?= Yii::t('frontend', 'Logout') ?></a>
+                                       data-href="<?= Url::to('/logout.html', true); ?>"><?= Yii::t('frontend', 'Logout') ?></a>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +171,7 @@ if ($userCookie->checkAddress()) {
                 USD
             </span><br>
             <span class="view-exchange-rate">
-                <?= Yii::$app->storeManager->showMoney(Yii::$app->storeManager->getExchangeRate(),$currency = null , $isRound = false) ?>
+                <?= Yii::$app->storeManager->showMoney(Yii::$app->storeManager->getExchangeRate(), $currency = null, $isRound = false) ?>
             </span>
         </div>
     </div>
@@ -181,7 +188,7 @@ if ($userCookie->checkAddress()) {
                     style="display: none; border-right: 1px solid gray ">
                     <li role="presentation">
                         <a data-toggle="collapse" class="toggle" id="toggle" role="button" aria-expanded="false">
-                            <span style="display: block; float: left;"><img src="/img/logo_amazon_us.png"></span>
+                            <span style="display: block; float: left;"><img src="<?= Url::to('/img/logo_amazon_us.png', true); ?>"></span>
                             <span style="display: block; text-align: right; margin-right: 8px" class="ico-dropdown amz"><i
                                         id="asd"
                                         class="la la-caret-down" style="transform: scaleY(-1);"></i></span>
@@ -195,7 +202,7 @@ if ($userCookie->checkAddress()) {
                         <a href="javascript: void(0);" class="toggleEbay" data-toggle="dropdown" aria-haspopup="true"
                            role="button"
                            aria-expanded="false">
-                            <span style="display: block; float: left;"><img src="/img/logo_ebay.png"></span>
+                            <span style="display: block; float: left;"><img src="<?= Url::to('/img/logo_ebay.png', true); ?>"></span>
                             <span style="display: block; text-align: right; margin-right: 8px"
                                   class="ico-dropdown ebay"><i id="asd1"
                                                                class="la la-caret-down"></i></span>
@@ -231,7 +238,7 @@ if ($userCookie->checkAddress()) {
 <div class="mb-wrapper mobile-show">
     <nav class="mb-navbar">
         <span class="btn-toggle la la-bars"></span>
-        <a href="/" class="logo"><img src="/images/logo/weshop-01.png" alt=""></a>
+        <a href="/" class="logo"><img src="<?= Url::to('/images/logo/weshop-01.png', true); ?>" alt=""></a>
         <ul class="action">
             <li><a href="javascript:void(0);" class="auth-user">
                     <i class="la la-user"></i>
@@ -258,7 +265,7 @@ if ($userCookie->checkAddress()) {
                         <a class="dropdown-collapse" data-toggle="collapse"
                            data-target="#category-mb-amazon" style="display: block"
                            aria-expanded="true" aria-controls="collapseOne">
-                            <img src="/img/logo_amazon_us.png" style="height: 22px">
+                            <img src="<?= Url::to('/img/logo_amazon_us.png', true); ?>" style="height: 22px">
                             <i class="la la-angle-down alert-right"></i>
                         </a>
                     </div>
@@ -273,7 +280,7 @@ if ($userCookie->checkAddress()) {
                         <a class="dropdown-collapse" data-toggle="collapse"
                            data-target="#category-mb-ebay" style="display: block"
                            aria-expanded="true" aria-controls="collapseOne">
-                            <img src="/img/logo_ebay.png" style="height: 22px">
+                            <img src="<?= Url::to('/img/logo_ebay.png', true); ?>" style="height: 22px">
                             <i class="la la-angle-right alert-right"></i>
                         </a>
                     </div>
@@ -288,7 +295,7 @@ if ($userCookie->checkAddress()) {
     </div>
     <div class="mb-modal-auth">
         <div class="title-mb-menu">
-            <a href="/" class="logo"><img src="/images/logo/weshop-01.png" alt="" style="height: 30px"></a>
+            <a href="/" class="logo"><img src="<?= Url::to('/images/logo/weshop-01.png', true); ?>" alt="" style="height: 30px"></a>
             <i class="la la-close" style="float: right;padding:5px;"></i>
             <div class="clearfix"></div>
         </div>
@@ -299,7 +306,7 @@ if ($userCookie->checkAddress()) {
                     <button onclick="smsLogin();" class="btn btn-fb"><?= Yii::t('frontend', 'Login via SMS') ?></button>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-google" data-action="clickToLoad" data-href="/login.html"
+                    <button class="btn btn-google" data-action="clickToLoad" data-href="<?= Url::to('/login.html', true); ?>"
                             class="btn btn-info">
                         <?= Yii::t('frontend', 'Login via Email') ?>
                     </button>
@@ -310,7 +317,7 @@ if ($userCookie->checkAddress()) {
                 <div class="col-12"><span><?= Yii::t('frontend', 'Are you not have account?') ?></span></div>
                 <div class="col-12">
                     <button class="btn btn-link" data-action="clickToLoad"
-                            data-href="/signup.html"><?= Yii::t('frontend', 'Register here') ?></button>
+                            data-href="<?= Url::to('/signup.html', true); ?>"><?= Yii::t('frontend', 'Register here') ?></button>
                 </div>
             </div>
         </div>

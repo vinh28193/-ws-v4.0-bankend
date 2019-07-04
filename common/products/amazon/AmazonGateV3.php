@@ -200,7 +200,7 @@ class AmazonGateV3 extends BaseGate
 //        ])->forSite($siteId)->select(['alias as category_id', 'name as category_name', 'originName as origin_name'])->asArray()->all();
         $sorts = [];
         foreach ($result['sorts'] as $value){
-            $sorts = array_merge($sorts,$value);
+            $sorts[ArrayHelper::getValue($value,'value','#')] = ArrayHelper::getValue($value,'name','None');
         }
         $data['categories'] = array_map(function($tag) {
             return array(

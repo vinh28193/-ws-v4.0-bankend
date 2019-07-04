@@ -23,7 +23,7 @@ class CartController extends CheckoutController
 
     public function actionIndex()
     {
-        $this->title = Yii::t('frontend', 'Product list in cart');
+
         $this->layout = '@frontend/views/layouts/portal';
         $cartContent = 'cartContent';
         $queryParams = $this->request->queryParams;
@@ -38,6 +38,11 @@ class CartController extends CheckoutController
             $ids = $queryParams['ref'];
         }
         $uuid = $this->filterUuid();
+
+        $this->site_title = Yii::t('frontend', 'Product list in cart');
+        $this->site_name = Yii::t('frontend', 'Shopping Cart');
+        $this->site_description = 'cart list';
+
         $cartManager = $this->module->cartManager;
         $items = $cartManager->getItems($type, $ids, $this->filterUuid());
         if ($this->request->getIsPjax()) {

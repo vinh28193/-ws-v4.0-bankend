@@ -46,11 +46,12 @@ a, .btn, .navbar-2, .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-men
 }
 
 .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2.top-store-cate ul li a:hover, .buy-amazon .right a:hover img, .search-content .title-box .left a:hover img, .product-list .item:hover .thumb, .product-block .pd-content .right .right-1 ul li .item:hover .thumb, .product-block .pd-content .right .right-2 ul li .item:hover .thumb, .product-block .pd-tag-box .brand-list ul li a:hover img {
-    -webkit-transform: scale(1.05);
+  /*  -webkit-transform: scale(1.05);
     -moz-transform: scale(1.05);
     -ms-transform: scale(1.05);
     -o-transform: scale(1.05);
-    transform: scale(1.05);
+    transform: scale(1.05);*/
+    opacity: 0.6;
 }
 
 .keep-navbar .cate-nav ul li.globe-sub .sub-menu li .sub-menu-2 .ebay-sub-slider .item .item-box .thumb a img, .deal-shock .deal-content ul li .item .thumb img, .product-list .item .thumb img, .cart-box .cart-item li .thumb img, .order-list li .thumb img, .method-list li span img, .product-block .pd-content .right .right-1 ul li .item .thumb img, .product-block .pd-content .right .right-2 ul li .item .thumb img, .related-product ul li a .thumb img, .detail-block .thumb-slider .detail-slider .item a img, .detail-block .product-full-info .option-box .style-list li span img, .detail-block .product-full-info .option-box-amazon .style-list li span img, .otp-modal .modal-dialog .modal-content .modal-body .form-group .input-group .input-group-text img, .be-box .be-body .new-update li .mess-content .logo img, .be-recharge .tab-content .be-method-list li span img, .be-order .be-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .od-table .table tbody tr td .product-info .thumb img, .order-detail .od-content .package-table .table tbody tr td .product-info .thumb img, .be-noti .noti-list li .thumb img, .voucher-wallet .vb-content .voucher-list li .thumb img, .ws-coin .wc-table .be-table .table tbody tr td .product-info .thumb img, .saved-pd .be-table .table tbody tr td .product-info .thumb img, .vip-level .vl_block2 .point-list li .thumb img {

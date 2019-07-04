@@ -18,26 +18,6 @@ use yii\helpers\Inflector;
 /* @var ShippingForm $shippingForm */
 /* @var array $provinces */
 
-$titleCollection = [];
-if ($payment->type === \common\components\cart\CartSelection::TYPE_BUY_NOW) {
-    $titleCollection[] = Yii::t('frontend', 'Buy now');
-} elseif ($payment->type === \common\components\cart\CartSelection::TYPE_SHOPPING) {
-    $titleCollection[] = Yii::t('frontend', 'Shopping');
-}
-$titleCollection[] = $shippingForm->getStoreManager()->store->name;
-
-foreach ($payment->getOrders() as $order) {
-
-    $titleCollection[] = Yii::t('frontend', 'Seller:{portal} {seller}', [
-        'portal' => strtoupper($order->seller->portal) === 'EBAY' ? 'eBay' : 'Amazon',
-        'seller' => Inflector::camelize($order->seller->seller_name)
-    ]);
-    foreach ($order->products as $product) {
-        $titleCollection[] = $product->product_name;
-    }
-}
-
-$this->title = implode(' | ', $titleCollection);
 
 $showStep = true;
 $activeStep = 2;
