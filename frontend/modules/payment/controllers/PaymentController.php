@@ -418,4 +418,41 @@ class PaymentController extends BasePaymentController
     {
 
     }
+
+    public function actionReturnNicepay(){
+        $merchant = 48;
+        $start = microtime(true);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $res = Payment::checkPayment((int)$merchant, $this->request);
+
+        /** @var $paymentTransaction PaymentTransaction */
+        $paymentTransaction = $res->paymentTransaction;
+        $redirectUrl = PaymentService::createSuccessUrl($paymentTransaction->transaction_code);
+        $failUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
+
+        if ($res->success === false) {
+            return $this->redirect($failUrl);
+        }
+
+        if ($res->checkoutUrl !== null) {
+            $redirectUrl = $res->checkoutUrl;
+        }
+        if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
+            foreach ($paymentTransaction->childPaymentTransaction as $child) {
+                $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+
+                if (($order = $child->order) !== null) {
+                    $order->total_paid_amount_local = $child->transaction_amount_local;
+                    if ($order->current_status == Order::STATUS_SUPPORTED) {
+                        $order->current_status = Order::STATUS_READY2PURCHASE;
+                    }
+                    $order->save(false);
+                }
+                $child->save(false);
+            }
+
+        }
+        return $this->redirect($redirectUrl);
+
+    }
 }
