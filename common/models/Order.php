@@ -497,7 +497,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
     public function getTargetFee()
     {
-        return $this->hasMany(TargetAdditionalFee::className(), ['order_id' => 'id']);
+        return $this->hasMany(TargetAdditionalFee::className(), ['target_id' => 'id'])->where(['target' => 'order']);
     }
 
     /**
@@ -619,15 +619,15 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 $query->andFilterWhere(['or',
                     ['order.ordercode' => $params['keyWord']],
                     ['product.id' => $params['keyWord']],
-                    ['order.ordercode' => $params['keyWord']],
                     ['product.sku' => $params['keyWord']],
                     ['product.category_id' => $params['keyWord']],
                     ['product.product_name' => $params['keyWord']],
                     ['order.payment_type' => $params['keyWord']],
                     ['order.buyer_email' => $params['keyWord']],
-                    ['order.receiver_email' => $params['keyWord']],
                     ['order.receiver_phone' => $params['keyWord']],
+                    ['order.buyer_email' => $params['keyWord']],
                     ['order.buyer_phone' => $params['keyWord']],
+                    ['order.payment_transaction_code' => $params['keyWord']],
                 ]);
             } elseif ($params['searchKeyword'] != 'ALL') {
                 if ($params['searchKeyword'] == 'email') {

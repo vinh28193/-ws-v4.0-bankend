@@ -94,27 +94,29 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 $this->_additionalFees->loadFormActiveRecord($this->getTarget(), $this->target_name);
             }
             $hasChange = false;
-            $taxRate = $this->ensureTaxRate();
             $usAmount = $this->us_amount;
             $this->shipping_quantity = ($this->shipping_quantity !== null && $this->shipping_quantity !== '' && (int)$this->shipping_quantity > 0) ? $this->shipping_quantity : 1;
-            if($usAmount && $usAmount !== '' ){
+            if ($usAmount && $usAmount !== '') {
                 $usAmount *= (int)$this->shipping_quantity;
             }
             if ($usAmount !== null && $usAmount !== '' && !WeshopHelper::compareValue($usAmount, $this->_additionalFees->getTotalAdditionalFees('product_price')[0])) {
                 $this->_additionalFees->remove('product_price');
-                $this->_additionalFees->withCondition($this, 'product_price', $usAmount);
-                $this->_additionalFees->remove('tax_fee');
-                $this->_additionalFees->withCondition($this, 'tax_fee', $taxRate);
+                $this->_additionalFees->withCondition($this, 'product_price', floatval($usAmount));
                 $hasChange = true;
             }
 
             if ($this->us_ship !== null && $this->us_ship !== '' && !WeshopHelper::compareValue($this->us_ship, $this->_additionalFees->getTotalAdditionalFees('shipping_fee')[0])) {
                 $this->_additionalFees->remove('shipping_fee', $this->us_ship);
-                $this->_additionalFees->withCondition($this, 'shipping_fee', $this->us_ship);
-                $this->_additionalFees->remove('tax_fee');
-                $this->_additionalFees->withCondition($this, 'tax_fee', $taxRate);
+                $this->_additionalFees->withCondition($this, 'shipping_fee', floatval($this->us_ship));
                 $hasChange = true;
             }
+
+            if ($this->us_tax !== null && $this->us_tax !== '' && !WeshopHelper::compareValue($this->us_tax, $this->_additionalFees->getTotalAdditionalFees('tax_fee')[0])) {
+                $this->_additionalFees->remove('tax_fee', $this->us_tax);
+                $this->_additionalFees->withCondition($this, 'tax_fee', floatval($this->us_tax));
+                $hasChange = true;
+            }
+
             if ($hasChange || $totalOrigin = $this->getTotalOrigin() > 0) {
                 $this->_additionalFees->remove('purchase_fee', $this->us_ship);
                 $this->_additionalFees->withCondition($this, 'purchase_fee', null);
@@ -124,14 +126,6 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         return $this->_additionalFees;
     }
 
-    protected function ensureTaxRate()
-    {
-        $taxRate = 0;
-        if (($taxFee = $this->getAdditionalFees()->getTotalAdditionalFees('tax_fee')[0]) > 0) {
-            $taxRate = ($taxFee * 100) / $this->getAdditionalFees()->getTotalAdditionalFees(['product_price', 'shipping_fee'])[0];
-        }
-        return $taxRate;
-    }
 
     /**
      * @inheritDoc
