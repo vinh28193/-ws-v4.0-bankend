@@ -9,8 +9,9 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel userbackend\models\CustomerSearch */
+/* @var $model \common\models\User */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
+$this->params = [Yii::t('frontend','Home') => '/', Yii::t('frontend','My Account') => '/my-account.html'];
 ?>
 <div class="be-acc">
     <div class="ba-block1">
@@ -22,9 +23,6 @@ use yii\helpers\Url;
         ]); ?>
         <div class="form-group">
             <?= $form->field($model, 'first_name', ['template' => " <i class=\"icon user\"></i>{input}\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
-        </div>
-        <div class="form-group">
-            <?= $form->field($model, 'last_name', ['template' => " <i class=\"icon user\"></i>{input}\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
         </div>
         <div class="form-group">
             <?= $form->field($model, 'phone', ['template' => " <i class=\"icon phone\"></i>{input}\n{hint}\n{error}"])->input('number') ?>
@@ -40,7 +38,6 @@ use yii\helpers\Url;
             <?= $form->field($address, 'province_id', ['template' => " <i class=\"icon globe\"></i>{input}\n{hint}\n{error}"])->dropDownList($provi, ['id' => 'province_id']); ?>
         </div>
         <?php
-        $district = \common\models\SystemDistrict::find()->all();
         $distr = ArrayHelper::map($district, 'id', 'name')
         ?>
         <div class="form-group">
@@ -63,23 +60,23 @@ use yii\helpers\Url;
         </div>
         <?php ActiveForm::end(); ?>
         <div class="config-acc">
-            <div class="title">Tùy chọn tài khoản</div>
+            <div class="title"><?= Yii::t('frontend','Option Account') ?></div>
             <ul>
                 <li>
-                    <b>Quốc tịch:</b>
-                    <span><?= $model->store->name ?></span>
+                    <b><?= Yii::t('frontend','Country:') ?></b>
+                    <span><?= $model->store->country_name ?></span>
                 </li>
                 <li>
-                    <b>Ngôn ngữ:</b>
-                    <span>Tiếng việt</span>
+                    <b><?= Yii::t('frontend','Language:') ?></b>
+                    <span><?= Yii::t('frontend',$model->locale) ?></span>
                 </li>
                 <li>
-                    <b>Tiền tệ:</b>
-                    <span>VNĐ</span>
+                    <b><?= Yii::t('frontend','Currency:') ?></b>
+                    <span><?= $model->store->currency ?></span>
                 </li>
                 <li>
-                    <b>Cấp thành viên:</b>
-                    <span>Basic</span>
+                    <b><?= Yii::t('frontend','Level') ?></b>
+                    <span><?= strtoupper(Yii::t('frontend',$model->userLevel)) ?></span>
                 </li>
             </ul>
         </div>

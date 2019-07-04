@@ -93,25 +93,27 @@ class CartHelper
             'phone' => $user->phone
         ] : null;
         /* @var $provider Provider */
-        $provider = isset($item->providers[0]) ? $item->providers[0] : $item->providers;
+        $provider = $item->provider ? $item->provider : $item->getCurrentProvider($sellerId);
 
-        if ($sellerId !== null) {
-            foreach ((array)$item->providers as $pro) {
-                /* @var $pro Provider */
-                if ($pro->name === $sellerId) {
-                    $provider = $pro;
-                    break;
-                }
-            }
+//        if ($sellerId) {
+//            foreach ((array)$item->providers as $pro) {
+//                /* @var $pro Provider */
+//                if ($pro->name === $sellerId) {
+//                    $provider = $pro;
+//                    break;
+//                }
+//            }
+//        }
+        if($provider){
+            $order['seller'] = [
+                'seller_name' => $provider->name,
+                'portal' => $item->type,
+                'seller_store_rate' => $provider->rating_score,
+                'seller_link_store' => $provider->website,
+                'location' => $provider->location,
+                'country_code' => $provider->country_code
+            ];
         }
-        $order['seller'] = [
-            'seller_name' => $provider->name,
-            'portal' => $item->type,
-            'seller_store_rate' => $provider->rating_score,
-            'seller_link_store' => $provider->website,
-            'location' => $provider->location,
-            'country_code' => $provider->country_code
-        ];
         $product = [];
         $product['portal'] = $item->type;
         $product['sku'] = $item->item_sku;

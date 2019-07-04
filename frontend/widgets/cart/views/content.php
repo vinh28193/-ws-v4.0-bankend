@@ -24,7 +24,7 @@ $storeManager = Yii::$app->storeManager;
                                style="margin: auto; height: 18px; width: 18px;" type="checkbox"
                                value="<?= $item['key'] ?>"
                                aria-label="..." <?= $item['selected'] ? 'checked' : ''; ?>>
-                        <span>Nhà bán <span style="color: #2b96b6;"><?= $item['seller']['seller_name'] ?></span> trên <?= $item['seller']['portal'] ?></span>
+                        <span><?= Yii::t('frontend','Seller') ?> <span style="color: #2b96b6;"><?= $item['seller']['seller_name'] ?></span> <?= Yii::t('frontend','on {portal}',['portal' => $item['seller']['portal']]) ?></span>
                     </div>
                     <div class="col-md-5 summary text-right">
                         <span> <?= Yii::t('frontend', 'Total order amount'); ?></span> :
@@ -32,6 +32,7 @@ $storeManager = Yii::$app->storeManager;
                               class="text-danger"><?= $storeManager->showMoney($item['final_amount']) ?></span>
                     </div>
                 </div>
+
                 <div class="cart-header row pb-4">
                     <div class="col-md-12">
                         <div class="row">
@@ -44,6 +45,7 @@ $storeManager = Yii::$app->storeManager;
                             <div class="col-md-2 text-right"><?= Yii::t('frontend', 'Total amount'); ?></div>
                          </div>
                     </div>
+
                 </div>
                 <div class="cart-item row pb-4">
                     <?php foreach ($products as $product): ?>
@@ -134,6 +136,7 @@ $storeManager = Yii::$app->storeManager;
                                     ?>
                                 </div>
                                 <div class="col-md-2 text-right col-sm-12 pt-4">
+
                                     <div class="price price-option text-danger">
                                         <span style="font-weight: 600"><?= $storeManager->showMoney($product['total_final_amount']); ?></span>
                                     </div>
@@ -155,10 +158,10 @@ $storeManager = Yii::$app->storeManager;
         </div>
         <div class="row  mb-5 mt-2">
             <div class="col-md-12 text-right">
-                <button class="btn btn-outline-info text-uppercase" style="float: left" onclick="ws.goback()">
+                <button class="btn btn-outline-info btn-lg text-uppercase" style="float: left" onclick="ws.goback()">
                     <?php echo Yii::t('frontend', 'Continue shopping'); ?>
                 </button>
-                <button class="btn btn-amazon text-uppercase" id="shoppingBtn" style="float: right;margin-right: 5px;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Make payment') ?></button>
+                <button class="btn btn-amazon btn-lg text-uppercase" id="shoppingBtn" style="float: right;margin-right: 5px;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Make payment') ?></button>
             </div>
         </div>
     </div>

@@ -57,12 +57,18 @@ class OrderCartItem extends BaseObject
         $products = ArrayHelper::getValue($tempKey, 'products', []);
         $orders = [];
         foreach ($products as $index => $param) {
+            $key_arr = explode('-',$tempKey['sellerId']);
+            $key_id = '';
+            foreach ($key_arr as $k => $value){
+                if(($k + 1) < (count($key_arr) - 2))
+                    $key_id = $k == 0 ? $value : $key_id.'-'.$value;
+            }
             $param = ArrayHelper::merge($param, [
                 'source' => $tempKey['source'],
-                'sellerId' => $tempKey['sellerId']
+                'sellerId' => $key_id ? $key_id : $tempKey['sellerId']
             ]);
             $new = new self($this->cartManager, $param);
-            list($ok, $newOrder) = $new->filterProduct();
+            list($ok, $newOrder) = $new->filterProduct($tempKey['sellerId']);
             if (!$ok) {
                 return [false, Yii::t('common', '"item {id} is invalid please remove this form cart list', [
                     'id' => $param['id']
@@ -122,12 +128,12 @@ class OrderCartItem extends BaseObject
 
     }
 
-    public function filterProduct()
+    public function filterProduct($seller_id = '')
     {
         $params = [
             'type' => $this->source,
             'id' => $this->id,
-            'seller' => $this->sellerId,
+            'seller' => $seller_id,
             'quantity' => (int)$this->quantity,
             'sku' => $this->sku,
         ];
@@ -140,7 +146,7 @@ class OrderCartItem extends BaseObject
         }
         $product->current_image = $this->image;
         $params['image'] = $this->image;
-        $order = CartHelper::createItem($product);
+        $order = CartHelper::createItem($product,$this->sellerId,$this->image);
         return [true, $order];
     }
 
