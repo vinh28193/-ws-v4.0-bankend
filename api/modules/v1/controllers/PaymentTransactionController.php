@@ -43,8 +43,12 @@ class PaymentTransactionController extends BaseApiController
         $models = PaymentTransaction::find()->where(['order_code' => $code])->all();
         foreach ($models as $model){
             $model->transaction_status = 'SUCCESS';
-            $model->note = $post['note'];
-            $model->link_image = $post['link_image'];
+            if (isset($post['note'])) {
+                $model->note = $post['note'];
+            }
+            if (isset($post['link_image'])) {
+                $model->link_image = $post['link_image'];
+            }
             $model->save(false);
         }
         return $this->response(true, 'success');
