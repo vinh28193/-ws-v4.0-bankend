@@ -24,6 +24,7 @@ use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use common\products\BaseProduct;
+use yii\helpers\Inflector;
 
 class ShippingController extends CheckoutController
 {
@@ -107,13 +108,14 @@ class ShippingController extends CheckoutController
 
     public function init()
     {
-
+        parent::init();
+        $this->site_name = 'Checkout page';
         if (($type = Yii::$app->request->get('type')) !== null) {
-            $this->title = Yii::t('frontend', 'Product in {type} cart', [
+            $this->site_title = Yii::t('frontend', 'Product in {type} cart', [
                 'type' => $type
             ]);
         }
-        parent::init();
+
     }
 
     public function actionIndex($type)
@@ -142,9 +144,30 @@ class ShippingController extends CheckoutController
         if (count($payment->getOrders()) === 0) {
             return $this->goBack();
         }
+        $siteName = Yii::t('frontend','Checkout');
+        $titleCollection = [];
+        if ($payment->type === CartSelection::TYPE_BUY_NOW) {
+            $siteName =  Yii::t('frontend', 'Buy now');
 
-//        $this->gaCheckout();
+        } elseif ($payment->type === CartSelection::TYPE_SHOPPING) {
+            $siteName = Yii::t('frontend', 'Shopping');
+        }
+        $titleCollection[] = $siteName;
+        $titleCollection[] = $shippingForm->getStoreManager()->store->name;
 
+        foreach ($payment->getOrders() as $order) {
+
+            $titleCollection[] = Yii::t('frontend', 'Seller:{portal} {seller}', [
+                'portal' => strtoupper($order->seller->portal) === 'EBAY' ? 'eBay' : 'Amazon',
+                'seller' => Inflector::camelize($order->seller->seller_name)
+            ]);
+            foreach ($order->products as $product) {
+                $titleCollection[] = $product->product_name;
+            }
+        }
+        $this->site_name = $siteName;
+        $this->site_title = implode(' | ', $titleCollection);
+        $this->site_description = 'checkout | products | payment | visa | master |bank transfer';
         return $this->render('index', [
             'shippingForm' => $shippingForm,
             'payment' => $payment,
