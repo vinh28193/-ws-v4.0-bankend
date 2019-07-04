@@ -44,6 +44,9 @@ class TestController extends FrontendController
 
     public function actionAlepay()
     {
+
+        $yiiParams = PaymentService::getClientConfig('alepay');
+        var_dump($yiiParams);die;
         $alepay = new AlepayClient();
 
         $res = $alepay->getInstallmentInfo(10000000.00, 'VND')['data'];

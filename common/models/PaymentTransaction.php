@@ -48,4 +48,5 @@ class PaymentTransaction extends DbPaymentTransaction
     {
         return $this->hasOne(Order::className(), ['ordercode' => 'order_code']);
     }
+
 }

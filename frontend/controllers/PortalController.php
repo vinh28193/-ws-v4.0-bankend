@@ -26,17 +26,17 @@ class PortalController extends FrontendController
         parent::init();
         $this->portalTitle = Yii::t('frontend', 'Buy in Amazon, eBay');
         $this->portalImage = '';
-        $this->portalDescription = Yii::t('frontend', 'Buy in Amazon, eBay & Top Stores US Viet Nam. Quality assurance. Order easy & online payment. free ship local.');
+        $this->portalDescription = Yii::t('frontend', 'Buy in Amazon, eBay & Top Stores US Viet Nam. Order easy & online payment.');
     }
 
     public function ogMetaTag()
     {
         return ArrayHelper::merge(parent::ogMetaTag(), [
             'title' => $this->portalTitle,
-            'site_name' => $this->portalTitle,
+            //'site_name' => $this->portalTitle,
             'image' => $this->portalImage,
             'description' => $this->portalDescription,
-            'portal' => strtolower($this->portal),
+           // 'portal' => strtolower($this->portal),
             'keyword' => Yii::t('frontend', 'weshop, ebay, amazon, ebay vn, amazon vn, buy ebay, buy amazon, buy usa, us shipping, watch, technological, electronics, high-tech, clothing, gadgets, accessories, jewelry, watches, beauty, cosmetic, health product, sport')
         ]);
     }
