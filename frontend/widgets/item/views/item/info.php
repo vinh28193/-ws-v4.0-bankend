@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 /* @var yii\web\View $this */
 /* @var BaseProduct $item */
 /* @var common\components\StoreManager $storeManager */
-$portal_web = strtolower($item->type) == 'ebay' ? '<a href="//ebay.com" rel="nofollow" target="_blank">eBay.com</a>' : '<a href="//amazon.com"  rel="nofollow" target="_blank" >Amazon.com</a>';
+$portal_web = strtolower($item->type) == 'ebay' ? '<a href="'.$item->item_origin_url.'" rel="nofollow" target="_blank">eBay.com</a>' : '<a href="'.$item->item_origin_url.'"  rel="nofollow" target="_blank" >Amazon.com</a>';
 $salePercent = $item->getSalePercent();
 $current_provider = $item->provider ? $item->provider : $item->getCurrentProvider();
 $variationUseImage = null;

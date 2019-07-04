@@ -38,15 +38,17 @@ class SignupForm extends Model
             ['phone', 'string', 'min' => 10, 'max' => 15],
             ['phone', 'required'],
             ['phone', 'common\validators\PhoneValidator'],
-            ['phone', 'unique', 'targetClass' => '\common\models\User'],
+            ['phone', 'unique', 'targetClass' => '\common\models\User','filter' => function(\yii\db\ActiveQuery  $query) {
+                $query->andWhere(['store_id' => Yii::$app->storeManager->getId()]);
+            }],
 
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
-
-
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.','filter' => function(\yii\db\ActiveQuery  $query) {
+                $query->andWhere(['store_id' => Yii::$app->storeManager->getId()]);
+            }],
             ['password', 'required'],
             ['password', 'string', 'min' => 8, 'max' => 72],
             ['password', 'match', 'pattern' => '/[0-9a-zA-Z]/', 'message' => 'Password does not enter special characters'],
