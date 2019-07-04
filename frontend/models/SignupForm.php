@@ -7,6 +7,7 @@ use yii\base\Model;
 use common\models\User;
 use Yii;
 use common\models\Auth;
+use yii\helpers\Html;
 
 /**
  * Signup form
@@ -91,8 +92,8 @@ class SignupForm extends Model
         @date_default_timezone_set('Asia/Ho_Chi_Minh');
         $user = new User([
             'phone' => $this->phone,
-            'last_name' => $this->last_name,
-            'first_name' => $this->first_name,
+            'last_name' => Html::encode($this->last_name),
+            'first_name' => Html::encode($this->first_name),
             'username' => $this->email,
             'email' => $this->email,
             'password' => $this->password,
