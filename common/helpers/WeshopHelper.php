@@ -8,6 +8,7 @@
 
 namespace common\helpers;
 
+use Yii;
 use wallet\modules\v1\models\WalletTransaction;
 use yii\base\InvalidArgumentException;
 use yii\bootstrap\Html;
@@ -158,6 +159,7 @@ class WeshopHelper
             throw new InvalidArgumentException("invalid $convertType");
         }
         $condition = "return ($convertType)'$target' $operator ($convertType)'$source';";
+        Yii::info("compare condition :$condition", __METHOD__);
         //var_dump(eval("return ($convertType)'$target';"));die;
         return eval($condition);
     }
@@ -178,7 +180,7 @@ class WeshopHelper
 
     }
 
-    public static function generateBinCode($reference,  $length = 6)
+    public static function generateBinCode($reference, $length = 6)
     {
         $length -= strlen($reference);
         while ($length > 0) {

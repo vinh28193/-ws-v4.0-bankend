@@ -99,11 +99,20 @@ return [
         'alepay' => [
             'enable' => 'sandbox',
             'params' => [
-                'baseUrl' => 'https://alepay-sandbox.nganluong.vn/checkout/v1',
-                'apiKey' => 'g84sF7yJ2cOrpQ88VbdZoZfiqX4Upx',
-                'checksumKey' => 'lXntf6CIZbSgzMqTz1nQ11jPKhGfsF',
-                'encryptKey' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCKWYg7jKrTqs83iIvYxlLgMqIy4MErNsoBKU2MHaG5ccntzGeNcDba436ds+VWB4E9kaL+D2wTuaiU+4Hx7DcyJ3leksXXM85koV/97f8Gn4nd3epxucaurcXmcEvU/VfqU7bKTdLdLwB7yPaZ45ilmBh/GqGJnmfq9csVuyZ0cwIDAQAB',
-                'callbackUrl' => '',
+                'sandbox' => [
+                    'baseUrl' => 'https://alepay-sandbox.nganluong.vn/checkout/v1',
+                    'apiKey' => 'g84sF7yJ2cOrpQ88VbdZoZfiqX4Upx',
+                    'checksumKey' => 'lXntf6CIZbSgzMqTz1nQ11jPKhGfsF',
+                    'encryptKey' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCKWYg7jKrTqs83iIvYxlLgMqIy4MErNsoBKU2MHaG5ccntzGeNcDba436ds+VWB4E9kaL+D2wTuaiU+4Hx7DcyJ3leksXXM85koV/97f8Gn4nd3epxucaurcXmcEvU/VfqU7bKTdLdLwB7yPaZ45ilmBh/GqGJnmfq9csVuyZ0cwIDAQAB',
+                    'callbackUrl' => '',
+                ],
+                'live' => [
+                    'baseUrl' => 'url live',
+                    'apiKey' => 'api key',
+                    'checksumKey' => 'check sum',
+                    'encryptKey' => 'public key',
+                    'callbackUrl' => '',
+                ]
             ]
         ]
     ],
