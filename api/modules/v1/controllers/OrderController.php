@@ -190,27 +190,27 @@ class OrderController extends BaseApiController
             if($model->total_paid_amount_local >= 0 && $model->total_paid_amount_local >= $model->total_final_amount_local){
                 $status = Product::STATUS_READY2PURCHASE;
             }
-            foreach ($model->products as $product){
-                if($product_id){
-                    if($product->id == $product_id){
-                        if($product->custom_category_id){
-                            $product->current_status = $status;
-                            $product->save(0);
-                        }else{
-                            $tran->rollBack();
-                            return $this->response(false,'Product id '.$product->id.' hasn\'t  category policy!');
-                        }
-                    }
-                }else{
-                    if($product->custom_category_id){
-                        $product->current_status = $status;
-                        $product->save(0);
-                    }else{
-                        $tran->rollBack();
-                        return $this->response(false,'Product id '.$product->id.' hasn\'t  category policy!');
-                    }
-                }
-            }
+//            foreach ($model->products as $product){
+//                if($product_id){
+//                    if($product->id == $product_id){
+//                        if($product->custom_category_id){
+//                            $product->current_status = $status;
+//                            $product->save(0);
+//                        }else{
+//                            $tran->rollBack();
+//                            return $this->response(false,'Product id '.$product->id.' hasn\'t  category policy!');
+//                        }
+//                    }
+//                }else{
+//                    if($product->custom_category_id){
+//                        $product->current_status = $status;
+//                        $product->save(0);
+//                    }else{
+//                        $tran->rollBack();
+//                        return $this->response(false,'Product id '.$product->id.' hasn\'t  category policy!');
+//                    }
+//                }
+//            }
             if(in_array($model->current_status,[Order::STATUS_READY2PURCHASE,Order::STATUS_NEW,Order::STATUS_SUPPORTED,Order::STATUS_SUPPORTING])){
                 $model->current_status = $status;
                 if($status == Order::STATUS_READY2PURCHASE){
@@ -313,7 +313,11 @@ class OrderController extends BaseApiController
             ]);
             return $this->response(false, $model->getFirstErrors());
         }
-        ChatHelper::push($messages, $model->ordercode, 'GROUP_WS', 'SYSTEM', $post['Order']['link_image_log'] ? $post['Order']['link_image_log'] :  null);
+        if (isset($post['Order']['link_image_log'])) {
+            ChatHelper::push($messages, $model->ordercode, 'GROUP_WS', 'SYSTEM', $post['Order']['link_image_log'] ? $post['Order']['link_image_log'] :  null);
+        } else {
+            ChatHelper::push($messages, $model->ordercode, 'GROUP_WS', 'SYSTEM', null);
+        }
         Yii::info("Order Log ".$model->getScenario());
         Yii::info([
             'id' => $model->ordercode,
