@@ -349,7 +349,7 @@ JS;
                     <div class="card-title seller">
                         <?php
                         $seller = $order->seller;
-                        echo Yii::t('frontend', '{portal} store: {store} (count) items', [
+                        echo Yii::t('frontend', '{portal} store: {store} ({count}) items', [
                             'portal' => strtoupper($seller->portal) === 'EBAY' ? 'eBay' : Inflector::camelize(strtolower($seller->portal)),
                             'store' => Html::tag('span', $seller->seller_name, ['style' => 'color: #2b96b6;']),
                             'count' => count($order->products)
