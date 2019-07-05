@@ -67,7 +67,7 @@ $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$
                     <?php
                     $form = ActiveForm::begin([
                         'id' => 'passwordRequiredForm',
-                        'action' => Url::toRoute('/secure/password-required', true)
+                        'action' => Url::toRoute('/secure/password-required', 'https')
                     ]);
                     ActiveForm::end();
                     ?>
