@@ -28,7 +28,6 @@ var ws = ws || (function ($) {
                         orgBeforeSendHandler(xhr, settings);
                     }
                 };
-
                 var orgErrorHandler = options.error;
                 options.error = function (xhr, textStatus, errorThrown) {
                     if (!xhr) {
@@ -38,7 +37,7 @@ var ws = ws || (function ($) {
                     if (redirect && xhr.getResponseHeader('X-PJAX-REDIRECT-URL') !== '' && xhr.getResponseHeader('X-PJAX-REDIRECT-URL') !== null) {
                         options.url = xhr.getResponseHeader('X-PJAX-REDIRECT-URL');
                         options.replace = true;
-                        console.log('Handled redirect to: ' + options.url);
+                        //console.log('Handled redirect to: ' + options.url);
                         $.pjax(options);
                     } else {
                         orgErrorHandler(xhr, textStatus, errorThrown);
@@ -51,7 +50,7 @@ var ws = ws || (function ($) {
             show = show || false;
             $('#loading').css('display', show ? 'block' : 'none');
         },
-        notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning',confirmAutoHide = true) {
+        notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning') {
             $('#modal-content').removeClass('modal-default');
             $('#modal-content').removeClass('modal-lg');
             $('#modal-content').removeClass('modal-xl');
@@ -68,14 +67,9 @@ var ws = ws || (function ($) {
             $('#NotifyConfirmBtnClose').removeAttr('class');
             $('#NotifyConfirmBtnSubmit').addClass(confirmClass);
             $('#NotifyConfirmBtnClose').addClass(cancelClass);
-            $('#NotifyConfirmHeader').css('background', '#fff');
             if (type === 'confirm') {
                 $('#NotifyConfirmBtnSubmit').css('display', 'block');
-                if(confirmAutoHide){
-                    $('#NotifyConfirmBtnSubmit').attr('onclick', "$('#NotifyConfirm').modal('hide');" + submitClick);
-                }else {
-                    $('#NotifyConfirmBtnSubmit').attr('onclick', submitClick);
-                }
+                $('#NotifyConfirmBtnSubmit').attr('onclick', "$('#NotifyConfirm').modal('hide');" + submitClick);
                 if (cancelClick) {
                     $('#NotifyConfirmBtnClose').attr('onclick', cancelClick);
                 }
@@ -98,8 +92,8 @@ var ws = ws || (function ($) {
             ws.notifyMessage(message, title, 'info', size);
         },
 
-        notifyConfirm: function (message = 'Confirm', title = 'Confirm', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning',confirmAutoHide = true) {
-            ws.notifyMessage(message, title, 'confirm', size, submitClick, cancelClick, confirmLabel, cancelLabel, confirmClass, cancelClass,confirmAutoHide);
+        notifyConfirm: function (message = 'Confirm', title = 'Confirm', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning') {
+            ws.notifyMessage(message, title, 'confirm', size, submitClick, cancelClick, confirmLabel, cancelLabel, confirmClass, cancelClass);
         },
         ajax: function (url, $options, loading = false) {
             if (loading) {
@@ -149,7 +143,7 @@ var ws = ws || (function ($) {
         },
         getFingerprint: function () {
             var content = $('meta[name=fingerprint-token]').attr('content');
-            if(content === ''){
+            if (content === '') {
                 var $client = new ClientJS();
                 content = $client.getFingerprint();
                 pub.setFingerprint(content);
@@ -174,7 +168,7 @@ var ws = ws || (function ($) {
         },
         reloadCartBadge: function () {
             ws.ajax('/checkout/cart/count', function (res) {
-                if(res.success){
+                if (res.success) {
                     pub.setCartBadge(res.count);
                 }
             }, false);
@@ -219,6 +213,11 @@ var ws = ws || (function ($) {
         redirect: function (href) {
             document.location.href = href;
         },
+        relativeUrl: function (url) {
+            var split = url.split('/');
+            var host = split[0] + '//' + split[2];
+            return url.replace(host, '');
+        },
         t: function (message, params = []) {
             var hash = message;
             if (typeof (i18nMessages[hash]) !== 'undefined') {
@@ -260,7 +259,7 @@ var ws = ws || (function ($) {
             precision = precision || pub.options.pricePrecision;
             currency = currency || pub.options.currency;
             money = pub.roundNumber(money, precision);
-            return pub.numberFormat(money) + ' ' + currency;
+            return pub.numberFormat(money) + currency;
         },
         showFilter: function (id) {
             if ($("#" + id).css('display') === 'none') {
@@ -274,27 +273,27 @@ var ws = ws || (function ($) {
             }
         },
         showMoreFilter: function (element) {
-            console.log($(element).html());
+            //console.log($(element).html());
             var tagert = $(element).attr('data-target');
             console.log(tagert);
-            if(!$('.'+tagert).hasClass('hide-filter')){
-                $('.'+tagert).addClass('hide-filter');
-                $('.type-show-'+tagert).removeClass('hide-filter');
+            if (!$('.' + tagert).hasClass('hide-filter')) {
+                $('.' + tagert).addClass('hide-filter');
+                $('.type-show-' + tagert).removeClass('hide-filter');
                 $(element).parent().addClass('hide-filter');
-            }else {
-                $('.'+tagert).removeClass('hide-filter');
-                $('.type-show-'+tagert).removeClass('hide-filter');
+            } else {
+                $('.' + tagert).removeClass('hide-filter');
+                $('.type-show-' + tagert).removeClass('hide-filter');
                 $(element).parent().addClass('hide-filter');
             }
         },
         getSuggestSearch: function (response) {
             console.log(response);
-            if(response.length > 2){
-                if($('input.searchBoxInput').val() === response[0]){
-                    var txt = '<option>'+response[0]+'</option>';
+            if (response.length > 2) {
+                if ($('input.searchBoxInput').val() === response[0]) {
+                    var txt = '<option>' + response[0] + '</option>';
                     // console.log(response[1]);
-                    $.each(response[1],function (k,v) {
-                        txt += '<option>'+v+'</option>';
+                    $.each(response[1], function (k, v) {
+                        txt += '<option>' + v + '</option>';
                         // console.log('<option>'+v+'</option>');
                         // $('#searchAutoComplete').append('<option>'+v+'</option>');
                     });
@@ -321,6 +320,7 @@ var ws = ws || (function ($) {
             if (prevHandler === undefined) {
                 eventHandlers[id] = {};
             }
+            // console.log('event: "' + event + '" will be trigger with selector: "' + selector + '"');
             $(document).on(event, selector, callback);
             eventHandlers[id][type] = {event: event, selector: selector};
         },
@@ -391,127 +391,11 @@ var ws = ws || (function ($) {
                 }
             });
         },
-        save_address: function () {
-            var dataForm = {
-                idAddress: $('#shipping-id').val(),
-                fullName: $('#shipping-full_name').val(),
-                phone: $('#shipping-phone').val(),
-                email: $('#shipping-email').val(),
-                district: $('#shipping_district_id').val(),
-                province: $('#shipping_province_id').val(),
-                zip_code: $('#shipping_zipcode').val(),
-                is_default: $('#shipping_is_default:checked').val(),
-                address: $('#shipping_address').val()
-            };
-            ws.loading(true);
-            $.ajax({
-                url: '/account/customer/save-address-shipping',
-                method: 'POST',
-                data: dataForm,
-                success: function (res) {
-                    if (res.success) {
-                        window.location.reload();
-                    } else {
-                        ws.loading(false);
-                        var text = res.message;
-                        if(res.errors){
-                            $.each(res.errors,function (k,v) {
-                                text += "<br><i class='la la-dot-circle-o'></i>" + v;
-                            });
-                        }
-                        $('#error-message').html(text);
-                    }
-                }
-            });
-        },
-        province_change: function(id_province, id_district){
-            var txt = '';
-            district_data.filter(function (d) {
-                if(d.province_id == $('#'+id_province).val()){
-                    txt += '<option value="'+d.id+'">'+d.name+'</option>';
-                }
-            });
-            $('#'+id_district).html(txt);
-            $('#'+id_district).trigger('change');
-            // ws.payment.calculatorShipping();
-        },
-        district_change: function(id_district, id_post_code , caculatorShipping = false){
-            if(store_id === 7){
-                var district = $('#'+id_district).val();
-                var zipcode = zipcode_data.filter(z => z.district_id === district);
-                if(zipcode && zipcode.length > 0){
-                    $('#'+id_post_code).val(zipcode[0].zip_code);
-                }else {
-                    ws.notifyInfo('Cannot find zipcode from your district ');
-                    $('#' + id_post_code).val('');
-                    return false;
-                }
-            }
-            if(caculatorShipping){
-                ws.payment.calculatorShipping();
-            }
-        },
-        zipcode_keyup: function(id_zipcode, id_list_zipcode){
-            var txt = '';
-            var count = 0;
-            var zipcode = $('#'+id_zipcode).val();
-            zipcode_data.filter(function (z) {
-                if(count < 20 && (z.zip_code.indexOf(zipcode) > -1 || !zipcode )){
-                    count++;
-                    txt += "<option value='"+z.zip_code+"'>"+z.label+"</option>";
-                }
-            });
-            $('#'+id_list_zipcode).html(txt);
-        },
-        zipcode_Change: function(id_zipcode, province_id, district_id){
-            var zipcode = zipcode_data.filter(z => z.zip_code === $('#' + id_zipcode).val());
-            if(zipcode && zipcode.length > 0){
-                $('#'+province_id).val(zipcode[0].province_id).trigger('change');
-                $('#'+district_id).val(zipcode[0].district_id).trigger('change');
-            }else {
-                ws.notifyInfo('Zip code '+$('#' + id_zipcode).val()+' not support! Please change zip code');
-                $('#' + id_zipcode).val('');
-            }
-        },
         showModal: function (id) {
-          $('#'+id).modal();
+            $('#' + id).modal();
         },
-        editAddress: function(id) {
-            ws.loading(true);
-            $.ajax({
-                url: '/account/customer/edit-address',
-                method: 'POST',
-                data: {id: id},
-                success: function (res) {
-                    if (res.success) {
-                        ws.loading(false);
-                        ws.notifyConfirm(res.data.content,res.data.title,'default','ws.save_address()','',ws.t('Confirm'),ws.t('Close'),'btn btn-success','btn btn-warning',false);
-                    } else {
-                        ws.loading(false);
-                        ws.notifyError(res.message);
-                    }
-                }
-            });
-        },
-        removeAddress: function(id) {
-            ws.loading(true);
-            $.ajax({
-                url: '/account/customer/remove-address',
-                method: 'POST',
-                data: {id: id},
-                success: function (res) {
-                    if (res.success) {
-                        window.location.reload();
-                    } else {
-                        ws.loading(false);
-                        ws.notifyError(res.message);
-                    }
-                }
-            });
-        },
-        startForm: function () {
-            var link = location.href;
-            var phone = $('#shippingform-buyer_phone').val().trim();
+        shippingCollection: function (type = 'buyer', cartType = 'buynow', cartIds = []) {
+            var phone = $('#shippingform-' + type + '_phone').val().trim();
             phone = phone.replace('(+84)', '0');
             phone = phone.replace('+84', '0');
             phone = phone.replace('0084', '0');
@@ -523,11 +407,14 @@ var ws = ws || (function ($) {
                 ws.ajax('/checkout/shipping/add-cart-checkout', {
                     type: 'POST',
                     data: {
-                        phone: phone,
-                        link: link,
-                        fullName: $('#shippingform-buyer_name').val().trim(),
-                        email: $('#shippingform-buyer_email').val().trim(),
-                        typeUpdate: 'updateCartInCheckout'
+                        type: cartType,
+                        cartIds: cartIds,
+                        params: {
+                            phone: phone,
+                            fullName: $('#shippingform-' + type + '_name').val().trim(),
+                            email: $('#shippingform-' + type + '_email').val().trim(),
+                            typeUpdate: type + 'CartInCheckout'
+                        }
                     },
                 });
             }
@@ -547,12 +434,12 @@ ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input.searchBoxInpu
     clearTimeout(window.mytimeout);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
-    }else{
+    } else {
         var $element = this;
         var key = $(this).val();
-        if(key){
-            window.mytimeout = setTimeout(function(){
-                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q='+encodeURI(key);
+        if (key) {
+            window.mytimeout = setTimeout(function () {
+                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q=' + encodeURI(key);
                 $.ajax({
                     url: url_call,
                     dataType: 'jsonp',
@@ -566,12 +453,12 @@ ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'keyup', 'input.mb-searchB
     clearTimeout(window.mytimeout);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
-    }else if (event.keyCode){
+    } else if (event.keyCode) {
         var $element = this;
         var key = $(this).val();
-        if(key){
-            window.mytimeout = setTimeout(function(){
-                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q='+encodeURI(key);
+        if (key) {
+            window.mytimeout = setTimeout(function () {
+                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q=' + encodeURI(key);
                 $.ajax({
                     url: url_call,
                     dataType: 'jsonp',
@@ -587,7 +474,7 @@ $('input.searchBoxInput').change(function () {
     ws.browse.searchNew(this, '$url');
 });
 $('datalist#listSuggestSearch').keyup(function () {
-    console.log('Key up: '+event.key);
+    //console.log('Key up: ' + event.key);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
     }
@@ -596,13 +483,13 @@ $('#zipcode_default').keyup(function () {
     var txt = '';
     var count = 0;
     var tesst = zipcode_data.filter(function (z) {
-        if(z.zip_code.indexOf($('#zipcode_default').val()) > -1){
+        if (z.zip_code.indexOf($('#zipcode_default').val()) > -1) {
             count++;
         }
         return count < 20 && z.zip_code.indexOf($('#zipcode_default').val()) > -1;
     });
-    $.each(tesst, function (k,v) {
-        txt += "<option value='"+v.zip_code+"'>"+v.label+"</option>";
+    $.each(tesst, function (k, v) {
+        txt += "<option value='" + v.zip_code + "'>" + v.label + "</option>";
     });
     $('#list_zipcode').html(txt);
 });

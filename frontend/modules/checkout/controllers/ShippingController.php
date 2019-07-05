@@ -11,6 +11,8 @@ use common\models\SystemCountry;
 use common\models\SystemDistrict;
 use common\models\SystemZipcode;
 use common\models\User;
+use frontend\modules\payment\models\Order;
+use frontend\modules\payment\PaymentService;
 use frontend\modules\payment\providers\wallet\WalletService;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
@@ -25,6 +27,7 @@ use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use common\products\BaseProduct;
 use yii\helpers\Inflector;
+use yii\web\NotFoundHttpException;
 
 class ShippingController extends CheckoutController
 {
@@ -118,32 +121,69 @@ class ShippingController extends CheckoutController
 
     }
 
-    public function actionIndex($type,$page = Payment::PAGE_CHECKOUT)
+    public function actionIndex()
     {
-        if (($keys = CartSelection::getSelectedItems($type)) === null) {
-            return $this->goBack();
-        }
+        $queryParams = $this->request->queryParams;
+
         $uuid = $this->filterUuid();
+
         $shippingForm = new ShippingForm();
         $shippingForm->setDefaultValues();
-        /** @var User $user */
-        $keys = array_map(function ($e) use ($uuid, $type) {
-            return [
-                'cartId' => $e,
-                'uuid' => $uuid,
-                'checkoutType' => $type,
-            ];
-        }, $keys);
+
+        $page = Payment::PAGE_CHECKOUT;
+        $type = ArrayHelper::getValue($queryParams, 'ref');
+        $code = ArrayHelper::getValue($queryParams, 'code');
+
         $payment = new Payment([
-            'page' => strtoupper($page),
-            'uuid' => $this->filterUuid(),
-            'type' => $type,
-            'orders' => $keys,
+            'page' => $page,
+            'uuid' => $uuid,
+            'type' => $type
         ]);
-        $payment->initDefaultMethod();
-        if (count($payment->getOrders()) === 0) {
-            return $this->goBack();
+
+        $orders = [];
+        if ($type !== null && CartSelection::isValidType($type) && ($keys = CartSelection::getSelectedItems($type)) !== null && !empty($keys)) {
+            foreach ($keys as $key) {
+                $order = new Order();
+                $order->checkoutType = $type;
+                $order->uuid = $uuid;
+                $order->cartId = $key;
+                if ($order->createOrderFromCart() === false) {
+                    continue;
+                }
+                $orders[$order->cartId] = $order;
+            }
+            $shippingForm->setDefaultValues();
+        } elseif ($code !== null) {
+            $payment->page = Payment::PAGE_BILLING;
+            if (strpos($code, 'PM', 0) !== false && ($parent = PaymentService::findParentTransaction($code))) {
+                $payment->transaction_code = $code;
+                foreach ($parent->childPaymentTransaction as $childPaymentTransaction) {
+                    if (($orderParam = $childPaymentTransaction->order) !== null) {
+                        $order = new Order($orderParam->getAttributes());
+                        $order->getAdditionalFees()->loadFormActiveRecord($orderParam, 'order');
+                        $order->getAdditionalFees()->remove('international_shipping_fee');
+                        $orders[$order->ordercode] = $order;
+                        $shippingForm->loadAddressFormOrder($order);
+                    }
+                }
+
+            } else if (($order = Order::findOne(['ordercode' => $code])) !== null) {
+                $payment->transaction_code = $order->payment_transaction_code;
+                $order = new Order($order->getAttributes());
+                $order->getAdditionalFees()->loadFormActiveRecord($order, 'order');
+                $order->getAdditionalFees()->remove('international_shipping_fee');
+                $orders[$order->ordercode] = $order;
+                $shippingForm->loadAddressFormOrder($order);
+            }
         }
+
+        if (count($orders) === 0) {
+            throw new NotFoundHttpException("Not found");
+        }
+
+        $payment->initDefaultMethod();
+        $payment->setOrders($orders);
+
         $siteName = Yii::t('frontend', 'Checkout');
         $titleCollection = [];
         if ($payment->type === CartSelection::TYPE_BUY_NOW) {
@@ -264,9 +304,24 @@ class ShippingController extends CheckoutController
 
     public function actionAddCartCheckout()
     {
-        $post = Yii::$app->request->post();
-        $CartId = CartSelection::getSelectedItems();
-        return $this->getCart()->updateSafeItem('buynow', $CartId['buynow'], $post);
+        $bodyParams = $this->request->bodyParams;
+        if (($type = ArrayHelper::getValue($bodyParams, 'type')) === null) {
+            return false;
+        }
+        if (($cartIds = ArrayHelper::getValue($bodyParams, 'cartIds')) === null || !is_array($cartIds) || empty($cartIds)) {
+            return false;
+        }
+        if (($params = ArrayHelper::getValue($bodyParams, 'params')) === null || !is_array($params) || empty($params)) {
+            return false;
+        }
+        if (!empty($cartIds) && !empty($params)) {
+            foreach ($cartIds as $cartIt) {
+                $this->getCart()->updateSafeItem($type, $cartIt, $params);
+            }
+            return true;
+        }
+        return false;
+
 
     }
 

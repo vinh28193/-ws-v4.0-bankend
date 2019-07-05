@@ -172,4 +172,13 @@ class CartSelection
             return self::addSelectedItem($type, $item);
         }
     }
+
+    public static function isValidType($type)
+    {
+        return ArrayHelper::isIn($type, [
+            self::TYPE_BUY_NOW,
+            self::TYPE_SHOPPING,
+            self::TYPE_INSTALLMENT
+        ]);
+    }
 }
