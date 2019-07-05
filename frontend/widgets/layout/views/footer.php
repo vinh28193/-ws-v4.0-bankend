@@ -46,32 +46,32 @@ $jsdistrict = json_encode($district);
                         <div class="col-md-4">
                             <div class="title"><?= Yii::t('frontend','About Weshop:') ?></div>
                             <ul>
-                                <li><a href="<?= Yii::t('frontend','#aboutus') ?>"><?= Yii::t('frontend','About us') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#privacypolicy') ?>"><?= Yii::t('frontend','Privacy Policy') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#term&condition') ?>"><?= Yii::t('frontend','Terms & Condition') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#contact') ?>"><?= Yii::t('frontend','Contact us') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#aboutus') ?>"><?= Yii::t('frontend','About us') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#privacypolicy') ?>"><?= Yii::t('frontend','Privacy Policy') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#term&condition') ?>"><?= Yii::t('frontend','Terms & Condition') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#contact') ?>"><?= Yii::t('frontend','Contact us') ?></a></li>
                             </ul>
                         </div>
                         <div class="col-md-4">
                             <div class="title"><?= Yii::t('frontend','Help') ?></div>
                             <ul>
-                                <li><a href="<?= Yii::t('frontend','#how2pay') ?>"><?= Yii::t('frontend','How to pay') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#termsrefund') ?>"><?= Yii::t('frontend','Terms Refund') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#prohibited') ?>"><?= Yii::t('frontend','Prohibited Items') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#importtaxduty') ?>"><?= Yii::t('frontend','Import Tax Duty') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#privacyPolicy') ?>"><?= Yii::t('frontend','Privacy Policy') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#term&condition') ?>"><?= Yii::t('frontend','Terms & Condition') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#how2pay') ?>"><?= Yii::t('frontend','How to pay') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#termsrefund') ?>"><?= Yii::t('frontend','Terms Refund') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#prohibited') ?>"><?= Yii::t('frontend','Prohibited Items') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#importtaxduty') ?>"><?= Yii::t('frontend','Import Tax Duty') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#privacyPolicy') ?>"><?= Yii::t('frontend','Privacy Policy') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#term&condition') ?>"><?= Yii::t('frontend','Terms & Condition') ?></a></li>
                             </ul>
                         </div>
                         <div class="col-md-4">
                             <div class="title"><?= Yii::t('frontend','Value Added Services') ?></div>
                             <ul>
-                                <li><a href="<?= Yii::t('frontend','#inspectionservice') ?>"><?= Yii::t('frontend','Inspection Service') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#consolidateshipment') ?>"><?= Yii::t('frontend','Consolidate shipments') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#repackingservice') ?>"><?= Yii::t('frontend','Repacking service') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#shippinginsurance') ?>"><?= Yii::t('frontend','Shipping Insurance') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#feedaystorage') ?>"><?= Yii::t('frontend','Free 60days storage') ?></a></li>
-                                <li><a href="<?= Yii::t('frontend','#allvas') ?>"><?= Yii::t('frontend','View all service VAS') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#inspectionservice') ?>"><?= Yii::t('frontend','Inspection Service') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#consolidateshipment') ?>"><?= Yii::t('frontend','Consolidate shipments') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#repackingservice') ?>"><?= Yii::t('frontend','Repacking service') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#shippinginsurance') ?>"><?= Yii::t('frontend','Shipping Insurance') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#feedaystorage') ?>"><?= Yii::t('frontend','Free 60days storage') ?></a></li>
+                                <li><a target="_blank" rel="nofollow" href="<?= Yii::t('frontend','#allvas') ?>"><?= Yii::t('frontend','View all service VAS') ?></a></li>
                             </ul>
                         </div>
                     </div>
@@ -92,8 +92,8 @@ $jsdistrict = json_encode($district);
                                                                               title=""/></a></div>
                     <div class="connect">
                         <span><?= Yii::t('frontend','Connect with Weshop:') ?>:</span>
-                        <a href="<?= Yii::t('frontend','#facebookWeshop') ?>" target="_blank"><img src="<?= Url::to('/img/social_fb.png', true); ?>" alt="" title=""/></a>
-                        <a href="<?= Yii::t('frontend','#youtubeWeshop') ?>" target="_blank"><img src="<?= Url::to('/img/social_youtube.png', true); ?>" alt="" title=""/></a>
+                        <a rel="nofollow" href="<?= Yii::t('frontend','#facebookWeshop') ?>" target="_blank"><img src="<?= Url::to('/img/social_fb.png', true); ?>" alt="" title=""/></a>
+                        <aư rel="nofollow" href="<?= Yii::t('frontend','#youtubeWeshop') ?>" target="_blank"><img src="<?= Url::to('/img/social_youtube.png', true); ?>" alt="" title=""/></aư>
                     </div>
                 </div>
             </div>
