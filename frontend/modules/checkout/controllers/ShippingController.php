@@ -160,7 +160,8 @@ class ShippingController extends CheckoutController
                 foreach ($parent->childPaymentTransaction as $childPaymentTransaction) {
                     if (($orderParam = $childPaymentTransaction->order) !== null) {
                         $order = new Order($orderParam->getAttributes());
-                        $order->getAdditionalFees()->loadFormActiveRecord($orderParam);
+                        $order->getAdditionalFees()->loadFormActiveRecord($orderParam,'order');
+                        $order->getAdditionalFees()->remove('international_shipping_fee');
                         $orders[$order->ordercode] = $order;
                         $shippingForm->loadAddressFormOrder($order);
                     }
@@ -169,7 +170,8 @@ class ShippingController extends CheckoutController
             } else if (($order = Order::findOne(['ordercode' => $code])) !== null) {
                 $payment->transaction_code = $order->payment_transaction_code;
                 $order = new Order($order->getAttributes());
-                $order->getAdditionalFees()->loadFormActiveRecord($order);
+                $order->getAdditionalFees()->loadFormActiveRecord($order,'order');
+                $order->getAdditionalFees()->remove('international_shipping_fee');
                 $orders[$order->ordercode] = $order;
                 $shippingForm->loadAddressFormOrder($order);
             }
@@ -303,8 +305,9 @@ class ShippingController extends CheckoutController
     public function actionAddCartCheckout()
     {
         $post = Yii::$app->request->post();
-        $CartId = CartSelection::getSelectedItems();
-        return $this->getCart()->updateSafeItem('buynow', $CartId['buynow'], $post);
+//        $CartId = CartSelection::getSelectedItems();
+        return true;
+        //return $this->getCart()->updateSafeItem('buynow', $CartId['buynow'], $post);
 
     }
 

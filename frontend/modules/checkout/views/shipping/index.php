@@ -106,8 +106,12 @@ $js = <<< JS
 JS;
 $this->registerJs($js);
 
-if($payment->page === Payment::PAGE_CHECKOUT){
-
+if ($payment->page === Payment::PAGE_CHECKOUT && $shippingForm->enable_buyer === ShippingForm::YES) {
+    $cartIds = json_encode(array_keys($payment->getOrders()));
+    $copyAddressJs = <<<JS
+    ws.shippingCollection('buyer','{$payment->type}',{$cartIds});
+JS;
+    $this->registerJs($copyAddressJs);
 }
 
 ?>
@@ -369,6 +373,8 @@ if($payment->page === Payment::PAGE_CHECKOUT){
                 <?php foreach ($order->products as $product): ?>
                     <?php
                     $productFees = ArrayHelper::index($product->productFees, null, 'name');
+                    $purchaseFee = 0;
+                    $purchaseFee = isset($productFees['purchase_fee']) ? $productFees['purchase_fee'][0]->local_amount : $purchaseFee;
                     ?>
 
                     <div class="col-md-12 product-item">
@@ -401,14 +407,12 @@ if($payment->page === Payment::PAGE_CHECKOUT){
                             </div>
                             <div class="col-md-1 text-right pt-4">
                                 <?php
-                                $purchaseFee = 0;
-                                $purchaseFee = isset($productFees['purchase_fee']) ? $productFees['purchase_fee'][0]->local_amount : $purchaseFee;
                                 echo $storeManager->showMoney($purchaseFee);
                                 ?>
                             </div>
                             <div class="col-md-2 text-right pt-4 text-danger">
                                 <?php
-                                echo $storeManager->showMoney($product->total_final_amount_local);
+                                echo $storeManager->showMoney($product->total_final_amount_local + $purchaseFee);
                                 ?>
                             </div>
                         </div>

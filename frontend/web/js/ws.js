@@ -390,7 +390,7 @@ var ws = ws || (function ($) {
         showModal: function (id) {
             $('#' + id).modal();
         },
-        shippingCollection: function (type = 'buyer', cartType = 'buynow', cartIds = [],) {
+        shippingCollection: function (type = 'buyer', cartType = 'buynow', cartIds = []) {
             var phone = $('#shippingform-' + type + '_phone').val().trim();
             phone = phone.replace('(+84)', '0');
             phone = phone.replace('+84', '0');
