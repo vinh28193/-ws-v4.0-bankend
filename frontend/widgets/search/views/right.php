@@ -39,34 +39,12 @@ $url_cate = function ($id) use ($portal) {
     return Yii::$app->getUrlManager()->createUrl($param);
 };
 $default = Yii::$app->request->cookies->getValue('user_setting_default_search');
-$tooltip = 'Nhấn enter để tìm kiếm';
+$tooltip = Yii::t('frontend','Press ENTER to search ');
 $js = <<<JS
     $('input[name=formPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
     $('input[name=toPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
 JS;
 $this->registerJs($js);
-/*
-if(!$default){
-    $message = "<p>" .
-        "Nhằm giúp khách hàng có trải nghiệm mua sắm xuyên biên giới tốt hơn, bạn nên tìm kiếm các sản phẩm trên website Amazon.com." .
-        "</p>" .
-        "<p>" .
-        "Đặc biệt nên mua các sản phẩm hỗ trợ dịch vụ Prime, hàng hoá chất lượng tốt hơn, thời gian nhận hàng nhanh hơn.".
-        "</p>" .
-        "<p>" .
-        "Bạn có muốn tìm kiếm mặc định các sản phẩm trên Amzon.com không?" .
-        "</p>";
-    $titleMess = "Thông báo nâng cấp trang tìm kiếm sản phẩm";
-    $js = <<<JS
-    $('input[name=formPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
-    $('input[name=toPrice]').tooltip({'trigger':'focus', 'title': '$tooltip'});
-    $(document).ready(function () {
-        ws.notifyConfirm('$message','$titleMess','lg','ws.setDefaultSearch(\'amazon\')','ws.setDefaultSearch(\'ebay\')','Đồng ý sử dụng Amazon.com','Không, tiếp tục tìm kiếm mặc định trên eBay.com','btn btn-amazon','btn btn-link');
-    });
-JS;
-    $this->registerJs($js);
-}
-*/
 ?>
 <div class="search-content search-2 <?= $portal ?>">
     <div class="title-box inline mobile-hide">
