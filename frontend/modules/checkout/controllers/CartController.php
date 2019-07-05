@@ -177,7 +177,7 @@ class CartController extends CheckoutController
 
         CartSelection::setSelectedItems($type, $carts);
         $count = CartSelection::countSelectedItems($type);
-        return ['success' => true, 'message' => "you will be $type with $count items", 'data' => Url::toRoute(['/checkout/shipping', 'type' => $type])];
+        return ['success' => true, 'message' => "you will be $type with $count items", 'data' => PaymentService::createCheckoutUrl($type)];
     }
 
     private function setDefaultSelected($items)
