@@ -28,7 +28,7 @@ class SystemStateProvince extends \common\models\db\SystemStateProvince
     {
         $cacheKey = 'SystemProvince'.$country_id;
         if (!($data = Yii::$app->cache->get($cacheKey)) || $refreshCache) {
-            $data = self::find()->select('id,country_id,name')->where(['country_id' => $country_id,'remove' => 0])->asArray()->all();
+            $data = self::find()->select('id,country_id,name')->where(['country_id' => $country_id,'remove' => 0])->orderBy('display_order, name')->asArray()->all();
             Yii::$app->cache->set($cacheKey, $data, 60*60*24*60);
         }
         return $data;

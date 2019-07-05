@@ -17,6 +17,7 @@ class SystemDistrict extends \common\models\db\SystemDistrict
             $query->from(['d' => self::tableName()]);
             $query->select(["id" => "d.$dataKey", "name" => "d.$dataValue"]);
             $query->where(['AND', ['d.remove' => 0], ['d.province_id' => $province_id]]);
+            $query->orderBy('name, display_order');
             $provinces = $query->all(self::getDb());
             Yii::$app->cache->set($cacheKey, $provinces, 3600);
         }
@@ -30,6 +31,7 @@ class SystemDistrict extends \common\models\db\SystemDistrict
             $query->from(['d' => self::tableName()]);
             $query->select(["id" => "d.$dataKey", "name" => "d.$dataValue"]);
             $query->where(['AND', ['d.remove' => 0], ['d.province_id' => $province_id]]);
+            $query->orderBy('name, display_order');
             $provinces = ArrayHelper::map($query->all(self::getDb()), $dataKey, $dataValue);
             Yii::$app->cache->set($cacheKey, $provinces, 3600);
         }
@@ -39,7 +41,7 @@ class SystemDistrict extends \common\models\db\SystemDistrict
     {
         $cacheKey = 'SystemDistrict'.$country_id;
         if (!($data = Yii::$app->cache->get($cacheKey)) || $refreshCache) {
-            $data = self::find()->select('id,province_id,name')->where(['country_id' => $country_id,'remove' => 0])->asArray()->all();
+            $data = self::find()->select('id,province_id,name')->where(['country_id' => $country_id,'remove' => 0])->orderBy('name, display_order')->asArray()->all();
             Yii::$app->cache->set($cacheKey, $data, 60*60*24*60);
         }
         return $data;

@@ -275,7 +275,7 @@ class AmazonGateV3 extends BaseGate
         $rs['product_type'] = count($price) == 0 ? 1 : 0;
         $rs['deal_price'] = null;
         $rs['deal_time'] = null;
-        $rs['shipping_weight'] = 0.5;
+        $rs['shipping_weight'] = floatval($amazon['weight']) > 0 ? round(floatval($amazon['weight']) / 1000,2) : 0.5;
         $rs['shipping_fee'] = 0;
         $rs['is_prime'] = null;
         $rs['is_free_ship'] = null;
@@ -439,7 +439,7 @@ class AmazonGateV3 extends BaseGate
         foreach ($data as $item) {
             if(isset($item['name'])){
                 $temp['name'] = trim(str_replace(':','',$item['name']));
-                if($temp['name']){
+                if($temp['name'] && $item['value']){
                     $temp['values'] = [];
                     $temp['value_current'] = '';
                     $temp['option_link'] = true;
