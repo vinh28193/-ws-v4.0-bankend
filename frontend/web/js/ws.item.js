@@ -620,14 +620,17 @@
         }
 
         var params = $data.params;
+        var image = params.images[0] ? params.images[0].main : '/img/no_image.png';
+
         var item = {
             source: params.type,
             id: params.id,
             sku: params.sku,
             sellerId: params.seller,
             quantity: quantity,
-            image: params.images[0] ? (typeof params.images[0].main !== 'string' ? params.images[0].main[0] : params.images[0].main) : '/img/no_image.png'
+            image: typeof image !== "string" ? image[0] : image,
         };
+        
         var link = location.href;
         var $ajaxOptions = {
             type: 'POST',
