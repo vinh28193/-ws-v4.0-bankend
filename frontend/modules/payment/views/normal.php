@@ -59,19 +59,19 @@ $storeManager = Yii::$app->storeManager;
     }
     ?>
 </div>
-<div class="form-group form-check term">
-    <input type="checkbox" class="form-check-input" value="1" id="termCheckout">
-
-    <label class="form-check-label" for="termCheckout">
-        <?= Yii::t('frontend', 'I agree with all of a <a href="{url}" target="_blank">{name}\'s terms and conditions</a> of trading.', [
-            'url' => 'javascript:void(0);',
-            'name' => $storeManager->store->name,
-        ]); ?>
-    </label>
-
-</div>
+<!--<div class="form-group form-check term">-->
+<!--    <input type="checkbox" class="form-check-input" value="1" id="termCheckout">-->
+<!---->
+<!--    <label class="form-check-label" for="termCheckout">-->
+<!--        --><?php //echo  Yii::t('frontend', 'I agree with all of a <a href="{url}" target="_blank">{name}\'s terms and conditions</a> of trading.', [
+//            'url' => 'javascript:void(0);',
+//            'name' => $storeManager->store->name,
+//        ]); ?>
+<!--    </label>-->
+<!---->
+<!--</div>-->
 <div class="text-center">
-    <button class="btn btn-amazon text-uppercase" id="btnCheckout" onclick="ws.payment.process()">
+    <button class="btn btn-amazon btn-lg text-uppercase" id="btnCheckout" onclick="ws.payment.process()">
         <?= Yii::t('frontend', 'Pay now'); ?>
         <span> <?= $storeManager->showMoney($payment->getTotalAmountDisplay()); ?></span>
     </button>

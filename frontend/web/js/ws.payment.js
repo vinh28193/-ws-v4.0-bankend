@@ -535,11 +535,11 @@ ws.payment = (function ($) {
             showStep(step);
         },
         process: function () {
-            var $termAgree = $('input#termCheckout').is(':checked');
-            if (!$termAgree) {
-                ws.notifyError('Bạn phải đồng ý với điều khoản weshop');
-                return;
-            }
+            // var $termAgree = $('input#termCheckout').is(':checked');
+            // if (!$termAgree) {
+            //     ws.notifyError('Bạn phải đồng ý với điều khoản weshop');
+            //     return;
+            // }
             processPaymment();
         },
         billing: function () {
