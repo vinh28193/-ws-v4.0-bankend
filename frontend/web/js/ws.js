@@ -51,7 +51,7 @@ var ws = ws || (function ($) {
             show = show || false;
             $('#loading').css('display', show ? 'block' : 'none');
         },
-        notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning') {
+        notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning',confirmAutoHide = true) {
             $('#modal-content').removeClass('modal-default');
             $('#modal-content').removeClass('modal-lg');
             $('#modal-content').removeClass('modal-xl');
@@ -68,9 +68,14 @@ var ws = ws || (function ($) {
             $('#NotifyConfirmBtnClose').removeAttr('class');
             $('#NotifyConfirmBtnSubmit').addClass(confirmClass);
             $('#NotifyConfirmBtnClose').addClass(cancelClass);
+            $('#NotifyConfirmHeader').css('background', '#fff');
             if (type === 'confirm') {
                 $('#NotifyConfirmBtnSubmit').css('display', 'block');
-                $('#NotifyConfirmBtnSubmit').attr('onclick', "$('#NotifyConfirm').modal('hide');" + submitClick);
+                if(confirmAutoHide){
+                    $('#NotifyConfirmBtnSubmit').attr('onclick', "$('#NotifyConfirm').modal('hide');" + submitClick);
+                }else {
+                    $('#NotifyConfirmBtnSubmit').attr('onclick', submitClick);
+                }
                 if (cancelClick) {
                     $('#NotifyConfirmBtnClose').attr('onclick', cancelClick);
                 }
@@ -93,8 +98,8 @@ var ws = ws || (function ($) {
             ws.notifyMessage(message, title, 'info', size);
         },
 
-        notifyConfirm: function (message = 'Confirm', title = 'Confirm', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning') {
-            ws.notifyMessage(message, title, 'confirm', size, submitClick, cancelClick, confirmLabel, cancelLabel, confirmClass, cancelClass);
+        notifyConfirm: function (message = 'Confirm', title = 'Confirm', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning',confirmAutoHide = true) {
+            ws.notifyMessage(message, title, 'confirm', size, submitClick, cancelClick, confirmLabel, cancelLabel, confirmClass, cancelClass,confirmAutoHide);
         },
         ajax: function (url, $options, loading = false) {
             if (loading) {
@@ -387,11 +392,37 @@ var ws = ws || (function ($) {
             });
         },
         save_address: function () {
-            var fullName = $('#shipping-full_name').val();
-            var phone = $('#shipping-phone').val();
-            var email = $('#shipping-email').val();
-            var district = $('#shipping_district_id').val();
-            var district = $('#shipping_district_id').val();
+            var dataForm = {
+                idAddress: $('#shipping-id').val(),
+                fullName: $('#shipping-full_name').val(),
+                phone: $('#shipping-phone').val(),
+                email: $('#shipping-email').val(),
+                district: $('#shipping_district_id').val(),
+                province: $('#shipping_province_id').val(),
+                zip_code: $('#shipping_zipcode').val(),
+                is_default: $('#shipping_is_default:checked').val(),
+                address: $('#shipping_address').val()
+            };
+            ws.loading(true);
+            $.ajax({
+                url: '/account/customer/save-address-shipping',
+                method: 'POST',
+                data: dataForm,
+                success: function (res) {
+                    if (res.success) {
+                        window.location.reload();
+                    } else {
+                        ws.loading(false);
+                        var text = res.message;
+                        if(res.errors){
+                            $.each(res.errors,function (k,v) {
+                                text += "<br><i class='la la-dot-circle-o'></i>" + v;
+                            });
+                        }
+                        $('#error-message').html(text);
+                    }
+                }
+            });
         },
         province_change: function(id_province, id_district){
             var txt = '';
@@ -444,6 +475,39 @@ var ws = ws || (function ($) {
         },
         showModal: function (id) {
           $('#'+id).modal();
+        },
+        editAddress: function(id) {
+            ws.loading(true);
+            $.ajax({
+                url: '/account/customer/edit-address',
+                method: 'POST',
+                data: {id: id},
+                success: function (res) {
+                    if (res.success) {
+                        ws.loading(false);
+                        ws.notifyConfirm(res.data.content,res.data.title,'default','ws.save_address()','',ws.t('Confirm'),ws.t('Close'),'btn btn-success','btn btn-warning',false);
+                    } else {
+                        ws.loading(false);
+                        ws.notifyError(res.message);
+                    }
+                }
+            });
+        },
+        removeAddress: function(id) {
+            ws.loading(true);
+            $.ajax({
+                url: '/account/customer/remove-address',
+                method: 'POST',
+                data: {id: id},
+                success: function (res) {
+                    if (res.success) {
+                        window.location.reload();
+                    } else {
+                        ws.loading(false);
+                        ws.notifyError(res.message);
+                    }
+                }
+            });
         },
         startForm: function () {
             var link = location.href;

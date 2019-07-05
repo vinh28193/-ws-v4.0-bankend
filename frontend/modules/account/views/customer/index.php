@@ -12,7 +12,7 @@ use yii\helpers\Url;
 /* @var $model \common\models\User */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $address \common\models\Address */
-/* @var $addressShip[] \common\models\Address */
+/* @var $addressShip \common\models\Address[] */
 $this->params = [Yii::t('frontend','Home') => '/', Yii::t('frontend','My Account') => '/my-account.html'];
 $contentForm = json_encode([
     'content' => \frontend\modules\account\views\widgets\FormAddressWidget::widget(),
@@ -21,7 +21,7 @@ $contentForm = json_encode([
 $js = <<<JS
 $('#add-new').click(function() {
     var content = $contentForm;
-  ws.notifyConfirm(content.content,content.title,'default');
+  ws.notifyConfirm(content.content,content.title,'default','ws.save_address()','',ws.t('Confirm'),ws.t('Close'),'btn btn-success','btn btn-warning',false);
 });
 $('#user_province_id').change(function() {
   ws.province_change('user_province_id','user_district_id');
@@ -116,14 +116,21 @@ $this->registerJs($js);
         <div class="row">
             <?php foreach ($addressShip as $add) {
                 ?>
-                <div class="col-md-6">
+                <div class="col-md-6" style="border-right: 1px solid #7f7f7f7f; padding-bottom: 15px">
                     <div class="name-box">
                         <b><?= $add->last_name ?></b>
-                        <a href="#"><i class="fa fa-edit"></i></a>
-                        <a href="#"><i class="fa fa-remove"></i></a>
+                        <a href="javascript:void (0);" onclick="ws.editAddress('<?= $add->id ?>')"><i class="fa fa-edit"></i> <?= Yii::t('frontend','Edit') ?></a>
+                        <a href="javascript:void (0);" onclick="ws.removeAddress('<?= $add->id ?>')"><i class="fa fa-remove"></i> <?= Yii::t('frontend','Delete') ?></a>
+                        <?php
+                        if($add->is_default){?>
+                            <span class="text-success font-weight-bold" style="font-size: 14px; margin-left: 15px"><i class="la la-tags"></i><?= Yii::t('frontend','Default') ?></span>
+                        <?php }
+                        ?>
                     </div>
                     <ul>
                         <li><?= $add->address ?></li>
+                        <li><?= $add->address ?>,<br>
+                            <?= $add->district_name ? ($add->district_name) : $add->district_id ?>,<?= $add->province_name ? ($add->province_name) : $add->province_id ?>,<?= $add->country_name ? ($add->country_name) : $add->country_id ?>.</li>
                         <li><?= Yii::t('frontend', 'Email: {email}',['email' => $add->email]); ?></li>
                         <li><?= Yii::t('frontend', 'Phone: {phone}',['phone' => $add->phone]); ?></li>
                     </ul>

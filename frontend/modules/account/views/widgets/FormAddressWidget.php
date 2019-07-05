@@ -16,7 +16,7 @@ class FormAddressWidget extends Widget
         if(!$user || \Yii::$app->user->isGuest){
             return "";
         }
-        if($this->address){
+        if(!$this->address){
             $this->address = new Address();
         }
         return $this->render('form-address',[

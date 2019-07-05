@@ -2,9 +2,11 @@
 
 namespace frontend\modules\account\controllers;
 
+use common\models\SystemDistrict;
 use common\models\User;
 use common\models\Address;
 use common\models\Order;
+use frontend\modules\account\views\widgets\FormAddressWidget;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -61,9 +63,10 @@ class CustomerController extends BaseAccountController
         $addressShip = Address::find()->where([
             'AND',
             ['customer_id' => $id],
+            ['remove' => 0],
             ['type' => Address::TYPE_SHIPPING],
 //            ['is_default' => Address::IS_DEFAULT]
-        ])->all();
+        ])->orderBy('is_default desc, id desc')->all();
         if(Yii::$app->request->isPost){
             $userPost = Yii::$app->request->post('User');
             $addressPost = Yii::$app->request->post('Address');
@@ -215,5 +218,86 @@ class CustomerController extends BaseAccountController
         }
 
         throw new NotFoundHttpException(Yii::t('frontend','The requested page does not exist.'));
+    }
+
+    public function actionSaveAddressShipping() {
+        Yii::$app->response->format = 'json';
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
+        if(!$user || Yii::$app->user->isGuest){
+            return ['success' => false, 'message' => Yii::t('frontend','Please login.')];
+        }
+        $idAddress = Yii::$app->request->post('idAddress');
+        if($idAddress){
+            $address = Address::findOne($idAddress);
+            if(!$address){
+                return ['success' => false, 'message' => Yii::t('frontend','Address not found.')];
+            }
+        }else{
+            $address = new Address();
+        }
+        $address->first_name = Yii::$app->request->post('fullName');
+        $address->phone = Yii::$app->request->post('phone');
+        $address->email = Yii::$app->request->post('email');
+        $address->district_id = Yii::$app->request->post('district');
+        $address->province_id = Yii::$app->request->post('province');
+        $address->address = Yii::$app->request->post('address');
+        $address->post_code = Yii::$app->request->post('zip_code');
+        $address->customer_id = $user->id;
+        $address->remove = 0;
+        $address->type = Address::TYPE_SHIPPING;
+        $address->is_default = Yii::$app->request->post('is_default') ? 1 : 0;
+        $district = SystemDistrict::findOne($address->district_id);
+        if(!$district || $district->province_id != $address->province_id){
+            return ['success' => false, 'message' => Yii::t('frontend','District or province not found.')];
+        }
+        $address->district_name = $district->name;
+        $address->province_name = $district->province->name;
+        $address->country_name = $district->country->name;
+        $address->country_id = $district->country_id;
+        $address->store_id = $user->store_id;
+        $errors = $address->validateAddress();
+        if($address->is_default == 1){
+            Address::updateAll(['is_default' => 0],['is_default' => 1 , 'customer_id' => $user->id , 'type' => Address::TYPE_SHIPPING]);
+        }
+        if($errors && count($errors) > 0){
+            return ['success' => false, 'message' => Yii::t('frontend','Add shipping address fail!'), 'errors' => $errors];
+        }
+        if($address->save()){
+            return ['success' => true, 'message' => Yii::t('frontend','Add shipping address success!')];
+        }
+        return ['success' => false, 'message' => Yii::t('frontend','Add shipping address fail!'), 'errors' => $errors];
+    }
+    public function actionEditAddress() {
+        Yii::$app->response->format = 'json';
+        $id = Yii::$app->request->post('id');
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
+        if(!$user || Yii::$app->user->isGuest){
+            return ['success' => false, 'message' => Yii::t('frontend','Please login.')];
+        }
+        $address = Address::findOne(['id' => $id, 'customer_id' => $user->id, 'remove' => 0]);
+        if(!$address){
+            return ['success' => false, 'message' => Yii::t('frontend','Address not found.')];
+        }
+        $content = FormAddressWidget::widget(['address' => $address]);
+        $title = Yii::t('frontend','Edit shipping address');
+        return ['success' => true, 'message' => Yii::t('frontend','Get success.') , 'data' => ['content' => $content,'title' => $title]];
+    }
+    public function actionRemoveAddress() {
+        Yii::$app->response->format = 'json';
+        $id = Yii::$app->request->post('id');
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
+        if(!$user || Yii::$app->user->isGuest){
+            return ['success' => false, 'message' => Yii::t('frontend','Please login.')];
+        }
+        $address = Address::findOne(['id' => $id, 'customer_id' => $user->id, 'remove' => 0]);
+        if(!$address){
+            return ['success' => false, 'message' => Yii::t('frontend','Address not found.')];
+        }
+        $address->remove = 1;
+        $address->save();
+        return ['success' => true, 'message' => Yii::t('frontend','Delete success.')];
     }
 }
