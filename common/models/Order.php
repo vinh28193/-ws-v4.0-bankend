@@ -663,6 +663,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         if (isset($params['portal'])) {
             $query->andFilterWhere(['order.portal' => $params['portal']]);
         }
+        if (isset($params['paymentBank'])) {
+            $query->andFilterWhere(['payment_transaction.payment_bank_code' => $params['paymentBank']]);
+        }
         if (isset($params['sale'])) {
             $query->andFilterWhere(['order.sale_support_id' => $params['sale']]);
         }

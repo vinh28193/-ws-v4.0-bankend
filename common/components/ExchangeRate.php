@@ -25,7 +25,9 @@ class ExchangeRate extends Component
 
     use GetUserIdentityTrait;
 
-    public $defaultRatePercent = 0.02; // 2%
+    public $defaultRatePercent = 0; // 0%
+
+    public $ratePercents = [];
 
     /**
      * @var string | Connection
@@ -105,21 +107,19 @@ class ExchangeRate extends Component
 
     protected function getRatePercent()
     {
+
         if (($user = $this->getUser()) === null) {
             Yii::info("Rate percent for guest : {$this->defaultRatePercent}", __METHOD__);
             return $this->defaultRatePercent;
         }
 
         $level = $user->getUserLevel();
-        $token = "Rate percent for user `{$user->id}` level `$level`: ";
-        if ($level === User::LEVEL_SLIVER) {
-            Yii::info("$token 0.01", __METHOD__);
-            return 0.01;
-        } elseif ($level === User::LEVEL_GOLD) {
-            Yii::info("$token 0", __METHOD__);
-            return 0;
+
+        if (isset($this->ratePercents[$level]) && $this->ratePercents[$level] > 0) {
+            Yii::info("Rate percent for user `{$user->id}` level `$level`: {$this->ratePercents[$level]}", __METHOD__);
+            return $this->ratePercents[$level];
         }
-        Yii::info("$token {$this->defaultRatePercent}", __METHOD__);
+        Yii::info("Default rate percent : {$this->defaultRatePercent}", __METHOD__);
         return $this->defaultRatePercent;
     }
 
