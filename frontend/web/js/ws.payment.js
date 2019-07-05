@@ -418,6 +418,7 @@ ws.payment = (function ($) {
             var $cardOrder = $('div.card-order[data-key=' + key + ']');
 
             var couriers = orderCouriers[key];
+
             var courier = $.grep(couriers.couriers, function (x) {
                 return x.service_code === service_code
             })[0];
@@ -431,6 +432,9 @@ ws.payment = (function ($) {
             var order = orders[key];
             var shippingFee = ws.roundNumber(courier.total_fee);
             var additionalFees = order.additionalFees;
+            if (fee.name in additionalFees) {
+                delete additionalFees[fee.name];
+            }
             additionalFees[fee.name] = [];
             fee.amount = shippingFee;
             fee.local_amount = shippingFee;
@@ -794,7 +798,11 @@ ws.payment = (function ($) {
             }
             pub.courierChange(key, couriers[0].service_code);
         } else if (typeof couriers === 'string') {
-            courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(couriers)
+            var tableFee = $cardOrder.find('table.table-fee');
+
+            var courierRow = tableFee.find('tr.courier');
+            courierRow.find('td.text-right').html(couriers);
+            // courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(couriers)
         }
     };
     var initRowTableFee = function ($cardOrder, fee) {
@@ -803,15 +811,18 @@ ws.payment = (function ($) {
         shippingRow.find('td.value').html(ws.showMoney(fee.local_amount));
     };
     var getTotalOrderAmount = function (order) {
-        var $amount = order.totalAmountLocal;
+        var $amount = Number(order.totalAmountLocal);
         $.each(order.additionalFees, function (name, array) {
             var totalFeeAmount = 0;
             for (var i = 0; i < array.length; i++) {
+                console.log("type of "  + typeof Number(array[i].local_amount));
                 totalFeeAmount += Number(array[i].local_amount);
             }
+
             $amount += totalFeeAmount;
         });
         if (order.discountAmount > 0) {
+
             $amount -= order.discountAmount;
         }
         return $amount

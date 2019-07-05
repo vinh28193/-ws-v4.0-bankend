@@ -48,10 +48,12 @@ class PaymentController extends BasePaymentController
             if (isset($orderParam['totalAmountLocal'])) {
                 unset($orderParam['totalAmountLocal']);
             }
-            $order = new Order($orderParam);
-            if ($order->cartId !== null && $order->createOrderFromCart() !== false) {
-                $orders[$order->cartId] = $order;
-            } else if ($order->ordercode !== null && ($order = Order::findOne(['ordercode' => $order->ordercode])) !== null) {
+            $orderPayment = new Order($orderParam);
+            if ($orderPayment->cartId !== null && $orderPayment->createOrderFromCart() !== false) {
+                $orders[$orderPayment->cartId] = $orderPayment;
+            } else if ($orderPayment->ordercode !== null && ($order = Order::findOne(['ordercode' => $orderPayment->ordercode])) !== null) {
+                $order->getAdditionalFees()->removeAll();
+                $order->getAdditionalFees()->fromArray($orderPayment->getAdditionalFees()->toArray());
                 $orders[$order->ordercode] = $order;
             }
         }
