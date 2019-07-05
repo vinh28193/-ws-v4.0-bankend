@@ -407,16 +407,14 @@ var ws = ws || (function ($) {
                 ws.ajax('/checkout/shipping/add-cart-checkout', {
                     type: 'POST',
                     data: {
-                        data: {
-                            type: cartType,
-                            cartIds: cartIds,
-                            params: {
-                                phone: phone,
-                                fullName: $('#shippingform-' + type + '_name').val().trim(),
-                                email: $('#shippingform-' + type + '_email').val().trim(),
-                                typeUpdate: type + 'CartInCheckout'
-                            }
-                        },
+                        type: cartType,
+                        cartIds: cartIds,
+                        params: {
+                            phone: phone,
+                            fullName: $('#shippingform-' + type + '_name').val().trim(),
+                            email: $('#shippingform-' + type + '_email').val().trim(),
+                            typeUpdate: type + 'CartInCheckout'
+                        }
                     },
                 });
             }

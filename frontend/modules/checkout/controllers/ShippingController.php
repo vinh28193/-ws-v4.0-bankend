@@ -160,7 +160,7 @@ class ShippingController extends CheckoutController
                 foreach ($parent->childPaymentTransaction as $childPaymentTransaction) {
                     if (($orderParam = $childPaymentTransaction->order) !== null) {
                         $order = new Order($orderParam->getAttributes());
-                        $order->getAdditionalFees()->loadFormActiveRecord($orderParam,'order');
+                        $order->getAdditionalFees()->loadFormActiveRecord($orderParam, 'order');
                         $order->getAdditionalFees()->remove('international_shipping_fee');
                         $orders[$order->ordercode] = $order;
                         $shippingForm->loadAddressFormOrder($order);
@@ -170,7 +170,7 @@ class ShippingController extends CheckoutController
             } else if (($order = Order::findOne(['ordercode' => $code])) !== null) {
                 $payment->transaction_code = $order->payment_transaction_code;
                 $order = new Order($order->getAttributes());
-                $order->getAdditionalFees()->loadFormActiveRecord($order,'order');
+                $order->getAdditionalFees()->loadFormActiveRecord($order, 'order');
                 $order->getAdditionalFees()->remove('international_shipping_fee');
                 $orders[$order->ordercode] = $order;
                 $shippingForm->loadAddressFormOrder($order);
@@ -304,10 +304,24 @@ class ShippingController extends CheckoutController
 
     public function actionAddCartCheckout()
     {
-        $post = Yii::$app->request->post();
-//        $CartId = CartSelection::getSelectedItems();
-        return true;
-        //return $this->getCart()->updateSafeItem('buynow', $CartId['buynow'], $post);
+        $bodyParams = $this->request->bodyParams;
+        if (($type = ArrayHelper::getValue($bodyParams, 'type')) === null) {
+            return false;
+        }
+        if (($cartIds = ArrayHelper::getValue($bodyParams, 'cartIds')) === null || !is_array($cartIds) || empty($cartIds)) {
+            return false;
+        }
+        if (($params = ArrayHelper::getValue($bodyParams, 'params')) === null || !is_array($params) || empty($params)) {
+            return false;
+        }
+        if (!empty($cartIds) && !empty($params)) {
+            foreach ($cartIds as $cartIt) {
+                $this->getCart()->updateSafeItem($type, $cartIt, $params);
+            }
+            return true;
+        }
+        return false;
+
 
     }
 

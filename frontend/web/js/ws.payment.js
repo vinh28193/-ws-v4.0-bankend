@@ -111,7 +111,11 @@ ws.payment = (function ($) {
                 window.scrollTo(0, 0);
             });
             $('#shippingform-buyer_phone').keyup(function () {
-                ws.shippingCollection('buyer', ws.payment.get('type'), ws.payment.get('orders').keys())
+                var isCheckOut = ws.payment.get('page') === 'CHECKOUT';
+                if (!isCheckOut) {
+                    return;
+                }
+                ws.shippingCollection('buyer', ws.payment.get('type'), Object.keys(ws.payment.get('orders')))
             });
             $('#loginToCheckout').click(function () {
                 ws.loading(true);
