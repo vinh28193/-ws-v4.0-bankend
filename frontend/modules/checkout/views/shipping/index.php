@@ -230,7 +230,7 @@ JS;
         <div class="row">
             <div class="col-md-12">
                 <?php
-                echo $form->field($shippingForm, 'other_receiver')->checkbox()->label('Information of the receiver other than the buyer');
+                echo $form->field($shippingForm, 'other_receiver')->checkbox()->label(Yii::t('frontend','Information of the receiver other than the buyer'));
                 ?>
             </div>
         </div>
@@ -340,7 +340,6 @@ JS;
         ?>
     </div>
 </div>
-<?php var_dump($payment->page); ?>
 <?php foreach ($payment->getOrders() as $order): ?>
     <div class="card card-checkout card-order"
          data-key="<?= $payment->page === Payment::PAGE_CHECKOUT ? $order->cartId : $order->ordercode; ?>">

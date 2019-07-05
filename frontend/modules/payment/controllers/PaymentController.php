@@ -107,6 +107,7 @@ class PaymentController extends BasePaymentController
                 $shippingParams['receiver_district_id'] = $buyer->district_id;
                 $shippingParams['receiver_province_name'] = $buyer->province_name;
                 $shippingParams['receiver_district_name'] = $buyer->district_name;
+                $shippingParams['receiver_post_code'] = $buyer->post_code;
             }
 
         }
@@ -130,6 +131,7 @@ class PaymentController extends BasePaymentController
                 $shippingParams['receiver_district_id'] = $receiver->post_code;
                 $shippingParams['receiver_province_name'] = $receiver->province_name;
                 $shippingParams['receiver_district_name'] = $receiver->district_name;
+                $shippingParams['receiver_post_code'] = $receiver->post_code;
             }
         }
         $payment->customer_name = $shippingForm->buyer_name;
