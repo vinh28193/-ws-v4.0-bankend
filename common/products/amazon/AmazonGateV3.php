@@ -10,6 +10,7 @@
 namespace common\products\amazon;
 
 use common\helpers\WeshopHelper;
+use common\products\Provider;
 use linslin\yii2\curl;
 use common\models\Category;
 use common\products\BaseGate;
@@ -260,7 +261,8 @@ class AmazonGateV3 extends BaseGate
             return [false, 'Request Error'];
         }
         $rs = [];
-        $price = explode('-',$amazon['price']);
+        $start_price = explode('-',$amazon['price']);
+        $sell_price = $amazon['current_price'] ? explode('-',$amazon['current_price']) : explode('-',$amazon['price']);
         $rs['categories'] = array_unique($amazon['node_ids']);
         $rs['item_id'] = $request->asin_id;
         $rs['item_sku'] = $request->asin_id;
@@ -269,10 +271,10 @@ class AmazonGateV3 extends BaseGate
         $rs['category_id'] = isset($amazon['node_ids'][count($amazon['node_ids']) - 1]) ? $amazon['node_ids'][count($amazon['node_ids']) - 1] : null;
         $rs['item_name'] = trim($amazon['title']);
         $rs['parent_item_id'] = $request->parent_asin_id ? $request->parent_asin_id : '';
-        $rs['retail_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
-        $rs['sell_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
-        $rs['sell_price_special'] = $price;
-        $rs['product_type'] = count($price) == 0 ? 1 : 0;
+        $rs['retail_price'] = count($sell_price) > 0 ? floatval(str_replace(',','',trim($sell_price[0]))) : 0;
+        $rs['sell_price'] = count($sell_price) > 0 ? floatval(str_replace(',','',trim($sell_price[0]))) : 0;
+        $rs['sell_price_special'] = $sell_price;
+        $rs['product_type'] = count($sell_price) == 0 ? 1 : 0;
         $rs['deal_price'] = null;
         $rs['deal_time'] = null;
         $rs['shipping_weight'] = floatval($amazon['weight']) > 0 ? round(floatval($amazon['weight']) / 1000,2) : 0.5;
@@ -288,7 +290,7 @@ class AmazonGateV3 extends BaseGate
         $rs['variation_options'] = $this->getOptionGroup($amazon['product_option'],$rs['item_name'],$rs['item_sku']);
         $rs['variation_mapping'] = [];
         $rs['relate_products'] = null;
-        $rs['start_price'] = count($price) > 0 ? floatval(str_replace(',','',trim($price[0]))) : 0;
+        $rs['start_price'] = count($start_price) > 0 ? floatval(str_replace(',','',trim($start_price[0]))) : 0;
         $rs['condition'] = isset($amazon['condition']) ? $amazon['condition'] : 'new';
         $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::TYPE_AMAZON_JP : AmazonProduct::TYPE_AMAZON_US;
         $rs['tax_fee'] = 0;
@@ -301,6 +303,25 @@ class AmazonGateV3 extends BaseGate
 //            }
             $check = false;
             $rs['providers'] = [];
+        if(($auth = ArrayHelper::getValue($amazon,'author'))){
+            $prov = [];
+            $prov['name'] = trim($auth);
+            $prov['image'] = '';
+            $prov['website'] = '';
+            $prov['location'] = '';
+            $prov['rating_score'] = ArrayHelper::getValue($amazon,'rate_count');
+            $prov['rating_star'] = ArrayHelper::getValue($amazon,'rate_star');
+            $prov['positive_feedback_percent'] = null;
+            $prov['condition'] = 'used or new';
+            $prov['fulfillment'] = null;
+            $prov['is_free_ship'] = $rs['is_free_ship'];
+            $prov['is_prime'] = $rs['is_prime'];
+            $prov['price'] = $rs['sell_price'];
+            $prov['shipping_fee'] = $rs['shipping_fee'];
+            $prov['tax_fee'] = $rs['tax_fee'];
+            $rs['providers'][] = $prov;
+            $rs['provider'] = new Provider($prov);
+        }
             if (!$this->isEmpty($offers)) {
                 foreach ($offers as $offer) {
                     if (in_array($offer['seller']['seller_name'], $this->sellerBlackLists)) {
@@ -324,31 +345,12 @@ class AmazonGateV3 extends BaseGate
                     $prov['tax_fee'] = $offer['tax_fee'];
                     $rs['providers'][] = $prov;
                 }
-                $rs['sell_price'] = trim(str_replace(',','',$offers[0]['price']));
-                $rs['condition'] = trim($offers[0]['condition']);
-                $rs['is_free_ship'] = $offers[0]['is_free_ship'];
-                $rs['is_prime'] = $offers[0]['is_prime'];
-                $rs['shipping_fee'] = $offers[0]['ship_fee'];
-                $rs['tax_fee'] = $offers[0]['tax_fee'];
-            }else{
-                if(($auth = ArrayHelper::getValue($amazon,'author'))){
-                    $prov = [];
-                    $prov['name'] = trim($auth);
-                    $prov['image'] = '';
-                    $prov['website'] = '';
-                    $prov['location'] = '';
-                    $prov['rating_score'] = ArrayHelper::getValue($amazon,'rate_count');
-                    $prov['rating_star'] = ArrayHelper::getValue($amazon,'rate_star');
-                    $prov['positive_feedback_percent'] = null;
-                    $prov['condition'] = 'used or new';
-                    $prov['fulfillment'] = null;
-                    $prov['is_free_ship'] = $rs['is_free_ship'];
-                    $prov['is_prime'] = $rs['is_prime'];
-                    $prov['price'] = $rs['sell_price'];
-                    $prov['shipping_fee'] = $rs['shipping_fee'];
-                    $prov['tax_fee'] = $rs['tax_fee'];
-                    $rs['providers'][] = $prov;
-                }
+//                $rs['sell_price'] = trim(str_replace(',','',$offers[0]['price']));
+//                $rs['condition'] = trim($offers[0]['condition']);
+//                $rs['is_free_ship'] = $offers[0]['is_free_ship'];
+//                $rs['is_prime'] = $offers[0]['is_prime'];
+//                $rs['shipping_fee'] = $offers[0]['ship_fee'];
+//                $rs['tax_fee'] = $offers[0]['tax_fee'];
             }
             if (!count($rs['providers']) && $check) {
                 $rs['sell_price'] = 0;

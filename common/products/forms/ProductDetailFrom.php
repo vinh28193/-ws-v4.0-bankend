@@ -100,12 +100,12 @@ class ProductDetailFrom extends BaseForm
         if ($this->quantity !== null && trim($this->quantity) > 0) {
             $product->quantity = $this->quantity;
         }
-        if ($this->seller !== null && trim($this->seller) !== '' && $this->type !== 'ebay') {
-            $product->updateBySeller($this->seller);
-        }
-        if(!$product->provider && $this->type !== 'ebay'){
-            $product->updateBySeller($product->getSeller());
-        }
+//        if ($this->seller !== null && trim($this->seller) !== '' && $this->type !== 'ebay') {
+//            $product->updateBySeller($this->seller);
+//        }
+//        if(!$product->provider && $this->type !== 'ebay'){
+//            $product->updateBySeller($product->getSeller());
+//        }
         $product->init();
 
 //        if ($product->checkOutOfStock() < 1) {

@@ -94,7 +94,7 @@ class PackageItemController extends BaseApiController
             ]);
             return $this->response(false, 'create package item error');
         }
-        ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM');
+        ChatHelper::push($messages, $model->order->ordercode, 'GROUP_WS', 'SYSTEM', null);
         Yii::$app->wsLog->push('order', $model->getScenario(), null, [
             'id' => $model->order->ordercode,
             'request' => $this->post,

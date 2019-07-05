@@ -122,6 +122,15 @@
                     methods.changeTempImage.call($item, '', '', true);
                     return false;
                 });
+                ws.initEventHandler($item, 'shortcut-payment', 'click.wsItem', 'a.shortcut-payment', function (event) {
+                    var that = $(this);
+                    methods.shortcutPayment.call($item,that.data('role'),that.data('seller'));
+                    return false;
+                });
+
+
+
+
                 $item.trigger($.Event(events.afterInit));
             });
         },
@@ -233,6 +242,11 @@
         },
         follow: function () {
 
+        },
+        shortcutPayment:function(type,sellerID) {
+            var $item = $(this);
+            $item.data('wsItem').params.seller = sellerID;
+            paymentItem($item,type);
         },
         favorite: function () {
             var $item = $(this);
@@ -621,7 +635,6 @@
 
         var params = $data.params;
         var image = params.images[0] ? params.images[0].main : '/img/no_image.png';
-
         var item = {
             source: params.type,
             id: params.id,
