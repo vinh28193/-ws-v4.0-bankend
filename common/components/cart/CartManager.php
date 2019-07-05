@@ -497,7 +497,7 @@ class CartManager extends Component
                 }
             }
             if (isset($param['typeUpdate'])) {
-                if ($param['typeUpdate'] == 'updateCartInCheckout') {
+                if ($param['typeUpdate'] == 'buyerCartInCheckout') {
                     $key['buyer']['buyer_phone'] = $param['phone'];
                     $key['buyer']['buyer_name'] = $param['fullName'];
                     $key['buyer']['email'] = $param['email'];

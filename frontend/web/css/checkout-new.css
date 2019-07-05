@@ -13,7 +13,6 @@
 
 .card-checkout .card-body {
     background-color: #ffffff;
-    font-size: 12px;
     line-height: 24px;
     padding: 0.75rem 1.25rem
 }
@@ -174,7 +173,7 @@
 /*    content: url("/images/icon/dropdown_arrow.png");*/
 /*}*/
 .table-fee {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 30px;
 }
 
@@ -184,8 +183,6 @@
 
 .table-fee .value {
     text-align: right;
-    color: red;
-    font-weight: 700;
 }
 
 .table-fee .final-amount {

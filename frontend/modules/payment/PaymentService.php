@@ -90,6 +90,22 @@ class PaymentService
         return $q->one();
     }
 
+    /**
+     * @param $orderCode
+     * @return PaymentTransaction|null
+     */
+    public static function findChildTransaction($orderCode)
+    {
+        $q = PaymentTransaction::find();
+        $q->where([
+            'AND',
+            ['order_code' => $orderCode],
+            ['IS', 'transaction_code', new Expression('NULL')]
+        ]);
+        return $q->one();
+    }
+
+
     public
     static function toNumber($value)
     {
@@ -125,6 +141,18 @@ class PaymentService
     public static function createBillingUrl($orderCode)
     {
         return Url::to("/order-$orderCode/billing.html", true);
+    }
+
+    public static function createCheckoutUrl($type = null, $code = null)
+    {
+        $route = ['/checkout/shipping'];
+        if ($type !== null) {
+            $route += ['ref' => $type];
+        }
+        if ($code !== null) {
+            $route += ['code' => $code];
+        }
+        return Url::to($route, true);
     }
 
     public

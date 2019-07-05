@@ -24,7 +24,8 @@ $storeManager = Yii::$app->storeManager;
                                style="margin: auto; height: 18px; width: 18px;" type="checkbox"
                                value="<?= $item['key'] ?>"
                                aria-label="..." <?= $item['selected'] ? 'checked' : ''; ?>>
-                        <span><?= Yii::t('frontend','Seller') ?> <span style="color: #2b96b6;"><?= $item['seller']['seller_name'] ?></span> <?= Yii::t('frontend','on {portal}',['portal' => $item['seller']['portal']]) ?></span>
+                        <span><?= Yii::t('frontend', 'Seller') ?> <span
+                                    style="color: #2b96b6;"><?= $item['seller']['seller_name'] ?></span> <?= Yii::t('frontend', 'on {portal}', ['portal' => $item['seller']['portal']]) ?></span>
                     </div>
                     <div class="col-md-5 summary text-right">
                         <span> <?= Yii::t('frontend', 'Total order amount'); ?></span> :
@@ -43,7 +44,7 @@ $storeManager = Yii::$app->storeManager;
                             <div class="col-md-2 text-right"><?= Yii::t('frontend', 'Tax/Domestic shipping'); ?></div>
                             <div class="col-md-1 text-right"><?= Yii::t('frontend', 'Purchase Fee'); ?></div>
                             <div class="col-md-2 text-right"><?= Yii::t('frontend', 'Total amount'); ?></div>
-                         </div>
+                        </div>
                     </div>
 
                 </div>
@@ -162,7 +163,9 @@ $storeManager = Yii::$app->storeManager;
                 <button class="btn btn-outline-info btn-lg text-uppercase" style="float: left" onclick="ws.goback()">
                     <?php echo Yii::t('frontend', 'Continue shopping'); ?>
                 </button>
-                <button class="btn btn-amazon btn-lg text-uppercase" id="shoppingBtn" style="float: right;margin-right: 5px;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Make payment') ?></button>
+                <button class="btn btn-amazon btn-lg text-uppercase" id="shoppingBtn"
+                        style="float: right;margin-right: 5px;"><i
+                            class="la la-shopping-cart"></i> <?= Yii::t('frontend', 'Make payment') ?></button>
             </div>
         </div>
     </div>
