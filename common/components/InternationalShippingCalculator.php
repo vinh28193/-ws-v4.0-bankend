@@ -94,7 +94,7 @@ class InternationalShippingCalculator extends BaseObject
         if (!$success && WeshopHelper::isEmpty($message) && isset($status->details) && is_string($status->details)) {
             $message = $status->details;
         }
-        return [$success, !$success ? (WeshopHelper::isEmpty($message) ? ($data->count() > 0 ? 'empty courier assigment' : 'unknown error') : $message) : $this->parserCalculateFeeResponse($data, $sellerContry)];
+        return [$success, !$success ? (WeshopHelper::isEmpty($message) ? ($data->count() > 0 ? Yii::t('frontend','Empty courier assigment') : Yii::t('frontend','Unknown error')) : $message) : $this->parserCalculateFeeResponse($data, $sellerContry)];
 //        return [true,json_decode('[{"courier_logo":"https:\/\/oms.boxme.asia\/assets\/images\/courier\/boxme.svg","courier_name":"Boxme","service_name":"International Express","service_code":"BM_DEX","shipping_fee":597168,"return_fee":0,"tax_fee":0,"total_fee":597168,"currency":"VND","min_delivery_time":6,"max_delivery_time":8}]',true)];
     }
 

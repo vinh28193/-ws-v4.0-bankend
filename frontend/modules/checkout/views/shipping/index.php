@@ -421,8 +421,8 @@ JS;
                 <?php endforeach; ?>
             </div>
             <div class="row additional-fee">
-                <div class="col-md-9 col-sm-12"></div>
-                <div class="col-md-3 col-sm-12">
+                <div class="col-md-8 col-sm-12"></div>
+                <div class="col-md-4 col-sm-12">
                     <div class="additional-list">
                         <!--                        <div class="dropdown courier-dropdown">-->
                         <!--                            <button class="btn btn-secondary dropdown-toggle" type="button"-->
