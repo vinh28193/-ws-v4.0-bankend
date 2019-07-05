@@ -72,7 +72,7 @@ return [
         ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://backup:QuKUBS1cQ2Q@mongodbWs:27017/admin',
+            'dsn' => 'mongodb://MongoBM:27017/admin',
         ],
 //        'db_oauth'=>[
 //            'class' => 'yii\db\Connection',
