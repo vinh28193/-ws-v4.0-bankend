@@ -815,7 +815,6 @@ ws.payment = (function ($) {
         $.each(order.additionalFees, function (name, array) {
             var totalFeeAmount = 0;
             for (var i = 0; i < array.length; i++) {
-                console.log("type of "  + typeof Number(array[i].local_amount));
                 totalFeeAmount += Number(array[i].local_amount);
             }
 
