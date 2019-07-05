@@ -37,6 +37,10 @@ class PaymentTransactionController extends BaseApiController
             ],
         ];
     }
+    public function actionIndex() {
+        $model = PaymentTransaction::find()->asArray()->all();
+        return $this->response(true, 'success', $model);
+    }
     public function actionUpdate($code) {
         /** @var PaymentTransaction[] $models */
         $post = Yii::$app->request->post();

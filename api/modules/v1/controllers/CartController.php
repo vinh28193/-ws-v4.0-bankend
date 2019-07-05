@@ -11,6 +11,7 @@ namespace api\modules\v1\controllers;
 use backend\models\CartAddForm;
 use common\components\cart\storage\MongodbCartStorage;
 use common\models\User;
+use common\modelsMongo\ShoppingCartUpgrade;
 use Yii;
 use yii\data\ArrayDataProvider;
 use api\controllers\BaseApiController;
@@ -40,11 +41,64 @@ class CartController extends BaseApiController
 
     public function actionIndex()
     {
-        $queryParam = Yii::$app->request->queryParams;
-        return $this->response(true, 'get cart success', new ArrayDataProvider([
-            'allModels' => $this->getCart()->filterShoppingCarts($queryParam),
-        ]));
+        $params = Yii::$app->request->get();
+        $model = ShoppingCartUpgrade::find();
+        if (isset($params['value']) && !isset($params['keyword'])) {
+            $model->andWhere(
+                ['OR',
+                    ['LIKE', 'key.buyer.buyer_email', $params['value']],
+                    ['value.ordercode', $params['value']],
+                    ['LIKE', 'key.buyer.buyer_phone', $params['value']],
+                ]
+            );
+        }
+        if (isset($params['statusShopping']) && !empty($params['statusShopping'])) {
+            $model->andWhere(['value.current_status' => $params['statusShopping']]);
+        }
 
+        if (isset($params['typePotential']) && !empty($params['typePotential'])) {
+            $model->andWhere(['type' => $params['typePotential']]);
+        }
+
+        if (isset($params['portal']) && !empty($params['portal'])) {
+            $model->andWhere(['value.portal' => $params['portal']]);
+        }
+
+        if (isset($params['saleID']) && !empty($params['saleID'])) {
+            $model->andWhere(['value.sale_support_id' => $params['saleID']]);
+        }
+        if (isset($params['potential']) && !empty($params['potential'])) {
+            $model->andWhere(['value.potential' => (int)$params['potential']]);
+        }
+        if (isset($params['value']) && isset($params['keyword'])) {
+            $model->andWhere([$params['keyword'] => $params['value']]);
+        }
+        if (isset($params['timeKey']) && isset($params['startTime']) && $params['endTime']) {
+            $start = (Yii::$app->formatter->asTimestamp($params['startTime']));
+            $end = (Yii::$app->formatter->asTimestamp($params['endTime']));
+            $model->andWhere(['between', $params['timeKey'], $start, $end]);
+        }
+        if (!isset($params['timeKey']) && isset($params['startTime']) && $params['endTime']) {
+            $start = (Yii::$app->formatter->asTimestamp($params['startTime']));
+            $end = (Yii::$app->formatter->asTimestamp($params['endTime']));
+            $model->andWhere(['OR',
+                ['between', 'value.new', $start, $end],
+                ['between', 'value.supporting', $start, $end],
+                ['between', 'value.supported', $start, $end],
+                ['between', 'value.cancelled', $start, $end],
+            ]);
+        }
+        $total = $model->count();
+        $limit = isset($params['limit']) ? (int)$params['limit'] : 20;
+        $page = isset($params['page']) ? (int)$params['page'] : 1;
+        $offset = ($page - 1) * $limit;
+        $model->orderBy(['create_at' => SORT_DESC])->limit($limit)->offset($offset);
+        $query = $model->asArray()->all();
+        $data = [
+            'model' => $query,
+            'total' => $total
+        ];
+        return $this->response(true, 'success', $data);
     }
 
     public function actionCreate()
