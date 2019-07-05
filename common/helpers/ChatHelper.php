@@ -31,7 +31,7 @@ class ChatHelper
      * @param $source
      * @return array
      */
-    private static function createParam($message, $path, $type, $source)
+    private static function createParam($message, $path, $type, $source, $image)
     {
         $message = self::resolveMessage($message);
         $identity = self::getPublicIdentity();
@@ -49,6 +49,7 @@ class ChatHelper
             'Order_path' => $path,
             'is_send_email_to_customer' => null,
             'type_chat' => $type,
+            'link_image' => $image,
             'is_customer_vew' => null,
             'is_employee_vew' => null,
         ];
@@ -73,10 +74,10 @@ class ChatHelper
      * @param $source
      * @return bool
      */
-    public static function push($message, $path, $type, $source)
+    public static function push($message, $path, $type, $source, $image)
     {
         $model = new ChatMongoWs;
-        $model->load(self::createParam($message, $path, $type, $source), '');
+        $model->load(self::createParam($message, $path, $type, $source, $image), '');
         return $model->save();
 
     }
