@@ -107,7 +107,7 @@ class ProductController extends BaseApiController
             if (!$product->save()) {
                 return $this->response(false, 'error', $product->getErrors());
             }
-            ChatHelper::push($messages, $post['order_path'], 'GROUP_WS', 'SYSTEM');
+            ChatHelper::push($messages, $post['order_path'], 'GROUP_WS', 'SYSTEM', null);
             Yii::$app->wsLog->push('order', "update product - {$post['title']}", null, [
                 'id' => $post['order_path'],
                 'request' => $this->post,
