@@ -645,7 +645,7 @@ ws.payment = (function ($) {
                         $otherMethod.modal('hide');
                     }
                     if (data.cancelUrl !== null) {
-                        window.history.pushState(null, null, data.cancelUrl);
+                        window.history.pushState({url: data.cancelUrl}, window.document.title, data.cancelUrl);
                     }
                     if (redirectType === 'POPUP') {
                         if (redirectMethod === 'WALLET') {
