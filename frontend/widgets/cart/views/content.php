@@ -50,6 +50,10 @@ $storeManager = Yii::$app->storeManager;
                 <div class="cart-item row pb-4">
                     <?php foreach ($products as $product): ?>
                         <?php
+                        $purchaseFee = 0;
+                        if (isset($product['fees']['purchase_fee']) && $product['fees']['purchase_fee'] > 0) {
+                            $purchaseFee = $product['fees']['purchase_fee'];
+                        }
                         $availableQuantity = $product['available_quantity'];
                         $soldQuantity = $product['quantity_sold'];
                         $variations = ArrayHelper::getValue($product, 'variations');
@@ -128,17 +132,14 @@ $storeManager = Yii::$app->storeManager;
                                 </div>
                                 <div class="col-md-1 text-right col-sm-12 pt-4">
                                     <?php
-                                    $purchaseFee = 0;
-                                    if (isset($product['fees']['purchase_fee']) && $product['fees']['purchase_fee'] > 0) {
-                                        $purchaseFee = $product['fees']['purchase_fee'];
-                                    }
+
                                     echo $storeManager->showMoney($purchaseFee);
                                     ?>
                                 </div>
                                 <div class="col-md-2 text-right col-sm-12 pt-4">
 
                                     <div class="price price-option text-danger">
-                                        <span style="font-weight: 600"><?= $storeManager->showMoney($product['total_final_amount']); ?></span>
+                                        <span style="font-weight: 600"><?= $storeManager->showMoney($product['total_final_amount'] + $purchaseFee); ?></span>
                                     </div>
                                 </div>
                             </div>

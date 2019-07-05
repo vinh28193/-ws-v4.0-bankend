@@ -11,7 +11,32 @@ use yii\helpers\Url;
 /* @var $searchModel userbackend\models\CustomerSearch */
 /* @var $model \common\models\User */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $address \common\models\Address */
+/* @var $addressShip[] \common\models\Address */
 $this->params = [Yii::t('frontend','Home') => '/', Yii::t('frontend','My Account') => '/my-account.html'];
+$contentForm = json_encode([
+    'content' => \frontend\modules\account\views\widgets\FormAddressWidget::widget(),
+    'title' => Yii::t('frontend','Add shipping address')
+]);
+$js = <<<JS
+$('#add-new').click(function() {
+    var content = $contentForm;
+  ws.notifyConfirm(content.content,content.title,'default');
+});
+$('#user_province_id').change(function() {
+  ws.province_change('user_province_id','user_district_id');
+});
+$('#user_district_id').change(function() {
+  ws.district_change('user_district_id','user_zip_code');
+});
+$('#user_zip_code').keyup(function() {
+  ws.zipcode_keyup('user_zip_code','listZipCOdeUser');
+});
+$('#user_zip_code').change(function() {
+  ws.zipcode_Change('user_zip_code','user_province_id','user_district_id');
+});
+JS;
+$this->registerJs($js);
 ?>
 <div class="be-acc">
     <div class="ba-block1">
@@ -31,26 +56,25 @@ $this->params = [Yii::t('frontend','Home') => '/', Yii::t('frontend','My Account
             <?= $form->field($model, 'email', ['template' => " <i class=\"icon email\"></i>{input}\n{hint}\n{error}"])->input('email') ?>
         </div>
         <?php
-        $provider = \common\models\SystemStateProvince::find()->all();
+        $provider = \common\models\SystemStateProvince::select2DataForCountry($address->country_id ? $address->country_id : $model->store->country_id);
         $provi = ArrayHelper::map($provider, 'id', 'name');
+        $district = \common\models\SystemDistrict::select2Data($address->province_id ? $address->province_id : array_key_first($provi));
+        $dist = ArrayHelper::map($district, 'id', 'name');
         ?>
         <div class="form-group">
-            <?= $form->field($address, 'province_id', ['template' => " <i class=\"icon globe\"></i>{input}\n{hint}\n{error}"])->dropDownList($provi, ['id' => 'province_id']); ?>
+            <?= $form->field($address, 'province_id', ['template' => " <i class=\"icon globe\"></i>{input}\n{hint}\n{error}"])->dropDownList($provi, ['id' => 'user_province_id']); ?>
         </div>
-        <?php
-        $distr = ArrayHelper::map($district, 'id', 'name')
-        ?>
         <div class="form-group">
-            <?= $form->field($address, 'district_id', ['template' => " <i class=\"icon city\"></i>{input}\n{hint}\n{error}"])->widget(DepDrop::classname(), [
-                'data' => $distr,
-                'options' => ['id' => 'district_id'],
-                'pluginOptions' => [
-                    'depends' => ['province_id'],
-                    'placeholder' => Yii::t('frontend', 'Select province...'),
-                    'url' => Url::to(['customer/subcat'])
-                ]
-            ]); ?>
+            <?= $form->field($address, 'district_id', ['template' => " <i class=\"icon city\"></i>{input}\n{hint}\n{error}"])->dropDownList($dist,['id' => 'user_district_id']); ?>
         </div>
+        <?php if($model->store_id == \common\components\StoreManager::STORE_ID){?>
+            <div class="form-group">
+                <?= $form->field($address, 'post_code', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'placeholder' => 'Zip Code','id' => 'user_zip_code','list' => 'listZipCOdeUser']) ?>
+                <datalist id="listZipCOdeUser">
+
+                </datalist>
+            </div>
+        <?php } ?>
         <div class="form-group">
             <?= $form->field($address, 'address', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
         </div>
@@ -83,16 +107,14 @@ $this->params = [Yii::t('frontend','Home') => '/', Yii::t('frontend','My Account
     </div>
     <div class="us-address">
         <div class="title"><?= Yii::t('frontend', 'Shipping address'); ?></div>
-        <div class="code"><?= Yii::t('frontend', 'Shipping code'); ?> : <b><?= $model->verify_code ?></b></div>
     </div>
     <div class="ba-block2">
         <div class="title-box">
             <div class="title"><?= Yii::t('frontend', 'Your shipping address'); ?>:</div>
-            <a href="#" class="add-new"><?= Yii::t('frontend', 'Add new'); ?></a>
+            <a href="javascript:void (0);" class="add-new" id="add-new"><?= Yii::t('frontend', 'Add new'); ?></a>
         </div>
         <div class="row">
-            <?php
-            foreach ($addressShip as $add) {
+            <?php foreach ($addressShip as $add) {
                 ?>
                 <div class="col-md-6">
                     <div class="name-box">

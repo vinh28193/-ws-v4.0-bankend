@@ -137,6 +137,7 @@ class UserController extends Controller
         $userOld = Customer::find()
             ->where(['email' => $email])->andWhere(['or', ['<>', 'Deleted', 0], ['is', 'Deleted', null]])
             ->orderBy('id desc')->one();
+
         $this->stdout('Kiểm tra user ' . $userOld->username . '-' . $userOld->email . '-' . $userOld->phone . '....' . PHP_EOL);
         if (!$userOld->email || !$userOld->phone) {
             $this->stdout('Email hoặc phone đang trống. Không thể cập nhật.' . PHP_EOL);

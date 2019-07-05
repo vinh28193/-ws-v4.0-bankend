@@ -361,6 +361,8 @@ $this->registerJs($js);
                 <?php foreach ($order->products as $product): ?>
                     <?php
                     $productFees = ArrayHelper::index($product->productFees, null, 'name');
+                    $purchaseFee = 0;
+                    $purchaseFee = isset($productFees['purchase_fee']) ? $productFees['purchase_fee'][0]->local_amount : $purchaseFee;
                     ?>
 
                     <div class="col-md-12 product-item">
@@ -393,14 +395,12 @@ $this->registerJs($js);
                             </div>
                             <div class="col-md-1 text-center pt-4">
                                 <?php
-                                $purchaseFee = 0;
-                                $purchaseFee = isset($productFees['purchase_fee']) ? $productFees['purchase_fee'][0]->local_amount : $purchaseFee;
                                 echo $storeManager->showMoney($purchaseFee);
                                 ?>
                             </div>
                             <div class="col-md-2 text-center pt-4 text-danger">
                                 <?php
-                                echo $storeManager->showMoney($product->total_final_amount_local);
+                                echo $storeManager->showMoney($product->total_final_amount_local + $purchaseFee);
                                 ?>
                             </div>
                         </div>

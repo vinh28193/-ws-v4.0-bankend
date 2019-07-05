@@ -142,18 +142,18 @@
             var data = $item.data('wsItem');
             const value = variationOption.values[selectedValue];
             const name = variationOption.name;
-            $('#error-'+variationOption.id).html("");
+            $('#error-' + variationOption.id).html("");
             console.log(variationOption);
             if (!value) {
                 return;
             }
-            if(variationOption.option_link && variationOption.sku){
+            if (variationOption.option_link && variationOption.sku) {
                 const sku = variationOption.sku.filter(s => s.value_option === value);
-                if(sku && sku[0].link){
+                if (sku && sku[0].link) {
                     ws.loading(true);
                     window.location.assign(sku[0].link);
                     return;
-                }else {
+                } else {
                     markOutofStock(true);
                     return;
                 }
@@ -176,7 +176,7 @@
                     $.when.apply(this, deferredArrays).always(function () {
                         var queryParams = data.options.queryParams;
                         queryParams.sku = activeVariation.variation_sku;
-                        if(!queryParams.seller){
+                        if (!queryParams.seller) {
                             queryParams.seller = data.params.seller;
                         }
                         data.params.available_quantity = activeVariation.available_quantity;
@@ -199,7 +199,7 @@
                             success: function (response) {
                                 if (response.success) {
                                     data.ajaxed = true;
-                                    if(response.content.sellerCurrentId){
+                                    if (response.content.sellerCurrentId) {
                                         data.options.queryParams.seller = response.content.sellerCurrentId;
                                     }
                                     var content = $.extend({}, priceUpdateResponse, response.content || {});
@@ -248,9 +248,11 @@
                     data: data,
                     dataType: 'json',
                     success: function (response) {
-                        if(response == 'Can not create favorite' || response == 'something wrong user uu!!!!!'){
-                            $( ".viewed-product" ).css( "display", "none" );
-                        }else { console.log("done : cret fv s!!! "); }
+                        if (response == 'Can not create favorite' || response == 'something wrong user uu!!!!!') {
+                            $(".viewed-product").css("display", "none");
+                        } else {
+                            console.log("done : cret fv s!!! ");
+                        }
                     }
                 }, false);
             }, 3000);
@@ -343,19 +345,19 @@
         console.log(activeVariation);
         if (activeVariation.length === 0) {
             var optionTemp = [];
-            $.each(data.params.variation_options,function (k,v) {
-                if(v.option_link && v.value_current){
+            $.each(data.params.variation_options, function (k, v) {
+                if (v.option_link && v.value_current) {
                     optionTemp.push({
                         name: v.name,
                         value: v.value_current,
                     });
                 }
             });
-            if(optionTemp.length > 0){
+            if (optionTemp.length > 0) {
                 activeVariation.push({
                     options_group: optionTemp
                 });
-            }else {
+            } else {
                 return;
             }
             // activeVariation = data.params.variation_mapping[0];
@@ -454,45 +456,45 @@
             markOutofStock(true);
             return;
         }
-        if(content.sellPrice_origin){
-            $('#price_origin').html('$'+content.sellPrice_origin);
-            $('#price_origin_local').html('$'+content.fees.product_price_text);
+        if (content.sellPrice_origin) {
+            $('#price_origin').html('$' + content.sellPrice_origin);
+            $('#price_origin_local').html('$' + content.fees.product_price_text);
         }
-        if(content.fees.purchase_fee_text && content.fees.purchase_fee){
+        if (content.fees.purchase_fee_text && content.fees.purchase_fee) {
             $('#purchase_fee').html(content.fees.purchase_fee_text);
         }
         if (content.queryParams.sku !== undefined) {
             data.params.sku = content.queryParams.sku;
             $item.data('wsItem', data);
         }
-        if(content.sellerCurrentName){
+        if (content.sellerCurrentName) {
             $('#seller_name').html(content.sellerCurrentName);
         }
-        if(content.sellerMore){
-            $('#other-seller-div').css('display','block');
+        if (content.sellerMore) {
+            $('#other-seller-div').css('display', 'block');
             $('#other-seller-div .owl-carousel').remove();
-            var sellermore = '<div class="owl-carousel owl-theme">'+content.sellerMore+'</div>';
+            var sellermore = '<div class="owl-carousel owl-theme">' + content.sellerMore + '</div>';
             $('#other-seller-div').append(sellermore);
             $(".owl-carousel").owlCarousel({
-                loop:false,
-                margin:10,
-                nav:true,
-                dots:true,
-                arrows:true,
-                responsive:{
-                    0:{
-                        items:2
+                loop: false,
+                margin: 10,
+                nav: true,
+                dots: true,
+                arrows: true,
+                responsive: {
+                    0: {
+                        items: 2
                     },
-                    600:{
-                        items:4
+                    600: {
+                        items: 4
                     },
-                    1000:{
-                        items:6
+                    1000: {
+                        items: 6
                     }
                 }
             });
-        }else {
-            $('#other-seller-div').css('display','none');
+        } else {
+            $('#other-seller-div').css('display', 'none');
             $('#other-seller').html("");
         }
     };
@@ -603,29 +605,32 @@
         }
 
         if ($data.params.variation_options.length > 0 && currentVariations.length !== $data.params.variation_options.length) {
-            for(let ind = 0; ind < $data.params.variation_options.length ; ind ++){
+            for (let ind = 0; ind < $data.params.variation_options.length; ind++) {
                 var check = false;
-                for(let ind_2 = 0; ind_2 < currentVariations.length ; ind_2 ++){
-                    if(currentVariations[ind_2].name === $data.params.variation_options[ind].name){
+                for (let ind_2 = 0; ind_2 < currentVariations.length; ind_2++) {
+                    if (currentVariations[ind_2].name === $data.params.variation_options[ind].name) {
                         check = true;
                     }
                 }
-                if(!check){
-                    $('#error-'+$data.params.variation_options[ind].id).html(ws.t('Please select {variation}',{variation:$data.params.variation_options[ind].name}));
+                if (!check) {
+                    $('#error-' + $data.params.variation_options[ind].id).html(ws.t('Please select {variation}', {variation: $data.params.variation_options[ind].name}));
                 }
             }
             return false;
         }
 
         var params = $data.params;
+        var image = params.images[0] ? params.images[0].main : '/img/no_image.png';
+
         var item = {
             source: params.type,
             id: params.id,
             sku: params.sku,
             sellerId: params.seller,
             quantity: quantity,
-            image: params.images[0] ? params.images[0].main : '/img/no_image.png'
+            image: typeof image !== "string" ? image[0] : image,
         };
+        
         var link = location.href;
         var $ajaxOptions = {
             type: 'POST',

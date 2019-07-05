@@ -1011,6 +1011,9 @@ php yii user/clone-user-old-by-email ngoctham213@gmail.com
 php yii user/clone-user-old-by-email tuongan.cntt@gmail.com
 php yii user/clone-user-old-by-email nguyen_quang_minh@outlook.com.vn
 
+49689196 
+php yii user/clone-user-old-by-email huongdl@peacesoft.net
+php yii user/clone-user-old-by-email huongdl@nexttech.asia
 
 #------------------API gRPC IP product------------------------------
 BOXME_GRPC_SERVICE_LOCATION=10.130.111.53:50052
@@ -1023,3 +1026,16 @@ BOXME_GRPC_SERVICE_ORDER=10.130.111.53:50058
 BOXME_GRPC_SERVICE_SELLER=10.130.111.53:50060
 BOXME_GRPC_SERVICE_NOTIFICATION=10.130.111.53:50051
 BOXME_GRPC_SERVICE_OPS=10.130.111.53:50059
+
+
+#----------------------------------------------
+ 'db_old' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;port=3306;dbname=weshop_cms',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+            'enableSchemaCache' => false,
+            'schemaCacheDuration' => 7200,
+            'schemaCache' => 'cache'
+        ],
