@@ -4,12 +4,11 @@
 namespace frontend\modules\payment\controllers;
 
 
-use common\additional\StoreAdditionalFee;
+use frontend\modules\payment\models\Order;
 use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
 use common\models\Address;
 use common\models\db\TargetAdditionalFee;
-use common\models\Order;
 use common\models\PaymentTransaction;
 use common\promotion\PromotionResponse;
 use frontend\modules\payment\models\ShippingForm;
@@ -30,7 +29,32 @@ class PaymentController extends BasePaymentController
         $start = microtime(true);
         $now = Yii::$app->getFormatter()->asDatetime('now');
         $bodyParams = $this->request->bodyParams;
-        $payment = new Payment($bodyParams['payment']);
+
+        $paymentParams = $bodyParams['payment'];
+        if (($orderParams = ArrayHelper::remove($paymentParams, 'orders')) === null) {
+            return $this->response(false, "can not get form null orders");
+        }
+
+        $payment = new Payment($paymentParams);
+        $orders = [];
+        foreach ($orderParams as $orderParam) {
+            if (isset($orderParam['totalFinalAmount'])) {
+                unset($orderParam['totalFinalAmount']);
+            }
+            if (isset($orderParam['totalAmountLocal'])) {
+                unset($orderParam['totalAmountLocal']);
+            }
+            $order = new Order($orderParam);
+            if ($order->cartId !== null && $order->createOrderFromCart() !== false) {
+                $orders[$order->cartId] = $order;
+            } else if ($order->ordercode !== null && ($order = Order::findOne(['ordercode' => $order->ordercode])) !== null) {
+                $orders[$order->ordercode] = $order;
+            }
+        }
+        $payment->setOrders($orders);
+
+
+        $payment = new Payment($paymentParams);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
         $shippingForm->ensureReceiver();
         if (count($payment->errors) > 0) {
