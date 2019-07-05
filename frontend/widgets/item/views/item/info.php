@@ -331,7 +331,8 @@ JS;
                                         </div>
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0)"  data-action="clickToLoad" data-href="<?= WeshopHelper::generateUrlDetail('amazon',$item->item_name,$item->item_sku,null,$provider->prov_id) ?>" class="btn btn-amazon" style="border-radius: 0px"><?= Yii::t('frontend','View Detail') ?></a>
+                                    <a href="javascript:void(0)"  class="btn btn-amazon shortcut-payment"  data-role="buynow" data-seller="<?=$provider->prov_id;?>" style="border-radius: 0px"><?= Yii::t('frontend','Buy Now') ?></a>
+                                    <a href="javascript:void(0)"  class="btn btn-outline-info shortcut-payment" data-role="shopping" data-seller="<?=$provider->prov_id;?>" style="border-radius: 0px"><?= Yii::t('frontend','Cart') ?></a>
                                 </td>
                             </tr>
                         <?php }

@@ -144,6 +144,9 @@ class OrderCartItem extends BaseObject
             return [false, $form->getFirstErrors()];
 
         }
+        if ($seller_id){
+            $product->updateBySeller($seller_id);
+        }
         $product->current_image = $this->image;
         $params['image'] = $this->image;
         $order = CartHelper::createItem($product,$this->sellerId,$this->image);
