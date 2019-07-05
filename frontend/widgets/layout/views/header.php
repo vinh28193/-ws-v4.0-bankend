@@ -67,7 +67,12 @@ if ($userCookie->checkAddress()) {
         <div class="logo">
             <span class="menu-toggle"></span>
             <a href="/" class="logo-pc">
-                <?php echo Html::img(Url::to('/images/logo/weshop-01.png', true)); ?>
+                <?php
+                $domain = Url::to('/images/logo/weshop-01.png', true);
+                if(YII_ENV == 'prod'){
+                    $domain =   str_replace(['http://','https"//'],'',$domain);
+                }
+                echo Html::img($domain); ?>
             </a>
         </div>
         <div class="shipping-header-box">
