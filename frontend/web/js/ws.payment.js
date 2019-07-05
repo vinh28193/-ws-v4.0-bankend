@@ -644,6 +644,9 @@ ws.payment = (function ($) {
                     if ($otherMethod.length && $otherMethod.hasClass('show')) {
                         $otherMethod.modal('hide');
                     }
+                    if (data.cancelUrl !== null) {
+                        window.history.pushState(null, null, data.cancelUrl);
+                    }
                     if (redirectType === 'POPUP') {
                         if (redirectMethod === 'WALLET') {
                             var $otp = $('#otp-confirm');
