@@ -86,7 +86,7 @@ ws.payment = (function ($) {
 
             setTimeout(function () {
                 pub.calculatorShipping();
-                console.log(pub.payment);
+                //console.log(pub.payment);
             }, 1000);
 
             $('input[name=check-member]').click(function () {
@@ -111,27 +111,11 @@ ws.payment = (function ($) {
                 window.scrollTo(0, 0);
             });
             $('#shippingform-buyer_phone').keyup(function () {
-                var link = location.href;
-                var phone = $('#shippingform-buyer_phone').val().trim();
-                phone = phone.replace('(+84)', '0');
-                phone = phone.replace('+84', '0');
-                phone = phone.replace('0084', '0');
-                phone = phone.replace('+62', '0');
-                phone = phone.replace('0062', '0');
-                phone = phone.replace(/ /g, '');
-                var firstNumber = phone.substring(0, 2);
-                if ((firstNumber == '09' || firstNumber == '03' || firstNumber == '07' || firstNumber == '08' || firstNumber == '05' || firstNumber == '06') && phone.length < 13 && phone.length > 9) {
-                    ws.ajax('/checkout/shipping/add-cart-checkout', {
-                        type: 'POST',
-                        data: {
-                            phone: phone,
-                            link: link,
-                            fullName: $('#shippingform-buyer_name').val().trim(),
-                            email: $('#shippingform-buyer_email').val().trim(),
-                            typeUpdate: 'updateCartInCheckout'
-                        },
-                    });
+                var isCheckOut = ws.payment.get('page') === 'CHECKOUT';
+                if (!isCheckOut) {
+                    return;
                 }
+                ws.shippingCollection('buyer', ws.payment.get('type'), Object.keys(ws.payment.get('orders')))
             });
             $('#loginToCheckout').click(function () {
                 ws.loading(true);
@@ -179,30 +163,103 @@ ws.payment = (function ($) {
                 });
             });
             $('#shippingform-buyer_province_id').change(function () {
-                ws.province_change('shippingform-buyer_province_id','shippingform-buyer_district_id');
+                var txt = '';
+                district_data.filter(function (d) {
+                    if (d.province_id == $('#shippingform-buyer_province_id').val()) {
+                        txt += '<option value="' + d.id + '">' + d.name + '</option>';
+                    }
+                });
+                $('#shippingform-buyer_district_id').html(txt);
+                $('#shippingform-buyer_district_id').trigger('change');
+                // ws.payment.calculatorShipping();
             });
             $('#shippingform-receiver_province_id').change(function () {
-                ws.province_change('shippingform-receiver_province_id','shippingform-receiver_district_id');
+                var txt = '';
+                district_data.filter(function (d) {
+                    if (d.province_id == $('#shippingform-receiver_province_id').val()) {
+                        txt += '<option value="' + d.id + '">' + d.name + '</option>';
+                    }
+                });
+                $('#shippingform-receiver_district_id').html(txt);
+                $('#shippingform-receiver_district_id').trigger('change');
+                // ws.payment.calculatorShipping();
             });
             $('#shippingform-buyer_district_id').change(function () {
-                ws.district_change('shippingform-buyer_district_id','shippingform-buyer_post_code',true);
+                if (store_id === 7) {
+                    var district = $('#shippingform-buyer_district_id').val();
+                    var zipcode = zipcode_data.filter(z => z.district_id === district);
+                    if (zipcode && zipcode.length > 0) {
+                        $('#shippingform-buyer_post_code').val(zipcode[0].zip_code);
+                        ws.payment.calculatorShipping();
+                    } else {
+                        ws.notifyInfo('Cannot find zipcode from your district ');
+                        $('#shippingform-buyer_post_code').val('');
+                    }
+                } else {
+                    ws.payment.calculatorShipping();
+                }
             });
             $('#shippingform-receiver_district_id').change(function () {
-                ws.district_change('shippingform-receiver_district_id','shippingform-receiver_post_code',true);
+                if (store_id === 7) {
+                    var district = $('#shippingform-receiver_district_id').val();
+                    var zipcode = zipcode_data.filter(z => z.district_id === district);
+                    if (zipcode && zipcode.length > 0) {
+                        $('#shippingform-receiver_post_code').val(zipcode[0].zip_code);
+                        ws.payment.calculatorShipping();
+                    } else {
+                        ws.notifyInfo('Cannot find zipcode from your district ');
+                        $('#shippingform-receiver_post_code').val('');
+                    }
+                } else {
+                    ws.payment.calculatorShipping();
+                }
             });
             $('#shippingform-buyer_post_code').keyup(function () {
-                ws.zipcode_keyup('shippingform-buyer_post_code','buyer_post_code_list');
+                var txt = '';
+                var count = 0;
+                var zipcode = $('#shippingform-buyer_post_code').val();
+                zipcode_data.filter(function (z) {
+                    if (count < 20 && (z.zip_code.indexOf(zipcode) > -1 || !zipcode)) {
+                        count++;
+                        txt += "<option value='" + z.zip_code + "'>" + z.label + "</option>";
+                    }
+                });
+                $('#buyer_post_code_list').html(txt);
             });
             $('#shippingform-receiver_post_code').keyup(function () {
-                ws.zipcode_keyup('shippingform-receiver_post_code','receiver_post_code_list');
+                var txt = '';
+                var count = 0;
+                var zipcode = $('#shippingform-receiver_post_code').val();
+                zipcode_data.filter(function (z) {
+                    if (count < 20 && (z.zip_code.indexOf(zipcode) > -1 || !zipcode)) {
+                        count++;
+                        txt += "<option value='" + z.zip_code + "'>" + z.label + "</option>";
+                    }
+                });
+                $('#receiver_post_code_list').html(txt);
             });
 
             $('#shippingform-buyer_post_code').change(function () {
-                ws.zipcode_Change('shippingform-buyer_post_code','shippingform-buyer_province_id','shippingform-buyer_district_id');
+                var zipcode = zipcode_data.filter(z => z.zip_code === $('#shippingform-buyer_post_code').val());
+                if (zipcode && zipcode.length > 0) {
+                    $('#shippingform-buyer_province_id').val(zipcode[0].province_id).trigger('change');
+                    $('#shippingform-buyer_district_id').val(zipcode[0].district_id).trigger('change');
+                } else {
+                    ws.notifyInfo('Zip code ' + $('#shippingform-buyer_post_code').val() + ' not support! Please change zip code');
+                    $('#shippingform-buyer_post_code').val('');
+                }
             });
 
             $('#shippingform-receiver_post_code').change(function () {
-                ws.zipcode_Change('shippingform-receiver_post_code','shippingform-receiver_province_id','shippingform-receiver_district_id');
+                var zipcode = zipcode_data.filter(z => z.zip_code === $('#shippingform-receiver_post_code').val());
+                if (zipcode && zipcode.length > 0) {
+                    $('#shippingform-receiver_province_id').val(zipcode[0].province_id).trigger('change');
+                    $('#shippingform-receiver_district_id').val(zipcode[0].district_id).trigger('change');
+                    $('#shippingform-receiver_post_code').val(zipcode[0].zip_code);
+                } else {
+                    ws.notifyInfo('Zip code ' + $('#shippingform-receiver_post_code').val() + ' not support! Please change zip code');
+                    $('#shippingform-receiver_post_code').val('');
+                }
             });
         },
         set: function (name, value) {
@@ -212,7 +269,7 @@ ws.payment = (function ($) {
             return pub.payment[name] || defaultValue;
         },
         selectMethod: function (providerId, methodId, bankCode, checkRequire = false) {
-            console.log('selected providerId:' + providerId + ' methodId:' + methodId + ' bankCode:' + bankCode);
+            //console.log('selected providerId:' + providerId + ' methodId:' + methodId + ' bankCode:' + bankCode);
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
             pub.payment.payment_bank_code = bankCode;
@@ -243,7 +300,7 @@ ws.payment = (function ($) {
         },
         registerMethods: function ($methods) {
             pub.methods = $methods;
-            console.log('register ' + pub.methods.length + ' methods');
+            //console.log('register ' + pub.methods.length + ' methods');
         },
         calculatorShipping: function () {
             if (!pub.filterShippingAddress(false)) {
@@ -262,7 +319,7 @@ ws.payment = (function ($) {
                 type: 'post',
                 data: {payment: pub.payment, shipping: pub.shipping},
                 success: function (response) {
-                    console.log(response);
+                    //console.log(response);
                     if (response.success) {
                         var orders = response.data;
                         orderCouriers = orders;
@@ -295,7 +352,7 @@ ws.payment = (function ($) {
             }, true);
         },
         installmentBankChange: function (code) {
-            console.log('selected bank :' + code);
+            //console.log('selected bank :' + code);
             pub.payment.installment_bank = code;
             pub.payment.installment_method = 'VISA';
             var currentBank = $.grep(pub.installmentParam.banks, function (x) {
@@ -365,6 +422,7 @@ ws.payment = (function ($) {
             var $cardOrder = $('div.card-order[data-key=' + key + ']');
 
             var couriers = orderCouriers[key];
+
             var courier = $.grep(couriers.couriers, function (x) {
                 return x.service_code === service_code
             })[0];
@@ -378,6 +436,9 @@ ws.payment = (function ($) {
             var order = orders[key];
             var shippingFee = ws.roundNumber(courier.total_fee);
             var additionalFees = order.additionalFees;
+            if (fee.name in additionalFees) {
+                delete additionalFees[fee.name];
+            }
             additionalFees[fee.name] = [];
             fee.amount = shippingFee;
             fee.local_amount = shippingFee;
@@ -554,16 +615,12 @@ ws.payment = (function ($) {
         return $isSuccess;
     };
     var processPaymment = function () {
-        var isCheckout = pub.payment.page === 'CHECKOUT';
-        if (isCheckout && !pub.filterShippingAddress()) {
+
+        if (!pub.filterShippingAddress()) {
             return;
         }
-        var handleUrl = '/payment/payment/billing';
-        var data = pub.payment;
-        if (isCheckout) {
-            data = {payment: pub.payment, shipping: pub.shipping};
-            handleUrl = '/payment/payment/process';
-        }
+        var handleUrl = '/payment/payment/process';
+        var data = {payment: pub.payment, shipping: pub.shipping};
         ws.ajax(handleUrl, {
             dataType: 'json',
             type: 'post',
@@ -576,7 +633,7 @@ ws.payment = (function ($) {
                         message: '',
                         merchant: undefined,
                         paymentTransaction: null,
-                        orderCodes:null,
+                        orderCodes: null,
                         redirectType: 'normal',
                         redirectMethod: 'get',
                         token: null,
@@ -588,8 +645,12 @@ ws.payment = (function ($) {
                     var redirectType = data.redirectType.toUpperCase();
                     var redirectMethod = data.redirectMethod.toUpperCase() || 'GET';
                     var $otherMethod = $('#otherMethods');
-                    if($otherMethod.length && $otherMethod.hasClass('show')){
+                    if ($otherMethod.length && $otherMethod.hasClass('show')) {
                         $otherMethod.modal('hide');
+                    }
+                    if (data.cancelUrl !== null) {
+                        var relativeUrl = ws.relativeUrl(data.cancelUrl);
+                        history.replaceState({url: relativeUrl}, window.document.title, relativeUrl);
                     }
                     if (redirectType === 'POPUP') {
                         if (redirectMethod === 'WALLET') {
@@ -622,9 +683,9 @@ ws.payment = (function ($) {
                         }
                     } else if (data.paymentTransaction) {
                         $('span#transactionCode').html(data.paymentTransaction);
-                        var invoiceHide =  $('p.invoice-hide');
+                        var invoiceHide = $('p.invoice-hide');
                         invoiceHide.find('span').html(data.orderCodes);
-                        invoiceHide.css('display','block');
+                        invoiceHide.css('display', 'block');
                         $('div#checkout-success').modal('show');
                         ws.initEventHandler('checkoutSuccess', 'nextPayment', 'click', 'button#next-payment', function (e) {
                             if (redirectMethod === 'POST') {
@@ -692,7 +753,7 @@ ws.payment = (function ($) {
     };
     var initInstallmentBankView = function (banks) {
         pub.installmentParam.banks = banks;
-        console.log(banks);
+        //console.log(banks);
         var htmlBank = [];
         $.each(banks, function (index, bank) {
             var iActive = index === 0;
@@ -745,7 +806,11 @@ ws.payment = (function ($) {
             }
             pub.courierChange(key, couriers[0].service_code);
         } else if (typeof couriers === 'string') {
-            courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(couriers)
+            var tableFee = $cardOrder.find('table.table-fee');
+
+            var courierRow = tableFee.find('tr.courier');
+            courierRow.find('td.text-right').html(couriers);
+            // courierDropDown.find('button#courierDropdownButton').find('.courier-name').html(couriers)
         }
     };
     var initRowTableFee = function ($cardOrder, fee) {
@@ -754,15 +819,17 @@ ws.payment = (function ($) {
         shippingRow.find('td.value').html(ws.showMoney(fee.local_amount));
     };
     var getTotalOrderAmount = function (order) {
-        var $amount = order.totalAmountLocal;
+        var $amount = Number(order.totalAmountLocal);
         $.each(order.additionalFees, function (name, array) {
             var totalFeeAmount = 0;
             for (var i = 0; i < array.length; i++) {
                 totalFeeAmount += Number(array[i].local_amount);
             }
+
             $amount += totalFeeAmount;
         });
         if (order.discountAmount > 0) {
+
             $amount -= order.discountAmount;
         }
         return $amount

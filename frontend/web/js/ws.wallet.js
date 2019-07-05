@@ -11,7 +11,7 @@ ws.wallet = (function ($) {
         data: {},
         init: function (options) {
             pub.data = $.extend({}, setting, options || {});
-            console.log(pub.data);
+            //console.log(pub.data);
             ws.initEventHandler('otpVerifyMethod', 'change', 'change', 'input[type=radio][name=otpVerifyMethod]', function (e) {
                 e.preventDefault();
                 pub.data.otp_receive_type = Number($(this).val());

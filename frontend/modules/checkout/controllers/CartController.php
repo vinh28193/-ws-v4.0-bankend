@@ -5,6 +5,7 @@ namespace frontend\modules\checkout\controllers;
 
 use common\components\cart\CartHelper;
 use common\components\StoreManager;
+use frontend\modules\payment\PaymentService;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
@@ -92,7 +93,7 @@ class CartController extends CheckoutController
 
         if ($type === CartSelection::TYPE_BUY_NOW || $type === CartSelection::TYPE_INSTALLMENT) {
             CartSelection::setSelectedItems($type, (string)$key[0]);
-            $redirectUrl = Url::toRoute(['/checkout/shipping', 'type' => $type], true);
+            $redirectUrl = PaymentService::createCheckoutUrl($type);
 
         }
         return ['success' => true, 'message' => 'You will be ' . $type . ' with cart:' . $key[0], 'data' => $redirectUrl];
@@ -176,7 +177,7 @@ class CartController extends CheckoutController
 
         CartSelection::setSelectedItems($type, $carts);
         $count = CartSelection::countSelectedItems($type);
-        return ['success' => true, 'message' => "you will be $type with $count items", 'data' => Url::toRoute(['/checkout/shipping', 'type' => $type])];
+        return ['success' => true, 'message' => "you will be $type with $count items", 'data' => PaymentService::createCheckoutUrl($type)];
     }
 
     private function setDefaultSelected($items)

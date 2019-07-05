@@ -20,7 +20,17 @@ abstract class BaseRule extends BaseObject
     public $employee;
 
     /**
-     * @return User|null
+     * get active supporter pass with current rule
+     * @param Order[] $orders
+     * @return User[]|array
      */
-    abstract function getActiveSupporter();
+    abstract function getActiveSupporters($orders);
+
+    /**
+     * do not use with [[getActiveSupporter]] together
+     * @param string|int $spId
+     * @param Order[] $orders
+     * @return bool
+     */
+    abstract function markAssigned($spId, $orders);
 }

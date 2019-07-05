@@ -54,24 +54,52 @@ class ConfirmRule extends BaseRule
         $this->saveFileName = $this->saveFilePath . '/' . $this->saveFileName . '.json';
     }
 
+
+    /**
+     * @param int|string $spId
+     * @param Order[] $orders
+     * @return bool
+     */
+    public function markAssigned($spId, $orders)
+    {
+        $count = count($orders);
+        $currentAssign = $this->getCurrentAssign();
+        $totalAssigned = ArrayHelper::getValue($currentAssign, 'total', 0);
+        $assigned = ArrayHelper::getValue($currentAssign, 'assigned', []);
+        if (!isset($assigned[$spId])) {
+            $assigned[$spId] = 0;
+        }
+        $totalAssigned += $count;
+        $value = $assigned[$spId];
+        $value += $count;
+        $assigned[$spId] = $value;
+        $this->setFileCache('current_assign', [
+            'assigned' => $assigned,
+            'total' => $totalAssigned
+        ]);
+        $this->_currentAssign = [];
+        return true;
+    }
+
     /**
      * @inheritDoc
      */
-    public function getActiveSupporter()
+    public function getActiveSupporters($orders)
     {
+        $count = count($orders);
         $supporters = $this->employee->getSupporters();
         $confirmPercent = $this->getConfirmPercent();
         $currentAssign = $this->getCurrentAssign();
         $confirmConverted = $confirmPercent['converted'];
         $confirmAgv = $confirmPercent['agv'];
         $totalAssigned = ArrayHelper::getValue($currentAssign, 'total', 0);
-        $totalAssigned += 1;
+        $totalAssigned += $count;
         $results = [];
         foreach (array_keys($supporters) as $id) {
             $ownerConvert = ArrayHelper::getValue($confirmConverted, $id, 0);
-            if($confirmAgv === 0){
+            if ($confirmAgv === 0) {
                 $assignRate = 100;
-            }else {
+            } else {
                 $assignRate = ($ownerConvert / $this->countSupporter() / $confirmAgv);
             }
             $results[$id] = $assignRate;
@@ -98,14 +126,15 @@ class ConfirmRule extends BaseRule
         $assigner = array_keys($sMax);
         $assigner = array_shift($assigner);
         $value = $assigned[$assigner];
-        $value += 1;
+        $value += $count;
         $assigned[$assigner] = $value;
 
         $this->setFileCache('current_assign', [
             'assigned' => $assigned,
             'total' => $totalAssigned
         ]);
-        return isset($supporters[$assigner]) ? $supporters[$assigner] : null;
+        $this->_currentAssign = [];
+        return isset($supporters[$assigner]) ? [$supporters[$assigner]] : [];
     }
 
     public function countSupporter()
@@ -134,7 +163,7 @@ class ConfirmRule extends BaseRule
 //                }
                 $converted = [];
                 $results = $this->loadConfirmPercentBySupporter($supportIds);
-                foreach ($supportIds as $id){
+                foreach ($supportIds as $id) {
                     $converted[$id] = isset($results[$id]) ? $results[$id] : 0;
                 }
                 $agv = array_sum($converted) / count($converted);
@@ -225,7 +254,8 @@ class ConfirmRule extends BaseRule
         return $this->createDateTime('Last Sunday', 23, 59, 59, 'U');
     }
 
-    public function getDayExpiredAt(){
-        return $this->createDateTime('Next Sunday',23, 59, 59, 'U');
+    public function getDayExpiredAt()
+    {
+        return $this->createDateTime('Next Sunday', 23, 59, 59, 'U');
     }
 }
