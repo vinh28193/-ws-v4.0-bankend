@@ -55,23 +55,23 @@ class UserCookies extends Model
     }
     public function setUser(){
         $this->setAttributes(self::getUserCookies(),false);
-        if(!Yii::$app->user->isGuest){
-            /** @var User $user */
-            $user = Yii::$app->user->getIdentity();
-            $this->email = $user->email;
-            $this->name = implode(' ',[$user->first_name,$user->last_name]);
-            $this->phone = $user->phone;
-            $this->customer_id = $user->id;
-            $addressDefault = $user->defaultShippingAddress ? $user->defaultShippingAddress : $user->defaultPrimaryAddress;
-            if($addressDefault){
-                $this->district_id = $addressDefault->district_id;
-                $this->province_id = $addressDefault->province_id;
-                $this->country_id = $addressDefault->country_id;
-                $this->address = $addressDefault->address;
-                $this->zipcode = $addressDefault->post_code;
-            }
-            $this->setCookies();
-        }
+//        if(!Yii::$app->user->isGuest){
+//            /** @var User $user */
+//            $user = Yii::$app->user->getIdentity();
+//            $this->email = $user->email;
+//            $this->name = implode(' ',[$user->first_name,$user->last_name]);
+//            $this->phone = $user->phone;
+//            $this->customer_id = $user->id;
+//            $addressDefault = $user->defaultShippingAddress ? $user->defaultShippingAddress : $user->defaultPrimaryAddress;
+//            if($addressDefault){
+//                $this->district_id = $addressDefault->district_id;
+//                $this->province_id = $addressDefault->province_id;
+//                $this->country_id = $addressDefault->country_id;
+//                $this->address = $addressDefault->address;
+//                $this->zipcode = $addressDefault->post_code;
+//            }
+//            $this->setCookies();
+//        }
         return $this;
     }
     public static function getUserCookies($isArray = true){

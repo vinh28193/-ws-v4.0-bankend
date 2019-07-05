@@ -150,11 +150,15 @@ if ($userCookie->checkAddress()) {
                             <div class="row" id="list-menu-account">
                                 <div class="col-md-12 mb-3">
                                     <a href="javascript:void (0);" data-action="clickToLoad"
-                                       data-href="<?= Url::to('/account/order', true); ?>"><?= Yii::t('frontend', 'My orders') ?></a>
+                                       data-href="/my-weshop.html"><?= Yii::t('frontend', 'Dashboard') ?></a>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <a href="javascript:void (0);" data-action="clickToLoad"
-                                       data-href="<?= Url::to('/my-weshop.html', true); ?>"><?= Yii::t('frontend', 'My Account') ?></a>
+                                       data-href="/my-order.html"><?= Yii::t('frontend', 'Orders') ?></a>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <a href="javascript:void (0);" data-action="clickToLoad"
+                                       data-href="/my-account.html"><?= Yii::t('frontend', 'Account') ?></a>
                                 </div>
                                 <div class="col-md-12 mb-2 social-button">
                                     <a class="btn btn-info p-2" href="javascript:void (0);" data-action="clickToLoad"
