@@ -61,7 +61,6 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'products.productFees',
             'products.packages',
             'products.trackingCodes',
-            'walletTransactions',
             'seller',
             'purchaseAssignee',
             'purchaseProducts',
@@ -77,6 +76,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
 //            'products',
 //        ]);
         $this->joinWith([
+            'walletTransactions',
             'products',
             'user',
         ]);

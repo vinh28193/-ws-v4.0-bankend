@@ -67,3 +67,8 @@ composer.lock
 #-------------
 ./git
 /git
+
+
+#-----sitemap-------
+./frontend/web/sitemap.xml
+frontend/web/sitemap.xml

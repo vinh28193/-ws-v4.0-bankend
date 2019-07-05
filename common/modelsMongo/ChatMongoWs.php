@@ -25,6 +25,7 @@ use yii\mongodb\ActiveRecord;
  * @property mixed $Order_path
  * @property mixed $is_send_email_to_customer
  * @property mixed $type_chat
+ * @property mixed $link_image
  * @property mixed $is_customer_vew
  * @property mixed $is_employee_vew
  */
@@ -86,6 +87,7 @@ class ChatMongoWs extends ActiveRecord
             'message',
             'user_avatars',
             'Order_path',
+            'link_image',
             'is_send_email_to_customer',
             'type_chat',
             'is_customer_vew',
@@ -108,6 +110,7 @@ class ChatMongoWs extends ActiveRecord
                 'Order_path',
                 'is_send_email_to_customer',
                 'type_chat',
+                'link_image',
                 'is_customer_vew',
                 'is_employee_vew'], 'safe'],
             [['user_id','message', 'Order_path', 'type_chat'], 'required'],
@@ -133,6 +136,7 @@ class ChatMongoWs extends ActiveRecord
             'is_send_email_to_customer' => ' đánh đấu nội dung này có gửi tới email khách hàng không',
             'message' => 'nội dung Thông điện tin nhắn Text nội bộ chat hoặc chat',
             'type_chat' => 'TYPE_CHAT : GROUP_WS/WS_CUSTOMER : CHAT nội bộ trong WS : "GROUP_WS" hoặc nhân viên chat KH :"WS_CUSTOMER" ',
+            'link_image' => 'Link anh',
             'is_customer_vew' => ' Đanh dấu khách hàng đã xem Null / Id Customer',
             'is_employee_vew' => 'đánh đấu nhân viên nào đã xem , list Id user : null / id user'
         ];

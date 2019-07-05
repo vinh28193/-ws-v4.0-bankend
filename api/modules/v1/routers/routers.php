@@ -867,7 +867,7 @@ return [
     [
     'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
-        'controller' => ['pay' => 'payment-transaction'],
+        'controller' => ['pay' => 'payment-transaction', 'pay-bank' => 'payment-bank'],
         'tokens' => [
         '{id}' => '<id:\\d[\\d,]*>',
         '{code}' => '<code:\\w[\\w,]*>',

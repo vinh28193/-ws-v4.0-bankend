@@ -231,7 +231,7 @@ class FrontendController extends Controller
                 ]);
             }
             $links = ArrayHelper::merge([
-                'shortcut icon' => Url::to('/favicon.ico', true),
+                'shortcut icon' => Url::to('/favicon.ico', 'https'),
             ], $this->linkTag(), ArrayHelper::getValue(Yii::$app->params, 'linkTagParam', []));
             foreach ($links as $rel => $href) {
                 $view->registerLinkTag([
