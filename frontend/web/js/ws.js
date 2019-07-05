@@ -144,7 +144,7 @@ var ws = ws || (function ($) {
         },
         getFingerprint: function () {
             var content = $('meta[name=fingerprint-token]').attr('content');
-            if(content === ''){
+            if (content === '') {
                 var $client = new ClientJS();
                 content = $client.getFingerprint();
                 pub.setFingerprint(content);
@@ -169,7 +169,7 @@ var ws = ws || (function ($) {
         },
         reloadCartBadge: function () {
             ws.ajax('/checkout/cart/count', function (res) {
-                if(res.success){
+                if (res.success) {
                     pub.setCartBadge(res.count);
                 }
             }, false);
@@ -255,7 +255,7 @@ var ws = ws || (function ($) {
             precision = precision || pub.options.pricePrecision;
             currency = currency || pub.options.currency;
             money = pub.roundNumber(money, precision);
-            return pub.numberFormat(money) + ' ' + currency;
+            return pub.numberFormat(money) + currency;
         },
         showFilter: function (id) {
             if ($("#" + id).css('display') === 'none') {
@@ -272,24 +272,24 @@ var ws = ws || (function ($) {
             console.log($(element).html());
             var tagert = $(element).attr('data-target');
             console.log(tagert);
-            if(!$('.'+tagert).hasClass('hide-filter')){
-                $('.'+tagert).addClass('hide-filter');
-                $('.type-show-'+tagert).removeClass('hide-filter');
+            if (!$('.' + tagert).hasClass('hide-filter')) {
+                $('.' + tagert).addClass('hide-filter');
+                $('.type-show-' + tagert).removeClass('hide-filter');
                 $(element).parent().addClass('hide-filter');
-            }else {
-                $('.'+tagert).removeClass('hide-filter');
-                $('.type-show-'+tagert).removeClass('hide-filter');
+            } else {
+                $('.' + tagert).removeClass('hide-filter');
+                $('.type-show-' + tagert).removeClass('hide-filter');
                 $(element).parent().addClass('hide-filter');
             }
         },
         getSuggestSearch: function (response) {
             console.log(response);
-            if(response.length > 2){
-                if($('input.searchBoxInput').val() === response[0]){
-                    var txt = '<option>'+response[0]+'</option>';
+            if (response.length > 2) {
+                if ($('input.searchBoxInput').val() === response[0]) {
+                    var txt = '<option>' + response[0] + '</option>';
                     // console.log(response[1]);
-                    $.each(response[1],function (k,v) {
-                        txt += '<option>'+v+'</option>';
+                    $.each(response[1], function (k, v) {
+                        txt += '<option>' + v + '</option>';
                         // console.log('<option>'+v+'</option>');
                         // $('#searchAutoComplete').append('<option>'+v+'</option>');
                     });
@@ -388,11 +388,10 @@ var ws = ws || (function ($) {
             });
         },
         showModal: function (id) {
-          $('#'+id).modal();
+            $('#' + id).modal();
         },
-        startForm: function () {
-            var link = location.href;
-            var phone = $('#shippingform-buyer_phone').val().trim();
+        shippingCollection: function (type = 'buyer', cartType = 'buynow', cartIds = [],) {
+            var phone = $('#shippingform-' + type + '_phone').val().trim();
             phone = phone.replace('(+84)', '0');
             phone = phone.replace('+84', '0');
             phone = phone.replace('0084', '0');
@@ -404,11 +403,16 @@ var ws = ws || (function ($) {
                 ws.ajax('/checkout/shipping/add-cart-checkout', {
                     type: 'POST',
                     data: {
-                        phone: phone,
-                        link: link,
-                        fullName: $('#shippingform-buyer_name').val().trim(),
-                        email: $('#shippingform-buyer_email').val().trim(),
-                        typeUpdate: 'updateCartInCheckout'
+                        data: {
+                            type:cartType,
+                            cartIds: cartIds,
+                            params: {
+                                phone: phone,
+                                fullName: $('#shippingform-' + type + '_name').val().trim(),
+                                email: $('#shippingform-' + type + '_email').val().trim(),
+                                typeUpdate: type + 'CartInCheckout'
+                            }
+                        },
                     },
                 });
             }
@@ -428,12 +432,12 @@ ws.initEventHandler('searchNew', 'searchBoxInput', 'keyup', 'input.searchBoxInpu
     clearTimeout(window.mytimeout);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
-    }else{
+    } else {
         var $element = this;
         var key = $(this).val();
-        if(key){
-            window.mytimeout = setTimeout(function(){
-                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q='+encodeURI(key);
+        if (key) {
+            window.mytimeout = setTimeout(function () {
+                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q=' + encodeURI(key);
                 $.ajax({
                     url: url_call,
                     dataType: 'jsonp',
@@ -447,12 +451,12 @@ ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'keyup', 'input.mb-searchB
     clearTimeout(window.mytimeout);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
-    }else if (event.keyCode){
+    } else if (event.keyCode) {
         var $element = this;
         var key = $(this).val();
-        if(key){
-            window.mytimeout = setTimeout(function(){
-                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q='+encodeURI(key);
+        if (key) {
+            window.mytimeout = setTimeout(function () {
+                var url_call = 'https://completion.amazon.com/search/complete?method=completion&mkt=1&r=QHW0T16FVMD8GWM2WWM4&s=161-1591289-5903765&c=AWJECJG5N87M8&p=Detail&l=en_US&sv=desktop&client=amazon-search-ui&search-alias=aps&qs=&cf=1&fb=1&sc=1&q=' + encodeURI(key);
                 $.ajax({
                     url: url_call,
                     dataType: 'jsonp',
@@ -468,7 +472,7 @@ $('input.searchBoxInput').change(function () {
     ws.browse.searchNew(this, '$url');
 });
 $('datalist#listSuggestSearch').keyup(function () {
-    console.log('Key up: '+event.key);
+    console.log('Key up: ' + event.key);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
     }
@@ -477,13 +481,13 @@ $('#zipcode_default').keyup(function () {
     var txt = '';
     var count = 0;
     var tesst = zipcode_data.filter(function (z) {
-        if(z.zip_code.indexOf($('#zipcode_default').val()) > -1){
+        if (z.zip_code.indexOf($('#zipcode_default').val()) > -1) {
             count++;
         }
         return count < 20 && z.zip_code.indexOf($('#zipcode_default').val()) > -1;
     });
-    $.each(tesst, function (k,v) {
-        txt += "<option value='"+v.zip_code+"'>"+v.label+"</option>";
+    $.each(tesst, function (k, v) {
+        txt += "<option value='" + v.zip_code + "'>" + v.label + "</option>";
     });
     $('#list_zipcode').html(txt);
 });

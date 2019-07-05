@@ -216,7 +216,7 @@ class Payment extends Model
         $this->transaction_code = $code;
         $this->transaction_fee = 0;
         $this->return_url = PaymentService::createReturnUrl($this->payment_provider);
-        $this->cancel_url = PaymentService::createCancelUrl($code);
+        $this->cancel_url = PaymentService::createCheckoutUrl(null, $code);
         $this->getPaymentMethodProviderName();
     }
 
@@ -284,7 +284,7 @@ class Payment extends Model
     public function checkPromotion()
     {
         $results = [];
-        foreach ($this->getOrders() as $order) {
+        foreach ($this->getOrders() as $key =>  $order) {
             /** @var  $order Order */
             $form = new PromotionForm();
             $form->load($order->createPromotionParam(), '');
@@ -292,7 +292,6 @@ class Payment extends Model
             $response = $form->checkPromotion();
             $order->discountAmount = $response->discount;
             $order->discountDetail = $response->details;
-            $key = $this->page === self::PAGE_CHECKOUT ? $order->cartId : $order->ordercode;
             $results[$key] = $response;
         }
         return $results;

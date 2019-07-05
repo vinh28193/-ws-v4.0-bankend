@@ -120,7 +120,7 @@ class AdditionalFeeServiceController extends BasePaymentController
             $this->response(false, "can not resolve user id");
         }
         $results = [];
-        foreach ($payment->getOrders() as $order) {
+        foreach ($payment->getOrders() as $uniq =>  $order) {
             $weight = $order->total_weight_temporary * 1000;
             $totalAmount = $order->total_amount_local;
             $items = [];
@@ -169,7 +169,7 @@ class AdditionalFeeServiceController extends BasePaymentController
             $calculator = new InternationalShippingCalculator();
             $response = $calculator->CalculateFee($params, $userId, $store->country_code, $store->currency, $location);
             $response = array_combine(['success', 'couriers'], $response);
-            $results[$order->cartId] = $response;
+            $results[$uniq] = $response;
         }
         $time = sprintf('%.3f', microtime(true) - $start);
         return $this->response(true, "total calculator time : $time s", $results);

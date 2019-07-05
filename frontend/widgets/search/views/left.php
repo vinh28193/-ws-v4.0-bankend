@@ -49,7 +49,7 @@ $this->registerJs($js);
             <?php foreach ($categories as $index => $category): ?>
                 <?php /* @var $category array */ ?>
                 <li class="accordion">
-                    <?= Html::a($category['category_name'], $url($category['category_id']), ['onclick' => "ws.loading(true);"]); ?>
+                    <?= Html::a(Yii::t('frontend',$category['category_name']), $url($category['category_id']), ['onclick' => "ws.loading(true);"]); ?>
                     <?php if (isset($category['child_category']) && ($childs = $category['child_category']) !== null && count($childs) > 0): ?>
                         <a class="dropdown-collapse collapsed" data-toggle="collapse" data-target="#sub-<?= $index; ?>"
                            aria-expanded="true" aria-controls="collapseOne"><i class="la la-chevron-right"></i></a>
@@ -58,7 +58,7 @@ $this->registerJs($js);
                             <ul class="sub-category">
                                 <?php foreach ($childs as $child): ?>
                                     <li>
-                                        <?= Html::a($child['category_name'], $url($child['category_id']), []); ?>
+                                        <?= Html::a(Yii::t('frontend',$child['category_name']), $url($child['category_id']), []); ?>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>

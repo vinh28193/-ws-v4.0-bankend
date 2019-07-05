@@ -34,6 +34,13 @@ $css = <<<CSS
     }
 CSS;
 $this->registerCss($css);
+$js = <<<JS
+$(document).ready(function() {
+    $('.la-question-circle').tooltip({'trigger':'hover'});
+});
+JS;
+$this->registerJs($js);
+
 $rate_star = floatval($item->rate_star);
 $rate_count = $item->rate_count ? $item->rate_count : 0;
 $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval($rate_star);
@@ -123,6 +130,7 @@ $userCookies->setUser();
                     </td>
                     <td>
                         <ul class="list-dot">
+                            <li><?= Yii::t('frontend','Weight: <span id="shipping_weight">{shipping_weight}Kg</span> <i class="la la-question-circle" title="{shipping_weight} is temporary weight."></i>',['shipping_weight' => $item->shipping_weight ]) ?></li>
                             <li><?= Yii::t('frontend','Internal Shipping fee: <span id="shipping_fee">{shipping_fee}</span>',['shipping_fee' => $userCookies->province_id && $userCookies->district_id ? $internal_shipping_fee : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>']) ?></li>
                             <?php if ($userCookies->checkAddress()){ ?>
                                 <li>

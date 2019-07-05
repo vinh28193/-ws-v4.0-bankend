@@ -29,13 +29,17 @@ class PaymentController extends BasePaymentController
         $start = microtime(true);
         $now = Yii::$app->getFormatter()->asDatetime('now');
         $bodyParams = $this->request->bodyParams;
-
         $paymentParams = $bodyParams['payment'];
+
+        $shippingForm = new ShippingForm($bodyParams['shipping']);
+        $shippingForm->ensureReceiver();
+
         if (($orderParams = ArrayHelper::remove($paymentParams, 'orders')) === null) {
             return $this->response(false, "can not get form null orders");
         }
 
         $payment = new Payment($paymentParams);
+
         $orders = [];
         foreach ($orderParams as $orderParam) {
             if (isset($orderParam['totalFinalAmount'])) {
@@ -51,12 +55,9 @@ class PaymentController extends BasePaymentController
                 $orders[$order->ordercode] = $order;
             }
         }
+
         $payment->setOrders($orders);
 
-
-        $payment = new Payment($paymentParams);
-        $shippingForm = new ShippingForm($bodyParams['shipping']);
-        $shippingForm->ensureReceiver();
         if (count($payment->errors) > 0) {
             return $this->response(false, implode(', ', $payment->errors));
         }
@@ -163,138 +164,144 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->save(false);
         /* @var $results PromotionResponse */
         $payment->checkPromotion();
-        $transaction = Order::getDb()->beginTransaction();
-        $orders = [];
-        try {
-            foreach ($payment->getOrders() as $key => $orderPayment) {
-                $order = clone $orderPayment;
-                $order->setAttributes($shippingParams);
-                if (!empty($orderPayment->courierDetail)) {
-                    $order->courier_name = implode(' ', [$orderPayment->courierDetail['courier_name'], $orderPayment->courierDetail['service_name']]);
-                    $order->courier_service = $orderPayment->courierDetail['service_code'];
-                    $order->courier_delivery_time = implode(' ', [$orderPayment->courierDetail['min_delivery_time'], $orderPayment->courierDetail['max_delivery_time']]);
-                }
-                $orderTotalDiscount = 0;
-                unset($order['products']);
-                unset($order['seller']);
-                unset($order['saleSupport']);
-                // 1 order
-                $order->type_order = Order::TYPE_SHOP;
-                $order->payment_type = $payment->payment_type;
-                $order->customer_type = 'Retail';
-                $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
-                $order->total_paid_amount_local = 0;
-
-                $order->total_promotion_amount_local = $order->discountAmount;
-
-                $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
-
-                $order->total_fee_amount_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees()[1];
-
-
-                $order->total_final_amount_local = $orderPayment->getTotalFinalAmount();
-
-                $order->payment_transaction_code = $payment->transaction_code;
-
-                // 2 .seller
-                $seller = $orderPayment->seller;
-                $seller->portal = $orderPayment->portal;
-                $seller = $seller->safeCreate();
-
-                // 3. update seller for order
-                $order->seller_id = $seller->id;
-                $order->seller_name = $seller->seller_name;
-                $order->seller_store = $seller->seller_link_store;
-
-                $order->payment_provider = $payment->payment_provider_name;
-                $order->payment_method = $payment->payment_method_name;
-                $order->payment_bank = $payment->payment_bank_code;
-
-                if ($shippingForm->receiver_address_id !== null) {
-                    $order->receiver_address_id = $shippingForm->receiver_address_id;
-                }
-                if (!$order->save(false)) {
-                    $transaction->rollBack();
-                    return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
-                }
-
-                foreach ($orderPayment->getAdditionalFees()->toArray() as $feeName => $arrayFee) {
-                    // luu tong
-                    $firstFee = $arrayFee[0];
-                    $firstFee = new TargetAdditionalFee($firstFee);
-                    list($firstFee->amount, $firstFee->local_amount) = $orderPayment->getAdditionalFees()->getTotalAdditionalFees($feeName);
-                    $firstFee->target = 'order';
-                    $firstFee->target_id = $order->id;
-                    if (!$firstFee->save(false)) {
-                        $transaction->rollBack();
-                        return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
+        if ($payment->page === Payment::PAGE_CHECKOUT) {
+            $transaction = Order::getDb()->beginTransaction();
+            $orders = [];
+            try {
+                foreach ($payment->getOrders() as $key => $orderPayment) {
+                    $order = clone $orderPayment;
+                    $order->setAttributes($shippingParams);
+                    if (!empty($orderPayment->courierDetail)) {
+                        $order->courier_name = implode(' ', [$orderPayment->courierDetail['courier_name'], $orderPayment->courierDetail['service_name']]);
+                        $order->courier_service = $orderPayment->courierDetail['service_code'];
+                        $order->courier_delivery_time = implode(' ', [$orderPayment->courierDetail['min_delivery_time'], $orderPayment->courierDetail['max_delivery_time']]);
                     }
-                }
-                $updateOrderAttributes = [];
+                    $orderTotalDiscount = 0;
+                    unset($order['products']);
+                    unset($order['seller']);
+                    unset($order['saleSupport']);
+                    // 1 order
+                    $order->type_order = Order::TYPE_SHOP;
+                    $order->payment_type = $payment->payment_type;
+                    $order->customer_type = 'Retail';
+                    $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
+                    $order->total_paid_amount_local = 0;
 
-                // 4 products
-                foreach ($orderPayment->products as $paymentProduct) {
-                    $product = clone $paymentProduct;
-                    unset($product['productFees']);
-                    unset($product['category']);
-                    $product->order_id = $order->id;
-                    $product->quantity_purchase = null;
-                    /** Todo */
-                    $product->quantity_inspect = null;
+                    $order->total_promotion_amount_local = $order->discountAmount;
 
-                    $product->variation_id = null;
-                    $product->remove = 0;
-                    $product->version = '4.0';
+                    $order->total_intl_shipping_fee_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1];
 
-                    // 6. // step 4: create category for each item
-                    $category = $paymentProduct->category;
-                    $category = $category->safeCreate();
+                    $order->total_fee_amount_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees()[1];
 
-                    // 7. set category id for product
-                    $product->category_id = $category->id;
-                    // 8. set seller id for product
-                    $product->seller_id = $seller->id;
 
-                    // save total product discount here
-                    if (!$product->save(false)) {
+                    $order->total_final_amount_local = $orderPayment->getTotalFinalAmount();
+
+                    $order->payment_transaction_code = $payment->transaction_code;
+
+                    // 2 .seller
+                    $seller = $orderPayment->seller;
+                    $seller->portal = $orderPayment->portal;
+                    $seller = $seller->safeCreate();
+
+                    // 3. update seller for order
+                    $order->seller_id = $seller->id;
+                    $order->seller_name = $seller->seller_name;
+                    $order->seller_store = $seller->seller_link_store;
+
+                    $order->payment_provider = $payment->payment_provider_name;
+                    $order->payment_method = $payment->payment_method_name;
+                    $order->payment_bank = $payment->payment_bank_code;
+
+                    if ($shippingForm->receiver_address_id !== null) {
+                        $order->receiver_address_id = $shippingForm->receiver_address_id;
+                    }
+                    if (!$order->save(false)) {
                         $transaction->rollBack();
                         return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                     }
 
-                    foreach ($paymentProduct->productFees as $feeName => $productFee) {
-                        $fee = clone $productFee;
-                        $fee->target = 'product';
-                        $fee->target_id = $product->id;
-
-                        if (!$fee->save(false)) {
+                    foreach ($orderPayment->getAdditionalFees()->toArray() as $feeName => $arrayFee) {
+                        // luu tong
+                        $firstFee = $arrayFee[0];
+                        $firstFee = new TargetAdditionalFee($firstFee);
+                        list($firstFee->amount, $firstFee->local_amount) = $orderPayment->getAdditionalFees()->getTotalAdditionalFees($feeName);
+                        $firstFee->target = 'order';
+                        $firstFee->target_id = $order->id;
+                        if (!$firstFee->save(false)) {
                             $transaction->rollBack();
                             return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
                         }
                     }
+                    $updateOrderAttributes = [];
+
+                    // 4 products
+                    foreach ($orderPayment->products as $paymentProduct) {
+                        $product = clone $paymentProduct;
+                        unset($product['productFees']);
+                        unset($product['category']);
+                        $product->order_id = $order->id;
+                        $product->quantity_purchase = null;
+                        /** Todo */
+                        $product->quantity_inspect = null;
+
+                        $product->variation_id = null;
+                        $product->remove = 0;
+                        $product->version = '4.0';
+
+                        // 6. // step 4: create category for each item
+                        $category = $paymentProduct->category;
+                        $category = $category->safeCreate();
+
+                        // 7. set category id for product
+                        $product->category_id = $category->id;
+                        // 8. set seller id for product
+                        $product->seller_id = $seller->id;
+
+                        // save total product discount here
+                        if (!$product->save(false)) {
+                            $transaction->rollBack();
+                            return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
+                        }
+
+                        foreach ($paymentProduct->productFees as $feeName => $productFee) {
+                            $fee = clone $productFee;
+                            $fee->target = 'product';
+                            $fee->target_id = $product->id;
+
+                            if (!$fee->save(false)) {
+                                $transaction->rollBack();
+                                return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
+                            }
+                        }
+                    }
+                    $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id, 6);
+                    $updateOrderAttributes['total_final_amount_local'] = $orderPayment->getTotalFinalAmount() - $order->total_promotion_amount_local;
+                    $order->updateAttributes($updateOrderAttributes);
+                    $orders[$order->ordercode] = $order;
                 }
-                $updateOrderAttributes['ordercode'] = WeshopHelper::generateBinCode($order->id, 6);
-                $updateOrderAttributes['total_final_amount_local'] = $orderPayment->getTotalFinalAmount() - $order->total_promotion_amount_local;
-                $order->updateAttributes($updateOrderAttributes);
-                $orders[$order->ordercode] = $order;
+                $transaction->commit();
+                $payment->setOrders($orders);
+            } catch (Exception $exception) {
+                $transaction->rollBack();
+                Yii::error($exception, __METHOD__);
+                return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
             }
-            $transaction->commit();
-        } catch (Exception $exception) {
-            $transaction->rollBack();
-            Yii::error($exception, __METHOD__);
-            return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
         }
 
+
         // ToDo Push GA Checkout @Phuchc
-        $payment->setOrders($orders);
+
         $res = $payment->processPayment();
         $employee = new Employee();
-        $assign = $employee->getAssign();
-
+        $assign = $payment->page === Payment::PAGE_CHECKOUT ? $employee->getAssign($payment->getOrders()) : [];
+        if (!empty($assign)) {
+            $assign = array_shift($assign);
+        }
         $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         if ($res->success === false) {
             return $this->response(false, $res->message);
         }
-        if ($assign !== null) {
+        if (!empty($assign)) {
             $paymentTransaction->support_id = $assign->id;
         }
         /** @var  $fOrder Order */
@@ -320,13 +327,15 @@ class PaymentController extends BasePaymentController
             $childTransaction->service_code = $order->courier_service;
             $childTransaction->courier_delivery_time = $order->courier_delivery_time;
             $childTransaction->save(false);
-            if ($assign !== null) {
+            if (!empty($assign)) {
                 $order->sale_support_id = $assign->id;
                 $order->support_email = $assign->email;
                 $order->save(false);
             }
+            if ($order->cartId !== null) {
+                $order->removeCart();
+            }
 
-            $order->removeCart();
         }
 
         $time = sprintf('%.3f', microtime(true) - $start);

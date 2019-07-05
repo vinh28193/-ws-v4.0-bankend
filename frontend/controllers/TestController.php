@@ -357,10 +357,7 @@ JSON;
     public function actionSaleAssign()
     {
         $employee = new Employee();
-        @unlink($employee->getActiveRule()->saveFileName);
-        for ($index = 1; $index <= 500; $index++) {
-            var_dump($employee->getAssign());
-        }
+        var_dump($employee->getCustomerSupporter(1));
         die;
     }
 

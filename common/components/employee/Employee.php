@@ -42,13 +42,6 @@ class Employee extends BaseObject
     {
         if (empty($this->_supporters)) {
             $this->_supporters = $this->loadSupporterByRoles();
-//            $s = [];
-//            for ($i = 1;$i <= 4;$i++){
-//                $s[$i] = [
-//                    'name' => "Sale $i"
-//                ];
-//            }
-//            $this->_supporters = $s;
 
         }
         return $this->_supporters;
@@ -71,11 +64,42 @@ class Employee extends BaseObject
     }
 
     /**
-     * @return User
+     * @param Order[] $orders
+     * @param null $customerId
+     * @return User[]|null
      */
-    public function getAssign()
+    public function getAssign($orders, $customerId = null)
     {
-        return $this->getActiveRule()->getActiveSupporter();
+        if (!is_array($orders)) {
+            $orders = [$orders];
+        }
+        if ($customerId === null && ($customer = Yii::$app->user->identity) !== null) {
+            $customerId = $customer->getId();
+        }
+
+        if ($customerId !== null && ($sp = $this->getCustomerSupporter($customerId)) !== false) {
+            if (isset($this->getSupporters()[$sp]) && ($sp = $this->getSupporters()[$sp]) !== null) {
+                $this->getActiveRule()->markAssigned($sp, $orders);
+                return [$sp];
+            }
+        }
+        return $this->getActiveRule()->getActiveSupporters($orders);
+    }
+
+
+    public function getCustomerSupporter($customerId)
+    {
+        $q = new Query();
+        $q->select(['o.sale_support_id']);
+        $q->from(['o' => Order::tableName()]);
+        $q->where([
+            'AND',
+            ['is not', 'o.sale_support_id', new Expression('NULL')],
+            ['o.customer_id' => $customerId]
+        ]);
+        $q->limit(1);
+        $supporter = $q->column(Order::getDb());
+        return !empty($supporter) && isset($supporter[0]) ? $supporter[0] : false;
     }
 
     /**

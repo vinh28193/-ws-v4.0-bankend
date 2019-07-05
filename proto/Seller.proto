@@ -32,8 +32,6 @@ message CreateShipmentResponse {
     string  Data        = 3; //chuoi json dumps Data
 }
 
-
-
 message SyncProductRequest {
     string Data = 1;
 }
@@ -43,14 +41,10 @@ message SyncProductResponse {
     string  Message             = 2;
 }
 
-
-
 service SellerService {
-
     // grpc create topup from weshop
     rpc WsCreateCahin (WsCreateCahinRequest) returns (WsCreateCahinResponse) {};
 	rpc CreateShipment (CreateShipmentRequest) returns (CreateShipmentResponse) {};
 	rpc SyncProduct(SyncProductRequest) returns (SyncProductResponse) {};
-
 
 }

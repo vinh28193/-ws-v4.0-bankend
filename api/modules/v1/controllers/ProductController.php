@@ -77,6 +77,9 @@ class ProductController extends BaseApiController
             if (isset($post['quantityP'])) {
                 $product->quantity_purchase =  $post['quantityP'];
             }
+            if (isset($post['policyPrice'])) {
+                $product->price_policy = $post['policyPrice'];
+            }
             if (isset($post['quantityC'])) {
                 $product->quantity_customer =  (int)$post['quantityC'];
             }

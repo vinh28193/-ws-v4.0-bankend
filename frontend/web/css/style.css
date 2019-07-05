@@ -2148,8 +2148,8 @@ a:hover {
     display: table-cell;
     text-align: center;
     vertical-align: middle;
-    width: 470px;
-    height: 168px;
+    /*width: 470px;*/
+    /*height: 168px;*/
 }
 
 .buy-amazon .right .middle .banner-1 a img {
@@ -2170,13 +2170,13 @@ a:hover {
     display: table-cell;
     text-align: center;
     vertical-align: middle;
-    width: 470px;
-    height: 168px;
+    /*width: 470px;*/
+    /*height: 168px;*/
 }
 
 .buy-amazon .right .middle .banner-2 a img {
-    max-width: 470px;
-    max-height: 168px;
+    /*max-width: 470px;*/
+    /*max-height: 168px;*/
 }
 
 .buy-amazon .right .bottom {
@@ -2268,7 +2268,8 @@ a:hover {
     display: table-cell;
     text-align: center;
     vertical-align: middle;
-    width: 377px;
+    width: 100%;
+    /*width: 377px;*/
     height: 395px;
 }
 
@@ -2297,8 +2298,8 @@ a:hover {
 }
 
 .buy-amazon.buy-ebay .right .bottom .banner-2 a img {
-    width: 187px;
-    height: 196px;
+    /*width: 187px;*/
+    /*height: 196px;*/
 }
 
 .buy-amazon.buy-ebay .right .bottom .banner-3 {
@@ -2317,8 +2318,8 @@ a:hover {
     text-align: center;
     vertical-align: middle;
     right: -120px;
-    width: 376px;
-    height: 196px;
+    /*width: 376px;*/
+    /*height: 196px;*/
 }
 
 /*.buy-amazon.buy-ebay .right .bottom .banner-3 a img {*/
@@ -2346,8 +2347,8 @@ a:hover {
 }
 
 .buy-amazon.buy-ebay .right .bottom .banner-4 a img {
-    max-width: 187px;
-    height: 196px;
+    /*max-width: 187px;*/
+    /*height: 196px;*/
 }
 
 .buy-amazon.buy-ebay .right .bottom .banner-5 {
@@ -2369,8 +2370,8 @@ a:hover {
     text-align: center;
     vertical-align: middle;
     right: -120px;
-    width: 376px;
-    height: 196px;
+    /*width: 376px;*/
+    /*height: 196px;*/
 }
 
 .buy-amazon.buy-ebay .right .bottom .banner-5 a img {

@@ -131,10 +131,17 @@ class ShippingController extends CheckoutController
         $shippingForm->setDefaultValues();
 
         $page = Payment::PAGE_CHECKOUT;
-        $type = ArrayHelper::getValue($queryParams, 'ref', CartSelection::TYPE_SHOPPING);
+        $type = ArrayHelper::getValue($queryParams, 'ref');
         $code = ArrayHelper::getValue($queryParams, 'code');
+
+        $payment = new Payment([
+            'page' => $page,
+            'uuid' => $uuid,
+            'type' => $type
+        ]);
+
         $orders = [];
-        if ($code === null && CartSelection::isValidType($type) && ($keys = CartSelection::getSelectedItems($type)) !== null && !empty($keys)) {
+        if ($type !== null && CartSelection::isValidType($type) && ($keys = CartSelection::getSelectedItems($type)) !== null && !empty($keys)) {
             foreach ($keys as $key) {
                 $order = new Order();
                 $order->checkoutType = $type;
@@ -146,10 +153,10 @@ class ShippingController extends CheckoutController
                 $orders[$order->cartId] = $order;
             }
             $shippingForm->setDefaultValues();
-        } elseif (!CartSelection::isValidType($type) && $code !== null) {
-            $page = Payment::PAGE_BILLING;
+        } elseif ($code !== null) {
+            $payment->page = Payment::PAGE_BILLING;
             if (strpos($code, 'PM', 0) !== false && ($parent = PaymentService::findParentTransaction($code))) {
-                $lastOrder = null;
+                $payment->transaction_code = $code;
                 foreach ($parent->childPaymentTransaction as $childPaymentTransaction) {
                     if (($orderParam = $childPaymentTransaction->order) !== null) {
                         $order = new Order($orderParam->getAttributes());
@@ -159,9 +166,10 @@ class ShippingController extends CheckoutController
                     }
                 }
 
-            } else if (($child = PaymentService::findChildTransaction($code)) !== null) {
-                $order = new Order($child->order->getAttributes());
-                $order->getAdditionalFees()->loadFormActiveRecord($child->order);
+            } else if (($order = Order::findOne(['ordercode' => $code])) !== null) {
+                $payment->transaction_code = $order->payment_transaction_code;
+                $order = new Order($order->getAttributes());
+                $order->getAdditionalFees()->loadFormActiveRecord($order);
                 $orders[$order->ordercode] = $order;
                 $shippingForm->loadAddressFormOrder($order);
             }
@@ -170,11 +178,7 @@ class ShippingController extends CheckoutController
         if (count($orders) === 0) {
             throw new NotFoundHttpException("Not found");
         }
-        $payment = new Payment([
-            'page' => $page,
-            'uuid' => $uuid,
-            'type' => $type
-        ]);
+
         $payment->initDefaultMethod();
         $payment->setOrders($orders);
 

@@ -12,9 +12,10 @@ use yii\helpers\ArrayHelper;
 use yii\web\JsExpression;
 use frontend\modules\payment\models\ShippingForm;
 use yii\helpers\Inflector;
+use frontend\modules\payment\Payment;
 
 /* @var yii\web\View $this */
-/* @var frontend\modules\payment\Payment $payment */
+/* @var Payment $payment */
 /* @var ShippingForm $shippingForm */
 /* @var array $provinces */
 
@@ -101,11 +102,13 @@ $js = <<< JS
         // send data to actionSave by ajax request.
         return false; // Cancel form submitting.
     });
-    $(document).ready(function () {
-       ws.startForm();
-    });
+  
 JS;
 $this->registerJs($js);
+
+if($payment->page === Payment::PAGE_CHECKOUT){
+
+}
 
 ?>
 <style type="text/css">
@@ -141,7 +144,7 @@ $this->registerJs($js);
             'validateOnChange' => false,
             'validateOnBlur' => false,
             'validateOnType' => false,
-            'validationUrl' => '/checkout/shipping/validate',
+//            'validationUrl' => '/checkout/shipping/validate',
         ]);
         echo Html::activeHiddenInput($shippingForm, 'customer_id');
         echo Html::activeHiddenInput($shippingForm, 'enable_buyer');
@@ -333,29 +336,34 @@ $this->registerJs($js);
         ?>
     </div>
 </div>
+<?php var_dump($payment->page); ?>
 <?php foreach ($payment->getOrders() as $order): ?>
-    <div class="card card-checkout card-order" data-key="<?= $order->cartId ?>">
+    <div class="card card-checkout card-order"
+         data-key="<?= $payment->page === Payment::PAGE_CHECKOUT ? $order->cartId : $order->ordercode; ?>">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card-title seller">
                         <?php
                         $seller = $order->seller;
+                        echo Yii::t('frontend', '{portal} store: {store} (count) items', [
+                            'portal' => strtoupper($seller->portal) === 'EBAY' ? 'eBay' : Inflector::camelize(strtolower($seller->portal)),
+                            'store' => Html::tag('span', $seller->seller_name, ['style' => 'color: #2b96b6;']),
+                            'count' => count($order->products)
+                        ])
                         ?>
-                        <?= $seller->portal; ?> store: <a
-                                href="<?= $seller->seller_link_store !== null ? $seller->seller_link_store : '#'; ?>"><?= $seller->seller_name; ?></a>
-                        (<?= count($order->products); ?> items)
-                        <!--                        <i class="fa fa-user"></i>--><?php //echo Yii::t('frontend', 'Amount needed to prepay'); ?>
                     </div>
                 </div>
             </div>
             <div class="product-header row pt-2">
-                <div class="col-md-4"></div>
-                <div class="col-md-2 text-center"><?= Yii::t('frontend', 'Price'); ?></div>
-                <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Quantity'); ?></div>
-                <div class="col-md-2 text-center"><?= Yii::t('frontend', 'Tax/Domestic shipping'); ?></div>
-                <div class="col-md-1 text-center"><?= Yii::t('frontend', 'Purchase Fee'); ?></div>
-                <div class="col-md-2 text-center"><?= Yii::t('frontend', 'Total amount'); ?></div>
+                <div class="col-md-1 text-right"></div>
+                <div class="col-md-3 text-left"><?= Yii::t('frontend', 'Product name'); ?></div>
+                <div class="col-md-1 text-right"><?= Yii::t('frontend', 'Price'); ?></div>
+                <div class="col-md-2 text-right"><?= Yii::t('frontend', 'Quantity'); ?></div>
+                <div class="col-md-2 text-right"><?= Yii::t('frontend', 'Tax/Domestic shipping'); ?></div>
+                <div class="col-md-1 text-right"><?= Yii::t('frontend', 'Purchase Fee'); ?></div>
+                <div class="col-md-2 text-right"><?= Yii::t('frontend', 'Total amount'); ?></div>
+
             </div>
             <div class="row product-list">
                 <?php foreach ($order->products as $product): ?>
@@ -370,14 +378,14 @@ $this->registerJs($js);
                                      alt="<?= $product->product_name; ?>" width="80%" height="100px"
                                      title="<?= $product->product_name; ?>">
                             </div>
-                            <div class="col-md-3 text-center pt-4">
+                            <div class="col-md-3 text-left pt-4">
                                 <?= $product->product_name; ?>
                             </div>
-                            <div class="col-md-2 text-center pt-4">
+                            <div class="col-md-1 text-right pt-4">
                                 <?php echo $storeManager->showMoney($product->price_amount_local); ?>
                             </div>
-                            <div class="col-md-1 text-center pt-4">x <?php echo $product->quantity_customer; ?></div>
-                            <div class="col-md-2 text-center pt-4">
+                            <div class="col-md-2 text-right pt-4">x <?php echo $product->quantity_customer; ?></div>
+                            <div class="col-md-2 text-right pt-4">
                                 <?php
                                 $usPrice = 0;
                                 foreach (['tax_fee', 'shipping_fee'] as $feeUs) {
@@ -391,14 +399,14 @@ $this->registerJs($js);
                                 echo $storeManager->showMoney($usPrice);
                                 ?>
                             </div>
-                            <div class="col-md-1 text-center pt-4">
+                            <div class="col-md-1 text-right pt-4">
                                 <?php
                                 $purchaseFee = 0;
                                 $purchaseFee = isset($productFees['purchase_fee']) ? $productFees['purchase_fee'][0]->local_amount : $purchaseFee;
                                 echo $storeManager->showMoney($purchaseFee);
                                 ?>
                             </div>
-                            <div class="col-md-2 text-center pt-4 text-danger">
+                            <div class="col-md-2 text-right pt-4 text-danger">
                                 <?php
                                 echo $storeManager->showMoney($product->total_final_amount_local);
                                 ?>
@@ -410,8 +418,8 @@ $this->registerJs($js);
                 <?php endforeach; ?>
             </div>
             <div class="row additional-fee">
-                <div class="col-md-7 col-sm-12"></div>
-                <div class="col-md-5 col-sm-12">
+                <div class="col-md-9 col-sm-12"></div>
+                <div class="col-md-3 col-sm-12">
                     <div class="additional-list">
                         <!--                        <div class="dropdown courier-dropdown">-->
                         <!--                            <button class="btn btn-secondary dropdown-toggle" type="button"-->
@@ -433,7 +441,7 @@ $this->registerJs($js);
                         <!--                        </div>-->
                         <table class="table table-borderless table-fee">
                             <tr data-role="fee" data-fee="international_shipping_fee">
-                                <th class="header"><?= Yii::t('frontend', 'Shipping fee'); ?>
+                                <td class="header"><?= Yii::t('frontend', 'Shipping fee'); ?>
                                     <?php
                                     $tooltipMessage = Yii::t('frontend', 'for {weight} {dram}', [
                                         'weight' => $order->total_weight_temporary,
@@ -443,19 +451,20 @@ $this->registerJs($js);
                                     <i class="la la-question-circle code-info" data-toggle="tooltip"
                                        data-placement="top" title="<?= $tooltipMessage; ?>"
                                        data-original-title="<?= $tooltipMessage; ?>"></i>
-                                </th>
-                                <td class="value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
+                                </td>
+                                <td class="value text-danger"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
                             </tr>
                             <tr class="courier">
-                                <th class="header"><?= Yii::t('frontend', 'Estimated time') ?></th>
+                                <td class="header"><?= Yii::t('frontend', 'Estimated time') ?></td>
                                 <td class="text-right">
                                     <?php echo Yii::t('frontend', 'Please select your address to suggest') ?>
                                 </td>
                             </tr>
                             <tr class="discount-detail">
-                                <th class="header"><?= Yii::t('frontend', 'Coupon code'); ?> <span
+                                <td class="header">
+                                    <?= Yii::t('frontend', 'Coupon code'); ?> <span
                                             class="coupon-code"></span>
-                                </th>
+                                </td>
                                 <td class="value">
                                     <div class="input-group discount-input" style="margin-bottom: 1rem">
                                         <input type="text" class="form-control" name="couponCode">
@@ -473,12 +482,12 @@ $this->registerJs($js);
                                 </td>
                             </tr>
                             <tr class="discount" style="display: none">
-                                <th><?= Yii::t('frontend', 'Discount amount'); ?></th>
+                                <td><?= Yii::t('frontend', 'Discount amount'); ?></td>
                                 <td><?= $storeManager->showMoney($order->discountAmount); ?></td>
                             </tr>
                             <tr class="final-amount">
-                                <th class="header"><?= Yii::t('frontend', 'Amount must to pre-pay') ?></th>
-                                <td class="value"
+                                <td class="header"><?= Yii::t('frontend', 'Amount must to pre-pay') ?></td>
+                                <td class="value text-danger"
                                     data-origin="<?= $order->getTotalFinalAmount() ?>"><?= $storeManager->showMoney($order->getTotalFinalAmount()); ?></td>
                             </tr>
                         </table>
