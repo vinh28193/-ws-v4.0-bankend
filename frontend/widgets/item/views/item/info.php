@@ -130,7 +130,7 @@ $userCookies->setUser();
                     </td>
                     <td>
                         <ul class="list-dot">
-                            <li><?= Yii::t('frontend','Weight: <span id="shipping_weight">{shipping_weight}Kg</span> <i class="la la-question-circle" title="{shipping_weight} is temporary weight."></i>',['shipping_weight' => $item->shipping_weight ]) ?></li>
+                            <li><?= Yii::t('frontend','Weight: <span id="shipping_weight">{shipping_weight}kg</span> <i class="la la-question-circle" title="{shipping_weight} is temporary weight."></i>',['shipping_weight' => $item->shipping_weight ]) ?></li>
                             <li><?= Yii::t('frontend','Internal Shipping fee: <span id="shipping_fee">{shipping_fee}</span>',['shipping_fee' => $userCookies->province_id && $userCookies->district_id ? $internal_shipping_fee : '<a href="javascript:void();" onclick="ws.showModal(\'modal-address\')">Click here</a>']) ?></li>
                             <?php if ($userCookies->checkAddress()){ ?>
                                 <li>

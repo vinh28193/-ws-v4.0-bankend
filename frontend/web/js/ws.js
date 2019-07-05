@@ -316,7 +316,6 @@ var ws = ws || (function ($) {
             if (prevHandler === undefined) {
                 eventHandlers[id] = {};
             }
-            console.log('event: "' + event + '" will be trigger with selector: "' + selector + '"');
             $(document).on(event, selector, callback);
             eventHandlers[id][type] = {event: event, selector: selector};
         },
@@ -386,6 +385,62 @@ var ws = ws || (function ($) {
                     }
                 }
             });
+        },
+        save_address: function () {
+            var fullName = $('#shipping-full_name').val();
+            var phone = $('#shipping-phone').val();
+            var email = $('#shipping-email').val();
+            var district = $('#shipping_district_id').val();
+            var district = $('#shipping_district_id').val();
+        },
+        province_change: function(id_province, id_district){
+            var txt = '';
+            district_data.filter(function (d) {
+                if(d.province_id == $('#'+id_province).val()){
+                    txt += '<option value="'+d.id+'">'+d.name+'</option>';
+                }
+            });
+            $('#'+id_district).html(txt);
+            $('#'+id_district).trigger('change');
+            // ws.payment.calculatorShipping();
+        },
+        district_change: function(id_district, id_post_code , caculatorShipping = false){
+            if(store_id === 7){
+                var district = $('#'+id_district).val();
+                var zipcode = zipcode_data.filter(z => z.district_id === district);
+                if(zipcode && zipcode.length > 0){
+                    $('#'+id_post_code).val(zipcode[0].zip_code);
+                }else {
+                    ws.notifyInfo('Cannot find zipcode from your district ');
+                    $('#' + id_post_code).val('');
+                    return false;
+                }
+            }
+            if(caculatorShipping){
+                ws.payment.calculatorShipping();
+            }
+        },
+        zipcode_keyup: function(id_zipcode, id_list_zipcode){
+            var txt = '';
+            var count = 0;
+            var zipcode = $('#'+id_zipcode).val();
+            zipcode_data.filter(function (z) {
+                if(count < 20 && (z.zip_code.indexOf(zipcode) > -1 || !zipcode )){
+                    count++;
+                    txt += "<option value='"+z.zip_code+"'>"+z.label+"</option>";
+                }
+            });
+            $('#'+id_list_zipcode).html(txt);
+        },
+        zipcode_Change: function(id_zipcode, province_id, district_id){
+            var zipcode = zipcode_data.filter(z => z.zip_code === $('#' + id_zipcode).val());
+            if(zipcode && zipcode.length > 0){
+                $('#'+province_id).val(zipcode[0].province_id).trigger('change');
+                $('#'+district_id).val(zipcode[0].district_id).trigger('change');
+            }else {
+                ws.notifyInfo('Zip code '+$('#' + id_zipcode).val()+' not support! Please change zip code');
+                $('#' + id_zipcode).val('');
+            }
         },
         showModal: function (id) {
           $('#'+id).modal();
