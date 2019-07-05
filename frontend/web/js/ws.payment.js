@@ -111,7 +111,7 @@ ws.payment = (function ($) {
                 window.scrollTo(0, 0);
             });
             $('#shippingform-buyer_phone').keyup(function () {
-                ws.shippingCollection('buyer', pub.get('type'), pub.get('cartIds').keys())
+                ws.shippingCollection('buyer', pub.get('type'), pub.get('orders').keys())
             });
             $('#loginToCheckout').click(function () {
                 ws.loading(true);
