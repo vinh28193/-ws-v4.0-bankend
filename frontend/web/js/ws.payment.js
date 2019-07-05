@@ -86,7 +86,7 @@ ws.payment = (function ($) {
 
             setTimeout(function () {
                 pub.calculatorShipping();
-                console.log(pub.payment);
+                //console.log(pub.payment);
             }, 1000);
 
             $('input[name=check-member]').click(function () {
@@ -111,7 +111,7 @@ ws.payment = (function ($) {
                 window.scrollTo(0, 0);
             });
             $('#shippingform-buyer_phone').keyup(function () {
-                ws.shippingCollection('buyer', pub.get('type'), pub.get('orders').keys())
+                ws.shippingCollection('buyer', ws.payment.get('type'), ws.payment.get('orders').keys())
             });
             $('#loginToCheckout').click(function () {
                 ws.loading(true);
@@ -265,7 +265,7 @@ ws.payment = (function ($) {
             return pub.payment[name] || defaultValue;
         },
         selectMethod: function (providerId, methodId, bankCode, checkRequire = false) {
-            console.log('selected providerId:' + providerId + ' methodId:' + methodId + ' bankCode:' + bankCode);
+            //console.log('selected providerId:' + providerId + ' methodId:' + methodId + ' bankCode:' + bankCode);
             pub.payment.payment_provider = providerId;
             pub.payment.payment_method = methodId;
             pub.payment.payment_bank_code = bankCode;
@@ -296,7 +296,7 @@ ws.payment = (function ($) {
         },
         registerMethods: function ($methods) {
             pub.methods = $methods;
-            console.log('register ' + pub.methods.length + ' methods');
+            //console.log('register ' + pub.methods.length + ' methods');
         },
         calculatorShipping: function () {
             if (!pub.filterShippingAddress(false)) {
@@ -315,7 +315,7 @@ ws.payment = (function ($) {
                 type: 'post',
                 data: {payment: pub.payment, shipping: pub.shipping},
                 success: function (response) {
-                    console.log(response);
+                    //console.log(response);
                     if (response.success) {
                         var orders = response.data;
                         orderCouriers = orders;
@@ -348,7 +348,7 @@ ws.payment = (function ($) {
             }, true);
         },
         installmentBankChange: function (code) {
-            console.log('selected bank :' + code);
+            //console.log('selected bank :' + code);
             pub.payment.installment_bank = code;
             pub.payment.installment_method = 'VISA';
             var currentBank = $.grep(pub.installmentParam.banks, function (x) {
@@ -645,7 +645,8 @@ ws.payment = (function ($) {
                         $otherMethod.modal('hide');
                     }
                     if (data.cancelUrl !== null) {
-                        window.history.replaceState({url: data.cancelUrl}, window.document.title, data.cancelUrl);
+                        var relativeUrl = ws.relativeUrl(data.cancelUrl);
+                        history.replaceState({url: relativeUrl}, window.document.title, relativeUrl);
                     }
                     if (redirectType === 'POPUP') {
                         if (redirectMethod === 'WALLET') {
@@ -748,7 +749,7 @@ ws.payment = (function ($) {
     };
     var initInstallmentBankView = function (banks) {
         pub.installmentParam.banks = banks;
-        console.log(banks);
+        //console.log(banks);
         var htmlBank = [];
         $.each(banks, function (index, bank) {
             var iActive = index === 0;

@@ -28,7 +28,6 @@ var ws = ws || (function ($) {
                         orgBeforeSendHandler(xhr, settings);
                     }
                 };
-
                 var orgErrorHandler = options.error;
                 options.error = function (xhr, textStatus, errorThrown) {
                     if (!xhr) {
@@ -38,7 +37,7 @@ var ws = ws || (function ($) {
                     if (redirect && xhr.getResponseHeader('X-PJAX-REDIRECT-URL') !== '' && xhr.getResponseHeader('X-PJAX-REDIRECT-URL') !== null) {
                         options.url = xhr.getResponseHeader('X-PJAX-REDIRECT-URL');
                         options.replace = true;
-                        console.log('Handled redirect to: ' + options.url);
+                        //console.log('Handled redirect to: ' + options.url);
                         $.pjax(options);
                     } else {
                         orgErrorHandler(xhr, textStatus, errorThrown);
@@ -214,6 +213,11 @@ var ws = ws || (function ($) {
         redirect: function (href) {
             document.location.href = href;
         },
+        relativeUrl: function (url) {
+            var split = url.split('/');
+            var host = split[0] + '//' + split[2];
+            return url.replace(host, '');
+        },
         t: function (message, params = []) {
             var hash = message;
             if (typeof (i18nMessages[hash]) !== 'undefined') {
@@ -269,7 +273,7 @@ var ws = ws || (function ($) {
             }
         },
         showMoreFilter: function (element) {
-            console.log($(element).html());
+            //console.log($(element).html());
             var tagert = $(element).attr('data-target');
             console.log(tagert);
             if (!$('.' + tagert).hasClass('hide-filter')) {
@@ -316,7 +320,7 @@ var ws = ws || (function ($) {
             if (prevHandler === undefined) {
                 eventHandlers[id] = {};
             }
-            console.log('event: "' + event + '" will be trigger with selector: "' + selector + '"');
+            // console.log('event: "' + event + '" will be trigger with selector: "' + selector + '"');
             $(document).on(event, selector, callback);
             eventHandlers[id][type] = {event: event, selector: selector};
         },
@@ -404,7 +408,7 @@ var ws = ws || (function ($) {
                     type: 'POST',
                     data: {
                         data: {
-                            type:cartType,
+                            type: cartType,
                             cartIds: cartIds,
                             params: {
                                 phone: phone,
@@ -472,7 +476,7 @@ $('input.searchBoxInput').change(function () {
     ws.browse.searchNew(this, '$url');
 });
 $('datalist#listSuggestSearch').keyup(function () {
-    console.log('Key up: ' + event.key);
+    //console.log('Key up: ' + event.key);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
     }
