@@ -388,9 +388,9 @@ JSON;
         ]);
     }
 
-    public function actionCheckout($type, $page = 'Checkout')
+    public function actionCheckout()
     {
-        var_dump(['$page' => $page, '$type' => $type]);
+        echo PaymentService::createCheckoutUrl('buynow',123);
         die;
     }
 }

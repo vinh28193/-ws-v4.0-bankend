@@ -174,33 +174,7 @@ class Payment extends Model
      */
     public function setOrders($orders)
     {
-        $this->_orders = [];
-        foreach ($orders as $order) {
-            if (!is_object($order)) {
-                if (!isset($order['checkoutType'])) {
-                    $order['checkoutType'] = $this->type;
-                }
-                if (!isset($order['uuid'])) {
-                    $order['uuid'] = $this->uuid;
-                }
-                if (isset($order['totalFinalAmount'])) {
-                    unset($order['totalFinalAmount']);
-                }
-                if (isset($order['totalAmountLocal'])) {
-                    unset($order['totalAmountLocal']);
-                }
-                $order = new Order($order);
-                if ($this->page === self::PAGE_CHECKOUT) {
-                    if ($order->createOrderFromCart() === false) {
-                        $this->errors[] = $order->getFirstErrors();
-                        continue;
-                    }
-                } elseif ($this->page === self::PAGE_BILLING) {
-                    $order = Order::findOne(['ordercode' => $order->ordercode]);
-                }
-            }
-            $this->_orders[] = $order;
-        }
+        $this->_orders = $orders;
 
     }
 

@@ -8,6 +8,7 @@ use common\components\GetUserIdentityTrait;
 use common\helpers\WeshopHelper;
 use common\models\Address;
 use common\products\BaseProduct;
+use frontend\modules\payment\models\Order;
 use frontend\modules\payment\models\ShippingForm;
 use frontend\modules\payment\Payment;
 use Yii;
@@ -27,7 +28,28 @@ class AdditionalFeeServiceController extends BasePaymentController
             return $this->response(false, "can not get pickup warehouse");
         }
         $isId = $store->country_code === 'ID';
-        $payment = new Payment($bodyParams['payment']);
+        $paymentParams = $bodyParams['payment'];
+        if (($orderParams = ArrayHelper::remove($paymentParams, 'orders')) === null) {
+            return $this->response(false, "can not get form null orders");
+        }
+
+        $payment = new Payment($paymentParams);
+        $orders = [];
+        foreach ($orderParams as $orderParam) {
+            if (isset($orderParam['totalFinalAmount'])) {
+                unset($orderParam['totalFinalAmount']);
+            }
+            if (isset($orderParam['totalAmountLocal'])) {
+                unset($orderParam['totalAmountLocal']);
+            }
+            $order = new Order($orderParam);
+            if ($order->cartId !== null && $order->createOrderFromCart() !== false) {
+                $orders[$order->cartId] = $order;
+            } else if ($order->ordercode !== null && ($order = Order::findOne(['ordercode' => $order->ordercode])) !== null) {
+                $orders[$order->ordercode] = $order;
+            }
+        }
+        $payment->setOrders($orders);
         $shippingForm = new ShippingForm($bodyParams['shipping']);
         $shippingForm->ensureReceiver();
         $ship_to = [
