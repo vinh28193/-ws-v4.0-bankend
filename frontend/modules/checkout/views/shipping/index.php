@@ -203,7 +203,6 @@ JS;
                         //                        ])->label(Yii::t('frontend', 'Province'));
 
                         echo $form->field($shippingForm, 'buyer_province_id')->dropDownList($shippingForm->getProvinces())->label(Yii::t('frontend', 'Province'));
-
                         echo $form->field($shippingForm, 'buyer_district_id')->dropDownList(SystemDistrict::selectData($shippingForm->buyer_province_id ? $shippingForm->buyer_province_id : array_key_first($shippingForm->getProvinces())))->label(Yii::t('frontend', 'District'));
                         //                        echo Html::hiddenInput('hiddenBuyerDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenBuyerDistrictId']);
                         //

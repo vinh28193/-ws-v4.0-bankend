@@ -66,8 +66,8 @@ class ConfirmRule extends BaseRule
         $currentAssign = $this->getCurrentAssign();
         $totalAssigned = ArrayHelper::getValue($currentAssign, 'total', 0);
         $assigned = ArrayHelper::getValue($currentAssign, 'assigned', []);
-        if (!isset($assigned[$spId])) {
-            $assigned[$spId] = 0;
+        if (empty($assigned) || !isset($assigned[$spId])) {
+            $assigned[$spId] = $count;
         }
         $totalAssigned += $count;
         $value = $assigned[$spId];
@@ -107,7 +107,7 @@ class ConfirmRule extends BaseRule
         $assigned = ArrayHelper::getValue($currentAssign, 'assigned', []);
         $calculator = [];
         foreach ($results as $id => $rate) {
-            if (!isset($assigned[$id])) {
+            if (empty($assigned) || !isset($assigned[$id])) {
                 $assigned[$id] = 0;
             }
             //(Lấy số thứ tự đơn hiện tại - tổng số đơn đã được nhận )* tỷ lệ => lớn nhất thì giao

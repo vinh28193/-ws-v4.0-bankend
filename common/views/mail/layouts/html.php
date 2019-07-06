@@ -6,9 +6,9 @@ use yii\helpers\Html;
 /* @var $message \yii\mail\MessageInterface the message being composed */
 /* @var $content string main view render result */
 $domain = Yii::$app->request->hostInfo;
-if(YII_ENV == 'prod'){
-    $domain =   str_replace(['http://','https"//'],'',$domain);
-}
+//if(YII_ENV == 'prod'){
+//    $domain =   str_replace(['http://','https"//'],'',$domain);
+//}
 
 ?>
 <?php $this->beginPage() ?>

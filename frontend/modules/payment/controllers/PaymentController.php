@@ -298,7 +298,7 @@ class PaymentController extends BasePaymentController
         $res = $payment->processPayment();
         $employee = new Employee();
         $assign = $payment->page === Payment::PAGE_CHECKOUT ? $employee->getAssign($payment->getOrders()) : [];
-        if (!empty($assign)) {
+        if (!empty($assign) && isset($assign[0])) {
             $assign = array_shift($assign);
         }
         $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
@@ -318,7 +318,7 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->save(false);
         // Todo remove cart after create payment success
 
-        foreach ($orders as $order) {
+        foreach ($payment->getOrders() as $order) {
             /** @var  $order Order */
             $childTransaction = clone $paymentTransaction;
             $childTransaction->id = null;

@@ -72,7 +72,7 @@ if ($userCookie->checkAddress()) {
                 if(YII_ENV == 'prod'){
                     $domain =   str_replace(['http://','https"//'],'',$domain);
                 }
-                echo Html::img($domain); ?>
+                echo Html::img(Url::to('/images/logo/weshop-01.png', true)); ?>
             </a>
         </div>
         <div class="shipping-header-box">
