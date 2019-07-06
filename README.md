@@ -1039,3 +1039,7 @@ BOXME_GRPC_SERVICE_OPS=10.130.111.53:50059
             'schemaCacheDuration' => 7200,
             'schemaCache' => 'cache'
         ],
+
+
+#-------------Select 2 Ajax Zipcode ----------------
+https://bitbucket.org/weshopasia/weshop-v4.0-api/commits/e2ff96da59b64bca41dd9b5eb175ab514f464111
