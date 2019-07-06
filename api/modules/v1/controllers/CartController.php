@@ -64,6 +64,10 @@ class CartController extends BaseApiController
             $model->andWhere(['value.portal' => $params['portal']]);
         }
 
+        if (isset($params['store']) && !empty($params['store'])) {
+            $model->andWhere(['value.store_id' => (int)$params['store']]);
+        }
+
         if (isset($params['saleID']) && !empty($params['saleID'])) {
             $model->andWhere(['value.sale_support_id' => $params['saleID']]);
         }

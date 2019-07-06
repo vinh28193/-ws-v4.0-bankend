@@ -35,6 +35,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
 
     public $us_ship;
 
+    public $custom_fee;
 
     public function attributes()
     {
@@ -106,15 +107,20 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             }
 
             if ($this->us_ship !== null && $this->us_ship !== '' && !WeshopHelper::compareValue($this->us_ship, $this->_additionalFees->getTotalAdditionalFees('shipping_fee')[0])) {
-                $this->_additionalFees->remove('shipping_fee', $this->us_ship);
+                $this->_additionalFees->remove('shipping_fee');
                 $this->_additionalFees->withCondition($this, 'shipping_fee', floatval($this->us_ship));
                 $hasChange = true;
             }
 
             if ($this->us_tax !== null && $this->us_tax !== '' && !WeshopHelper::compareValue($this->us_tax, $this->_additionalFees->getTotalAdditionalFees('tax_fee')[0])) {
-                $this->_additionalFees->remove('tax_fee', $this->us_tax);
+                $this->_additionalFees->remove('tax_fee');
                 $this->_additionalFees->withCondition($this, 'tax_fee', floatval($this->us_tax));
                 $hasChange = true;
+            }
+
+            if ($this->custom_fee !== null && $this->custom_fee !== '' && !WeshopHelper::compareValue($this->custom_fee, $this->_additionalFees->getTotalAdditionalFees('custom_fee')[0])) {
+                $this->_additionalFees->remove('custom_fee');
+                $this->_additionalFees->withCondition($this, 'custom_fee', floatval($this->custom_fee));
             }
 
             if ($hasChange || $totalOrigin = $this->getTotalOrigin() > 0) {

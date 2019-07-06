@@ -4,15 +4,15 @@
 namespace api\modules\v1\controllers;
 
 
-use common\models\Order;
-use common\modelsMongo\AdditionalFeeLog;
-use common\modelsMongo\OrderUpdateLog;
-use Yii;
 use api\controllers\BaseApiController;
 use api\modules\v1\models\AdditionalFeeFrom;
 use common\helpers\WeshopHelper;
 use common\models\db\TargetAdditionalFee;
+use common\models\Order;
 use common\models\Product;
+use common\modelsMongo\OrderUpdateLog;
+use Yii;
+use yii\helpers\ArrayHelper;
 
 class AdditionalController extends BaseApiController
 {
@@ -64,10 +64,11 @@ class AdditionalController extends BaseApiController
                 return $this->response(false, "can not resolved empty fee for product {$form->target_id}");
             }
             $additionalFees = $form->getAdditionalFees();
+            $keys = [];
             foreach ($productFees as $productFee) {
                 /** @var  $productFee TargetAdditionalFee */
                 list($amount, $local) = $form->getAdditionalFees()->getTotalAdditionalFees($productFee->name);
-
+                $keys[] = $productFee->name;
                 if (!WeshopHelper::compareValue($productFee->amount, $amount, 'float')) {
                     $productFee->local_amount = $local;
                     $productFee->amount = $amount;
@@ -77,13 +78,34 @@ class AdditionalController extends BaseApiController
                     }
                 }
             }
+            foreach ($form->getAdditionalFees()->keys() as $feeName) {
+                // continute if $key in $keys
+                if (ArrayHelper::isIn($feeName, $keys)) {
+                    continue;
+                }
+                $arrayFees = $form->getAdditionalFees()->get($feeName, [], false);
+
+                $firstFee = $arrayFees[0];
+                $firstFee = new TargetAdditionalFee($firstFee);
+                list($firstFee->amount, $firstFee->local_amount) = $form->getAdditionalFees()->getTotalAdditionalFees($feeName);
+                $firstFee->target = 'order';
+                $firstFee->target_id = $product->order_id;
+                $firstFee->save(false);
+                foreach ($arrayFees as $arrayFee) {
+                    $target = new TargetAdditionalFee($arrayFee);
+                    $target->target = 'product';
+                    $target->target_id = $product->id;
+                    $target->save(false);
+                }
+                $form->getAdditionalFees()->remove($feeName);
+            }
             $productPrice = $additionalFees->getTotalAdditionalFees('product_price');
-            $product->total_fee_product_local = $additionalFees->getTotalAdditionalFees(['tax_fee', 'shipping_fee'])[1];         // Tổng Phí theo sản phẩm
-            list($product->price_amount_origin, $product->price_amount_local) = $productPrice;
+            $product->total_fee_product_local = $additionalFees->getTotalAdditionalFees(null,['product_price']);
             $product->price_amount_origin = $product->price_amount_origin / $product->quantity_customer;
             $product->price_amount_local = $product->price_amount_local / $product->quantity_customer;
             $product->total_price_amount_local = $productPrice[1];
             $product->total_price_amount_origin = $productPrice[0];
+            $policy = isset($product->price_policy) ? $product->price_policy : 0;
             list($product->total_final_amount_origin, $product->total_final_amount_local) = $additionalFees->getTotalAdditionalFees(['product_price', 'shipping_fee', 'tax_fee']);
 
             // Tổng tiền local tất tần tận
@@ -190,6 +212,10 @@ class AdditionalController extends BaseApiController
                     // Tổng vận chuyển tại local của các sản phẩm
                     $attribute = 'total_vat_amount_local';
                     $attributeAmount = 'total_vat_amount_amount';
+                } elseif ($orderFee->name === 'customer_fee') {
+                    // Tổng vận chuyển tại local của các sản phẩm
+                    $attribute = 'total_custom_fee_amount_local';
+                    $attributeAmount = 'total_custom_fee_amount_amount';
                 }
                 $totalOrderFeeAmountLocal += $orderFee->local_amount;
                 if (!isset($orderUpdateAttribute[$attribute])) {
