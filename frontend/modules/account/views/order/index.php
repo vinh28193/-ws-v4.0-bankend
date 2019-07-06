@@ -9,7 +9,7 @@ use yii\grid\GridView;
 /* @var \common\models\Order[] $models */
 
 $this->title = Yii::t('frontend', 'Orders');
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="be-order">

@@ -81,6 +81,7 @@ class OrderController extends BaseAccountController
                 ]);
             }
         }
+        $dataProvider->orderBy(['created_at' => SORT_DESC]);
         $models = $dataProvider->all();
         return $this->render('index', [
             'models' => $models,

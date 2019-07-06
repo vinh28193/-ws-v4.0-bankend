@@ -318,7 +318,7 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->save(false);
         // Todo remove cart after create payment success
 
-        foreach ($orders as $order) {
+        foreach ($payment->getOrders() as $order) {
             /** @var  $order Order */
             $childTransaction = clone $paymentTransaction;
             $childTransaction->id = null;
