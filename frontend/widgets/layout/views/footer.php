@@ -10,10 +10,9 @@ use yii\helpers\Url;
  * @var \yii\web\View $this
  * @var ShippingForm $shippingForm
  */
-$zipcode = (SystemZipcode::loadZipCode($shippingForm->buyer_country_id));
 $province = (\common\models\SystemStateProvince::select2DataForCountry($shippingForm->buyer_country_id));
 $district = (SystemDistrict::select2DataForCountry($shippingForm->buyer_country_id));
-$jszipcode = json_encode($zipcode);
+$jszipcode = json_encode(Yii::$app->storeManager->store->country_code === 'ID' ? (SystemZipcode::loadZipCode($shippingForm->buyer_country_id)) : []);
 $jsprovince = json_encode($province);
 $jsdistrict = json_encode($district);
 ?>
@@ -350,11 +349,8 @@ $jsdistrict = json_encode($district);
             }
         }
     })();</script>
-
 <script>
-    <?php if (Yii::$app->storeManager->store->country_code === 'ID'): ?>
     var zipcode_data = <?= $jszipcode ?>;
-    <?php endif; ?>
     var province_data = <?= $jsprovince ?>;
     var district_data = <?= $jsdistrict ?>;
     var store_id = <?= Yii::$app->storeManager->getId() ?>;
