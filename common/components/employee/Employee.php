@@ -92,9 +92,9 @@ class Employee extends BaseObject
         }
 
         if ($customerId !== null && ($sp = $this->getCustomerSupporter($customerId)) !== false) {
-            if (isset($this->getSupporters()[$sp]) && ($sp = $this->getSupporters()[$sp]) !== null) {
+            if (isset($this->getSupporters()[$sp]) && ($usp = $this->getSupporters()[$sp]) !== null) {
                 $this->getActiveRule()->markAssigned($sp, $orders);
-                return [$sp];
+                return [$usp];
             }
         }
         return $this->getActiveRule()->getActiveSupporters($orders);
