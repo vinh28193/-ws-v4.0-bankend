@@ -141,13 +141,14 @@ class AmazonGateV3 extends BaseGate
     {
         $curl = new curl\Curl();
 
-        $response = $curl->get($this->baseUrl.'/asin_offer/'.$itemId);
-        if($curl->responseCode != 200){
+        $response = $curl->get($this->baseUrl . '/asin_offer/' . $itemId);
+        if ($curl->responseCode != 200) {
             return [];
         }
-        $response = json_decode($response,true);
-        return ArrayHelper::getValue($response,'response',[]);
+        $response = json_decode($response, true);
+        return ArrayHelper::getValue($response, 'response', []);
     }
+
     /**
      * @param $request AmazonSearchRequest
      * @return array
@@ -156,9 +157,9 @@ class AmazonGateV3 extends BaseGate
      */
     private function searchInternal($request)
     {
-        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.urlencode($request->keyword).'&page='.$request->page;
-        if($request->filter){
-            $url .= '&filter='.$request->filter;
+        $url = $this->baseUrl . '/' . $this->searchUrl . '?q=' . urlencode($request->keyword) . '&page=' . $request->page;
+        if ($request->filter) {
+            $url .= '&filter=' . $request->filter;
         }
         $url = trim($url);
         $curl = new curl\Curl();
@@ -171,14 +172,14 @@ class AmazonGateV3 extends BaseGate
 //            Yii::debug($curl->responseCode);
 //        }
 //        Yii::debug($response);
-        if($curl->responseCode !== 200){
+        if ($curl->responseCode !== 200) {
             $response = $curl->get($url);
             Yii::debug($curl->responseCode);
-            if($curl->responseCode !== 200){
-                return [false, 'Request Error '.$curl->responseCode];
+            if ($curl->responseCode !== 200) {
+                return [false, 'Request Error ' . $curl->responseCode];
             }
         }
-        $response = json_decode($response,true);
+        $response = json_decode($response, true);
         Yii::debug($response);
         if (!isset($response)) {
             return [false, 'can not send request'];
@@ -200,10 +201,10 @@ class AmazonGateV3 extends BaseGate
 //            ['path' => $result['categories']]
 //        ])->forSite($siteId)->select(['alias as category_id', 'name as category_name', 'originName as origin_name'])->asArray()->all();
         $sorts = [];
-        foreach ($result['sorts'] as $value){
-            $sorts[ArrayHelper::getValue($value,'value','#')] = ArrayHelper::getValue($value,'name','None');
+        foreach ($result['sorts'] as $value) {
+            $sorts[ArrayHelper::getValue($value, 'value', '#')] = ArrayHelper::getValue($value, 'name', 'None');
         }
-        $data['categories'] = array_map(function($tag) {
+        $data['categories'] = array_map(function ($tag) {
             return array(
                 'category_name' => $tag['name'],
                 'category_id' => $tag['value']
@@ -236,11 +237,11 @@ class AmazonGateV3 extends BaseGate
     {
         $curl = new curl\Curl();
 
-        $response = $curl->get($this->baseUrl.'/'.$this->asinsUrl.'/'.$request->asin_id);
-        $response = json_decode($response,true);
+        $response = $curl->get($this->baseUrl . '/' . $this->asinsUrl . '/' . $request->asin_id);
+        $response = json_decode($response, true);
         Yii::debug($curl->responseCode);
-        if($curl->responseCode != 200){
-            return [false, 'Request error '. $curl->responseCode];
+        if ($curl->responseCode != 200) {
+            return [false, 'Request error ' . $curl->responseCode];
         }
         if (!$this->isValidResponse($response)) {
             return [false, 'can not send request'];
@@ -251,18 +252,19 @@ class AmazonGateV3 extends BaseGate
 //            return [false, 'can not send request'];
 //        }
         $amazon = null;
-        if(isset($response['response'])){
+        if (isset($response['response'])) {
             $response = $response['response'];
-            if(isset($response['product_detail'])){
+            if (isset($response['product_detail'])) {
                 $amazon = $response['product_detail'];
             }
         }
-        if(!$amazon || !$response){
+        if (!$amazon || !$response) {
             return [false, 'Request Error'];
         }
         $rs = [];
-        $start_price = explode('-',$amazon['price']);
-        $sell_price = explode('-',$amazon['price']) ; // $amazon['current_price'] ? explode('-',$amazon['current_price']) : explode('-',$amazon['price']);
+
+        $start_price = explode('-', $amazon['price']);
+        $sell_price = !WeshopHelper::isEmpty($amazon['current_price']) ? explode('-', $amazon['current_price']) : $start_price;
         $rs['categories'] = array_unique($amazon['node_ids']);
         $rs['item_id'] = $request->asin_id;
         $rs['item_sku'] = $request->asin_id;
@@ -271,46 +273,48 @@ class AmazonGateV3 extends BaseGate
         $rs['category_id'] = isset($amazon['node_ids'][count($amazon['node_ids']) - 1]) ? $amazon['node_ids'][count($amazon['node_ids']) - 1] : null;
         $rs['item_name'] = trim($amazon['title']);
         $rs['parent_item_id'] = $request->parent_asin_id ? $request->parent_asin_id : '';
-        $rs['retail_price'] = count($sell_price) > 0 ? floatval(str_replace(',','',trim($sell_price[0]))) : 0;
-        $rs['sell_price'] = count($sell_price) > 0 ? floatval(str_replace(',','',trim($sell_price[0]))) : 0;
+
+        $rs['retail_price'] = count($sell_price) > 0 ? floatval(str_replace(',', '', trim($sell_price[0]))) : 0;
+        $rs['sell_price'] = count($sell_price) > 0 ? floatval(str_replace(',', '', trim($sell_price[0]))) : 0;
+
         $rs['sell_price_special'] = $sell_price;
         $rs['product_type'] = count($sell_price) == 0 ? 1 : 0;
         $rs['deal_price'] = null;
         $rs['deal_time'] = null;
-        $rs['shipping_weight'] = floatval($amazon['weight']) > 0 ? round(floatval($amazon['weight']) / 1000,2) : 0.5;
+        $rs['shipping_weight'] = floatval($amazon['weight']) > 0 ? round(floatval($amazon['weight']) / 1000, 2) : 0.5;
         $rs['shipping_fee'] = 0;
         $rs['is_prime'] = null;
         $rs['is_free_ship'] = null;
-        $rs['sort_desc'] = is_array($amazon['product_description']) ? implode('<br>',$amazon['product_description']) : $amazon['product_description'];
+        $rs['sort_desc'] = is_array($amazon['product_description']) ? implode('<br>', $amazon['product_description']) : $amazon['product_description'];
         $rs['description'] = isset($amazon['description']) ? $amazon['description'] : '';
         $rs['best_seller'] = '';
         $rs['manufacturer_description'] = '';
-        $rs['primary_images'] =  $this->getItemImage($amazon['primary_images']);//$amazon['images'];
+        $rs['primary_images'] = $this->getItemImage($amazon['primary_images']);//$amazon['images'];
         $rs['technical_specific'] = $this->getTechnicalSpecific($amazon['product_information']);//$amazon['product_description'];
-        $rs['variation_options'] = $this->getOptionGroup($amazon['product_option'],$rs['item_name'],$rs['item_sku']);
+        $rs['variation_options'] = $this->getOptionGroup($amazon['product_option'], $rs['item_name'], $rs['item_sku']);
         $rs['variation_mapping'] = [];
         $rs['relate_products'] = null;
-        $rs['start_price'] = count($start_price) > 0 ? floatval(str_replace(',','',trim($start_price[0]))) : 0;
+        $rs['start_price'] = count($start_price) > 0 ? floatval(str_replace(',', '', trim($start_price[0]))) : 0;
         $rs['condition'] = isset($amazon['condition']) ? $amazon['condition'] : 'new';
         $rs['type'] = $this->store === AmazonProduct::STORE_JP ? AmazonProduct::TYPE_AMAZON_JP : AmazonProduct::TYPE_AMAZON_US;
         $rs['tax_fee'] = 0;
         $rs['store'] = $this->store;
-        $rs['customer_feedback'] = ArrayHelper::getValue($amazon,'product_review',[]);
+        $rs['customer_feedback'] = ArrayHelper::getValue($amazon, 'product_review', []);
 //            $offersCacheKey = "offers_{$rs['item_sku']}";
 //            if (!($offers = $this->cache->get($offersCacheKey))) {
-            $offers = $this->getOffers($rs['item_sku']);
+        $offers = $this->getOffers($rs['item_sku']);
 //                $this->cache->set($offersCacheKey, $offers, 3600);
 //            }
-            $check = false;
-            $rs['providers'] = [];
-        if(($auth = ArrayHelper::getValue($amazon,'author'))){
+        $check = false;
+        $rs['providers'] = [];
+        if (($auth = ArrayHelper::getValue($amazon, 'author'))) {
             $prov = [];
             $prov['name'] = trim($auth);
             $prov['image'] = '';
             $prov['website'] = '';
             $prov['location'] = '';
-            $prov['rating_score'] = ArrayHelper::getValue($amazon,'rate_count');
-            $prov['rating_star'] = ArrayHelper::getValue($amazon,'rate_star');
+            $prov['rating_score'] = ArrayHelper::getValue($amazon, 'rate_count');
+            $prov['rating_star'] = ArrayHelper::getValue($amazon, 'rate_star');
             $prov['positive_feedback_percent'] = null;
             $prov['condition'] = 'used or new';
             $prov['fulfillment'] = null;
@@ -322,40 +326,40 @@ class AmazonGateV3 extends BaseGate
             $rs['providers'][] = $prov;
             $rs['provider'] = new Provider($prov);
         }
-            if (!$this->isEmpty($offers)) {
-                foreach ($offers as $offer) {
-                    if (in_array($offer['seller']['seller_name'], $this->sellerBlackLists)) {
-                        $check = true;
-                        continue;
-                    }
-                    $prov = [];
-                    $prov['name'] = trim($offer['seller']['seller_name']);
-                    $prov['image'] = '';
-                    $prov['website'] = '';
-                    $prov['location'] = '';
-                    $prov['rating_score'] = isset($offer['seller']['rate_count']) ? trim($offer['seller']['rate_count']) : '';
-                    $prov['rating_star'] = isset($offer['seller']['rate_star']) ? trim($offer['seller']['rate_star']) : '';
-                    $prov['positive_feedback_percent'] = isset($offer['seller']['positive']) ? trim($offer['seller']['positive']) : '';
-                    $prov['condition'] = trim($offer['condition']);
-                    $prov['fulfillment'] = $offer['fulfillment'];
-                    $prov['is_free_ship'] = $offer['is_free_ship'];
-                    $prov['is_prime'] = $offer['is_prime'];
-                    $prov['price'] = trim(str_replace(',','',$offer['price']));
-                    $prov['shipping_fee'] = $offer['ship_fee'];
-                    $prov['tax_fee'] = $offer['tax_fee'];
-                    $rs['providers'][] = $prov;
+        if (!$this->isEmpty($offers)) {
+            foreach ($offers as $offer) {
+                if (in_array($offer['seller']['seller_name'], $this->sellerBlackLists)) {
+                    $check = true;
+                    continue;
                 }
+                $prov = [];
+                $prov['name'] = trim($offer['seller']['seller_name']);
+                $prov['image'] = '';
+                $prov['website'] = '';
+                $prov['location'] = '';
+                $prov['rating_score'] = isset($offer['seller']['rate_count']) ? trim($offer['seller']['rate_count']) : '';
+                $prov['rating_star'] = isset($offer['seller']['rate_star']) ? trim($offer['seller']['rate_star']) : '';
+                $prov['positive_feedback_percent'] = isset($offer['seller']['positive']) ? trim($offer['seller']['positive']) : '';
+                $prov['condition'] = trim($offer['condition']);
+                $prov['fulfillment'] = $offer['fulfillment'];
+                $prov['is_free_ship'] = $offer['is_free_ship'];
+                $prov['is_prime'] = $offer['is_prime'];
+                $prov['price'] = trim(str_replace(',', '', $offer['price']));
+                $prov['shipping_fee'] = $offer['ship_fee'];
+                $prov['tax_fee'] = $offer['tax_fee'];
+                $rs['providers'][] = $prov;
+            }
 //                $rs['sell_price'] = trim(str_replace(',','',$offers[0]['price']));
 //                $rs['condition'] = trim($offers[0]['condition']);
 //                $rs['is_free_ship'] = $offers[0]['is_free_ship'];
 //                $rs['is_prime'] = $offers[0]['is_prime'];
 //                $rs['shipping_fee'] = $offers[0]['ship_fee'];
 //                $rs['tax_fee'] = $offers[0]['tax_fee'];
-            }
-            if (!count($rs['providers']) && $check) {
-                $rs['sell_price'] = 0;
-                [false, 'no provider valid'];
-            }
+        }
+        if (!count($rs['providers']) && $check) {
+            $rs['sell_price'] = 0;
+            [false, 'no provider valid'];
+        }
         $rs['price_api'] = $rs['sell_price'];
         $rs['currency_api'] = 'USD';
         $rs['ex_rate_api'] = 1;
@@ -365,28 +369,30 @@ class AmazonGateV3 extends BaseGate
         return [true, $rs];
 
     }
-    public function getTechnicalSpecific($data){
-        if(!$data){
+
+    public function getTechnicalSpecific($data)
+    {
+        if (!$data) {
             return [];
         }
         $dessc = [];
-        foreach ($data as $datum){
-            if (isset($datum['value']) && is_array($datum['value'])){
-               foreach ($datum['value'] as $key => $value){
-                   if(is_string($value)){
-                       $dessc['value'][] = $value;
-                   }elseif(is_array($value)){
-                       foreach ($value as $k => $v){
-                           $temp = [];
-                           $temp['name'] = trim(str_replace(':','' ,$k));
-                           $temp['value'] = $value;
-                           $res[] = $temp;
-                       }
-                   }
-               }
+        foreach ($data as $datum) {
+            if (isset($datum['value']) && is_array($datum['value'])) {
+                foreach ($datum['value'] as $key => $value) {
+                    if (is_string($value)) {
+                        $dessc['value'][] = $value;
+                    } elseif (is_array($value)) {
+                        foreach ($value as $k => $v) {
+                            $temp = [];
+                            $temp['name'] = trim(str_replace(':', '', $k));
+                            $temp['value'] = $value;
+                            $res[] = $temp;
+                        }
+                    }
+                }
             }
         }
-        if($dessc && count($dessc) > 0){
+        if ($dessc && count($dessc) > 0) {
             $dessc['name'] = 'Description';
             $res[] = $dessc;
             $res = array_reverse($res);
@@ -439,39 +445,39 @@ class AmazonGateV3 extends BaseGate
         }
         $rs = [];
         foreach ($data as $item) {
-            if(isset($item['name'])){
-                $temp['name'] = trim(str_replace(':','',$item['name']));
-                if($temp['name'] && $item['value']){
+            if (isset($item['name'])) {
+                $temp['name'] = trim(str_replace(':', '', $item['name']));
+                if ($temp['name'] && $item['value']) {
                     $temp['values'] = [];
                     $temp['value_current'] = '';
                     $temp['option_link'] = true;
                     $temp['images_mapping'] = [];
                     $temp['sku'] = [];
-                    foreach ($item['value'] as $value){
+                    foreach ($item['value'] as $value) {
                         $value_tem = '';
-                        if(isset($value['asin_color']) && $value['asin_color']){
+                        if (isset($value['asin_color']) && $value['asin_color']) {
                             $value_tem = $value['asin_color'];
-                        }else if(isset($value['asin_size']) && $value['asin_size']){
+                        } else if (isset($value['asin_size']) && $value['asin_size']) {
                             $value_tem = $value['asin_size'];
-                        }else if(isset($value['name'])){
+                        } else if (isset($value['name'])) {
                             $value_tem = $value['name'];
                         }
-                        if($value_tem) {
+                        if ($value_tem) {
                             $temp['values'][] = $value_tem;
-                            if(isset($value['asin_id']) && $value['asin_id']){
+                            if (isset($value['asin_id']) && $value['asin_id']) {
                                 $temp['sku'][] = [
                                     'asin_id' => $value['asin_id'],
                                     'value_option' => $value_tem,
-                                    'link' => WeshopHelper::generateUrlDetail('amazon',$title,$value['asin_id']),
+                                    'link' => WeshopHelper::generateUrlDetail('amazon', $title, $value['asin_id']),
                                 ];
-                                if($value['asin_id'] == $skuCurrent){
+                                if ($value['asin_id'] == $skuCurrent) {
                                     $temp['value_current'] = $value_tem;
-                                }else if (ArrayHelper::keyExists('asin_url',$value) && !ArrayHelper::getValue($value,'asin_url')){
+                                } else if (ArrayHelper::keyExists('asin_url', $value) && !ArrayHelper::getValue($value, 'asin_url')) {
                                     $temp['value_current'] = $value_tem;
                                 }
                             }
                         }
-                        if(isset($value['asin_images']) && $value['asin_images']){
+                        if (isset($value['asin_images']) && $value['asin_images']) {
                             $temp['images_mapping'][] = [
                                 'value' => $value_tem,
                                 'images' => [
@@ -536,7 +542,7 @@ class AmazonGateV3 extends BaseGate
         $imgs = [];
         if (count($data) > 0)
             foreach ($data as $datum) {
-                foreach ($datum as $img){
+                foreach ($datum as $img) {
                     $temp = [];
                     $temp['thumb'] = $img['thumb'];
                     $temp['main'] = $img['large'];
@@ -602,21 +608,24 @@ class AmazonGateV3 extends BaseGate
 
         return $rs;
     }
-    public function convertStringToNumber($str){
-        $num = str_replace(' ','',$str);
-        $num = str_replace(',','',$num);
+
+    public function convertStringToNumber($str)
+    {
+        $num = str_replace(' ', '', $str);
+        $num = str_replace(',', '', $num);
         return $num;
     }
+
     private function getFilterNew($filter)
     {
         $rs = [];
         foreach ($filter as $item) {
-            if(isset($item['value'])){
+            if (isset($item['value'])) {
 //                if (count($item['value']) == 0 || strpos(strtolower($item['name']),'customer review'))
 //                    continue;
                 $temp = [];
                 $temp['name'] = $item['name'];
-                $temp['values'] = array_map(function($tag) {
+                $temp['values'] = array_map(function ($tag) {
                     return array(
                         'count' => 1,
                         'is_selected' => false,
@@ -626,14 +635,14 @@ class AmazonGateV3 extends BaseGate
                     );
                 }, $item['value']);
                 $rs[] = $temp;
-            }else{
+            } else {
                 foreach ($item as $v) {
-                    if(isset($v['value'])){
+                    if (isset($v['value'])) {
                         if (count($v['value']) == 0)
                             continue;
                         $temp = [];
                         $temp['name'] = $v['name'];
-                        $temp['values'] = array_map(function($tag) {
+                        $temp['values'] = array_map(function ($tag) {
                             return array(
                                 'count' => 1,
                                 'is_selected' => false,
@@ -643,7 +652,7 @@ class AmazonGateV3 extends BaseGate
                             );
                         }, $v['value']);
                         $rs[] = $temp;
-                    }else{
+                    } else {
                     }
                 }
             }
@@ -663,18 +672,18 @@ class AmazonGateV3 extends BaseGate
         $response['tax_fee'] = $exRate->jpyToUsd($response['tax_fee']);
         $response['deal_price'] = $exRate->jpyToUsd($response['deal_price']);
         $response['start_price'] = $exRate->jpyToUsd($response['start_price']);
-        if(isset($response['sell_price_special']) && is_array($response['sell_price_special'])){
+        if (isset($response['sell_price_special']) && is_array($response['sell_price_special'])) {
             foreach ($response['sell_price_special'] as $k => $v) {
                 $response['sell_price_special'][$k] = $exRate->jpyToUsd($v);
             }
         }
-        if(isset($response['relate_products']) && is_array($response['relate_products'])){
+        if (isset($response['relate_products']) && is_array($response['relate_products'])) {
             foreach ($response['relate_products'] as $k => $v) {
                 $response['relate_products'][$k]['sell_price'] = $exRate->jpyToUsd($v['sell_price']);
             }
         }
 
-        if(isset($response['suggest_set_purchase']) && is_array($response['suggest_set_purchase'])){
+        if (isset($response['suggest_set_purchase']) && is_array($response['suggest_set_purchase'])) {
             foreach ($response['suggest_set_purchase'] as $k => $v) {
                 foreach ($v['sell_price'] as $key => $val) {
                     $response['suggest_set_purchase'][$k]['sell_price'][$key] = $exRate->jpyToUsd($val);
@@ -682,7 +691,7 @@ class AmazonGateV3 extends BaseGate
             }
         }
 
-        if(isset($response['suggest_set_session']) && is_array($response['suggest_set_session'])){
+        if (isset($response['suggest_set_session']) && is_array($response['suggest_set_session'])) {
             foreach ($v['sell_price'] as $key => $val) {
                 $response['suggest_set_session'][$k]['sell_price'][$key] = $exRate->jpyToUsd($val);
             }
