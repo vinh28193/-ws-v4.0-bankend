@@ -66,8 +66,8 @@ class ConfirmRule extends BaseRule
         $currentAssign = $this->getCurrentAssign();
         $totalAssigned = ArrayHelper::getValue($currentAssign, 'total', 0);
         $assigned = ArrayHelper::getValue($currentAssign, 'assigned', []);
-        if (empty($assigned) && !isset($assigned[$spId])) {
-            $assigned[$spId] = 0;
+        if (empty($assigned) || !isset($assigned[$spId])) {
+            $assigned[$spId] = $count;
         }
         $totalAssigned += $count;
         $value = $assigned[$spId];

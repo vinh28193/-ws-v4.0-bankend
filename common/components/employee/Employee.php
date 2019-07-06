@@ -36,6 +36,20 @@ class Employee extends BaseObject
     private $_supporters = [];
 
     /**
+     * @var string| yii\rbac\ManagerInterface
+     */
+    public $authManager = 'authManager';
+
+    public function init()
+    {
+        parent::init();
+        if (!is_string($this->authManager)) {
+            $this->authManager = Yii::$app->get($this->authManager);
+        }
+
+    }
+
+    /**
      * @return User[]
      */
     public function getSupporters()
@@ -113,5 +127,10 @@ class Employee extends BaseObject
         }
         $config['employee'] = $this;
         return Yii::createObject($config);
+    }
+
+    protected function isSaleOwner($id){
+        $role = $this->authManager->getRolesByUser($id);
+
     }
 }
