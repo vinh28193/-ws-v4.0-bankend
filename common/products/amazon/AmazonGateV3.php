@@ -263,8 +263,8 @@ class AmazonGateV3 extends BaseGate
         }
         $rs = [];
 
-        $start_price = explode('-', $amazon['price']);
-        $sell_price =  isset($amazon['current_price']) && !WeshopHelper::isEmpty($amazon['current_price']) ? explode('-', $amazon['current_price']) : $start_price;
+        $start_price = isset($amazon['price']) && $amazon['price'] !== null ? explode('-', $amazon['price']) : [0];
+        $sell_price = isset($amazon['current_price']) && !WeshopHelper::isEmpty($amazon['current_price']) ? explode('-', $amazon['current_price']) : $start_price;
         $rs['categories'] = array_unique($amazon['node_ids']);
         $rs['item_id'] = $request->asin_id;
         $rs['item_sku'] = $request->asin_id;
