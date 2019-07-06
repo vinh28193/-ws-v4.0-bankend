@@ -15,6 +15,7 @@ class SearchController extends AmazonController
 
     public function actionIndex()
     {
+
         $queryParams = $this->request->getQueryParams();
         $form = new ProductSearchForm();
         $form->load($queryParams);

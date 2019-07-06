@@ -21,6 +21,9 @@ $url_page = function ($p){
     $param = [explode('?',\yii\helpers\Url::current())[0]];
     $param = Yii::$app->request->get() ? array_merge($param, Yii::$app->request->get()) : $param;
     $param['page'] = $p;
+    if (isset($param['keyword'])) {
+        unset($param['keyword']);
+    }
 //           $param['portal'] = $portal;
     return Yii::$app->getUrlManager()->createUrl($param);
 };

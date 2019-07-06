@@ -9,11 +9,11 @@ use yii\helpers\Url;
 
 $domain = Yii::$app->request->hostInfo;
 ?>
-<table style="padding:0 0 0 0;" border="0" cellpadding="0" cellspacing="0" width="100%">
+<table bgcolor="#f0f8ff" style="color: #ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
     <tbody>
     <tr>
         <td>
-            <table style="color: #ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <table style="color: #666666" border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tbody>
                 <tr>
                     <td style="padding:20px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
@@ -41,7 +41,7 @@ $domain = Yii::$app->request->hostInfo;
     </tr>
     <tr>
         <td style="padding: 0 20px;">
-            <table style="border-collapse:collapse;color: #ffffff" border="0" bgcolor="#141c2e"
+            <table style="border-collapse:collapse;color: #666666; border: 1px solid slategrey" bgcolor="#ffffff"
                    cellpadding="0"
                    cellspacing="0" width="100%">
                 <tbody>
@@ -73,13 +73,13 @@ $domain = Yii::$app->request->hostInfo;
     </tr>
     <tr>
         <td style="padding:10px 20px">
-            <table style="border-collapse:collapse;color: #ffffff" bgcolor="#141c2e" cellpadding="0"
-                   cellspacing="0"
-                   width="100%">
+            <table style="border-collapse:collapse;color: #666666; border: 1px solid slategrey" bgcolor="#ffffff"
+                   cellpadding="0"
+                   cellspacing="0" width="100%">
                 <tbody>
                 <tr>
                     <td style="padding:15px 20px 1px 20px">
-                        <table style="border-collapse:collapse; color: #ffffff" border="0" cellpadding="0"
+                        <table style="border-collapse:collapse;" border="0" cellpadding="0"
                                cellspacing="0" width="100%">
                             <tbody>
                             <tr>
@@ -108,39 +108,6 @@ $domain = Yii::$app->request->hostInfo;
                                             <td colspan="1"
                                                 style="width:30%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
                                                 Seller : sdaSs
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                        <tbody>
-                                        <tr>
-                                            <td colspan="3"
-                                                style="width:70%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                Seller : sdaSs
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"
-                                                style="padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                ABC
-                                            </td>
-                                            <td style="width:30%;padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                12232c VND
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"
-                                                style="padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                ABC
-                                            </td>
-                                            <td style="width:30%;padding: 0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                12232c VND
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="3">
-                                                <i style="display: block;height: 1px; background: #2796b6;"></i>
                                             </td>
                                         </tr>
                                         </tbody>

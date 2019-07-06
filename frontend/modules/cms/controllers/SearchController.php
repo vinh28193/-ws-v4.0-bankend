@@ -23,7 +23,7 @@ class SearchController extends CmsController
         $this->isShow = false;
         $keyword = Yii::$app->request->get('keyword');
         $form = new ProductSearchForm();
-        $form->load(['keyword' => $keyword]);
+        $form->load(Yii::$app->request->get(),'');
 //        $form->type = 'ebay';
 //        Yii::info($form->getAttributes(), __METHOD__);
 //        if (($results = $form->search()) === false || (isset($results['products']) && $results['products'] === 0)) {
