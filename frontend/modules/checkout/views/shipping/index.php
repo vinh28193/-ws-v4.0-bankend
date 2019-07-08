@@ -218,6 +218,7 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                                 ],
                                 'pluginOptions' => [
                                     'allowClear' => true,
+                                    'minimumInputLength' => 4,
                                     'placeholder' => Yii::t('frontend', 'Enter your post code'),
                                     'ajax' => [
                                         'url' => $urlAjaxUrl,
@@ -327,6 +328,7 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                                 ],
                                 'pluginOptions' => [
                                     'allowClear' => true,
+                                    'minimumInputLength' => 4,
                                     'placeholder' => Yii::t('frontend', 'Enter your post code'),
                                     'ajax' => [
                                         'url' => $urlAjaxUrl,

@@ -234,6 +234,7 @@ $isID = $storeManager->store->country_code === 'ID';
                             'value' => $shippingForm->receiver_province_id,
                             'pluginOptions' => [
                                 'allowClear' => true,
+                                'minimumInputLength' => 4,
                                 'placeholder' => Yii::t('frontend', 'Enter your post code'),
                                 'ajax' => [
                                     'url' => Url::toRoute(['/data/get-zip-code']),
