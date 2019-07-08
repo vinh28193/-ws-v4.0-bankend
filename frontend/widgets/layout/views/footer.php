@@ -230,10 +230,9 @@ $isID = $storeManager->store->country_code === 'ID';
                     <div class="form-group">
                         <?php
                         echo Select2::widget([
-                            'data' => $shippingForm->getProvinces(),
                             'id' => 'zipcode_default',
                             'name' => 'zipcode_default',
-                            'value' => $shippingForm->receiver_province_id,
+                            'value' => $shippingForm->receiver_post_code,
                             'pluginOptions' => [
                                 'allowClear' => true,
                                 'minimumInputLength' => 4,
