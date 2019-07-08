@@ -38,7 +38,6 @@ var wsAddress = (function ($) {
             if (resp.loading) {
                 return resp.text;
             }
-            console.log(resp);
             return resp.text;
         },
         select2Params: function (params) {
