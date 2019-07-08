@@ -309,7 +309,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
 
             unset($productParam['available_quantity']);
             unset($productParam['quantity_sold']);
-            $productParam['variations'] = Json::encode($variations);
+            $productParam['variations'] = !empty($variations) ? Json::encode($variations) : null;
             $product = new Product($productParam);
             // product_price next to save, this fee not in collect
             if (!empty($productFeeParams)) {
