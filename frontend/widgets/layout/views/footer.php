@@ -12,7 +12,10 @@ use yii\helpers\Url;
  */
 $province = (\common\models\SystemStateProvince::select2DataForCountry($shippingForm->buyer_country_id));
 $district = (SystemDistrict::select2DataForCountry($shippingForm->buyer_country_id));
-$jszipcode = json_encode(Yii::$app->storeManager->store->country_code === 'ID' ? (SystemZipcode::loadZipCode($shippingForm->buyer_country_id)) : []);
+
+$zipcode = Yii::$app->storeManager->store->country_code === 'ID' ? (SystemZipcode::loadZipCode($shippingForm->buyer_country_id)) : [];
+
+$jszipcode = json_encode($zipcode);
 $jsprovince = json_encode($province);
 $jsdistrict = json_encode($district);
 ?>
