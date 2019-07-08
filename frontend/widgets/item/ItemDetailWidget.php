@@ -156,6 +156,24 @@ CSS;
         if ($this->item->type === BaseProduct::TYPE_EBAY) {
             $view->registerJs("setInterval(function () {ws.countdownTime();}, 1000);");
         }
+        if ($this->item->type === BaseProduct::TYPE_AMAZON_US) {
+            $view->registerJs("
+            $(document).ready(function(){
+                $.ajax({
+                url: '/amazon/item/get-offer/".$this->item->item_sku."',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                console.log(data);
+                    if(data.success){
+                        $('#seller-more').css('display','block');
+                        $('#seller-more table tbody').html(data.data.content);
+                    }
+                }
+            });
+            });
+            ");
+        }
     }
 
     protected function renderEntries()

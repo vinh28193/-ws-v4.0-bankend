@@ -33,6 +33,7 @@ return [
         // amazon
         'amazon.html' => 'cms/amazon/index',
         'GET amazon/item/<name:[0-9A-Za-z_-]*>-<id:[0-9A-Za-z_-]+>.html' => 'amazon/item/detail',
+        'GET amazon/item/get-offer/<id:[0-9A-Za-z_-]+>' => 'amazon/item/get-offer',
         'amazon/search/<keyword:[^/]+>.html' => 'amazon/search/index',
         'amazon/seller/<seller:[^/]+>.html' => 'amazon/search/index',
         'amazon/category/<name:[0-9a-zA-Z_-]+>-<category:\d+>.html' => 'amazon/search/index',
