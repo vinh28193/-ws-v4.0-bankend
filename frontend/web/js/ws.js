@@ -289,6 +289,10 @@ var ws = ws || (function ($) {
         getSuggestSearch: function (response) {
             console.log(response);
             if (response.length > 2) {
+                $('input.searchBoxInput').autocomplete({
+                    source: response[1]
+                });
+                /*
                 if ($('input.searchBoxInput').val() === response[0]) {
                     var txt = '<option>' + response[0] + '</option>';
                     // console.log(response[1]);
@@ -298,7 +302,7 @@ var ws = ws || (function ($) {
                         // $('#searchAutoComplete').append('<option>'+v+'</option>');
                     });
                     $('#listSuggestSearch').html(txt);
-                }
+                }*/
             }
         },
         // hạn chế việc khai báo event quá nhiều,
@@ -469,10 +473,10 @@ ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'keyup', 'input.mb-searchB
     }
 });
 
-$('input.searchBoxInput').change(function () {
-    // clearTimeout(window.mytimeout);
-    ws.browse.searchNew(this, '$url');
-});
+// $('input.searchBoxInput').change(function () {
+//    // clearTimeout(window.mytimeout);
+    // ws.browse.searchNew(this, '$url');
+// });
 $('datalist#listSuggestSearch').keyup(function () {
     //console.log('Key up: ' + event.key);
     if (event.keyCode === 13) {
