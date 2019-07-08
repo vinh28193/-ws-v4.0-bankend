@@ -54,7 +54,7 @@ $userCookies->setUser();
     <div id="checkcate" style="display: none"><?= $item->category_id ?></div>
     <div class="title">
         <span class="badge-buy-detail"><?= Yii::t('frontend','Buy from the US') ?></span>
-        <strong class="name-product"><?= $item->item_name ?></strong>
+        <h1 class="name-product"><?= $item->item_name ?></h1>
         <span id="sale-tag" class="sale-tag"
               style="display: <?= $salePercent > 0 ? 'block' : 'none' ?>"><?= $salePercent > 0 ? $salePercent : '' ?>% OFF</span>
     </div>
