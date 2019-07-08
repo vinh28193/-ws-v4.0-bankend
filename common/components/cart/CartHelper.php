@@ -13,6 +13,7 @@ use common\models\User;
 use common\products\BaseProduct;
 use common\products\Provider;
 use common\products\VariationMapping;
+use common\products\VariationOption;
 use Yii;
 use DateTime;
 use yii\db\Query;
@@ -60,7 +61,7 @@ class CartHelper
         $order = [];
         $order['type_order'] = Order::TYPE_SHOP;
         $order['ordercode'] = null;
-        if (isset($postt['link_payment']) ) {
+        if (isset($postt['link_payment'])) {
             $order['link_payment'] = $postt['link_payment'];
         }
         $order['portal'] = $item->type;
@@ -104,7 +105,7 @@ class CartHelper
 //                }
 //            }
 //        }
-        if($provider){
+        if ($provider) {
             $order['seller'] = [
                 'seller_name' => $provider->name,
                 'portal' => $item->type,
@@ -122,17 +123,36 @@ class CartHelper
         $product['link_origin'] = $item->item_origin_url;
         $product['remove'] = 0;
         $product['condition'] = $item->condition;
-        $variations = null;
-        foreach ((array)$item->variation_mapping as $v) {
-            /** @var $v VariationMapping */
-            if ($v->variation_sku === $item->item_sku) {
-                $variations = $v;
-                break;
+        $variations = [];
+        if (strtolower($item->type) === 'ebay') {
+            foreach ((array)$item->variation_mapping as $v) {
+                /** @var $v VariationMapping */
+                if ($v->variation_sku === $item->item_sku) {
+
+                    $specific = [];
+                    foreach ($v->options_group as $option) {
+                        $specific = array_merge($specific, [$option->name => $option->value]);
+                    }
+                    $variations = $specific;
+                    break;
+                }
             }
+        } else {
+            $specific = [];
+            foreach ($item->variation_options as $variation_option) {
+                /** @var $variation_option VariationOption */
+                if($variation_option->option_link && !empty($variation_option->sku)){
+                    $specific = array_merge($specific, [$variation_option->name => $variation_option->value_current]);
+                }
+            }
+            $variations = $specific;
         }
+
+        $product['variations'] = $variations;
+
         $product['available_quantity'] = $item->available_quantity;
         $product['quantity_sold'] = $item->quantity_sold;
-        $product['variations'] = $variations;
+
         $product['product_link'] = $item->ws_link;
         $product['product_name'] = $item->item_name;
         $product['quantity_customer'] = $item->getShippingQuantity();
@@ -145,7 +165,7 @@ class CartHelper
         $additionalFees = $item->getAdditionalFees();
         $productPrice = $additionalFees->getTotalAdditionalFees('product_price');
         // Tổng tiền các phí, trừ tiền gốc sản phẩm (chỉ có các phí)
-        $product['total_fee_product_local'] = $additionalFees->getTotalAdditionalFees(['tax_fee','shipping_fee'])[1];         // Tổng Phí theo sản phẩm
+        $product['total_fee_product_local'] = $additionalFees->getTotalAdditionalFees(['tax_fee', 'shipping_fee'])[1];         // Tổng Phí theo sản phẩm
         // Tổng tiền local gốc sản phẩm (chỉ có tiền gốc của sản phẩm)
         list($product['price_amount_origin'], $product['price_amount_local']) = $productPrice;
         $product['price_amount_origin'] = $product['price_amount_origin'] / $item->getShippingQuantity();
@@ -153,7 +173,7 @@ class CartHelper
 
         $product['total_price_amount_local'] = $productPrice[1];
         // Tổng tiền local tất tần tận
-        list($product['total_final_amount_origin'],$product['total_final_amount_local'])  = $additionalFees->getTotalAdditionalFees(['product_price','shipping_fee','tax_fee']);
+        list($product['total_final_amount_origin'], $product['total_final_amount_local']) = $additionalFees->getTotalAdditionalFees(['product_price', 'shipping_fee', 'tax_fee']);
         $productFees = [];
         $product['additionalFees'] = $additionalFees->toArray();
         foreach ($additionalFees->keys() as $feeName) {
