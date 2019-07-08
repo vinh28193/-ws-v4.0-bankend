@@ -8,8 +8,10 @@
     <div class="carousel-inner">
         <?php foreach($images as $k => $image) {?>
             <div class="carousel-item <?= $k == 0 ? 'active' : '' ?>">
-                <img src="<?= $image->domain.$image->origin_src ?>"
-                     alt="<?= $image->name ?>">
+                <a href="<?= $image->link ? $image->link: 'javascript: void(0);' ?>">
+                    <img src="<?= $image->domain.$image->origin_src ?>"
+                         alt="<?= $image->name ?>">
+                </a>
             </div>
         <?php }?>
     </div>

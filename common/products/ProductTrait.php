@@ -28,6 +28,9 @@ trait ProductTrait
             $it->value_current = isset($datum['value_current']) ? $datum['value_current'] : '';
             $it->name = $datum['name'];
             $it->values = isset($datum['values']) ? $datum['values'] : (isset($datum['value']) ? $datum['value'] : []);
+            if(is_string($it->values)){
+                $it->values = [$it->values];
+            }
             $it->setImagesMapping();
             $it->setId();
             $rs[] = $it;
