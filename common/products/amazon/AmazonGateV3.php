@@ -316,7 +316,7 @@ class AmazonGateV3 extends BaseGate
             $prov['rating_score'] = ArrayHelper::getValue($amazon, 'rate_count');
             $prov['rating_star'] = ArrayHelper::getValue($amazon, 'rate_star');
             $prov['positive_feedback_percent'] = null;
-            $prov['condition'] = 'used or new';
+            $prov['condition'] = $rs['condition'] ? : 'new';
             $prov['fulfillment'] = null;
             $prov['is_free_ship'] = $rs['is_free_ship'];
             $prov['is_prime'] = $rs['is_prime'];
