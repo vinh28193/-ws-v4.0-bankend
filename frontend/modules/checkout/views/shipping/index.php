@@ -19,6 +19,7 @@ use frontend\modules\payment\Payment;
 /* @var ShippingForm $shippingForm */
 /* @var array $provinces */
 
+$isID = $shippingForm->getStoreManager()->store->country_code === 'ID';
 
 $showStep = true;
 $activeStep = 2;
@@ -106,14 +107,36 @@ $js = <<< JS
 JS;
 $this->registerJs($js);
 
-if ($payment->page === Payment::PAGE_CHECKOUT && $shippingForm->enable_buyer === ShippingForm::YES) {
-    $cartIds = json_encode(array_keys($payment->getOrders()));
-    $copyAddressJs = <<<JS
-    ws.shippingCollection('buyer','{$payment->type}',{$cartIds});
-JS;
-    $this->registerJs($copyAddressJs);
-}
+$urlAjaxUrl = Url::toRoute(['/data/get-zip-code']);
 
+$zipJs = <<<JS
+    var suggestAddress = function(event) {
+    
+        var params = event.params;
+        var data = params.data;
+        var type = params._type;
+        var target = $(event.target).data('ownwer');
+        var province = $('#shippingform-'+target+'_province_id');
+        province.prop('disabled',true);
+        if(data.province === false){
+            province.prop('disabled',false);
+            data.province = '';
+        }
+        wsAddress.select2ChangeSelect(province,data.province);
+        var depdropDistrict = $('#shippingform-'+target+'_district_id');
+        
+        depdropDistrict.trigger('change');
+        
+        depdropDistrict.on('depdrop:afterChange', function(event, id, value, jqXHR, textStatus) {
+            depdropDistrict.attr('disabled','disabled');
+            if(data.district === false){
+                depdropDistrict.removeAttr('disabled');
+            }
+           wsAddress.select2ChangeSelect(depdropDistrict,data.district);
+        });
+    };
+JS;
+$this->registerJs($zipJs, yii\web\View::POS_HEAD);
 ?>
 <style type="text/css">
 
@@ -187,40 +210,60 @@ JS;
                     </div>
                     <div class="col-md-6">
                         <?php
-                        if ($shippingForm->getStoreManager()->store->country_code === 'ID') {
+                        if ($isID) {
 //                            echo $form->field($shippingForm, 'buyer_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
-                            echo $form->field($shippingForm, 'buyer_post_code')->textInput(['list' => 'buyer_post_code_list'])->label(Yii::t('frontend', 'Post Code'));
-                            echo '<datalist id="buyer_post_code_list"></datalist>';
+                            echo $form->field($shippingForm, 'buyer_post_code')->widget(Select2::className(), [
+                                'options' => [
+                                    'data-ownwer' => 'buyer',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'placeholder' => Yii::t('frontend', 'Enter your post code'),
+                                    'ajax' => [
+                                        'url' => $urlAjaxUrl,
+                                        'dataType' => 'json',
+                                        'data' => new JsExpression('wsAddress.zipAjaxParam'),
+                                        'processResults' => new JsExpression('wsAddress.zipAjaxProcessResults'),
+                                    ],
+                                    'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                                    'templateResult' => new JsExpression('wsAddress.formatZipAjaxResults'),
+                                    'templateSelection' => new JsExpression('wsAddress.formatZipAjaxSelection'),
+
+                                ],
+                                'pluginEvents' => [
+                                    "select2:select" => new JsExpression('suggestAddress'),
+                                    "select2:unselect" => new JsExpression('suggestAddress')
+                                ]
+                            ])->label(Yii::t('frontend', 'Post Code'));
                         } else {
                             echo $form->field($shippingForm, 'buyer_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label(Yii::t('frontend', 'Address'));
                         }
-                        //                        echo $form->field($shippingForm, 'buyer_province_id')->widget(Select2::className(), [
-                        //                            'data' => $shippingForm->getProvinces(),
-                        //                            'pluginOptions' => [
-                        //                                'allowClear' => true,
-                        //                                'placeholder' => Yii::t('frontend', 'Choose the province'),
-                        //                            ],
-                        //                        ])->label(Yii::t('frontend', 'Province'));
+                        echo $form->field($shippingForm, 'buyer_province_id')->widget(Select2::className(), [
+                            'data' => $shippingForm->getProvinces(),
+                            'disabled' => $isID,
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'placeholder' => Yii::t('frontend', 'Choose the province'),
+                            ],
+                        ])->label(Yii::t('frontend', 'Province'));
 
-                        echo $form->field($shippingForm, 'buyer_province_id')->dropDownList($shippingForm->getProvinces())->label(Yii::t('frontend', 'Province'));
-                        echo $form->field($shippingForm, 'buyer_district_id')->dropDownList(SystemDistrict::selectData($shippingForm->buyer_province_id ? $shippingForm->buyer_province_id : array_key_first($shippingForm->getProvinces())))->label(Yii::t('frontend', 'District'));
-                        //                        echo Html::hiddenInput('hiddenBuyerDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenBuyerDistrictId']);
-                        //
-                        //                        echo $form->field($shippingForm, 'buyer_district_id')->widget(DepDrop::classname(), [
-                        //                            'type' => DepDrop::TYPE_SELECT2,
-                        //                            'select2Options' => [
-                        //                                'pluginOptions' => ['allowClear' => true], 'pluginEvents' => [
-                        //                                    "select2:select" => "function(event) {ws.payment.calculatorShipping(); }",
-                        //                                ]
-                        //                            ],
-                        //                            'pluginOptions' => [
-                        //                                'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
-                        //                                'placeholder' => Yii::t('frontend', 'Choose the district'),
-                        //                                'url' => Url::toRoute(['sub-district']),
-                        //                                'params' => ['hiddenBuyerDistrictId']
-                        //                            ],
-                        ////
-                        //                        ])->label(Yii::t('frontend', 'District')); ?>
+                        echo Html::hiddenInput('hiddenBuyerDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenBuyerDistrictId']);
+
+                        echo $form->field($shippingForm, 'buyer_district_id')->widget(DepDrop::classname(), [
+                            'type' => DepDrop::TYPE_SELECT2,
+                            'select2Options' => [
+                                'pluginOptions' => ['allowClear' => true], 'pluginEvents' => [
+                                    "select2:select" => "function(event) {ws.payment.calculatorShipping(); }",
+                                ]
+                            ],
+                            'pluginOptions' => [
+                                'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
+                                'placeholder' => Yii::t('frontend', 'Choose the district'),
+                                'url' => Url::toRoute(['sub-district']),
+                                'params' => ['hiddenBuyerDistrictId']
+                            ],
+//
+                        ])->label(Yii::t('frontend', 'District')); ?>
                     </div>
                 </div>
             </div>
@@ -229,7 +272,7 @@ JS;
         <div class="row">
             <div class="col-md-12">
                 <?php
-                echo $form->field($shippingForm, 'other_receiver')->checkbox()->label(Yii::t('frontend','Information of the receiver other than the buyer'));
+                echo $form->field($shippingForm, 'other_receiver')->checkbox()->label(Yii::t('frontend', 'Information of the receiver other than the buyer'));
                 ?>
             </div>
         </div>
@@ -278,42 +321,59 @@ JS;
                         <?php
                         if ($shippingForm->getStoreManager()->store->country_code === 'ID') {
 //                            echo $form->field($shippingForm, 'receiver_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
-                            echo $form->field($shippingForm, 'receiver_post_code')->textInput(['list' => 'receiver_post_code_list'])->label(Yii::t('frontend', 'Post Code'));
-                            echo '<datalist id="receiver_post_code_list"></datalist>';
+                            echo $form->field($shippingForm, 'receiver_post_code')->widget(Select2::className(), [
+                                'options' => [
+                                    'data-ownwer' => 'receiver',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'placeholder' => Yii::t('frontend', 'Enter your post code'),
+                                    'ajax' => [
+                                        'url' => $urlAjaxUrl,
+                                        'dataType' => 'json',
+                                        'data' => new JsExpression('wsAddress.zipAjaxParam'),
+                                        'processResults' => new JsExpression('wsAddress.zipAjaxProcessResults'),
+                                    ],
+                                    'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                                    'templateResult' => new JsExpression('wsAddress.formatZipAjaxResults'),
+                                    'templateSelection' => new JsExpression('wsAddress.formatZipAjaxSelection'),
+
+                                ],
+                                'pluginEvents' => [
+                                    "select2:select" => new JsExpression('suggestAddress'),
+                                    "select2:unselect" => new JsExpression('suggestAddress')
+                                ]
+                            ])->label(Yii::t('frontend', 'Post Code'));
                         } else {
                             echo $form->field($shippingForm, 'receiver_address')->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')])->label(Yii::t('frontend', 'Address'));
                         }
-                        //                        echo $form->field($shippingForm, 'receiver_province_id')->widget(Select2::className(), [
-                        //                            'data' => $shippingForm->getProvinces(),
-                        //                            'pluginOptions' => [
-                        //                                'allowClear' => true,
-                        //                                'placeholder' => Yii::t('frontend', 'Choose the province'),
-                        //                            ],
-                        //                        ])->label(Yii::t('frontend', 'Province'));
+                        echo $form->field($shippingForm, 'receiver_province_id')->widget(Select2::className(), [
+                            'data' => $shippingForm->getProvinces(),
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'placeholder' => Yii::t('frontend', 'Choose the province'),
+                            ],
+                        ])->label(Yii::t('frontend', 'Province'));
 
-                        echo $form->field($shippingForm, 'receiver_province_id')->dropDownList($shippingForm->getProvinces())->label(Yii::t('frontend', 'Province'));
+                        echo Html::hiddenInput('hiddenReceiverDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenReceiverDistrictId']);
 
-                        echo $form->field($shippingForm, 'receiver_district_id')->dropDownList(SystemDistrict::selectData($shippingForm->receiver_province_id ? $shippingForm->receiver_province_id : array_key_first($shippingForm->getProvinces())))->label(Yii::t('frontend', 'District'));
-                        //
-                        //                        echo Html::hiddenInput('hiddenReceiverDistrictId', $shippingForm->buyer_district_id, ['id' => 'hiddenReceiverDistrictId']);
-                        //
-                        //                        echo $form->field($shippingForm, 'receiver_district_id')->widget(DepDrop::classname(), [
-                        //                            'type' => DepDrop::TYPE_SELECT2,
-                        //                            'select2Options' => [
-                        //                                'pluginOptions' => ['allowClear' => true],
-                        //                                'pluginEvents' => [
-                        //                                    "select2:select" => "function(event) { ;ws.payment.calculatorShipping(); }",
-                        //                                ]
-                        //                            ],
-                        //                            'pluginOptions' => [
-                        //                                'depends' => [Html::getInputId($shippingForm, 'receiver_province_id')],
-                        //                                'placeholder' => Yii::t('frontend', 'Choose the district'),
-                        //                                'url' => Url::toRoute(['sub-district']),
-                        //                                'loadingText' => Yii::t('frontend', 'Loading district ...'),
-                        //                                'initialize' => true,
-                        //                                'params' => ['hiddenReceiverDistrictId']
-                        //                            ],
-                        //                        ])->label(Yii::t('frontend', 'District'));
+                        echo $form->field($shippingForm, 'receiver_district_id')->widget(DepDrop::classname(), [
+                            'type' => DepDrop::TYPE_SELECT2,
+                            'select2Options' => [
+                                'pluginOptions' => ['allowClear' => true],
+                                'pluginEvents' => [
+                                    "select2:select" => "function(event) { ;ws.payment.calculatorShipping(); }",
+                                ]
+                            ],
+                            'pluginOptions' => [
+                                'depends' => [Html::getInputId($shippingForm, 'receiver_province_id')],
+                                'placeholder' => Yii::t('frontend', 'Choose the district'),
+                                'url' => Url::toRoute(['sub-district']),
+                                'loadingText' => Yii::t('frontend', 'Loading district ...'),
+                                'initialize' => true,
+                                'params' => ['hiddenReceiverDistrictId']
+                            ],
+                        ])->label(Yii::t('frontend', 'District'));
 
                         ?>
                     </div>
