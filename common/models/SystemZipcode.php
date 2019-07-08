@@ -16,13 +16,8 @@ class SystemZipcode extends DbSystemZipcode
 
     public static function loadZipCode($country, $zipcode = null, $offset = 0, $limit = 10)
     {
-        $conditions = [
-            'AND',
-            ['zip.system_country_id' => $country],
-        ];
-        if (!WeshopHelper::isEmpty($zipcode)) {
-            $conditions[] = ['like', 'zip.zip_code', $zipcode];
-        }
+
+
         $query = new Query();
         $query->select([
             'zip_code' => new Expression('`zip`.`zip_code`'),
@@ -38,7 +33,11 @@ class SystemZipcode extends DbSystemZipcode
         $query->leftJoin(['country' => SystemCountry::tableName()], ['country.id' => new Expression('[[zip.system_country_id]]')]);
         $query->leftJoin(['province' => SystemStateProvince::tableName()], ['province.id' => new Expression('[[zip.system_state_province_id]]')]);
         $query->leftJoin(['district' => SystemDistrict::tableName()], ['district.id' => new Expression('[[zip.system_district_id]]')]);
-        $query->where($conditions);
+        $query->andWhere(['zip.system_country_id' => $country]);
+        if (!WeshopHelper::isEmpty($zipcode)) {
+            $query->andWhere('`zip`.`zip_code` like :zip', [':zip' => $zipcode . '%']);
+        }
+
         $query->limit($limit);
         $query->offset($offset);
         $totalCount = (clone $query)->limit(-1)->offset(-1)->count(new Expression('[[zip.zip_code]]'));
