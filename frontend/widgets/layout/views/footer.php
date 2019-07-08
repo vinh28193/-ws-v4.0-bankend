@@ -128,12 +128,14 @@ $isID = $storeManager->store->country_code === 'ID';
                     <div class="sticker-bct"><a href="#" target="_blank"><img
                                     src="<?= Url::to('/img/chung_nhan_bct.png', true); ?>" alt=""
                                     title=""/></a></div>
-                    <div class="connect">
-                        <span><?= Yii::t('frontend', 'Connect with Weshop:') ?>:</span>
-                        <a rel="nofollow" href="<?= Yii::t('frontend', '#facebookWeshop') ?>" target="_blank"><img
-                                    src="<?= Url::to('/img/social_fb.png', true); ?>" alt="" title=""/></a>
-                        <aư rel="nofollow" href="<?= Yii::t('frontend', '#youtubeWeshop') ?>" target="_blank"><img
-                                    src="<?= Url::to('/img/social_youtube.png', true); ?>" alt="" title=""/></aư>
+                    <div class="connect" style="color: #fff">
+                        <span><?= Yii::t('frontend', 'Connect with Weshop:') ?></span>
+                        <a rel="nofollow" href="<?= Yii::t('frontend', '#facebookWeshop') ?>" target="_blank">
+                            <i class="fa fa-facebook-square" style="font-size: 30px; padding: 0px;"></i>
+                        </a> |
+                        <a rel="nofollow" href="<?= Yii::t('frontend', '#youtubeWeshop') ?>" target="_blank">
+                            <i class="fa fa-instagram" style="font-size: 30px; padding: 0px;"></i>
+                        </a>
                     </div>
                     <script>
                         var formSubmit = function () {
