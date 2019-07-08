@@ -116,9 +116,10 @@ $jsdistrict = json_encode($district);
                     <div class="form-group contact">
                         <div class="input-group">
                             <input class="form-control" type="text"
+                                   id="email-getdeal"
                                    placeholder="<?= Yii::t('frontend', 'Enter email to get hot deals') ?>">
                             <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i
+                                        <button type="button" onclick="formSubmit()" class="btn btn-default"><i
                                                     class="contact-ico"></i></button>
                                     </span>
                         </div>
@@ -133,6 +134,13 @@ $jsdistrict = json_encode($district);
                         <aư rel="nofollow" href="<?= Yii::t('frontend', '#youtubeWeshop') ?>" target="_blank"><img
                                     src="<?= Url::to('/img/social_youtube.png', true); ?>" alt="" title=""/></aư>
                     </div>
+                    <script>
+                        var formSubmit = function () {
+                            var email = document.getElementById("email-getdeal").value;
+                            Intercom('update', { email: email, "subscriber": "1" });
+                            Intercom('showNewMessage', "<?= Yii::t('frontend', 'Hello Weshop!') ?>");
+                        }
+                    </script>
                 </div>
             </div>
         </div>

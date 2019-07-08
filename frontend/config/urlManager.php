@@ -23,9 +23,11 @@ return [
         'GET ebay/item/<name:[0-9A-Za-z_-]*>-<id:[0-9_-]*>.html' => 'ebay/item/detail',
         'POST ebay/item/detail' => 'ebay/item/detail',
         'ebay/search/<keyword:[^/]+>.html' => 'ebay/search/index',
+        'ebay/search/ebay/search/<keyword:[^/]+>.html' => 'ebay/search/index',
         'ebay/seller/<seller:[^/]+>.html' => 'ebay/search/index',
         'ebay/category/<name:[0-9a-zA-Z_-]+>-<category:\d+>.html' => 'ebay/search/index',
         'GET ebay/categories.html' => 'ebay/ebay/categories',
+        'ebay/service/browse/<keyword:[^/]+>' => 'ebay/search/index',
 
 
         // amazon

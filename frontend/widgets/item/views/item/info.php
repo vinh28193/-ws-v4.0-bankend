@@ -209,7 +209,7 @@ JS;
     $this->registerJs($js);
         } //esle 0 Dong ?>
     <?php
-    if (isset($item->bid) && isset($item->bid['bid_minimum']) && ($item->bid['bid_minimum'])) { ?>
+    if (isset($item->bid) && isset($item->bid['bid_minimum']) && ($item->bid['bid_minimum']) && !(ArrayHelper::getValue($item->bid,'allow_by_now'))) { ?>
         <div class="" id="" style="display: block; font-size: 12px;color: red">
             <i class="fa fa-exclamation-triangle"></i><b><?= Yii::t('frontend', 'Sorry, the auction system on WESHOP is currently under maintenance. <br> Hope you sympathize!'); ?></b>
         </div>
