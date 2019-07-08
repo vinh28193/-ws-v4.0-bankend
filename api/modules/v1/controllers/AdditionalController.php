@@ -217,7 +217,7 @@ class AdditionalController extends BaseApiController
                 } elseif ($orderFee->name === 'customer_fee') {
                     // Tổng vận chuyển tại local của các sản phẩm
                     $attribute = 'total_custom_fee_amount_local';
-                    $attributeAmount = 'total_custom_fee_amount_amount';
+                    $attributeAmount = 'total_custom_fee_amount';
                 }
                 $totalOrderFeeAmountLocal += $orderFee->local_amount;
                 if (!isset($orderUpdateAttribute[$attribute])) {
