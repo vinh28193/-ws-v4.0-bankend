@@ -27,6 +27,7 @@ class ItemController extends EbayController
         $form->id = $id;
         $form->type = 'ebay';
         $item = $form->detail();
+
         if (Yii::$app->request->isPjax) {
             if ($item === false) {
                 return $this->renderAjax('@frontend/views/common/item_error', [

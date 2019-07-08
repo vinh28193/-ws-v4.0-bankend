@@ -27,17 +27,19 @@ class OrderController extends BaseApiController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-//        $behaviors['pageCache'] = [
-//            'class' => 'yii\filters\PageCache',
-//            'only' => ['index'],
-//            'duration' => 24 * 3600 * 365, // 1 year
-//            'dependency' => [
-//                'class' => 'yii\caching\ChainedDependency',
-//                'dependencies' => [
-//                    new DbDependency(['sql' => 'SELECT MAX(id) FROM `'.Order::tableName().'`'])
-//                ]
-//            ],
-//        ];
+        /*
+        $behaviors['pageCache'] = [
+            'class' => 'yii\filters\PageCache',
+            'only' => ['index'],
+            'duration' => 24 * 3600 * 365, // 1 year
+            'dependency' => [
+                'class' => 'yii\caching\ChainedDependency',
+                'dependencies' => [
+                    new DbDependency(['sql' => 'SELECT MAX(id) FROM `'.Order::tableName().'`'])
+                ]
+            ],
+        ];
+        */
         return $behaviors;
     }
 
@@ -48,8 +50,7 @@ class OrderController extends BaseApiController
             [
                 'allow' => true,
                 'actions' => ['index', 'view', 'create', 'update'],
-                'roles' => $this->getAllRoles(true),
-
+                'roles' => $this->getAllRoles(true,'marketing'),
             ],
             [
                 'allow' => true,

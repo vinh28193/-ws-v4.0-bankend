@@ -21,9 +21,7 @@ $(document).ready(function() {
         data: {fingerprint: ws.getFingerprint()},
         loading: true,
         success: function (result) {
-            console.log("result.success : " + result.success);  console.log( "result.data.content" + result.data.content);
             if(result.success == true ){
-                console.log("hdhdh :");
                 $( ".viewed-product" ).css( "display", "block" );
                 $('.viewed-product').html(result.data.content);
                 $(".owl-carousel").owlCarousel({

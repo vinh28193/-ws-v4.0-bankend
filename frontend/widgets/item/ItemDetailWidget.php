@@ -147,7 +147,7 @@ CSS;
         $view = $this->getView();
         ItemDetailAsset::register($view);
         $view->registerJs("jQuery('#$id').wsItem($params,$options);", $view::POS_END);
-        $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
+//        $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
         $item = Json::htmlEncode($this->item);
         $sku = $this->item->item_id;
         // cách gọi 1 hàm cùng với param truyền vào

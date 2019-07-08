@@ -15,16 +15,16 @@ return [
             'class' => 'common\bootstrap\AutoDetectLanguageBootstrapping'
         ],
         'log', 'queue', ],
-    'timeZone' => 'Asia/Ho_Chi_Minh',
-    'controllerNamespace' => 'frontend\controllers',
-    'defaultRoute' => 'cms/home',
-    'components' => [
-        /*
-        'queue' => [
-            'class' => '\yii\queue\file\Queue',
-            'as log' => '\yii\queue\LogBehavior',
-            'path' => '@runtime/queue',
-        ],
+            'timeZone' => 'Asia/Ho_Chi_Minh',
+            'controllerNamespace' => 'frontend\controllers',
+            'defaultRoute' => 'cms/home',
+            'components' => [
+                /*
+                'queue' => [
+                    'class' => '\yii\queue\file\Queue',
+                    'as log' => '\yii\queue\LogBehavior',
+                    'path' => '@runtime/queue',
+                ],
         */
         'translatemanager' => [
            'class' => 'lajax\translatemanager\Component'
@@ -119,7 +119,7 @@ return [
             'targets' => [
                 [
                     'class' => 'notamedia\sentry\SentryTarget',
-                    'dsn' =>'https://c45d3a0d75be4d4d981cab62b26a9748@sentry.io/1498360', // 'https://b3713d886aed4cd3afa56ef65572ace7@sentry.io/1487129',
+                    'dsn' => 'https://b3713d886aed4cd3afa56ef65572ace7@sentry.io/1487129', // 'https://c45d3a0d75be4d4d981cab62b26a9748@sentry.io/1498360'
                     'levels' => ['error', 'warning'],
                     'context' => true // Write the context information. The default is true.
                 ],

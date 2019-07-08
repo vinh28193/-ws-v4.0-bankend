@@ -75,7 +75,8 @@ ws.payment = (function ($) {
                 if ($input.length > 0 && $input.val() !== '') {
                     var orders = pub.get('orders');
                     var order = orders[key];
-                    order.couponCode = $input.val();
+                    order.couponCode = $input.val().replace(new RegExp(/[<>\/]/, 'g'), '');
+                    $input.val(order.couponCode);
                     order.discountDetail = [];
                     order.discountAmount = 0;
                     orders[key] = order;

@@ -265,7 +265,7 @@
                         if (response == 'Can not create favorite' || response == 'something wrong user uu!!!!!') {
                             $(".viewed-product").css("display", "none");
                         } else {
-                            console.log("done : cret fv s!!! ");
+                            // console.log("done : cret fv s!!! ");
                         }
                     }
                 }, false);
@@ -356,7 +356,7 @@
         if (sku !== undefined) {
             activeVariation = data.params.variation_mapping.filter(m => m.variation_sku === sku);
         }
-        console.log(activeVariation);
+        // console.log(activeVariation);
         if (activeVariation.length === 0) {
             var optionTemp = [];
             $.each(data.params.variation_options, function (k, v) {
@@ -376,7 +376,7 @@
             }
             // activeVariation = data.params.variation_mapping[0];
         }
-        console.log(activeVariation);
+        // console.log(activeVariation);
         var images = data.params.images;
         $.each(activeVariation[0].options_group, function (index, group) {
             for (var i = 0; i < data.params.variation_options.length; i++) {

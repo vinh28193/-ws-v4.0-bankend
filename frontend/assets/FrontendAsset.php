@@ -33,6 +33,7 @@ class FrontendAsset extends AssetBundle
     ];
     public $depends = [
         'yii\web\YiiAsset',
+        'yii\jui\JuiAsset',
         'yii\bootstrap4\BootstrapPluginAsset',
         'common\assets\JQueryEzPlus',
         //'common\assets\FontawesomeAsset',

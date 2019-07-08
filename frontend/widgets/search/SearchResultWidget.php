@@ -78,7 +78,7 @@ class SearchResultWidget extends Widget
         SearchAsset::register($view);
         $options = Json::htmlEncode($this->getClientOptions());
         $view->registerJs("jQuery('#$id').wsSearch($options);");
-        $view->registerJs("console.log($('#$id').wsSearch('data'))");
+//        $view->registerJs("console.log($('#$id').wsSearch('data'))");
         if (strtolower($this->portal) === 'ebay') {
             $view->registerJs("setInterval(function () {ws.countdownTime();}, 1000);");
         }
