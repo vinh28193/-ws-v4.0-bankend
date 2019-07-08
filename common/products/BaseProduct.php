@@ -171,13 +171,13 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getSellPrice()
     {
-        try{
+        try {
             if (!empty($this->deal_price) && $this->deal_price > 0.0) {
                 return $this->deal_price * $this->quantity;
             } else {
                 return $this->sell_price ? $this->sell_price * $this->quantity : 0;
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Yii::error($exception);
             return 0;
         }
@@ -275,8 +275,9 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         return $this->roundShippingWeight($this->shipping_weight * $this->quantity);
     }
 
-    public function roundShippingWeight($inputWeight = 0, $minWeight = 0.5)
+    public function roundShippingWeight($inputWeight = 0)
     {
+        $minWeight = $this->getStoreManager()->store->country_code === 'ID' ? 1 : 0.5;
         return floatval($inputWeight) < $minWeight ? $minWeight : round($inputWeight, 2);
     }
 

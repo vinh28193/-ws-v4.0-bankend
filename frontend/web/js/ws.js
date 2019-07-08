@@ -1,4 +1,4 @@
-var ws = ws || (function ($) {
+ var ws = ws || (function ($) {
 
     var events = {
         ajaxBeforeSend: 'ajaxBeforeSend',
@@ -490,18 +490,4 @@ $('datalist#listSuggestSearch').keyup(function () {
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
     }
-});
-$('#zipcode_default').keyup(function () {
-    var txt = '';
-    var count = 0;
-    var tesst = zipcode_data.filter(function (z) {
-        if (z.zip_code.indexOf($('#zipcode_default').val()) > -1) {
-            count++;
-        }
-        return count < 20 && z.zip_code.indexOf($('#zipcode_default').val()) > -1;
-    });
-    $.each(tesst, function (k, v) {
-        txt += "<option value='" + v.zip_code + "'>" + v.label + "</option>";
-    });
-    $('#list_zipcode').html(txt);
 });

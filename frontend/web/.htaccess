@@ -4,3 +4,6 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 # Otherwise forward it to index.php
 RewriteRule . index.php
+
+# Redirect 301 /amazon-jp/item/ https://weshop.com.vn/
+
