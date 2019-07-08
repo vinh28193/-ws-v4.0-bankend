@@ -77,6 +77,7 @@ class AmazonGateV3 extends BaseGate
         $condition['store'] = $this->store;
         $request = new AmazonDetailRequest();
         $request->load($condition, '');
+        $request->get_offer = ArrayHelper::getValue($condition,'get_offer',true);
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
@@ -300,11 +301,10 @@ class AmazonGateV3 extends BaseGate
         $rs['tax_fee'] = 0;
         $rs['store'] = $this->store;
         $rs['customer_feedback'] = ArrayHelper::getValue($amazon, 'product_review', []);
-//            $offersCacheKey = "offers_{$rs['item_sku']}";
-//            if (!($offers = $this->cache->get($offersCacheKey))) {
-        $offers = $this->getOffers($rs['item_sku']);
-//                $this->cache->set($offersCacheKey, $offers, 3600);
-//            }
+        $offers = null;
+        if($request->get_offer){
+            $offers = $this->getOffers($rs['item_sku']);
+        }
         $check = false;
         $rs['providers'] = [];
         if (($auth = ArrayHelper::getValue($amazon, 'author'))) {
@@ -349,12 +349,6 @@ class AmazonGateV3 extends BaseGate
                 $prov['tax_fee'] = $offer['tax_fee'];
                 $rs['providers'][] = $prov;
             }
-//                $rs['sell_price'] = trim(str_replace(',','',$offers[0]['price']));
-//                $rs['condition'] = trim($offers[0]['condition']);
-//                $rs['is_free_ship'] = $offers[0]['is_free_ship'];
-//                $rs['is_prime'] = $offers[0]['is_prime'];
-//                $rs['shipping_fee'] = $offers[0]['ship_fee'];
-//                $rs['tax_fee'] = $offers[0]['tax_fee'];
         }
         if (!count($rs['providers']) && $check) {
             $rs['sell_price'] = 0;

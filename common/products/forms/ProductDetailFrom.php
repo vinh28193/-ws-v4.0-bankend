@@ -27,6 +27,8 @@ class ProductDetailFrom extends BaseForm
 
     public $weight;
 
+    public $getOffer = true;
+
     public $sub_product_url;      //ToDo :  Url product con vì chạy qua 2 api mới lấy đủ 1 thông tin details sản phẩm
 
     public $with_detail = false;  //ToDo :  Thông tin mô tả quá dài . nếu Tru sẽ cắt đi và ngược lại
@@ -129,12 +131,14 @@ class ProductDetailFrom extends BaseForm
             return $this->id;
         } else {
             $param = [
-                'asin_id' => $this->id
+                'asin_id' => $this->id,
+                'get_offer' => $this->getOffer,
             ];
             if ($this->isSku()) {
                 $param['asin_id'] = $this->sku;
                 $param['parent_asin_id'] = $this->id;
                 $param['load_sub_url'] = null;
+                $param['get_offer'] = $this->getOffer;
             }
             return $param;
 

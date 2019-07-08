@@ -17,6 +17,7 @@ class ItemController extends AmazonController
         $form->load($this->request->getQueryParams(), '');
         $form->id = $id;
         $form->type = 'amazon';
+        $form->getOffer = false;
         if (($item = $form->detail()) === false) {
             return $this->render('@frontend/views/common/item_error', [
                 'errors' => $form->getErrors()
@@ -37,7 +38,9 @@ class ItemController extends AmazonController
         $response = ['success' => false, 'message' => Yii::t('frontend', 'Failed'), 'content' => []];
         $form = new ProductDetailFrom();
         $post = Yii::$app->getRequest()->post();
-        if ($form->load(Yii::$app->getRequest()->post(), '')) {
+        $form->load(Yii::$app->getRequest()->post(), '');
+        $form->getOffer = false;
+        if (!$form || $form->id) {
             $response['message'] = Yii::t('frontend', 'Can not resolve request');
         }
         $form->type = 'amazon';
@@ -85,5 +88,49 @@ class ItemController extends AmazonController
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $response;
+    }
+    public function actionGetOffer($id) {
+        Yii::$app->response->format = 'json';
+        $form = new ProductDetailFrom();
+        $form->load($this->request->getQueryParams(), '');
+        $form->id = $id;
+        $form->type = 'amazon';
+        if (($item = $form->detail()) === false) {
+            return ['success' => false];
+        }
+        if($item->providers){
+            $txt = "";
+            $current_provider = $item->provider;
+            foreach ($item->providers as $provider) {
+                if($provider->prov_id != $current_provider->prov_id){
+                    $item->updateBySeller($provider->prov_id);
+                    $rate_star_seller = floatval($provider->rating_star);
+                    $rate_count_seller = $provider->rating_score ? $provider->rating_score : 0;
+                    $rate_star_seller = $rate_star_seller > intval($rate_star_seller) ? intval($rate_star_seller).'-5' : intval($rate_star_seller);
+                    $txt .= "<tr>" .
+                        "<td><strong class='text-danger'>".$this->storeManager->showMoney($item->getLocalizeTotalPrice())."</strong>";
+                    if($item->start_price && $item->start_price > $item->sell_price){
+                        $txt .= "<br><b class='old-price'>".$this->storeManager->showMoney($item->getLocalizeTotalStartPrice())."</b>";
+                    }
+                    $txt .= "</td>";
+                    $txt .= "<td><strong>".$provider->condition."</strong></td>";
+                    $txt .= "<td>" .
+                        "<div class='text-blue'>".$provider->name."</div>" .
+                        "<div class='rate text-orange'>" .
+                        "" .($rate_star_seller ? "<i class='a-icon a-icon-star a-star-".$rate_star_seller."   review-rating'></i>" : "").
+                        "" .($provider->positive_feedback_percent ? "<u class='text-blue font-weight-bold'>".Yii::t('frontend','{positive}% positive',['positive' => $provider->positive_feedback_percent])."</u>" : "").
+                        "" .($rate_count_seller ? "<br><u class='text-blue font-weight-bold'>(".Yii::t('frontend','{countRate} total rating',['countRate' => $rate_count_seller]).")</u>" : "").
+                        "</div>" .
+                        "</td>";
+                    $txt .= "<td>" .
+                        "<a href='javascript: void(0);' class='btn btn-amazon shortcut-payment'  data-role='buynow' data-seller=' ".$provider->prov_id." ' style='border-radius: 0px'>".Yii::t('frontend','Buy now')."</a>" .
+                        "<a href='javascript: void(0);' class='btn btn-outline-info shortcut-payment'  data-role='shopping' data-seller=' ".$provider->prov_id." ' style='border-radius: 0px'>".Yii::t('frontend','Cart')."</a>" .
+                        "</td>";
+                    $txt .= "</tr>";
+                }
+            };
+            return ['success' => true,'data' => ['content' => $txt]];
+        }
+        return ['success' => false];
     }
 }

@@ -274,9 +274,9 @@ JS;
             </div>
         </div>
     <?php }
-    if($item->type == BaseProduct::TYPE_AMAZON_US && count($item->providers) > 1){
+    if($item->type == BaseProduct::TYPE_AMAZON_US){
         ?>
-        <div class="seller-block">
+        <div class="seller-block" id="seller-more" style="display: none">
             <div class="title">
                 <?= Yii::t('frontend','Other sellers') ?>:
             </div>

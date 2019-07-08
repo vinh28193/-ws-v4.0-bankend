@@ -287,7 +287,6 @@
             }
         },
         getSuggestSearch: function (response) {
-            console.log(response);
             if (response.length > 2) {
                 $('input.searchBoxInput').autocomplete({
                     source: response[1],
@@ -301,7 +300,6 @@
                         .append("<div>" + newText + "</div>")
                         .appendTo(ul);
                 };
-                console.log('complete');
                 /*
                 if ($('input.searchBoxInput').val() === response[0]) {
                     var txt = '<option>' + response[0] + '</option>';

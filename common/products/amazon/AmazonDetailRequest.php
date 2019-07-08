@@ -16,6 +16,7 @@ class AmazonDetailRequest extends AmazonRequest
     public $asin_id;
     public $parent_asin_id;
     public $load_sub_url;
+    public $get_offer = true;
 
     public $is_first_load = false;
     public function rules()
