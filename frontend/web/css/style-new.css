@@ -20,6 +20,9 @@ html, body {
 .formIconTitle i{
     font-size: 25px
 }
+.ui-menu .ui-menu-item-wrapper{
+    font-size: 14px;
+}
 .formIconTitle input{
     border: none;
 }
@@ -187,6 +190,7 @@ body div.wrapper div.navbar-ws div div.search-box{
 }
 .bars-nav123 li a{
     color: #2b96b6;
+    display: initial;
     padding-left: 10px;
 
 }

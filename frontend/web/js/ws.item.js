@@ -265,7 +265,7 @@
                         if (response == 'Can not create favorite' || response == 'something wrong user uu!!!!!') {
                             $(".viewed-product").css("display", "none");
                         } else {
-                            console.log("done : cret fv s!!! ");
+                            // console.log("done : cret fv s!!! ");
                         }
                     }
                 }, false);
@@ -301,7 +301,8 @@
             }
             if (value > numberInstock) {
                 $('#quantity').val(valueOld === value ? 1 : valueOld);
-                return ws.notifyError(ws.t('You can not buy greater than {number}', {number: numberInstock}));
+                return false;
+                // return ws.notifyError(ws.t('You can not buy greater than {number}', {number: numberInstock}));
             }
             $('#quantity').val(value);
             $('#quantity').css('width', (value.toString().length * 10 + 20) + 'px');
@@ -356,7 +357,7 @@
         if (sku !== undefined) {
             activeVariation = data.params.variation_mapping.filter(m => m.variation_sku === sku);
         }
-        console.log(activeVariation);
+        // console.log(activeVariation);
         if (activeVariation.length === 0) {
             var optionTemp = [];
             $.each(data.params.variation_options, function (k, v) {
@@ -376,7 +377,7 @@
             }
             // activeVariation = data.params.variation_mapping[0];
         }
-        console.log(activeVariation);
+        // console.log(activeVariation);
         var images = data.params.images;
         $.each(activeVariation[0].options_group, function (index, group) {
             for (var i = 0; i < data.params.variation_options.length; i++) {
@@ -615,7 +616,8 @@
         var $data = $item.data('wsItem');
         var quantity = $('#quantity').val();
         if (quantity < 1) {
-            return ws.notifyError(ws.t('You can not buy lesser than {number}', {number: '1'}));
+            return false;
+            // return ws.notifyError(ws.t('You can not buy lesser than {number}', {number: '1'}));
         }
 
         if ($data.params.variation_options.length > 0 && currentVariations.length !== $data.params.variation_options.length) {

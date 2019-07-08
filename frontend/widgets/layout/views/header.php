@@ -52,13 +52,18 @@ $(document).ready(function () {
 JS;
 $this->registerJs($js);
 
+/** @var  $storeManager  common\components\StoreManager */
+$storeManager = Yii::$app->storeManager;
+
 $userCookie = new \common\components\UserCookies();
 $userCookie->setUser();
 $shipTo = Yii::t('frontend', 'Click here');
 if ($userCookie->checkAddress()) {
     $array = [];
-    if (($provide = $userCookie->getProvince())) {
+    if (($storeManager->isVN() && $provide = $userCookie->getProvince())) {
         $shipTo = $provide->name;
+    } elseif ($storeManager->isID() && $userCookie->zipcode !== null) {
+        $shipTo = $userCookie->zipcode;
     }
 }
 ?>
@@ -69,8 +74,8 @@ if ($userCookie->checkAddress()) {
             <a href="/" class="logo-pc">
                 <?php
                 $domain = Url::to('/images/logo/weshop-01.png', true);
-                if(YII_ENV == 'prod'){
-                    $domain =   str_replace(['http://','https"//'],'',$domain);
+                if (YII_ENV == 'prod') {
+                    $domain = str_replace(['http://', 'https"//'], '', $domain);
                 }
                 echo Html::img(Url::to('/images/logo/weshop-01.png', true)); ?>
             </a>
@@ -197,7 +202,8 @@ if ($userCookie->checkAddress()) {
                     style="display: none; border-right: 1px solid gray ">
                     <li role="presentation">
                         <a data-toggle="collapse" class="toggle" id="toggle" role="button" aria-expanded="false">
-                            <span style="display: block; float: left;"><img src="<?= Url::to('/img/logo_amazon_us.png', true); ?>"></span>
+                            <span style="display: block; float: left;"><img
+                                        src="<?= Url::to('/img/logo_amazon_us.png', true); ?>"></span>
                             <span style="display: block; text-align: right; margin-right: 8px" class="ico-dropdown amz"><i
                                         id="asd"
                                         class="la la-caret-down" style="transform: scaleY(-1);"></i></span>
@@ -211,7 +217,8 @@ if ($userCookie->checkAddress()) {
                         <a href="javascript: void(0);" class="toggleEbay" data-toggle="dropdown" aria-haspopup="true"
                            role="button"
                            aria-expanded="false">
-                            <span style="display: block; float: left;"><img src="<?= Url::to('/img/logo_ebay.png', true); ?>"></span>
+                            <span style="display: block; float: left;"><img
+                                        src="<?= Url::to('/img/logo_ebay.png', true); ?>"></span>
                             <span style="display: block; text-align: right; margin-right: 8px"
                                   class="ico-dropdown ebay"><i id="asd1"
                                                                class="la la-caret-down"></i></span>
@@ -304,7 +311,8 @@ if ($userCookie->checkAddress()) {
     </div>
     <div class="mb-modal-auth">
         <div class="title-mb-menu">
-            <a href="/" class="logo"><img src="<?= Url::to('/images/logo/weshop-01.png', true); ?>" alt="" style="height: 30px"></a>
+            <a href="/" class="logo"><img src="<?= Url::to('/images/logo/weshop-01.png', true); ?>" alt=""
+                                          style="height: 30px"></a>
             <i class="la la-close" style="float: right;padding:5px;"></i>
             <div class="clearfix"></div>
         </div>
@@ -315,7 +323,8 @@ if ($userCookie->checkAddress()) {
                     <button onclick="smsLogin();" class="btn btn-fb"><?= Yii::t('frontend', 'Login via SMS') ?></button>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-google" data-action="clickToLoad" data-href="<?= Url::to('/login.html', true); ?>"
+                    <button class="btn btn-google" data-action="clickToLoad"
+                            data-href="<?= Url::to('/login.html', true); ?>"
                             class="btn btn-info">
                         <?= Yii::t('frontend', 'Login via Email') ?>
                     </button>

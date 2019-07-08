@@ -12,6 +12,18 @@ $config = [
             'port' => 6479,
             'database' => 0
         ],
+        'log' => [
+            // Query QA IO
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                [
+                    'class' => 'notamedia\sentry\SentryTarget',
+                    'dsn' =>  'https://b3713d886aed4cd3afa56ef65572ace7@sentry.io/1487129',
+                    'levels' => ['error', 'warning'],
+                    'context' => true // Write the context information. The default is true.
+                ],
+            ],
+        ],
         /*
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',

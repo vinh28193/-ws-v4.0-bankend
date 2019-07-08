@@ -147,7 +147,7 @@ CSS;
         $view = $this->getView();
         ItemDetailAsset::register($view);
         $view->registerJs("jQuery('#$id').wsItem($params,$options);", $view::POS_END);
-        $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
+//        $view->registerJs("console.log($('#$id').wsItem('data'));", $view::POS_END);
         $item = Json::htmlEncode($this->item);
         $sku = $this->item->item_id;
         // cách gọi 1 hàm cùng với param truyền vào
@@ -155,6 +155,24 @@ CSS;
         $view->registerJs("jQuery('#$id').wsItem('favorite');", $view::POS_END);
         if ($this->item->type === BaseProduct::TYPE_EBAY) {
             $view->registerJs("setInterval(function () {ws.countdownTime();}, 1000);");
+        }
+        if ($this->item->type === BaseProduct::TYPE_AMAZON_US) {
+            $view->registerJs("
+            $(document).ready(function(){
+                $.ajax({
+                url: '/amazon/item/get-offer/".$this->item->item_sku."',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                console.log(data);
+                    if(data.success){
+                        $('#seller-more').css('display','block');
+                        $('#seller-more table tbody').html(data.data.content);
+                    }
+                }
+            });
+            });
+            ");
         }
     }
 

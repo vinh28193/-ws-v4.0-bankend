@@ -34,8 +34,8 @@ use common\helpers\WeshopHelper;
 class StoreManager extends Component implements BootstrapInterface
 {
 
-    const STORE_VN = 1;
-    const STORE_ID = 7;
+    const STORE_VN = 'VN';
+    const STORE_ID = 'ID';
 
     const MONEY_SHOW_MODE_CURRENCY = 'currency';
     const MONEY_SHOW_MODE_SYMBOL = 'symbol';
@@ -259,12 +259,12 @@ class StoreManager extends Component implements BootstrapInterface
      */
     public function isVN()
     {
-        return $this->getId() == self::STORE_VN;
+        return $this->store->country_code === self::STORE_VN;
     }
 
     public function isID()
     {
-        return $this->getId() == self::STORE_ID;
+        return $this->store->country_code === self::STORE_ID;
     }
 
     public function getBaseUrl()

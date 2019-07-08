@@ -10,14 +10,15 @@ use yii\helpers\Url;
 use yii\bootstrap4\ActiveForm;
 use frontend\assets\FrontendAsset;
 use frontend\models\PasswordRequiredForm;
+use frontend\assets\AddressAsset;
 
 $passwordRequiredForm = new PasswordRequiredForm();
 FrontendAsset::register($this);
 
 $this->registerJs("ws.sendFingerprint();", \yii\web\View::POS_READY);
-$ParamConfigAccountKit = ArrayHelper::getValue(Yii::$app->params,'account_kit',[]);
-$ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$app->storeManager->getId(),[]);
-
+$ParamConfigAccountKit = ArrayHelper::getValue(Yii::$app->params, 'account_kit', []);
+$ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit, 'store_' . Yii::$app->storeManager->getId(), []);
+AddressAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -37,9 +38,9 @@ $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$
     AccountKit_OnInteractive = function () {
         AccountKit.init(
             {
-                appId: "<?= ArrayHelper::getValue($ConfigAccountKit,'app_id','181219292667675'); ?>",
+                appId: "<?= ArrayHelper::getValue($ConfigAccountKit, 'app_id', '181219292667675'); ?>",
                 state: "<?= Yii::$app->request->getCsrfToken() ?>",
-                version: "<?= ArrayHelper::getValue($ConfigAccountKit,'ver','v1.1'); ?>",
+                version: "<?= ArrayHelper::getValue($ConfigAccountKit, 'ver', 'v1.1'); ?>",
                 fbAppEventsEnabled: true,
                 redirect: ""
             }
@@ -97,15 +98,18 @@ $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$
             <div class="modal-content">
                 <div class="modal-body">
                     <i class="la la-check"></i>
-                    <div class="modal-title"><?=Yii::t('frontend','Thank you!');?></div>
+                    <div class="modal-title"><?= Yii::t('frontend', 'Thank you!'); ?></div>
                     <div class="order-code" style="margin-bottom: 1rem">
-                        <?=Yii::t('frontend','Transaction code');?>
+                        <?= Yii::t('frontend', 'Transaction code'); ?>
                         <span class="text-blue" id="transactionCode"></span>
                     </div>
-                    <p class="invoice-hide mt-3" style="display: none"><?php echo Yii::t('frontend','Payment for orders')?>: <span class="text-danger" style="font-weight: 700"></span></p>
-                    <p><?=Yii::t('frontend','Your order has been successfully! <br/> The system will be automatically redirect to page of payment gate way');?>
+                    <p class="invoice-hide mt-3"
+                       style="display: none"><?php echo Yii::t('frontend', 'Payment for orders') ?>: <span
+                                class="text-danger" style="font-weight: 700"></span></p>
+                    <p><?= Yii::t('frontend', 'Your order has been successfully! <br/> The system will be automatically redirect to page of payment gate way'); ?>
                     </p>
-                    <button type="button" class="btn btn-submit btn-block" id="next-payment"><?=Yii::t('frontend','Redirect now');?> <span
+                    <button type="button" class="btn btn-submit btn-block"
+                            id="next-payment"><?= Yii::t('frontend', 'Redirect now'); ?> <span
                                 id="countdown_payment">10</span></button>
                 </div>
             </div>
@@ -134,10 +138,11 @@ $ConfigAccountKit = ArrayHelper::getValue($ParamConfigAccountKit,'store_'.Yii::$
     function smsLogin() {
         AccountKit.login(
             'PHONE',
-            {countryCode: '<?= ArrayHelper::getValue($ConfigAccountKit,'code_phone','+84'); ?>'}, // will use default values if not specified
+            {countryCode: '<?= ArrayHelper::getValue($ConfigAccountKit, 'code_phone', '+84'); ?>'}, // will use default values if not specified
             loginCallback
         );
     }
+
     // // email form submission handler
     // function emailLogin() {
     //     var emailAddress = document.getElementById("email").value;

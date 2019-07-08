@@ -147,7 +147,7 @@ class CartWidget extends Widget
         $view = $this->getView();
         CartAsset::register($view);
         $view->registerJs("jQuery('#$id').wsCart($items,$options);");
-        $view->registerJs("console.log($('#$id').wsCart('data'));");
+//        $view->registerJs("console.log($('#$id').wsCart('data'));");
     }
 
     protected function renderSummary()

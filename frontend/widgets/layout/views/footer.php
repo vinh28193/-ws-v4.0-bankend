@@ -4,20 +4,18 @@ use common\models\SystemDistrict;
 use common\models\SystemZipcode;
 use frontend\modules\payment\models\ShippingForm;
 use kartik\depdrop\DepDrop;
+use kartik\select2\Select2;
 use yii\helpers\Url;
+use yii\web\JsExpression;
 
 /**
  * @var \yii\web\View $this
  * @var ShippingForm $shippingForm
  */
-$province = (\common\models\SystemStateProvince::select2DataForCountry($shippingForm->buyer_country_id));
-$district = (SystemDistrict::select2DataForCountry($shippingForm->buyer_country_id));
+/** @var  $storeManager common\components\StoreManager */
+$storeManager = Yii::$app->storeManager;
+$isID = $storeManager->store->country_code === 'ID';
 
-$zipcode = Yii::$app->storeManager->store->country_code === 'ID' ? (SystemZipcode::loadZipCode($shippingForm->buyer_country_id)) : [];
-
-$jszipcode = json_encode($zipcode);
-$jsprovince = json_encode($province);
-$jsdistrict = json_encode($district);
 ?>
 <footer class="footer">
     <div class="top">
@@ -140,7 +138,7 @@ $jsdistrict = json_encode($district);
                     <script>
                         var formSubmit = function () {
                             var email = document.getElementById("email-getdeal").value;
-                            Intercom('update', { email: email, "subscriber": "1" });
+                            Intercom('update', {email: email, "subscriber": "1"});
                             Intercom('showNewMessage', "<?= Yii::t('frontend', 'Hello Weshop!') ?>");
                         }
                     </script>
@@ -226,86 +224,68 @@ $jsdistrict = json_encode($district);
                         <?= Yii::t('frontend', 'Please enter your address so we can display shipping fee correctly.') ?>
                     </div>
                 </div>
-                <div class="form-group" style="display: none">
-                    <div class="input-group formIconTitle">
-                        <span class="input-group-addon">
-                            <i class="la la-user"></i>
-                        </span>
-                        <input name="fullName_default" type="text" class="form-control"
-                               placeholder="<?= Yii::t('frontend', 'Full Name') ?>"
-                               value="<?= $shippingForm->receiver_name ?>">
-                    </div>
-                </div>
-                <div class="form-group" style="display: none">
-                    <div class="input-group formIconTitle">
-                        <span class="input-group-addon">
-                            <i class="la la-phone"></i>
-                        </span>
-                        <input name="phone_default" type="text" class="form-control"
-                               placeholder="<?= Yii::t('frontend', 'Phone') ?>"
-                               value="<?= $shippingForm->receiver_phone ?>">
-                    </div>
-                </div>
-                <div class="form-group" style="<?= (Yii::$app->storeManager->getId() == 7) ? 'display:none;' : '' ?>">
-                    <?=
-                    \kartik\select2\Select2::widget([
-                        'data' => $shippingForm->getProvinces(),
-                        'id' => 'city_default',
-                        'name' => 'city_default',
-                        'value' => $shippingForm->receiver_province_id,
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                            'placeholder' => Yii::t('frontend', 'Choose the province'),
-                        ],
-                    ]);
-                    ?>
-                </div>
-                <div class="form-group" style="<?= (Yii::$app->storeManager->getId() == 7) ? 'display:none;' : '' ?>">
-                    <?=
-                    DepDrop::widget([
-                        'type' => DepDrop::TYPE_SELECT2,
-                        'name' => 'district_default',
-                        'attribute' => 'district_default',
-                        'value' => $shippingForm->receiver_district_id,
-                        'select2Options' => [
-                            'pluginOptions' => ['allowClear' => true],
-                        ],
-                        'pluginOptions' => [
-                            'depends' => ['city_default'],
-                            'placeholder' => Yii::t('frontend', 'Choose the district'),
-                            'url' => '/checkout/shipping/sub-district',
-                            'loadingText' => Yii::t('frontend', 'Loading district ...'),
-                            'initialize' => true,
-                            'params' => ['hiddenReceiverDistrictId']
-                        ],
-                    ]);
-                    ?>
-                </div>
-                <?php if (Yii::$app->storeManager->getId() == 7) { ?>
+                <?php if ($isID): ?>
                     <div class="form-group">
-                        <div class="input-group formIconTitle">
-                        <span class="input-group-addon">
-                            <i class="la la-map-marker"></i>
-                        </span>
-                            <input autocomplete="off" list="list_zipcode" id="zipcode_default" type="text"
-                                   class="form-control"
-                                   placeholder="<?= Yii::t('frontend', 'Zip Code') ?>"
-                                   value="<?= $shippingForm->receiver_post_code ?>">
-                            <datalist id="list_zipcode">
-                                <?php
-                                $count = 0;
-                                foreach ($zipcode as $datazip) {
-                                    $count++;
-                                    if ($count > 20) {
-                                        break;
-                                    }
-                                    echo "<option value='" . $datazip['zip_code'] . "'>" . $datazip['label'] . "</option>";
-                                }
-                                ?>
-                            </datalist>
-                        </div>
+                        <?php
+                        echo Select2::widget([
+                            'id' => 'zipcode_default',
+                            'name' => 'zipcode_default',
+                            'value' => $shippingForm->receiver_post_code,
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'minimumInputLength' => 4,
+                                'placeholder' => Yii::t('frontend', 'Enter your post code'),
+                                'ajax' => [
+                                    'url' => Url::toRoute(['/data/get-zip-code']),
+                                    'dataType' => 'json',
+                                    'data' => new JsExpression('wsAddress.zipAjaxParam'),
+                                    'processResults' => new JsExpression('wsAddress.zipAjaxProcessResults'),
+                                ],
+                                'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                                'templateResult' => new JsExpression('wsAddress.formatZipAjaxResults'),
+                                'templateSelection' => new JsExpression('wsAddress.formatZipAjaxSelection'),
+
+                            ],
+                        ]);
+                        ?>
                     </div>
-                <?php } ?>
+                <?php else: ?>
+                    <div class="form-group"
+                         style="<?= (Yii::$app->storeManager->getId() == 7) ? 'display:none;' : '' ?>">
+                        <?=
+                        Select2::widget([
+                            'data' => $shippingForm->getProvinces(),
+                            'id' => 'city_default',
+                            'name' => 'city_default',
+                            'value' => $shippingForm->receiver_province_id,
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'placeholder' => Yii::t('frontend', 'Choose the province'),
+                            ],
+                        ]);
+                        ?>
+                    </div>
+                    <div class="form-group">
+                        <?=
+                        DepDrop::widget([
+                            'type' => DepDrop::TYPE_SELECT2,
+                            'name' => 'district_default',
+                            'attribute' => 'district_default',
+                            'value' => $shippingForm->receiver_district_id,
+                            'select2Options' => [
+                                'pluginOptions' => ['allowClear' => true],
+                            ],
+                            'pluginOptions' => [
+                                'depends' => ['city_default'],
+                                'placeholder' => Yii::t('frontend', 'Choose the district'),
+                                'url' => '/checkout/shipping/sub-district',
+                                'loadingText' => Yii::t('frontend', 'Loading district ...'),
+                                'initialize' => true,
+                            ],
+                        ]);
+                        ?>
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="modal-footer">
                 <button type="button"
@@ -360,11 +340,5 @@ $jsdistrict = json_encode($district);
             }
         }
     })();</script>
-<script>
-    var zipcode_data = <?= $jszipcode ?>;
-    var province_data = <?= $jsprovince ?>;
-    var district_data = <?= $jsdistrict ?>;
-    var store_id = <?= Yii::$app->storeManager->getId() ?>;
-</script>
 
 

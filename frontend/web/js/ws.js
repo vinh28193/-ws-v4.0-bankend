@@ -1,4 +1,4 @@
-var ws = ws || (function ($) {
+ var ws = ws || (function ($) {
 
     var events = {
         ajaxBeforeSend: 'ajaxBeforeSend',
@@ -287,8 +287,20 @@ var ws = ws || (function ($) {
             }
         },
         getSuggestSearch: function (response) {
-            console.log(response);
             if (response.length > 2) {
+                $('input.searchBoxInput').autocomplete({
+                    source: response[1],
+                }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                    var newText = String(item.value).replace(
+                        new RegExp(this.term, "gi"),
+                        "<strong>$&</strong>");
+
+                    return $("<li></li>")
+                        .data("item.autocomplete", item)
+                        .append("<div>" + newText + "</div>")
+                        .appendTo(ul);
+                };
+                /*
                 if ($('input.searchBoxInput').val() === response[0]) {
                     var txt = '<option>' + response[0] + '</option>';
                     // console.log(response[1]);
@@ -298,7 +310,7 @@ var ws = ws || (function ($) {
                         // $('#searchAutoComplete').append('<option>'+v+'</option>');
                     });
                     $('#listSuggestSearch').html(txt);
-                }
+                }*/
             }
         },
         // hạn chế việc khai báo event quá nhiều,
@@ -469,27 +481,13 @@ ws.initEventHandler('searchNew', 'mb-searchBoxInput', 'keyup', 'input.mb-searchB
     }
 });
 
-$('input.searchBoxInput').change(function () {
-    // clearTimeout(window.mytimeout);
-    ws.browse.searchNew(this, '$url');
-});
+// $('input.searchBoxInput').change(function () {
+//    // clearTimeout(window.mytimeout);
+    // ws.browse.searchNew(this, '$url');
+// });
 $('datalist#listSuggestSearch').keyup(function () {
     //console.log('Key up: ' + event.key);
     if (event.keyCode === 13) {
         ws.browse.searchNew(this, '$url');
     }
-});
-$('#zipcode_default').keyup(function () {
-    var txt = '';
-    var count = 0;
-    var tesst = zipcode_data.filter(function (z) {
-        if (z.zip_code.indexOf($('#zipcode_default').val()) > -1) {
-            count++;
-        }
-        return count < 20 && z.zip_code.indexOf($('#zipcode_default').val()) > -1;
-    });
-    $.each(tesst, function (k, v) {
-        txt += "<option value='" + v.zip_code + "'>" + v.label + "</option>";
-    });
-    $('#list_zipcode').html(txt);
 });
