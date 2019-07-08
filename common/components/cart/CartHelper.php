@@ -124,7 +124,7 @@ class CartHelper
         $product['remove'] = 0;
         $product['condition'] = $item->condition;
         $variations = [];
-        if (strtolower($item->type === 'ebay')) {
+        if (strtolower($item->type) === 'ebay') {
             foreach ((array)$item->variation_mapping as $v) {
                 /** @var $v VariationMapping */
                 if ($v->variation_sku === $item->item_sku) {
@@ -141,7 +141,7 @@ class CartHelper
             $specific = [];
             foreach ($item->variation_options as $variation_option) {
                 /** @var $variation_option VariationOption */
-                if ($variation_option->option_link && !empty($variation_option->sku)) {
+                if($variation_option->option_link && !empty($variation_option->sku)){
                     $specific = array_merge($specific, [$variation_option->name => $variation_option->value_current]);
                 }
             }
