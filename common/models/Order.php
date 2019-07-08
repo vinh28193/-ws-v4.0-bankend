@@ -59,13 +59,18 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
      * current_status const value
      */
     const STATUS_NEW = 'NEW'; // Lv 1; đơn mới được tạo, next status SUPPORTING
+
     const STATUS_JUNK = 'JUNK'; // end of status
     const STATUS_SUPPORTING = 'SUPPORTING'; // Lv 2; đơn đang được chăm sóc, next status SUPPORTED
     const STATUS_SUPPORTED = 'SUPPORTED'; // Lv 3; đơn đã được chăm sóc, next status READY_PURCHASE
+    const CONTACTING = 'CONTACTING'; // đã chăm sóc đơn hàng xong.
+    const AWAITING_PAYMENT = 'AWAITING_PAYMENT'; // confirm chờ thanh toán
     const STATUS_READY2PURCHASE = 'READY2PURCHASE'; // Lv 4; đơn đã sẵn sàng mua hàng, next status PURCHASING, PURCHASE_PART or REFUNDING
     const STATUS_PURCHASING = 'PURCHASING'; // Lv 5; đơn đang trong quá trình mua hàng, next status PURCHASED
     const STATUS_PURCHASE_PART = 'PURCHASE_PART'; // Lv 6; đơn đang trong quá trình mua hàng nhưng mới mua được 1 phần, next status PURCHASED
     const STATUS_PURCHASED = 'PURCHASED'; // Lv7; đơn đã mua, next status REFUNDING
+    const DELIVERING = 'DELIVERING'; //  Đang giao hàng
+    const DELIVERED = 'DELIVERED'; //  Đã giao hàng
     const STATUS_REFUNDING = 'REFUNDING'; //Lv8; đơn đang chuyển hoàn, next status REFUNDED
     const STATUS_REFUNDED = 'REFUNDED'; //Lv8; đơn đã chuyển hoàn, end of status
     const STATUS_CANCEL = 'CANCELLED';
@@ -596,6 +601,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
         $offset = ($page - 1) * $limit;
         $query = Order::find()
+            ->addSelectColumn()
             ->withFullRelations()
             ->andWhere(['is not', 'product.id', null])// ToDo Test/Check Code Fee
             ->filter($params)
@@ -629,11 +635,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 $query->andFilterWhere(['or',
                     ['order.ordercode' => $params['keyWord']],
                     ['product.id' => $params['keyWord']],
-                    ['product.sku' => $params['keyWord']],
-                    ['product.category_id' => $params['keyWord']],
-                    ['product.product_name' => $params['keyWord']],
-                    ['order.payment_type' => $params['keyWord']],
-                    ['order.buyer_email' => $params['keyWord']],
                     ['order.receiver_phone' => $params['keyWord']],
                     ['order.buyer_email' => $params['keyWord']],
                     ['order.buyer_phone' => $params['keyWord']],
@@ -643,12 +644,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 if ($params['searchKeyword'] == 'email') {
                     $query->andFilterWhere(['or',
                         ['like', 'order.receiver_email', $params['keyWord']],
-                        ['like', 'user.email', $params['keyWord']],
+//                        ['like', 'user.email', $params['keyWord']],
                     ]);
                 } elseif ($params['searchKeyword'] == 'phone') {
                     $query->andFilterWhere(['or',
                         ['like', 'order.receiver_phone', $params['keyWord']],
-                        ['like', 'user.phone', $params['keyWord']],
+//                        ['like', 'user.phone', $params['keyWord']],
                     ]);
                 }
                 $query->andFilterWhere([$params['searchKeyword'] => $params['keyWord']]);
@@ -882,7 +883,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             'totalCount' => (int)(clone $query)->limit(-1)->offset(-1)->orderBy([])->count('order.id')
         ];
         $data = new \stdClass();
-        $data->_items = $query->orderBy('id desc')->all();
+        $data->_items = $query->orderBy(['id' => SORT_DESC])->all();
         $data->_links = '';
         $data->_meta = $additional_info;
         /**
