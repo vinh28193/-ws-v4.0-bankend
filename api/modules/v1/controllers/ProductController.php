@@ -40,7 +40,6 @@ class ProductController extends BaseApiController
             ],
         ];
     }
-
     public function actionCreate() {
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $post = \Yii::$app->request->post();
