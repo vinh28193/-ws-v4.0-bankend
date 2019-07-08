@@ -27,6 +27,7 @@ class OrderController extends BaseApiController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
+        /*
         $behaviors['pageCache'] = [
             'class' => 'yii\filters\PageCache',
             'only' => ['index'],
@@ -38,6 +39,7 @@ class OrderController extends BaseApiController
                 ]
             ],
         ];
+        */
         return $behaviors;
     }
 
