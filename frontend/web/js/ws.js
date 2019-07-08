@@ -290,8 +290,18 @@ var ws = ws || (function ($) {
             console.log(response);
             if (response.length > 2) {
                 $('input.searchBoxInput').autocomplete({
-                    source: response[1]
-                });
+                    source: response[1],
+                }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                    var newText = String(item.value).replace(
+                        new RegExp(this.term, "gi"),
+                        "<strong>$&</strong>");
+
+                    return $("<li></li>")
+                        .data("item.autocomplete", item)
+                        .append("<div>" + newText + "</div>")
+                        .appendTo(ul);
+                };
+                console.log('complete');
                 /*
                 if ($('input.searchBoxInput').val() === response[0]) {
                     var txt = '<option>' + response[0] + '</option>';

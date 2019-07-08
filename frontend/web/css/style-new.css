@@ -20,6 +20,9 @@ html, body {
 .formIconTitle i{
     font-size: 25px
 }
+.ui-menu .ui-menu-item-wrapper{
+    font-size: 14px;
+}
 .formIconTitle input{
     border: none;
 }
