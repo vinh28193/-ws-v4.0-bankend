@@ -15,16 +15,16 @@ return [
             'class' => 'common\bootstrap\AutoDetectLanguageBootstrapping'
         ],
         'log', 'queue', ],
-    'timeZone' => 'Asia/Ho_Chi_Minh',
-    'controllerNamespace' => 'frontend\controllers',
-    'defaultRoute' => 'cms/home',
-    'components' => [
-        /*
-        'queue' => [
-            'class' => '\yii\queue\file\Queue',
-            'as log' => '\yii\queue\LogBehavior',
-            'path' => '@runtime/queue',
-        ],
+            'timeZone' => 'Asia/Ho_Chi_Minh',
+            'controllerNamespace' => 'frontend\controllers',
+            'defaultRoute' => 'cms/home',
+            'components' => [
+                /*
+                'queue' => [
+                    'class' => '\yii\queue\file\Queue',
+                    'as log' => '\yii\queue\LogBehavior',
+                    'path' => '@runtime/queue',
+                ],
         */
         'translatemanager' => [
            'class' => 'lajax\translatemanager\Component'
