@@ -136,6 +136,7 @@ class FrontendController extends Controller
      */
     public function beforeAction($action)
     {
+        Yii::$app->response->setStatusCode(200);
         if ($this->filterUuid(false) === null && ($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN, null)) !== null) {
             $this->setUuidCookie($onHead);
         }
