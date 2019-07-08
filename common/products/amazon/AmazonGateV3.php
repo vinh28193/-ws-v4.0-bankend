@@ -468,7 +468,7 @@ class AmazonGateV3 extends BaseGate
                                 $temp['sku'][] = [
                                     'asin_id' => $value['asin_id'],
                                     'value_option' => $value_tem,
-                                    'link' => WeshopHelper::generateUrlDetail('amazon', $title, $value['asin_id']),
+                                    'link' => WeshopHelper::generateUrlDetail('amazon', $title, $skuCurrent, $value['asin_id']),
                                 ];
                                 if ($value['asin_id'] == $skuCurrent) {
                                     $temp['value_current'] = $value_tem;
