@@ -78,6 +78,7 @@ class AdditionalController extends BaseApiController
                     }
                 }
             }
+            Yii::info($form->getAdditionalFees());
             foreach ($form->getAdditionalFees()->keys() as $feeName) {
                 // continute if $key in $keys
                 if (ArrayHelper::isIn($feeName, $keys)) {
@@ -86,6 +87,7 @@ class AdditionalController extends BaseApiController
                 $arrayFees = $form->getAdditionalFees()->get($feeName, [], false);
 
                 $firstFee = $arrayFees[0];
+                Yii::info($firstFee);
                 $firstFee = new TargetAdditionalFee($firstFee);
                 list($firstFee->amount, $firstFee->local_amount) = $form->getAdditionalFees()->getTotalAdditionalFees($feeName);
                 $firstFee->target = 'order';
@@ -100,7 +102,7 @@ class AdditionalController extends BaseApiController
                 $form->getAdditionalFees()->remove($feeName);
             }
             $productPrice = $additionalFees->getTotalAdditionalFees('product_price');
-            $product->total_fee_product_local = $additionalFees->getTotalAdditionalFees(null,['product_price']);
+            $product->total_fee_product_local = $additionalFees->getTotalAdditionalFees(null,['product_price'])[1];
             $product->price_amount_origin = $product->price_amount_origin / $product->quantity_customer;
             $product->price_amount_local = $product->price_amount_local / $product->quantity_customer;
             $product->total_price_amount_local = $productPrice[1];
@@ -215,7 +217,7 @@ class AdditionalController extends BaseApiController
                 } elseif ($orderFee->name === 'customer_fee') {
                     // Tổng vận chuyển tại local của các sản phẩm
                     $attribute = 'total_custom_fee_amount_local';
-                    $attributeAmount = 'total_custom_fee_amount_amount';
+                    $attributeAmount = 'total_custom_fee_amount';
                 }
                 $totalOrderFeeAmountLocal += $orderFee->local_amount;
                 if (!isset($orderUpdateAttribute[$attribute])) {

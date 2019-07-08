@@ -40,7 +40,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     public function attributes()
     {
         return ArrayHelper::merge(parent::attributes(), [
-            'target_name', 'target_id', 'store_id', 'customer_id', 'item_type', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship',
+            'target_name', 'target_id', 'store_id', 'customer_id', 'custom_fee', 'item_type', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship',
         ]);
     }
 
@@ -52,7 +52,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             [['target_id', 'store_id', 'customer_id', 'shipping_weight', 'shipping_quantity'], 'filter', 'filter' => function ($value) {
                 return (integer)$value;
             }],
-            [['us_amount', 'us_tax', 'us_ship'], 'number'],
+            [['us_amount', 'us_tax', 'us_ship', 'custom_fee'], 'number'],
             ['target', 'string'],
             ['target', 'default', 'value' => 'product'],
 
