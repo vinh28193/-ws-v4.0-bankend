@@ -21,7 +21,7 @@ class I18nController extends BaseApiController
             [
                 'allow' => true,
                 'actions' => ['index','get-lang','update','create'],
-                'roles' => ['operation', 'master_operation']
+                'roles' => ['operation', 'master_operation','marketing','master_marketing','master_accountant','marketing_intent']
             ]
         ];
     }

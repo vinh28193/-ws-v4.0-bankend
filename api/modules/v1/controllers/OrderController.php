@@ -50,8 +50,7 @@ class OrderController extends BaseApiController
             [
                 'allow' => true,
                 'actions' => ['index', 'view', 'create', 'update'],
-                'roles' => $this->getAllRoles(true),
-
+                'roles' => $this->getAllRoles(true,'marketing'),
             ],
             [
                 'allow' => true,
