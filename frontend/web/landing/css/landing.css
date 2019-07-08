@@ -505,12 +505,12 @@
     left: 0;
 }
 
-.menu ul li a {
-    text-transform: uppercase;
-    color: #fff;
-    display: block;
-    padding: 20px;
-}
+/*.menu ul li a {*/
+/*    text-transform: uppercase;*/
+/*    color: #fff;*/
+/*    display: block;*/
+/*    padding: 20px;*/
+/*}*/
 
 .menu ul li:hover a {
     text-decoration: none;

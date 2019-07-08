@@ -102,7 +102,7 @@ class ItemController extends AmazonController
             $txt = "";
             $current_provider = $item->provider;
             foreach ($item->providers as $provider) {
-                if($provider->prov_id != $current_provider->prov_id){
+                if(!$current_provider || $provider->prov_id != $current_provider->prov_id){
                     $item->updateBySeller($provider->prov_id);
                     $rate_star_seller = floatval($provider->rating_star);
                     $rate_count_seller = $provider->rating_score ? $provider->rating_score : 0;
