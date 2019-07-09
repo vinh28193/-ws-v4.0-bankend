@@ -10,6 +10,12 @@ use yii\web\View;
 /* @var $paymentTransaction common\models\PaymentTransaction */
 /* @var $storeManager common\components\StoreManager */
 
+/** @var  $paymentMethodProvider common\models\PaymentMethodProvider */
+$paymentMethodProvider = \common\models\PaymentMethodProvider::find()->where([
+    'AND',
+    ['payment_method_id' => $paymentTransaction->payment_method],
+    ['payment_provider_id' => $paymentTransaction->payment_provider]
+])->with(['paymentMethod', 'paymentProvider'])->one();
 
 ?>
 <table bgcolor="#ffffff" style="color: #ffffff; border: 1px solid gray" border="0" cellpadding="0" cellspacing="0"
@@ -75,11 +81,23 @@ use yii\web\View;
                                             'time' => Html::tag('b', Yii::$app->formatter->asDatetime($paymentTransaction->created_at))
                                         ]); ?>
                                     </p>
-                                    <!--                                    <p>-->
-                                    <!--                                        --><?php //echo  Yii::t('frontend', 'Total paid amount: {amount}', [
-                                    //                                            'amount' => Html::tag('b', $storeManager->showMoney($paymentTransaction->transaction_amount_local), ['style' => 'color:red'])
-                                    //                                        ]); ?>
-                                    <!--                                    </p>-->
+                                    <?php if ($paymentMethodProvider !== null): ?>
+                                        <p>
+                                            <?= Yii::t('frontend', 'Payment method: {method}', [
+                                                'method' => Html::tag('b', implode('/',[$paymentMethodProvider->paymentMethod->code, $paymentMethodProvider->paymentProvider->code]))
+                                            ]); ?>
+                                        </p>
+                                    <?php endif; ?>
+                                    <p>
+                                        <?= Yii::t('frontend', 'Create at: {time}', [
+                                            'time' => Html::tag('b', Yii::$app->formatter->asDatetime($paymentTransaction->created_at))
+                                        ]); ?>
+                                    </p>
+                                    <p>
+                                        <?php echo Yii::t('frontend', 'Total paid amount: {amount}', [
+                                            'amount' => Html::tag('b', $storeManager->showMoney($paymentTransaction->transaction_amount_local), ['style' => 'color:red'])
+                                        ]); ?>
+                                    </p>
                                 </td>
                             </tr>
                             </tbody>
