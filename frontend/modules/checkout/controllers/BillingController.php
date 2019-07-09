@@ -60,25 +60,20 @@ class BillingController extends CheckoutController
             throw new NotFoundHttpException("not found transaction code $code");
         }
         try {
-            try {
-                /** @var  $mailer yii\mail\BaseMailer */
-                $mailer = Yii::$app->mailer;
-                $mailer->viewPath = '@common/views/mail';
-                $mail = $mailer->compose(['html' => 'paymentSuccess-html'], [
-                    'paymentTransaction' => $paymentTransaction,
-                    'storeManager' => $this->storeManager
-                ]);
-                $mail->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot']);
-                $mail->setTo($paymentTransaction->transaction_customer_email);
-                $mail->setSubject('Thank for payment');
-                $mail->send();
-            } catch (\Exception $exception) {
-                Yii::error($exception);
-            }
+            /** @var  $mailer yii\mail\BaseMailer */
+            $mailer = Yii::$app->mailer;
+            $mailer->viewPath = '@common/views/mail';
+            $mail = $mailer->compose(['html' => 'paymentSuccess-html'], [
+                'paymentTransaction' => $paymentTransaction,
+                'storeManager' => $this->storeManager
+            ]);
+            $mail->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot']);
+            $mail->setTo($paymentTransaction->transaction_customer_email);
+            $mail->setSubject('Thank for payment');
+            $mail->send();
         } catch (\Exception $exception) {
-
+            Yii::error($exception);
         }
-        $mailer = Yii::$app->mailer;
 
         return $this->render('success', ['code' => $code, 'paymentTransaction' => $paymentTransaction,]);
     }
