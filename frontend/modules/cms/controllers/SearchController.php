@@ -33,7 +33,7 @@ class SearchController extends CmsController
         $form->type = 'amazon';//Yii::$app->request->cookies->getValue('user_setting_default_search','amazon');
         Yii::info($form->getAttributes(), __METHOD__);
         if (($results = $form->search()) === false || (isset($results['products']) && $results['products'] === 0)) {
-            return $this->render('@frontend/views/common/no_search_results');
+//            return $this->render('@frontend/views/common/no_search_results');
         }
         $data['amazon'] = $results;
         $this->site_title = Yii::t('frontend','{keyword} - Shopping US Amazon, eBay - {web_name}',['keyword' => $form->keyword, 'web_name' =>$this->storeManager->store->name]);

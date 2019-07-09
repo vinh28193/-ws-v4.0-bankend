@@ -67,6 +67,7 @@ return [
         'order-<code:[^/]+>/bill.html' => 'checkout/billing/index',
 
         // payment
+        'payment/nicepay/return.html' => 'payment/payment/return-nicepay',
         'payment/process' => 'payment/payment/process',
         'payment/<merchant:[^/]+>/return.html' => 'payment/payment/return',
         'otp/<code:[^/]+>/verify.html' => 'payment/wallet/otp-verify',
@@ -76,6 +77,7 @@ return [
         'payment/<merchant:[^/]+>/check-recursive' => 'payment/payment/check-recursive',
         'payment/courier/calculator' => 'payment/additional-fee-service/courier-calculator',
         'weshop/order/nicepaysuccess' => 'payment/payment/return-nicepay',
+        'nicepay-payment.html' => 'payment/payment/return-nicepay',
 
         //account
         'my-weshop.html' => 'account/home',
