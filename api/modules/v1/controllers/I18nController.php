@@ -82,4 +82,19 @@ class I18nController extends BaseApiController
         }
         return $this->response(true, 'update success '.$count.' !');
     }
+    public function actionCreate(){
+        $key = ArrayHelper::getValue($this->post,'key', '');
+        $category = ArrayHelper::getValue($this->post,'category', '');
+        /** @var SourceMessage $source */
+        $source = SourceMessage::find()->where(['category' => $category, 'message' => $key])->one();
+        if(!$source){
+            $source = new SourceMessage();
+        }else{
+            return $this->response(false, 'duplicate key language!');
+        }
+        $source->category = $category;
+        $source->message = $key;
+        $source->save();
+        return $this->response(true, 'create success!');
+    }
 }
