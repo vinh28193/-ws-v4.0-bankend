@@ -140,6 +140,9 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'order.check_insurance',
             'order.check_inspection',
             'order.check_packing_wood',
+            'order.tracking_codes',
+            'order.purchase_order_id',
+            'order.purchase_transaction_id',
         ]);
         return $this;
     }
