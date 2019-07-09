@@ -294,10 +294,12 @@ ul.bars-nav li:last-child{
     padding: 15px;
 }
 .content-body .title-content-home{
-    color: #000;
+    color: #f47a43;
     text-align: center;
-    padding-bottom: 15px;
-    font-size: 32px;
+    /* padding-bottom: 15px; */
+    padding: 15px;
+    font-size: 20px;
+    font-weight: 600;
 }
 .tutorial-shop a{
     color: #2b96b6;
