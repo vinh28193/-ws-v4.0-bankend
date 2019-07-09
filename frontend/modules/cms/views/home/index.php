@@ -9,7 +9,7 @@ use frontend\widgets\WsStaticCMSWidget;
 
 //Toto Page Title here
 
-$this->title = Yii::t('frontend','Weshop - Worldwide shopping made easy');
+//$this->title = Yii::t('frontend','Weshop - Worldwide shopping made easy');
 //echo WsStaticCMSWidget::widget([
 //    'data' => $data
 //]);
