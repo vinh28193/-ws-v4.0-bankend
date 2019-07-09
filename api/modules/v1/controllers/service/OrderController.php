@@ -10,6 +10,7 @@ use common\models\Order;
 use common\models\PaymentTransaction;
 use common\models\Product;
 use common\modelsMongo\ChatMongoWs;
+use common\products\BaseProduct;
 use frontend\modules\payment\PaymentService;
 use Yii;
 
@@ -34,6 +35,7 @@ class OrderController extends BaseApiController
             'create' => ['POST'],
             'update-arrears' => ['POST'],
             'confirm-change-price' => ['POST'],
+            'save-purchase-info' => ['POST'],
         ];
     }
 
@@ -296,5 +298,32 @@ class OrderController extends BaseApiController
         $order->confirm_change_price = $confirm_change_price;
         $order->save();
         return $this->response(true, 'Confirm success.');
+    }
+    public function actionSavePurchaseInfo() {
+        $id = Yii::$app->request->post('id');
+        $trackingCodes = Yii::$app->request->post('trackingCodes');
+        $orderPurchase = Yii::$app->request->post('purchase_order_id');
+        $purchase_transaction_id = Yii::$app->request->post('purchase_transaction_id');
+        $order = Order::findOne($id);
+        if($order){
+            if(!$orderPurchase){
+                return $this->response(false, 'Order Number Purchase cannot null!');
+            }
+            if(!$purchase_transaction_id && $order->type_order == BaseProduct::TYPE_EBAY){
+                return $this->response(false, 'Purchase transaction cannot null!');
+            }
+            if($order->current_status == Order::STATUS_READY2PURCHASE){
+                $order->purchase_order_id = $orderPurchase;
+                $order->purchase_transaction_id = $purchase_transaction_id;
+                $order->current_status = Order::STATUS_PURCHASED;
+            }
+            if($trackingCodes){
+                $order->tracking_codes = implode(',',$trackingCodes);
+                $order->current_status = $order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE ? Order::STATUS_SELLER_SHIPPED : $order->current_status;
+            }
+            $order->save(0);
+            return $this->response(true, 'save success.');
+        }
+        return $this->response(false, 'Cannot find order.');
     }
 }
