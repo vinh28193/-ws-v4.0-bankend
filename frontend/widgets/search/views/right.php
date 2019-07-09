@@ -53,10 +53,10 @@ $this->registerJs($js);
     <div class="title-box inline mobile-hide">
         <div class="lable-titlebox"><?= Yii::t('frontend','Choose website') ?> </div>
         <div class="btn-group btn-group-sn" style="padding-right: 20px">
-            <button class="btn btn-default" <?= $portal != 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/amazon/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+            <button class="btn btn-default <?= $portal != 'ebay' ? 'active-btn' : '' ?>" <?= $portal != 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/amazon/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
                 <i class="ico ico-amazon <?= $portal != 'ebay' ? 'active' : '' ?>"></i>
             </button>
-            <button class="btn btn-default" <?= $portal == 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/ebay/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+            <button class="btn btn-default <?= $portal == 'ebay' ? 'active-btn' : '' ?>" <?= $portal == 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/ebay/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
                 <i class="ico ico-ebay <?= $portal == 'ebay' ? 'active' : '' ?>"></i>
             </button>
         </div>

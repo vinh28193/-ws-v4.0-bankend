@@ -365,7 +365,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
         $logCallback->request_content = $data;
         $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK;
         $logCallback->transaction_code_request = "NICE PAY CALLBACK";
-        $logCallback->store_id = 1;
+        $logCallback->store_id = 7;
 
         $tXid = $this->getNotifications()->get('tXid');
         $referenceNo = $this->getNotifications()->get('referenceNo');
@@ -374,7 +374,6 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
 
         if ($referenceNo === null) {
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
-            $logCallback->request_content = "Missing parameter referenceNo";
             $logCallback->response_content = $this->getNotifications()->toArray();
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);
@@ -383,7 +382,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
             ]), 'nicepay');
         }
         if (($transaction = PaymentService::findParentTransaction($referenceNo)) === null) {
-            $logCallback->request_content = "Không tìm thấy transaction";
+            $logCallback->response_content = "Không tìm thấy transaction";
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);
             return new PaymentResponse(false, Yii::t('frontend','Transaction not found'), 'nicepay');

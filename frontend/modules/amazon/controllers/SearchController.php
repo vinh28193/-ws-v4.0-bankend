@@ -30,7 +30,7 @@ class SearchController extends AmazonController
 
         Yii::info($form->getAttributes(), __METHOD__);
         if (($results = $form->search()) === false || (isset($results['products']) && $results['products'] === 0)) {
-            return $this->render('@frontend/views/common/no_search_results');
+//            return $this->render('@frontend/views/common/no_search_results');
         }
         return $this->render('index', [
             'results' => $results,

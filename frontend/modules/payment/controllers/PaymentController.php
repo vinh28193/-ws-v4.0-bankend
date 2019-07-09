@@ -342,6 +342,23 @@ class PaymentController extends BasePaymentController
 
         }
 
+        try {
+            /** @var  $mailer yii\mail\BaseMailer */
+            $mailer = Yii::$app->mailer;
+            $mailer->viewPath = '@common/views/mail';
+            $mail = $mailer->compose(['html' => 'orderCreate-html'],[
+                'paymentTransaction' => $paymentTransaction,
+                'storeManager' => $this->storeManager
+            ]);
+            $mail->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot']);
+            $mail->setTo($payment->customer_email);
+            $mail->setSubject('Create Order Success');
+            $mail->send();
+        }catch (\Exception $exception){
+            Yii::error($exception);
+        }
+
+
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res);
