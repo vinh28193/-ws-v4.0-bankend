@@ -120,8 +120,7 @@ class FrontendController extends Controller
     public function init()
     {
         parent::init();
-        $this->storeManager = Instance::ensure($this->storeManager, StoreManager::className());
-        $this->request = Instance::ensure($this->request, Request::className());
+
         $this->site_title = $this->storeManager->store->name;
         $this->site_name = $this->storeManager->store->name;
         $this->site_description = Yii::t('frontend', '{name} - World Wide Shopping Made Easy', [
