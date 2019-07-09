@@ -12,45 +12,10 @@ use yii\web\NotFoundHttpException;
 
 class BillingController extends CheckoutController
 {
-
-    public function actionIndex($code)
-    {
-        $this->title = Yii::t('frontend', 'Billing for order {code}', ['code' => $code]);
-        if (($paymentTransaction = PaymentService::findParentTransaction($code)) === null) {
-            throw new NotFoundHttpException("not found transaction for order code $code");
-        }
-        $payment = new Payment([
-            'type' => 'order',
-            'page' => Payment::PAGE_BILLING,
-            'transaction_code' => $paymentTransaction->transaction_code,
-            'customer_name' => $paymentTransaction->transaction_customer_name,
-            'customer_email' => $paymentTransaction->transaction_customer_email,
-            'customer_phone' => $paymentTransaction->transaction_customer_phone,
-            'customer_address' => $paymentTransaction->transaction_customer_address,
-            'customer_city' => $paymentTransaction->transaction_customer_city,
-            'customer_postcode' => $paymentTransaction->transaction_customer_postcode,
-            'customer_district' => $paymentTransaction->transaction_customer_district,
-            'customer_country' => $paymentTransaction->transaction_customer_country,
-            'payment_provider' => (int)$paymentTransaction->payment_provider,
-            'payment_method' => (int)$paymentTransaction->payment_method,
-            'payment_bank_code' => $paymentTransaction->payment_bank_code,
-        ]);
-
-        $order = new Order($paymentTransaction->order->getAttributes());
-        $order->getAdditionalFees()->loadFormActiveRecord($paymentTransaction->order);
-        $payment->setOrders([$order]);
-        $paymentView = $payment->initPaymentView();
-        return $this->render('index', [
-            'paymentTransaction' => $paymentTransaction,
-            'payment' => $paymentView,
-            'order' => $order
-        ]);
-    }
-
     public function actionFail($code)
     {
         $this->title = Yii::t('frontend', 'Invoice failed {code}', ['code' => $code]);
-        if (($paymentTransaction =  PaymentService::findParentTransaction($code)) === null) {
+        if (($paymentTransaction = PaymentService::findParentTransaction($code)) === null) {
             throw new NotFoundHttpException("not found transaction code $code");
         }
 
@@ -91,10 +56,24 @@ class BillingController extends CheckoutController
     public function actionSuccess($code)
     {
         $this->title = Yii::t('frontend', 'Invoice success {code}', ['code' => $code]);
-        if (($paymentTransaction = PaymentService::findParentTransaction( $code)) === null) {
+        if (($paymentTransaction = PaymentService::findParentTransaction($code)) === null) {
             throw new NotFoundHttpException("not found transaction code $code");
         }
-        $mailer = Yii::$app->mailer;
+        try {
+            /** @var  $mailer yii\mail\BaseMailer */
+            $mailer = Yii::$app->mailer;
+            $mailer->viewPath = '@common/views/mail';
+            $mail = $mailer->compose(['html' => 'paymentSuccess-html'], [
+                'paymentTransaction' => $paymentTransaction,
+                'storeManager' => $this->storeManager
+            ]);
+            $mail->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot']);
+            $mail->setTo($paymentTransaction->transaction_customer_email);
+            $mail->setSubject('Thank for payment');
+            $mail->send();
+        } catch (\Exception $exception) {
+            Yii::error($exception);
+        }
 
         return $this->render('success', ['code' => $code, 'paymentTransaction' => $paymentTransaction,]);
     }

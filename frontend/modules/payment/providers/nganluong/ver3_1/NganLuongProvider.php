@@ -131,7 +131,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $logPaymentGateway->transaction_code_ws = $orderCode;
         $logPaymentGateway->request_content = $param;
         $logPaymentGateway->transaction_code_request = $data['token'];
-        $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CHECK_PAYMENT;
+        $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK;
         $logPaymentGateway->url = $this->submitUrl;
         try {
             if (($transaction = PaymentService::findParentTransaction($orderCode)) === null) {

@@ -77,6 +77,7 @@ return [
         'payment/<merchant:[^/]+>/check-recursive' => 'payment/payment/check-recursive',
         'payment/courier/calculator' => 'payment/additional-fee-service/courier-calculator',
         'weshop/order/nicepaysuccess' => 'payment/payment/return-nicepay',
+        'payment/callback/alepay' => 'payment/callback/alepay',
         'nicepay-payment.html' => 'payment/payment/return-nicepay',
 
         //account

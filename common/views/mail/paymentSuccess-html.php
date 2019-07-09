@@ -1,37 +1,51 @@
 <?php
 
+use common\components\StoreManager;
+use common\models\PaymentTransaction;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\View;
 
 /* @var $this yii\web\View */
 /* @var $paymentTransaction common\models\PaymentTransaction */
 /* @var $storeManager common\components\StoreManager */
 
-$domain = Yii::$app->request->hostInfo;
+/** @var  $paymentMethodProvider common\models\PaymentMethodProvider */
+$paymentMethodProvider = \common\models\PaymentMethodProvider::find()->where([
+    'AND',
+    ['payment_method_id' => $paymentTransaction->payment_method],
+    ['payment_provider_id' => $paymentTransaction->payment_provider]
+])->with(['paymentMethod', 'paymentProvider'])->one();
+
 ?>
-<table bgcolor="#f0f8ff" style="color: #ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+<table bgcolor="#ffffff" style="color: #ffffff; border: 1px solid gray" border="0" cellpadding="0" cellspacing="0"
+       width="100%">
     <tbody>
     <tr>
         <td>
             <table style="color: #666666" border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tbody>
                 <tr>
-                    <td style="padding:20px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                        Kính chào Quý khách <b>,</b></td>
+                    <td style="padding:20px 20px 20px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
+                        <?php echo Yii::t('frontend', 'Dear {customer},', [
+                            'customer' => $paymentTransaction->transaction_customer_name
+                        ]); ?></td>
                 </tr>
                 <tr>
-                    <td style="padding:20px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                        Chân thành cảm ơn Quý khách đã mua sắm tại <a href="<?= $domain; ?>">WeShop
-                            Việt Nam</a>
+                    <td style="padding:0px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
+                        <?php echo Yii::t('frontend', 'Thank you for payment', [
+                            'name' => $storeManager->store->name,
+                        ]); ?>
+
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding:00px 20px 20px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                        <p>Chúng tôi hy vọng Quý khách hài lòng với trải nghiệm mua sắm và
-                            các sản phẩm đã chọn.<br/><a href="<?= $domain; ?>">WeShop VIệt
-                                Nam</a> vừa nhận
-                            được thông tin đặt hàng của quý khách với chi tiết đơn hàng như
-                            sau:</p>
+                    <td style="padding:0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
+                        <p>
+                            <?php echo Yii::t('frontend', '{name} just received your payment with the following:', [
+                                'name' => $storeManager->store->name,
+                            ]); ?>
+                        </p>
                     </td>
                 </tr>
 
@@ -40,8 +54,8 @@ $domain = Yii::$app->request->hostInfo;
         </td>
     </tr>
     <tr>
-        <td style="padding: 0 20px;">
-            <table style="border-collapse:collapse;color: #666666; border: 1px solid slategrey" bgcolor="#ffffff"
+        <td style="padding: 0 20px 20px 20px;">
+            <table style="border-collapse:collapse;color: #666666; border: 1px solid slategrey;" bgcolor="#ffffff"
                    cellpadding="0"
                    cellspacing="0" width="100%">
                 <tbody>
@@ -51,67 +65,39 @@ $domain = Yii::$app->request->hostInfo;
                             <tbody>
                             <tr>
                                 <td width="50%" style="vertical-align: top">
-                                    <h4 style="font-size: 14px; margin: 0 0 15px;text-transform: uppercase;">
-                                        Thông tin giao dich</h4>
+
                                     <p>
-                                        <i style="display: block; width: 50px; height: 1px; background: #2796b6;"></i>
+                                        <?= Yii::t('frontend', 'Transaction code: {code}', [
+                                            'code' => Html::tag('b', $paymentTransaction->transaction_code)
+                                        ]); ?>
                                     </p>
-                                    <p><b>Mã giao dịch: </b># </p>
-                                    <p><b>Trạng thái: </b># </p>
-                                    <p><b>Ngày / Giờ:</b><?= date(' H:i Y-m-d', strtotime('now')); ?>
-                                    </p>
-                                    <!-- <p><b>Giờ:</b> </p> -->
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td style="padding:10px 20px">
-            <table style="border-collapse:collapse;color: #666666; border: 1px solid slategrey" bgcolor="#ffffff"
-                   cellpadding="0"
-                   cellspacing="0" width="100%">
-                <tbody>
-                <tr>
-                    <td style="padding:15px 20px 1px 20px">
-                        <table style="border-collapse:collapse;" border="0" cellpadding="0"
-                               cellspacing="0" width="100%">
-                            <tbody>
-                            <tr>
-                                <td style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:bold;padding:0 0 10px 0"
-                                    align="left">
-                                    <h4 style="font-size: 14px; margin: 0 0 15px;text-transform: uppercase;">
-                                        Chi tiết đơn hàng</h4>
                                     <p>
-                                        <i style="display: block; width: 50px; height: 1px; background: #2796b6;"></i>
+                                        <?= Yii::t('frontend', 'Status: {status}', [
+                                            'status' => Html::tag('b', \yii\helpers\Inflector::camelize($paymentTransaction->transaction_status))
+                                        ]); ?>
                                     </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:bold;padding:0 0 10px 0">
-                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                        <tbody>
-                                        <tr>
-                                            <td colspan="1"
-                                                style="width:50%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                OrderCode : sdaSs
-                                            </td>
-                                            <td colspan="1"
-                                                style="width:20%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                Amazon
-                                            </td>
-                                            <td colspan="1"
-                                                style="width:30%;padding:0.75rem 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;">
-                                                Seller : sdaSs
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                    <p>
+                                        <?= Yii::t('frontend', 'Create at: {time}', [
+                                            'time' => Html::tag('b', Yii::$app->formatter->asDatetime($paymentTransaction->created_at))
+                                        ]); ?>
+                                    </p>
+                                    <?php if ($paymentMethodProvider !== null): ?>
+                                        <p>
+                                            <?= Yii::t('frontend', 'Payment method: {method}', [
+                                                'method' => Html::tag('b', implode('/',[$paymentMethodProvider->paymentMethod->code, $paymentMethodProvider->paymentProvider->code]))
+                                            ]); ?>
+                                        </p>
+                                    <?php endif; ?>
+                                    <p>
+                                        <?= Yii::t('frontend', 'Create at: {time}', [
+                                            'time' => Html::tag('b', Yii::$app->formatter->asDatetime($paymentTransaction->created_at))
+                                        ]); ?>
+                                    </p>
+                                    <p>
+                                        <?php echo Yii::t('frontend', 'Total paid amount: {amount}', [
+                                            'amount' => Html::tag('b', $storeManager->showMoney($paymentTransaction->transaction_amount_local), ['style' => 'color:red'])
+                                        ]); ?>
+                                    </p>
                                 </td>
                             </tr>
                             </tbody>
