@@ -59,13 +59,18 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
      * current_status const value
      */
     const STATUS_NEW = 'NEW'; // Lv 1; đơn mới được tạo, next status SUPPORTING
+
     const STATUS_JUNK = 'JUNK'; // end of status
     const STATUS_SUPPORTING = 'SUPPORTING'; // Lv 2; đơn đang được chăm sóc, next status SUPPORTED
     const STATUS_SUPPORTED = 'SUPPORTED'; // Lv 3; đơn đã được chăm sóc, next status READY_PURCHASE
+    const CONTACTING = 'CONTACTING'; // đã chăm sóc đơn hàng xong.
+    const AWAITING_PAYMENT = 'AWAITING_PAYMENT'; // confirm chờ thanh toán
     const STATUS_READY2PURCHASE = 'READY2PURCHASE'; // Lv 4; đơn đã sẵn sàng mua hàng, next status PURCHASING, PURCHASE_PART or REFUNDING
     const STATUS_PURCHASING = 'PURCHASING'; // Lv 5; đơn đang trong quá trình mua hàng, next status PURCHASED
     const STATUS_PURCHASE_PART = 'PURCHASE_PART'; // Lv 6; đơn đang trong quá trình mua hàng nhưng mới mua được 1 phần, next status PURCHASED
     const STATUS_PURCHASED = 'PURCHASED'; // Lv7; đơn đã mua, next status REFUNDING
+    const DELIVERING = 'DELIVERING'; //  Đang giao hàng
+    const DELIVERED = 'DELIVERED'; //  Đã giao hàng
     const STATUS_REFUNDING = 'REFUNDING'; //Lv8; đơn đang chuyển hoàn, next status REFUNDED
     const STATUS_REFUNDED = 'REFUNDED'; //Lv8; đơn đã chuyển hoàn, end of status
     const STATUS_CANCEL = 'CANCELLED';
@@ -596,6 +601,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
         $offset = ($page - 1) * $limit;
         $query = Order::find()
+            ->addSelectColumn()
             ->withFullRelations()
             ->andWhere(['is not', 'product.id', null])// ToDo Test/Check Code Fee
             ->filter($params)
@@ -629,11 +635,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 $query->andFilterWhere(['or',
                     ['order.ordercode' => $params['keyWord']],
                     ['product.id' => $params['keyWord']],
-                    ['product.sku' => $params['keyWord']],
-                    ['product.category_id' => $params['keyWord']],
-                    ['product.product_name' => $params['keyWord']],
-                    ['order.payment_type' => $params['keyWord']],
-                    ['order.buyer_email' => $params['keyWord']],
                     ['order.receiver_phone' => $params['keyWord']],
                     ['order.buyer_email' => $params['keyWord']],
                     ['order.buyer_phone' => $params['keyWord']],
@@ -643,12 +644,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 if ($params['searchKeyword'] == 'email') {
                     $query->andFilterWhere(['or',
                         ['like', 'order.receiver_email', $params['keyWord']],
-                        ['like', 'user.email', $params['keyWord']],
+//                        ['like', 'user.email', $params['keyWord']],
                     ]);
                 } elseif ($params['searchKeyword'] == 'phone') {
                     $query->andFilterWhere(['or',
                         ['like', 'order.receiver_phone', $params['keyWord']],
-                        ['like', 'user.phone', $params['keyWord']],
+//                        ['like', 'user.phone', $params['keyWord']],
                     ]);
                 }
                 $query->andFilterWhere([$params['searchKeyword'] => $params['keyWord']]);
@@ -695,33 +696,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 $query->andFilterWhere(['between', $params['timeKey'], $start, $end]);
             }
         }
-
-//        if (isset($params['timeKeyCreate']) && isset($params['startDate']) && isset($params['endDate'])) {
-//            $query->andFilterWhere(['between', $params['timeKeyCreate'], $params['startDate'], $params['endDate']]);
-//        }
-
-//        if (isset($params['receiver_email'])) {
-//            $query->andFilterWhere(['or',
-//                ['like', 'order.receiver_email', $params['receiver_email']],
-//                ['like', 'customer.email', $params['receiver_email']],
-//            ]
-//            );
-//        }
-
-        /*
-
-        if(isset($params['typeSearch']) and isset($params['keyword']) ){
-            $query->andFilterWhere(['like',$params['typeSearch'],$params['keyword']]);
-        }else{
-            $query->andWhere(['or',
-                ['like', 'id', $params['keyword']],
-                ['like', 'seller_name', $params['keyword']],
-                ['like', 'seller_store', $params['keyword']],
-                ['like', 'portal', $params['keyword']],
-            ]);
-        }
-        */
-
         if (isset($params['type_order'])) {
             $query->andFilterWhere(['type_order' => $params['type_order']]);
         }
@@ -739,83 +713,84 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 ['<=', 'updated_at', $params['time_end']]
             ]);
         }
-
-//        $subDraftExtensionTrackingMapQuery = new Query();
-//        $subDraftExtensionTrackingMapQuery->select([new Expression('1')]);
-//        $subDraftExtensionTrackingMapQuery->from(['draftTracking' => DraftExtensionTrackingMap::tableName()]);
-//        $subDraftExtensionTrackingMapQuery->where(['draftTracking.order_id' => new Expression('[[id]]')]);
-//        $countOrder = Order::find()->select(['purchased', 'stockin_us'])->asArray()->all();
-//        if (isset($params['noTracking'])) {
-//            if ($params['noTracking'] === 'NO_TRACKING') {
-//                $query->andWhere(['NOT EXISTS', $subDraftExtensionTrackingMapQuery]);
-//            }
-//            if ($params['noTracking'] === '10STOCKOUT_US') {
-//                $query->andFilterWhere([
-//                    'and',
-//                    ['IS NOT', 'stockin_us', new Expression('null')],
-//                    ['<', 'stockin_us', (Yii::$app->getFormatter()->asTimestamp('now - 10 days'))],
-//                    ['IS', 'stockout_us', new Expression('null')],
-//                ]);
-//            }
-//            if ($params['noTracking'] === 'SHIPPED5') {
-//                $query->andFilterWhere([
-//                    'AND',
-//                    ['<', 'seller_shipped', (int)(Yii::$app->getFormatter()->asTimestamp('now - 5 days'))],
-//                    ['is', 'stockin_us', new Expression('null')]
-//                ]);
-//            }
-//            if ($params['noTracking'] === 'PURCHASED2DAY') {
-//                for ($i = 0; $i < count($countOrder); $i++) {
-//                    if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Friday') {
-//                        $query->where([
-//                            'and',
-//                            ['<', 'purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 5 days')],
-//                            ['is', 'stockin_us', new Expression('null')],
-//                        ]);
-//                    }
-//                    if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Saturday') {
-//                        $query->where([
-//                            'and',
-//                            ['<', 'purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 4 days')],
-//                            ['is', 'stockin_us', new Expression('null')],
-//                        ]);
-//                    } else {
-//                        $query->where([
-//                            'and',
-//                            ['<', 'purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 2 days')],
-//                            ['is', 'stockin_us', new Expression('null')],
-//                        ]);
-//                    }
-//                }
-//            }
-//            if ($params['noTracking'] == 'STOCKIN_US2DAY') {
-//                for ($i = 0; $i < count($countOrder); $i++) {
-//                    if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Friday') {
-//                        $query->andFilterWhere([
-//                            'and',
-//                            ['IS NOT', 'stockin_us', new Expression('null')],
-//                            ['<', 'stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 4 days'))],
-//                            ['is', 'stockout_us', new Expression('null')],
-//                        ]);
-//                    }
-//                    if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Saturday') {
-//                        $query->andFilterWhere([
-//                            'and',
-//                            ['IS NOT', 'stockin_us', new Expression('null')],
-//                            ['<', 'stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 3 days'))],
-//                            ['is', 'stockout_us', new Expression('null')],
-//                        ]);
-//                    } else {
-//                        $query->andFilterWhere([
-//                            'and',
-//                            ['IS NOT', 'stockin_us', new Expression('null')],
-//                            ['<', 'stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 2 days'))],
-//                            ['is', 'stockout_us', new Expression('null')],
-//                        ]);
-//                    }
-//                }
-//            }
-//        }
+        /**
+        $subDraftExtensionTrackingMapQuery = new Query();
+        $subDraftExtensionTrackingMapQuery->select([new Expression('1')]);
+        $subDraftExtensionTrackingMapQuery->from(['draftTracking' => DraftExtensionTrackingMap::tableName()]);
+        $subDraftExtensionTrackingMapQuery->where(['draftTracking.order_id' => new Expression('[[id]]')]);
+        $countOrder = Order::find()->select(['purchased', 'stockin_us'])->asArray()->all();
+        if (isset($params['noTracking'])) {
+            if ($params['noTracking'] === 'NO_TRACKING') {
+                $query->andWhere(['NOT EXISTS', $subDraftExtensionTrackingMapQuery]);
+            }
+            if ($params['noTracking'] === '10STOCKOUT_US') {
+                $query->andFilterWhere([
+                    'and',
+                    ['IS NOT', 'stockin_us', new Expression('null')],
+                    ['<', 'stockin_us', (Yii::$app->getFormatter()->asTimestamp('now - 10 days'))],
+                    ['IS', 'stockout_us', new Expression('null')],
+                ]);
+            }
+            if ($params['noTracking'] === 'SHIPPED5') {
+                $query->andFilterWhere([
+                    'AND',
+                    ['<', 'seller_shipped', (int)(Yii::$app->getFormatter()->asTimestamp('now - 5 days'))],
+                    ['is', 'stockin_us', new Expression('null')]
+                ]);
+            }
+            if ($params['noTracking'] === 'PURCHASED2DAY') {
+                for ($i = 0; $i < count($countOrder); $i++) {
+                    if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Friday') {
+                        $query->where([
+                            'and',
+                            ['<', 'purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 5 days')],
+                            ['is', 'stockin_us', new Expression('null')],
+                        ]);
+                    }
+                    if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Saturday') {
+                        $query->where([
+                            'and',
+                            ['<', 'purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 4 days')],
+                            ['is', 'stockin_us', new Expression('null')],
+                        ]);
+                    } else {
+                        $query->where([
+                            'and',
+                            ['<', 'purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 2 days')],
+                            ['is', 'stockin_us', new Expression('null')],
+                        ]);
+                    }
+                }
+            }
+            if ($params['noTracking'] == 'STOCKIN_US2DAY') {
+                for ($i = 0; $i < count($countOrder); $i++) {
+                    if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Friday') {
+                        $query->andFilterWhere([
+                            'and',
+                            ['IS NOT', 'stockin_us', new Expression('null')],
+                            ['<', 'stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 4 days'))],
+                            ['is', 'stockout_us', new Expression('null')],
+                        ]);
+                    }
+                    if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Saturday') {
+                        $query->andFilterWhere([
+                            'and',
+                            ['IS NOT', 'stockin_us', new Expression('null')],
+                            ['<', 'stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 3 days'))],
+                            ['is', 'stockout_us', new Expression('null')],
+                        ]);
+                    } else {
+                        $query->andFilterWhere([
+                            'and',
+                            ['IS NOT', 'stockin_us', new Expression('null')],
+                            ['<', 'stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 2 days'))],
+                            ['is', 'stockout_us', new Expression('null')],
+                        ]);
+                    }
+                }
+            }
+        }
+         */
 
         $cloneQuery = clone $query;
         $cloneQuery->with = null;
@@ -823,6 +798,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         $cloneQuery->offset(-1);
         $cloneQuery->orderBy([]);
         $countPC = 0;
+        /**
         $pc = 0;
         $pc1 = 0;
         $pc2 = 0;
@@ -830,73 +806,76 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         $sk = 0;
         $sk1 = 0;
         $sk2 = 0;
-//        for ($i = 0; $i < count($countOrder); $i++) {
-//            if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Friday') {
-//                $pc = (new Query())->from(['p' => $cloneQuery])->where([
-//                    'and',
-//                    ['IS NOT', 'p.purchased', new Expression('null')],
-//                    ['<', 'p.purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 5 days')],
-//                    ['is', 'p.seller_shipped', new Expression('null')],
-//                ])->count('p.id');
-//            }
-//            if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Saturday') {
-//                $pc1 = (new Query())->from(['p' => $cloneQuery])->where([
-//                    'and',
-//                    ['IS NOT', 'p.purchased', new Expression('null')],
-//                    ['<', 'p.purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 4 days')],
-//                    ['is', 'p.seller_shipped', new Expression('null')],
-//                ])->count('p.id');
-//            }
-//            if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Friday') {
-//                $sk = (new Query())->from(['p' => $cloneQuery])->where([
-//                    'and',
-//                    ['IS NOT', 'p.stockin_us', new Expression('null')],
-//                    ['<', 'p.stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 4 days'))],
-//                    ['is', 'p.stockout_us', new Expression('null')],
-//                ])->count('p.id');
-//            }
-//            if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Saturday') {
-//                $sk1 = (new Query())->from(['p' => $cloneQuery])->where([
-//                    'and',
-//                    ['IS NOT', 'p.stockin_us', new Expression('null')],
-//                    ['<', 'p.stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 3 days'))],
-//                    ['is', 'p.stockout_us', new Expression('null')],
-//                ])->count('p.id');
-//            } else {
-//                $sk1 = (new Query())->from(['p' => $cloneQuery])->where([
-//                    'and',
-//                    ['IS NOT', 'p.stockin_us', new Expression('null')],
-//                    ['<', 'p.stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 2 days'))],
-//                    ['is', 'p.stockout_us', new Expression('null')],
-//                ])->count('p.id');
-//                $pc2 = (new Query())->from(['p' => $cloneQuery])->where([
-//                    'and',
-//                    ['IS NOT', 'p.purchased', new Expression('null')],
-//                    ['<', 'p.purchased', (int)(Yii::$app->getFormatter()->asTimestamp('now - 2 days'))],
-//                    ['is', 'p.seller_shipped', new Expression('null')],
-//                ])->count('p.id');
-//            }
-//        }
-//        $countPC += $pc1 + $pc2 + $pc;
-//        $countStockin = $sk + $sk1 + $sk2;
-//        $summary = [
-//            'totalUnPaid' => (new Query())->from(['cc' => $cloneQuery])->where(['=', 'total_paid_amount_local', 0])->count('cc.id'),
-//            'countPurchase' => (new Query())->from(['cp' => $cloneQuery])->where([
-//                'AND',
-//                ['IS NOT', 'cp.seller_shipped', new Expression('null')],
-//                ['<', 'cp.seller_shipped', (int)(Yii::$app->getFormatter()->asTimestamp('now - 5 days'))],
-//                ['is', 'cp.stockin_us', new Expression('null')]
-//            ])->count('cp.id'),
-//            'countPC' => $countPC,
-//            'countStockin' => $countStockin,
-//            'countUS' => (new Query())->from(['cp' => $cloneQuery])->where([
-//                'and',
-//                ['IS NOT', 'cp.stockin_us', new Expression('null')],
-//                ['<', 'cp.stockin_us', (int)Yii::$app->getFormatter()->asTimestamp('now - 10 days')],
-//                ['is', 'cp.stockout_us', new Expression('null')],
-//            ])->count('cp.id'),
-//            'noTracking' => (new Query())->from(['cc' => $cloneQuery])->where(['NOT EXISTS', $subDraftExtensionTrackingMapQuery])->count('cc.id'),
-//        ];
+        for ($i = 0; $i < count($countOrder); $i++) {
+            if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Friday') {
+                $pc = (new Query())->from(['p' => $cloneQuery])->where([
+                    'and',
+                    ['IS NOT', 'p.purchased', new Expression('null')],
+                    ['<', 'p.purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 5 days')],
+                    ['is', 'p.seller_shipped', new Expression('null')],
+                ])->count('p.id');
+            }
+            if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['purchased'], 'l') == 'Saturday') {
+                $pc1 = (new Query())->from(['p' => $cloneQuery])->where([
+                    'and',
+                    ['IS NOT', 'p.purchased', new Expression('null')],
+                    ['<', 'p.purchased', (int)Yii::$app->getFormatter()->asTimestamp('now - 4 days')],
+                    ['is', 'p.seller_shipped', new Expression('null')],
+                ])->count('p.id');
+            }
+            if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Friday') {
+                $sk = (new Query())->from(['p' => $cloneQuery])->where([
+                    'and',
+                    ['IS NOT', 'p.stockin_us', new Expression('null')],
+                    ['<', 'p.stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 4 days'))],
+                    ['is', 'p.stockout_us', new Expression('null')],
+                ])->count('p.id');
+            }
+            if (Yii::$app->getFormatter()->asDatetime($countOrder[$i]['stockin_us'], 'l') == 'Saturday') {
+                $sk1 = (new Query())->from(['p' => $cloneQuery])->where([
+                    'and',
+                    ['IS NOT', 'p.stockin_us', new Expression('null')],
+                    ['<', 'p.stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 3 days'))],
+                    ['is', 'p.stockout_us', new Expression('null')],
+                ])->count('p.id');
+            } else {
+                $sk1 = (new Query())->from(['p' => $cloneQuery])->where([
+                    'and',
+                    ['IS NOT', 'p.stockin_us', new Expression('null')],
+                    ['<', 'p.stockin_us', (int)(Yii::$app->getFormatter()->asTimestamp('now - 2 days'))],
+                    ['is', 'p.stockout_us', new Expression('null')],
+                ])->count('p.id');
+                $pc2 = (new Query())->from(['p' => $cloneQuery])->where([
+                    'and',
+                    ['IS NOT', 'p.purchased', new Expression('null')],
+                    ['<', 'p.purchased', (int)(Yii::$app->getFormatter()->asTimestamp('now - 2 days'))],
+                    ['is', 'p.seller_shipped', new Expression('null')],
+                ])->count('p.id');
+            }
+        }
+        $countPC += $pc1 + $pc2 + $pc;
+        $countStockin = $sk + $sk1 + $sk2;
+        $summary = [
+            'totalUnPaid' => (new Query())->from(['cc' => $cloneQuery])->where(['=', 'total_paid_amount_local', 0])->count('cc.id'),
+            'countPurchase' => (new Query())->from(['cp' => $cloneQuery])->where([
+                'AND',
+                ['IS NOT', 'cp.seller_shipped', new Expression('null')],
+                ['<', 'cp.seller_shipped', (int)(Yii::$app->getFormatter()->asTimestamp('now - 5 days'))],
+                ['is', 'cp.stockin_us', new Expression('null')]
+            ])->count('cp.id'),
+            'countPC' => $countPC,
+            'countStockin' => $countStockin,
+            'countUS' => (new Query())->from(['cp' => $cloneQuery])->where([
+                'and',
+                ['IS NOT', 'cp.stockin_us', new Expression('null')],
+                ['<', 'cp.stockin_us', (int)Yii::$app->getFormatter()->asTimestamp('now - 10 days')],
+                ['is', 'cp.stockout_us', new Expression('null')],
+            ])->count('cp.id'),
+            'noTracking' => (new Query())->from(['cc' => $cloneQuery])->where(['NOT EXISTS', $subDraftExtensionTrackingMapQuery])->count('cc.id'),
+        ];
+
+        */
+
         $additional_info = [
             'currentPage' => $page,
             'pageCount' => $page,
@@ -904,10 +883,12 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             'totalCount' => (int)(clone $query)->limit(-1)->offset(-1)->orderBy([])->count('order.id')
         ];
         $data = new \stdClass();
-        $data->_items = $query->orderBy('id desc')->all();
+        $data->_items = $query->orderBy(['id' => SORT_DESC])->all();
         $data->_links = '';
         $data->_meta = $additional_info;
-//        $data->_summary = $summary;
+        /**
+            $data->_summary = $summary;
+         */
         $data->total = count($data->_items);
         return $data;
 
