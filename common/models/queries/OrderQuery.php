@@ -140,6 +140,17 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'order.check_insurance',
             'order.check_inspection',
             'order.check_packing_wood',
+            'order.contacting',
+            'order.awaiting_payment',
+            'order.awaiting_confirm_purchase',
+            'order.delivering',
+            'order.delivered',
+            'order.created_at',
+            'order.seller_id',
+            'order.junk',
+            'order.purchasing',
+            'order.refunded',
+            'order.purchased',
         ]);
         return $this;
     }
@@ -173,7 +184,6 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'seller' => function ($q) {
                 /** @var ActiveQuery $q */
                 $q->select([
-                    'seller_store',
                     'seller_name',
                     'id',
                 ]);

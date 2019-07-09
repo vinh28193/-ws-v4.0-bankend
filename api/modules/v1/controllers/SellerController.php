@@ -60,7 +60,7 @@ class SellerController extends BaseApiController
         $request = Seller::find()
             ->select([
             'id',
-            'seller_name',
+            'seller_name'
         ])
             ->asArray()->all();
         return $this->response(true, 'Success', $request);

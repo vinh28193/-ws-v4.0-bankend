@@ -116,6 +116,14 @@ use Yii;
  * @property string $supported
  * @property string $ready_purchase
  * @property string $supporting
+ * @property string $contacting
+ * @property string $awaiting_payment
+ * @property string $awaiting_confirm_purchase
+ * @property string $delivering
+ * @property string $delivered
+ * @property string $purchasing
+ * @property string $junk
+ * @property string $refunded
  * @property int $check_update_payment
  * @property int $confirm_change_price 0: là không có thay đổi giá hoặc có thay đổi nhưng đã confirm. 1: là có thay đổi cần xác nhận
  * @property int $potential 0 là khách hàng binh thường, 1 là khách hàng tiềm năng
@@ -165,7 +173,7 @@ class Order extends \common\components\db\ActiveRecord
     {
         return [
             [['store_id', 'type_order', 'customer_type', 'portal', 'buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_id', 'buyer_country_name', 'buyer_province_id', 'buyer_province_name', 'buyer_district_id', 'buyer_district_name', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_country_name', 'receiver_province_id', 'receiver_province_name', 'receiver_district_id', 'receiver_district_name', 'payment_type', 'buyer_phone'], 'required'],
-            [['store_id', 'customer_id', 'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'buyer_country_id', 'buyer_province_id', 'buyer_district_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove', 'mark_supporting', 'supported', 'ready_purchase', 'supporting', 'check_update_payment', 'confirm_change_price', 'potential', 'additional_service', 'check_insurance', 'check_inspection', 'boxed_fee', 'check_packing_wood'], 'integer'],
+            [['store_id', 'customer_id', 'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'buyer_country_id', 'buyer_province_id', 'buyer_district_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove', 'mark_supporting', 'supported', 'ready_purchase', 'supporting', 'check_update_payment', 'confirm_change_price', 'potential', 'additional_service', 'check_insurance', 'check_inspection', 'boxed_fee', 'check_packing_wood', 'contacting', 'awaiting_payment', 'awaiting_confirm_purchase', 'delivering', 'delivered', 'purchasing', 'junk', 'refunded'], 'integer'],
             [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_account_id', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'note_update_payment'], 'string'],
             [['total_final_amount_local', 'total_amount_local', 'total_origin_fee_local', 'total_price_amount_origin', 'total_paid_amount_local', 'total_refund_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_fee_amount_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_custom_fee_amount_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'revenue_xu', 'xu_count', 'xu_amount', 'total_weight', 'total_weight_temporary', 'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund', 'total_intl_shipping_fee_amount', 'total_origin_tax_fee_amount', 'total_weshop_fee_amount', 'total_boxed_fee_amount', 'total_origin_shipping_fee_amount', 'total_vat_amount_amount'], 'number'],
             [['ordercode', 'type_order', 'portal', 'utm_source', 'quotation_note', 'buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_name', 'buyer_province_name', 'buyer_district_name', 'buyer_post_code', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'version', 'courier_name', 'courier_delivery_time', 'buyer_phone', 'payment_provider', 'payment_method', 'payment_bank'], 'string', 'max' => 255],
@@ -317,6 +325,14 @@ class Order extends \common\components\db\ActiveRecord
             'payment_method' => 'Payment Method',
             'payment_bank' => 'Payment Bank',
             'payment_transaction_code' => 'Payment Transaction Code',
+            'contacting' => 'Contacting',
+            'awaiting_payment' => 'Awaiting Payment',
+            'awaiting_confirm_purchase' => 'Awaiting Confirm Purchase',
+            'delivering' => 'Delivering',
+            'delivered' => 'Delivered',
+            'purchasing' => 'Purchasing',
+            'junk' => 'Junk',
+            'refunded' => 'Refunded',
         ];
     }
 
