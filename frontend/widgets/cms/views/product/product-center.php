@@ -28,6 +28,10 @@ use frontend\widgets\imagelazy\ImageLazyLoadWidget;
                 }
                 ?>
             </a>
+            <?php
+            if ($saleTag > 0) {
+                echo '<span class="sale-tag-top">' . $saleTag . '% OFF</span>';
+            } ?>
         </div>
         <div class="info-box">
             <div class="info">
@@ -37,10 +41,6 @@ use frontend\widgets\imagelazy\ImageLazyLoadWidget;
                 <div class="price-box">
                     <strong><?= $sellPrice; ?></strong>
                     <div class="old-price"><?= $oldPrice; ?></div>
-                    <?php
-                    if ($saleTag > 0) {
-                        echo '<span class="sale-tag">' . $saleTag . '% OFF</span>';
-                    } ?>
                 </div>
 <!--                <div class="total-price">* Xem giá trọn gói về Việt Nam</div>-->
             </div>

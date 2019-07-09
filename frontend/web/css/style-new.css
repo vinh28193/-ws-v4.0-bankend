@@ -205,6 +205,24 @@ body div.wrapper div.navbar-ws div div.search-box{
 ul.bars-nav li:last-child{
     padding-right: 10px;
 }
+.sale-tag-top{
+    padding: 3px 6px;
+    z-index: 2;
+    display: block;
+    width: 32px;
+    height: 40px;
+    background: url(../img/sale_tag.png) no-repeat center;
+    background-size: contain;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fefefe;
+    line-height: 1.1;
+    text-align: center;
+    padding-top: 4px;
+}
 .active-btn{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
     border: 2px #2b96b6 solid !important;
