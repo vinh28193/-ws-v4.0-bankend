@@ -9,7 +9,10 @@ $params = array_merge(
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'queue'],
+    'bootstrap' => ['log', 'queue', function ($app) {
+        /** @var $app \yii\console\Application */
+        $app->urlManager->hostInfo = Yii::$app->storeManager->store->url;
+    }],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
