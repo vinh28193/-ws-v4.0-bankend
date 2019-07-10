@@ -206,24 +206,24 @@ class OrderQuery extends \common\components\db\ActiveQuery
 //            'products',
 //        ]);
         $this->joinWith([
-            'walletTransactions' => function ($q) {
-            /** @var ActiveQuery $q */
-                $q->select([
-                    'id',
-                    'order_code',
-                    'transaction_code',
-                    'transaction_amount_local',
-                    'transaction_type',
-                    'transaction_status',
-                    'transaction_description',
-                    'note',
-                    'link_image',
-                    'third_party_transaction_link',
-                    'payment_bank_code',
-                    'created_at',
-                    'updated_at',
-                ]);
-            },
+//            'walletTransactions' => function ($q) {
+//            /** @var ActiveQuery $q */
+//                $q->select([
+//                    'id',
+//                    'order_code',
+//                    'transaction_code',
+//                    'transaction_amount_local',
+//                    'transaction_type',
+//                    'transaction_status',
+//                    'transaction_description',
+//                    'note',
+//                    'link_image',
+//                    'third_party_transaction_link',
+//                    'payment_bank_code',
+//                    'created_at',
+//                    'updated_at',
+//                ]);
+//            },
             'products' => function ($q) {
                 /** @var ActiveQuery $q */
                $q->select([
