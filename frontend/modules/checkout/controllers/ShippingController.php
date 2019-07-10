@@ -333,41 +333,6 @@ class ShippingController extends CheckoutController
         return Yii::$app->cart;
     }
 
-    public function actionGetAddressAjax()
-    {
-        $store = $this->storeManager->store;
-        $queryParams = $this->request->getQueryParams();
-        $message = ["load address for country `{$store->country_code}`"];
-        if (($zip = ArrayHelper::getValue($queryParams, 'zipcode', null)) !== null) {
-            $message[] = "for zip code `{$zip}`";
-        }
-        $results = SystemZipcode::loadAddress(101, $zip);
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return ['success' => true, "message" => implode(', ', $message), 'data' => $results, 'count' => count($results)];
-    }
 
-    public function actionGetZipAjax()
-    {
-        $store = $this->storeManager->store;
-        $queryParams = $this->request->getQueryParams();
-        $message = ["load zipcode for country `{$store->country_code}`"];
 
-        if (($province = ArrayHelper::getValue($queryParams, 'province', null)) !== null) {
-            $message[] = "for province `{$province}`";
-        }
-        if (($district = ArrayHelper::getValue($queryParams, 'district', null)) !== null) {
-            $message[] = "for district `{$district}`";
-        }
-        if (($zip = ArrayHelper::getValue($queryParams, 'zipcode', null)) !== null) {
-            $message[] = "search zipcode `{$zip}`";
-        }
-        $refresh = isset($queryParams['refresh']) && $queryParams['refresh'] === 'yess';
-        $refresh = true;
-        if ($refresh === true) {
-            $message[] = "invalid on cache";
-        }
-        $results = SystemZipcode::loadZipCode(101, $zip, $province, $district, $refresh);
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return ['success' => true, "message" => implode(', ', $message), 'data' => $results, 'count' => count($results)];
-    }
 }

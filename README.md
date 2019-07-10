@@ -1050,3 +1050,21 @@ http://uat-v4.weshop.com.vn/26cm-B07F9VHT2P.html
 RewriteRule ^about-us\.html?$ https://newdomain.com/about/ [NC,R,L]
 Redirect  ^/amazon-jp/item\.html?$ https://weshop.com.vn/landing-page/golden-brand-290.html [NC,R,L]
 
+
+	
+ #--------------Live Toan bo don Khach le Weshop --------------------
+	weshop.shipping@boxme.asia
+	user_id = 253019
+	
+	1.1 Toan bo User Thuong 
+	courier.proto --> rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+	
+	1.2 Khi co tracking seller thi day sang kho theo gRPC : Seller.proto -->  rpc CreateShipment + ma don Boxme o 1.1 
+	
+	Khach hang bac : Chay qua kieu Lien ket 
+	
+	#----------------------------
+	Lien ket Prime :
+	
+	
+
