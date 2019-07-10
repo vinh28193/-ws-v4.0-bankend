@@ -35,6 +35,9 @@ $('#user_zip_code').keyup(function() {
 $('#user_zip_code').change(function() {
   ws.zipcode_Change('user_zip_code','user_province_id','user_district_id');
 });
+$(document).ready(function() {
+    $('.la-question').tooltip({'trigger':'hover'});
+});
 JS;
 $this->registerJs($js);
 ?>
@@ -101,6 +104,20 @@ $this->registerJs($js);
                 <li>
                     <b><?= Yii::t('frontend','Level') ?></b>
                     <span><?= strtoupper(Yii::t('frontend',$model->userLevel)) ?></span>
+                </li>
+                <li>
+                    <b><?= Yii::t('frontend','Account Boxme') ?>
+                        <i class="la la-question" title="<?= Yii::t('frontend','Link your boxme account to get very more offers.') ?>"></i>
+                    </b>
+                    <span>
+                        <?php
+                        if($model->bm_wallet_id){
+                            echo "<span class='badge badge-success'>".Yii::t('frontend','Connected')."</span>";
+                        }else{
+                            echo "<a href='javascript: void(0);' class='btn-link'>".Yii::t('frontend','Click to connect')."</a>";
+                        }
+                        ?>
+                    </span>
                 </li>
             </ul>
         </div>
