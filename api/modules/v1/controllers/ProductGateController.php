@@ -106,7 +106,7 @@ class ProductGateController extends BaseApiController
             'item_sku' => $product->item_sku,
             'item_name' => $product->item_name,
             'item_origin_url' => $product->item_origin_url,
-            'start_price' => $product->start_time,
+            'start_price' => $product->start_price,
             'sell_price' => $product->getSellPrice(),
             'category_id' => $product->category_id,
             'start_time' => $product->start_time,

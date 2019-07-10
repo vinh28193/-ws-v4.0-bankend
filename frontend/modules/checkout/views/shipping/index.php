@@ -403,8 +403,9 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
     </div>
 </div>
 <?php foreach ($payment->getOrders() as $order): ?>
+    <?php $refKey = $payment->page === Payment::PAGE_CHECKOUT ? $order->cartId : $order->ordercode; ?>
     <div class="card card-checkout card-order"
-         data-key="<?= $payment->page === Payment::PAGE_CHECKOUT ? $order->cartId : $order->ordercode; ?>">
+         data-key="<?= $refKey; ?>">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
@@ -471,7 +472,7 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                                 echo $storeManager->showMoney($purchaseFee);
                                 ?>
                             </div>
-                            <div class="col-md-2 text-right pt-4 text-danger">
+                            <div class="col-md-2 text-right pt-4">
                                 <?php
                                 echo $storeManager->showMoney($product->total_final_amount_local + $purchaseFee);
                                 ?>
@@ -517,7 +518,7 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                                        data-placement="top" title="<?= $tooltipMessage; ?>"
                                        data-original-title="<?= $tooltipMessage; ?>"></i>
                                 </td>
-                                <td class="value text-danger"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
+                                <td class="value"><?= $storeManager->showMoney($order->getAdditionalFees()->getTotalAdditionalFees('international_shipping_fee')[1]); ?></td>
                             </tr>
                             <tr class="courier">
                                 <td class="header"><?= Yii::t('frontend', 'Estimated time') ?></td>
@@ -525,16 +526,23 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                                     <?php echo Yii::t('frontend', 'Please select your address to suggest') ?>
                                 </td>
                             </tr>
-                            <tr class="discount-detail">
+                            <tr class="discount-helper">
+                                <td colspan="2" class="text-right">
+                                    <?php echo Yii::t('frontend', 'If you have a discount code, {handle}', [
+                                        'handle' => Html::a(Yii::t('frontend', ' enter the code'), new JsExpression('javascript:void(0)'), ['style' => 'color: #2b96b6;', 'onclick' => 'ws.payment.enableCoupon(\'' . $refKey . '\')'])
+                                    ]) ?>
+                                </td>
+                            </tr>
+                            <tr class="discount-detail" style="display: none">
                                 <td class="header">
                                     <?= Yii::t('frontend', 'Coupon code'); ?> <span
                                             class="coupon-code"></span>
                                 </td>
                                 <td class="value">
-                                    <div class="input-group discount-input" style="margin-bottom: 1rem">
+                                    <div class="input-group discount-input" style="margin-bottom: 1rem;">
                                         <input type="text" class="form-control" name="couponCode">
                                         <div class="input-group-append">
-                                            <button data-key="<?php echo $order->cartId; ?>"
+                                            <button data-key="<?php echo $refKey; ?>"
                                                     class="btn btn-outline-secondary" type="button"
                                                     id="applyCouponCode"><?php echo Yii::t('frontend', 'Apply'); ?></button>
                                         </div>
@@ -543,7 +551,7 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                                     <span class="discount-amount" style="display: none"><span
                                                 class="discount-value"></span>
                                             <i class="la la-times text-danger del-coupon"
-                                               onclick="ws.payment.removeCouponCode('<?= $order->cartId; ?>')"></i></span>
+                                               onclick="ws.payment.removeCouponCode('<?= $refKey; ?>')"></i></span>
                                 </td>
                             </tr>
                             <tr class="discount" style="display: none">
