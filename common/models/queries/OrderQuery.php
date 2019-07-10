@@ -140,6 +140,10 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'order.check_insurance',
             'order.check_inspection',
             'order.check_packing_wood',
+            'order.tracking_codes',
+            'order.purchase_note',
+            'order.purchase_order_id',
+            'order.purchase_transaction_id',
         ]);
         return $this;
     }
@@ -173,7 +177,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'seller' => function ($q) {
                 /** @var ActiveQuery $q */
                 $q->select([
-                    'seller_store',
+                    'seller_link_store',
                     'seller_name',
                     'id',
                 ]);
@@ -217,6 +221,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
                     'third_party_transaction_link',
                     'payment_bank_code',
                     'created_at',
+                    'updated_at',
                 ]);
             },
             'products' => function ($q) {

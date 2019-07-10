@@ -157,12 +157,24 @@ $userCookies->setUser();
                 <ul class="style-list">
                     <?php foreach ($variationOption->values as $k => $value) {
                         foreach ($variationOption->images_mapping as $image) {
-                            if (strtolower($image->value) == strtolower($value)) {
+                            $thumb_img = '' ;
+                            $main_img = '';
+                            if($image->images && is_string($image->images[0]->thumb)){
+                                $thumb_img = $image->images[0]->thumb;
+                            }elseif ($image->images && count($image->images[0]->thumb) > 0){
+                                $thumb_img = $image->images[0]->thumb[0];
+                            }
+                            if($image->images && is_string($image->images[0]->main)){
+                                $main_img = $image->images[0]->main;
+                            }elseif ($image->images && count($image->images[0]->main) > 0){
+                                $main_img = $image->images[0]->main[0];
+                            }
+                            if (strtolower($image->value) == strtolower($value) && $thumb_img) {
                                 ?>
                                 <li class="item">
                                                 <span type="spanList" class="box-select-item" tabindex="<?= $k ?>">
-                                                    <img src="<?= $image->images ? (is_string($image->images[0]->thumb) ? $image->images[0]->thumb : $image->images[0]->thumb[0] ) : '/img/no_image.png' ?>"
-                                                         data-src="<?= $image->images ? (is_string($image->images[0]->main) ? $image->images[0]->main : $image->images[0]->main[0] ) : '/img/no_image.png' ?>"
+                                                    <img src="<?= $thumb_img ?>"
+                                                         data-src="<?= $main_img ?>"
                                                          alt="<?= $variationOption->name; ?>: <?= $value ?>" title="<?= $value ?>"/>
                                                 </span>
                                 </li>

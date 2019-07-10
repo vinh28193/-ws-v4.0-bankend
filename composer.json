@@ -55,7 +55,8 @@
     "ext-grpc": "*",
     "notamedia/yii2-sentry": "^1.3",
     "ratchet/pawl": "^0.3.4",
-    "rmrevin/yii2-minify-view": "^2.0"
+    "rmrevin/yii2-minify-view": "^2.0",
+    "nickcv/yii2-mandrill": "*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

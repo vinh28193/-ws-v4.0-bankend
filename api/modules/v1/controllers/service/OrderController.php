@@ -10,6 +10,7 @@ use common\models\Order;
 use common\models\PaymentTransaction;
 use common\models\Product;
 use common\modelsMongo\ChatMongoWs;
+use common\products\BaseProduct;
 use frontend\modules\payment\PaymentService;
 use Yii;
 
@@ -34,6 +35,7 @@ class OrderController extends BaseApiController
             'create' => ['POST'],
             'update-arrears' => ['POST'],
             'confirm-change-price' => ['POST'],
+            'save-purchase-info' => ['POST'],
         ];
     }
 
@@ -296,5 +298,56 @@ class OrderController extends BaseApiController
         $order->confirm_change_price = $confirm_change_price;
         $order->save();
         return $this->response(true, 'Confirm success.');
+    }
+    public function actionSavePurchaseInfo() {
+        $id = Yii::$app->request->post('id');
+        $trackingCodes = Yii::$app->request->post('trackingCodes');
+        $orderPurchase = Yii::$app->request->post('purchase_order_id');
+        $purchase_transaction_id = Yii::$app->request->post('purchase_transaction_id');
+        $purchase_note = Yii::$app->request->post('purchase_note');
+        $order = Order::findOne($id);
+        $mess = "";
+        if($order){
+            if(!$orderPurchase){
+                return $this->response(false, 'Order Number Purchase cannot null!');
+            }
+            if(!$purchase_transaction_id && $order->type_order == BaseProduct::TYPE_EBAY){
+                return $this->response(false, 'Purchase transaction cannot null!');
+            }
+            if($order->current_status == Order::STATUS_READY2PURCHASE){
+                $order->purchase_order_id = $orderPurchase;
+                $order->purchase_transaction_id = $purchase_transaction_id;
+                $order->current_status = Order::STATUS_PURCHASED;
+                $order->purchased = time();
+                $mess = '<br>- Chuyển trạng thái purchased ('.date('Y-m-d H:i:s').')';
+                $mess .= '<br>- Mã đơn hàng trên '.$order->type_order.': '.$order->purchase_order_id;
+                if($order->type_order == BaseProduct::TYPE_EBAY){
+                    $mess .= '<br>- Mã giao dịch PayPal: '.$order->purchase_transaction_id;
+                }
+            }
+            if($trackingCodes){
+                $old = $order->tracking_codes;
+                $order->tracking_codes = implode(',',$trackingCodes);
+                $mess .= '<br>- Nhập tracking code: '.$order->tracking_codes.' (cũ: '.$old.')';
+                if($order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE){
+                    $order->current_status = Order::STATUS_SELLER_SHIPPED;
+                    $order->seller_shipped = time();
+                    $mess .= '<br>- Chuyển trạng thái Seller Shipped ('.date('Y-m-d H:i:s').')';
+                }
+            }
+            if($purchase_note !== $order->purchase_note){
+                $mess .= '<br>- Thay đổi note: '.$purchase_note.'(cũ:'.$order->purchase_note.')';
+                $order->purchase_note = $purchase_note;
+            }
+            $order->save(0);
+            ChatMongoWs::SendMessage('Cập nhật thông tin mua hàng: '.$mess, $order->ordercode,ChatMongoWs::TYPE_GROUP_WS);
+            Yii::$app->wsLog->push('order','updatePurchaseInfo', $mess, [
+                'id' => $order->id,
+                'request' => $mess,
+                'response' => "Success"
+            ]);
+            return $this->response(true, 'save success.');
+        }
+        return $this->response(false, 'Cannot find order.');
     }
 }
