@@ -15,6 +15,7 @@ use yii\console\ExitCode;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
+use yii\mongodb\Connection;
 
 class ProductGateController extends Controller
 {
@@ -22,9 +23,11 @@ class ProductGateController extends Controller
     {
         $start = microtime(true);
         $now = Yii::$app->formatter->asDatetime('now');
-        $this->stdout("action start at: $now", Console::FG_GREEN);
-        $startFetchTime = microtime(true);
-        $this->stdout("fetching ....", Console::FG_GREEN);
+        $this->stdout("action start at: $now \n", Console::FG_GREEN);
+        /** @var  $mongoConnect  Connection*/
+        $mongoConnect = Yii::$app->get('mongodb');
+        $this->stdout("    > open `mongodb` dsn {$mongoConnect->dsn}.... \n", Console::FG_GREEN);
+        $this->stdout("    > fetching .... \n", Console::FG_GREEN);
         $query = WsProduct::find()->where(['status' => 1]);
         /** @var  $lastSync ProductSyncLog | null */
         $lastSync = ProductSyncLog::find()->limit(1)->where(['row_id' => ProductSyncLog::find()->max('row_id')])->orderBy(['time' => SORT_DESC])->one();
