@@ -49,6 +49,7 @@ class PaymentTransactionController extends BaseApiController
             $model->transaction_status = 'SUCCESS';
             if (isset($post['note'])) {
                 $model->note = $post['note'];
+                $model->updated_at = Yii::$app->getFormatter()->asTimestamp('now');
             }
             if (isset($post['link_image'])) {
                 $model->link_image = $post['link_image'];
