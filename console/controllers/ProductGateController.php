@@ -26,7 +26,11 @@ class ProductGateController extends Controller
         $startFetchTime = microtime(true);
         $this->stdout("fetching ....", Console::FG_GREEN);
         $query = WsProduct::find()->where(['status' => 1]);
-
+        /** @var  $lastSync ProductSyncLog | null */
+        $lastSync = ProductSyncLog::find()->limit(1)->where(['row_id' => ProductSyncLog::find()->max('row_id')])->orderBy(['time' => SORT_DESC])->one();
+        if ($lastSync !== null) {
+            $query->andWhere(['>', 'id', $lastSync->row_id]);
+        }
         $totalFetch = (clone $query)->count();
         $limit = 100;
         $totalPage = ceil($totalFetch / $limit);
