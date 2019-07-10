@@ -304,6 +304,7 @@ class OrderController extends BaseApiController
         $trackingCodes = Yii::$app->request->post('trackingCodes');
         $orderPurchase = Yii::$app->request->post('purchase_order_id');
         $purchase_transaction_id = Yii::$app->request->post('purchase_transaction_id');
+        $purchase_note = Yii::$app->request->post('purchase_note');
         $order = Order::findOne($id);
         if($order){
             if(!$orderPurchase){
@@ -316,10 +317,17 @@ class OrderController extends BaseApiController
                 $order->purchase_order_id = $orderPurchase;
                 $order->purchase_transaction_id = $purchase_transaction_id;
                 $order->current_status = Order::STATUS_PURCHASED;
+                $order->purchased = time();
             }
             if($trackingCodes){
                 $order->tracking_codes = implode(',',$trackingCodes);
-                $order->current_status = $order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE ? Order::STATUS_SELLER_SHIPPED : $order->current_status;
+                if($order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE){
+                    $order->current_status = Order::STATUS_SELLER_SHIPPED;
+                    $order->seller_shipped = time();
+                }
+            }
+            if($purchase_note){
+                $order->purchase_note = $purchase_note;
             }
             $order->save(0);
             return $this->response(true, 'save success.');
