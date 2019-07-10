@@ -37,7 +37,7 @@ return [
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
-                'hostname' =>  'localhost',
+                'hostname' => 'localhost',
                 'port' => 6379,
                 'database' => 0,
             ]
@@ -137,5 +137,10 @@ return [
             'strictJobType' => false,
             'serializer' => '\yii\queue\serializers\JsonSerializer',
         ],
+        'mandrillMailer' => [
+            'class' => 'nickcv\mandrill\Mailer',
+            'apikey' => '0r73DdSINNWIC5T7h8By6g', // VN
+//            'apikey' => 'DbmlRAwuBMQoE8hAzMsuuA' // ID
+        ]
     ],
 ];

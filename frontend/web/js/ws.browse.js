@@ -7,7 +7,13 @@ ws.browse = (function ($) {
             if (/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(a)) {
                 var s = "undefined", o = "undefined",
                     i = /(ftp|http|https):\/\/www.ebay.com\/itm\/([\S]*\/[0-9]*(\S+)|[0-9]([\/]*\S+))?/;
-                if (/(ftp|http|https):\/\/www.amazon.com\/(gp\/product|[0-9a-zA-Z\-]*\/dp|dp)(\S+)?/.test(a)) s = /(ftp|http|https):\/\/www.amazon.com\/dp(\S+)?/.test(a) ? (s = a.split("/")[4]).split("?")[0] : (s = a.split("/")[5]).split("?")[0], o = "amazon"; else if (i.test(a)) s = /(ftp|http|https):\/\/www.ebay.com\/itm\/[\S]*\/[0-9]*(\S+)?/.test(a) ? (s = a.split("/")[5]).split("?")[0] : (s = a.split("/")[4]).split("?")[0], o = "ebay"; else {
+                if (/(ftp|http|https):\/\/www.amazon.com\/(gp\/product|[0-9a-zA-Z\-]*\/dp|dp)(\S+)?/.test(a))
+                    s = /(ftp|http|https):\/\/www.amazon.com\/dp(\S+)?/.test(a) ? (s = a.split("/")[4]).split("?")[0] : (s = a.split("/")[5]).split("?")[0], o = "amazon";
+                else if (i.test(a))
+                    s = /(ftp|http|https):\/\/www.ebay.com\/itm\/[\S]*\/[0-9]*(\S+)?/.test(a) ? (s = a.split("/")[5]).split("?")[0] : (s = a.split("/")[4]).split("?")[0], o = "ebay";
+                else if (/(ftp|http|https):\/\/www.amazon.com\/[\S\s]*\/(gp\/product|[0-9a-zA-Z\-]*\/dp|dp)(\S+)?/.test(a))
+                    s = /(ftp|http|https):\/\/www.amazon.com\/[\S\s]*\/dp(\S+)?/.test(a) ? (s = a.split("/")[5]).split("?")[0] : (s = a.split("/")[6]).split("?")[0], o = "amazon";
+                else {
                     $($element).val('');
                     return ws.notifyError('Your link is not valid.\n' +
                         'Only support the link of product detail (Ebay or Amazon), try another or search with keyword !');

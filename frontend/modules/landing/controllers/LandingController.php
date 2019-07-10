@@ -22,7 +22,15 @@ class LandingController extends CmsController
 
     protected function getActivePage()
     {
-        return PageService::getPage($this->type, $this->storeManager->getId(), $this->request->get('id'), \Yii::$app->request->get('nocache','') === 'yes');
+        $page = PageService::getPage($this->type, $this->storeManager->getId(), $this->request->get('id'), \Yii::$app->request->get('nocache','') === 'yes');
+        if($page && $page instanceof WsPage){
+            $this->site_title = $page->title;
+            $this->site_description = $page->description;
+            if($page->image){
+                $this->site_image = $page->image;
+            }
+        }
+        return $page;
     }
 
 }

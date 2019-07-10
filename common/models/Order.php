@@ -25,6 +25,7 @@ use yii\web\NotFoundHttpException;
 /**
  * @property Product[] $products
  * @property Package[] $packages
+ * @property string[] $trackingCodes
  * @property Seller $seller
  */
 class Order extends DbOrder implements RuleOwnerAccessInterface
@@ -552,6 +553,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         return array_merge($fields, [
             'store' => function ($model) {
                 return $model->store_id === 1 ? 'Viet Nam' : 'Indo';
+            },
+            'trackingCodes' => function($model){
+                return $model->tracking_codes !== null ? explode(',',$model->tracking_codes) : [];
             }
         ]);
     }
@@ -943,4 +947,5 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     {
         return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
+
 }
