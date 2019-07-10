@@ -304,7 +304,9 @@ class OrderController extends BaseApiController
         $trackingCodes = Yii::$app->request->post('trackingCodes');
         $orderPurchase = Yii::$app->request->post('purchase_order_id');
         $purchase_transaction_id = Yii::$app->request->post('purchase_transaction_id');
+        $purchase_note = Yii::$app->request->post('purchase_note');
         $order = Order::findOne($id);
+        $mess = "";
         if($order){
             if(!$orderPurchase){
                 return $this->response(false, 'Order Number Purchase cannot null!');
@@ -316,12 +318,34 @@ class OrderController extends BaseApiController
                 $order->purchase_order_id = $orderPurchase;
                 $order->purchase_transaction_id = $purchase_transaction_id;
                 $order->current_status = Order::STATUS_PURCHASED;
+                $order->purchased = time();
+                $mess = '<br>- Chuyển trạng thái purchased ('.date('Y-m-d H:i:s').')';
+                $mess .= '<br>- Mã đơn hàng trên '.$order->type_order.': '.$order->purchase_order_id;
+                if($order->type_order == BaseProduct::TYPE_EBAY){
+                    $mess .= '<br>- Mã giao dịch PayPal: '.$order->purchase_transaction_id;
+                }
             }
             if($trackingCodes){
+                $old = $order->tracking_codes;
                 $order->tracking_codes = implode(',',$trackingCodes);
-                $order->current_status = $order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE ? Order::STATUS_SELLER_SHIPPED : $order->current_status;
+                $mess .= '<br>- Nhập tracking code: '.$order->tracking_codes.' (cũ: '.$old.')';
+                if($order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE){
+                    $order->current_status = Order::STATUS_SELLER_SHIPPED;
+                    $order->seller_shipped = time();
+                    $mess .= '<br>- Chuyển trạng thái Seller Shipped ('.date('Y-m-d H:i:s').')';
+                }
+            }
+            if($purchase_note !== $order->purchase_note){
+                $mess .= '<br>- Thay đổi note: '.$purchase_note.'(cũ:'.$order->purchase_note.')';
+                $order->purchase_note = $purchase_note;
             }
             $order->save(0);
+            ChatMongoWs::SendMessage('Cập nhật thông tin mua hàng: '.$mess, $order->ordercode,ChatMongoWs::TYPE_GROUP_WS);
+            Yii::$app->wsLog->push('order','updatePurchaseInfo', $mess, [
+                'id' => $order->id,
+                'request' => $mess,
+                'response' => "Success"
+            ]);
             return $this->response(true, 'save success.');
         }
         return $this->response(false, 'Cannot find order.');

@@ -12,7 +12,6 @@ use Yii;
  * @property mixed $order_code
  * @property mixed $dirty_attribute
  * @property mixed $diff_value
- * @property mixed $action
  * @property mixed $create_by
  * @property mixed $create_at
  */
