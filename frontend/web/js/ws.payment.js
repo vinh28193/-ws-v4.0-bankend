@@ -531,6 +531,14 @@ ws.payment = (function ($) {
             pub.set('orders', orders);
             pub.checkPromotion();
         },
+        enableCoupon: function (key) {
+            var $cardOrder = $('div.card-order[data-key=' + key + ']');
+            var TableFee = $cardOrder.find('table.table-fee');
+            var $discountBox = TableFee.find('tr.discount-detail');
+            var $discountHelper = TableFee.find('tr.discount-helper');
+            $discountHelper.css('display', 'none');
+            $discountBox.css('display', 'table-row');
+        },
         login: function ($form) {
             var loginForm = $($form);
         },
@@ -721,18 +729,22 @@ ws.payment = (function ($) {
 
             var $cardOrder = $('div.card-order[data-key=' + key + ']');
             var $discountBox = $cardOrder.find('table.table-fee').find('tr.discount-detail');
-            $discountBox.find('.discount-input').css('display', 'flex');
+            if (!order.couponCode) {
+                $discountBox.find('.discount-input').css('display', 'flex');
+            }
             $discountBox.find('.coupon-code').html('');
             $discountBox.find('.discount-amount').css('display', 'none');
+
             var $errorDiscount = $discountBox.find('td.value').find('span#discountErrors');
 
             if (!data.success || order.couponCode in data.errors) {
                 var error = data.errors[order.couponCode];
+
                 $errorDiscount.css('display', 'block');
                 $errorDiscount.html(error);
             }
 
-            if (data.discount > 0 && data.details.length > 0) {
+            if (data.success && data.discount > 0 && data.details.length > 0) {
                 order.discountAmount = data.discount;
                 order.discountDetail = data.details;
                 $discountBox.find('.discount-input').css('display', 'none');

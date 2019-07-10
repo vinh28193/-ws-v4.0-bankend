@@ -3,6 +3,7 @@
 
 namespace common\promotion;
 
+use Yii;
 use common\components\GetUserIdentityTrait;
 use common\models\User;
 use yii\base\Model;
@@ -96,8 +97,10 @@ class PromotionForm extends Model
 //        }
         if ($this->couponCode !== null && $this->couponCode !== '') {
             if (($coupon = $this->findCoupon()) === null) {
-                $response->errors[$this->couponCode] = "Not found coupon `{$this->couponCode}` ";
-                $response->success = count($response->details) > 0 && $response->discount > 0;
+                $response->errors[$this->couponCode] = Yii::t('common', 'Not found coupon `{code}`', [
+                    'code' => $this->couponCode
+                ]);
+                $response->success = false;
                 return $response;
             }
 
