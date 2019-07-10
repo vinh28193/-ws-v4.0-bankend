@@ -159,7 +159,7 @@ $isID = $storeManager->store->country_code === 'ID';
         </div>
     </div>
 </footer>
-<div class="loading_new" id="loading" style="display:none;">
+<div class="loading_new progress-bar" id="loading" style="display:none;">
     <div class="loading-inner-new">
         <img src="/img/gif/loading.gif">
     </div>

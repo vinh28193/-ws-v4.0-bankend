@@ -46,9 +46,21 @@
             });
         },
         // Todo loading
-        loading: function (show) {
+        loading: async function (show) {
             show = show || false;
             $('#loading').css('display', show ? 'block' : 'none');
+            if(!show){
+                $('#loading').css('width', '0%');
+            }else {
+                var m_seconds = 0;
+                var x = await setInterval(function() {
+                    m_seconds = m_seconds + 3;
+                    $('#loading').css('width', (m_seconds/10) + '%');
+                    if (m_seconds >= 9900) {
+                        clearInterval(x);
+                    }
+                }, 10);
+            }
         },
         notifyMessage: function (message, title = 'Notify', type = 'info', size = 'default', submitClick = 'alert(\'Click!\')', cancelClick = '', confirmLabel = 'Confirm', cancelLabel = 'Close', confirmClass = 'btn btn-info', cancelClass = 'btn btn-warning') {
             $('#modal-content').removeClass('modal-default');
