@@ -52,6 +52,7 @@ use Yii;
  * @property string $courier_delivery_time
  * @property int $international_shipping_fee
  * @property int $insurance_fee
+ * @property int $updated_at
  */
 class PaymentTransaction extends \common\components\db\ActiveRecord
 {
@@ -70,7 +71,7 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
     {
         return [
             [['store_id', 'payment_type', 'payment_provider', 'payment_method', 'courier_name', 'service_code', 'international_shipping_fee'], 'required'],
-            [['store_id', 'customer_id', 'used_xu', 'bulk_point', 'shipping', 'support_id', 'third_party_transaction_time', 'created_at', 'international_shipping_fee', 'insurance_fee'], 'integer'],
+            [['store_id', 'customer_id', 'used_xu', 'bulk_point', 'shipping', 'support_id', 'third_party_transaction_time', 'created_at', 'international_shipping_fee', 'insurance_fee', 'updated_at'], 'integer'],
             [['total_discount_amount', 'before_discount_amount_local', 'transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
             [['transaction_description', 'note', 'third_party_transaction_link'], 'string'],
             [['transaction_code', 'payment_bank_code', 'coupon_code', 'topup_transaction_code', 'parent_transaction_code', 'order_code', 'service_code'], 'string', 'max' => 32],
@@ -132,6 +133,7 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
             'courier_delivery_time' => 'Courier Delivery Time',
             'international_shipping_fee' => 'International Shipping Fee',
             'insurance_fee' => 'Insurance Fee',
+            'updated_at' => 'Updated At',
         ];
     }
 }
