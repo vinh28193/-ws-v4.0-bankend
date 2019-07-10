@@ -177,7 +177,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'seller' => function ($q) {
                 /** @var ActiveQuery $q */
                 $q->select([
-                    'seller_store',
+                    'seller_link_store',
                     'seller_name',
                     'id',
                 ]);
@@ -221,6 +221,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
                     'third_party_transaction_link',
                     'payment_bank_code',
                     'created_at',
+                    'updated_at',
                 ]);
             },
             'products' => function ($q) {
