@@ -260,6 +260,7 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                             'pluginOptions' => [
                                 'depends' => [Html::getInputId($shippingForm, 'buyer_province_id')],
                                 'placeholder' => Yii::t('frontend', 'Choose the district'),
+                                'initialize' => true,
                                 'url' => Url::toRoute(['sub-district']),
                                 'params' => ['hiddenBuyerDistrictId']
                             ],

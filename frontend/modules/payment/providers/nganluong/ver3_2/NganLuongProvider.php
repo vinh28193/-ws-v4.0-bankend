@@ -42,7 +42,8 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $this->getClient()->getParams()->set('payment_method', NganluongHelper::getPaymentMethod($payment->payment_bank_code));
         $this->getClient()->getParams()->set('bank_code', NganluongHelper::replaceBankCode($payment->payment_bank_code));
         $this->getClient()->getParams()->set('cancel_url', $payment->cancel_url);
-        $this->getClient()->getParams()->set('return_url', $payment->cancel_url);
+        $this->getClient()->getParams()->set('return_url', $payment->return_url);
+        $this->getClient()->getParams()->set('notify_url', $payment->return_url);
         $this->getClient()->getParams()->set('total_amount', $payment->getTotalAmountDisplay());
         $this->getClient()->getParams()->set('order_description', "Thanh toan cho cac ma don: {$payment->getOrderCodes()}");
         $this->getClient()->getParams()->set('buyer_fullname', $payment->customer_name);
@@ -77,7 +78,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $returnUrl = $payment->return_url;
             $returnUrl .= "?token={$resp['token']}&order_code={$payment->transaction_code}";
             $cancelUrl = $payment->cancel_url;
-            return new PaymentResponse($success, $mess, 'nganluong32', $payment->transaction_code, $payment->getOrderCodes(),PaymentResponse::TYPE_POPUP, PaymentResponse::METHOD_QRCODE, $resp['token'], $resp['error_code'], isset($resp['qr_data']) ? $resp['qr_data'] : '', $returnUrl, $cancelUrl);
+            return new PaymentResponse($success, $mess, 'nganluong32', $payment->transaction_code, $payment->getOrderCodes(), PaymentResponse::TYPE_POPUP, PaymentResponse::METHOD_QRCODE, $resp['token'], $resp['error_code'], isset($resp['qr_data']) ? $resp['qr_data'] : '', $returnUrl, $cancelUrl);
 
         } catch (Exception $exception) {
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
@@ -115,16 +116,16 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway->store_id = 1;
             $logPaymentGateway->save(false);
             if ($resp['error_code'] != '00') {
-                return new PaymentResponse(false, 'failed','nganluong32');
+                return new PaymentResponse(false, 'failed', 'nganluong32');
             }
             $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
             $transaction->save(false);
-            return new PaymentResponse(true, 'Giao dịch thanh toán thành công!','nganluong32', $transaction);
+            return new PaymentResponse(true, 'Giao dịch thanh toán thành công!', 'nganluong32', $transaction);
         } catch (Exception $exception) {
             $logPaymentGateway->request_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logPaymentGateway->save(false);
-            return new PaymentResponse(false, 'Check payment thất bại','nganluong32');
+            return new PaymentResponse(false, 'Check payment thất bại', 'nganluong32');
         }
     }
 
