@@ -177,7 +177,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'seller' => function ($q) {
                 /** @var ActiveQuery $q */
                 $q->select([
-                    'seller_store',
+                    'seller_link_store',
                     'seller_name',
                     'id',
                 ]);
