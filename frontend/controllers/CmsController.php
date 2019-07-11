@@ -32,7 +32,10 @@ class CmsController extends FrontendController
             $this->site_image = $this->page->image;
         }
         if($this->page->description){
-            $this->site_description = $this->page->image;
+            $this->site_description = $this->page->description;
+        }
+        if($this->page->seo_keyword){
+            $this->site_keyword = $this->page->seo_keyword;
         }
     }
 

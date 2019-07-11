@@ -48,6 +48,8 @@ class FrontendController extends Controller
     public $site_description;
 
     public $site_image;
+
+    public $site_keyword;
     /**
      * @var string|Request
      */
@@ -93,6 +95,7 @@ class FrontendController extends Controller
             'site_name' => $this->site_name,
             'url' => $this->request->absoluteUrl,
             'image' => $this->site_image,
+            'keyword' => $this->site_keyword,
             'description' => $this->site_description,
         ];
     }
@@ -104,6 +107,7 @@ class FrontendController extends Controller
             'site_name' => $this->site_name,
             'url' => $this->request->absoluteUrl,
             'image' => $this->site_image,
+            'keyword' => $this->site_keyword,
             'description' => $this->site_description,
         ];
 

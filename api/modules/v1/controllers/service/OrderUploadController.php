@@ -66,8 +66,8 @@ class OrderUploadController extends OrderController
 
                 $column = $refKey === 'BIN' ? 'ordercode' : 'purchase_transaction_id';
                 $where = ['IN', $column, $refs];
-                $orders = Order::find()->indexBy($column)->where($where)->all();
-
+                $orders = Order::find()->where($where)->all();
+                $orders = ArrayHelper::index($orders,$column);
                 $totalRow = count($sheet);
                 $msg = "update form Sheet $name ($totalRow records)";
                 $count = 0;
@@ -85,6 +85,10 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Not found order  $refKey : `$conditions`";
                         continue;
                     }
+                    if(isset($order[0])){
+                        $order = reset($order);
+                    }
+
                     $transaction = Order::getDb()->beginTransaction();
                     try {
                         if ($refKey === 'BIN' && ($transactionID = ArrayHelper::getValue($row, 'Transaction ID')) !== null && !WeshopHelper::compareValue($order->purchase_transaction_id, $transactionID)) {
@@ -141,7 +145,9 @@ class OrderUploadController extends OrderController
 
                 $column = $refKey === 'BIN' ? 'ordercode' : 'purchase_transaction_id';
                 $where = ['IN', $column, $refs];
-                $orders = Order::find()->indexBy($column)->where($where)->all();
+
+                $orders = Order::find()->where($where)->all();
+                $orders = ArrayHelper::index($orders,$column);
 
                 $totalRow = count($sheet);
                 $msg = "update form Sheet $name ($totalRow records)";
@@ -161,7 +167,9 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Not found order  $refKey : `$conditions`";
                         continue;
                     }
-
+                    if(isset($order[0])){
+                        $order = reset($order);
+                    }
                     $transaction = Order::getDb()->beginTransaction();
                     try {
                         if ($refKey === 'BIN' && ($orderId = ArrayHelper::getValue($row, 'Order ID')) !== null && !WeshopHelper::compareValue($order->purchase_order_id, $orderId)) {
