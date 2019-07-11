@@ -198,7 +198,7 @@ class RestApiChatController extends BaseApiController
                     }
                 }
                 $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}";
-                ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM');
+                ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM', null);
                 Yii::$app->wsLog->push('order', $model->getScenario(), null, [
                     'id' => $_post['Order_path'],
                     'request' => $this->post,
