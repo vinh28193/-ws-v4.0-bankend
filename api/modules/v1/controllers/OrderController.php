@@ -195,18 +195,21 @@ class OrderController extends BaseApiController
             $tran->commit();
         }
         if ($model->getScenario() == 'updateOrderStatus') {
-            $i = 1;
-            for ($i; $i < count($StatusOrder) + 1; $i++) {
+            $i = 0;
+            for ($i; $i < count($StatusOrder) ; $i++) {
                 if ($StatusOrder[$i] != $post['Order']['status']) {
                     if ($model->{$StatusOrder[$i]} == null) {
                         $model->{$StatusOrder[$i]} = $now;
                     }
                 } else {
+                    $model->{$StatusOrder[$i]} = $now;
                     break;
                 }
             }
-            for ($j = $i + 1; $j < count($StatusOrder) ; $j++) {
-                $model->{$StatusOrder[$j]} = null;
+            if ($i < 11) {
+                for ($j = $i + 1; $j < count($StatusOrder) -1 ; $j++) {
+                    $model->{$StatusOrder[$j]} = null;
+                }
             }
 
             if ($post['Order']['status'] == 'ready_purchase') {
@@ -224,7 +227,7 @@ class OrderController extends BaseApiController
             $model->current_status = Order::STATUS_CANCEL;
         }
         if ($model->getScenario() == 'updateTimeNull') {
-            for ($k = 0; $k < count($StatusOrder) + 1; $k++) {
+            for ($k = 0; $k < count($StatusOrder); $k++) {
                 if ($StatusOrder[$k] == $post['Order']['column']) {
                     break;
                 }
