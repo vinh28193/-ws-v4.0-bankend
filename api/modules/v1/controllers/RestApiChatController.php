@@ -108,7 +108,6 @@ class RestApiChatController extends BaseApiController
                 if($order == null){
                     Yii::$app->api->sendFailedResponse("Not found order by ordercode : .".$_post['Order_path']);
                 }
-
                 $current_status = $order->current_status;
                 $paid_status = $order->total_paid_amount_local > 0 ? true : false ;
                 if($current_status == Order::STATUS_NEW or $current_status == Order::STATUS_SUPPORTING)
