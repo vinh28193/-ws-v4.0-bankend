@@ -195,8 +195,8 @@ class OrderController extends BaseApiController
             $tran->commit();
         }
         if ($model->getScenario() == 'updateOrderStatus') {
-            $i = 1;
-            for ($i; $i < count($StatusOrder) + 1; $i++) {
+            $i = 0;
+            for ($i; $i < count($StatusOrder) ; $i++) {
                 if ($StatusOrder[$i] != $post['Order']['status']) {
                     if ($model->{$StatusOrder[$i]} == null) {
                         $model->{$StatusOrder[$i]} = $now;
@@ -205,7 +205,7 @@ class OrderController extends BaseApiController
                     break;
                 }
             }
-            for ($j = $i + 1; $j < count($StatusOrder) ; $j++) {
+            for ($j = $i + 1; $j < count($StatusOrder) -1 ; $j++) {
                 $model->{$StatusOrder[$j]} = null;
             }
 
