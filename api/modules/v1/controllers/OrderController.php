@@ -183,13 +183,12 @@ class OrderController extends BaseApiController
         if ($model->getScenario() == 'confirmPurchase') {
             $product_id = Yii::$app->request->post('product_id');
             $tran = Yii::$app->db->beginTransaction();
-            $status = Order::STATUS_AWAITING_PAYMENT;
+            $model->current_status = Order::STATUS_AWAITING_PAYMENT;
             if($model->total_paid_amount_local >= 0 && $model->total_paid_amount_local >= $model->total_final_amount_local){
-                $status = Order::STATUS_READY2PURCHASE;
+                $model->current_status = Order::STATUS_READY2PURCHASE;
             }
             if(in_array($model->current_status,[Order::STATUS_READY2PURCHASE,Order::STATUS_CONTACTING,Order::STATUS_AWAITING_PAYMENT])){
-                $model->current_status = $status;
-                if($status == Order::STATUS_READY2PURCHASE){
+                if($model->current_status == Order::STATUS_READY2PURCHASE){
                     $model->ready_purchase = time();
                 }
             }
