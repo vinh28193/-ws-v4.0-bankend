@@ -145,7 +145,7 @@
     left: 50.5%;
 }
 
-.lmkt-title h1 {
+.lmkt-title h2 {
     font-size: 20px;
     color: #333;
     text-transform: uppercase;
@@ -153,7 +153,7 @@
     margin-bottom: 25px;
 }
 
-.lmkt-title h1 a {
+.lmkt-title h2 a {
     font-size: 13px;
     color: #333;
     text-decoration: none;
@@ -164,7 +164,7 @@
     bottom: 15px;
 }
 
-.lmkt-title h1 a:hover {
+.lmkt-title h2 a:hover {
     color: #e67425
 }
 

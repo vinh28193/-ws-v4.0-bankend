@@ -35,6 +35,10 @@ class TestController extends FrontendController
     public function actionTestMe()
     {
         echo PaymentService::createReturnUrl(42);
+        echo "<pre>";
+        $orders = \common\models\Order::find()->indexBy('ordercode')->limit(5)->all();
+        print_r(ArrayHelper::getValue($orders,'WSVN6517'));
+        echo "</pre>";
         die;
     }
 

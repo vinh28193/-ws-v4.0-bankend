@@ -70,10 +70,10 @@ $userCookies->setUser();
     <?php } ?>
     <div class="condition-and-seller">
         <strong><?= Yii::t('frontend',$current_provider && $current_provider->condition ? ($current_provider->condition ? $current_provider->condition : 'Use or new') : ($item->condition ? $item->condition : 'Use or new')) ?></strong>
-        <span>
+        <span id="provider-seller">
             <?php
             if(is_array($item->providers) && count($item->providers)){
-                echo Yii::t('frontend','of seller <a href="#" id="seller_name">{seller}</a>',['seller' => $current_provider ? $current_provider->name : '---']);
+                echo Yii::t('frontend','of seller <a href="{link_provider}" id="seller_name">{seller}</a>',['seller' => $current_provider ? $current_provider->name : '---' , 'link_provider'=>  $current_provider ? $current_provider->website : '#']);
             }
             if($item->type === BaseProduct::TYPE_EBAY && $current_provider && $current_provider->positive_feedback_percent && $current_provider->rating_score){
                 echo "<a href='javascript:void(0)' class=\"text-black\">&nbsp;(".$current_provider->rating_score."&nbsp;<i class='la la-star text-warning'></i>)&nbsp;".Yii::t('frontend','{positive}% positive',['positive' => $current_provider->positive_feedback_percent])."</a>";

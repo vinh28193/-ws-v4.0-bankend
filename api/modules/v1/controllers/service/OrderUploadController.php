@@ -66,8 +66,8 @@ class OrderUploadController extends OrderController
 
                 $column = $refKey === 'BIN' ? 'ordercode' : 'purchase_transaction_id';
                 $where = ['IN', $column, $refs];
-                $orders = Order::find()->indexBy($column)->where($where)->all();
-
+                $orders = Order::find()->where($where)->all();
+                $orders = ArrayHelper::index($orders,$column);
                 $totalRow = count($sheet);
                 $msg = "update form Sheet $name ($totalRow records)";
                 $count = 0;
@@ -76,6 +76,7 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Invalid column `$refKey`";
                         continue;
                     }
+                    $conditions = trim($conditions);
                     if ($refKey === 'BIN' && (!is_numeric($conditions) || WeshopHelper::isSubText($conditions, 'VN') || WeshopHelper::isSubText($conditions, 'ID'))) {
                         $log[$index] = "Unknown order code  $conditions";
                         continue;
@@ -85,6 +86,10 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Not found order  $refKey : `$conditions`";
                         continue;
                     }
+                    if(isset($order[0])){
+                        $order = reset($order);
+                    }
+
                     $transaction = Order::getDb()->beginTransaction();
                     try {
                         if ($refKey === 'BIN' && ($transactionID = ArrayHelper::getValue($row, 'Transaction ID')) !== null && !WeshopHelper::compareValue($order->purchase_transaction_id, $transactionID)) {
@@ -141,7 +146,9 @@ class OrderUploadController extends OrderController
 
                 $column = $refKey === 'BIN' ? 'ordercode' : 'purchase_transaction_id';
                 $where = ['IN', $column, $refs];
-                $orders = Order::find()->indexBy($column)->where($where)->all();
+
+                $orders = Order::find()->where($where)->all();
+                $orders = ArrayHelper::index($orders,$column);
 
                 $totalRow = count($sheet);
                 $msg = "update form Sheet $name ($totalRow records)";
@@ -152,6 +159,8 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Invalid column `$refKey`";
                         continue;
                     }
+                    $conditions = trim($conditions);
+
                     if ($refKey === 'BIN' && (!is_numeric($conditions) || WeshopHelper::isSubText($conditions, 'VN') || WeshopHelper::isSubText($conditions, 'ID'))) {
                         $log[$index] = "Unknown order code  $conditions";
                         continue;
@@ -161,7 +170,9 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Not found order  $refKey : `$conditions`";
                         continue;
                     }
-
+                    if(isset($order[0])){
+                        $order = reset($order);
+                    }
                     $transaction = Order::getDb()->beginTransaction();
                     try {
                         if ($refKey === 'BIN' && ($orderId = ArrayHelper::getValue($row, 'Order ID')) !== null && !WeshopHelper::compareValue($order->purchase_order_id, $orderId)) {
@@ -190,7 +201,7 @@ class OrderUploadController extends OrderController
                         if (($carrierTracking = ArrayHelper::getValue($row, 'Carrier Tracking #')) !== null && trim($carrierTracking) !== 'N/A' && trim($carrierTracking) !== '') {
                             $transactionCodes = $order->tracking_codes !== null ? explode(',', $order->tracking_codes) : [];
                             if (!in_array($carrierTracking, $transactionCodes)) {
-                                $transactionCodes[] = $transactionCodes;
+                                $transactionCodes[] = $carrierTracking;
                             }
                             if (!empty($transactionCodes)) {
                                 $order->tracking_codes = implode(',', $transactionCodes);

@@ -6,9 +6,9 @@ use common\components\RedisLanguage;
 <div class="container">
     <div class="lmkt-prod-slide">
         <div class="lmkt-title">
-            <h1><?= $block->name ?><a
+            <h2><?= $block->name ?><a
                         href="<?= $block->url ?>"><?= RedisLanguage::getLanguageByKey('header_massage_seeall', 'Xem tất cả') ?></a>
-            </h1>
+            </h2>
         </div>
         <div class="lmkt-prod-all">
             <ul>
