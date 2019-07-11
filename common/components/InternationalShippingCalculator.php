@@ -113,12 +113,16 @@ class InternationalShippingCalculator extends BaseObject
 
         foreach ($data->getIterator() as $iterator) {
             /** @var $iterator CourierCalculate */
+
             $courier = [];
             $courier['courier_logo'] = $iterator->getCourierLogo();
             $courier['courier_name'] = $iterator->getCourierName();
             $courier['service_name'] = $iterator->getServiceName();
             $courier['service_code'] = $iterator->getServiceCode();
             $courier['shipping_fee'] = $iterator->getShippingFee();
+            $courier['special_fee'] = $iterator->getFulfillment()->getSpecial();
+            $courier['handling_fee'] = $iterator->getFulfillment()->getHandling();
+            $courier['insurance_fee'] = $iterator->getVas()->getInsurance();
             $courier['return_fee'] = $iterator->getReturnFee();
             $courier['tax_fee'] = $iterator->getTax();
             $courier['total_fee'] = $iterator->getTotalFee();
