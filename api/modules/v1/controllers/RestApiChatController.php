@@ -108,7 +108,6 @@ class RestApiChatController extends BaseApiController
                 if($order == null){
                     Yii::$app->api->sendFailedResponse("Not found order by ordercode : .".$_post['Order_path']);
                 }
-
                 $current_status = $order->current_status;
                 $paid_status = $order->total_paid_amount_local > 0 ? true : false ;
                 if($current_status == Order::STATUS_NEW or $current_status == Order::STATUS_SUPPORTING)
@@ -124,18 +123,18 @@ class RestApiChatController extends BaseApiController
                     }
                 }
             }
-            if ($_post['type_chat'] == 'GROUP_WS' && strlen(strstr($_post['message'], 'Supported')) > 0) {
-                $this->keyChatManger = new KeyChatList();
-                $mess = str_replace('-Type: Supported','',$_post['message']);
-                $listChat = $this->keyChatManger->read();
-                foreach ($listChat as $value) {
-                    if ($value['content'] == $mess) {
-                        $isSupported = true;
-                        break;
-                    }
-                }
-            }
-            if ($_post['type_chat'] == 'WS_CUSTOMER' && strlen(strstr($_post['message'], 'supporting')) > 0) {
+//            if ($_post['type_chat'] == 'GROUP_WS' && strlen(strstr($_post['message'], 'Supported')) > 0) {
+//                $this->keyChatManger = new KeyChatList();
+//                $mess = str_replace('-Type: Supported','',$_post['message']);
+//                $listChat = $this->keyChatManger->read();
+//                foreach ($listChat as $value) {
+//                    if ($value['content'] == $mess) {
+//                        $isSupported = true;
+//                        break;
+//                    }
+//                }
+//            }
+            if (($_post['type_chat'] == 'GROUP_WS') && strlen(strstr($_post['message'], 'supporting')) > 0) {
                 $mess = str_replace('-Type: supporting','',$_post['message']);
                 $listChat = ListChat::find()->where(['status' => (string)(1)])->all();
                 foreach ($listChat as $value) {
