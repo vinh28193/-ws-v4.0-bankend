@@ -390,7 +390,11 @@ JSON;
             'paymentTransaction' => $paymentTransaction,
             'storeManager' => $this->storeManager
         ]);
-        $mail->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot']);
+        $from = [$this->storeManager->store->name => 'no-reply@weshop.com.vn'];
+        if($this->storeManager->store->country_code === 'ID'){
+            $from = [$this->storeManager->store->name => 'no-reply@weshop.co.id'];
+        }
+        $mail->setFrom($from);
         $mail->setTo('vinhvv@peacesoft.net');
         $mail->setSubject('Create Order Success');
         var_dump($mail->send());
