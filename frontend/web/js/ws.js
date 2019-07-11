@@ -46,8 +46,9 @@
             });
         },
         // Todo loading
-        loading: async function (show) {
+        loading: async function (show, image = false) {
             show = show || false;
+            $('#image-loading').css('display', image ? 'block' : 'none');
             $('#loading').css('display', show ? 'block' : 'none');
             if(!show){
                 $('#loading').css('width', '0%');
@@ -417,6 +418,48 @@
         },
         showModal: function (id) {
             $('#' + id).modal();
+        },
+        loginBoxme: function () {
+          var username = $('input[name=emailBoxme]').val();
+          var password = $('input[name=passwordBoxme]').val();
+          $('#ErrorEmailBoxme').html('');
+          $('#ErrorPasswordBoxme').html('');
+          ws.loading(true,true);
+            $.ajax({
+                url: '/account/customer/connect-boxme',
+                method: 'POST',
+                data: {
+                    username: username,
+                    password: password
+                },
+                success: function (res) {
+                    ws.loading(false);
+                    if (res.success) {
+                        $('#connectSuccess').html(res.message);
+                        window.location.reload();
+                    } else {
+                        if(res.data.email){
+                            $('#ErrorEmailBoxme').html(res.data.email);
+                        }
+                        if(res.data.password){
+                            $('#ErrorPasswordBoxme').html(res.data.password);
+                        }
+                    }
+                }
+            });
+        },
+        disconnectBoxme: function(){
+          ws.notifyConfirm(ws.t('Do you want disconnect boxme account?'),ws.t('Disconnect boxme'),'sm','ws.callDisconnectBm()')
+        },
+        callDisconnectBm: function() {
+            ws.loading(true,true);
+            $.ajax({
+                url: '/account/customer/disconnect-boxme',
+                method: 'GET',
+                success: function (res) {
+                    window.location.reload();
+                }
+            });
         },
         shippingCollection: function (type = 'buyer', cartType = 'buynow', cartIds = []) {
             var phone = $('#shippingform-' + type + '_phone').val().trim();

@@ -73,7 +73,7 @@ class EbayDetailResponse extends BaseResponse
                 $price = 0;
                 if($converted_current_price){
                     $currency = ArrayHelper::getValue($converted_current_price,'currency_id','USD');
-                    $price = ArrayHelper::getValue($converted_current_price,'value',0);
+                    $price = $currency == ArrayHelper::getValue($response,'sell_price_currency')? ArrayHelper::getValue($response,'sell_price',0):  ArrayHelper::getValue($converted_current_price,'value',0);
                 }
                 $data['shipping_details'] = ArrayHelper::getValue($response,'shipping_details',[]);
                 $data['categories'] = ArrayHelper::getValue($response,'categories',[]);

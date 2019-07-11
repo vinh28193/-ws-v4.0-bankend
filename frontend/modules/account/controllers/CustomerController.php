@@ -7,6 +7,7 @@ use common\models\User;
 use common\models\Address;
 use common\models\Order;
 use frontend\modules\account\views\widgets\FormAddressWidget;
+use linslin\yii2\curl\Curl;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -299,5 +300,63 @@ class CustomerController extends BaseAccountController
         $address->remove = 1;
         $address->save();
         return ['success' => true, 'message' => Yii::t('frontend','Delete success.')];
+    }
+    public function actionConnectBoxme() {
+        Yii::$app->response->format = 'json';
+        $username = Yii::$app->request->post('username');
+        $password = Yii::$app->request->post('password');
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
+        if(!$user){
+            return ['success' => false, 'message' => Yii::t('frontend','Please login account weshop!') ,'data' => ['email' => Yii::t('frontend','Please login account weshop!')]];
+        }
+        if($user->bm_wallet_id){
+            return ['success' => false, 'message' => Yii::t('frontend','You are already connected to a boxme account.') ,'data' => ['email' => Yii::t('frontend','You are already connected to a boxme account')]];
+        }
+        if(!$username){
+            return ['success' => false, 'data' => ['email' => Yii::t('frontend','Email cannot null!')]];
+        }
+        if(!$password){
+            return ['success' => false, 'data' => ['password' => Yii::t('frontend','Password cannot null!')]];
+        }
+        $curl = new Curl();
+        $paramPost = [
+            'email' => $username,
+            'password' => $password,
+            'platform' => 'Weshop',
+            'country' => $this->storeManager->store->country_code
+        ];
+        $response = $curl->setRawPostData($paramPost)
+                    ->post(ArrayHelper::getValue(Yii::$app->params,'api_login_boxme','https://s.boxme.asia/api/v1/users/auth/sign-in/'));
+        $dataRs = json_decode($response,true);
+        if($dataRs['error']){
+            return ['success' => false, 'data' => ['password' => $dataRs['messages']]];
+        }else{
+            if($dataRs['data']['active'] == 1 && $dataRs['data']['id']){
+                $user->bm_wallet_id = $dataRs['data']['id'];
+                if(isset($dataRs['data']['loyalty']) && isset($dataRs['data']['loyalty']['user_level'])&& isset($dataRs['data']['loyalty']['time_end'])){
+                    $user->vip_end_time = $dataRs['data']['loyalty']['time_end'];
+                    $user->vip = $dataRs['data']['loyalty']['time_end'] >= time() ? $dataRs['data']['loyalty']['user_level'] : 0;
+                }else{
+                    $user->vip = 0;
+                }
+                $user->save();
+                return ['success' => true, 'message' => Yii::t('frontend','Connect success. Please wait 15 seconds.')];
+            }
+            return ['success' => false, 'data' => ['password' => Yii::t('frontend','Has error.')]];
+        }
+    }
+    public function actionDisconnectBoxme() {
+        Yii::$app->response->format = 'json';
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
+        if(!$user){
+            return ['success' => false, 'message' => Yii::t('frontend','Please login account weshop!') ,'data' => ['email' => Yii::t('frontend','Please login account weshop!')]];
+        }
+        $user->bm_wallet_id = null;
+        $user->vip_end_time = null;
+        $user->vip = 0;
+        $user->save();
+        return ['success' => true];
     }
 }
