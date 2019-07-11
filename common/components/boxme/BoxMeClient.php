@@ -11,6 +11,7 @@ use Seller\SellerClient;
 use Seller\SyncProductRequest;
 use Seller\SyncProductResponse;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Created by PhpStorm.
@@ -141,7 +142,7 @@ class BoxMeClient
         return $res;
     }
     public static function CreateLiveShipment($data,$tracking){
-        $service = new CourierClient('206.189.94.203:50060', [
+        $service = new CourierClient(ArrayHelper::getValue(Yii::$app->params,'host_ip_gprc_shipment','206.189.94.203:50060'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $param = [];
@@ -160,7 +161,7 @@ class BoxMeClient
             $param['procducts'][] = $temp;
         }
         $param['packages'] = [];
-        /*foreach ($data as $datum){
+        foreach ($data as $datum){
             $temp = [
                 'code' => $datum['packing_code'],
                 'weight' => $datum['weight'],
@@ -171,7 +172,7 @@ class BoxMeClient
                 'description' => $datum['description'],
             ];
             $param['packages'][] = $temp;
-        }*/
+        }
         $param['tracking']['type'] = 2;
         $param['tracking']['tracking_number'] = $tracking;
         $curl = new Curl();
@@ -190,7 +191,7 @@ class BoxMeClient
      * @throws \Exception
      */
     public static function SyncProduct($product){
-        $service = new SellerClient('206.189.94.203:50060', [
+        $service = new SellerClient(ArrayHelper::getValue(Yii::$app->params,'host_ip_gprc_shipment','206.189.94.203:50060'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $data = [];
