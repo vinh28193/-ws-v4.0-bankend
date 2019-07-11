@@ -18,10 +18,15 @@ use yii\helpers\Html;
  * @see \yii\web\UrlRuleInterface
  */
 $url = WeshopHelper::generateUrlDetail($portal, $product['item_name'], $product['item_id']);
-$localSellprice = $product['sell_price'] * $storeManager->getExchangeRate();
+$productBase = new \common\products\BaseProduct([
+        'sell_price' => $product['sell_price'],
+        'start_price' => $product['retail_price'],
+    'isInitialized' => true,
+]);
+$localSellprice = $productBase->getLocalizeTotalPrice();
 $localStartPrice = 0;
 if ($product['retail_price']) {
-    $localStartPrice = $product['retail_price'] * $storeManager->getExchangeRate();
+    $localStartPrice = $productBase->getLocalizeTotalStartPrice();
 }
 $salePercent = 0;
 if ($product['sell_price'] && $product['retail_price'] && $product['retail_price'] > $product['sell_price']) {

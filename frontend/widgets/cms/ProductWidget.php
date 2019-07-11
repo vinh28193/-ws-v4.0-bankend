@@ -4,6 +4,7 @@
 namespace frontend\widgets\cms;
 
 use common\components\StoreManager;
+use common\products\BaseProduct;
 use Yii;
 
 class ProductWidget extends WeshopBlockWidget
@@ -38,11 +39,17 @@ class ProductWidget extends WeshopBlockWidget
     public function run()
     {
         parent::run();
-        $price = $this->getStoreManager()->roundMoney($this->product['calculated_sell_price'] * $this->getStoreManager()->getExchangeRate());
+
+        $product_base = new BaseProduct([
+            'sell_price' => $this->product['calculated_sell_price'],
+            'start_price' => $this->product['calculated_start_price'],
+            'isInitialized' => true,
+        ]);
+        $price = $this->getStoreManager()->roundMoney($product_base->getLocalizeTotalPrice());
         $oldPrice = '';
         $saleTag = 0;
         if (($oldPrice = $this->product['calculated_start_price'])) {
-            $oldPrice = $this->getStoreManager()->roundMoney($oldPrice * $this->getStoreManager()->getExchangeRate());
+            $oldPrice = $this->getStoreManager()->roundMoney($product_base->getLocalizeTotalStartPrice());
             $saleTag = round((($oldPrice - $price) / $oldPrice) * 100);
             $oldPrice = $this->getStoreManager()->showMoney($oldPrice);
         }
