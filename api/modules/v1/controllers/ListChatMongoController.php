@@ -58,10 +58,17 @@ class ListChatMongoController extends BaseApiController
         if (isset($get['contentL'])) {
             $chat->where(['LIKE', 'content', $get['contentL']]);
         }
-        if (isset($get['limit'])) {
-            $chat->limit($get['limit']);
-        }
-        return $this->response(true, 'success',  $chat->asArray()->all());
+        $total = $chat->count();
+        $limit = isset($get['limit']) ? $get['limit'] : 10;
+        $page = isset($get['page']) ? $get['page'] : 1;
+        $offset = ($page - 1) * $limit;
+        $chat->limit($limit)->offset($offset);
+        $query = $chat->asArray()->all();
+        $data = [
+            'model' => $query,
+            'totalCount' => $total
+        ];
+        return $this->response(true, 'success',  $data);
     }
     public function actionCreate() {
         $model = ListChat::find()->orderBy('code DESC')->limit(1)->one();
