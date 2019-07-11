@@ -144,6 +144,9 @@ class AdditionalFeeServiceController extends BasePaymentController
                 'items' => $items
             ];
             $params = [
+                'config' => [
+                    'include_special_goods' => $order->getIsSpecial() ? 'Y' : 'N',
+                ],
                 'ship_from' => [
                     'country' => 'US',
                     'pickup_id' => $pickUpId

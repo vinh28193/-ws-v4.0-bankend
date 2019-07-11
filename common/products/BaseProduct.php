@@ -348,6 +348,9 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         }
         $weight = $this->getShippingWeight() * 1000;
         $params = [
+            'config' => [
+                'include_special_goods' => $this->getIsSpecial() ? 'Y' : 'N',
+            ],
             'ship_from' => [
                 'country' => 'US',
                 'pickup_id' => $pickUpId
