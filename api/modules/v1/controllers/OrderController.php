@@ -247,7 +247,7 @@ class OrderController extends BaseApiController
         if ($model->getScenario() == 'editAdjustPayment') {
             $messages = "<span class='text-danger fa-2x'>Order {$model->ordercode}</span> <br> - $action <br>{$this->resolveChatMessage($dirtyAttributes,$model)}. <br>- Update Payment Transaction: `Transaction Status` changed from `CREATE` to `SUCCESS`";
         } else {
-            $messages = "<span class='text-danger'>Order {$model->ordercode}</span> <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
+            $messages = "<span class='text-danger font-weight-bold'>Order {$model->ordercode}</span> <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
         }
         $model->validate();
         if (!$model->save(false)) {
@@ -330,7 +330,7 @@ class OrderController extends BaseApiController
             if (strpos($name, '_id') !== false && is_numeric($value)) {
                 continue;
             }
-            $results[] = "<span class='font-weight-bold'>{$reference->getAttributeLabel($name)} :</span> <br> changed from `{$reference->getOldAttribute($name)}` to `$value`";
+            $results[] = "<span class='font-weight-bold'>{$reference->getAttributeLabel($name)} :</span> <br> Changed from `{$reference->getOldAttribute($name)}` to `$value`";
         }
 
         return implode('<br>- ', $results);
