@@ -1101,3 +1101,15 @@ Thinh Nguyen, [11.07.19 16:46]
 1.2 ---------------------- Luồng Request ----------------------------
   làm thêm chức năng tạo Request thu thêm hoặc request Refund trên backend enm nhé
   Có đơn cần RF nhưng không tạo được RQ trên hệ thống
+
+
+#------------------SymLink to a Directory------------------------
+$ ln -s /var/www/ws-operation/dist/ /var/www/ws-operation-dist/
+
+#---------Unlink---------
+cd /var/www/ws-operation/dist/
+unlink dist
+
+#-------------Token------------------------
+c26078a0a62a1acd7ade4579dca3a44f2fc79ed8
+

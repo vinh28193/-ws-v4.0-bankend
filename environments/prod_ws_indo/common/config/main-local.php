@@ -70,6 +70,9 @@ return [
                 'encryption' => 'tls'
             ],
         ],
+        'mandrillMailer' => [
+            'apikey' => 'DbmlRAwuBMQoE8hAzMsuuA' // ID : DbmlRAwuBMQoE8hAzMsuuA
+        ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://backup:QuKUBS1cQ2Q@mongodbWs:27017/admin',

@@ -1,7 +1,7 @@
 <?php
 return [
-    'version_gate' => 'Old', //Api Chương: '' or Api WESHOP: 'Old'
-
+    'version_gate' => '', //Api Chương: '' or Api WESHOP: 'Old'
+    'api_login_boxme' => 'https://s.boxme.asia/api/v1/users/auth/sign-in/',
     'ebay-api' => 'https://api-lbc.weshop.asia/v3',
     'boxme' =>[
         'vn' => [
