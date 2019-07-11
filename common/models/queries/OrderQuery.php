@@ -261,6 +261,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
                    'price_amount_local',
                    'total_final_amount_origin',
                    'total_final_amount_local',
+                   'check_special',
                ]);
             },
         ]);
