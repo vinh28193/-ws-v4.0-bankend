@@ -1099,3 +1099,5 @@ Thinh Nguyen, [11.07.19 16:46]
 
 
 1.2 ---------------------- Luồng Request ----------------------------
+  làm thêm chức năng tạo Request thu thêm hoặc request Refund trên backend enm nhé
+  Có đơn cần RF nhưng không tạo được RQ trên hệ thống
