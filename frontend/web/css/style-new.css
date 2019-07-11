@@ -412,9 +412,13 @@ div.title-box.inline div.form-inline input{
     display: inline-flex;
 }
 div.product-list.row div a div.info div.name{
-    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 16px;
+    /* max-height: 50px; */
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     font-size: 14px;
 }
 .ico.ico-amazon:before {
