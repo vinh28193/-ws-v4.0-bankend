@@ -111,7 +111,6 @@ class AdditionalController extends BaseApiController
             list($product->total_final_amount_origin, $product->total_final_amount_local) = $additionalFees->getTotalAdditionalFees(['product_price', 'shipping_fee', 'tax_fee']);
 
             // Tổng tiền local tất tần tận
-
             $product->save(false);
             $order = $product->order;
             $order->on(Order::EVENT_AFTER_UPDATE, function ($event) {

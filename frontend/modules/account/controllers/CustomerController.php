@@ -333,6 +333,10 @@ class CustomerController extends BaseAccountController
             return ['success' => false, 'data' => ['password' => $dataRs['messages']]];
         }else{
             if($dataRs['data']['active'] == 1 && $dataRs['data']['id']){
+                $checkImp = User::find()->where(['bm_wallet_id' => $dataRs['data']['id'],''])->select('id')->count();
+                if($checkImp > 0){
+                    return ['success' => false, 'data' => ['password' => Yii::t('frontend','This Boxme account was connected with other Weshop account.')]];
+                }
                 $user->bm_wallet_id = $dataRs['data']['id'];
                 if(isset($dataRs['data']['loyalty']) && isset($dataRs['data']['loyalty']['user_level'])&& isset($dataRs['data']['loyalty']['time_end'])){
                     $user->vip_end_time = $dataRs['data']['loyalty']['time_end'];

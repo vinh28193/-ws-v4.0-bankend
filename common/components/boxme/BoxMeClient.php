@@ -142,7 +142,7 @@ class BoxMeClient
         return $res;
     }
     public static function CreateLiveShipment($data,$tracking){
-        $service = new CourierClient(ArrayHelper::getValue(Yii::$app->params,'host_ip_gprc_shipment','206.189.94.203:50060'), [
+        $service = new CourierClient(ArrayHelper::getValue(Yii::$app->params,'host_ip_gprc_shipment','10.130.111.53:50060'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $param = [];
@@ -228,4 +228,9 @@ class BoxMeClient
 
     }
 
+    public function CreateOrder() {
+        $service = new CourierClient(ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_COURIER','10.130.111.53:50056'), [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+    }
 }

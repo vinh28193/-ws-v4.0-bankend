@@ -123,8 +123,8 @@ class ItemController extends AmazonController
                         "</div>" .
                         "</td>";
                     $txt .= "<td>" .
-                        "<a href='javascript: void(0);' class='btn btn-amazon shortcut-payment'  data-role='buynow' data-seller=' ".$provider->prov_id." ' style='border-radius: 0px'>".Yii::t('frontend','Buy now')."</a>" .
-                        "<a href='javascript: void(0);' class='btn btn-outline-info shortcut-payment'  data-role='shopping' data-seller=' ".$provider->prov_id." ' style='border-radius: 0px'>".Yii::t('frontend','Cart')."</a>" .
+                        "<a href='javascript: void(0);' class='btn btn-amazon shortcut-payment'  data-role='buynow' data-seller='".$provider->prov_id."' style='border-radius: 0px'>".Yii::t('frontend','Buy now')."</a>" .
+                        "<a href='javascript: void(0);' class='btn btn-outline-info shortcut-payment'  data-role='shopping' data-seller='".$provider->prov_id."' style='border-radius: 0px'>".Yii::t('frontend','Cart')."</a>" .
                         "</td>";
                     $txt .= "</tr>";
                 }

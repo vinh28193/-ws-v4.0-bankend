@@ -14,20 +14,20 @@ return [
         'language' => [
             'class' => 'common\bootstrap\AutoDetectLanguageBootstrapping'
         ],
-        'log', 'queue', ],
-            'timeZone' => 'Asia/Ho_Chi_Minh',
-            'controllerNamespace' => 'frontend\controllers',
-            'defaultRoute' => 'cms/home',
-            'components' => [
-                /*
-                'queue' => [
-                    'class' => '\yii\queue\file\Queue',
-                    'as log' => '\yii\queue\LogBehavior',
-                    'path' => '@runtime/queue',
-                ],
-        */
+        'log', 'queue',],
+    'timeZone' => 'Asia/Ho_Chi_Minh',
+    'controllerNamespace' => 'frontend\controllers',
+    'defaultRoute' => 'cms/home',
+    'components' => [
+        /*
+        'queue' => [
+            'class' => '\yii\queue\file\Queue',
+            'as log' => '\yii\queue\LogBehavior',
+            'path' => '@runtime/queue',
+        ],
+*/
         'translatemanager' => [
-           'class' => 'lajax\translatemanager\Component'
+            'class' => 'lajax\translatemanager\Component'
         ],
         'assetManager' => [
             'bundles' => [
@@ -79,6 +79,10 @@ return [
             'loginUrl' => '/login.html',
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
+//        'view' => [
+//            'class' => '\rmrevin\yii\minify\View',
+//            'enableMinify' => false,
+//        ],
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
@@ -138,7 +142,6 @@ return [
 //            'token' => '62b5c2a506ccfa164d05f4987e810b6e', //MY
             'offerId' => 'weshop',
             'cookieName' => '_____ecomobiCookiePrefix'
-
         ]
 
     ],
@@ -180,6 +183,7 @@ return [
                 'queue' => '\yii\queue\debug\Panel',
             ],
         ],
+
         /*
         'translatemanager' => [
             'class' => 'lajax\translatemanager\Module',
