@@ -16,7 +16,7 @@ use Yii;
 
 class OrderController extends BaseApiController
 {
-    public function rules()
+    protected function rules()
     {
         return [
             [
@@ -27,7 +27,7 @@ class OrderController extends BaseApiController
         ];
     }
 
-    public function verbs()
+    protected function verbs()
     {
         return [
             'index' => ['GET'],

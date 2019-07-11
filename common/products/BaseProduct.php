@@ -12,6 +12,7 @@ use common\additional\AdditionalFeeInterface;
 use common\additional\AdditionalFeeTrait;
 use common\components\GetUserIdentityTrait;
 use common\components\InternationalShippingCalculator;
+use common\components\ThirdPartyLogs;
 use common\components\UserCookies;
 use common\helpers\WeshopHelper;
 use common\models\Category;
@@ -405,6 +406,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
             }
             $calculator = new InternationalShippingCalculator();
             list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code, $this->getStoreManager()->store->currency, $location);
+            ThirdPartyLogs::setLog('BaseProduct', 'getInternationalShipping', $this->getUniqueCode(), $this->getShippingParams(), $couriers);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
                 $this->_couriers = $couriers;
                 $firstCourier = $couriers[0];
