@@ -344,7 +344,7 @@ class PaymentController extends BasePaymentController
 
         try {
             /** @var  $mailer yii\mail\BaseMailer */
-            $mailer = Yii::$app->mailer;
+            $mailer = Yii::$app->mandrillMailer;
             $mailer->viewPath = '@common/views/mail';
             $mail = $mailer->compose(['html' => 'orderCreate-html'],[
                 'paymentTransaction' => $paymentTransaction,

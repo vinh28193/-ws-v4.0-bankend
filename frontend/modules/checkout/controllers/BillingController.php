@@ -61,7 +61,7 @@ class BillingController extends CheckoutController
         }
         try {
             /** @var  $mailer yii\mail\BaseMailer */
-            $mailer = Yii::$app->mailer;
+            $mailer = Yii::$app->mandrillMailer;
             $mailer->viewPath = '@common/views/mail';
             $mail = $mailer->compose(['html' => 'paymentSuccess-html'], [
                 'paymentTransaction' => $paymentTransaction,

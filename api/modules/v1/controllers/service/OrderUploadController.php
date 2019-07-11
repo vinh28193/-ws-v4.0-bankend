@@ -76,6 +76,7 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Invalid column `$refKey`";
                         continue;
                     }
+                    $conditions = trim($conditions);
                     if ($refKey === 'BIN' && (!is_numeric($conditions) || WeshopHelper::isSubText($conditions, 'VN') || WeshopHelper::isSubText($conditions, 'ID'))) {
                         $log[$index] = "Unknown order code  $conditions";
                         continue;
@@ -158,6 +159,8 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Invalid column `$refKey`";
                         continue;
                     }
+                    $conditions = trim($conditions);
+
                     if ($refKey === 'BIN' && (!is_numeric($conditions) || WeshopHelper::isSubText($conditions, 'VN') || WeshopHelper::isSubText($conditions, 'ID'))) {
                         $log[$index] = "Unknown order code  $conditions";
                         continue;
