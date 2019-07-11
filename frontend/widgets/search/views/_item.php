@@ -70,29 +70,24 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
             <div class="price">
                 <div class="notify">
                     <?php
+                    if (isset($product['provider'])) {
+                        if(($seller = \yii\helpers\ArrayHelper::getValue($product['provider'],'name'))){
+                            echo "<div>".Yii::t('frontend','Sold by:')."<b> ".$seller."</b> (".\yii\helpers\ArrayHelper::getValue($product['provider'],'rating_score',0)."<i class='la la-star text-warning'></i>)</div>";
+                        }
+                        if(($positive_feedback_percent = \yii\helpers\ArrayHelper::getValue($product['provider'],'positive_feedback_percent'))){
+                            echo "<div><u class=\"text-blue font-weight-bold\">".Yii::t('frontend','{positive}% positive',['positive' => $positive_feedback_percent])."</u></div>";
+                        }
+                    }
+                    if(isset($product['condition'])){
+                        echo "<div class=\"condition-product\">".Yii::t('frontend',$product['condition'])."</div>";
+                    }
                     if ($localSellprice) {
                         if ($localStartPrice && $salePercent) {
                             echo "<span class='old-price' >" . trim($storeManager->showMoney($localStartPrice)) . "</span>";
-                        } else {
-                            if (isset($product['provider'])) {
-                                if(($seller = \yii\helpers\ArrayHelper::getValue($product['provider'],'name'))){
-                                    echo "<div>".Yii::t('frontend','Sold by:')."<b> ".$seller."</b> (".\yii\helpers\ArrayHelper::getValue($product['provider'],'rating_score',0)."<i class='la la-star text-warning'></i>)</div>";
-                                }
-                                if(($positive_feedback_percent = \yii\helpers\ArrayHelper::getValue($product['provider'],'positive_feedback_percent'))){
-                                    echo "<div><u class=\"text-blue font-weight-bold\">".Yii::t('frontend','{positive}% positive',['positive' => $positive_feedback_percent])."</u></div>";
-                                }
-                            } else {
-                                echo "";
-                            }
                         }
-                    } else {
-                        echo "";
                     }
                     ?>
                 </div>
-                <?php if(isset($product['condition'])){?>
-                    <div class="condition-product"><?= Yii::t('frontend',$product['condition']) ?></div>
-                <?php } ?>
                 <div>
                     <?php
                     if ($localSellprice) {
