@@ -54,6 +54,10 @@ $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval(
                 'title' => $product['item_name'],
             ])
             ?>
+            <?php
+            if ($salePercent > 0) {
+                echo '<span class="sale-tag-top">' . $salePercent . '% OFF</span>';
+            } ?>
         </div>
         <div class="info">
             <div class="rate text-orange" <?= strtolower($portal) == 'ebay' ? 'style="display:none;"' : '' ?>>

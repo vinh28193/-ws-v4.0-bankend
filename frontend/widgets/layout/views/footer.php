@@ -161,7 +161,7 @@ $isID = $storeManager->store->country_code === 'ID';
 </footer>
 <div class="loading_new progress-bar" id="loading" style="display:none;">
     <div class="loading-inner-new">
-        <img src="/img/gif/loading.gif">
+<!--        <img src="/img/gif/loading.gif">-->
     </div>
 </div>
 <!-- Modal login waller -->
