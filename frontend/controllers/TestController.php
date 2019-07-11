@@ -390,7 +390,19 @@ JSON;
     {
         $file = Yii::getAlias('@root/order-amazon-01jul-08jul.xlsx');
         $results = ExcelHelper::read($file);
-        var_dump($results);
+        foreach ($results as $name => $sheet){
+            $checkSheet = isset($sheet[0]) ? $sheet[0] : null;
+            if ($checkSheet === null || !isset($checkSheet['PO Number'])) {
+                continue;
+            }
+            foreach ($sheet as $index => $row){
+                if (($conditions = ArrayHelper::getValue($row, 'PO Number')) === null) {
+                    var_dump($row);
+                }
+            }
+
+        }
+
         die;
     }
 

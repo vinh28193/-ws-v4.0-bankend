@@ -17,7 +17,7 @@ class Order extends \common\models\Order
         }
         $transaction = self::getDb()->beginTransaction();
         try {
-            ThirdPartyLogs::setLog('Order', 'updateRecord', 'Upload form excel', $conditions, $attributes);
+            ThirdPartyLogs::setLog('Order', 'update', 'Upload form excel', $conditions, $attributes);
             $executed = self::updateAll($attributes, $conditions);
             $transaction->commit();
             return $executed > 0;
