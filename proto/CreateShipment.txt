@@ -2,6 +2,7 @@ param = {
         "shipping_method" :5,
         "pickup_id"		: #id kho cua khach hang ,
         "ff_id"			: #id kho boxme,
+	"shipment_number" : // Ma shipment cua ban (ma team mua hang se dien tran amazon),
         "have_labeling" : 1 da co ma vach, 2 Kho dan ma (Mac dinh = 2)  (co tinh phi)
         "procducts": [
             {
@@ -40,7 +41,19 @@ param = {
         "tracking": {
             "type": 2, (1 su dung dich vu van chuyen cua boxme), 2 Tu van chuyen (hang tu US ve la 2)
             "tracking_number": Ma HVC
+        },
+	"list_order"		:[{
+            "tracking_number"	:// MA DON BOXME
+            "parcel_number"	: // Ma hang vạn chuyen US cua don,
+            "country_code"	: // Quoc gia cua con BOXME
+        },
+        {
+            "tracking_number"	:// MA DON BOXME
+            "parcel_number"	: // Ma hang vạn chuyen US cua don,
+            "country_code"	: // Quoc gia cua con BOXME
+
         }
+        ]
         }
         obj = json.dumps(obj)
         
@@ -50,49 +63,60 @@ resp = SellerClient().create_shipment(param, country, int(user_id))
 
 Example:
 param = {
-        "shipping_method" : 5,
-        "pickup_id"		: 4647,
-        "ff_id"			: 56656,
-        "have_labeling: : 2,
+        "shipping_method" : 6,
+        "pickup_id"		: 35729,
+        "ff_id"			: 35729,
+        "shipment_number" : "ORDER123456",
         "procducts": [
             {
-            "bsin"      : "N14694496635",
-            "quantity"  : 10,
-            "img_check" : 1,
-            "description":"Yeu cau chup hinh san pham"
+            "bsin": "BSINPHONE03",
+            "quantity": 30,
+            "img_check":1,
+            "description":"Chụp ảnh"
             },
             {
-            "bsin"      : "NET64279342804186165" ,
-            "quantity"  : 12,
-            "img_check"	: 0,
-            "description":"Thay nhãn Trung Quốc nếu có"
+            "bsin": "BSINPHONE04",
+            "quantity": 50,
+            "img_check":1,
+            "description":"Chụp ảnh"
             }
+            
         ],
         "packages": [
             {
-            "code"      : "DHL_123456789",
-            "weight"    : 1000,
-            "quantity"  : 10,
-            "width"     : "60",
-            "length"    : "70",
-            "height"    : "50",
+            "code"      : "UPS123456",
+            "weight"    : 40000,
+            "quantity"  : 50,
+            "width"     : 50,
+            "length"    : 100,
+            "height"    : 50,
             "description":"Kien hang thu 1"
             },
             {
-            "code"      : "DHL_987654321",
-            "weight"    : "12000",
-            "width"     : "50",
-            "length"    : "60",
-            "quantity"  : "40",
-            "height"    : "40",
-            "description":"Kien hang thu 2"
+            "code"  : "DHL456789",
+            "weight": 10000,
+            "quantity":30,
+            "width" : 40,
+            "length": 80,
+            "height": 30,
+            "description":"Kien hang thu 1"
             }
         ],
         "tracking": {
-            "type": 2,
-            "tracking_number": ""
+            "type": 2
+        },
+        "list_order"		:[{
+            "tracking_number"	: "BM1111111111",
+            "parcel_number"	: "UPS123456",
+            "country_code"	: "VN"
+        },
+        {
+            "tracking_number"	: "BM2222222222",
+            "parcel_number"	: "DHL456789",
+            "country_code"	:"VN"
         }
-    }
+        ]
+        }
 from boxme_core.rpc.services.seller.SellerClient import SellerClient
 param = json.dumps(param)
 resp = SellerClient().create_shipment(param, country, int(user_id))

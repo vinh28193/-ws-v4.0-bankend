@@ -867,21 +867,30 @@ return [
         ],
     ],
     [
-    'class' => \common\filters\ApiUrlRule::className(),
+        'class' => \common\filters\ApiUrlRule::className(),
         'prefix' => 'v1',
         'controller' => ['pay' => 'payment-transaction', 'pay-bank' => 'payment-bank'],
         'tokens' => [
-        '{id}' => '<id:\\d[\\d,]*>',
-        '{code}' => '<code:\\w[\\w,]*>',
-    ],
+            '{id}' => '<id:\\d[\\d,]*>',
+            '{code}' => '<code:\\w[\\w,]*>',
+        ],
         'patterns' => [
-        'GET,HEAD' => 'index',
-        'GET' => 'get-lang',
-        'PUT,PATCH {code}' => 'update',
-        'GET,HEAD {code}' => 'view',
-        'POST' => 'create',
-        'OPTIONS {code}' => 'options',
-        'OPTIONS' => 'options',
+            'GET,HEAD' => 'index',
+            'GET' => 'get-lang',
+            'PUT,PATCH {code}' => 'update',
+            'GET,HEAD {code}' => 'view',
+            'POST' => 'create',
+            'OPTIONS {code}' => 'options',
+            'OPTIONS' => 'options',
+        ],
     ],
-        ]
-    ];
+    [
+        'class' => \common\filters\ApiUrlRule::className(),
+        'prefix' => 'v1',
+        'controller' => ['order-save-file' => 'service/order-upload'],
+        'patterns' => [
+            'POST' => 'upload',
+            'OPTIONS' => 'options',
+        ],
+    ]
+];

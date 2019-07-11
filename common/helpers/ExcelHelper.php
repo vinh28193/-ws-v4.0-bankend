@@ -27,13 +27,15 @@ class ExcelHelper
 
     public static function readFromFile($instance)
     {
-        $file = UploadedFile::getInstanceByName($instance);
+        if (($file = UploadedFile::getInstanceByName($instance)) === null) {
+            return [];
+        }
         return self::read($file->tempName);
     }
 
     /**
      * @param $file
-     * @return array|bool
+     * @return array
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
     public static function read($file)
@@ -59,7 +61,7 @@ class ExcelHelper
             return $sheets;
         } catch (ReaderException $exception) {
             Yii::error($exception);
-            return false;
+            return [];
         }
     }
 
