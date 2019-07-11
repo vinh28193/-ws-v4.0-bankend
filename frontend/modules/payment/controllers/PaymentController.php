@@ -355,7 +355,7 @@ class PaymentController extends BasePaymentController
             ]);
             $from = [$this->storeManager->store->name => 'no-reply@weshop.com.vn'];
             if($this->storeManager->store->country_code === 'ID'){
-                $from = [$this->storeManager->store->name => 'no-reply@weshop.com.vn'];
+                $from = [$this->storeManager->store->name => 'no-reply@weshop.co.id'];
             }
             $mail->setFrom($from);
             $mail->setTo($payment->customer_email);
