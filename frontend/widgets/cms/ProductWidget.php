@@ -48,7 +48,7 @@ class ProductWidget extends WeshopBlockWidget
         $price = $this->getStoreManager()->roundMoney($product_base->getLocalizeTotalPrice());
         $oldPrice = '';
         $saleTag = 0;
-        if (($oldPrice = $this->product['calculated_start_price'])) {
+        if (($oldPrice = $this->product['calculated_start_price']) && $oldPrice > 0) {
             $oldPrice = $this->getStoreManager()->roundMoney($product_base->getLocalizeTotalStartPrice());
             $saleTag = round((($oldPrice - $price) / $oldPrice) * 100);
             $oldPrice = $this->getStoreManager()->showMoney($oldPrice);
