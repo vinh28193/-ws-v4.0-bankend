@@ -161,7 +161,7 @@ $isID = $storeManager->store->country_code === 'ID';
 </footer>
 <div class="loading_new progress-bar" id="loading" style="display:none;">
     <div class="loading-inner-new">
-        <img src="/img/gif/loading.gif">
+<!--        <img src="/img/gif/loading.gif">-->
     </div>
 </div>
 <!-- Modal login waller -->
@@ -176,6 +176,36 @@ $isID = $storeManager->store->country_code === 'ID';
                 </button>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <i class="icon password"></i>
+                    <input type="password" name="passwordWallet" class="form-control" placeholder="Mật khẩu">
+                    <label style="color: red" id="ErrorPasswordWallet"></label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="ws.loginWallet()">Đăng nhập</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal login waller -->
+<div class="modal" id="loginBoxme" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="m-auto">
+                    <img alt="Home" style="max-height: 64px" src="/images/logo/logo-BM-Asia.svg">
+                </div>
+            </div>
+            <div class="modal-body">
+                <h3>Đăng nhập Boxme</h3>
+                <div class="form-group">
+                    <i class="icon email"></i>
+                    <input type="email" name="emailBoxme" class="form-control" placeholder="Email">
+                    <label style="color: red" id="ErrorPasswordWallet"></label>
+                </div>
                 <div class="form-group">
                     <i class="icon password"></i>
                     <input type="password" name="passwordWallet" class="form-control" placeholder="Mật khẩu">
