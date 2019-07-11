@@ -160,8 +160,8 @@ $isID = $storeManager->store->country_code === 'ID';
     </div>
 </footer>
 <div class="loading_new progress-bar" id="loading" style="display:none;">
-    <div class="loading-inner-new">
-<!--        <img src="/img/gif/loading.gif">-->
+    <div class="loading-inner-new" id="image-loading" style="display:none;">
+        <img src="/img/gif/loading.gif">
     </div>
 </div>
 <!-- Modal login waller -->
@@ -200,21 +200,21 @@ $isID = $storeManager->store->country_code === 'ID';
                 </div>
             </div>
             <div class="modal-body">
-                <h3>Đăng nhập Boxme</h3>
+                <h3><?= Yii::t('frontend','Login boxme asia') ?></h3>
                 <div class="form-group">
                     <i class="icon email"></i>
-                    <input type="email" name="emailBoxme" class="form-control" placeholder="Email">
-                    <label style="color: red" id="ErrorPasswordWallet"></label>
+                    <input type="email" name="emailBoxme" class="form-control" placeholder="<?= Yii::t('frontend','Email') ?>">
+                    <label style="color: red" id="ErrorEmailBoxme"></label>
                 </div>
                 <div class="form-group">
                     <i class="icon password"></i>
-                    <input type="password" name="passwordWallet" class="form-control" placeholder="Mật khẩu">
-                    <label style="color: red" id="ErrorPasswordWallet"></label>
+                    <input type="password" name="passwordBoxme" class="form-control" placeholder="<?= Yii::t('frontend','Password') ?>">
+                    <label style="color: red" id="ErrorPasswordBoxme"></label>
+                    <label class="text-success" id="connectSuccess"></label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="ws.loginWallet()">Đăng nhập</button>
+                <button type="button" class="btn btn-primary" onclick="ws.loginBoxme()"><?= Yii::t('frontend','Login') ?></button>
             </div>
         </div>
     </div>

@@ -7,6 +7,7 @@ use common\boxme\InternationalShippingCalculator;
 use common\components\cart\CartHelper;
 use common\components\cart\CartManager;
 use common\components\employee\Employee;
+use common\helpers\ExcelHelper;
 use common\helpers\ObjectHelper;
 use common\helpers\WeshopHelper;
 use common\models\PaymentTransaction;
@@ -385,9 +386,24 @@ JSON;
         ]);
     }
 
-    public function actionCheckout()
+    public function actionXlxs()
     {
-        echo PaymentService::createCheckoutUrl('buynow',123);
+        $file = Yii::getAlias('@root/order-amazon-01jul-08jul.xlsx');
+        $results = ExcelHelper::read($file);
+        foreach ($results as $name => $sheet){
+            $checkSheet = isset($sheet[0]) ? $sheet[0] : null;
+            if ($checkSheet === null || !isset($checkSheet['PO Number'])) {
+                continue;
+            }
+            foreach ($sheet as $index => $row){
+                if (($conditions = ArrayHelper::getValue($row, 'PO Number')) === null) {
+                    var_dump($row);
+                }
+            }
+
+        }
+
         die;
     }
+
 }

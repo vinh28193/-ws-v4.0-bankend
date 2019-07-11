@@ -34,15 +34,16 @@ class ThirdPartyLogs extends \common\modelsMongo\ThirdPartyLogs
 
     }
 
-    public static function setLog($provider, $action, $user, $request, $response)
+    public static function setLog($provider, $action, $message, $request, $response)
     {
-        $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh'));
+        $formatter = Yii::$app->formatter;
         try {
             $log = new ThirdPartyLogs();
-            $log->date = $date->format('Y-m-d');
-            $log->create_by = $user;
-            $log->create_time = $date->format('Y-m-d H:i:s');
+            $log->date = $formatter->asDate('now');
+            $log->create_by = Yii::$app->user->getId();
+            $log->create_time = $formatter->asDatetime('now');
             $log->action = $action;
+            $log->message = $message;
             $log->request = $request;
             $log->response = $response;
             $log->provider = $provider;

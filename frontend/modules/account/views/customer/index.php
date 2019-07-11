@@ -103,7 +103,7 @@ $this->registerJs($js);
                 </li>
                 <li>
                     <b><?= Yii::t('frontend','Level') ?></b>
-                    <span><?= strtoupper(Yii::t('frontend',$model->userLevel)) ?></span>
+                    <span class="label label-<?= strtolower($model->userLevel) ?>"><?= strtoupper(Yii::t('frontend',$model->userLevel)) ?></span>
                 </li>
                 <li>
                     <b><?= Yii::t('frontend','Account Boxme') ?>
@@ -112,9 +112,9 @@ $this->registerJs($js);
                     <span>
                         <?php
                         if($model->bm_wallet_id){
-                            echo "<span class='badge badge-success'>".Yii::t('frontend','Connected')."</span>";
+                            echo "<a  href='javascript: void(0);' onclick='ws.disconnectBoxme()'  class='badge badge-success'>".Yii::t('frontend','Connected')."</a>";
                         }else{
-                            echo "<a href='javascript: void(0);' class='btn-link'>".Yii::t('frontend','Click to connect')."</a>";
+                            echo "<a href='javascript: void(0);' onclick='ws.showModal(\"loginBoxme\")' class='btn-link'>".Yii::t('frontend','Connect Boxme')."</a>";
                         }
                         ?>
                     </span>
