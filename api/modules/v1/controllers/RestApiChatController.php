@@ -124,18 +124,18 @@ class RestApiChatController extends BaseApiController
                     }
                 }
             }
-            if ($_post['type_chat'] == 'GROUP_WS' && strlen(strstr($_post['message'], 'Supported')) > 0) {
-                $this->keyChatManger = new KeyChatList();
-                $mess = str_replace('-Type: Supported','',$_post['message']);
-                $listChat = $this->keyChatManger->read();
-                foreach ($listChat as $value) {
-                    if ($value['content'] == $mess) {
-                        $isSupported = true;
-                        break;
-                    }
-                }
-            }
-            if ($_post['type_chat'] == 'WS_CUSTOMER' && strlen(strstr($_post['message'], 'supporting')) > 0) {
+//            if ($_post['type_chat'] == 'GROUP_WS' && strlen(strstr($_post['message'], 'Supported')) > 0) {
+//                $this->keyChatManger = new KeyChatList();
+//                $mess = str_replace('-Type: Supported','',$_post['message']);
+//                $listChat = $this->keyChatManger->read();
+//                foreach ($listChat as $value) {
+//                    if ($value['content'] == $mess) {
+//                        $isSupported = true;
+//                        break;
+//                    }
+//                }
+//            }
+            if (($_post['type_chat'] == 'GROUP_WS') && strlen(strstr($_post['message'], 'supporting')) > 0) {
                 $mess = str_replace('-Type: supporting','',$_post['message']);
                 $listChat = ListChat::find()->where(['status' => (string)(1)])->all();
                 foreach ($listChat as $value) {
