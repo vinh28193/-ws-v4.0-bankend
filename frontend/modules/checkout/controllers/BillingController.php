@@ -67,10 +67,7 @@ class BillingController extends CheckoutController
                 'paymentTransaction' => $paymentTransaction,
                 'storeManager' => $this->storeManager
             ]);
-            $from = [$this->storeManager->store->name => 'no-reply@weshop.com.vn'];
-            if($this->storeManager->store->country_code === 'ID'){
-                $from = [$this->storeManager->store->name => 'no-reply@weshop.co.id'];
-            }
+            $from = [$this->storeManager->store->country_code === 'ID' ? 'no-reply@weshop.co.id' : 'no-reply@weshop.com.vn' => $this->storeManager->store->name];
             $mail->setFrom($from);
             $mail->setTo($paymentTransaction->transaction_customer_email);
             $mail->setSubject('Thank for payment');
