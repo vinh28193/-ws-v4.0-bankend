@@ -84,7 +84,7 @@ class InternationalShippingCalculator extends BaseObject
         $apires = $this->getGrpcClient()->CalculateFee($request)->wait();
         list($response, $status) = $apires;
         /** @var $response CourierCalculate */
-        if(!$response){
+        if (!$response) {
             return null;
         }
         $data = $response->getData();
@@ -94,7 +94,9 @@ class InternationalShippingCalculator extends BaseObject
         if (!$success && WeshopHelper::isEmpty($message) && isset($status->details) && is_string($status->details)) {
             $message = $status->details;
         }
-        return [$success, !$success ? (WeshopHelper::isEmpty($message) ? ($data->count() > 0 ? Yii::t('frontend','Empty courier assigment') : Yii::t('frontend','Unknown error')) : $message) : $this->parserCalculateFeeResponse($data, $sellerContry)];
+        $rs = !$success ? (WeshopHelper::isEmpty($message) ? ($data->count() > 0 ? Yii::t('frontend', 'Empty courier assigment') : Yii::t('frontend', 'Unknown error')) : $message) : $this->parserCalculateFeeResponse($data, $sellerContry);
+        ThirdPartyLogs::setLog('gprc', 'CalculateFee', "Calculate with user {$request->getUserId()} in country {$request->getCountryCode()} seller Location {$sellerContry}", $params, $rs);
+        return [$success, $rs];
 //        return [true,json_decode('[{"courier_logo":"https:\/\/oms.boxme.asia\/assets\/images\/courier\/boxme.svg","courier_name":"Boxme","service_name":"International Express","service_code":"BM_DEX","shipping_fee":597168,"return_fee":0,"tax_fee":0,"total_fee":597168,"currency":"VND","min_delivery_time":6,"max_delivery_time":8}]',true)];
     }
 
@@ -111,12 +113,16 @@ class InternationalShippingCalculator extends BaseObject
 
         foreach ($data->getIterator() as $iterator) {
             /** @var $iterator CourierCalculate */
+
             $courier = [];
             $courier['courier_logo'] = $iterator->getCourierLogo();
             $courier['courier_name'] = $iterator->getCourierName();
             $courier['service_name'] = $iterator->getServiceName();
             $courier['service_code'] = $iterator->getServiceCode();
             $courier['shipping_fee'] = $iterator->getShippingFee();
+            $courier['special_fee'] = $iterator->getFulfillment()->getSpecial();
+            $courier['handling_fee'] = $iterator->getFulfillment()->getHandling();
+            $courier['insurance_fee'] = $iterator->getVas()->getInsurance();
             $courier['return_fee'] = $iterator->getReturnFee();
             $courier['tax_fee'] = $iterator->getTax();
             $courier['total_fee'] = $iterator->getTotalFee();

@@ -5,6 +5,7 @@ namespace frontend\modules\payment\controllers;
 
 use common\components\InternationalShippingCalculator;
 use common\components\GetUserIdentityTrait;
+use common\components\ThirdPartyLogs;
 use common\helpers\WeshopHelper;
 use common\models\Address;
 use common\products\BaseProduct;
@@ -120,7 +121,7 @@ class AdditionalFeeServiceController extends BasePaymentController
             $this->response(false, "can not resolve user id");
         }
         $results = [];
-        foreach ($payment->getOrders() as $uniq =>  $order) {
+        foreach ($payment->getOrders() as $uniq => $order) {
             $weight = $order->total_weight_temporary * 1000;
             $totalAmount = $order->total_amount_local;
             $items = [];
@@ -143,6 +144,9 @@ class AdditionalFeeServiceController extends BasePaymentController
                 'items' => $items
             ];
             $params = [
+                'config' => [
+                    'include_special_goods' => $order->getIsSpecial() ? 'Y' : 'N',
+                ],
                 'ship_from' => [
                     'country' => 'US',
                     'pickup_id' => $pickUpId
@@ -169,6 +173,7 @@ class AdditionalFeeServiceController extends BasePaymentController
             $calculator = new InternationalShippingCalculator();
             $response = $calculator->CalculateFee($params, $userId, $store->country_code, $store->currency, $location);
             $response = array_combine(['success', 'couriers'], $response);
+            ThirdPartyLogs::setLog('Checkout Calculator', strtolower($payment->page), $uniq, $params, $response);
             $results[$uniq] = $response;
         }
         $time = sprintf('%.3f', microtime(true) - $start);

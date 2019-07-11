@@ -127,6 +127,11 @@ class Order extends BaseOrder implements AdditionalFeeInterface
      */
     public function getIsSpecial()
     {
+        foreach ($this->products as $product) {
+            if (($category = $product->category) !== null && $category->checkSpecialGroup($this)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -174,6 +179,9 @@ class Order extends BaseOrder implements AdditionalFeeInterface
             'items' => $items
         ];
         $params = [
+            'config' => [
+                'include_special_goods' => $this->getIsSpecial() ? 'Y' : 'N',
+            ],
             'ship_from' => [
                 'country' => 'US',
                 'pickup_id' => ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_pickup_id')
