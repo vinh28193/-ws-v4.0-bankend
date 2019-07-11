@@ -26,6 +26,7 @@ class LandingController extends CmsController
         if($page && $page instanceof WsPage){
             $this->site_title = $page->title;
             $this->site_description = $page->description;
+            $this->site_keyword = $page->seo_keyword;
             if($page->image){
                 $this->site_image = $page->image;
             }

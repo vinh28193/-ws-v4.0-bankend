@@ -3,8 +3,8 @@
 <div class="container">
     <div class="lmkt-list-prod">
         <div class="lmkt-title">
-            <h1><?php echo $block['name'] ?><a href="<?php echo $block['url'] ?>">Xem tất cả'</a>
-            </h1>
+            <h2><?php echo $block['name'] ?><a href="<?php echo $block['url'] ?>">Xem tất cả'</a>
+            </h2>
         </div>
         <div class="lmkt-prod-top">
             <ul>

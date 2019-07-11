@@ -5,8 +5,8 @@
 <div class="container">
     <div class="lmkt-list-prod">
         <div class="lmkt-title">
-            <h1><?= $block['name'] ?><a href="<?= $block['url'] ?>">Xem tất cả</a>
-            </h1>
+            <h2><?= $block['name'] ?><a href="<?= $block['url'] ?>">Xem tất cả</a>
+            </h2>
         </div>
         <div class="lmkt-prod-top">
             <ul>
