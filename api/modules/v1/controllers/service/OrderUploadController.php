@@ -201,7 +201,7 @@ class OrderUploadController extends OrderController
                         if (($carrierTracking = ArrayHelper::getValue($row, 'Carrier Tracking #')) !== null && trim($carrierTracking) !== 'N/A' && trim($carrierTracking) !== '') {
                             $transactionCodes = $order->tracking_codes !== null ? explode(',', $order->tracking_codes) : [];
                             if (!in_array($carrierTracking, $transactionCodes)) {
-                                $transactionCodes[] = $transactionCodes;
+                                $transactionCodes[] = $carrierTracking;
                             }
                             if (!empty($transactionCodes)) {
                                 $order->tracking_codes = implode(',', $transactionCodes);
