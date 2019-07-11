@@ -6,7 +6,9 @@ use common\models\boxme\ShipToForm;
 use common\models\boxme\ShipmentForm;
 use common\models\Product;
 use Courier\CourierClient;
+use Courier\CreateOrderRequest;
 use linslin\yii2\curl\Curl;
+use Seller\CreateShipmentRequest;
 use Seller\SellerClient;
 use Seller\SyncProductRequest;
 use Seller\SyncProductResponse;
@@ -142,7 +144,7 @@ class BoxMeClient
         return $res;
     }
     public static function CreateLiveShipment($data,$tracking){
-        $service = new CourierClient(ArrayHelper::getValue(Yii::$app->params,'host_ip_gprc_shipment','10.130.111.53:50060'), [
+        $service = new SellerClient(ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_SELLER','10.130.111.53:50060'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $param = [];
@@ -175,14 +177,24 @@ class BoxMeClient
         }
         $param['tracking']['type'] = 2;
         $param['tracking']['tracking_number'] = $tracking;
-        $curl = new Curl();
-        $response = $curl->setRawPostData(json_encode($param))
-            ->setHeader('Content-Type','application/json')
-            ->setHeader('Authorization','Token 424d31352012b39b1c399a669ab4a22a230d74d1ca2f0012e1079a8199c9fbd6')
-            ->post('https://oms.boxme.asia/api/v1/sellers/shipments/create/');
-//        Yii::debug($response);
-        print_r(json_decode($response,true));
-        die;
+
+        $request = new CreateShipmentRequest(
+            [
+                'Country' => '',
+                'UserId' => '',
+                'Source' => '',
+                'Param' => json_encode($param),
+            ]
+        );
+        $apires = $service->CreateShipment($request)->wait();
+//        $curl = new Curl();
+//        $response = $curl->setRawPostData(json_encode($param))
+//            ->setHeader('Content-Type','application/json')
+//            ->setHeader('Authorization','Token 424d31352012b39b1c399a669ab4a22a230d74d1ca2f0012e1079a8199c9fbd6')
+//            ->post('https://oms.boxme.asia/api/v1/sellers/shipments/create/');
+////        Yii::debug($response);
+//        print_r(json_decode($response,true));
+//        die;
         return $response;
     }
 
@@ -191,7 +203,7 @@ class BoxMeClient
      * @throws \Exception
      */
     public static function SyncProduct($product){
-        $service = new SellerClient(ArrayHelper::getValue(Yii::$app->params,'host_ip_gprc_shipment','206.189.94.203:50060'), [
+        $service = new SellerClient(ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_SELLER','206.189.94.203:50060'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
         $data = [];
@@ -232,5 +244,7 @@ class BoxMeClient
         $service = new CourierClient(ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_COURIER','10.130.111.53:50056'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
+        $request = new CreateOrderRequest();
+        $service->CreateOrder($request)->wait();
     }
 }
