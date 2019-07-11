@@ -36,6 +36,6 @@ class Provider extends \yii\base\BaseObject
     {
         parent::init();
         //bỏ dấu + thành dấu *. vì để  + khi get từ url sẽ nhận nhầm thành dấu cách
-        $this->prov_id = str_replace('+','*',base64_encode($this->name .'-'. $this->condition .'-'. $this->price));
+        $this->prov_id = base64_encode($this->name .'-'. $this->condition .'-'. $this->price);
     }
 }
