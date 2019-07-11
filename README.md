@@ -1066,5 +1066,32 @@ Redirect  ^/amazon-jp/item\.html?$ https://weshop.com.vn/landing-page/golden-bra
 	#----------------------------
 	Lien ket Prime :
 	
+	1. dùng gRPC đồng bộ User Weshop sang Boxme lần đàu dùng qua SingUp 
+    2. Nếu Khách đăng kí mới dùng qua SignIn --> check hạng bạc 
 	
+	
+	
+#----------- Quy trinh Hang Unkows New + -----------------	
+   https://ua4fnc.axshare.com/#id=hap1ny&p=unknown_parcels
 
+	
+	
+#--------------$ THINH NGUYEN 11/7/2019 rule của hàng hoá đặc biệt --------------------------------
+* Special product      
+1. Prohibited Items: Drug, Powder, Battery, Liquid, Dangerous Articles, Cigarette, Alcohol, Cash, Securities, Infringing Products;      
+2. Special: Food supplement, watch, oversize, sextoys, item value over 75$, latop, mobile...      
+3. Additional shipping time 15days base on normal product
+
+Thinh Nguyen, [11.07.19 16:39]	 
+    với order nào thuộc case này
+    anh thêm trường confiig.include_special_goods = Y
+    để mình tính phí nha a
+    
+Thinh Nguyen, [11.07.19 16:46]
+    "fulfillment": {
+                        "handling": 18374.4,
+                        "material": 0,
+                        "special": 38280
+                    },
+	
+----> Tính giá 
