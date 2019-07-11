@@ -307,6 +307,7 @@ class OrderController extends BaseApiController
         $purchase_note = Yii::$app->request->post('purchase_note');
         $order = Order::findOne($id);
         $mess = "";
+        $trackingCodes = str_replace(' ','',$trackingCodes);
         if($order){
             if(!$orderPurchase){
                 return $this->response(false, 'Order Number Purchase cannot null!');
@@ -320,19 +321,21 @@ class OrderController extends BaseApiController
                 $order->current_status = Order::STATUS_PURCHASED;
                 $order->purchased = time();
                 $mess = '<br>- Chuyển trạng thái purchased ('.date('Y-m-d H:i:s').')';
-                $mess .= '<br>- Mã đơn hàng trên '.$order->type_order.': '.$order->purchase_order_id;
-                if($order->type_order == BaseProduct::TYPE_EBAY){
+                $mess .= '<br>- Mã đơn hàng trên '.$order->portal.': '.$order->purchase_order_id;
+                if($order->portal == BaseProduct::TYPE_EBAY){
                     $mess .= '<br>- Mã giao dịch PayPal: '.$order->purchase_transaction_id;
                 }
             }
-            if($trackingCodes){
+            if($trackingCodes && $trackingCodes != ''){
                 $old = $order->tracking_codes;
                 $order->tracking_codes = implode(',',$trackingCodes);
-                $mess .= '<br>- Nhập tracking code: '.$order->tracking_codes.' (cũ: '.$old.')';
-                if($order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE){
-                    $order->current_status = Order::STATUS_SELLER_SHIPPED;
-                    $order->seller_shipped = time();
-                    $mess .= '<br>- Chuyển trạng thái Seller Shipped ('.date('Y-m-d H:i:s').')';
+                if($order->tracking_codes != $old){
+                    $mess .= '<br>- Nhập tracking code: '.$order->tracking_codes.' (cũ: '.$old.')';
+                    if($order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE){
+                        $order->current_status = Order::STATUS_SELLER_SHIPPED;
+                        $order->seller_shipped = time();
+                        $mess .= '<br>- Chuyển trạng thái Seller Shipped ('.date('Y-m-d H:i:s').')';
+                    }
                 }
             }
             if($purchase_note !== $order->purchase_note){
