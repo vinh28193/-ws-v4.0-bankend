@@ -79,10 +79,10 @@ return [
             'loginUrl' => '/login.html',
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
-        'view' => [
-            'class' => '\rmrevin\yii\minify\View',
-            'enableMinify' => false,
-        ],
+//        'view' => [
+//            'class' => '\rmrevin\yii\minify\View',
+//            'enableMinify' => false,
+//        ],
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
