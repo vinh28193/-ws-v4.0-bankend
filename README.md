@@ -1050,3 +1050,66 @@ http://uat-v4.weshop.com.vn/26cm-B07F9VHT2P.html
 RewriteRule ^about-us\.html?$ https://newdomain.com/about/ [NC,R,L]
 Redirect  ^/amazon-jp/item\.html?$ https://weshop.com.vn/landing-page/golden-brand-290.html [NC,R,L]
 
+
+	
+ #--------------Live Toan bo don Khach le Weshop --------------------
+	weshop.shipping@boxme.asia
+	user_id = 253019
+	
+	1.1 Toan bo User Thuong 
+	courier.proto --> rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+	
+	1.2 Khi co tracking seller thi day sang kho theo gRPC : Seller.proto -->  rpc CreateShipment + ma don Boxme o 1.1 
+	
+	Khach hang bac : Chay qua kieu Lien ket 
+	
+	#----------------------------
+	Lien ket Prime :
+	
+	1. dùng gRPC đồng bộ User Weshop sang Boxme lần đàu dùng qua SingUp 
+    2. Nếu Khách đăng kí mới dùng qua SignIn --> check hạng bạc 
+	
+	
+	
+#----------- Quy trinh Hang Unkows New + -----------------	
+   https://ua4fnc.axshare.com/#id=hap1ny&p=unknown_parcels
+
+#-------------------- UGENT 11/7/2019 --------------------------
+	
+	
+ 1.1 ----  $ THINH NGUYEN 11/7/2019 rule của hàng hoá đặc biệt --------------------------------
+* Special product      
+1. Prohibited Items: Drug, Powder, Battery, Liquid, Dangerous Articles, Cigarette, Alcohol, Cash, Securities, Infringing Products;      
+2. Special: Food supplement, watch, oversize, sextoys, item value over 75$, latop, mobile...      
+3. Additional shipping time 15days base on normal product
+
+Thinh Nguyen, [11.07.19 16:39]	 
+    với order nào thuộc case này
+    anh thêm trường confiig.include_special_goods = Y
+    để mình tính phí nha a
+    
+Thinh Nguyen, [11.07.19 16:46]
+    "fulfillment": {
+                        "handling": 18374.4,
+                        "material": 0,
+                        "special": 38280
+                    },
+	
+----> Tính giá hàng đặc biệt này vào giá gốc sản phẩm  
+
+
+1.2 ---------------------- Luồng Request ----------------------------
+  làm thêm chức năng tạo Request thu thêm hoặc request Refund trên backend enm nhé
+  Có đơn cần RF nhưng không tạo được RQ trên hệ thống
+
+
+#------------------SymLink to a Directory------------------------
+$ ln -s /var/www/ws-operation/dist/ /var/www/ws-operation-dist/
+
+#---------Unlink---------
+cd /var/www/ws-operation/dist/
+unlink dist
+
+#-------------Token------------------------
+c26078a0a62a1acd7ade4579dca3a44f2fc79ed8
+

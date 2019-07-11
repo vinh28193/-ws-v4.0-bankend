@@ -343,6 +343,9 @@ class PaymentController extends BasePaymentController
         }
 
         try {
+
+            // ToDo @Phuchc gửi lên Mongodb nếu bị lỗi để gửi lại  9/7/2019
+
             /** @var  $mailer yii\mail\BaseMailer */
             $mailer = Yii::$app->mandrillMailer;
             $mailer->viewPath = '@common/views/mail';
@@ -354,6 +357,7 @@ class PaymentController extends BasePaymentController
             $mail->setTo($payment->customer_email);
             $mail->setSubject('Create Order Success');
             $mail->send();
+
         }catch (\Exception $exception){
             Yii::error($exception);
         }
