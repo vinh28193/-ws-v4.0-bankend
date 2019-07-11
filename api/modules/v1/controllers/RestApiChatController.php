@@ -181,8 +181,8 @@ class RestApiChatController extends BaseApiController
                     if($isNew === true &&  $isSupporting === true)
                     {
                         Order::updateAll([
-                            'current_status' => Order::STATUS_SUPPORTING,
-                            'supporting' => Yii::$app->getFormatter()->asDatetime('now'),
+                            'current_status' => Order::STATUS_CONTACTING,
+                            'contacting' => Yii::$app->getFormatter()->asTimestamp('now'),
                         ],['ordercode' => $_post['Order_path']]);
                     }
                 }
@@ -198,7 +198,7 @@ class RestApiChatController extends BaseApiController
                     }
                 }
                 $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}";
-                ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM');
+                ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM', null);
                 Yii::$app->wsLog->push('order', $model->getScenario(), null, [
                     'id' => $_post['Order_path'],
                     'request' => $this->post,
