@@ -181,8 +181,8 @@ class RestApiChatController extends BaseApiController
                     if($isNew === true &&  $isSupporting === true)
                     {
                         Order::updateAll([
-                            'current_status' => Order::STATUS_SUPPORTING,
-                            'supporting' => Yii::$app->getFormatter()->asDatetime('now'),
+                            'current_status' => Order::STATUS_CONTACTING,
+                            'contacting' => Yii::$app->getFormatter()->asTimestamp('now'),
                         ],['ordercode' => $_post['Order_path']]);
                     }
                 }
