@@ -101,7 +101,7 @@ class ProductController extends BaseApiController
                 $product->note_boxme = $post['note_boxme'];
             }
             $dirtyAttributes = $product->getDirtyAttributes();
-            $messages = "order {$post['order_path']} Update Product {$this->resolveChatMessage($dirtyAttributes,$product)}";
+            $messages = "<span class='text-danger'>Update Product {$post['order_path']}</span> <br> {$this->resolveChatMessage($dirtyAttributes,$product)}";
 
             if (!$product->save()) {
                 return $this->response(false, 'error', $product->getErrors());
@@ -123,9 +123,9 @@ class ProductController extends BaseApiController
             if (strpos($name, '_id') !== false && is_numeric($value)) {
                 continue;
             }
-            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+            $results[] = "<span class='font-weight-bold'>{$reference->getAttributeLabel($name)} :</span> <br> changed from `{$reference->getOldAttribute($name)}` to `$value`";
         }
 
-        return implode(", ", $results);
+        return implode('<br>- ', $results);
     }
 }

@@ -245,9 +245,9 @@ class OrderController extends BaseApiController
         $action = Inflector::camel2words($model->getScenario());
         Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());
         if ($model->getScenario() == 'editAdjustPayment') {
-            $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}, update Payment Transaction: `Transaction Status` changed from `CREATE` to `SUCCESS`";
+            $messages = "<span class='text-danger fa-2x'>Order {$model->ordercode}</span> <br> - $action <br>{$this->resolveChatMessage($dirtyAttributes,$model)}. <br>- Update Payment Transaction: `Transaction Status` changed from `CREATE` to `SUCCESS`";
         } else {
-            $messages = "order {$model->ordercode} $action {$this->resolveChatMessage($dirtyAttributes,$model)}";
+            $messages = "<span class='text-danger'>Order {$model->ordercode}</span> <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
         }
         $model->validate();
         if (!$model->save(false)) {
@@ -330,10 +330,10 @@ class OrderController extends BaseApiController
             if (strpos($name, '_id') !== false && is_numeric($value)) {
                 continue;
             }
-            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+            $results[] = "<span class='font-weight-bold'>{$reference->getAttributeLabel($name)} :</span> <br> changed from `{$reference->getOldAttribute($name)}` to `$value`";
         }
 
-        return implode(", ", $results);
+        return implode('<br>- ', $results);
     }
 
 
