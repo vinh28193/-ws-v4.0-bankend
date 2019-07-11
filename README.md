@@ -1074,9 +1074,10 @@ Redirect  ^/amazon-jp/item\.html?$ https://weshop.com.vn/landing-page/golden-bra
 #----------- Quy trinh Hang Unkows New + -----------------	
    https://ua4fnc.axshare.com/#id=hap1ny&p=unknown_parcels
 
+#-------------------- UGENT 11/7/2019 --------------------------
 	
 	
-#--------------$ THINH NGUYEN 11/7/2019 rule của hàng hoá đặc biệt --------------------------------
+ 1.1 ----  $ THINH NGUYEN 11/7/2019 rule của hàng hoá đặc biệt --------------------------------
 * Special product      
 1. Prohibited Items: Drug, Powder, Battery, Liquid, Dangerous Articles, Cigarette, Alcohol, Cash, Securities, Infringing Products;      
 2. Special: Food supplement, watch, oversize, sextoys, item value over 75$, latop, mobile...      
@@ -1094,4 +1095,7 @@ Thinh Nguyen, [11.07.19 16:46]
                         "special": 38280
                     },
 	
-----> Tính giá 
+----> Tính giá hàng đặc biệt này vào giá gốc sản phẩm  
+
+
+1.2 ---------------------- Luồng Request ----------------------------
