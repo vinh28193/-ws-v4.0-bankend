@@ -61,7 +61,7 @@ class OrderUploadController extends OrderController
 
                 $refs = ArrayHelper::getColumn($sheet, $refKey, false);
                 $refs = array_filter($refs, function ($ref) {
-                    return $ref !== null || $ref !== 'N/A' || $ref !== '';
+                    return $ref !== null || $ref !== 'N/A' || $ref !== '#N/A' || $ref !== '';
                 });
 
                 $column = $refKey === 'BIN' ? 'ordercode' : 'purchase_transaction_id';
@@ -93,6 +93,9 @@ class OrderUploadController extends OrderController
                         if (($amount = ArrayHelper::getValue($row, 'Gross')) !== null) {
                             $amount = str_replace('-', '', $amount);
                             $order->purchase_amount = $amount;
+                        }
+                        if(($q = ArrayHelper::getValue($row,'Quantity')) !== null){
+                            $order->total_purchase_quantity = $q;
                         }
                         $order->currency_purchase = 'USD';
 
@@ -133,7 +136,7 @@ class OrderUploadController extends OrderController
 
                 $refs = ArrayHelper::getColumn($sheet, $refKey, false);
                 $refs = array_filter($refs, function ($ref) {
-                    return $ref !== null || $ref !== 'N/A' || $ref !== '';
+                    return $ref !== null || $ref !== 'N/A' || $ref !== '#N/A' || $ref !== '';
                 });
 
                 $column = $refKey === 'BIN' ? 'ordercode' : 'purchase_transaction_id';

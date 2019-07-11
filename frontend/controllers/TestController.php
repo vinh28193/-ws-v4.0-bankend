@@ -379,11 +379,18 @@ JSON;
         if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $code])) === null) {
             throw new NotFoundHttpException("not found transaction code $code");
         }
-        $this->layout = '@common/views/mail/layouts/html';
-        return $this->render('@common/views/mail/paymentSuccess-html', [
+        /** @var  $mailer yii\mail\BaseMailer */
+        $mailer = Yii::$app->mandrillMailer;
+        $mailer->viewPath = '@common/views/mail';
+        $mail = $mailer->compose(['html' => 'orderCreate-html'],[
             'paymentTransaction' => $paymentTransaction,
             'storeManager' => $this->storeManager
         ]);
+        $mail->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot']);
+        $mail->setTo('vinhvv@peacesoft.net');
+        $mail->setSubject('Create Order Success');
+        var_dump($mail->send());
+        die;
     }
 
     public function actionXlxs()
