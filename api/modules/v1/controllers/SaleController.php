@@ -102,7 +102,7 @@ class SaleController extends BaseApiController
             'request' => $saleId,
             'response' => $message
         ]);
-        ChatHelper::push($message, $model->ordercode, 'GROUP_WS', 'SYSTEM');
+        ChatHelper::push($message, $model->ordercode, 'GROUP_WS', 'SYSTEM', null);
         return $this->response(true, $message, [
             'id' => $model->sale_support_id,
             'username' => $sale->username,

@@ -144,6 +144,17 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'order.purchase_note',
             'order.purchase_order_id',
             'order.purchase_transaction_id',
+            'order.contacting',
+            'order.awaiting_payment',
+            'order.awaiting_confirm_purchase',
+            'order.delivering',
+            'order.delivered',
+            'order.created_at',
+            'order.seller_id',
+            'order.junk',
+            'order.purchasing',
+            'order.refunded',
+            'order.purchased',
         ]);
         return $this;
     }
@@ -206,24 +217,24 @@ class OrderQuery extends \common\components\db\ActiveQuery
 //            'products',
 //        ]);
         $this->joinWith([
-            'walletTransactions' => function ($q) {
-            /** @var ActiveQuery $q */
-                $q->select([
-                    'id',
-                    'order_code',
-                    'transaction_code',
-                    'transaction_amount_local',
-                    'transaction_type',
-                    'transaction_status',
-                    'transaction_description',
-                    'note',
-                    'link_image',
-                    'third_party_transaction_link',
-                    'payment_bank_code',
-                    'created_at',
-                    'updated_at',
-                ]);
-            },
+//            'walletTransactions' => function ($q) {
+//            /** @var ActiveQuery $q */
+//                $q->select([
+//                    'id',
+//                    'order_code',
+//                    'transaction_code',
+//                    'transaction_amount_local',
+//                    'transaction_type',
+//                    'transaction_status',
+//                    'transaction_description',
+//                    'note',
+//                    'link_image',
+//                    'third_party_transaction_link',
+//                    'payment_bank_code',
+//                    'created_at',
+//                    'updated_at',
+//                ]);
+//            },
             'products' => function ($q) {
                 /** @var ActiveQuery $q */
                $q->select([

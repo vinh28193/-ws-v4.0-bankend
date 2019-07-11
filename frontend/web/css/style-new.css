@@ -412,9 +412,13 @@ div.title-box.inline div.form-inline input{
     display: inline-flex;
 }
 div.product-list.row div a div.info div.name{
-    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 16px;
+    /* max-height: 50px; */
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     font-size: 14px;
 }
 .ico.ico-amazon:before {
@@ -428,6 +432,24 @@ div.product-list.row div a div.info div.name{
 }
 .ico.ico-ebay.active {
     content: url("/images/logo/logo_ebay.jpg");
+}
+.label-sliver{
+    background: #C0C0C0;
+    color: #fff;
+    border-radius: 15px;
+    padding: 5px;
+}
+.label-gold{
+    background: #FFD700;
+    color: #fff;
+    border-radius: 15px;
+    padding: 5px;
+}
+.label-normal,.label-basic{
+    /*background: #000;*/
+    /*color: #fff;*/
+    /*border-radius: 15px;*/
+    /*padding: 5px;*/
 }
 #NotifyConfirmTitle{
     color: rgba(0, 0, 0, 0.85);

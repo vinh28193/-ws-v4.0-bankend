@@ -136,11 +136,10 @@ class OrderController extends BaseApiController
     public function actionView($code)
     {
         if ($code !== null) {
-            $query = Order::find();
-            $request = $query->where([$query->getColumnName('ordercode') => $code])
+            $query = Order::find()->where(['ordercode' => $code])
                 ->withFullRelations()
                 ->asArray()->all();
-            return $this->response(true, "Get order $code success", $request);
+            return $this->response(true, "Get order $code success", $query);
         } else {
             Yii::$app->api->sendFailedResponse("Invalid Record requested");
         }
@@ -163,20 +162,17 @@ class OrderController extends BaseApiController
     {
         $StatusOrder = array(
             'new',
-            'supporting',
-            'supported',
+            'contacting',
+            'awaiting_payment',
             'ready_purchase',
-            'purchase_start',
+            'purchasing',
+            'awaiting_confirm_purchase',
             'purchased',
-            'seller_shipped',
-            'stockin_us',
-            'stockout_us',
-            'stockin_local',
-            'stockout_local',
-            'at_customer',
-            'returned',
+            'delivering',
+            'delivered',
+            'refunded',
             'cancelled',
-            'lost',
+            'junk',
         );
         $user = Yii::$app->user->identity;
         $post = Yii::$app->request->post();
@@ -187,85 +183,39 @@ class OrderController extends BaseApiController
         if ($model->getScenario() == 'confirmPurchase') {
             $product_id = Yii::$app->request->post('product_id');
             $tran = Yii::$app->db->beginTransaction();
-            $status = Product::STATUS_SUPPORTED;
+            $model->current_status = Order::STATUS_AWAITING_PAYMENT;
             if($model->total_paid_amount_local >= 0 && $model->total_paid_amount_local >= $model->total_final_amount_local){
-                $status = Product::STATUS_READY2PURCHASE;
+                $model->current_status = Order::STATUS_READY2PURCHASE;
             }
-//            foreach ($model->products as $product){
-//                if($product_id){
-//                    if($product->id == $product_id){
-//                        if($product->custom_category_id){
-//                            $product->current_status = $status;
-//                            $product->save(0);
-//                        }else{
-//                            $tran->rollBack();
-//                            return $this->response(false,'Product id '.$product->id.' hasn\'t  category policy!');
-//                        }
-//                    }
-//                }else{
-//                    if($product->custom_category_id){
-//                        $product->current_status = $status;
-//                        $product->save(0);
-//                    }else{
-//                        $tran->rollBack();
-//                        return $this->response(false,'Product id '.$product->id.' hasn\'t  category policy!');
-//                    }
-//                }
-//            }
-            if(in_array($model->current_status,[Order::STATUS_READY2PURCHASE,Order::STATUS_NEW,Order::STATUS_SUPPORTED,Order::STATUS_SUPPORTING])){
-                $model->current_status = $status;
-                if($status == Order::STATUS_READY2PURCHASE){
+            if(in_array($model->current_status,[Order::STATUS_READY2PURCHASE,Order::STATUS_CONTACTING,Order::STATUS_AWAITING_PAYMENT])){
+                if($model->current_status == Order::STATUS_READY2PURCHASE){
                     $model->ready_purchase = time();
                 }
             }
             $tran->commit();
-//            if (isset($post['Order']['checkR2p'])) {
-//                if ($post['Order']['checkR2p'] == 'yes') {
-//                    for ($i = 0; $i < 4; $i++) {
-//                        if ($model->{$StatusOrder[$i]} == null) {
-//                            $model->{$StatusOrder[$i]} = $now;
-//                        }
-//                    }
-//                    $model->current_status = Order::STATUS_READY2PURCHASE;
-//                } else if ($post['Order']['checkR2p'] != 'yes') {
-//                    for ($i = 0; $i < 3; $i++) {
-//                        if ($model->{$StatusOrder[$i]} == null) {
-//                            $model->{$StatusOrder[$i]} = $now;
-//                        }
-//                    }
-//                    $model->current_status = Order::STATUS_SUPPORTED;
-//                }
-//            }
         }
         if ($model->getScenario() == 'updateOrderStatus') {
-            for ($i = 0; $i < (int)($post['Order']['status']); $i++) {
-                if ($model->{$StatusOrder[$i]} == null) {
+            $i = 0;
+            for ($i; $i < count($StatusOrder) ; $i++) {
+                if ($StatusOrder[$i] != $post['Order']['status']) {
+                    if ($model->{$StatusOrder[$i]} == null) {
+                        $model->{$StatusOrder[$i]} = $now;
+                    }
+                } else {
                     $model->{$StatusOrder[$i]} = $now;
+                    break;
                 }
             }
-            for ($j = (int)($post['Order']['status']) + 1; $j < 15 ; $j++) {
-                $model->{$StatusOrder[$j]} = null;
+            if ($i < 11) {
+                for ($j = $i + 1; $j < count($StatusOrder) -1 ; $j++) {
+                    $model->{$StatusOrder[$j]} = null;
+                }
             }
-//            $model->current_status = strtoupper($post['Order']['current_status']);
-            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'purchase_start') {
-                $model->current_status = Order::STATUS_PURCHASING;
-            }
-            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'stockin_us') {
-                $model->current_status = Order::STATUS_STOCK_IN_US;
-            }
-            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'stockout_us') {
-                $model->current_status = Order::STATUS_STOCK_OUT_US;
-            }
-            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'stockin_local') {
-                $model->current_status = Order::STATUS_STOCK_IN_LOCAL;
-            }
-            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'stockout_local') {
-                $model->current_status = Order::STATUS_STOCK_OUT_LOCAL;
-            }
-            if ($StatusOrder[(int)($post['Order']['status']) - 1] == 'ready_purchase') {
+
+            if ($post['Order']['status'] == 'ready_purchase') {
                 $model->current_status = Order::STATUS_READY2PURCHASE;
             } else {
-                $model->current_status = strtoupper($StatusOrder[(int)($post['Order']['status']) - 1]);
+                $model->current_status = strtoupper($post['Order']['status']);
             }
         }
         if ($model->getScenario() == 'updateReady2Purchase') {
@@ -277,26 +227,20 @@ class OrderController extends BaseApiController
             $model->current_status = Order::STATUS_CANCEL;
         }
         if ($model->getScenario() == 'updateTimeNull') {
-            $i = 0;
-            for ($i; $i<15; $i++) {
-                if ($StatusOrder[$i] == $post['Order']['column']) {
+            for ($k = 0; $k < count($StatusOrder); $k++) {
+                if ($StatusOrder[$k] == $post['Order']['column']) {
                     break;
                 }
             }
-            $j = $i;
-            for ($j; $j<15; $j++) {
-                $model->{$StatusOrder[$j]} = null;
+            for ($h = $k; $h < count($StatusOrder); $h++) {
+                $model->{$StatusOrder[$h]} = null;
             }
-            if ($post['Order']['column'] == 'ready_purchase') {
-                $model->current_status = 'READY2PURCHASE';
+            if ($StatusOrder[$k -1] == 'ready_purchase') {
+                $model->current_status = Order::STATUS_READY2PURCHASE;
             } else {
-                $model->current_status = strtoupper(str_replace('_', ' ', $StatusOrder[$i-1]));
+                $model->current_status = strtoupper($StatusOrder[$k -1]);
             }
         }
-//        if (($model->current_status == Order::STATUS_NEW || $model->current_status == Order::STATUS_SUPPORTING || $model->current_status == Order::STATUS_SUPPORTED) && $model->total_paid_amount_local > 0) {
-//            $model->current_status =  Order::STATUS_READY2PURCHASE;
-//            $model->ready_purchase = $now;
-//        }
         $dirtyAttributes = $model->getDirtyAttributes();
         $action = Inflector::camel2words($model->getScenario());
         Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());

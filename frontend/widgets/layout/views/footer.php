@@ -160,7 +160,7 @@ $isID = $storeManager->store->country_code === 'ID';
     </div>
 </footer>
 <div class="loading_new progress-bar" id="loading" style="display:none;">
-    <div class="loading-inner-new">
+    <div class="loading-inner-new" id="image-loading" style="display:none;">
         <img src="/img/gif/loading.gif">
     </div>
 </div>
@@ -185,6 +185,36 @@ $isID = $storeManager->store->country_code === 'ID';
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" onclick="ws.loginWallet()">Đăng nhập</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal login waller -->
+<div class="modal" id="loginBoxme" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="m-auto">
+                    <img alt="Home" style="max-height: 64px" src="/images/logo/logo-BM-Asia.svg">
+                </div>
+            </div>
+            <div class="modal-body">
+                <h3><?= Yii::t('frontend','Login boxme asia') ?></h3>
+                <div class="form-group">
+                    <i class="icon email"></i>
+                    <input type="email" name="emailBoxme" class="form-control" placeholder="<?= Yii::t('frontend','Email') ?>">
+                    <label style="color: red" id="ErrorEmailBoxme"></label>
+                </div>
+                <div class="form-group">
+                    <i class="icon password"></i>
+                    <input type="password" name="passwordBoxme" class="form-control" placeholder="<?= Yii::t('frontend','Password') ?>">
+                    <label style="color: red" id="ErrorPasswordBoxme"></label>
+                    <label class="text-success" id="connectSuccess"></label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="ws.loginBoxme()"><?= Yii::t('frontend','Login') ?></button>
             </div>
         </div>
     </div>

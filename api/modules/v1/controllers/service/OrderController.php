@@ -21,7 +21,7 @@ class OrderController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index','update','update-arrears','confirm-change-price'],
+                'actions' => ['index','update','update-arrears','confirm-change-price','save-purchase-info'],
                 'roles' => $this->getAllRoles(true),
             ],
         ];
@@ -314,7 +314,7 @@ class OrderController extends BaseApiController
             if(!$purchase_transaction_id && $order->type_order == BaseProduct::TYPE_EBAY){
                 return $this->response(false, 'Purchase transaction cannot null!');
             }
-            if($order->current_status == Order::STATUS_READY2PURCHASE){
+            if($order->current_status == Order::STATUS_READY2PURCHASE || $order->current_status == Order::STATUS_PURCHASING){
                 $order->purchase_order_id = $orderPurchase;
                 $order->purchase_transaction_id = $purchase_transaction_id;
                 $order->current_status = Order::STATUS_PURCHASED;

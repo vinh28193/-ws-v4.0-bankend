@@ -400,9 +400,9 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
      */
     public function getUserLevel()
     {
-        if ($this->vip === null or  $this->vip <= 2) {
+        if ($this->vip === null || $this->vip === 0 ||  $this->vip === '') {
             return self::LEVEL_NORMAL;
-        } else if ($this->vip > 2 && $this->vip <= 4) {
+        } else if ($this->vip === 1) {
             return self::LEVEL_SLIVER;
         } else {
             return self::LEVEL_GOLD;
