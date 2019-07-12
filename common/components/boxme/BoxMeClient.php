@@ -199,10 +199,13 @@ class BoxMeClient
         $apires = $service->CreateShipment($request)->wait();
         list($rs,$stt) = $apires;
         /** @var CreateShipmentResponse $rs */
+        print_r($rs);
+        die;
         if(!$rs->getError()){
             $data_rs = json_decode($rs->getData(),true);
             $shipment_code = ArrayHelper::getValue($data_rs,'shipment_code');
             $order->shipment_boxme = $shipment_code ? ($order->shipment_boxme ? $order->shipment_boxme.','.$shipment_code : $shipment_code) : $order->shipment_boxme;
+            $order->save();
             return true;
         }
         return false;
@@ -217,12 +220,18 @@ class BoxMeClient
         $service = new SellerClient(ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_SELLER','206.189.94.203:50060'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
+        $user_id_df = '';
+        if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
+            $current = $params['default'];
+            $wh = ArrayHelper::getValue($params, "warehouses.$current", false);
+            $user_id_df = ArrayHelper::getValue($wh, 'ref_user_id');
+        }
         $user = User::findOne($product->order->customer_id);
         $data = [];
         $data['country'] = $product->order->store->country_code;
-        $data['seller_id'] = self::checkIsPrime($user) ? $user->bm_wallet_id : ArrayHelper::getValue(Yii::$app->params,'id_user_boxme','23');
+        $data['seller_id'] = self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df;
         $data['category_id'] = $product->category_id;
-        $data['seller_sku'] = strtoupper($product->portal) == 'EBAY' ? $product->parent_sku : $product->sku;
+        $data['seller_sku'] = TextUtility::GenerateBSinBoxMe($product->id);
         $data['bsin'] = TextUtility::GenerateBSinBoxMe($product->id);
         $data['name'] = $product->product_name;
         $data['name_local'] = $product->product_name;
@@ -265,11 +274,13 @@ class BoxMeClient
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
 
+        $user_id_df = '';
         $pickUpId = '';
         if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
             $current = $params['default'];
             $wh = ArrayHelper::getValue($params, "warehouses.$current", false);
             $pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id');
+            $user_id_df = ArrayHelper::getValue($wh, 'ref_user_id');
         }
         $country = SystemCountry::findOne($order->receiver_country_id);
         $user = User::findOne($order->customer_id);
@@ -345,7 +356,7 @@ class BoxMeClient
         ];
         $request = new CreateOrderRequest([
             'Data' => json_encode($data),
-            'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : ArrayHelper::getValue(Yii::$app->params,'id_user_boxme','23'),
+            'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df,
             'CountryCode' => $country ? $country->country_code : 'VN',
         ]);
         /** @var CreateOrderResponse $rs */

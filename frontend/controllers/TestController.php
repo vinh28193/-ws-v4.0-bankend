@@ -434,6 +434,9 @@ JSON;
         $order = Order::findOne($orderid);
         $dataShipment = [];
         if($order){
+            foreach ($order->products as $product){
+                BoxMeClient::SyncProduct($product);
+            }
             BoxMeClient::CreateLiveShipment($order,"121jhj21jh21");
             die;
         }
