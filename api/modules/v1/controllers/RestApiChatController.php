@@ -168,21 +168,17 @@ class RestApiChatController extends BaseApiController
 
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
-                // chat group ws from new to supported
                 if ($_post['_chat'] == 'ORDER') {
-                    if($isNew === true &&  $isSupported === true)
-                    {
-                        Order::updateAll([
-                            'current_status' => Order::STATUS_SUPPORTED,
-                            'supported' => Yii::$app->getFormatter()->asDatetime('now'),
-                        ],['ordercode' => $_post['Order_path']]);
-                    }
                     if($isNew === true &&  $isSupporting === true)
                     {
-                        Order::updateAll([
-                            'current_status' => Order::STATUS_CONTACTING,
-                            'contacting' => Yii::$app->getFormatter()->asTimestamp('now'),
-                        ],['ordercode' => $_post['Order_path']]);
+//                        Order::updateAll([
+//                            'current_status' => Order::STATUS_CONTACTING,
+//                            'contacting' => Yii::$app->getFormatter()->asTimestamp('now'),
+//                        ],['ordercode' => $_post['Order_path']]);
+                        $order = Order::find()->where(['ordercode' => $_post['Order_path']])->one();
+                        $order->current_status = Order::STATUS_CONTACTING;
+                        $order->contacting = Yii::$app->getFormatter()->asTimestamp('now');
+                        $order->save();
                     }
                 }
 
@@ -196,7 +192,8 @@ class RestApiChatController extends BaseApiController
                         $this->getCart()->updateSafeItem(($_post['type']), $_post['id'], $_post);
                     }
                 }
-                $messages = "order {$_post['Order_path']} Create Chat {$_post['type_chat']} ,{$_post['message']}";
+                $dirtyAttributes = $order->getDirtyAttributes();
+                $messages = "<span class='text-danger font-weight-bold'>Order {$_post['Order_path']}</span> <br> - Create Chat <br> {$this->resolveChatMessage($dirtyAttributes, $order)}";
                 ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM', null);
                 Yii::$app->wsLog->push('order', $model->getScenario(), null, [
                     'id' => $_post['Order_path'],
@@ -278,10 +275,10 @@ class RestApiChatController extends BaseApiController
             if (strpos($name, '_id') !== false && is_numeric($value)) {
                 continue;
             }
-            $results[] = "`{$reference->getAttributeLabel($name)}` changed from `{$reference->getOldAttribute($name)}` to `$value`";
+            $results[] = "<span class='font-weight-bold'>- {$reference->getAttributeLabel($name)} :</span> <br> Changed from `{$reference->getOldAttribute($name)}` to `$value`";
         }
 
-        return implode(", ", $results);
+        return implode('<br> ', $results);
     }
 
     protected function getCart()
