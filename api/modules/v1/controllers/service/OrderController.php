@@ -326,10 +326,13 @@ class OrderController extends BaseApiController
                 if($order->portal == BaseProduct::TYPE_EBAY){
                     $mess .= '<br>- Mã giao dịch PayPal: '.$order->purchase_transaction_id;
                 }
+                // ToDo Check Next Phuchc
+                /*
                 foreach ($order->products as $product){
                     BoxMeClient::SyncProduct($product);
                 }
                 BoxMeClient::CreateOrder($order);
+                */
             }
             if($orderPurchase != $order->purchase_order_id){
                 $mess .= '<br>- Cập nhật mã đơn hàng trên '.$order->portal.': '.$orderPurchase;
@@ -345,9 +348,12 @@ class OrderController extends BaseApiController
                 $old = $order->tracking_codes;
                 $order->tracking_codes = implode(',',$trackingCodes);
                 if($order->tracking_codes != $old){
+                    // ToDo Check Next Phuchc
+                    /*
                     foreach ($trackingCodes as $trackingCode){
                         BoxMeClient::CreateLiveShipment($order,$trackingCode);
                     }
+                    */
                     $mess .= '<br>- Nhập tracking code: '.$order->tracking_codes.' (cũ: '.$old.')';
                     if($order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE){
                         $order->current_status = Order::STATUS_SELLER_SHIPPED;
