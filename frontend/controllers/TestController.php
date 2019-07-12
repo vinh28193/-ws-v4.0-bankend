@@ -418,4 +418,9 @@ JSON;
         die;
     }
 
+    public function actionTestPayment(){
+        var_dump(PaymentService::findParentTransaction('PM15626393794D3'));
+        die;
+    }
+
 }
