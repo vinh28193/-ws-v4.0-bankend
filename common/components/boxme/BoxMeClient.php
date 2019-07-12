@@ -253,9 +253,7 @@ class BoxMeClient
         $apires = $service->syncProduct($request)->wait();
         /** @var SyncProductResponse $response */
         list($response, $status) = $apires;
-        Yii::debug($response->getMessage());
-        Yii::debug($response->getError());
-        return !$response->getError();
+        return response ? !$response->getError() : false;
 
     }
 
