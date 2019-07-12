@@ -79,7 +79,7 @@ class ListChatMongoController extends BaseApiController
         $chat->code = $model->code + 1;
         $chat->content = $post['contentC'];
         $chat->status = $post['statusC'];
-        $chat->type = 'supporting';
+        $chat->type = 'contacting';
         $chat->time_start = $now;
         if (!$chat->save()) {
             return $this->response(false, 'error', $chat->getErrors());
