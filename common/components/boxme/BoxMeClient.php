@@ -199,8 +199,6 @@ class BoxMeClient
         $apires = $service->CreateShipment($request)->wait();
         list($rs,$stt) = $apires;
         /** @var CreateShipmentResponse $rs */
-        print_r($rs);
-        die;
         if(!$rs->getError()){
             $data_rs = json_decode($rs->getData(),true);
             $shipment_code = ArrayHelper::getValue($data_rs,'shipment_code');
