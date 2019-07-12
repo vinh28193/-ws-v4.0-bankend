@@ -56,16 +56,18 @@ class PasswordResetRequestForm extends Model
         }
 
         Yii::info('Send email reset password');
-        return Yii::$app->mailer
-            ->compose(
-                ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
-                ['user' => $user]
-            )
-            //->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setFrom([Yii::$app->params['supportEmail'] => 'Weshop Việt Nam robot'])
-            ->setTo($this->email)
-            ->setSubject('Password reset for ' . Yii::$app->name)
-            ->send();
+        /** @var  $mailer yii\mail\BaseMailer */
+        $mailer = Yii::$app->mandrillMailer;
+        $mailer->viewPath = '@common/mail';
+        $mail = $mailer->compose(
+            ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
+            ['user' => $user]
+        );
+        $from = [Yii::$app->storeManager->store->country_code === 'ID' ? 'no-reply@weshop.co.id' : 'no-reply@weshop.com.vn' => Yii::$app->storeManager->store->name];
+        $mail->setFrom($from);
+        $mail->setTo($this->email);
+        $mail->setSubject(Yii::t('frontend','Password reset for {web_name}',['web_name' => Yii::$app->name]));
+        return $mail->send();
     }
 
     public  function FindEmail()

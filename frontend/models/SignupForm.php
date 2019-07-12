@@ -161,26 +161,26 @@ class SignupForm extends Model
      *
      * @return bool whether the email was send
      */
-    public function sendEmail()
-    {
+
+    public function sendEmail() {
         /* @var $user User */
         $user = User::findOne([
             'status' => User::STATUS_ACTIVE,
             'email' => $this->email,
         ]);
-
         if (!$user) {
             return false;
         }
         Yii::info($user, 'Send email register new');
-        return Yii::$app->mailer
-            ->compose(
-                ['html' => 'accounts/verify_create_done-html', 'text' => 'accounts/verify_create_done-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => 'Weshop Việt Nam robot'])
-            ->setTo($this->email)
-            ->setSubject('REGISTER ACCOUNT SUCCESS! WESHOP VIỆT NAM')
-            ->send();
+        /** @var  $mailer yii\mail\BaseMailer */
+        $mailer = Yii::$app->mandrillMailer;
+        $mailer->viewPath = '@common/mail';
+        $mail = $mailer->compose(['html' => 'accounts/verify_create_done-html', 'text' => 'accounts/verify_create_done-text'],
+            ['user' => $user]);
+        $from = [Yii::$app->storeManager->store->country_code === 'ID' ? 'no-reply@weshop.co.id' : 'no-reply@weshop.com.vn' => Yii::$app->storeManager->store->name];
+        $mail->setFrom($from);
+        $mail->setTo($this->email);
+        $mail->setSubject(Yii::t('frontend','REGISTER ACCOUNT SUCCESS! WESHOP GLOBAL'));
+        return $mail->send();
     }
 }
