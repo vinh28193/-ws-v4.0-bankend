@@ -581,7 +581,8 @@ class AmazonGateV3 extends BaseGate
             $item['image'] = $param['images'][0];
             $item['is_prime'] = $param['is_prime'];
 
-            $sell_price = $param['sell_price'];
+            $sell_price = is_string($param['sell_price']) ? [trim(str_replace('$','',$param['sell_price']))] : $param['sell_price'];
+            $sell_price = $sell_price ? $sell_price : [0];
             $sell_price = array_filter($sell_price, function ($price) {
                 return (int)$price > 0;
             });

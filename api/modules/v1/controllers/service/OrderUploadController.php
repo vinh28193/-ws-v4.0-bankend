@@ -76,6 +76,7 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Invalid column `$refKey`";
                         continue;
                     }
+                    $conditions = trim($conditions);
                     if ($refKey === 'BIN' && (!is_numeric($conditions) || WeshopHelper::isSubText($conditions, 'VN') || WeshopHelper::isSubText($conditions, 'ID'))) {
                         $log[$index] = "Unknown order code  $conditions";
                         continue;
@@ -158,6 +159,8 @@ class OrderUploadController extends OrderController
                         $log[$index] = "Invalid column `$refKey`";
                         continue;
                     }
+                    $conditions = trim($conditions);
+
                     if ($refKey === 'BIN' && (!is_numeric($conditions) || WeshopHelper::isSubText($conditions, 'VN') || WeshopHelper::isSubText($conditions, 'ID'))) {
                         $log[$index] = "Unknown order code  $conditions";
                         continue;
@@ -198,7 +201,7 @@ class OrderUploadController extends OrderController
                         if (($carrierTracking = ArrayHelper::getValue($row, 'Carrier Tracking #')) !== null && trim($carrierTracking) !== 'N/A' && trim($carrierTracking) !== '') {
                             $transactionCodes = $order->tracking_codes !== null ? explode(',', $order->tracking_codes) : [];
                             if (!in_array($carrierTracking, $transactionCodes)) {
-                                $transactionCodes[] = $transactionCodes;
+                                $transactionCodes[] = $carrierTracking;
                             }
                             if (!empty($transactionCodes)) {
                                 $order->tracking_codes = implode(',', $transactionCodes);

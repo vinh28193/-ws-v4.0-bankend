@@ -34,6 +34,7 @@ if ($product['sell_price'] && $product['retail_price'] && $product['retail_price
 }
 $image = \yii\helpers\ArrayHelper::getValue($product,'bigImage',null);
 $image = $image ? $image : \yii\helpers\ArrayHelper::getValue($product,'image','/img/no_image.png');
+$image = $image ? $image : '/img/no_image.png';
 $rate_star = floatval(\yii\helpers\ArrayHelper::getValue($product,'rate_star',0));
 $rate_count = \yii\helpers\ArrayHelper::getValue($product,'rate_count',0);
 $rate_star = $rate_star > intval($rate_star) ? intval($rate_star).'-5' : intval($rate_star);

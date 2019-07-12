@@ -347,13 +347,14 @@ class PaymentController extends BasePaymentController
             // ToDo @Phuchc gửi lên Mongodb nếu bị lỗi để gửi lại  9/7/2019
 
             /** @var  $mailer yii\mail\BaseMailer */
-            $mailer = Yii::$app->mailer;
+            $mailer = Yii::$app->mandrillMailer;
             $mailer->viewPath = '@common/views/mail';
             $mail = $mailer->compose(['html' => 'orderCreate-html'],[
                 'paymentTransaction' => $paymentTransaction,
                 'storeManager' => $this->storeManager
             ]);
-            $mail->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot']);
+            $from = [$this->storeManager->store->country_code === 'ID' ? 'no-reply@weshop.co.id' : 'no-reply@weshop.com.vn' => $this->storeManager->store->name];
+            $mail->setFrom($from);
             $mail->setTo($payment->customer_email);
             $mail->setSubject('Create Order Success');
             $mail->send();
