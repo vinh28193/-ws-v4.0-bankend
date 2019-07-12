@@ -181,14 +181,23 @@ class OrderController extends BaseApiController
         //$this->can('canUpdate', $model);
         $check = $model->loadWithScenario($this->post);
         if ($model->getScenario() == 'confirmPurchase') {
+            $total = round(($model->total_paid_amount_local / $model->total_final_amount_local) * 100);
+            $remaining = $model->total_final_amount_local - $model->total_paid_amount_local;
             $product_id = Yii::$app->request->post('product_id');
             $tran = Yii::$app->db->beginTransaction();
             $model->current_status = Order::STATUS_AWAITING_PAYMENT;
-            if($model->total_paid_amount_local >= 0 && $model->total_paid_amount_local >= $model->total_final_amount_local){
+
+            if($model->total_paid_amount_local >= 0 && $total > 30){
                 $model->current_status = Order::STATUS_READY2PURCHASE;
             }
             if(in_array($model->current_status,[Order::STATUS_READY2PURCHASE,Order::STATUS_CONTACTING,Order::STATUS_AWAITING_PAYMENT])){
                 if($model->current_status == Order::STATUS_READY2PURCHASE){
+                    if ($model->contacting == null) {
+                        $model->contacting = Yii::$app->getFormatter()->asTimestamp('now');
+                    }
+                    if ($model->awaiting_payment == null) {
+                        $model->awaiting_payment = Yii::$app->getFormatter()->asTimestamp('now');
+                    }
                     $model->ready_purchase = time();
                 }
             }
@@ -246,8 +255,10 @@ class OrderController extends BaseApiController
         Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());
         if ($model->getScenario() == 'editAdjustPayment') {
             $messages = "<span class='text-danger fa-2x'>Order {$model->ordercode}</span> <br> - $action <br>{$this->resolveChatMessage($dirtyAttributes,$model)}. <br>- Update Payment Transaction: `Transaction Status` changed from `CREATE` to `SUCCESS`";
+        } if ($model->getScenario() == 'confirmPurchase') {
+                $messages = "<span class='text-danger font-weight-bold'>Order {$model->ordercode}</span><br>- Customer paid: {$total}% <br>- Remaining amount: {$remaining} <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
         } else {
-            $messages = "<span class='text-danger font-weight-bold'>Order {$model->ordercode}</span> <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
+                $messages = "<span class='text-danger font-weight-bold'>Order {$model->ordercode}</span> <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
         }
         $model->validate();
         if (!$model->save(false)) {
@@ -330,10 +341,10 @@ class OrderController extends BaseApiController
             if (strpos($name, '_id') !== false && is_numeric($value)) {
                 continue;
             }
-            $results[] = "<span class='font-weight-bold'>{$reference->getAttributeLabel($name)} :</span> <br> Changed from `{$reference->getOldAttribute($name)}` to `$value`";
+            $results[] = "<span class='font-weight-bold'>- {$reference->getAttributeLabel($name)} :</span> <br> Changed from `{$reference->getOldAttribute($name)}` to `$value`";
         }
 
-        return implode('<br>- ', $results);
+        return implode('<br> ', $results);
     }
 
 

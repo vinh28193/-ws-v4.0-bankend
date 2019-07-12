@@ -1779,6 +1779,14 @@ a:hover {
 }
 
 .deal-shock .deal-content ul li .item .info-box .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    /*line-height: 16px;*/
+    /* max-height: 50px; */
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-size: 14px;
     line-height: 1.2;
 }
 

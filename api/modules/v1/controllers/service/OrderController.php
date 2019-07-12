@@ -326,6 +326,16 @@ class OrderController extends BaseApiController
                     $mess .= '<br>- Mã giao dịch PayPal: '.$order->purchase_transaction_id;
                 }
             }
+            if($orderPurchase != $order->purchase_order_id){
+                $mess .= '<br>- Cập nhật mã đơn hàng trên '.$order->portal.': '.$orderPurchase;
+                $mess .= '<br>&nbsp;&nbsp;+ Mã đơn hàng trên '.$order->portal.' cũ: '.$order->purchase_order_id;
+                $order->purchase_order_id = $orderPurchase;
+            }
+            if($purchase_transaction_id != $order->purchase_transaction_id){
+                $mess .= '<br>- Cập nhật mã giao dịch PayPal: '.$purchase_transaction_id;
+                $mess .= '<br>&nbsp;&nbsp;+ Mã giao dịch PayPal cũ: '.$order->purchase_transaction_id;
+                $order->purchase_transaction_id = $purchase_transaction_id;
+            }
             if($trackingCodes && $trackingCodes != ''){
                 $old = $order->tracking_codes;
                 $order->tracking_codes = implode(',',$trackingCodes);
@@ -342,14 +352,18 @@ class OrderController extends BaseApiController
                 $mess .= '<br>- Thay đổi note: '.$purchase_note.'(cũ:'.$order->purchase_note.')';
                 $order->purchase_note = $purchase_note;
             }
-            $order->save(0);
-            ChatMongoWs::SendMessage('Cập nhật thông tin mua hàng: '.$mess, $order->ordercode,ChatMongoWs::TYPE_GROUP_WS);
-            Yii::$app->wsLog->push('order','updatePurchaseInfo', $mess, [
-                'id' => $order->id,
-                'request' => $mess,
-                'response' => "Success"
-            ]);
-            return $this->response(true, 'save success.');
+            if($mess){
+                $order->save(0);
+                ChatMongoWs::SendMessage('Cập nhật thông tin mua hàng: '.$mess, $order->ordercode,ChatMongoWs::TYPE_GROUP_WS);
+                Yii::$app->wsLog->push('order','updatePurchaseInfo', $mess, [
+                    'id' => $order->id,
+                    'request' => $mess,
+                    'response' => "Success"
+                ]);
+                return $this->response(true, 'save success.');
+            }else{
+                return $this->response(true, 'Nothing change.');
+            }
         }
         return $this->response(false, 'Cannot find order.');
     }

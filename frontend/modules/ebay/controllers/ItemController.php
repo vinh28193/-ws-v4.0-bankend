@@ -22,41 +22,45 @@ class ItemController extends EbayController
 
     public function actionDetail($id)
     {
-        $form = new ProductDetailFrom();
-        $form->load($this->request->getQueryParams(), '');
-        $form->id = $id;
-        $form->type = 'ebay';
-        $item = $form->detail();
 
-        if (Yii::$app->request->isPjax) {
+        if (!in_array($id, Yii::$app->params['checkBanIdEbay'])) {
+            $form = new ProductDetailFrom();
+            $form->load($this->request->getQueryParams(), '');
+            $form->id = $id;
+            $form->type = 'ebay';
+            $item = $form->detail();
+
+            if (Yii::$app->request->isPjax) {
+                if ($item === false) {
+                    return $this->renderAjax('@frontend/views/common/item_error', [
+                        'errors' => $form->getErrors()
+                    ]);
+                }
+                return $this->renderAjax('index', [
+                    'item' => $item
+                ]);
+            }
             if ($item === false) {
-                return $this->renderAjax('@frontend/views/common/item_error', [
+                return $this->render('@frontend/views/common/item_error', [
                     'errors' => $form->getErrors()
                 ]);
             }
-            return $this->renderAjax('index', [
-                'item' => $item
-            ]);
-        }
-        if ($item === false) {
-            return $this->render('@frontend/views/common/item_error', [
-                'errors' => $form->getErrors()
-            ]);
-        }
-        $this->site_title = Yii::t('frontend', '{name} | Product eBay', ['name' => $item->item_name]);
-        $this->site_description = Yii::t('frontend', 'Buy the "{name}" product on eBay immediately via Weshop to get the product within 7-15 days with many attractive offers. Shopping US Amazon, eBay easily.', ['name' => $item->item_name]);
-        $this->site_image = isset($item->primary_images[0]) ? $item->primary_images[0]->main : Url::to('/img/no_image.png',true);
+            $this->site_title = Yii::t('frontend', '{name} | Product eBay', ['name' => $item->item_name]);
+            $this->site_description = Yii::t('frontend', 'Buy the "{name}" product on eBay immediately via Weshop to get the product within 7-15 days with many attractive offers. Shopping US Amazon, eBay easily.', ['name' => $item->item_name]);
+            $this->site_image = isset($item->primary_images[0]) ? $item->primary_images[0]->main : Url::to('/img/no_image.png',true);
 
 //        $category = $item->getCategory();
 
-        //Load sau khi load xong content
+            //Load sau khi load xong content
 //        $relate_product_rs = EbayProductGate::paserSugget($item->item_id, $category ? [$category->alias] : []);
 //        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
 //        $item->relate_products = RelateProduct::setRelateProducts($relate_product);
-        return $this->render('index', [
-            'item' => $item
-        ]);
-
+            return $this->render('index', [
+                'item' => $item
+            ]);
+        } else {
+            return $this->render('@frontend/views/common/item_error');
+        }
     }
 
 

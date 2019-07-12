@@ -1,5 +1,6 @@
 <?php
 namespace landing\widgets\ListProduct;
+use common\products\BaseProduct;
 use landing\LandingWidget;
 
 class ListProductWidget extends LandingWidget
@@ -19,13 +20,20 @@ class ListProductWidget extends LandingWidget
 
         if(!empty($products)){
             foreach ($products as $key=>$val){
-                $products[$key]['calculated_sell_price'] = $website->showMoney($val['calculated_sell_price'] * $exchangeRate);
-                if(isset($val['start_price'])){
-                    $products[$key]['calculated_start_price'] = $website->showMoney($val['calculated_start_price'] * $exchangeRate);
+                $product_base = new BaseProduct([
+                    'sell_price' => $val['calculated_sell_price'],
+                    'start_price' => $val['start_price'],
+                    'isInitialized' => true,
+                ]);
+                $products[$key]['calculated_sell_price'] = $website->showMoney($product_base->getLocalizeTotalPrice());
+                if(isset($val['start_price']) && $val['start_price'] > $val['start_price']){
+                    $products[$key]['calculated_start_price'] = $website->showMoney($product_base->getLocalizeTotalStartPrice());
+                }else{
+                    $products[$key]['calculated_start_price'] = 0;
                 }
-                if($val['start_price']!=null && $val['start_price'] >0 ){
-                    $products[$key]['rate_count']   = 100-($val['sell_price']/$val['start_price'])*100;
-                }
+//                if($val['start_price']!=null && $val['start_price'] >0 ){
+//                    $products[$key]['rate_count']   = 100-($val['sell_price']/$val['start_price'])*100;
+//                }
 
             }
         }

@@ -123,9 +123,9 @@ class ProductController extends BaseApiController
             if (strpos($name, '_id') !== false && is_numeric($value)) {
                 continue;
             }
-            $results[] = "<span class='font-weight-bold'>{$reference->getAttributeLabel($name)} :</span> <br> Changed from `{$reference->getOldAttribute($name)}` to `$value`";
+            $results[] = "<span class='font-weight-bold'>- {$reference->getAttributeLabel($name)} :</span> <br> Changed from `{$reference->getOldAttribute($name)}` to `$value`";
         }
 
-        return implode('<br>- ', $results);
+        return implode('<br> ', $results);
     }
 }
