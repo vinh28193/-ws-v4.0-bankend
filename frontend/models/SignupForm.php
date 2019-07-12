@@ -183,4 +183,27 @@ class SignupForm extends Model
             ->setSubject('REGISTER ACCOUNT SUCCESS! WESHOP VIỆT NAM')
             ->send();
     }
+    public function sendEmail1() {
+        /* @var $user User */
+        $user = User::findOne([
+            'status' => User::STATUS_ACTIVE,
+            'email' => $this->email,
+        ]);
+        if (!$user) {
+            return false;
+        }
+        Yii::info($user, 'Send email register new');
+        /** @var  $mailer yii\mail\BaseMailer */
+        $mailer = Yii::$app->mandrillMailer;
+        $mailer->viewPath = '@common/views/mail';
+        $mail = $mailer->compose(['html' => 'orderCreate-html'],[
+            'paymentTransaction' => $paymentTransaction,
+            'storeManager' => $this->storeManager
+        ]);
+        $from = [$this->storeManager->store->country_code === 'ID' ? 'no-reply@weshop.co.id' : 'no-reply@weshop.com.vn' => $this->storeManager->store->name];
+        $mail->setFrom($from);
+        $mail->setTo('vinhvv@peacesoft.net');
+        $mail->setSubject('Create Order Success');
+        var_dump($mail->send());
+    }
 }
