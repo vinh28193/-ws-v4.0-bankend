@@ -77,12 +77,14 @@ $this->registerJs($js);
                 ?>
             </div>
         </div>
-        <div class="lable-titlebox"><?= Yii::t('frontend','Price range (USD)') ?> </div>
-        <div class="form-inline" style="padding-right: 20px">
-            <input class="form-control form-control-sm" type="number" name="formPrice" placeholder="Price form">
-            <span style="padding: 10px">—</span>
-            <input class="form-control form-control-sm" type="number" name="toPrice" placeholder="Price to">
-        </div>
+        <?php if($portal == 'ebay') {?>
+            <div class="lable-titlebox"><?= Yii::t('frontend','Price range (USD)') ?> </div>
+            <div class="form-inline" style="padding-right: 20px">
+                <input class="form-control form-control-sm" type="number" name="formPrice" placeholder="Price form">
+                <span style="padding: 10px">—</span>
+                <input class="form-control form-control-sm" type="number" name="toPrice" placeholder="Price to">
+            </div>
+        <?php }?>
         <div class="form-check lable-titlebox" style="margin-left: 15px;">
             <?php
             if($portal != 'ebay'){ ?>
