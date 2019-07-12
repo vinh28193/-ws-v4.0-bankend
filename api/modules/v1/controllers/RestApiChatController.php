@@ -101,6 +101,8 @@ class RestApiChatController extends BaseApiController
             //----ToDo Need More Infor param
             $_user_app = 'Weshop2019'; /***Todo Set**/
             $_request_ip = Yii::$app->getRequest()->getUserIP();
+            $isR2 = false;
+            $isNew1 = false;
             $isNew = false; $isSupported = false; // 1:true;0:false
             $isSupporting = false;
             if ($_post['_chat'] == 'ORDER') {
@@ -110,9 +112,13 @@ class RestApiChatController extends BaseApiController
                 }
                 $current_status = $order->current_status;
                 $paid_status = $order->total_paid_amount_local > 0 ? true : false ;
-                if($current_status == Order::STATUS_NEW or $current_status == Order::STATUS_SUPPORTING)
+                if($current_status == Order::STATUS_NEW or $current_status == Order::STATUS_SUPPORTING or $current_status == Order::STATUS_CONTACTING)
                 {
                     $isNew = true;
+                }
+                if($current_status == Order::STATUS_NEW or $current_status == Order::STATUS_SUPPORTING or $current_status == Order::STATUS_CONTACTING or $current_status == Order::STATUS_AWAITING_PAYMENT)
+                {
+                    $isNew1 = true;
                 }
             }
             if ($_post['_chat'] == 'CART') {
@@ -123,21 +129,15 @@ class RestApiChatController extends BaseApiController
                     }
                 }
             }
-//            if ($_post['type_chat'] == 'GROUP_WS' && strlen(strstr($_post['message'], 'Supported')) > 0) {
-//                $this->keyChatManger = new KeyChatList();
-//                $mess = str_replace('-Type: Supported','',$_post['message']);
-//                $listChat = $this->keyChatManger->read();
-//                foreach ($listChat as $value) {
-//                    if ($value['content'] == $mess) {
-//                        $isSupported = true;
-//                        break;
-//                    }
-//                }
-//            }
-            if (($_post['type_chat'] == 'GROUP_WS') && strlen(strstr($_post['message'], 'supporting')) > 0) {
-                $mess = str_replace('-Type: supporting','',$_post['message']);
+            if (($_post['type_chat'] == 'GROUP_WS') && strlen(strstr($_post['message'], 'contacting')) > 0) {
+                $mess = str_replace('-Type: contacting','',$_post['message']);
+                $messReade2Purchase = 'Đã báo khách hàng số thu thêm';
                 $listChat = ListChat::find()->where(['status' => (string)(1)])->all();
                 foreach ($listChat as $value) {
+                    if ($value['content'] == $messReade2Purchase && $mess == $messReade2Purchase) {
+                        $isR2 = true;
+                        break;
+                    }
                     if ($value['content'] == $mess) {
                         $isSupporting = true;
                         break;
@@ -145,6 +145,8 @@ class RestApiChatController extends BaseApiController
                 }
             }
             $isNew = $isNew ? true : false;
+            $isNew1 = $isNew1 ? true : false;
+            $isR2 = $isR2 ? true : false;
             $isSupported = $isSupported ? true : false;
 
             $_rest_data = ["ChatMongoWs" => [
@@ -169,17 +171,31 @@ class RestApiChatController extends BaseApiController
             if ($model->load($_rest_data) and $model->save()) {
                 $id = (string)$model->_id;
                 if ($_post['_chat'] == 'ORDER') {
-                    if($isNew === true &&  $isSupporting === true)
+                    if($isNew === true &&  $isSupporting === true && $isR2 === false)
                     {
-//                        Order::updateAll([
-//                            'current_status' => Order::STATUS_CONTACTING,
-//                            'contacting' => Yii::$app->getFormatter()->asTimestamp('now'),
-//                        ],['ordercode' => $_post['Order_path']]);
                         $order = Order::find()->where(['ordercode' => $_post['Order_path']])->one();
                         $order->current_status = Order::STATUS_CONTACTING;
                         $order->contacting = Yii::$app->getFormatter()->asTimestamp('now');
-                        $order->save();
+                        $order->save(false);
+                        $dirtyAttributes = $order->getDirtyAttributes();
+                        $messagesOrder = "<span class='text-danger font-weight-bold'>Order {$_post['Order_path']}</span> <br> - Update status <br> {$this->resolveChatMessage($dirtyAttributes, $order)}";
                     }
+                    if($isNew1 === true &&  $isR2 === true)
+                    {
+                        $order = Order::find()->where(['ordercode' => $_post['Order_path']])->one();
+                        $order->current_status = Order::STATUS_READY2PURCHASE;
+                        if ($order->contacting == null) {
+                            $order->contacting = Yii::$app->getFormatter()->asTimestamp('now');
+                        }
+                        if ($order->awaiting_payment == null) {
+                            $order->awaiting_payment = Yii::$app->getFormatter()->asTimestamp('now');
+                        }
+                        $order->ready_purchase = Yii::$app->getFormatter()->asTimestamp('now');
+                        $order->save(false);
+                        $dirtyAttributes = $order->getDirtyAttributes();
+                        $messagesOrder = "<span class='text-danger font-weight-bold'>Order {$_post['Order_path']}</span> <br> - Update status <br> {$this->resolveChatMessage($dirtyAttributes, $order)}";
+                    }
+
                 }
 
                 if ($_post['_chat'] == 'CART') {
@@ -192,10 +208,12 @@ class RestApiChatController extends BaseApiController
                         $this->getCart()->updateSafeItem(($_post['type']), $_post['id'], $_post);
                     }
                 }
-                $dirtyAttributes = $order->getDirtyAttributes();
-                $messages = "<span class='text-danger font-weight-bold'>Order {$_post['Order_path']}</span> <br> - Create Chat <br> {$this->resolveChatMessage($dirtyAttributes, $order)}";
+                $messages = "<span class='text-danger font-weight-bold'>Order {$_post['Order_path']}</span> <br> - Create chat <br>{$_post['type_chat']} ,{$_post['message']}";
+                if (isset($messagesOrder)) {
+                    ChatHelper::push($messagesOrder, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM', null);
+                }
                 ChatHelper::push($messages, $_post['Order_path'], 'GROUP_WS' , 'SYSTEM', null);
-                Yii::$app->wsLog->push('order', $model->getScenario(), null, [
+                Yii::$app->wsLog->push('order', 'Create chat', null, [
                     'id' => $_post['Order_path'],
                     'request' => $this->post,
                     'response' => $_post['message']
