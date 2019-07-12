@@ -123,8 +123,10 @@ class CartWidget extends Widget
         ]);
         if (empty($this->items)) {
             echo $this->render('empty');
+        }else {
+            echo $this->renderItems();
         }
-        echo $this->renderItems();
+
         Pjax::end();
         echo Html::endTag('div');
     }
@@ -158,7 +160,7 @@ class CartWidget extends Widget
 
     public function renderItems()
     {
-        return $this->render('content', [
+        return $this->render('content-new', [
             'items' => $this->items,
             'totalAmount' => $this->totalAmount
         ]);

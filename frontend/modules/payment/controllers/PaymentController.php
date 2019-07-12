@@ -323,6 +323,7 @@ class PaymentController extends BasePaymentController
             $childTransaction = clone $paymentTransaction;
             $childTransaction->id = null;
             $childTransaction->isNewRecord = true;
+            $childTransaction->carts = $order->cartId;
             $childTransaction->transaction_amount_local = $order->total_final_amount_local;
             $childTransaction->total_discount_amount = $order->total_promotion_amount_local;
             $childTransaction->before_discount_amount_local = $childTransaction->transaction_amount_local - $order->total_promotion_amount_local;

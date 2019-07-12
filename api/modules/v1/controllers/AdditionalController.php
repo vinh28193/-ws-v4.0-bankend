@@ -53,7 +53,6 @@ class AdditionalController extends BaseApiController
         if (!$form->load(Yii::$app->getRequest()->getQueryParams(), '')) {
             return $this->response(false, 'can not resolved current request');
         }
-
         if ($form->target_name === 'product' && ($product = $form->getTarget()) !== null) {
             /** @var $product Product */
             if ($form->shipping_quantity !== null && $form->shipping_quantity !== '' && (int)$form->shipping_quantity > 0 && !WeshopHelper::compareValue($product->quantity_customer, $form->shipping_quantity)) {
@@ -113,35 +112,19 @@ class AdditionalController extends BaseApiController
             // Tổng tiền local tất tần tận
             $product->save(false);
             $order = $product->order;
-            $order->on(Order::EVENT_AFTER_UPDATE, function ($event) {
-                /** @var $event  \yii\db\AfterSaveEvent */
-                $diffValue = [];
-                /** @var $sender Order */
-                $sender = $event->sender;
-                $dirtyAttribute = [];
-                $formatter = Yii::$app->formatter;
-                foreach ($event->changedAttributes as $attribute => $value) {
-                    $newValue = $sender->getAttribute($attribute);
-                    if ($attribute !== 'updated_at') {
-                        $value = (int)$value;
-                        $newValue -= $value;
+            $check = OrderUpdateLog::find()->where(['order_code' => $form->orderCode])->one();
+            if ($check > 0) {
 
-                    } else {
-                        $newValue = $formatter->asDatetime($newValue);
-                        $value = $formatter->asDatetime($value);
-                    }
-                    $dirtyAttribute[$attribute] = $value;
-                    $diffValue[$attribute] = $newValue;
-                }
-                $orderChangeLog = new OrderUpdateLog();
-                $orderChangeLog->action = 'update';
-                $orderChangeLog->order_code = $sender->ordercode;
-                $orderChangeLog->dirty_attribute = $dirtyAttribute;
-                $orderChangeLog->diff_value = $diffValue;
-                $orderChangeLog->create_by = Yii::$app->getUser()->getId();
-                $orderChangeLog->create_at = $formatter->asDatetime('now');
-                $orderChangeLog->save(false);
-            });
+            } else {
+                $order->on(Order::EVENT_AFTER_UPDATE, function ($event) {
+                    /** @var $event  \yii\db\AfterSaveEvent */
+                    $diffValue = [];
+                    /** @var $sender Order */
+                    $sender = $event->sender;
+                    $dirtyAttribute = [];
+                    $formatter = Yii::$app->formatter;
+                });
+            }
             $orderFees = [];
             $totalOrderQuantity = 0;
             $totalOrderAmount = 0;

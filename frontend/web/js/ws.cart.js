@@ -177,6 +177,18 @@
                 //     return false;
                 // });
 
+
+                $("[data-toggle=popover]").each(function (i, obj) {
+
+                    $(this).popover({
+                        html: true,
+                        content: function () {
+                            var id = $(this).data('ref');
+                            return $('#' + id).html();
+                        }
+                    });
+
+                });
             });
         },
         checkUuid: function () {
@@ -224,9 +236,7 @@
             ws.ajax(data.settings.updateUrl, $ajaxOptions, true);
 
         },
-        hiden: function ($key) {
 
-        },
         remove: function (param) {
             var $cart = $(this);
             var data = $cart.data('wsCart');

@@ -36,6 +36,11 @@ return [
             'class' => 'yii\mongodb\console\controllers\MigrateController',
             'migrationPath' => ['@console/mongodb-migrations']
         ],
+        // mongodb-migrations-product
+        'mongodbProductMigra' => [
+            'class' => 'yii\mongodb\console\controllers\MigrateController',
+            'migrationPath' => ['@console/mongodb-migrations-product']
+        ],
         'i18n-migrate' => [
             'class' => 'common\components\consoles\controllers\MigrateController',
             'useTablePrefix' => true,

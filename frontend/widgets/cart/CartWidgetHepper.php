@@ -11,11 +11,13 @@ use yii\helpers\Inflector;
 class CartWidgetHepper
 {
 
-    public static function getCartProductId($productId, $productSku = null)
+
+
+    public static function getCartProductId($key,$productId, $productSku = null)
     {
-        $key = $productId;
+        $key .= $productId;
         if ($productSku !== null) {
-            $key .= $productSku;
+            $key .= Inflector::id2camel($productSku);
         }
 //        $key = Inflector::camelize($key);
         return "cartProduct{$key}";
