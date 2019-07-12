@@ -199,7 +199,7 @@ class BoxMeClient
         $apires = $service->CreateShipment($request)->wait();
         list($rs,$stt) = $apires;
         /** @var CreateShipmentResponse $rs */
-        if(!$rs->getError()){
+        if($rs && !$rs->getError()){
             $data_rs = json_decode($rs->getData(),true);
             $shipment_code = ArrayHelper::getValue($data_rs,'shipment_code');
             $order->shipment_boxme = $shipment_code ? ($order->shipment_boxme ? $order->shipment_boxme.','.$shipment_code : $shipment_code) : $order->shipment_boxme;
@@ -358,7 +358,7 @@ class BoxMeClient
         /** @var CreateOrderResponse $rs */
         $apirs = $service->CreateOrder($request)->wait();
         list($rs, $stt) = $apirs;
-        if(!$rs->getError()){
+        if($rs && !$rs->getError()){
             $order->order_boxme = $rs->getData() ? $rs->getData()->getTrackingNumber() : '';
             $order->save();
             return $rs->getData() ? $rs->getData()->getTrackingNumber() : '';
