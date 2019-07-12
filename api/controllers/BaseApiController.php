@@ -161,16 +161,16 @@ class BaseApiController extends \yii\rest\Controller
                         'application/json' => 'yii\web\JsonParser',
                     ]
                 ],
-//                'response' => [
-//                    'class' => Response::className(),
-//                    'format' => Response::FORMAT_JSON,
+                'response' => [
+                    'class' => Response::className(),
+                    'format' => Response::FORMAT_JSON,
 //                    'formatters' => [
 //                        Response::FORMAT_JSON => [
 //                            'class' => 'yii\web\JsonResponseFormatter',
 ////                            'prettyPrint' => true, // use "pretty" output in debug mode
 //                        ],
 //                    ],
-//                ]
+                ]
             ]
         ]);
     }

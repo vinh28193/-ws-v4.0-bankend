@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers\service;
 
 
 use api\controllers\BaseApiController;
+use common\components\boxme\BoxMeClient;
 use common\lib\WalletBackendService;
 use common\models\Order;
 use common\models\PaymentTransaction;
@@ -325,6 +326,10 @@ class OrderController extends BaseApiController
                 if($order->portal == BaseProduct::TYPE_EBAY){
                     $mess .= '<br>- Mã giao dịch PayPal: '.$order->purchase_transaction_id;
                 }
+                foreach ($order->products as $product){
+                    BoxMeClient::SyncProduct($product);
+                }
+                BoxMeClient::CreateOrder($order);
             }
             if($orderPurchase != $order->purchase_order_id){
                 $mess .= '<br>- Cập nhật mã đơn hàng trên '.$order->portal.': '.$orderPurchase;
@@ -340,6 +345,9 @@ class OrderController extends BaseApiController
                 $old = $order->tracking_codes;
                 $order->tracking_codes = implode(',',$trackingCodes);
                 if($order->tracking_codes != $old){
+                    foreach ($trackingCodes as $trackingCode){
+                        BoxMeClient::CreateLiveShipment($order,$trackingCode);
+                    }
                     $mess .= '<br>- Nhập tracking code: '.$order->tracking_codes.' (cũ: '.$old.')';
                     if($order->current_status == Order::STATUS_PURCHASED || $order->current_status == Order::STATUS_READY2PURCHASE){
                         $order->current_status = Order::STATUS_SELLER_SHIPPED;

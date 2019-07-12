@@ -13,6 +13,7 @@ class ItemController extends AmazonController
 {
     public function actionDetail($id)
     {
+
         $form = new ProductDetailFrom();
         $form->load($this->request->getQueryParams(), '');
         $form->id = $id;

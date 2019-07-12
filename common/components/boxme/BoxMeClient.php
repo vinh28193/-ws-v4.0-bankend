@@ -1,14 +1,20 @@
 <?php
 namespace common\components\boxme;
 use common\components\lib\TextUtility;
+use common\helpers\WeshopHelper;
 use common\models\boxme\ConfigForm;
 use common\models\boxme\ShipToForm;
 use common\models\boxme\ShipmentForm;
+use common\models\Order;
 use common\models\Product;
+use common\models\SystemCountry;
+use common\models\User;
 use Courier\CourierClient;
 use Courier\CreateOrderRequest;
+use Courier\CreateOrderResponse;
 use linslin\yii2\curl\Curl;
 use Seller\CreateShipmentRequest;
+use Seller\CreateShipmentResponse;
 use Seller\SellerClient;
 use Seller\SyncProductRequest;
 use Seller\SyncProductResponse;
@@ -143,72 +149,78 @@ class BoxMeClient
         $res = $response->getData();
         return $res;
     }
-    public static function CreateLiveShipment($data,$tracking){
+
+    /**
+     * @param Order $order
+     * @param $tracking
+     * @return bool
+     * @throws \Exception
+     */
+    public static function CreateLiveShipment($order,$tracking){
         $service = new SellerClient(ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_SELLER','10.130.111.53:50060'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
+        $user = User::findOne($order->customer_id);
+        $pickUpId = '';
+        $user_id_df = '';
+        if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
+            $current = $params['default'];
+            $wh = ArrayHelper::getValue($params, "warehouses.$current", false);
+            $pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id');
+            $user_id_df = ArrayHelper::getValue($wh, 'ref_user_id');
+        }
         $param = [];
         $param['shipping_method'] = 5;
-        $param['pickup_id'] = 39412;
-        $param['ff_id'] = 39412;
-        $param['user_id'] = 41;
+        $param['pickup_id'] = $pickUpId;
+        $param['ff_id'] = $pickUpId;
+        $param['user_id'] = self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df;
         $param['procducts'] = [];
-        foreach ($data as $datum){
+        foreach ($order->products as $datum){
             $temp = [
-              'bsin' => $datum['bsin'],
-              'quantity' => $datum['quantity'],
-              'img_check' => $datum['img_check'],
-              'description' => $datum['description']
+              'bsin' => TextUtility::GenerateBSinBoxMe($datum->id),
+              'quantity' => $datum->quantity_customer,
+              'img_check' => 1,
+              'description' => $datum->product_name
             ];
             $param['procducts'][] = $temp;
-        }
-        $param['packages'] = [];
-        foreach ($data as $datum){
-            $temp = [
-                'code' => $datum['packing_code'],
-                'weight' => $datum['weight'],
-                'width' => $datum['width'],
-                'length' => $datum['length'],
-                'quantity' => $datum['quantity'],
-                'height' => $datum['height'],
-                'description' => $datum['description'],
-            ];
-            $param['packages'][] = $temp;
         }
         $param['tracking']['type'] = 2;
         $param['tracking']['tracking_number'] = $tracking;
 
         $request = new CreateShipmentRequest(
             [
-                'Country' => '',
-                'UserId' => '',
-                'Source' => '',
+                'Country' => 'VN',
+                'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df,
+                'Source' => 2,
                 'Param' => json_encode($param),
             ]
         );
+
         $apires = $service->CreateShipment($request)->wait();
-//        $curl = new Curl();
-//        $response = $curl->setRawPostData(json_encode($param))
-//            ->setHeader('Content-Type','application/json')
-//            ->setHeader('Authorization','Token 424d31352012b39b1c399a669ab4a22a230d74d1ca2f0012e1079a8199c9fbd6')
-//            ->post('https://oms.boxme.asia/api/v1/sellers/shipments/create/');
-////        Yii::debug($response);
-//        print_r(json_decode($response,true));
-//        die;
-        return $response;
+        list($rs,$stt) = $apires;
+        /** @var CreateShipmentResponse $rs */
+        if(!$rs->getError()){
+            $data_rs = json_decode($rs->getData(),true);
+            $shipment_code = ArrayHelper::getValue($data_rs,'shipment_code');
+            $order->shipment_boxme = $shipment_code ? ($order->shipment_boxme ? $order->shipment_boxme.','.$shipment_code : $shipment_code) : $order->shipment_boxme;
+            return true;
+        }
+        return false;
     }
 
     /**
      * @param Product $product
+     * @return bool
      * @throws \Exception
      */
     public static function SyncProduct($product){
         $service = new SellerClient(ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_SELLER','206.189.94.203:50060'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
+        $user = User::findOne($product->order->customer_id);
         $data = [];
         $data['country'] = $product->order->store->country_code;
-        $data['seller_id'] = $product->seller_id;
+        $data['seller_id'] = self::checkIsPrime($user) ? $user->bm_wallet_id : ArrayHelper::getValue(Yii::$app->params,'id_user_boxme','23');
         $data['category_id'] = $product->category_id;
         $data['seller_sku'] = strtoupper($product->portal) == 'EBAY' ? $product->parent_sku : $product->sku;
         $data['bsin'] = TextUtility::GenerateBSinBoxMe($product->id);
@@ -236,15 +248,117 @@ class BoxMeClient
         list($response, $status) = $apires;
         Yii::debug($response->getMessage());
         Yii::debug($response->getError());
-        return $response->getError();
+        return !$response->getError();
 
     }
 
-    public function CreateOrder() {
-        $service = new CourierClient(ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_COURIER','10.130.111.53:50056'), [
+    /**
+     * @param Order $order
+     * @return bool|string
+     */
+    public static function CreateOrder($order) {
+        if ($order->order_boxme){
+            return false;
+        }
+        $hostname = ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_COURIER','10.130.111.53:50056');
+        $service = new CourierClient($hostname, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
-        $request = new CreateOrderRequest();
-        $service->CreateOrder($request)->wait();
+
+        $pickUpId = '';
+        if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
+            $current = $params['default'];
+            $wh = ArrayHelper::getValue($params, "warehouses.$current", false);
+            $pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id');
+        }
+        $country = SystemCountry::findOne($order->receiver_country_id);
+        $user = User::findOne($order->customer_id);
+        $shipTo = [
+            'contact_name' => $order->receiver_name,
+            'company_name' => '',
+            'email' => $order->receiver_email,
+            'address' => $order->receiver_address,
+            'address2' => $order->buyer_address,
+            'phone' => $order->receiver_phone,
+            'phone2' => $order->buyer_phone,
+            'province' => $order->receiver_province_id,
+            'district' => $order->receiver_district_id,
+            'country' => $country ? $country->country_code : 'VN',
+            'zipcode' => $order->receiver_post_code,
+        ];
+        $item = [];
+        foreach ($order->products as $product){
+            $item[] = [
+                'sku' => strtolower($product->portal) == 'ebay' ? $product->sku : $product->parent_sku,
+                'label_code' => '',
+                'origin_country' => 'US',
+                'name' => $product->product_name,
+                'desciption' => '',
+                'weight' => WeshopHelper::roundNumber(($product->total_weight_temporary * 1000 / $product->quantity_customer)),
+                'amount' => WeshopHelper::roundNumber($product->total_final_amount_local),
+                'quantity' => $product->quantity_customer,
+            ];
+        }
+        $data = [
+            'ship_from' => [
+                'country' => 'US',
+                'pickup_id' => $pickUpId
+            ],
+            'ship_to' => $shipTo,
+            'shipments' => [
+                'content' => '',
+                'total_parcel' => count($order->products),
+                'total_amount' => $order->total_final_amount_local,
+                'description' => '',
+                'amz_shipment_id' => '',
+                'chargeable_weight' => WeshopHelper::roundNumber($order->total_weight_temporary * 1000),
+                'parcels' => [
+                    [
+                        'weight' => WeshopHelper::roundNumber($order->total_weight_temporary * 1000),
+                        'amount' => $order->total_final_amount_local,
+                        'description' => "Order Weshop ({$order->ordercode}) .Product {$order->portal}",
+                        'items' => $item
+                    ]
+                ]
+            ],
+            'config' => [
+                'preview' => 'Y',
+                'return_mode' => 0,
+                'insurance' => 'N',
+                'document' => 0,
+                'currency' => $order->store->currency,
+                'unit_metric' => 'metric',
+                'sort_mode' => 'best_rating',
+                'auto_approve' => 'Y',
+                'create_by' => 0,
+                'order_type' => 'dropship',
+                'check_stock' => 'N',
+                'include_special_goods' => 'N'
+            ],
+            'payment' => [
+                'cod_amount' => 0,
+                'fee_paid_by' => 'sender'
+            ],
+            'referral' => [
+                'order_number' => $order->ordercode,
+            ]
+        ];
+        $request = new CreateOrderRequest([
+            'Data' => json_encode($data),
+            'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : ArrayHelper::getValue(Yii::$app->params,'id_user_boxme','23'),
+            'CountryCode' => $country ? $country->country_code : 'VN',
+        ]);
+        /** @var CreateOrderResponse $rs */
+        $apirs = $service->CreateOrder($request)->wait();
+        list($rs, $stt) = $apirs;
+        if(!$rs->getError()){
+            $order->order_boxme = $rs->getData() ? $rs->getData()->getTrackingNumber() : '';
+            $order->save();
+            return $rs->getData() ? $rs->getData()->getTrackingNumber() : '';
+        }
+        return false;
+    }
+    public static function checkIsPrime($user) {
+        return $user && $user->bm_wallet_id && $user->vip > 0 && $user->vip_end_time > time();
     }
 }

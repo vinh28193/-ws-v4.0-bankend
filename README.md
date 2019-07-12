@@ -1113,3 +1113,20 @@ unlink dist
 #-------------Token------------------------
 c26078a0a62a1acd7ade4579dca3a44f2fc79ed8
 
+
+
+-----------------------------create ptoduct-----------------------------------------
+
+$ grpcc --proto proto/seller.proto --address 206.189.94.203:50060 -i
+
+$ let aa4 = client.syncProduct({Data : '{"country":"VN","seller_id":23,"category_id":387,"seller_sku":"B01LTHP2ZK","bsin":"WS545077","name":"Nintendo Switch - Gray Joy-Con","name_local":"Nintendo Switch - Gray Joy-Con","type_sku":1
+,"desc":"Nintendo Switch - Gray Joy-Con","link":"https:\/\/amazon.com\/gp\/product\/B01LTHP2ZK?ie=UTF8&tag=wp034-20&camp=1789&linkCode=xm2&creativeASIN=B01LTHP2ZK","price":"20116000.00","price_sale":"6705333.33","active":1,"weight":1500,"unit_weight":"g","volume":"
+","tag":"","warehouse_condition":1,"supplier_name":"","min_quantity":1,"images":["https:\/\/images-na.ssl-images-amazon.com\/images\/I\/41UY4Pnw0SL.jpg"]}' },printReply)
+ 
+$ let ab8 = client.createShipment({UserId: 23 , Country: 'VN',Source : 2 , Param : '{"shipping_method":5,"pickup_id":35549,"ff_id":35549,"user_id":23,"procducts":[{"bsin":"WS545077","quantity":3,"img_check":1,"description":"Nintend
+  o Switch - Gray Joy-Con"}],"tracking":{"type":2,"tracking_number":"121jhj21jh21"}}' },printReply)
+-----------------------------------Tao ma BM + create Order Boxme -----------------------------------
+
+$ grpcc --proto proto/courier.proto --address 206.189.94.203:50056 -i
+ 
+$ let PD = client.CreateOrder({UserId: 23 , CountryCode: 'VN',Data : '{"ship_from":{"country":"US","pickup_id":35549},"ship_to":{"contact_name":" L\u00ea V\u0103n Vi\u1ec5n","company_name":"","email":null,"address":"test","address2":"test","phone":"0987698769","phone2":"0987698769","province":1,"district":273,"country":"VN","zipcode":null},"shipments":{"content":"","total_parcel":1,"total_amount":"22409000.00","description":"","amz_shipment_id":"","chargeable_weight":1500,"parcels":[{"weight":1500,"amount":"22409000.00","description":"Order Weshop (417986) .Product AMAZON","items":[{"sku":"B01LTHP2ZK","label_code":"","origin_country":"US","name":"Nintendo Switch - Gray Joy-Con","desciption":"","weight":500,"amount":20116000,"quantity":3}]}]},"config":{"preview":"Y","return_mode":0,"insurance":"N","document":0,"currency":"VND","unit_metric":"metric","sort_mode":"best_rating","auto_approve":"Y","create_by":0,"order_type":"dropship","check_stock":"N","include_special_goods":"N"},"payment":{"cod_amount":0,"fee_paid_by":"sender"},"referral":{"order_number":"417986"}}' },printReply)

@@ -4,9 +4,11 @@
 namespace frontend\controllers;
 
 use common\boxme\InternationalShippingCalculator;
+use common\components\boxme\BoxMeClient;
 use common\components\cart\CartHelper;
 use common\components\cart\CartManager;
 use common\components\employee\Employee;
+use common\components\lib\TextUtility;
 use common\helpers\ExcelHelper;
 use common\helpers\ObjectHelper;
 use common\helpers\WeshopHelper;
@@ -415,6 +417,27 @@ JSON;
 
         }
 
+        die;
+    }
+    public function actionTestCreateOrderBoxme(){
+        $orderid = Yii::$app->request->get('id');
+        $order = Order::findOne($orderid);
+        if($order){
+            BoxMeClient::CreateOrder($order);
+            die;
+        }
+        var_dump($order);
+        die;
+    }
+    public function actionTestCreateShipmentLiveBoxme(){
+        $orderid = Yii::$app->request->get('id');
+        $order = Order::findOne($orderid);
+        $dataShipment = [];
+        if($order){
+            BoxMeClient::CreateLiveShipment($order,"121jhj21jh21");
+            die;
+        }
+        var_dump($order);
         die;
     }
 
