@@ -1105,10 +1105,24 @@ Thinh Nguyen, [11.07.19 16:46]
 
 #------------------SymLink to a Directory------------------------
 $ ln -s /var/www/ws-operation/dist/ /var/www/ws-operation-dist/
+ln -s /var/www/ws-operation/dist/ /var/www/ws-operation-dist/
+
+cd /var/www/ws-operation 
+rm -rf /var/www/ws-operation-dist/*
+cp -r /var/www/ws-operation/dist /var/www/ws-operation-dist/ops-nginx
+
+#----ln -s /var/www/ws-operation/ops-nginx /var/www/ws-operation-dist/--------------
 
 #---------Unlink---------
 cd /var/www/ws-operation/dist/
 unlink dist
+
+#--------------Deploy Code -----------------
+cd /var/www/ws-operation
+ng build --prod
+
+rm -rf /var/www/ws-operation-dist/*
+cp -r /var/www/ws-operation/dist /var/www/ws-operation-dist/ops-nginx
 
 #-------------Token------------------------
 c26078a0a62a1acd7ade4579dca3a44f2fc79ed8
