@@ -337,16 +337,22 @@ class CustomerController extends BaseAccountController
             'Json' =>@json_encode($paramPost),
             '$Json_string' => $Json_string
         ], __CLASS__);
+
+        $api_login_boxme = '';
+        if (YII_ENV == 'prod') {
+            $api_login_boxme  = Yii::$app->params['api_login_boxme'] ? Yii::$app->params['api_login_boxme'] : 'https://s.boxme.asia/api/v1/users/auth/sign-in/';
+        }elseif ( $api_login_boxme == '' and  !YII_ENV == 'prod'){
+            $api_login_boxme  = 'http://sandbox.boxme.asia/api/v1/users/auth/sign-in/';
+        }
         $response = $curl->setHeaders([
                             'Content-Type' => 'application/json',
                         ])
                          ->setRawPostData($Json_string)
-                        ->post('https://s.boxme.asia/api/v1/users/auth/sign-in/',true);
-                       // ->post(ArrayHelper::getValue(Yii::$app->params,'api_login_boxme','https://s.boxme.asia/api/v1/users/auth/sign-in/' , true));
-
+                        ->post($api_login_boxme,true);
         Yii::info([
             'curl' => @unserialize($curl),
             'response' => @unserialize($response),
+            '$api_login_boxme' => $api_login_boxme
         ], __CLASS__);
 
         $dataRs = @json_decode($response,true);
@@ -361,6 +367,7 @@ class CustomerController extends BaseAccountController
                       'bm_wallet_id' => $dataRs['data']['id'],
                       'id' => $user->id,
                 ])->select('id')->count();
+
                 if($checkImp > 0){
                     return ['success' => false, 'data' => ['password' => Yii::t('frontend','This Boxme account was connected with other Weshop account.')]];
                 }
@@ -368,6 +375,10 @@ class CustomerController extends BaseAccountController
                 if(isset($dataRs['data']['loyalty']) && isset($dataRs['data']['loyalty']['user_level'])&& isset($dataRs['data']['loyalty']['time_end'])){
                     $user->vip_end_time = $dataRs['data']['loyalty']['time_end'];
                     $user->vip = $dataRs['data']['loyalty']['time_end'] >= time() ? $dataRs['data']['loyalty']['user_level'] : 0;
+                    Yii::info("User  : ". $user->email . ' set level :'.$dataRs['data']['loyalty']['user_level'] . '. Time end  level :'. $dataRs['data']['loyalty']['time_end']);
+                    // ToDo Địa Chỉ kho cho mỗi khách thuộc loại hạng 1 hoặc 2
+                    // http://sandbox.boxme.asia/api/v1/sellers/addresses/default-warehouse/
+                    // $user->addresses_warehouse = 0;
                 }else{
                     $user->vip = 0;
                 }
