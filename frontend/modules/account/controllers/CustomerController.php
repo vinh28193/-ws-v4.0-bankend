@@ -307,6 +307,10 @@ class CustomerController extends BaseAccountController
         $password = Yii::$app->request->post('password');
         /** @var User $user */
         $user = Yii::$app->user->getIdentity();
+        Yii::info("User Connect Boxme : ");
+        Yii::info([
+            'User' =>$user,
+        ], __CLASS__);
         if(!$user){
             return ['success' => false, 'message' => Yii::t('frontend','Please login account weshop!') ,'data' => ['email' => Yii::t('frontend','Please login account weshop!')]];
         }
@@ -326,14 +330,43 @@ class CustomerController extends BaseAccountController
             'platform' => 'Weshop',
             'country' => $this->storeManager->store->country_code
         ];
-        $response = $curl->setRawPostData($paramPost)
-                    ->post(ArrayHelper::getValue(Yii::$app->params,'api_login_boxme','https://s.boxme.asia/api/v1/users/auth/sign-in/'));
-        $dataRs = json_decode($response,true);
+        Yii::info("User send Connect Boxme : ");
+        Yii::info([
+            'paramPost' =>$paramPost,
+            'Json' =>@json_encode($paramPost),
+        ], __CLASS__);
+        $response = $curl->setHeaders([
+                            'Content-Type' => 'application/json',
+                        ])
+                         ->setRawPostData('{
+  "email": "ws_test@gmail.com",
+  "password": "123456a@",
+  "country": "VN",
+  "platform": "Weshop"
+}')
+                         ->post('https://s.boxme.asia/api/v1/users/auth/sign-in/',true);
+                    // ->post(ArrayHelper::getValue(Yii::$app->params,'api_login_boxme','https://s.boxme.asia/api/v1/users/auth/sign-in/'));
+
+
+        Yii::info([
+            'curl' => @unserialize($curl),
+            'response' => @unserialize($response),
+        ], __CLASS__);
+
+        $dataRs = @json_decode($response,true);
+        Yii::info([
+            'dataRs' =>$dataRs,
+        ], __CLASS__);
         if($dataRs['error']){
             return ['success' => false, 'data' => ['password' => $dataRs['messages']]];
         }else{
             if($dataRs['data']['active'] == 1 && $dataRs['data']['id']){
                 $checkImp = User::find()->where(['bm_wallet_id' => $dataRs['data']['id'],''])->select('id')->count();
+                print_r($checkImp); die;
+                Yii::info("checkImp : " . $checkImp);
+                Yii::info([
+                    'checkImp' =>$checkImp
+                ], __CLASS__);
                 if($checkImp > 0){
                     return ['success' => false, 'data' => ['password' => Yii::t('frontend','This Boxme account was connected with other Weshop account.')]];
                 }

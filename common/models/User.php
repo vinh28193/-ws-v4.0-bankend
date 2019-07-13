@@ -404,7 +404,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
             return self::LEVEL_NORMAL;
         } else if ($this->vip === 1) {
             return self::LEVEL_SLIVER;
-        } else {
+        } else  if ($this->vip === 2)  {
             return self::LEVEL_GOLD;
         }
     }
