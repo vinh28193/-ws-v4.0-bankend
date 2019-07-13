@@ -338,7 +338,12 @@ class CustomerController extends BaseAccountController
         $response = $curl->setHeaders([
                             'Content-Type' => 'application/json',
                         ])
-                         ->setRawPostData(@json_encode($paramPost))
+                         ->setRawPostData('{
+  "email": "ws_test@gmail.com",
+  "password": "123456a@",
+  "country": "VN",
+  "platform": "Weshop"
+}')
                          ->post('https://s.boxme.asia/api/v1/users/auth/sign-in/',true);
                     // ->post(ArrayHelper::getValue(Yii::$app->params,'api_login_boxme','https://s.boxme.asia/api/v1/users/auth/sign-in/'));
 
