@@ -307,6 +307,10 @@ class CustomerController extends BaseAccountController
         $password = Yii::$app->request->post('password');
         /** @var User $user */
         $user = Yii::$app->user->getIdentity();
+        Yii::info("User Connect Boxme : ");
+        Yii::info([
+            'User' =>$user,
+        ], __CLASS__);
         if(!$user){
             return ['success' => false, 'message' => Yii::t('frontend','Please login account weshop!') ,'data' => ['email' => Yii::t('frontend','Please login account weshop!')]];
         }
@@ -326,9 +330,16 @@ class CustomerController extends BaseAccountController
             'platform' => 'Weshop',
             'country' => $this->storeManager->store->country_code
         ];
+        Yii::info("User send Connect Boxme : ");
+        Yii::info([
+            'paramPost' =>$paramPost,
+        ], __CLASS__);
         $response = $curl->setRawPostData($paramPost)
                     ->post(ArrayHelper::getValue(Yii::$app->params,'api_login_boxme','https://s.boxme.asia/api/v1/users/auth/sign-in/'));
-        $dataRs = json_decode($response,true);
+        $dataRs = @json_decode($response,true);
+        Yii::info([
+            'dataRs' =>$dataRs,
+        ], __CLASS__);
         if($dataRs['error']){
             return ['success' => false, 'data' => ['password' => $dataRs['messages']]];
         }else{
