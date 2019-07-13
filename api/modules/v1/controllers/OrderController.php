@@ -13,6 +13,7 @@ use api\controllers\BaseApiController;
 use common\helpers\ChatHelper;
 use common\models\Order;
 use common\models\Product;
+use common\modelsMongo\ActiveRecordUpdateLog;
 use common\modelsMongo\PaymentLogWS;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -50,7 +51,7 @@ class OrderController extends BaseApiController
             [
                 'allow' => true,
                 'actions' => ['index', 'view', 'create', 'update'],
-                'roles' => $this->getAllRoles(true,'marketing'),
+                'roles' => $this->getAllRoles(true, 'marketing'),
             ],
             [
                 'allow' => true,
@@ -187,11 +188,11 @@ class OrderController extends BaseApiController
             $tran = Yii::$app->db->beginTransaction();
             $model->current_status = Order::STATUS_AWAITING_PAYMENT;
 
-            if($model->total_paid_amount_local >= 0 && $total > 30){
+            if ($model->total_paid_amount_local >= 0 && $total > 30) {
                 $model->current_status = Order::STATUS_READY2PURCHASE;
             }
-            if(in_array($model->current_status,[Order::STATUS_READY2PURCHASE,Order::STATUS_CONTACTING,Order::STATUS_AWAITING_PAYMENT])){
-                if($model->current_status == Order::STATUS_READY2PURCHASE){
+            if (in_array($model->current_status, [Order::STATUS_READY2PURCHASE, Order::STATUS_CONTACTING, Order::STATUS_AWAITING_PAYMENT])) {
+                if ($model->current_status == Order::STATUS_READY2PURCHASE) {
                     if ($model->contacting == null) {
                         $model->contacting = Yii::$app->getFormatter()->asTimestamp('now');
                     }
@@ -205,7 +206,7 @@ class OrderController extends BaseApiController
         }
         if ($model->getScenario() == 'updateOrderStatus') {
             $i = 0;
-            for ($i; $i < count($StatusOrder) ; $i++) {
+            for ($i; $i < count($StatusOrder); $i++) {
                 if ($StatusOrder[$i] != $post['Order']['status']) {
                     if ($model->{$StatusOrder[$i]} == null) {
                         $model->{$StatusOrder[$i]} = $now;
@@ -216,7 +217,7 @@ class OrderController extends BaseApiController
                 }
             }
             if ($i < 11) {
-                for ($j = $i + 1; $j < count($StatusOrder) -1 ; $j++) {
+                for ($j = $i + 1; $j < count($StatusOrder) - 1; $j++) {
                     $model->{$StatusOrder[$j]} = null;
                 }
             }
@@ -244,21 +245,29 @@ class OrderController extends BaseApiController
             for ($h = $k; $h < count($StatusOrder); $h++) {
                 $model->{$StatusOrder[$h]} = null;
             }
-            if ($StatusOrder[$k -1] == 'ready_purchase') {
+            if ($StatusOrder[$k - 1] == 'ready_purchase') {
                 $model->current_status = Order::STATUS_READY2PURCHASE;
             } else {
-                $model->current_status = strtoupper($StatusOrder[$k -1]);
+                $model->current_status = strtoupper($StatusOrder[$k - 1]);
             }
         }
         $dirtyAttributes = $model->getDirtyAttributes();
         $action = Inflector::camel2words($model->getScenario());
         Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());
         if ($model->getScenario() == 'editAdjustPayment') {
+            /** @var  $logOrigin ActiveRecordUpdateLog */
+            $logOrigin = ActiveRecordUpdateLog::find()->find()->where(['and', ['type' => 'original'], ['object_class' => 'Order'], ['object_identity' => $model->ordercode]])->one();
+            if ($logOrigin !== null) {
+                $logOrigin->updateAttributes([
+                    'status' => 'inactive'
+                ]);
+            }
             $messages = "<span class='text-danger fa-2x'>Order {$model->ordercode}</span> <br> - $action <br>{$this->resolveChatMessage($dirtyAttributes,$model)}. <br>- Update Payment Transaction: `Transaction Status` changed from `CREATE` to `SUCCESS`";
-        } if ($model->getScenario() == 'confirmPurchase') {
-                $messages = "<span class='text-danger font-weight-bold'>Order {$model->ordercode}</span><br>- Customer paid: {$total}% <br>- Remaining amount: {$remaining} <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
+        }
+        if ($model->getScenario() == 'confirmPurchase') {
+            $messages = "<span class='text-danger font-weight-bold'>Order {$model->ordercode}</span><br>- Customer paid: {$total}% <br>- Remaining amount: {$remaining} <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
         } else {
-                $messages = "<span class='text-danger font-weight-bold'>Order {$model->ordercode}</span> <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
+            $messages = "<span class='text-danger font-weight-bold'>Order {$model->ordercode}</span> <br> - $action <br> {$this->resolveChatMessage($dirtyAttributes,$model)}";
         }
         $model->validate();
         if (!$model->save(false)) {
@@ -270,11 +279,11 @@ class OrderController extends BaseApiController
             return $this->response(false, $model->getFirstErrors());
         }
         if (isset($post['Order']['link_image_log'])) {
-            ChatHelper::push($messages, $model->ordercode, 'GROUP_WS', 'SYSTEM', $post['Order']['link_image_log'] ? $post['Order']['link_image_log'] :  null);
+            ChatHelper::push($messages, $model->ordercode, 'GROUP_WS', 'SYSTEM', $post['Order']['link_image_log'] ? $post['Order']['link_image_log'] : null);
         } else {
             ChatHelper::push($messages, $model->ordercode, 'GROUP_WS', 'SYSTEM', null);
         }
-        Yii::info("Order Log ".$model->getScenario());
+        Yii::info("Order Log " . $model->getScenario());
         Yii::info([
             'id' => $model->ordercode,
             'request' => $this->post,
