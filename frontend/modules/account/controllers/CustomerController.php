@@ -427,6 +427,8 @@ class CustomerController extends BaseAccountController
         $user->bm_wallet_id = null;
         $user->vip_end_time = null;
         $user->vip = 0;
+        $user->pickup_id = 0;
+        $user->warehouse_code = '';
         $user->save();
         return ['success' => true];
     }
