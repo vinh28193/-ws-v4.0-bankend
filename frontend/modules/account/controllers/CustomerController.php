@@ -333,6 +333,7 @@ class CustomerController extends BaseAccountController
         Yii::info("User send Connect Boxme : ");
         Yii::info([
             'paramPost' =>$paramPost,
+            'Json' =>@json_encode($paramPost),
         ], __CLASS__);
         $response = $curl->setRawPostData(@json_encode($paramPost))
                         ->setHeaders([
