@@ -256,7 +256,7 @@ class OrderController extends BaseApiController
         Yii::info([$dirtyAttributes, $model->getOldAttributes()], $model->getScenario());
         if ($model->getScenario() == 'editAdjustPayment') {
             /** @var  $logOrigin ActiveRecordUpdateLog */
-            $logOrigin = ActiveRecordUpdateLog::find()->find()->where(['and', ['type' => 'original'], ['object_class' => 'Order'], ['object_identity' => $model->ordercode]])->one();
+            $logOrigin = ActiveRecordUpdateLog::find()->where(['and', ['type' => 'original'], ['object_class' => 'Order'], ['object_identity' => $model->ordercode]])->one();
             if ($logOrigin !== null) {
                 $logOrigin->updateAttributes([
                     'status' => 'inactive'
