@@ -162,8 +162,11 @@ class AdditionalFeeCollection extends ArrayCollection
             } else if ($userLevel === User::LEVEL_GOLD) {
                 $percent = 0.1;
             }
-            Yii::info("$userLevel : $percent %", 'Discount international shipping fee');
-            $amount -= $amount * $percent;
+
+
+            $calAmount = $amount * $percent;
+            Yii::info("user level $userLevel, percent $percent %, origin $amount, discount $calAmount ", 'Discount international shipping fee');
+            $amount -= $calAmount;
             $amountLocal = $this->getStoreManager()->roundMoney($amount);
         } else if ($config->name === 'product_price') {
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
