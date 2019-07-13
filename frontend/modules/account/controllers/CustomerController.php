@@ -365,11 +365,6 @@ class CustomerController extends BaseAccountController
                       'bm_wallet_id' => $dataRs['data']['id'],
                       'id' => $user->id,
                 ])->select('id')->count();
-                print_r($checkImp); die;
-                Yii::info("checkImp : " . $checkImp);
-                Yii::info([
-                    'checkImp' =>$checkImp
-                ], __CLASS__);
                 if($checkImp > 0){
                     return ['success' => false, 'data' => ['password' => Yii::t('frontend','This Boxme account was connected with other Weshop account.')]];
                 }
