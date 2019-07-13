@@ -419,7 +419,7 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
      */
     public function getPickupWarehouse()
     {
-        return null;
+        return $this->pickup_id;
     }
 
     /**
