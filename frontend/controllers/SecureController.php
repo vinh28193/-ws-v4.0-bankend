@@ -307,8 +307,7 @@ class SecureController extends FrontendController
         return $this->redirect('/login.html');
     }
     public function actionGetCookies(){
-        print_r(UserCookies::getCookies());
-        die;
+        print_r(UserCookies::getCookies()); die;
     }
     public function actionDeleteCookies(){
         Cookies::set(UserCookies::KEY_COOKIES,null);

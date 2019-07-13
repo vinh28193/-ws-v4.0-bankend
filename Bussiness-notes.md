@@ -120,3 +120,17 @@
 #--------------Khi Khách hàng có hang  + Liên Kết Boxme Me ------------------
 1. khi Kh login --> gọi gRPC check hạng + thời gian kết thúc
 2. lấy địa chỉ kho của từng khách hàng dùng để tính toán + phí vận chuyển quốc tế theo hạng + Phí bảo hiểm cũng theo hạng
+Thinh Nguyen, [13.07.19 13:58]
+sandbox.boxme.asia/api/v1/sellers/addresses/default-warehouse/
+
+Thinh Nguyen, [13.07.19 13:58]
+{
+  "token": "8f6df519a2125946820bc34a561164c2",
+  "country": "VN",
+  "user_id": 1032,
+  "phone": "00987654321",
+  "fullname": "david"
+}
+
+Thinh Nguyen, [13.07.19 13:58]
+API lấy kho của user
