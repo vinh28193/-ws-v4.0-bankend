@@ -114,6 +114,9 @@ class ActiveRecordUpdateLog extends \yii\mongodb\ActiveRecord
                     $pk = $sender->ordercode;
                     $info = [];
                     foreach ($dirtyAttribute as $name => $val){
+                        if (in_array($name, $sender->timestampFields())) {
+                            continue;
+                        }
                         $info[] = "<span class='font-weight-bold'>- {$sender->getAttributeLabel($name)} :</span> <br> Changed from `{$oldAttribute[$name]}` to `$val` diff value `{$diffValue[$name]}`";
                     }
                     $info = implode('<br> ', $info);
