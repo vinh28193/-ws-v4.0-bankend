@@ -221,7 +221,7 @@ class AdditionalController extends BaseApiController
 
     public function actionView($code)
     {
-        $model = ActiveRecordUpdateLog::find()->where(['AND',['object_class' => 'Order'],['object_identity' => $code]])->orderBy(['create_at' => SORT_DESC])->asArray()->one();
+        $model = ActiveRecordUpdateLog::find()->where(['AND',['type' => 'original'],['object_class' => 'Order'],['object_identity' => $code]])->orderBy(['create_at' => SORT_DESC])->asArray()->one();
         return $this->response(true, 'sucess', $model);
     }
 
