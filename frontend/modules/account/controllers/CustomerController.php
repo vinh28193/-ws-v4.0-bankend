@@ -361,7 +361,7 @@ class CustomerController extends BaseAccountController
             return ['success' => false, 'data' => ['password' => $dataRs['messages']]];
         }else{
             if($dataRs['data']['active'] == 1 && $dataRs['data']['id']){
-                $checkImp = User::find()->where(['bm_wallet_id' => $dataRs['data']['id'],''])->select('id')->count();
+                $checkImp = User::find()->where(['bm_wallet_id' => $dataRs['data']['id'],'']); // ->select('id')->count();
                 Yii::info("checkImp : " . $checkImp);
                 Yii::info([
                     'checkImp' =>$checkImp
