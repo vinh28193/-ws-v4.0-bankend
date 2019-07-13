@@ -142,8 +142,8 @@ class ActiveRecordUpdateLog extends \yii\mongodb\ActiveRecord
                         if (in_array($attribute, $sender->timestampFields())) {
                             continue;
                         }
-                        $value = (int)$value;
-                        $diffOV = $newValue - $value;
+                        $value = floatval($value);
+                        $diffOV = floatval($newValue) - $value;
                         $originalDiffValue[$attribute] = $diffOV;
                     }
                     $original->old_attribute = $originalOldAttribute;
