@@ -10,6 +10,7 @@ namespace common\additional;
 
 
 use common\helpers\WeshopHelper;
+use common\models\User;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;
@@ -153,7 +154,19 @@ class AdditionalFeeCollection extends ArrayCollection
             is_array($result)
         ) {
             list($amount, $amountLocal) = $result;
-        } else if ($config->type === StoreAdditionalFee::TYPE_LOCAL) {
+        } else if ($config->type === StoreAdditionalFee::TYPE_LOCAL && $config->name === 'international_shipping_fee') {
+            $userLevel = $additional->getUserLevel();
+            $percent = 0;
+            if ($userLevel === User::LEVEL_SLIVER) {
+                $percent = 0.05;
+            } else if ($userLevel === User::LEVEL_GOLD) {
+                $percent = 0.1;
+            }
+
+
+            $calAmount = $amount * $percent;
+            Yii::info("user level $userLevel, percent $percent %, origin $amount, discount $calAmount ", 'Discount international shipping fee');
+            $amount -= $calAmount;
             $amountLocal = $this->getStoreManager()->roundMoney($amount);
         } else if ($config->name === 'product_price') {
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
