@@ -365,7 +365,7 @@ class CustomerController extends BaseAccountController
         }else{
             if($dataRs['data']['active'] == 1 && $dataRs['data']['id']){
                 $checkImp = User::find()->where([
-                      'bm_wallet_id' => $dataRs['data']['id'],
+                      'bm_wallet_id' => $dataRs['data']['user']['id'],
                       'id' => $user->id,
                 ])->select('id')->count();
 
@@ -383,8 +383,8 @@ class CustomerController extends BaseAccountController
                     $Json_string_Address = '{
                       "token": "8f6df519a2125946820bc34a561164c2",
                       "country": "'.$this->storeManager->store->country_code.'",
-                      "user_id": '.$dataRs['data']['id'].',
-                      "phone": "0972607988",
+                      "user_id": '.$dataRs['data']['user']['id'].',
+                      "phone": "'.$dataRs['data']['phone_number'].'",
                       "fullname": "'.$user->first_name .' '.$user->last_name.'"
                     }';
                     Yii::info("Curl send call get Address : ");
@@ -405,7 +405,7 @@ class CustomerController extends BaseAccountController
                         'dataRs' =>$dataRs_add,
                     ], __CLASS__);
 
-                     $user->pickup_id = 63881;
+                     $user->pickup_id = 9999;
                      $user->warehouse_code = "BMVN_US";
 
                 }else{
