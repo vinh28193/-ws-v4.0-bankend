@@ -330,23 +330,19 @@ class CustomerController extends BaseAccountController
             'platform' => 'Weshop',
             'country' => $this->storeManager->store->country_code
         ];
+        $Json_string = '{"email": "'.$username.'", "password": "'.$password.'","country":"'. $this->storeManager->store->country_code.'","platform":"Weshop"}';
         Yii::info("User send Connect Boxme : ");
         Yii::info([
             'paramPost' =>$paramPost,
             'Json' =>@json_encode($paramPost),
+            '$Json_string' => $Json_string
         ], __CLASS__);
         $response = $curl->setHeaders([
                             'Content-Type' => 'application/json',
                         ])
-                         ->setRawPostData('{
-  "email": "ws_test@gmail.com",
-  "password": "123456a@",
-  "country": "VN",
-  "platform": "Weshop"
-}')
-                         ->post('https://s.boxme.asia/api/v1/users/auth/sign-in/',true);
-                    // ->post(ArrayHelper::getValue(Yii::$app->params,'api_login_boxme','https://s.boxme.asia/api/v1/users/auth/sign-in/'));
-
+                         ->setRawPostData($Json_string)
+                        // ->post('https://s.boxme.asia/api/v1/users/auth/sign-in/',true);
+                       ->post(ArrayHelper::getValue(Yii::$app->params,'api_login_boxme','https://s.boxme.asia/api/v1/users/auth/sign-in/' , true));
 
         Yii::info([
             'curl' => @unserialize($curl),

@@ -123,21 +123,6 @@ class User extends DbUser implements IdentityInterface, UserApiGlobalIdentityInt
         ])->one();
     }
 
-    public static function findBoxme($condition)
-    {
-        return static::find()->where([
-            'and',
-            [
-                'or',
-                ['username' => $condition],
-                ['email' => $condition],
-                ['id' => $condition],
-                ['uuid' => $condition]
-            ],
-            ['status' => self::STATUS_ACTIVE]
-        ])->one();
-    }
-
 
     /**
      * Finds user by username
