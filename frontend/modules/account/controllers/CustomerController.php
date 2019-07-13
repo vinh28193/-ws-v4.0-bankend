@@ -334,11 +334,11 @@ class CustomerController extends BaseAccountController
         Yii::info([
             'paramPost' =>$paramPost,
         ], __CLASS__);
-        $response = $curl->setRequestBody(@json_encode($paramPost))
-                         ->setHeaders([
-                            'Content-Type' => 'application/json',
-                            'Content-Length' => strlen(@json_encode($paramPost))
-                        ])
+        $response = $curl->setRequestBody($paramPost)
+//                         ->setHeaders([
+//                            'Content-Type' => 'application/json',
+//                            'Content-Length' => strlen(@json_encode($paramPost))
+//                        ])
                          ->post('https://s.boxme.asia/api/v1/users/auth/sign-in/');
                     // ->post(ArrayHelper::getValue(Yii::$app->params,'api_login_boxme','https://s.boxme.asia/api/v1/users/auth/sign-in/'));
 
