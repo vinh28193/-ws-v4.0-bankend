@@ -323,6 +323,8 @@ class CustomerController extends BaseAccountController
         if(!$password){
             return ['success' => false, 'data' => ['password' => Yii::t('frontend','Password cannot null!')]];
         }
+
+        Yii::info("Call Level Boxme ");
         $curl = new Curl();
         $paramPost = [
             'email' => $username,
@@ -331,34 +333,33 @@ class CustomerController extends BaseAccountController
             'country' => $this->storeManager->store->country_code
         ];
         $Json_string = '{"email": "'.$username.'", "password": "'.$password.'","country":"'. $this->storeManager->store->country_code.'","platform":"Weshop"}';
-        Yii::info("User send Connect Boxme : ");
-        Yii::info([
-            'paramPost' =>$paramPost,
-            'Json' =>@json_encode($paramPost),
-            '$Json_string' => $Json_string
-        ], __CLASS__);
 
-        $api_login_boxme = '';
+        Yii::info(" Param send Connect Boxme : ");
+        $api_login_boxme = $api_addresse_warehouse = '';
         if (YII_ENV == 'prod') {
             $api_login_boxme  = Yii::$app->params['api_login_boxme'] ? Yii::$app->params['api_login_boxme'] : 'https://s.boxme.asia/api/v1/users/auth/sign-in/';
+            $api_addresse_warehouse = Yii::$app->params['api_addresse_warehouse'] ? Yii::$app->params['api_addresse_warehouse'] : 'http://boxme.asia/api/v1/sellers/addresses/default-warehouse/';
         }elseif ( $api_login_boxme == '' and  !YII_ENV == 'prod'){
-            $api_login_boxme  = 'http://sandbox.boxme.asia/api/v1/users/auth/sign-in/';
+            $api_login_boxme  = Yii::$app->params['api_login_boxme'] ? Yii::$app->params['api_login_boxme'] : 'http://sandbox.boxme.asia/api/v1/users/auth/sign-in/';
+            $api_addresse_warehouse = Yii::$app->params['api_addresse_warehouse'] ? Yii::$app->params['api_addresse_warehouse'] : 'http://sandbox.boxme.asia/api/v1/sellers/addresses/default-warehouse/';
         }
-        $response = $curl->setHeaders([
-                            'Content-Type' => 'application/json',
-                        ])
-                         ->setRawPostData($Json_string)
-                        ->post($api_login_boxme,true);
-        Yii::info([
-            'curl' => @unserialize($curl),
-            'response' => @unserialize($response),
-            '$api_login_boxme' => $api_login_boxme
-        ], __CLASS__);
 
+        Yii::info("Curl send call / get Level Boxme + Phone : ");
+        $response = $curl->setHeaders([ 'Content-Type' => 'application/json',  ])
+                         ->setRawPostData($Json_string)
+                         ->post($api_login_boxme,true);
         $dataRs = @json_decode($response,true);
         Yii::info([
+            'Curl'=> 'Curl send call / get Level Boxme + Phone :',
+            'paramPost' =>$paramPost,
+            'Json' =>@json_encode($paramPost),
+            '$Json_string' => $Json_string,
+            'curl' => @unserialize($curl),
+            'response' => @unserialize($response),
+            '$api_login_boxme' => $api_login_boxme,
             'dataRs' =>$dataRs,
         ], __CLASS__);
+
         if($dataRs['error']){
             return ['success' => false, 'data' => ['password' => $dataRs['messages']]];
         }else{
@@ -376,9 +377,37 @@ class CustomerController extends BaseAccountController
                     $user->vip_end_time = $dataRs['data']['loyalty']['time_end'];
                     $user->vip = $dataRs['data']['loyalty']['time_end'] >= time() ? $dataRs['data']['loyalty']['user_level'] : 0;
                     Yii::info("User  : ". $user->email . ' set level :'.$dataRs['data']['loyalty']['user_level'] . '. Time end  level :'. $dataRs['data']['loyalty']['time_end']);
+
                     // ToDo Địa Chỉ kho cho mỗi khách thuộc loại hạng 1 hoặc 2
                     // http://sandbox.boxme.asia/api/v1/sellers/addresses/default-warehouse/
-                    // $user->addresses_warehouse = 0;
+                    $Json_string_Address = '{
+                      "token": "8f6df519a2125946820bc34a561164c2",
+                      "country": "'.$this->storeManager->store->country_code.'",
+                      "user_id": '.$dataRs['data']['id'].',
+                      "phone": "00987654321",
+                      "fullname": "'.$user->first_name .' '.$user->last_name.'"
+                    }';
+                    Yii::info("Curl send call get Address : ");
+                    $curl_addess = new Curl();
+                    $response_res = $curl_addess->setHeaders([ 'Content-Type' => 'application/json',  ])
+                        ->setRawPostData($Json_string_Address)
+                        ->post($api_addresse_warehouse,true);
+                    $dataRs_add = @json_decode($response_res,true);
+
+                    Yii::info([
+                        'Curl'=> 'Curl send call get Address :',
+                        'paramPost' =>$paramPost,
+                        'Json' =>@json_encode($paramPost),
+                        '$Json_string' => $Json_string_Address,
+                        'curl' => @unserialize($curl_addess),
+                        'response' => @unserialize($response_res),
+                        '$api_login_boxme' => $api_addresse_warehouse,
+                        'dataRs' =>$dataRs_add,
+                    ], __CLASS__);
+
+                     $user->pickup_id = 63881;
+                     $user->warehouse_code = "BMVN_US";
+
                 }else{
                     $user->vip = 0;
                 }
