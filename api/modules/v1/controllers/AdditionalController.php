@@ -71,7 +71,7 @@ class AdditionalController extends BaseApiController
                 list($amount, $local) = $form->getAdditionalFees()->getTotalAdditionalFees($productFee->name);
                 $keys[] = $productFee->name;
                 if (!WeshopHelper::compareValue($productFee->amount, $amount, 'float')) {
-                    ActiveRecordUpdateLog::register('beforeConfirm',$productFee);
+                    ActiveRecordUpdateLog::register('beforeConfirm', $productFee);
                     $productFee->local_amount = $local;
                     $productFee->amount = $amount;
                     $productFee->save();
@@ -112,8 +112,8 @@ class AdditionalController extends BaseApiController
             // Tổng tiền local tất tần tận
             $product->save(false);
             $order = $product->order;
-            Yii::info($order->total_price_amount_origin,'total_price_amount_origin');
-            ActiveRecordUpdateLog::register('beforeConfirm',$order);
+            Yii::info($order->total_price_amount_origin, 'total_price_amount_origin');
+            ActiveRecordUpdateLog::register('beforeConfirm', $order);
 
             $orderFees = [];
             $totalOrderQuantity = 0;
@@ -222,7 +222,7 @@ class AdditionalController extends BaseApiController
 
     public function actionView($code)
     {
-        $model = ActiveRecordUpdateLog::find()->where(['AND',['type' => 'original'],['object_class' => 'Order'],['object_identity' => $code]])->orderBy(['create_at' => SORT_DESC])->asArray()->one();
+        $model = ActiveRecordUpdateLog::find()->where(['AND', ['status' => 'active'], ['type' => 'original'], ['object_class' => 'Order'], ['object_identity' => $code]])->orderBy(['create_at' => SORT_DESC])->asArray()->one();
         return $this->response(true, 'sucess', $model);
     }
 
