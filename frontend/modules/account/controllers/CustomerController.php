@@ -384,7 +384,7 @@ class CustomerController extends BaseAccountController
                       "token": "8f6df519a2125946820bc34a561164c2",
                       "country": "'.$this->storeManager->store->country_code.'",
                       "user_id": '.$dataRs['data']['id'].',
-                      "phone": "00987654321",
+                      "phone": "0972607988",
                       "fullname": "'.$user->first_name .' '.$user->last_name.'"
                     }';
                     Yii::info("Curl send call get Address : ");
