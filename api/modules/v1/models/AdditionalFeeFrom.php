@@ -12,6 +12,7 @@ use common\helpers\WeshopHelper;
 use common\models\Order;
 use common\models\Product;
 use common\models\User;
+use common\modelsMongo\ActiveRecordUpdateLog;
 use common\products\BaseProduct;
 use Yii;
 use yii\base\Model;
@@ -75,6 +76,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         if (!$this->_target) {
             $class = $this->target_name == 'product' ? Product::className() : Order::className();
             if (($target = $class::findOne($this->target_id)) !== null) {
+                ActiveRecordUpdateLog::register('beforeConfirm', $target);
                 $this->_target = $target;
             }
         }
@@ -97,7 +99,9 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             $hasChange = false;
             $usAmount = $this->us_amount;
             $this->shipping_quantity = ($this->shipping_quantity !== null && $this->shipping_quantity !== '' && (int)$this->shipping_quantity > 0) ? $this->shipping_quantity : 1;
+            Yii::info($usAmount && $usAmount !== '',(int)$this->shipping_quantity);
             if ($usAmount && $usAmount !== '') {
+
                 $usAmount *= (int)$this->shipping_quantity;
             }
             if ($usAmount !== null && $usAmount !== '' && !WeshopHelper::compareValue($usAmount, $this->_additionalFees->getTotalAdditionalFees('product_price')[0])) {

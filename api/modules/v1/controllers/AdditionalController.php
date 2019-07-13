@@ -6,10 +6,12 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
 use api\modules\v1\models\AdditionalFeeFrom;
+use common\helpers\ChatHelper;
 use common\helpers\WeshopHelper;
 use common\models\db\TargetAdditionalFee;
 use common\models\Order;
 use common\models\Product;
+use common\modelsMongo\ActiveRecordUpdateLog;
 use common\modelsMongo\OrderUpdateLog;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -62,22 +64,19 @@ class AdditionalController extends BaseApiController
             if (empty($productFees)) {
                 return $this->response(false, "can not resolved empty fee for product {$form->target_id}");
             }
-            $additionalFees = $form->getAdditionalFees();
+
             $keys = [];
             foreach ($productFees as $productFee) {
                 /** @var  $productFee TargetAdditionalFee */
                 list($amount, $local) = $form->getAdditionalFees()->getTotalAdditionalFees($productFee->name);
                 $keys[] = $productFee->name;
                 if (!WeshopHelper::compareValue($productFee->amount, $amount, 'float')) {
+                    ActiveRecordUpdateLog::register('beforeConfirm',$productFee);
                     $productFee->local_amount = $local;
                     $productFee->amount = $amount;
                     $productFee->save();
-                    if ($productFee->name === 'product_fee') {
-                        $product->total_price_amount_local = $local;
-                    }
                 }
             }
-            Yii::info($form->getAdditionalFees());
             foreach ($form->getAdditionalFees()->keys() as $feeName) {
                 // continute if $key in $keys
                 if (ArrayHelper::isIn($feeName, $keys)) {
@@ -98,33 +97,23 @@ class AdditionalController extends BaseApiController
                     $target->target_id = $product->id;
                     $target->save(false);
                 }
-                $form->getAdditionalFees()->remove($feeName);
+                //$form->getAdditionalFees()->remove($feeName);
             }
-            $productPrice = $additionalFees->getTotalAdditionalFees('product_price');
-            $product->total_fee_product_local = $additionalFees->getTotalAdditionalFees(null,['product_price'])[1];
-            $product->price_amount_origin = $product->price_amount_origin / $product->quantity_customer;
-            $product->price_amount_local = $product->price_amount_local / $product->quantity_customer;
+            $productPrice = $form->getAdditionalFees()->getTotalAdditionalFees('product_price');
+
+            $product->total_fee_product_local = $form->getAdditionalFees()->getTotalAdditionalFees(null, ['product_price'])[1];
             $product->total_price_amount_local = $productPrice[1];
             $product->total_price_amount_origin = $productPrice[0];
-            $policy = isset($product->price_policy) ? $product->price_policy : 0;
-            list($product->total_final_amount_origin, $product->total_final_amount_local) = $additionalFees->getTotalAdditionalFees(['product_price', 'shipping_fee', 'tax_fee']);
+            $product->price_amount_origin = $product->total_price_amount_origin / $product->quantity_customer;
+            $product->price_amount_local = $product->total_price_amount_local / $product->quantity_customer;
+
+            list($product->total_final_amount_origin, $product->total_final_amount_local) = $form->getAdditionalFees()->getTotalAdditionalFees(['product_price', 'shipping_fee', 'tax_fee']);
 
             // Tổng tiền local tất tần tận
             $product->save(false);
             $order = $product->order;
-            $check = OrderUpdateLog::find()->where(['order_code' => $form->orderCode])->one();
-            if ($check > 0) {
+            ActiveRecordUpdateLog::register('beforeConfirm',$order);
 
-            } else {
-                $order->on(Order::EVENT_AFTER_UPDATE, function ($event) {
-                    /** @var $event  \yii\db\AfterSaveEvent */
-                    $diffValue = [];
-                    /** @var $sender Order */
-                    $sender = $event->sender;
-                    $dirtyAttribute = [];
-                    $formatter = Yii::$app->formatter;
-                });
-            }
             $orderFees = [];
             $totalOrderQuantity = 0;
             $totalOrderAmount = 0;
@@ -223,6 +212,7 @@ class AdditionalController extends BaseApiController
             // Tổng tiền (bao gồm tiền giá gốc của các sản phẩm và các loại phí)
             $orderUpdateAttribute['total_final_amount_local'] = $orderUpdateAttribute['total_amount_local'] + $orderUpdateAttribute['total_fee_amount_local'];
             $order->setAttributes($orderUpdateAttribute, false); // set all, do not check safe
+
             $order->update(false);
 
         }
@@ -231,7 +221,8 @@ class AdditionalController extends BaseApiController
 
     public function actionView($code)
     {
-        $model = OrderUpdateLog::find()->where(['order_code' => $code])->orderBy(['create_at' => SORT_DESC])->asArray()->one();
+        $model = ActiveRecordUpdateLog::find()->where(['AND',['type' => 'original'],['object_class' => 'Order'],['object_identity' => $code]])->orderBy(['create_at' => SORT_DESC])->asArray()->one();
         return $this->response(true, 'sucess', $model);
     }
+
 }
