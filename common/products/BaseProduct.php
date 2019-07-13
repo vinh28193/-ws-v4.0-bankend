@@ -422,6 +422,8 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     /**
      * @return array|mixed|null
+     *
+     * @Phuchc Thay dia chi Kho cho Từng Khách hàng Vàng + Bạc
      */
     private $_pickUpWareHouse = false;
 
