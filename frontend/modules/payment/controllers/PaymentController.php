@@ -187,7 +187,7 @@ class PaymentController extends BasePaymentController
                     // 1 order
                     $order->type_order = Order::TYPE_SHOP;
                     $order->payment_type = $payment->payment_type;
-                    $order->customer_type = 'Retail';
+                    $order->customer_type = $orderPayment->getUserLevel();
                     $order->exchange_rate_fee = $this->storeManager->getExchangeRate();
                     $order->total_paid_amount_local = 0;
 
