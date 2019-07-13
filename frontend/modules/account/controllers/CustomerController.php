@@ -344,10 +344,8 @@ class CustomerController extends BaseAccountController
 
 
         Yii::info([
-            'curl' =>$curl,
-        ], __CLASS__);
-        Yii::info([
-            'response' =>$response,
+            'curl' =>\unserialize($curl),
+            'response' =>\unserialize($response),
         ], __CLASS__);
 
         $dataRs = @json_decode($response,true);
