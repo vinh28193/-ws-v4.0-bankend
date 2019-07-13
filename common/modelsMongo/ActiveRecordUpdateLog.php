@@ -23,6 +23,7 @@ use yii\helpers\ArrayHelper;
  * @property mixed $type
  * @property mixed $create_by
  * @property mixed $create_at
+ * @property mixed $status
  */
 class ActiveRecordUpdateLog extends \yii\mongodb\ActiveRecord
 {
@@ -51,6 +52,7 @@ class ActiveRecordUpdateLog extends \yii\mongodb\ActiveRecord
             'diff_value',
             'create_by',
             'create_at',
+            'status'
         ];
     }
 
@@ -60,7 +62,7 @@ class ActiveRecordUpdateLog extends \yii\mongodb\ActiveRecord
     public function rules()
     {
         return [
-            [['period', 'action', 'type', 'object_class', 'object_identity', 'old_attribute', 'dirty_attribute', 'diff_value', 'action', 'create_by', 'create_at'], 'safe']
+            [['period', 'action', 'type', 'object_class', 'object_identity', 'old_attribute', 'dirty_attribute', 'diff_value', 'action', 'create_by', 'create_at','status'], 'safe']
         ];
     }
 
@@ -119,7 +121,7 @@ class ActiveRecordUpdateLog extends \yii\mongodb\ActiveRecord
                     $pk = $sender->ordercode;
                 }
                 /** @var  $original ActiveRecordUpdateLog */
-                $original = self::find()->where(['and', ['type' => 'original'], ['object_class' => $reflection->getShortName()], ['object_identity' => $pk]])->one();
+                $original = self::find()->where(['and',['status' => 'active'] ,['type' => 'original'], ['object_class' => $reflection->getShortName()], ['object_identity' => $pk]])->one();
 
 
                 $type = 'changed';
@@ -166,6 +168,7 @@ class ActiveRecordUpdateLog extends \yii\mongodb\ActiveRecord
                 $newLog->diff_value = $diffValue;
                 $newLog->create_by = Yii::$app->getUser()->getId();
                 $newLog->create_at = $formatter->asDatetime('now');
+                $newLog->status = 'active';
                 $newLog->save(false);
 
                 if ($reflection->getShortName() === 'Order') {
