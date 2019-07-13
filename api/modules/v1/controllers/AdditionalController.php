@@ -112,6 +112,7 @@ class AdditionalController extends BaseApiController
             // Tổng tiền local tất tần tận
             $product->save(false);
             $order = $product->order;
+            Yii::info($order->total_price_amount_origin,'total_price_amount_origin');
             ActiveRecordUpdateLog::register('beforeConfirm',$order);
 
             $orderFees = [];

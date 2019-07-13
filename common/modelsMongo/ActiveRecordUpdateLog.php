@@ -98,8 +98,8 @@ class ActiveRecordUpdateLog extends \yii\mongodb\ActiveRecord
             foreach ($event->changedAttributes as $attribute => $value) {
                 $newValue = $sender->getAttribute($attribute);
                 if (!in_array($attribute, $sender->timestampFields())) {
-                    $value = (int)$value;
-                    $diffV = $newValue - $value;
+                    $value = floatval($value);
+                    $diffV = floatval($newValue) - $value;
                 } else {
                     $newValue = $formatter->asDatetime($newValue);
                     $diffV = $newValue;
