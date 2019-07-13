@@ -362,6 +362,10 @@ class CustomerController extends BaseAccountController
         }else{
             if($dataRs['data']['active'] == 1 && $dataRs['data']['id']){
                 $checkImp = User::find()->where(['bm_wallet_id' => $dataRs['data']['id'],''])->select('id')->count();
+                Yii::info("checkImp : " . $checkImp);
+                Yii::info([
+                    'checkImp' =>$checkImp
+                ], __CLASS__);
                 if($checkImp > 0){
                     return ['success' => false, 'data' => ['password' => Yii::t('frontend','This Boxme account was connected with other Weshop account.')]];
                 }
