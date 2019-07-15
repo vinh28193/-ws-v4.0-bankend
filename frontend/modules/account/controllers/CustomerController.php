@@ -419,13 +419,13 @@ class CustomerController extends BaseAccountController
                     }else {
                         if(!empty($dataRs_add['data'])){
                             foreach ($dataRs_add['data'] as $key =>$value){
-                                if ($this->storeManager->store->country_code == 'VN' and $value->ff_center_code == "BMVN_US") {
-                                    $warehouse_code = $value->ff_center_code;
-                                    $pickup_id = $value->id;
+                                if ($this->storeManager->store->country_code == 'VN' and $value['ff_center_code'] == "BMVN_US") {
+                                    $warehouse_code = $value['ff_center_code'];
+                                    $pickup_id = $value['id'];
                                 }
-                                if ($this->storeManager->store->country_code == 'ID' and $value->ff_center_code == "BMID_US"){
-                                    $warehouse_code = $value->ff_center_code;
-                                    $pickup_id = $value->id;
+                                if ($this->storeManager->store->country_code == 'ID' and $value['ff_center_code'] == "BMID_US"){
+                                    $warehouse_code = $value['ff_center_code'];
+                                    $pickup_id = $value['id'];
                                 }
                             }
                         $user->pickup_id = $pickup_id;
