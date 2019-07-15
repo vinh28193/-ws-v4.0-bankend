@@ -12,7 +12,7 @@ use yii\web\Response;
 use common\products\forms\ProductDetailFrom;
 use common\lib\EbayProductGate;
 use common\products\RelateProduct;
-use common\lib\AmazonProductGate;
+// use common\lib\AmazonProductGate;
 
 class PortalController extends FrontendController
 {
