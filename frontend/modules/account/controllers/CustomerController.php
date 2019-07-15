@@ -419,6 +419,7 @@ class CustomerController extends BaseAccountController
                     }else {
                         if(!empty($dataRs_add['data'])){
                             foreach ($dataRs_add['data'] as $key =>$value){
+                                print_r($value);die;
                                 if ($this->storeManager->store->country_code == 'VN' and $value['ff_center_code'] == "BMVN_US") {
                                     $warehouse_code = $value['ff_center_code'];
                                     $pickup_id = $value['id'];
