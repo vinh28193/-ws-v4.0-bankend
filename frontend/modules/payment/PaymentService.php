@@ -124,7 +124,8 @@ class PaymentService
         // http://weshop.com.vn/payment/42/return.html
         // http://weshop.com.vn/payment/46/return.html
         // http://weshop.com.vn/payment/50/return.html
-        return Url::toRoute(["/payment/payment/return", 'merchant' => $provider], true);
+        // return Url::toRoute(["/payment/payment/return", 'merchant' => $provider], true);
+        return Url::toRoute(["/payment/payment/return", 'merchant' => $provider], 'https');
     }
 
     public
