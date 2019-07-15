@@ -17,6 +17,7 @@ class SearchController extends AmazonController
     {
 
         $queryParams = $this->request->getQueryParams();
+        Yii::info([" queryParams search "=>$queryParams],__CLASS__);
         $form = new ProductSearchForm();
         $form->load($queryParams);
         $form->type = 'amazon';
