@@ -5,6 +5,7 @@ namespace api\modules\v1\models;
 
 use common\additional\AdditionalFeeCollection;
 use common\additional\AdditionalFeeInterface;
+use common\components\db\ActiveRecord;
 use common\components\GetUserIdentityTrait;
 use common\components\InternationalShippingCalculator;
 use common\components\PickUpWareHouseTrait;
@@ -16,6 +17,7 @@ use common\models\Store;
 use common\models\User;
 use common\modelsMongo\ActiveRecordUpdateLog;
 use common\products\BaseProduct;
+use common\products\forms\ProductDetailFrom;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -58,6 +60,10 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
      */
     public $item_sku;
 
+    /**
+     * @var string
+     */
+    public $item_seller;
     /**
      * @var integer
      */
@@ -102,10 +108,12 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
      */
     public $accept_insurance = 'N';
 
+
     public function attributes()
     {
         return ArrayHelper::merge(parent::attributes(), [
-            'target_name', 'target_id', 'store_id', 'customer_id', 'custom_fee', 'item_type', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship',
+            'target_name', 'target_id', 'store_id', 'customer_id', 'custom_fee', 'item_type', 'item_id', 'item_sku',
+            'item_seller', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship', 'accept_insurance'
         ]);
     }
 
@@ -118,7 +126,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 return (integer)$value;
             }],
             [['us_amount', 'us_tax', 'us_ship', 'custom_fee'], 'number'],
-            ['target', 'string'],
+            [['target', 'item_type', 'item_id', 'item_sku', 'item_seller'], 'string'],
             [['province', 'district'], 'safe'],
             ['accept_insurance', 'string']
         ]);
@@ -138,16 +146,31 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     public function getTarget()
     {
         if (!$this->_target) {
-            $condition = ['id' => $this->target_id];
-            $class = Product::className();
-            if ($this->target_name == 'order') {
-                $condition = ['ordercode' => $this->target_id];
-                $class = Order::className();
+            if ($this->target_name === 'gate') {
+                $form = new ProductDetailFrom();
+                $form->type = $this->item_type;
+                $form->id = $this->item_id;
+                $form->sku = $this->item_sku;
+                $form->quantity = $this->getShippingQuantity();
+                if (($product = $form->detail()) !== false) {
+                    if ($this->item_seller !== null && $this->item_seller !== '') {
+                        $product->updateBySeller($this->item_seller);
+                    }
+                    $this->_target = $product;
+                }
+            } else {
+                $condition = ['id' => $this->target_id];
+                $class = Product::className();
+                if ($this->target_name == 'order') {
+                    $condition = ['ordercode' => $this->target_id];
+                    $class = Order::className();
+                }
+                if (($target = $class::findOne($condition)) !== null) {
+                    ActiveRecordUpdateLog::register('beforeConfirm', $target);
+                    $this->_target = $target;
+                }
             }
-            if (($target = $class::findOne($condition)) !== null) {
-                ActiveRecordUpdateLog::register('beforeConfirm', $target);
-                $this->_target = $target;
-            }
+
         }
         return $this->_target;
 
@@ -162,8 +185,11 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             $this->_additionalFees->storeId = $this->store_id;
             $this->_additionalFees->userId = $this->customer_id;
             $this->_additionalFees->removeAll();
-            if ($this->getTarget() !== null) {
+            if (($target = $this->getTarget()) !== null && $target instanceof ActiveRecord) {
                 $this->_additionalFees->loadFormActiveRecord($this->getTarget(), $this->target_name);
+            } elseif ($target instanceof BaseProduct) {
+
+                $this->_additionalFees->fromArray($target->getAdditionalFees()->toArray());
             }
             $hasChange = false;
             $usAmount = $this->us_amount;
@@ -298,7 +324,15 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     public function getCalculateFee($store, $refresh = false)
     {
         if ((empty($this->_couriers) || $refresh) && !empty($this->getShippingParams())) {
+
             $location = InternationalShippingCalculator::LOCATION_AMAZON;
+            if (($target = $this->getTarget()) instanceof BaseProduct && $target->type === BaseProduct::TYPE_EBAY) {
+                $location = InternationalShippingCalculator::LOCATION_EBAY_US;
+                $currentSeller = $target->getCurrentProvider();
+                if (strtoupper($currentSeller->country_code) !== 'US') {
+                    $location = InternationalShippingCalculator::LOCATION_EBAY;
+                }
+            }
             $calculator = new InternationalShippingCalculator();
             list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $store->country_code, $store->currency, $location);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
@@ -307,6 +341,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', $firstCourier['total_fee']);
                 $this->getAdditionalFees()->withCondition($this, 'insurance_fee', $firstCourier['insurance_fee']);
             }
+
         }
         return $this->_couriers;
     }
@@ -372,6 +407,26 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                         'weight' => WeshopHelper::roundNumber(($weight / $target->quantity_customer)),
                         'amount' => WeshopHelper::roundNumber($target->total_price_amount_local),
                         'quantity' => $target->quantity_customer,
+                    ]
+                ]
+            ];
+        } else if ($target instanceof BaseProduct) {
+            $weight = $target->getShippingWeight() * 1000;
+            $totalAmount = $target->getLocalizeTotalPrice();
+            $parcel = [
+                'weight' => $weight,
+                'amount' => $totalAmount,
+                'description' => "{$target->type} {$target->getUniqueCode()}",
+                'items' => [
+                    [
+                        'sku' => $target->getUniqueCode(),
+                        'label_code' => '',
+                        'origin_country' => '',
+                        'name' => $target->item_name,
+                        'desciption' => '',
+                        'weight' => WeshopHelper::roundNumber(($weight / $target->getShippingQuantity())),
+                        'amount' => WeshopHelper::roundNumber($totalAmount),
+                        'quantity' => $target->getShippingQuantity(),
                     ]
                 ]
             ];
