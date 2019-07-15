@@ -245,6 +245,14 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
         $logPaymentGateway = new PaymentGatewayLogs();
         $logPaymentGateway->transaction_code_ws = $payment->transaction_code;
         $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED;
+        $logPaymentGateway->response_time = date('Y-m-d H:i:s');
+        $logPaymentGateway->create_time = date('Y-m-d H:i:s');
+        $logPaymentGateway->store_id = 7;
+        $logPaymentGateway->payment_method = $payment->payment_method;
+        $logPaymentGateway->payment_bank = $payment->payment_bank_code;
+        $logPaymentGateway->amount = $payment->getTotalAmountDisplay();
+
+
         try {
             if ($payment->instalment_type == 2 && !empty($payment->installment_bank) && !empty($payment->installment_method)) {
                 $this->getClient()->getData()->set('payMethod', '01');

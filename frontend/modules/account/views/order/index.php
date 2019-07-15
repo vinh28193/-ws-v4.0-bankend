@@ -24,10 +24,15 @@ $this->title = Yii::t('frontend', 'Orders');
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($models as $order) { ?>
+            <?php foreach ($models as $order) {?>
                 <tr style="border-bottom: 1px solid #ebebeb">
                     <td>
-                        <?php echo Html::a($order->ordercode, ['/account/order/' . $order->ordercode]); ?>
+                        <?php if ($order->total_paid_amount_local > 0) { ?>
+                            <a href="javascript:void(0)"><?= $order->ordercode ?></a>
+                        <?php } else { ?>
+                            <a href="<?= 'checkout.html?code=' . $order->ordercode ?>"
+                               target="_blank"><?= $order->ordercode ?></a>
+                            <?php } ?>
                         <b><?= $order->current_status ?></b>
                         <b style="color: darkgray"><?= Yii::$app->getFormatter()->asDatetime($order->created_at) ?></b>
 
@@ -40,16 +45,17 @@ $this->title = Yii::t('frontend', 'Orders');
                                          alt=""/>
                                 </div>
                                 <div class="info">
-                                    <b><?= $product->product_name ?></b>
+                                    <a href="<?= 'my-order/'.$order->ordercode.'.html' ?>"
+                                       target="_blank"><?= $product->product_name ?></a>
                                     <span><?= $product->quantity_purchase ?></span>
                                 </div>
                             </div>
                         <?php } ?>
                     </td>
                     <td>
-                        <b class="total text-orange"><?= number_format($order->total_paid_amount_local, 0, ',', '.') . 'đ'; ?></b>
+                        <b class="total text-orange"><?= number_format($order->total_final_amount_local, 0, ',', '.');?><?php if ($order->store_id == 1) {echo 'đ';} else {echo 'IDR';} ?></b>
                     </td>
-                    <td></td>
+                    <td><?= $order->tracking_codes ?></td>
                 </tr>
             <?php } ?>
             </tbody>

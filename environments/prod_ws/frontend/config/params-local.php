@@ -57,7 +57,7 @@ return [
                      'apiKey' => 'K4LIZPybs0mcHegtN3vMqeWTDsGO32',
                      'checksumKey' => 'R5l8bgiBBPoQ16UD3Q8UQ2x7TctvOg',
                      'encryptKey' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqWpoASXBQ6zMI2uWOZNCm8haZMdhM2lA8d4CKLDMmP6OkXH20CQJv3e++aKdNOZFGyBypC3kepJFjhizwvMLQCMKYQY2Dt/A/lymAI9BC90ZZtJMvZ5hILl5qVJTd4MtidVaIMUN+ALC2vcGIeupqdq5Rw3BL4pJBqVghp6iKiwIDAQAB',
-                     'callbackUrl' => '',
+                     'callbackUrl' => 'https://weshop.com.vn/payment/callback/alepay',
                  ]
              ]
          ]

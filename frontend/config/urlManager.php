@@ -36,8 +36,8 @@ return [
         'GET amazon/item/get-offer/<id:[0-9A-Za-z_-]+>' => 'amazon/item/get-offer',
         'amazon/search/<keyword:[^/]+>.html' => 'amazon/search/index',
         'amazon/seller/<seller:[^/]+>.html' => 'amazon/search/index',
-        'amazon/category/<name:[0-9a-zA-Z_-]+>-<category:\d+>.html' => 'amazon/search/index',
-//        'amazon/category/<name:[0-9a-zA-Z_-]+>-<node:\d+>.html' => 'amazon/category/index',
+        // 'amazon/category/<name:[0-9a-zA-Z_-]+>-<category:\d+>.html' => 'amazon/search/index',
+        // 'amazon/category/<name:[0-9a-zA-Z_-]+>-<node:\d+>.html' => 'amazon/category/index',
         'amazon/category/<name:[0-9a-zA-Z_-]+>-<keyword:\d+>.html' => 'amazon/search/index',
         'GET amazon/categories.html' => 'amazon/amazon/categories',
 
@@ -86,6 +86,7 @@ return [
         'my-weshop.html' => 'account/home',
         'my-account.html' => 'account/customer',
         'my-order.html' => 'account/order',
+        'my-order/<orderCode:[0-9A-Za-z_-]*>.html' => 'account/order/view',
         'chat/<code:[^/]+>/order.html' => 'account/chat/order-chat',
         'login.html' => 'secure/login',
         'change-password.html' => 'secure/change-password',
