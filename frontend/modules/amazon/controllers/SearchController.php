@@ -15,11 +15,11 @@ class SearchController extends AmazonController
 
     public function actionIndex()
     {
-
         $queryParams = $this->request->getQueryParams();
         Yii::info([" queryParams search "=>$queryParams],__CLASS__);
         $form = new ProductSearchForm();
         $form->load($queryParams);
+        $form->keyword = str_replace("'s","",$form->keyword); // Key Word : men's watch
         $form->type = 'amazon';
 
         $this->site_title = Yii::t('frontend','{keyword} - Shopping US Amazon, eBay - {web_name}',['keyword' => $form->keyword, 'web_name' =>$this->storeManager->store->name]);

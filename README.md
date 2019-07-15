@@ -1145,3 +1145,24 @@ $ grpcc --proto proto/courier.proto --address 206.189.94.203:50056 -i
  
 $ let PD = client.CreateOrder({UserId: 23 , CountryCode: 'VN',Data : '{"ship_from":{"country":"US","pickup_id":35549},"ship_to":{"contact_name":" L\u00ea V\u0103n Vi\u1ec5n","company_name":"","email":null,"address":"test","address2":"test","phone":"0987698769","phone2":"0987698769","province":1,"district":273,"country":"VN","zipcode":null},"shipments":{"content":"","total_parcel":1,"total_amount":"22409000.00","description":"","amz_shipment_id":"","chargeable_weight":1500,"parcels":[{"weight":1500,"amount":"22409000.00","description":"Order Weshop (417986) .Product AMAZON","items":[{"sku":"B01LTHP2ZK","label_code":"","origin_country":"US","name":"Nintendo Switch - Gray Joy-Con","desciption":"","weight":500,"amount":20116000,"quantity":3}]}]},"config":{"preview":"Y","return_mode":0,"insurance":"N","document":0,"currency":"VND","unit_metric":"metric","sort_mode":"best_rating","auto_approve":"Y","create_by":0,"order_type":"dropship","check_stock":"N","include_special_goods":"N"},"payment":{"cod_amount":0,"fee_paid_by":"sender"},"referral":{"order_number":"417986"}}' },printReply)
 
+
+
+#---------------------NICEPAY---------------------------------
+ const NICEPAY_IMID = 'WESHOP1122';
+    const NICEPAY_MERCHANT_KEY = 'vnMmWGv8+Ao7P9iI3G9IdwQ1cefHOrryIa4ELPBTd/uTCXdW4R+vTfABNuM6ofeiokxG976f9Mh9YywR7WLEJQ==';
+    const NICEPAY_IMID_INSTALLMENT = 'WESHOPINS2';
+    const NICEPAY_MERCHANT_KEY_INSTALLMENT = 'p9tK0wDh/sodB9caI0eN/ZNNjgPw8qwBykqR7rlO/GAAxlLMY5EUbTvon6j83Iwwa5DDefC0V+kj//cS5Hikjw==';
+    const NICEPAY_CALLBACK_URL = 'http://weshop.co.id/nicepay-payment.html';
+    const NICEPAY_DBPROCESS_URL = 'http://weshop.co.id/nicepay-payment.html';
+
+    const NICEPAY_TIMEOUT_CONNECT = 15;
+    const NICEPAY_TIMEOUT_READ = 25;
+
+    const NICEPAY_PROGRAM = 'NicepayLite';
+    const NICEPAY_VERSION = '1.11';
+    const NICEPAY_BUILDDATE = '20160309';
+    const NICEPAY_REQ_CC_URL = 'https://www.nicepay.co.id/nicepay/api/orderRegist.do';
+    const NICEPAY_REQ_VA_URL = 'https://www.nicepay.co.id/nicepay/api/onePass.do';
+    const NICEPAY_CANCEL_VA_URL = 'https://www.nicepay.co.id/nicepay/api/onePassAllCancel.do';
+    const NICEPAY_ORDER_STATUS_URL = 'https://www.nicepay.co.id/nicepay/api/onePassStatus.do';
+    const NICEPAY_READ_TIMEOUT_ERR = '10200';

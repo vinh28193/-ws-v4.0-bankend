@@ -69,7 +69,7 @@ return [
         'order-<code:[^/]+>/bill.html' => 'checkout/billing/index',
 
         // payment
-        'payment/nicepay/return.html' => 'payment/payment/return-nicepay',
+        // 'payment/nicepay/return.html' => 'payment/payment/return-nicepay',
         'payment/process' => 'payment/payment/process',
         'payment/<merchant:[^/]+>/return.html' => 'payment/payment/return',
         'otp/<code:[^/]+>/verify.html' => 'payment/wallet/otp-verify',
