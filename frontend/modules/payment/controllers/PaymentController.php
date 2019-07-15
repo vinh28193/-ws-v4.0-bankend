@@ -293,7 +293,7 @@ class PaymentController extends BasePaymentController
         }
 
 
-        // ToDo Push GA Checkout @Phuchc
+        // ToDo Push GA Checkout @Phuchc 15/7/2019
 
         $res = $payment->processPayment();
         $employee = new Employee();
