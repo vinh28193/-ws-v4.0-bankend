@@ -6,6 +6,7 @@ use frontend\modules\payment\models\ShippingForm;
 use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use yii\helpers\Url;
+use yii\helpers\Html;
 use yii\web\JsExpression;
 
 /**
@@ -200,21 +201,24 @@ $isID = $storeManager->store->country_code === 'ID';
                 </div>
             </div>
             <div class="modal-body">
-                <h3><?= Yii::t('frontend','Login boxme asia') ?></h3>
+                <h3><?= Yii::t('frontend', 'Login boxme asia') ?></h3>
                 <div class="form-group">
                     <i class="icon email"></i>
-                    <input type="email" name="emailBoxme" class="form-control" placeholder="<?= Yii::t('frontend','Email') ?>">
+                    <input type="email" name="emailBoxme" class="form-control"
+                           placeholder="<?= Yii::t('frontend', 'Email') ?>">
                     <label style="color: red" id="ErrorEmailBoxme"></label>
                 </div>
                 <div class="form-group">
                     <i class="icon password"></i>
-                    <input type="password" name="passwordBoxme" class="form-control" placeholder="<?= Yii::t('frontend','Password') ?>">
+                    <input type="password" name="passwordBoxme" class="form-control"
+                           placeholder="<?= Yii::t('frontend', 'Password') ?>">
                     <label style="color: red" id="ErrorPasswordBoxme"></label>
                     <label class="text-success" id="connectSuccess"></label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="ws.loginBoxme()"><?= Yii::t('frontend','Login') ?></button>
+                <button type="button" class="btn btn-primary"
+                        onclick="ws.loginBoxme()"><?= Yii::t('frontend', 'Login') ?></button>
             </div>
         </div>
     </div>
@@ -298,8 +302,9 @@ $isID = $storeManager->store->country_code === 'ID';
                         ?>
                     </div>
                     <div class="form-group">
-                        <?=
-                        DepDrop::widget([
+                        <?php
+                        echo \yii\helpers\Html::hiddenInput('defaultDistrict', $shippingForm->receiver_district_id,['id' => 'defaultDistrictId']);
+                        echo DepDrop::widget([
                             'type' => DepDrop::TYPE_SELECT2,
                             'name' => 'district_default',
                             'attribute' => 'district_default',
@@ -310,9 +315,10 @@ $isID = $storeManager->store->country_code === 'ID';
                             'pluginOptions' => [
                                 'depends' => ['city_default'],
                                 'placeholder' => Yii::t('frontend', 'Choose the district'),
-                                'url' => '/checkout/shipping/sub-district',
+                                'url' => Url::to('/checkout/shipping/sub-district'),
                                 'loadingText' => Yii::t('frontend', 'Loading district ...'),
                                 'initialize' => true,
+                                'params' => ['defaultDistrictId']
                             ],
                         ]);
                         ?>
