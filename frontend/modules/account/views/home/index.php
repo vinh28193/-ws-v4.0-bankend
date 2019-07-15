@@ -85,7 +85,12 @@ $this->registerJs($js);
                             foreach ($orders as $order) { ?>
                                 <tr>
                                     <td>
-                                        <a href="<?= '/my-weshop/order/' . $order->ordercode . '.html' ?>"><?= $order->ordercode ?></a>
+                                        <?php if ($order->total_paid_amount_local > 0) { ?>
+                                            <a href="javascript:void(0)"><?= $order->ordercode ?></a>
+                                        <?php } else { ?>
+                                            <a href="<?= 'checkout.html?code=' . $order->ordercode ?>"
+                                               target="_blank"><?= $order->ordercode ?></a>
+                                        <?php } ?>
                                     </td>
                                     <td><?= $order->current_status ?></td>
                                     <td>
