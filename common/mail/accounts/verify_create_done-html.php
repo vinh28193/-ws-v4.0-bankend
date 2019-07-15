@@ -4,12 +4,11 @@ use yii\helpers\Html;
 /* @var $model common\models\User */
 
 if (YII_ENV == 'dev') {
-    $domain = Yii::$app->params['Url_FrontEnd'] ? Yii::$app->params['Url_FrontEnd'] : 'http://weshop-v4.front-end-ws.local.vn';
+    $_domain = Yii::$app->params['Url_FrontEnd'] ? Yii::$app->params['Url_FrontEnd'] : 'http://weshop-v4.front-end-ws.local.vn';
 } else if (YII_ENV == 'prod') {
     $_domain = $dommain;
 }
 
-$verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token' => $user->auth_key]);
 $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token' => $user->auth_key]);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
