@@ -200,7 +200,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                 'purchase_refund_transaction_id', 'purchase_amount_refund'
             ],
             self::SCENARIO_UPDATE_ADD_FEE => [
-                'check_packing_wood', 'boxed_fee'
+                'check_insurance', 'boxed_fee', 'check_insurance'
             ],
             self::SCENARIO_UPDATE_MARK_SUPPORTING => [
                 'current_status', 'mark_supporting'

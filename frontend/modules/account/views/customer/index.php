@@ -103,7 +103,7 @@ $this->registerJs($js);
                 </li>
                 <li>
                     <b><?= Yii::t('frontend','Level') ?></b>
-                    <span class="label label-<?= strtolower($model->userLevel) ?>"><?= strtoupper(Yii::t('frontend',$model->userLevel)) ?></span>
+                    <span class="label label-<?= $model->userLevel ?>"><?= Yii::t('frontend',$model->userLevel) ?></span>
                 </li>
                 <li>
                     <b><?= Yii::t('frontend','Account Boxme') ?>
