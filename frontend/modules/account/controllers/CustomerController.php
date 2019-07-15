@@ -405,8 +405,14 @@ class CustomerController extends BaseAccountController
                         'dataRs' =>$dataRs_add,
                     ], __CLASS__);
 
-                     $user->pickup_id = 9999;
-                     $user->warehouse_code = "BMVN_US";
+                    if($dataRs_add['error']){
+                        return ['success' => false, 'data' => ['password' => 'Error : ' . $dataRs_add['messages']]];
+                    }else {
+                        if ($this->storeManager->store->country_code == 'VN') $warehouse_code = "BMVN_US";
+                        if ($this->storeManager->store->country_code == 'ID') $warehouse_code = "BMID_US";
+                        $user->pickup_id = 9999;
+                        $user->warehouse_code = $warehouse_code;
+                    }//end Curl send call get Address
 
                 }else{
                     $user->vip = 0;
