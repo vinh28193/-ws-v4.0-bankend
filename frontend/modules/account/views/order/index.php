@@ -24,7 +24,7 @@ $this->title = Yii::t('frontend', 'Orders');
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($models as $order) { var_dump($order); die()?>
+            <?php foreach ($models as $order) {?>
                 <tr style="border-bottom: 1px solid #ebebeb">
                     <td>
                         <?php if ($order->total_paid_amount_local > 0) { ?>
