@@ -154,7 +154,7 @@ class AdditionalFeeCollection extends ArrayCollection
             is_array($result)
         ) {
             list($amount, $amountLocal) = $result;
-        } else if ($config->type === StoreAdditionalFee::TYPE_LOCAL && $config->name === 'international_shipping_fee') {
+        } else if ($config->name === 'international_shipping_fee') {
             $userLevel = $additional->getUserLevel();
             $percent = 0;
             if ($userLevel === User::LEVEL_SLIVER) {
@@ -162,17 +162,19 @@ class AdditionalFeeCollection extends ArrayCollection
             } else if ($userLevel === User::LEVEL_GOLD) {
                 $percent = 0.1;
             }
-
-
             $calAmount = $amount * $percent;
             Yii::info("user level $userLevel, percent $percent %, origin $amount, discount $calAmount ", 'Discount international shipping fee');
             $amount -= $calAmount;
-            $amountLocal = $this->getStoreManager()->roundMoney($amount);
+
         } else if ($config->name === 'product_price') {
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         } else {
             $amount *= $additional->getShippingQuantity();
             $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
+        }
+
+        if ($config->type === StoreAdditionalFee::TYPE_LOCAL) {
+            $amountLocal = $this->getStoreManager()->roundMoney($amount);
         }
         return [
             'name' => $config->name,

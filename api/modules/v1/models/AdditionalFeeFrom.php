@@ -7,10 +7,12 @@ use common\additional\AdditionalFeeCollection;
 use common\additional\AdditionalFeeInterface;
 use common\components\GetUserIdentityTrait;
 use common\components\InternationalShippingCalculator;
+use common\components\PickUpWareHouseTrait;
 use common\components\UserCookies;
 use common\helpers\WeshopHelper;
 use common\models\Order;
 use common\models\Product;
+use common\models\Store;
 use common\models\User;
 use common\modelsMongo\ActiveRecordUpdateLog;
 use common\products\BaseProduct;
@@ -20,23 +22,85 @@ use yii\helpers\ArrayHelper;
 
 class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
 {
-    use GetUserIdentityTrait;
+    use PickUpWareHouseTrait;
 
+    /**
+     * @var string target name order/product
+     */
     public $target_name;
+    /**
+     * @var string|integer
+     */
     public $target_id;
+    /**
+     * @var string|integer
+     */
     public $store_id;
+    /**
+     * @var null|string|integer
+     */
     public $customer_id;
+
+    /**
+     * @var string type of target (ebay/amazon)
+     */
     public $item_type;
+
+    /**
+     * Todo new Target 'gate'
+     * @var string
+     */
+    public $item_id;
+
+    /**
+     * Todo new Target 'gate'
+     * @var string
+     */
+    public $item_sku;
+
+    /**
+     * @var integer
+     */
     public $shipping_weight;
+    /**
+     * @var integer
+     */
     public $shipping_quantity;
+    /**
+     * @var null|string|integer
+     */
+    public $province;
+    /**
+     * @var null|string|integer
+     */
+    public $district;
 
+    /**
+     * @var string
+     */
+    public $post_code;
+
+    /**
+     * @var float
+     */
     public $us_amount;
-
+    /**
+     * @var float
+     */
     public $us_tax;
-
+    /**
+     * @var float
+     */
     public $us_ship;
-
+    /**
+     * @var float
+     */
     public $custom_fee;
+
+    /**
+     * @var bool
+     */
+    public $accept_insurance = 'N';
 
     public function attributes()
     {
@@ -55,8 +119,8 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             }],
             [['us_amount', 'us_tax', 'us_ship', 'custom_fee'], 'number'],
             ['target', 'string'],
-            ['target', 'default', 'value' => 'product'],
-
+            [['province', 'district'], 'safe'],
+            ['accept_insurance', 'string']
         ]);
     }
 
@@ -74,8 +138,13 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     public function getTarget()
     {
         if (!$this->_target) {
-            $class = $this->target_name == 'product' ? Product::className() : Order::className();
-            if (($target = $class::findOne($this->target_id)) !== null) {
+            $condition = ['id' => $this->target_id];
+            $class = Product::className();
+            if ($this->target_name == 'order') {
+                $condition = ['ordercode' => $this->target_id];
+                $class = Order::className();
+            }
+            if (($target = $class::findOne($condition)) !== null) {
                 ActiveRecordUpdateLog::register('beforeConfirm', $target);
                 $this->_target = $target;
             }
@@ -99,7 +168,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             $hasChange = false;
             $usAmount = $this->us_amount;
             $this->shipping_quantity = ($this->shipping_quantity !== null && $this->shipping_quantity !== '' && (int)$this->shipping_quantity > 0) ? $this->shipping_quantity : 1;
-            Yii::info($usAmount && $usAmount !== '',(int)$this->shipping_quantity);
+            Yii::info($usAmount && $usAmount !== '', (int)$this->shipping_quantity);
             if ($usAmount && $usAmount !== '') {
 
                 $usAmount *= (int)$this->shipping_quantity;
@@ -150,7 +219,8 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
      */
     public function getType()
     {
-        return $this->item_type;
+        /** @var $target Product|Order */
+        return ($target = $this->getTarget() !== null) ? $target->portal : 'ebay';
     }
 
     /**
@@ -169,12 +239,23 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         return null;
     }
 
+
+    private $_user;
+
+    public function getUser()
+    {
+        if ($this->_user === null && ($this->customer_id !== null && $this->customer_id !== '')) {
+            $this->_user = User::findOne($this->customer_id);
+        }
+        return $this->_user;
+    }
+
     /**
      * @return string
      */
     public function getUserLevel()
     {
-        if ($this->customer_id === null || $this->customer_id === '' || ($user = User::findOne($this->customer_id)) === null) {
+        if (($user = $this->getUser()) === null) {
             return User::LEVEL_NORMAL;
         }
         return $user->getUserLevel();
@@ -212,117 +293,22 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         return $this->shipping_quantity;
     }
 
-    /**
-     * @return null|array|mixed
-     */
-    public function getShippingParams()
-    {
-        if (($wh = $this->getPickUpWareHouse()) === false) {
-            return [];
-        }
-        if (($pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id')) === null) {
-            return [];
-        }
-        $shipTo = [
-            'contact_name' => 'ws calculator',
-            'company_name' => '',
-            'email' => '',
-            'address' => 'ws auto',
-            'address2' => '',
-            'phone' => '0987654321',
-            'phone2' => '',
-            'province' => 1,
-            'district' => 8,
-            'country' => $this->getAdditionalFees()->storeManager->store->country_code,
-            'zipcode' => '',
-        ];
-        $userInfoCookie = new UserCookies();
-        $userInfoCookie->setUser();
-        if ($userInfoCookie && $userInfoCookie->district_id && $userInfoCookie->province_id) {
-            $shipTo = ArrayHelper::merge($shipTo, [
-                'contact_name' => $userInfoCookie->name ? $userInfoCookie->name : $shipTo['contact_name'],
-                'address' => $userInfoCookie->address ? $userInfoCookie->address : $shipTo['address'],
-                'phone' => $userInfoCookie->phone ? $userInfoCookie->phone : $shipTo['phone'],
-                'province' => $userInfoCookie->province_id ? $userInfoCookie->province_id : $shipTo['province'],
-                'district' => $userInfoCookie->district_id ? $userInfoCookie->district_id : $shipTo['district'],
-                'zipcode' => $userInfoCookie->zipcode ? $userInfoCookie->zipcode : $shipTo['zipcode']
-            ]);
-        } else {
-            return [];
-        }
-        $weight = $this->getShippingWeight() * 1000;
-        $amount = $this->getAdditionalFees()->getTotalAdditionalFees()[1];
-        $params = [
-            'ship_from' => [
-                'country' => 'US',
-                'pickup_id' => $pickUpId
-            ],
-            'ship_to' => $shipTo,
-            'shipments' => [
-                'content' => '',
-                'total_parcel' => 1,
-                'total_amount' => $amount,
-                'description' => '',
-                'amz_shipment_id' => '',
-                'chargeable_weight' => $weight,
-                'parcels' => [
-                    [
-                        'weight' => $weight,
-                        'amount' => $amount,
-                        'description' => "{$this->item_type} {$this->getUniqueCode()}",
-                        'items' => [
-                            [
-                                'sku' => $this->getUniqueCode(),
-                                'label_code' => '',
-                                'origin_country' => '',
-                                'name' => 'ws item name',
-                                'desciption' => '',
-                                'weight' => WeshopHelper::roundNumber(($weight / $this->getShippingQuantity())),
-                                'amount' => WeshopHelper::roundNumber($amount),
-                                'quantity' => $this->getShippingQuantity(),
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-        ];
-        return $params;
-    }
-
     private $_couriers = [];
 
-    public function getInternationalShipping($refresh = false)
+    public function getCalculateFee($store, $refresh = false)
     {
         if ((empty($this->_couriers) || $refresh) && !empty($this->getShippingParams())) {
             $location = InternationalShippingCalculator::LOCATION_AMAZON;
             $calculator = new InternationalShippingCalculator();
-            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code, $this->getStoreManager()->store->currency, $location);
+            list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $store->country_code, $store->currency, $location);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
                 $this->_couriers = $couriers;
                 $firstCourier = $couriers[0];
                 $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', $firstCourier['total_fee']);
+                $this->getAdditionalFees()->withCondition($this, 'insurance_fee', $firstCourier['insurance_fee']);
             }
         }
         return $this->_couriers;
-    }
-
-    /**
-     * @return array|mixed|null
-     */
-    private $_pickUpWareHouse = false;
-
-    public function getPickUpWareHouse()
-    {
-        if (!$this->_pickUpWareHouse) {
-            if (($user = $this->getUser()) !== null && $user->getPickupWarehouse() !== null) {
-                $this->_pickUpWareHouse = $user->getPickupWarehouse();
-            } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
-                $current = $params['default'];
-                $this->_pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
-            }
-        }
-        return $this->_pickUpWareHouse;
-
     }
 
     /**
@@ -331,5 +317,135 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     public function getExchangeRate()
     {
         return $this->getAdditionalFees()->getStoreManager()->getExchangeRate();
+    }
+
+    public function getShippingParams()
+    {
+        if (($target = $this->getTarget()) === null || ($wh = $this->getPickUpWareHouse()) === null) {
+            return [];
+        }
+        $parcel = [];
+        $weight = 0;
+        $totalAmount = 0;
+        if ($target instanceof Order) {
+            $weight = $target->total_weight_temporary * 1000;
+            $totalAmount = $target->total_amount_local;
+            $items = [];
+            foreach ($target->products as $product) {
+                $items[] = [
+                    'sku' => implode('|', [$product->parent_sku, $product->sku]),
+                    'label_code' => '',
+                    'origin_country' => '',
+                    'name' => $product->product_name,
+                    'desciption' => '',
+                    'weight' => WeshopHelper::roundNumber(($weight / $product->quantity_customer)),
+                    'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
+                    'quantity' => $product->quantity_customer,
+                ];
+            }
+            $parcel = [
+                'weight' => $weight,
+                'amount' => $totalAmount,
+                'description' => $target->seller ? "order of seller `{$target->seller->seller_name}`" : "",
+                'items' => $items
+            ];
+        } else if ($target instanceof Product) {
+            $weight = $target->total_weight_temporary * 1000;
+            $totalAmount = $target->total_price_amount_local;
+
+            $sku = [$target->parent_sku];
+            if ($target->sku !== null) {
+                $sku[] = $target->sku;
+            }
+            $sku = count($sku) > 1 ? implode('|', $sku) : $sku[0];
+            $parcel = [
+                'weight' => $weight,
+                'amount' => $totalAmount,
+                'description' => "product $sku",
+                'items' => [
+                    [
+                        'sku' => $sku,
+                        'label_code' => '',
+                        'origin_country' => '',
+                        'name' => $target->product_name,
+                        'desciption' => '',
+                        'weight' => WeshopHelper::roundNumber(($weight / $target->quantity_customer)),
+                        'amount' => WeshopHelper::roundNumber($target->total_price_amount_local),
+                        'quantity' => $target->quantity_customer,
+                    ]
+                ]
+            ];
+        }
+        if (
+            ($pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id')) === null ||
+            ($userId = ArrayHelper::getValue($wh, 'ref_user_id')) === null ||
+            empty($parcel) ||
+            $weight === 0 ||
+            $totalAmount === 0
+        ) {
+            return [];
+        }
+        $store = $this->getAdditionalFees()->storeManager->store;
+        $shipTo = ArrayHelper::merge([
+            'contact_name' => 'ws calculator',
+            'company_name' => '',
+            'email' => '',
+            'address' => 'ws auto',
+            'address2' => '',
+            'phone' => '0987654321',
+            'phone2' => '',
+        ], $this->getDefaultTo($store));
+        $params = [
+            'config' => [
+                'insurance' => $this->accept_insurance,
+            ],
+            'ship_from' => [
+                'country' => 'US',
+                'pickup_id' => $pickUpId
+            ],
+            'ship_to' => $shipTo,
+            'shipments' => [
+                'content' => '',
+                'total_parcel' => 1,
+                'total_amount' => $totalAmount,
+                'description' => '',
+                'amz_shipment_id' => '',
+                'chargeable_weight' => $weight,
+                'parcels' => [$parcel]
+            ],
+        ];
+        return $params;
+    }
+
+    /**
+     * @param $store Store
+     * @return array
+     */
+    private function getDefaultTo($store)
+    {
+        return [
+            'province' => $this->province !== null ? $this->province : ($store->country_code === 'ID' ? 3464 : 1),
+            'district' => $this->district !== null ? $this->district : ($store->country_code === 'ID' ? 28444 : 8),
+            'country' => $store->country_code,
+            'zipcode' => $store->country_code === 'ID' ? '14340' : '',
+        ];
+    }
+
+    public function calculator()
+    {
+        $store = $this->getAdditionalFees()->getStoreManager()->store;
+        $this->getCalculateFee($store, true);
+
+        return [
+            'store' => $store->name,
+            'target_name' => $this->target_name,
+            'target_identity' => $this->target_id,
+            'shipping_weight' => $this->shipping_weight,
+            'shipping_quantity' => $this->shipping_quantity,
+            'exchange' => $this->getExchangeRate(),
+            'ship_from' => $this->getPickUpWareHouse(),
+            'ship_to' => $this->getDefaultTo($store),
+            'additional_fees' => $this->getAdditionalFees()->toArray(),
+        ];
     }
 }

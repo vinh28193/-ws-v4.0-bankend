@@ -25,15 +25,9 @@ class AdditionalController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index', 'view', 'create', 'update'],
+                'actions' => ['index', 'view', 'calculator'],
                 'roles' => $this->getAllRoles(true),
 
-            ],
-            [
-                'allow' => true,
-                'actions' => ['view'],
-                'roles' => $this->getAllRoles(true),
-                'permissions' => ['canView']
             ],
         ];
     }
@@ -41,11 +35,9 @@ class AdditionalController extends BaseApiController
     protected function verbs()
     {
         return [
-            'index' => ['GET', 'POST'],
-            'create' => ['POST'],
-            'update' => ['PATCH', 'PUT'],
+            'index' => ['GET'],
+            'calculator' => ['POST'],
             'view' => ['GET'],
-            'delete' => ['DELETE']
         ];
     }
 
@@ -218,6 +210,15 @@ class AdditionalController extends BaseApiController
 
         }
         return $this->response(true, 'call success', []);
+    }
+
+    public function actionCalculator()
+    {
+        $form = new AdditionalFeeFrom();
+        if (!$form->load(Yii::$app->getRequest()->getBodyParams(), '')) {
+            return $this->response(false, 'can not resolved current request');
+        }
+        return $this->response(true, 'calculator success', $form->calculator());
     }
 
     public function actionView($code)

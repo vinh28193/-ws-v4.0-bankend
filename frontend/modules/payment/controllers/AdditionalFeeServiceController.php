@@ -5,6 +5,7 @@ namespace frontend\modules\payment\controllers;
 
 use common\components\InternationalShippingCalculator;
 use common\components\GetUserIdentityTrait;
+use common\components\PickUpWareHouseTrait;
 use common\components\ThirdPartyLogs;
 use common\helpers\WeshopHelper;
 use common\models\Address;
@@ -19,13 +20,14 @@ class AdditionalFeeServiceController extends BasePaymentController
 {
 
     use GetUserIdentityTrait;
+    use PickUpWareHouseTrait;
 
     public function actionCourierCalculator()
     {
         $start = microtime(true);
         $store = $this->storeManager->store;
         $bodyParams = $this->request->bodyParams;
-        if (($wh = $this->getPickUpWareHouse()) === false) {
+        if (($wh = $this->getPickUpWareHouse()) === null) {
             return $this->response(false, "can not get pickup warehouse");
         }
         $isId = $store->country_code === 'ID';
@@ -178,17 +180,5 @@ class AdditionalFeeServiceController extends BasePaymentController
         }
         $time = sprintf('%.3f', microtime(true) - $start);
         return $this->response(true, "total calculator time : $time s", $results);
-    }
-
-    public function getPickUpWareHouse()
-    {
-        if (($user = $this->getUser()) !== null && $user->getPickupWarehouse() !== null) {
-            return $user->getPickupWarehouse();
-        }
-        if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) === null) {
-            return false;
-        }
-        $current = $params['default'];
-        return ArrayHelper::getValue($params, "warehouses.$current", false);
     }
 }

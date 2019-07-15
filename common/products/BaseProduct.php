@@ -12,6 +12,7 @@ use common\additional\AdditionalFeeInterface;
 use common\additional\AdditionalFeeTrait;
 use common\components\GetUserIdentityTrait;
 use common\components\InternationalShippingCalculator;
+use common\components\PickUpWareHouseTrait;
 use common\components\ThirdPartyLogs;
 use common\components\UserCookies;
 use common\helpers\WeshopHelper;
@@ -29,6 +30,7 @@ use yii\helpers\ArrayHelper;
 class BaseProduct extends BaseObject implements AdditionalFeeInterface
 {
     use GetUserIdentityTrait;
+    use PickUpWareHouseTrait;
     use AdditionalFeeTrait;
     use ProductTrait;
 
@@ -317,7 +319,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
      */
     public function getShippingParams()
     {
-        if (($wh = $this->getPickUpWareHouse()) === false) {
+        if (($wh = $this->getPickUpWareHouse()) === null) {
             return [];
         }
         if (($pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id')) === null) {
@@ -420,26 +422,6 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         return $this->_couriers;
     }
 
-    /**
-     * @return array|mixed|null
-     *
-     * @Phuchc Thay dia chi Kho cho Từng Khách hàng Vàng + Bạc
-     */
-    private $_pickUpWareHouse = false;
-
-    public function getPickUpWareHouse()
-    {
-        if (!$this->_pickUpWareHouse) {
-            if (($user = $this->getUser()) !== null && $user->getPickupWarehouse() !== null) {
-                $this->_pickUpWareHouse = $user->getPickupWarehouse();
-            } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
-                $current = $params['default'];
-                $this->_pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
-            }
-        }
-        return $this->_pickUpWareHouse;
-
-    }
 
     /**
      * @return integer
