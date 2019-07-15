@@ -8,6 +8,7 @@
 
 namespace common\products\amazon;
 
+use common\helpers\WeshopHelper;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -38,22 +39,25 @@ class AmazonSearchRequest extends AmazonRequest
     public function params()
     {
         $params = parent::params();
-        $unnecessaryAttribute = ['min_price', 'max_price'];
+        if (isset($params['store'])) {
+            unset($params['store']);
+        }
+        $unnecessaryAttribute = ['store', 'min_price', 'max_price'];
         foreach ($this->getAttributes() as $name => $value) {
             if (ArrayHelper::isIn($name, $unnecessaryAttribute)) {
                 continue;
             }
             if ($name === 'category') {
                 $key = 'node';
-            } elseif ($name === 'filter') {
-                $key = 'rh';
+            } elseif ($name === 'keyword') {
+                $key = 'q';
             } else {
                 $key = $name;
             }
             if ($key === 'sort' && $value === 'relevancerank') {
-                $value = '';
+                continue;
             }
-            if($value){
+            if (!WeshopHelper::isEmpty($value)) {
                 $params[$key] = $value;
             }
         }

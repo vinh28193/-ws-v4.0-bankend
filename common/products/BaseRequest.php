@@ -16,7 +16,6 @@ use yii\helpers\ArrayHelper;
  * @package common\products
  * Chỉ một mục tiêu là Call Request dữ liệu dang http client sang API cho BaseGate
  */
-
 abstract class BaseRequest extends \yii\base\Model
 {
 
@@ -52,15 +51,15 @@ abstract class BaseRequest extends \yii\base\Model
     public function rules()
     {
         $rules = parent::rules();
-        if ($this->getStoreManager()->getId() === 7) {
-            $rules = ArrayHelper::merge($rules, [
-                [['keyword'], 'common\validators\SpecialKeywordValidator'],
-            ]);
-        }
+//        if ($this->getStoreManager()->getId() === 7) {
+//            $rules = ArrayHelper::merge($rules, [
+//                [['keyword'], 'common\validators\SpecialKeywordValidator'],
+//            ]);
+//        }
         $rules = ArrayHelper::merge($rules, [
             // Todo complate translate keyword
-            [['keyword'], 'common\validators\GoogleTranslationFilterValidator'],
-            [['keyword', 'sort', 'filter','category'], 'string'],
+            //[['keyword'], 'common\validators\GoogleTranslationFilterValidator'],
+            [['keyword', 'sort', 'filter', 'category'], 'string'],
             [['page', 'min_price', 'max_price'], 'integer'],
             [['keyword', 'sort', 'filter'], 'filter', 'filter' => 'trim'],
             [['keyword', 'sort', 'filter'], 'filter', 'filter' => '\yii\helpers\Html::encode'],
@@ -68,6 +67,7 @@ abstract class BaseRequest extends \yii\base\Model
             [['page'], 'default', 'value' => 1],
             ['min_price', 'common\validators\PriceRangeValidator', 'conditionOperator' => '<', 'assistAttribute' => 'max_price'],
             ['max_price', 'common\validators\PriceRangeValidator', 'conditionOperator' => '>', 'assistAttribute' => 'min_price'],
+            [['keyword'], 'filter', 'filter' => '\common\helpers\WeshopHelper::vn2unicode'],
         ]);
 
         return $rules;
@@ -75,14 +75,14 @@ abstract class BaseRequest extends \yii\base\Model
 
     public function attributes()
     {
-        return ArrayHelper::merge(parent::attributes(),[
+        return ArrayHelper::merge(parent::attributes(), [
             'keyword', 'category', 'filter', 'page', 'min_price', 'max_price', 'sort',
         ]);
     }
 
     public function attributeLabels()
     {
-        return ArrayHelper::merge(parent::attributeLabels(),[
+        return ArrayHelper::merge(parent::attributeLabels(), [
             'keyword' => 'Keyword',
             'category' => 'category',
             'filter' => 'filter',
@@ -93,20 +93,23 @@ abstract class BaseRequest extends \yii\base\Model
 
         ]);
     }
-    public function hasAttribute($name = null){
-        if($name === null){
+
+    public function hasAttribute($name = null)
+    {
+        if ($name === null) {
             return true;
         }
         $has = false;
         $attributes = $this->attributes();
-        foreach ($attributes as $attribute){
-            if($attribute === $name){
+        foreach ($attributes as $attribute) {
+            if ($attribute === $name) {
                 $has = true;
                 break;
             }
         }
         return $has;
     }
+
     public function getFirstErrors()
     {
         $errors = parent::getFirstErrors();
@@ -118,7 +121,8 @@ abstract class BaseRequest extends \yii\base\Model
      * @param $value
      * @return bool
      */
-    public function isEmpty($value){
+    public function isEmpty($value)
+    {
         return \common\helpers\WeshopHelper::isEmpty($value);
     }
 
