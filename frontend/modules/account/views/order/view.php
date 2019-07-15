@@ -7,8 +7,8 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Order */
 
 $this->title = $model->ordercode;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('frontend', 'Orders'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = ['label' => Yii::t('frontend', 'Orders'), 'url' => ['index']];
+//$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
 $js = <<<JS
@@ -22,7 +22,7 @@ $this->registerJs($js);
 ?>
 <div class="order-detail">
     <ul class="od-header">
-        <li><a href="#" class="icon icon1">Xem shop</a></li>
+        <li><a href="/" class="icon icon1">Xem shop</a></li>
         <li>
             <style>
                 a {
@@ -41,7 +41,7 @@ $this->registerJs($js);
         <li><a href="#" class="icon icon3">Khiếu nại</a></li>
     </ul>
     <?php
-    $status = array('NEW', 'STOCKIN_US', 'STOCKIN_LOCAL', 'STOCKOUT_LOCAL', 'AT_CUSTOMER');
+    $status = array('NEW', 'AWAITING_CONFIRM_PURCHASE', 'PURCHASED', 'DELIVERING', 'DELIVERED');
     $count = 0;
     foreach ($status as $key => $sta) {
         unset($status[$key]);
@@ -57,21 +57,21 @@ $this->registerJs($js);
                 <i class="icon icon1"></i>
                 <span><?= Yii::t('frontend', 'Purchasing'); ?></span>
             </li>
-            <li class="<?php if (!in_array('STOCKIN_US', $status)) { ?> active <?php } ?>">
+            <li class="<?php if (!in_array('AWAITING_CONFIRM_PURCHASE', $status)) { ?> active <?php } ?>">
                 <i class="icon icon2"></i>
-                <span><?= Yii::t('frontend', 'Us warehousing'); ?></span>
+                <span><?= Yii::t('frontend', 'Awaiting confirm purchase'); ?></span>
             </li>
-            <li class="<?php if (!in_array('STOCKIN_LOCAL', $status)) { ?> active <?php } ?>">
+            <li class="<?php if (!in_array('PURCHASED', $status)) { ?> active <?php } ?>">
                 <i class="icon icon3"></i>
-                <span><?= Yii::t('frontend', 'Local warehousing'); ?></span>
+                <span><?= Yii::t('frontend', 'Purchased'); ?></span>
             </li>
-            <li class="<?php if (!in_array('STOCKOUT_LOCAL', $status)) { ?> active <?php } ?>">
+            <li class="<?php if (!in_array('DELIVERING', $status)) { ?> active <?php } ?>">
                 <i class="icon icon4"></i>
-                <span><?= Yii::t('frontend', 'Shipment'); ?></span>
+                <span><?= Yii::t('frontend', 'Delivering'); ?></span>
             </li>
-            <li class="<?php if (!in_array('AT_CUSTOMER', $status)) { ?> active <?php } ?>">
+            <li class="<?php if (!in_array('DELIVERED', $status)) { ?> active <?php } ?>">
                 <i class="icon icon5"></i>
-                <span><?= Yii::t('frontend', 'At customer'); ?></span>
+                <span><?= Yii::t('frontend', 'Delivered'); ?></span>
             </li>
         </ul>
         <div class="row info-detail">
@@ -90,9 +90,9 @@ $this->registerJs($js);
             </div>
             <div class="col-md-4">
                 <div class="title-2"><?= Yii::t('frontend', 'Total amount'); ?></div>
-                <b class="text-orange"><?= number_format($model->total_final_amount_local, 2, ',', '.') . ' VNĐ'; ?></b>
+                <b class="text-orange"><?= number_format($model->total_final_amount_local, 2, ',', '.'); ?><?php if ($model->store_id == 1) {echo 'VNĐ';} else {echo 'IDR';} ?></b>
                 <div class="title-2"><?= Yii::t('frontend', 'Total paid amount'); ?></div>
-                <b class="text-orange"><?= number_format($model->total_paid_amount_local, 2, ',', '.') . ' VNĐ'; ?></b>
+                <b class="text-orange"><?= number_format($model->total_paid_amount_local, 2, ',', '.'); ?><?php if ($model->store_id == 1) {echo 'VNĐ';} else {echo 'IDR';} ?></b>
             </div>
         </div>
         <div class="od-table">
@@ -120,7 +120,7 @@ $this->registerJs($js);
                                 </div>
                             </td>
                             <td>01</td>
-                            <td><b class="total text-orange"><?= $product->total_price_amount_local ?></b></td>
+                            <td><b class="total text-orange"><?= number_format($product->total_price_amount_local) ?><?php if ($model->store_id == 1) {echo 'VNĐ';} else {echo 'IDR';} ?></b></td>
                             <td><b><?= $product->current_status ?></b></td>
                         </tr>
                     <?php } ?>
