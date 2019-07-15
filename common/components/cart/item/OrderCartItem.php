@@ -142,7 +142,6 @@ class OrderCartItem extends BaseObject
         if (($product = $form->detail()) === false) {
             Yii::info($form->getFirstErrors(), "add_to_cart");
             return [false, $form->getFirstErrors()];
-
         }
         if ($seller_id){
             $product->updateBySeller($seller_id);

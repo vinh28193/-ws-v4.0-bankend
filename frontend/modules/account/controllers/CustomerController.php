@@ -338,7 +338,7 @@ class CustomerController extends BaseAccountController
         $api_login_boxme = $api_addresse_warehouse = '';
         if (YII_ENV == 'prod') {
             $api_login_boxme  = Yii::$app->params['api_login_boxme'] ? Yii::$app->params['api_login_boxme'] : 'https://s.boxme.asia/api/v1/users/auth/sign-in/';
-            $api_addresse_warehouse = Yii::$app->params['api_addresse_warehouse'] ? Yii::$app->params['api_addresse_warehouse'] : 'http://boxme.asia/api/v1/sellers/addresses/default-warehouse/';
+            $api_addresse_warehouse = Yii::$app->params['api_addresse_warehouse'] ? Yii::$app->params['api_addresse_warehouse'] : 'https://s.boxme.asia/api/v1/sellers/addresses/default-warehouse/';
         }elseif ( $api_login_boxme == '' and  !YII_ENV == 'prod'){
             $api_login_boxme  = Yii::$app->params['api_login_boxme'] ? Yii::$app->params['api_login_boxme'] : 'http://sandbox.boxme.asia/api/v1/users/auth/sign-in/';
             $api_addresse_warehouse = Yii::$app->params['api_addresse_warehouse'] ? Yii::$app->params['api_addresse_warehouse'] : 'http://sandbox.boxme.asia/api/v1/sellers/addresses/default-warehouse/';
@@ -375,8 +375,15 @@ class CustomerController extends BaseAccountController
                 $user->bm_wallet_id = $dataRs['data']['id'];
                 if(isset($dataRs['data']['loyalty']) && isset($dataRs['data']['loyalty']['user_level'])&& isset($dataRs['data']['loyalty']['time_end'])){
                     $user->vip_end_time = $dataRs['data']['loyalty']['time_end'];
-                    $user->vip = $dataRs['data']['loyalty']['time_end'] >= time() ? $dataRs['data']['loyalty']['user_level'] : 0;
-                    Yii::info("User  : ". $user->email . ' set level :'.$dataRs['data']['loyalty']['user_level'] . '. Time end  level :'. $dataRs['data']['loyalty']['time_end']);
+
+                    /** Check Time End **/
+                    if($dataRs['data']['loyalty']['time_end'] == 0){
+                        $user->vip = $dataRs['data']['loyalty']['user_level'];
+                    }elseif ($dataRs['data']['loyalty']['time_end'] > 0 )
+                    { $user->vip = $dataRs['data']['loyalty']['time_end'] >= time() ? $dataRs['data']['loyalty']['user_level'] : 0;   }
+
+                    $user->bm_wallet_id =  $dataRs['data']['user']['id'];
+                    Yii::info("User  : ". $user->email . ' set level : '.$dataRs['data']['loyalty']['user_level'] . '. Time end  level :'. $dataRs['data']['loyalty']['time_end']);
 
                     // ToDo Địa Chỉ kho cho mỗi khách thuộc loại hạng 1 hoặc 2
                     // http://sandbox.boxme.asia/api/v1/sellers/addresses/default-warehouse/
@@ -405,13 +412,31 @@ class CustomerController extends BaseAccountController
                         'dataRs' =>$dataRs_add,
                     ], __CLASS__);
 
+                    $warehouse_code = ""; //  "BMID_US";
+                    $pickup_id = 0;
                     if($dataRs_add['error']){
                         return ['success' => false, 'data' => ['password' => 'Error : ' . $dataRs_add['messages']]];
                     }else {
-                        if ($this->storeManager->store->country_code == 'VN') $warehouse_code = "BMVN_US";
-                        if ($this->storeManager->store->country_code == 'ID') $warehouse_code = "BMID_US";
-                        $user->pickup_id = 9999;
+                        if(!empty($dataRs_add['data'])){
+                            foreach ($dataRs_add['data'] as $key =>$value){
+                                if ($this->storeManager->store->country_code == 'VN' and $value->ff_center_code == "BMVN_US") {
+                                    $warehouse_code = $value->ff_center_code;
+                                    $pickup_id = $value->id;
+                                }
+                                if ($this->storeManager->store->country_code == 'ID' and $value->ff_center_code == "BMID_US"){
+                                    $warehouse_code = $value->ff_center_code;
+                                    $pickup_id = $value->id;
+                                }
+                            }
+                        $user->pickup_id = $pickup_id;
                         $user->warehouse_code = $warehouse_code;
+                         Yii::info("Set-get address Id Warehouse");
+                         Yii::info([
+                            'warehouse_code' => $warehouse_code,
+                            'pickup_id' => $pickup_id
+                         ],__CLASS__);
+
+                        }
                     }//end Curl send call get Address
 
                 }else{
