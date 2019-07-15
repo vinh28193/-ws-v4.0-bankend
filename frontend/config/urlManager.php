@@ -86,6 +86,7 @@ return [
         'my-weshop.html' => 'account/home',
         'my-account.html' => 'account/customer',
         'my-order.html' => 'account/order',
+        'my-order/<orderCode:[0-9A-Za-z_-]*>.html' => 'account/order/view',
         'chat/<code:[^/]+>/order.html' => 'account/chat/order-chat',
         'login.html' => 'secure/login',
         'change-password.html' => 'secure/change-password',

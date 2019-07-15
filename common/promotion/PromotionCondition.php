@@ -39,6 +39,7 @@ class PromotionCondition extends DbPromotionCondition
         'in' => 'IN',
         'nin' => 'NOT IN',
         'like' => 'LIKE',
+        'exits' => 'EXIST',
     ];
 
     /**
@@ -55,7 +56,8 @@ class PromotionCondition extends DbPromotionCondition
         $resolvers = [
             'timeStart' => 'resolveTimestamp',
             'timeEnd' => 'resolveTimestamp',
-            'dayOfWeek' => 'resolveDayOfWeek'
+            'dayOfWeek' => 'resolveDayOfWeek',
+            'userOwner' => 'resolveUserOwner'
         ];
         if (isset($resolvers[$this->name]) && ($resolver = $resolvers[$this->name]) !== null) {
             $value = call_user_func([$this, $resolver]);
@@ -98,7 +100,7 @@ class PromotionCondition extends DbPromotionCondition
             'IN' => 'executeInCondition',
             'NOT IN' => 'executeInCondition',
             'LIKE' => 'executeLikeCondition',
-            'NOT LIKE' => 'executeNotLikeCondition'
+            'NOT LIKE' => 'executeNotLikeCondition',
         ];
         $operator = isset($this->operatorMapping[$config->operator]) ? $this->operatorMapping[$config->operator] : $config->operator;
         if (isset($operatorsExecutor[$operator]) && ($method = $operatorsExecutor[$operator]) !== null) {
@@ -165,6 +167,11 @@ class PromotionCondition extends DbPromotionCondition
     {
         $dateTime = new DateTime('now', new DateTimeZone($this->getFormatter()->timeZone));
         return $dateTime->format('l');
+    }
+
+    public function resolveUserOwner()
+    {
+
     }
 
     /**

@@ -28,10 +28,11 @@ trait GetUserIdentityTrait
      */
     public function getUser()
     {
-        if (!Yii::$app instanceof \yii\web\Application) {
-            return null;
+        if (!($app = Yii::$app) instanceof \yii\web\Application) {
+            $this->_user = null; //clear up
+            return $this->_user;
         }
-        if ($this->_user === null && Yii::$app && ($user = Yii::$app->user->identity) !== null && $this->usedIdentity) {
+        if ($this->_user === null && ($user = $app->user->identity) !== null && $this->usedIdentity) {
             $this->_user = $user;
         }
         return $this->_user;

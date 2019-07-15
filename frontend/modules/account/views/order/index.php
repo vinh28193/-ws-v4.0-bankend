@@ -45,7 +45,8 @@ $this->title = Yii::t('frontend', 'Orders');
                                          alt=""/>
                                 </div>
                                 <div class="info">
-                                    <b><?= $product->product_name ?></b>
+                                    <a href="<?= 'my-order/'.$order->ordercode.'.html' ?>"
+                                       target="_blank"><?= $product->product_name ?></a>
                                     <span><?= $product->quantity_purchase ?></span>
                                 </div>
                             </div>
