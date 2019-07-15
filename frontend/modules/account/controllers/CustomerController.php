@@ -405,13 +405,33 @@ class CustomerController extends BaseAccountController
                         'dataRs' =>$dataRs_add,
                     ], __CLASS__);
 
+                    $warehouse_code = "BMVN_US"; //  "BMID_US";
+                    $pickup_id = 00;
                     if($dataRs_add['error']){
                         return ['success' => false, 'data' => ['password' => 'Error : ' . $dataRs_add['messages']]];
                     }else {
-                        if ($this->storeManager->store->country_code == 'VN') $warehouse_code = "BMVN_US";
-                        if ($this->storeManager->store->country_code == 'ID') $warehouse_code = "BMID_US";
-                        $user->pickup_id = 9999;
-                        $user->warehouse_code = $warehouse_code;
+                        if(!empty($dataRs_add['data'])){
+                            foreach ($dataRs_add['data'] as $key =>$value){
+                                if ($this->storeManager->store->country_code == 'VN' and $value->ff_center_code == "BMVN_US") {
+                                    $warehouse_code = $value->ff_center_code;
+                                    $pickup_id = $value->id;
+                                    $user->pickup_id = $value->id;
+                                    $user->warehouse_code = $value->ff_center_code;
+                                }
+                                if ($this->storeManager->store->country_code == 'ID' and $value->ff_center_code == "BMID_US"){
+                                    $warehouse_code = $value->ff_center_code;
+                                    $pickup_id = $value->id;
+                                    $user->pickup_id = $value->id;
+                                    $user->warehouse_code = $value->ff_center_code;
+                                }
+                            }
+                         Yii::info("Set-get address Id Warehouse");
+                         Yii::info([
+                            'warehouse_code' => $warehouse_code,
+                            'pickup_id' => $pickup_id
+                         ],__CLASS__);
+
+                        }
                     }//end Curl send call get Address
 
                 }else{
