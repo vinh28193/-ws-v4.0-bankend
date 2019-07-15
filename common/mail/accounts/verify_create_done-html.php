@@ -6,10 +6,10 @@ use yii\helpers\Html;
 if (YII_ENV == 'dev') {
     $domain = Yii::$app->params['Url_FrontEnd'] ? Yii::$app->params['Url_FrontEnd'] : 'http://weshop-v4.front-end-ws.local.vn';
 } else if (YII_ENV == 'prod') {
-    $domain = 'https://weshop.com.vn';
+    $_domain = $dommain;
 }
 
-//$verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token' => $user->auth_key]);
+$verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token' => $user->auth_key]);
 $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token' => $user->auth_key]);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -37,18 +37,18 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                             <tr>
                                 <td style="color:#999999;font-family:Arial,Helvetica,sans-serif;font-size:11px; padding-left: 20px;"
                                     align="left" width="33.33%"><a href="#" style="color:#999999;text-decoration:none"
-                                                                   target="_blank">My Account</a></td>
+                                                                   target="_blank"><?= Yii::t('frontend','My Account') ?></a></td>
                                 <td style="padding:20px 0 17px 15px" width="33.33%" align="center">
-                                    <a href="<?= $domain; ?>" target="_blank">
-                                        <img class="CToWUd" src="<?= $domain; ?>/mail/image/weshop_logo.png"
+                                    <a href="<?= $_domain; ?>" target="_blank">
+                                        <img class="CToWUd" src="<?= $_domain; ?>/mail/image/weshop_logo.png"
                                              alt="Weshop" width="116" height="44"/>
                                     </a>
                                 </td>
                                 <td style="font-size:11px;font-weight: bold;" align="right" width="33.33%">
                                     <img style="display: inline-block;vertical-align: middle; margin-right: 5px"
-                                         src="<?= $domain; ?>/mail/image/phone2.png"/>
+                                         src="<?= $_domain; ?>/mail/image/phone2.png"/>
                                     <span style="color:#e67425;text-decoration:none; display: inline-block;vertical-align: middle; padding-right: 20px;"
-                                          target="_blank">Hotline: 0932 277 572</span>
+                                          target="_blank"><?= Yii::t('frontend','Hotline: 19006755') ?> Hotline: 19006755</span>
                                 </td>
                             </tr>
                             </tbody>
@@ -58,7 +58,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                 <tr>
                     <td style="background:#ffffff; border-bottom:2px solid #e67425; color:#2796b6; font-size:24px; text-transform:uppercase; font-family:Arial, Helvetica, sans-serif; padding:15px 0px 15px;font-weight: bold;"
                         align="center">
-                        YÊU CẦU XÁC THỰC TÀI KHOẢN
+                        <?= Yii::t('frontend','REQUEST FOR AUTHENTICATION OF ACCOUNT') ?>
                     </td>
                 </tr>
                 <tr>
@@ -68,7 +68,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                             <tbody>
                             <tr>
                                 <td colspan="3" style="" align="center">
-                                    <img src="<?= $domain; ?>/mail/image/shadow.png" width="100%"/>
+                                    <img src="<?= $_domain; ?>/mail/image/shadow.png" width="100%"/>
                                 </td>
                             </tr>
                             <tr>
@@ -77,12 +77,12 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                         <tbody>
                                         <tr>
                                             <td style="padding:20px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
-                                                Kính chào Quý khách <b><?= Html::encode($user->username) ?>,</b></td>
+                                                <?= Yii::t('frontend','Welcome') ?> <b><?= Html::encode($user->username) ?>,</b></td>
                                         </tr>
                                         <tr>
                                             <td style="padding:20px 20px 20px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
-                                                Chúc mừng quý khách đã trở thành thành viên của <a
-                                                        href="<?= $domain; ?>">WeShop Việt Nam</a>
+                                                <?= Yii::t('frontend','Congratulations on your membership') ?>
+                                                <a href="<?= $_domain; ?>"><?= Yii::t('frontend','WeShop Viet Nam') ?></a>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -95,7 +95,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                            width="100%">
                                         <tr>
                                             <td style="padding: 20px">
-                                                <h4 style="font-size: 14px; margin: 0 0 15px;">Thông tin đăng ký</h4>
+                                                <h4 style="font-size: 14px; margin: 0 0 15px;"><?= Yii::t('frontend','Registration information') ?></h4>
                                                 <p>
                                                     <i style="display: block; width: 50px; height: 1px; background: #2796b6;"></i>
                                                 </p>
@@ -103,7 +103,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                                     <tr>
                                                         <td style="padding: 15px;border: 1px solid #e3e3e3;"
                                                             width="25%">
-                                                            <b>Tên đăng nhập</b>
+                                                            <b><?= Yii::t('frontend','user name') ?></b>
                                                         </td>
                                                         <td style="padding: 15px; border: 1px solid #e3e3e3;border-left: none; vertical-align: top"
                                                             width="75%">
@@ -123,7 +123,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                                     <tr>
                                                         <td style="padding: 15px;border: 1px solid #e3e3e3;"
                                                             width="25%">
-                                                            <b>Số điện thoại</b>
+                                                            <b><?= Yii::t('frontend','phone number') ?> </b>
                                                         </td>
                                                         <td style="padding: 15px; border: 1px solid #e3e3e3;border-left: none; vertical-align: top"
                                                             width="75%">
@@ -131,14 +131,11 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                <!--p style="padding: 20px 0 0 0">Để xác thực tài khoản, mời quý khách
-                                                    click vào đường dẫn dưới đây:<br/>
+                                                <p style="padding: 20px 0 0 0"><?= Yii::t('frontend','To verify your account, please click on the link below:') ?><br/>
                                                     <a href="<?= $verifyLink; ?>" style="display: block; width: 500px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis"><?= $verifyLink; ?></a>
-                                                </p-->
-                                                <p>Cám ơn quý khách đã đăng ký thành viên tại <a href="<?= $domain; ?>">WeShop
-                                                        Việt Nam</a></p>
-                                                <p><b>BẮT ĐẦU MUA SẮM NGAY TẠI <a href="<?= $domain; ?>">WESHOP VIỆT
-                                                            NAM</a></b></p>
+                                                </p>
+                                                <p><?= Yii::t('frontend','Thank you for registering your membership at ') ?>  <a href="<?= $_domain; ?>"> <?= Yii::t('frontend','WeShop Viet Nam') ?> </a></p>
+                                                <p><b><?= Yii::t('frontend','START SHOPPING NOW') ?> <a href="<?= $_domain; ?>"> <?= Yii::t('frontend','WESHOP VIET NAM') ?> </a></b></p>
 
                                             </td>
                                         </tr>
@@ -151,30 +148,29 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                         <tbody>
                                         <tr>
                                             <td style="padding:5px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
-                                                Mọi thắc mắc và góp ý, Quý khách vui lòng liên hệ với chúng tôi
-                                                qua:
+                                                <?= Yii::t('frontend','Any questions and suggestions, please contact us') ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="padding:5px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
-                                                Email hỗ trợ: <font color="#0388cd"><a
-                                                            href="mailto:support-vn@weshop.asia" target="_blank">support-vn@weshop.asia</a></font>
+                                                <?= Yii::t('frontend','Email support:') ?>   <font color="#0388cd"><a
+                                                            href="mailto:support@weshop.asia" target="_blank">support@weshop.asia</a></font>
                                                 hoặc
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="padding:5px 20px 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
-                                                Tổng đài Chăm sóc khách hàng: 1900 6755 hoặc Hotline : 0932 277 572
+                                                <?= Yii::t('frontend','Customer Care Call Center: 1900 6755 ') ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="padding:20px 20px 20px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666">
-                                                Weshop trân trọng cảm ơn và rất hân hạnh được phục vụ Quý khách.
+                                                <?= Yii::t('frontend','Customer Care Call Center: 1900 6755 ') ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="padding:5px 20px 20px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666666;font-style:italic">
-                                                <b>*Quý khách vui lòng không trả lời email này*</b></td>
+                                                <b> <?= Yii::t('frontend','* Please do not reply to this email *') ?> </b></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -190,7 +186,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
     </tr>
     <tr>
         <td align="center">
-            <img src="<?= $domain; ?>/mail/image/mailbox.png" alt="" width="694"/>
+            <img src="<?= $_domain; ?>/mail/image/mailbox.png" alt="" width="694"/>
         </td>
     </tr>
     </tbody>
