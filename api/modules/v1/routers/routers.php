@@ -750,6 +750,8 @@ return [
             'POST confirm-change-price' => 'confirm-change-price',
             'OPTIONS confirm-change-price' => 'options',
             'POST save-purchase-info' => 'save-purchase-info',
+            'POST update-payment' => 'update-payment',
+            'OPTIONS update-payment' => 'options',
             'OPTIONS save-purchase-info' => 'options',
             'POST update-arrears' => 'update-arrears',
             'OPTIONS update-arrears' => 'options',
