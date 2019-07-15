@@ -44,7 +44,7 @@ class AmazonSearchRequest extends AmazonRequest
                 continue;
             }
             if ($name === 'category') {
-                $key = 'node_ids';
+                $key = 'node';
             } elseif ($name === 'filter') {
                 $key = 'rh';
             } else {
@@ -57,6 +57,7 @@ class AmazonSearchRequest extends AmazonRequest
                 $params[$key] = $value;
             }
         }
+
         return $params;
     }
 }

@@ -37,6 +37,7 @@ return [
         'amazon/search/<keyword:[^/]+>.html' => 'amazon/search/index',
         'amazon/seller/<seller:[^/]+>.html' => 'amazon/search/index',
         'amazon/category/<name:[0-9a-zA-Z_-]+>-<category:\d+>.html' => 'amazon/search/index',
+//        'amazon/category/<name:[0-9a-zA-Z_-]+>-<node:\d+>.html' => 'amazon/category/index',
         'GET amazon/categories.html' => 'amazon/amazon/categories',
 
         // amazon-jp
