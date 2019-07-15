@@ -449,4 +449,9 @@ JSON;
         die;
     }
 
+    public function actionUnicode(){
+        $string = 'Đây là chuỗi';
+        var_dump(WeshopHelper::vn2unicode($string));
+        die;
+    }
 }

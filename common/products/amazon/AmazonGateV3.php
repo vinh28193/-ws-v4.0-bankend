@@ -77,7 +77,7 @@ class AmazonGateV3 extends BaseGate
         $condition['store'] = $this->store;
         $request = new AmazonDetailRequest();
         $request->load($condition, '');
-        $request->get_offer = ArrayHelper::getValue($condition,'get_offer',true);
+        $request->get_offer = ArrayHelper::getValue($condition, 'get_offer', true);
         if (!$request->validate()) {
             return [false, $request->getFirstErrors()];
         }
@@ -158,10 +158,8 @@ class AmazonGateV3 extends BaseGate
      */
     private function searchInternal($request)
     {
-        $url = $this->baseUrl . '/' . $this->searchUrl . '?q=' . urlencode($request->keyword) . '&page=' . $request->page;
-        if ($request->filter) {
-            $url .= '&filter=' . $request->filter;
-        }
+        $url = $this->baseUrl . '/' . $this->searchUrl . '?';
+        $url .= http_build_query($request->params());
         $url = trim($url);
         $curl = new curl\Curl();
 //        $countCall = 0;
@@ -302,7 +300,7 @@ class AmazonGateV3 extends BaseGate
         $rs['store'] = $this->store;
         $rs['customer_feedback'] = ArrayHelper::getValue($amazon, 'product_review', []);
         $offers = null;
-        if($request->get_offer){
+        if ($request->get_offer) {
             $offers = $this->getOffers($rs['item_sku']);
         }
         $check = false;
@@ -316,7 +314,7 @@ class AmazonGateV3 extends BaseGate
             $prov['rating_score'] = ArrayHelper::getValue($amazon, 'rate_count');
             $prov['rating_star'] = ArrayHelper::getValue($amazon, 'rate_star');
             $prov['positive_feedback_percent'] = null;
-            $prov['condition'] = $rs['condition'] ? : 'new';
+            $prov['condition'] = $rs['condition'] ?: 'new';
             $prov['fulfillment'] = null;
             $prov['is_free_ship'] = $rs['is_free_ship'];
             $prov['is_prime'] = $rs['is_prime'];
@@ -581,7 +579,7 @@ class AmazonGateV3 extends BaseGate
             $item['image'] = $param['images'][0];
             $item['is_prime'] = $param['is_prime'];
 
-            $sell_price = is_string($param['sell_price']) ? [trim(str_replace('$','',$param['sell_price']))] : $param['sell_price'];
+            $sell_price = is_string($param['sell_price']) ? [trim(str_replace('$', '', $param['sell_price']))] : $param['sell_price'];
             $sell_price = $sell_price ? $sell_price : [0];
             $sell_price = array_filter($sell_price, function ($price) {
                 return (int)$price > 0;

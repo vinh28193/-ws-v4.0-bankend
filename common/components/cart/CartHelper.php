@@ -235,8 +235,8 @@ class CartHelper
         while (!empty($orders)) {
             foreach (array_shift($orders) as $key => $value) {
                 if (strpos($key, 'total_') !== false) {
-                    $oldValue = (int)$order[$key];
-                    $newValue = (int)$value;
+                    $oldValue = floatval($order[$key]);
+                    $newValue = floatval($value);
                     $oldValue += $newValue;
                     $order[$key] = $oldValue;
                 } elseif ($key === 'products') {
