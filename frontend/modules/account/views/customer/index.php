@@ -20,6 +20,11 @@ $contentForm = json_encode([
     'title' => Yii::t('frontend','Add shipping address')
 ]);
 $js = <<<JS
+$('a[data-popup=modal]').on('click',function(event) {
+        event.preventDefault();
+        var uri = $(this).data('url');
+        $('div#exampleModalAddress').modal('show').find('#modalContent').load(uri);
+    });
 $('#add-new').click(function() {
     var content = $contentForm;
   ws.notifyConfirm(content.content,content.title,'default','ws.save_address()','',ws.t('Confirm'),ws.t('Close'),'btn btn-success','btn btn-warning',false);
@@ -93,7 +98,7 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
         </div>
         <div class="col-md-12 pl-0 pr-0">
             <?php
-            if ($address->store_id === 7) {
+            if ($model->store_id == \common\components\StoreManager::STORE_ID) {
 //                            echo $form->field($shippingForm, 'receiver_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
                 echo $form->field($address, 'post_code', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->widget(Select2::className(), [
                     'options' => [
@@ -199,7 +204,14 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
     <div class="ba-block2">
         <div class="title-box">
             <div class="title"><?= Yii::t('frontend', 'Your shipping address'); ?>:</div>
-            <a href="javascript:void (0);" class="add-new" id="add-new"><?= Yii::t('frontend', 'Add new'); ?></a>
+<!--            <a href="javascript:void (0);" class="add-new" id="add-new">--><?//= Yii::t('frontend', 'Add new'); ?><!--</a>-->
+            <?php
+            echo Html::a('Add New',new \yii\web\JsExpression('javascript:void(0);'),[
+                'data-url' => \yii\helpers\Url::toRoute(['/my-account/addAddress.html'],true),
+                'data-target' => '#exampleModalAddress',
+                'data-popup' => 'modal'
+            ])
+            ?>
         </div>
         <div class="row">
             <?php foreach ($addressShip as $add) {
@@ -224,6 +236,24 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                     </ul>
                 </div>
             <?php } ?>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="exampleModalAddress" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content modal-lg">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="card m-b-0">
+                        <div class="card-body">
+                            <div id="modalContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
