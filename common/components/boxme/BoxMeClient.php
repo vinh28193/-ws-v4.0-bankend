@@ -1,6 +1,7 @@
 <?php
 namespace common\components\boxme;
 use common\components\lib\TextUtility;
+use common\components\ThirdPartyLogs;
 use common\helpers\WeshopHelper;
 use common\models\boxme\ConfigForm;
 use common\models\boxme\ShipToForm;
@@ -186,15 +187,13 @@ class BoxMeClient
         }
         $param['tracking']['type'] = 2;
         $param['tracking']['tracking_number'] = $tracking;
-
-        $request = new CreateShipmentRequest(
-            [
-                'Country' => 'VN',
-                'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df,
-                'Source' => 2,
-                'Param' => json_encode($param),
-            ]
-        );
+        $data = [
+            'Country' => 'VN',
+            'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df,
+            'Source' => 2,
+            'Param' => json_encode($param),
+        ];
+        $request = new CreateShipmentRequest($data);
 
         $apires = $service->CreateShipment($request)->wait();
         list($rs,$stt) = $apires;
@@ -204,9 +203,11 @@ class BoxMeClient
             $shipment_code = ArrayHelper::getValue($data_rs,'shipment_code');
             $order->shipment_boxme = $shipment_code ? ($order->shipment_boxme ? $order->shipment_boxme.','.$shipment_code : $shipment_code) : $order->shipment_boxme;
             $order->save(0);
+            ThirdPartyLogs::setLog('gprc','create_shipment', 'Create success', $data,$rs->getData());
             return $order->shipment_boxme;
         }
-        return false;
+        ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: '.$rs->getError(), $data,[$rs->getError(),$rs->getMessage(),$stt]);
+        return $rs->getError();
     }
 
     /**
@@ -253,13 +254,14 @@ class BoxMeClient
         $apires = $service->syncProduct($request)->wait();
         /** @var SyncProductResponse $response */
         list($response, $status) = $apires;
+        ThirdPartyLogs::setLog('gprc','sync_product', $response ? $response->getMessage() : "Sync fail", $data,[$response->getMessage(),$response->getError(),$status]);
         return $response ? $response->getMessage() : [ false , $status];
 
     }
 
     /**
      * @param Order $order
-     * @return bool|string
+     * @return bool|string|array
      */
     public static function CreateOrder($order) {
         if ($order->order_boxme){
@@ -350,20 +352,23 @@ class BoxMeClient
                 'order_number' => $order->ordercode,
             ]
         ];
-        $request = new CreateOrderRequest([
+        $data_rq = [
             'Data' => json_encode($data),
             'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df,
             'CountryCode' => $country ? $country->country_code : 'VN',
-        ]);
+        ];
+        $request = new CreateOrderRequest($data_rq);
         /** @var CreateOrderResponse $rs */
         $apirs = $service->CreateOrder($request)->wait();
         list($rs, $stt) = $apirs;
         if($rs && !$rs->getError()){
             $order->order_boxme = $rs->getData() ? $rs->getData()->getTrackingNumber() : '';
             $order->save(0);
-            return $rs->getData() ? $rs->getData()->getTrackingNumber() : '';
+            ThirdPartyLogs::setLog('gprc','create_order_BM', $rs->getData() ? $rs->getData()->getTrackingNumber() : 'Fail', $data_rq,[$rs->getError(),$rs->getErrorCode(),$rs->getErrorMessage(),$rs->getData(),$stt]);
+            return [true,$rs->getData() ? $rs->getData()->getTrackingNumber() : ''];
         }
-        return false;
+        ThirdPartyLogs::setLog('gprc','create_order_BM', 'Fail', $data_rq,[$rs->getError(),$rs->getErrorCode(),$rs->getErrorMessage(),$rs->getData(),$stt]);
+        return [false,$rs->getErrorMessage()];
     }
     public static function checkIsPrime($user) {
         return $user && $user->bm_wallet_id && $user->vip > 0 && $user->vip_end_time > time();

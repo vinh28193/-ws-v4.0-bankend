@@ -40,7 +40,29 @@ class ThirdPartyLogs extends \common\modelsMongo\ThirdPartyLogs
         try {
             $log = new ThirdPartyLogs();
             $log->date = $formatter->asDate('now');
-            $log->create_by = Yii::$app->user->getId();
+            $log->create_by = Yii::$app->user ? Yii::$app->user->getId() : "Guest | Console";
+            $log->create_time = $formatter->asDatetime('now');
+            $log->action = $action;
+            $log->message = $message;
+            $log->request = $request;
+            $log->response = $response;
+            $log->provider = $provider;
+            $log->save(false);
+            return true;
+        } catch (\Exception $e) {
+            Yii::info($e);
+            return self::setLogConsole($provider, $action, $message, $request, $response);
+        }
+
+//        return self::getLogs($log->date, $provider, $action);
+    }
+    public static function setLogConsole($provider, $action, $message, $request, $response, $user = 'Console')
+    {
+        $formatter = Yii::$app->formatter;
+        try {
+            $log = new ThirdPartyLogs();
+            $log->date = $formatter->asDate('now');
+            $log->create_by = $user;
             $log->create_time = $formatter->asDatetime('now');
             $log->action = $action;
             $log->message = $message;
