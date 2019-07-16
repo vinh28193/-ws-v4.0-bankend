@@ -27,8 +27,8 @@ class ChangePasswordForm extends Model
     {
         return [
             [['password_hash', 'passwordNew', 'replacePassword'], 'required'],
-            [['password', 'replacePassword'], 'string', 'min' => 6],
-            ['replacePassword', 'compare', 'compareAttribute' => 'password'],
+            [['password_hash', 'replacePassword'], 'string', 'min' => 6],
+            ['replacePassword', 'compare', 'compareAttribute' => 'passwordNew'],
         ];
     }
 
