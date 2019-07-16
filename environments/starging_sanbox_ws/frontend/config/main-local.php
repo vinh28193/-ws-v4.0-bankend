@@ -24,12 +24,10 @@ $config = [
                 ],
             ],
         ],
-        /*
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://192.168.11.252:27017/admin',
+            'dsn' => 'mongodb://MongoBM:27017/admin',
         ],
-        */
     ],
 ];
 
