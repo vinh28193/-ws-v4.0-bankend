@@ -47,7 +47,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                     <img style="display: inline-block;vertical-align: middle; margin-right: 5px"
                                          src="<?= $_domain; ?>/mail/image/phone2.png"/>
                                     <span style="color:#e67425;text-decoration:none; display: inline-block;vertical-align: middle; padding-right: 20px;"
-                                          target="_blank"><?= Yii::t('frontend','Hotline: 19006755') ?> Hotline: 19006755</span>
+                                          target="_blank"><?= Yii::t('frontend','Hotline: 19006755') ?></span>
                                 </td>
                             </tr>
                             </tbody>
@@ -131,7 +131,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['secure/verify', 'token'
                                                     </tr>
                                                 </table>
                                                 <p style="padding: 20px 0 0 0"><?= Yii::t('frontend','To verify your account, please click on the link below:') ?><br/>
-                                                    <a href="<?= $verifyLink; ?>" style="display: block; width: 500px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis"><?= $verifyLink; ?></a>
+                                                    <!--a href="<?= $verifyLink; ?>" style="display: block; width: 500px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis"><?= $verifyLink; ?></a-->
                                                 </p>
                                                 <p><?= Yii::t('frontend','Thank you for registering your membership at ') ?>  <a href="<?= $_domain; ?>"> <?= Yii::t('frontend','WeShop Viet Nam') ?> </a></p>
                                                 <p><b><?= Yii::t('frontend','START SHOPPING NOW') ?> <a href="<?= $_domain; ?>"> <?= Yii::t('frontend','WESHOP VIET NAM') ?> </a></b></p>
