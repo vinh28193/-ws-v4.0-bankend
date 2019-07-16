@@ -45,7 +45,7 @@ return [
                 'ref_user_id' => 253019,
                 'ref_pickup_id' => 62555,
                 'email' => '',
-                'name' => 'BMUS_NY',
+                'name' => 'BMVN_US',
                 'description' => 'Boxme US',
                 'address' => 'US · Newyork, United State'
             ],
@@ -53,7 +53,7 @@ return [
                 'ref_user_id' => 253019,
                 'ref_pickup_id' => 62556,
                 'email' => '',
-                'name' => 'BMUS_NY',
+                'name' => 'BMID_US',
                 'description' => 'Boxme US',
                 'address' => 'US · Newyork, United State'
             ],

@@ -103,8 +103,10 @@ $checkUrl = Yii::$app->getRequest()->url;
                         <?php foreach ($order->products as $product) { ?>
                             <div class="product-info">
                                 <div class="thumb">
-                                    <img src="<?= !is_null($product->link_img) ? $product->link_img : 'no-image' ?>"
-                                         alt=""/>
+                                    <a href="<?= $product->product_link ?>" target="_blank">
+                                        <img src="<?= !is_null($product->link_img) ? $product->link_img : 'no-image' ?>"
+                                             alt=""/>
+                                    </a>
                                 </div>
                                 <div class="info">
                                     <a href="<?= 'my-order/'.$order->ordercode.'.html' ?>"
