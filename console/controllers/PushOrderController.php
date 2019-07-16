@@ -37,27 +37,46 @@ class PushOrderController extends Controller
                     $this->stdout_F('sync success.!');
                 }
             }
-            $this->stdout_F('Tạo order box me: ...');
-            $orderBM = BoxMeClient::CreateOrder($order);
-            print_r($orderBM);
-            if(!$orderBM || (is_array($orderBM) && !$orderBM[0] )){
-                $this->stdout_F('Tạo order box me lỗi. Bỏ qua order.');
-                $this->stdout_F('-------ERROR----------');
-                continue;
+            if($order->order_boxme){
+                $this->stdout_F('Đã có order boxme: '.$order->order_boxme);
+            }else{
+                $this->stdout_F('Tạo order box me: ...');
+                $orderBM = BoxMeClient::CreateOrder($order);
+                print_r($orderBM);
+                if(!$orderBM || (is_array($orderBM) && !$orderBM[0] )){
+                    $this->stdout_F('Tạo order box me lỗi. Bỏ qua order.');
+                    $this->stdout_F('-------ERROR----------');
+                    continue;
+                }
+                $this->stdout_F('');
+                $this->stdout_F('Tạo order box me success.');
             }
-            $this->stdout_F('');
-            $this->stdout_F('Tạo order box me success.');
-            $trackingCodes = explode(',',$order->tracking_codes);
-            if($trackingCodes && count($trackingCodes) > 0){
-                $this->stdout_F('Tạo shipment box me: ...');
-                foreach ($trackingCodes as $trackingCode){
+            $arrTracking = $order->tracking_codes ? explode(',',$order->tracking_codes) : [];
+            $arrShipment = $order->shipment_boxme ? explode(',',$order->shipment_boxme) : [];
+            if(!$order->tracking_codes){
+                $this->stdout_F('Chưa có tracking code');
+                die();
+            }
+            if(count($arrTracking) <= count($arrShipment)){
+                $this->stdout_F('Đã có mã shipment cho order này: ');
+                $this->stdout_F($order->tracking_codes);
+                $this->stdout_F($order->shipment_boxme);
+                $this->stdout_F('-------ERROR----------');
+                die();
+            }
+            print_r($arrTracking);
+            print_r($arrShipment);
+            $this->stdout_F('Tạo shipment box me: ...');
+            foreach ($arrTracking as $key => $trackingCode){
+                echo "$key \n";
+                if($key > (count($arrShipment) - 1)){
                     $this->stdout_F('Tạo shipment box me cho tracking code: '.$trackingCode);
                     print_r(BoxMeClient::CreateLiveShipment($order,$trackingCode));
                     $this->stdout_F('');
                     $this->stdout_F('Tạo shipment box me success!');
                 }
-                $this->stdout_F('---------SUCCESS---------');
             }
+            $this->stdout_F('---------SUCCESS---------');
         }
         $this->stdout_F('Job end ---------------------------');
     }
