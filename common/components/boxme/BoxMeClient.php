@@ -203,15 +203,15 @@ class BoxMeClient
             $data_rs = json_decode($rs->getData(),true);
             $shipment_code = ArrayHelper::getValue($data_rs,'shipment_code');
             $order->shipment_boxme = $shipment_code ? ($order->shipment_boxme ? $order->shipment_boxme.','.$shipment_code : $shipment_code) : $order->shipment_boxme;
-            $order->save();
-            return true;
+            $order->save(0);
+            return $order->shipment_boxme;
         }
         return false;
     }
 
     /**
      * @param Product $product
-     * @return bool
+     * @return bool | array | string
      * @throws \Exception
      */
     public static function SyncProduct($product){
@@ -253,7 +253,7 @@ class BoxMeClient
         $apires = $service->syncProduct($request)->wait();
         /** @var SyncProductResponse $response */
         list($response, $status) = $apires;
-        return response ? !$response->getError() : false;
+        return $response ? $response->getMessage() : [ false , $status];
 
     }
 
@@ -360,7 +360,7 @@ class BoxMeClient
         list($rs, $stt) = $apirs;
         if($rs && !$rs->getError()){
             $order->order_boxme = $rs->getData() ? $rs->getData()->getTrackingNumber() : '';
-            $order->save();
+            $order->save(0);
             return $rs->getData() ? $rs->getData()->getTrackingNumber() : '';
         }
         return false;
