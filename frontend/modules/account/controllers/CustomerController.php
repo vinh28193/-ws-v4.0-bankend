@@ -3,6 +3,7 @@
 namespace frontend\modules\account\controllers;
 
 use common\models\SystemDistrict;
+use common\models\SystemStateProvince;
 use common\models\User;
 use common\models\Address;
 use common\models\Order;
@@ -36,8 +37,8 @@ class CustomerController extends BaseAccountController
 
     public function actions()
     {
-        return ArrayHelper::merge(parent::actions(),[
-            'subcat' => [
+        return ArrayHelper::merge(parent::actions(), [
+            'sub-district' => [
                 'class' => 'common\actions\DepDropAction',
                 'useAction' => 'common\models\SystemDistrict::select2Data'
             ]
@@ -74,27 +75,31 @@ class CustomerController extends BaseAccountController
             if ($model && $userPost) {
                 $model->first_name = ArrayHelper::getValue($userPost,'first_name',$model->first_name);
                 $model->last_name = ArrayHelper::getValue($userPost,'last_name',$model->last_name);
-                $model->email = $model->email ? $model->email : ArrayHelper::getValue($userPost,'email');
-                $model->phone = $model->phone ? $model->phone : ArrayHelper::getValue($userPost,'phone');
+                $model->email = ArrayHelper::getValue($userPost,'email');
+                $model->phone = ArrayHelper::getValue($userPost,'phone');
                 $model->save();
+                $district = SystemDistrict::findOne(ArrayHelper::getValue($addressPost,'district_id'));
+                $province = SystemStateProvince::findOne(ArrayHelper::getValue($addressPost,'province_id'));
                 if ($address) {
                     $address->first_name = ArrayHelper::getValue($userPost,'first_name',$model->first_name);
-                    $address->last_name = ArrayHelper::getValue($userPost,'last_name',$model->last_name);
                     $address->email = ArrayHelper::getValue($userPost,'email');
                     $address->phone = ArrayHelper::getValue($userPost,'phone');
                     $address->province_id = ArrayHelper::getValue($addressPost,'province_id');
+                    $address->district_name = $district->name;
+                    $address->province_name = $province->name;
                     $address->district_id = ArrayHelper::getValue($addressPost,'district_id');
                     $address->address = ArrayHelper::getValue($addressPost,'address');
                     $address->save();
                 } else{
                     $add = new Address();
                     $add->first_name = ArrayHelper::getValue($userPost,'first_name',$model->first_name);
-                    $add->last_name = ArrayHelper::getValue($userPost,'last_name',$model->last_name);
                     $add->email = ArrayHelper::getValue($userPost,'email');
                     $add->phone = ArrayHelper::getValue($userPost,'phone');
                     $add->province_id = ArrayHelper::getValue($addressPost,'province_id');
                     $add->district_id = ArrayHelper::getValue($addressPost,'district_id');
                     $add->address = ArrayHelper::getValue($addressPost,'address');
+                    $add->type = Address::TYPE_PRIMARY;
+                    $add->is_default = 1;
                     $add->save();
                     return $this->render('index', [
                         'model' => $model,
@@ -222,6 +227,7 @@ class CustomerController extends BaseAccountController
     }
 
     public function actionSaveAddressShipping() {
+        $post = Yii::$app->request->post();
         Yii::$app->response->format = 'json';
         /** @var User $user */
         $user = Yii::$app->user->getIdentity();
@@ -240,15 +246,15 @@ class CustomerController extends BaseAccountController
         $address->first_name = Yii::$app->request->post('fullName');
         $address->phone = Yii::$app->request->post('phone');
         $address->email = Yii::$app->request->post('email');
-        $address->district_id = Yii::$app->request->post('district');
-        $address->province_id = Yii::$app->request->post('province');
+        $address->district_id = Yii::$app->request->post('district_id');
+        $address->province_id = Yii::$app->request->post('province_id');
         $address->address = Yii::$app->request->post('address');
         $address->post_code = Yii::$app->request->post('zip_code');
         $address->customer_id = $user->id;
         $address->remove = 0;
         $address->type = Address::TYPE_SHIPPING;
         $address->is_default = Yii::$app->request->post('is_default') ? 1 : 0;
-        $district = SystemDistrict::findOne($address->district_id);
+        $district = SystemDistrict::findOne(Yii::$app->request->post('district_id'));
         if(!$district || $district->province_id != $address->province_id){
             return ['success' => false, 'message' => Yii::t('frontend','District or province not found.')];
         }
