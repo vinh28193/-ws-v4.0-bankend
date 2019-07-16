@@ -4,11 +4,11 @@ class m190524_040750_third_party_logs extends \yii\mongodb\Migration
 {
     public function up()
     {
-        $this->createCollection(['Weshop_log_40_v40', 'third_party_logs']);
+        $this->createCollection(['Weshop_log_40_stag', 'third_party_logs']);
     }
 
     public function down()
     {
-        $this->dropCollection(['Weshop_log_40_v40', 'third_party_logs']);
+        $this->dropCollection(['Weshop_log_40_stag', 'third_party_logs']);
     }
 }

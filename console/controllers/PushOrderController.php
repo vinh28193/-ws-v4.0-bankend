@@ -39,8 +39,9 @@ class PushOrderController extends Controller
             $this->stdout_F('Tạo order box me: ...');
             $orderBM = BoxMeClient::CreateOrder($order);
             print_r($orderBM);
-            if(!$orderBM){
+            if(!$orderBM || (is_array($orderBM) && !$orderBM[0] )){
                 $this->stdout_F('Tạo order box me lỗi. Bỏ qua order.');
+                $this->stdout_F('-------ERROR----------');
                 continue;
             }
             $this->stdout_F('');
@@ -54,7 +55,7 @@ class PushOrderController extends Controller
                     $this->stdout_F('');
                     $this->stdout_F('Tạo shipment box me success!');
                 }
-                $this->stdout_F('-------------');
+                $this->stdout_F('---------SUCCESS---------');
             }
         }
         $this->stdout_F('Job end ---------------------------');
