@@ -114,7 +114,10 @@ $this->registerJs($js);
                             <td>
                                 <div class="product-info">
                                     <div class="thumb">
-                                        <img src="<?= $product->link_img ?>" alt=""/>
+                                        <a href="<?= $product->product_link ?>" target="_blank">
+                                            <img src="<?= !is_null($product->link_img) ? $product->link_img : 'no-image' ?>"
+                                                 alt=""/>
+                                        </a>
                                     </div>
                                     <div class="info"><?= $product->product_name ?></div>
                                 </div>
