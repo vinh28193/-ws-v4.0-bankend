@@ -9,9 +9,71 @@ use yii\grid\GridView;
 /* @var \common\models\Order[] $models */
 
 $this->title = Yii::t('frontend', 'Orders');
+$check = Yii::$app->getRequest()->getQueryParams();
+$checkUrl = Yii::$app->getRequest()->url;
 //$this->params['breadcrumbs'][] = $this->title;
 
 ?>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tab-card-header">
+            <ul class="nav nav-tabs card-header-tabs mb-1" id="myTab" role="tablist">
+                <li class="nav-item ml-2  text-center" style="width: 10%">
+                    <?php
+                    if ($checkUrl == '/my-order.html') {
+                        echo Html::a(Yii::t('frontend', 'All Orders List'), ['/my-order.html'], ['class' => 'nav-link active']);
+                    } else {
+                        echo Html::a(Yii::t('frontend', 'All Orders List'), ['/my-order.html'], ['class' => 'nav-link']);
+                    }
+                    ?>
+                </li>
+                <li class="nav-item text-center" style="width: 10%">
+                    <?php if ($checkUrl == '/my-order.html?p=2') {
+                        echo Html::a(Yii::t('frontend', 'Unpaid'), ['/my-order.html?p=2'], ['class' => 'nav-link active']);
+                    } else {
+                        echo Html::a(Yii::t('frontend', 'Unpaid'), ['/my-order.html?p=2'], ['class' => 'nav-link']);
+                    }?>
+                </li>
+                <li class="nav-item text-center" style="width: 10%">
+                    <?php if ($checkUrl == '/my-order.html?p=3') {
+                        echo Html::a(Yii::t('frontend', 'Paid'), ['/my-order.html?p=3'], ['class' => 'nav-link active']);
+                    } else {
+                        echo Html::a(Yii::t('frontend', 'Paid'), ['/my-order.html?p=3'], ['class' => 'nav-link']);
+                    } ?>
+                </li>
+                <li class="nav-item text-center" style="width: 10%">
+                    <?php if ($checkUrl == '/my-order.html?p=4') {
+                        echo Html::a(Yii::t('frontend', 'Purchased'), ['/my-order.html?p=4'], ['class' => 'nav-link active']);
+                    } else {
+                        echo Html::a(Yii::t('frontend', 'Purchased'), ['/my-order.html?p=4'], ['class' => 'nav-link']);
+                    } ?>
+                </li>
+                <li class="nav-item text-center" style="width: 10%">
+                    <?php if ($checkUrl == '/my-order.html?p=5') {
+                        echo Html::a(Yii::t('frontend', 'Delivering'), ['/my-order.html?p=5'], ['class' => 'nav-link active']);
+                    } else {
+                        echo Html::a(Yii::t('frontend', 'Delivering'), ['/my-order.html?p=5'], ['class' => 'nav-link']);
+                    } ?>
+                </li>
+                <li class="nav-item text-center" style="width: 10%">
+                    <?php if ($checkUrl == '/my-order.html?p=6') {
+                        echo Html::a(Yii::t('frontend', 'Delivered'), ['/my-order.html?p=6'], ['class' => 'nav-link active']);
+                    } else {
+                        echo Html::a(Yii::t('frontend', 'Delivered'), ['/my-order.html?p=6'], ['class' => 'nav-link']);
+                    } ?>
+                </li>
+                <li class="nav-item text-center" style="width: 10%">
+                    <?php  if ($checkUrl == '/my-order.html?p=7') {
+                        echo Html::a(Yii::t('frontend', 'Cancel'), ['/my-order.html?p=4'], ['class' => 'nav-link active']);
+                    }
+                    else {
+                        echo Html::a(Yii::t('frontend', 'Cancel'), ['/my-order.html?p=4'], ['class' => 'nav-link']);
+                    }?>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 <div class="be-order">
     <div class="be-table overflow-auto" style="max-height: 55em">
         <table class="table">
