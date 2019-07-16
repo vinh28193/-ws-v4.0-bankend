@@ -416,6 +416,72 @@
                 }
             });
         },
+        save_address: function () {
+            var dataForm = {
+                idAddress: $('#shipping-id').val(),
+                fullName: $('#shipping-full_name').val(),
+                phone: $('#shipping-phone').val(),
+                email: $('#shipping-email').val(),
+                district: $('#shipping_district_id').val(),
+                province: $('#shipping_province_id').val(),
+                zip_code: $('#shipping_zipcode').val(),
+                is_default: $('#shipping_is_default:checked').val(),
+                address: $('#shipping_address').val()
+            };
+            ws.loading(true);
+            $.ajax({
+                url: '/account/customer/save-address-shipping',
+                method: 'POST',
+                data: dataForm,
+                success: function (res) {
+                    if (res.success) {
+                        window.location.reload();
+                    } else {
+                        ws.loading(false);
+                        var text = res.message;
+                        if(res.errors){
+                            $.each(res.errors,function (k,v) {
+                                text += "<br><i class='la la-dot-circle-o'></i>" + v;
+                            });
+                        }
+                        $('#error-message').html(text);
+                    }
+                }
+            });
+        },
+        editAddress: function(id) {
+            ws.loading(true);
+            $.ajax({
+                url: '/account/customer/edit-address',
+                method: 'POST',
+                data: {id: id},
+                success: function (res) {
+                    if (res.success) {
+                        ws.loading(false);
+                        ws.notifyConfirm(res.data.content,res.data.title,'default','ws.save_address()','',ws.t('Confirm'),ws.t('Close'),'btn btn-success','btn btn-warning',false);
+                    } else {
+                        ws.loading(false);
+                        ws.notifyError(res.message);
+                    }
+                }
+            });
+        },
+        removeAddress: function(id) {
+            ws.loading(true);
+            $.ajax({
+                url: '/account/customer/remove-address',
+                method: 'POST',
+                data: {id: id},
+                success: function (res) {
+                    if (res.success) {
+                        window.location.reload();
+                    } else {
+                        ws.loading(false);
+                        ws.notifyError(res.message);
+                    }
+                }
+            });
+        },
         showModal: function (id) {
             $('#' + id).modal();
         },

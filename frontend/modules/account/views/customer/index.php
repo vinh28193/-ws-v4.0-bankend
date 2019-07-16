@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use kartik\depdrop\DepDrop;
 use yii\helpers\Url;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $searchModel userbackend\models\CustomerSearch */
@@ -40,10 +41,42 @@ $(document).ready(function() {
 });
 JS;
 $this->registerJs($js);
+
+$urlAjaxUrl = Url::toRoute(['/data/get-zip-code']);
+
+$zipJs = <<<JS
+    var suggestAddress = function(event) {
+    
+        var params = event.params;
+        var data = params.data;
+        var type = params._type;
+        var target = $(event.target).data('ownwer');
+        var province = $('#shippingform-'+target+'_province_id');
+        province.prop('disabled',true);
+        if(data.province === false){
+            province.prop('disabled',false);
+            data.province = '';
+        }
+        wsAddress.select2ChangeSelect(province,data.province);
+        var depdropDistrict = $('#shippingform-'+target+'_district_id');
+        
+        depdropDistrict.trigger('change');
+        
+        depdropDistrict.on('depdrop:afterChange', function(event, id, value, jqXHR, textStatus) {
+            depdropDistrict.attr('disabled','disabled');
+            if(data.district === false){
+                depdropDistrict.removeAttr('disabled');
+            }
+           wsAddress.select2ChangeSelect(depdropDistrict,data.district);
+        });
+    };
+JS;
+$this->registerJs($zipJs, yii\web\View::POS_HEAD);
 ?>
 <div class="be-acc">
     <div class="ba-block1">
         <?php $form = ActiveForm::begin([
+                'action' => 'my-account.html',
             'options' => [
                 'class' => 'payment-form'
             ]
@@ -58,28 +91,66 @@ $this->registerJs($js);
         <div class="form-group">
             <?= $form->field($model, 'email', ['template' => " <i class=\"icon email\"></i>{input}\n{hint}\n{error}"])->input('email') ?>
         </div>
-        <?php
-        $provider = \common\models\SystemStateProvince::select2DataForCountry($address->country_id ? $address->country_id : $model->store->country_id);
-        $provi = ArrayHelper::map($provider, 'id', 'name');
-        $district = \common\models\SystemDistrict::select2Data($address->province_id ? $address->province_id : array_key_first($provi));
-        $dist = ArrayHelper::map($district, 'id', 'name');
-        ?>
-        <div class="form-group">
-            <?= $form->field($address, 'province_id', ['template' => " <i class=\"icon globe\"></i>{input}\n{hint}\n{error}"])->dropDownList($provi, ['id' => 'user_province_id']); ?>
-        </div>
-        <div class="form-group">
-            <?= $form->field($address, 'district_id', ['template' => " <i class=\"icon city\"></i>{input}\n{hint}\n{error}"])->dropDownList($dist,['id' => 'user_district_id']); ?>
-        </div>
-        <?php if($model->store_id == \common\components\StoreManager::STORE_ID){?>
-            <div class="form-group">
-                <?= $form->field($address, 'post_code', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'placeholder' => 'Zip Code','id' => 'user_zip_code','list' => 'listZipCOdeUser']) ?>
-                <datalist id="listZipCOdeUser">
+        <div class="col-md-12 pl-0 pr-0">
+            <?php
+            if ($address->store_id === 7) {
+//                            echo $form->field($shippingForm, 'receiver_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
+                echo $form->field($address, 'post_code', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->widget(Select2::className(), [
+                    'options' => [
+                        'data-ownwer' => 'receiver',
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'minimumInputLength' => 4,
+                        'placeholder' => Yii::t('frontend', 'Enter your post code'),
+                        'ajax' => [
+                            'url' => $urlAjaxUrl,
+                            'dataType' => 'json',
+                            'data' => new JsExpression('wsAddress.zipAjaxParam'),
+                            'processResults' => new JsExpression('wsAddress.zipAjaxProcessResults'),
+                        ],
+                        'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                        'templateResult' => new JsExpression('wsAddress.formatZipAjaxResults'),
+                        'templateSelection' => new JsExpression('wsAddress.formatZipAjaxSelection'),
 
-                </datalist>
-            </div>
-        <?php } ?>
-        <div class="form-group">
-            <?= $form->field($address, 'address', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
+                    ],
+                    'pluginEvents' => [
+                        "select2:select" => new JsExpression('suggestAddress'),
+                        "select2:unselect" => new JsExpression('suggestAddress')
+                    ]
+                ]);
+            } else {
+                echo $form->field($address, 'address', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')]);
+            }
+            echo $form->field($address, 'province_id', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->widget(Select2::className(), [
+                'data' => $address->getProvinces(),
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'placeholder' => Yii::t('frontend', 'Choose the province'),
+                ],
+            ]);
+
+            echo Html::hiddenInput('hiddenReceiverDistrictId', $address->district_id, ['id' => 'hiddenReceiverDistrictId']);
+
+            echo $form->field($address, 'district_id', ['template' => " <i class=\"icon mapmaker\"></i>{input}\n{hint}\n{error}"])->widget(DepDrop::classname(), [
+                'type' => DepDrop::TYPE_SELECT2,
+                'select2Options' => [
+                    'pluginOptions' => ['allowClear' => true],
+                    'pluginEvents' => [
+                        "select2:select" => "function(event) { ;ws.payment.calculatorShipping(); }",
+                    ]
+                ],
+                'pluginOptions' => [
+                    'depends' => [Html::getInputId($address, 'province_id')],
+                    'placeholder' => Yii::t('frontend', 'Choose the district'),
+                    'url' => Url::toRoute(['sub-district']),
+                    'loadingText' => Yii::t('frontend', 'Loading district ...'),
+                    'initialize' => true,
+                    'params' => ['hiddenReceiverDistrictId']
+                ],
+            ]);
+
+            ?>
         </div>
         <div class="form-group">
             <?= Html::submitButton(Yii::t('frontend', 'Confirm'), ['class' => 'btn btn-payment']) ?>

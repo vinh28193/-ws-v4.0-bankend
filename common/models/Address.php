@@ -105,4 +105,21 @@ class Address extends \common\models\db\Address
         }
     }
 
+    private $_provinces;
+
+    public function getProvinces()
+    {
+        /** @var StoreManager $storem */
+        $storem = \Yii::$app->storeManager;
+        if ($this->_provinces === null) {
+            $this->_provinces = SystemStateProvince::select2Data($storem->store->country_id);
+        }
+        return $this->_provinces;
+    }
+
+    public function getZipCodes()
+    {
+        return $zipcodes = SystemZipcode::loadZipCode($this->country_id);
+    }
+
 }
