@@ -170,6 +170,11 @@ class BoxMeClient
             $pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id');
             $user_id_df = ArrayHelper::getValue($wh, 'ref_user_id');
         }
+        if($user->pickup_id && self::checkIsPrime($user)){
+            $pickUpId = $user->pickup_id;
+        }else{
+            $user = null;
+        }
         $param = [];
         $param['shipping_method'] = 5;
         $param['pickup_id'] = $pickUpId;
@@ -282,6 +287,11 @@ class BoxMeClient
         }
         $country = SystemCountry::findOne($order->receiver_country_id);
         $user = User::findOne($order->customer_id);
+        if($user->pickup_id && self::checkIsPrime($user)){
+            $pickUpId = $user->pickup_id;
+        }else{
+            $user = null;
+        }
         $shipTo = [
             'contact_name' => $order->receiver_name,
             'company_name' => '',
