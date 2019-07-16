@@ -60,20 +60,31 @@ class OrderController extends BaseAccountController
     {
         $userId = Yii::$app->user->getId();
         $get = Yii::$app->request->get();
+//        var_dump($get);
+//        die();
         $dataProvider = Order::find()
             ->with('products')
             ->where(['=', 'customer_id', $userId]);
-        if (isset($get['status']) && !empty($get['status'])) {
-            $dataProvider ->andWhere(['=','current_status', $get['status']]);
-        }
-        if (isset($get['purchase']) && !empty($get['purchase'])) {
-            if ($get['purchase'] == 'paid') {
+        if (isset($get['p']) && !empty($get['p'])) {
+            if ($get['p'] == 7) {
+                $dataProvider ->andWhere(['=','current_status', 'CANCELLED']);
+            }
+            if ($get['p'] == 5) {
+                $dataProvider ->andWhere(['=','current_status', 'DELIVERING']);
+            }
+            if ($get['p'] == 6) {
+                $dataProvider ->andWhere(['=','current_status', 'DELIVERED']);
+            }
+            if ($get['p'] == 4) {
+                $dataProvider ->andWhere(['=','current_status', 'PURCHASED']);
+            }
+            if ($get['p'] == 3) {
                 $dataProvider ->andWhere([
                     'and',
                     ['>','total_paid_amount_local', 0],
                     ['IS NOT', 'total_paid_amount_local', null]
                 ]);
-            } if ($get['purchase'] == 'unpaid') {
+            } if ($get['p'] == 2) {
                 $dataProvider ->andWhere([
                     'or',
                     ['=','total_paid_amount_local', 0],
