@@ -55,6 +55,7 @@ class UserController extends BaseApiController
             'last_name',
             'type_customer',
             'vip',
+            'vip_end_time',
             'uuid',
             'token_fcm',
             'token_apn',

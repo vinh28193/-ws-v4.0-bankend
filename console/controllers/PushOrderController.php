@@ -10,8 +10,9 @@ use yii\console\Controller;
 
 class PushOrderController extends Controller
 {
-    public function actionPushOrder($rows)
+    public function actionPushOrder($rows,$env = 'prod')
     {
+        print_r(YII_ENV);
         $this->stdout_F('Rows: '.$rows);
         $this->stdout_F('Bắt đầu chạy job: ');
         /** @var Order[] $orders */

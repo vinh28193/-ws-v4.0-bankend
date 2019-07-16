@@ -1,6 +1,7 @@
 <?php
 namespace common\components\boxme;
 use common\components\lib\TextUtility;
+use common\components\StoreManager;
 use common\components\ThirdPartyLogs;
 use common\helpers\WeshopHelper;
 use common\models\boxme\ConfigForm;
@@ -165,12 +166,12 @@ class BoxMeClient
         $pickUpId = '';
         $user_id_df = '';
         if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
-            $current = $params['default'];
+            $current = self::getParamDefault($order->store_id);
             $wh = ArrayHelper::getValue($params, "warehouses.$current", false);
             $pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id');
             $user_id_df = ArrayHelper::getValue($wh, 'ref_user_id');
         }
-        if($user->pickup_id && self::checkIsPrime($user)){
+        if($user && $user->pickup_id && self::checkIsPrime($user)){
             $pickUpId = $user->pickup_id;
         }else{
             $user = null;
@@ -226,7 +227,7 @@ class BoxMeClient
         ]);
         $user_id_df = '';
         if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
-            $current = $params['default'];
+            $current = self::getParamDefault($product->order->store_id);
             $wh = ArrayHelper::getValue($params, "warehouses.$current", false);
             $user_id_df = ArrayHelper::getValue($wh, 'ref_user_id');
         }
@@ -280,14 +281,14 @@ class BoxMeClient
         $user_id_df = '';
         $pickUpId = '';
         if (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
-            $current = $params['default'];
+            $current = self::getParamDefault($order->store_id);
             $wh = ArrayHelper::getValue($params, "warehouses.$current", false);
             $pickUpId = ArrayHelper::getValue($wh, 'ref_pickup_id');
             $user_id_df = ArrayHelper::getValue($wh, 'ref_user_id');
         }
         $country = SystemCountry::findOne($order->receiver_country_id);
         $user = User::findOne($order->customer_id);
-        if($user->pickup_id && self::checkIsPrime($user)){
+        if($user && $user->pickup_id && self::checkIsPrime($user)){
             $pickUpId = $user->pickup_id;
         }else{
             $user = null;
@@ -382,5 +383,20 @@ class BoxMeClient
     }
     public static function checkIsPrime($user) {
         return $user && $user->bm_wallet_id && $user->vip > 0 && $user->vip_end_time > time();
+    }
+    public static function getParamDefault($store_id) {
+        if (YII_ENV != 'prod') {
+            if($store_id == 7){
+                return 'sandbox_id';
+            }else{
+                return 'sandbox_vn';
+            }
+        }else{
+            if($store_id == 7){
+                return 'ws_id';
+            }else{
+                return 'ws_vn';
+            }
+        }
     }
 }

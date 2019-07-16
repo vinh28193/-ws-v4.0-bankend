@@ -345,7 +345,7 @@ class CustomerController extends BaseAccountController
         if (YII_ENV == 'prod') {
             $api_login_boxme  = Yii::$app->params['api_login_boxme'] ? Yii::$app->params['api_login_boxme'] : 'https://s.boxme.asia/api/v1/users/auth/sign-in/';
             $api_addresse_warehouse = Yii::$app->params['api_addresse_warehouse'] ? Yii::$app->params['api_addresse_warehouse'] : 'https://s.boxme.asia/api/v1/sellers/addresses/default-warehouse/';
-        }elseif ( $api_login_boxme == '' and  !YII_ENV == 'prod'){
+        }elseif ( YII_ENV == 'dev'){
             $api_login_boxme  = Yii::$app->params['api_login_boxme'] ? Yii::$app->params['api_login_boxme'] : 'http://sandbox.boxme.asia/api/v1/users/auth/sign-in/';
             $api_addresse_warehouse = Yii::$app->params['api_addresse_warehouse'] ? Yii::$app->params['api_addresse_warehouse'] : 'http://sandbox.boxme.asia/api/v1/sellers/addresses/default-warehouse/';
         }
