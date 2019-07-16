@@ -152,6 +152,8 @@ use Yii;
  * @property string $refunded time hoàn trả lại tiền
  * @property string $order_boxme
  * @property string $shipment_boxme
+ * @property string $transfer_to Order code của order nhận được số tiền chuyển
+ * @property int $refund_transfer Thời gian chuyển
  *
  * @property User $saleSupport
  * @property Seller $seller
@@ -178,10 +180,10 @@ class Order extends \common\components\db\ActiveRecord
     {
         return [
             [['store_id', 'type_order', 'customer_type', 'portal', 'buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_id', 'buyer_country_name', 'buyer_province_id', 'buyer_province_name', 'buyer_district_id', 'buyer_district_name', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_id', 'receiver_country_name', 'receiver_province_id', 'receiver_province_name', 'receiver_district_id', 'receiver_district_name', 'payment_type', 'buyer_phone'], 'required'],
-            [['store_id', 'customer_id', 'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'buyer_country_id', 'buyer_province_id', 'buyer_district_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove', 'mark_supporting', 'supported', 'ready_purchase', 'supporting', 'check_update_payment', 'confirm_change_price', 'potential', 'additional_service', 'check_insurance', 'check_inspection', 'boxed_fee', 'check_packing_wood', 'contacting', 'awaiting_payment', 'awaiting_confirm_purchase', 'delivering', 'delivered', 'purchasing', 'junk', 'refunded'], 'integer'],
+            [['store_id', 'customer_id', 'new', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancelled', 'lost', 'is_quotation', 'quotation_status', 'buyer_country_id', 'buyer_province_id', 'buyer_district_id', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id', 'receiver_address_id', 'seller_id', 'sale_support_id', 'is_email_sent', 'is_sms_sent', 'difference_money', 'coupon_id', 'xu_time', 'promotion_id', 'created_at', 'updated_at', 'purchase_assignee_id', 'total_quantity', 'total_purchase_quantity', 'remove', 'mark_supporting', 'supported', 'ready_purchase', 'supporting', 'check_update_payment', 'confirm_change_price', 'potential', 'additional_service', 'check_insurance', 'check_inspection', 'boxed_fee', 'check_packing_wood', 'contacting', 'awaiting_payment', 'awaiting_confirm_purchase', 'delivering', 'delivered', 'purchasing', 'junk', 'refunded', 'refund_transfer'], 'integer'],
             [['note_by_customer', 'note', 'seller_store', 'purchase_order_id', 'purchase_transaction_id', 'purchase_account_id', 'purchase_account_email', 'purchase_card', 'purchase_refund_transaction_id', 'note_update_payment', 'tracking_codes', 'purchase_note', 'shipment_boxme'], 'string'],
             [['total_final_amount_local', 'total_amount_local', 'total_origin_fee_local', 'total_price_amount_origin', 'total_paid_amount_local', 'total_refund_amount_local', 'total_counpon_amount_local', 'total_promotion_amount_local', 'total_fee_amount_local', 'total_origin_tax_fee_local', 'total_origin_shipping_fee_local', 'total_weshop_fee_local', 'total_intl_shipping_fee_local', 'total_custom_fee_amount_local', 'total_delivery_fee_local', 'total_packing_fee_local', 'total_inspection_fee_local', 'total_insurance_fee_local', 'total_vat_amount_local', 'exchange_rate_fee', 'exchange_rate_purchase', 'revenue_xu', 'xu_count', 'xu_amount', 'total_weight', 'total_weight_temporary', 'purchase_amount', 'purchase_amount_buck', 'purchase_amount_refund', 'total_intl_shipping_fee_amount', 'total_origin_tax_fee_amount', 'total_weshop_fee_amount', 'total_boxed_fee_amount', 'total_origin_shipping_fee_amount', 'total_vat_amount_amount', 'total_custom_fee_amount'], 'number'],
-            [['ordercode', 'type_order', 'portal', 'utm_source', 'quotation_note', 'buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_name', 'buyer_province_name', 'buyer_district_name', 'buyer_post_code', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'version', 'courier_name', 'courier_delivery_time', 'buyer_phone', 'payment_provider', 'payment_method', 'payment_bank', 'order_boxme'], 'string', 'max' => 255],
+            [['ordercode', 'type_order', 'portal', 'utm_source', 'quotation_note', 'buyer_email', 'buyer_name', 'buyer_address', 'buyer_country_name', 'buyer_province_name', 'buyer_district_name', 'buyer_post_code', 'receiver_email', 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_country_name', 'receiver_province_name', 'receiver_district_name', 'receiver_post_code', 'seller_name', 'currency_purchase', 'payment_type', 'support_email', 'xu_log', 'version', 'courier_name', 'courier_delivery_time', 'buyer_phone', 'payment_provider', 'payment_method', 'payment_bank', 'order_boxme', 'transfer_to'], 'string', 'max' => 255],
             [['customer_type'], 'string', 'max' => 11],
             [['current_status'], 'string', 'max' => 200],
             [['transaction_code', 'courier_service', 'payment_transaction_code'], 'string', 'max' => 32],
@@ -341,7 +343,10 @@ class Order extends \common\components\db\ActiveRecord
             'purchasing' => Yii::t('db', 'Purchasing'),
             'junk' => Yii::t('db', 'Junk'),
             'refunded' => Yii::t('db', 'Refunded'),
-            'check_special' => Yii::t('db', 'Check Special'),
+            'order_boxme' => Yii::t('db', 'Order Boxme'),
+            'shipment_boxme' => Yii::t('db', 'Shipment Boxme'),
+            'transfer_to' => Yii::t('db', 'Transfer To'),
+            'refund_transfer' => Yii::t('db', 'Refund Transfer'),
         ];
     }
 

@@ -66,6 +66,8 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'order.current_status',
             'order.total_paid_amount_local',
             'order.potential',
+            'order.order_boxme',
+            'order.shipment_boxme',
             'order.store_id',
             'order.type_order',
             'order.created_at',
