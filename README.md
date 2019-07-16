@@ -1166,3 +1166,7 @@ $ let PD = client.CreateOrder({UserId: 23 , CountryCode: 'VN',Data : '{"ship_fro
     const NICEPAY_CANCEL_VA_URL = 'https://www.nicepay.co.id/nicepay/api/onePassAllCancel.do';
     const NICEPAY_ORDER_STATUS_URL = 'https://www.nicepay.co.id/nicepay/api/onePassStatus.do';
     const NICEPAY_READ_TIMEOUT_ERR = '10200';
+
+
+#---------------------Day Don Xuong Kho---------------------------------
+php yii push-order/push-order 1

@@ -32,6 +32,10 @@ return [
 //            'migrationPath' => ['@console/migrations-backup-v2'],
             'migrationPath' => ['@console/migrations'],
         ],
+        'mongodb-migrations-stag' => [
+            'class' => 'yii\mongodb\console\controllers\MigrateController',
+            'migrationPath' => ['@console/mongodb-migrations-stag']
+        ],
         'mongodb-migrate' => [
             'class' => 'yii\mongodb\console\controllers\MigrateController',
             'migrationPath' => ['@console/mongodb-migrations']
