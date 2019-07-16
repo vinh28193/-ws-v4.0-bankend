@@ -1,11 +1,24 @@
 <?php
+use yii\helpers\Html;
+use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
+use yii\web\JsExpression;
+use yii\widgets\ActiveForm;
+use kartik\depdrop\DepDrop;
+use yii\helpers\Url;
+use kartik\select2\Select2;
 /**
  * @var $address \common\models\Address
  * @var $user \common\models\User
  */
-$provincies = \common\models\SystemStateProvince::select2DataForCountry($address && $address->country_id ? $address->country_id : $user->store->country_id);
-$district = \common\models\SystemDistrict::selectData($address && $address->province_id ? $address->province_id : $provincies[0]['id']);
 ?>
+<?php $form = ActiveForm::begin([
+    'action' => 'my-account.html',
+    'options' => [
+        'class' => 'payment-form'
+    ]
+
+]); ?>
 <div class="payment-form">
     <input type="hidden" id="shipping-id" class="form-control" name="shipping-id" value="<?= $address && $address->id ? $address->id : '' ?>">
     <div class="form-group">
@@ -27,56 +40,66 @@ $district = \common\models\SystemDistrict::selectData($address && $address->prov
             <div class="help-block"></div>
         </div>
     </div>
-    <div class="form-group">
-        <div class="form-group">
-            <i class="icon globe"></i>
-            <select id="shipping_province_id" class="form-control" name="shippingform-receiver_province_id" onchange="ws.province_change('shipping_province_id','shipping_district_id')">
-                <?php foreach ($provincies as $provincy){
-                    $selected = $address && $address->province_id == $provincy['id'] ? 'selected' : '';
-                    echo "<option ".$selected." value='".$provincy['id']."'>".$provincy['name']."</option>";
-                }?>
-            </select>
-            <div class="help-block"></div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="form-group">
-            <i class="icon city"></i>
-            <select id="shipping_district_id" class="form-control" name="shippingform-receiver_district_id" onchange="ws.district_change('shipping_district_id','shipping_zipcode')">
-                <?php foreach ($district as $id => $name){
-                    $selected = $address && $address->district_id == $id ? 'selected' : '';
-                    echo "<option ".$selected." value='".$id."'>".$name."</option>";
-                }?>
-            </select>
-            <div class="help-block"></div>
-        </div>
-    </div>
-    <?php if($user->store_id == \common\components\StoreManager::STORE_ID) {?>
-        <div class="form-group">
-            <div class="form-group">
-                <i class="icon mapmaker"></i>
-                <input
-                        type="number"
-                        id="shipping_zipcode"
-                        class="form-control"
-                        name="shipping_zipcode"
-                        list="list_zipcode_shipping"
-                        value="<?= $address && $address->post_code ? $address->post_code : '' ?>"
-                        placeholder="<?= Yii::t('frontend', 'Zip code') ?>"
-                        onkeyup="ws.zipcode_keyup('shipping_zipcode','list_zipcode_shipping')"
-                        onchange="ws.zipcode_Change('shipping_zipcode','shipping_province_id','shipping_district_id')"
-                >
-                <datalist id="list_zipcode_shipping"></datalist>
-                <div class="help-block"></div>
-            </div>
-        </div>
-    <?php }?>
-    <div class="form-group">
-        <div class="form-group">
-            <i class="icon mapmaker"></i>
-            <input type="text" id="shipping_address" class="form-control" name="shipping_address" placeholder="<?= Yii::t('frontend', 'Address') ?>"  value="<?= $address && $address->address ? $address->address : '' ?>">
-            <div class="help-block"></div>
-        </div>
+    <div class="col-md-12 pl-0 pr-0">
+        <?php
+        if ($address->store_id == \common\components\StoreManager::STORE_ID) {
+//                            echo $form->field($shippingForm, 'receiver_post_code')->textInput(['placeholder' => Yii::t('frontend', 'Enter your post code')])->label(Yii::t('frontend', 'Post Code'));
+            echo $form->field($address, 'post_code', ['template' => "{input}\n{hint}\n{error}"])->widget(Select2::className(), [
+                'options' => [
+                    'data-ownwer' => 'receiver',
+                ],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'minimumInputLength' => 4,
+                    'placeholder' => Yii::t('frontend', 'Enter your post code'),
+                    'ajax' => [
+                        'url' => $urlAjaxUrl,
+                        'dataType' => 'json',
+                        'data' => new JsExpression('wsAddress.zipAjaxParam'),
+                        'processResults' => new JsExpression('wsAddress.zipAjaxProcessResults'),
+                    ],
+                    'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                    'templateResult' => new JsExpression('wsAddress.formatZipAjaxResults'),
+                    'templateSelection' => new JsExpression('wsAddress.formatZipAjaxSelection'),
+
+                ],
+                'pluginEvents' => [
+                    "select2:select" => new JsExpression('suggestAddress'),
+                    "select2:unselect" => new JsExpression('suggestAddress')
+                ]
+            ]);
+        } else {
+            echo $form->field($address, 'address', ['template' => "{input}\n{hint}\n{error}"])->textInput(['placeholder' => Yii::t('frontend', 'Enter your address')]);
+        }
+        echo $form->field($address, 'province_id', ['template' => "{input}\n{hint}\n{error}"])->widget(Select2::className(), [
+            'data' => $address->getProvinces(),
+            'pluginOptions' => [
+                'allowClear' => true,
+                'placeholder' => Yii::t('frontend', 'Choose the province'),
+            ],
+        ]);
+
+        echo Html::hiddenInput('hiddenReceiverDistrictId', $address->district_id, ['id' => 'hiddenReceiverDistrictId']);
+
+        echo $form->field($address, 'district_id', ['template' => "{input}\n{hint}\n{error}"])->widget(DepDrop::classname(), [
+            'type' => DepDrop::TYPE_SELECT2,
+            'select2Options' => [
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => [
+                    "select2:select" => "function(event) { ;ws.payment.calculatorShipping(); }",
+                ]
+            ],
+            'pluginOptions' => [
+                'depends' => [Html::getInputId($address, 'province_id')],
+                'placeholder' => Yii::t('frontend', 'Choose the district'),
+                'url' => Url::toRoute(['sub-district']),
+                'loadingText' => Yii::t('frontend', 'Loading district ...'),
+                'initialize' => true,
+                'params' => ['hiddenReceiverDistrictId']
+            ],
+        ]);
+
+        ?>
     </div>
     <div class="form-group">
         <div class="form-check">

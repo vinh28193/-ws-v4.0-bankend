@@ -205,7 +205,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
                 /** @var ActiveQuery $q */
                 $q->select([
                     'code',
-                    'discountAmount',
+                    'discount_amount',
                     'id'
                 ]);
             },

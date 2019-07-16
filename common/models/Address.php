@@ -110,9 +110,9 @@ class Address extends \common\models\db\Address
     public function getProvinces()
     {
         /** @var StoreManager $storem */
-        $storem = \Yii::$app->storeManager;
+        $storeM = \Yii::$app->storeManager;
         if ($this->_provinces === null) {
-            $this->_provinces = SystemStateProvince::select2Data($storem->store->country_id);
+            $this->_provinces = SystemStateProvince::select2Data($storeM->store->country_id);
         }
         return $this->_provinces;
     }

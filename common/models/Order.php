@@ -707,6 +707,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                     ['between', 'order.supporting', $start, $end],
                     ['between', 'order.supported', $start, $end],
                     ['between', 'order.ready_purchase', $start, $end],
+//                    ['between', 'walletTransactions.ready_purchase', $start, $end],
                 ]);
             } elseif ($params['timeKey'] != 'ALL') {
                 $query->andFilterWhere(['between', $params['timeKey'], $start, $end]);
