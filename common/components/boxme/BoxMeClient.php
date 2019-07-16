@@ -212,8 +212,8 @@ class BoxMeClient
             ThirdPartyLogs::setLog('gprc','create_shipment', 'Create success', $data,$rs->getData());
             return $order->shipment_boxme;
         }
-        ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: '.$rs->getError(), $data,[$rs->getError(),$rs->getMessage(),$stt]);
-        return $rs->getError();
+        ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: '.$rs->getMessage(), $data,[$rs->getError(),$rs->getMessage(),$rs->getData(),$stt]);
+        return $rs->getMessage();
     }
 
     /**

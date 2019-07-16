@@ -9,9 +9,11 @@
 namespace api\controllers;
 
 
+use common\components\boxme\BoxMeClient;
 use common\models\Category;
 use common\models\draft\DraftBoxmeTracking;
 use common\models\draft\DraftDataTracking;
+use common\models\Order;
 use common\models\Package;
 use common\models\draft\DraftWastingTracking;
 use common\models\TrackingCode;
@@ -166,5 +168,73 @@ class TestController extends Controller
         \Yii::$app->response->data = ['success' => true, 'message' => 'Done'];
         \Yii::$app->response->send();
         exit();
+    }
+    public function actionSyncProduct(){
+        $order = Order::findOne(['ordercode' => \Yii::$app->request->get('order_code')]);
+        if($order){
+            foreach ($order->products as $product) {
+                $this->stdout_F('sync product: '.$product->sku.' - '.$product->parent_sku);
+                $productBM = BoxMeClient::SyncProduct($product);
+                print_r($productBM);
+                $this->stdout_F('');
+                if(is_array($productBM) && isset($productBM[0]) && !$productBM[0]){
+                    $this->stdout_F('sync false.!');
+                }else{
+                    $this->stdout_F('sync success.!');
+                }
+            }
+        }
+    }
+    public function actionCreateOrderBm() {
+        $order = Order::findOne(['ordercode' => \Yii::$app->request->get('order_code')]);
+        if($order){
+            if($order->order_boxme){
+                $this->stdout_F('Đã có mã BM cho order này: '.$order->order_boxme);
+                $this->stdout_F('-------ERROR----------');
+                die();
+            }
+            $this->stdout_F('Tạo order box me: ...');
+            $orderBM = BoxMeClient::CreateOrder($order);
+            print_r($orderBM);
+            if(!$orderBM || (is_array($orderBM) && !$orderBM[0] )){
+                $this->stdout_F('Tạo order box me lỗi. Bỏ qua order.');
+                $this->stdout_F('-------ERROR----------');
+                die();
+            }
+            $this->stdout_F('');
+            $this->stdout_F('Tạo order box me success.');
+        }
+    }
+    public function actionCreateLiveShipment() {
+        $order = Order::findOne(['ordercode' => \Yii::$app->request->get('order_code')]);
+        if($order){
+            $arrTracking = $order->tracking_codes ? explode(',',$order->tracking_codes) : [];
+            $arrShipment = $order->shipment_boxme ? explode(',',$order->shipment_boxme) : [];
+            if(!$order->tracking_codes){
+                $this->stdout_F('Chưa có tracking code');
+                die();
+            }
+            if(count($arrTracking) <= count($arrShipment)){
+                $this->stdout_F('Đã có mã shipment cho order này: ');
+                $this->stdout_F($order->tracking_codes);
+                $this->stdout_F($order->shipment_boxme);
+                $this->stdout_F('-------ERROR----------');
+                die();
+            }
+            print_r($arrTracking);
+            print_r($arrShipment);
+            foreach ($arrTracking as $key => $trackingCode){
+                echo "$key \n";
+                if($key > (count($arrShipment) - 1)){
+                    $this->stdout_F('Tạo shipment box me cho tracking code: '.$trackingCode);
+                    print_r(BoxMeClient::CreateLiveShipment($order,$trackingCode));
+                    $this->stdout_F('');
+                    $this->stdout_F('Tạo shipment box me success!');
+                }
+            }
+        }
+    }
+    public function stdout_F($string) {
+        echo $string.PHP_EOL;
     }
 }

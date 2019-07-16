@@ -22,6 +22,9 @@ return [
 
         'test/get-custom-fee'=>'test/get-custom-fee',
         'test/callback-boxme'=>'test/callback-boxme',
+        'GET test/sync-product'=>'test/sync-product',
+        'GET test/create-order-bm'=>'test/create-order-bm',
+        'GET test/create-live-shipment'=>'test/create-live-shipment',
 
         '1/addon/get'=>'addon/index',
         '1/addon/order'=>'addon/order-list',
