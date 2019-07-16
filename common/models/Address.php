@@ -120,11 +120,6 @@ class Address extends \common\models\db\Address
     public function getZipCodes()
     {
         return $zipcodes = SystemZipcode::loadZipCode($this->country_id);
-//        $data = [];
-//        foreach ($zipcodes  as  $zipcode){
-//            $data[$zipcode['zip_code']] = $zipcode['label'];
-//        }
-//        return $data;
     }
 
 }
