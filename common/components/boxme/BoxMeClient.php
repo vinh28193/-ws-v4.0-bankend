@@ -178,6 +178,7 @@ class BoxMeClient
         }
         $param = [];
         $param['shipping_method'] = 6;
+        $param['shipment_number'] = $order->ordercode;
         $param['pickup_id'] = $pickUpId;
         $param['ff_id'] = $pickUpId;
         $param['user_id'] = self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df;
