@@ -177,7 +177,7 @@ class BoxMeClient
             $user = null;
         }
         $param = [];
-        $param['shipping_method'] = 5;
+        $param['shipping_method'] = 6;
         $param['pickup_id'] = $pickUpId;
         $param['ff_id'] = $pickUpId;
         $param['user_id'] = self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df;
@@ -220,6 +220,13 @@ class BoxMeClient
         }
         $param['tracking']['type'] = 2;
         $param['tracking']['tracking_number'] = $order->order_boxme;
+        $param['list_order'] = [
+            [
+                'tracking_number' => $order->order_boxme,
+                'parcel_number' => '',
+                'country_code' => $order->store ? $order->store->country_code : 'VN',
+            ]
+        ];
         $data = [
             'Country' => $order->store ? $order->store->country_code : 'VN',
             'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df,

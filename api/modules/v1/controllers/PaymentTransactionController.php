@@ -54,19 +54,27 @@ class PaymentTransactionController extends BaseApiController
             if(!$model){
                 return $this->response(false, 'Cannot found transaction code!');
             }
+            if($model->transaction_status == PaymentTransaction::TRANSACTION_STATUS_QUEUED){
+                return $this->response(false, 'Transaction status is not queued !');
+            }
+            $order = Order::findOne(['ordercode' => $model->order_code]);
             $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-            $model->order->total_paid_amount_local = $model->order->total_paid_amount_local + $model->transaction_amount_local;
+            $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
             $model->save(0);
-            $model->order->save(0);
+            $order->save(0);
         }elseif ($type == 'cancel'){
             $model = PaymentTransaction::findOne(['transaction_code' => $code]);
             if(!$model){
                 return $this->response(false, 'Cannot found transaction code!');
             }
+            if($model->transaction_status == PaymentTransaction::TRANSACTION_STATUS_QUEUED){
+                return $this->response(false, 'Transaction status is not queued !');
+            }
+            $order = Order::findOne(['ordercode' => $model->order_code]);
             $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CANCEL;
-            $model->order->total_final_amount_local = $model->order->total_final_amount_local - $model->transaction_amount_local;
+            $order->total_final_amount_local = $order->total_final_amount_local + $model->transaction_amount_local;
             $model->save(0);
-            $model->order->save(0);
+            $order->save(0);
         }else{
             $model = PaymentTransaction::findOne(['order_code' => $code]);
             if(!$model){
