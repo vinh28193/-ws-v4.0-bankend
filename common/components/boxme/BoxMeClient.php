@@ -243,7 +243,7 @@ class BoxMeClient
             $order->shipment_boxme = $shipment_code ? ($order->shipment_boxme ? $order->shipment_boxme.','.$shipment_code : $shipment_code) : $order->shipment_boxme;
             $order->save(0);
             ThirdPartyLogs::setLog('gprc','create_shipment', 'Create success', $data,$rs->getData());
-            return $order->shipment_boxme;
+            return 'create_shipment: '.$order->shipment_boxme;
         }
         ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: '.($rs ? $rs->getMessage() : "something"), $data,$rs ? [$rs->getError(),$rs->getMessage(),$rs->getData(),$stt] : [$stt]);
         return ['Create error: '.($rs ? $rs->getMessage() : "something"),$stt];

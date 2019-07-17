@@ -59,6 +59,28 @@ class PushOrderController extends Controller
         }
         $this->stdout_F('Job end ---------------------------');
     }
+    public function actionPushShipment($rows,$env = 'prod')
+    {
+        $this->stdout_F('ENV: '.YII_ENV);
+        $this->stdout_F('Rows: '.$rows);
+        $this->stdout_F('Bắt đầu chạy job: ');
+        /** @var Order[] $orders */
+        $orders = Order::find()
+            ->where(['is not', 'tracking_codes', null])
+            ->andWhere(['<>', 'tracking_codes', ''])
+            ->andWhere(['or', ['<>' , 'order_boxme' , ''], ['is not', 'order_boxme', null]])
+            ->andWhere(['or', ['shipment_boxme' => ''], ['is', 'shipment_boxme', null]])
+            ->limit($rows)->all();
+        $this->stdout_F('Có '.count($orders).' orders sẽ được chạy');
+        foreach ($orders as $order) {
+            $this->stdout_F('Chạy đơn: '.$order->ordercode);
+            $this->stdout_F('Tạo shipment box me: ...');
+            print_r(BoxMeClient::CreateLiveShipment($order));
+            $this->stdout_F('');
+            $this->stdout_F('---------DONE---------');
+        }
+        $this->stdout_F('Job end ---------------------------');
+    }
     public function stdout_F($string,$option = '')
     {
 
