@@ -24,7 +24,7 @@ return [
         'POST ebay/item/detail' => 'ebay/item/detail',
         'ebay/search/<keyword:[^/]+>.html' => 'ebay/search/index',
         'ebay/search/ebay/search/<keyword:[^/]+>.html' => 'ebay/search/index',
-        'ebay/seller/<seller:[^/]+>.html' => 'ebay/search/index',
+        'ebay/seller/<keyword:[^/]+>.html' => 'ebay/search/index',
         'ebay/category/<name:[0-9a-zA-Z_-]+>-<category:\d+>.html' => 'ebay/search/index',
         'GET ebay/categories.html' => 'ebay/ebay/categories',
         'ebay/service/browse/<keyword:[^/]+>' => 'ebay/search/index',
