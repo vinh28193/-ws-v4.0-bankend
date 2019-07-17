@@ -10,6 +10,7 @@ namespace api\modules\v1\controllers;
 use api\controllers\BaseApiController;
 use common\models\Order;
 use common\models\PaymentTransaction;
+use common\modelsMongo\ChatMongoWs;
 use frontend\modules\payment\PaymentService;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -138,6 +139,7 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->save(0);
                 $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                 $paymentTransaction->save(0);
+                ChatMongoWs::SendMessage('Tạo giao dịch thu thêm: <b>'.$paymentTransaction->transaction_code.'</b><br>Ghi chú: '.$description,$paymentTransaction->order_code,ChatMongoWs::TYPE_GROUP_WS);
                 return $this->response(true, "add payment ".$paymentTransaction->transaction_code." order code $order_code success");
             }elseif ($type == PaymentTransaction::PAYMENT_TYPE_REFUND){
                 if($order->total_paid_amount_local < $amount){
@@ -173,6 +175,7 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->save(0);
                 $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                 $paymentTransaction->save(0);
+                ChatMongoWs::SendMessage('Tạo giao dịch hoàn tiền: <b>'.$paymentTransaction->transaction_code.'</b><br>Ghi chú: '.$description,$paymentTransaction->order_code,ChatMongoWs::TYPE_GROUP_WS);
                 return $this->response(true, "refund transaction ".$paymentTransaction->transaction_code." order code $order_code success");
             }elseif ($type == 'transfer'){
                 if($order->total_paid_amount_local < 0){
@@ -215,6 +218,7 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->save(0);
                 $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                 $paymentTransaction->save(0);
+                ChatMongoWs::SendMessage("Chuyển tiền thanh toán cho order <b>".$to.'</b>. Với mã giao dịch <b>'.$paymentTransaction->transaction_code.'</b>',$paymentTransaction->order_code,ChatMongoWs::TYPE_GROUP_WS);
                 $paymentTransaction_2 = new PaymentTransaction();
                 $paymentTransaction_2->store_id = $orderTo->store_id;
                 $paymentTransaction_2->customer_id = $orderTo->customer_id;
@@ -240,6 +244,7 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction_2->save(0);
                 $paymentTransaction_2->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction_2->id);
                 $paymentTransaction_2->save(0);
+                ChatMongoWs::SendMessage("Nhận tiền thanh toán từ order <b>".$order_code.'</b>. Với mã giao dịch nhận <b>'.$paymentTransaction_2->transaction_code.'</b> và mã giao dịch chuyển là: <b>'.$paymentTransaction->transaction_code.'</b>',$paymentTransaction_2->order_code,ChatMongoWs::TYPE_GROUP_WS);
                 return $this->response(true, "transaction transfer : ".$paymentTransaction->transaction_code." - ".$paymentTransaction_2->transaction_code."  success");
             }
         }else{
