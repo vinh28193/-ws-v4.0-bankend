@@ -284,7 +284,7 @@ class Payment extends Model
     public function checkPromotion()
     {
         $results = [];
-        foreach ($this->getOrders() as $key =>  $order) {
+        foreach ($this->getOrders() as $key => $order) {
             /** @var  $order Order */
             $form = new PromotionForm();
             $form->load($order->createPromotionParam(), '');

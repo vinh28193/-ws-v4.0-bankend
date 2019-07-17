@@ -13,7 +13,6 @@ use yii\helpers\ArrayHelper;
  *
  * @property-read array|mixed|null $pickUpWareHouse
  */
-
 trait PickUpWareHouseTrait
 {
 
@@ -28,8 +27,8 @@ trait PickUpWareHouseTrait
     {
         if (!$this->_pickUpWareHouse) {
             $user = method_exists($this, 'getUser') ? call_user_func([$this, 'getUser']) : ((($app = Yii::$app) instanceof \yii\web\Application && ($identity = $app->user->identity) !== null) ? $identity : null);
-            if ($user !== null && method_exists($user, 'getPickupWarehouse')) {
-                $this->_pickUpWareHouse = call_user_func([$user, 'getPickupWarehouse']);
+            if ($user !== null && method_exists($user, 'getPickupWarehouse') && ($wh = call_user_func([$user, 'getPickupWarehouse'])) !== null) {
+                $this->_pickUpWareHouse = $wh;
             } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
                 $current = $params['default'];
                 $this->_pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
