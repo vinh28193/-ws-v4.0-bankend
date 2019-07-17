@@ -142,13 +142,22 @@ class PaymentController extends BasePaymentController
         $payment->customer_postcode = $shippingForm->buyer_post_code;
         $payment->customer_district = $shippingForm->getBuyerDistrictName();
         $payment->customer_country = $this->storeManager->store->country_name;
+
+        $parentTransaction = null;
+        if ($payment->transaction_code !== null) {
+            $parentTransaction = $payment->transaction_code;
+        }
+
         $payment->createTransactionCode();
+
         $paymentTransaction = new PaymentTransaction();
         $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
         $paymentTransaction->store_id = $payment->storeManager->getId();
+        $paymentTransaction->carts = implode(',', array_keys($payment->getOrders()));
         $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
         $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
         $paymentTransaction->transaction_code = $payment->transaction_code;
+        $paymentTransaction->parent_transaction_code = $parentTransaction;
         $paymentTransaction->transaction_customer_name = $payment->customer_name;
         $paymentTransaction->transaction_customer_email = $payment->customer_email;
         $paymentTransaction->transaction_customer_phone = $payment->customer_phone;
@@ -292,7 +301,6 @@ class PaymentController extends BasePaymentController
             }
         }
 
-
         // ToDo Push GA Checkout @Phuchc 15/7/2019
 
         $res = $payment->processPayment();
@@ -318,12 +326,12 @@ class PaymentController extends BasePaymentController
         $paymentTransaction->save(false);
         // Todo remove cart after create payment success
 
-        foreach ($payment->getOrders() as $order) {
+        foreach ($payment->getOrders() as $key => $order) {
             /** @var  $order Order */
             $childTransaction = clone $paymentTransaction;
             $childTransaction->id = null;
             $childTransaction->isNewRecord = true;
-            $childTransaction->carts = $order->cartId;
+            $childTransaction->carts = $key;
             $childTransaction->transaction_amount_local = $order->total_final_amount_local;
             $childTransaction->total_discount_amount = $order->total_promotion_amount_local;
             $childTransaction->before_discount_amount_local = $childTransaction->transaction_amount_local - $order->total_promotion_amount_local;
@@ -350,7 +358,7 @@ class PaymentController extends BasePaymentController
             /** @var  $mailer yii\mail\BaseMailer */
             $mailer = Yii::$app->mandrillMailer;
             $mailer->viewPath = '@common/views/mail';
-            $mail = $mailer->compose(['html' => 'orderCreate-html'],[
+            $mail = $mailer->compose(['html' => 'orderCreate-html'], [
                 'paymentTransaction' => $paymentTransaction,
                 'storeManager' => $this->storeManager
             ]);
@@ -360,7 +368,7 @@ class PaymentController extends BasePaymentController
             $mail->setSubject('Create Order Success');
             $mail->send();
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Yii::error($exception);
         }
 

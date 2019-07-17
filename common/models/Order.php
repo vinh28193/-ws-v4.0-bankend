@@ -959,4 +959,25 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
         return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 
+    public function attributeAlias()
+    {
+        return ArrayHelper::merge(parent::attributeAlias(), [
+            'total_price_amount_origin' => Yii::t('frontend', 'Price amount'),
+            'total_origin_fee_local' => Yii::t('frontend', 'Price local'),
+            'total_origin_tax_fee_local' => Yii::t('frontend', 'Tax fee local'),
+            'total_origin_tax_fee_amount' => Yii::t('frontend', 'Tax fee amount'),
+            'total_origin_shipping_fee_local' => Yii::t('frontend', 'Shipping fee local'),
+            'total_origin_shipping_fee_amount' => Yii::t('frontend', 'Shipping fee amount'),
+            'total_weshop_fee_local' => Yii::t('frontend', 'Purchase fee local'),
+            'total_weshop_fee_amount' => Yii::t('frontend', 'Purchase fee amount'),
+            'total_intl_shipping_fee_local' => Yii::t('frontend', 'International shipping fee local'),
+            'total_intl_shipping_fee_amount' => Yii::t('frontend', 'International shipping fee amount'),
+            'total_vat_amount_local' => Yii::t('frontend', 'Vat local'),
+            'total_vat_amount_amount' => Yii::t('frontend', 'Vat amount'),
+            'total_custom_fee_amount_local' => Yii::t('frontend', 'Custom fee local'),
+            'total_custom_fee_amount' => Yii::t('frontend', 'Custom fee amount'),
+        ]);
+    }
+
+
 }

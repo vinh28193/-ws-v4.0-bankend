@@ -128,7 +128,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             [['us_amount', 'us_tax', 'us_ship', 'custom_fee'], 'number'],
             [['target', 'item_type', 'item_id', 'item_sku', 'item_seller'], 'string'],
             [['province', 'district'], 'safe'],
-            ['accept_insurance', 'string']
+            [['accept_insurance'], 'string']
         ]);
     }
 
@@ -340,6 +340,9 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 $firstCourier = $couriers[0];
                 $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', $firstCourier['total_fee']);
                 $this->getAdditionalFees()->withCondition($this, 'insurance_fee', $firstCourier['insurance_fee']);
+                if ($this->getIsSpecial()) {
+                    Yii::info($firstCourier['special_fee'], 'special_fee');
+                }
             }
 
         }
@@ -453,6 +456,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         $params = [
             'config' => [
                 'insurance' => $this->accept_insurance,
+                'include_special_goods' => $this->getIsSpecial() ? 'Y' : 'N'
             ],
             'ship_from' => [
                 'country' => 'US',
