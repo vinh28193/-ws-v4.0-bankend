@@ -158,7 +158,7 @@ class BoxMeClient
      * @return bool
      * @throws \Exception
      */
-    public static function CreateLiveShipment($order,$tracking){
+    public static function CreateLiveShipment($order){
         $service = new SellerClient(ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_SELLER','10.130.111.53:50060'), [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
@@ -191,8 +191,30 @@ class BoxMeClient
             ];
             $param['procducts'][] = $temp;
         }
+        $arrTracking = $order->tracking_codes ? explode(',',$order->tracking_codes) : [];
+        if(!$order->tracking_codes){
+            ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: not have tracking code', [],[]);
+            return 'Not have tracking code.';
+        }
+        if(!$order->order_boxme){
+            ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: not have order boxme', [],[]);
+            return 'Not have order boxme.';
+        }
+        $param['packages'] = [];
+        foreach ($arrTracking as $key => $trackingCode){
+            $temp = [
+                'code' => $trackingCode,
+                'weight' => ($order->total_weight_temporary * 1000)/$order->total_quantity,
+                'quantity' => $order->total_quantity,
+                'width' => 5,
+                'length' => 5,
+                'height' => 5,
+                'description' => 'Package for '.$trackingCode
+            ];
+            $param['procducts'][] = $temp;
+        }
         $param['tracking']['type'] = 2;
-        $param['tracking']['tracking_number'] = $tracking;
+        $param['tracking']['tracking_number'] = $order->order_boxme;
         $data = [
             'Country' => $order->store ? $order->store->country_code : 'VN',
             'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df,

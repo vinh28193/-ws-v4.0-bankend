@@ -51,6 +51,8 @@ class PushOrderController extends Controller
                 $this->stdout_F('');
                 $this->stdout_F('Tạo order box me success.');
             }
+
+            print_r(BoxMeClient::CreateLiveShipment($order));
             $arrTracking = $order->tracking_codes ? explode(',',$order->tracking_codes) : [];
             $arrShipment = $order->shipment_boxme ? explode(',',$order->shipment_boxme) : [];
             if(!$order->tracking_codes){
