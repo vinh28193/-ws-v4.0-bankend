@@ -10,18 +10,21 @@ use yii\console\Controller;
 
 class PushOrderController extends Controller
 {
-    public function actionPushOrder($rows,$env = 'prod')
+    public function actionPushOrder($rows, $store_id = null,$env = 'prod')
     {
         print_r(YII_ENV);
         $this->stdout_F('Rows: '.$rows);
         $this->stdout_F('Bắt đầu chạy job: ');
         /** @var Order[] $orders */
-        $orders = Order::find()
+        $qr = Order::find()
             ->where(['is not', 'tracking_codes', null])
             ->andWhere(['<>', 'tracking_codes', ''])
             ->andWhere(['or', ['order_boxme' => ''], ['is', 'order_boxme', null]])
-            ->andWhere(['or', ['shipment_boxme' => ''], ['is', 'shipment_boxme', null]])
-            ->limit($rows)->all();
+            ->andWhere(['or', ['shipment_boxme' => ''], ['is', 'shipment_boxme', null]]);
+        if($store_id){
+            $qr->andWhere(['store_id' => $store_id]);
+        }
+        $orders = $qr->limit($rows)->all();
         $this->stdout_F('Có '.count($orders).' orders sẽ được chạy');
         foreach ($orders as $order) {
             $this->stdout_F('Chạy đơn: '.$order->ordercode);
