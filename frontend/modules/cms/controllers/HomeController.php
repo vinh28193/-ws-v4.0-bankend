@@ -68,5 +68,17 @@ class HomeController extends CmsController
         return $this->render('index', ['data' => $data]);
     }
 
+    public function actionVoucher()
+    {
+        $data = file_get_contents(\Yii::getAlias('@webroot') . '/data/data_voucher.json');
+        $data = json_decode($data, true);
+        return $this->render('voucher', ['web' => $this->storeManager, 'data' => $data]);
+    }
+
+    public function actionVoucherDetail($id = null)
+    {
+        $data = \Yii::$app->cache->get($id);
+        return $this->render('detailVoucher', ['data' => $data, 'web' => $this->storeManager]);
+    }
 
 }

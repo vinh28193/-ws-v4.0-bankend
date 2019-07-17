@@ -11,7 +11,7 @@ use Yii;
  * @property int $store_id Store ID reference
  * @property int $customer_id customer id
  * @property string $transaction_code mã giao dịch của weshop
- * @property string $transaction_type Loại giao dịch: top up , payment, withdraw
+ * @property string $transaction_type
  * @property string $transaction_status trạng thái giao dịch
  * @property string $transaction_customer_name
  * @property string $transaction_customer_email
@@ -52,6 +52,7 @@ use Yii;
  * @property string $courier_delivery_time
  * @property int $international_shipping_fee
  * @property int $insurance_fee
+ * @property string $link_image
  * @property int $updated_at
  */
 class PaymentTransaction extends \common\components\db\ActiveRecord
@@ -70,13 +71,12 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'payment_type', 'payment_provider', 'payment_method', 'courier_name', 'service_code', 'international_shipping_fee'], 'required'],
+            [['store_id'], 'required'],
             [['store_id', 'customer_id', 'used_xu', 'bulk_point', 'shipping', 'support_id', 'third_party_transaction_time', 'created_at', 'international_shipping_fee', 'insurance_fee', 'updated_at'], 'integer'],
             [['total_discount_amount', 'before_discount_amount_local', 'transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
-            [['transaction_description', 'note', 'third_party_transaction_link'], 'string'],
-            [['transaction_code', 'payment_bank_code', 'coupon_code', 'topup_transaction_code', 'parent_transaction_code', 'order_code', 'service_code'], 'string', 'max' => 32],
+            [['transaction_description', 'note', 'third_party_transaction_link', 'link_image'], 'string'],
+            [['transaction_code', 'transaction_type', 'payment_type', 'payment_bank_code', 'coupon_code', 'topup_transaction_code', 'parent_transaction_code', 'order_code', 'service_code'], 'string', 'max' => 32],
             [['transaction_status'], 'string', 'max' => 10],
-            [['transaction_type', 'payment_type'], 'string', 'max' => 32],
             [['transaction_customer_name', 'transaction_customer_email', 'transaction_customer_phone', 'transaction_customer_address', 'transaction_customer_city', 'transaction_customer_postcode', 'transaction_customer_district', 'transaction_customer_country', 'carts', 'transaction_reference_code', 'third_party_transaction_code', 'courier_name', 'courier_delivery_time'], 'string', 'max' => 255],
             [['payment_provider', 'payment_method'], 'string', 'max' => 50],
             [['third_party_transaction_status'], 'string', 'max' => 200],
@@ -89,52 +89,53 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'store_id' => 'Store ID',
-            'customer_id' => 'Customer ID',
-            'transaction_code' => 'Transaction Code',
-            'transaction_type' => 'Transaction Type',
-            'transaction_status' => 'Transaction Status',
-            'transaction_customer_name' => 'Transaction Customer Name',
-            'transaction_customer_email' => 'Transaction Customer Email',
-            'transaction_customer_phone' => 'Transaction Customer Phone',
-            'transaction_customer_address' => 'Transaction Customer Address',
-            'transaction_customer_city' => 'Transaction Customer City',
-            'transaction_customer_postcode' => 'Transaction Customer Postcode',
-            'transaction_customer_district' => 'Transaction Customer District',
-            'transaction_customer_country' => 'Transaction Customer Country',
-            'payment_type' => 'Payment Type',
-            'payment_provider' => 'Payment Provider',
-            'payment_method' => 'Payment Method',
-            'payment_bank_code' => 'Payment Bank Code',
-            'coupon_code' => 'Coupon Code',
-            'used_xu' => 'Used Xu',
-            'bulk_point' => 'Bulk Point',
-            'carts' => 'Carts',
-            'shipping' => 'Shipping',
-            'support_id' => 'Support ID',
-            'total_discount_amount' => 'Total Discount Amount',
-            'before_discount_amount_local' => 'Before Discount Amount Local',
-            'transaction_amount_local' => 'Transaction Amount Local',
-            'transaction_description' => 'Transaction Description',
-            'note' => 'Note',
-            'transaction_reference_code' => 'Transaction Reference Code',
-            'third_party_transaction_code' => 'Third Party Transaction Code',
-            'third_party_transaction_link' => 'Third Party Transaction Link',
-            'third_party_transaction_status' => 'Third Party Transaction Status',
-            'third_party_transaction_time' => 'Third Party Transaction Time',
-            'before_transaction_amount_local' => 'Before Transaction Amount Local',
-            'after_transaction_amount_local' => 'After Transaction Amount Local',
-            'created_at' => 'Created At',
-            'topup_transaction_code' => 'Topup Transaction Code',
-            'parent_transaction_code' => 'Parent Transaction Code',
-            'order_code' => 'Order Code',
-            'courier_name' => 'Courier Name',
-            'service_code' => 'Service Code',
-            'courier_delivery_time' => 'Courier Delivery Time',
-            'international_shipping_fee' => 'International Shipping Fee',
-            'insurance_fee' => 'Insurance Fee',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('db', 'ID'),
+            'store_id' => Yii::t('db', 'Store ID'),
+            'customer_id' => Yii::t('db', 'Customer ID'),
+            'transaction_code' => Yii::t('db', 'Transaction Code'),
+            'transaction_type' => Yii::t('db', 'Transaction Type'),
+            'transaction_status' => Yii::t('db', 'Transaction Status'),
+            'transaction_customer_name' => Yii::t('db', 'Transaction Customer Name'),
+            'transaction_customer_email' => Yii::t('db', 'Transaction Customer Email'),
+            'transaction_customer_phone' => Yii::t('db', 'Transaction Customer Phone'),
+            'transaction_customer_address' => Yii::t('db', 'Transaction Customer Address'),
+            'transaction_customer_city' => Yii::t('db', 'Transaction Customer City'),
+            'transaction_customer_postcode' => Yii::t('db', 'Transaction Customer Postcode'),
+            'transaction_customer_district' => Yii::t('db', 'Transaction Customer District'),
+            'transaction_customer_country' => Yii::t('db', 'Transaction Customer Country'),
+            'payment_type' => Yii::t('db', 'Payment Type'),
+            'payment_provider' => Yii::t('db', 'Payment Provider'),
+            'payment_method' => Yii::t('db', 'Payment Method'),
+            'payment_bank_code' => Yii::t('db', 'Payment Bank Code'),
+            'coupon_code' => Yii::t('db', 'Coupon Code'),
+            'used_xu' => Yii::t('db', 'Used Xu'),
+            'bulk_point' => Yii::t('db', 'Bulk Point'),
+            'carts' => Yii::t('db', 'Carts'),
+            'shipping' => Yii::t('db', 'Shipping'),
+            'support_id' => Yii::t('db', 'Support ID'),
+            'total_discount_amount' => Yii::t('db', 'Total Discount Amount'),
+            'before_discount_amount_local' => Yii::t('db', 'Before Discount Amount Local'),
+            'transaction_amount_local' => Yii::t('db', 'Transaction Amount Local'),
+            'transaction_description' => Yii::t('db', 'Transaction Description'),
+            'note' => Yii::t('db', 'Note'),
+            'transaction_reference_code' => Yii::t('db', 'Transaction Reference Code'),
+            'third_party_transaction_code' => Yii::t('db', 'Third Party Transaction Code'),
+            'third_party_transaction_link' => Yii::t('db', 'Third Party Transaction Link'),
+            'third_party_transaction_status' => Yii::t('db', 'Third Party Transaction Status'),
+            'third_party_transaction_time' => Yii::t('db', 'Third Party Transaction Time'),
+            'before_transaction_amount_local' => Yii::t('db', 'Before Transaction Amount Local'),
+            'after_transaction_amount_local' => Yii::t('db', 'After Transaction Amount Local'),
+            'created_at' => Yii::t('db', 'Created At'),
+            'topup_transaction_code' => Yii::t('db', 'Topup Transaction Code'),
+            'parent_transaction_code' => Yii::t('db', 'Parent Transaction Code'),
+            'order_code' => Yii::t('db', 'Order Code'),
+            'courier_name' => Yii::t('db', 'Courier Name'),
+            'service_code' => Yii::t('db', 'Service Code'),
+            'courier_delivery_time' => Yii::t('db', 'Courier Delivery Time'),
+            'international_shipping_fee' => Yii::t('db', 'International Shipping Fee'),
+            'insurance_fee' => Yii::t('db', 'Insurance Fee'),
+            'link_image' => Yii::t('db', 'Link Image'),
+            'updated_at' => Yii::t('db', 'Updated At'),
         ];
     }
 }
