@@ -4,6 +4,25 @@ html, body {
     font-weight: 400;
     color: #555555;
 }
+#countdown{
+    color: red;
+}
+i.la.la-check.check-active-btn-search{
+    font-weight: 900;
+    position: absolute;
+    top: -10px;
+    left: -5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 18px;
+    height: 18px;
+    color: #fff;
+    font-size: 10px;
+    line-height: 12px;
+    border-radius: 50%;
+    background-color: #37a525;
+}
 .big-img .zoomWrapper {
     /*text-align: center;*/
 }

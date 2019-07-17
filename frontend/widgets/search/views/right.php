@@ -54,9 +54,11 @@ $this->registerJs($js);
         <div class="lable-titlebox"><?= Yii::t('frontend','Choose website') ?> </div>
         <div class="btn-group btn-group-sn" style="padding-right: 20px">
             <button class="btn btn-default <?= $portal != 'ebay' ? 'active-btn' : '' ?>" <?= $portal != 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/amazon/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+                <i class="la la-check <?= $portal != 'ebay' ? 'check-active-btn-search' : 'd-none' ?>"></i>
                 <i class="ico ico-amazon <?= $portal != 'ebay' ? 'active' : '' ?>"></i>
             </button>
             <button class="btn btn-default <?= $portal == 'ebay' ? 'active-btn' : '' ?>" <?= $portal == 'ebay' ? '' : 'onclick="ws.loading(true);location.assign(\'/ebay/search/'.Yii::$app->request->get('keyword','').'.html\')"' ?>>
+                <i class="la la-check <?= $portal == 'ebay' ? 'check-active-btn-search' : 'd-none' ?>"></i>
                 <i class="ico ico-ebay <?= $portal == 'ebay' ? 'active' : '' ?>"></i>
             </button>
         </div>
@@ -273,8 +275,19 @@ $this->registerJs($js);
                 ]);
             }
         }else{
+            echo '<script>var runTime = setInterval(function () {
+            var second = parseInt($("#countdown").attr("data-val"));
+            if (second > 0) {
+                $("#countdown").text((second - 1) + "s");
+                $("#countdown").attr("data-val",(second - 1));
+            } else {
+                ws.redirect("/'.($portal == "ebay" ? "amazon" : "ebay" ).'/search/'.Yii::$app->request->get('keyword','').'.html");
+                    clearInterval(runTime);
+            }
+        }, 1000);</script>';
             echo '<div class="col-12" style="font-size: 18px;font-weight: 700;">'.Yii::t('frontend','No results for {keyword}.',['keyword' => $keyword]).'</div>';
             echo '<div class="col-12" style="font-size: 14px;font-weight: 700;">'.Yii::t('frontend','Try checking your spelling or use more general terms. Or you can try search on {portal}.',['portal' => $portal == 'ebay' ? 'Amazon' : 'eBay']).'</div>';
+            echo '<div class="col-12" style="font-size: 14px;font-weight: 700;">'.Yii::t('frontend','Search {portal} in <span id="countdown" data-val="15">15s</span>.',['portal' => $portal == 'ebay' ? 'Amazon' : 'eBay']).'</div>';
         }
         ?>
     </div>
