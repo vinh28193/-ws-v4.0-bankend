@@ -154,8 +154,7 @@ class BoxMeClient
 
     /**
      * @param Order $order
-     * @param $tracking
-     * @return bool
+     * @return bool|array
      * @throws \Exception
      */
     public static function CreateLiveShipment($order){
@@ -217,7 +216,7 @@ class BoxMeClient
                 $desc .= " | ".$product->note_boxme;
             }
             $temp['description'] = $desc;
-            $param['procducts'][] = $temp;
+            $param['packages'][] = $temp;
         }
         $param['tracking']['type'] = 2;
         $param['tracking']['tracking_number'] = $order->order_boxme;
@@ -235,7 +234,6 @@ class BoxMeClient
             'Param' => json_encode($param),
         ];
         $request = new CreateShipmentRequest($data);
-
         $apires = $service->CreateShipment($request)->wait();
         list($rs,$stt) = $apires;
         /** @var CreateShipmentResponse $rs */
@@ -247,8 +245,8 @@ class BoxMeClient
             ThirdPartyLogs::setLog('gprc','create_shipment', 'Create success', $data,$rs->getData());
             return $order->shipment_boxme;
         }
-        ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: '.$rs->getMessage(), $data,[$rs->getError(),$rs->getMessage(),$rs->getData(),$stt]);
-        return $rs->getMessage();
+        ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: '.($rs ? $rs->getMessage() : "something"), $data,$rs ? [$rs->getError(),$rs->getMessage(),$rs->getData(),$stt] : [$stt]);
+        return ['Create error: '.($rs ? $rs->getMessage() : "something"),$stt];
     }
 
     /**
@@ -306,7 +304,7 @@ class BoxMeClient
      */
     public static function CreateOrder($order) {
         if ($order->order_boxme){
-            return false;
+            return true;
         }
         $hostname = ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_COURIER','10.130.111.53:50056');
         $service = new CourierClient($hostname, [
