@@ -306,6 +306,11 @@ class BoxMeClient
         if ($order->order_boxme){
             return true;
         }
+        $trackingCodes = explode(',',$order->tracking_codes);
+        if(count($trackingCodes) > 1){
+            ThirdPartyLogs::setLog('gprc','create_order_BM', 'Cannot send tracking code multi', $order->ordercode,[]);
+            return [false,'Tracking code multi'];
+        }
         $hostname = ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_COURIER','10.130.111.53:50056');
         $service = new CourierClient($hostname, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),

@@ -32,7 +32,7 @@ class AmazonProduct extends BaseProduct
             $source = self::STORE_JP;
         }
         $id = strtoupper($this->item_id);
-        $this->item_origin_url = "https://$source/gp/product/$id?ie=UTF8&tag=wp034-20&camp=1789&linkCode=xm2&creativeASIN=$id";
+        $this->item_origin_url = "https://$source/gp/product/$id?ie=UTF8&tag=wp034-20&camp=1789&linkCode=xm2&creativeASIN=$id&th=1&psc=1";
         return $this->item_origin_url;
     }
 
