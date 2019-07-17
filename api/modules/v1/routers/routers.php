@@ -116,10 +116,12 @@ return [
         'patterns' => [
             'GET,HEAD' => 'index',
             'PUT,PATCH {id}' => 'update',
+            'PUT,PATCH {code}/confirm' => 'confirm',
             'DELETE {id}' => 'delete',
             'GET,HEAD {code}' => 'view',
             'POST' => 'create',
             'OPTIONS {id}' => 'options',
+            'OPTIONS {code}/confirm' => 'options',
             'OPTIONS {code}' => 'options',
             'OPTIONS' => 'options',
         ],
