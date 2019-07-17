@@ -219,13 +219,7 @@ class PaymentController extends BasePaymentController
                     $order->seller_name = $seller->seller_name;
                     $order->seller_store = $seller->seller_link_store;
 
-                    $order->payment_provider = $payment->payment_provider_name;
-                    $order->payment_method = $payment->payment_method_name;
-                    $order->payment_bank = $payment->payment_bank_code;
 
-                    if ($shippingForm->receiver_address_id !== null) {
-                        $order->receiver_address_id = $shippingForm->receiver_address_id;
-                    }
                     if (!$order->save(false)) {
                         $transaction->rollBack();
                         return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
@@ -339,6 +333,13 @@ class PaymentController extends BasePaymentController
             $childTransaction->courier_delivery_time = $order->courier_delivery_time;
             $childTransaction->save(false);
 
+            $order->payment_provider = $payment->payment_provider_name;
+            $order->payment_method = $payment->payment_method_name;
+            $order->payment_bank = $payment->payment_bank_code;
+
+            if ($shippingForm->receiver_address_id !== null) {
+                $order->receiver_address_id = $shippingForm->receiver_address_id;
+            }
             $order->payment_transaction_code = $childTransaction->transaction_code;
 
             if (!empty($assign)) {
