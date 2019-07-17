@@ -221,17 +221,9 @@ class TestController extends Controller
                 $this->stdout_F('-------ERROR----------');
                 die();
             }
-            print_r($arrTracking);
-            print_r($arrShipment);
-            foreach ($arrTracking as $key => $trackingCode){
-                echo "$key \n";
-                if($key > (count($arrShipment) - 1)){
-                    $this->stdout_F('Tạo shipment box me cho tracking code: '.$trackingCode);
-                    print_r(BoxMeClient::CreateLiveShipment($order,$trackingCode));
-                    $this->stdout_F('');
-                    $this->stdout_F('Tạo shipment box me success!');
-                }
-            }
+            $this->stdout_F('Tạo shipment box me');
+            print_r(BoxMeClient::CreateLiveShipment($order));
+            $this->stdout_F('');
         }
     }
     public function stdout_F($string) {

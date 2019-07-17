@@ -19,6 +19,7 @@ class PaymentTransaction extends DbPaymentTransaction
 
     const TRANSACTION_TYPE_PAYMENT = 'PAYMENT';
     const TRANSACTION_ADDFEE = 'ADDFEE';
+    const TRANSACTION_continue_payment = 'CONTINUE_PAYMENT';
     const TRANSACTION_TYPE_TOP_UP = 'TOP_UP';
     const TRANSACTION_TYPE_REFUND = 'REFUND';
     const TRANSACTION_TYPE_REFUND_TRANSFER = 'REFUND_TRANSFER';
@@ -35,6 +36,7 @@ class PaymentTransaction extends DbPaymentTransaction
     const PAYMENT_TYPE_SHOPPING = 'shopping';
     const PAYMENT_TYPE_TOP_UP = 'top_up';
     const PAYMENT_TYPE_ADDFEE = 'addfee';
+    const PAYMENT_TYPE_continue_payment = 'continue_payment';
     const PAYMENT_TYPE_REFUND = 'refund';
 
     /**

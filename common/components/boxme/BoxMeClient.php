@@ -154,8 +154,7 @@ class BoxMeClient
 
     /**
      * @param Order $order
-     * @param $tracking
-     * @return bool
+     * @return bool|array
      * @throws \Exception
      */
     public static function CreateLiveShipment($order){
@@ -178,6 +177,7 @@ class BoxMeClient
         }
         $param = [];
         $param['shipping_method'] = 6;
+        $param['shipment_number'] = $order->order_boxme;
         $param['pickup_id'] = $pickUpId;
         $param['ff_id'] = $pickUpId;
         $param['user_id'] = self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df;
@@ -216,7 +216,7 @@ class BoxMeClient
                 $desc .= " | ".$product->note_boxme;
             }
             $temp['description'] = $desc;
-            $param['procducts'][] = $temp;
+            $param['packages'][] = $temp;
         }
         $param['tracking']['type'] = 2;
         $param['tracking']['tracking_number'] = $order->order_boxme;
@@ -234,7 +234,6 @@ class BoxMeClient
             'Param' => json_encode($param),
         ];
         $request = new CreateShipmentRequest($data);
-
         $apires = $service->CreateShipment($request)->wait();
         list($rs,$stt) = $apires;
         /** @var CreateShipmentResponse $rs */
@@ -244,10 +243,10 @@ class BoxMeClient
             $order->shipment_boxme = $shipment_code ? ($order->shipment_boxme ? $order->shipment_boxme.','.$shipment_code : $shipment_code) : $order->shipment_boxme;
             $order->save(0);
             ThirdPartyLogs::setLog('gprc','create_shipment', 'Create success', $data,$rs->getData());
-            return $order->shipment_boxme;
+            return 'create_shipment: '.$order->shipment_boxme;
         }
-        ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: '.$rs->getMessage(), $data,[$rs->getError(),$rs->getMessage(),$rs->getData(),$stt]);
-        return $rs->getMessage();
+        ThirdPartyLogs::setLog('gprc','create_shipment', 'Create error: '.($rs ? $rs->getMessage() : "something"), $data,$rs ? [$rs->getError(),$rs->getMessage(),$rs->getData(),$stt] : [$stt]);
+        return ['Create error: '.($rs ? $rs->getMessage() : "something"),$stt];
     }
 
     /**
@@ -305,7 +304,12 @@ class BoxMeClient
      */
     public static function CreateOrder($order) {
         if ($order->order_boxme){
-            return false;
+            return true;
+        }
+        $trackingCodes = explode(',',$order->tracking_codes);
+        if(count($trackingCodes) > 1){
+            ThirdPartyLogs::setLog('gprc','create_order_BM', 'Cannot send tracking code multi', $order->ordercode,[]);
+            return [false,'Tracking code multi'];
         }
         $hostname = ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_COURIER','10.130.111.53:50056');
         $service = new CourierClient($hostname, [
@@ -343,7 +347,7 @@ class BoxMeClient
         $item = [];
         foreach ($order->products as $product){
             $item[] = [
-                'sku' => strtolower($product->portal) == 'ebay' ? $product->sku : $product->parent_sku,
+                'sku' => TextUtility::GenerateBSinBoxMe($product->id),
                 'label_code' => '',
                 'origin_country' => 'US',
                 'name' => $product->product_name,

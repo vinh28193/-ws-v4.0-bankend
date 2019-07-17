@@ -54,7 +54,10 @@ class PaymentTransactionController extends BaseApiController
             if(!$model){
                 return $this->response(false, 'Cannot found transaction code!');
             }
-            if($model->transaction_status == PaymentTransaction::TRANSACTION_STATUS_QUEUED){
+            if($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE){
+                return $this->response(false, 'Transaction is not addfee or continue payment!');
+            }
+            if($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED){
                 return $this->response(false, 'Transaction status is not queued !');
             }
             $order = Order::findOne(['ordercode' => $model->order_code]);
@@ -62,19 +65,26 @@ class PaymentTransactionController extends BaseApiController
             $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
             $model->save(0);
             $order->save(0);
+            ChatMongoWs::SendMessage("Update trạng thái success cho payment transaction: <b>".$model->transaction_code."</b>.",ChatMongoWs::TYPE_GROUP_WS);
         }elseif ($type == 'cancel'){
             $model = PaymentTransaction::findOne(['transaction_code' => $code]);
             if(!$model){
                 return $this->response(false, 'Cannot found transaction code!');
             }
-            if($model->transaction_status == PaymentTransaction::TRANSACTION_STATUS_QUEUED){
+            if($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE){
+                return $this->response(false, 'Transaction is not addfee or continue payment!');
+            }
+            if($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED){
                 return $this->response(false, 'Transaction status is not queued !');
             }
-            $order = Order::findOne(['ordercode' => $model->order_code]);
+            if($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment){
+                $order = Order::findOne(['ordercode' => $model->order_code]);
+                $order->total_final_amount_local = $order->total_final_amount_local + $model->transaction_amount_local;
+                $order->save(0);
+            }
             $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CANCEL;
-            $order->total_final_amount_local = $order->total_final_amount_local + $model->transaction_amount_local;
             $model->save(0);
-            $order->save(0);
+            ChatMongoWs::SendMessage("Update trạng thái cancel cho payment transaction: <b>".$model->transaction_code."</b>.",ChatMongoWs::TYPE_GROUP_WS);
         }else{
             $model = PaymentTransaction::findOne(['order_code' => $code]);
             if(!$model){
@@ -148,6 +158,34 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                 $paymentTransaction->save(0);
                 ChatMongoWs::SendMessage('Tạo giao dịch thu thêm: <b>'.$paymentTransaction->transaction_code.'</b><br>Ghi chú: '.$description,$paymentTransaction->order_code,ChatMongoWs::TYPE_GROUP_WS);
+                return $this->response(true, "add payment ".$paymentTransaction->transaction_code." order code $order_code success");
+            }elseif($type == PaymentTransaction::PAYMENT_TYPE_continue_payment){
+                $paymentTransaction = new PaymentTransaction();
+                $paymentTransaction->store_id = $order->store_id;
+                $paymentTransaction->customer_id = $order->customer_id;
+                $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_continue_payment;
+                $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_QUEUED;
+                $paymentTransaction->transaction_customer_name = $order->receiver_name;
+                $paymentTransaction->transaction_customer_email = $order->receiver_email;
+                $paymentTransaction->transaction_customer_phone = $order->receiver_phone;
+                $paymentTransaction->transaction_customer_address = $order->receiver_address;
+                $paymentTransaction->transaction_customer_city = $order->receiver_province_name;
+                $paymentTransaction->transaction_customer_postcode = $order->receiver_post_code;
+                $paymentTransaction->transaction_customer_district = $order->receiver_district_name;
+                $paymentTransaction->transaction_customer_country = $order->receiver_country_name;
+                $paymentTransaction->order_code = $order->ordercode;
+                $paymentTransaction->shipping = 0;
+                $paymentTransaction->payment_type = PaymentTransaction::PAYMENT_TYPE_continue_payment;
+                $paymentTransaction->carts = '';
+                $paymentTransaction->transaction_description = $description;
+                $paymentTransaction->total_discount_amount = 0;
+                $paymentTransaction->before_discount_amount_local = $amount;
+                $paymentTransaction->transaction_amount_local = $amount;
+                $paymentTransaction->created_at = time();
+                $paymentTransaction->save(0);
+                $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
+                $paymentTransaction->save(0);
+                ChatMongoWs::SendMessage('Tạo giao dịch tiếp tục thanh toán: <b>'.$paymentTransaction->transaction_code.'</b><br>Ghi chú: '.$description,$paymentTransaction->order_code,ChatMongoWs::TYPE_GROUP_WS);
                 return $this->response(true, "add payment ".$paymentTransaction->transaction_code." order code $order_code success");
             }elseif ($type == PaymentTransaction::PAYMENT_TYPE_REFUND){
                 if($order->total_paid_amount_local < $amount){

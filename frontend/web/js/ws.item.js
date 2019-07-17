@@ -326,6 +326,12 @@
                 markOutofStock(true);
                 return false;
             }
+            console.log(activeVariation.available_quantity);
+            if (activeVariation.available_quantity === 0 || activeVariation.available_quantity === "0") {
+                // ws.notifyError(ws.t("Out of stock"));
+                markOutofStock(true);
+                return false;
+            }
         }
         markOutofStock(false);
         return true;

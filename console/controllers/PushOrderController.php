@@ -10,18 +10,21 @@ use yii\console\Controller;
 
 class PushOrderController extends Controller
 {
-    public function actionPushOrder($rows,$env = 'prod')
+    public function actionPushOrder($rows, $store_id = null,$env = 'prod')
     {
         print_r(YII_ENV);
         $this->stdout_F('Rows: '.$rows);
         $this->stdout_F('Bắt đầu chạy job: ');
         /** @var Order[] $orders */
-        $orders = Order::find()
+        $qr = Order::find()
             ->where(['is not', 'tracking_codes', null])
             ->andWhere(['<>', 'tracking_codes', ''])
             ->andWhere(['or', ['order_boxme' => ''], ['is', 'order_boxme', null]])
-            ->andWhere(['or', ['shipment_boxme' => ''], ['is', 'shipment_boxme', null]])
-            ->limit($rows)->all();
+            ->andWhere(['or', ['shipment_boxme' => ''], ['is', 'shipment_boxme', null]]);
+        if($store_id){
+            $qr->andWhere(['store_id' => $store_id]);
+        }
+        $orders = $qr->limit($rows)->all();
         $this->stdout_F('Có '.count($orders).' orders sẽ được chạy');
         foreach ($orders as $order) {
             $this->stdout_F('Chạy đơn: '.$order->ordercode);
@@ -52,33 +55,32 @@ class PushOrderController extends Controller
                 $this->stdout_F('Tạo order box me success.');
             }
 
-            print_r(BoxMeClient::CreateLiveShipment($order));
-            $arrTracking = $order->tracking_codes ? explode(',',$order->tracking_codes) : [];
-            $arrShipment = $order->shipment_boxme ? explode(',',$order->shipment_boxme) : [];
-            if(!$order->tracking_codes){
-                $this->stdout_F('Chưa có tracking code');
-                die();
-            }
-            if(count($arrTracking) <= count($arrShipment)){
-                $this->stdout_F('Đã có mã shipment cho order này: ');
-                $this->stdout_F($order->tracking_codes);
-                $this->stdout_F($order->shipment_boxme);
-                $this->stdout_F('-------ERROR----------');
-                die();
-            }
-            print_r($arrTracking);
-            print_r($arrShipment);
             $this->stdout_F('Tạo shipment box me: ...');
-            foreach ($arrTracking as $key => $trackingCode){
-                echo "$key \n";
-                if($key > (count($arrShipment) - 1)){
-                    $this->stdout_F('Tạo shipment box me cho tracking code: '.$trackingCode);
-                    print_r(BoxMeClient::CreateLiveShipment($order,$trackingCode));
-                    $this->stdout_F('');
-                    $this->stdout_F('Tạo shipment box me success!');
-                }
-            }
+            print_r(BoxMeClient::CreateLiveShipment($order));
+            $this->stdout_F('Tạo shipment box me success!');
             $this->stdout_F('---------SUCCESS---------');
+        }
+        $this->stdout_F('Job end ---------------------------');
+    }
+    public function actionPushShipment($rows,$env = 'prod')
+    {
+        $this->stdout_F('ENV: '.YII_ENV);
+        $this->stdout_F('Rows: '.$rows);
+        $this->stdout_F('Bắt đầu chạy job: ');
+        /** @var Order[] $orders */
+        $orders = Order::find()
+            ->where(['is not', 'tracking_codes', null])
+            ->andWhere(['<>', 'tracking_codes', ''])
+            ->andWhere(['or', ['<>' , 'order_boxme' , ''], ['is not', 'order_boxme', null]])
+            ->andWhere(['or', ['shipment_boxme' => ''], ['is', 'shipment_boxme', null]])
+            ->limit($rows)->all();
+        $this->stdout_F('Có '.count($orders).' orders sẽ được chạy');
+        foreach ($orders as $order) {
+            $this->stdout_F('Chạy đơn: '.$order->ordercode);
+            $this->stdout_F('Tạo shipment box me: ...');
+            print_r(BoxMeClient::CreateLiveShipment($order));
+            $this->stdout_F('');
+            $this->stdout_F('---------DONE---------');
         }
         $this->stdout_F('Job end ---------------------------');
     }
