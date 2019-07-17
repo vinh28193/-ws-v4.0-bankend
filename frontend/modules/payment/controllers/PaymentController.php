@@ -209,8 +209,6 @@ class PaymentController extends BasePaymentController
 
                     $order->total_final_amount_local = $orderPayment->getTotalFinalAmount();
 
-                    $order->payment_transaction_code = $payment->transaction_code;
-
                     // 2 .seller
                     $seller = $orderPayment->seller;
                     $seller->portal = $orderPayment->portal;
@@ -340,11 +338,14 @@ class PaymentController extends BasePaymentController
             $childTransaction->service_code = $order->courier_service;
             $childTransaction->courier_delivery_time = $order->courier_delivery_time;
             $childTransaction->save(false);
+
+            $order->payment_transaction_code = $childTransaction->transaction_code;
+
             if (!empty($assign)) {
                 $order->sale_support_id = $assign->id;
                 $order->support_email = $assign->email;
-                $order->save(false);
             }
+            $order->save(false);
             if ($order->cartId !== null) {
                 $order->removeCart();
             }
