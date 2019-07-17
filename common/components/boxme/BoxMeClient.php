@@ -194,7 +194,7 @@ class BoxMeClient
         $param['tracking']['type'] = 2;
         $param['tracking']['tracking_number'] = $tracking;
         $data = [
-            'Country' => 'VN',
+            'Country' => $order->store ? $order->store->country_code : 'VN',
             'UserId' => self::checkIsPrime($user) ? $user->bm_wallet_id : $user_id_df,
             'Source' => 2,
             'Param' => json_encode($param),
