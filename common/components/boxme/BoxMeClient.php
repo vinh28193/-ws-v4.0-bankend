@@ -209,8 +209,13 @@ class BoxMeClient
                 'width' => 5,
                 'length' => 5,
                 'height' => 5,
-                'description' => 'Package for '.$trackingCode
+                'description' => ''
             ];
+            $desc = '';
+            foreach ($order->products as $product){
+                $desc .= " | ".$product->note_boxme;
+            }
+            $temp['description'] = $desc;
             $param['procducts'][] = $temp;
         }
         $param['tracking']['type'] = 2;
