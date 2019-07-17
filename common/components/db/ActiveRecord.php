@@ -285,4 +285,18 @@ class ActiveRecord extends \yii\db\ActiveRecord
         $this->trigger(self::EVENT_BEFORE_RESOLVE_FIELD, $event);
         return $event;
     }
+
+    public function attributeAlias()
+    {
+        return [];
+    }
+
+    public function getAttributeAlias($attribute)
+    {
+        $alias= $this->attributeAlias();
+        if (isset($alias[$attribute])) {
+            return $alias[$attribute];
+        }
+        return $this->getAttributeLabel($attribute);
+    }
 }

@@ -10,6 +10,7 @@ use common\lib\WalletBackendService;
 use common\models\Order;
 use common\models\PaymentTransaction;
 use common\models\Product;
+use common\modelsMongo\ActiveRecordUpdateLog;
 use common\modelsMongo\ChatMongoWs;
 use common\products\BaseProduct;
 use frontend\modules\payment\PaymentService;
@@ -402,19 +403,23 @@ class OrderController extends BaseApiController
             return $this->response(false, 'Missing amount');
         }
 
+        $description = ArrayHelper::getValue($bodyParams,'description');
+
         if (($order = Order::findOne(['ordercode' => $orderCode])) === null) {
             return $this->response(false, "Not founr order code $orderCode");
         }
+
+        ActiveRecordUpdateLog::register($type, $order);
 
         if ($type === 'addPayment') {
             $order->total_paid_amount_local += $amount;
             $order->save(false);
             $currentTransaction = $order->paymentTransaction;
             $newTransaction = clone $currentTransaction;
-            $newTransaction->isNewRecord = false;
+            $newTransaction->isNewRecord = true;
             $newTransaction->id = null;
             $newTransaction->transaction_amount_local = $amount;
-            $newTransaction->save();
+            $newTransaction->save(false);
             return $this->response(true, "add payment order code $orderCode success");
         } else if ($type === 'markRefund') {
             $order->total_refund_amount_local = $amount;
