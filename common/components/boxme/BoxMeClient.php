@@ -342,7 +342,7 @@ class BoxMeClient
         $item = [];
         foreach ($order->products as $product){
             $item[] = [
-                'sku' => strtolower($product->portal) == 'ebay' ? $product->sku : $product->parent_sku,
+                'sku' => TextUtility::GenerateBSinBoxMe($product->id),
                 'label_code' => '',
                 'origin_country' => 'US',
                 'name' => $product->product_name,
