@@ -311,7 +311,7 @@ class ServiceUsSendingController extends BaseApiController
         $trackingCode->status = $trackingCode->status ? $trackingCode->status : TrackingCode::STATUS_MERGE_NEW;
         $trackingCode->save(false);
         if($dataShipment && count($dataShipment)){
-            $response = BoxMeClient::CreateLiveShipment($dataShipment,$trackingCode->tracking_code);
+//            $response = BoxMeClient::CreateLiveShipment($dataShipment,$trackingCode->tracking_code);
 //        $trackingCode->save(false);
         }
         return $this->response(true,'Insert tracking to '.$count.' product success!');

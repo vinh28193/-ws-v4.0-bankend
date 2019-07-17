@@ -5,14 +5,17 @@
  * Date: 16/08/2018
  * Time: 03:37 PM
  */
+/**
+ * @var \yii\web\View $this
+ */
+$this->registerJsFile("/js/voucher/jquery.formatCurrency.js",['position' => \yii\web\View::POS_END]);
+$this->registerJsFile("/js/voucher/voucher.js",['position' => \yii\web\View::POS_END]);
+$this->registerJsFile("/js/voucher/jquery.formatCurrency.all.js",['position' => \yii\web\View::POS_END]);
+$this->registerCssFile("/css/voucher.css");
 ?>
 <script>
-    var data_voucher = <?= $data ?>;
+    var data_voucher = <?= json_encode($data) ?>;
 </script>
-<link href="/css/voucher.css" rel="stylesheet">
-<script src="/js/voucher/jquery.formatCurrency.js"></script>
-<script src="/js/voucher/voucher.js"></script>
-<script src="/js/voucher/jquery.formatCurrency.all.js"></script>
 <div class="container" style="margin-top: 50px">
     <span style="display: none" id="count_temp"></span>
     <div class="row">
@@ -34,8 +37,8 @@
                             <strong id="amount_voucher_<?= $index ?>"><?= strpos('VNĐ', $web->showMoney($amount)) ? $web->showMoney($amount) : $web->showMoney($amount) . " VNĐ" ?> </strong>
                     </div>
                     <div class="pricing-table-signup-tiny">
-                        <p><a href="#"
-                              onclick="voucher.detail(<?= $index ?>)"><?= \common\components\RedisLanguage::getLanguageByKey('buynow-voucher', 'Mua ngay!') ?></a>
+                        <p><a href="javascript: void(0);"
+                              onclick="voucher.detail(<?= $index ?>)"><?= Yii::t('frontend','Buy now!')?></a>
                         </p>
                     </div>
                 </div>
@@ -45,5 +48,7 @@
     </div>
 </div>
 <script>
-    voucher.loopChange();
+    $(document).ready(function () {
+        voucher.loopChange();
+    });
 </script>

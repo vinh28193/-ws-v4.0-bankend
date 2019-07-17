@@ -81,4 +81,28 @@ class HomeController extends CmsController
         return $this->render('detailVoucher', ['data' => $data, 'web' => $this->storeManager]);
     }
 
+    public function actionGetdetailvoucher(){
+        $code = Yii::$app->request->post('code');
+        $name = Yii::$app->request->post('name');
+        $amount = Yii::$app->request->post('amount');
+        $key = strtoupper(md5($name.$code.$amount));
+        $data = Yii::$app->cache->get($key);
+        if(!$data){
+            $data = [
+                'id' => $key,
+                'name' => $name,
+                'code' => $code,
+                'amount' => $amount
+            ];
+            Yii::$app->cache->set($key,$data,60*60*24*60);
+        }
+        if ($data)
+            return $this->response(true,'get detail success',$data);
+        return $this->response(false,'get detail false',$data);
+
+    }
+    public function response($success,$message,$data){
+        Yii::$app->response->format = 'json';
+        return ['success' => $success, 'message' => $message, 'data' => $data];
+    }
 }

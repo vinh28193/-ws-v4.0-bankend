@@ -43,19 +43,21 @@ voucher.randomText = function (max) {
 };
 var i =0;
 voucher.loopChange = function () {
+    console.log("change");
     voucher.reload();
     setTimeout(function () {
+        console.log("change_loop");
             voucher.reload();
             voucher.loopChange();
-    }, 3600000) //3600000
+    }, 60*1000) //3600000
 };
 voucher.detail = function (index) {
  var data = {};
  data.code = $('#code_voucher_'+index).html();
  data.name = $('#title_voucher_'+index).html();
  data.amount = $('#amount_voucher_'+index).html();
-    ajax({
-        service: "/weshop/service/test/getdetailvoucher",
+    $.ajax({
+        url: "/cms/home/getdetailvoucher",
         data: data,
         loading: true,
         method: "POST",
@@ -71,7 +73,7 @@ voucher.detail = function (index) {
 voucher.buyNow = function (id) {
     var data = {};
     data.id = id;
-    ajax({
+    $.ajax({
         service: "/weshop/service/test/checkout",
         data: data,
         loading: true,
@@ -93,7 +95,7 @@ voucher.checkout = function () {
             values[x.name] = $.trim(x.value);
         });
     }
-    ajax({
+    $.ajax({
         service: "/weshop/service/test/create-order-voucher",
         data: values,
         loading: true,
