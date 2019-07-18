@@ -160,7 +160,7 @@ class CartHelper
         $product['quantity_customer'] = $item->getShippingQuantity();
         $product['total_weight_temporary'] = $item->getShippingWeight();
 
-        $product['check_special'] = $item->getIsSpecial() ? 1 : 0;
+        $product['is_special'] = $item->getIsSpecial() ? 1 : 0;
 
         $product['category'] = [
             'alias' => $item->category_id,
