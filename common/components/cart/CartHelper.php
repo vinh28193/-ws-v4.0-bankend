@@ -77,6 +77,7 @@ class CartHelper
         $order['sale_support_id'] = null;
         $order['support_email'] = null;
         $order['check_insurance'] = 0;
+        $order['is_special'] = $item->getIsSpecial() ? 1 : 0;
 //        $order['check_inspection'] = 0;
 //        $order['check_inspection'] = 0;
 //        $order['total_insurance_fee_local'] = 0; // bảo hiểm đê mặc định k chuyền
@@ -123,6 +124,7 @@ class CartHelper
         $product['link_origin'] = $item->item_origin_url;
         $product['remove'] = 0;
         $product['condition'] = $item->condition;
+        $product['is_special'] = $item->getIsSpecial() ? 1 : 0;
         $variations = [];
         if (strtolower($item->type) === 'ebay') {
             foreach ((array)$item->variation_mapping as $v) {
@@ -141,7 +143,7 @@ class CartHelper
             $specific = [];
             foreach ($item->variation_options as $variation_option) {
                 /** @var $variation_option VariationOption */
-                if($variation_option->option_link && !empty($variation_option->sku)){
+                if ($variation_option->option_link && !empty($variation_option->sku)) {
                     $specific = array_merge($specific, [$variation_option->name => $variation_option->value_current]);
                 }
             }
@@ -234,6 +236,7 @@ class CartHelper
         $order = array_shift($orders);
         while (!empty($orders)) {
             foreach (array_shift($orders) as $key => $value) {
+
                 if (strpos($key, 'total_') !== false) {
                     $oldValue = floatval($order[$key]);
                     $newValue = floatval($value);
@@ -243,6 +246,8 @@ class CartHelper
                     $products = $order['products'];
                     $products[] = reset($value);
                     $order['products'] = $products;
+                } elseif ($key === 'is_special' && $value === 1) {
+                    $order['is_special'] = 1;
                 }
             }
         }

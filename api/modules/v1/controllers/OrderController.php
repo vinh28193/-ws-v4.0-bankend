@@ -10,9 +10,13 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\BaseApiController;
+use common\components\StoreManager;
 use common\helpers\ChatHelper;
+use common\helpers\WeshopHelper;
+use common\models\db\TargetAdditionalFee;
 use common\models\Order;
 use common\models\Product;
+use common\models\StoreAdditionalFee;
 use common\modelsMongo\ActiveRecordUpdateLog;
 use common\modelsMongo\PaymentLogWS;
 use Yii;
@@ -68,6 +72,11 @@ class OrderController extends BaseApiController
             [
                 'allow' => true,
                 'actions' => ['update', 'delete'],
+                'roles' => $this->getAllRoles(true, 'user'),
+            ],
+            [
+                'allow' => true,
+                'actions' => ['confirm'],
                 'roles' => $this->getAllRoles(true, 'user'),
             ],
         ];
@@ -182,7 +191,9 @@ class OrderController extends BaseApiController
         //$this->can('canUpdate', $model);
         $check = $model->loadWithScenario($this->post);
         if ($model->getScenario() == 'confirmPurchase') {
-            $total = round(($model->total_paid_amount_local / $model->total_final_amount_local) * 100);
+
+            if ((Yii::$app->request->post('product_id')) !== null)
+                $total = round(($model->total_paid_amount_local / $model->total_final_amount_local) * 100);
             $remaining = $model->total_final_amount_local - $model->total_paid_amount_local;
             $product_id = Yii::$app->request->post('product_id');
             $tran = Yii::$app->db->beginTransaction();
@@ -313,6 +324,127 @@ class OrderController extends BaseApiController
         $this->can('canDelete', ['id' => $model->id]);
         $model->delete();
         return $this->response(true, "Delete order $id success", $model);
+    }
+
+
+    public function actionConfirm($code)
+    {
+        $insurance = Yii::$app->request->post('insurance', 0);
+        $inspection = Yii::$app->request->post('inspection', 0);
+        $packingWood = Yii::$app->request->post('packingWood', 0);
+        $packingWood = floatval($packingWood);
+        /** @var $order Order */
+        if (($order = $this->findModel(['ordercode' => $code], false)) === null) {
+            return $this->response(false, "Not found order code $code");
+        }
+
+        $timeTimestamp = Yii::$app->formatter->asTimestamp('now');
+        /** @var $storeManager StoreManager */
+        $storeManager = Yii::$app->storeManager;
+        $storeManager->setStore($order->store_id);
+        $token = ["Confirm order {$order->ordercode}"];
+        if ($insurance !== 0) {
+            $target = new TargetAdditionalFee();
+            $target->name = 'insurance_fee';
+            $target->type = 'local';
+            $target->amount = $insurance;
+            $target->local_amount = $insurance;
+            $target->discount_amount = 0;
+            $target->currency = $storeManager->getCurrencyName();
+            $target->label = $order->store_id === 1 ? 'Phí bảo hiểm' : 'Insurance Fee';
+            $target->created_at = $timeTimestamp;
+            $target->remove = 0;
+            $target->target = 'order';
+            $target->target_id = $order->id;
+            $target->save(false);
+        }
+
+        if ($inspection !== 0) {
+            $target = new TargetAdditionalFee();
+            $target->name = 'inspection_fee';
+            $target->type = 'addition';
+            $target->amount = $inspection;
+            $target->local_amount = $storeManager->roundMoney($inspection * $storeManager->getExchangeRate());
+            $target->discount_amount = 0;
+            $target->currency = $storeManager->getCurrencyName();
+            $target->label = $order->store_id === 1 ? 'Phí kiểm hàng' : 'Inspection Fee';
+            $target->created_at = $timeTimestamp;
+            $target->remove = 0;
+            $target->target = 'order';
+            $target->target_id = $order->id;
+            $target->save(false);
+        }
+
+        if ($packingWood !== 0) {
+            $target = new TargetAdditionalFee();
+            $target->name = 'packing_fee';
+            $target->type = 'addition';
+            $target->amount = $packingWood;
+            $target->local_amount = $storeManager->roundMoney($packingWood * $storeManager->getExchangeRate());
+            $target->discount_amount = 0;
+            $target->currency = $storeManager->getCurrencyName();
+            $target->label = $order->store_id === 1 ? 'Phí đóng hàng' : 'Packing Fee';
+            $target->created_at = $timeTimestamp;
+            $target->remove = 0;
+            $target->target = 'order';
+            $target->target_id = $order->id;
+            $target->save(false);
+        }
+
+        $order->refresh();
+        $allOrderFees = $order->targetFee;
+        $totalFeeAmount = 0;
+        foreach ($allOrderFees as $orderFee) {
+            /** @var $orderFee TargetAdditionalFee */
+            if ($orderFee->name === 'packing_fee') {
+                $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
+                $value = $order->total_packing_fee_local ? $order->total_packing_fee_local : 0;
+                $value += $orderFee->local_amount;
+                $order->total_packing_fee_local = $value;
+                $order->total_packing_fee_local = $orderFee->local_amount;
+            } elseif ($orderFee->name === 'inspection_fee') {
+                $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
+                $value = $order->total_inspection_fee_local ? $order->total_inspection_fee_local : 0;
+                $value += $orderFee->local_amount;
+                $order->total_inspection_fee_local = $value;
+            } elseif ($orderFee->name === 'insurance_fee') {
+                $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
+                $value = $order->total_insurance_fee_local ? $order->total_insurance_fee_local : 0;
+                $value += $orderFee->local_amount;
+                $order->total_insurance_fee_local = $value;
+            } elseif ($orderFee->name === 'product_price') {
+                continue;
+            }
+            $totalFeeAmount += $orderFee->local_amount;
+
+        }
+        $order->total_fee_amount_local = $totalFeeAmount;
+        $order->total_final_amount_local = $order->total_amount_local + $order->total_fee_amount_local;
+
+        $paidPercent = round(($order->total_paid_amount_local / $order->total_final_amount_local) * 100);
+
+        $order->current_status = Order::STATUS_AWAITING_PAYMENT;
+
+        if ($order->total_paid_amount_local >= 0 && $paidPercent > 70) {
+            $order->current_status = Order::STATUS_READY2PURCHASE;
+        }
+        if (in_array($order->current_status, [Order::STATUS_READY2PURCHASE, Order::STATUS_CONTACTING, Order::STATUS_AWAITING_PAYMENT])) {
+            if ($order->current_status == Order::STATUS_READY2PURCHASE) {
+                if ($order->contacting == null) {
+                    $order->contacting = $timeTimestamp;
+                }
+                if ($order->awaiting_payment == null) {
+                    $order->awaiting_payment = $timeTimestamp;
+                }
+                $order->ready_purchase = $timeTimestamp;
+            }
+        }
+        $token[] = "status {$order->current_status}";
+        $dirtyAttributes = $order->getDirtyAttributes();
+        $messages = "<span class='text-danger font-weight-bold'>Order {$order->ordercode}</span> <br> - Confirm <br> {$this->resolveChatMessage($dirtyAttributes,$order)}";
+        $order->update(false);
+        ChatHelper::push($messages, $order->ordercode, 'GROUP_WS', 'SYSTEM', null);
+        return $this->response(true, implode(',', $token));
     }
 
     /**

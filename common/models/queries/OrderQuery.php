@@ -18,7 +18,8 @@ class OrderQuery extends \common\components\db\ActiveQuery
      * @param $params
      * @return $this
      */
-    public function filter($params){
+    public function filter($params)
+    {
 
         return $this;
     }
@@ -52,14 +53,15 @@ class OrderQuery extends \common\components\db\ActiveQuery
             $this->getColumnName('purchase_amount'),
             $this->getColumnName('purchase_account_email'),
             $this->getColumnName('purchase_card'),
-        ],$columns);
+        ], $columns);
         return parent::defaultSelect($columns);
     }
 
     /**
      * @return $this
      */
-    public function addSelectColumn() {
+    public function addSelectColumn()
+    {
         $this->select([
             'order.id',
             'order.ordercode',
@@ -161,7 +163,8 @@ class OrderQuery extends \common\components\db\ActiveQuery
         return $this;
     }
 
-    public function withFullRelations(){
+    public function withFullRelations()
+    {
         $this->with([
             'products.productFees' => function ($q) {
                 /** @var ActiveQuery $q */
@@ -176,17 +179,17 @@ class OrderQuery extends \common\components\db\ActiveQuery
 
             /** TODO 08/07/2019 join tracking_code (draft_extension_tracking_map && package )*/
             /**
-            'products.packages' => function ($q) {
-                // @var ActiveQuery $q
-                $q->select([
-                    'tracking_code',
-                    'product_id',
-                    'order_id',
-                    'id',
-                ]);
-            },
-            'products.trackingCodes' => function ($q) { },
-            */
+             * 'products.packages' => function ($q) {
+             * // @var ActiveQuery $q
+             * $q->select([
+             * 'tracking_code',
+             * 'product_id',
+             * 'order_id',
+             * 'id',
+             * ]);
+             * },
+             * 'products.trackingCodes' => function ($q) { },
+             */
             'seller' => function ($q) {
                 /** @var ActiveQuery $q */
                 $q->select([
@@ -197,9 +200,9 @@ class OrderQuery extends \common\components\db\ActiveQuery
             },
             /** TODO 08/07/2019 nghiệp vụ bỏ  */
             /**
-            'purchaseAssignee',
-            'purchaseProducts',
-            'purchaseProducts.purchaseOrder',
+             * 'purchaseAssignee',
+             * 'purchaseProducts',
+             * 'purchaseProducts.purchaseOrder',
              **/
             'promotion' => function ($q) {
                 /** @var ActiveQuery $q */
@@ -212,7 +215,7 @@ class OrderQuery extends \common\components\db\ActiveQuery
             'package',
             'saleSupport' => function ($q) {
                 /** @var ActiveQuery $q */
-                $q->select(['username','email','id','status', 'created_at', 'updated_at']);
+                $q->select(['username', 'email', 'id', 'status', 'created_at', 'updated_at']);
             }
         ]);
 //        $this->innerJoinWith([
@@ -239,38 +242,39 @@ class OrderQuery extends \common\components\db\ActiveQuery
 //            },
             'products' => function ($q) {
                 /** @var ActiveQuery $q */
-               $q->select([
-                   'id',
-                   'link_img',
-                   'order_id',
-                   'link_origin',
-                   'product_link',
-                   'product_name',
-                   'sku',
-                   'parent_sku',
-                   'variations',
-                   'total_weight_temporary',
-                   'current_status',
-                   'note_boxme',
-                   'note_by_customer',
-                   'custom_category_id',
-                   'confirm_change_price',
-                   'purchased',
-                   'quantity_customer',
-                   'quantity_purchase',
-                   'quantity_inspect',
-                   'price_amount_origin',
-                   'price_amount_local',
-                   'total_final_amount_origin',
-                   'total_final_amount_local',
-                   'check_special',
-               ]);
+                $q->select([
+                    'id',
+                    'link_img',
+                    'order_id',
+                    'link_origin',
+                    'product_link',
+                    'product_name',
+                    'sku',
+                    'parent_sku',
+                    'variations',
+                    'total_weight_temporary',
+                    'current_status',
+                    'note_boxme',
+                    'note_by_customer',
+                    'custom_category_id',
+                    'confirm_change_price',
+                    'purchased',
+                    'quantity_customer',
+                    'quantity_purchase',
+                    'quantity_inspect',
+                    'price_amount_origin',
+                    'price_amount_local',
+                    'total_final_amount_origin',
+                    'total_final_amount_local',
+                    'is_special',
+                ]);
             },
         ]);
         return $this;
     }
 
-    public function countPurchase() {
+    public function countPurchase()
+    {
 
     }
 }

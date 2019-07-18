@@ -308,6 +308,9 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     public function getIsSpecial()
     {
+        if($this->getStoreManager()->store->country_code === 'VN'){
+            return false;
+        }
         if (($category = $this->getCategory()) !== null) {
             return $category->checkSpecialGroup($this);
         }

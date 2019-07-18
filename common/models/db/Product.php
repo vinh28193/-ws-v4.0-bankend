@@ -58,7 +58,8 @@ use Yii;
  * @property string $tracking_codes list tracking_code seller, Cách nhau dấu (,)
  * @property string $total_final_amount_origin
  * @property string $total_price_amount_origin
- * @property string $price_policy
+ * @property string $price_policy tiền phí hải quan
+ * @property int $is_special check hệ thống tự bắt hàng đặc biệt
  *
  * @property CategoryCustomPolicy $customCategory
  * @property Order $order
@@ -82,9 +83,9 @@ class Product extends \common\components\db\ActiveRecord
     {
         return [
             [['order_id', 'seller_id', 'portal', 'parent_sku', 'link_img', 'link_origin', 'price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'quantity_customer', 'created_at', 'product_name'], 'required'],
-            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancel', 'lost', 'refunded', 'confirm_change_price', 'total_final_amount_local'], 'integer'],
+            [['order_id', 'seller_id', 'category_id', 'custom_category_id', 'quantity_customer', 'quantity_purchase', 'quantity_inspect', 'variation_id', 'created_at', 'updated_at', 'remove', 'purchase_start', 'purchased', 'seller_shipped', 'stockin_us', 'stockout_us', 'stockin_local', 'stockout_local', 'at_customer', 'returned', 'cancel', 'lost', 'refunded', 'confirm_change_price', 'total_final_amount_local', 'is_special'], 'integer'],
             [['link_img', 'link_origin', 'variations', 'note_by_customer', 'product_name', 'tracking_codes'], 'string'],
-            [['price_amount_origin', 'price_amount_local', 'price_policy', 'total_price_amount_local', 'total_fee_product_local', 'price_purchase', 'shipping_fee_purchase', 'tax_fee_purchase', 'total_weight_temporary', 'seller_refund_amount', 'total_final_amount_origin', 'total_price_amount_origin'], 'number'],
+            [['price_amount_origin', 'price_amount_local', 'total_price_amount_local', 'total_fee_product_local', 'price_purchase', 'shipping_fee_purchase', 'tax_fee_purchase', 'total_weight_temporary', 'seller_refund_amount', 'total_final_amount_origin', 'total_price_amount_origin', 'price_policy'], 'number'],
             [['portal', 'sku', 'parent_sku', 'version', 'condition', 'note_boxme', 'current_status'], 'string', 'max' => 255],
             [['product_link'], 'string', 'max' => 500],
             [['custom_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoryCustomPolicy::className(), 'targetAttribute' => ['custom_category_id' => 'id']],
@@ -151,6 +152,7 @@ class Product extends \common\components\db\ActiveRecord
             'total_final_amount_origin' => 'Total Final Amount Origin',
             'total_price_amount_origin' => 'Total Price Amount Origin',
             'price_policy' => 'Price Policy',
+            'is_special' => 'Is Special',
         ];
     }
 
