@@ -36,7 +36,7 @@ class PaymentTransactionController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index', 'view', 'update'],
+                'actions' => ['index', 'view', 'update' , 'create'],
                 'roles' => ['master_operation', 'tester', 'master_sale', 'sale', 'master_accountant', 'accountant', 'operation']
             ],
         ];
