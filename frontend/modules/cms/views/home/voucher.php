@@ -38,7 +38,7 @@ $this->registerCssFile("/css/voucher.css");
                     </div>
                     <div class="pricing-table-signup-tiny">
                         <p><a href="javascript: void(0);"
-                              onclick="voucher.detail(<?= $index ?>)"><?= Yii::t('frontend','Buy now!')?></a>
+                              onclick="ws.sweetalert('<?= Yii::t('frontend','We are upgrading the new system. Please try again later!')?>','<?= Yii::t('frontend','System upgrade')?>')"><?= Yii::t('frontend','Buy now!')?></a>
                         </p>
                     </div>
                 </div>
