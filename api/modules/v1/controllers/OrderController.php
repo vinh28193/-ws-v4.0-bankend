@@ -342,7 +342,7 @@ class OrderController extends BaseApiController
         /** @var $storeManager StoreManager */
         $storeManager = Yii::$app->storeManager;
         $storeManager->setStore($order->store_id);
-
+        $token = ["Confirm order {$order->ordercode}"];
         if ($insurance !== 0) {
             $target = new TargetAdditionalFee();
             $target->name = 'insurance_fee';
@@ -357,7 +357,6 @@ class OrderController extends BaseApiController
             $target->target = 'order';
             $target->target_id = $order->id;
             $target->save(false);
-            $order->total_insurance_fee_local = $insurance;
         }
 
         if ($inspection !== 0) {
@@ -394,22 +393,32 @@ class OrderController extends BaseApiController
 
         $order->refresh();
         $allOrderFees = $order->targetFee;
-        $totalConfirmFee = 0;
+        $totalFeeAmount = 0;
         foreach ($allOrderFees as $orderFee) {
             /** @var $orderFee TargetAdditionalFee */
             if ($orderFee->name === 'packing_fee') {
+                $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
+                $value = $order->total_packing_fee_local ? $order->total_packing_fee_local : 0;
+                $value += $orderFee->local_amount;
+                $order->total_packing_fee_local = $value;
                 $order->total_packing_fee_local = $orderFee->local_amount;
-                $order->total_fee_amount_local += $orderFee->local_amount;
             } elseif ($orderFee->name === 'inspection_fee') {
-                $order->total_inspection_fee_local = $orderFee->local_amount;
-                $order->total_fee_amount_local += $orderFee->local_amount;
+                $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
+                $value = $order->total_inspection_fee_local ? $order->total_inspection_fee_local : 0;
+                $value += $orderFee->local_amount;
+                $order->total_inspection_fee_local = $value;
             } elseif ($orderFee->name === 'insurance_fee') {
-                $order->total_insurance_fee_local = $orderFee->local_amount;
-                $order->total_fee_amount_local += $orderFee->local_amount;
-            } else {
+                $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
+                $value = $order->total_insurance_fee_local ? $order->total_insurance_fee_local : 0;
+                $value += $orderFee->local_amount;
+                $order->total_insurance_fee_local = $value;
+            } elseif ($orderFee->name === 'product_price') {
                 continue;
             }
+            $totalFeeAmount += $orderFee->local_amount;
+
         }
+        $order->total_fee_amount_local = $totalFeeAmount;
         $order->total_final_amount_local = $order->total_amount_local + $order->total_fee_amount_local;
 
         $paidPercent = round(($order->total_paid_amount_local / $order->total_final_amount_local) * 100);
@@ -422,19 +431,20 @@ class OrderController extends BaseApiController
         if (in_array($order->current_status, [Order::STATUS_READY2PURCHASE, Order::STATUS_CONTACTING, Order::STATUS_AWAITING_PAYMENT])) {
             if ($order->current_status == Order::STATUS_READY2PURCHASE) {
                 if ($order->contacting == null) {
-                    $order->contacting = Yii::$app->getFormatter()->asTimestamp('now');
+                    $order->contacting = $timeTimestamp;
                 }
                 if ($order->awaiting_payment == null) {
-                    $order->awaiting_payment = Yii::$app->getFormatter()->asTimestamp('now');
+                    $order->awaiting_payment = $timeTimestamp;
                 }
-                $order->ready_purchase = time();
+                $order->ready_purchase = $timeTimestamp;
             }
         }
-
+        $token[] = "status {$order->current_status}";
         $dirtyAttributes = $order->getDirtyAttributes();
-        $messages  = "<span class='text-danger font-weight-bold'>Order {$order->ordercode}</span> <br> - Confirm <br> {$this->resolveChatMessage($dirtyAttributes,$order)}";
+        $messages = "<span class='text-danger font-weight-bold'>Order {$order->ordercode}</span> <br> - Confirm <br> {$this->resolveChatMessage($dirtyAttributes,$order)}";
         $order->update(false);
         ChatHelper::push($messages, $order->ordercode, 'GROUP_WS', 'SYSTEM', null);
+        return $this->response(true, implode(',', $token));
     }
 
     /**

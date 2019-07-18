@@ -127,12 +127,7 @@ class Order extends BaseOrder implements AdditionalFeeInterface
      */
     public function getIsSpecial()
     {
-        foreach ($this->products as $product) {
-            if (($category = $product->category) !== null && $category->checkSpecialGroup($this)) {
-                return true;
-            }
-        }
-        return false;
+        return $this->is_special === 1;
     }
 
     /**

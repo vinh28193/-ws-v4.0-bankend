@@ -40,7 +40,9 @@ class ProductController extends BaseApiController
             ],
         ];
     }
-    public function actionCreate() {
+
+    public function actionCreate()
+    {
         $now = Yii::$app->getFormatter()->asTimestamp('now');
         $post = \Yii::$app->request->post();
         $query = new Product();
@@ -66,55 +68,82 @@ class ProductController extends BaseApiController
         return $this->response(true, 'success', $query);
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate($id)
+    {
         $post = Yii::$app->request->post();
-        if ($id) {
-            $product = Product::find()->where(['id' => $id])->one();
-            if (isset($post['quantityI'])) {
-                $product->quantity_inspect =  $post['quantityI'];
-            }
-            if (isset($post['quantityP'])) {
-                $product->quantity_purchase =  $post['quantityP'];
-            }
-            if (isset($post['policyPrice'])) {
-                $product->price_policy = $post['policyPrice'];
-            }
-            if (isset($post['quantityC'])) {
-                $product->quantity_customer =  (int)$post['quantityC'];
-            }
-            if (isset($post['variant'])) {
-                $product->variations = $post['variant'];
-            }
-            if (isset($post['policy_id'])) {
-                $product->custom_category_id = $post['policy_id'];
-            }
-            if (isset($post['category_id'])) {
-                $product->custom_category_id = $post['category_id'];
-            }
-            if (isset($post['noteCustomer'])) {
-                $product->note_by_customer = $post['noteCustomer'];
-            }
-            if (isset($post['price_amount_origin'])) {
-                $product->price_amount_origin = $post['price_amount_origin'];
-            }
-            if (isset($post['note_boxme'])) {
-                $product->note_boxme = $post['note_boxme'];
-            }
-            $dirtyAttributes = $product->getDirtyAttributes();
-            $messages = "<span class='text-danger font-weight-bold'>Update Product {$post['order_path']}</span> <br> {$this->resolveChatMessage($dirtyAttributes,$product)}";
-
-            if (!$product->save()) {
-                return $this->response(false, 'error', $product->getErrors());
-            }
-            ChatHelper::push($messages, $post['order_path'], 'GROUP_WS', 'SYSTEM', null);
-            Yii::$app->wsLog->push('order', "update product - {$post['title']}", null, [
-                'id' => $post['order_path'],
-                'request' => $this->post,
-                'response' => $messages
-            ]);
-            return $this->response(true, 'success', $product);
+        /** @var $product Product */
+        if (($product = Product::find()->where(['id' => $id])->one()) === null) {
+            return $this->response(false, "Not found product $id");
         }
+        $markIsSpecial = isset($post['is_special']);
+        if ($markIsSpecial) {
+            $product->is_special = $post['is_special'] == 'yes' ? 1 : 0;
+        }
+        if (isset($post['quantityI'])) {
+            $product->quantity_inspect = $post['quantityI'];
+        }
+        if (isset($post['quantityP'])) {
+            $product->quantity_purchase = $post['quantityP'];
+        }
+        if (isset($post['policyPrice'])) {
+            $product->price_policy = $post['policyPrice'];
+        }
+        if (isset($post['quantityC'])) {
+            $product->quantity_customer = (int)$post['quantityC'];
+        }
+        if (isset($post['variant'])) {
+            $product->variations = $post['variant'];
+        }
+        if (isset($post['policy_id'])) {
+            $product->custom_category_id = $post['policy_id'];
+        }
+        if (isset($post['category_id'])) {
+            $product->custom_category_id = $post['category_id'];
+        }
+        if (isset($post['noteCustomer'])) {
+            $product->note_by_customer = $post['noteCustomer'];
+        }
+        if (isset($post['price_amount_origin'])) {
+            $product->price_amount_origin = $post['price_amount_origin'];
+        }
+        if (isset($post['note_boxme'])) {
+            $product->note_boxme = $post['note_boxme'];
+        }
+        $dirtyAttributes = $product->getDirtyAttributes();
+        $messages = "<span class='text-danger font-weight-bold'>Update Product {$post['order_path']}</span> <br> {$this->resolveChatMessage($dirtyAttributes,$product)}";
+
+        if (!$product->save()) {
+            return $this->response(false, 'error', $product->getErrors());
+        }
+
+        if ($markIsSpecial) {
+            $order = $product->order;
+            $order->refresh();
+            $orderSpecial = $product->is_special;
+            if (count($order->products) > 1) {
+                foreach ($order->products as $p) {
+                    if ($p->is_special === 1) {
+                        $orderSpecial = 1;
+                        break;
+                    }
+                }
+            }
+            $order->is_special = $orderSpecial;
+            $v = $orderSpecial === 1 ? 'Special' : 'NonSpecial';
+            ChatHelper::push("<span class='text-danger font-weight-bold'>mark Order `{$order->ordercode}` as {$v}</span>", $order->ordercode, 'GROUP_WS', 'SYSTEM', null);
+        }else {
+            ChatHelper::push($messages, $post['order_path'], 'GROUP_WS', 'SYSTEM', null);
+        }
+
+        Yii::$app->wsLog->push('order', "update product - {$post['title']}", null, [
+            'id' => $post['order_path'],
+            'request' => $this->post,
+            'response' => $messages
+        ]);
+        return $this->response(true, 'success', $product);
+
     }
+
     protected function resolveChatMessage($dirtyAttributes, $reference)
     {
 
